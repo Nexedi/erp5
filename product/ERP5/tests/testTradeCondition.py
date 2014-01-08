@@ -109,11 +109,11 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
-    self.assertEquals(self.vendor, self.order.getSourceSectionValue())
-    self.assertEquals(self.vendor, self.order.getSourceValue())
-    self.assertEquals(self.client, self.order.getDestinationSectionValue())
-    self.assertEquals(self.client, self.order.getDestinationValue())
-    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEqual(self.vendor, self.order.getSourceSectionValue())
+    self.assertEqual(self.vendor, self.order.getSourceValue())
+    self.assertEqual(self.client, self.order.getDestinationSectionValue())
+    self.assertEqual(self.client, self.order.getDestinationValue())
+    self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
 
   def test_apply_trade_condition_keep_categories(self):
     # source section & source are set on the order, not on the TC
@@ -130,11 +130,11 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
     # Applying the TC keeps values on the order
-    self.assertEquals(self.vendor, self.order.getSourceSectionValue())
-    self.assertEquals(self.vendor, self.order.getSourceValue())
-    self.assertEquals(self.client, self.order.getDestinationSectionValue())
-    self.assertEquals(self.client, self.order.getDestinationValue())
-    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEqual(self.vendor, self.order.getSourceSectionValue())
+    self.assertEqual(self.vendor, self.order.getSourceValue())
+    self.assertEqual(self.client, self.order.getDestinationSectionValue())
+    self.assertEqual(self.client, self.order.getDestinationValue())
+    self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
 
   def test_apply_trade_condition_set_categories_with_hierarchy(self):
     trade_condition_source = self.trade_condition_module.newContent(
@@ -155,11 +155,11 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
-    self.assertEquals(self.vendor, self.order.getSourceSectionValue())
-    self.assertEquals(self.vendor, self.order.getSourceValue())
-    self.assertEquals(self.client, self.order.getDestinationSectionValue())
-    self.assertEquals(self.client, self.order.getDestinationValue())
-    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEqual(self.vendor, self.order.getSourceSectionValue())
+    self.assertEqual(self.vendor, self.order.getSourceValue())
+    self.assertEqual(self.client, self.order.getDestinationSectionValue())
+    self.assertEqual(self.client, self.order.getDestinationValue())
+    self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
 
   def test_apply_trade_condition_copy_subobjects(self):
     self.trade_condition.setPaymentConditionTradeDate('custom')
@@ -168,8 +168,8 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
-    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
-    self.assertEquals(DateTime(2001, 01, 01),
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
 
   def test_apply_twice_trade_condition_copy_subobjects(self):
@@ -178,13 +178,13 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
-    self.assertEquals(1, len(self.order.contentValues(
+    self.assertEqual(1, len(self.order.contentValues(
                                 portal_type='Payment Condition')))
-    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
-    self.assertEquals(DateTime(2001, 01, 01),
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
-    self.assertEquals(1, len(self.order.contentValues(
+    self.assertEqual(1, len(self.order.contentValues(
                                 portal_type='Payment Condition')))
 
   def test_apply_trade_condition_copy_subobjects_with_hierarchy(self):
@@ -200,8 +200,8 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
-    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
-    self.assertEquals(DateTime(2001, 01, 01),
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
 
   def test_apply_trade_condition_twice_update_order(self):
@@ -216,13 +216,13 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     
-    self.assertEquals(self.vendor, self.order.getSourceSectionValue())
-    self.assertEquals(self.vendor, self.order.getSourceValue())
-    self.assertEquals(self.client, self.order.getDestinationSectionValue())
-    self.assertEquals(self.client, self.order.getDestinationValue())
-    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
-    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
-    self.assertEquals(DateTime(2001, 01, 01),
+    self.assertEqual(self.vendor, self.order.getSourceSectionValue())
+    self.assertEqual(self.vendor, self.order.getSourceValue())
+    self.assertEqual(self.client, self.order.getDestinationSectionValue())
+    self.assertEqual(self.client, self.order.getDestinationValue())
+    self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
 
     new_vendor = self.portal.organisation_module.newContent(
@@ -235,13 +235,13 @@ class TestApplyTradeCondition(TradeConditionTestCase):
                     payment_condition_payment_date=DateTime(2002, 2, 2))
 
     self.order.Order_applyTradeCondition(new_trade_condition, force=1)
-    self.assertEquals(new_vendor, self.order.getSourceSectionValue())
-    self.assertEquals(self.vendor, self.order.getSourceValue())
-    self.assertEquals(self.client, self.order.getDestinationSectionValue())
-    self.assertEquals(self.client, self.order.getDestinationValue())
-    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
-    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
-    self.assertEquals(DateTime(2002, 02, 02),
+    self.assertEqual(new_vendor, self.order.getSourceSectionValue())
+    self.assertEqual(self.vendor, self.order.getSourceValue())
+    self.assertEqual(self.client, self.order.getDestinationSectionValue())
+    self.assertEqual(self.client, self.order.getDestinationValue())
+    self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2002, 02, 02),
                       self.order.getPaymentConditionPaymentDate())
 
 
@@ -259,11 +259,11 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     supply_line = self.trade_condition.newContent(
                                     portal_type=self.supply_line_type)
 
-    self.assertEquals(self.vendor, supply_line.getSourceValue())
-    self.assertEquals(self.vendor, supply_line.getSourceSectionValue())
-    self.assertEquals(self.client, supply_line.getDestinationValue())
-    self.assertEquals(self.client, supply_line.getDestinationSectionValue())
-    self.assertEquals(self.currency, supply_line.getPriceCurrencyValue())
+    self.assertEqual(self.vendor, supply_line.getSourceValue())
+    self.assertEqual(self.vendor, supply_line.getSourceSectionValue())
+    self.assertEqual(self.client, supply_line.getDestinationValue())
+    self.assertEqual(self.client, supply_line.getDestinationSectionValue())
+    self.assertEqual(self.currency, supply_line.getPriceCurrencyValue())
 
   def test_movement_price_assignment(self):
     # supply line from the trade condition apply to the movements in order
@@ -279,7 +279,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     line = self.order.newContent(portal_type=self.order_line_type,
                                  resource_value=self.resource,
                                  quantity=1)
-    self.assertEquals(123, line.getPrice())
+    self.assertEqual(123, line.getPrice())
 
   def test_supply_line_priority(self):
     # supply lines from related trade condition should have priority over
@@ -306,7 +306,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  resource_value=self.resource,
                                  quantity=1)
     # using the supply line inside trade condition
-    self.assertEquals(2, line.getPrice())
+    self.assertEqual(2, line.getPrice())
 
   def test_supply_cell_priority(self):
     # supply lines from related trade condition should have priority over
@@ -351,7 +351,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
 
     line = self.order.newContent(portal_type=self.order_line_type,
                                  resource_value=self.variated_resource,)
-    self.assertEquals(None, line.getPrice())
+    self.assertEqual(None, line.getPrice())
     line.setVariationBaseCategoryList(['size'])
     line.setVariationCategoryList(['size/small'])
     line.updateCellRange(base_id='movement')
@@ -359,7 +359,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
 
     cell = line.newCell(base_id='movement', *['size/small'])
     cell.setQuantity(1)
-    self.assertEquals(2, cell.getPrice())
+    self.assertEqual(2, cell.getPrice())
 
   def test_supply_line_in_invalidated_trade_condition_does_not_apply(self):
     # supply lines from supply modules
@@ -387,7 +387,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  resource_value=self.resource,
                                  quantity=1)
     # not using the supply line inside trade condition
-    self.assertEquals(1, line.getPrice())
+    self.assertEqual(1, line.getPrice())
 
   # TODO: move to testSupplyLine ! (which does not exist yet)
   def test_supply_line_section(self):
@@ -422,7 +422,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  resource_value=self.resource,
                                  quantity=1)
     # using the supply line with section defined
-    self.assertEquals(2, line.getPrice())
+    self.assertEqual(2, line.getPrice())
 
 
 class TestEffectiveTradeCondition(TradeConditionTestCase):
@@ -449,7 +449,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                             version='002')
     self.tic()
     
-    self.assertEquals(other_trade_condition,
+    self.assertEqual(other_trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
@@ -470,7 +470,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setEffectiveDate('2009/01/01')
     self.trade_condition.setExpirationDate('2009/12/31')
     self.tic()
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
@@ -481,7 +481,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setEffectiveDate(None)
     self.trade_condition.setExpirationDate(None)
     self.tic()
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
@@ -489,7 +489,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setEffectiveDate(None)
     self.trade_condition.setExpirationDate('2009/12/31')
     self.tic()
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
@@ -497,7 +497,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setEffectiveDate('2009/01/01')
     self.trade_condition.setExpirationDate(None)
     self.tic()
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
@@ -505,9 +505,9 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
   def test_getEffectiveModel_return_self_when_no_reference(self):
     # when no reference defined, getEffectiveModel returns the trade condition.
     self.trade_condition.setReference(None)
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel())
-    self.assertEquals(self.trade_condition,
+    self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(start_date=DateTime(),
                                                stop_date=DateTime()))
 

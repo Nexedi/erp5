@@ -207,7 +207,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Define erp5_core as current bt
     """
     core_bt = self.getBusinessTemplate('erp5_core')
-    self.failIf(core_bt is None)
+    self.assertFalse(core_bt is None)
     sequence.edit(current_bt=core_bt)
 
   def stepCreateTest(self, sequence=None, **kw):
@@ -221,7 +221,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     f = file(file_path, 'w')
     f.write(test_data)
     f.close()
-    self.failUnless(os.path.exists(file_path))
+    self.assertTrue(os.path.exists(file_path))
     sequence.edit(test_title=test_title, test_path=file_path,
         test_data=test_data)
 
@@ -232,13 +232,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepRemoveTest(self, sequence=None, **kw):
     test_path = sequence['test_path']
     os.remove(test_path)
-    self.failIf(os.path.exists(test_path))
+    self.assertFalse(os.path.exists(test_path))
 
   def stepCheckTestExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['test_path']))
+    self.assertFalse(not os.path.exists(sequence['test_path']))
 
   def stepCheckTestRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['test_path']))
+    self.assertFalse(os.path.exists(sequence['test_path']))
 
   def stepCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
@@ -246,7 +246,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     template_tool = self.getTemplateTool()
     core_bt = self.getBusinessTemplate('erp5_core')
-    self.failIf(core_bt is None)
+    self.assertFalse(core_bt is None)
     # make copy
     copy_data = template_tool.manage_copyObjects(ids=[core_bt.getId()])
     ids = template_tool.manage_pasteObjects(copy_data)
@@ -267,7 +267,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Build copied core bt
     """
     bt = sequence.get('copy_bt')
-    self.assertEquals(bt.getTitle(), 'erp5_core')
+    self.assertEqual(bt.getTitle(), 'erp5_core')
     bt.build()
 
   def stepInstallCopyCoreBusinessTemplate(self, sequence=None, **kw):
@@ -275,21 +275,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Install copied core bt
     """
     bt = sequence.get('copy_bt')
-    self.assertEquals(bt.getTitle(), 'erp5_core')
-    self.assertEquals(bt.getInstallationState(), 'not_installed')
+    self.assertEqual(bt.getTitle(), 'erp5_core')
+    self.assertEqual(bt.getInstallationState(), 'not_installed')
     bt.install()
 
   def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None, **kw):
     original_bt = sequence.get('current_bt')
     copy_bt = sequence.get('copy_bt')
-    self.assertEquals(original_bt.getBuildingState(), 'built')
-    self.assertEquals(copy_bt.getBuildingState(), 'built')
+    self.assertEqual(original_bt.getBuildingState(), 'built')
+    self.assertEqual(copy_bt.getBuildingState(), 'built')
 
     for item_name in original_bt._item_name_list:
       original_obj = getattr(original_bt, item_name)
       copy_obj = getattr(copy_bt, item_name)
-      self.failIf(original_obj is None)
-      self.failIf(copy_obj is None)
+      self.assertFalse(original_obj is None)
+      self.assertFalse(copy_obj is None)
       self.failIfDifferentSet(original_obj.getKeys(), copy_obj.getKeys())
 
   def stepUseExportBusinessTemplate(self, sequence=None, **kw):
@@ -330,53 +330,53 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
   def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.assertEquals(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
+    self.assertEqual(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
 
   def stepCheckInstalledInstallationState(self, sequence=None, **kw):
     """
     Check if installation state is installed
     """
     bt = sequence.get('current_bt', None)
-    self.assertEquals(bt.getInstallationState(), 'installed')
+    self.assertEqual(bt.getInstallationState(), 'installed')
 
   def stepCheckNotInstalledInstallationState(self, sequence=None, **kw):
     """
     Check if installation state is not_installed
     """
     bt = sequence.get('current_bt')
-    self.assertEquals(bt.getInstallationState(), 'not_installed')
+    self.assertEqual(bt.getInstallationState(), 'not_installed')
 
   def stepCheckReplacedInstallationState(self, sequence=None, seqeunce_list=None, **kw):
     """
     Check if installation state is replaced
     """
     bt = sequence.get('current_bt')
-    self.assertEquals(bt.getInstallationState(), 'replaced')
+    self.assertEqual(bt.getInstallationState(), 'replaced')
 
   def stepCheckModifiedBuildingState(self, sequence=None, **kw):
     """
     Check if the building state is modified.
     """
     bt = sequence.get('current_bt')
-    self.assertEquals(bt.getBuildingState(), 'modified')
+    self.assertEqual(bt.getBuildingState(), 'modified')
 
   def stepCheckBuiltBuildingState(self, sequence=None, **kw):
     """
     Check if the building state is built.
     """
     bt = sequence.get('current_bt')
-    self.assertEquals(bt.getBuildingState(), 'built')
+    self.assertEqual(bt.getBuildingState(), 'built')
 
   def stepCheckTools(self, sequence=None, **kw):
     """
     Check presence of tools
     """
-    self.failUnless(self.getCategoryTool() is not None)
-    self.failUnless(self.getTemplateTool() is not None)
-    self.failUnless(self.getTypeTool() is not None)
-    self.failUnless(self.getSkinsTool() is not None)
-    self.failUnless(self.getCatalogTool() is not None)
-    self.failUnless(self.getTrashTool() is not None)
+    self.assertTrue(self.getCategoryTool() is not None)
+    self.assertTrue(self.getTemplateTool() is not None)
+    self.assertTrue(self.getTypeTool() is not None)
+    self.assertTrue(self.getSkinsTool() is not None)
+    self.assertTrue(self.getCatalogTool() is not None)
+    self.assertTrue(self.getTrashTool() is not None)
 
   def stepCheckSkinsLayers(self, sequence=None, **kw):
     """
@@ -385,24 +385,24 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     skins_tool = self.getSkinsTool()
     for skin_name, selection in skins_tool.getSkinPaths():
       if skin_name == 'View':
-        self.failIf('erp5_csv_style' in selection)
-        self.failIf('erp5_core' not in selection)
-        self.failIf('erp5_xhtml_style' not in selection)
+        self.assertFalse('erp5_csv_style' in selection)
+        self.assertFalse('erp5_core' not in selection)
+        self.assertFalse('erp5_xhtml_style' not in selection)
       if skin_name == 'Print':
-        self.failIf('erp5_xhtml_style' in selection)
-        self.failIf('erp5_csv_style' in selection)
-        self.failIf('erp5_core' not in selection)
+        self.assertFalse('erp5_xhtml_style' in selection)
+        self.assertFalse('erp5_csv_style' in selection)
+        self.assertFalse('erp5_core' not in selection)
       if skin_name == 'CSV':
-        self.failIf('erp5_xhtml_style' in selection)
-        self.failIf('erp5_core' not in selection)
-        self.failIf('erp5_csv_style' not in selection)
+        self.assertFalse('erp5_xhtml_style' in selection)
+        self.assertFalse('erp5_core' not in selection)
+        self.assertFalse('erp5_csv_style' not in selection)
 
   def stepCheckNoTrashBin(self, sequence=None, **kw):
     """
     Check if there is no trash bins
     """
     trash = self.getTrashTool()
-    self.assertEquals(len(trash.objectIds()), 0)
+    self.assertEqual(len(trash.objectIds()), 0)
 
   def stepRemoveAllTrashBins(self, sequence=None, **kw):
     """
@@ -412,7 +412,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     trash_ids = list(trash.objectIds())
     for id in trash_ids:
       trash.deleteContent(id)
-    self.failIf(len(trash.objectIds()) > 0)
+    self.assertFalse(len(trash.objectIds()) > 0)
 
   def stepCheckTrashBin(self, sequence=None, **kw):
     """
@@ -420,9 +420,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     trash = self.getTrashTool()
     trash_ids = list(trash.objectIds())
-    self.assertEquals(len(trash.objectIds()), 1)
+    self.assertEqual(len(trash.objectIds()), 1)
     bt_id = sequence.get('import_bt').getId()
-    self.failUnless(bt_id not in trash_ids[0])
+    self.assertTrue(bt_id not in trash_ids[0])
 
   # portal types
   def stepCreatePortalType(self, sequence=None, **kw):
@@ -433,7 +433,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # create module object portal type
     object_type = pt.newContent('Geek Object', 'Base Type',
                                 type_class='Person')
-    self.failUnless(object_type is not None)
+    self.assertTrue(object_type is not None)
     sequence.edit(object_ptype_id=object_type.getId())
     # create module portal type
     module_type = pt.newContent('Geek Module', 'Base Type',
@@ -443,7 +443,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       type_hidden_content_type_list=('Geek Object',),
       type_base_category_list=('destination',),
       type_property_sheet_list=('Version',))
-    self.failUnless(module_type is not None)
+    self.assertTrue(module_type is not None)
     sequence.edit(module_ptype_id=module_type.getId(),
       module_ptype_filter_content_types=module_type.getTypeFilterContentType(),
       module_ptype_allowed_content_types=module_type.getTypeAllowedContentTypeList(),
@@ -461,11 +461,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTypeTool()
     module_type = pt._getOb('Geek Module', None)
-    self.failUnless(module_type is not None)
+    self.assertTrue(module_type is not None)
     module_type.allowed_content_types = list(module_type.allowed_content_types) + ['Geek Module']
     module_type.base_category_list = list(module_type.base_category_list) + ['source']
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_portal_type_allowed_content_type=('Geek Module | Geek Module',),
             template_portal_type_hidden_content_type=(),
             template_portal_type_base_category=('Geek Module | source',),
@@ -480,7 +480,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add types to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
@@ -493,7 +493,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add duplicated portal type to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     self.assertEqual(len(ptype_ids), 1)
@@ -508,9 +508,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_ptype_id')
     pt.manage_delObjects([module_id, object_id])
     module_type = pt._getOb(module_id, None)
-    self.failUnless(module_type is None)
+    self.assertTrue(module_type is None)
     object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type is None)
+    self.assertTrue(object_type is None)
 
   def stepRemoveFirstAction(self, sequence=None, **kw):
     pt = self.getTypeTool()
@@ -529,7 +529,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
-    self.failUnless(module_type is not None)
+    self.assertTrue(module_type is not None)
     self.assertEqual(module_type.getTypeAllowedContentTypeList(),
         sequence.get('module_ptype_allowed_content_types'))
     self.assertEqual(module_type.getTypeHiddenContentTypeList(),
@@ -541,7 +541,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(module_type.getTypePropertySheetList(),
         sequence.get('module_ptype_property_sheet_list'))
     object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type is not None)
+    self.assertTrue(object_type is not None)
 
   def stepCheckPortalTypeRemoved(self, sequence=None, **kw):
     """
@@ -551,9 +551,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
-    self.failUnless(module_type is None)
+    self.assertTrue(module_type is None)
     object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type is None)
+    self.assertTrue(object_type is None)
 
   def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None, **kw):
     """
@@ -562,14 +562,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type is None)
+    self.assertTrue(object_type is None)
 
   def stepFillPortalTypesFields(self, sequence=None, **kw):
     """
     Fill portal types properties field in business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.getPortalTypesProperties()
 
   def stepFillWrongPortalTypesFields(self, sequence=None, **kw):
@@ -577,7 +577,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Fill portal types properties field in business template with wrong values
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.getPortalTypesProperties()
     bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
     bt_allowed_content_type_list.append("Geek Module | BusinessTemplate")
@@ -595,14 +595,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       n = n + 1
       id = "%s_%s" %('geek_module', n)
     module = portal.newContent(id=id, portal_type='Geek Module')
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     # add a specific permission to module which do not use acquisition
     module.manage_permission('Copy or Move', ['Assignor'], False)
     sequence.edit(module_id=module.getId())
     module_object_list = []
     for i in xrange(10):
       object = module.newContent(portal_type = 'Geek Object')
-      self.failUnless(object is not None)
+      self.assertTrue(object is not None)
       module_object_list.append(object)
     sequence.edit(module_object_id_list=module_object_list)
 
@@ -612,7 +612,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('current_bt', None)
     module_id = sequence.get('module_id', None)
-    self.failUnless(module_id is not None)
+    self.assertTrue(module_id is not None)
     bt.edit(template_module_id_list=[module_id])
 
   def stepCreateModuleObjects(self, sequence=None, **kw):
@@ -622,11 +622,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get('module_id')
     module = portal._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     module_object_list = []
     for i in xrange(10):
       object = module.newContent(portal_type = 'Geek Object')
-      self.failUnless(object is not None)
+      self.assertTrue(object is not None)
       module_object_list.append(object.getId())
     sequence.edit(module_object_id_list=module_object_list)
 
@@ -637,7 +637,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get("module_id")
     portal.manage_delObjects([module_id])
-    self.failIf(portal._getOb(module_id, None) is not None)
+    self.assertFalse(portal._getOb(module_id, None) is not None)
 
   def stepCheckModuleExists(self, sequence=None, **kw):
     """
@@ -646,7 +646,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get("module_id")
     new_module = portal._getOb(module_id, None)
-    self.failIf(new_module is None)
+    self.assertFalse(new_module is None)
 
   def stepCheckModulePermissions(self, sequence=None, **kw):
     """
@@ -676,11 +676,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get('module_id')
     module = portal._getOb(module_id)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     object_id_list = sequence.get('module_object_id_list')
     for object_id in object_id_list:
       object = module._getOb(object_id, None)
-      self.failUnless(object is not None)
+      self.assertTrue(object is not None)
 
   def stepCheckModuleObjectsRemoved(self, sequence=None, **kw):
     """
@@ -689,11 +689,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get('module_id')
     module = portal._getOb(module_id)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     object_id_list = sequence.get('module_object_id_list')
     for object_id in object_id_list:
       object = module._getOb(object_id, None)
-      self.failUnless(object is None)
+      self.assertTrue(object is None)
 
   def stepCheckModuleRemoved(self, sequence=None, **kw):
     """
@@ -701,7 +701,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.getPortal()
     module_id = sequence.get("module_id")
-    self.failIf(portal._getOb(module_id, None) is not None)
+    self.assertFalse(portal._getOb(module_id, None) is not None)
 
   # skins folder
   def stepCreateSkinFolder(self, sequence=None, **kw):
@@ -711,7 +711,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
     skin_folder = ps._getOb('erp5_geek', None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     sequence.edit(skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -727,7 +727,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_nerd')
     skin_folder = ps._getOb('erp5_nerd', None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     sequence.edit(another_skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -743,7 +743,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_static')
     skin_folder = ps._getOb('erp5_static', None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     sequence.edit(static_skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -756,10 +756,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateSkinSubFolder(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     skin_folder.manage_addFolder('erp5_subgeek')
     skin_subfolder = skin_folder._getOb('erp5_subgeek', None)
-    self.failUnless(skin_subfolder is not None)
+    self.assertTrue(skin_subfolder is not None)
     sequence.edit(skin_subfolder_id=skin_subfolder.getId())
 
   def stepCheckSkinSubFolderExists(self, sequence=None, **kw):
@@ -769,10 +769,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     subskin_id = sequence.get('skin_subfolder_id')
     skin_subfolder = skin_folder._getOb(subskin_id, None)
-    self.failUnless(skin_subfolder is not None)
+    self.assertTrue(skin_subfolder is not None)
 
   def stepCreateNewForm(self, sequence=None):
     """Create a new ERP5 Form in a skin folder."""
@@ -784,12 +784,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     addERP5Form(form_id, 'View')
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
-    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+    self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_title', 'Title', 'StringField')
     field = form.get_field('my_title')
-    self.assertEquals(form.get_fields_in_group('left'), [field])
+    self.assertEqual(form.get_fields_in_group('left'), [field])
     group_dict = {}
     for group in form.get_groups(include_empty=1):
       id_list = []
@@ -808,12 +808,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     addERP5Form(form_id, 'View')
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
-    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+    self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_title', 'Title', 'StringField')
     field = form.get_field('my_title')
-    self.assertEquals(form.get_fields_in_group('left'), [field])
+    self.assertEqual(form.get_fields_in_group('left'), [field])
     group_dict = {}
     for group in form.get_groups(include_empty=1):
       id_list = []
@@ -832,7 +832,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(form, None)
     skin_folder.manage_delObjects([form_id])
     form = skin_folder._getOb(form_id, None)
-    self.assertEquals(form, None)
+    self.assertEqual(form, None)
 
   def stepAddFormField(self, sequence=None):
     """Add a field to an ERP5 Form."""
@@ -842,13 +842,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
-    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+    self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_reference', 'Reference', 'StringField')
     form.move_field_group(['my_reference'], 'left', 'right')
     field = form.get_field('my_reference')
-    self.assertEquals(form.get_fields_in_group('right'), [field])
+    self.assertEqual(form.get_fields_in_group('right'), [field])
     group_dict = {}
     for group in form.get_groups(include_empty=1):
       id_list = []
@@ -866,7 +866,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     form_title = 'First Form Title'
     form.title = form_title
     self.assertNotEquals(form, None)
-    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+    self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     group_dict = {}
     for group in form.get_groups(include_empty=1):
@@ -892,7 +892,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(skin_folder, None)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertEquals('First Form Title', form.title)
+    self.assertEqual('First Form Title', form.title)
 
   def stepCheckFormIsRemoved(self, sequence=None):
     """Check the form is exist in erp5_geek."""
@@ -901,7 +901,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(skin_folder, None)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertEquals(form, None)
+    self.assertEqual(form, None)
 
   def stepCheckFormIsNotRemovedFromErp5Nerd(self, sequence=None):
     """Check the form is not exist in erp5_nerd."""
@@ -935,13 +935,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
     group_dict = sequence.get('group_dict')
-    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+    self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(group_dict.iterkeys()))
     for group in group_dict.iterkeys():
       id_list = []
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
-      self.assertEquals(group_dict[group], id_list)
+      self.assertEqual(group_dict[group], id_list)
 
   def stepCheckFieldTitleIsNotRemovedFromErp5Nerd(self, sequence=None):
     """Check that field title is not removed form erp5_nerd."""
@@ -960,15 +960,15 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     skin_subfolder = skin_folder._getOb('erp5_subgeek', None)
-    self.failUnless(skin_subfolder is not None)
+    self.assertTrue(skin_subfolder is not None)
     method_id = "z_fake_method"
     addSQLMethod = skin_subfolder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
     addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
                  arguments='', template='')
     zsql_method = skin_subfolder._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertTrue(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
 
   def stepRemoveSkinFolder(self, sequence=None, **kw):
@@ -979,7 +979,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     skin_id = sequence.get('skin_folder_id')
     ps.manage_delObjects([skin_id])
     skin_folder = ps._getOb(skin_id, None)
-    self.failUnless(skin_folder is None)
+    self.assertTrue(skin_folder is None)
     for skin_name, selection in ps.getSkinPaths():
       selection = selection.split(',')
       if skin_id in selection:
@@ -993,7 +993,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
 
   def stepCheckSkinFolderRemoved(self, sequence=None, **kw):
     """
@@ -1002,23 +1002,23 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    self.failUnless(skin_folder is None)
+    self.assertTrue(skin_folder is None)
 
   def stepAddSkinFolderToBusinessTemplate(self, sequence=None, **kw):
     """
     Add skin folder to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     skin_id = sequence.get('skin_folder_id', '')
-    self.failIfEqual(skin_id, '')
+    self.assertNotEqual(skin_id, '')
     bt.edit(template_skin_id_list=[skin_id])
 
   def stepAddAnotherSkinFolderToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     skin_id = sequence.get('another_skin_folder_id', '')
-    self.failIfEqual(skin_id, '')
+    self.assertNotEqual(skin_id, '')
     current_skin_id_list = bt.getTemplateSkinIdList()
     template_skin_id_list = []
     template_skin_id_list.extend(current_skin_id_list)
@@ -1031,7 +1031,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add registered selection to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'), ))
 
@@ -1040,7 +1040,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add registered selection to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'),
          '%s | Bar' % sequence.get('skin_folder_id'),))
@@ -1050,7 +1050,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add a path to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_path_list=['geek_path',])
 
   # Base Category
@@ -1060,7 +1060,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pc = self.getCategoryTool()
     base_category = pc.newContent(portal_type = 'Base Category')
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     sequence.edit(bc_id=base_category.getId(),)
     sequence.edit(base_category_uid=base_category.getUid(),)
 
@@ -1079,7 +1079,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       Check that we can find new type name in ctr
     """
     ctr = getattr(self.getPortal(), 'content_type_registry')
-    self.failUnless(ctr.findTypeName('bzzz.def', None, None) == 'What Not')
+    self.assertTrue(ctr.findTypeName('bzzz.def', None, None) == 'What Not')
 
   def stepAddContentTypeRegistryAsPathToBusinessTemplate(self, sequence=None, **kw):
     """
@@ -1101,7 +1101,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       Check that we can not find new type name in ctr anymore
     """
     ctr = getattr(self.getPortal(), 'content_type_registry')
-    self.failUnless(ctr.findTypeName('bzzz.def', None, None) is None)
+    self.assertTrue(ctr.findTypeName('bzzz.def', None, None) is None)
 
   def stepAddBaseCategoryToBusinessTemplate(self, sequence=None, **kw):
     """
@@ -1125,7 +1125,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     pc.manage_delObjects([bc_id])
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is None)
+    self.assertTrue(base_category is None)
 
   def stepCheckBaseCategoryExists(self, sequence=None, **kw):
     """
@@ -1134,7 +1134,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pc = self.getCategoryTool()
     bc_id = sequence.get('bc_id')
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
 
   def stepCheckBaseCategoryRemoved(self, sequence=None, **kw):
     """
@@ -1143,7 +1143,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pc = self.getCategoryTool()
     bc_id = sequence.get('bc_id')
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is None)
+    self.assertTrue(base_category is None)
 
   def stepSaveBaseCategoryUid(self, sequence=None, **kw):
     """
@@ -1172,11 +1172,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     category_list = []
     for i in xrange(10):
       category = base_category.newContent(portal_type='Category')
-      self.failUnless(category is not None)
+      self.assertTrue(category is not None)
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
 
@@ -1196,11 +1196,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     category_id_list = sequence.get('category_id_list')
     for category_id in category_id_list:
       category = base_category._getOb(category_id, None)
-      self.failUnless(category is not None)
+      self.assertTrue(category is not None)
 
   def stepCheckCategoriesRemoved(self, sequence=None, **kw):
     """
@@ -1209,22 +1209,22 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     category_id_list = sequence.get('category_id_list')
     for category_id in category_id_list:
       category = base_category._getOb(category_id, None)
-      self.failUnless(category is None)
+      self.assertTrue(category is None)
 
   def stepRemoveCategories(self, sequence=None, **kw):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     category_id_list = sequence.get('category_id_list')
     base_category.manage_delObjects(category_id_list)
     for category_id in category_id_list:
       category = base_category._getOb(category_id, None)
-      self.failUnless(category is None)
+      self.assertTrue(category is None)
 
   # sub categories
   def stepCreateSubCategories(self, sequence=None, **kw):
@@ -1234,17 +1234,17 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pc = self.getCategoryTool()
     bc_id = sequence.get('bc_id')
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     cat_id_list = sequence.get('category_id_list')
     # only use one category
     cat_id = cat_id_list[0]
     category = base_category._getOb(cat_id, None)
-    self.failUnless(category is not None)
+    self.assertTrue(category is not None)
     subcategory_list = []
     subcategory_uid_dict = {}
     for i in xrange(10):
       subcategory = category.newContent(portal_type='Category', title='toto')
-      self.failUnless(subcategory is not None)
+      self.assertTrue(subcategory is not None)
       subcategory_list.append(subcategory.getId())
       subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
     sequence.edit(subcategory_id_list=subcategory_list, \
@@ -1278,15 +1278,15 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     parent_category_id = sequence.get('parent_category_id')
     category = base_category._getOb(parent_category_id, None)
-    self.failUnless(category is not None)
+    self.assertTrue(category is not None)
     subcategory_id_list = sequence.get('subcategory_id_list')
     for subcategory_id in subcategory_id_list:
       subcategory = category._getOb(subcategory_id, None)
-      self.failUnless(subcategory is not None)
-      self.assertEquals(subcategory.getTitle(), 'toto')
+      self.assertTrue(subcategory is not None)
+      self.assertEqual(subcategory.getTitle(), 'toto')
 
   def stepCheckUidSubCategories(self, sequence=None, **kw):
     """
@@ -1295,7 +1295,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     base_category_id = sequence.get('bc_id')
     category_tool = self.getCategoryTool()
     base_category = category_tool._getOb(base_category_id, None)
-    self.assertEquals(base_category.getUid(), \
+    self.assertEqual(base_category.getUid(), \
                       sequence.get('base_category_uid'))
     parent_category_id = sequence.get('parent_category_id')
     category = base_category._getOb(parent_category_id, None)
@@ -1303,7 +1303,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     subcategory_uid_dict = sequence.get('subcategory_uid_dict')
     for subcategory_id in subcategory_id_list:
       subcategory = category._getOb(subcategory_id, None)
-      self.assertEquals(subcategory.getUid(), \
+      self.assertEqual(subcategory.getUid(), \
            subcategory_uid_dict[subcategory_id])
 
   # workflow
@@ -1315,7 +1315,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pw = self.getWorkflowTool()
     addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
+    self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
     cbt = pw._chains_by_type
     props = {}
@@ -1332,7 +1332,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     wf_id = 'geek_workflow'
     pw = self.getWorkflowTool()
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
+    self.assertTrue(workflow is not None)
     cbt = pw._chains_by_type
     props = {}
     if cbt is not None:
@@ -1379,7 +1379,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
   def stepAppendWorkflowToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     wf_ids = list(bt.getTemplateWorkflowIdList())
     wf_ids.append(sequence.get('workflow_id', ''))
     self.assertEqual(len(wf_ids), 2)
@@ -1390,7 +1390,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add workflow to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     wf_ids = []
     wf_ids.append(sequence.get('workflow_id', ''))
     self.assertEqual(len(wf_ids), 1)
@@ -1398,20 +1398,20 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
   def stepAppendWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     wf_chain_ids = list(bt.getTemplatePortalTypeWorkflowChainList())
     wf_chain_ids.append('Geek Object | %s' % sequence.get('workflow_id', ''))
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     wf_chain_ids = ['Geek Object | %s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepAddRemovedWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     wf_chain_ids = ['Geek Object | -%s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
@@ -1423,7 +1423,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pw = self.getWorkflowTool()
     pw.manage_delObjects([wf_id])
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is None)
+    self.assertTrue(workflow is None)
     # remove workflowChain
     cbt = pw._chains_by_type
     props = {}
@@ -1442,7 +1442,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     wf_id = sequence.get('workflow_id')
     pw = self.getWorkflowTool()
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
+    self.assertTrue(workflow is not None)
 
   def stepCheckWorkflowRemoved(self, sequence=None, **kw):
     """
@@ -1451,7 +1451,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     wf_id = sequence.get('workflow_id')
     pw = self.getWorkflowTool()
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is None)
+    self.assertTrue(workflow is None)
 
   def stepCheckWorkflowBackup(self, sequence=None, **kw):
     """
@@ -1557,7 +1557,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     object_id = sequence.get('object_ptype_id')
     action_id = sequence.get('second_action_id')
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_action_path=['%s | %s' %(object_id, action_id)])
 
   # Catalog Method
@@ -1567,13 +1567,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = "z_fake_method"
     addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
     addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
                  arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertTrue(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
     # set this method in update_object properties of catalog
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
@@ -1593,13 +1593,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = "z_fake_method"
     addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
     addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
                  arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertTrue(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
     # set this method in update_object properties of catalog
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
@@ -1624,7 +1624,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
                  arguments='', template='')
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is not None)
+    self.assertTrue(zsql_method is not None)
     sequence.edit(another_zsql_method_id = method_id)
     # set this method in update_object properties of catalog
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
@@ -1637,25 +1637,25 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
     previous_method = catalog._getOb(method_id,None)
-    self.assertEquals(previous_method.title,'')
+    self.assertEqual(previous_method.title,'')
     previous_method.title='toto'
-    self.assertEquals(previous_method.title,'toto')
+    self.assertEqual(previous_method.title,'toto')
 
   def stepCheckCatalogMethodChangeKept(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
     previous_method = catalog._getOb(method_id,None)
-    self.assertEquals(previous_method.title,'toto')
+    self.assertEqual(previous_method.title,'toto')
 
   def stepAddCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
     """
     Add catalog method into the business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     method_id = sequence.get('zsql_method_id', None)
-    self.failUnless(method_id is not None)
+    self.assertTrue(method_id is not None)
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
     bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
@@ -1679,9 +1679,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add catalog method into the business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     method_id = sequence.get('zsql_method_id', None)
-    self.failUnless(method_id is not None)
+    self.assertTrue(method_id is not None)
     another_method_id = sequence.get('another_zsql_method_id', None)
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
@@ -1694,12 +1694,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
     self.assertNotEqual(zsql_method, None)
     # check catalog properties
-    self.failUnless(method_id in catalog.sql_uncatalog_object)
+    self.assertTrue(method_id in catalog.sql_uncatalog_object)
     # check filter
     filter_dict = catalog.filter_dict[method_id]
     self.assertEqual(filter_dict['filtered'], 1)
@@ -1710,12 +1710,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
     self.assertNotEqual(zsql_method, None)
     # check catalog properties
-    self.failUnless(method_id in catalog.sql_uncatalog_object)
+    self.assertTrue(method_id in catalog.sql_uncatalog_object)
     # check filter
     filter_dict = catalog.filter_dict[method_id]
     self.assertEqual(filter_dict['filtered'], 1)
@@ -1729,14 +1729,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is None)
+    self.assertTrue(zsql_method is None)
     # check catalog properties
-    self.failUnless(method_id not in catalog.sql_uncatalog_object)
+    self.assertTrue(method_id not in catalog.sql_uncatalog_object)
     # check filter
-    self.failUnless(method_id not in catalog.filter_dict.keys())
+    self.assertTrue(method_id not in catalog.filter_dict.keys())
 
   def stepRemoveCatalogMethod(self, sequence=None, **kw):
     """
@@ -1744,20 +1744,20 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
     catalog.manage_delObjects([method_id])
     zsql_method = catalog._getOb(method_id, None)
-    self.failUnless(zsql_method is None)
+    self.assertTrue(zsql_method is None)
     # remove catalog properties
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
     sql_uncatalog_object.remove(method_id)
     sql_uncatalog_object.sort()
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    self.failUnless(method_id not in catalog.sql_uncatalog_object)
+    self.assertTrue(method_id not in catalog.sql_uncatalog_object)
     # remove filter
     del catalog.filter_dict[method_id]
-    self.failUnless(method_id not in catalog.filter_dict.keys())
+    self.assertTrue(method_id not in catalog.filter_dict.keys())
 
   # Related key, Result key and table, and others
   def stepCreateKeysAndTable(self, sequence=list, **kw):
@@ -1778,91 +1778,91 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     role_key = 'Foo | catalog.owner'
     local_role_key = 'Bar | catalog.owner'
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     # result table
     if result_table not in catalog.sql_search_tables:
       sql_search_tables = list(catalog.sql_search_tables)
       sql_search_tables.append(result_table)
       sql_search_tables.sort()
       catalog.sql_search_tables = tuple(sql_search_tables)
-    self.failUnless(result_table in catalog.sql_search_tables)
+    self.assertTrue(result_table in catalog.sql_search_tables)
     # result key
     if result_key not in catalog.sql_search_result_keys:
       sql_search_result_keys = list(catalog.sql_search_result_keys)
       sql_search_result_keys.append(result_key)
       sql_search_result_keys.sort()
       catalog.sql_search_result_keys = tuple(sql_search_result_keys)
-    self.failUnless(result_key in catalog.sql_search_result_keys)
+    self.assertTrue(result_key in catalog.sql_search_result_keys)
     # related key
     if related_key not in catalog.sql_catalog_related_keys:
       sql_search_related_keys = list(catalog.sql_catalog_related_keys)
       sql_search_related_keys.append(related_key)
       sql_search_related_keys.sort()
       catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
-    self.failUnless(related_key in catalog.sql_catalog_related_keys)
+    self.assertTrue(related_key in catalog.sql_catalog_related_keys)
     # search keys
     if search_key not in catalog.sql_catalog_search_keys:
       sql_catalog_search_keys = list(catalog.sql_catalog_search_keys)
       sql_catalog_search_keys.append(search_key)
       sql_catalog_search_keys.sort()
       catalog.sql_catalog_search_keys = tuple(sql_catalog_search_keys)
-    self.failUnless(search_key in catalog.sql_catalog_search_keys)
+    self.assertTrue(search_key in catalog.sql_catalog_search_keys)
     # keyword keys
     if keyword_key not in catalog.sql_catalog_keyword_search_keys:
       sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
       sql_catalog_keyword_keys.append(keyword_key)
       sql_catalog_keyword_keys.sort()
       catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
-    self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
+    self.assertTrue(keyword_key in catalog.sql_catalog_keyword_search_keys)
     # full_text keys
     if full_text_key not in catalog.sql_catalog_full_text_search_keys:
       sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
       sql_catalog_full_text_keys.append(full_text_key)
       sql_catalog_full_text_keys.sort()
       catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
-    self.failUnless(full_text_key in catalog.sql_catalog_full_text_search_keys)
+    self.assertTrue(full_text_key in catalog.sql_catalog_full_text_search_keys)
     # request
     if request_key not in catalog.sql_catalog_request_keys:
       sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
       sql_catalog_request_keys.append(request_key)
       sql_catalog_request_keys.sort()
       catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
-    self.failUnless(request_key in catalog.sql_catalog_request_keys)
+    self.assertTrue(request_key in catalog.sql_catalog_request_keys)
     # multivalue
     if multivalue_key not in catalog.sql_catalog_multivalue_keys:
       sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
       sql_catalog_multivalue_keys.append(multivalue_key)
       sql_catalog_multivalue_keys.sort()
       catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
-    self.failUnless(multivalue_key in catalog.sql_catalog_multivalue_keys)
+    self.assertTrue(multivalue_key in catalog.sql_catalog_multivalue_keys)
     # topic keys
     if topic_key not in catalog.sql_catalog_topic_search_keys:
       sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
       sql_catalog_topic_keys.append(topic_key)
       sql_catalog_topic_keys.sort()
       catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
-    self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
+    self.assertTrue(topic_key in catalog.sql_catalog_topic_search_keys)
     # scriptable keys
     if scriptable_key not in catalog.sql_catalog_scriptable_keys:
       sql_catalog_scriptable_keys = list(catalog.sql_catalog_scriptable_keys)
       sql_catalog_scriptable_keys.append(scriptable_key)
       sql_catalog_scriptable_keys.sort()
       catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
-    self.failUnless(scriptable_key in catalog.sql_catalog_scriptable_keys)
+    self.assertTrue(scriptable_key in catalog.sql_catalog_scriptable_keys)
     # role keys
     if role_key not in catalog.sql_catalog_role_keys:
       sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
       sql_catalog_role_keys.append(role_key)
       sql_catalog_role_keys.sort()
       catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
-    self.failUnless(role_key in catalog.sql_catalog_role_keys)
+    self.assertTrue(role_key in catalog.sql_catalog_role_keys)
     # local_role keys
     if local_role_key not in catalog.sql_catalog_local_role_keys:
       sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
       sql_catalog_local_role_keys.append(local_role_key)
       sql_catalog_local_role_keys.sort()
       catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
-    self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
+    self.assertTrue(local_role_key in catalog.sql_catalog_local_role_keys)
 
     sequence.edit(related_key=related_key, result_key=result_key,
                   result_table=result_table, search_key=search_key,
@@ -1899,11 +1899,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     catalog = self.getCatalogTool().getSQLCatalog()
     # method related configuration
-    self.assertEquals(catalog.sql_getitem_by_uid, 'z_getitem_by_uid_2')
+    self.assertEqual(catalog.sql_getitem_by_uid, 'z_getitem_by_uid_2')
     # table related configuration
-    self.failUnless('translation' in catalog.sql_search_tables)
+    self.assertTrue('translation' in catalog.sql_search_tables)
     # column related configuration
-    self.failUnless('catalog.reference'
+    self.assertTrue('catalog.reference'
                     in catalog.sql_search_result_keys)
 
   def stepModifyRelatedKey(self, sequence):
@@ -1971,17 +1971,17 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Remove modification made in stepModifyCatalogConfiguration
     """
     result_key = sequence.get('result_key', None)
-    self.failUnless(result_key is not None)
+    self.assertTrue(result_key is not None)
     result_table = sequence.get('search_table', None)
-    self.failUnless(result_table is not None)
+    self.assertTrue(result_table is not None)
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     # result key
     sql_search_result_keys = list(catalog.sql_search_result_keys)
     sql_search_result_keys.remove(result_key)
     sql_search_result_keys.sort()
     catalog.sql_search_result_keys = tuple(sql_search_result_keys)
-    self.failUnless(result_key not in catalog.sql_search_result_keys)
+    self.assertTrue(result_key not in catalog.sql_search_result_keys)
     # search table
     sql_search_tables = list(catalog.sql_search_tables)
     sql_search_tables.remove(result_table)
@@ -2000,31 +2000,31 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add some related, result key and tables to Business Temlpate
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     related_key = sequence.get('related_key', None)
-    self.failUnless(related_key is not None)
+    self.assertTrue(related_key is not None)
     result_key = sequence.get('result_key', None)
-    self.failUnless(result_key is not None)
+    self.assertTrue(result_key is not None)
     result_table = sequence.get('result_table', None)
-    self.failUnless(result_table is not None)
+    self.assertTrue(result_table is not None)
     search_key = sequence.get('search_key', None)
-    self.failUnless(search_key is not None)
+    self.assertTrue(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
-    self.failUnless(keyword_key is not None)
+    self.assertTrue(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
-    self.failUnless(full_text_key is not None)
+    self.assertTrue(full_text_key is not None)
     request_key = sequence.get('request_key', None)
-    self.failUnless(request_key is not None)
+    self.assertTrue(request_key is not None)
     multivalue_key = sequence.get('multivalue_key', None)
-    self.failUnless(multivalue_key is not None)
+    self.assertTrue(multivalue_key is not None)
     topic_key = sequence.get('topic_key', None)
-    self.failUnless(topic_key is not None)
+    self.assertTrue(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
-    self.failUnless(scriptable_key is not None)
+    self.assertTrue(scriptable_key is not None)
     role_key = sequence.get('role_key', None)
-    self.failUnless(role_key is not None)
+    self.assertTrue(role_key is not None)
     local_role_key = sequence.get('local_role_key', None)
-    self.failUnless(local_role_key is not None)
+    self.assertTrue(local_role_key is not None)
 
     bt.edit(template_catalog_related_key_list=[related_key],
             template_catalog_result_key_list=[result_key],
@@ -2045,216 +2045,216 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Remove some keys and tables
     """
     related_key = sequence.get('related_key', None)
-    self.failUnless(related_key is not None)
+    self.assertTrue(related_key is not None)
     result_key = sequence.get('result_key', None)
-    self.failUnless(result_key is not None)
+    self.assertTrue(result_key is not None)
     result_table = sequence.get('result_table', None)
-    self.failUnless(result_table is not None)
+    self.assertTrue(result_table is not None)
     search_key = sequence.get('search_key', None)
-    self.failUnless(search_key is not None)
+    self.assertTrue(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
-    self.failUnless(keyword_key is not None)
+    self.assertTrue(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
-    self.failUnless(full_text_key is not None)
+    self.assertTrue(full_text_key is not None)
     request_key = sequence.get('request_key', None)
-    self.failUnless(request_key is not None)
+    self.assertTrue(request_key is not None)
     multivalue_key = sequence.get('multivalue_key', None)
-    self.failUnless(multivalue_key is not None)
+    self.assertTrue(multivalue_key is not None)
     topic_key = sequence.get('topic_key', None)
-    self.failUnless(topic_key is not None)
+    self.assertTrue(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
-    self.failUnless(scriptable_key is not None)
+    self.assertTrue(scriptable_key is not None)
     role_key = sequence.get('role_key', None)
-    self.failUnless(role_key is not None)
+    self.assertTrue(role_key is not None)
     local_role_key = sequence.get('local_role_key', None)
-    self.failUnless(local_role_key is not None)
+    self.assertTrue(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     # result key
     sql_search_result_keys = list(catalog.sql_search_result_keys)
     sql_search_result_keys.remove(result_key)
     sql_search_result_keys.sort()
     catalog.sql_search_result_keys = tuple(sql_search_result_keys)
-    self.failUnless(result_key not in catalog.sql_search_result_keys)
+    self.assertTrue(result_key not in catalog.sql_search_result_keys)
     # related key
     sql_search_related_keys = list(catalog.sql_catalog_related_keys)
     sql_search_related_keys.remove(related_key)
     sql_search_related_keys.sort()
     catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
-    self.failUnless(related_key not in catalog.sql_catalog_related_keys)
+    self.assertTrue(related_key not in catalog.sql_catalog_related_keys)
     # result table
     sql_search_tables = list(catalog.sql_search_tables)
     sql_search_tables.remove(result_table)
     sql_search_tables.sort()
     catalog.sql_search_tables = tuple(sql_search_tables)
-    self.failUnless(result_table not in catalog.sql_search_tables)
+    self.assertTrue(result_table not in catalog.sql_search_tables)
     # search keys
     sql_catalog_search_keys = list(catalog.sql_catalog_search_keys)
     sql_catalog_search_keys.remove(search_key)
     sql_catalog_search_keys.sort()
     catalog.sql_catalog_search_keys = tuple(sql_catalog_search_keys)
-    self.failUnless(search_key not in catalog.sql_catalog_search_keys)
+    self.assertTrue(search_key not in catalog.sql_catalog_search_keys)
     # keyword keys
     sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
     sql_catalog_keyword_keys.remove(keyword_key)
     sql_catalog_keyword_keys.sort()
     catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
-    self.failUnless(keyword_key not in catalog.sql_catalog_keyword_search_keys)
+    self.assertTrue(keyword_key not in catalog.sql_catalog_keyword_search_keys)
     # full_text keys
     sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
     sql_catalog_full_text_keys.remove(full_text_key)
     sql_catalog_full_text_keys.sort()
     catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
-    self.failUnless(full_text_key not in catalog.sql_catalog_full_text_search_keys)
+    self.assertTrue(full_text_key not in catalog.sql_catalog_full_text_search_keys)
     # request
     sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
     sql_catalog_request_keys.remove(request_key)
     sql_catalog_request_keys.sort()
     catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
-    self.failUnless(request_key not in catalog.sql_catalog_request_keys)
+    self.assertTrue(request_key not in catalog.sql_catalog_request_keys)
     # multivalue
     sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
     sql_catalog_multivalue_keys.remove(multivalue_key)
     sql_catalog_multivalue_keys.sort()
     catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
-    self.failUnless(multivalue_key not in catalog.sql_catalog_multivalue_keys)
+    self.assertTrue(multivalue_key not in catalog.sql_catalog_multivalue_keys)
     # topic keys
     sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
     sql_catalog_topic_keys.remove(topic_key)
     sql_catalog_topic_keys.sort()
     catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
-    self.failUnless(topic_key not in catalog.sql_catalog_topic_search_keys)
+    self.assertTrue(topic_key not in catalog.sql_catalog_topic_search_keys)
     # scriptable keys
     sql_catalog_scriptable_keys = list(catalog.sql_catalog_scriptable_keys)
     sql_catalog_scriptable_keys.remove(scriptable_key)
     sql_catalog_scriptable_keys.sort()
     catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
-    self.failUnless(scriptable_key not in catalog.sql_catalog_scriptable_keys)
+    self.assertTrue(scriptable_key not in catalog.sql_catalog_scriptable_keys)
     # role keys
     sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
     sql_catalog_role_keys.remove(role_key)
     sql_catalog_role_keys.sort()
     catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
-    self.failUnless(role_key not in catalog.sql_catalog_role_keys)
+    self.assertTrue(role_key not in catalog.sql_catalog_role_keys)
     # local_role keys
     sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
     sql_catalog_local_role_keys.remove(local_role_key)
     sql_catalog_local_role_keys.sort()
     catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
-    self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
+    self.assertTrue(local_role_key not in catalog.sql_catalog_local_role_keys)
 
   def stepCheckKeysAndTableExists(self, sequence=list, **kw):
     """
     Check presence of some keys and tables
     """
     related_key = sequence.get('related_key', None)
-    self.failUnless(related_key is not None)
+    self.assertTrue(related_key is not None)
     result_key = sequence.get('result_key', None)
-    self.failUnless(result_key is not None)
+    self.assertTrue(result_key is not None)
     result_table = sequence.get('result_table', None)
-    self.failUnless(result_table is not None)
+    self.assertTrue(result_table is not None)
     search_key = sequence.get('search_key', None)
-    self.failUnless(search_key is not None)
+    self.assertTrue(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
-    self.failUnless(keyword_key is not None)
+    self.assertTrue(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
-    self.failUnless(full_text_key is not None)
+    self.assertTrue(full_text_key is not None)
     request_key = sequence.get('request_key', None)
-    self.failUnless(request_key is not None)
+    self.assertTrue(request_key is not None)
     multivalue_key = sequence.get('multivalue_key', None)
-    self.failUnless(multivalue_key is not None)
+    self.assertTrue(multivalue_key is not None)
     topic_key = sequence.get('topic_key', None)
-    self.failUnless(topic_key is not None)
+    self.assertTrue(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
-    self.failUnless(scriptable_key is not None)
+    self.assertTrue(scriptable_key is not None)
     role_key = sequence.get('role_key', None)
-    self.failUnless(role_key is not None)
+    self.assertTrue(role_key is not None)
     local_role_key = sequence.get('local_role_key', None)
-    self.failUnless(local_role_key is not None)
+    self.assertTrue(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     # result key
-    self.failUnless(result_key in catalog.sql_search_result_keys)
+    self.assertTrue(result_key in catalog.sql_search_result_keys)
     # related key
-    self.failUnless(related_key in catalog.sql_catalog_related_keys)
+    self.assertTrue(related_key in catalog.sql_catalog_related_keys)
     # result table
-    self.failUnless(result_table in catalog.sql_search_tables)
+    self.assertTrue(result_table in catalog.sql_search_tables)
     # search key
-    self.failUnless(search_key in catalog.sql_catalog_search_keys)
+    self.assertTrue(search_key in catalog.sql_catalog_search_keys)
     # keyword key
-    self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
+    self.assertTrue(keyword_key in catalog.sql_catalog_keyword_search_keys)
     # full text key
-    self.failUnless(full_text_key in catalog.sql_catalog_full_text_search_keys)
+    self.assertTrue(full_text_key in catalog.sql_catalog_full_text_search_keys)
     # request key
-    self.failUnless(request_key in catalog.sql_catalog_request_keys)
+    self.assertTrue(request_key in catalog.sql_catalog_request_keys)
     # multivalue key
-    self.failUnless(multivalue_key in catalog.sql_catalog_multivalue_keys)
+    self.assertTrue(multivalue_key in catalog.sql_catalog_multivalue_keys)
     # topic key
-    self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
+    self.assertTrue(topic_key in catalog.sql_catalog_topic_search_keys)
     # scriptable key
-    self.failUnless(scriptable_key in catalog.sql_catalog_scriptable_keys)
+    self.assertTrue(scriptable_key in catalog.sql_catalog_scriptable_keys)
     # role key
-    self.failUnless(role_key in catalog.sql_catalog_role_keys)
+    self.assertTrue(role_key in catalog.sql_catalog_role_keys)
     # local_role key
-    self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
+    self.assertTrue(local_role_key in catalog.sql_catalog_local_role_keys)
 
   def stepCheckKeysAndTableRemoved(self, sequence=list, **kw):
     """
     Check non-presence of some keys and tables
     """
     related_key = sequence.get('related_key', None)
-    self.failUnless(related_key is not None)
+    self.assertTrue(related_key is not None)
     result_key = sequence.get('result_key', None)
-    self.failUnless(result_key is not None)
+    self.assertTrue(result_key is not None)
     result_table = sequence.get('result_table', None)
-    self.failUnless(result_table is not None)
+    self.assertTrue(result_table is not None)
     search_key = sequence.get('search_key', None)
-    self.failUnless(search_key is not None)
+    self.assertTrue(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
-    self.failUnless(keyword_key is not None)
+    self.assertTrue(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
-    self.failUnless(full_text_key is not None)
+    self.assertTrue(full_text_key is not None)
     request_key = sequence.get('request_key', None)
-    self.failUnless(request_key is not None)
+    self.assertTrue(request_key is not None)
     multivalue_key = sequence.get('multivalue_key', None)
-    self.failUnless(multivalue_key is not None)
+    self.assertTrue(multivalue_key is not None)
     topic_key = sequence.get('topic_key', None)
-    self.failUnless(topic_key is not None)
+    self.assertTrue(topic_key is not None)
     scriptable_key = sequence.get('scriptable_key', None)
-    self.failUnless(scriptable_key is not None)
+    self.assertTrue(scriptable_key is not None)
     role_key = sequence.get('role_key', None)
-    self.failUnless(role_key is not None)
+    self.assertTrue(role_key is not None)
     local_role_key = sequence.get('local_role_key', None)
-    self.failUnless(local_role_key is not None)
+    self.assertTrue(local_role_key is not None)
 
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
     # result key
-    self.failUnless(result_key not in catalog.sql_search_result_keys)
+    self.assertTrue(result_key not in catalog.sql_search_result_keys)
     # related key
-    self.failUnless(related_key not in catalog.sql_catalog_related_keys)
+    self.assertTrue(related_key not in catalog.sql_catalog_related_keys)
     # result table
-    self.failUnless(result_table not in catalog.sql_search_tables)
+    self.assertTrue(result_table not in catalog.sql_search_tables)
     # search key
-    self.failUnless(search_key not in catalog.sql_catalog_search_keys)
+    self.assertTrue(search_key not in catalog.sql_catalog_search_keys)
     # keyword key
-    self.failUnless(keyword_key not in catalog.sql_catalog_keyword_search_keys)
+    self.assertTrue(keyword_key not in catalog.sql_catalog_keyword_search_keys)
     # full text key
-    self.failUnless(full_text_key not in catalog.sql_catalog_full_text_search_keys)
+    self.assertTrue(full_text_key not in catalog.sql_catalog_full_text_search_keys)
     # request key
-    self.failUnless(request_key not in catalog.sql_catalog_request_keys)
+    self.assertTrue(request_key not in catalog.sql_catalog_request_keys)
     # multivalue key
-    self.failUnless(multivalue_key not in catalog.sql_catalog_multivalue_keys)
+    self.assertTrue(multivalue_key not in catalog.sql_catalog_multivalue_keys)
     # topic key
-    self.failUnless(topic_key not in catalog.sql_catalog_topic_search_keys)
+    self.assertTrue(topic_key not in catalog.sql_catalog_topic_search_keys)
     # scriptable key
-    self.failUnless(scriptable_key not in catalog.sql_catalog_scriptable_keys)
+    self.assertTrue(scriptable_key not in catalog.sql_catalog_scriptable_keys)
     # role key
-    self.failUnless(role_key not in catalog.sql_catalog_role_keys)
+    self.assertTrue(role_key not in catalog.sql_catalog_role_keys)
     # local_role key
-    self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
+    self.assertTrue(local_role_key not in catalog.sql_catalog_local_role_keys)
 
   # Roles
   def stepCreateRole(self, sequence=None, **kw):
@@ -2266,7 +2266,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     role_list = list(p.__ac_roles__)
     role_list.append(new_role)
     p.__ac_roles__ = tuple(role_list)
-    self.failUnless(new_role in p.__ac_roles__)
+    self.assertTrue(new_role in p.__ac_roles__)
     sequence.edit(role=new_role)
 
   def stepRemoveRole(self, sequence=None, **kw):
@@ -2274,21 +2274,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Remove a role
     """
     role = sequence.get('role', None)
-    self.failUnless(role is not None)
+    self.assertTrue(role is not None)
     p = self.getPortal()
     role_list = list(p.__ac_roles__)
     role_list.remove(role)
     p.__ac_roles__ = tuple(role_list)
-    self.failUnless(role not in p.__ac_roles__)
+    self.assertTrue(role not in p.__ac_roles__)
 
   def stepAddRoleToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Role to Business Template
     """
     role = sequence.get('role', None)
-    self.failUnless(role is not None)
+    self.assertTrue(role is not None)
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_role_list=[role])
 
   def stepCheckRoleExists(self, sequence=None, **kw):
@@ -2296,18 +2296,18 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Check presence of role
     """
     role = sequence.get('role', None)
-    self.failUnless(role is not None)
+    self.assertTrue(role is not None)
     p = self.getPortal()
-    self.failUnless(role in p.__ac_roles__)
+    self.assertTrue(role in p.__ac_roles__)
 
   def stepCheckRoleRemoved(self, sequence=None, **kw):
     """
     Check non-presence of role
     """
     role = sequence.get('role', None)
-    self.failUnless(role is not None)
+    self.assertTrue(role is not None)
     p = self.getPortal()
-    self.failUnless(role not in p.__ac_roles__)
+    self.assertTrue(role not in p.__ac_roles__)
 
   # Local Roles
   def stepCreateLocalRoles(self, sequence=None, **kw):
@@ -2319,9 +2319,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     module.__ac_local_roles__ = new_local_roles
-    self.assertEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertEqual(module.__ac_local_roles__, new_local_roles)
     sequence.edit(local_roles=new_local_roles)
 
   def stepRemoveLocalRoles(self, sequence=None, **kw):
@@ -2331,7 +2331,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     module.__ac_local_roles__ = {'someone_else': ['Associate']}
     new_local_roles = sequence.get('local_roles')
     self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
@@ -2342,7 +2342,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     module_id = sequence.get('module_id')
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_local_role_list=[module_id])
 
   def stepCheckLocalRolesExists(self, sequence=None, **kw):
@@ -2353,14 +2353,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
-    self.assertEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertTrue(module is not None)
+    self.assertEqual(module.__ac_local_roles__, new_local_roles)
 
   def stepCheckModuleLocalRolesInCatalogBeforeUpdate(self, sequence=None, **kw):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     sql = "select distinct roles_and_users.uid as uid, allowedRolesAndUsers as role from catalog, roles_and_users where catalog.security_uid = roles_and_users.uid and catalog.uid=%s" %(module.getUid(),)
     sql_connection = self.getSQLConnection()
     result = sql_connection.manage_test(sql)
@@ -2372,7 +2372,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_id')
     before_update_local_roles = sequence.get('local_roles_catalog_result')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     sql = "select distinct roles_and_users.uid as uid, allowedRolesAndUsers as role from catalog, roles_and_users where catalog.security_uid = roles_and_users.uid and catalog.uid=%s" %(module.getUid(),)
     sql_connection = self.getSQLConnection()
     result = sql_connection.manage_test(sql)
@@ -2387,7 +2387,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
-    self.failUnless(module is not None)
+    self.assertTrue(module is not None)
     self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
 
   # Document, Property Sheet, Extension And Test
@@ -2406,7 +2406,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     f = file(file_path, 'w')
     f.write(ps_data)
     f.close()
-    self.failUnless(os.path.exists(file_path))
+    self.assertTrue(os.path.exists(file_path))
     sequence.edit(ps_title=ps_title, ps_path=file_path, ps_data=ps_data)
 
   def stepAddPropertySheetToBusinessTemplate(self, sequence=None, **kw):
@@ -2414,9 +2414,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add Property Sheet to Business Template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     ps_title = sequence.get('ps_title', None)
-    self.failUnless(ps_title is not None)
+    self.assertTrue(ps_title is not None)
     bt.edit(template_property_sheet_id_list=[ps_title])
 
   def stepCheckPropertySheetMigration(self, sequence=None, **kw):
@@ -2424,13 +2424,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Check migration of Property Sheets from the Filesystem to ZODB
     """
     property_sheet_tool = self.getPortalObject().portal_property_sheets
-    self.failUnless('UnitTest' in property_sheet_tool.objectIds())
+    self.assertTrue('UnitTest' in property_sheet_tool.objectIds())
 
     property_list = property_sheet_tool.UnitTest.contentValues()
 
-    self.assertEquals(len(property_list), 1)
-    self.failUnless(property_list[0].getReference() == 'ps_prop1')
-    self.failUnless(property_list[0].getElementaryType() == 'string')
+    self.assertEqual(len(property_list), 1)
+    self.assertTrue(property_list[0].getReference() == 'ps_prop1')
+    self.assertTrue(property_list[0].getElementaryType() == 'string')
 
   def stepRemovePropertySheet(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2438,17 +2438,17 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.failUnless(ps_path is not None)
-    self.failUnless(os.path.exists(ps_path))
+    self.assertTrue(ps_path is not None)
+    self.assertTrue(os.path.exists(ps_path))
     os.remove(ps_path)
-    self.failIf(os.path.exists(ps_path))
+    self.assertFalse(os.path.exists(ps_path))
     return
     # Property Sheet will not be installed in file sytem
-    self.failIf(os.path.exists(ps_path))
+    self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
-    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertTrue(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
     self.portal.portal_property_sheets.manage_delObjects([ps_title])
-    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertFalse(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepRemovePropertySheetFromZODB(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2456,13 +2456,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.failUnless(ps_path is not None)
+    self.assertTrue(ps_path is not None)
     # Property Sheet will not be installed in file sytem
-    self.failIf(os.path.exists(ps_path))
+    self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
-    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertTrue(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
     self.portal.portal_property_sheets.manage_delObjects([ps_title])
-    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertFalse(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetExists(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2470,27 +2470,27 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.failUnless(ps_path is not None)
+    self.assertTrue(ps_path is not None)
     # Property Sheet will not be installed in file sytem
-    self.failIf(os.path.exists(ps_path))
+    self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
-    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertTrue(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
     Check deletion of Property Sheet
     """
     ps_path = sequence.get('ps_path', None)
-    self.failUnless(ps_path is not None)
-    self.failIf(os.path.exists(ps_path))
+    self.assertTrue(ps_path is not None)
+    self.assertFalse(os.path.exists(ps_path))
 
   def stepCheckMigratedPropertySheetRemoved(self, sequence=None, **kw):
     """
     Check deletion of migrated Property Sheet
     """
     ps_id = sequence.get('ps_title', None)
-    self.failIf(ps_id is None)
-    self.failIf(ps_id in self.getPortalObject().portal_property_sheets.objectIds())
+    self.assertFalse(ps_id is None)
+    self.assertFalse(ps_id in self.getPortalObject().portal_property_sheets.objectIds())
 
   def stepCreateUpdatedPropertySheet(self, sequence=None, **kw):
     """
@@ -2506,7 +2506,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     f = file(file_path, 'w')
     f.write(ps_data)
     f.close()
-    self.failUnless(os.path.exists(file_path))
+    self.assertTrue(os.path.exists(file_path))
     sequence.edit(ps_data_u=ps_data)
 
   def stepCheckUpdatedPropertySheetExists(self, sequence=None, sequencer_list=None, **kw):
@@ -2515,11 +2515,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.failUnless(ps_path is not None)
+    self.assertTrue(ps_path is not None)
     # Property Sheet will not be installed in file sytem
-    self.failIf(os.path.exists(ps_path))
+    self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
-    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.assertTrue(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   # Busines templates
   def stepImportBusinessTemplate(self, sequence=None, **kw):
@@ -2536,8 +2536,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       import_id = "%s_%s" %(import_id, n)
     template_tool.download(url='file:'+template_path, id=import_id)
     import_bt = template_tool._getOb(id=import_id)
-    self.failIf(import_bt is None)
-    self.assertEquals(import_bt.getPortalType(), 'Business Template')
+    self.assertFalse(import_bt is None)
+    self.assertEqual(import_bt.getPortalType(), 'Business Template')
     sequence.edit(import_bt=import_bt)
 
   def stepAddExtraSlashesToTemplatePath(self, sequence=None, **kw):
@@ -2627,8 +2627,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     template.edit(title='geek template',
                   version='1.0',
                   description='bt for unit_test')
@@ -2640,8 +2640,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     template.edit(title='geek template',
                   version='2.0',
                   description='bt for unit_test')
@@ -2654,8 +2654,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     template.edit(title='duplicated geek template',
                   version='1.0',
                   description='bt for unit_test')
@@ -2700,7 +2700,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       shutil.rmtree(template_path)
     template.export(path=template_path, local=1)
     sequence.edit(template_path=template_path)
-    self.failUnless(os.path.exists(template_path))
+    self.assertTrue(os.path.exists(template_path))
 
   def stepCheckObjectPropertiesInBusinessTemplate(self, sequence=None, **kw):
     """
@@ -2721,11 +2721,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       if item is not None:
         for key, data in item._objects.items():
           if hasattr(data, '__ac_local_roles__'):
-            self.failUnless(data.__ac_local_roles__ is None)
+            self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
-            self.failUnless(data._owner is None)
+            self.assertTrue(data._owner is None)
           if hasattr(aq_base(data), 'uid'):
-            self.failUnless(data.uid is None)
+            self.assertTrue(data.uid is None)
 
   def stepCheckUnindexActivityPresence(self, sequence=None, **kw):
     """
@@ -2734,7 +2734,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     message_list = [ m for m in self.portal.portal_activities.getMessageList()
                      if m.method_id == 'unindexObject'
                      and m.kw.get('uid') is not None ]
-    self.assertEquals(len(message_list), 0)
+    self.assertEqual(len(message_list), 0)
 
   def stepCheckFolderReindexActivityPresence(self, sequence=None, **kw):
     """
@@ -2753,11 +2753,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     category_id_list = sequence.get('category_id_list')
     portal = self.getPortal()
     ob = portal.unrestrictedTraverse(path)
-    self.failUnless(ob is not None)
+    self.assertTrue(ob is not None)
     for id_ in category_id_list:
       cat = ob[id_]
       catalog_ob_list = [x.getObject() for x in portal.portal_catalog(uid=cat.getUid())]
-      self.failUnless(len(catalog_ob_list) > 0)
+      self.assertTrue(len(catalog_ob_list) > 0)
 
   def stepSetUpdateToolFlagInBusinessTemplate(self, sequence=None):
     """
@@ -2776,7 +2776,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     template_tool = self.getTemplateTool()
     template_tool.manage_delObjects([bt_id])
     bt = template_tool._getOb(bt_id, None)
-    self.failUnless(bt is None)
+    self.assertTrue(bt is None)
 
   def stepUninstallBusinessTemplate(self, sequence=None, **kw):
     """
@@ -2816,10 +2816,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepRemoveSimulationTool(self, sequence=None, **kw):
     p = self.getPortal()
     p.manage_delObjects(['portal_simulation'])
-    self.failUnless(p._getOb('portal_simulation', None) is None)
+    self.assertTrue(p._getOb('portal_simulation', None) is None)
 
   def stepCheckSimulationToolExists(self, sequence=None, **kw):
-    self.failUnless(self.getSimulationTool() is not None)
+    self.assertTrue(self.getSimulationTool() is not None)
 
   def stepCheckSubobjectsNotIncluded(self, sequence=None, **kw):
     """Check subobjects are not included in the base category.
@@ -2829,8 +2829,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # XXX maybe too low level
     base_category_obj = bt._category_item._objects.get(
         'portal_categories/%s' % base_category_id)
-    self.failUnless(base_category_obj is not None)
-    self.assertEquals(len(base_category_obj.objectIds()), 0)
+    self.assertTrue(base_category_obj is not None)
+    self.assertEqual(len(base_category_obj.objectIds()), 0)
 
   def stepCheckInitialRevision(self, sequence=None, **kw):
     """ Check if revision of a new bt is an empty string
@@ -2859,7 +2859,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       bt.checkDependencies()
     except:
       missing_dep = True
-    self.failUnless(not missing_dep)
+    self.assertTrue(not missing_dep)
 
   def stepCheckMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has missing dependency
@@ -2870,7 +2870,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       bt.checkDependencies()
     except:
       missing_dep = True
-    self.failUnless(missing_dep)
+    self.assertTrue(missing_dep)
 
   def stepAddDependency(self, sequence=None, **kw):
     """ Add a dependency to the business template
@@ -2881,8 +2881,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateDependencyBusinessTemplate(self, sequence=None, **kw):
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     template.edit(title='dependency_bt',
                   version='1.0',
                   description='bt for unit_test')
@@ -2957,7 +2957,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pw = self.getWorkflowTool()
     addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
     workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
+    self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
     cbt = pw._chains_by_type
     props = {}
@@ -2977,8 +2977,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     template.edit(title='custom geek template',
                   version='1.0',
                   description='custom bt for unit_test')
@@ -3045,7 +3045,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Remove workflow to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     current_twi = list(bt.getTemplateWorkflowIdList())
     current_twi.remove(sequence.get('workflow_id', ''))
     bt.edit(template_workflow_id_list=current_twi)
@@ -3055,7 +3055,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Remove workflow chain to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     workflow_id = sequence.get('workflow_id', '')
     new_value = []
     workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
@@ -3087,7 +3087,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add type role to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
@@ -3132,7 +3132,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type.title.startswith('Modified '))
+    self.assertTrue(object_type.title.startswith('Modified '))
 
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
@@ -3153,7 +3153,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add types to business template
     """
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
     template_skin_id_list.append('custom')
     bt.edit(template_skin_id_list=template_skin_id_list)
@@ -3187,18 +3187,18 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckSiteProperty(self, sequence=None, **kw):
     """Check a site property."""
     portal = self.getPortal()
-    self.assertEquals(portal.getProperty('a_property'),
+    self.assertEqual(portal.getProperty('a_property'),
                       sequence.get('site_property_value'))
 
   def stepCheckSitePropertyRemoved(self, sequence=None, **kw):
     """Check if a site property is removed."""
     portal = self.getPortal()
-    self.failIf(portal.hasProperty('a_property'))
+    self.assertFalse(portal.hasProperty('a_property'))
 
   def stepAddSitePropertyToBusinessTemplate(self, sequence=None, **kw):
     """Add a site property into a business template."""
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     bt.edit(template_site_property_id_list=('a_property',))
 
   def stepCheckSkinSelectionRemoved(self, sequence=None, **kw):
@@ -3247,8 +3247,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps = self.portal.portal_skins
     for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
+      self.assertEqual('erp5_core', ps.getSkinPath(skin).split(',')[0])
+      self.assertEqual('erp5_geek', ps.getSkinPath(skin).split(',')[1])
 
   def stepCheckSkinFolderPriorityOff(self, sequence=None, **kw):
     """
@@ -3256,8 +3256,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps = self.portal.portal_skins
     for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
+      self.assertEqual('erp5_geek', ps.getSkinPath(skin).split(',')[0])
+      self.assertEqual('erp5_core', ps.getSkinPath(skin).split(',')[1])
 
   def stepUserDisableSkinFolderPriority(self, sequence=None, **kw):
     """
@@ -3293,7 +3293,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                     'business_template_skin_layer_priority',
                     99, type='float')
     # Make sure it is really set.
-    self.assertEquals(
+    self.assertEqual(
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepUnmodifySkinFolder(self, sequence=None, **kw):
@@ -3301,7 +3301,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
     skin_folder._delProperty('business_template_skin_layer_priority')
-    self.assertEquals(
+    self.assertEqual(
         None, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepCheckModifiedSkinFolderExists(self, sequence=None, **kw):
@@ -3311,7 +3311,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    self.assertEquals(
+    self.assertEqual(
         99, skin_folder.getProperty('business_template_skin_layer_priority'))
 
   def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
@@ -3335,7 +3335,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.portal.portal_property_sheets.manage_delObjects([sequence['ps_title']])
 
   def stepCheckDraftBuildingState(self, sequence=None, **kw):
-    self.assertEquals(sequence['current_bt'].getBuildingState(), 'draft')
+    self.assertEqual(sequence['current_bt'].getBuildingState(), 'draft')
 
   def stepSimulateAndCopyPrePropertySheetMigrationBusinessTemplate(self, sequence=None, **kw):
     portal = self.getPortalObject()
@@ -3370,7 +3370,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
-    self.assertEquals('Template Tool', self.getTemplateTool().Title())
+    self.assertEqual('Template Tool', self.getTemplateTool().Title())
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""
@@ -5605,7 +5605,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt5 = self.getPortal().portal_templates.newContent(
           portal_type='Business Template',
           dependency_list=['erp5_core (>= %s)' % erp5_core_version])
-    self.assertEquals(None, bt5.checkDependencies())
+    self.assertEqual(None, bt5.checkDependencies())
 
     bt5.setDependencyList(['erp5_core (> %s)' % erp5_core_version])
     self.assertRaises(BusinessTemplateMissingDependency, bt5.checkDependencies)
@@ -6321,7 +6321,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       props['chain_%s' % id] = ','.join(wf_ids)
     props['chain_Dummy Type'] = 'edit_workflow'
     pw.manage_changeWorkflows('', props=props)
-    self.assertEquals(('edit_workflow', ), pw.getChainFor('Dummy Type'))
+    self.assertEqual(('edit_workflow', ), pw.getChainFor('Dummy Type'))
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
@@ -6351,7 +6351,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       # portal type template item are exported in their physical location
       for template_item in ('PortalTypeTemplateItem',
                             'ActionTemplateItem',):
-        self.assertEquals(['dummy_type_provider'],
+        self.assertEqual(['dummy_type_provider'],
             [os.path.basename(f) for f in
               glob.glob('%s/%s/*' % (export_dir, template_item))])
       new_bt = self.portal.portal_templates.download(
@@ -6384,31 +6384,31 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       dummy_type = types_tool.getTypeInfo('Dummy Type')
       self.assertNotEquals(None, dummy_type)
       # all the configuration from the type is still here
-      self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
-      self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
-      self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
-      self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
+      self.assertEqual(['Reference'], dummy_type.getTypePropertySheetList())
+      self.assertEqual(['source'], dummy_type.getTypeBaseCategoryList())
+      self.assertEqual(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
+      self.assertEqual(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
 
       action_list = dummy_type.contentValues(portal_type='Action Information')
-      self.assertEquals(['View'], [action.getTitle() for action in action_list])
-      self.assertEquals(['view'], [action.getReference() for action in action_list])
+      self.assertEqual(['View'], [action.getTitle() for action in action_list])
+      self.assertEqual(['view'], [action.getReference() for action in action_list])
 
       role_list = dummy_type.contentValues(portal_type='Role Information')
-      self.assertEquals(['Dummy Role Definition'],
+      self.assertEqual(['Dummy Role Definition'],
                         [role.getTitle() for role in role_list])
 
-      self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
+      self.assertEqual(('edit_workflow',), pw.getChainFor('Dummy Type'))
 
       # and our type can be used
       instance = self.portal.newContent(portal_type='Dummy Type',
                                         id='test_document')
       instance.setSourceReference('OK')
-      self.assertEquals('OK', instance.getSourceReference())
+      self.assertEqual('OK', instance.getSourceReference())
 
     finally:
       new_bt.uninstall()
       self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
-      self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
+      self.assertEqual(None, types_tool.getTypeInfo('Dummy Type'))
       self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
   def test_type_provider_2(self):
@@ -6498,7 +6498,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.tic()
       # actions are exported in portal_types/ and then the id of the container
       # tool
-      self.assertEquals(['portal_actions'],
+      self.assertEqual(['portal_actions'],
             [os.path.basename(f) for f in
               glob.glob('%s/ActionTemplateItem/portal_types/*' % (export_dir, ))])
       new_bt = self.portal.portal_templates.download(
@@ -6557,12 +6557,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # after installation, the exported document is replaced with the one from
     # the business template
-    self.assertEquals('Exported', self.portal.exported_path.getTitle())
+    self.assertEqual('Exported', self.portal.exported_path.getTitle())
     # but its uid did not change
-    self.assertEquals(uid, self.portal.exported_path.getUid())
+    self.assertEqual(uid, self.portal.exported_path.getUid())
     # and it is still in the catalog
     self.tic()
-    self.assertEquals(self.portal.exported_path,
+    self.assertEqual(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
   @expectedFailure
@@ -6686,15 +6686,15 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt.install()
     try:
       role, = object_type.getRoleInformationList()
-      self.assertEquals(self.portal.portal_categories.local_role_group.Alternate,
+      self.assertEqual(self.portal.portal_categories.local_role_group.Alternate,
                         role.getLocalRoleGroupValue())
       path = self.portal.geek_module['1']
-      self.assertEquals(sorted([
+      self.assertEqual(sorted([
         ('another_group', ['Assignee']),
         ('group', ['Assignee', 'Assignor']),
         ]), sorted([item for item in
             path.__ac_local_roles__.items() if item[1] != ['Owner']]))
-      self.assertEquals(initial___ac_local_roles_group_id_dict__,
+      self.assertEqual(initial___ac_local_roles_group_id_dict__,
         path.__ac_local_roles_group_id_dict__)
       # make sure we can reindexing the object works
       path.recursiveImmediateReindexObject()
@@ -6747,7 +6747,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepSetVersionPriorityRegisteredSelection(self, sequence=None, **kw):
     bt = sequence.get('current_bt')
-    self.failIf(bt is None)
+    self.assertFalse(bt is None)
 
     version_priority_list = ('abc| 1.0',
                              'def |99.0',
@@ -6763,7 +6763,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepUpdateVersionPriorityRegisteredSelection(self, sequence=None, **kw):
     bt = sequence.get('current_bt')
-    self.failIf(bt is None)
+    self.assertFalse(bt is None)
 
     version_priority_list = ('erp4',
                              'abc | 1.0',
@@ -6862,8 +6862,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     file_content = getattr(skin_folder, sequence.get('fake_file_id')).data
     expected_file_content = sequence.get('fake_file_content')
 
-    self.assertEquals(file_content, expected_file_content)
-    self.assertEquals(len(file_content), len(expected_file_content))
+    self.assertEqual(file_content, expected_file_content)
+    self.assertEqual(len(file_content), len(expected_file_content))
 
   def test_text_file_import_export(self):
     """
@@ -6925,7 +6925,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     for i in range(self.organisation_amount):
       organisation = organisation_module.newContent(
                        portal_type = 'Organisation')
-      self.failUnless(organisation is not None)
+      self.assertTrue(organisation is not None)
       organisation.setTitle('organisation %d' % (i + 1))
       for j in range(self.email_amount):
         organisation.newContent(id='email%d' % (j+1),
@@ -7002,7 +7002,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepAddOrganisationToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     if bt.getTemplatePathList():
       path_list = bt.getTemplatePathList()[:]
       path_list = path_list + ('organisation_module/**',)
@@ -7114,7 +7114,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     f = file(file_path, 'w')
     f.write(self.document_data)
     f.close()
-    self.failUnless(os.path.exists(file_path))
+    self.assertTrue(os.path.exists(file_path))
     sequence.edit(document_title=self.document_title, document_path=file_path,
         document_data=self.document_data)
 
@@ -7125,7 +7125,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     f = file(file_path, 'w')
     f.write(self.document_data_updated)
     f.close()
-    self.failUnless(os.path.exists(file_path))
+    self.assertTrue(os.path.exists(file_path))
     sequence.edit(document_title=self.document_title, document_path=file_path,
         document_data_updated=self.document_data_updated)
 
@@ -7136,20 +7136,20 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
   def stepRemoveDocument(self, sequence=None, **kw):
     document_path = sequence['document_path']
     os.remove(document_path)
-    self.failIf(os.path.exists(document_path))
+    self.assertFalse(os.path.exists(document_path))
 
   def stepCheckDocumentExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertFalse(not os.path.exists(sequence['document_path']))
     self.assertEqual(file(sequence['document_path']).read(),
         sequence['document_data'])
 
   def stepCheckUpdatedDocumentExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertFalse(not os.path.exists(sequence['document_path']))
     self.assertEqual(file(sequence['document_path']).read(),
         sequence['document_data_updated'])
 
   def stepCheckDocumentRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['document_path']))
+    self.assertFalse(os.path.exists(sequence['document_path']))
 
   def test_BusinessTemplateWithDocument(self):
     sequence_list = SequenceList()
@@ -7415,9 +7415,9 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                         sequence['document_id'], None)
 
     self.assertNotEqual(component, None)
-    self.assertEquals(sorted(list(component.workflow_history)),
+    self.assertEqual(sorted(list(component.workflow_history)),
                       ['component_validation_workflow', 'edit_workflow'])
-    self.failIf(len(component.workflow_history['component_validation_workflow']) <= 1)
+    self.assertFalse(len(component.workflow_history['component_validation_workflow']) <= 1)
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.getPortalObject().portal_components.deleteContent(
@@ -7428,21 +7428,21 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                         sequence['document_id'], None)
 
     self.assertNotEqual(component, None)
-    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEqual(component.getValidationState(), 'validated')
 
     # Only the last Workflow History should have been exported
-    self.assertEquals(list(component.workflow_history),
+    self.assertEqual(list(component.workflow_history),
                       ['component_validation_workflow'])
 
     validation_state_only_list = []
     for validation_dict in list(component.workflow_history['component_validation_workflow']):
       validation_state_only_list.append(validation_dict.get('validation_state'))
 
-    self.assertEquals(validation_state_only_list, ['validated'])
+    self.assertEqual(validation_state_only_list, ['validated'])
 
   def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
     component_tool = self.getPortalObject().portal_components
-    self.failIf(sequence['document_id'] in component_tool.objectIds())
+    self.assertFalse(sequence['document_id'] in component_tool.objectIds())
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.portal.portal_components.manage_delObjects([sequence['document_id']])
@@ -7467,7 +7467,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
 
     source_code = sequence['document_data']
     with open(python_source_code_path) as f:
-      self.assertEquals(f.read(), source_code)
+      self.assertEqual(f.read(), source_code)
 
     xml_path = base_path + '.xml'
     self.assertTrue(os.path.exists(xml_path))
@@ -7475,7 +7475,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     first_line = source_code.split('\n', 1)[0]
     with open(xml_path) as f:
       for line in f:
-        self.failIf(first_line in line)
+        self.assertFalse(first_line in line)
 
   def test_BusinessTemplateWithZodbDocument(self):
     sequence_list = SequenceList()
@@ -7609,16 +7609,16 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     component_id = '%s.erp5.%s' % (self.component_id_prefix,
                                    sequence.get('document_title'))
 
-    self.assertEquals(bt.getProperty(self.template_property),
+    self.assertEqual(bt.getProperty(self.template_property),
                       [component_id])
 
     component_tool = self.getPortalObject().portal_components
-    self.failUnless(component_id in component_tool.objectIds())
+    self.assertTrue(component_id in component_tool.objectIds())
 
     component = getattr(component_tool, component_id)
-    self.assertEquals(component.getReference(), sequence['document_title'])
-    self.assertEquals(component.getTextContent(), sequence['document_data'])
-    self.assertEquals(component.getPortalType(), self.component_portal_type)
+    self.assertEqual(component.getReference(), sequence['document_title'])
+    self.assertEqual(component.getTextContent(), sequence['document_data'])
+    self.assertEqual(component.getPortalType(), self.component_portal_type)
     sequence.edit(document_id=component_id)
 
   def test_BusinessTemplateWithZodbDocumentMigrated(self):

@@ -434,7 +434,7 @@ class TestKM(TestKMMixIn):
     #self.changeSkin('KM')
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.failUnless(self.web_front_knowledge_pad.getTitle() in response.getBody())
+    self.assertTrue(self.web_front_knowledge_pad.getTitle() in response.getBody())
 
     # Web Front gadgets
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
@@ -445,7 +445,7 @@ class TestKM(TestKMMixIn):
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
-      self.failUnless(gadget.getTitle() in response.getBody())
+      self.assertTrue(gadget.getTitle() in response.getBody())
 
   def test_05MyTaskGadget(self):
     """ Check My Task Gadgets """
@@ -483,8 +483,8 @@ class TestKM(TestKMMixIn):
                                                   self.webpage.getRelativeUrl(),  
                                                   km_my_tasks_box_url)
                                , self.auth)]:
-      self.failUnless(project.getTitle() in response.getBody())
-      self.failUnless(visit.getTitle() in response.getBody())
+      self.assertTrue(project.getTitle() in response.getBody())
+      self.assertTrue(visit.getTitle() in response.getBody())
 
   def test_06MyDocumentsGadget(self):
     """ Check My Document Gadgets """
@@ -526,8 +526,8 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),  
                                                  km_my_documents_gadget_box_url)
                          , self.auth)]:
-      self.failUnless(web_page.getTitle() in response.getBody())
-      self.failUnless(presentation.getTitle() in response.getBody())
+      self.assertTrue(web_page.getTitle() in response.getBody())
+      self.assertTrue(presentation.getTitle() in response.getBody())
     
   def test_07MyContactsGadget(self):
     """ Check My Contacts Gadgets """
@@ -563,7 +563,7 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(), 
                                                  km_my_contacts_gadget_box_url)
                          , self.auth)]:
-      self.failUnless(person.getTitle() in response.getBody())
+      self.assertTrue(person.getTitle() in response.getBody())
     
   def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
@@ -585,7 +585,7 @@ class TestKM(TestKMMixIn):
                                %(self.web_section_url, self.web_section_knowledge_pad.getRelativeUrl()), self.auth)
    
     for gadget in web_section_gadgets:
-      self.failUnless(gadget.getTitle() in response.getBody())     
+      self.assertTrue(gadget.getTitle() in response.getBody())     
 
   def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
@@ -626,7 +626,7 @@ class TestKM(TestKMMixIn):
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.failUnless(presentation.getTitle() in 
+    self.assertTrue(presentation.getTitle() in 
           self.publish(self.base_url_pattern 
                     %(self.web_section_url+'/%s' %latest_docs_subsection.getId(),  
                       gadget_view_form_id, 
@@ -655,7 +655,7 @@ class TestKM(TestKMMixIn):
                                           self.web_section_knowledge_pad,  
                                           km_assigned_member_gadget)
     self.changeSkin('KM') 
-    self.failUnless('No result' in 
+    self.assertTrue('No result' in 
           self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
               gadget_view_form_id, 
@@ -669,7 +669,7 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment')
     self.tic()
     self.changeSkin('KM')
-    self.failUnless(person.getTitle() in 
+    self.assertTrue(person.getTitle() in 
                     self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
               gadget_view_form_id, 
@@ -696,7 +696,7 @@ class TestKM(TestKMMixIn):
                                %(self.web_page_url,self.web_section_content_knowledge_pad.getRelativeUrl()), self.auth)
 
     for gadget in web_section_content_gadgets:
-      self.failUnless(gadget.getTitle() in response.getBody())
+      self.assertTrue(gadget.getTitle() in response.getBody())
     
   def test_12RelationGadget(self):
     """ Check  Relation Gadgets """
@@ -725,7 +725,7 @@ class TestKM(TestKMMixIn):
                                      gadget_view_form_id)
 
     # no related docs should exist
-    self.failUnless('No result.' in relation_form_renderer())
+    self.assertTrue('No result.' in relation_form_renderer())
 
     # set related docs
     similar_doc = portal.web_page_module.newContent(
@@ -747,9 +747,9 @@ class TestKM(TestKMMixIn):
 
     self.changeSkin('KM')
     # .. should be in gadget html 
-    self.failUnless(similar_doc.getTitle() in relation_form_renderer())
-    self.failUnless(predecessor_doc.getTitle() in relation_form_renderer())
-    self.failUnless(successor_doc.getTitle() in relation_form_renderer())
+    self.assertTrue(similar_doc.getTitle() in relation_form_renderer())
+    self.assertTrue(predecessor_doc.getTitle() in relation_form_renderer())
+    self.assertTrue(successor_doc.getTitle() in relation_form_renderer())
 
   def test_15GadgetServerSideFailure(self):
     """ 
@@ -762,7 +762,7 @@ class TestKM(TestKMMixIn):
 
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.failUnless(self.web_front_knowledge_pad.getTitle() in response.getBody())
+    self.assertTrue(self.web_front_knowledge_pad.getTitle() in response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
@@ -770,25 +770,25 @@ class TestKM(TestKMMixIn):
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
-    self.failUnless(gadget.getTitle() in response.getBody())
+    self.assertTrue(gadget.getTitle() in response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
     gadget.view_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.failUnless('Server side error' in response.getBody())
+    self.assertTrue('Server side error' in response.getBody())
     gadget.view_form_id = old_gadget_view_form_id
     response = self.publish(url, self.auth)
-    self.failUnless('Server side error' not in response.getBody())
+    self.assertTrue('Server side error' not in response.getBody())
     
     # set non existent edit_form
     old_gadget_edit_form_id =  gadget.edit_form_id
     gadget.edit_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.failUnless('Server side error' in response.getBody())
+    self.assertTrue('Server side error' in response.getBody())
     gadget.edit_form_id = old_gadget_edit_form_id
     response = self.publish(url, self.auth)
-    self.failUnless('Server side error' not in response.getBody())
+    self.assertTrue('Server side error' not in response.getBody())
 
   def test_16WebSiteBrowserGadget(self):
     """ 
@@ -815,14 +815,14 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id, 
                                   self.website.getRelativeUrl(),  
                                   box_url)    
-    self.failUnless(subsection.getTitle() not in 
+    self.assertTrue(subsection.getTitle() not in 
                     self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
     self.tic()
     self.changeSkin('KM')
-    self.failUnless(subsection.getTitle() in 
+    self.assertTrue(subsection.getTitle() in 
                     self.publish(url, self.auth).getBody())
 
   def test_17AddGadgets(self):
@@ -863,7 +863,7 @@ class TestKM(TestKMMixIn):
     self.changeSkin('KM')
 
     assigned_member_list = websection.WebSection_searchAssignmentList(portal_type='Assignment')
-    self.assertEquals(0, len(websection.WebSection_searchAssignmentList(portal_type='Assignment')))
+    self.assertEqual(0, len(websection.WebSection_searchAssignmentList(portal_type='Assignment')))
     project = portal.project_module.newContent(portal_type='Project', \
                                                id='test_project')
     another_project = portal.project_module.newContent(portal_type='Project', \
@@ -882,9 +882,9 @@ class TestKM(TestKMMixIn):
     self.tic()
 
     self.changeSkin('KM')
-    self.assertEquals(1,\
+    self.assertEqual(1,\
       len( websection.WebSection_searchAssignmentList(portal_type='Assignment')))
-    self.assertEquals(1,\
+    self.assertEqual(1,\
       len( websection.WebSection_countAssignmentList(portal_type='Assignment')))                        
 
 class TestKMSearch(TestKMMixIn):

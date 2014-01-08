@@ -154,23 +154,23 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     # currency is present in the report
-    self.assertEquals('currency_module/euro', self.portal.
+    self.assertEqual('currency_module/euro', self.portal.
      AccountingTransactionModule_viewJournalReport.your_currency.get_value('default'))
     
     # precision is set in the REQUEST (so that fields know how to format)
     precision = self.portal.REQUEST.get('precision')
-    self.assertEquals(2, precision)
+    self.assertEqual(2, precision)
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 3 transactions, with 3 lines each
-    self.assertEquals(9, len(data_line_list))
+    self.assertEqual(9, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['specific_reference', 'date', 'title', 'parent_reference',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
@@ -269,18 +269,18 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     
     # Stat Line
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.failIf(stat_line.getColumnProperty('specific_reference'))
-    self.failIf(stat_line.getColumnProperty('date'))
-    self.failIf(stat_line.getColumnProperty('title'))
-    self.failIf(stat_line.getColumnProperty('parent_reference'))
-    self.failIf(stat_line.getColumnProperty('node_title'))
-    self.failIf(stat_line.getColumnProperty('mirror_section_title'))
+    self.assertTrue(stat_line.isStatLine())
+    self.assertFalse(stat_line.getColumnProperty('specific_reference'))
+    self.assertFalse(stat_line.getColumnProperty('date'))
+    self.assertFalse(stat_line.getColumnProperty('title'))
+    self.assertFalse(stat_line.getColumnProperty('parent_reference'))
+    self.assertFalse(stat_line.getColumnProperty('node_title'))
+    self.assertFalse(stat_line.getColumnProperty('mirror_section_title'))
     # when printing the report, the field does the rounding, so we can round in
     # the test
-    self.assertEquals(717.60, round(stat_line.getColumnProperty('debit'),
+    self.assertEqual(717.60, round(stat_line.getColumnProperty('debit'),
                                     precision))
-    self.assertEquals(717.60, round(stat_line.getColumnProperty('credit'),
+    self.assertEqual(717.60, round(stat_line.getColumnProperty('credit'),
                                     precision))
 
   def testJournalTransactionsWithoutThirdParty(self):
@@ -300,7 +300,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=19.60),
                      dict(source_value=account_module.goods_sales,
                           source_credit=100.00)))
-    self.assertEquals(None, first.getDestinationSectionValue())
+    self.assertEqual(None, first.getDestinationSectionValue())
 
     second = self._makeOne(
               portal_type='Accounting Transaction',
@@ -316,7 +316,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           destination_credit=19.60),
                      dict(destination_value=account_module.goods_sales,
                           destination_credit=100.00)))
-    self.assertEquals(None, second.getSourceSectionValue())
+    self.assertEqual(None, second.getSourceSectionValue())
 
 
     # set request variables and render                 
@@ -331,20 +331,20 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     # precision is set in the REQUEST (so that fields know how to format)
     precision = self.portal.REQUEST.get('precision')
-    self.assertEquals(2, precision)
+    self.assertEqual(2, precision)
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 transactions, with 3 lines
-    self.assertEquals(6, len(data_line_list))
+    self.assertEqual(6, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['specific_reference', 'date', 'title', 'parent_reference', 'node_title',
          'mirror_section_title', 'debit', 'credit'])
     
@@ -399,17 +399,17 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     
      # Stat Line
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.failIf(stat_line.getColumnProperty('specific_reference'))
-    self.failIf(stat_line.getColumnProperty('date'))
-    self.failIf(stat_line.getColumnProperty('title'))
-    self.failIf(stat_line.getColumnProperty('node_title'))
-    self.failIf(stat_line.getColumnProperty('mirror_section_title'))
+    self.assertTrue(stat_line.isStatLine())
+    self.assertFalse(stat_line.getColumnProperty('specific_reference'))
+    self.assertFalse(stat_line.getColumnProperty('date'))
+    self.assertFalse(stat_line.getColumnProperty('title'))
+    self.assertFalse(stat_line.getColumnProperty('node_title'))
+    self.assertFalse(stat_line.getColumnProperty('mirror_section_title'))
     # when printing the report, the field does the rounding, so we can round in
     # the test
-    self.assertEquals(239.20, round(stat_line.getColumnProperty('debit'),
+    self.assertEqual(239.20, round(stat_line.getColumnProperty('debit'),
                                     precision))
-    self.assertEquals(239.20, round(stat_line.getColumnProperty('credit'),
+    self.assertEqual(239.20, round(stat_line.getColumnProperty('credit'),
                                     precision))
 
 
@@ -462,12 +462,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 1 transactions with 2 lines
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0],
                             specific_reference=transaction.getSourceReference(),
@@ -487,7 +487,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             credit=100)
     
     # Stat Line
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=100, credit=100)
 
   def testJournalProject(self):
@@ -504,15 +504,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['specific_reference', 'date', 'title', 'parent_reference',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
@@ -526,7 +526,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              debit=0,
                              credit=500)
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=500, credit=500)
 
   def createAccountStatementDataSet(self, use_two_bank_accounts=1):
@@ -820,24 +820,24 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     # precision is set in the REQUEST (so that fields know how to format)
     precision = self.portal.REQUEST.get('precision')
-    self.assertEquals(2, precision)
+    self.assertEqual(2, precision)
 
     # currency is present in the report
-    self.assertEquals('currency_module/euro', self.portal.
+    self.assertEqual('currency_module/euro', self.portal.
         AccountModule_viewAccountStatementReport.your_currency.get_value('default'))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 6 transactions, because 7th is after
-    self.assertEquals(6, len(data_line_list))
+    self.assertEqual(6, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'Movement_getMirrorSectionTitle',
          'Movement_getExplanationReference',
@@ -903,7 +903,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=1700)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
                              Movement_getSpecificReference=None,
                              date=None,
@@ -932,11 +932,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 1 summary line and 4 transactions
-    self.assertEquals(5, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
  
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
@@ -983,7 +983,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=1700)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=1900, credit_price=200,)
 
 
@@ -1006,7 +1006,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertNotEquals('Previous Balance',
@@ -1075,16 +1075,16 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 1 transactions, because 1st is grouped during the period.
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'Movement_getMirrorSectionTitle',
          'Movement_getExplanationReference',
@@ -1100,7 +1100,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=239.20)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
                              Movement_getSpecificReference=None,
                              date=None,
@@ -1131,22 +1131,22 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                     'AccountModule_viewGeneralLedgerReport')
     # Except the stat, we only have one report section, because Client 1 is
     # grouped in the period.
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
 
-    self.assertEquals('41 - Receivable (Client 2)',
+    self.assertEqual('41 - Receivable (Client 2)',
                       report_section_list[0].getTitle())
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
 
     # report layout
-    self.assertEquals(['Movement_getSpecificReference',
+    self.assertEqual(['Movement_getSpecificReference',
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
         'debit_price', 'credit_price', 'running_total_price'],
         data_line_list[0].column_id_list)
 
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
           Movement_getExplanationTitle='Grouped after period',
@@ -1156,7 +1156,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 2',
           debit_price=239.20, credit_price=0, running_total_price=239.20, )
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
           Movement_getExplanationTitle=None,
@@ -1166,12 +1166,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit_price=239.20, credit_price=0, )
 
-    self.assertEquals('Total', report_section_list[1].getTitle())
+    self.assertEqual('Total', report_section_list[1].getTitle())
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # report layout
-    self.assertEquals(['debit_price', 'credit_price'], data_line_list[0].column_id_list)
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(['debit_price', 'credit_price'], data_line_list[0].column_id_list)
+    self.assertEqual(1, len(data_line_list))
 
     # The bottom line remain the same as when showing grouped lines
     self.checkLineProperties(data_line_list[0], debit_price=358.80, credit_price=0)
@@ -1277,10 +1277,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     # the report has 4 sections, 
-    self.assertEquals(4, len(report_section_list))
+    self.assertEqual(4, len(report_section_list))
     # but 2 of them are only titles
     report_section_list = [r for r in report_section_list if r.form_id]
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
     
     # the first section contains explanation of non grouped lines before the
     # period
@@ -1288,7 +1288,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     # We only have lines for the transaction 1 which is not grouped, and for
     # transaction 4, which is grouped with lines in the period.
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
                              date=DateTime(2006, 2, 1),
@@ -1303,14 +1303,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              Movement_getMirrorSectionTitle='Client 1',
                              debit_price=400,
                              credit_price=0,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
     
     # Second section is for previous balance summary and lines in the period,
     # ie only transaction 5
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
                              date=DateTime(2006, 2, 25),
@@ -1327,7 +1327,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=100,
                              debit_price=0,
                              credit_price=400,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=600)
 
 
@@ -1421,17 +1421,17 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     # the report has 4 sections, 
-    self.assertEquals(4, len(report_section_list))
+    self.assertEqual(4, len(report_section_list))
     # but 2 of them are only titles
     report_section_list = [r for r in report_section_list if r.form_id]
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
     
     # the first section contains explanation of non grouped lines before the
     # period
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # We only have line for transactions 1 and 2 which are not grouped
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
                              date=DateTime(2006, 2, 1),
@@ -1446,14 +1446,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              Movement_getMirrorSectionTitle='Client 1',
                              debit_price=200,
                              credit_price=0,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=300, credit_price=0)
     
     # Second section is for previous balance summary and lines in the period,
     # transaction 3 and transaction 4
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
                              date=DateTime(2006, 2, 25),
@@ -1478,7 +1478,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=500,
                              debit_price=400,
                              credit_price=0,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=200)
 
   def testAccountStatementFromDateDetailedSummaryGroupedAtFromDateCase2(self):
@@ -1501,17 +1501,17 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
     # the report has 4 sections, 
-    self.assertEquals(4, len(report_section_list))
+    self.assertEqual(4, len(report_section_list))
     # but 2 of them are only titles
     report_section_list = [r for r in report_section_list if r.form_id]
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
     
     # the first section contains explanation of non grouped lines before the
     # period
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # We only have line for transaction 1 which are not grouped
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
                              date=DateTime(2006, 2, 1),
@@ -1519,14 +1519,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              Movement_getMirrorSectionTitle='Client 1',
                              debit_price=100,
                              credit_price=0,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=100, credit_price=0)
     
     # Second section is for previous balance summary and lines in the period,
     # transaction 4
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
                              date=DateTime(2006, 2, 26),
@@ -1543,7 +1543,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=500,
                              debit_price=400,
                              credit_price=0,)
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=200)
     
 
@@ -1566,12 +1566,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 3 transactions, but only 2 are in the period
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='2',
@@ -1591,7 +1591,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=300,
                              running_total_price=-500)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
 
 
@@ -1629,11 +1629,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
                              date=DateTime(2006, 2, 2),
@@ -1652,7 +1652,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=579)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=600, credit_price=21)
 
   def testAccountStatementPeriodDateEqualsFromDate(self):
@@ -1690,11 +1690,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
@@ -1723,7 +1723,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=579)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=579, credit_price=0)
 
 
@@ -1746,11 +1746,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='Previous Balance',
                              date=DateTime(2006, 2, 2),
@@ -1769,7 +1769,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=300,
                              running_total_price=-500)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
 
 
@@ -1792,11 +1792,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
                              date=DateTime(2005, 12, 31),
@@ -1824,7 +1824,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=300,
                              running_total_price=-600)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=600)
 
 
@@ -1848,15 +1848,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     line = data_line_list[0]
     # mirror section title is not in the list of columns, as a mirror section
     # is choosen in the dialog
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
@@ -1869,7 +1869,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=400)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=400, credit_price=0)
 
 
@@ -1890,10 +1890,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='7',
@@ -1904,7 +1904,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=0,
                              running_total_price=700)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=0)
 
 
@@ -1951,10 +1951,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
  
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
@@ -1974,7 +1974,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=-200,
                              running_total_price=100)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=-100, credit_price=-200,)
 
 
@@ -2011,11 +2011,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
-    self.assertEquals(
+    self.assertEqual(2, len(data_line_list))
+    self.assertEqual(
         set([line.getColumnProperty('Movement_getSpecificReference') for line in
               data_line_list]),
         set(('Source Reference', 'Destination Reference')))
@@ -2039,7 +2039,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                  debit_price=100,
                                  credit_price=0,)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=0,)
 
 
@@ -2085,12 +2085,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
-    self.assertEquals(data_line_list[0].column_id_list,
+    self.assertEqual(data_line_list[0].column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'section_title',
          'Movement_getMirrorSectionTitle',
@@ -2117,7 +2117,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              credit_price=200,
                              running_total_price=-100)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=100, credit_price=200)
 
   def testTrialBalance(self):
@@ -2139,20 +2139,20 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
     # currency is present in the report
-    self.assertEquals('currency_module/euro', self.portal.
+    self.assertEqual('currency_module/euro', self.portal.
         AccountModule_viewTrialBalanceReport.your_currency.get_value('default'))
 
     # all accounts are present
-    self.assertEquals(
+    self.assertEqual(
           len(self.portal.account_module.contentValues(portal_type='Account')),
           len(data_line_list))
     
-    self.assertEquals(['node_id', 'node_title',
+    self.assertEqual(['node_id', 'node_title',
            'initial_debit_balance', 'initial_credit_balance', 'debit',
            'credit', 'final_debit_balance', 'final_credit_balance',
            'final_balance_if_debit', 'final_balance_if_credit'],
@@ -2216,7 +2216,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=0, final_balance_if_debit=0,
         final_balance_if_credit=0)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=3600,
         credit=3600, final_debit_balance=3600, final_credit_balance=3600,
@@ -2242,13 +2242,13 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(6, len(data_line_list))
+    self.assertEqual(6, len(data_line_list))
     
-    self.assertEquals(['node_id', 'node_title', 'mirror_section_title',
+    self.assertEqual(['node_id', 'node_title', 'mirror_section_title',
       'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
       'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
       'final_balance_if_credit'], data_line_list[0].column_id_list)
@@ -2290,7 +2290,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=1100,
         final_balance_if_debit=0, final_balance_if_credit=1100,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=2100,
         credit=2100, final_debit_balance=2100, final_credit_balance=2100,
@@ -2361,11 +2361,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(5, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
 
     # account are sorted by GAP Id
     # TODO: sort by "gap normalized path"
@@ -2399,7 +2399,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=50,
         final_balance_if_debit=0, final_balance_if_credit=50,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=600, initial_credit_balance=600, debit=2150,
         credit=2150, final_debit_balance=2750, final_credit_balance=2750,
@@ -2447,11 +2447,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=0,
@@ -2465,7 +2465,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=200, final_credit_balance=0,
         final_balance_if_debit=200, final_balance_if_credit=0)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=200, initial_credit_balance=200, debit=0,
         credit=0, final_debit_balance=200, final_credit_balance=200,
@@ -2513,10 +2513,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', mirror_section_title='Client 1',
@@ -2542,7 +2542,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=600, final_credit_balance=0,
         final_balance_if_debit=600, final_balance_if_credit=0)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=1000, initial_credit_balance=1000, debit=0,
         credit=0, final_debit_balance=1000, final_credit_balance=1000,
@@ -2594,11 +2594,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=400,
@@ -2612,7 +2612,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=600, final_credit_balance=400,
         final_balance_if_debit=200, final_balance_if_credit=0)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=1000, initial_credit_balance=1000, debit=0,
         credit=0, final_debit_balance=1000, final_credit_balance=1000,
@@ -2663,11 +2663,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=100,
@@ -2681,7 +2681,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=110,
         final_balance_if_debit=0, final_balance_if_credit=110)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=100, initial_credit_balance=100, debit=10,
         credit=10, final_debit_balance=110, final_credit_balance=110,
@@ -2731,11 +2731,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=100,
@@ -2749,7 +2749,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=110,
         final_balance_if_debit=0, final_balance_if_credit=110)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=100, initial_credit_balance=100, debit=10,
         credit=10, final_debit_balance=110, final_credit_balance=110,
@@ -2812,11 +2812,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=111,
@@ -2830,7 +2830,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=200, final_credit_balance=111,
         final_balance_if_debit=89, final_balance_if_credit=0)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=311, initial_credit_balance=311, debit=0,
         credit=0, final_debit_balance=311, final_credit_balance=311,
@@ -2881,11 +2881,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=100,
         initial_credit_balance=0, debit=10, credit=0,
@@ -2898,7 +2898,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=110,
         final_balance_if_debit=0, final_balance_if_credit=110)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=100, initial_credit_balance=100, debit=10,
         credit=10, final_debit_balance=110, final_credit_balance=110,
@@ -2954,11 +2954,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=0,
@@ -2972,7 +2972,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=0, final_credit_balance=500,
         final_balance_if_debit=0, final_balance_if_credit=500)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=500,
         credit=500, final_debit_balance=500, final_credit_balance=500,
@@ -2998,11 +2998,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
 
     # account are sorted by GAP Id
     self.checkLineProperties(data_line_list[0], node_id='40',
@@ -3029,7 +3029,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_debit_balance=500, final_credit_balance=0,
         final_balance_if_debit=500, final_balance_if_credit=0,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=2100,
         credit=300, final_debit_balance=2100, final_credit_balance=300,
@@ -3077,11 +3077,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
         node_title='Payable', initial_debit_balance=0,
@@ -3104,7 +3104,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # an empty line for style
     self.checkLineProperties(data_line_list[3], node_title=' ')
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=1000,
         credit=1000, final_debit_balance=1000, final_credit_balance=1000,
@@ -3130,10 +3130,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0], node_id='41',
         node_title='Receivable', initial_debit_balance=0,
@@ -3147,7 +3147,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=600, final_balance_if_debit=0,
         final_balance_if_credit=600,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=600,
         credit=600, final_debit_balance=600, final_credit_balance=600,
@@ -3172,10 +3172,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0], node_id='41',
         node_title='Receivable', initial_debit_balance=0,
@@ -3189,7 +3189,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=500, final_balance_if_debit=0,
         final_balance_if_credit=500,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=500,
         credit=500, final_debit_balance=500, final_credit_balance=500,
@@ -3235,10 +3235,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0], node_id='41',
         node_title='Receivable', initial_debit_balance=0,
@@ -3252,7 +3252,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=500, final_balance_if_debit=0,
         final_balance_if_credit=500,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=500,
         credit=500, final_debit_balance=500, final_credit_balance=500,
@@ -3278,10 +3278,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0], node_id='41',
         node_title='Receivable', initial_debit_balance=0,
@@ -3295,7 +3295,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=700, final_balance_if_debit=0,
         final_balance_if_credit=700,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=700,
         credit=700, final_debit_balance=700, final_credit_balance=700,
@@ -3322,10 +3322,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(data_line_list[0], node_id='41',
         node_title='Receivable', initial_debit_balance=0,
@@ -3339,7 +3339,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_credit_balance=300, final_balance_if_debit=0,
         final_balance_if_credit=300,)
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
         initial_debit_balance=0, initial_credit_balance=0, debit=300,
         credit=300, final_debit_balance=300, final_credit_balance=300,
@@ -3363,9 +3363,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(6, len(report_section_list))
+    self.assertEqual(6, len(report_section_list))
 
-    self.assertEquals('40 - Payable (Client 1)',
+    self.assertEqual('40 - Payable (Client 1)',
                       report_section_list[0].getTitle())
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -3384,18 +3384,18 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section.popReport(self.portal)
 
     # currency is present in the report
-    self.assertEquals('currency_module/euro', self.portal.
+    self.assertEqual('currency_module/euro', self.portal.
         AccountModule_viewGeneralLedgerReport.your_currency.get_value('default'))
     
     # report layout
-    self.assertEquals(['Movement_getSpecificReference',
+    self.assertEqual(['Movement_getSpecificReference',
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
         'debit_price', 'credit_price', 'running_total_price'],
         data_line_list[0].column_id_list)
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Transaction 1',
@@ -3414,7 +3414,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
           Movement_getExplanationTitle=None,
@@ -3424,11 +3424,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit_price=200, credit_price=100, )
     
-    self.assertEquals('41 - Receivable (Client 1)',
+    self.assertEqual('41 - Receivable (Client 1)',
                       report_section_list[1].getTitle())
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(5, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Transaction 1',
@@ -3475,7 +3475,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=800, credit_price=0, running_total_price=1600, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
           Movement_getExplanationTitle=None,
@@ -3485,11 +3485,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit_price=1800, credit_price=200, )
 
-    self.assertEquals('41 - Receivable (Client 2)',
+    self.assertEqual('41 - Receivable (Client 2)',
                       report_section_list[2].getTitle())
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='4',
           Movement_getExplanationTitle='Transaction 4',
@@ -3499,14 +3499,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 2',
           debit_price=400, credit_price=0, running_total_price=400, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=400, credit_price=0, )
 
-    self.assertEquals('41 - Receivable (John Smith)',
+    self.assertEqual('41 - Receivable (John Smith)',
                       report_section_list[3].getTitle())
     line_list = self.getListBoxLineList(report_section_list[3])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='5',
           Movement_getExplanationTitle='Transaction 5',
@@ -3516,14 +3516,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='John Smith',
           debit_price=500, credit_price=0, running_total_price=500, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0, )
 
-    self.assertEquals('5 - Bank (Bank1)',
+    self.assertEqual('5 - Bank (Bank1)',
                       report_section_list[4].getTitle())
     line_list = self.getListBoxLineList(report_section_list[4])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(5, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
           Movement_getExplanationTitle='Transaction 3',
@@ -3570,15 +3570,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=800, running_total_price=-2600, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=2600, )
 
-    self.assertEquals('Total', report_section_list[5].getTitle())
+    self.assertEqual('Total', report_section_list[5].getTitle())
     line_list = self.getListBoxLineList(report_section_list[5])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # report layout
-    self.assertEquals(['debit_price', 'credit_price'], data_line_list[0].column_id_list)
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(['debit_price', 'credit_price'], data_line_list[0].column_id_list)
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=2900, credit_price=2900)
  
 
@@ -3600,14 +3600,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
 
-    self.assertEquals('40 - Payable (Client 1)',
+    self.assertEqual('40 - Payable (Client 1)',
                       report_section_list[0].getTitle())
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Transaction 1',
@@ -3626,7 +3626,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
     
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
           Movement_getExplanationTitle=None,
@@ -3636,10 +3636,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit_price=200, credit_price=100, )
     
-    self.assertEquals('Total', report_section_list[1].getTitle())
+    self.assertEqual('Total', report_section_list[1].getTitle())
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=200, credit_price=100)
  
   def testGeneralLedgerFunction(self):
@@ -3658,11 +3658,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Function a Project 1',
@@ -3670,12 +3670,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=500, credit_price=0, running_total_price=500, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Function a Project 1',
@@ -3683,12 +3683,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=500, running_total_price=-500, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
 
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=500, credit_price=500)
 
   def testGeneralLedgerNoProject(self):
@@ -3707,11 +3707,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
           Movement_getExplanationTitle='No function no project',
@@ -3719,12 +3719,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=700, credit_price=0, running_total_price=700, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=0)
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
           Movement_getExplanationTitle='No function no project',
@@ -3732,12 +3732,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=700, running_total_price=-700, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=700)
 
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=700,
         credit_price=700)
 
@@ -3757,11 +3757,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Function a Project 1',
@@ -3769,12 +3769,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=500, credit_price=0, running_total_price=500, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
           Movement_getExplanationTitle='Function a Project 1',
@@ -3782,12 +3782,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=500, running_total_price=-500, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
 
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=500, credit_price=500)
 
   def testGeneralLedgerMirrorSectionRole(self):
@@ -3806,11 +3806,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
           Movement_getExplanationTitle='Invoice to a supplier',
@@ -3818,12 +3818,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Supplier',
           debit_price=300, credit_price=0, running_total_price=300, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=300, credit_price=0)
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
           Movement_getExplanationTitle='Invoice to a supplier',
@@ -3831,12 +3831,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
           Movement_getMirrorSectionTitle='Supplier',
           debit_price=0, credit_price=300, running_total_price=-300, )
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=300)
 
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=300,
                              credit_price=300)
 
@@ -3919,17 +3919,17 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewOtherPartiesReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     # the role is displayed in parenthesis
-    self.assertEquals(report_section_list[0].getTitle(),
+    self.assertEqual(report_section_list[0].getTitle(),
                       'Client 1 (Client)')
     # currency is present in the report
-    self.assertEquals('currency_module/euro', self.portal.
+    self.assertEqual('currency_module/euro', self.portal.
         AccountModule_viewOtherPartiesReport.your_currency.get_value('default'))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
           Movement_getExplanationTitle='Transaction 1',
@@ -4032,8 +4032,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                      account_module.payable) or\
       line.getDestinationValue() in (account_module.receivable,
                                      account_module.payable):
-          self.failUnless(line.getGroupingReference())
-          self.failUnless(line.getGroupingDate())
+          self.assertTrue(line.getGroupingReference())
+          self.assertTrue(line.getGroupingDate())
 
   def test_simple_aged_creditor_report_detailed(self):
     self.createAgedBalanceDataSet()
@@ -4049,11 +4049,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                     self.portal.accounting_module,
                     'AccountingTransactionModule_viewAgedBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                              date=DateTime(2013, 7, 30),
@@ -4077,11 +4077,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                     self.portal.accounting_module,
                     'AccountingTransactionModule_viewAgedBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                              mirror_section_title='Client 1',
@@ -4102,11 +4102,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                     self.portal.accounting_module,
                     'AccountingTransactionModule_viewAgedBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                              date=DateTime(2013, 7, 30),
@@ -4130,11 +4130,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                     self.portal.accounting_module,
                     'AccountingTransactionModule_viewAgedBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                              mirror_section_title='Supplier',
@@ -4239,15 +4239,15 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         [ 'specific_reference', 'date', 'title', 'parent_reference',
           'function', 'project', 'product_line_translated_title',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
@@ -4283,7 +4283,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              credit=700)
 
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
 
   def testJournalAnalyticsHidden(self):
@@ -4298,15 +4298,15 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['specific_reference', 'date', 'title', 'parent_reference',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
@@ -4321,7 +4321,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              debit=0,
                              credit=1500)
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
 
   def testAccountStatementAnalyticsShown(self):
@@ -4340,14 +4340,14 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
 
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle',
          'function', 'project', 'product_line_translated_title',
@@ -4378,7 +4378,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=-1500)
 
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
  
   def testAccountStatementAnalyticsHidden(self):
@@ -4394,14 +4394,14 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
                                'AccountModule_viewAccountStatementReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle',
          'Movement_getMirrorSectionTitle',
@@ -4414,7 +4414,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=-1500)
 
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
   def testGeneralLedgerAnalyticsShown(self):
@@ -4432,12 +4432,12 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # FIXME: order of columns is inconsistant in GL and Account Statement
-    self.assertEquals(['Movement_getSpecificReference',
+    self.assertEqual(['Movement_getSpecificReference',
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
@@ -4468,13 +4468,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              running_total_price=-1500)
 
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
     line_list = self.getListBoxLineList(report_section_list[2])
     
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              debit_price=1500,
                              credit_price=1500,)
@@ -4491,40 +4491,40 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewGeneralLedgerReport')
-    self.assertEquals(3, len(report_section_list))
+    self.assertEqual(3, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(['Movement_getSpecificReference',
+    self.assertEqual(['Movement_getSpecificReference',
         'Movement_getExplanationTitle', 'date',
         'Movement_getExplanationTranslatedPortalType',
         'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
         'debit_price', 'credit_price', 'running_total_price'],
         data_line_list[0].column_id_list)
     # receivable account
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              debit_price=1500,
                              credit_price=0,
                              running_total_price=1500)
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=1500, credit_price=0)
     # good sales account
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              debit_price=0,
                              credit_price=1500,
                              running_total_price=-1500)
     stat_line = line_list[-1]
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
     # summary
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              debit_price=1500,
                              credit_price=1500,)
@@ -4545,13 +4545,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
-    self.assertEquals(['node_id', 'node_title', 'project_uid',
+    self.assertEqual(['node_id', 'node_title', 'project_uid',
       'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
       'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
       'final_balance_if_credit'], data_line_list[0].column_id_list)
@@ -4568,7 +4568,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         credit=700, final_debit_balance=0, final_credit_balance=700,
         final_balance_if_debit=0, final_balance_if_credit=700)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=1500, final_debit_balance=0, final_credit_balance=1500,
@@ -4590,13 +4590,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
-    self.assertEquals(['node_id', 'node_title', 'function_uid',
+    self.assertEqual(['node_id', 'node_title', 'function_uid',
       'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
       'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
       'final_balance_if_credit'], data_line_list[0].column_id_list)
@@ -4613,7 +4613,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         credit=1200, final_debit_balance=0, final_credit_balance=1200,
         final_balance_if_debit=0, final_balance_if_credit=1200)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=1500, final_debit_balance=0, final_credit_balance=1500,
@@ -4635,13 +4635,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
 
-    self.assertEquals(['node_id', 'node_title', 'function_uid', 'project_uid',
+    self.assertEqual(['node_id', 'node_title', 'function_uid', 'project_uid',
       'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
       'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
       'final_balance_if_credit'], data_line_list[0].column_id_list)
@@ -4664,7 +4664,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         credit=700, final_debit_balance=0, final_credit_balance=700,
         final_balance_if_debit=0, final_balance_if_credit=700)
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=1500, final_debit_balance=0, final_credit_balance=1500,
@@ -4706,13 +4706,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
                                     'AccountModule_viewTrialBalanceReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
  
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
-    self.assertEquals(['node_id', 'node_title', 'strict_product_line_uid',
+    self.assertEqual(['node_id', 'node_title', 'strict_product_line_uid',
       'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
       'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
       'final_balance_if_credit'], data_line_list[0].column_id_list)
@@ -4725,7 +4725,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 
     # Lines that does not have a product line are not displayed. This is a
     # technical limitation, we would have to left join to support this.
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=800, final_debit_balance=0, final_credit_balance=800,

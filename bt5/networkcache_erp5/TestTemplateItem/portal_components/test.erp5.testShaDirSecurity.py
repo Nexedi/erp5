@@ -122,7 +122,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
 
     data_set.publish()
     self.tic()
-    self.assertEquals('Published', data_set.getValidationStateTitle())
+    self.assertEqual('Published', data_set.getValidationStateTitle())
 
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', data_set)
 
@@ -170,7 +170,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     document.publishAlive()
     self.tic()
 
-    self.assertEquals('Published Alive', document.getValidationStateTitle())
+    self.assertEqual('Published Alive', document.getValidationStateTitle())
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', document)
 
   def test_user_can_not_view_document_module(self):

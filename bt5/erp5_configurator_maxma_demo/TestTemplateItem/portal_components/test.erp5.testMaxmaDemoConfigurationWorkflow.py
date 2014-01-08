@@ -83,8 +83,8 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     response_dict = sequence.get("response_dict")
     # configuration is finished. We are at the Install state.
     # On maxma demo, installation is the first slide.
-    self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Install', response_dict['next'])
+    self.assertEqual('show', response_dict['command'])
+    self.assertEqual('Install', response_dict['next'])
 
   def stepSetMaxmaDemoWorkflow(self, sequence=None, sequence_list=None, **kw):
     """ Set Consulting Workflow into Business Configuration """
@@ -130,7 +130,7 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
     # Check Gadgets
     for gadget in self.portal.portal_gadgets.searchFolder():
-      self.assertEquals('public', gadget.getValidationState(),
+      self.assertEqual('public', gadget.getValidationState(),
                         "%s is not public but %s" % (gadget.getRelativeUrl(), 
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
@@ -140,11 +140,11 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     reference=self.user_reference)
 
     self.assertNotEquals(user.Person_getAvailableAssignmentValueList(), [])
-    self.assertEquals(user.getTitle(), "Jack Vale")
-    self.assertEquals(user.getValidationState(), "validated")
-    self.assertEquals(user.getSubordination(), 
+    self.assertEqual(user.getTitle(), "Jack Vale")
+    self.assertEqual(user.getValidationState(), "validated")
+    self.assertEqual(user.getSubordination(), 
                           'organisation_module/myorganisation')
-    self.assertEquals(user.getSubordinationTitle(), "Maxma Co")
+    self.assertEqual(user.getSubordinationTitle(), "Maxma Co")
 
   ### STEPS
   DEFAULT_SEQUENCE_LIST = """

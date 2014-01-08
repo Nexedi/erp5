@@ -93,22 +93,22 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     currency1.setTitle('Euro')
     currency1.setReference('EUR')
     currency1.setBaseUnitQuantity(0.01)
-    self.assertEquals(currency1.getTitle(), 'Euro')
-    self.assertEquals(currency1.getReference(), 'EUR')
-    self.assertEquals(currency1.getBaseUnitQuantity(), 0.01)
+    self.assertEqual(currency1.getTitle(), 'Euro')
+    self.assertEqual(currency1.getReference(), 'EUR')
+    self.assertEqual(currency1.getBaseUnitQuantity(), 0.01)
     currency1.validate()
-    self.assertEquals(0, len(currency1.checkConsistency()))
-    self.assertEquals(currency1.getValidationState(),'validated')
+    self.assertEqual(0, len(currency1.checkConsistency()))
+    self.assertEqual(currency1.getValidationState(),'validated')
     currency2 = module.newContent(portal_type = 'Currency')
     currency2.setTitle('Francs CFA')
     currency2.setReference('XOF')
     currency2.setBaseUnitQuantity(1.00)
-    self.assertEquals(currency2.getTitle(), 'Francs CFA')
-    self.assertEquals(currency2.getReference(), 'XOF')
-    self.assertEquals(currency2.getBaseUnitQuantity(), 1.00)
+    self.assertEqual(currency2.getTitle(), 'Francs CFA')
+    self.assertEqual(currency2.getReference(), 'XOF')
+    self.assertEqual(currency2.getBaseUnitQuantity(), 1.00)
     currency2.validate()
-    self.assertEquals(currency2.getValidationState(),'validated')
-    self.assertEquals(0, len(currency2.checkConsistency()))
+    self.assertEqual(currency2.getValidationState(),'validated')
+    self.assertEqual(0, len(currency2.checkConsistency()))
 
 
   def test_UseCurrencyExchangeLineForDestination(self):
@@ -134,11 +134,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+    self.assertEqual(x_curr_ex_line.getPriceCurrencyTitle(),
                           'Francs CFA')
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    self.assertEqual(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),
+    self.assertEqual(x_curr_ex_line.getValidationState(),
                            'validated')
     accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
@@ -154,7 +154,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getDestinationTotalAssetPrice(),
+      self.assertEqual(line.getDestinationTotalAssetPrice(),
              round(655.957*line.getQuantity()))
                                         
 
@@ -182,11 +182,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+    self.assertEqual(x_curr_ex_line.getPriceCurrencyTitle(),
                                          'Francs CFA')
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    self.assertEqual(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),
+    self.assertEqual(x_curr_ex_line.getValidationState(),
                             'validated')
     yen = self.portal.currency_module.yen
     yen_line1 = yen.newContent(
@@ -218,7 +218,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getDestinationTotalAssetPrice(),
+      self.assertEqual(line.getDestinationTotalAssetPrice(),
                    round(655.957*line.getQuantity()))
 
   def test_UseCurrencyExchangeLineForSource(self):
@@ -244,11 +244,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+    self.assertEqual(x_curr_ex_line.getPriceCurrencyTitle(),
                             'Francs CFA')
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    self.assertEqual(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),
+    self.assertEqual(x_curr_ex_line.getValidationState(),
                          'validated')
     accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
@@ -265,10 +265,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getSourceValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getSourceInventoriatedTotalAssetDebit(),
+        self.assertEqual(line.getSourceInventoriatedTotalAssetDebit(),
                            327979)
       elif line.getSourceValue() == self.account_module.receivable:
-        self.assertEquals(line.getSourceInventoriatedTotalAssetCredit(),
+        self.assertEqual(line.getSourceInventoriatedTotalAssetCredit(),
                            327979)
       else:
         self.fail('line not found')
@@ -304,7 +304,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getDestinationTotalAssetPrice(),None)
+      self.assertEqual(line.getDestinationTotalAssetPrice(),None)
 
 
   def test_DateOfCurrencyExchangeLineNotDateofTransaction(self):
@@ -333,11 +333,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,6))
     x_curr_ex_line.setStopDate(DateTime(2008,9,7))
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+    self.assertEqual(x_curr_ex_line.getPriceCurrencyTitle(),
                'Francs CFA')
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    self.assertEqual(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),
+    self.assertEqual(x_curr_ex_line.getValidationState(),
                                'validated')
     accounting_module = self.portal.accounting_module
     transaction1 = self._makeOne(
@@ -354,7 +354,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = transaction1.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-      self.assertEquals(line.getDestinationTotalAssetPrice(),None)
+      self.assertEqual(line.getDestinationTotalAssetPrice(),None)
     transaction2 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/06'),
@@ -370,10 +370,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
         portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getDestinationInventoriatedTotalAssetDebit(),
+        self.assertEqual(line.getDestinationInventoriatedTotalAssetDebit(),
                            327979)
       elif line.getDestinationValue() == self.account_module.receivable:
-        self.assertEquals(line.getDestinationInventoriatedTotalAssetCredit(),
+        self.assertEqual(line.getDestinationInventoriatedTotalAssetCredit(),
                            327979)
       else:
         self.fail('line not found')
@@ -401,10 +401,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getPriceCurrency(),None)
-    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    self.assertEqual(x_curr_ex_line.getPriceCurrency(),None)
+    self.assertEqual(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),
+    self.assertEqual(x_curr_ex_line.getValidationState(),
                           'validated')
     
     accounting_module = self.portal.accounting_module
@@ -423,7 +423,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-        self.assertEquals(line.getDestinationTotalAssetPrice(),
+        self.assertEqual(line.getDestinationTotalAssetPrice(),
                  None)
   
    
@@ -451,11 +451,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     euro_line1.setBasePrice(655.957)
     euro_line1.setStartDate(DateTime(2008,9,8))
     euro_line1.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(euro_line1.getPriceCurrencyTitle(),
+    self.assertEqual(euro_line1.getPriceCurrencyTitle(),
                             'Francs CFA')
-    self.assertEquals(euro_line1.getBasePrice(),655.957)
+    self.assertEqual(euro_line1.getBasePrice(),655.957)
     euro_line1.validate()
-    self.assertEquals(euro_line1.getValidationState(),
+    self.assertEqual(euro_line1.getValidationState(),
                                  'validated')
     euro_line2 = euro.newContent(
                               portal_type='Currency Exchange Line',
@@ -463,12 +463,12 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     euro_line2.setTitle('Euro to Francs CFA')
     euro_line2.setStartDate(DateTime(2008,9,8))
     euro_line2.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(euro_line2.getPriceCurrencyTitle(),
+    self.assertEqual(euro_line2.getPriceCurrencyTitle(),
                             'Francs CFA')
-    self.assertEquals(euro_line2.getBasePrice(),None)
+    self.assertEqual(euro_line2.getBasePrice(),None)
     euro_line2.validate()
     
-    self.assertEquals(euro_line2.getValidationState(),
+    self.assertEqual(euro_line2.getValidationState(),
                                  'validated')
     accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
@@ -487,10 +487,10 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
 
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
-        self.assertEquals(line.getDestinationInventoriatedTotalAssetDebit(),
+        self.assertEqual(line.getDestinationInventoriatedTotalAssetDebit(),
                            327979)
       elif line.getDestinationValue() == self.account_module.receivable:
-        self.assertEquals(line.getDestinationInventoriatedTotalAssetCredit(),
+        self.assertEqual(line.getDestinationInventoriatedTotalAssetCredit(),
                            327979)
       else:
         self.fail('line not found')
@@ -515,13 +515,13 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     euro = module.euro
     usd = module.usd
     euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
-    self.assertEquals(0, len(euro_to_usd.contentValues()))
+    self.assertEqual(0, len(euro_to_usd.contentValues()))
     # when we set the target currency, currency exchange cells will be added
     euro_to_usd.setPriceCurrencyValue(usd)
-    self.assertEquals(2, len(euro_to_usd.contentValues()))
+    self.assertEqual(2, len(euro_to_usd.contentValues()))
 
     # cell range is like this:
-    self.assertEquals([
+    self.assertEqual([
       ['currency_exchange_type/type_a', 'currency_exchange_type/type_b'],
       ['resource/%s' % euro.getRelativeUrl()],
       ['price_currency/%s' % usd.getRelativeUrl()],
@@ -533,23 +533,23 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
       'price_currency/%s' % usd.getRelativeUrl(),
       base_id='path')
     self.assertNotEquals(None, type_a_cell)
-    self.assertEquals('Currency Exchange Cell', type_a_cell.getPortalTypeName())
+    self.assertEqual('Currency Exchange Cell', type_a_cell.getPortalTypeName())
 
     # int index have been copied, so that listbox in CurrencyExchangeLine_view
     # displays currency exchange line in same order than int indexes on
     # currency_exchange_type categories.
-    self.assertEquals(1, type_a_cell.getIntIndex())
+    self.assertEqual(1, type_a_cell.getIntIndex())
  
     self.assertTrue('currency_exchange_type/type_a' in
         type_a_cell.getCategoryList())
     
     type_a_cell_predicate = type_a_cell.asPredicate()
-    self.assertEquals(sorted(('price_currency',
+    self.assertEqual(sorted(('price_currency',
                               'resource',
                               'currency_exchange_type')),
       sorted(type_a_cell_predicate.getMembershipCriterionBaseCategoryList()))
 
-    self.assertEquals(sorted(('price_currency/currency_module/usd',
+    self.assertEqual(sorted(('price_currency/currency_module/usd',
                               'resource/currency_module/euro',
                               'currency_exchange_type/type_a')),
           sorted(type_a_cell_predicate.getMembershipCriterionCategoryList()))
@@ -588,7 +588,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
 
     exchange_ratio = euro.getPrice(context=context,
                                    portal_type='Currency Exchange Cell')
-    self.assertEquals(0.98, exchange_ratio)
+    self.assertEqual(0.98, exchange_ratio)
 
 
 def test_suite():

@@ -94,10 +94,10 @@ class TestCRM(BaseTestCRM):
     for portal_type in self.portal.getPortalEventTypeList():
       event = event_module.newContent(portal_type=portal_type)
       # quantity on events is 1 by default
-      self.assertEquals(1, event.getQuantity())
+      self.assertEqual(1, event.getQuantity())
       # but it can be overriden
       event.setQuantity(321)
-      self.assertEquals(321, event.getQuantity())
+      self.assertEqual(321, event.getQuantity())
 
   def test_Event_isMovement(self):
     event_module = self.portal.event_module
@@ -164,7 +164,7 @@ class TestCRM(BaseTestCRM):
                              description='New Desc')
       self.tic()
       new_event, = ticket.getFollowUpRelatedValueList(portal_type=ptype)
-      self.assertEquals('stopped', new_event.getSimulationState())
+      self.assertEqual('stopped', new_event.getSimulationState())
 
       # outgoing
       ticket.Ticket_newEvent(direction='outgoing',
@@ -174,7 +174,7 @@ class TestCRM(BaseTestCRM):
       self.tic()
       new_event, = [event for event in ticket.getFollowUpRelatedValueList(portal_type=ptype) if\
                    event.getTitle() == 'Outgoing Title']
-      self.assertEquals('planned', new_event.getSimulationState())
+      self.assertEqual('planned', new_event.getSimulationState())
 
   def test_Ticket_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
@@ -215,12 +215,12 @@ class TestCRM(BaseTestCRM):
       getter_id = "getSourceRelatedValue"
     related_event = getattr(pers1, getter_id)(portal_type='Mail Message')
     self.assertNotEquals(None, related_event)
-    self.assertEquals('The Event Title', related_event.getTitle())
-    self.assertEquals('The Event Descr.', related_event.getDescription())
-    self.assertEquals('Event Content', related_event.getTextContent())
+    self.assertEqual('The Event Title', related_event.getTitle())
+    self.assertEqual('The Event Descr.', related_event.getDescription())
+    self.assertEqual('Event Content', related_event.getTextContent())
 
     for person in (pers2, pers3):
-      self.assertEquals(None, getattr(person, getter_id)(
+      self.assertEqual(None, getattr(person, getter_id)(
                                        portal_type='Mail Message'))
 
   def test_PersonModule_CreateOutgoingRelatedEventSelectionParams(self):
@@ -255,11 +255,11 @@ class TestCRM(BaseTestCRM):
       related_event = person.getDestinationRelatedValue(
                             portal_type='Mail Message')
       self.assertNotEquals(None, related_event)
-      self.assertEquals('The Event Title', related_event.getTitle())
-      self.assertEquals('The Event Descr.', related_event.getDescription())
-      self.assertEquals('Event Content', related_event.getTextContent())
+      self.assertEqual('The Event Title', related_event.getTitle())
+      self.assertEqual('The Event Descr.', related_event.getDescription())
+      self.assertEqual('Event Content', related_event.getTextContent())
 
-    self.assertEquals(None, pers3.getDestinationRelatedValue(
+    self.assertEqual(None, pers3.getDestinationRelatedValue(
                                 portal_type='Mail Message'))
 
   def test_SaleOpportunitySold(self):
@@ -267,17 +267,17 @@ class TestCRM(BaseTestCRM):
     # finaly sold
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
-    self.assertEquals('draft', so.getSimulationState())
+    self.assertEqual('draft', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'submit_action')
-    self.assertEquals('submitted', so.getSimulationState())
+    self.assertEqual('submitted', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEquals('contacted', so.getSimulationState())
+    self.assertEqual('contacted', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'enquire_action')
-    self.assertEquals('enquired', so.getSimulationState())
+    self.assertEqual('enquired', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'offer_action')
-    self.assertEquals('offered', so.getSimulationState())
+    self.assertEqual('offered', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'sell_action')
-    self.assertEquals('sold', so.getSimulationState())
+    self.assertEqual('sold', so.getSimulationState())
 
   def test_SaleOpportunityRejected(self):
     # test the workflow of sale opportunities, when the sale opportunity is
@@ -285,26 +285,26 @@ class TestCRM(BaseTestCRM):
     # Uses different transitions than test_SaleOpportunitySold
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
-    self.assertEquals('draft', so.getSimulationState())
+    self.assertEqual('draft', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEquals('contacted', so.getSimulationState())
+    self.assertEqual('contacted', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'enquire_action')
-    self.assertEquals('enquired', so.getSimulationState())
+    self.assertEqual('enquired', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'offer_action')
-    self.assertEquals('offered', so.getSimulationState())
+    self.assertEqual('offered', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'reject_action')
-    self.assertEquals('rejected', so.getSimulationState())
+    self.assertEqual('rejected', so.getSimulationState())
 
   def test_SaleOpportunityExpired(self):
     # test the workflow of sale opportunities, when the sale opportunity
     # expires
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
-    self.assertEquals('draft', so.getSimulationState())
+    self.assertEqual('draft', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEquals('contacted', so.getSimulationState())
+    self.assertEqual('contacted', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'expire_action')
-    self.assertEquals('expired', so.getSimulationState())
+    self.assertEqual('expired', so.getSimulationState())
 
   @expectedFailure
   def test_Event_AcknowledgeAndCreateEvent(self):
@@ -395,7 +395,7 @@ class TestCRM(BaseTestCRM):
 
     new_support_request = support_request.Base_createCloneDocument(
                                                                  batch_mode=1)
-    self.assertEquals(new_support_request.getTitle(), title)
+    self.assertEqual(new_support_request.getTitle(), title)
     self.assertNotEquals(None, support_request.getReference())
     self.assertNotEquals(support_request.getReference(), 
                                         new_support_request.getReference())
@@ -508,16 +508,16 @@ class TestCRM(BaseTestCRM):
     self.tic()
     event_list = [event for event in campaign.getFollowUpRelatedValueList()
       if event.getPortalType() != 'Mail Message']
-    self.assertEquals(event_list, [])
+    self.assertEqual(event_list, [])
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Mail Message')
     self.assertNotEquals(event_list, [])
     destination_list = map(lambda x: x.getDestinationValue(), event_list)
-    self.assertEquals(destination_list, [first_user])
+    self.assertEqual(destination_list, [first_user])
     mail_message = event_list[0]
-    self.assertEquals(sender.getRelativeUrl(), mail_message.getSource())
-    self.assertEquals(mail_message.getTextFormat(), "text/html")
-    self.assertEquals(mail_message.getTextContent(), "Hello %s" % first_user.getTitle())
-    self.assertEquals(mail_message.getResourceValue(), service)
+    self.assertEqual(sender.getRelativeUrl(), mail_message.getSource())
+    self.assertEqual(mail_message.getTextFormat(), "text/html")
+    self.assertEqual(mail_message.getTextContent(), "Hello %s" % first_user.getTitle())
+    self.assertEqual(mail_message.getResourceValue(), service)
 
     campaign = portal.campaign_module.newContent(portal_type="Campaign",
         default_event_path_event_portal_type="Visit",
@@ -529,14 +529,14 @@ class TestCRM(BaseTestCRM):
     self.tic()
     event_list = [event for event in campaign.getFollowUpRelatedValueList()
       if event.getPortalType() != 'Visit']
-    self.assertEquals([], event_list)
+    self.assertEqual([], event_list)
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Visit')
     self.assertNotEquals([], event_list)
     destination_uid_list = map(lambda x: x.getDestinationUid(), event_list)
-    self.assertEquals([organisation.getUid()], destination_uid_list)
+    self.assertEqual([organisation.getUid()], destination_uid_list)
 
     resource_value_list = map(lambda x: x.getResourceValue(), event_list)
-    self.assertEquals([service], resource_value_list)
+    self.assertEqual([service], resource_value_list)
 
   def test_OutcomePath(self):
     service = self.portal.service_module.newContent(portal_type='Service')
@@ -549,18 +549,18 @@ class TestCRM(BaseTestCRM):
     campaign.setDefaultOutcomePathPrice(4)
     campaign.setDefaultOutcomePathPriceCurrency(currency.getRelativeUrl())
 
-    self.assertEquals(3*4, campaign.getDefaultOutcomePathTotalPrice())
+    self.assertEqual(3*4, campaign.getDefaultOutcomePathTotalPrice())
 
-    self.assertEquals(3, campaign.getDefaultOutcomePathQuantity())
-    self.assertEquals('unit/piece', campaign.getDefaultOutcomePathQuantityUnit())
-    self.assertEquals(service.getRelativeUrl(),
+    self.assertEqual(3, campaign.getDefaultOutcomePathQuantity())
+    self.assertEqual('unit/piece', campaign.getDefaultOutcomePathQuantityUnit())
+    self.assertEqual(service.getRelativeUrl(),
       campaign.getDefaultOutcomePathResource())
-    self.assertEquals(4, campaign.getDefaultOutcomePathPrice())
-    self.assertEquals(currency.getRelativeUrl(),
+    self.assertEqual(4, campaign.getDefaultOutcomePathPrice())
+    self.assertEqual(currency.getRelativeUrl(),
       campaign.getDefaultOutcomePathPriceCurrency())
 
     outcome_path = campaign._getOb('default_outcome_path')
-    self.assertEquals('Outcome Path', outcome_path.getPortalType())
+    self.assertEqual('Outcome Path', outcome_path.getPortalType())
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
@@ -623,7 +623,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
   def test_findTypeByName_MailMessage(self):
     # without this, ingestion will not work
-    self.assertEquals(
+    self.assertEqual(
       'Mail Message',
       self.portal.portal_contribution_registry.findPortalTypeName(
       filename='postfix_mail.eml', content_type='message/rfc822', data='Test'
@@ -651,41 +651,41 @@ class TestCRMMailIngestion(BaseTestCRM):
     for header, expected_paths in expected_values:
       paths = [entity.getRelativeUrl()
                for entity in portal.Base_getEntityListFromFromHeader(header)] 
-      self.assertEquals(paths, expected_paths,
+      self.assertEqual(paths, expected_paths,
                         '%r should return %r, but returned %r' %
                         (header, expected_paths, paths))
 
   def test_document_creation(self):
     # CRM email ingestion creates a Mail Message in event_module
     event = self._ingestMail('simple')
-    self.assertEquals(len(self.portal.event_module), 1)
-    self.assertEquals(event, self.portal.event_module.contentValues()[0])
-    self.assertEquals('Mail Message', event.getPortalType())
-    self.assertEquals('text/plain', event.getContentType())
-    self.assertEquals('message/rfc822', event._baseGetContentType())
+    self.assertEqual(len(self.portal.event_module), 1)
+    self.assertEqual(event, self.portal.event_module.contentValues()[0])
+    self.assertEqual('Mail Message', event.getPortalType())
+    self.assertEqual('text/plain', event.getContentType())
+    self.assertEqual('message/rfc822', event._baseGetContentType())
     # check if parsing of metadata from content is working
     content_dict = {'source_list': ['person_module/sender'],
                     'destination_list': ['person_module/me',
                                          'person_module/he']}
-    self.assertEquals(event.getPropertyDictFromContent(), content_dict)
+    self.assertEqual(event.getPropertyDictFromContent(), content_dict)
 
   def test_title(self):
     # title is found automatically, based on the Subject: header in the mail
     event = self._ingestMail('simple')
-    self.assertEquals('Simple Mail Test', event.getTitle())
-    self.assertEquals('Simple Mail Test', event.getTitleOrId())
+    self.assertEqual('Simple Mail Test', event.getTitle())
+    self.assertEqual('Simple Mail Test', event.getTitleOrId())
 
   def test_asText(self):
     # asText requires portal_transforms
     event = self._ingestMail('simple')
-    self.assertEquals('Hello,\nContent of the mail.\n', str(event.asText()))
+    self.assertEqual('Hello,\nContent of the mail.\n', str(event.asText()))
  
   def test_sender(self):
     # source is found automatically, based on the From: header in the mail
     event = self._ingestMail('simple')
     # metadata discovery is done in an activity
     self.tic()
-    self.assertEquals('person_module/sender', event.getSource())
+    self.assertEqual('person_module/sender', event.getSource())
 
   def test_recipient(self):
     # destination is found automatically, based on the To: header in the mail
@@ -693,37 +693,37 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.tic()
     destination_list = event.getDestinationList()
     destination_list.sort()
-    self.assertEquals(['person_module/he', 'person_module/me'],
+    self.assertEqual(['person_module/he', 'person_module/me'],
                       destination_list)
 
   def test_clone(self):
     # cloning an event must keep title and text-content
     event = self._ingestMail('simple')
     self.tic()
-    self.assertEquals('Simple Mail Test', event.getTitle())
-    self.assertEquals('Simple Mail Test', event.getTitleOrId())
-    self.assertEquals('Hello,\nContent of the mail.\n', str(event.asText()))
-    self.assertEquals('Hello,\nContent of the mail.\n', str(event.getTextContent()))
-    self.assertEquals('Mail Message', event.getPortalType())
-    self.assertEquals('text/plain', event.getContentType())
-    self.assertEquals('message/rfc822', event._baseGetContentType())
+    self.assertEqual('Simple Mail Test', event.getTitle())
+    self.assertEqual('Simple Mail Test', event.getTitleOrId())
+    self.assertEqual('Hello,\nContent of the mail.\n', str(event.asText()))
+    self.assertEqual('Hello,\nContent of the mail.\n', str(event.getTextContent()))
+    self.assertEqual('Mail Message', event.getPortalType())
+    self.assertEqual('text/plain', event.getContentType())
+    self.assertEqual('message/rfc822', event._baseGetContentType())
     # check if parsing of metadata from content is working
     content_dict = {'source_list': ['person_module/sender'],
                     'destination_list': ['person_module/me',
                                          'person_module/he']}
-    self.assertEquals(event.getPropertyDictFromContent(), content_dict)
+    self.assertEqual(event.getPropertyDictFromContent(), content_dict)
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.tic()
-    self.assertEquals('Simple Mail Test', new_event.getTitle())
-    self.assertEquals('Simple Mail Test', new_event.getTitleOrId())
-    self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.asText()))
-    self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.getTextContent()))
-    self.assertEquals('Mail Message', new_event.getPortalType())
-    self.assertEquals('text/plain', new_event.getContentType())
+    self.assertEqual('Simple Mail Test', new_event.getTitle())
+    self.assertEqual('Simple Mail Test', new_event.getTitleOrId())
+    self.assertEqual('Hello,\nContent of the mail.\n', str(new_event.asText()))
+    self.assertEqual('Hello,\nContent of the mail.\n', str(new_event.getTextContent()))
+    self.assertEqual('Mail Message', new_event.getPortalType())
+    self.assertEqual('text/plain', new_event.getContentType())
 
     # check that metadatas read from data are copied on cloned event
-    self.assertEquals(new_event.getSourceList(), ['person_module/sender'])
-    self.assertEquals(new_event.getDestinationList(), ['person_module/me',
+    self.assertEqual(new_event.getSourceList(), ['person_module/sender'])
+    self.assertEqual(new_event.getDestinationList(), ['person_module/me',
                                                        'person_module/he'])
 
     # cloned event got a new reference
@@ -755,11 +755,11 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     property_dict = event.getPropertyDictFromContent()
     # destination is set on the event. In this case it is kept as is.
-    self.assertEquals([organisation.getRelativeUrl()],
+    self.assertEqual([organisation.getRelativeUrl()],
         property_dict['destination_list'])
     # source is not set. In this case it is searched in catalog based on email
     # address
-    self.assertEquals([source_person.getRelativeUrl()],
+    self.assertEqual([source_person.getRelativeUrl()],
         property_dict['source_list'])
 
 
@@ -772,7 +772,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.tic()
     event = self._ingestMail('simple')
     self.tic()
-    self.assertEquals(None, event.getFollowUp())
+    self.assertEqual(None, event.getFollowUp())
 
   def test_portal_type_determination(self):
     """
@@ -907,25 +907,25 @@ class TestCRMMailIngestion(BaseTestCRM):
     stripped_html = document.asStrippedHTML()
     self.assertTrue('<form' not in stripped_html)
     self.assertTrue('<form' not in document.getAttachmentData(4))
-    self.assertEquals('This is my content.\n*ERP5* is a Free _Software_\n',
+    self.assertEqual('This is my content.\n*ERP5* is a Free _Software_\n',
                       document.getAttachmentData(2))
-    self.assertEquals('text/html', document.getContentType())
-    self.assertEquals('\n<html>\n<head>\n\n<meta http-equiv="content-type"'\
+    self.assertEqual('text/html', document.getContentType())
+    self.assertEqual('\n<html>\n<head>\n\n<meta http-equiv="content-type"'\
                       ' content="text/html; charset=utf-8" />\n'\
                       '</head>\n<body text="#000000"'\
                       ' bgcolor="#ffffff">\nThis is my content.<br />\n'\
                       '<b>ERP5</b> is a Free <u>Software</u><br />'\
                       '\n\n</body>\n</html>\n', document.getAttachmentData(3))
-    self.assertEquals(document.getAttachmentData(3), document.getTextContent())
+    self.assertEqual(document.getAttachmentData(3), document.getTextContent())
 
     # now check a message with multipart/mixed
     mixed_document = self._ingestMail(filename='sample_html_attachment')
     self.tic()
-    self.assertEquals(mixed_document.getAttachmentData(1),
+    self.assertEqual(mixed_document.getAttachmentData(1),
                       mixed_document.getTextContent())
-    self.assertEquals('Hi, this is the Message.\nERP5 is a free software.\n\n',
+    self.assertEqual('Hi, this is the Message.\nERP5 is a free software.\n\n',
                       mixed_document.getTextContent())
-    self.assertEquals('text/plain', mixed_document.getContentType())
+    self.assertEqual('text/plain', mixed_document.getContentType())
 
   def test_flawed_html_attachment(self):
     portal_type = 'Mail Message'
@@ -950,7 +950,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     event.setData(message.as_string())
     self.tic()
     self.assertTrue('html' in event.getTextContent())
-    self.assertEquals(len(event.getAttachmentInformationList()), 2)
+    self.assertEqual(len(event.getAttachmentInformationList()), 2)
     self.assertTrue(bool(event.getAttachmentData(1)))
     self.assertTrue(bool(event.getAttachmentData(2)))
 
@@ -1033,12 +1033,12 @@ class TestCRMMailSend(BaseTestCRM):
     last_message, = self.portal.MailHost._message_list
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me," <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
-    self.assertEquals(event.getTextContent(), text_content)
+    self.assertEqual('"Me," <me@erp5.org>', mfrom)
+    self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
+    self.assertEqual(event.getTextContent(), text_content)
     message = message_from_string(messageText)
 
-    self.assertEquals('A Mail', decode_header(message['Subject'])[0][0])
+    self.assertEqual('A Mail', decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1061,10 +1061,10 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertNotEquals((), last_message_2)
     # check last message 1 and last message 2 (the order is random)
     # both should have 'From: Me'
-    self.assertEquals(['"Me," <me@erp5.org>', '"Me," <me@erp5.org>'],
+    self.assertEqual(['"Me," <me@erp5.org>', '"Me," <me@erp5.org>'],
                       [x[0] for x in (last_message_1, last_message_2)])
     # one should have 'To: Me' and the other should have 'To: Recipient'
-    self.assertEquals([['"Me," <me@erp5.org>'], ['"Recipient," <recipient@example.com>']],
+    self.assertEqual([['"Me," <me@erp5.org>'], ['"Recipient," <recipient@example.com>']],
                       sorted([x[1] for x in (last_message_1, last_message_2)]))
 
   def test_MailFromMailMessageEventNoSendMail(self):
@@ -1077,11 +1077,11 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTitle('A Mail')
     event.setTextContent('Mail Content')
     self.portal.portal_workflow.doActionFor(event, 'initial_stop_action')
-    self.assertEquals('stopped', event.getSimulationState())
+    self.assertEqual('stopped', event.getSimulationState())
     self.tic()
     # no mail sent
     last_message = self.portal.MailHost._last_message
-    self.assertEquals((), last_message)
+    self.assertEqual((), last_message)
 
   def test_MailFromOtherEvents(self):
     # passing start_action transition on event workflow will not send an email
@@ -1097,8 +1097,8 @@ class TestCRMMailSend(BaseTestCRM):
 
       self.tic()
       # this means no message have been set
-      self.assertEquals([], self.portal.MailHost._message_list)
-      self.assertEquals((), self.portal.MailHost._last_message)
+      self.assertEqual([], self.portal.MailHost._message_list)
+      self.assertEqual((), self.portal.MailHost._last_message)
 
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
@@ -1112,18 +1112,18 @@ class TestCRMMailSend(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     # content type is kept
-    self.assertEquals(event.getContentType(), 'text/html')
+    self.assertEqual(event.getContentType(), 'text/html')
 
     # The getTextContent() gets the content from the file data instead the
     # Attribute text_content.
-    self.assertEquals(event.text_content, text_content)
+    self.assertEqual(event.text_content, text_content)
     text_content_from_data = '<html><body>Hello<br />World</body></html>'
-    self.assertEquals(event.getTextContent(), text_content_from_data)
+    self.assertEqual(event.getTextContent(), text_content_from_data)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me," <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
+    self.assertEqual('"Me," <me@erp5.org>', mfrom)
+    self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
 
     message = message_from_string(messageText)
     part = None
@@ -1145,12 +1145,12 @@ class TestCRMMailSend(BaseTestCRM):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"Me," <me@erp5.org>', mfrom)
-    self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
+    self.assertEqual('"Me," <me@erp5.org>', mfrom)
+    self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
     
     message = message_from_string(messageText)
 
-    self.assertEquals('Héhé', decode_header(message['Subject'])[0][0])
+    self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1564,20 +1564,20 @@ class TestCRMMailSend(BaseTestCRM):
                                                 title=dummy_title,
                                                 text_content=dummy_content,)
     self.assertFalse(event.hasFile(), '%r has a file' % (event,))
-    self.assertEquals(event.getTitle(), dummy_title)
-    self.assertEquals(event.getTextContent(), dummy_content)
+    self.assertEqual(event.getTitle(), dummy_title)
+    self.assertEqual(event.getTextContent(), dummy_content)
 
     event.setData('Subject: %s\r\n\r\n%s' % (real_title, real_content))
     self.assertTrue(event.hasFile(), '%r has no file' % (event,))
-    self.assertEquals(event.getTitle(), real_title)
-    self.assertEquals(event.getTextContent(), real_content)
+    self.assertEqual(event.getTitle(), real_title)
+    self.assertEqual(event.getTextContent(), real_content)
 
     self.tic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
-    self.assertEquals(new_event.getData(), '')
-    self.assertEquals(new_event.getTitle(), real_title)
-    self.assertEquals(new_event.getTextContent(), real_content)
+    self.assertEqual(new_event.getData(), '')
+    self.assertEqual(new_event.getTitle(), real_title)
+    self.assertEqual(new_event.getTextContent(), real_content)
     self.assertNotEquals(new_event.getReference(), event.getReference())
 
   def test_cloneTicketAndEventList(self):
@@ -1680,14 +1680,14 @@ class TestCRMMailSend(BaseTestCRM):
 
       # check created Event
       event = person.getSourceRelatedValue()
-      self.assertEquals(event.getTitle(), title)
-      self.assertEquals(event.getResource(), resource)
+      self.assertEqual(event.getTitle(), title)
+      self.assertEqual(event.getResource(), resource)
       self.assertTrue(event.hasStartDate())
-      self.assertEquals(event.getSource(), person.getRelativeUrl())
-      self.assertEquals(event.getSourceSection(),
+      self.assertEqual(event.getSource(), person.getRelativeUrl())
+      self.assertEqual(event.getSourceSection(),
                         organisation.getRelativeUrl())
-      self.assertEquals(event.getDestination(), user.getRelativeUrl())
-      self.assertEquals(event.getDestinationSection(), user.getSubordination())
+      self.assertEqual(event.getDestination(), user.getRelativeUrl())
+      self.assertEqual(event.getDestinationSection(), user.getSubordination())
 
       ### Outgoing on Person ###
       # Check another direction
@@ -1700,15 +1700,15 @@ class TestCRMMailSend(BaseTestCRM):
 
       # check created Event
       event = another_person.getDestinationRelatedValue()
-      self.assertEquals(event.getTitle(), title)
-      self.assertEquals(event.getResource(), resource)
+      self.assertEqual(event.getTitle(), title)
+      self.assertEqual(event.getResource(), resource)
       self.assertTrue(event.hasStartDate())
-      self.assertEquals(event.getDestination(),
+      self.assertEqual(event.getDestination(),
                         another_person.getRelativeUrl())
-      self.assertEquals(event.getDestinationSection(),
+      self.assertEqual(event.getDestinationSection(),
                         organisation.getRelativeUrl())
-      self.assertEquals(event.getSource(), user.getRelativeUrl())
-      self.assertEquals(event.getSourceSection(), user.getSubordination())
+      self.assertEqual(event.getSource(), user.getRelativeUrl())
+      self.assertEqual(event.getSourceSection(), user.getSubordination())
 
       ### Outgoing on Organisation ###
       # check on Organisation
@@ -1720,15 +1720,15 @@ class TestCRMMailSend(BaseTestCRM):
 
       # check created Event
       event = organisation.getDestinationSectionRelatedValue()
-      self.assertEquals(event.getTitle(), title)
-      self.assertEquals(event.getResource(), resource)
+      self.assertEqual(event.getTitle(), title)
+      self.assertEqual(event.getResource(), resource)
       self.assertTrue(event.hasStartDate())
-      self.assertEquals(event.getDestination(),
+      self.assertEqual(event.getDestination(),
                         organisation.getRelativeUrl())
-      self.assertEquals(event.getDestinationSection(),
+      self.assertEqual(event.getDestinationSection(),
                         organisation.getRelativeUrl())
-      self.assertEquals(event.getSource(), user.getRelativeUrl())
-      self.assertEquals(event.getSourceSection(), user.getSubordination())
+      self.assertEqual(event.getSource(), user.getRelativeUrl())
+      self.assertEqual(event.getSourceSection(), user.getSubordination())
 
       ### Outgoing on Career ###
       # Now check Base_addEvent on any document (follow_up)
@@ -1740,11 +1740,11 @@ class TestCRMMailSend(BaseTestCRM):
 
       # check created Event
       event = career.getFollowUpRelatedValue()
-      self.assertEquals(event.getTitle(), title)
-      self.assertEquals(event.getResource(), resource)
+      self.assertEqual(event.getTitle(), title)
+      self.assertEqual(event.getResource(), resource)
       self.assertTrue(event.hasStartDate())
-      self.assertEquals(event.getSource(), user.getRelativeUrl())
-      self.assertEquals(event.getSourceSection(), user.getSubordination())
+      self.assertEqual(event.getSource(), user.getRelativeUrl())
+      self.assertEqual(event.getSourceSection(), user.getSubordination())
     finally:
       # clean up created roles on portal_types
       self.login() # admin
@@ -1764,7 +1764,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
-    self.assertEquals(3, len(relative_url_list))
+    self.assertEqual(3, len(relative_url_list))
     mail_message.setDestinationList(relative_url_list)
     mail_message.setSource(relative_url_list[0])
     mail_text_content = "Body Text Content"
@@ -1783,11 +1783,11 @@ class TestCRMMailSend(BaseTestCRM):
                     if i.kw.has_key("event_relative_url")]
     try:
       # 3 recipients -> 3 activities
-      self.assertEquals(3, len(message_list))
+      self.assertEqual(3, len(message_list))
     finally:
       self.tic()
 
-    self.assertEquals(3, len(self.portal.MailHost._message_list))
+    self.assertEqual(3, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
       self.assertTrue(mail_text_content in message_info[-1])
       message = message_from_string(message_info[-1])
@@ -1808,8 +1808,8 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     (from_url, to_url, last_message,), = self.portal.MailHost._message_list
     self.assertTrue("Body Simple Case" in last_message)
-    self.assertEquals('FG ER <eee@eee.com>', from_url)
-    self.assertEquals(['Expert User <expert@in24.test>'], to_url)
+    self.assertEqual('FG ER <eee@eee.com>', from_url)
+    self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 
 
 def test_suite():

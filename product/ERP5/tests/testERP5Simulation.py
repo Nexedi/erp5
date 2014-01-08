@@ -121,7 +121,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(2,len(packing_list_list))
+    self.assertEqual(2,len(packing_list_list))
     packing_list1 = None
     packing_list2 = None
     for packing_list in packing_list_list:
@@ -132,10 +132,10 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     sequence.edit(new_packing_list=packing_list2)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity-10,line.getQuantity())
+      self.assertEqual(self.default_quantity-10,line.getQuantity())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(10,line.getQuantity())
+      self.assertEqual(10,line.getQuantity())
 
   def _checkSolverState(self, sequence=None, sequence_list=None,
                         state='solved'):
@@ -145,7 +145,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     solver_process = sequence.get('solver_process')
     for solver in solver_process.objectValues(
       portal_type=self.portal.getPortalTargetSolverTypeList()):
-      self.assertEquals(state, solver.getValidationState())
+      self.assertEqual(state, solver.getValidationState())
 
   def stepCheckSolverIsSolving(self, sequence=None, sequence_list=None, **kw):
     """
@@ -168,7 +168,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     portal_catalog = self.portal.portal_catalog
 
     portal_simulation_path = self.portal.portal_simulation.getPath()
-    self.assertEquals(1,
+    self.assertEqual(1,
         len(portal_catalog(path=portal_simulation_path)))
 
   def test_01_splitAndDefer(self, quiet=quiet, run=run_all_test):
@@ -217,7 +217,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(2,len(packing_list_list))
+    self.assertEqual(2,len(packing_list_list))
     packing_list1 = None
     packing_list2 = None
     for packing_list in packing_list_list:
@@ -227,16 +227,16 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
         packing_list2 = packing_list
 
     destination_value = sequence.get('organisation3')
-    self.assertEquals(packing_list1.getDestinationValue(), destination_value)
-    self.assertEquals(packing_list2.getDestinationValue(), destination_value)
+    self.assertEqual(packing_list1.getDestinationValue(), destination_value)
+    self.assertEqual(packing_list2.getDestinationValue(), destination_value)
 
     sequence.edit(new_packing_list=packing_list2)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity-10,line.getQuantity())
+      self.assertEqual(self.default_quantity-10,line.getQuantity())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(10+1000,line.getQuantity())
+      self.assertEqual(10+1000,line.getQuantity())
 
   def test_02_splitAndDeferAfterAcceptDecision(self, quiet=quiet, run=run_all_test):
     """

@@ -236,11 +236,11 @@ class TestMRPImplementation(TestMRPMixin):
     transformation = self.createDefaultTransformation()
 
     business_process = self.createSimpleBusinessProcess()
-    self.assertEquals([business_process.p2],
+    self.assertEqual([business_process.p2],
                       rule.getHeadProductionPathList(transformation, business_process))
 
     business_process = self.createConcurrentBusinessProcess()
-    self.assertEquals(set([business_process.p2, business_process.p3]),
+    self.assertEqual(set([business_process.p2, business_process.p3]),
                       set(rule.getHeadProductionPathList(transformation, business_process)))
 
   @newSimulationExpectedFailure
@@ -293,7 +293,7 @@ class TestMRPImplementation(TestMRPMixin):
       ((path_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 10),
       ((path_p3,), 'product_module/5', produced_organisations, None, -10)])
     movement_list = applied_rule.objectValues()
-    self.assertEquals(len(expected_value_set), len(movement_list))
+    self.assertEqual(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
       movement_value_set |= set([(tuple(movement.getCausalityList()),
@@ -304,7 +304,7 @@ class TestMRPImplementation(TestMRPMixin):
                                    movement.getDestination(),), # organisations
                                   movement.getTradePhase(),
                                   movement.getQuantity())])
-    self.assertEquals(expected_value_set, movement_value_set)
+    self.assertEqual(expected_value_set, movement_value_set)
 
   @skip('Unfinished experimental feature')
   def test_TransformationRule_expand_concurrent(self):
@@ -355,7 +355,7 @@ class TestMRPImplementation(TestMRPMixin):
       ((phase_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 10),
       ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, -10)])
     movement_list = applied_rule.objectValues()
-    self.assertEquals(len(expected_value_set), len(movement_list))
+    self.assertEqual(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
       movement_value_set |= set([(tuple(movement.getCausalityList()),
@@ -366,7 +366,7 @@ class TestMRPImplementation(TestMRPMixin):
                                    movement.getDestination(),), # organisations
                                   movement.getTradePhase(),
                                   movement.getQuantity())])
-    self.assertEquals(expected_value_set, movement_value_set)
+    self.assertEqual(expected_value_set, movement_value_set)
 
   @skip('Unfinished experimental feature')
   def test_TransformationRule_expand_reexpand(self):
@@ -421,7 +421,7 @@ class TestMRPImplementation(TestMRPMixin):
       ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, 1), # Frozen
       ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, -11)])
     movement_list = applied_rule.objectValues()
-    self.assertEquals(len(expected_value_set), len(movement_list))
+    self.assertEqual(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
       movement_value_set |= set([(tuple(movement.getCausalityList()),
@@ -432,7 +432,7 @@ class TestMRPImplementation(TestMRPMixin):
                                    movement.getDestination(),), # organisations
                                   movement.getTradePhase(),
                                   movement.getQuantity())])
-    self.assertEquals(expected_value_set, movement_value_set)
+    self.assertEqual(expected_value_set, movement_value_set)
 
   @skip('Unfinished experimental feature')
   def test_TransformationSourcingRule_expand(self):
@@ -491,7 +491,7 @@ class TestMRPImplementation(TestMRPMixin):
     expected_value_set = set([
       ((phase_p2,), sourcing_resource, organisations, 10)])
     movement_list = applied_rule.objectValues()
-    self.assertEquals(len(expected_value_set), len(movement_list))
+    self.assertEqual(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
       movement_value_set |= set([(tuple(movement.getCausalityList()),
@@ -501,7 +501,7 @@ class TestMRPImplementation(TestMRPMixin):
                                    movement.getDestinationSection(),
                                    movement.getDestination(),), # organisations
                                   movement.getQuantity())])
-    self.assertEquals(expected_value_set, movement_value_set)
+    self.assertEqual(expected_value_set, movement_value_set)
 
 
 def test_suite():

@@ -120,17 +120,17 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     nb_person = self.populatePersonServer()
     portal_sync = self.getSynchronizationTool()
     for sub in portal_sync.searchFolder(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     for sub in portal_sync.searchFolder(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
-    self.assertEquals(nb_message1, self.nb_message_first_synchronization)
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
+    self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     # Synchronize the second client
     nb_message2 = self.synchronize(self.sub_id2)
     for sub in portal_sync.searchFolder(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
-    self.assertEquals(nb_message2, self.nb_message_first_synchronization)
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
+    self.assertEqual(nb_message2, self.nb_message_first_synchronization)
     self.checkFirstSynchronization(id='1', nb_person=nb_person)
 
   def test_05_basicVCardSynchronization(self):
@@ -181,10 +181,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     person1_c.edit(**kw)
     person1_s.edit(**kw) #the same person is added on client AND server
     #before synchornization, First and Last name souldn't be the same
-    self.assertEquals(person1_s.getFirstName(), self.first_name3)
-    self.assertEquals(person1_s.getLastName(), self.last_name3)
-    self.assertEquals(person1_c.getFirstName(), self.first_name3)
-    self.assertEquals(person1_c.getLastName(), self.last_name3)
+    self.assertEqual(person1_s.getFirstName(), self.first_name3)
+    self.assertEqual(person1_s.getLastName(), self.last_name3)
+    self.assertEqual(person1_c.getFirstName(), self.first_name3)
+    self.assertEqual(person1_c.getLastName(), self.last_name3)
     nb_person_serv_before_sync = len(pub.getDocumentList())
     self.synchronize(self.sub_id1)
     #after synchronization, no new person is created on server because it
@@ -194,16 +194,16 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 
     #after the synchro, the client and server should be synchronized
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEquals(person1_s.getFirstName(), self.first_name3)
-    self.assertEquals(person1_s.getLastName(), self.last_name3)
-    self.assertEquals(person1_c.getFirstName(), self.first_name3)
-    self.assertEquals(person1_c.getLastName(), self.last_name3)
+    self.assertEqual(person1_s.getFirstName(), self.first_name3)
+    self.assertEqual(person1_s.getLastName(), self.last_name3)
+    self.assertEqual(person1_c.getFirstName(), self.first_name3)
+    self.assertEqual(person1_c.getLastName(), self.last_name3)
 
     nb_person_serv_after_sync = len(pub.getDocumentList())
     #the number of person on server before and after the synchronization should
     #be the same
     nb_person_serv_after_sync = len(pub.getDocumentList())
-    self.assertEquals(nb_person_serv_after_sync, nb_person_serv_before_sync)
+    self.assertEqual(nb_person_serv_after_sync, nb_person_serv_before_sync)
 
 
 import unittest

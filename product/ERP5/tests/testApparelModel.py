@@ -145,7 +145,7 @@ class TestApparelModel(ERP5TypeTestCase):
 
     # check the cells have been copied
     cell_list = apparel_model.contentValues(portal_type = 'Mapped Value')
-    self.assertEquals(len(cell_list), 2)
+    self.assertEqual(len(cell_list), 2)
 
     acrylique = apparel_model.getCell(
         'composition/acrylique',

@@ -97,15 +97,15 @@ class TestERP5Administration(InventoryAPITestCase):
     # errors reported by property type validity constraint
     line_list = alarm.Alarm_viewConsistencyCheckReport.listbox.get_value(
                         'default', render_format='list')
-    self.assertEquals(1, len([line for line in line_list if line.isDataLine()]))
-    self.assertEquals(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
+    self.assertEqual(1, len([line for line in line_list if line.isDataLine()]))
+    self.assertEqual(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
       "Attribute title should be of type string but is of type <type 'int'>")
 
     # this alarm can solve, as long as the constraints can solve, this is the
     # case of PropertyTypeValidity
     alarm.solve()
     self.tic()
-    self.assertEquals('3', person.title)
+    self.assertEqual('3', person.title)
 
 
 def test_suite():

@@ -264,15 +264,15 @@ class TestEgov(ERP5TypeTestCase):
     self.fillProcedureForm(procedure, 'vat declaration')
     procedure.validate()
     vat_module = self.portal.getDefaultModule('Vat Declaration')
-    self.assertEquals(vat_module.getId(), 'vat_declaration_module')
+    self.assertEqual(vat_module.getId(), 'vat_declaration_module')
     vat_portal_type = self.portal.portal_types.getTypeInfo('Vat Declaration')
-    self.assertEquals(vat_portal_type.getId(), 'Vat Declaration')
+    self.assertEqual(vat_portal_type.getId(), 'Vat Declaration')
     self.assertTrue(vat_portal_type.getDefaultScribusFormValue().getData()
                                                  not in ('', None))
     self.assertTrue(vat_portal_type.getDefaultPdfFormValue().getData()
                                                  not in ('', None))
     id_generator = vat_module.getIdGenerator()
-    self.assertEquals(id_generator, '_generatePerDayId')
+    self.assertEqual(id_generator, '_generatePerDayId')
 
   def test_02_application_creation(self):
     """
@@ -294,9 +294,9 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration.view()
     vat_declaration.PDFType_viewAsPdf()
     application_dict = vat_declaration.PDFDocument_getApplicationIncomeDict()
-    self.assertEquals(len(application_dict), 1)
+    self.assertEqual(len(application_dict), 1)
     report_section_list = vat_declaration.PDFDocument_getReportSectionList()
-    self.assertEquals(len(report_section_list), 1)
+    self.assertEqual(len(report_section_list), 1)
     vat_declaration.PDFDocument_viewHistory()
 
   def test_03_submit_application(self):
@@ -316,9 +316,9 @@ class TestEgov(ERP5TypeTestCase):
     # test form generation
     # change to EGov skin which is defined in erp5_egov
     self.changeSkin('EGov') 
-    self.assertEquals('draft', vat_declaration.getValidationState())
+    self.assertEqual('draft', vat_declaration.getValidationState())
     missing_file = vat_declaration.PDFDocument_getRequirementCount()
-    self.assertEquals(missing_file, 1)  
+    self.assertEqual(missing_file, 1)  
     type_allowed_content_type_list = vat_declaration.getTypeInfo().getTypeAllowedContentTypeList()
     type_allowed_content_type_list.append('PDF')
     vat_declaration.getTypeInfo().setTypeAllowedContentTypeList(type_allowed_content_type_list)
@@ -327,9 +327,9 @@ class TestEgov(ERP5TypeTestCase):
     self.tic()
     self.commit()
     missing_file = vat_declaration.PDFDocument_getRequirementCount()
-    self.assertEquals(missing_file, 0)
+    self.assertEqual(missing_file, 0)
     self.portal.portal_workflow.doActionFor(vat_declaration, 'submit_draft_action')
-    self.assertEquals('submitted', vat_declaration.getValidationState())
+    self.assertEqual('submitted', vat_declaration.getValidationState())
 
   def test_05_process_application(self):
     """
@@ -349,7 +349,7 @@ class TestEgov(ERP5TypeTestCase):
     # change to EGov skin which is defined in erp5_egov
     self.changeSkin('EGov') 
     self.portal.portal_workflow.doActionFor(vat_declaration, 'submit_draft_action')
-    self.assertEquals('submitted', vat_declaration.getValidationState())
+    self.assertEqual('submitted', vat_declaration.getValidationState())
     self.createAgentUser()
     self.logout()
     self.login('agent')
@@ -359,18 +359,18 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration.PDFDocument_viewHistory()
     self.portal.portal_workflow.doActionFor(vat_declaration, 'receive_action')
     if vat_declaration.getTypeInfo().getStepReviewRequest() is None:
-      self.assertEquals('completed', vat_declaration.getValidationState())
+      self.assertEqual('completed', vat_declaration.getValidationState())
     """
     else:
-      self.assertEquals('receivable', vat_declaration.getValidationState())
-      self.assertEquals(vat_declaration.getTypeInfo().getStepReviewRequest(),None)
+      self.assertEqual('receivable', vat_declaration.getValidationState())
+      self.assertEqual(vat_declaration.getTypeInfo().getStepReviewRequest(),None)
       self.portal.portal_workflow.doActionFor(vat_declaration, 'assign_action')
-      self.assertEquals('assigned', vat_declaration.getValidationState())
+      self.assertEqual('assigned', vat_declaration.getValidationState())
       self.createValidatorUser()
       self.logout()
       self.login('major')
       self.portal.portal_workflow.doActionFor(vat_declaration, 'complete_action')
-      self.assertEquals('completed', vat_declaration.getValidationState())
+      self.assertEqual('completed', vat_declaration.getValidationState())
     """
 
 def test_suite():

@@ -92,26 +92,26 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                           'alarm_tool_configuration_list'
     )
     signature = self.portal.ERP5Site_getUpgraderSignature()
-    self.assertEquals(sorted(signature_key_list), sorted(signature.keys()))
+    self.assertEqual(sorted(signature_key_list), sorted(signature.keys()))
 
   def test_StandardUpgraderSignature(self):
     """ Test default behaviours provided by default ERP5Site_getUpgraderSignature
     """
     signature = self.portal.ERP5Site_getUpgraderSignature()
     # By default we do not recatalog the instance
-    self.assertEquals(signature['recatalog'], False)
+    self.assertEqual(signature['recatalog'], False)
 
     # By default we do not upgrade manually the workflow
-    self.assertEquals(signature['workflow_chain_dict'], None)
+    self.assertEqual(signature['workflow_chain_dict'], None)
 
     # By Default we do not upgrade Catalog Filters
-    self.assertEquals(signature['catalog_filter_dict'], None)
+    self.assertEqual(signature['catalog_filter_dict'], None)
 
     # By Default there is no extra properties to set.
-    self.assertEquals(signature['erp5_site_property_dict'], {})
+    self.assertEqual(signature['erp5_site_property_dict'], {})
 
     # Do not enable alarms by default
-    self.assertEquals(signature['alarm_tool_configuration_list'], ())
+    self.assertEqual(signature['alarm_tool_configuration_list'], ())
 
     # By default we upgrade software, products, bt5 and so on.
     self.assertTrue(signature['alarm_dict']["bt5_upgrader"])
@@ -144,14 +144,14 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
     self.commit()
-    self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
-    self.assertEquals(self.portal.ERP5Site_upgradeObjectList(), [])
+    self.assertEqual(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
+    self.assertEqual(self.portal.ERP5Site_upgradeObjectList(), [])
     test_object = self.portal.portal_categories.newContent(id=self.upgrade_object_test_id,
                                              portal_type="Base Category")
-    self.assertEquals(test_object.getValidationState(), 'embedded')
+    self.assertEqual(test_object.getValidationState(), 'embedded')
     self.assertNotEquals(self.portal.ERP5Site_upgradeObjectList(), [])
     self.assertNotEquals(self.portal.ERP5Site_upgradeObjectList(upgrade="1"), [])
-    self.assertEquals(test_object.getValidationState(), 'published')
+    self.assertEqual(test_object.getValidationState(), 'published')
 
   def testUpgradeObjectClass(self):
     """
@@ -169,9 +169,9 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
     self.commit()
-    self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
+    self.assertEqual(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
     # Nothing to upgrade
-    self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
+    self.assertEqual(self.portal.ERP5Site_upgradeObjectClass(), [])
 
     # Create one broken object
     gadget = self.portal.portal_gadgets.newContent(portal_type="Gadget", 
@@ -189,10 +189,10 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
 
     self.commit()
     self.assertNotEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
-    self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(upgrade=1),
+    self.assertEqual(self.portal.ERP5Site_upgradeObjectClass(upgrade=1),
                         [(gadget.getRelativeUrl(), 'ERP5 Gadget')])
     self.tic()
-    self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
+    self.assertEqual(self.portal.ERP5Site_upgradeObjectClass(), [])
 
   def test_UpgradeGlobalPropertyList(self):
     """
@@ -206,16 +206,16 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
     self.commit()
-    self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
-    self.assertEquals(self.portal.ERP5Site_upgradeGlobalPropertyList(), 
+    self.assertEqual(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
+    self.assertEqual(self.portal.ERP5Site_upgradeGlobalPropertyList(), 
                       ["Upgrade Required for Global Properties."])
 
-    self.assertEquals(["Upgrade Executed for Global Properties (erp5_site_global_id)."], 
+    self.assertEqual(["Upgrade Executed for Global Properties (erp5_site_global_id)."], 
                       self.portal.ERP5Site_upgradeGlobalPropertyList(upgrade=1))
 
     self.tic()
-    self.assertEquals(self.portal.ERP5Site_upgradeGlobalPropertyList(), [])
-    self.assertEquals(getattr(self.portal, 'erp5_site_global_id', None),
+    self.assertEqual(self.portal.ERP5Site_upgradeGlobalPropertyList(), [])
+    self.assertEqual(getattr(self.portal, 'erp5_site_global_id', None),
                       self.upgrade_object_test_id)
 
   def test_UpgradeWorkflowChain(self):
@@ -230,23 +230,23 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                     "return " + str(signature_code))
     self.commit()
 
-    self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(), [])
+    self.assertEqual(self.portal.ERP5Site_upgradeWorkflowChain(), [])
 
     original_person_chain = workflow_dict["chain_Person"]
     # Modify installed workflow chain.
     workflow_dict["chain_Person"] = ''
     workflow_tool.manage_changeWorkflows(default_chain = '', 
                                          props = workflow_dict)
-    self.assertEquals(workflow_tool.getWorkflowChainDict()["chain_Person"],
+    self.assertEqual(workflow_tool.getWorkflowChainDict()["chain_Person"],
                       "")
-    self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(),
+    self.assertEqual(self.portal.ERP5Site_upgradeWorkflowChain(),
                       ["Upgrade Required for Workflow Chain."])
 
-    self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(upgrade=1),
+    self.assertEqual(self.portal.ERP5Site_upgradeWorkflowChain(upgrade=1),
                       ["Upgrade Executed for Workflow Chain."])
     self.tic()
-    self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(),[])
-    self.assertEquals(workflow_tool.getWorkflowChainDict()["chain_Person"],
+    self.assertEqual(self.portal.ERP5Site_upgradeWorkflowChain(),[])
+    self.assertEqual(workflow_tool.getWorkflowChainDict()["chain_Person"],
                       original_person_chain)
 
   def test_RunVerificationScriptDontRaise(self):
@@ -261,9 +261,9 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                    "return ['A']")
 
     failure = self.portal.ERP5Site_runVerificationScript("ERP5Site_raise")
-    self.failUnless("Script ERP5Site_raise fail to run" in failure,
+    self.assertTrue("Script ERP5Site_raise fail to run" in failure,
                     "'Script ERP5Site_raise fail to run not' in %s" % failure)
-    self.assertEquals('ERP5Site_return : \n - A ',
+    self.assertEqual('ERP5Site_return : \n - A ',
        self.portal.ERP5Site_runVerificationScript("ERP5Site_return"))
 
   def test_UpgradePortalTypePropertySheet(self):
@@ -275,13 +275,13 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
     self.commit()
-    self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
-    self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(),
+    self.assertEqual(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
+    self.assertEqual(self.portal.ERP5Site_upgradePortalTypePropertySheet(),
                       ["Person doesn't has Account associated."])
-    self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(upgrade=1),
+    self.assertEqual(self.portal.ERP5Site_upgradePortalTypePropertySheet(upgrade=1),
                       ["Associate PropertySheet Account into Portal Type Person."])
     self.tic()
-    self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(), [])
+    self.assertEqual(self.portal.ERP5Site_upgradePortalTypePropertySheet(), [])
 
 
   def test_recreateActivities(self):
@@ -306,5 +306,5 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.tic()
     self.assertFalse(object_to_test.hasActivity(method_id="ERP5Site_testRecreateActivityScript"))
     self.assertFalse(self.portal.portal_activities.hasActivity(method_id='ERP5Site_clearActivities'))
-    self.assertEquals(object_to_test.getProperty('custom_property_without_meaning'),
+    self.assertEqual(object_to_test.getProperty('custom_property_without_meaning'),
                       'I was there')

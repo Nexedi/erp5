@@ -137,27 +137,27 @@ class TestProject(ERP5TypeTestCase):
     self.tic()
     # Script Used for Task Tab
     task_line_list = project.Project_getSourceProjectRelatedTaskList()
-    self.assertEquals(1, len(task_line_list))
-    self.assertEquals(task_line_list[0], task.default_task_line)
+    self.assertEqual(1, len(task_line_list))
+    self.assertEqual(task_line_list[0], task.default_task_line)
  
     # Script Used for Task Report Tab
     # It shows planned tasks also.
     task_line_list = project.Project_getSourceProjectRelatedTaskReportList()
-    self.assertEquals(1, len(task_line_list))
-    self.assertEquals(task_line_list[0], task.default_task_line)
+    self.assertEqual(1, len(task_line_list))
+    self.assertEqual(task_line_list[0], task.default_task_line)
 
     task.confirm()
     self.tic()
 
     # Script Used for Task Tab keep only showing tasks.
     task_line_list = project.Project_getSourceProjectRelatedTaskList()
-    self.assertEquals(1, len(task_line_list))
-    self.assertEquals(task_line_list[0], task.default_task_line)
+    self.assertEqual(1, len(task_line_list))
+    self.assertEqual(task_line_list[0], task.default_task_line)
  
     # Script Used for Task Report Tab
     # It shows planned tasks also.
     task_line_list = project.Project_getSourceProjectRelatedTaskReportList()
-    self.assertEquals(1, len(task_line_list))
+    self.assertEqual(1, len(task_line_list))
     self.assertNotEquals(task_line_list[0], task.default_task_line)
     self.assertNotEquals(task_line_list[0].getCausalityRelatedValue(), 
                            task.default_task_line)

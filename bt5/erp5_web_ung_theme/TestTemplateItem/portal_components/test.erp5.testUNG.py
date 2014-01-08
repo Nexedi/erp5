@@ -62,7 +62,7 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.ERP5Site_createNewWebDocument(template)
     self.tic()
     web_page_search = web_page_module.searchFolder(**kw)
-    self.assertEquals(1, len(web_page_search))
+    self.assertEqual(1, len(web_page_search))
 
   def getTitleListToBySubjectDomain(self):
     parent = self.portal.portal_domains.ung_domain.by_subject
@@ -103,10 +103,10 @@ class TestUNG(ERP5TypeTestCase):
     web_table = self.portal.web_page_module.newContent(portal_type="Web Table")
     web_table.Base_changeWorkflowState("publish_action")
     self.tic()
-    self.assertEquals(web_table.getValidationState(), "published")
+    self.assertEqual(web_table.getValidationState(), "published")
     self.changeSkin("UNGDoc")
     web_table.Base_changeWorkflowState("reject_action")
-    self.assertEquals(web_table.getValidationState(), "draft")
+    self.assertEqual(web_table.getValidationState(), "draft")
 
   def testWebPage_getUNGIcon(self):
     """Test if the paths are returned correctly"""
@@ -115,11 +115,11 @@ class TestUNG(ERP5TypeTestCase):
     web_illustration = self.portal.web_page_module.newContent(portal_type="Web Illustration")
     self.tic()
     self.changeSkin("UNGDoc")
-    self.assertEquals(web_page.WebPage_getUNGIcon(),
+    self.assertEqual(web_page.WebPage_getUNGIcon(),
                       "<img src='ung_images/document.gif'/>")
-    self.assertEquals(web_table.WebPage_getUNGIcon(),
+    self.assertEqual(web_table.WebPage_getUNGIcon(),
                       "<img src='ung_images/table.jpg'/>")
-    self.assertEquals(web_illustration.WebPage_getUNGIcon(),
+    self.assertEqual(web_illustration.WebPage_getUNGIcon(),
                       "<img src='ung_images/svg.png'/>")
 
   def testWebSection_deleteObjectList(self):
@@ -132,13 +132,13 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     self.portal.WebSection_deleteObjectList()
     self.tic()
-    self.assertEquals(web_page.getValidationState(), "deleted")
+    self.assertEqual(web_page.getValidationState(), "deleted")
     self.portal.REQUEST.set("uids", [web_page.getUid(),])
     self.tic()
     self.changeSkin("UNGDoc")
     self.portal.WebSection_deleteObjectList()
     self.tic()
-    self.assertEquals(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
+    self.assertEqual(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
     web_page = web_page_module.newContent(portal_type="Web Page")
     web_table = web_page_module.newContent(portal_type="Web Table")
     web_illustration = web_page_module.newContent(portal_type="Web Illustration")
@@ -153,9 +153,9 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     self.portal.web_site_module.ung.WebSection_deleteObjectList()
     self.tic()
-    self.assertEquals(web_page.getValidationState(), "deleted")
-    self.assertEquals(web_table.getValidationState(), "deleted")
-    self.assertEquals(web_illustration.getValidationState(), "deleted")
+    self.assertEqual(web_page.getValidationState(), "deleted")
+    self.assertEqual(web_table.getValidationState(), "deleted")
+    self.assertEqual(web_illustration.getValidationState(), "deleted")
     self.portal.REQUEST.set("uids", uid_list)
     id_list = [web_page.getId(),
                web_table.getId(),
@@ -188,14 +188,14 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.ERP5Site_userFollowUpWebPage("new.Web-Page")
     self.tic()
     self.login("ERP5TypeTestCase")
-    self.assertEquals("ung_new_user", web_page.getFollowUpValue().getReference())
+    self.assertEqual("ung_new_user", web_page.getFollowUpValue().getReference())
     self.login("ung_new_user2")
     self.changeSkin("UNGDoc")
     self.portal.ERP5Site_userFollowUpWebPage("new.Web-Page")
     self.tic()
     self.login("ERP5TypeTestCase")
     reference_list = [user.getReference() for user in web_page.getFollowUpValueList()]
-    self.assertEquals(["ung_new_user", "ung_new_user2"],
+    self.assertEqual(["ung_new_user", "ung_new_user2"],
                       sorted(reference_list))
 
   def testWebSection_getGadgetPathList(self):
@@ -206,8 +206,8 @@ class TestUNG(ERP5TypeTestCase):
       url = gadget.get("image_url").split("?")[0]
       url = url.replace("/default_image", "")
       catalog_result = self.portal.portal_catalog(relative_url=url)
-      self.assertEquals(len(catalog_result), 1)
-      self.assertEquals(catalog_result[0].getTitle(), gadget.get('title'))
+      self.assertEqual(len(catalog_result), 1)
+      self.assertEqual(catalog_result[0].getTitle(), gadget.get('title'))
 
   def testEventModule_createNewEvent(self):
     """Test if script creates correctly a new event"""
@@ -232,10 +232,10 @@ class TestUNG(ERP5TypeTestCase):
     event = portal.portal_catalog.getResultValue(
       portal_type="Note",
       title='Buy Phone' )
-    self.assertEquals(event.getDescription(), "testUNG Sample")
+    self.assertEqual(event.getDescription(), "testUNG Sample")
     start_date = event.getStartDate()
-    self.assertEquals(start_date.month(), 2)
-    self.assertEquals(start_date.minute(), 12)
+    self.assertEqual(start_date.month(), 2)
+    self.assertEqual(start_date.minute(), 12)
 
   def testWebPage_setSubjectList(self):
     """Test if string is inserted as subjects in object correctly"""
@@ -245,13 +245,13 @@ class TestUNG(ERP5TypeTestCase):
     web_table.WebPage_setSubjectList("VPN")
     self.tic()
     subject_list = web_table.getSubjectList()
-    self.assertEquals(["VPN"], subject_list)
+    self.assertEqual(["VPN"], subject_list)
     self.changeSkin("UNGDoc")
     web_table.WebPage_setSubjectList("VPN,ERP5")
     self.tic()
     self.changeSkin("UNGDoc")
     subject_list = web_table.getSubjectList()
-    self.assertEquals(["ERP5", "VPN"], sorted(subject_list))
+    self.assertEqual(["ERP5", "VPN"], sorted(subject_list))
 
   def testWebSection_getDocumentUrl(self):
     """Test if script used to generated custom url to listbox works
@@ -273,7 +273,7 @@ class TestUNG(ERP5TypeTestCase):
     """Test script used to manage events in UNG Calendar """
     self.changeSkin('UNGDoc')
     event_dict = json.loads(self.portal.Base_updateCalendarEventList("list"))
-    self.assertEquals(event_dict.get("events"), [])
+    self.assertEqual(event_dict.get("events"), [])
     event = self.portal.event_module.newContent(portal_type="Note")
     event.setStartDate(DateTime())
     event.setStopDate(DateTime()+1)
@@ -281,7 +281,7 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     event_dict = json.loads(self.portal.Base_updateCalendarEventList("list"))
     event_list = event_dict.get("events")
-    self.assertEquals(event_list[0][-2], "Note")
+    self.assertEqual(event_list[0][-2], "Note")
     form_dict = dict(CalendarStartTime=DateTime().strftime("%m/%d/%Y %H:%M"),
                      CalendarEndTime=DateTime().strftime("%m/%d/%Y %H:%M"),
                      CalendarTitle="One Sample",
@@ -290,7 +290,7 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.Base_updateCalendarEventList("add")
     self.tic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
-    self.assertEquals(web_message.getTitle(), "One Sample")
+    self.assertEqual(web_message.getTitle(), "One Sample")
     self.portal.REQUEST.form.clear()
     form_dict = dict(CalendarStartTime=DateTime().strftime("%m/%d/%Y %H:%M"),
                      CalendarEndTime=DateTime().strftime("%m/%d/%Y %H:%M"),
@@ -300,17 +300,17 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     self.portal.Base_updateCalendarEventList("update")
     self.tic()
-    self.assertEquals(web_message.getTitle(), "Buy Coffee")
+    self.assertEqual(web_message.getTitle(), "Buy Coffee")
     form_dict["event_portal_type"] = "Note"
     self.portal.REQUEST.form.update(form_dict)
     self.changeSkin("UNGDoc")
     self.portal.Base_updateCalendarEventList("update")
     self.tic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
-    self.assertEquals(web_message, None)
+    self.assertEqual(web_message, None)
     note = self.portal.portal_catalog.getResultValue(portal_type="Note",
           title="Buy Coffee")
-    self.assertEquals(note.getTitle(), "Buy Coffee")
+    self.assertEqual(note.getTitle(), "Buy Coffee")
     self.portal.REQUEST.form.clear()
     form_dict = dict(title=note.getTitle(),
                      id=note.getId())
@@ -320,7 +320,7 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     note = self.portal.portal_catalog.getResultValue(portal_type="Note",
                                                      title="Buy Coffee")
-    self.assertEquals(note, None)
+    self.assertEqual(note, None)
     self.portal.REQUEST.form.clear()
     start_date = DateTime()
     end_date = DateTime() + 1
@@ -334,12 +334,12 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
                                                        title="Another Sample")
-    self.assertEquals(letter.getPortalType(), "Letter")
-    self.assertEquals(letter.getTitle(), "Another Sample")
-    self.assertEquals(letter.getStartDate().hour(), start_date.hour())
-    self.assertEquals(letter.getStartDate().day(), start_date.day())
-    self.assertEquals(letter.getStopDate().hour(), end_date.hour())
-    self.assertEquals(letter.getStopDate().day(), end_date.day())
+    self.assertEqual(letter.getPortalType(), "Letter")
+    self.assertEqual(letter.getTitle(), "Another Sample")
+    self.assertEqual(letter.getStartDate().hour(), start_date.hour())
+    self.assertEqual(letter.getStartDate().day(), start_date.day())
+    self.assertEqual(letter.getStopDate().hour(), end_date.hour())
+    self.assertEqual(letter.getStopDate().day(), end_date.day())
     self.portal.REQUEST.form.clear()
     form_dict = dict(title="Change only the Title of Sample",
                      event_id=letter.getId())
@@ -349,13 +349,13 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
                                                        title="Another Sample")
-    self.assertEquals(letter, None)
+    self.assertEqual(letter, None)
     letter = self.portal.portal_catalog.getResultValue(portal_type="Letter",
                                                        title="Change only the Title of Sample")
-    self.assertEquals(letter.getStartDate().hour(), start_date.hour())
-    self.assertEquals(letter.getStartDate().day(), start_date.day())
-    self.assertEquals(letter.getStopDate().hour(), end_date.hour())
-    self.assertEquals(letter.getStopDate().day(), end_date.day())
+    self.assertEqual(letter.getStartDate().hour(), start_date.hour())
+    self.assertEqual(letter.getStartDate().day(), start_date.day())
+    self.assertEqual(letter.getStopDate().hour(), end_date.hour())
+    self.assertEqual(letter.getStopDate().day(), end_date.day())
   
   def testERPSite_createUNGUser(self):
     """Test if script creates an user correctly"""
@@ -371,22 +371,22 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
                                                        reference="ung_user")
-    self.assertEquals(person.getFirstName(), "UNG")
-    self.assertEquals(person.getLastName(), "User")
-    self.assertEquals(person.getValidationState(), "validated")
-    self.assertEquals(person.getEmail().getPortalType(), "Email")
-    self.assertEquals(person.getEmailText(), "g@g.com")
+    self.assertEqual(person.getFirstName(), "UNG")
+    self.assertEqual(person.getLastName(), "User")
+    self.assertEqual(person.getValidationState(), "validated")
+    self.assertEqual(person.getEmail().getPortalType(), "Email")
+    self.assertEqual(person.getEmailText(), "g@g.com")
     self.changeSkin("UNGDoc")
     response = json.loads(self.portal.ERPSite_createUNGUser())
-    self.assertEquals(response, None)
+    self.assertEqual(response, None)
 
   def testERP5Site_checkIfUserExistUsingHttpRequest(self):
     """Test script ERP5Site_checkIfUserExist to simulate the browser request"""
     script_path = self.portal.web_site_module.ung.getPath() + "/ERP5Site_checkIfUserExist"
     response = json.loads(self.publish(script_path).getBody())
-    self.assertEquals(response, {'response': False})
+    self.assertEqual(response, {'response': False})
     response = json.loads(self.publish(script_path + "?reference=ung_reference").getBody())
-    self.assertEquals(response, {'response': True})
+    self.assertEqual(response, {'response': True})
 
   def testERP5Site_checkIfUserExist(self):
     """Test script ERP5Site_checkIfUserExist"""
@@ -400,21 +400,21 @@ class TestUNG(ERP5TypeTestCase):
     portal.ERPSite_createUNGUser()
     kw = dict(reference=form_dict["login_name"],)
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
-    self.assertEquals(response.get("response"), False)
+    self.assertEqual(response.get("response"), False)
     self.tic()
     param_list = ["%s=%s" % (key,value) for key, value in kw.iteritems()]
     self.changeSkin("UNGDoc")
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
-    self.assertEquals(response.get("response"), True)
+    self.assertEqual(response.get("response"), True)
     kw = dict(first_name="Not Exist",
               reference="no_reference",
              )
     self.changeSkin("UNGDoc")
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
-    self.assertEquals(response.get("response"), False)
+    self.assertEqual(response.get("response"), False)
     self.login("ung_reference")
     user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
-    self.assertEquals(user.getFirstName(), "UNG")
+    self.assertEqual(user.getFirstName(), "UNG")
 
   def testWebSection_addGadgetList(self):
     """Test if gadgets are added correctly"""
@@ -429,7 +429,7 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     gadget = self.portal.portal_catalog.getResultValue(portal_type="Gadget",
                                                        validation_state="public")
-    self.assertEquals(gadget_id_list, gadget.getId())
+    self.assertEqual(gadget_id_list, gadget.getId())
     self.portal.knowledge_pad_module.deleteContent(id=obj.getId())
     self.tic()
     obj = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
@@ -448,24 +448,24 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     self.portal.web_site_module.ung.WebSection_addGadgetList()
     self.tic()
-    self.assertEquals(len(obj.searchFolder()), 2)
-    self.assertEquals(sorted([x.getSpecialise() for x in obj.searchFolder()]),
+    self.assertEqual(len(obj.searchFolder()), 2)
+    self.assertEqual(sorted([x.getSpecialise() for x in obj.searchFolder()]),
                       sorted(path_list))
 
   def testBase_getPreferencePathList(self):
     """Test if the paths of preference objects are returned correctly"""
     self.changeSkin('UNGDoc')
     self.logout()
-    self.assertEquals(json.loads(self.portal.Base_getPreferencePathList()), None)
+    self.assertEqual(json.loads(self.portal.Base_getPreferencePathList()), None)
     self.login("ERP5TypeTestCase")
     self.changeSkin("UNGDoc")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
-    self.assertEquals(preference_dict, {})
+    self.assertEqual(preference_dict, {})
     self.portal.portal_preferences.ung_preference.enable()
     self.tic()
     self.changeSkin("UNGDoc")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
-    self.assertEquals(preference_dict["preference"], "portal_preferences/ung_preference")
+    self.assertEqual(preference_dict["preference"], "portal_preferences/ung_preference")
 
   def testWebSection_getWebPageObjectList(self):
     """Test if the paths of preference objects are returned correctly"""
@@ -478,16 +478,16 @@ class TestUNG(ERP5TypeTestCase):
     kw = {"portal_type": "Web Page"}
     self.changeSkin('UNGDoc')
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Page")
+    self.assertEqual(len(result_list), 1)
+    self.assertEqual(result_list[0].getPortalType(), "Web Page")
     kw["portal_type"] = "Web Illustration"
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Illustration")
+    self.assertEqual(len(result_list), 1)
+    self.assertEqual(result_list[0].getPortalType(), "Web Illustration")
     kw["portal_type"] = "Web Table"
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Table")
+    self.assertEqual(len(result_list), 1)
+    self.assertEqual(result_list[0].getPortalType(), "Web Table")
 
   def testWebPage_updateWebDocument(self):
     """ Test if script load correctly the Web Page with data of one document
@@ -511,4 +511,4 @@ class TestUNG(ERP5TypeTestCase):
     web_page.WebPage_updateWebDocument(document.getPath())
     self.tic()
     self.assertTrue(re.search("\>tiolive\<", web_page.getTextContent()) is not None)
-    self.assertEquals(web_page.getTitle(), document.getTitle())
+    self.assertEqual(web_page.getTitle(), document.getTitle())

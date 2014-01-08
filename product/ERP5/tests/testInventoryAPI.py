@@ -267,14 +267,14 @@ class TestInventory(InventoryAPITestCase):
   """Tests getInventory methods.
   """
   def assertInventoryEquals(self, value, **inventory_kw):
-    self.assertEquals(value, self.getInventory(**inventory_kw))
+    self.assertEqual(value, self.getInventory(**inventory_kw))
 
   def testReturnedTypeIsFloat(self):
     """getInventory returns a float"""
     inventory = self.getInventory()
-    self.assertEquals(type(inventory), type(0.1))
+    self.assertEqual(type(inventory), type(0.1))
     # default is 0
-    self.assertEquals(0, inventory)
+    self.assertEqual(0, inventory)
 
   def test_SimulationMovement(self):
     """Test Simulation Movements works in this testing environnement.
@@ -291,10 +291,10 @@ class TestInventory(InventoryAPITestCase):
     sim_mvt = self._makeSimulationMovement(quantity=2)
     mvt = self._makeMovement(quantity=3)
     # simulation movement are accountable,
-    self.failUnless(sim_mvt.isAccountable())
+    self.assertTrue(sim_mvt.isAccountable())
     # unless connected to a delivery movement
     sim_mvt.setDeliveryValue(mvt)
-    self.failIf(sim_mvt.isAccountable())
+    self.assertFalse(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
     self.tic() # (after reindexing of course)
     self.assertInventoryEquals(3, section_uid=self.section.getUid())
@@ -678,7 +678,7 @@ class TestInventory(InventoryAPITestCase):
     for i in range(10):
       self._makeMovement( quantity=-0.1, price=1 )
     self.assertInventoryEquals(0, precision=2, node_uid=self.node.getUid())
-    self.assertEquals(0, getInventoryAssetPrice(precision=2,
+    self.assertEqual(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
 
   def test_OmitInputOmitOutput(self):
@@ -776,9 +776,9 @@ class TestInventory(InventoryAPITestCase):
   def test_OmitInputOmitOutputWithZeroQuantity(self):
     self._makeMovement(quantity=0, destination_total_asset_price=1)
     getInventoryAssetPrice = self.portal.portal_simulation.getInventoryAssetPrice
-    self.assertEquals(0, getInventoryAssetPrice(node_uid=self.node.getUid(),
+    self.assertEqual(0, getInventoryAssetPrice(node_uid=self.node.getUid(),
                                                 omit_input=1))
-    self.assertEquals(1, getInventoryAssetPrice(node_uid=self.node.getUid(),
+    self.assertEqual(1, getInventoryAssetPrice(node_uid=self.node.getUid(),
                                                 omit_output=1))
 
   def test_OmitAssetIncreaseDecreaseWithZeroPrice(self):
@@ -811,22 +811,22 @@ class TestInventoryList(InventoryAPITestCase):
     """Inventory List returns a sequence object"""
     getInventoryList = self.getSimulationTool().getInventoryList
     inventory_list = getInventoryList()
-    self.assertEquals(str(inventory_list.__class__),
+    self.assertEqual(str(inventory_list.__class__),
                     'Shared.DC.ZRDB.Results.Results')
     # the brain is InventoryListBrain
     self.assert_('InventoryListBrain' in
           [c.__name__ for c in inventory_list._class.__bases__])
     # default is an empty list
-    self.assertEquals(0, len(inventory_list))
+    self.assertEqual(0, len(inventory_list))
 
   def testDefault0(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement()
     inventory_list = getInventoryList(section_uid=self.section.getUid(),)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(0, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(0, inventory_list[0].total_quantity)
     # The total price of grouped movements without price is 0
-    self.assertEquals(0, inventory_list[0].total_price)
+    self.assertEqual(0, inventory_list[0].total_price)
 
   def test_GroupByNode(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -834,12 +834,12 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(destination_value=self.other_node, quantity=100)
     self._makeMovement(destination_value=None, quantity=100)
     inventory_list = getInventoryList(group_by_node=1)
-    self.assertEquals(3, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.node_relative_url ==
+    self.assertEqual(3, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.node_relative_url ==
                   self.node.getRelativeUrl()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.node_relative_url ==
+    self.assertEqual([r for r in inventory_list if r.node_relative_url ==
                   self.other_node.getRelativeUrl()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.node_relative_url ==
+    self.assertEqual([r for r in inventory_list if r.node_relative_url ==
                   self.mirror_node.getRelativeUrl()][0].inventory, -300)
 
   def test_GroupByMirrorNode(self):
@@ -849,12 +849,12 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(source_value=None, quantity=100)
     inventory_list = getInventoryList(section_uid=self.section.getUid(),
                                       group_by_mirror_node=1)
-    self.assertEquals(3, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.mirror_node_uid ==
+    self.assertEqual(3, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.mirror_node_uid ==
                   self.mirror_node.getUid()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.mirror_node_uid ==
+    self.assertEqual([r for r in inventory_list if r.mirror_node_uid ==
                   self.other_node.getUid()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
                        if r.mirror_node_uid is None][0].inventory, 100)
 
   def test_GroupBySection(self):
@@ -864,12 +864,12 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(destination_section_value=None, quantity=100)
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_section=1)
-    self.assertEquals(3, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.section_relative_url ==
+    self.assertEqual(3, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.section_relative_url ==
                   self.section.getRelativeUrl()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.section_relative_url ==
+    self.assertEqual([r for r in inventory_list if r.section_relative_url ==
                   self.other_node.getRelativeUrl()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.section_relative_url is
+    self.assertEqual([r for r in inventory_list if r.section_relative_url is
                   None][0].inventory, 100)
 
   def test_GroupBySectionCategory(self):
@@ -882,11 +882,11 @@ class TestInventoryList(InventoryAPITestCase):
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       section_category='group/level1',
                                       group_by_section_category=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(3+2, inventory_list[0].inventory)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(3+2, inventory_list[0].inventory)
     # section category is exported in the brain
     self.assertTrue(hasattr(inventory_list[0], 'section_category_uid'))
-    self.assertEquals(self.portal.portal_categories.group.level1.getUid(),
+    self.assertEqual(self.portal.portal_categories.group.level1.getUid(),
                       inventory_list[0].section_category_uid)
 
   def test_GroupBySectionCategoryStrict(self):
@@ -899,12 +899,12 @@ class TestInventoryList(InventoryAPITestCase):
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       section_category='group/level1',
                                       group_by_section_category_strict_membership=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(3+2, inventory_list[0].inventory)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(3+2, inventory_list[0].inventory)
     # section category is exported in the brain
     self.assertTrue(hasattr(inventory_list[0],
       'section_category_strict_membership_uid'))
-    self.assertEquals(self.portal.portal_categories.group.level1.getUid(),
+    self.assertEqual(self.portal.portal_categories.group.level1.getUid(),
                       inventory_list[0].section_category_strict_membership_uid)
 
   def test_GroupByFunction(self):
@@ -920,10 +920,10 @@ class TestInventoryList(InventoryAPITestCase):
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_function=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.function_uid ==
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.function_uid ==
       function1.getUid()][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list if r.function_uid ==
+    self.assertEqual([r for r in inventory_list if r.function_uid ==
       function2.getUid()][0].inventory, 3)
 
   def test_GroupByFunding(self):
@@ -939,10 +939,10 @@ class TestInventoryList(InventoryAPITestCase):
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_funding=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.funding_uid ==
       funding1.getUid()][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+    self.assertEqual([r for r in inventory_list if r.funding_uid ==
       funding2.getUid()][0].inventory, 3)
 
   def test_GroupByPaymentRequest(self):
@@ -958,10 +958,10 @@ class TestInventoryList(InventoryAPITestCase):
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_payment_request=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.payment_request_uid ==
       payment_request1.getUid()][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+    self.assertEqual([r for r in inventory_list if r.payment_request_uid ==
       payment_request2.getUid()][0].inventory, 3)
 
   def test_GroupByProject(self):
@@ -973,10 +973,10 @@ class TestInventoryList(InventoryAPITestCase):
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_project=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.project_uid ==
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.project_uid ==
       self.project.getUid()][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list if r.project_uid ==
+    self.assertEqual([r for r in inventory_list if r.project_uid ==
       self.other_project.getUid()][0].inventory, 3)
 
   def test_GroupByResource(self):
@@ -986,17 +986,17 @@ class TestInventoryList(InventoryAPITestCase):
     # group_by_resource is implicit when grouping by something ...
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_node=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.resource_relative_url ==
                   self.resource.getRelativeUrl()][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.resource_relative_url ==
+    self.assertEqual([r for r in inventory_list if r.resource_relative_url ==
                   self.other_resource.getRelativeUrl()][0].inventory, 100)
     # ... but can be disabled
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_node=1,
                                       group_by_resource=0)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(inventory_list[0].inventory, 200)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(inventory_list[0].inventory, 200)
 
   def test_GroupByPayment(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1005,10 +1005,10 @@ class TestInventoryList(InventoryAPITestCase):
                        quantity=200)
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_node=1, group_by_payment=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list if r.payment_uid is
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.payment_uid is
                       None][0].inventory, 100)
-    self.assertEquals([r for r in inventory_list if r.payment_uid ==
+    self.assertEqual([r for r in inventory_list if r.payment_uid ==
                        self.payment_node.getUid()][0].inventory, 200)
 
   def test_GroupByDate(self):
@@ -1019,10 +1019,10 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(quantity=1, start_date=DateTime('2001/1/1 12:00 UTC'))
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_date=1)
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list
                         if r.date.year() == 2000][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
                         if r.date.year() == 2001][0].inventory, 1)
 
   def test_GroupByRelatedKey(self):
@@ -1037,10 +1037,10 @@ class TestInventoryList(InventoryAPITestCase):
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by=('strict_use_uid', ))
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
     # in such case, it's interesting to pass a select expression, to be have on
@@ -1049,22 +1049,22 @@ class TestInventoryList(InventoryAPITestCase):
                                                 self.other_node.getUid()),
                                       group_by=('strict_use_uid', ),
                                       select_list=['strict_use_uid'])
-    self.assertEquals(2, len(inventory_list))
+    self.assertEqual(2, len(inventory_list))
     self.assertTrue(hasattr(inventory_list[0], 'strict_use_uid'))
     use = self.portal.portal_categories.use
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
       if r.strict_use_uid == use.use1.getUid()][0].inventory, 5)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
       if r.strict_use_uid == use.use2.getUid()][0].inventory, 11)
 
     # group_by can also be passed as string
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by='strict_use_uid', )
-    self.assertEquals(2, len(inventory_list))
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
     # if we group by "use_uid" instead of "strict_use_uid", then we'll have
@@ -1073,40 +1073,40 @@ class TestInventoryList(InventoryAPITestCase):
                                                 self.other_node.getUid()),
                                       group_by=('use_uid', ),
                                       select_list=['use_uid'])
-    self.assertEquals(3, len(inventory_list))
+    self.assertEqual(3, len(inventory_list))
     self.assertTrue(hasattr(inventory_list[0], 'use_uid'))
     use = self.portal.portal_categories.use
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
       if r.use_uid == use.use1.getUid()][0].inventory, 5)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
       if r.use_uid == use.use2.getUid()][0].inventory, 11)
     # the summary line
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
       if r.use_uid == use.getUid()][0].inventory, 11+5)
 
     # the name of a column can also be used, from stock or other tables
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by='node_uid', )
-    self.assertEquals(2, len(inventory_list))
+    self.assertEqual(2, len(inventory_list))
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by='title', )
-    self.assertEquals(4, len(inventory_list))
+    self.assertEqual(4, len(inventory_list))
 
     # group_by= can be mixed with group_by_* arguments
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by_node=True,
                                       group_by=('strict_use_uid',))
-    self.assertEquals(3, len(inventory_list))
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual(3, len(inventory_list))
+    self.assertEqual([r for r in inventory_list
             if r.getObject().getUse() == 'use1'
             and r.node_uid == self.node.getUid()][0].inventory, 2)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
             if r.getObject().getUse() == 'use1'
             and r.node_uid == self.other_node.getUid()][0].inventory, 3)
-    self.assertEquals([r for r in inventory_list
+    self.assertEqual([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
   def test_OmitInputOmitOutput(self):
@@ -1116,19 +1116,19 @@ class TestInventoryList(InventoryAPITestCase):
     # omit input ignores movement comming to this node
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_input=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(-1, inventory_list[0].total_price)
-    self.assertEquals(-1, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(-1, inventory_list[0].total_price)
+    self.assertEqual(-1, inventory_list[0].total_quantity)
 
     # omit output ignores movement going to this node
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_output=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(1, inventory_list[0].total_price)
-    self.assertEquals(1, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(1, inventory_list[0].total_price)
+    self.assertEqual(1, inventory_list[0].total_quantity)
 
     # omit_output & omit_input return nothing in that case
-    self.assertEquals(0, len(getInventoryList(node_uid=self.node.getUid(),
+    self.assertEqual(0, len(getInventoryList(node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
 
@@ -1139,44 +1139,44 @@ class TestInventoryList(InventoryAPITestCase):
     # omit movements that increases the asset
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_asset_increase=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(-1, inventory_list[0].total_price)
-    self.assertEquals(-1, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(-1, inventory_list[0].total_price)
+    self.assertEqual(-1, inventory_list[0].total_quantity)
 
     # omit movements that decrease the asset
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_asset_decrease=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(1, inventory_list[0].total_price)
-    self.assertEquals(1, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(1, inventory_list[0].total_price)
+    self.assertEqual(1, inventory_list[0].total_quantity)
 
     # omit_asset_increase and omit_asset_decrease return nothing in that case
-    self.assertEquals(0, len(getInventoryList(node_uid=self.node.getUid(),
+    self.assertEqual(0, len(getInventoryList(node_uid=self.node.getUid(),
                                               omit_asset_increase=1,
                                               omit_asset_decrease=1)))
 
     # so far, it works the same as omit_input & omit_output, but if we have
     # negative prices, we see the interest of such feature
     m1.setPrice(-1)
-    self.assertEquals(-1, m1.getTotalPrice())
+    self.assertEqual(-1, m1.getTotalPrice())
     m2.setPrice(-1)
-    self.assertEquals(1, m2.getTotalPrice())
+    self.assertEqual(1, m2.getTotalPrice())
 
     self.tic()
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_asset_increase=1)
-    self.assertEquals(1, len(inventory_list))
+    self.assertEqual(1, len(inventory_list))
     # this is m1
-    self.assertEquals(-1, inventory_list[0].total_price)
-    self.assertEquals(1, inventory_list[0].total_quantity)
+    self.assertEqual(-1, inventory_list[0].total_price)
+    self.assertEqual(1, inventory_list[0].total_quantity)
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_asset_decrease=1)
-    self.assertEquals(1, len(inventory_list))
+    self.assertEqual(1, len(inventory_list))
     # this is m2
-    self.assertEquals(1, inventory_list[0].total_price)
-    self.assertEquals(-1, inventory_list[0].total_quantity)
+    self.assertEqual(1, inventory_list[0].total_price)
+    self.assertEqual(-1, inventory_list[0].total_quantity)
 
 
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
@@ -1192,17 +1192,17 @@ class TestInventoryList(InventoryAPITestCase):
                                       section_uid=self.section.getUid(),
                                       payment_uid=self.payment_node.getUid(),
                                       omit_output=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(2, inventory_list[0].total_price)
-    self.assertEquals(2, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(2, inventory_list[0].total_price)
+    self.assertEqual(2, inventory_list[0].total_quantity)
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                 section_uid=self.section.getUid(),
                                 payment_uid=self.other_payment_node.getUid(),
                                 omit_input=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(-2, inventory_list[0].total_price)
-    self.assertEquals(-2, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(-2, inventory_list[0].total_price)
+    self.assertEqual(-2, inventory_list[0].total_quantity)
 
   def test_OmitInputOmitOutputCancellationAmount(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1211,16 +1211,16 @@ class TestInventoryList(InventoryAPITestCase):
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_input=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(2, inventory_list[0].total_price)
-    self.assertEquals(2, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(2, inventory_list[0].total_price)
+    self.assertEqual(2, inventory_list[0].total_quantity)
 
     # omit output ignores movement going to this node
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       omit_output=1)
-    self.assertEquals(1, len(inventory_list))
-    self.assertEquals(-1, inventory_list[0].total_price)
-    self.assertEquals(-1, inventory_list[0].total_quantity)
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(-1, inventory_list[0].total_price)
+    self.assertEqual(-1, inventory_list[0].total_quantity)
 
   def test_CurentAvailableFutureInventoryList(self):
     def makeMovement(simulation_state=None, quantity=None):
@@ -1239,9 +1239,9 @@ class TestInventoryList(InventoryAPITestCase):
       if destination:
         node_uid = self.other_node.getUid()
       inventory_list = method(node_uid=node_uid)
-      self.assertEquals(len(inventory_list), line)
+      self.assertEqual(len(inventory_list), line)
       if quantity is not None:
-        self.assertEquals(sum([x.total_quantity for x in inventory_list]),
+        self.assertEqual(sum([x.total_quantity for x in inventory_list]),
                           quantity)
     makeMovement(quantity=1, simulation_state='ordered')
     checkInventory(line=0, type='Current', destination=1)
@@ -1296,9 +1296,9 @@ class TestInventoryList(InventoryAPITestCase):
       return round(r)
 
 
-    self.assertEquals(7895, valuate("MovingAverage"))
-    self.assertEquals(7200, valuate("Filo"))
-    self.assertEquals(8600, valuate("Fifo"))
+    self.assertEqual(7895, valuate("MovingAverage"))
+    self.assertEqual(7200, valuate("Filo"))
+    self.assertEqual(8600, valuate("Fifo"))
 
   def test_weighted_average_asset_price(self):
     def h(quantity, total_price):
@@ -1367,7 +1367,7 @@ class TestInventoryList(InventoryAPITestCase):
                   resource_uid=resource.getUid(),
                   node_uid=self.node.getUid())
       self.assertTrue(result is not None)
-      self.assertEquals(data[cur]['after']['total_price'], round(result))
+      self.assertEqual(data[cur]['after']['total_price'], round(result))
 
     # check internal data
     internal_data = {
@@ -1389,7 +1389,7 @@ class TestInventoryList(InventoryAPITestCase):
                   resource_uid=resource.getUid(),
                   section_uid=self.section.getUid())
       self.assertTrue(result is not None)
-      self.assertEquals(internal_data[cur]['after']['total_price'], round(result))
+      self.assertEqual(internal_data[cur]['after']['total_price'], round(result))
 
 
 class TestMovementHistoryList(InventoryAPITestCase):
@@ -1399,27 +1399,27 @@ class TestMovementHistoryList(InventoryAPITestCase):
     """Movement History List returns a sequence object"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList()
-    self.assertEquals(str(mvt_history_list.__class__),
+    self.assertEqual(str(mvt_history_list.__class__),
                     'Shared.DC.ZRDB.Results.Results')
     # default is an empty list
-    self.assertEquals(0, len(mvt_history_list))
+    self.assertEqual(0, len(mvt_history_list))
 
   def testDefault0(self):
     self._makeMovement()
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList(
       section_uid=self.section.getUid(),)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(0, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(0, mvt_history_list[0].total_quantity)
     # If a movement have no price, None is returned
-    self.assertEquals(None, mvt_history_list[0].total_price)
+    self.assertEqual(None, mvt_history_list[0].total_price)
 
   def testMovementBothSides(self):
     """Movement History List returns movement from both sides"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
     # we don't filter, so we have the same movement from both sides.
-    self.assertEquals(2, len(getMovementHistoryList()))
+    self.assertEqual(2, len(getMovementHistoryList()))
 
   def testBrainClass(self):
     """Movement History List uses InventoryListBrain for brains"""
@@ -1428,7 +1428,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r)
     r_bases = getMovementHistoryList()._class.__bases__
     brain_class = r_bases[2].__name__
-    self.assertEquals('MovementHistoryListBrain', brain_class,
+    self.assertEqual('MovementHistoryListBrain', brain_class,
       "unexpected brain class for getMovementHistoryList InventoryListBrain"
       " != %s (bases %s)" % (brain_class, r_bases))
 
@@ -1450,17 +1450,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
     # compatiblity names
     self.assertTrue(hasattr(brain, 'section_title'))
-    self.assertEquals(brain.section_title, self.section.getTitle())
+    self.assertEqual(brain.section_title, self.section.getTitle())
     self.assertTrue(hasattr(brain, 'section_relative_url'))
-    self.assertEquals(brain.section_relative_url, self.section.getRelativeUrl())
+    self.assertEqual(brain.section_relative_url, self.section.getRelativeUrl())
     self.assertTrue(hasattr(brain, 'node_title'))
-    self.assertEquals(brain.node_title, self.node.getTitle())
+    self.assertEqual(brain.node_title, self.node.getTitle())
     self.assertTrue(hasattr(brain, 'node_relative_url'))
-    self.assertEquals(brain.node_relative_url, self.node.getRelativeUrl())
+    self.assertEqual(brain.node_relative_url, self.node.getRelativeUrl())
     self.assertTrue(hasattr(brain, 'resource_title'))
-    self.assertEquals(brain.resource_title, self.resource.getTitle())
+    self.assertEqual(brain.resource_title, self.resource.getTitle())
     self.assertTrue(hasattr(brain, 'resource_relative_url'))
-    self.assertEquals(brain.resource_relative_url, self.resource.getRelativeUrl())
+    self.assertEqual(brain.resource_relative_url, self.resource.getRelativeUrl())
 
   def testBrainGetItem(self):
     """Test __getitem__ interface on brains."""
@@ -1468,25 +1468,25 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self._makeMovement(quantity=100)
     brain = getMovementHistoryList(section_uid=self.section.getUid())[0]
 
-    self.assertEquals(brain['node_uid'], self.node.getUid())
-    self.assertEquals(brain['node_relative_url'], self.node.getRelativeUrl())
-    self.assertEquals(brain['node_title'], self.node.getTitle())
-    self.assertEquals(brain['section_uid'], self.section.getUid())
-    self.assertEquals(brain['section_relative_url'], self.section.getRelativeUrl())
-    self.assertEquals(brain['section_title'], self.section.getTitle())
-    self.assertEquals(brain['resource_uid'], self.resource.getUid())
-    self.assertEquals(brain['resource_relative_url'], self.resource.getRelativeUrl())
-    self.assertEquals(brain['resource_title'], self.resource.getTitle())
+    self.assertEqual(brain['node_uid'], self.node.getUid())
+    self.assertEqual(brain['node_relative_url'], self.node.getRelativeUrl())
+    self.assertEqual(brain['node_title'], self.node.getTitle())
+    self.assertEqual(brain['section_uid'], self.section.getUid())
+    self.assertEqual(brain['section_relative_url'], self.section.getRelativeUrl())
+    self.assertEqual(brain['section_title'], self.section.getTitle())
+    self.assertEqual(brain['resource_uid'], self.resource.getUid())
+    self.assertEqual(brain['resource_relative_url'], self.resource.getRelativeUrl())
+    self.assertEqual(brain['resource_title'], self.resource.getTitle())
 
   def testSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)
     mvt_history_list = getMovementHistoryList(
                             section_uid = self.section.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
-    self.assertEquals(100, mvt_history_list[0].total_quantity)
-    self.assertEquals(self.section.getRelativeUrl(),
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEqual(100, mvt_history_list[0].total_quantity)
+    self.assertEqual(self.section.getRelativeUrl(),
                   mvt_history_list[0].section_relative_url)
 
   def testMirrorSection(self):
@@ -1494,22 +1494,22 @@ class TestMovementHistoryList(InventoryAPITestCase):
     mvt = self._makeMovement(quantity=100)
     mvt_history_list = getMovementHistoryList(
                             mirror_section_uid = self.section.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
-    self.assertEquals(-100, mvt_history_list[0].total_quantity)
-    self.assertEquals(self.mirror_section.getRelativeUrl(),
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEqual(-100, mvt_history_list[0].total_quantity)
+    self.assertEqual(self.mirror_section.getRelativeUrl(),
                   mvt_history_list[0].section_relative_url)
-    self.assertEquals(self.mirror_node.getRelativeUrl(),
+    self.assertEqual(self.mirror_node.getRelativeUrl(),
                   mvt_history_list[0].node_relative_url)
 
     # if we look from the other side, everything is reverted
     mvt_history_list = getMovementHistoryList(
                             section_uid = self.section.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(100, mvt_history_list[0].total_quantity)
-    self.assertEquals(self.section.getRelativeUrl(),
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(100, mvt_history_list[0].total_quantity)
+    self.assertEqual(self.section.getRelativeUrl(),
                   mvt_history_list[0].section_relative_url)
-    self.assertEquals(self.node.getRelativeUrl(),
+    self.assertEqual(self.node.getRelativeUrl(),
                   mvt_history_list[0].node_relative_url)
 
   def testDifferentDatesPerSection(self):
@@ -1520,10 +1520,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
                              start_date=start_date,
                              stop_date=stop_date)
     # start_date is for source
-    self.assertEquals(start_date, getMovementHistoryList(
+    self.assertEqual(start_date, getMovementHistoryList(
                             section_uid=self.mirror_section.getUid())[0].date)
     # stop_date is for destination
-    self.assertEquals(stop_date, getMovementHistoryList(
+    self.assertEqual(stop_date, getMovementHistoryList(
                             section_uid=self.section.getUid())[0].date)
 
   def testNode(self):
@@ -1531,18 +1531,18 @@ class TestMovementHistoryList(InventoryAPITestCase):
     mvt = self._makeMovement(quantity=100)
     mvt_history_list = getMovementHistoryList(
                             node_uid = self.node.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
-    self.assertEquals(100, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEqual(100, mvt_history_list[0].total_quantity)
 
   def testMirrorNode(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)
     mvt_history_list = getMovementHistoryList(
                             mirror_node_uid = self.node.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt.getUid(), mvt_history_list[0].uid)
-    self.assertEquals(-100, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(mvt.getUid(), mvt_history_list[0].uid)
+    self.assertEqual(-100, mvt_history_list[0].total_quantity)
 
   def testResource(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1554,17 +1554,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),
                             resource_uid=self.resource.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(100, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(100, mvt_history_list[0].total_quantity)
     # getMovementHistoryList should return only movement for
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),
                             resource_uid=another_resource.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(3, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(3, mvt_history_list[0].total_quantity)
 
     # wrong value yields an empty list
-    self.assertEquals(0, len(getMovementHistoryList(
+    self.assertEqual(0, len(getMovementHistoryList(
                             resource_uid = self.node.getUid())))
 
   def testSectionCategory(self):
@@ -1581,15 +1581,15 @@ class TestMovementHistoryList(InventoryAPITestCase):
                              ]:
       movement_history_list = getMovementHistoryList(
                                 section_category=section_category)
-      self.assertEquals(len(movement_history_list), 1)
-      self.assertEquals(movement_history_list[0].total_quantity, 100)
+      self.assertEqual(len(movement_history_list), 1)
+      self.assertEqual(movement_history_list[0].total_quantity, 100)
 
     # again, bad category raises an exception
     self.assertRaises(ValueError,
                       getMovementHistoryList,
                       section_category='group/notexists')
     # (but other arguments are ignored)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         section_category='group/level1',
                         ignored='argument')), 1)
 
@@ -1602,8 +1602,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
     movement_history_list = getMovementHistoryList(
                               section_category=['group/level1',
                                                 'group/level1/level2'])
-    self.assertEquals(len(movement_history_list), 1)
-    self.assertEquals(movement_history_list[0].total_quantity, 100)
+    self.assertEqual(len(movement_history_list), 1)
+    self.assertEqual(movement_history_list[0].total_quantity, 100)
 
 
   def testNodeCategoryAndSectionCategory(self):
@@ -1623,8 +1623,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
         movement_history_list = getMovementHistoryList(
                                   node_category=node_category,
                                   section_category=section_category)
-        self.assertEquals(len(movement_history_list), 1)
-        self.assertEquals(movement_history_list[0].total_quantity, 100)
+        self.assertEqual(len(movement_history_list), 1)
+        self.assertEqual(movement_history_list[0].total_quantity, 100)
 
     # if node category OR section category is not matched, no movement are
     # returned.
@@ -1633,14 +1633,14 @@ class TestMovementHistoryList(InventoryAPITestCase):
         movement_history_list = getMovementHistoryList(
                                   node_category=node_category,
                                   section_category=section_category)
-        self.assertEquals(len(movement_history_list), 0)
+        self.assertEqual(len(movement_history_list), 0)
 
     for section_category in invalid_category_list:
       for node_category in valid_category_list:
         movement_history_list = getMovementHistoryList(
                                   node_category=node_category,
                                   section_category=section_category)
-        self.assertEquals(len(movement_history_list), 0)
+        self.assertEqual(len(movement_history_list), 0)
 
 
   # Date tests:
@@ -1663,10 +1663,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
                          start_date=date,
                          stop_date=date+1)
     # from_date takes all movements >=
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 2)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 02),
                         section_uid=self.mirror_section.getUid())), 2)
 
@@ -1677,10 +1677,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
                          start_date=date,
                          stop_date=date+1)
     # at_date takes all movements <=
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         at_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 2)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         at_date=DateTime(2006, 01, 02),
                         section_uid=self.mirror_section.getUid())), 2)
 
@@ -1691,10 +1691,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
                          start_date=date,
                          stop_date=date+1)
     # to_date takes all movements <
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 1)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         to_date=DateTime(2006, 01, 02),
                         section_uid=self.mirror_section.getUid())), 1)
 
@@ -1705,20 +1705,20 @@ class TestMovementHistoryList(InventoryAPITestCase):
                          start_date=date,
                          stop_date=date+1)
     # both from_date and at_date
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 03),
                         at_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 1)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 02),
                         at_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 2)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2005, 01, 02),
                         at_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 2)
     # from other side
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 02),
                         at_date=DateTime(2006, 01, 03),
                         section_uid=self.mirror_section.getUid())), 2)
@@ -1730,20 +1730,20 @@ class TestMovementHistoryList(InventoryAPITestCase):
                          start_date=date,
                          stop_date=date+1)
     # both from_date and to_date
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 03),
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 0)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 02),
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 1)
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2005, 01, 02),
                         to_date=DateTime(2007, 01, 02),
                         section_uid=self.section.getUid())), 3)
     # from other side
-    self.assertEquals(len(getMovementHistoryList(
+    self.assertEqual(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 02),
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.mirror_section.getUid())), 1)
@@ -1755,10 +1755,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
                        start_date=DateTime('2001/02/03 04:05 GMT+3'))
     movement_history_list = getMovementHistoryList(
                                 section_uid=self.section.getUid())
-    self.assertEquals(len(movement_history_list), 1)
+    self.assertEqual(len(movement_history_list), 1)
     brain = movement_history_list[0]
-    self.assertEquals(DateTime('2001/02/03 04:05 GMT+3'), brain.date)
-    self.assertEquals('GMT+3', brain.date.timezone())
+    self.assertEqual(DateTime('2001/02/03 04:05 GMT+3'), brain.date)
+    self.assertEqual('GMT+3', brain.date.timezone())
 
   def test_BrainDateTimeZoneStopDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1767,19 +1767,19 @@ class TestMovementHistoryList(InventoryAPITestCase):
                        stop_date=DateTime('2001/02/03 04:05 GMT+3'))
     movement_history_list = getMovementHistoryList(
                         mirror_section_uid=self.section.getUid())
-    self.assertEquals(len(movement_history_list), 1)
+    self.assertEqual(len(movement_history_list), 1)
     brain = movement_history_list[0]
-    self.assertEquals(DateTime('2001/02/03 04:05 GMT+2'), brain.date)
-    self.assertEquals('GMT+2', brain.date.timezone())
+    self.assertEqual(DateTime('2001/02/03 04:05 GMT+2'), brain.date)
+    self.assertEqual('GMT+2', brain.date.timezone())
 
   def test_BrainEmptyDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100,)
     movement_history_list = getMovementHistoryList(
                                 section_uid=self.section.getUid())
-    self.assertEquals(len(movement_history_list), 1)
+    self.assertEqual(len(movement_history_list), 1)
     brain = movement_history_list[0]
-    self.assertEquals(None, brain.date)
+    self.assertEqual(None, brain.date)
 
   def test_SortOnDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1799,11 +1799,11 @@ class TestMovementHistoryList(InventoryAPITestCase):
     movement_date_list = [ x.date for x in getMovementHistoryList(
                               section_uid=self.section.getUid(),
                               sort_on=(('stock.date', 'ascending'),)) ]
-    self.assertEquals(movement_date_list, date_list)
+    self.assertEqual(movement_date_list, date_list)
     movement_date_list = [ x.date for x in getMovementHistoryList(
                               section_uid=self.section.getUid(),
                               sort_on=(('stock.date', 'descending'),)) ]
-    self.assertEquals(movement_date_list, reverse_date_list)
+    self.assertEqual(movement_date_list, reverse_date_list)
     # minimum test for (('stock.date', 'ASC'), ('stock.uid', 'ASC')) which is
     # what you want to make sure that the last line on a page precedes the
     # first line on the previous page.
@@ -1811,17 +1811,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               section_uid=self.section.getUid(),
                               sort_on=(('stock.date', 'ascending'),
                                        ('stock.uid', 'ascending'),)) ]
-    self.assertEquals(movement_date_list, date_list)
+    self.assertEqual(movement_date_list, date_list)
 
   def test_SortOnCatalogColumn(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=1, title='First')
     self._makeMovement(quantity=2, title='Second')
 
-    self.assertEquals(['First', 'Second'], [ x.getObject().getTitle() for x in
+    self.assertEqual(['First', 'Second'], [ x.getObject().getTitle() for x in
           getMovementHistoryList(section_uid=self.section.getUid(),
                                  sort_on=(('title', 'ascending'),)) ])
-    self.assertEquals(['Second', 'First'], [ x.getObject().getTitle() for x in
+    self.assertEqual(['Second', 'First'], [ x.getObject().getTitle() for x in
           getMovementHistoryList(section_uid=self.section.getUid(),
                                  sort_on=(('title', 'descending'),)) ])
 
@@ -1829,8 +1829,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     for q in range(6):
       self._makeMovement(quantity=1)
-    self.assertEquals(3, len(getMovementHistoryList(limit=3)))
-    self.assertEquals(4, len(getMovementHistoryList(limit=(1, 4))))
+    self.assertEqual(3, len(getMovementHistoryList(limit=3)))
+    self.assertEqual(4, len(getMovementHistoryList(limit=(1, 4))))
 
   def test_SimulationState(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1840,13 +1840,13 @@ class TestMovementHistoryList(InventoryAPITestCase):
       movement_history_list = getMovementHistoryList(
                                 simulation_state=simulation_state,
                                 section_uid=self.section.getUid())
-      self.assertEquals(len(movement_history_list), 1)
-      self.assertEquals(movement_history_list[0].total_quantity, 2)
+      self.assertEqual(len(movement_history_list), 1)
+      self.assertEqual(movement_history_list[0].total_quantity, 2)
 
     movement_history_list = getMovementHistoryList(
                               simulation_state=["confirmed", "planned"],
                               section_uid=self.section.getUid())
-    self.assertEquals(len(movement_history_list), 2)
+    self.assertEqual(len(movement_history_list), 2)
 
   def test_SimulationMovement(self):
     """Test simulation movement are listed in getMovementHistoryList
@@ -1856,7 +1856,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self._makeMovement(quantity=100)
     movement_history_list = getMovementHistoryList(
                                     section_uid=self.section.getUid())
-    self.assertEquals(2, len(movement_history_list))
+    self.assertEqual(2, len(movement_history_list))
 
   def test_OmitSimulation(self):
     """Test omit_simulation argument to getMovementHistoryList.
@@ -1867,8 +1867,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
     movement_history_list = getMovementHistoryList(
                                     section_uid=self.section.getUid(),
                                     omit_simulation=1)
-    self.assertEquals(1, len(movement_history_list))
-    self.assertEquals(100, movement_history_list[0].quantity)
+    self.assertEqual(1, len(movement_history_list))
+    self.assertEqual(100, movement_history_list[0].quantity)
 
   def test_OnlyAccountable(self):
     """Test that only_accountable works with getMovementHistoryList"""
@@ -1878,14 +1878,14 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # by default, only accountable movements are returned
     movement_history_list = getMovementHistoryList(
                                     section_uid=self.section.getUid(),)
-    self.assertEquals(1, len(movement_history_list))
-    self.assertEquals(2, movement_history_list[0].quantity)
+    self.assertEqual(1, len(movement_history_list))
+    self.assertEqual(2, movement_history_list[0].quantity)
     # unless only_accountable=False is passed
     movement_history_list = getMovementHistoryList(
                                     section_uid=self.section.getUid(),
                                     only_accountable=False)
-    self.assertEquals(2, len(movement_history_list))
-    self.assertEquals(sorted((2,3)), sorted(
+    self.assertEqual(2, len(movement_history_list))
+    self.assertEqual(sorted((2,3)), sorted(
       brain.quantity for brain in movement_history_list))
 
   def test_RunningTotalQuantity(self):
@@ -1903,9 +1903,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
     for idx, (date, quantity) in enumerate(date_and_qty_list):
       brain = movement_history_list[idx]
       running_total_quantity += quantity
-      self.assertEquals(running_total_quantity, brain.running_total_quantity)
-      self.assertEquals(date, brain.date)
-      self.assertEquals(quantity, brain.quantity)
+      self.assertEqual(running_total_quantity, brain.running_total_quantity)
+      self.assertEqual(date, brain.date)
+      self.assertEqual(quantity, brain.quantity)
 
   def test_RunningTotalPrice(self):
     """Test that a running_total_price attribute is set on brains
@@ -1922,9 +1922,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
     for idx, (date, price) in enumerate(date_and_price_list):
       brain = movement_history_list[idx]
       running_total_price += price
-      self.assertEquals(running_total_price, brain.running_total_price)
-      self.assertEquals(date, brain.date)
-      self.assertEquals(price, brain.total_price)
+      self.assertEqual(running_total_price, brain.running_total_price)
+      self.assertEqual(date, brain.date)
+      self.assertEqual(price, brain.total_price)
 
   def test_RunningTotalWithInitialValue(self):
     """Test running_total_price and running_total_quantity with an initial
@@ -1948,11 +1948,11 @@ class TestMovementHistoryList(InventoryAPITestCase):
     running_total_quantity=initial_running_total_quantity
     for idx, (date, quantity) in enumerate(date_and_qty_list):
       brain = movement_history_list[idx]
-      self.assertEquals(date, brain.date)
+      self.assertEqual(date, brain.date)
       running_total_quantity += quantity
-      self.assertEquals(running_total_quantity, brain.running_total_quantity)
+      self.assertEqual(running_total_quantity, brain.running_total_quantity)
       running_total_price += quantity * quantity # we've set price=quantity
-      self.assertEquals(running_total_price, brain.running_total_price)
+      self.assertEqual(running_total_price, brain.running_total_price)
 
   def testRunningQuantityWithQuantity0(self):
     # a 0 quantity should not be a problem for running total price
@@ -1964,13 +1964,13 @@ class TestMovementHistoryList(InventoryAPITestCase):
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),
                             sort_on=[['stock.date', 'ASC']])
-    self.assertEquals(3, len(mvt_history_list))
-    self.assertEquals(-1, mvt_history_list[0].running_total_quantity)
-    self.assertEquals(-1, mvt_history_list[0].running_total_price)
-    self.assertEquals(-1, mvt_history_list[1].running_total_quantity)
-    self.assertEquals(-1, mvt_history_list[1].running_total_price)
-    self.assertEquals(0, mvt_history_list[2].running_total_quantity)
-    self.assertEquals(0, mvt_history_list[2].running_total_price)
+    self.assertEqual(3, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].running_total_quantity)
+    self.assertEqual(-1, mvt_history_list[0].running_total_price)
+    self.assertEqual(-1, mvt_history_list[1].running_total_quantity)
+    self.assertEqual(-1, mvt_history_list[1].running_total_price)
+    self.assertEqual(0, mvt_history_list[2].running_total_quantity)
+    self.assertEqual(0, mvt_history_list[2].running_total_price)
 
   # bug #352
   def testSameNodeDifferentDates(self):
@@ -1984,8 +1984,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
-    self.assertEquals(2, len(mvt_history_list))
-    self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+    self.assertEqual(2, len(mvt_history_list))
+    self.assertEqual(0, sum([r.total_quantity for r in mvt_history_list]))
 
   def testSameNodeSameDates(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1995,8 +1995,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               destination_value=self.node )
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
-    self.assertEquals(2, len(mvt_history_list))
-    self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+    self.assertEqual(2, len(mvt_history_list))
+    self.assertEqual(0, sum([r.total_quantity for r in mvt_history_list]))
 
   def testSameNodeSameDatesSameSections(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2013,8 +2013,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
                             ignore_group_by=True,
                             node_uid=self.node.getUid(),
                             section_uid=self.section.getUid())
-    self.assertEquals(2, len(mvt_history_list))
-    self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
+    self.assertEqual(2, len(mvt_history_list))
+    self.assertEqual(0, sum([r.total_quantity for r in mvt_history_list]))
 
   def testPrecision(self):
     # getMovementHistoryList supports a precision= argument to specify the
@@ -2024,20 +2024,20 @@ class TestMovementHistoryList(InventoryAPITestCase):
     mvt_history_list = getMovementHistoryList(
                             precision=2,
                             node_uid=self.node.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(0.12, mvt_history_list[0].running_total_quantity)
-    self.assertEquals(0.12, mvt_history_list[0].running_total_price)
-    self.assertEquals(0.12, mvt_history_list[0].total_quantity)
-    self.assertEquals(0.12, mvt_history_list[0].total_price)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(0.12, mvt_history_list[0].running_total_quantity)
+    self.assertEqual(0.12, mvt_history_list[0].running_total_price)
+    self.assertEqual(0.12, mvt_history_list[0].total_quantity)
+    self.assertEqual(0.12, mvt_history_list[0].total_price)
 
     mvt_history_list = getMovementHistoryList(
                             precision=3,
                             node_uid=self.node.getUid())
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(0.123, mvt_history_list[0].running_total_quantity)
-    self.assertEquals(0.123, mvt_history_list[0].running_total_price)
-    self.assertEquals(0.123, mvt_history_list[0].total_quantity)
-    self.assertEquals(0.123, mvt_history_list[0].total_price)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(0.123, mvt_history_list[0].running_total_quantity)
+    self.assertEqual(0.123, mvt_history_list[0].running_total_price)
+    self.assertEqual(0.123, mvt_history_list[0].total_quantity)
+    self.assertEqual(0.123, mvt_history_list[0].total_price)
 
   def testPrecisionAndFloatRoundingIssues(self):
     # sum([0.1] * 10) != 1.0 but this is not a problem here
@@ -2050,9 +2050,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
                             precision=2,
                             node_uid=self.node.getUid(),
                             sort_on=[['stock.date', 'ASC']])
-    self.assertEquals(11, len(mvt_history_list))
-    self.assertEquals(0, mvt_history_list[-1].running_total_quantity)
-    self.assertEquals(0, mvt_history_list[-1].running_total_price)
+    self.assertEqual(11, len(mvt_history_list))
+    self.assertEqual(0, mvt_history_list[-1].running_total_quantity)
+    self.assertEqual(0, mvt_history_list[-1].running_total_price)
 
   def test_OmitInputOmitOutput(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2061,18 +2061,18 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # omit input ignores movement comming to this node
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_input=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(-1, mvt_history_list[0].total_price)
-    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].total_price)
+    self.assertEqual(-1, mvt_history_list[0].total_quantity)
 
     # omit output ignores movement going to this node
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_output=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(1, mvt_history_list[0].total_price)
-    self.assertEquals(1, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].total_price)
+    self.assertEqual(1, mvt_history_list[0].total_quantity)
 
-    self.assertEquals(0, len(getMovementHistoryList(
+    self.assertEqual(0, len(getMovementHistoryList(
                                               node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
@@ -2083,15 +2083,15 @@ class TestMovementHistoryList(InventoryAPITestCase):
     m2 = self._makeMovement(quantity=-1, price=-1)
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_asset_increase=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(-1, mvt_history_list[0].total_price)
-    self.assertEquals(1, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].total_price)
+    self.assertEqual(1, mvt_history_list[0].total_quantity)
 
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_asset_decrease=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(1, mvt_history_list[0].total_price)
-    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].total_price)
+    self.assertEqual(-1, mvt_history_list[0].total_quantity)
 
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2107,17 +2107,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                       section_uid=self.section.getUid(),
                                       payment_uid=self.payment_node.getUid(),
                                       omit_output=1)
-    self.assertEquals(1, len(movement_history_list))
-    self.assertEquals(2, movement_history_list[0].total_price)
-    self.assertEquals(2, movement_history_list[0].total_quantity)
+    self.assertEqual(1, len(movement_history_list))
+    self.assertEqual(2, movement_history_list[0].total_price)
+    self.assertEqual(2, movement_history_list[0].total_quantity)
 
     movement_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                    section_uid=self.section.getUid(),
                                    payment_uid=self.other_payment_node.getUid(),
                                    omit_input=1)
-    self.assertEquals(1, len(movement_history_list))
-    self.assertEquals(-2, movement_history_list[0].total_price)
-    self.assertEquals(-2, movement_history_list[0].total_quantity)
+    self.assertEqual(1, len(movement_history_list))
+    self.assertEqual(-2, movement_history_list[0].total_price)
+    self.assertEqual(-2, movement_history_list[0].total_quantity)
 
   def test_OmitInputOmitOutputCancellationAmount(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2125,17 +2125,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self._makeMovement(quantity=2, price=1, cancellation_amount=True)
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_input=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(2, mvt_history_list[0].total_price)
-    self.assertEquals(2, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(2, mvt_history_list[0].total_price)
+    self.assertEqual(2, mvt_history_list[0].total_quantity)
 
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_output=1)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(-1, mvt_history_list[0].total_price)
-    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].total_price)
+    self.assertEqual(-1, mvt_history_list[0].total_quantity)
 
-    self.assertEquals(0, len(getMovementHistoryList(
+    self.assertEqual(0, len(getMovementHistoryList(
                                               node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
@@ -2148,16 +2148,16 @@ class TestMovementHistoryList(InventoryAPITestCase):
                        start_date=DateTime(2010, 1, 2))
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               sort_on=(('stock.date', 'ASC'),))
-    self.assertEquals(2, len(mvt_history_list))
-    self.assertEquals(0, mvt_history_list[0].debit)
-    self.assertEquals(1, mvt_history_list[0].credit)
-    self.assertEquals(0, mvt_history_list[0].debit_price)
-    self.assertEquals(2, mvt_history_list[0].credit_price)
+    self.assertEqual(2, len(mvt_history_list))
+    self.assertEqual(0, mvt_history_list[0].debit)
+    self.assertEqual(1, mvt_history_list[0].credit)
+    self.assertEqual(0, mvt_history_list[0].debit_price)
+    self.assertEqual(2, mvt_history_list[0].credit_price)
 
-    self.assertEquals(2, mvt_history_list[1].debit)
-    self.assertEquals(0, mvt_history_list[1].credit)
-    self.assertEquals(4, mvt_history_list[1].debit_price)
-    self.assertEquals(0, mvt_history_list[1].credit_price)
+    self.assertEqual(2, mvt_history_list[1].debit)
+    self.assertEqual(0, mvt_history_list[1].credit)
+    self.assertEqual(4, mvt_history_list[1].debit_price)
+    self.assertEqual(0, mvt_history_list[1].credit_price)
 
   def test_debit_credit_cancellation_amount(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2167,16 +2167,16 @@ class TestMovementHistoryList(InventoryAPITestCase):
                        start_date=DateTime(2010, 1, 2))
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               sort_on=(('stock.date', 'ASC'),))
-    self.assertEquals(2, len(mvt_history_list))
-    self.assertEquals(-1, mvt_history_list[0].debit)
-    self.assertEquals(0, mvt_history_list[0].credit)
-    self.assertEquals(-2, mvt_history_list[0].debit_price)
-    self.assertEquals(0, mvt_history_list[0].credit_price)
+    self.assertEqual(2, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].debit)
+    self.assertEqual(0, mvt_history_list[0].credit)
+    self.assertEqual(-2, mvt_history_list[0].debit_price)
+    self.assertEqual(0, mvt_history_list[0].credit_price)
 
-    self.assertEquals(0, mvt_history_list[1].debit)
-    self.assertEquals(-2, mvt_history_list[1].credit)
-    self.assertEquals(0, mvt_history_list[1].debit_price)
-    self.assertEquals(-4, mvt_history_list[1].credit_price)
+    self.assertEqual(0, mvt_history_list[1].debit)
+    self.assertEqual(-2, mvt_history_list[1].credit)
+    self.assertEqual(0, mvt_history_list[1].debit_price)
+    self.assertEqual(-4, mvt_history_list[1].credit_price)
 
   def test_group_by_explanation(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -2198,37 +2198,37 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.tic()
     # sanity check, our fake movements are all created in the same delivery,
     # and have a valid explanation uid
-    self.assertEquals(m1.getExplanationUid(),
+    self.assertEqual(m1.getExplanationUid(),
                       m2.getExplanationUid())
     self.assertTrue(m1.getExplanationUid())
     # also make sure they acquire from delivery
-    self.assertEquals(self.node, m1.getDestinationValue())
+    self.assertEqual(self.node, m1.getDestinationValue())
 
     # group by explanation
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               group_by=('explanation_uid',), )
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(3, mvt_history_list[0].total_quantity)
-    self.assertEquals(3, mvt_history_list[0].running_total_quantity)
-    self.assertEquals(12, mvt_history_list[0].total_price)
-    self.assertEquals(12, mvt_history_list[0].running_total_price)
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(3, mvt_history_list[0].total_quantity)
+    self.assertEqual(3, mvt_history_list[0].running_total_quantity)
+    self.assertEqual(12, mvt_history_list[0].total_price)
+    self.assertEqual(12, mvt_history_list[0].running_total_price)
 
     # group by explanation and resource
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               group_by_resource=True,
                                               group_by=('explanation_uid',),
                                               sort_on=(('stock.date', 'ASC'),))
-    self.assertEquals(2, len(mvt_history_list))
+    self.assertEqual(2, len(mvt_history_list))
 
-    self.assertEquals(2, mvt_history_list[0].total_quantity)
-    self.assertEquals(2, mvt_history_list[0].running_total_quantity)
-    self.assertEquals(5, mvt_history_list[0].total_price)
-    self.assertEquals(5, mvt_history_list[0].running_total_price)
+    self.assertEqual(2, mvt_history_list[0].total_quantity)
+    self.assertEqual(2, mvt_history_list[0].running_total_quantity)
+    self.assertEqual(5, mvt_history_list[0].total_price)
+    self.assertEqual(5, mvt_history_list[0].running_total_price)
 
-    self.assertEquals(1, mvt_history_list[1].total_quantity)
-    self.assertEquals(3, mvt_history_list[1].running_total_quantity)
-    self.assertEquals(7, mvt_history_list[1].total_price)
-    self.assertEquals(12, mvt_history_list[1].running_total_price)
+    self.assertEqual(1, mvt_history_list[1].total_quantity)
+    self.assertEqual(3, mvt_history_list[1].running_total_quantity)
+    self.assertEqual(7, mvt_history_list[1].total_price)
+    self.assertEqual(12, mvt_history_list[1].running_total_price)
 
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):
@@ -2250,19 +2250,19 @@ class TestNextNegativeInventoryDate(InventoryAPITestCase):
                          simulation_state='planned')
     node_uid = self.node.getUid()
     date = DateTime(DateTime().strftime('%Y/%m/%d'))
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
     makeMovement(quantity=1, change_way=1, start_date=date)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
     makeMovement(quantity=3, change_way=0, start_date=date+2)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+2)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+2)
     makeMovement(quantity=5, change_way=1, start_date=date+1)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
     makeMovement(quantity=7, change_way=0, start_date=date+5)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+5)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+5)
     makeMovement(quantity=7, change_way=1, start_date=date+4)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
     makeMovement(quantity=7, change_way=0, start_date=date+3)
-    self.assertEquals(getNextNegativeInventoryDate(node_uid=node_uid), date+3)
+    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+3)
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
@@ -2276,11 +2276,11 @@ class TestInventoryStat(InventoryAPITestCase):
     node_uid = self.node.getUid()
     makeMovement(quantity=1)
     # Test the number of movement for this particular node
-    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 1)
+    self.assertEqual(getInventoryStat(node_uid=node_uid)[0].stock_uid, 1)
     makeMovement(quantity=3)
-    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 2)
+    self.assertEqual(getInventoryStat(node_uid=node_uid)[0].stock_uid, 2)
     makeMovement(quantity=5)
-    self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
+    self.assertEqual(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
 
 class TestTrackingList(InventoryAPITestCase):
   """Tests Item Tracking
@@ -2298,15 +2298,15 @@ class TestTrackingList(InventoryAPITestCase):
     item_uid = self.item.getUid()
     other_item_uid = self.other_item.getUid()
     node_uid = self.node.getUid()
-    self.assertEquals(len(getTrackingList(node_uid=node_uid,
+    self.assertEqual(len(getTrackingList(node_uid=node_uid,
                              at_date=start_date)),0)
     makeMovement(aggregate=self.item)
     result = getTrackingList(node_uid=node_uid,at_date=start_date)
-    self.assertEquals(len(result),1)
+    self.assertEqual(len(result),1)
     self.failIfDifferentSet([x.uid for x in result], [item_uid])
     makeMovement(aggregate=self.other_item)
     result = getTrackingList(node_uid=node_uid,at_date=start_date)
-    self.assertEquals(len(result),2)
+    self.assertEqual(len(result),2)
     self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
 
   def testSeveralAggregateOnMovement(self):
@@ -2322,12 +2322,12 @@ class TestTrackingList(InventoryAPITestCase):
     item_uid = self.item.getUid()
     other_item_uid = self.other_item.getUid()
     node_uid = self.node.getUid()
-    self.assertEquals(len(getTrackingList(node_uid=node_uid,
+    self.assertEqual(len(getTrackingList(node_uid=node_uid,
                              at_date=start_date)),0)
     makeMovement(aggregate_list=[self.item.getRelativeUrl(),
                                  self.other_item.getRelativeUrl()])
     result = getTrackingList(node_uid=node_uid,at_date=start_date)
-    self.assertEquals(len(result),2)
+    self.assertEqual(len(result),2)
     self.failIfDifferentSet([x.uid for x in result], [item_uid, other_item_uid])
 
   def testDates(self):
@@ -2393,7 +2393,7 @@ class TestTrackingList(InventoryAPITestCase):
       self.tic()
       tracking_node_uid_list = [brain.node_uid for brain in
         getFutureTrackingList(item=self.item.getRelativeUrl())]
-      self.assertEquals([node_uid], tracking_node_uid_list,
+      self.assertEqual([node_uid], tracking_node_uid_list,
         "%s != %s (state:%s)" % ([node_uid], tracking_node_uid_list, state))
 
     for state in ('draft', 'cancelled', 'deleted'):
@@ -2402,7 +2402,7 @@ class TestTrackingList(InventoryAPITestCase):
       self.tic()
       tracking_node_uid_list = [brain.node_uid for brain in
         getFutureTrackingList(item=self.item.getRelativeUrl())]
-      self.assertEquals([], tracking_node_uid_list,
+      self.assertEqual([], tracking_node_uid_list,
         "%s != %s (state:%s)" % ([], tracking_node_uid_list, state))
 
     # TODO: missing tests for input=1 and output=1
@@ -2568,7 +2568,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Make stock table inconsistent to be sure it uses cache
     self.doubleStockValue()
     # Check it use cache
-    self.assertEquals(value, self.getInventory(**inventory_kw))
+    self.assertEqual(value, self.getInventory(**inventory_kw))
     self.assertNotEquals(value,
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
@@ -2791,8 +2791,8 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     value = self.INVENTORY_QUANTITY_3 + self.INVENTORY_QUANTITY_2 + \
             2 * self.INVENTORY_QUANTITY_1
     self.doubleStockValue()
-    self.assertEquals(value, self.getInventory(**inventory_kw))
-    self.assertEquals(value,
+    self.assertEqual(value, self.getInventory(**inventory_kw))
+    self.assertEqual(value,
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
 
@@ -2820,24 +2820,24 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     )
     self.tic()
     # Optimisation must still be used
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4,
       self.getInventory(**inventory_kw),
     )
     # Edit start date so that cache table is cleared
     movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
-    self.assertEquals(
+    self.assertEqual(
       value + 2 * INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
       self.getInventory(optimisation__=False, **inventory_kw),
     )
@@ -2845,17 +2845,17 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # at former date
     movement.edit(start_date=self.NOW - 1)
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 +  7 * self.INVENTORY_QUANTITY_1,
       self.getInventory(optimisation__=False, **inventory_kw),
     )
@@ -2863,17 +2863,17 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Set date back in the past, cache is clear again
     movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
-    self.assertEquals(
+    self.assertEqual(
       value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
-    self.assertEquals(
+    self.assertEqual(
       value + 2 * INVENTORY_QUANTITY_4 + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(optimisation__=False, **inventory_kw),
     )
@@ -2881,13 +2881,13 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Delete movement, so it gets unindexed and cache entry is flushed
     self.folder.manage_delObjects(ids=[movement.getId(), ])
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       value + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
-    self.assertEquals(
+    self.assertEqual(
       value + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
@@ -3026,7 +3026,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     """
      Check getInventory without date when there is no cache.
     """
-    self.assertEquals(
+    self.assertEqual(
       self.INVENTORY_QUANTITY_1 + \
       self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_3,
       self.getInventory(node_uid=self.node_uid)
@@ -3237,19 +3237,19 @@ class TestUnitConversion(BaseTestUnitConversion):
 
 
     for i in range(3):
-      self.assertEquals(None, self.convertedSimulation('unit/%i' % i))
+      self.assertEqual(None, self.convertedSimulation('unit/%i' % i))
 
-    self.assertEquals(None,
+    self.assertEqual(None,
                       self.convertedSimulation('unit',
                                                simulation_period='Current'))
-    self.assertEquals(11, self.convertedSimulation('unit'))
+    self.assertEqual(11, self.convertedSimulation('unit'))
 
-    self.assertEquals(11 * .123 - .789, self.convertedSimulation('mass/net'))
-    self.assertEquals((11 * 123 - 789) / 1e6,
+    self.assertEqual(11 * .123 - .789, self.convertedSimulation('mass/net'))
+    self.assertEqual((11 * 123 - 789) / 1e6,
                       self.convertedSimulation('mass/net',
                                                quantity_unit='mass/t'))
 
-    self.assertEquals(13 * .056 - 2 * .043,
+    self.assertEqual(13 * .056 - 2 * .043,
                       self.convertedSimulation('mass/nutr/lipid'))
 
     def testInventoryNoMetricType(self):
@@ -3257,7 +3257,7 @@ class TestUnitConversion(BaseTestUnitConversion):
       providing only the quantity_unit argument should also work,
       and the standard metric type is used
       """
-      self.assertEquals((11 * 123 - 789) / 1e6,
+      self.assertEqual((11 * 123 - 789) / 1e6,
                         self.getSimulationTool().getInventory(
                            node_uid=self.node.getUid(),
                            quantity_unit="mass/t"))
@@ -3323,16 +3323,16 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
     self.makeMovement(500, self.resource_byunit)
 
     # Always displayed as quantity*unit_ratio
-    self.assertEquals(10*1000 + 1*6 - 2*50 - 500*1,
+    self.assertEqual(10*1000 + 1*6 - 2*50 - 500*1,
                       self.convertedSimulation('unit'))
-    self.assertEquals(10*1000 + 1*6 - 2*50 - 500*1,
+    self.assertEqual(10*1000 + 1*6 - 2*50 - 500*1,
                       self.convertedSimulation('unit',
                                                quantity_unit='unit/unit'))
-    self.assertEquals(10*1 + 1*(6*0.001) - 2*1 - 500*(1./1000),
+    self.assertEqual(10*1 + 1*(6*0.001) - 2*1 - 500*(1./1000),
                       self.convertedSimulation('unit',
                                                quantity_unit='unit/lot'))
     # amounts are rounded on the 12th digit.
-    self.assertEquals(round(10*(1000./6) + 1*1 - 2*(50./6) - 500*(1./6), 12),
+    self.assertEqual(round(10*(1000./6) + 1*1 - 2*(50./6) - 500*(1./6), 12),
                       self.convertedSimulation('unit',
                                                quantity_unit='unit/pack'))
 
@@ -3342,36 +3342,36 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                      self.resource_bypack,
                      self.resource_byunit):
       # not_reference -> reference quantity
-      self.assertEquals(1000,
+      self.assertEqual(1000,
                         resource.convertQuantity(1,
                                                  "unit/lot",
                                                  "unit/unit"))
       # reference -> not_reference
-      self.assertEquals(1,
+      self.assertEqual(1,
                         resource.convertQuantity(1000,
                                                  "unit/unit",
                                                  "unit/lot"))
       # not_reference -> not_reference
-      self.assertEquals(1*1000./6,
+      self.assertEqual(1*1000./6,
                         resource.convertQuantity(1,
                                                  "unit/lot",
                                                  "unit/pack"))
-      self.assertEquals(1*6./1000,
+      self.assertEqual(1*6./1000,
                         resource.convertQuantity(1,
                                                  "unit/pack",
                                                  "unit/lot"))
 
     # then with local Unit definition
-    self.assertEquals(1*50,
+    self.assertEqual(1*50,
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/lot", "unit/unit"))
-    self.assertEquals(1./50,
+    self.assertEqual(1./50,
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/unit", "unit/lot"))
-    self.assertEquals(1*50./6,
+    self.assertEqual(1*50./6,
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/lot", "unit/pack"))
-    self.assertEquals(1*6./50,
+    self.assertEqual(1*6./50,
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/pack", "unit/lot"))
 
@@ -3382,12 +3382,12 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
     changes.
     """
     # Before the global change, global definition reads 1000
-    self.assertEquals(1000,
+    self.assertEqual(1000,
                       self.resource_bylot.convertQuantity(1,
                                                            "unit/lot",
                                                            "unit/unit"))
     # which does not affect resources overriding the definition
-    self.assertEquals(1*50,
+    self.assertEqual(1*50,
                       self.resource_bylot_overriding\
                           .convertQuantity(1, "unit/lot", "unit/unit"))
 
@@ -3402,7 +3402,7 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
                                                   portal_type= \
                                                     "Quantity Unit Conversion" \
                                                     " Definition")
-    self.assertEquals(1, len(query))
+    self.assertEqual(1, len(query))
     return query[0].getObject()
 
   def testResourceConvertQuantityAfterGlobalChange(self):
@@ -3421,12 +3421,12 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
       self.tic()
 
       # SQL tables should have been updated:
-      self.assertEquals(500,
+      self.assertEqual(500,
                         self.resource_bylot.convertQuantity(1,
                                                             "unit/lot",
                                                             "unit/unit"))
       # without affecting resources that override the definition
-      self.assertEquals(1*50,
+      self.assertEqual(1*50,
                         self.resource_bylot_overriding\
                            .convertQuantity(1, "unit/lot", "unit/unit"))
     finally:
@@ -3449,12 +3449,12 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
       self.tic()
 
       # SQL tables should have been updated:
-      self.assertEquals(None,
+      self.assertEqual(None,
                         self.resource_bylot.convertQuantity(1,
                                                             "unit/lot",
                                                             "unit/unit"))
       # without affecting resources that override the definition
-      self.assertEquals(1*50,
+      self.assertEqual(1*50,
                         self.resource_bylot_overriding\
                             .convertQuantity(1, "unit/lot", "unit/unit"))
     finally:
@@ -3511,13 +3511,13 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
     self.tic()
 
     # inventories of that resource are indexed in grams
-    self.assertEquals(3010,
+    self.assertEqual(3010,
         self.portal.portal_simulation.getCurrentInventory(
           resource_uid=resource.getUid(),
           node_uid=node.getUid()))
 
     # converted inventory also works
-    self.assertEquals(3.01,
+    self.assertEqual(3.01,
         self.portal.portal_simulation.getCurrentInventory(
           quantity_unit='mass/kilogram',
           resource_uid=resource.getUid(),

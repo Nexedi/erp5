@@ -108,7 +108,7 @@ class TestArchive(InventoryAPITestCase):
     for url in url_list:
       path = '/' + portal_id + '/' + url
       #LOG('checkRelativeUrlInSQLPathList found path:',0,path)
-      self.failUnless(path in path_list)
+      self.assertTrue(path in path_list)
 
   def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
@@ -116,7 +116,7 @@ class TestArchive(InventoryAPITestCase):
     for url in url_list:
       path = '/' + portal_id + '/' + url
       #LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
-      self.failUnless(path not in  path_list)
+      self.assertTrue(path not in  path_list)
 
   @reindex
   def _makeInventory(self, date):
@@ -150,7 +150,7 @@ class TestArchive(InventoryAPITestCase):
     getInventory = self.getSimulationTool().getInventory
     self.mvt = self._makeMovement(quantity=100, stop_date=DateTime("2006/06/06"),
                                   simulation_state='delivered',)
-    self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
+    self.assertEqual(100, getInventory(node_uid=self.node.getUid()))
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
 
     # Create an inventory object
@@ -275,7 +275,7 @@ class TestArchive(InventoryAPITestCase):
 
     # Create a new movement and check it goes only in new catalog
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 0)
-    self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
+    self.assertEqual(100, getInventory(node_uid=self.node.getUid()))
     self.new_mvt = self._makeMovement(quantity=50, stop_date=DateTime("2006/08/06"),
                                       simulation_state='delivered',)
     self.tic()
@@ -286,7 +286,7 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
-    self.assertEquals(150, getInventory(node_uid=self.node.getUid()))
+    self.assertEqual(150, getInventory(node_uid=self.node.getUid()))
 
     # now play with preference to select to view document from archive
     portal_preferences = self.getPreferenceTool()
@@ -299,7 +299,7 @@ class TestArchive(InventoryAPITestCase):
     self.portal.portal_workflow.doActionFor(self.pref,
                                             'enable_action',
                                             wf_id='preference_workflow')
-    self.assertEquals(self.pref.getPreferenceState(),    'enabled')
+    self.assertEqual(self.pref.getPreferenceState(),    'enabled')
 
     path_list = [self.pref.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
@@ -310,7 +310,7 @@ class TestArchive(InventoryAPITestCase):
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
     
     # As we only have first movement in archive, inventory must be 100
-    self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
+    self.assertEqual(100, getInventory(node=self.node.getRelativeUrl()))
 
     # go on current catalog
     self.pref.edit(preferred_archive=None)
@@ -330,7 +330,7 @@ class TestArchive(InventoryAPITestCase):
     # check inventory in archive now
     self.pref.edit(preferred_archive=archive.getRelativeUrl())
     self.tic()
-    self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
+    self.assertEqual(100, getInventory(node=self.node.getRelativeUrl()))
 
     # check if we unindex an object, it's remove in all catalog:
     module.manage_delObjects([self.organisation_1.id,])
@@ -340,7 +340,7 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
 
     # check the current archive
-    self.assertEquals(portal_archive.getCurrentArchive(), dest)
+    self.assertEqual(portal_archive.getCurrentArchive(), dest)
 
     
 def test_suite():

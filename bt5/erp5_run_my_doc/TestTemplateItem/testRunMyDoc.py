@@ -88,7 +88,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     document = website.WebSection_getDocumentValue(test_page_reference)
     
     self.assertNotEquals(None, document)
-    self.assertEquals(document.getRelativeUrl(),
+    self.assertEqual(document.getRelativeUrl(),
                       test_page.getRelativeUrl())
 
   def test_Zuite_uploadScreenShot(self):
@@ -127,15 +127,15 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertNotEquals(None, 
                    self.portal.Zuite_uploadScreenshot(image_upload, web_page_reference))
 
-    self.assertEquals(None, 
+    self.assertEqual(None, 
                    self.portal.Zuite_uploadScreenshot(image_upload, image_reference))
 
     self.tic()
     # The right image were updated.
     image_upload.seek(0)
-    self.assertEquals(image_page_2.getData(), image_upload.read().decode("base64"))
-    self.assertEquals(image_page_2.getFilename(), image_reference + '.png')
-    self.assertEquals(image_page.getData(), '')
+    self.assertEqual(image_page_2.getData(), image_upload.read().decode("base64"))
+    self.assertEqual(image_page_2.getFilename(), image_reference + '.png')
+    self.assertEqual(image_page.getData(), '')
 
   def test_viewSeleniumTest(self):
     """
@@ -226,7 +226,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page = self.portal.test_page_module.newContent(title="TEST",
                                                         reference='TESTPAGEREFERENCE',
                                                         text_content=test_page_html)
-    self.assertEquals(test_page.TestPage_viewSeleniumTest(), expected_test_html % 
+    self.assertEqual(test_page.TestPage_viewSeleniumTest(), expected_test_html % 
                                  ("ERP5TypeTestCase", ""))
 
     self.tic()
@@ -240,7 +240,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     expected_html = expected_test_html % ("ERP5TypeTestCase", "")
 
-    self.assertEquals(zptest._text, expected_html.strip())
+    self.assertEqual(zptest._text, expected_html.strip())
 
     expected_test_html = u"""<html>
   <head>
@@ -301,7 +301,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.portal.REQUEST['user'] = "toto"
     self.portal.REQUEST['password'] = "toto"
 
-    self.assertEquals(test_page.TestPage_viewSeleniumTest(REQUEST=self.portal.REQUEST),
+    self.assertEqual(test_page.TestPage_viewSeleniumTest(REQUEST=self.portal.REQUEST),
                       expected_test_html % ("http://toto.com", "toto", "toto"))
     self.tic()
     test_page.TestPage_runSeleniumTest()
@@ -314,4 +314,4 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     expected_html = expected_test_html % ("http://toto.com", "toto", "toto")
 
-    self.assertEquals(zptest._text, expected_html.strip())
+    self.assertEqual(zptest._text, expected_html.strip())

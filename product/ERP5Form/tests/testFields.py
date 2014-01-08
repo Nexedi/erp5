@@ -65,10 +65,10 @@ class TestRenderViewAPI(ERP5TypeTestCase):
 
   def test_signature(self):
     for field in FieldRegistry.get_field_classes().itervalues():
-      self.assertEquals(('self', 'value', 'REQUEST', 'render_prefix'),
+      self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
                         field.render_view.im_func.func_code.co_varnames)
       if field is not ProxyField.ProxyField:
-        self.assertEquals(('self', 'field', 'value', 'REQUEST'),
+        self.assertEqual(('self', 'field', 'value', 'REQUEST'),
           field.widget.render_view.im_func.func_code.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.im_func.func_code.co_varnames[:4]))
 
 
@@ -86,81 +86,81 @@ class TestFloatField(ERP5TypeTestCase):
 
   def test_format_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
-    self.assertEquals('1 000.0', self.widget.format_value(self.field, 1000))
+    self.assertEqual('1 000.0', self.widget.format_value(self.field, 1000))
 
   def test_format_thousand_separator_coma(self):
     self.field.values['input_style'] = '-1 234,5'
-    self.assertEquals('1 000,0', self.widget.format_value(self.field, 1000))
+    self.assertEqual('1 000,0', self.widget.format_value(self.field, 1000))
 
   def test_format_thousand_separator_point_coma(self):
     self.field.values['input_style'] = '-1.234,5'
-    self.assertEquals('1.000,0', self.widget.format_value(self.field, 1000))
+    self.assertEqual('1.000,0', self.widget.format_value(self.field, 1000))
 
   def test_format_thousand_separator_coma_point(self):
     self.field.values['input_style'] = '-1,234.5'
-    self.assertEquals('1,000.0', self.widget.format_value(self.field, 1000))
+    self.assertEqual('1,000.0', self.widget.format_value(self.field, 1000))
 
   def test_format_thousand_separator_first_separator(self):
     # test for an edge case bug bug, ",100,000.0" was displayed (with leading coma)
     self.field.values['input_style'] = '-1,234.5'
-    self.assertEquals('100,000.0', self.widget.format_value(self.field, 100000))
-    self.assertEquals('-100,000.0', self.widget.format_value(self.field, -100000))
+    self.assertEqual('100,000.0', self.widget.format_value(self.field, 100000))
+    self.assertEqual('-100,000.0', self.widget.format_value(self.field, -100000))
 
   def test_format_with_separator_and_precision0(self):
     self.field.values['input_style'] = '-1,234.5'
     self.field.values['precision'] = 0
-    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.25))
-    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.49))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.99))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.80))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.70))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.60))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.59))
-    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.51))
+    self.assertEqual('-1,000', self.widget.format_value(self.field, -1000.25))
+    self.assertEqual('-1,000', self.widget.format_value(self.field, -1000.49))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.99))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.80))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.70))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.60))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.59))
+    self.assertEqual('-1,001', self.widget.format_value(self.field, -1000.51))
     # this is not -1,001 (is this a specification?)
-    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.50))
+    self.assertEqual('-1,000', self.widget.format_value(self.field, -1000.50))
 
   def test_format_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
-    self.assertEquals('10.0%', self.widget.format_value(self.field, 0.1))
+    self.assertEqual('10.0%', self.widget.format_value(self.field, 0.1))
 
   def test_format_precision(self):
     self.field.values['precision'] = 0
-    self.assertEquals('12', self.widget.format_value(self.field, 12.34))
+    self.assertEqual('12', self.widget.format_value(self.field, 12.34))
     # value is rounded
-    self.assertEquals('13', self.widget.format_value(self.field, 12.9))
+    self.assertEqual('13', self.widget.format_value(self.field, 12.9))
 
     field_value_cache.clear() # call this before changing internal field values.
     self.field.values['precision'] = 2
-    self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
+    self.assertEqual('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded
-    self.assertEquals('0.01', self.widget.format_value(self.field, 0.009999))
-    self.assertEquals('1.00',
+    self.assertEqual('0.01', self.widget.format_value(self.field, 0.009999))
+    self.assertEqual('1.00',
         self.widget.format_value(self.field, sum([0.1] * 10)))
-    self.assertEquals('566.30',
+    self.assertEqual('566.30',
         self.widget.format_value(self.field, 281.80 + 54.50 + 230.00))
 
   def test_format_no_precision(self):
-    self.assertEquals('7.2', self.widget.format_value(self.field, 7.2))
-    self.assertEquals('0.009999', self.widget.format_value(self.field, 0.009999))
-    self.assertEquals('1000.0', self.widget.format_value(self.field, 1000))
+    self.assertEqual('7.2', self.widget.format_value(self.field, 7.2))
+    self.assertEqual('0.009999', self.widget.format_value(self.field, 0.009999))
+    self.assertEqual('1000.0', self.widget.format_value(self.field, 1000))
   
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
-    self.assertEquals('1&nbsp;000.00', self.field.render(1000))
+    self.assertEqual('1&nbsp;000.00', self.field.render(1000))
 
   def test_render_dict(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['precision'] = 4
-    self.assertEquals(dict(query=0.12345,
+    self.assertEqual(dict(query=0.12345,
                            format='0.0000',
                            type='float'),
                       self.field.render_dict(0.12345))
     # this also work when using , as decimal separator
     self.field.values['input_style'] = '-1.234,5'
-    self.assertEquals(dict(query=0.12345,
+    self.assertEqual(dict(query=0.12345,
                            format='0.0000',
                            type='float'),
                       self.field.render_dict(0.12345))
@@ -168,50 +168,50 @@ class TestFloatField(ERP5TypeTestCase):
   def test_render_string_value(self):
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
-    self.assertEquals('12.34', self.field.render("12.34"))
-    self.assertEquals('not float', self.field.render("not float"))
+    self.assertEqual('12.34', self.field.render("12.34"))
+    self.assertEqual('not float', self.field.render("not float"))
 
   def test_percent_style_render_string_value(self):
     self.field.values['input_style'] = '-12.3%'
     self.field.values['editable'] = 0
-    self.assertEquals('-12.34%', self.field.render("-0.1234"))
-    self.assertEquals('not float', self.field.render("not float"))
+    self.assertEqual('-12.34%', self.field.render("-0.1234"))
+    self.assertEqual('not float', self.field.render("not float"))
 
   def test_render_big_numbers(self):
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
-    self.assertEquals('10000000000000.00',
+    self.assertEqual('10000000000000.00',
                       self.field.render(10000000000000))
-    self.assertEquals('1e+20', self.field.render(1e+20))
+    self.assertEqual('1e+20', self.field.render(1e+20))
 
   def test_validate_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
     self.portal.REQUEST.set('field_test_field', '1 000.0')
-    self.assertEquals(1000,
+    self.assertEqual(1000,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
   
   def test_validate_thousand_separator_coma(self):
     self.field.values['input_style'] = '-1 234,5'
     self.portal.REQUEST.set('field_test_field', '1 000,0')
-    self.assertEquals(1000,
+    self.assertEqual(1000,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_thousand_separator_point_coma(self):
     self.field.values['input_style'] = '-1.234,5'
     self.portal.REQUEST.set('field_test_field', '1.000,0')
-    self.assertEquals(1000,
+    self.assertEqual(1000,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_thousand_separator_coma_point(self):
     self.field.values['input_style'] = '-1,234.5'
     self.portal.REQUEST.set('field_test_field', '1,000.0')
-    self.assertEquals(1000,
+    self.assertEqual(1000,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
     self.portal.REQUEST.set('field_test_field', '10.0%')
-    self.assertEquals(0.1,
+    self.assertEqual(0.1,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_validate_not_float(self):
@@ -234,29 +234,29 @@ class TestFloatField(ERP5TypeTestCase):
   def test_render_odt(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['default'] = 1000
-    self.assertEquals('1 000.0', self.field.render_odt(as_string=False).text)
+    self.assertEqual('1 000.0', self.field.render_odt(as_string=False).text)
 
   def test_render_odg(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['default'] = 1000
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('1 000.0', test_value)
+    self.assertEqual('1 000.0', test_value)
 
   def test_render_odt_variable(self):
     self.field.values['default'] = 1000.0
     node = self.field.render_odt_variable(as_string=False)
-    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
-    self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(1000.0))
+    self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'float')
+    self.assertEqual(node.get('{%s}value' % NSMAP['office']), str(1000.0))
 
   def test_fullwidth_number_conversion(self):
     self.portal.REQUEST.set('field_test_field', '１2３．４5')
-    self.assertEquals(123.45,
+    self.assertEqual(123.45,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_fullwidth_minus_number_conversion(self):
     self.portal.REQUEST.set('field_test_field', '−１2３．４5')
-    self.assertEquals(-123.45,
+    self.assertEqual(-123.45,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
 
@@ -274,34 +274,34 @@ class TestIntegerField(ERP5TypeTestCase):
 
   def test_render_odt(self):
     self.field.values['default'] = 34
-    self.assertEquals('34', self.field.render_odt(as_string=False).text)
+    self.assertEqual('34', self.field.render_odt(as_string=False).text)
 
   def test_render_odt_variable(self):
     value = 34
     self.field.values['default'] = value
     node = self.field.render_odt_variable(as_string=False)
-    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
-    self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(value))
-    self.assertEquals(node.text, str(value))
+    self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'float')
+    self.assertEqual(node.get('{%s}value' % NSMAP['office']), str(value))
+    self.assertEqual(node.text, str(value))
     self.assertTrue('{%s}formula' % NSMAP['text'] not in node.attrib)
 
   def test_render_odg_view(self):
     self.field.values['default'] = 34
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('34', test_value)
+    self.assertEqual('34', test_value)
     test_value = self.field.render_odg(value=0, as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('0', test_value)
+    self.assertEqual('0', test_value)
 
   def test_fullwidth_number_conversion(self):
     self.portal.REQUEST.set('field_test_field', '１２３４')
-    self.assertEquals(1234,
+    self.assertEqual(1234,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
   def test_fullwidth_minus_number_conversion(self):
     self.portal.REQUEST.set('field_test_field', 'ー１２３４')
-    self.assertEquals(-1234,
+    self.assertEqual(-1234,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
 
@@ -318,27 +318,27 @@ class TestStringField(ERP5TypeTestCase):
 
   def test_escape_html(self):
     self.field.values['editable'] = 0
-    self.assertEquals('&lt;script&gt;', self.field.render("<script>"))
+    self.assertEqual('&lt;script&gt;', self.field.render("<script>"))
 
   def test_render_odt(self):
     self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
-    self.assertEquals('Hello World! <&> &lt;&mp;&gt;', self.field.render_odt(as_string=False).text)
-    self.assertEquals('Hello World!', self.field.render_odt(value='Hello World!', as_string=False).text)
+    self.assertEqual('Hello World! <&> &lt;&mp;&gt;', self.field.render_odt(as_string=False).text)
+    self.assertEqual('Hello World!', self.field.render_odt(value='Hello World!', as_string=False).text)
 
   def test_render_odg(self):
     self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('Hello World! <&> &lt;&mp;&gt;', test_value)
+    self.assertEqual('Hello World! <&> &lt;&mp;&gt;', test_value)
     test_value = self.field.render_odg(value='Hello World!', as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('Hello World!', test_value)
+    self.assertEqual('Hello World!', test_value)
 
   def test_render_odt_variable(self):
     self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
     node = self.field.render_odt_variable(as_string=False)
-    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'string')
-    self.assertEquals(node.text, 'Hello World! <&> &lt;&mp;&gt;')
+    self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'string')
+    self.assertEqual(node.text, 'Hello World! <&> &lt;&mp;&gt;')
 
 class TestDateTimeField(ERP5TypeTestCase):
   """Tests DateTime field
@@ -354,13 +354,13 @@ class TestDateTimeField(ERP5TypeTestCase):
 
   def test_render_odt(self):
     self.field.values['default'] = DateTime('2010/01/01 00:00:01 UTC')
-    self.assertEquals('2010/01/01   00:00',
+    self.assertEqual('2010/01/01   00:00',
             self.field.render_odt(as_string=False).text)
 
   def test_render_odg(self):
     self.field.values['default'] = DateTime('2010/01/01 00:00:01 UTC')
     self.field.render_odg(as_string=False)
-    self.assertEquals('2010/01/01   00:00',
+    self.assertEqual('2010/01/01   00:00',
                       self.field.render_odg(as_string=False)\
              .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0])
 
@@ -368,8 +368,8 @@ class TestDateTimeField(ERP5TypeTestCase):
     value = DateTime(2010, 12, 06, 10, 23, 32, 'GMT+5')
     self.field.values['default'] = value
     node = self.field.render_odt_variable(as_string=False)
-    self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'date')
-    self.assertEquals(node.get('{%s}date-value' % NSMAP['office']),
+    self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'date')
+    self.assertEqual(node.get('{%s}date-value' % NSMAP['office']),
                       value.ISO8601())
     self.field.values['default'] = None
     node = self.field.render_odt_variable(as_string=False)
@@ -381,7 +381,7 @@ class TestDateTimeField(ERP5TypeTestCase):
     self.portal.REQUEST.set('subfield_field_test_field_day', '１５')
     self.portal.REQUEST.set('subfield_field_test_field_hour', '０２')
     self.portal.REQUEST.set('subfield_field_test_field_minute', '１８')
-    self.assertEquals(DateTime('2011/12/15 02:18:00'),
+    self.assertEqual(DateTime('2011/12/15 02:18:00'),
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
 
@@ -398,21 +398,21 @@ class TestTextAreaField(ERP5TypeTestCase):
 
   def test_render_view(self):
     self.field.values['default'] = 'My first Line\n&My Second Line\tfoo'
-    self.assertEquals('<div  >\nMy first Line<br/><br/>&amp;My Second Line\tfoo</div>',
+    self.assertEqual('<div  >\nMy first Line<br/><br/>&amp;My Second Line\tfoo</div>',
                       self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']))
     editable_mode = self.portal.REQUEST.get('editable_mode', 1)
     self.portal.REQUEST.set('editable_mode', 0)
     try:
-      self.assertEquals('<div  >\nMy first Line<br/>&amp;My Second Line\tfoo</div>',
+      self.assertEqual('<div  >\nMy first Line<br/>&amp;My Second Line\tfoo</div>',
                         self.field.render(REQUEST=self.portal.REQUEST))
     finally:
       self.portal.REQUEST.set('editable_mode', editable_mode)
 
   def test_render_odt(self):
     self.field.values['default'] = 'My first Line\nMy Second Line\tfoo'
-    self.assertEquals('text:line-break', 
+    self.assertEqual('text:line-break', 
         self.field.render_odt(as_string=False)[0].xpath('name()'))
-    self.assertEquals('text:tab',
+    self.assertEqual('text:tab',
         self.field.render_odt(as_string=False)[1].xpath('name()'))
 
   def test_render_odg(self):
@@ -434,22 +434,22 @@ class TestLinesField(ERP5TypeTestCase):
     self.widget = self.field.widget
 
   def test_render_view(self):
-    self.assertEquals(self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']),
+    self.assertEqual(self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']),
                       '<div  >\nMy first Line<br />\n<br />\n&amp;My Second Line\tfoo</div>')
 
   def test_render_odt(self):
     self.field.values['default'] = ['A', 'B']
-    self.assertEquals('{%(text)s}p' % NSMAP,
+    self.assertEqual('{%(text)s}p' % NSMAP,
                       self.field.render_odt(as_string=False).tag)
 
   def test_render_odt_view(self):
     self.field.values['default'] = ['A', 'B']
     element = self.field.render_odt(as_string=False,
                                     REQUEST=self.portal.REQUEST)
-    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
     # separated by text:line-break
-    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
-    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+    self.assertEqual('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEqual(['A', 'B'], [x for x in element.itertext()])
 
 
 class TestCheckBoxField(ERP5TypeTestCase):
@@ -465,25 +465,25 @@ class TestCheckBoxField(ERP5TypeTestCase):
 
   def test_render_odt(self):
     self.field.values['default'] = 1
-    self.assertEquals('{%(form)s}checkbox' % NSMAP,
+    self.assertEqual('{%(form)s}checkbox' % NSMAP,
                       self.field.render_odt(as_string=False).tag)
 
   def test_render_odt_view(self):
     self.field.values['default'] = 1
     self.portal.REQUEST.set('editable_mode', 0)
-    self.assertEquals('{%(text)s}p' % NSMAP,
+    self.assertEqual('{%(text)s}p' % NSMAP,
                       self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).tag)
-    self.assertEquals('1', self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).text)
+    self.assertEqual('1', self.field.render_odt(as_string=False, REQUEST=self.portal.REQUEST).text)
 
   def test_render_odt_variable(self):
     for value in (True, False,):
       self.field.values['default'] = value
       node = self.field.render_odt_variable(as_string=False)
-      self.assertEquals(node.get('{%s}value-type' % NSMAP['office']),
+      self.assertEqual(node.get('{%s}value-type' % NSMAP['office']),
                             'boolean')
-      self.assertEquals(node.get('{%s}boolean-value' % NSMAP['office']),
+      self.assertEqual(node.get('{%s}boolean-value' % NSMAP['office']),
                         str(value).lower())
-      self.assertEquals(node.text, str(value).upper())
+      self.assertEqual(node.text, str(value).upper())
 
   def test_render_odg_view(self):
     """Like integer field
@@ -493,10 +493,10 @@ class TestCheckBoxField(ERP5TypeTestCase):
     self.portal.REQUEST.set('editable_mode', 0)
     test_value = self.field.render_odg(as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('1', test_value)
+    self.assertEqual('1', test_value)
     test_value = self.field.render_odg(value=0, as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
-    self.assertEquals('0', test_value)
+    self.assertEqual('0', test_value)
 
 class TestListField(ERP5TypeTestCase):
   """Tests List field
@@ -539,13 +539,13 @@ class TestListField(ERP5TypeTestCase):
     self.field.values['items'] = items
     self.field.values['default'] = '2'
     element = self.field.render_odt(as_string=False)
-    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
-    self.assertEquals('My Second Line', element.text)
+    self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEqual('My Second Line', element.text)
 
     # values not in items are displayed with ???
     self.field.values['default'] = '3'
     element = self.field.render_odt(as_string=False)
-    self.assertEquals('??? (3)', element.text)
+    self.assertEqual('??? (3)', element.text)
 
 
   def test_listField_value_order(self):
@@ -568,15 +568,15 @@ class TestListField(ERP5TypeTestCase):
     form_id='Base_viewFieldLibrary', field_id='my_category'))
 
     category_item_list = field.get_value('items')
-    self.assertEquals(category_item_list,
+    self.assertEqual(category_item_list,
         [['', ''], ['Male', 'male'], ['Female', 'female']])
 
     # try on a person to select on gender and check if the result is the same
     person_module = self.portal.getDefaultModule('Person')
     person = person_module.newContent(portal_type='Person')
     person.setGender('female')
-    self.assertEquals(person.getGender(), 'female')
-    self.assertEquals(person.Person_view.my_gender.get_value('items'),
+    self.assertEqual(person.getGender(), 'female')
+    self.assertEqual(person.Person_view.my_gender.get_value('items'),
         [['', ''], ['Male', 'male'], ['Female', 'female']])
 
 
@@ -589,30 +589,30 @@ class TestMultiListField(ERP5TypeTestCase):
     self.field.values['default'] = ['a', 'b']
 
   def test_render_view(self):
-    self.assertEquals('A<br />\nB', self.field.render_view(value=['a', 'b']))
+    self.assertEqual('A<br />\nB', self.field.render_view(value=['a', 'b']))
 
   def test_render_odt(self):
     element = self.field.render_odt(as_string=False)
-    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
     # separated by text:line-break
-    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
-    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+    self.assertEqual('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEqual(['A', 'B'], [x for x in element.itertext()])
 
   def test_render_odt_view(self):
     element = self.field.render_odt_view(as_string=False,
                                         value=['a', 'b'],
                                         REQUEST=self.portal.REQUEST)
-    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
     # separated by text:line-break
-    self.assertEquals('{%(text)s}line-break' % NSMAP, element[0].tag)
-    self.assertEquals(['A', 'B'], [x for x in element.itertext()])
+    self.assertEqual('{%(text)s}line-break' % NSMAP, element[0].tag)
+    self.assertEqual(['A', 'B'], [x for x in element.itertext()])
 
     # values not in items are displayed with ???
     element = self.field.render_odt_view(as_string=False,
                                         value=['other'],
                                         REQUEST=self.portal.REQUEST)
-    self.assertEquals('{%(text)s}p' % NSMAP, element.tag)
-    self.assertEquals('??? (other)', element.text)
+    self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
+    self.assertEqual('??? (other)', element.text)
 
 class TestProxyField(ERP5TypeTestCase):
 
@@ -640,30 +640,30 @@ class TestProxyField(ERP5TypeTestCase):
                                    'my_title', 'Title', 'StringField')
     proxy_field = self.addField(self.container.Base_view,
                                 'my_title', 'Not Title', 'ProxyField')
-    self.assertEquals(None, proxy_field.getTemplateField())
-    self.assertEquals(None, proxy_field.get_value('enable'))
-    self.assertEquals(None, proxy_field.get_value('default'))
+    self.assertEqual(None, proxy_field.getTemplateField())
+    self.assertEqual(None, proxy_field.get_value('enable'))
+    self.assertEqual(None, proxy_field.get_value('default'))
 
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
-    self.assertEquals(original_field, proxy_field.getTemplateField())
+    self.assertEqual(original_field, proxy_field.getTemplateField())
 
   def test_simple_surcharge(self):
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_title', 'Title', 'StringField')
-    self.assertEquals('Title', original_field.get_value('title'))
+    self.assertEqual('Title', original_field.get_value('title'))
 
     proxy_field = self.addField(self.container.Base_view,
                                 'my_title', 'Not Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     self.assert_(proxy_field.is_delegated('title'))
-    self.assertEquals('Title', proxy_field.get_value('title'))
+    self.assertEqual('Title', proxy_field.get_value('title'))
 
   def test_simple_not_surcharge(self):
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_title', 'Title', 'StringField')
-    self.assertEquals('Title', original_field.get_value('title'))
+    self.assertEqual('Title', original_field.get_value('title'))
 
     proxy_field = self.addField(self.container.Base_view,
                                 'my_title', 'Proxy Title', 'ProxyField')
@@ -672,8 +672,8 @@ class TestProxyField(ERP5TypeTestCase):
     # XXX no API for this ?
     proxy_field._surcharged_edit(dict(title='Proxy Title'), ['title'])
 
-    self.failIf(proxy_field.is_delegated('title'))
-    self.assertEquals('Proxy Title', proxy_field.get_value('title'))
+    self.assertFalse(proxy_field.is_delegated('title'))
+    self.assertEqual('Proxy Title', proxy_field.get_value('title'))
 
   def test_get_value_default(self):
     # If the proxy field is named 'my_id', it will get 'id'
@@ -684,8 +684,8 @@ class TestProxyField(ERP5TypeTestCase):
                                 'my_id', 'ID', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
-    self.assertEquals('container', self.container.getId())
-    self.assertEquals('container', proxy_field.get_value('default'))
+    self.assertEqual('container', self.container.getId())
+    self.assertEqual('container', proxy_field.get_value('default'))
 
   def test_field_tales_context(self):
     # in the TALES context, "field" will be the proxyfield, not the original
@@ -693,14 +693,14 @@ class TestProxyField(ERP5TypeTestCase):
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_title', 'Title', 'StringField')
     original_field.manage_tales_xmlrpc(dict(title='field/getId'))
-    self.assertEquals('my_title', original_field.get_value('title'))
+    self.assertEqual('my_title', original_field.get_value('title'))
 
     proxy_field = self.addField(self.container.Base_view,
                                 'my_reference', 'Not Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
     # 'my_reference' is the ID of the proxy field
-    self.assertEquals('my_reference', proxy_field.get_value('title'))
+    self.assertEqual('my_reference', proxy_field.get_value('title'))
 
   def test_form_tales_context(self):
     # in the TALES context, "form" will be the form containing the proxyfield,
@@ -708,14 +708,14 @@ class TestProxyField(ERP5TypeTestCase):
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_title', 'Title', 'StringField')
     original_field.manage_tales_xmlrpc(dict(title='form/getId'))
-    self.assertEquals('Base_viewProxyFieldLibrary',
+    self.assertEqual('Base_viewProxyFieldLibrary',
                        original_field.get_value('title'))
 
     proxy_field = self.addField(self.container.Base_view,
                                 'my_title', 'Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
-    self.assertEquals('Base_view', proxy_field.get_value('title'))
+    self.assertEqual('Base_view', proxy_field.get_value('title'))
 
   def test_get_value_cache_on_TALES_target(self):
     # If the proxy field defines its target using TALES, then no caching should
@@ -730,12 +730,12 @@ class TestProxyField(ERP5TypeTestCase):
     proxy_field.manage_tales_xmlrpc(dict(field_id='request/field_id'))
 
     self.container.REQUEST.set('field_id', 'my_title')
-    self.assertEquals(original_field, proxy_field.getTemplateField())
-    self.assertEquals('Title', proxy_field.get_value('title'))
+    self.assertEqual(original_field, proxy_field.getTemplateField())
+    self.assertEqual('Title', proxy_field.get_value('title'))
 
     self.container.REQUEST.set('field_id', 'my_other_field')
-    self.assertEquals(other_field, proxy_field.getTemplateField())
-    self.assertEquals('Other', proxy_field.get_value('title'))
+    self.assertEqual(other_field, proxy_field.getTemplateField())
+    self.assertEqual('Other', proxy_field.get_value('title'))
 
   def test_proxy_to_date_time_field(self):
     # date time fields are specific, because they use a 'sub_form', we must
@@ -767,7 +767,7 @@ class TestProxyField(ERP5TypeTestCase):
 
     proxy_field.manage_edit_surcharged_xmlrpc(dict(title='Title'))
     self.assertFalse(proxy_field.is_delegated('title'))
-    self.assertEquals('Title', proxy_field.get_value('title'))
+    self.assertEqual('Title', proxy_field.get_value('title'))
 
     # beware that all values that are not passed in the mapping will be
     # delegated again, regardless of the old state.
@@ -821,7 +821,7 @@ class TestProxyField(ERP5TypeTestCase):
       #surcharge from edit
       field._surcharged_edit(dict(title='TestTitle'), ['title'])
       self.assertTrue('title' in field.delegated_list)
-      self.assertEquals(field.values['title'], 'TestTitle')
+      self.assertEqual(field.values['title'], 'TestTitle')
       self.assertTrue('title' not in field.tales)
 
     def delegate_edit():
@@ -836,7 +836,7 @@ class TestProxyField(ERP5TypeTestCase):
       field._surcharged_tales(dict(title='string:TestTitle'), ['title'])
       self.assertTrue('title' in field.delegated_list)
       self.assertTrue(field.values['title'], 'OrigTitle')
-      self.assertEquals(field.tales['title'], 'string:TestTitle')
+      self.assertEqual(field.tales['title'], 'string:TestTitle')
 
     def delegate_tales():
       # delegate the field from tales view
@@ -865,7 +865,7 @@ class TestProxyField(ERP5TypeTestCase):
                                    'my_dict_test', '', 'ProxyField')
     field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                          field_id='my_title',))
-    self.assertEquals(original_field.get_error_names(),
+    self.assertEqual(original_field.get_error_names(),
         field.get_error_names())
     test_error = 'too_long' # arbitrary chosen among StringField error names
     test_message = 'Some Unprobable Error'
@@ -873,16 +873,16 @@ class TestProxyField(ERP5TypeTestCase):
     original_field.message_values[test_error] = test_message
     field.message_values[test_error] = test_message2
     # delegated (by default)
-    self.assertEquals(original_field.get_error_message(test_error),
+    self.assertEqual(original_field.get_error_message(test_error),
       test_message)
     self.assertTrue(field.is_message_delegated(test_error))
-    self.assertEquals(field.get_error_message(test_error), test_message)
+    self.assertEqual(field.get_error_message(test_error), test_message)
     # surcharged
     field.delegated_message_list = [test_error]
-    self.assertEquals(original_field.get_error_message(test_error),
+    self.assertEqual(original_field.get_error_message(test_error),
       test_message)
     self.assertFalse(field.is_message_delegated(test_error))
-    self.assertEquals(field.get_error_message(test_error), test_message2)
+    self.assertEqual(field.get_error_message(test_error), test_message2)
 
 class TestFieldValueCache(ERP5TypeTestCase):
   """Tests field value caching system

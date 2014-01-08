@@ -83,27 +83,27 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals('', data)
-    self.assertEquals(201, result.status)
+    self.assertEqual('', data)
+    self.assertEqual(201, result.status)
 
     # Check Data Set
     data_set = self.portal.portal_catalog.getResultValue(
                               portal_type='Data Set',
                               reference=self.key)
     self.assertNotEquals(None, data_set)
-    self.assertEquals('Published', data_set.getValidationStateTitle())
+    self.assertEqual('Published', data_set.getValidationStateTitle())
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
                                                 reference=self.sha512sum,
                                                 creation_date=' >= "%s"' % now)
     self.assertNotEquals(None, document)
-    self.assertEquals(self.data, document.getData())
-    self.assertEquals(str(self.expiration_date),
+    self.assertEqual(self.data, document.getData())
+    self.assertEqual(str(self.expiration_date),
                                str(document.getExpirationDate()))
-    self.assertEquals(data_set, document.getFollowUpValue())
-    self.assertEquals('File', document.getPortalType())
-    self.assertEquals('Published', document.getValidationStateTitle())
+    self.assertEqual(data_set, document.getFollowUpValue())
+    self.assertEqual('File', document.getPortalType())
+    self.assertEqual('Published', document.getValidationStateTitle())
 
   def test_external_get(self, annonymous=False):
     """
@@ -121,9 +121,9 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals(json.dumps([json.loads(self.data)]), data)
-    self.assertEquals(200, result.status)
-    self.assertEquals(self.content_type, result.getheader("content-type"))
+    self.assertEqual(json.dumps([json.loads(self.data)]), data)
+    self.assertEqual(200, result.status)
+    self.assertEqual(self.content_type, result.getheader("content-type"))
 
   def test_external_get_anonymous(self):
     """
@@ -143,7 +143,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       self.tic()
     finally:
       connection.close()
-    self.assertEquals(302, result.status)
+    self.assertEqual(302, result.status)
 
   def test_external_post_with_wrong_data(self):
     """
@@ -166,6 +166,6 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     finally:
       connection.close()
     self.assertTrue("Required field 'file' is missing" in data, data)
-    self.assertEquals(500, result.status)
-    self.assertEquals('text/html; charset=utf-8',
+    self.assertEqual(500, result.status)
+    self.assertEqual('text/html; charset=utf-8',
                                          result.getheader("content-type"))

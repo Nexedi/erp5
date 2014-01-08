@@ -82,18 +82,18 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals(self.key, data)
-    self.assertEquals(httplib.CREATED, result.status)
+    self.assertEqual(self.key, data)
+    self.assertEqual(httplib.CREATED, result.status)
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
                                                   reference=self.key,
                                                   creation_date=' >= "%s"' % now)
     self.assertNotEquals(None, document)
-    self.assertEquals(self.data, document.getData())
-    self.assertEquals('File', document.getPortalType())
-    self.assertEquals('Published', document.getValidationStateTitle())
-    self.assertEquals(self.expected_content_type, document.getContentType())
+    self.assertEqual(self.data, document.getData())
+    self.assertEqual('File', document.getPortalType())
+    self.assertEqual('Published', document.getValidationStateTitle())
+    self.assertEqual(self.expected_content_type, document.getContentType())
 
   def test_external_get(self, annonymous=False):
     """
@@ -112,9 +112,9 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals(self.data, data)
-    self.assertEquals(httplib.OK, result.status)
-    self.assertEquals(self.expected_content_type,
+    self.assertEqual(self.data, data)
+    self.assertEqual(httplib.OK, result.status)
+    self.assertEqual(self.expected_content_type,
                            result.getheader("content-type"))
 
   def test_external_get_anonymous(self):
@@ -141,6 +141,6 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # to POST resource while begin not authorised
     # One of UNAUTHORIZED or FORBIDDEN shall be returned
     # Ref: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4
-    # self.assertEquals(httplib.UNAUTHORIZED, result.status)
+    # self.assertEqual(httplib.UNAUTHORIZED, result.status)
     # FORBIDDEN seems more suitable for RESTful server...
-    self.assertEquals(httplib.FORBIDDEN, result.status)
+    self.assertEqual(httplib.FORBIDDEN, result.status)

@@ -124,10 +124,10 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     self.assertEqual(response.getStatus(), httplib.CREATED)
     document_module = self.getDocumentModule()
-    self.failUnless(filename in document_module.objectIds())
-    self.assertEquals(document_module[filename].getPortalType(), 'Presentation')
+    self.assertTrue(filename in document_module.objectIds())
+    self.assertEqual(document_module[filename].getPortalType(), 'Presentation')
     file_object.seek(0)
-    self.assertEquals(document_module[filename].getData(), file_object.read())
+    self.assertEqual(document_module[filename].getData(), file_object.read())
 
   def test_GET_on_contributionTool(self):
     """Get a document through Contribution Tool.
@@ -157,8 +157,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
-    self.assertEquals(response.getStatus(), httplib.OK)
-    self.assertEquals(response.getBody(), document.getData(),
+    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getBody(), document.getData(),
           'Error in getting data, get:%r' % response.getHeader('content-type'))
 
   def test_PUT_on_web_page(self):
@@ -174,8 +174,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     self.assertEqual(response.getStatus(), httplib.CREATED)
     web_page_module = self.getWebPageModule()
-    self.failUnless(filename in web_page_module.objectIds())
-    self.assertEquals(web_page_module[filename].getPortalType(), 'Web Page')
+    self.assertTrue(filename in web_page_module.objectIds())
+    self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
 
     # Edit a new document via FTP/DAV
     text_content= """<html>
@@ -195,12 +195,12 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(iso_text_content),
                             basic=self.authentication)
     self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
-    self.assertEquals(web_page_module[filename].getData(), iso_text_content)
+    self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
     # Content-Type header is replaced if sonversion encoding succeed
     new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
-    self.assertEquals(web_page_module[filename].getTextContent(), new_text_content)
+    self.assertEqual(web_page_module[filename].getTextContent(), new_text_content)
 
   def test_GET_on_document(self):
     """Get data from document in webdav
@@ -225,8 +225,8 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEquals(response.getStatus(), httplib.OK)
-    self.assertEquals(response.getBody(), document.getData(),
+    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getBody(), document.getData(),
              'Error in getting data, get:%r' % response.getHeader('content-type'))
 
   def test_PROPFIND_on_document(self):
@@ -249,18 +249,18 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEquals(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
-    self.assertEquals(xml_metadata.find('{DAV:}response/{DAV:}href').text,
+    self.assertEqual(xml_metadata.find('{DAV:}response/{DAV:}href').text,
                       document.getPath())
-    self.assertEquals(xml_metadata.find(
+    self.assertEqual(xml_metadata.find(
                       '{DAV:}response/{DAV:}propstat/{DAV:}prop/'\
                       '{DAV:}getcontenttype').text,
                       document.getContentType())
     # Outputed string is not reproductable for comparaison.
     # So we need to parse the date and use the same format
-    self.assertEquals(DateTime(xml_metadata.find('{DAV:}response/'\
+    self.assertEqual(DateTime(xml_metadata.find('{DAV:}response/'\
                       '{DAV:}propstat/{DAV:}prop/{DAV:}getlastmodified')\
                       .text).ISO8601(),
                       document.bobobase_modification_time().toZone('UTC').ISO8601())
@@ -287,10 +287,10 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEquals(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
-    self.assertEquals(xml_metadata.find(
+    self.assertEqual(xml_metadata.find(
            '{DAV:}response/{DAV:}propstat/{DAV:}prop/{DAV:}creationdate').text,
                       document.getCreationDate().HTML4())
 

@@ -71,13 +71,13 @@ class TestPlanningBox(ERP5TypeTestCase):
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
     message = portal.foo_module.FooModule_createObjects()
-    self.failUnless('Created Successfully' in message)
+    self.assertTrue('Created Successfully' in message)
 
   def stepCreateObjectLines(self, sequence = None, sequence_list = None, **kw):
     # Make sure that the status is clean.
     portal = self.getPortal()
     message = portal.foo_module['0'].Foo_createObjects(num=1)
-    self.failUnless('Created Successfully' in message)
+    self.assertTrue('Created Successfully' in message)
     portal.foo_module['0'].Foo_editObjectLineDates()
 
   def stepRenderStructure(self, sequence = None, sequence_list = None, **kw):
@@ -96,37 +96,37 @@ class TestPlanningBox(ERP5TypeTestCase):
 
   def stepCheckPlanning(self, sequence = None, sequence_list = None, **kw):
     planning = sequence.get('planning')
-    self.assertEquals(planning.vertical_view, 0)
-    self.assertEquals(len(planning.content), 1)
+    self.assertEqual(planning.vertical_view, 0)
+    self.assertEqual(len(planning.content), 1)
     bloc = planning.content[0]
-    self.assertEquals(bloc.name , 'group_1_activity_1_block_1')
-    self.assertEquals(bloc.title , 'Title 0')
+    self.assertEqual(bloc.name , 'group_1_activity_1_block_1')
+    self.assertEqual(bloc.title , 'Title 0')
     for info in bloc.info.values():
-      self.assertEquals(info.info,'Title 0')
-      self.assertEquals(info.link , 
+      self.assertEqual(info.info,'Title 0')
+      self.assertEqual(info.link , 
                         '%s/foo_module/0/0' % self.getPortal().absolute_url())
     # Check Parent Activities
     parent = bloc.parent_activity
     for info in parent.info.values():
-      self.assertEquals(info,'Title 0')
-    self.assertEquals(parent.link , 
+      self.assertEqual(info,'Title 0')
+    self.assertEqual(parent.link , 
                       '/%s/foo_module/0/0' % self.getPortal().getId())
     # XXX This test for Quantity is not complete, It should be improved. 
-    self.assertEquals(parent.height , None)
-    self.assertEquals(parent.title,'Title 0')
+    self.assertEqual(parent.height , None)
+    self.assertEqual(parent.title,'Title 0')
 
   def stepCheckBasic(self, sequence = None, sequence_list = None, **kw):
     basic = sequence.get('basic')
-    self.assertEquals(len(basic.report_group_list), 1)
+    self.assertEqual(len(basic.report_group_list), 1)
     lane_tree_list = basic.buildLaneTreeList()
     sec_axis_info = basic.getLaneAxisInfo(lane_tree_list)
     date = DateTime()
     today = DateTime('%s/%s/%s' % (date.year(),date.month(),date.day()))
-    self.assertEquals(sec_axis_info['bound_start'], today)
-    self.assertEquals(sec_axis_info['bound_stop'], today+1)
+    self.assertEqual(sec_axis_info['bound_start'], today)
+    self.assertEqual(sec_axis_info['bound_stop'], today+1)
 
     for tree_list, activity_list,stat in basic.report_group_list:
-      self.assertEquals(len(activity_list), 1)
+      self.assertEqual(len(activity_list), 1)
 
 
   def test_01(self, quiet=quiet, run=run_all_test):

@@ -138,26 +138,26 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     organisation = sequence.get('organisation1')
     organisation3 = sequence.get('organisation3')
     
-    self.assertEquals(organisation3, returned_packing_list.getSourceValue())
-    self.assertEquals(organisation3, returned_packing_list.getSourceSectionValue())
-    self.assertEquals(organisation, returned_packing_list.getDestinationValue())
-    self.assertEquals(organisation, returned_packing_list.getDestinationSectionValue())
-    self.assertEquals(organisation3, returned_packing_list.getSourceDecisionValue())
-    self.assertEquals(organisation, returned_packing_list.getDestinationDecisionValue())
-    self.assertEquals(organisation3, returned_packing_list.getSourceAdministrationValue())
-    self.assertEquals(organisation, returned_packing_list.getDestinationAdministrationValue())
+    self.assertEqual(organisation3, returned_packing_list.getSourceValue())
+    self.assertEqual(organisation3, returned_packing_list.getSourceSectionValue())
+    self.assertEqual(organisation, returned_packing_list.getDestinationValue())
+    self.assertEqual(organisation, returned_packing_list.getDestinationSectionValue())
+    self.assertEqual(organisation3, returned_packing_list.getSourceDecisionValue())
+    self.assertEqual(organisation, returned_packing_list.getDestinationDecisionValue())
+    self.assertEqual(organisation3, returned_packing_list.getSourceAdministrationValue())
+    self.assertEqual(organisation, returned_packing_list.getDestinationAdministrationValue())
 
     returned_packing_list_line_list = returned_packing_list.objectValues(
                         portal_type=self.returned_packing_list_line_portal_type)
                         
-    self.assertEquals(1, len(returned_packing_list_line_list))
+    self.assertEqual(1, len(returned_packing_list_line_list))
     returned_packing_list_line = returned_packing_list_line_list[0]
-    self.assertEquals(self.returned_packing_list_line_portal_type,
+    self.assertEqual(self.returned_packing_list_line_portal_type,
                       returned_packing_list_line.getPortalType())
     resource = sequence.get('resource')    
     created_resource = returned_packing_list_line.getResourceValue()
-    self.assertEquals(resource, created_resource)
-    self.assertEquals(200, returned_packing_list_line.getQuantity())
+    self.assertEqual(resource, created_resource)
+    self.assertEqual(200, returned_packing_list_line.getQuantity())
   
   def stepCheckReturnedPackingListDeleting(self, sequence=None, 
                                            sequence_list=None, **kw):
@@ -167,7 +167,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list = sequence.get('returned_packing_list')
     returned_packing_list_line_list = returned_packing_list.objectValues(
                         portal_type=self.returned_packing_list_line_portal_type)
-    self.assertEquals(1, len(returned_packing_list_line_list))
+    self.assertEqual(1, len(returned_packing_list_line_list))
     returned_packing_list_line = returned_packing_list_line_list[0]
     # delete a line
     returned_packing_list.manage_delObjects([returned_packing_list_line.getId()])
@@ -175,9 +175,9 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     portal_catalog = self.getCatalogTool()
     returned_packing_list_uid = returned_packing_list.getUid()    
     found_rpl = portal_catalog(uid=returned_packing_list_uid)
-    self.assertEquals(1, len(found_rpl))    
+    self.assertEqual(1, len(found_rpl))    
     rpl = found_rpl[0].getObject()
-    self.assertEquals(0, len(rpl.objectValues(
+    self.assertEqual(0, len(rpl.objectValues(
         portal_type=self.returned_packing_list_line_portal_type)))
         
     # delete a delivery
@@ -185,7 +185,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
         [returned_packing_list.getId(),])
     
     found_rpl =  portal_catalog(uid=returned_packing_list_uid)
-    self.assertEquals(0, len(found_rpl))
+    self.assertEqual(0, len(found_rpl))
     
   def stepConfirmReturnedPackingList(self, sequence=None, sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
@@ -206,23 +206,23 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
   def stepCheckConfirmedReturnedPackingList(self, sequence=None,
                                             sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
-    self.assertEquals('confirmed', returned_packing_list.getSimulationState())
+    self.assertEqual('confirmed', returned_packing_list.getSimulationState())
     
   def stepCheckShippedReturnedPackingList(self, sequence=None,
                                           sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
-    self.assertEquals('started', returned_packing_list.getSimulationState())
+    self.assertEqual('started', returned_packing_list.getSimulationState())
     
   def stepCheckReceivedReturnedPackingList(self, sequence=None,
                                            sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
-    self.assertEquals('stopped', returned_packing_list.getSimulationState())
+    self.assertEqual('stopped', returned_packing_list.getSimulationState())
     
   
   def stepCheckDeliveredReturnedPackingList(self, sequence=None,
                                             sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
-    self.assertEquals('delivered', returned_packing_list.getSimulationState())
+    self.assertEqual('delivered', returned_packing_list.getSimulationState())
 
   
   def _getInventoryModule(self):
@@ -257,13 +257,13 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
                                                      to_date=first_date)
-    self.assertEquals(2000, quantity)
+    self.assertEqual(2000, quantity)
     
     view_date = DateTime(self.view_stock_date)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=view_date)  
-    self.assertEquals(2000, quantity)
+    self.assertEqual(2000, quantity)
     
   def stepCheckReturnedInventory(self, sequence=None, sequence_list=None, **kw):
     """
@@ -279,13 +279,13 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date) 
-    self.assertEquals(2200, quantity)
+    self.assertEqual(2200, quantity)
 
     shipping_date = DateTime(self.shipping_date_string) 
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
                                                      to_date=shipping_date) 
-    self.assertEquals(2000, quantity)
+    self.assertEqual(2000, quantity)
     
     
   def stepCheckReturnedPackingLineEmptyCell(self, sequence=None, \
@@ -354,7 +354,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list_line.setCellRange(line_vcl, base_id=base_id) 
     self.tic()
    
-    self.assertEquals(2, len(variation_category_list))
+    self.assertEqual(2, len(variation_category_list))
     cell_key_list = list(returned_packing_list_line.getCellKeyList(base_id=base_id))
     
     self.assertNotEquals(0, len(cell_key_list))
@@ -369,7 +369,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     self.commit()
     cell_list = returned_packing_list_line.objectValues(
         portal_type=self.returned_packing_list_cell_portal_type)
-    self.assertEquals(2, len(cell_list))
+    self.assertEqual(2, len(cell_list))
     sequence.edit(returned_packing_list_with_cell=returned_packing_list)
     
 
@@ -381,14 +381,14 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     rplwc = sequence.get('returned_packing_list_with_cell')
     rplwc_line_list = rplwc.objectValues(
                 portal_type=self.returned_packing_list_line_portal_type)
-    self.assertEquals(1, len(rplwc_line_list))
+    self.assertEqual(1, len(rplwc_line_list))
     rplwc_line = rplwc_line_list[0]
     
     vcl = rplwc_line.getVariationCategoryList(omit_optional_variation=1)
-    self.assertEquals(2, len(vcl))
+    self.assertEqual(2, len(vcl))
     cell_list = rplwc_line.objectValues(
         portal_type=self.returned_packing_list_cell_portal_type)
-    self.assertEquals(2, len(cell_list))
+    self.assertEqual(2, len(cell_list))
     
  
   def stepCheckReturnedPackingListWithCellDeleting(self, sequence=None,
@@ -399,21 +399,21 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     rplwc = sequence.get('returned_packing_list_with_cell')
     rplwc_line_list = rplwc.objectValues(
                 portal_type=self.returned_packing_list_line_portal_type)
-    self.assertEquals(1, len(rplwc_line_list))
+    self.assertEqual(1, len(rplwc_line_list))
     rplwc_line = rplwc_line_list[0]
     
     vcl = rplwc_line.getVariationCategoryList(omit_optional_variation=1)
-    self.assertEquals(2, len(vcl))
+    self.assertEqual(2, len(vcl))
     cell_list = rplwc_line.objectValues(
         portal_type=self.returned_packing_list_cell_portal_type)
-    self.assertEquals(2, len(cell_list))
+    self.assertEqual(2, len(cell_list))
     # delete cells
     rplwc_line.deleteContent(map(lambda x: x.getId(), cell_list))
     self.commit()
     
     cell_list = rplwc_line.objectValues(
     ortal_type=self.returned_packing_list_cell_portal_type)
-    self.assertEquals(0, len(cell_list))
+    self.assertEqual(0, len(cell_list))
     
   def stepCheckReturnedPackingListIsNotDivergent(self, sequence=None,
                                          sequence_list=None, **kw):

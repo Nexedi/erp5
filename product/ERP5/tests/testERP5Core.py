@@ -150,7 +150,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     skins_tool = self.portal.portal_skins
     types_tool = self.portal.portal_types
-    self.failIf(self.portal._getOb(module_id, None) is not None)
+    self.assertFalse(self.portal._getOb(module_id, None) is not None)
     self.assertEqual(skins_tool._getOb(portal_skins_folder, None), None)
     self.assertEqual(types_tool._getOb(module_portal_type, None), None)
     self.assertEqual(types_tool._getOb(object_portal_type, None), None)
@@ -161,8 +161,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                       object_title=object_title,
                                       module_id=module_id,
                                       module_title=module_title)
-    self.failUnless(self.portal._getOb(module_id, None) is not None)
-    self.assertEquals(module_title,
+    self.assertTrue(self.portal._getOb(module_id, None) is not None)
+    self.assertEqual(module_title,
                       self.portal._getOb(module_id).getTitle())
     self.assertNotEqual(types_tool.getTypeInfo(module_portal_type), None)
     self.assertNotEqual(types_tool.getTypeInfo(object_portal_type), None)
@@ -173,13 +173,13 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertNotEqual(skin_folder, None)
     self.assert_('UnitTest_view' in skin_folder.objectIds())
     view_form = skin_folder.UnitTest_view
-    self.assertEquals('form_view', view_form.pt)
-    self.assertEquals('Base_edit', view_form.action)
+    self.assertEqual('form_view', view_form.pt)
+    self.assertEqual('Base_edit', view_form.action)
 
     self.assert_('UnitTestModule_viewUnitTestList' in skin_folder.objectIds())
     list_form = skin_folder.UnitTestModule_viewUnitTestList
-    self.assertEquals('form_list', list_form.pt)
-    self.assertEquals('Base_doSelect', list_form.action)
+    self.assertEqual('form_list', list_form.pt)
+    self.assertEqual('Base_doSelect', list_form.action)
     self.assert_('listbox' in [x.getId() for x in list_form.get_fields()])
     self.assert_('listbox' in
             [x.getId() for x in list_form.get_fields_in_group('bottom')])
@@ -190,9 +190,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.unittest_module.document.view()
 
     # make sure translation domains are set correctly
-    self.assertEquals('erp5_ui',
+    self.assertEqual('erp5_ui',
         self.portal.unittest_module.getTitleTranslationDomain())
-    self.assertEquals('erp5_ui',
+    self.assertEqual('erp5_ui',
         self.portal.unittest_module.getShortTitleTranslationDomain())
 
     type_information = self.portal.portal_types[module_portal_type]
@@ -208,7 +208,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                        if action['visible']]
     msg = ("Actions do not match. Expected:\n%s\n\nGot:\n%s\n" %
            (pprint.pformat(expected), pprint.pformat(got)))
-    self.assertEquals(expected, got, msg)
+    self.assertEqual(expected, got, msg)
 
   def test_manager_actions_on_portal(self):
     # as manager:
@@ -275,14 +275,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Test we can view the front page.
     """
     response = self.publish(self.portal_id, self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
 
   def test_login_form(self):
     """Test anonymous user are redirected to login_form
     """
     response = self.publish(self.portal_id)
-    self.assertEquals(HTTP_REDIRECT, response.getStatus())
-    self.assertEquals('%s/login_form' % self.portal.absolute_url(),
+    self.assertEqual(HTTP_REDIRECT, response.getStatus())
+    self.assertEqual('%s/login_form' % self.portal.absolute_url(),
                       response.getHeader('Location'))
 
   def test_view_tools(self):
@@ -292,7 +292,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                  'portal_rules',
                  'portal_alarms',):
       response = self.publish('%s/%s' % (self.portal_id, tool), self.auth)
-      self.assertEquals(HTTP_OK, response.getStatus(),
+      self.assertEqual(HTTP_OK, response.getStatus(),
                         "%s: %s (%s)" % (tool, response.getStatus(),
                                          str(response)))
 
@@ -303,10 +303,10 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # assumes that we can add Business Template in template tool
     response = self.publish('%s/portal_templates' %
                                 self.portal_id, self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    self.failUnless(('Business Template', {})
+    self.assertEqual(HTTP_OK, response.getStatus())
+    self.assertTrue(('Business Template', {})
                     in translation_service._translated['ui'])
-    self.failUnless(
+    self.assertTrue(
       ('Add ${portal_type}', {'portal_type': 'Business Template'}) in
       translation_service._translated['ui'])
 
@@ -323,14 +323,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                       action_type='object_jump')
     response = self.publish('%s/portal_templates' %
                             self.portal_id, self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    self.failUnless(('Dummy Jump Action', {}) in
+    self.assertEqual(HTTP_OK, response.getStatus())
+    self.assertTrue(('Dummy Jump Action', {}) in
                       translation_service._translated['ui'])
 
   def test_error_log(self):
-    self.failUnless('error_log' in self.portal.objectIds())
-    self.failUnless(self.portal.error_log.getProperties()['copy_to_zlog'])
-    self.failIf('Unauthorized' in
+    self.assertTrue('error_log' in self.portal.objectIds())
+    self.assertTrue(self.portal.error_log.getProperties()['copy_to_zlog'])
+    self.assertFalse('Unauthorized' in
                 self.portal.error_log.getProperties()['ignored_exceptions'])
 
   def test_03_getDefaultModule(self, quiet=quiet, run=run_all_test):
@@ -349,7 +349,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     module_title='%ss' % object_portal_type
 
     # Create module for testing
-    self.failIf(self.portal._getOb(module_id, None) is not None)
+    self.assertFalse(self.portal._getOb(module_id, None) is not None)
     self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
                      None)
     self.assertEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
@@ -364,16 +364,16 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                       module_title=module_title)
 
     # Test
-    self.assertEquals(
+    self.assertEqual(
         module_id,
         self.portal.getDefaultModule(object_portal_type).getId())
-    self.assertEquals(
+    self.assertEqual(
         module_portal_type,
         self.portal.getDefaultModule(object_portal_type).getPortalType())
-    self.assertEquals(
+    self.assertEqual(
         module_id,
         self.portal.getDefaultModule(module_portal_type).getId())
-    self.assertEquals(
+    self.assertEqual(
         module_portal_type,
         self.portal.getDefaultModule(module_portal_type).getPortalType())
 
@@ -403,7 +403,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                 title='My Test Preference')),
       1)
     response = self.publish(self.portal_id, self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
 
   def _Folder_delete(self, *object_list):
     selection_name = 'test_selection'
@@ -446,9 +446,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     delete(1, person)
     self.assertEqual(0, organisation.getRelationCountForDeletion())
     delete(1, organisation)
-    self.assertEquals(organisation_module_len + 1,
+    self.assertEqual(organisation_module_len + 1,
                       len(self.portal.organisation_module))
-    self.assertEquals(person_module_len + 1,
+    self.assertEqual(person_module_len + 1,
                       len(self.portal.person_module))
 
   def test_Folder_delete_non_accessible_object(self):
@@ -462,7 +462,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                 base_category_list=('source',),
                                 category_list=document_2.getRelativeUrl())
     self.tic()
-    self.assertEquals([document_1],
+    self.assertEqual([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
 
     document_1.manage_permission('View', [], acquire=0)

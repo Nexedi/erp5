@@ -56,6 +56,6 @@ class TestSQLBench(unittest.TestCase):
       cwd = mariadb_folder + '/sql-bench/',
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    self.assertEquals(0, len(error), error)
+    self.assertEqual(0, len(error), error)
     print output
     self.assertTrue(output.find("Total time: ")>=0)

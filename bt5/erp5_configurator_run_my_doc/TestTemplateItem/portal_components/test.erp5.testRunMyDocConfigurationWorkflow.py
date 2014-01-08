@@ -114,13 +114,13 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check if organisation was created fine """
     business_configuration = sequence.get("business_configuration")
     organisation_config_save = business_configuration['3']
-    self.assertEquals(organisation_config_save.getTitle(),
+    self.assertEqual(organisation_config_save.getTitle(),
                       "My Organisation")
-    self.assertEquals(1, len(organisation_config_save.contentValues()))
+    self.assertEqual(1, len(organisation_config_save.contentValues()))
     organisation_config_item = organisation_config_save['1']
-    self.assertEquals(organisation_config_item.getPortalType(),
+    self.assertEqual(organisation_config_item.getPortalType(),
                       'Organisation Configurator Item')
-    self.assertEquals(organisation_config_item.getDefaultEmailText(),
+    self.assertEqual(organisation_config_item.getDefaultEmailText(),
                       'me@example.com')
 
   def stepSetupUserAccountNumberThree(self, sequence=None, sequence_list=None, **kw):
@@ -140,9 +140,9 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check the multiple user account form """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Configure ERP5 Preferences', response_dict['next'])
+      self.assertEqual('show', response_dict['command'])
+    self.assertEqual('Previous', response_dict['previous'])
+    self.assertEqual('Configure ERP5 Preferences', response_dict['next'])
     self.assertCurrentStep('RunMyDoc Preferences', response_dict)
 
   def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
@@ -166,30 +166,30 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
      business_configuration = sequence.get("business_configuration")
      person_config_save = business_configuration["5"]
      person_config_item = person_config_save["1"]
-     self.assertEquals(person_config_item.getReference(), "person_creator")
+     self.assertEqual(person_config_item.getReference(), "person_creator")
      person_config_item = person_config_save["2"]
-     self.assertEquals(person_config_item.getReference(), "person_assignee")
+     self.assertEqual(person_config_item.getReference(), "person_assignee")
      person_config_item = person_config_save["3"]
-     self.assertEquals(person_config_item.getReference(), "person_assignor")
+     self.assertEqual(person_config_item.getReference(), "person_assignor")
 
   def stepCheckMultipleUserAccountThreeFrance(self, sequence=None, sequence_list=None, **kw):
      """ Check if the users were created correctly """
      business_configuration = sequence.get("business_configuration")
      person_config_save = business_configuration["5"]
      person_config_item = person_config_save["1"]
-     self.assertEquals(person_config_item.getReference(), "french_creator")
+     self.assertEqual(person_config_item.getReference(), "french_creator")
      person_config_item = person_config_save["2"]
-     self.assertEquals(person_config_item.getReference(), "french_assignee")
+     self.assertEqual(person_config_item.getReference(), "french_assignee")
      person_config_item = person_config_save["3"]
-     self.assertEquals(person_config_item.getReference(), "french_assignor")
+     self.assertEqual(person_config_item.getReference(), "french_assignor")
 
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
     system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
     conversion_dict = _getConversionServerDict()
-    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(),
+    self.assertEqual(system_preference.getPreferredOoodocServerPortNumber(),
                       conversion_dict['port'])
-    self.assertEquals(system_preference.getPreferredOoodocServerAddress(),
+    self.assertEqual(system_preference.getPreferredOoodocServerAddress(),
                       conversion_dict['hostname'])
 
   def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
@@ -197,13 +197,13 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     portal_catalog = self.portal.portal_catalog
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Assignor')
-    self.assertEquals(preference.getPreferenceState(), "enabled")
+    self.assertEqual(preference.getPreferenceState(), "enabled")
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Assignee')
-    self.assertEquals(preference.getPreferenceState(), "enabled")
+    self.assertEqual(preference.getPreferenceState(), "enabled")
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Creator')
-    self.assertEquals(preference.getPreferenceState(), "enabled")
+    self.assertEqual(preference.getPreferenceState(), "enabled")
 
   def _stepCheckKnowledgePadRole(self):
     """ Check if Knowledge Pad is configured correctly """
@@ -216,10 +216,10 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     self.portal.KnowledgePad_addBoxList(uids=[gadget_uid],
                                         active_pad_relative_url=pad.getRelativeUrl())
     self.tic()
-    self.assertEquals(len(pad.contentValues()), 1)
+    self.assertEqual(len(pad.contentValues()), 1)
     box = pad.contentValues()[0]
-    self.assertEquals(box.getValidationState(), 'visible')
-    self.assertEquals(box.getSpecialise(), 'portal_gadgets/test_wizard_gadget')
+    self.assertEqual(box.getValidationState(), 'visible')
+    self.assertEqual(box.getSpecialise(), 'portal_gadgets/test_wizard_gadget')
 
 class TestRunMyDocsConfiguratorWorkflowFranceLanguage(TestRunMyDocsConfiguratorWorkflowMixin):
   """

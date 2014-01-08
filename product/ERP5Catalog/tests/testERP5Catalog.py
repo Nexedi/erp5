@@ -160,7 +160,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
-      self.failUnless(path in path_list)
+      self.assertTrue(path in path_list)
       LOG('checkRelativeUrlInSQLPathList found path:',0,path)
 
   def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
@@ -168,7 +168,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
-      self.failUnless(path not in  path_list)
+      self.assertTrue(path not in  path_list)
       LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
 
   def test_01_HasEverything(self):
@@ -182,7 +182,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     self.tic()
     organisation_module_list = portal_catalog(portal_type='Organisation Module')
-    self.assertEquals(len(organisation_module_list),1)
+    self.assertEqual(len(organisation_module_list),1)
 
   def test_03_CreateAndDeleteObject(self):
     portal_catalog = self.getCatalogTool()
@@ -222,50 +222,50 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     # Now we will try the same thing as previous test and look at searchFolder
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
     person = person_module.newContent(id='4',portal_type='Person',)
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
     person.immediateReindexObject()
     person_module.manage_delObjects('4')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
 
   def test_05_SearchFolderWithImmediateReindexObject(self):
     person_module = self.getPersonModule()
 
     # Now we will try the same thing as previous test and look at searchFolder
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
 
     person = person_module.newContent(id='4',portal_type='Person')
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
 
     person_module.manage_delObjects('4')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
 
   def test_06_SearchFolderWithRecursiveImmediateReindexObject(self):
     person_module = self.getPersonModule()
 
     # Now we will try the same thing as previous test and look at searchFolder
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
 
     person = person_module.newContent(id='4',portal_type='Person')
     person_module.recursiveImmediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
 
     person_module.manage_delObjects('4')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals([],folder_object_list)
+    self.assertEqual([],folder_object_list)
 
   def test_07_ClearCatalogAndTestNewContent(self):
     person_module = self.getPersonModule()
@@ -277,7 +277,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='4',portal_type='Person')
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
 
   def test_08_ClearCatalogAndTestRecursiveImmediateReindexObject(self):
     person_module = self.getPersonModule()
@@ -289,7 +289,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='4',portal_type='Person')
     person_module.recursiveImmediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
 
   def test_09_ClearCatalogAndTestImmediateReindexObject(self):
     person_module = self.getPersonModule()
@@ -301,7 +301,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='4',portal_type='Person')
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['4'],folder_object_list)
+    self.assertEqual(['4'],folder_object_list)
 
   def test_10_OrderedSearchFolder(self):
     person_module = self.getPersonModule()
@@ -318,15 +318,15 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId()
               for x in person_module.searchFolder(sort_on=[('id','ascending')])]
-    self.assertEquals(['a','b','c'],folder_object_list)
+    self.assertEqual(['a','b','c'],folder_object_list)
     folder_object_list = [x.getObject().getId()
               for x in person_module.searchFolder(
               sort_on=[('title','ascending'), ('description','ascending')])]
-    self.assertEquals(['c','b','a'],folder_object_list)
+    self.assertEqual(['c','b','a'],folder_object_list)
     folder_object_list = [x.getObject().getId()
               for x in person_module.searchFolder(
               sort_on=[('title','ascending'),('description','descending')])]
-    self.assertEquals(['a','b','c'],folder_object_list)
+    self.assertEqual(['a','b','c'],folder_object_list)
 
   def test_11_CastStringAsInt(self):
     person_module = self.getPersonModule()
@@ -342,14 +342,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='c',portal_type='Person',title='12')
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending')])]
-    self.assertEquals(['1','12','2'],folder_object_list)
+    self.assertEqual(['1','12','2'],folder_object_list)
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
-    self.assertEquals(['1','2','12'],folder_object_list)
+    self.assertEqual(['1','2','12'],folder_object_list)
 
   def test_12_TransactionalUidBuffer(self):
     portal_catalog = self.getCatalogTool()
     catalog = portal_catalog.getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.assertTrue(catalog is not None)
 
     # Clear out the uid buffer.
     #from Products.ZSQLCatalog.SQLCatalog import uid_buffer_dict, get_ident
@@ -368,11 +368,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     catalog.newUid()
     uid_buffer = getUIDBuffer()
-    self.failUnless(len(uid_buffer) > 0)
+    self.assertTrue(len(uid_buffer) > 0)
 
     self.abort()
     uid_buffer = getUIDBuffer()
-    self.failUnless(len(uid_buffer) == 0)
+    self.assertTrue(len(uid_buffer) == 0)
 
   def test_13_ERP5Site_reindexAll(self):
     # Flush message queue
@@ -395,7 +395,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = 'select count(*) from catalog where portal_type!=NULL'
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
-    self.assertEquals(0, message_count)
+    self.assertEqual(0, message_count)
     # Commit
     self.commit()
     # Reindex all
@@ -406,10 +406,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = 'select count(*) from message'
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
-    self.assertEquals(0, message_count)
+    self.assertEqual(0, message_count)
     # Check if all objects are catalogued as before
     new_path_list = self.getSQLPathList()
-    self.assertEquals(set(original_path_list) - set(new_path_list), set())
+    self.assertEqual(set(original_path_list) - set(new_path_list), set())
 
   def test_14_ReindexWithBrokenCategory(self):
     """Reindexing an object with 1 broken category must not affect other valid
@@ -426,11 +426,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
     organisation.setGroup('nexedi')
-    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    self.assertEqual(organisation.getGroupValue(), group_nexedi_category)
     organisation.setRegion('europe')
-    self.assertEquals(organisation.getRegionValue(), region_europe_category)
+    self.assertEqual(organisation.getRegionValue(), region_europe_category)
     organisation.setRole('not_exists')
-    self.assertEquals(organisation.getRoleValue(), None)
+    self.assertEqual(organisation.getRoleValue(), None)
     # Flush message queue
     self.tic()
     # Clear catalog
@@ -443,7 +443,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         organisation.getUid()
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
-    self.assertEquals(0, message_count)
+    self.assertEqual(0, message_count)
     # Commit
     self.tic()
     # Check catalog
@@ -453,7 +453,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = 'select count(*) from message'
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
-    self.assertEquals(0, message_count)
+    self.assertEqual(0, message_count)
     # Check region and group categories are catalogued
     for base_cat, theorical_count in {
                                       'region':1,
@@ -465,7 +465,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                     portal_category[base_cat].getUid())
       result = sql_connection.manage_test(sql)
       cataloged_obj_count = result[0]['COUNT(*)']
-      self.assertEquals(theorical_count, cataloged_obj_count,
+      self.assertEqual(theorical_count, cataloged_obj_count,
             'category %s is not cataloged correctly' % base_cat)
 
   def test_15_getObject(self,):
@@ -475,20 +475,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     obj = self._makeOrganisation()
     # otherwise it returns the object
-    self.assertEquals(obj, portal_catalog.getObject(obj.getUid()).getObject())
+    self.assertEqual(obj, portal_catalog.getObject(obj.getUid()).getObject())
     # but raises KeyError if object is not in catalog
     self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
 
   def test_getRecordForUid(self):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
-    self.assertEquals(obj,
+    self.assertEqual(obj,
         portal_catalog.getSQLCatalog().getRecordForUid(obj.getUid()).getObject())
 
   def test_path(self):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
-    self.assertEquals(obj.getPath(), portal_catalog.getpath(obj.getUid()))
+    self.assertEqual(obj.getPath(), portal_catalog.getpath(obj.getUid()))
     self.assertRaises(KeyError, portal_catalog.getpath, sys.maxint)
 
   def test_16_newUid(self):
@@ -498,8 +498,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_dict = {}
     for i in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.failUnless(isinstance(uid, long))
-      self.failIf(uid in uid_dict)
+      self.assertTrue(isinstance(uid, long))
+      self.assertFalse(uid in uid_dict)
       uid_dict[uid] = None
 
   def test_17_CreationDate_ModificationDate(self):
@@ -517,25 +517,25 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = """select creation_date, modification_date 
              from catalog where uid = %s""" % organisation.getUid()
     result = sql_connection.manage_test(sql)
-    self.assertEquals(creation_date, 
+    self.assertEqual(creation_date, 
                       result[0]['creation_date'].ISO())
-    self.assertEquals(modification_date,
+    self.assertEqual(modification_date,
                       result[0]['modification_date'].ISO())
-    self.assertEquals(creation_date, 
+    self.assertEqual(creation_date, 
                       result[0]['modification_date'].ISO())
 
     import time; time.sleep(3)
     organisation.edit(title='edited')
     self.tic()
     result = sql_connection.manage_test(sql)
-    self.assertEquals(creation_date, result[0]['creation_date'].ISO())
+    self.assertEqual(creation_date, result[0]['creation_date'].ISO())
     modification_date = organisation.getModificationDate().toZone('UTC').ISO()
     self.assertNotEquals(modification_date,
                          organisation.getCreationDate())
     # This test was first written with a now variable initialized with
     # DateTime(). But since we are never sure of the time required in
     # order to execute some line of code
-    self.assertEquals(modification_date,
+    self.assertEqual(modification_date,
                       result[0]['modification_date'].ISO())
     self.assertTrue(organisation.getModificationDate()>now)
     self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
@@ -606,7 +606,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                   **kw) )
     LOG('kw', 0, kw)
     LOG('SQL', 0, testMethod(src__=1, **kw))
-    self.assertEquals(len(testMethod(**kw)), 2)
+    self.assertEqual(len(testMethod(**kw)), 2)
     
     # check we can make a simple filter on title.
     kw = default_parametrs.copy()
@@ -616,9 +616,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                   **kw) )
     LOG('kw', 1, kw)
     LOG('SQL', 1, testMethod(src__=1, **kw))
-    self.assertEquals( len(testMethod(**kw)), 1,
+    self.assertEqual( len(testMethod(**kw)), 1,
                        testMethod(src__=1, **kw) )
-    self.assertEquals( testMethod(**kw)[0]['uid'],
+    self.assertEqual( testMethod(**kw)[0]['uid'],
                         source_organisation.getUid(),
                         testMethod(src__=1, **kw) )
     
@@ -631,9 +631,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     LOG('kw', 2, kw)
     LOG('SQL', 2, testMethod(src__=1, **kw))
     brains = testMethod(**kw)
-    self.assertEquals( len(brains), 2,
+    self.assertEqual( len(brains), 2,
                        testMethod(src__=1, **kw))
-    self.failIf( brains[0]['id'] > brains[1]['id'],
+    self.assertFalse( brains[0]['id'] > brains[1]['id'],
                  testMethod(src__=1, **kw) )
     
     # check related keys works
@@ -645,8 +645,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     LOG('kw', 3, kw)
     LOG('SQL', 3, testMethod(src__=1, **kw))
     brains = testMethod(**kw)
-    self.assertEquals( len(brains), 1, testMethod(src__=1, **kw) )
-    self.assertEquals( brains[0]['uid'],
+    self.assertEqual( len(brains), 1, testMethod(src__=1, **kw) )
+    self.assertEqual( brains[0]['uid'],
                        source_organisation.getUid(),
                        testMethod(src__=1, **kw) )
 
@@ -657,10 +657,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='5',portal_type='Person',title=title)
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEquals(['5'],folder_object_list)
+    self.assertEqual(['5'],folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
-    self.assertEquals(['5'],folder_object_list)
+    self.assertEqual(['5'],folder_object_list)
 
   def test_Collation(self):
     person_module = self.getPersonModule()
@@ -670,17 +670,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
-    self.assertEquals(['5'],folder_object_list)
+    self.assertEqual(['5'],folder_object_list)
 
     # Searching for Sebastien should also find Sébastien
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title='Sebastien')]
-    self.assertEquals(['5'],folder_object_list)
+    self.assertEqual(['5'],folder_object_list)
 
     # Same for sebastien, as catalog searches are case insensitive
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title='sebastien')]
-    self.assertEquals(['5'],folder_object_list)
+    self.assertEqual(['5'],folder_object_list)
 
 
   def test_20_SearchFolderWithDynamicRelatedKey(self):
@@ -698,51 +698,51 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
     organisation.setGroup('nexedi')
-    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    self.assertEqual(organisation.getGroupValue(), group_nexedi_category)
     organisation2 = module.newContent(portal_type='Organisation',)
     organisation2.setGroup('storever')
     organisation2.setTitle('Organisation 2')
-    self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
+    self.assertEqual(organisation2.getGroupValue(), group_nexedi_category2)
     # Flush message queue
     self.tic()
 
     # Try to get the organisation with the group title Nexedi
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_title='Nexedi')]
-    self.assertEquals(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(default_group_title='Nexedi')]
-    self.assertEquals(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
     # Try to get the organisation with the group id 
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_id='storever')]
-    self.assertEquals(organisation_list,[organisation2])
+    self.assertEqual(organisation_list,[organisation2])
     # Try to get the organisation with the group description 'a'
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_description='a')]
-    self.assertEquals(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
     # Try to get the organisation with the group description 'c'
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_description='c')]
-    self.assertEquals(organisation_list,[])
+    self.assertEqual(organisation_list,[])
     # Try to get the organisation with the default group description 'c'
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(default_group_description='c')]
-    self.assertEquals(organisation_list,[])
+    self.assertEqual(organisation_list,[])
     # Try to get the organisation with group relative_url
     group_relative_url = group_nexedi_category.getRelativeUrl()
     organisation_list = [x.getObject() for x in 
                  module.searchFolder(group_relative_url=group_relative_url)]
-    self.assertEquals(organisation_list, [organisation])
+    self.assertEqual(organisation_list, [organisation])
     # Try to get the organisation with group uid
     organisation_list = [x.getObject() for x in 
                  module.searchFolder(group_uid=group_nexedi_category.getUid())]
-    self.assertEquals(organisation_list, [organisation])
+    self.assertEqual(organisation_list, [organisation])
     # Try to get the organisation with the group id AND title of the document
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_id='storever',
                                              title='Organisation 2')]
-    self.assertEquals(organisation_list,[organisation2])
+    self.assertEqual(organisation_list,[organisation2])
 
 
   def test_21_SearchFolderWithDynamicStrictRelatedKey(self):
@@ -760,26 +760,26 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
     organisation.setGroup('nexedi/erp5')
-    self.assertEquals(organisation.getGroupValue(), sub_group_nexedi)
+    self.assertEqual(organisation.getGroupValue(), sub_group_nexedi)
     # Flush message queue
     self.tic()
 
     # Try to get the organisation with the group title Nexedi
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(strict_group_title='Nexedi')]
-    self.assertEquals(organisation_list,[])
+    self.assertEqual(organisation_list,[])
     # Try to get the organisation with the group title ERP5
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(strict_group_title='ERP5')]
-    self.assertEquals(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
     # Try to get the organisation with the group description a
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(strict_group_description='a')]
-    self.assertEquals(organisation_list,[])
+    self.assertEqual(organisation_list,[])
     # Try to get the organisation with the group description b
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(strict_group_description='b')]
-    self.assertEquals(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
 
   def test_22_SearchingWithUnicode(self):
     person_module = self.getPersonModule()
@@ -820,7 +820,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             ('catalog.title DESC', '`catalog`.`title` DESC'))
 
   def test_26_SortOnUnknownKeys(self):
-    self.assertEquals('',
+    self.assertEqual('',
           self.getCatalogTool().buildSQLQuery(select_list=('uid', 'path'),
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
 
@@ -935,7 +935,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
-    self.assertEquals([organisation.getPath()],
+    self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
                 title={'query': organisation_title})])
 
@@ -943,7 +943,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, but using a related key
     """
     organisation = self._makeOrganisation()
-    self.assertEquals([organisation.getPath()],
+    self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
                 group_title={'query': 'Nexedi Group'},
                 # have to filter on portal type, because the group category is
@@ -956,7 +956,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
   
-    self.assertEquals([organisation.getPath()],
+    self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
                 title={'query': (organisation_title, 'something else'),
                        'operator': 'or'})])
@@ -967,7 +967,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_title = 'Nexedi Organisation'
     organisation = self._makeOrganisation(title=organisation_title)
   
-    self.assertEquals([organisation.getPath()],
+    self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
                 # this is useless, we must find a better use case
                 title={'query': (organisation_title, organisation_title),
@@ -980,7 +980,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
 
-    self.assertEquals([org_a.getPath()],
+    self.assertEqual([org_a.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',
                 title={'query': 'B', 'range': 'max'})])
@@ -1017,7 +1017,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
 
-    self.assertEquals([org_b.getPath()],
+    self.assertEqual([org_b.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',
                 title={'query': ('B', 'C'), 'range': 'minmax'})])
@@ -1047,7 +1047,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     for k, v in query_dict.items():
       setattr(query_record, k, v)
 
-    self.assertEquals(set([org_b.getPath(), org_c.getPath()]),
+    self.assertEqual(set([org_b.getPath(), org_c.getPath()]),
         set([x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',
                 title=query_record)]))
@@ -1058,12 +1058,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     erp5_sql_deferred_connection = getattr(self.getPortal(),
                                     'erp5_sql_deferred_connection',
                                     None)
-    self.failUnless(erp5_sql_deferred_connection is not None)
-    self.assertEquals('Z MySQL Deferred Database Connection',
+    self.assertTrue(erp5_sql_deferred_connection is not None)
+    self.assertEqual('Z MySQL Deferred Database Connection',
                       erp5_sql_deferred_connection.meta_type)
     for method in ['z0_uncatalog_fulltext',
                    'z_catalog_fulltext_list']:
-      self.assertEquals('erp5_sql_deferred_connection',
+      self.assertEqual('erp5_sql_deferred_connection',
                 getattr(self.getCatalogTool().getSQLCatalog(),
                               method).connection_id)
 
@@ -1075,7 +1075,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     folder.manage_delObjects([ob.getId()])
     self.tic()
-    self.assertEquals(0, len(folder.searchFolder()))
+    self.assertEqual(0, len(folder.searchFolder()))
 
   def test_41_ProxyRolesInRestrictedPython(self):
     """test that proxy roles apply to catalog queries within python scripts
@@ -1096,36 +1096,36 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob.manage_permission(perm, ['Manager'], 0)
     self.tic()
     # check access
-    self.assertEquals(1, getSecurityManager().checkPermission(perm, folder))
-    self.assertEquals(1, getSecurityManager().checkPermission(perm, ob))
+    self.assertEqual(1, getSecurityManager().checkPermission(perm, folder))
+    self.assertEqual(1, getSecurityManager().checkPermission(perm, ob))
     self.login('bob')
-    self.assertEquals(1, getSecurityManager().checkPermission(perm, folder))
-    self.assertEquals(None, getSecurityManager().checkPermission(perm, ob))
+    self.assertEqual(1, getSecurityManager().checkPermission(perm, folder))
+    self.assertEqual(None, getSecurityManager().checkPermission(perm, ob))
     # add a script that calls a catalog method
     self.login('alice')
     script = createZODBPythonScript(self.getPortal().portal_skins.custom,
         'catalog_test_script', '', "return len(context.searchFolder())")
 
     # test without proxy role
-    self.assertEquals(1, folder.catalog_test_script())
+    self.assertEqual(1, folder.catalog_test_script())
     self.login('bob')
-    self.assertEquals(0, folder.catalog_test_script())
+    self.assertEqual(0, folder.catalog_test_script())
 
     # test with proxy role and correct role
     self.login('alice')
     script.manage_proxy(['Manager'])
-    self.assertEquals(1, folder.catalog_test_script())
+    self.assertEqual(1, folder.catalog_test_script())
     self.login('bob')
-    self.assertEquals(1, folder.catalog_test_script())
+    self.assertEqual(1, folder.catalog_test_script())
 
     # test with proxy role and wrong role
     self.login('alice')
     script.manage_proxy(['Assignor'])
     # proxy roles must overwrite the user's roles, even if he is the owner
     # of the script
-    self.assertEquals(0, folder.catalog_test_script())
+    self.assertEqual(0, folder.catalog_test_script())
     self.login('bob')
-    self.assertEquals(0, folder.catalog_test_script())
+    self.assertEqual(0, folder.catalog_test_script())
 
   def test_42_SearchableText(self):
     """Tests SearchableText is working in ERP5Catalog
@@ -1133,20 +1133,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder = self.getOrganisationModule()
     ob = folder.newContent()
     ob.setTitle('The title of this object')
-    self.failUnless('this' in ob.SearchableText(), ob.SearchableText())
+    self.assertTrue('this' in ob.SearchableText(), ob.SearchableText())
     # add some other objects, we need to create a minimum quantity of data for
     # full text queries to work correctly
     for i in range(10):
       otherob = folder.newContent()
       otherob.setTitle('Something different')
-      self.failIf('this' in otherob.SearchableText(), otherob.SearchableText())
+      self.assertFalse('this' in otherob.SearchableText(), otherob.SearchableText())
     # catalog those objects
     self.tic()
     catalog_tool = self.getCatalogTool()
-    self.assertEquals([ob],
+    self.assertEqual([ob],
         [x.getObject() for x in catalog_tool(portal_type='Organisation',
                                              SearchableText='title')])
-    self.assertEquals(1,
+    self.assertEqual(1,
                       catalog_tool.countResults(portal_type='Organisation',
                                                 SearchableText='title')[0][0])
 
@@ -1156,14 +1156,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.portal.erp5_sql_connection.manage_test('SHOW SENNA STATUS')
     except ProgrammingError:
       # MySQL
-      self.assertEquals([],
+      self.assertEqual([],
           [x.getObject for x in self.getCatalogTool()(
                   portal_type='Organisation', SearchableText='different')])
-      self.assertEquals(0, self.getCatalogTool().countResults(
+      self.assertEqual(0, self.getCatalogTool().countResults(
                 portal_type='Organisation', SearchableText='different')[0][0])
     else:
       # Tritonn
-      self.assertEquals(10, self.getCatalogTool().countResults(
+      self.assertEqual(10, self.getCatalogTool().countResults(
                 portal_type='Organisation', SearchableText='different')[0][0])
 
   def test_43_ManagePasteObject(self):
@@ -1184,7 +1184,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module.reindexObject()
     person = person_module.newContent(id='1',portal_type='Person')
     self.tic()
-    self.assertEquals([person],
+    self.assertEqual([person],
         [x.getObject() for x in self.getCatalogTool()(
                parent_title=person_module.getTitle())])
 
@@ -1330,7 +1330,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     original_path_list = self.getSQLPathList(self.original_connection_id)
     new_path_list = self.getSQLPathList(self.new_connection_id)
-    self.assertEquals(set(original_path_list) - set(new_path_list), set())
+    self.assertEqual(set(original_path_list) - set(new_path_list), set())
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
@@ -1344,9 +1344,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Make sure some zsql method use the right connection_id
     zsql_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
-    self.assertEquals(getattr(zsql_method,'connection_id'),self.new_connection_id)
+    self.assertEqual(getattr(zsql_method,'connection_id'),self.new_connection_id)
 
-    self.assertEquals(portal_catalog.getHotReindexingState(),
+    self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_FINISHED_STATE)
 
     # Do a hot reindex in the reverse way, but this time a more
@@ -1358,7 +1358,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       destination_sql_connection_id_list=source_sql_connection_id_list,
       update_destination_sql_catalog=True)
     self.commit()
-    self.assertEquals(portal_catalog.getHotReindexingState(),
+    self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_RECORDING_STATE)
     self.organisation3 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
@@ -1387,7 +1387,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                          'playBackRecordedObjectList',
                          'getId',
                          'setHotReindexingState'))
-    self.assertEquals(portal_catalog.getHotReindexingState(),
+    self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_DOUBLE_INDEXING_STATE)
     # Now we have started an double indexing
     self.next_deleted_organisation = module.newContent(portal_type='Organisation',
@@ -1405,14 +1405,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.organisation4 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     self.tic()
-    self.assertEquals(portal_catalog.getHotReindexingState(),
+    self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_FINISHED_STATE)
     # Check Security UID object exist in roles and users
     # compare the number object in the catalog
     count_catalog = len(self.getSQLPathList(self.original_connection_id))
     count_restricted_catalog = len(self.getSQLPathListWithRolesAndUsers(\
                                self.original_connection_id))
-    self.assertEquals(count_catalog, count_restricted_catalog)
+    self.assertEqual(count_catalog, count_restricted_catalog)
 
     path_list = [self.organisation3.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
@@ -1561,13 +1561,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # bob cannot see the document
     self.login('bob')
     ctool = self.getCatalogTool()
-    self.assertEquals(0, len(ctool.searchResults(title='Object Title')))
-    self.assertEquals(0, ctool.countResults(title='Object Title')[0][0])
+    self.assertEqual(0, len(ctool.searchResults(title='Object Title')))
+    self.assertEqual(0, ctool.countResults(title='Object Title')[0][0])
 
     # unless using unrestricted searches
-    self.assertEquals(1,
+    self.assertEqual(1,
                 len(ctool.unrestrictedSearchResults(title='Object Title')))
-    self.assertEquals(1,
+    self.assertEqual(1,
                 ctool.unrestrictedCountResults(title='Object Title')[0][0])
 
   @todo_erp5
@@ -1590,11 +1590,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(index_columns), 0)
     # Check catalog don't tell to use index if nothing defined
     sql = person_module.searchFolder(src__=1)
-    self.failUnless('use index' not in sql)
+    self.assertTrue('use index' not in sql)
     sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
-    self.failUnless('use index' not in sql)
+    self.assertTrue('use index' not in sql)
     sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
-    self.failUnless('use index' not in sql)
+    self.assertTrue('use index' not in sql)
     # Defined that catalog must tell to use index when order by catalog.title
     index_columns = ('catalog.title',)
     setattr(catalog, 'sql_catalog_index_on_order_keys', index_columns)
@@ -1603,11 +1603,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(index_columns), 1)
     # Check catalog tell to use index only when ordering by catalog.title
     sql = person_module.searchFolder(src__=1)
-    self.failUnless('use index' not in sql)
+    self.assertTrue('use index' not in sql)
     sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
-    self.failUnless('use index' not in sql)
+    self.assertTrue('use index' not in sql)
     sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
-    self.failUnless('use index' in sql)
+    self.assertTrue('use index' in sql)
 
   def test_50_LocalRolesArgument(self):
     """test local_roles= argument
@@ -1627,44 +1627,44 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # by default bob can see those 2 documents
     self.login('bob')
     ctool = self.getCatalogTool()
-    self.assertEquals(2, len(ctool.searchResults(title='Object Title')))
-    self.assertEquals(2, ctool.countResults(title='Object Title')[0][0])
+    self.assertEqual(2, len(ctool.searchResults(title='Object Title')))
+    self.assertEqual(2, ctool.countResults(title='Object Title')[0][0])
     
     # if we specify local_roles= it will only returns documents on with bob has
     # a local roles
-    self.assertEquals(0,
+    self.assertEqual(0,
                 len(ctool.searchResults(title='Object Title',
                                         local_roles='UnexistingRole')))
-    self.assertEquals(0,
+    self.assertEqual(0,
                 len(ctool.searchResults(title='Object Title',
                                         local_roles='Assignor')))
-    self.assertEquals(1,
+    self.assertEqual(1,
                 len(ctool.searchResults(title='Object Title',
                                         local_roles='Assignee')))
-    self.assertEquals(1,
+    self.assertEqual(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee')[0][0])
 
     # this also work for searchFolder and countFolder
-    self.assertEquals(1, len(folder.searchFolder(title='Object Title',
+    self.assertEqual(1, len(folder.searchFolder(title='Object Title',
                                              local_roles='Assignee')))
-    self.assertEquals(1, folder.countFolder(title='Object Title',
+    self.assertEqual(1, folder.countFolder(title='Object Title',
                                              local_roles='Assignee')[0][0])
     
     # and local_roles can be a list, then this a OR (ie. you must have at least
     # one role).
-    self.assertEquals(1,
+    self.assertEqual(1,
                 len(ctool.searchResults(title='Object Title',
                                        local_roles=['Assignee', 'Auditor'])))
-    self.assertEquals(1,
+    self.assertEqual(1,
                 ctool.countResults(title='Object Title',
                                    local_roles=['Assignee', 'Auditor'])[0][0])
 
     # this list can also be given in ; form, for worklists URL
-    self.assertEquals(1,
+    self.assertEqual(1,
                 len(ctool.searchResults(title='Object Title',
                                        local_roles='Assignee;Auditor')))
-    self.assertEquals(1,
+    self.assertEqual(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee;Auditor')[0][0])
 
@@ -1677,16 +1677,16 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(user.has_permission('View', ob1))
     self.assertTrue(user.has_role('Assignee', ob1))
     result_list = [r.getId() for r in ctool(title='Object Title', local_roles='Assignee')]
-    self.assertEquals(1, len(result_list))
-    self.assertEquals([ob2_id], result_list)
-    self.assertEquals(1,
+    self.assertEqual(1, len(result_list))
+    self.assertEqual([ob2_id], result_list)
+    self.assertEqual(1,
                 ctool.countResults(title='Object Title',
                                    local_roles='Assignee')[0][0])
 
     # this also work for searchFolder and countFolder
-    self.assertEquals(1, len(folder.searchFolder(title='Object Title',
+    self.assertEqual(1, len(folder.searchFolder(title='Object Title',
                                              local_roles='Assignee')))
-    self.assertEquals(1, folder.countFolder(title='Object Title',
+    self.assertEqual(1, folder.countFolder(title='Object Title',
                                              local_roles='Assignee')[0][0])
 
   def test_51_SearchWithKeyWords(self):
@@ -1698,16 +1698,16 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     self.tic()
     ctool = self.getCatalogTool()
-    self.assertEquals([and_], [x.getObject() for x in
+    self.assertEqual([and_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='AND')])
 
-    self.assertEquals([or_], [x.getObject() for x in
+    self.assertEqual([or_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='OR')])
 
-    self.assertEquals([like_], [x.getObject() for x in
+    self.assertEqual([like_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='LIKE')])
 
-    self.assertEquals([select_], [x.getObject() for x in
+    self.assertEqual([select_], [x.getObject() for x in
                                    ctool(portal_type='Person', title='SELECT')])
 
   def test_52_QueryAndTableAlias(self):
@@ -1803,11 +1803,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',)
     # Ensure that the new uid is long.
     uid = organisation.uid
-    self.failUnless(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, long))
     self.tic()
 
     # Ensure that the uid did not change after the indexing.
-    self.assertEquals(organisation.uid, uid)
+    self.assertEqual(organisation.uid, uid)
 
     # Force to convert the uid to int.
     self.uid = int(uid)
@@ -1815,8 +1815,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # After the indexing, the uid must be converted to long automatically,
     # and the value must be equivalent.
-    self.failUnless(isinstance(uid, long))
-    self.assertEquals(organisation.uid, uid)
+    self.assertTrue(isinstance(uid, long))
+    self.assertEqual(organisation.uid, uid)
 
   def test_55_FloatFormat(self):
     catalog_kw = {'uid': {'query': '2 567.54',
@@ -1855,10 +1855,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj2.reindexObject()
     self.tic()
     ctool = self.getCatalogTool()
-    self.assertEquals([obj], [x.getObject() for x in
+    self.assertEqual([obj], [x.getObject() for x in
                                    ctool(title='The Document',
                                          owner=self.username)])
-    self.assertEquals([], [x.getObject() for x in
+    self.assertEqual([], [x.getObject() for x in
                                    ctool(title='The Document',
                                          owner='somebody else')])
 
@@ -1873,7 +1873,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
     self.login('bob')
-    self.assertEquals([obj2], [x.getObject() for x in
+    self.assertEqual([obj2], [x.getObject() for x in
                                obj.searchFolder(portal_type='Bank Account')])
     # now if we pass the bank account in deleted state, it's no longer returned
     # by searchFolder.
@@ -1881,7 +1881,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # allow deletion.
     obj2.delete()
     self.tic()
-    self.assertEquals([], [x.getObject() for x in
+    self.assertEqual([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
   @todo_erp5
@@ -2094,7 +2094,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertSameSet([doc, other_doc], [x.getObject() for x in 
         ctool(portal_type='Organisation', title='Foo%')])
     # ... but you can force searches with an exact match key
-    self.assertEquals([doc], [x.getObject() for x in
+    self.assertEqual([doc], [x.getObject() for x in
        ctool(portal_type='Organisation', title=dict(query='Foo%',
                                                     key='ExactMatch'))])
 
@@ -2108,7 +2108,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # future, in this case, this test have to be updated)
     self.assertSameSet([doc], [x.getObject() for x in 
         ctool(portal_type='Organisation', description='Foo')])
-    self.assertEquals(set([doc, other_doc]), set([x.getObject() for x in
+    self.assertEqual(set([doc, other_doc]), set([x.getObject() for x in
       ctool(portal_type='Organisation', description=dict(query='Foo',
                                                          key='Keyword'))]))
 
@@ -2123,10 +2123,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       return set([x.getObject() for x in ctool.searchResults(**kw)])
     
     # description='' is ignored
-    self.assertEquals(set([doc_with_empty_description, doc_with_description]),
+    self.assertEqual(set([doc_with_empty_description, doc_with_description]),
                       searchResults(description=''))
     # unless we exlicitly say we don't want to ignore empty strings
-    self.assertEquals(set([doc_with_empty_description]),
+    self.assertEqual(set([doc_with_empty_description]),
                       searchResults(ignore_empty_string=0, description=''))
 
   def test_ignore_empty_string_related_key(self):
@@ -2141,9 +2141,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       kw['portal_type'] = 'Organisation'
       return set([x.getObject() for x in ctool.searchResults(**kw)])
     
-    self.assertEquals(set([doc_with_empty_region_description, doc_without_region]),
+    self.assertEqual(set([doc_with_empty_region_description, doc_without_region]),
                       searchResults(region_description=''))
-    self.assertEquals(set([doc_with_empty_region_description]),
+    self.assertEqual(set([doc_with_empty_region_description]),
         searchResults(ignore_empty_string=0, region_description=''))
 
   def test_complex_query(self):
@@ -3426,15 +3426,15 @@ VALUES
     folder.newContent(portal_type=portal_type, title='foo_organisation_1')
     folder.newContent(portal_type=portal_type, title='foo_organisation_2')
     self.tic()
-    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+    self.assertEqual(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_organisation_1')))
-    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+    self.assertEqual(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_organisation_2')))
-    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+    self.assertEqual(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='%organisation_1')))
-    self.assertEquals(2, len(folder.portal_catalog(portal_type=portal_type,
+    self.assertEqual(2, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_organisation%')))
-    self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
+    self.assertEqual(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_org%ion_1')))
 
   def test_SearchedStringIsNotStripped(self):
@@ -3557,13 +3557,13 @@ VALUES
                                      title='Nexedi Orga',
                                      description='c')
     organisation.setGroup('nexedi')
-    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    self.assertEqual(organisation.getGroupValue(), group_nexedi_category)
     organisation2 = module.newContent(portal_type='Organisation',
                                       title='Storever Orga',
                                       description='d')
     organisation2.setGroup('storever')
     organisation2.setTitle('Organisation 2')
-    self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
+    self.assertEqual(organisation2.getGroupValue(), group_nexedi_category2)
     # Flush message queue
     self.tic()
 
@@ -3573,44 +3573,44 @@ VALUES
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(
                            group_related_title='Nexedi Orga')]
-    self.assertEquals(category_list, [group_nexedi_category])
+    self.assertEqual(category_list, [group_nexedi_category])
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(
                            default_group_related_title='Nexedi Orga')]
-    self.assertEquals(category_list, [group_nexedi_category])
+    self.assertEqual(category_list, [group_nexedi_category])
     # Try to get the category with the group related organisation id
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(group_related_id='storever')]
-    self.assertEquals(category_list,[group_nexedi_category2])
+    self.assertEqual(category_list,[group_nexedi_category2])
     # Try to get the category with the group related organisation description 'd'
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(group_related_description='d')]
-    self.assertEquals(category_list,[group_nexedi_category2])
+    self.assertEqual(category_list,[group_nexedi_category2])
     # Try to get the category with the group related organisation description
     # 'e'
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(group_related_description='e')]
-    self.assertEquals(category_list,[])
+    self.assertEqual(category_list,[])
     # Try to get the category with the default group related organisation description
     # 'e'
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(default_group_related_description='e')]
-    self.assertEquals(category_list,[])
+    self.assertEqual(category_list,[])
     # Try to get the category with the group related organisation relative_url
     organisation_relative_url = organisation.getRelativeUrl()
     category_list = [x.getObject() for x in 
                  base_category.searchFolder(group_related_relative_url=organisation_relative_url)]
-    self.assertEquals(category_list, [group_nexedi_category])
+    self.assertEqual(category_list, [group_nexedi_category])
     # Try to get the category with the group related organisation uid
     category_list = [x.getObject() for x in 
                  base_category.searchFolder(group_related_uid=organisation.getUid())]
-    self.assertEquals(category_list, [group_nexedi_category])
+    self.assertEqual(category_list, [group_nexedi_category])
     # Try to get the category with the group related organisation id and title
     # of the category
     category_list = [x.getObject() for x in 
                          base_category.searchFolder(group_related_id=organisation2.getId(),
                                              title='Storever')]
-    self.assertEquals(category_list,[group_nexedi_category2])
+    self.assertEqual(category_list,[group_nexedi_category2])
 
   def test_SearchFolderWithRelatedDynamicStrictRelatedKey(self):
     # Create some objects
@@ -3629,7 +3629,7 @@ VALUES
                                      title='ERP5 Orga',
                                      description='c')
     organisation.setGroup('nexedi/erp5')
-    self.assertEquals(organisation.getGroupValue(), sub_group_nexedi)
+    self.assertEqual(organisation.getGroupValue(), sub_group_nexedi)
     organisation2 = module.newContent(portal_type='Organisation',
                                      title='Nexedi Orga',
                                      description='d')
@@ -3644,23 +3644,23 @@ VALUES
     category_list = [x.getObject() for x in 
                          base_category.portal_catalog(
                              strict_group_related_title='Nexedi Orga')]
-    self.assertEquals(category_list,[group_nexedi_category])
+    self.assertEqual(category_list,[group_nexedi_category])
     # Try to get the category with the group related organisation title ERP5
     # Orga
     category_list = [x.getObject() for x in 
                          base_category.portal_catalog(
                            strict_group_related_title='ERP5 Orga')]
-    self.assertEquals(category_list,[sub_group_nexedi])
+    self.assertEqual(category_list,[sub_group_nexedi])
     # Try to get the category with the group related organisation description d
     category_list = [x.getObject() for x in 
                          base_category.portal_catalog(
                            strict_group_related_description='d')]
-    self.assertEquals(category_list,[group_nexedi_category])
+    self.assertEqual(category_list,[group_nexedi_category])
     # Try to get the category with the group related organisation description c
     category_list = [x.getObject() for x in 
                          base_category.portal_catalog(
                            strict_group_related_description='c')]
-    self.assertEquals(category_list,[sub_group_nexedi])
+    self.assertEqual(category_list,[sub_group_nexedi])
 
   def test_EscapingLoginInSescurityQuery(self):
     # Create some objects
@@ -3725,8 +3725,8 @@ VALUES
       group_by_expression='catalog.reference',
       portal_type='Person',
     )
-    self.assertEquals(1, len(res))
-    self.assertEquals(person, res[0].getObject())
+    self.assertEqual(1, len(res))
+    self.assertEqual(person, res[0].getObject())
 
   def test_CatalogUidDuplicates(self):
     """
@@ -3742,7 +3742,7 @@ VALUES
 
     # Make sure that the new object is catalogued.
     portal_catalog = self.getPortalObject().portal_catalog
-    self.assertEquals(person, portal_catalog(uid=person.uid)[0].getObject())
+    self.assertEqual(person, portal_catalog(uid=person.uid)[0].getObject())
 
     # Delete the new object to free the uid.
     available_uid = person.uid
@@ -3750,7 +3750,7 @@ VALUES
     self.tic()
 
     # Make sure that the uid is not used any longer.
-    self.assertEquals(0, len(portal_catalog(uid=person.uid)))
+    self.assertEqual(0, len(portal_catalog(uid=person.uid)))
 
     # Now, we create two new objects without indexing, so the catalog
     # will not know anything about these objects.
@@ -3775,7 +3775,7 @@ VALUES
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in 
                               person_module.searchFolder(title=title)]
-    self.assertEquals([person_id],folder_object_list)
+    self.assertEqual([person_id],folder_object_list)
 
   def test_SearchFolderWithMultipleSpaces(self):
     person_module = self.getPersonModule()
@@ -3792,7 +3792,7 @@ VALUES
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in 
                               person_module.searchFolder(title=title)]
-    self.assertEquals([person_id],folder_object_list)
+    self.assertEqual([person_id],folder_object_list)
 
   def test_SearchFolderWithSingleQuote(self):
     person_module = self.getPersonModule()
@@ -3807,7 +3807,7 @@ VALUES
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in 
                               person_module.searchFolder(title=title)]
-    self.assertEquals([person_id],folder_object_list)
+    self.assertEqual([person_id],folder_object_list)
 
   def test_ParameterSelectDict(self):
     person_module = self.getPersonModule()
@@ -3825,17 +3825,17 @@ VALUES
     new_description = 'foobarfoo'
     person.setTitle(new_title)
     person.setDescription(new_description)
-    self.assertEquals(new_title, person.getTitle())
+    self.assertEqual(new_title, person.getTitle())
     expected_sql_title_list = [title]
-    self.assertEquals([x.title for x in folder_object_list],
+    self.assertEqual([x.title for x in folder_object_list],
                       expected_sql_title_list)
-    self.assertEquals([x.getProperty('title') for x in
+    self.assertEqual([x.getProperty('title') for x in
                       folder_object_list], expected_sql_title_list)
     expected_sql_description_list = [new_description]
-    self.assertEquals([x.getProperty('description') for x in
+    self.assertEqual([x.getProperty('description') for x in
                       folder_object_list], expected_sql_description_list)
     real_title_list = [new_title]
-    self.assertEquals([x.getTitle() for x in
+    self.assertEqual([x.getTitle() for x in
                       folder_object_list], real_title_list)
 
   def test_countResultsUsesFromExpression(self):
@@ -3904,7 +3904,7 @@ VALUES
   def test_queriesEndingWithSemicolon(self):
     connector = self.getPortal().erp5_sql_connection
     result = connector.manage_test('select 1 as foo;')
-    self.assertEquals(1, result[0].foo)
+    self.assertEqual(1, result[0].foo)
 
   def _createSomeGroupCategories(self):
     portal_category = self.getCategoryTool()
@@ -3944,7 +3944,7 @@ VALUES
                                     org2=['Nexedi'],
                                     org3=['TIOLive'],
                                     org4=['Nexedi', 'TIOLive'])
-    self.assertEquals(actual_group_title_map, expected_group_title_map)
+    self.assertEqual(actual_group_title_map, expected_group_title_map)
     # Flush message queue
     self.tic()
 
@@ -3959,7 +3959,7 @@ VALUES
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(strict_group_title='Nexedi',
                                              **search_kw)]
-    self.assertEquals(organisation_list, [org2, org4])
+    self.assertEqual(organisation_list, [org2, org4])
     # Now lets fetch the titles of groups of the above orgs using select_dict.
     search_kw.update(select_dict=dict(strict_group_title=None))
     records = module.searchFolder(**search_kw)
@@ -3969,7 +3969,7 @@ VALUES
     # relationships each catalog entry has in that related key.
     results = [(rec.title, rec.strict_group_title)
                for rec in records]
-    self.assertEquals(sorted(results),
+    self.assertEqual(sorted(results),
                       [('org1', None),
                        ('org2', 'Nexedi'),
                        ('org3', 'TIOLive'),
@@ -3981,7 +3981,7 @@ VALUES
     records = module.searchFolder(**search_kw)
     results = [(rec.title, rec.strict_group_title)
                for rec in records]
-    self.assertEquals(sorted(results),
+    self.assertEqual(sorted(results),
                       [('org1', None),
                        ('org2', 'Nexedi'),
                        ('org3', 'TIOLive'),
@@ -3999,7 +3999,7 @@ VALUES
     search_kw.update(group_by_list=('uid',))
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(**search_kw)]
-    self.assertEquals(organisation_list, [org1, org2, org3, org4])
+    self.assertEqual(organisation_list, [org1, org2, org3, org4])
 
   def test_BackwardCompatibilityWithOldMethods(self):
     'Dealing with RelatedKey methods missing the proper separator'

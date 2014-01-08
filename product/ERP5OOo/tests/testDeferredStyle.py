@@ -89,7 +89,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, message_text = last_message
-    self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
@@ -98,8 +98,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         # "History" is the title of Base_viewHistory form
         file_name = part.get_filename()
         expected_file_name = 'History%s' % self.attachment_file_extension
-        self.assertEquals(expected_file_name, file_name)
-        self.assertEquals('attachment; filename="%s"' % expected_file_name,
+        self.assertEqual(expected_file_name, file_name)
+        self.assertEqual('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)
@@ -124,7 +124,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, message_text = last_message
-    self.assertEquals('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
       content_type = part.get_content_type()
@@ -132,8 +132,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         # "Person" is the title of Person_view form
         file_name = part.get_filename()
         expected_file_name = 'Person%s' % self.attachment_file_extension
-        self.assertEquals(expected_file_name, file_name)
-        self.assertEquals('attachment; filename="%s"' % expected_file_name,
+        self.assertEqual(expected_file_name, file_name)
+        self.assertEqual('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
         error_list = Validator().validate(data)

@@ -44,7 +44,7 @@ class TestAudioField(ERP5TypeTestCase):
   def test_render_view(self):
     self.field.values['default'] = 'Audio content'
 
-    self.assertEquals('<audio preload="preload" src="Audio content" ' +
+    self.assertEqual('<audio preload="preload" src="Audio content" ' +
         'controls="controls" >\nYour browser does not ' +
         'support audio tag.</audio>', self.field.render_view(value='Audio content'))
 
@@ -54,7 +54,7 @@ class TestAudioField(ERP5TypeTestCase):
     self.field.values['audio_autoplay'] = True
     self.field.values['audio_error_message'] = 'Another error message'
 
-    self.assertEquals('<audio src="Another Audio content" ' +
+    self.assertEqual('<audio src="Another Audio content" ' +
         'loop="loop" autoplay="autoplay" >\nAnother error ' +
         'message</audio>', self.field.render_view(value='Another Audio content'))
 

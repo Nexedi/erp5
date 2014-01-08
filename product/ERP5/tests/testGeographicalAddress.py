@@ -135,7 +135,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     Check getAddressText
     """
     address = sequence.get('address')
-    self.assertEquals(address.asText(),
+    self.assertEqual(address.asText(),
         "%s %s\n%s %s" % (self.street_address_number,
                           self.street_address_text,
                           self.zip_code_text,
@@ -174,7 +174,7 @@ return '%s\\n%s %s COUNTRY' % \\
     Check getAddressText
     """
     address = sequence.get('address')
-    self.assertEquals(address.asText(),
+    self.assertEqual(address.asText(),
         "%s %s\n%s %s COUNTRY" % (self.street_address_number,
                           self.street_address_text,
                           self.zip_code_text,

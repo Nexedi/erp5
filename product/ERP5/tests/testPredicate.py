@@ -113,7 +113,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
       predicate_folder = self.getPortal().newContent(
                                         portal_type = 'Folder',
                                         id = PREDICATE_FOLDER_NAME)
-    self.failUnless('Predicate' in [x.id for x in
+    self.assertTrue('Predicate' in [x.id for x in
                     predicate_folder.allowedContentTypes()])
     return predicate_folder
 
@@ -256,7 +256,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
     """Assert the predicate is true on the document."""
     doc = sequence.get('doc')
     predicate = sequence.get('predicate')
-    self.failUnless(predicate.test(doc))
+    self.assertTrue(predicate.test(doc))
   
   def stepAssertPredicateFalse(self, sequence=None, **kw) :
     """Assert the predicate is false on the document."""
@@ -275,7 +275,7 @@ class TestPredicates(TestPredicateMixIn):
     from Products.ERP5Type.interfaces import IPredicate
     from Products.ERP5Type.Core.Predicate import Predicate
     predicate = self.createPredicate()
-    self.failUnless(IPredicate.providedBy(predicate))
+    self.assertTrue(IPredicate.providedBy(predicate))
     from zope.interface.verify import verifyClass
     verifyClass(IPredicate, Predicate)
 
@@ -358,11 +358,11 @@ class TestPredicates(TestPredicateMixIn):
     # script). This method must return a boolean value.
     pred = self.createPredicate(test_method_id='true_method')
     self.assertTrue(pred.test(doc))
-    self.assertEquals([True], calls)
+    self.assertEqual([True], calls)
 
     pred = self.createPredicate(test_method_id='false_method')
     self.assertFalse(pred.test(doc))
-    self.assertEquals([True, False], calls)
+    self.assertEqual([True, False], calls)
   
     # the use of method id can be mixed with category membership, both will
     # have to be true for the predicate to be true.
@@ -372,7 +372,7 @@ class TestPredicates(TestPredicateMixIn):
         membership_criterion_category_list=
                       ['region/europe/western_europe/france'])
     self.assertTrue(pred.test(doc))
-    self.assertEquals([True, False, True], calls)
+    self.assertEqual([True, False, True], calls)
     
     pred = self.createPredicate(
         test_method_id='false_method',
@@ -380,7 +380,7 @@ class TestPredicates(TestPredicateMixIn):
         membership_criterion_category_list=
                       ['region/europe/western_europe/france'])
     self.assertFalse(pred.test(doc))
-    self.assertEquals([True, False, True, False], calls)
+    self.assertEqual([True, False, True, False], calls)
 
     pred = self.createPredicate(
         test_method_id='true_method',
@@ -389,7 +389,7 @@ class TestPredicates(TestPredicateMixIn):
     self.assertFalse(pred.test(doc))
     # Note that if the document is not member of the category, the test_method
     # is not called.
-    self.assertEquals([True, False, True, False], calls)
+    self.assertEqual([True, False, True, False], calls)
   
 
   def test_Predicate_getMembershipCriterionCategoryList(self):
@@ -402,7 +402,7 @@ class TestPredicates(TestPredicateMixIn):
                                       getCategoryChildCompactLogicalPathItemList(base=1)[:]
     pred = self.createPredicate(
         membership_criterion_base_category_list=['region'], )
-    self.failUnless(('europe/western_europe', 'region/europe/western_europe') in
+    self.assertTrue(('europe/western_europe', 'region/europe/western_europe') in
         [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
         pred.Predicate_getMembershipCriterionCategoryList(),)
     
@@ -413,13 +413,13 @@ class TestPredicates(TestPredicateMixIn):
     # note that the id of the actual base category is displayed in the first
     # item too, for making it clear in the UI that it's the content of a
     # category used for another base category.
-    self.failUnless(('region/europe/western_europe',
+    self.assertTrue(('region/europe/western_europe',
                      'source_region/region/europe/western_europe') in
         [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
         pred.Predicate_getMembershipCriterionCategoryList(),)
     source_region_chile_list_after = self.portal.portal_categories.source_region.\
                                      getCategoryChildCompactLogicalPathItemList(base=1)[:]
-    self.assertEquals(source_region_chile_list_before, source_region_chile_list_after)
+    self.assertEqual(source_region_chile_list_before, source_region_chile_list_after)
 
 
   def test_PredicateFusion(self, quiet=QUIET, run=RUN_ALL_TESTS):
@@ -568,14 +568,14 @@ class TestPredicates(TestPredicateMixIn):
     self.tic()
 
     # check that if we define the same filter than on predicate we get same result
-    self.assertEquals(len(predicate.searchResults()), 2)
+    self.assertEqual(len(predicate.searchResults()), 2)
     self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
     'Organisation'])]), set([fabien, nexedi]))
 
     # check that it's possible to filter results
-    self.assertEquals([x.getObject() for x in \
+    self.assertEqual([x.getObject() for x in \
       predicate.searchResults(portal_type='Person')], [fabien])
-    self.assertEquals([x.getObject() for x in \
+    self.assertEqual([x.getObject() for x in \
         predicate.searchResults(portal_type='Organisation')], [nexedi])
 
     # check that if the filter define more properties, we cannot have more than

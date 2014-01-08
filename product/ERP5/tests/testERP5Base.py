@@ -296,20 +296,20 @@ class TestERP5Base(ERP5TypeTestCase):
         category_value_list.append(category_document)
         set_accessor = getattr(document, 'set' + base_accessor_id)
         set_accessor(category_relative_url)
-        self.assertEquals(getattr(document, 'get' + base_accessor_id)(),
+        self.assertEqual(getattr(document, 'get' + base_accessor_id)(),
                           category_relative_url)
-        self.assertEquals(getattr(document, 'get' + base_accessor_id + 'Title')(),
+        self.assertEqual(getattr(document, 'get' + base_accessor_id + 'Title')(),
                           category_title)
-        self.assertEquals(getattr(document, 'get' + base_accessor_id + 'Value')(),
+        self.assertEqual(getattr(document, 'get' + base_accessor_id + 'Value')(),
                           category_document)
       set_accessor_list = 'set' + base_accessor_id + 'List'
       accessor_list = getattr(document, set_accessor_list)
       accessor_list(category_relative_url_list)
-      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'List')(),
+      self.assertEqual(getattr(document, 'get' + base_accessor_id + 'List')(),
                         category_relative_url_list)
-      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'TitleList')(),
+      self.assertEqual(getattr(document, 'get' + base_accessor_id + 'TitleList')(),
                         category_title_list)
-      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'ValueList')(),
+      self.assertEqual(getattr(document, 'get' + base_accessor_id + 'ValueList')(),
                         category_value_list)
 
   ##################################
@@ -353,26 +353,26 @@ class TestERP5Base(ERP5TypeTestCase):
     organisation.setSite(None)
     organisation.setSkillList(None)
 
-    self.assertEquals(organisation.getFunction()       , None)
-    self.assertEquals(organisation.getActivity()       , None)
-    self.assertEquals(organisation.getGroup()          , None)
-    self.assertEquals(organisation.getRole()           , None)
-    self.assertEquals(organisation.getSite()           , None)
-    self.assertEquals(organisation.getSkillList(), [])
+    self.assertEqual(organisation.getFunction()       , None)
+    self.assertEqual(organisation.getActivity()       , None)
+    self.assertEqual(organisation.getGroup()          , None)
+    self.assertEqual(organisation.getRole()           , None)
+    self.assertEqual(organisation.getSite()           , None)
+    self.assertEqual(organisation.getSkillList(), [])
 
-    self.assertEquals(organisation.getFunctionTitle()       , None)
-    self.assertEquals(organisation.getActivityTitle()       , None)
-    self.assertEquals(organisation.getGroupTitle()          , None)
-    self.assertEquals(organisation.getRoleTitle()           , None)
-    self.assertEquals(organisation.getSiteTitle()           , None)
-    self.assertEquals(organisation.getSkillTitleList(), [])
+    self.assertEqual(organisation.getFunctionTitle()       , None)
+    self.assertEqual(organisation.getActivityTitle()       , None)
+    self.assertEqual(organisation.getGroupTitle()          , None)
+    self.assertEqual(organisation.getRoleTitle()           , None)
+    self.assertEqual(organisation.getSiteTitle()           , None)
+    self.assertEqual(organisation.getSkillTitleList(), [])
 
-    self.assertEquals(organisation.getFunctionValue()       , None)
-    self.assertEquals(organisation.getActivityValue()       , None)
-    self.assertEquals(organisation.getGroupValue()          , None)
-    self.assertEquals(organisation.getRoleValue()           , None)
-    self.assertEquals(organisation.getSiteValue()           , None)
-    self.assertEquals(organisation.getSkillValueList(), [])
+    self.assertEqual(organisation.getFunctionValue()       , None)
+    self.assertEqual(organisation.getActivityValue()       , None)
+    self.assertEqual(organisation.getGroupValue()          , None)
+    self.assertEqual(organisation.getRoleValue()           , None)
+    self.assertEqual(organisation.getSiteValue()           , None)
+    self.assertEqual(organisation.getSkillValueList(), [])
 
 
   def stepSetOrganisationAddress(self, sequence=None, sequence_list=None, **kw):
@@ -409,57 +409,57 @@ class TestERP5Base(ERP5TypeTestCase):
     organisation.setDefaultFaxText('+55(0)69-1337')
     organisation.setDefaultEmailText('kevin@truc-bidule.com')
 
-    self.failUnless('default_address' in organisation.contentIds())
+    self.assertTrue('default_address' in organisation.contentIds())
     default_address = organisation.default_address
-    self.assertEquals(default_address.getPortalType(), 'Address')
-    self.assertEquals(organisation.getDefaultAddressValue(), default_address)
+    self.assertEqual(default_address.getPortalType(), 'Address')
+    self.assertEqual(organisation.getDefaultAddressValue(), default_address)
 
-    self.assertEquals( organisation.getDefaultAddressCity()
+    self.assertEqual( organisation.getDefaultAddressCity()
                      , default_address.getCity()
                      )
-    self.assertEquals( organisation.getDefaultAddressRegion()
+    self.assertEqual( organisation.getDefaultAddressRegion()
                      , default_address.getRegion()
                      )
-    self.assertEquals( organisation.getDefaultAddressRegionTitle()
+    self.assertEqual( organisation.getDefaultAddressRegionTitle()
                      , default_address.getRegionTitle()
                      )
-    self.assertEquals( default_address.getRegionValue()
+    self.assertEqual( default_address.getRegionValue()
                      , region_object
                      )
-    self.assertEquals( organisation.getDefaultAddressZipCode()
+    self.assertEqual( organisation.getDefaultAddressZipCode()
                      , default_address.getZipCode()
                      )
-    self.assertEquals( organisation.getDefaultAddressStreetAddress()
+    self.assertEqual( organisation.getDefaultAddressStreetAddress()
                      , default_address.getStreetAddress()
                      )
     
     # Organisation's region is acquired from the Address object
-    self.assertEquals( organisation.getRegion()
+    self.assertEqual( organisation.getRegion()
                      , default_address.getRegion()
                      )
     
-    self.failUnless('default_telephone' in organisation.contentIds())
+    self.assertTrue('default_telephone' in organisation.contentIds())
     default_telephone = organisation.default_telephone
-    self.assertEquals(default_telephone.getPortalType(), 'Telephone')
-    self.assertEquals( organisation.getDefaultTelephoneText()
+    self.assertEqual(default_telephone.getPortalType(), 'Telephone')
+    self.assertEqual( organisation.getDefaultTelephoneText()
                      , default_telephone.asText()
                      )
     self.assertTrue(organisation.hasDefaultTelephone())
     self.assertTrue(organisation.hasDefaultTelephoneCoordinateText())
 
-    self.failUnless('default_fax' in organisation.contentIds())
+    self.assertTrue('default_fax' in organisation.contentIds())
     default_fax = organisation.default_fax
-    self.assertEquals(default_fax.getPortalType(), 'Fax')
-    self.assertEquals( organisation.getDefaultFaxText()
+    self.assertEqual(default_fax.getPortalType(), 'Fax')
+    self.assertEqual( organisation.getDefaultFaxText()
                      , default_fax.asText()
                      )
     self.assertTrue(organisation.hasDefaultFax())
     self.assertTrue(organisation.hasDefaultFaxCoordinateText())
 
-    self.failUnless('default_email' in organisation.contentIds())
+    self.assertTrue('default_email' in organisation.contentIds())
     default_email = organisation.default_email
-    self.assertEquals(default_email.getPortalType(), 'Email')
-    self.assertEquals( organisation.getDefaultEmailText()
+    self.assertEqual(default_email.getPortalType(), 'Email')
+    self.assertEqual( organisation.getDefaultEmailText()
                      , default_email.asText()
                      )
     self.assertTrue(organisation.hasDefaultEmail())
@@ -487,14 +487,14 @@ class TestERP5Base(ERP5TypeTestCase):
     
     # Set subordination
     person.setCareerSubordinationValue(organisation)
-    self.assertEquals(person.getCareerSubordinationValue(), organisation)
+    self.assertEqual(person.getCareerSubordinationValue(), organisation)
     
     # Set & Check simple properties with 'Career' prefix
     person.setCareerTitle('A brand new career step')
     person.setCareerDescription(
         'This career step correspond to my arrival at Nexedi as employee')
-    self.assertEquals(person.getCareerTitle()      , 'A brand new career step')
-    self.assertEquals(person.getCareerDescription(),
+    self.assertEqual(person.getCareerTitle()      , 'A brand new career step')
+    self.assertEqual(person.getCareerDescription(),
         'This career step correspond to my arrival at Nexedi as employee')
 
     dummy_date1 = self.datetime + 10
@@ -505,16 +505,16 @@ class TestERP5Base(ERP5TypeTestCase):
     person.setCareerCollectiveAgreementTitle('SYNTEC convention')
     person.setCareerActivity('software')
     person.setCareerReference('1234')
-    self.assertEquals(person.getCareerStopDate()                , dummy_date2)
-    self.assertEquals(person.getCareerStartDate()               , dummy_date1)
-    self.assertEquals(person.getCareerSalaryCoefficient()       , 1)
-    self.assertEquals(person.getCareerCollectiveAgreementTitle(), 'SYNTEC convention')
-    self.assertEquals(person.getCareerActivityTitle(), 'Software')
-    self.assertEquals(person.getCareerReference(), '1234')
+    self.assertEqual(person.getCareerStopDate()                , dummy_date2)
+    self.assertEqual(person.getCareerStartDate()               , dummy_date1)
+    self.assertEqual(person.getCareerSalaryCoefficient()       , 1)
+    self.assertEqual(person.getCareerCollectiveAgreementTitle(), 'SYNTEC convention')
+    self.assertEqual(person.getCareerActivityTitle(), 'Software')
+    self.assertEqual(person.getCareerReference(), '1234')
 
     # activity must be acquired on person
-    self.assertEquals(person.getActivity(), person.getCareerActivity())
-    self.assertEquals('Software', person.getActivityTitle())
+    self.assertEqual(person.getActivity(), person.getCareerActivity())
+    self.assertEqual('Software', person.getActivityTitle())
 
     tested_base_category_list = ('function', 'role', 'grade', 'salary_level',
                                  'skill')
@@ -531,7 +531,7 @@ class TestERP5Base(ERP5TypeTestCase):
       skill_object_list.append(category_value)
     for skill_object in skill_object_list:
       self.assertTrue(person in skill_object.getSkillRelatedValueList())
-    self.assertEquals(person.getSkillValue(), skill_object_list[0])
+    self.assertEqual(person.getSkillValue(), skill_object_list[0])
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
     """
@@ -541,54 +541,54 @@ class TestERP5Base(ERP5TypeTestCase):
     person = sequence.get('person')
 
     # Check default career sub-object
-    self.failUnless('default_career' in person.contentIds())
+    self.assertTrue('default_career' in person.contentIds())
     default_career = person.default_career
-    self.assertEquals(default_career.getPortalType(), 'Career')
+    self.assertEqual(default_career.getPortalType(), 'Career')
 
     # Test getter with 'Career' prefix
-    self.assertEquals(person.getCareer()           , default_career.getRelativeUrl())
-    self.assertEquals(person.getCareerTitle()      , default_career.getTitle())
-    self.assertEquals(person.getCareerReference(), default_career.getReference())
-    self.assertEquals(person.getCareerValue()      , default_career)
-    self.assertEquals(person.getCareerDescription(), default_career.getDescription())
+    self.assertEqual(person.getCareer()           , default_career.getRelativeUrl())
+    self.assertEqual(person.getCareerTitle()      , default_career.getTitle())
+    self.assertEqual(person.getCareerReference(), default_career.getReference())
+    self.assertEqual(person.getCareerValue()      , default_career)
+    self.assertEqual(person.getCareerDescription(), default_career.getDescription())
 
-    self.assertEquals(person.getCareerFunction()     , default_career.getFunction())
-    self.assertEquals(person.getCareerFunctionTitle(), default_career.getFunctionTitle())
-    self.assertEquals(person.getCareerFunctionValue(), default_career.getFunctionValue())
+    self.assertEqual(person.getCareerFunction()     , default_career.getFunction())
+    self.assertEqual(person.getCareerFunctionTitle(), default_career.getFunctionTitle())
+    self.assertEqual(person.getCareerFunctionValue(), default_career.getFunctionValue())
 
     # Test getter with no prefix (aka 'transparent' getters) on simple properties
     #   then on category properties
-    self.assertEquals(person.getCareerStopDate()                , default_career.getStopDate())
-    self.assertEquals(person.getCareerStartDate()               , default_career.getStartDate())
-    self.assertEquals(person.getCareerSalaryCoefficient()       , default_career.getSalaryCoefficient())
-    self.assertEquals(person.getCareerCollectiveAgreementTitle(), default_career.getCollectiveAgreementTitle())
+    self.assertEqual(person.getCareerStopDate()                , default_career.getStopDate())
+    self.assertEqual(person.getCareerStartDate()               , default_career.getStartDate())
+    self.assertEqual(person.getCareerSalaryCoefficient()       , default_career.getSalaryCoefficient())
+    self.assertEqual(person.getCareerCollectiveAgreementTitle(), default_career.getCollectiveAgreementTitle())
 
-    self.assertEquals(person.getCareerRole()     , default_career.getRole())
-    self.assertEquals(person.getCareerRoleTitle(), default_career.getRoleTitle())
-    self.assertEquals(person.getCareerRoleValue(), default_career.getRoleValue())
+    self.assertEqual(person.getCareerRole()     , default_career.getRole())
+    self.assertEqual(person.getCareerRoleTitle(), default_career.getRoleTitle())
+    self.assertEqual(person.getCareerRoleValue(), default_career.getRoleValue())
 
-    self.assertEquals(person.getCareerGrade()     , default_career.getGrade())
-    self.assertEquals(person.getCareerGradeTitle(), default_career.getGradeTitle())
-    self.assertEquals(person.getCareerGradeValue(), default_career.getGradeValue())
+    self.assertEqual(person.getCareerGrade()     , default_career.getGrade())
+    self.assertEqual(person.getCareerGradeTitle(), default_career.getGradeTitle())
+    self.assertEqual(person.getCareerGradeValue(), default_career.getGradeValue())
     
-    self.assertEquals(person.getCareerActivity(),
+    self.assertEqual(person.getCareerActivity(),
                       default_career.getActivity())
-    self.assertEquals(person.getCareerActivityTitle(),
+    self.assertEqual(person.getCareerActivityTitle(),
                       default_career.getActivityTitle())
-    self.assertEquals(person.getCareerActivityValue(),
+    self.assertEqual(person.getCareerActivityValue(),
                       default_career.getActivityValue())
 
-    self.assertEquals(person.getCareerSalaryLevel()     , default_career.getSalaryLevel())
-    self.assertEquals(person.getCareerSalaryLevelTitle(), default_career.getSalaryLevelTitle())
-    self.assertEquals(person.getCareerSalaryLevelValue(), default_career.getSalaryLevelValue())
+    self.assertEqual(person.getCareerSalaryLevel()     , default_career.getSalaryLevel())
+    self.assertEqual(person.getCareerSalaryLevelTitle(), default_career.getSalaryLevelTitle())
+    self.assertEqual(person.getCareerSalaryLevelValue(), default_career.getSalaryLevelValue())
 
-    self.assertEquals(person.getCareerSkillList()     , default_career.getSkillList())
-    self.assertEquals(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
-    self.assertEquals(person.getCareerSkillValueList(), default_career.getSkillValueList())
+    self.assertEqual(person.getCareerSkillList()     , default_career.getSkillList())
+    self.assertEqual(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
+    self.assertEqual(person.getCareerSkillValueList(), default_career.getSkillValueList())
 
-    self.assertEquals(person.getCareerSubordination(), default_career.getSubordination())
+    self.assertEqual(person.getCareerSubordination(), default_career.getSubordination())
     # Person's subordination is acquired from default career
-    self.assertEquals(person.getSubordination(), default_career.getSubordination())
+    self.assertEqual(person.getSubordination(), default_career.getSubordination())
     
   def stepAddCareerStepInAnotherOrganisation(self, sequence=None, **kw) :
     """Adds another career step on the person."""
@@ -599,7 +599,7 @@ class TestERP5Base(ERP5TypeTestCase):
     new_career_title = 'new career title'
     # Create a new career step.
     person.Person_shiftDefaultCareer()
-    self.assertEquals( 2,
+    self.assertEqual( 2,
           len(person.contentValues(filter={'portal_type':'Career'})))
     person.setCareerSubordination(other_organisation.getRelativeUrl())
     person.setCareerTitle(new_career_title)
@@ -636,18 +636,18 @@ class TestERP5Base(ERP5TypeTestCase):
                     old_career_step.getCategoryList(),
                 '%s not in %s' % (old_organisation.getRelativeUrl(),
                                   old_career_step.getCategoryList()))
-    self.assertEquals( old_career_step.getSubordination(),
+    self.assertEqual( old_career_step.getSubordination(),
                        old_organisation.getRelativeUrl() )
-    self.assertEquals( old_career_step.getSubordinationTitle(),
+    self.assertEqual( old_career_step.getSubordinationTitle(),
                        old_organisation_title )
   
     self.assert_( "subordination/%s" % new_organisation.getRelativeUrl() in
                     new_career_step.getCategoryList(),
                 '%s not in %s' % (new_organisation.getRelativeUrl(),
                                   new_career_step.getCategoryList()))
-    self.assertEquals( new_career_step.getSubordination(),
+    self.assertEqual( new_career_step.getSubordination(),
                        new_organisation.getRelativeUrl() )
-    self.assertEquals( new_career_step.getSubordinationTitle(),
+    self.assertEqual( new_career_step.getSubordinationTitle(),
                        new_organisation_title )
 
   def stepCheckChangePersonAddress(self, sequence=None, **kw) :
@@ -657,10 +657,10 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     person = sequence.get('person')
     organisation = sequence.get('organisation')
-    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
-    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
-    self.assertEquals(person.getDefaultAddressCity(),'Lille')
-    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEqual(organisation.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(person.getDefaultAddressCity(),'Lille')
+    self.assertEqual(person.getDefaultAddressZipCode(), '59000')
 
     # here, the parameters we pass to edit are the same as the one acquired
     # from the organisation, edit shouldn't do anything
@@ -668,10 +668,10 @@ class TestERP5Base(ERP5TypeTestCase):
         default_address_city='Lille',
         default_address_zip_code='59000')
 
-    self.assertEquals(person.getDefaultAddress(),
+    self.assertEqual(person.getDefaultAddress(),
         organisation.getDefaultAddress())
-    self.assertEquals(person.getDefaultAddressCity(),'Lille')
-    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(person.getDefaultAddressCity(),'Lille')
+    self.assertEqual(person.getDefaultAddressZipCode(), '59000')
 
     # here, the first parameter we pass will trigger the creation of a
     # subobject on person, and we need to make sure that the second one gets
@@ -683,10 +683,10 @@ class TestERP5Base(ERP5TypeTestCase):
 
     self.assertNotEquals(person.getDefaultAddress(),
         organisation.getDefaultAddress())
-    self.assertEquals(person.getDefaultAddressCity(),'La Garnache')
-    self.assertEquals(person.getDefaultAddressZipCode(), '59000')
-    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
-    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(person.getDefaultAddressCity(),'La Garnache')
+    self.assertEqual(person.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEqual(organisation.getDefaultAddressZipCode(), '59000')
 
     # retry last action, inverting the modified property
     # XXX Whether this test is usefull or not completely depends on Python
@@ -702,21 +702,21 @@ class TestERP5Base(ERP5TypeTestCase):
 
     self.assertNotEquals(person.getDefaultAddress(),
         organisation.getDefaultAddress())
-    self.assertEquals(person.getDefaultAddressCity(),'Lille')
-    self.assertEquals(person.getDefaultAddressZipCode(), '69000')
-    self.assertEquals(organisation.getDefaultAddressCity(),'Lille')
-    self.assertEquals(organisation.getDefaultAddressZipCode(), '59000')
+    self.assertEqual(person.getDefaultAddressCity(),'Lille')
+    self.assertEqual(person.getDefaultAddressZipCode(), '69000')
+    self.assertEqual(organisation.getDefaultAddressCity(),'Lille')
+    self.assertEqual(organisation.getDefaultAddressZipCode(), '59000')
 
     # if the address of the person is the same of the organisation
     # there is no reason to create a subobject (default_address)
     person.manage_delObjects(['default_address'])
     person.edit(career_subordination_value=organisation)
     self.assertTrue('default_address' not in person.objectIds())
-    self.assertEquals(person.getDefaultAddress(),
+    self.assertEqual(person.getDefaultAddress(),
         organisation.getDefaultAddress())
-    self.assertEquals(person.getDefaultAddressCity(),
+    self.assertEqual(person.getDefaultAddressCity(),
         organisation.getDefaultAddressCity())
-    self.assertEquals(person.getDefaultAddressZipCode(),
+    self.assertEqual(person.getDefaultAddressZipCode(),
         organisation.getDefaultAddressZipCode())
     # if the address of the person is different then the subobject
     # (default_address) must be created.
@@ -802,11 +802,11 @@ class TestERP5Base(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(
                             portal_type='Person',
                             career_subordination_value=organisation)
-    self.assertEquals(portal_categories.role.client,
+    self.assertEqual(portal_categories.role.client,
                       person.getRoleValue())
-    self.assertEquals(portal_categories.activity.software,
+    self.assertEqual(portal_categories.activity.software,
                       person.getActivityValue())
-    self.assertEquals(portal_categories.group.nexedi,
+    self.assertEqual(portal_categories.group.nexedi,
                       person.getGroupValue())
 
 
@@ -818,11 +818,11 @@ class TestERP5Base(ERP5TypeTestCase):
     birthday = DateTime(1999, 01, 01)
     now = DateTime()
     pers.edit(birthday = birthday)
-    self.assertEquals(birthday, pers.getBirthday())
-    self.assertEquals(birthday, pers.getStartDate())
+    self.assertEqual(birthday, pers.getBirthday())
+    self.assertEqual(birthday, pers.getStartDate())
     
     for slot in ['year', 'month', 'day', 'hour', 'minute']:
-      self.assertEquals(getattr(now, slot)(),
+      self.assertEqual(getattr(now, slot)(),
                         getattr(pers.getCreationDate(), slot)(),
                         'Wrong creation date %s' % pers.getCreationDate())
   
@@ -833,10 +833,10 @@ class TestERP5Base(ERP5TypeTestCase):
     start_date = DateTime(1999, 01, 01)
     now = DateTime()
     org.edit(start_date = start_date)
-    self.assertEquals(start_date, org.getStartDate())
+    self.assertEqual(start_date, org.getStartDate())
     
     for slot in ['year', 'month', 'day', 'hour', 'minute']:
-      self.assertEquals(getattr(now, slot)(),
+      self.assertEqual(getattr(now, slot)(),
                         getattr(org.getCreationDate(), slot)(),
                         'Wrong creation date %s' % org.getCreationDate())
 
@@ -845,15 +845,15 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     pers = self.getPersonModule().newContent(portal_type='Person')
     pers.setDefaultBirthplaceAddressCity('Lille')
-    self.assertEquals('Lille', pers.getDefaultBirthplaceAddressCity())
+    self.assertEqual('Lille', pers.getDefaultBirthplaceAddressCity())
 
   def test_getTranslatedId(self):
     pers = self.getPersonModule().newContent(
                 portal_type='Person', id='default_email')
-    self.assertEquals(None, pers.getTranslatedId())
+    self.assertEqual(None, pers.getTranslatedId())
     pers.setDefaultEmailText('nobody@example.com')
     email = pers.getDefaultEmailValue()
-    self.assertEquals('Default Email', str(email.getTranslatedId()))
+    self.assertEqual('Default Email', str(email.getTranslatedId()))
     
   def test_SubordinationAcquisitionAndFunction(self):
     # function is acquired from the subordination, organisation function are
@@ -869,7 +869,7 @@ class TestERP5Base(ERP5TypeTestCase):
     person = self.getPersonModule().newContent(portal_type='Person',
                             career_subordination_value=organisation)
     # on Organisation_view, the user usually select node for functions:
-    self.assertEquals([['', ''], ['Function Node', 'function_node']],
+    self.assertEqual([['', ''], ['Function Node', 'function_node']],
       organisation.Organisation_view.my_function.get_value('items'))
     
     # on Person_view, the user select leaves for functions:
@@ -879,13 +879,13 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertTrue('function_node/function_leave' in [x[1] for x in
                           field.get_value('items')])
     # person acquire function from the organisation
-    self.assertEquals(person.getFunctionValue(), function_node)
+    self.assertEqual(person.getFunctionValue(), function_node)
     # but the user interface does not show the acquired value in this case
-    self.assertEquals('', field.get_value('default'))
+    self.assertEqual('', field.get_value('default'))
     # (the field is working)
     person.setDefaultCareerFunctionValue(function_leave)
-    self.assertEquals(person.getFunctionValue(), function_leave)
-    self.assertEquals('function_node/function_leave',
+    self.assertEqual(person.getFunctionValue(), function_leave)
+    self.assertEqual('function_node/function_leave',
                       field.get_value('default'))
 
 
@@ -894,18 +894,18 @@ class TestERP5Base(ERP5TypeTestCase):
     for entity in (self.getPersonModule().newContent(portal_type='Person'),
         self.getOrganisationModule().newContent(portal_type='Organisation')):
       bank_account = entity.newContent(portal_type='Bank Account')
-      self.assertEquals([], bank_account.checkConsistency())
+      self.assertEqual([], bank_account.checkConsistency())
       bank_account.newContent(portal_type='Agent')
-      self.assertEquals([], bank_account.checkConsistency())
+      self.assertEqual([], bank_account.checkConsistency())
       self.portal.portal_workflow.doActionFor(bank_account, 'validate_action')
-      self.assertEquals('validated', bank_account.getValidationState())
+      self.assertEqual('validated', bank_account.getValidationState())
 
   def test_CreateImage(self):
     # We can add Images inside Persons and Organisation
     for entity in (self.getPersonModule().newContent(portal_type='Person'),
         self.getOrganisationModule().newContent(portal_type='Organisation')):
       image = entity.newContent(portal_type='Embedded File')
-      self.assertEquals([], image.checkConsistency())
+      self.assertEqual([], image.checkConsistency())
       image.view() # viewing the image does not cause error
 
   def test_ConvertImage(self):
@@ -932,19 +932,19 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertTrue(isinstance(image.data, Pdata))
 
     image_type, image_data = image.convert('jpg', display='thumbnail')
-    self.assertEquals('image/jpeg', image_type)
+    self.assertEqual('image/jpeg', image_type)
     # magic
-    self.assertEquals('\xff', image_data[0])
-    self.assertEquals('\xd8', image_data[1])
+    self.assertEqual('\xff', image_data[0])
+    self.assertEqual('\xd8', image_data[1])
 
   def test_ImageSize(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    self.assertEquals(320, image.getWidth())
-    self.assertEquals(250, image.getHeight())
+    self.assertEqual(320, image.getWidth())
+    self.assertEqual(250, image.getHeight())
     image.edit(file=self.makeImageFileUpload('erp5_logo_small.png'))
-    self.assertEquals(160, image.getWidth())
-    self.assertEquals(125, image.getHeight())
+    self.assertEqual(160, image.getWidth())
+    self.assertEqual(125, image.getHeight())
 
   def test_Person_getCareerStartDate(self):
     # Person_getCareerStartDate scripts returns the date when an employee
@@ -966,10 +966,10 @@ class TestERP5Base(ERP5TypeTestCase):
                               portal_type='Career',
                               subordination_value=second_organisation,
                               start_date=DateTime(1999, 9, 9))
-    self.assertEquals(DateTime(2001, 1, 1),
+    self.assertEqual(DateTime(2001, 1, 1),
          person.Person_getCareerStartDate(
             subordination_relative_url=first_organisation.getRelativeUrl()))
-    self.assertEquals(DateTime(1999, 9, 9),
+    self.assertEqual(DateTime(1999, 9, 9),
          person.Person_getCareerStartDate(
             subordination_relative_url=second_organisation.getRelativeUrl()))
 
@@ -980,7 +980,7 @@ class TestERP5Base(ERP5TypeTestCase):
                               subordination_value=first_organisation,
                               start_date=DateTime(1996, 9, 9))
     another_cancelled_career.cancel()
-    self.assertEquals(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 01, 01),
          person.Person_getCareerStartDate(
             subordination_relative_url=first_organisation.getRelativeUrl()))
 
@@ -989,30 +989,30 @@ class TestERP5Base(ERP5TypeTestCase):
                                   portal_type='Person',
                                   start_date=DateTime(2001, 2, 3))
 
-    self.assertEquals(1,
+    self.assertEqual(1,
           person.Person_getAge(year=1, at_date=DateTime(2002, 2, 4)))
     self.assertTrue(person.Person_getAge(year=1) > 5)
 
     # if year is not passed, the script returns the age in a translated string.
     age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
-    self.assertEquals(age_as_text, "1 years old")
+    self.assertEqual(age_as_text, "1 years old")
 
   def test_AssignmentWorkflow(self):
     person = self.getPersonModule().newContent(portal_type='Person',)
     assignment = person.newContent(portal_type='Assignment')
-    self.assertEquals('draft', assignment.getValidationState())
+    self.assertEqual('draft', assignment.getValidationState())
     self.portal.portal_workflow.doActionFor(assignment, 'open_action')
-    self.assertEquals('open', assignment.getValidationState())
+    self.assertEqual('open', assignment.getValidationState())
     self.portal.portal_workflow.doActionFor(assignment, 'update_action')
-    self.assertEquals('updated', assignment.getValidationState())
+    self.assertEqual('updated', assignment.getValidationState())
     self.portal.portal_workflow.doActionFor(assignment, 'open_action')
-    self.assertEquals('open', assignment.getValidationState())
+    self.assertEqual('open', assignment.getValidationState())
     # date is set automatically when closing
-    self.assertEquals(None, assignment.getStopDate())
+    self.assertEqual(None, assignment.getStopDate())
     self.portal.portal_workflow.doActionFor(assignment, 'close_action')
-    self.assertEquals('closed', assignment.getValidationState())
+    self.assertEqual('closed', assignment.getValidationState())
     self.assertNotEquals(None, assignment.getStopDate())
-    self.assertEquals(DateTime().day(), assignment.getStopDate().day())
+    self.assertEqual(DateTime().day(), assignment.getStopDate().day())
 
   def test_ERP5Site_checkDataWithScript(self):
     # note the '/'.join(obj.getPhysicalPath()) idiom:
@@ -1040,7 +1040,7 @@ class TestERP5Base(ERP5TypeTestCase):
     relative_url_list = sum((x.detail.split('\n')
                              for x in active_process.getResultList()), [])
 
-    self.assertEquals(len(relative_url_list), len(set(relative_url_list)))
+    self.assertEqual(len(relative_url_list), len(set(relative_url_list)))
     for obj in organisation, person, person.getDefaultEmailValue():
       self.assertTrue('/'.join(obj.getPhysicalPath()) in relative_url_list)
     for relative_url in relative_url_list:
@@ -1073,14 +1073,14 @@ class TestERP5Base(ERP5TypeTestCase):
     # patch the method, we'll abort later
     self.portal.Localizer.get_selected_language = lambda: lang
 
-    self.assertEquals(set([person_1, person_2]),
+    self.assertEqual(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))
-    self.assertEquals(set([person_2, organisation]),
+    self.assertEqual(set([person_2, organisation]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      portal_type=('Person', 'Organisation'))]))
-    self.assertEquals([person_2],
+    self.assertEqual([person_2],
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])
@@ -1091,9 +1091,9 @@ class TestERP5Base(ERP5TypeTestCase):
     module.manage_permission('Add portal content', ['Member'], 0)
     self.login_as_auditor()
     person = module.newContent(portal_type='Person',)
-    self.assertEquals(1, len(module))
+    self.assertEqual(1, len(module))
     person.Base_createCloneDocument()
-    self.assertEquals(2, len(module))
+    self.assertEqual(2, len(module))
 
   def test_Base_createCloneDocument_document_in_document(self):
     module = self.portal.person_module
@@ -1102,11 +1102,11 @@ class TestERP5Base(ERP5TypeTestCase):
     person = module.newContent(portal_type='Person',)
     # An address is a document, it cannot contain anything
     address = person.newContent(portal_type='Address')
-    self.assertEquals(0, len(address.allowedContentTypes()))
+    self.assertEqual(0, len(address.allowedContentTypes()))
 
-    self.assertEquals(1, len(person))
+    self.assertEqual(1, len(person))
     address.Base_createCloneDocument()
-    self.assertEquals(2, len(person))
+    self.assertEqual(2, len(person))
 
   def test_Base_createCloneDocument_folder_in_document(self):
     module = self.portal.person_module
@@ -1117,9 +1117,9 @@ class TestERP5Base(ERP5TypeTestCase):
     # A bank account is a folder, it can contain other documents
     self.assertNotEquals(0, len(bank_account.allowedContentTypes()))
 
-    self.assertEquals(1, len(person))
+    self.assertEqual(1, len(person))
     bank_account.Base_createCloneDocument()
-    self.assertEquals(2, len(person))
+    self.assertEqual(2, len(person))
 
   def getWorkflowHistory(self, document, workflow_id):
     return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
@@ -1177,199 +1177,199 @@ class TestERP5Base(ERP5TypeTestCase):
         self.portal.portal_catalog.getResultValue(portal_type='Preference',
                                                   owner='user_login'))
     # for his assignent group
-    self.assertEquals('group/nexedi',
+    self.assertEqual('group/nexedi',
         self.portal.portal_preferences.getPreferredSectionCategory())
 
   def test_default_address_acquisition(self):
     # more complete version of test_04_SubordinationAndAddress
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getDefaultAddressStreetAddress())
-    self.assertEquals(None, organisation.getDefaultAddressCity())
-    self.assertEquals(None, organisation.getDefaultAddressZipCode())
-    self.assertEquals(None, organisation.getDefaultAddressText())
+    self.assertEqual(None, organisation.getDefaultAddressStreetAddress())
+    self.assertEqual(None, organisation.getDefaultAddressCity())
+    self.assertEqual(None, organisation.getDefaultAddressZipCode())
+    self.assertEqual(None, organisation.getDefaultAddressText())
 
-    self.assertEquals(None, organisation.getDefaultAddressRegion())
-    self.assertEquals(None, organisation.getRegion())
+    self.assertEqual(None, organisation.getDefaultAddressRegion())
+    self.assertEqual(None, organisation.getRegion())
 
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals('europe/france', organisation.getDefaultAddressRegion())
+    self.assertEqual('europe/france', organisation.getDefaultAddressRegion())
     # region is acquired from default address
-    self.assertEquals('europe/france', organisation.getRegion())
-    self.assertEquals(None, organisation.getDefaultAddressStreetAddress())
-    self.assertEquals(None, organisation.getDefaultAddressCity())
-    self.assertEquals(None, organisation.getDefaultAddressZipCode())
+    self.assertEqual('europe/france', organisation.getRegion())
+    self.assertEqual(None, organisation.getDefaultAddressStreetAddress())
+    self.assertEqual(None, organisation.getDefaultAddressCity())
+    self.assertEqual(None, organisation.getDefaultAddressZipCode())
 
     organisation.setDefaultAddressStreetAddress('Street Address')
     organisation.setDefaultAddressCity('City')
     organisation.setDefaultAddressZipCode('Zip Code')
 
-    self.assertEquals('Street Address', organisation.getDefaultAddressStreetAddress())
-    self.assertEquals('City', organisation.getDefaultAddressCity())
-    self.assertEquals('Zip Code', organisation.getDefaultAddressZipCode())
+    self.assertEqual('Street Address', organisation.getDefaultAddressStreetAddress())
+    self.assertEqual('City', organisation.getDefaultAddressCity())
+    self.assertEqual('Zip Code', organisation.getDefaultAddressZipCode())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getDefaultAddressStreetAddress())
-    self.assertEquals(None, person.getDefaultAddressCity())
-    self.assertEquals(None, person.getDefaultAddressZipCode())
-    self.assertEquals(None, person.getDefaultAddressText())
-    self.assertEquals(None, person.getDefaultAddressRegion())
-    self.assertEquals(None, person.getRegion())
+    self.assertEqual(None, person.getDefaultAddressStreetAddress())
+    self.assertEqual(None, person.getDefaultAddressCity())
+    self.assertEqual(None, person.getDefaultAddressZipCode())
+    self.assertEqual(None, person.getDefaultAddressText())
+    self.assertEqual(None, person.getDefaultAddressRegion())
+    self.assertEqual(None, person.getRegion())
 
     # On persons, Address is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
 
-    self.assertEquals('Street Address', person.getDefaultAddressStreetAddress())
-    self.assertEquals('City', person.getDefaultAddressCity())
-    self.assertEquals('Zip Code', person.getDefaultAddressZipCode())
-    self.assertEquals('europe/france', person.getDefaultAddressRegion())
+    self.assertEqual('Street Address', person.getDefaultAddressStreetAddress())
+    self.assertEqual('City', person.getDefaultAddressCity())
+    self.assertEqual('Zip Code', person.getDefaultAddressZipCode())
+    self.assertEqual('europe/france', person.getDefaultAddressRegion())
     # region is acquired from default address
-    self.assertEquals('europe/france', person.getRegion())
+    self.assertEqual('europe/france', person.getRegion())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setDefaultAddressStreetAddress('Person Street Address')
     person.setDefaultAddressCity('Person City')
     person.setDefaultAddressZipCode('Person Zip Code')
-    self.assertEquals('Person Street Address', person.getDefaultAddressStreetAddress())
-    self.assertEquals('Person City', person.getDefaultAddressCity())
-    self.assertEquals('Person Zip Code', person.getDefaultAddressZipCode())
-    self.assertEquals('Street Address', organisation.getDefaultAddressStreetAddress())
-    self.assertEquals('City', organisation.getDefaultAddressCity())
-    self.assertEquals('Zip Code', organisation.getDefaultAddressZipCode())
+    self.assertEqual('Person Street Address', person.getDefaultAddressStreetAddress())
+    self.assertEqual('Person City', person.getDefaultAddressCity())
+    self.assertEqual('Person Zip Code', person.getDefaultAddressZipCode())
+    self.assertEqual('Street Address', organisation.getDefaultAddressStreetAddress())
+    self.assertEqual('City', organisation.getDefaultAddressCity())
+    self.assertEqual('Zip Code', organisation.getDefaultAddressZipCode())
 
   def test_default_telephone_acquisition(self):
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getDefaultTelephoneCoordinateText())
     # There is no problem if this organisation has a region (this use to be a
     # problem)
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getDefaultTelephoneCoordinateText())
 
     organisation.setDefaultTelephoneText("12345")
-    self.assertEquals('12345', organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual('12345', organisation.getDefaultTelephoneCoordinateText())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getDefaultTelephoneCoordinateText())
+    self.assertEqual(None, person.getDefaultTelephoneCoordinateText())
 
     # On persons, Telephone is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
-    self.assertEquals('12345', person.getDefaultTelephoneCoordinateText())
+    self.assertEqual('12345', person.getDefaultTelephoneCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setDefaultTelephoneText('54321')
-    self.assertEquals('54321', person.getDefaultTelephoneCoordinateText())
-    self.assertEquals('12345', organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual('54321', person.getDefaultTelephoneCoordinateText())
+    self.assertEqual('12345', organisation.getDefaultTelephoneCoordinateText())
 
   def test_mobile_telephone_acquisition(self):
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getMobileTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getMobileTelephoneCoordinateText())
     # There is no problem if this organisation has a region (this use to be a
     # problem)
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals(None, organisation.getMobileTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getMobileTelephoneCoordinateText())
 
     organisation.setMobileTelephoneText("12345")
-    self.assertEquals('12345', organisation.getMobileTelephoneCoordinateText())
+    self.assertEqual('12345', organisation.getMobileTelephoneCoordinateText())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getMobileTelephoneCoordinateText())
+    self.assertEqual(None, person.getMobileTelephoneCoordinateText())
 
     # On persons, Telephone is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
-    self.assertEquals('12345', person.getMobileTelephoneCoordinateText())
+    self.assertEqual('12345', person.getMobileTelephoneCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setMobileTelephoneText('54321')
-    self.assertEquals('54321', person.getMobileTelephoneCoordinateText())
-    self.assertEquals('12345', organisation.getMobileTelephoneCoordinateText())
+    self.assertEqual('54321', person.getMobileTelephoneCoordinateText())
+    self.assertEqual('12345', organisation.getMobileTelephoneCoordinateText())
 
   def test_default_fax_acquisition(self):
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getDefaultTelephoneCoordinateText())
     # There is no problem if this organisation has a region (this use to be a
     # problem)
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals(None, organisation.getDefaultFaxCoordinateText())
+    self.assertEqual(None, organisation.getDefaultFaxCoordinateText())
 
     organisation.setDefaultFaxText("12345")
-    self.assertEquals('12345', organisation.getDefaultFaxCoordinateText())
+    self.assertEqual('12345', organisation.getDefaultFaxCoordinateText())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getDefaultFaxCoordinateText())
+    self.assertEqual(None, person.getDefaultFaxCoordinateText())
 
     # On persons, Fax is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
-    self.assertEquals('12345', person.getDefaultFaxCoordinateText())
+    self.assertEqual('12345', person.getDefaultFaxCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setDefaultFaxText('54321')
-    self.assertEquals('54321', person.getDefaultFaxCoordinateText())
-    self.assertEquals('12345', organisation.getDefaultFaxCoordinateText())
+    self.assertEqual('54321', person.getDefaultFaxCoordinateText())
+    self.assertEqual('12345', organisation.getDefaultFaxCoordinateText())
 
   def test_default_email_acquisition(self):
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    self.assertEqual(None, organisation.getDefaultTelephoneCoordinateText())
     # There is no problem if this organisation has a region (this use to be a
     # problem)
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals(None, organisation.getDefaultEmailCoordinateText())
+    self.assertEqual(None, organisation.getDefaultEmailCoordinateText())
 
     organisation.setDefaultEmailText("organisation@example.com")
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('organisation@example.com',
       organisation.getDefaultEmailCoordinateText())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getDefaultEmailCoordinateText())
+    self.assertEqual(None, person.getDefaultEmailCoordinateText())
     self.assertFalse(person.hasDefaultEmailCoordinateText())
 
     # On persons, Email is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('organisation@example.com',
       person.getDefaultEmailCoordinateText())
     self.assertFalse(person.hasDefaultEmailCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setDefaultEmailText('person@example.com')
-    self.assertEquals('person@example.com', person.getDefaultEmailCoordinateText())
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('person@example.com', person.getDefaultEmailCoordinateText())
+    self.assertEqual('organisation@example.com',
       organisation.getDefaultEmailCoordinateText())
     self.assertTrue(person.hasDefaultEmailCoordinateText())
 
   def test_alternate_email_acquisition(self):
     organisation = \
       self.portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(None, organisation.getAlternateEmailCoordinateText())
+    self.assertEqual(None, organisation.getAlternateEmailCoordinateText())
     # There is no problem if this organisation has a region (this use to be a
     # problem)
     organisation.setDefaultAddressRegion('europe/france')
-    self.assertEquals(None, organisation.getAlternateEmailCoordinateText())
+    self.assertEqual(None, organisation.getAlternateEmailCoordinateText())
 
     organisation.setAlternateEmailText("organisation@example.com")
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('organisation@example.com',
       organisation.getAlternateEmailCoordinateText())
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertEquals(None, person.getAlternateEmailCoordinateText())
+    self.assertEqual(None, person.getAlternateEmailCoordinateText())
 
     # On persons, Email is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('organisation@example.com',
       person.getAlternateEmailCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
     person.setAlternateEmailText('person@example.com')
-    self.assertEquals('person@example.com', person.getAlternateEmailCoordinateText())
-    self.assertEquals('organisation@example.com',
+    self.assertEqual('person@example.com', person.getAlternateEmailCoordinateText())
+    self.assertEqual('organisation@example.com',
       organisation.getAlternateEmailCoordinateText())
 
   # Marked as expectedFailure as it shall be never possible to use edit method to set

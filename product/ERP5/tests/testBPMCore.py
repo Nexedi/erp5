@@ -389,16 +389,16 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_link = self.createBusinessLink()
     business_link.setSourceValue(source_node)
     business_link.setSourceSectionValue(source_section_node)
-    self.assertEquals([source_node], business_link.getSourceValueList())
-    self.assertEquals([source_node.getRelativeUrl()], business_link.getSourceList())
-    self.assertEquals(source_node.getRelativeUrl(),
+    self.assertEqual([source_node], business_link.getSourceValueList())
+    self.assertEqual([source_node.getRelativeUrl()], business_link.getSourceList())
+    self.assertEqual(source_node.getRelativeUrl(),
         business_link.getSource(default='something'))
 
   def test_EmptyBusinessLinkStandardCategoryAccessProvider(self):
     business_link = self.createBusinessLink()
-    self.assertEquals(None, business_link.getSourceValue())
-    self.assertEquals(None, business_link.getSource())
-    self.assertEquals('something',
+    self.assertEqual(None, business_link.getSourceValue())
+    self.assertEqual(None, business_link.getSource())
+    self.assertEqual('something',
         business_link.getSource(default='something'))
 
   def test_BusinessPathDynamicCategoryAccessProvider(self):
@@ -412,8 +412,8 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     context_movement = self.createMovement()
     context_movement.setSourceValue(source_node)
     context_movement.setSourceSectionValue(source_section_node)
-    self.assertEquals(None, business_path.getSourceValue())
-    self.assertEquals([source_node.getRelativeUrl()],
+    self.assertEqual(None, business_path.getSourceValue())
+    self.assertEqual([source_node.getRelativeUrl()],
                       business_path.getArrowCategoryDict(context=context_movement)['source'])
 
   def test_BusinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
@@ -427,8 +427,8 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     context_movement = self.createMovement()
     context_movement.setSourceValue(movement_node)
-    self.assertEquals(path_node, business_path.getSourceValue())
-    self.assertEquals([path_node.getRelativeUrl()],
+    self.assertEqual(path_node, business_path.getSourceValue())
+    self.assertEqual([path_node.getRelativeUrl()],
                       business_path.getArrowCategoryDict(context=context_movement)['source'])
 
   def test_BusinessPathDynamicCategoryAccessProviderEmptyMovement(self):
@@ -436,7 +436,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
 
     context_movement = self.createMovement()
-    self.assertEquals(None, business_path.getSourceValue())
+    self.assertEqual(None, business_path.getSourceValue())
     self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
 
   def test_BusinessState_getRemainingTradePhaseList(self):
@@ -465,14 +465,14 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     trade_phase = category_tool.trade_phase.default
 
-    self.assertEquals([trade_phase.delivery,
+    self.assertEqual([trade_phase.delivery,
                        trade_phase.invoicing],
                       business_process.getRemainingTradePhaseList(
                        business_process.order))
-    self.assertEquals([trade_phase.invoicing],
+    self.assertEqual([trade_phase.invoicing],
                       business_process.getRemainingTradePhaseList(
                        business_process.deliver))
-    self.assertEquals([],
+    self.assertEqual([],
                       business_process.getRemainingTradePhaseList(
                        business_process.invoice))
 
@@ -492,7 +492,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.tic()
 
     def checkExpectedDates(explanation, start_date, stop_date, delay_mode=None):
-      self.assertEquals(
+      self.assertEqual(
         self.business_process.getExpectedTradeModelPathStartAndStopDate(
             explanation, self.delivery_path, delay_mode=delay_mode),
         (start_date, stop_date))
@@ -545,17 +545,17 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.tic()
 
     def checkIsBusinessLinkBuildable(explanation, business_link, value):
-      self.assertEquals(self.business_process.isBusinessLinkBuildable(
+      self.assertEqual(self.business_process.isBusinessLinkBuildable(
        explanation, business_link), value)
 
     # in the beginning only order related movements shall be buildable
     checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
-    self.assertEquals(self.delivery_simulation_movement.isBuildable(), True)
-    self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
+    self.assertEqual(self.delivery_simulation_movement.isBuildable(), True)
+    self.assertEqual(self.split_delivery_simulation_movement.isBuildable(), True)
 
     checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
-    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
+    self.assertEqual(self.invoicing_simulation_movement.isBuildable(), False)
+    self.assertEqual(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
     # add delivery
@@ -576,14 +576,14 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     # delivery_link (for delivery) is not buildable - delivery is already
     # built for those movements
     checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
-    self.assertEquals(self.split_delivery_simulation_movement.isBuildable(), True)
+    self.assertEqual(self.split_delivery_simulation_movement.isBuildable(), True)
 
     checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, False)
-    self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), False)
+    self.assertEqual(self.delivery_simulation_movement.isBuildable(), False)
+    self.assertEqual(self.invoicing_simulation_movement.isBuildable(), False)
     checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
-    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(), False)
+    self.assertEqual(self.split_invoicing_simulation_movement.isBuildable(), False)
 
     # put delivery in simulation state configured on path (and this state is
     # available directly on movements)
@@ -605,14 +605,14 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     # split movement for invoicing is not buildable - no proper delivery
     # related for previous path
     checkIsBusinessLinkBuildable(self.order, self.delivery_link, True)
-    self.assertEquals(self.invoicing_simulation_movement.isBuildable(), True)
+    self.assertEqual(self.invoicing_simulation_movement.isBuildable(), True)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
 
     checkIsBusinessLinkBuildable(self.order, self.invoice_link, False)
     checkIsBusinessLinkBuildable(delivery, self.invoice_link, True)
     checkIsBusinessLinkBuildable(delivery, self.delivery_link, False)
-    self.assertEquals(self.delivery_simulation_movement.isBuildable(), False)
-    self.assertEquals(self.split_invoicing_simulation_movement.isBuildable(),
+    self.assertEqual(self.delivery_simulation_movement.isBuildable(), False)
+    self.assertEqual(self.split_invoicing_simulation_movement.isBuildable(),
         False)
 
   def test_isCompleted(self):

@@ -129,9 +129,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.validate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_02_WrongTestMethod(self):
     """
@@ -145,9 +145,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.validate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_03_GoodTestMethod(self):
     """
@@ -161,9 +161,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.validate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 1)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 1)
 
   def test_04_NotValidatedRule(self):
     """
@@ -179,9 +179,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.invalidate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 0)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_06_WrongDateRange(self):
     """
@@ -198,9 +198,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.validate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_07_GoodDateRange(self):
     """
@@ -217,9 +217,9 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.validate()
     self.tic()
 
-    self.assertEquals(self.getRuleTool().countFolder(
+    self.assertEqual(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 1)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 1)
 
   def test_070_direct_criteria_specification(self):
     """
@@ -380,7 +380,7 @@ return context.generatePredicate(
     self.pl.updateSimulation(create_root=1)
     self.tic()
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule_2.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
@@ -393,7 +393,7 @@ return context.generatePredicate(
     self.pl.updateSimulation(create_root=1)
     self.tic()
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule_1.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
@@ -431,12 +431,12 @@ return context.generatePredicate(
 
     # check that only one invoicing rule (higher version) was applied
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule.getRelativeUrl())
 
     movement, = root_applied_rule.objectValues()
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
     # increase version of other rule, clean simulation and check again
@@ -449,12 +449,12 @@ return context.generatePredicate(
 
     # check that only one invoicing rule (higher version) was applied
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule.getRelativeUrl())
 
     movement, = root_applied_rule.objectValues()
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
@@ -487,19 +487,19 @@ return context.generatePredicate(
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
 
     # check that no invoicing rule was applied
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule.getRelativeUrl())
     movement, = root_applied_rule.objectValues()
-    self.assertEquals(movement.objectCount(), 0)
+    self.assertEqual(movement.objectCount(), 0)
 
     # change rule script so that it matches and test again
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
     invoicing_rule_1_applied_rule, = movement.objectValues()
-    self.assertEquals(invoicing_rule_1_applied_rule.getSpecialise(),
+    self.assertEqual(invoicing_rule_1_applied_rule.getSpecialise(),
                       invoicing_rule_1.getRelativeUrl())
 
     # add more invoicing_rule and test that nothing is changed
@@ -516,13 +516,13 @@ return context.generatePredicate(
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
     applied_rule_1, applied_rule_2 = sorted(movement.objectValues(),
         key=lambda x: x.getSpecialiseReference())
     # check the 1st applied rule is an application of invoicing_rule_1
-    self.assertEquals(applied_rule_1.getSpecialise(),
+    self.assertEqual(applied_rule_1.getSpecialise(),
         invoicing_rule_n.getRelativeUrl())
-    self.assertEquals(applied_rule_2.getSpecialise(),
+    self.assertEqual(applied_rule_2.getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
@@ -555,22 +555,22 @@ return context.generatePredicate(
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
 
     # check that the invoicing rule was applied
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule.getRelativeUrl())
     movement, = root_applied_rule.objectValues()
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
     # invalidate the rule and test that it is gone
     invoicing_rule_1.invalidate()
     self.tic()
-    self.assertEquals(invoicing_rule_1.getValidationState(), 'invalidated')
+    self.assertEqual(invoicing_rule_1.getValidationState(), 'invalidated')
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
-    self.assertEquals(movement.objectCount(), 0)
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(movement.objectCount(), 0)
 
     # change the test method to one that fails, and test that the rule is
     # removed
@@ -578,8 +578,8 @@ return context.generatePredicate(
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
-    self.assertEquals(movement.objectCount(), 0)
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(movement.objectCount(), 0)
 
     # change the test to one that succeeds, revalidate, expand, add a delivery
     # relation, change the test method to one that fails, expand, and test
@@ -587,13 +587,13 @@ return context.generatePredicate(
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     invoicing_rule_1.validate()
     self.tic()
-    self.assertEquals(invoicing_rule_1.getValidationState(), 'validated')
+    self.assertEqual(invoicing_rule_1.getValidationState(), 'validated')
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
     sub_movement, = applied_rule.objectValues()
 
@@ -603,12 +603,12 @@ return context.generatePredicate(
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
-    self.assertEquals(list(movement.objectValues()), [applied_rule])
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(movement.objectValues()), [applied_rule])
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
-    self.assertEquals(list(applied_rule.objectValues()), [sub_movement])
-    self.assertEquals(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
+    self.assertEqual(list(applied_rule.objectValues()), [sub_movement])
+    self.assertEqual(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
@@ -645,11 +645,11 @@ return context.generatePredicate(
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
 
     # check that the invoicing rule 2 was applied
-    self.assertEquals(root_applied_rule.getSpecialise(),
+    self.assertEqual(root_applied_rule.getSpecialise(),
         delivery_rule.getRelativeUrl())
     movement, = root_applied_rule.objectValues()
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
     # change the test method to one that fails, and test that the rule is
@@ -658,9 +658,9 @@ return context.generatePredicate(
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
     applied_rule, = movement.objectValues()
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
     # change the test of invoicing rule 2 to one that succeeds, add a delivery
@@ -671,12 +671,12 @@ return context.generatePredicate(
     root_applied_rule.expand()
     self.tic()
 
-    self.assertEquals(list(root_applied_rule.objectValues()), [movement])
-    self.assertEquals(list(movement.objectValues()), [applied_rule])
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEqual(list(root_applied_rule.objectValues()), [movement])
+    self.assertEqual(list(movement.objectValues()), [applied_rule])
+    self.assertEqual(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
-    self.assertEquals(list(applied_rule.objectValues()), [sub_movement])
-    self.assertEquals(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
+    self.assertEqual(list(applied_rule.objectValues()), [sub_movement])
+    self.assertEqual(sub_movement.getDelivery(), self.pl.line.getRelativeUrl())
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()

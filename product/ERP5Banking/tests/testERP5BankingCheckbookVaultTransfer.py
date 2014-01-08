@@ -116,7 +116,7 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
 
     for line in self.checkbook_reception.objectValues():
       aggregate_value_list = line.getAggregateValueList()
-      self.assertEquals(len(aggregate_value_list), 1)
+      self.assertEqual(len(aggregate_value_list), 1)
       aggregate_value = aggregate_value_list[0]
       if aggregate_value.getPortalType()=='Checkbook':
         self.checkbook_1 = aggregate_value

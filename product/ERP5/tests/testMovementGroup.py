@@ -68,8 +68,8 @@ class TestPropertyMovementGroup(MovementGroupTestCase):
                   tested_property_list=('start_date',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(start_date=DateTime(2001, 1, 1)),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(start_date=DateTime(2001, 1, 1)),
                       group_list[0].getGroupEditDict())
 
   def test_property_movement_group_separating(self):
@@ -87,10 +87,10 @@ class TestPropertyMovementGroup(MovementGroupTestCase):
                   tested_property_list=('start_date',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(2, len(group_list))
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(start_date=DateTime(2001, 1, 1))]))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(start_date=DateTime(2001, 1, 2))]))
 
   def test_property_movement_group_and_separating(self):
@@ -110,11 +110,11 @@ class TestPropertyMovementGroup(MovementGroupTestCase):
                   tested_property_list=('start_date', 'title'))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(2, len(group_list))
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(title='A',
                                        start_date=DateTime(2001, 1, 1))]))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(title='A',
                                        start_date=DateTime(2001, 1, 2))]))
 
@@ -136,8 +136,8 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
                   grouping_method='max',)
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(start_date=DateTime(2001, 1, 2)),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(start_date=DateTime(2001, 1, 2)),
                       group_list[0].getGroupEditDict())
 
   def test_property_assignment_movement_group_min(self):
@@ -156,8 +156,8 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
                   grouping_method='min',)
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(start_date=DateTime(2001, 1, 1)),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(start_date=DateTime(2001, 1, 1)),
                       group_list[0].getGroupEditDict())
 
   def test_property_assignment_movement_group_avg(self):
@@ -176,8 +176,8 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
                   grouping_method='avg',)
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(int_index=2),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(int_index=2),
                       group_list[0].getGroupEditDict())
 
   def test_property_assignment_movement_group_common_match(self):
@@ -196,8 +196,8 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
                   grouping_method='common',)
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(start_date=DateTime(2001, 1, 1)),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(start_date=DateTime(2001, 1, 1)),
                       group_list[0].getGroupEditDict())
 
   def test_property_assignment_movement_group_common_doesnot_match(self):
@@ -216,8 +216,8 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
                   grouping_method='common',)
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(), group_list[0].getGroupEditDict())
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(), group_list[0].getGroupEditDict())
 
 class TestOrderMovementGroup(MovementGroupTestCase):
   """Tests Order Movement Group - grouping and separating by
@@ -242,8 +242,8 @@ class TestOrderMovementGroup(MovementGroupTestCase):
 
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(causality_list=[order.getRelativeUrl()]),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(causality_list=[order.getRelativeUrl()]),
                       group_list[0].getGroupEditDict())
 
   def test_order_movement_group_separating(self):
@@ -272,10 +272,10 @@ class TestOrderMovementGroup(MovementGroupTestCase):
 
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(2, len(group_list))
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(causality_list=[order_1.getRelativeUrl()])]))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(causality_list=[order_2.getRelativeUrl()])]))
 
 class TestOrderMovementGroupDelivery(TestOrderMovementGroup):
@@ -333,8 +333,8 @@ class TestDeliveryCausalityAssignmentMovementGroup(MovementGroupTestCase):
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
 
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(causality_list=[delivery_1.getRelativeUrl(),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(causality_list=[delivery_1.getRelativeUrl(),
       delivery_2.getRelativeUrl()]),
                       group_list[0].getGroupEditDict())
 
@@ -386,8 +386,8 @@ class TestCategoryMovementGroup(MovementGroupTestCase):
                   tested_property_list=('source',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
-    self.assertEquals(dict(source_list=['1']),
+    self.assertEqual(1, len(group_list))
+    self.assertEqual(dict(source_list=['1']),
                       group_list[0].getGroupEditDict())
 
   def test_category_movement_group_separating(self):
@@ -405,10 +405,10 @@ class TestCategoryMovementGroup(MovementGroupTestCase):
                   tested_property_list=('source',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(2, len(group_list))
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(source_list=['1'])]))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(source_list=['2'])]))
 
   def test_category_movement_group_and_separating(self):
@@ -428,11 +428,11 @@ class TestCategoryMovementGroup(MovementGroupTestCase):
                   tested_property_list=('destination', 'source'))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(2, len(group_list))
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(destination_list=['A'],
                                        source_list=['1'])]))
-    self.assertEquals(1, len([group for group in group_list if
+    self.assertEqual(1, len([group for group in group_list if
       group.getGroupEditDict() == dict(destination_list=['A'],
                                        source_list=['2'])]))
 
@@ -466,9 +466,9 @@ class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
                   tested_property_list=('start_date',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(1, len(group_list))
+    self.assertEqual(1, len(group_list))
      # This movent group must not assign the properties
-    self.assertEquals({}, group_list[0].getGroupEditDict())
+    self.assertEqual({}, group_list[0].getGroupEditDict())
 
   def test_property_movement_group_separating(self):
     movement_list = ( self.folder.newContent(
@@ -485,10 +485,10 @@ class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
                   tested_property_list=('start_date',))
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
-    self.assertEquals(2, len(group_list))
+    self.assertEqual(2, len(group_list))
     for group in group_list:
       # This movent group must not assign the properties
-      self.assertEquals({}, group.getGroupEditDict())
+      self.assertEqual({}, group.getGroupEditDict())
 
   def test_property_movement_group_and_separating(self):
     movement_list = ( self.folder.newContent(
@@ -519,11 +519,11 @@ class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
     group_list = movement_group_node.getGroupList()
 
     # must not be 4
-    self.assertEquals(3, len(group_list))
+    self.assertEqual(3, len(group_list))
 
     for group in group_list:
       # This movent group must not assign the properties
-      self.assertEquals({}, group.getGroupEditDict())
+      self.assertEqual({}, group.getGroupEditDict())
 
 def test_suite():
   suite = unittest.TestSuite()

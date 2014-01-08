@@ -109,9 +109,9 @@ class TestIngestion(ERP5TypeLiveTestCase):
     filename = 'any_file.txt'
     document = self.contributeFileWithUrl(script_id, filename=filename)
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getFilename(), filename)
-    self.assertEquals(document.getContentType(), 'text/plain')
+    self.assertEqual(document.getPortalType(), 'Text')
+    self.assertEqual(document.getFilename(), filename)
+    self.assertEqual(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
   def test_02_contributeTextFileWithExplicitExtensionfromUrl(self):
@@ -122,9 +122,9 @@ class TestIngestion(ERP5TypeLiveTestCase):
     script_id = 'ERP5Site_getTextFile.txt'
     document = self.contributeFileWithUrl(script_id)
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getFilename(), script_id)
-    self.assertEquals(document.getContentType(), 'text/plain')
+    self.assertEqual(document.getPortalType(), 'Text')
+    self.assertEqual(document.getFilename(), script_id)
+    self.assertEqual(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
   def test_03_textFileWithExplicitExtensionWithoutContentTypefromUrl(self):
@@ -134,9 +134,9 @@ class TestIngestion(ERP5TypeLiveTestCase):
     script_id = 'ERP5Site_getTextFileWithoutContentType.txt'
     document = self.contributeFileWithUrl(script_id)
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getFilename(), script_id)
-    self.assertEquals(document.getContentType(), 'text/plain')
+    self.assertEqual(document.getPortalType(), 'Text')
+    self.assertEqual(document.getFilename(), script_id)
+    self.assertEqual(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
   def test_04_contributeTextFileWithFilenameAndRedirectionfromUrl(self):
@@ -147,9 +147,9 @@ class TestIngestion(ERP5TypeLiveTestCase):
     filename = 'any_file.txt'
     document = self.contributeFileWithUrl(script_id, filename=filename)
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Text')
-    self.assertEquals(document.getFilename(), filename)
-    self.assertEquals(document.getContentType(), 'text/plain')
+    self.assertEqual(document.getPortalType(), 'Text')
+    self.assertEqual(document.getFilename(), filename)
+    self.assertEqual(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
 
   def test_05_contributeTextFileWithoutFilenameButHTMLContentType(self):
@@ -160,8 +160,8 @@ class TestIngestion(ERP5TypeLiveTestCase):
     script_id = 'ERP5Site_getTextFileWithoutFileNameButHTMLContentType'
     document = self.contributeFileWithUrl(script_id)
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Web Page')
-    self.assertEquals(document.getFilename(), script_id)
-    self.assertEquals(document.getContentType(), 'text/html')
+    self.assertEqual(document.getPortalType(), 'Web Page')
+    self.assertEqual(document.getFilename(), script_id)
+    self.assertEqual(document.getContentType(), 'text/html')
     self.assertTrue(document.hasData())
 

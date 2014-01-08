@@ -117,11 +117,11 @@ class TestAlarm(ERP5TypeTestCase):
     now = DateTime()
     date = addToDate(now,day=1)
     alarm.setPeriodicityStartDate(date)
-    self.assertEquals(alarm.getAlarmDate(), None)
+    self.assertEqual(alarm.getAlarmDate(), None)
     alarm.setEnabled(True)
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
     alarm.setNextAlarmDate(current_date=now) # This should not do change the alarm date
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEqual(alarm.getAlarmDate(),date)
 
   def test_03_EveryHour(self, quiet=0, run=run_all_test):
     if not run: return
@@ -136,20 +136,20 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityHourFrequency(1)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=1)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=1,minute=5)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,hour=1)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
     # check if manual invoking does not break getAlarmDate() result.
     alarm.activeSense()
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
 
   def test_04_Every3Hours(self, quiet=0, run=run_all_test):
     if not run: return
@@ -166,17 +166,17 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityHourFrequency(3)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEqual(alarm.getAlarmDate(),date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=3)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,hour=3,minute=7,second=4)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,hour=3)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
 
   def test_05_SomeHours(self, quiet=0, run=run_all_test):
     if not run: return
@@ -195,13 +195,13 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityHourList(hour_list)
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(),right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEquals(alarm.getAlarmDate(),right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEquals(alarm.getAlarmDate(),right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
   def test_06_EveryDayOnce(self, quiet=0, run=run_all_test):
     if not run: return
@@ -219,11 +219,11 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityDayFrequency(1)
     alarm.setPeriodicityHourList((10,))
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(),right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEquals(alarm.getAlarmDate(),right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEquals(alarm.getAlarmDate(),right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
 
   def test_07_Every3DaysSomeHours(self, quiet=0, run=run_all_test):
     """- every 3 days at 14 and 15 and 17"""
@@ -242,13 +242,13 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityDayFrequency(3)
     alarm.setPeriodicityHourList((14,15,17))
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(),right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEquals(alarm.getAlarmDate(),right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEquals(alarm.getAlarmDate(),right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
   def test_07a_Every4DaysSomeHours(self, quiet=0, run=run_all_test):
     """- every 4 days at 14 and 15 and 17"""
@@ -268,15 +268,15 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityDayFrequency(4)
     alarm.setPeriodicityHourList((14,15,17))
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(),right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEquals(alarm.getAlarmDate(),right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
     alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEquals(alarm.getAlarmDate(),right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
     alarm.setNextAlarmDate(current_date=right_fourth_date)
-    self.assertEquals(alarm.getAlarmDate(),right_fifth_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fifth_date)
 
   def test_08_SomeWeekDaysSomeHours(self, quiet=0, run=run_all_test):
     """- every monday and friday, at 6 and 15"""
@@ -304,9 +304,9 @@ class TestAlarm(ERP5TypeTestCase):
     """
     for date in args[:-1]:
       LOG('checkDate, checking date...:',0,date)
-      self.assertEquals(alarm.getAlarmDate(),date)
+      self.assertEqual(alarm.getAlarmDate(),date)
       alarm.setNextAlarmDate(current_date=date)
-    self.assertEquals(alarm.getAlarmDate(),args[-1])
+    self.assertEqual(alarm.getAlarmDate(),args[-1])
 
   def test_09_SomeMonthDaysSomeHours(self, quiet=0, run=run_all_test):
     """- every 1st and 15th every month, at 12 and 14"""
@@ -379,17 +379,17 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityMinuteFrequency(5)
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEqual(alarm.getAlarmDate(),date)
     LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
     LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,minute=5)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
     now = addToDate(now,minute=5,second=14)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(next_date,minute=5)
-    self.assertEquals(alarm.getAlarmDate(),next_date)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
 
   def test_13_EveryMinute(self, quiet=0, run=run_all_test):
     if not run: return
@@ -404,7 +404,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityMinuteFrequency(1)
     self.tic()
     alarm.setNextAlarmDate(current_date=date)
-    self.assertEquals(alarm.getAlarmDate(),date)
+    self.assertEqual(alarm.getAlarmDate(),date)
 
   def test_14_NewActiveProcess(self, quiet=0, run=run_all_test):
     if not run: return
@@ -414,10 +414,10 @@ class TestAlarm(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     alarm = self.newAlarm(enabled=True)
     active_process = alarm.newActiveProcess()
-    self.assertEquals('Active Process', active_process.getPortalType())
-    self.assertEquals(alarm, active_process.getCausalityValue())
+    self.assertEqual('Active Process', active_process.getPortalType())
+    self.assertEqual(alarm, active_process.getCausalityValue())
     self.tic()
-    self.assertEquals(active_process, alarm.getLastActiveProcess())
+    self.assertEqual(active_process, alarm.getLastActiveProcess())
 
   def test_15_FailedAlarmsDoNotBlockFutureAlarms(self, quiet=0, run=run_all_test):
     if not run: return
@@ -437,7 +437,7 @@ class TestAlarm(ERP5TypeTestCase):
       self.tic()
       now = DateTime()
       alarm.setActiveSenseMethodId(sense_method_id)
-      self.assertEquals(alarm.isActive(), 0)
+      self.assertEqual(alarm.isActive(), 0)
       alarm.activeSense()
       self.commit()
       try:
@@ -447,9 +447,9 @@ class TestAlarm(ERP5TypeTestCase):
       else:
         raise Exception, 'Tic did not raise though activity was supposed to fail'
       # Check that the alarm is not considered active, although there is a remaining activity.
-      self.assertEquals(alarm.hasActivity(), 1)
-      self.assertEquals(alarm.isActive(), 0)
-      self.assertEquals(alarm.getLastActiveProcess(), None)
+      self.assertEqual(alarm.hasActivity(), 1)
+      self.assertEqual(alarm.isActive(), 0)
+      self.assertEqual(alarm.getLastActiveProcess(), None)
       # Make the sense method succeed and leave a trace
       self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
       alarm.activeSense()
@@ -484,12 +484,12 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now, day=1)
     alarm.setPeriodicityStartDate(date)
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
 
     # This should not do change the alarm date
     alarm.setNextAlarmDate(current_date=now)
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
 
     # Delete the alarm
     a_tool = self.getAlarmTool()
@@ -500,7 +500,7 @@ class TestAlarm(ERP5TypeTestCase):
     sql_connection = self.getSQLConnection()
     sql = 'select * from alarm where uid=%s' % alarm_uid
     result = sql_connection.manage_test(sql)
-    self.assertEquals(0, len(result))
+    self.assertEqual(0, len(result))
 
   def test_17_tic(self, quiet=0, run=run_all_test):
     """
@@ -538,7 +538,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm_tool.tic()
     self.tic()
-    self.assertEquals(alarm.getDescription(), 'a')
+    self.assertEqual(alarm.getDescription(), 'a')
 
   def test_18_alarm_activities_execution_order(self, quiet=0, run=run_all_test):
     """
@@ -567,7 +567,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.activeSense()
     self.commit()
     messages_list = self.getActivityTool().getMessageList()
-    self.assertEquals(2, len(messages_list))
+    self.assertEqual(2, len(messages_list))
     expected_tag = alarm.getRelativeUrl() + '_0'
     # check tags after activeSense
     for m in messages_list:
@@ -622,8 +622,8 @@ class TestAlarm(ERP5TypeTestCase):
     user = uf.getUserById('normal').__of__(uf)
     
     # Check the pre-conditions.
-    self.assertEquals(alarm.getProperty('bogus', None), None)
-    self.assertEquals(alarm.getEnabled(), False)
+    self.assertEqual(alarm.getProperty('bogus', None), None)
+    self.assertEqual(alarm.getEnabled(), False)
     sm = getSecurityManager()
     newSecurityManager(None, user)
 
@@ -634,7 +634,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Non-managers must not be able to invoke the automatic fixation.
     setSecurityManager(sm)
     alarm.setEnabled(True)
-    self.assertEquals(alarm.getEnabled(), True)
+    self.assertEqual(alarm.getEnabled(), True)
     newSecurityManager(None, user)
     self.assertRaises(Unauthorized, alarm.activeSense, fixit=1)
 
@@ -645,38 +645,38 @@ class TestAlarm(ERP5TypeTestCase):
 
     alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    self.assertEqual(alarm.getProperty('bogus', None), correct_answer)
     alarm.setProperty('bogus', None)
-    self.assertEquals(alarm.getProperty('bogus', None), None)
+    self.assertEqual(alarm.getProperty('bogus', None), None)
 
     newSecurityManager(None, user)
     alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    self.assertEqual(alarm.getProperty('bogus', None), correct_answer)
     setSecurityManager(sm)
     alarm.setProperty('bogus', None)
 
     # Check that Manager can invoke an alarm freely.
     alarm.activeSense(fixit=1)
     self.tic()
-    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    self.assertEqual(alarm.getProperty('bogus', None), correct_answer)
     alarm.setProperty('bogus', None)
-    self.assertEquals(alarm.getProperty('bogus', None), None)
+    self.assertEqual(alarm.getProperty('bogus', None), None)
 
     alarm.setEnabled(False)
-    self.assertEquals(alarm.getEnabled(), False)
+    self.assertEqual(alarm.getEnabled(), False)
 
     alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    self.assertEqual(alarm.getProperty('bogus', None), correct_answer)
     alarm.setProperty('bogus', None)
-    self.assertEquals(alarm.getProperty('bogus', None), None)
+    self.assertEqual(alarm.getProperty('bogus', None), None)
 
     alarm.activeSense(fixit=1)
     self.tic()
-    self.assertEquals(alarm.getProperty('bogus', None), correct_answer)
+    self.assertEqual(alarm.getProperty('bogus', None), correct_answer)
     alarm.setProperty('bogus', None)
-    self.assertEquals(alarm.getProperty('bogus', None), None)
+    self.assertEqual(alarm.getProperty('bogus', None), None)
 
   def test_20_UndefinedPeriodicityStartDate(self, quiet=0, run=run_all_test):
     """
@@ -691,14 +691,14 @@ class TestAlarm(ERP5TypeTestCase):
     # Test sanity check.
     self.assertEqual(alarm.getPeriodicityStartDate(), None)
     # Actual test.
-    self.assertEquals(alarm.getAlarmDate(), None)
+    self.assertEqual(alarm.getAlarmDate(), None)
 
   def test_21_AlarmCatalogPresence(self):
     """Check that alarm date is properly stored in catalog upon first reindexation"""
     date = DateTime().earliestTime()
     alarm = self.newAlarm(enabled=True, periodicity_start_date=date)
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
     alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
     self.assertEqual(1, len(alarm_list))
     catalog_alarm_date = alarm_list[0].alarm_date
@@ -711,7 +711,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm.recursiveReindexObject()
     self.tic()
-    self.assertEquals(alarm.getAlarmDate(), date)
+    self.assertEqual(alarm.getAlarmDate(), date)
     alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
     self.assertEqual(1, len(alarm_list))
     catalog_alarm_date = alarm_list[0].alarm_date

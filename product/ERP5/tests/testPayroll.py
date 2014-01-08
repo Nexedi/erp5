@@ -588,9 +588,9 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
     movement_to_add = movement_dict['movement_to_add_list']
-    self.assertEquals(len(movement_to_delete),
+    self.assertEqual(len(movement_to_delete),
         expected_movement_to_delete_count)
-    #    self.assertEquals(len(movement_to_add), expected_movement_to_add_count)
+    #    self.assertEqual(len(movement_to_add), expected_movement_to_add_count)
 
   def stepCheckUpdateAggregatedAmountListReturn(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -708,11 +708,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.1)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.5)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -725,11 +725,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 4000)
-        self.assertEquals(cell1.getPrice(), 0.1)
+        self.assertEqual(cell1.getQuantity(), 4000)
+        self.assertEqual(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 4000)
-        self.assertEquals(cell2.getPrice(), 0.5)
+        self.assertEqual(cell2.getQuantity(), 4000)
+        self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Bonus':
@@ -746,11 +746,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         cell1 = paysheet_line.getCell('contribution_share/employee')
         # XXX-Aurel quantity from model line is multiply by total price of labour line
         # price remains None
-        self.assertEquals(cell1.getQuantity(), -300000)
-        self.assertEquals(cell1.getPrice(), None)
+        self.assertEqual(cell1.getQuantity(), -300000)
+        self.assertEqual(cell1.getPrice(), None)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), -600000)
-        self.assertEquals(cell2.getPrice(), None)
+        self.assertEqual(cell2.getQuantity(), -600000)
+        self.assertEqual(cell2.getPrice(), None)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -765,30 +765,30 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         if paysheet_line.getSalaryRange() == 'france/slice_0_to_200':
           cell1 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell1.getQuantity(), 200)
-          self.assertEquals(cell1.getPrice(), 0.1)
+          self.assertEqual(cell1.getQuantity(), 200)
+          self.assertEqual(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell2.getQuantity(), 200)
-          self.assertEquals(cell2.getPrice(), 0.2)
+          self.assertEqual(cell2.getQuantity(), 200)
+          self.assertEqual(cell2.getPrice(), 0.2)
         elif paysheet_line.getSalaryRange() == 'france/slice_200_to_400':
           cell3 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell3.getQuantity(), 200)
-          self.assertEquals(cell3.getPrice(), 0.3)
+          self.assertEqual(cell3.getQuantity(), 200)
+          self.assertEqual(cell3.getPrice(), 0.3)
           cell4 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell4.getQuantity(), 200)
-          self.assertEquals(cell4.getPrice(), 0.4)
+          self.assertEqual(cell4.getQuantity(), 200)
+          self.assertEqual(cell4.getPrice(), 0.4)
         elif paysheet_line.getSalaryRange() == 'france/slice_400_to_5000':
           cell5 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell5.getQuantity(), 2600)
-          self.assertEquals(cell5.getPrice(), 0.5)
+          self.assertEqual(cell5.getQuantity(), 2600)
+          self.assertEqual(cell5.getPrice(), 0.5)
           cell6 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell6.getQuantity(), 2600)
-          self.assertEquals(cell6.getPrice(), 0.6)
+          self.assertEqual(cell6.getQuantity(), 2600)
+          self.assertEqual(cell6.getPrice(), 0.6)
         else:
           self.fail("Unknown salary range for line %s" % paysheet_line.getTitle())
       elif service == 'Labour':
@@ -805,30 +805,30 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         if paysheet_line.getSalaryRange() == 'france/slice_0_to_200':
           cell1 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell1.getQuantity(), 200)
-          self.assertEquals(cell1.getPrice(), 0.1)
+          self.assertEqual(cell1.getQuantity(), 200)
+          self.assertEqual(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell2.getQuantity(), 200)
-          self.assertEquals(cell2.getPrice(), 0.2)
+          self.assertEqual(cell2.getQuantity(), 200)
+          self.assertEqual(cell2.getPrice(), 0.2)
         elif paysheet_line.getSalaryRange() == 'france/slice_200_to_400':
           cell3 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell3.getQuantity(), 200)
-          self.assertEquals(cell3.getPrice(), 0.3)
+          self.assertEqual(cell3.getQuantity(), 200)
+          self.assertEqual(cell3.getPrice(), 0.3)
           cell4 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell4.getQuantity(), 200)
-          self.assertEquals(cell4.getPrice(), 0.4)
+          self.assertEqual(cell4.getQuantity(), 200)
+          self.assertEqual(cell4.getPrice(), 0.4)
         elif paysheet_line.getSalaryRange() == 'france/slice_400_to_5000':
           cell5 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell5.getQuantity(), 2600)
-          self.assertEquals(cell5.getPrice(), 0.5)
+          self.assertEqual(cell5.getQuantity(), 2600)
+          self.assertEqual(cell5.getPrice(), 0.5)
           cell6 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell6.getQuantity(), 2600)
-          self.assertEquals(cell6.getPrice(), 0.6)
+          self.assertEqual(cell6.getQuantity(), 2600)
+          self.assertEqual(cell6.getPrice(), 0.6)
         else:
           self.fail("Unknown salary range for line %s" % paysheet_line.getTitle())
       elif service == 'Labour':
@@ -847,21 +847,21 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         if paysheet_line.getSalaryRange() == 'france/slice_200_to_400':
           cell1 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell1.getQuantity(), 200)
-          self.assertEquals(cell1.getPrice(), 0.1)
+          self.assertEqual(cell1.getQuantity(), 200)
+          self.assertEqual(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell2.getQuantity(), 200)
-          self.assertEquals(cell2.getPrice(), 0.2)
+          self.assertEqual(cell2.getQuantity(), 200)
+          self.assertEqual(cell2.getPrice(), 0.2)
         elif paysheet_line.getSalaryRange() == 'france/slice_600_to_800':
           cell3 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_600_to_800')
-          self.assertEquals(cell3.getQuantity(), 200)
-          self.assertEquals(cell3.getPrice(), 0.3)
+          self.assertEqual(cell3.getQuantity(), 200)
+          self.assertEqual(cell3.getPrice(), 0.3)
           cell4 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_600_to_800')
-          self.assertEquals(cell4.getQuantity(), 200)
-          self.assertEquals(cell4.getPrice(), 0.4)
+          self.assertEqual(cell4.getQuantity(), 200)
+          self.assertEqual(cell4.getPrice(), 0.4)
         else:
           self.fail("Unknown salary range for line %s" % paysheet_line.getTitle())
       elif service == 'Labour':
@@ -879,37 +879,37 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         if paysheet_line.getSalaryRange() == 'france/slice_0_to_200':
           cell1 = paysheet_line.getCell('contribution_share/employee',
                                         'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell1.getQuantity(), 200)
-          self.assertEquals(cell1.getPrice(), 0.1)
+          self.assertEqual(cell1.getQuantity(), 200)
+          self.assertEqual(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_0_to_200')
-          self.assertEquals(cell2.getQuantity(), 200)
-          self.assertEquals(cell2.getPrice(), 0.2)
+          self.assertEqual(cell2.getQuantity(), 200)
+          self.assertEqual(cell2.getPrice(), 0.2)
         elif paysheet_line.getSalaryRange() == 'france/slice_200_to_400':
           cell3 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell3.getQuantity(), 200)
-          self.assertEquals(cell3.getPrice(), 0.3)
+          self.assertEqual(cell3.getQuantity(), 200)
+          self.assertEqual(cell3.getPrice(), 0.3)
           cell4 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_200_to_400')
-          self.assertEquals(cell4.getQuantity(), 200)
-          self.assertEquals(cell4.getPrice(), 0.4)
+          self.assertEqual(cell4.getQuantity(), 200)
+          self.assertEqual(cell4.getPrice(), 0.4)
         elif paysheet_line.getSalaryRange() == 'france/slice_400_to_5000':
           cell5 = paysheet_line.getCell('contribution_share/employee',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell5.getQuantity(), 2600)
-          self.assertEquals(cell5.getPrice(), 0.5)
+          self.assertEqual(cell5.getQuantity(), 2600)
+          self.assertEqual(cell5.getPrice(), 0.5)
           cell6 = paysheet_line.getCell('contribution_share/employer',
               'salary_range/france/slice_400_to_5000')
-          self.assertEquals(cell6.getQuantity(), 2600)
-          self.assertEquals(cell6.getPrice(), 0.6)
+          self.assertEqual(cell6.getQuantity(), 2600)
+          self.assertEqual(cell6.getPrice(), 0.6)
         else:
           cell1 = paysheet_line.getCell('contribution_share/employee')
-          self.assertEquals(cell1.getQuantity(), 3000)
-          self.assertEquals(cell1.getPrice(), 0.1)
+          self.assertEqual(cell1.getQuantity(), 3000)
+          self.assertEqual(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('contribution_share/employer')
-          self.assertEquals(cell2.getQuantity(), 3000)
-          self.assertEquals(cell2.getPrice(), 0.5)
+          self.assertEqual(cell2.getQuantity(), 3000)
+          self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -922,20 +922,20 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.1)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.5)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Sickness Insurance':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.4)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.4)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.3)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.3)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -946,20 +946,20 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.1)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.5)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Old Age Insurance':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.5)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.5)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.8)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.8)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -968,8 +968,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
     movement_to_add = movement_dict['movement_to_add_list']
-    self.assertEquals(len(movement_to_delete), 0)
-    self.assertEquals(len(movement_to_add), 0)
+    self.assertEqual(len(movement_to_delete), 0)
+    self.assertEqual(len(movement_to_add), 0)
 
   def stepCreateUrssafRoubaixOrganisation(self, sequence=None, **kw):
     node = self.createOrganisation()
@@ -1011,9 +1011,9 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getSourceSectionValue(), urssaf_roubaix)
+        self.assertEqual(cell1.getSourceSectionValue(), urssaf_roubaix)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getSourceSectionValue(), urssaf_roubaix)
+        self.assertEqual(cell2.getSourceSectionValue(), urssaf_roubaix)
       elif service == 'Labour':
         pass
       else:
@@ -1043,34 +1043,34 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     employer = sequence.get('employer')
     employee = sequence.get('employee')
     currency = sequence.get('price_currency')
-    self.assertEquals(paysheet.getSourceSectionValue(), employee)
-    self.assertEquals(paysheet.getDestinationSectionValue(), employer)
-    self.assertEquals(paysheet.getPriceCurrencyValue(), currency)
-    self.assertEquals(paysheet.getDefaultPaymentConditionTradeDate(), 'custom')
-    self.assertEquals(paysheet.getDefaultPaymentConditionPaymentDate(),
+    self.assertEqual(paysheet.getSourceSectionValue(), employee)
+    self.assertEqual(paysheet.getDestinationSectionValue(), employer)
+    self.assertEqual(paysheet.getPriceCurrencyValue(), currency)
+    self.assertEqual(paysheet.getDefaultPaymentConditionTradeDate(), 'custom')
+    self.assertEqual(paysheet.getDefaultPaymentConditionPaymentDate(),
         DateTime(2009,05,25))
-    self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantity(), 151.67)
-    self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantityUnit(),
+    self.assertEqual(paysheet.getWorkTimeAnnotationLineQuantity(), 151.67)
+    self.assertEqual(paysheet.getWorkTimeAnnotationLineQuantityUnit(),
       'time/hours')
 
   def stepCheckPaysheetContainNoAnnotationLine(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    self.assertEquals(len(paysheet.contentValues(portal_type=\
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
         'Annotation Line')), 0)
 
   def stepCheckPaysheetContainOneAnnotationLine(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    self.assertEquals(len(paysheet.contentValues(portal_type=\
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
         'Annotation Line')), 1)
 
   def stepCheckPaysheetContainNoPaymentCondition(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    self.assertEquals(len(paysheet.contentValues(portal_type=\
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
         'Payment Condition')), 0)
 
   def stepCheckPaysheetContainOnePaymentCondition(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    self.assertEquals(len(paysheet.contentValues(portal_type=\
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
         'Payment Condition')), 1)
 
   def stepCreateModelTree(self, sequence=None, **kw):
@@ -1290,7 +1290,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
     # paysheet should contain only two lines (labour and urssaf, but not
     # intermediate urssaf
-    self.assertEquals(len(paysheet.contentValues(portal_type=\
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
         'Pay Sheet Line')), 2)
 
     # check amounts
@@ -1299,13 +1299,13 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 600) # here it's 600 of tax
+        self.assertEqual(cell1.getQuantity(), 600) # here it's 600 of tax
                                   # because of the intermediate line (3000*0.2)
-        self.assertEquals(cell1.getPrice(), 0.1)
+        self.assertEqual(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 600) # here it's 600 of tax
+        self.assertEqual(cell2.getQuantity(), 600) # here it's 600 of tax
                                   # because of the intermediate line (3000*0.2)
-        self.assertEquals(cell2.getPrice(), 0.5)
+        self.assertEqual(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -1335,11 +1335,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       service = paysheet_line.getResourceTitle()
       if service == 'Urssaf':
         cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.2)
+        self.assertEqual(cell1.getQuantity(), 3000)
+        self.assertEqual(cell1.getPrice(), 0.2)
         cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.6)
+        self.assertEqual(cell2.getQuantity(), 3000)
+        self.assertEqual(cell2.getPrice(), 0.6)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -1357,15 +1357,15 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
   def stepCheckPaysheetConsistency(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    self.assertEquals([], paysheet.checkConsistency())
+    self.assertEqual([], paysheet.checkConsistency())
 
   def stepCheckModelConsistency(self, sequence=None, **kw):
     model = sequence.get('model')
-    self.assertEquals([], model.checkConsistency())
+    self.assertEqual([], model.checkConsistency())
 
   def stepCheckServiceConsistency(self, sequence=None, **kw):
     service = sequence.get('urssaf_service')
-    self.assertEquals([], service.checkConsistency())
+    self.assertEqual([], service.checkConsistency())
 
   def stepAddPredicateOnOldAgeInsuranceModelLineForSinglePerson(self,
       sequence=None, **kw):
@@ -1429,24 +1429,24 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
     model_reference_dict = model_employee.getInheritanceReferenceDict(
         paysheet, portal_type_list=('Annotation Line',))
-    self.assertEquals(len(model_reference_dict), 3) # there is 4 model but two
+    self.assertEqual(len(model_reference_dict), 3) # there is 4 model but two
                                                     # models have the same
                                                     # reference.
-    self.assertEquals(model_reference_dict.has_key(model_employee_url), True)
-    self.assertEquals(model_reference_dict[model_employee_url],
+    self.assertEqual(model_reference_dict.has_key(model_employee_url), True)
+    self.assertEqual(model_reference_dict[model_employee_url],
         ['over_time_duration'])
-    self.assertEquals(model_reference_dict.has_key(model_company_url), True)
-    self.assertEquals(model_reference_dict[model_company_url],
+    self.assertEqual(model_reference_dict.has_key(model_company_url), True)
+    self.assertEqual(model_reference_dict[model_company_url],
         ['worked_time_duration'])
-    self.assertEquals(model_reference_dict.has_key(model_company_alt_url), True)
-    self.assertEquals(model_reference_dict[model_company_alt_url],
+    self.assertEqual(model_reference_dict.has_key(model_company_alt_url), True)
+    self.assertEqual(model_reference_dict[model_company_alt_url],
         ['social_insurance'])
     self.assertNotEquals(model_reference_dict.has_key(model_country_url), True)
     
     # check the object list :
     object_list = paysheet.getInheritedObjectValueList(portal_type_list=\
         ('Annotation Line',))
-    self.assertEquals(len(object_list), 3) # one line have the same reference
+    self.assertEqual(len(object_list), 3) # one line have the same reference
                                            # than another, so each reference
                                            # should be prensent only one time
                                            # in the list
@@ -1467,11 +1467,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     # when pay sheet has no line, the script returns an empty list
-    self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 0)
+    self.assertEqual(len(paysheet.PaySheetTransaction_getMovementList()), 0)
 
     # we add a line, then it is returned in the list
     line = self.createPaysheetLine(paysheet)
-    self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 1)
+    self.assertEqual(len(paysheet.PaySheetTransaction_getMovementList()), 1)
 
     # if the line has cells with different tax categories, new properties are
     # added to this line.
@@ -1493,14 +1493,14 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     cell1.setQuantity(5.0)
 
     movement_list = paysheet.PaySheetTransaction_getMovementList()
-    self.assertEquals(1, len(movement_list))
+    self.assertEqual(1, len(movement_list))
     movement = movement_list[0]
-    self.assertEquals(2, movement.employee_price)
-    self.assertEquals(3, movement.employee_quantity)
-    self.assertEquals(2*3, movement.employee_total_price)
-    self.assertEquals(4, movement.employer_price)
-    self.assertEquals(5, movement.employer_quantity)
-    self.assertEquals(4*5, movement.employer_total_price)
+    self.assertEqual(2, movement.employee_price)
+    self.assertEqual(3, movement.employee_quantity)
+    self.assertEqual(2*3, movement.employee_total_price)
+    self.assertEqual(4, movement.employer_price)
+    self.assertEqual(5, movement.employer_quantity)
+    self.assertEqual(4*5, movement.employer_total_price)
 
   def stepCheckModelWithoutRefValidity(self, sequence=None, **kw):
     '''
@@ -1545,16 +1545,16 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     # if no reference, we don't care about dates
     sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
     
-    self.assertEquals(len(paysheet.contentValues(\
+    self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet.applyTransformation()
     self.tic()
-    self.assertEquals(len(paysheet.contentValues(
+    self.assertEqual(len(paysheet.contentValues(
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet
     # XXX-Aurel : no price here
-    self.assertEquals(paysheet.contentValues()[0].getQuantity(), 10000)
+    self.assertEqual(paysheet.contentValues()[0].getQuantity(), 10000)
 
   def stepCheckModelWithoutDateValidity(self, sequence=None, **kw):
     '''
@@ -1591,16 +1591,16 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     portal_type_list = ['Pay Sheet Model Line',]
 
     # check the paysheet contail no lines before calculation
-    self.assertEquals(len(paysheet_without_date.contentValues(\
+    self.assertEqual(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet_without_date.applyTransformation()
     self.tic()
-    self.assertEquals(len(paysheet_without_date.contentValues(\
+    self.assertEqual(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet_without_date
     # XXX-Aurel getTotalPrice is None as no price defined on the model
-    self.assertEquals(paysheet_without_date.contentValues()[0].getQuantity(),
+    self.assertEqual(paysheet_without_date.contentValues()[0].getQuantity(),
         10000)
 
     # create a paysheet with dates
@@ -1615,16 +1615,16 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     portal_type_list = ['Pay Sheet Model Line',]
 
     # check the paysheet contains no lines before calculation
-    self.assertEquals(len(paysheet_with_date.contentValues(\
+    self.assertEqual(len(paysheet_with_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet_with_date.applyTransformation()
     self.tic()
     # after calculation, paysheet contains one line, because the model applies.
-    self.assertEquals(len(paysheet_with_date.contentValues(\
+    self.assertEqual(len(paysheet_with_date.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # XXX-Aurel same as previous one
-    self.assertEquals(paysheet_without_date.contentValues()[0].getQuantity(),
+    self.assertEqual(paysheet_without_date.contentValues()[0].getQuantity(),
         10000)
 
   def stepCheckModelDateValidity(self, sequence=None, **kw):
@@ -1683,17 +1683,17 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet.PaySheetTransaction_applyModel()
     self.tic()
 
-    self.assertEquals(len(paysheet.contentValues(\
+    self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet.applyTransformation()
     self.tic()
     # XXX-Aurel Why it is one as the model should not apply since date are not in the range ??
-    self.assertEquals(len(paysheet.contentValues(\
+    self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet, if it's model_2, the total_price 
     # should be 30000.
-    # self.assertEquals(paysheet.contentValues()[0].getTotalPrice(), 30000)
+    # self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
 
   def stepCheckModelVersioning(self, sequence=None, **kw):
     '''
@@ -1748,12 +1748,12 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     effective_model = specialise_value.getEffectiveModel(\
         start_date=paysheet.getStartDate(),
         stop_date=paysheet.getStopDate())
-    self.assertEquals(effective_model, model_2)
+    self.assertEqual(effective_model, model_2)
 
     # check the effective model tree list
     effective_value_list = specialise_value.findEffectiveSpecialiseValueList(\
         context=paysheet)
-    self.assertEquals(effective_value_list, [model_2])
+    self.assertEqual(effective_value_list, [model_2])
 
   def stepCreateModelLineZeroPrice(self, sequence=None, **kw):
     '''Test the creation of lines when the price is set to zero: the line should
@@ -1913,14 +1913,14 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     model_1.setSpecialiseValue(model_4)
     model_4.setSpecialiseValue(model_6)
     paysheet.PaySheetTransaction_applyModel()
-    self.assertEquals([model_2],
+    self.assertEqual([model_2],
       specialise_value.findEffectiveSpecialiseValueList(context=paysheet))
 
     model_1.setSpecialiseValue(None)
     model_2.setSpecialiseValue(model_5)
     model_5.setSpecialiseValue(model_6)
     paysheet.PaySheetTransaction_applyModel()
-    self.assertEquals([model_2, model_5, model_7],
+    self.assertEqual([model_2, model_5, model_7],
       specialise_value.findEffectiveSpecialiseValueList(context=paysheet))
 
   def stepCheckPropertiesAreCopiedFromModelLineToPaySheetLine(self,
@@ -1940,11 +1940,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
             self.assertNotEquals(prop_from_model_line, None)
             prop_from_paysheet_line = getattr(paysheet_line, prop, None)
             # check the property is the same on model_line and paysheet_line
-            self.assertEquals(prop_from_model_line, prop_from_paysheet_line)
+            self.assertEqual(prop_from_model_line, prop_from_paysheet_line)
           break
 
       # check that for each model line, we foud a corresponding paysheet_line
-      self.assertEquals(line_found, True)
+      self.assertEqual(line_found, True)
 
   def stepSetProperiesOnModelLines(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -1964,7 +1964,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       result = form.listbox.get_value('default',
                                       render_format='list',
                                       REQUEST=self.portal.REQUEST)
-      self.assertEquals(precision, self.portal.REQUEST.get('precision'))
+      self.assertEqual(precision, self.portal.REQUEST.get('precision'))
     report_section.popReport(self.portal)
 
 class TestPayroll(TestPayrollMixin):
@@ -2547,7 +2547,7 @@ class TestPayroll(TestPayrollMixin):
 
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
     # used in the report dialog to display possible organisations.
-    self.assertEquals(
+    self.assertEqual(
         [('', ''),
          (other_provider.getTitle(), other_provider.getRelativeUrl()),
          (provider.getTitle(), provider.getRelativeUrl())],
@@ -2565,11 +2565,11 @@ class TestPayroll(TestPayrollMixin):
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
     # precision is 3. Editable Fields will reuse this precision.
@@ -2757,11 +2757,11 @@ class TestPayroll(TestPayrollMixin):
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewPaySheetLineReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(6, len(data_line_list))
+    self.assertEqual(6, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                             id=1,
@@ -2955,11 +2955,11 @@ class TestPayroll(TestPayrollMixin):
     report_section_list = self.getReportSectionList(
                              self.portal.accounting_module,
                              'AccountingTransactionModule_viewNetSalaryReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     # base_unit_quantity for EUR is set to 0.001 in the created currencies, so the
     # precision is 3. Editable Fields will reuse this precision.
@@ -3222,29 +3222,29 @@ class TestPayroll(TestPayrollMixin):
     self.tic()
     accounting_line_list = ps.contentValues(
         portal_type='Pay Sheet Transaction Line')
-    self.assertEquals(len(accounting_line_list), 4)
+    self.assertEqual(len(accounting_line_list), 4)
 
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == self.account_payroll_wages_expense][0]
-    self.assertEquals(2050, line.getDestinationDebit())
-    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEqual(2050, line.getDestinationDebit())
+    self.assertEqual(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == self.account_net_wages][0]
-    self.assertEquals(2050 - 205, line.getDestinationCredit())
-    self.assertEquals(employer, line.getDestinationSectionValue())
-    self.assertEquals(employee, line.getSourceSectionValue())
+    self.assertEqual(2050 - 205, line.getDestinationCredit())
+    self.assertEqual(employer, line.getDestinationSectionValue())
+    self.assertEqual(employee, line.getSourceSectionValue())
 
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == self.account_payroll_taxes_expense][0]
-    self.assertEquals(410, line.getDestinationDebit())
-    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEqual(410, line.getDestinationDebit())
+    self.assertEqual(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
             if l.getDestinationValue() == self.account_payroll_taxes][0]
-    self.assertEquals(410 + 205, line.getDestinationCredit())
-    self.assertEquals(employer, line.getDestinationSectionValue())
-    self.assertEquals(provider, line.getSourceSectionValue())
+    self.assertEqual(410 + 205, line.getDestinationCredit())
+    self.assertEqual(employer, line.getDestinationSectionValue())
+    self.assertEqual(provider, line.getSourceSectionValue())
 
   def test_modelWithoutReferenceValidity(self):
     ''' Check that if no REFERENCE are defined on a model, the behavior is
@@ -3341,9 +3341,9 @@ class TestPayroll(TestPayrollMixin):
 
     # model 2 gets cell values from model 1 (see test_07_model_getCell)
     model_2_cell = model_2.getCell('salary_range/france/slice_a')
-    self.failIf(model_2_cell is None)
-    self.assertEquals(1, model_2_cell.getQuantityRangeMin())
-    self.assertEquals(2, model_2_cell.getQuantityRangeMax())
+    self.assertFalse(model_2_cell is None)
+    self.assertEqual(1, model_2_cell.getQuantityRangeMin())
+    self.assertEqual(2, model_2_cell.getQuantityRangeMax())
 
     # model 2 can override values
     model_2.edit(variation_settings_category_list=('salary_range/france',))
@@ -3352,17 +3352,17 @@ class TestPayroll(TestPayrollMixin):
                     base_id='cell')
     cell.setQuantityRangeMin(3)
     cell.setQuantityRangeMax(4)
-    self.assertEquals(3,
+    self.assertEqual(3,
         model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
-    self.assertEquals(4,
+    self.assertEqual(4,
         model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
 
     # when unsetting variation settings category on this model will acquire
     # again values from specialised model
     model_2.edit(variation_settings_category_list=())
-    self.assertEquals(1,
+    self.assertEqual(1,
         model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
-    self.assertEquals(2,
+    self.assertEqual(2,
         model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
 
   def test_complexModelInheritanceScheme(self):

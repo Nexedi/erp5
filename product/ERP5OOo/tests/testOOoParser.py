@@ -43,13 +43,13 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Person'], mapping.keys())
+    self.assertEqual(['Person'], mapping.keys())
     person_mapping = mapping['Person']
     self.assertTrue(isinstance(person_mapping, list))
     self.assertTrue(102, len(person_mapping))
-    self.assertEquals(person_mapping[0],
+    self.assertEqual(person_mapping[0],
        ['Title', 'First Name', 'Last Name', 'Default Email Text'])
-    self.assertEquals(person_mapping[1],
+    self.assertEqual(person_mapping[1],
        ['John Doe 0', 'John', 'Doe 0', 'john.doe0@foo.com'])
 
   def test_openFromString(self):
@@ -57,40 +57,40 @@ class TestOOoParser(unittest.TestCase):
     parser.openFromString(
         open(makeFilePath('import_data_list.ods'), 'rb').read())
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Person'], mapping.keys())
+    self.assertEqual(['Person'], mapping.keys())
 
   def test_getSpreadSheetMappingStyle(self):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list_with_style.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'][1],
+    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(mapping['Feuille1'][1],
                       ['a line with style'])
-    self.assertEquals(mapping['Feuille1'][2],
+    self.assertEqual(mapping['Feuille1'][2],
                       ['a line with multiple styles'])
-    self.assertEquals(mapping['Feuille1'][3],
+    self.assertEqual(mapping['Feuille1'][3],
                       ['http://www.erp5.org'])
-    self.assertEquals(mapping['Feuille1'][4],
+    self.assertEqual(mapping['Feuille1'][4],
                       ['john.doe@example.com'])
 
   def test_getSpreadSheetMappingDataTypes(self):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list_data_type.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'][0],
+    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(mapping['Feuille1'][0],
                       ['1234.5678'])
-    self.assertEquals(mapping['Feuille1'][1],
+    self.assertEqual(mapping['Feuille1'][1],
                       ['1234.5678'])
-    self.assertEquals(mapping['Feuille1'][2],
+    self.assertEqual(mapping['Feuille1'][2],
                       ['0.1'])
-    self.assertEquals(mapping['Feuille1'][3],
+    self.assertEqual(mapping['Feuille1'][3],
                       ['2008-11-14'])
-    self.assertEquals(mapping['Feuille1'][4],
+    self.assertEqual(mapping['Feuille1'][4],
                       ['2008-11-14T10:20:30']) # supported by DateTime
-    self.assertEquals(mapping['Feuille1'][5],
+    self.assertEqual(mapping['Feuille1'][5],
                       ['PT12H34M56S']) # maybe not good, this is raw format
-    self.assertEquals(mapping['Feuille1'][6],
+    self.assertEqual(mapping['Feuille1'][6],
                       ['With note'])
 
   def test_BigSpreadSheet_can_be_parsed(self,):
@@ -101,7 +101,7 @@ class TestOOoParser(unittest.TestCase):
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
     for spread, values in mapping.iteritems():
-      self.assertEquals(len(values), 41001)
+      self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:
       self.fail('Spreadsheet not read!')
@@ -110,18 +110,18 @@ class TestOOoParser(unittest.TestCase):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('complex_text.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'][0], [' leading space'])
-    self.assertEquals(mapping['Feuille1'][1], ['   leading space'])
-    self.assertEquals(mapping['Feuille1'][2], ['tab\t'])
-    self.assertEquals(mapping['Feuille1'][3], ['New\nLine'])
+    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(mapping['Feuille1'][0], [' leading space'])
+    self.assertEqual(mapping['Feuille1'][1], ['   leading space'])
+    self.assertEqual(mapping['Feuille1'][2], ['tab\t'])
+    self.assertEqual(mapping['Feuille1'][3], ['New\nLine'])
 
   def test_getSpreadSheetMappingEmptyCells(self):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('empty_cells.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'],
+    self.assertEqual(['Feuille1'], mapping.keys())
+    self.assertEqual(mapping['Feuille1'],
       [
         ['A1', None, 'C1'],
         [],

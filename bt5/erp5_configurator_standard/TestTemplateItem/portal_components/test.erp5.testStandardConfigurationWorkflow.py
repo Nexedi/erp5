@@ -184,15 +184,15 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
     self.assertNotEquals(len(person_list), 0)
     for person in person_list:
-      self.assertEquals('validated', person.getValidationState())
+      self.assertEqual('validated', person.getValidationState())
       person.Base_checkConsistency()
       assignment_list = person.contentValues(portal_type='Assignment')
       self.assertNotEquals(len(assignment_list), 0)
       for assignment in assignment_list:
-        self.assertEquals('open', assignment.getValidationState())
+        self.assertEqual('open', assignment.getValidationState())
         self.assertNotEquals(None, assignment.getStartDate())
         self.assertNotEquals(None, assignment.getStopDate())
-        self.assertEquals(assignment.getGroup(), "my_group")
+        self.assertEqual(assignment.getGroup(), "my_group")
         assignment.Base_checkConsistency()
 
   def stepCheckPersonInformationList(self, sequence=None, sequence_list=None, **kw):
@@ -201,7 +201,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
     business_configuration = sequence.get("business_configuration")
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
-    self.assertEquals(len(person_list), len(self.user_list))
+    self.assertEqual(len(person_list), len(self.user_list))
     for person in person_list:
       user_info = None
       for user_dict in self.user_list:
@@ -210,21 +210,21 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
           break
 
       self.assertNotEquals(user_info, None)
-      self.assertEquals(user_info["field_your_first_name"],
+      self.assertEqual(user_info["field_your_first_name"],
                         person.getFirstName())
-      self.assertEquals(user_info["field_your_last_name"],
+      self.assertEqual(user_info["field_your_last_name"],
                         person.getLastName())
       self.assertNotEquals(person.getPassword(), None)
-      self.assertEquals(user_info["field_your_function"],
+      self.assertEqual(user_info["field_your_function"],
                         person.getFunction())
-      self.assertEquals(user_info["field_your_default_email_text"],
+      self.assertEqual(user_info["field_your_default_email_text"],
                         person.getDefaultEmailText())
-      self.assertEquals(user_info["field_your_default_telephone_text"],
+      self.assertEqual(user_info["field_your_default_telephone_text"],
                         person.getDefaultTelephoneText())
 
       assignment_list = person.contentValues(portal_type='Assignment')
-      self.assertEquals(len(assignment_list), 1)
-      self.assertEquals('my_group', assignment_list[0].getGroup())
+      self.assertEqual(len(assignment_list), 1)
+      self.assertEqual('my_group', assignment_list[0].getGroup())
 
   def stepCheckSocialTitleCategory(self, sequence=None,sequence_list=None, **kw):
     """Check that the social title category is configured.
@@ -240,7 +240,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
     organisation = organisation_list[0]
-    self.assertEquals('validated', organisation.getValidationState())
+    self.assertEqual('validated', organisation.getValidationState())
     organisation.Base_checkConsistency()
 
   def stepCheckBaseCategoryList(self, sequence=None, sequence_list=None, **kw):
@@ -249,9 +249,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
        We use role as an example
     """
     role = self.portal.portal_categories.role
-    self.assertEquals('Role', role.getTitle())
-    self.assertEquals(['subordination'], role.getAcquisitionBaseCategoryList())
-    self.assertEquals(['default_career'], role.getAcquisitionObjectIdList())
+    self.assertEqual('Role', role.getTitle())
+    self.assertEqual(['subordination'], role.getAcquisitionBaseCategoryList())
+    self.assertEqual(['default_career'], role.getAcquisitionObjectIdList())
     # ... this is enough to proove it has not been erased by an empty one
 
   def stepCheckOrganisationSite(self, sequence=None, sequence_list=None, **kw):
@@ -262,7 +262,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
 
-    self.assertEquals(self.portal.portal_categories.site.main,
+    self.assertEqual(self.portal.portal_categories.site.main,
                       organisation_list[0].getSiteValue())
 
 
@@ -290,7 +290,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     currency_list = self.getBusinessConfigurationObjectList(business_configuration, 'Currency')
     self.assertNotEquals(len(currency_list), 0)
     for currency in currency_list:
-      self.assertEquals('validated', currency.getValidationState())
+      self.assertEqual('validated', currency.getValidationState())
       currency.Base_checkConsistency()
 
   def stepCheckValidServiceList(self, sequence=None, sequence_list=None, **kw):
@@ -301,7 +301,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     service_list = self.getBusinessConfigurationObjectList(business_configuration, 'Service')
     self.assertNotEquals(len(service_list), 0)
     for service in service_list:
-      self.assertEquals('validated', service.getValidationState())
+      self.assertEqual('validated', service.getValidationState())
       self.assertNotEquals(None, service.getUseValue())
       service.Base_checkConsistency()
 
@@ -311,12 +311,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
     business_configuration = sequence.get("business_configuration")
     alarm_list = self.getBusinessConfigurationObjectList(business_configuration, 'Alarm')
-    self.assertEquals(len(alarm_list), 2)
+    self.assertEqual(len(alarm_list), 2)
     for alarm in alarm_list:
-      self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+      self.assertTrue(alarm.getPeriodicityStartDate() < DateTime())
       self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
-      self.assertEquals(alarm.getPeriodicityMinuteFrequency(), 5)
-      self.assertEquals(alarm.getEnabled(), True)
+      self.assertEqual(alarm.getPeriodicityMinuteFrequency(), 5)
+      self.assertEqual(alarm.getEnabled(), True)
       self.assertNotEquals(alarm.getActiveSenseMethodId(), None)
 
   def stepCheckPublicGadgetList(self, sequence=None, sequence_list=None, **kw):
@@ -326,7 +326,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get("business_configuration")
     gadget_list = self.getBusinessConfigurationObjectList(business_configuration, 'Gadget')
     for gadget in gadget_list:
-      self.assertEquals('public', gadget.getValidationState(),
+      self.assertEqual('public', gadget.getValidationState(),
                         "%s is not public but %s" % (gadget.getRelativeUrl(),
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
@@ -339,10 +339,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get("business_configuration")
     bt5_object = business_configuration.getSpecialiseValue()
     preference_list = bt5_object.getTemplatePreferenceList()
-    self.assertEquals(len(preference_list), 2)
+    self.assertEqual(len(preference_list), 2)
 
     for preference in preference_list:
-      self.assertEquals(preference_tool[preference].getPreferenceState(),
+      self.assertEqual(preference_tool[preference].getPreferenceState(),
                         'global')
 
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration,
@@ -353,49 +353,49 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     # ui
     # The default preferences are not disabled anymore, there is no reason to
     # assert such properties.
-    #self.assertEquals('dmy', preference_tool.getPreferredDateOrder())
+    #self.assertEqual('dmy', preference_tool.getPreferredDateOrder())
     #self.assertTrue(preference_tool.getPreferredHtmlStyleAccessTab())
-    self.assertEquals('ODT', preference_tool.getPreferredReportStyle())
-    self.assertEquals('pdf', preference_tool.getPreferredReportFormat())
-    self.assertEquals(10, preference_tool.getPreferredMoneyQuantityFieldWidth())
+    self.assertEqual('ODT', preference_tool.getPreferredReportStyle())
+    self.assertEqual('pdf', preference_tool.getPreferredReportFormat())
+    self.assertEqual(10, preference_tool.getPreferredMoneyQuantityFieldWidth())
 
     currency_reference = sequence.get('configuration_currency_reference')
-    self.assertEquals('currency_module/%s' % currency_reference,
+    self.assertEqual('currency_module/%s' % currency_reference,
                      preference_tool.getPreferredAccountingTransactionCurrency())
-    self.assertEquals(sequence.get('configuration_gap') ,
+    self.assertEqual(sequence.get('configuration_gap') ,
                       preference_tool.getPreferredAccountingTransactionGap())
 
 
     # on Business Configuration
-    #self.assertEquals('localhost', preference_tool.getPreferredOoodocServerAddress())
-    #self.assertEquals(8011, preference_tool.getPreferredOoodocServerPortNumber())
+    #self.assertEqual('localhost', preference_tool.getPreferredOoodocServerAddress())
+    #self.assertEqual(8011, preference_tool.getPreferredOoodocServerPortNumber())
 
     # accounting
-    self.assertEquals('group/my_group',
+    self.assertEqual('group/my_group',
                   preference_tool.getPreferredAccountingTransactionSectionCategory())
-    self.assertEquals('organisation_module/%s' % organisation_id,
+    self.assertEqual('organisation_module/%s' % organisation_id,
                       preference_tool.getPreferredAccountingTransactionSourceSection())
-    self.assertEquals(preference_tool.getPreferredSectionCategory(),
+    self.assertEqual(preference_tool.getPreferredSectionCategory(),
                       'group/my_group')
-    self.assertEquals('organisation_module/%s' % organisation_id,
+    self.assertEqual('organisation_module/%s' % organisation_id,
                       preference_tool.getPreferredSection())
     self.assertSameSet(['delivered', 'stopped'],
                   preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
     # trade
-    self.assertEquals(['role/supplier'], preference_tool.getPreferredSupplierRoleList())
-    self.assertEquals(['role/client'], preference_tool.getPreferredClientRoleList())
-    self.assertEquals(['use/trade/sale'], preference_tool.getPreferredSaleUseList())
-    self.assertEquals(['use/trade/purchase'], preference_tool.getPreferredPurchaseUseList())
-    self.assertEquals(['use/trade/container'], preference_tool.getPreferredPackingUseList())
-    self.assertEquals(['use/trade/tax'], preference_tool.getPreferredTaxUseList())
+    self.assertEqual(['role/supplier'], preference_tool.getPreferredSupplierRoleList())
+    self.assertEqual(['role/client'], preference_tool.getPreferredClientRoleList())
+    self.assertEqual(['use/trade/sale'], preference_tool.getPreferredSaleUseList())
+    self.assertEqual(['use/trade/purchase'], preference_tool.getPreferredPurchaseUseList())
+    self.assertEqual(['use/trade/container'], preference_tool.getPreferredPackingUseList())
+    self.assertEqual(['use/trade/tax'], preference_tool.getPreferredTaxUseList())
 
     # CRM
-    self.assertEquals(['use/crm/event'], preference_tool.getPreferredEventUseList())
-    self.assertEquals(['use/crm/campaign'], preference_tool.getPreferredCampaignUseList())
-    self.assertEquals(['use/crm/sale_opportunity'], preference_tool.getPreferredSaleOpportunityUseList())
-    self.assertEquals(['use/crm/support_request'], preference_tool.getPreferredSupportRequestUseList())
-    self.assertEquals(['use/crm/meeting'], preference_tool.getPreferredMeetingUseList())
+    self.assertEqual(['use/crm/event'], preference_tool.getPreferredEventUseList())
+    self.assertEqual(['use/crm/campaign'], preference_tool.getPreferredCampaignUseList())
+    self.assertEqual(['use/crm/sale_opportunity'], preference_tool.getPreferredSaleOpportunityUseList())
+    self.assertEqual(['use/crm/support_request'], preference_tool.getPreferredSupportRequestUseList())
+    self.assertEqual(['use/crm/meeting'], preference_tool.getPreferredMeetingUseList())
 
   def stepCheckEventResourceItemList(self, sequence=None, sequence_list=None):
     self.assertTrue(self.all_username_list)
@@ -436,29 +436,29 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       Test modules business application.
     """
     ba = self.portal.portal_categories.business_application
-    self.assertEquals('Base',
+    self.assertEqual('Base',
         self.portal.organisation_module.getBusinessApplicationTitle())
-    self.assertEquals('Base',
+    self.assertEqual('Base',
         self.portal.person_module.getBusinessApplicationTitle())
-    self.assertEquals('Base',
+    self.assertEqual('Base',
         self.portal.currency_module.getBusinessApplicationTitle())
-    self.assertEquals(set([self.portal.organisation_module,
+    self.assertEqual(set([self.portal.organisation_module,
                        self.portal.person_module,
                        self.portal.currency_module,
                        ba.base]),
          set(ba.base.getBusinessApplicationRelatedValueList()))
 
-    self.assertEquals('CRM',
+    self.assertEqual('CRM',
         self.portal.campaign_module.getBusinessApplicationTitle())
-    self.assertEquals('CRM',
+    self.assertEqual('CRM',
         self.portal.event_module.getBusinessApplicationTitle())
-    self.assertEquals('CRM',
+    self.assertEqual('CRM',
         self.portal.sale_opportunity_module.getBusinessApplicationTitle())
-    self.assertEquals('CRM',
+    self.assertEqual('CRM',
         self.portal.meeting_module.getBusinessApplicationTitle())
-    self.assertEquals('CRM',
+    self.assertEqual('CRM',
         self.portal.support_request_module.getBusinessApplicationTitle())
-    self.assertEquals(set([self.portal.campaign_module,
+    self.assertEqual(set([self.portal.campaign_module,
                        self.portal.event_module,
                        self.portal.sale_opportunity_module,
                        self.portal.meeting_module,
@@ -466,34 +466,34 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                        ba.crm]),
          set(ba.crm.getBusinessApplicationRelatedValueList()))
 
-    self.assertEquals('Accounting',
+    self.assertEqual('Accounting',
         self.portal.account_module.getBusinessApplicationTitle())
-    self.assertEquals('Accounting',
+    self.assertEqual('Accounting',
         self.portal.accounting_module.getBusinessApplicationTitle())
-    self.assertEquals(set([self.portal.account_module,
+    self.assertEqual(set([self.portal.account_module,
                        self.portal.accounting_module,
                        ba.accounting]),
          set(ba.accounting.getBusinessApplicationRelatedValueList()))
 
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.sale_order_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.purchase_order_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.sale_trade_condition_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.purchase_trade_condition_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.sale_packing_list_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.purchase_packing_list_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.inventory_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.internal_packing_list_module.getBusinessApplicationTitle())
-    self.assertEquals('Trade',
+    self.assertEqual('Trade',
         self.portal.returned_sale_packing_list_module.getBusinessApplicationTitle())
-    self.assertEquals(set([self.portal.sale_order_module,
+    self.assertEqual(set([self.portal.sale_order_module,
                        self.portal.purchase_order_module,
                        self.portal.sale_trade_condition_module,
                        self.portal.purchase_trade_condition_module,
@@ -505,19 +505,19 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                        ba.trade]),
          set(ba.trade.getBusinessApplicationRelatedValueList()))
 
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.service_module.getBusinessApplicationTitle())
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.product_module.getBusinessApplicationTitle())
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.component_module.getBusinessApplicationTitle())
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.transformation_module.getBusinessApplicationTitle())
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.sale_supply_module.getBusinessApplicationTitle())
-    self.assertEquals('PDM',
+    self.assertEqual('PDM',
         self.portal.purchase_supply_module.getBusinessApplicationTitle())
-    self.assertEquals(set([self.portal.service_module,
+    self.assertEqual(set([self.portal.service_module,
                        self.portal.product_module,
                        self.portal.component_module,
                        self.portal.transformation_module,
@@ -534,7 +534,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     account_list = self.getBusinessConfigurationObjectList(business_configuration, 'Account')
     self.assertNotEquals(len(account_list), 0)
     for account in account_list:
-      self.assertEquals('validated', account.getValidationState())
+      self.assertEqual('validated', account.getValidationState())
       # all accounts have a financial section set correctly
       self.assertNotEquals(None, account.getFinancialSectionValue())
       # all accounts have a gap correctly
@@ -590,7 +590,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                         validation_state="validated")
 
       self.assertTrue(len(rule_list) > 0)
-      self.assertEquals(int(rule_template.getVersion(0)) + 1,
+      self.assertEqual(int(rule_template.getVersion(0)) + 1,
                         int(rule_list[-1].getVersion(0)))
 
       result = self.getBusinessConfigurationObjectList(business_configuration,
@@ -608,79 +608,79 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     business_process_list = \
               self.getBusinessConfigurationObjectList(business_configuration,
                                                            'Business Process')
-    self.assertEquals(len(business_process_list), 1)
+    self.assertEqual(len(business_process_list), 1)
 
     business_process = business_process_list[0]
-    self.assertEquals("default_erp5_business_process",
+    self.assertEqual("default_erp5_business_process",
                       business_process.getReference())
 
-    self.assertEquals("Default Trade Business Process",
+    self.assertEqual("Default Trade Business Process",
                       business_process.getTitle())
 
     order_path = getattr(business_process, "order_path", None)
     self.assertNotEquals(order_path, None)
-    self.assertEquals(order_path.getEfficiency(), 1.0)
-    self.assertEquals(order_path.getTradePhase(), 'trade/order')
-    self.assertEquals(order_path.getTradeDate(), 'trade_phase/trade/order')
-    self.assertEquals(order_path.getTestMethodId(), None)
+    self.assertEqual(order_path.getEfficiency(), 1.0)
+    self.assertEqual(order_path.getTradePhase(), 'trade/order')
+    self.assertEqual(order_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEqual(order_path.getTestMethodId(), None)
 
     delivery_path = getattr(business_process, "delivery_path", None)
     self.assertNotEquals(delivery_path, None)
-    self.assertEquals(delivery_path.getEfficiency(), 1.0)
-    self.assertEquals(delivery_path.getTradePhase(), 'trade/delivery')
-    self.assertEquals(delivery_path.getTradeDate(), 'trade_phase/trade/order')
-    self.assertEquals(delivery_path.getTestMethodId(), None)
+    self.assertEqual(delivery_path.getEfficiency(), 1.0)
+    self.assertEqual(delivery_path.getTradePhase(), 'trade/delivery')
+    self.assertEqual(delivery_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEqual(delivery_path.getTestMethodId(), None)
 
     invoicing_path = getattr(business_process, "invoicing_path", None)
     self.assertNotEquals(invoicing_path, None)
-    self.assertEquals(invoicing_path.getEfficiency(), 1.0)
-    self.assertEquals(invoicing_path.getTradePhase(), 'trade/invoicing')
-    self.assertEquals(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
-    self.assertEquals(invoicing_path.getTestMethodId(), None)
+    self.assertEqual(invoicing_path.getEfficiency(), 1.0)
+    self.assertEqual(invoicing_path.getTradePhase(), 'trade/invoicing')
+    self.assertEqual(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
+    self.assertEqual(invoicing_path.getTestMethodId(), None)
 
     tax_path = getattr(business_process, "tax_path", None)
     self.assertNotEquals(tax_path, None)
-    self.assertEquals(tax_path.getEfficiency(), 1.0)
-    self.assertEquals(tax_path.getTradePhase(), 'trade/tax')
-    self.assertEquals(tax_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(tax_path.getTestMethodId(), None)
+    self.assertEqual(tax_path.getEfficiency(), 1.0)
+    self.assertEqual(tax_path.getTradePhase(), 'trade/tax')
+    self.assertEqual(tax_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEqual(tax_path.getTestMethodId(), None)
 
     accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
     self.assertNotEquals(accounting_credit_path, None)
-    self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
-    self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
-    self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_credit_path.getSource(), "account_module/receivable")
-    self.assertEquals(accounting_credit_path.getDestination(), "account_module/payable")
+    self.assertEqual(accounting_credit_path.getEfficiency(), -1.0)
+    self.assertEqual(accounting_credit_path.getTradePhase(), 'trade/accounting')
+    self.assertEqual(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEqual(accounting_credit_path.getSource(), "account_module/receivable")
+    self.assertEqual(accounting_credit_path.getDestination(), "account_module/payable")
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
     self.assertNotEquals(accounting_debit_path, None)
-    self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
-    self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
-    self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_debit_path.getSource(), "account_module/sales")
-    self.assertEquals(accounting_debit_path.getDestination(), "account_module/purchase")
+    self.assertEqual(accounting_debit_path.getEfficiency(), 1.0)
+    self.assertEqual(accounting_debit_path.getTradePhase(), 'trade/accounting')
+    self.assertEqual(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEqual(accounting_debit_path.getSource(), "account_module/sales")
+    self.assertEqual(accounting_debit_path.getDestination(), "account_module/purchase")
 
     order_link = getattr(business_process, "order_link", None)
     self.assertNotEquals(order_link, None)
     #self.assertTrue(order_link.getDeliverable())
-    self.assertEquals(order_link.getSuccessor(), "trade_state/trade/ordered")
-    self.assertEquals(order_link.getPredecessor(),None)
-    self.assertEquals(order_link.getCompletedStateList(),["confirmed"])
-    self.assertEquals(order_link.getFrozenState(), None)
-    self.assertEquals(order_link.getDeliveryBuilder(), None)
-    self.assertEquals(order_link.getTradePhase(),'trade/order')
+    self.assertEqual(order_link.getSuccessor(), "trade_state/trade/ordered")
+    self.assertEqual(order_link.getPredecessor(),None)
+    self.assertEqual(order_link.getCompletedStateList(),["confirmed"])
+    self.assertEqual(order_link.getFrozenState(), None)
+    self.assertEqual(order_link.getDeliveryBuilder(), None)
+    self.assertEqual(order_link.getTradePhase(),'trade/order')
 
     deliver_link = getattr(business_process, "deliver_link", None)
     self.assertNotEquals(deliver_link, None)
     #self.assertTrue(deliver_link.getDeliverable())
-    self.assertEquals(deliver_link.getSuccessor(),"trade_state/trade/delivered")
-    self.assertEquals(deliver_link.getPredecessor(),"trade_state/trade/ordered")
-    self.assertEquals(deliver_link.getCompletedStateList(),['delivered','started','stopped'])
-    self.assertEquals(deliver_link.getFrozenStateList(),['delivered','stopped'])
-    self.assertEquals(deliver_link.getTradePhase(),'trade/delivery')
+    self.assertEqual(deliver_link.getSuccessor(),"trade_state/trade/delivered")
+    self.assertEqual(deliver_link.getPredecessor(),"trade_state/trade/ordered")
+    self.assertEqual(deliver_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEqual(deliver_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEqual(deliver_link.getTradePhase(),'trade/delivery')
 
-    self.assertEquals(deliver_link.getDeliveryBuilderList(),
+    self.assertEqual(deliver_link.getDeliveryBuilderList(),
            ["portal_deliveries/sale_packing_list_builder",
             "portal_deliveries/internal_packing_list_builder",
             "portal_deliveries/purchase_packing_list_builder"])
@@ -688,39 +688,39 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     invoice_link = getattr(business_process, "invoice_link", None)
     self.assertNotEquals(invoice_link, None)
     #self.assertFalse(invoice_link.getDeliverable())
-    self.assertEquals(invoice_link.getSuccessor(),"trade_state/trade/invoiced")
-    self.assertEquals(invoice_link.getPredecessor(),"trade_state/trade/delivered")
-    self.assertEquals(invoice_link.getCompletedStateList(),
+    self.assertEqual(invoice_link.getSuccessor(),"trade_state/trade/invoiced")
+    self.assertEqual(invoice_link.getPredecessor(),"trade_state/trade/delivered")
+    self.assertEqual(invoice_link.getCompletedStateList(),
                         ['confirmed','delivered','started','stopped'])
-    self.assertEquals(invoice_link.getFrozenStateList(),['delivered','stopped'])
-    self.assertEquals(invoice_link.getTradePhase(),'trade/invoicing')
+    self.assertEqual(invoice_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEqual(invoice_link.getTradePhase(),'trade/invoicing')
 
-    self.assertEquals(invoice_link.getDeliveryBuilderList(),
+    self.assertEqual(invoice_link.getDeliveryBuilderList(),
            ["portal_deliveries/purchase_invoice_builder",
             "portal_deliveries/sale_invoice_builder"])
 
     tax_link = getattr(business_process, "tax_link", None)
     self.assertNotEquals(tax_link, None)
     #self.assertFalse(tax_link.getDeliverable())
-    self.assertEquals(tax_link.getSuccessor(),"trade_state/trade/invoiced")
-    self.assertEquals(tax_link.getPredecessor(),"trade_state/trade/invoiced")
-    self.assertEquals(tax_link.getCompletedStateList(),
+    self.assertEqual(tax_link.getSuccessor(),"trade_state/trade/invoiced")
+    self.assertEqual(tax_link.getPredecessor(),"trade_state/trade/invoiced")
+    self.assertEqual(tax_link.getCompletedStateList(),
                         ['confirmed','delivered','started','stopped'])
-    self.assertEquals(tax_link.getFrozenStateList(),['delivered','stopped'])
-    self.assertEquals(tax_link.getTradePhase(),'trade/tax')
+    self.assertEqual(tax_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEqual(tax_link.getTradePhase(),'trade/tax')
 
-    self.assertEquals(tax_link.getDeliveryBuilderList(),
+    self.assertEqual(tax_link.getDeliveryBuilderList(),
            ["portal_deliveries/purchase_invoice_transaction_trade_model_builder",
             "portal_deliveries/sale_invoice_transaction_trade_model_builder"])
 
     account_link = getattr(business_process, "account_link", None)
     self.assertNotEquals(account_link, None)
     #self.assertFalse(account_link.getDeliverable())
-    self.assertEquals(account_link.getSuccessor(),"trade_state/trade/accounted")
-    self.assertEquals(account_link.getPredecessor(),"trade_state/trade/invoiced")
-    self.assertEquals(account_link.getCompletedStateList(),['delivered','started','stopped'])
-    self.assertEquals(account_link.getFrozenStateList(),['delivered','stopped'])
-    self.assertEquals(account_link.getTradePhase(), 'trade/accounting')
+    self.assertEqual(account_link.getSuccessor(),"trade_state/trade/accounted")
+    self.assertEqual(account_link.getPredecessor(),"trade_state/trade/invoiced")
+    self.assertEqual(account_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEqual(account_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEqual(account_link.getTradePhase(), 'trade/accounting')
 
     self.assertSameSet(account_link.getDeliveryBuilderList(),
            ["portal_deliveries/purchase_invoice_transaction_builder",
@@ -729,14 +729,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     pay_link = getattr(business_process, "pay_link", None)
     self.assertNotEquals(pay_link, None)
     #self.assertFalse(pay_link.getDeliverable())
-    self.assertEquals(pay_link.getTradePhase(), 'trade/payment')
-    self.assertEquals(pay_link.getSuccessor(), None)
-    self.assertEquals(pay_link.getPredecessor(),"trade_state/trade/accounted")
-    self.assertEquals(pay_link.getCompletedStateList(),
+    self.assertEqual(pay_link.getTradePhase(), 'trade/payment')
+    self.assertEqual(pay_link.getSuccessor(), None)
+    self.assertEqual(pay_link.getPredecessor(),"trade_state/trade/accounted")
+    self.assertEqual(pay_link.getCompletedStateList(),
                         ['confirmed','delivered','started','stopped'])
-    self.assertEquals(pay_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEqual(pay_link.getFrozenStateList(),['delivered','stopped'])
 
-    self.assertEquals(pay_link.getDeliveryBuilderList(),
+    self.assertEqual(pay_link.getDeliveryBuilderList(),
            ["portal_deliveries/payment_transaction_builder"])
 
   def stepCheckAccountingPeriod(self, sequence=None, sequence_list=None, **kw):
@@ -750,12 +750,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     organisation = organisation_list[0]
     period_list = organisation.contentValues(portal_type='Accounting Period')
-    self.assertEquals(1, len(period_list))
+    self.assertEqual(1, len(period_list))
     period = period_list[0]
-    self.assertEquals('started', period.getSimulationState())
-    self.assertEquals(DateTime(2008, 1, 1), period.getStartDate())
-    self.assertEquals(DateTime(2008, 12, 31), period.getStopDate())
-    self.assertEquals('2008', period.getShortTitle())
+    self.assertEqual('started', period.getSimulationState())
+    self.assertEqual(DateTime(2008, 1, 1), period.getStartDate())
+    self.assertEqual(DateTime(2008, 12, 31), period.getStopDate())
+    self.assertEqual('2008', period.getShortTitle())
 
     # security on this period has been initialised
     for username in self.accountant_username_list:
@@ -770,25 +770,25 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     sale_trade_condition_list = \
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                         'Sale Trade Condition')
-    self.assertEquals(len(sale_trade_condition_list), 1)
+    self.assertEqual(len(sale_trade_condition_list), 1)
     sale_trade_condition = sale_trade_condition_list[0]
 
-    self.assertEquals("General Sale Trade Condition",
+    self.assertEqual("General Sale Trade Condition",
                                               sale_trade_condition.getTitle())
-    self.assertEquals("STC-General", sale_trade_condition.getReference())
+    self.assertEqual("STC-General", sale_trade_condition.getReference())
 
     # Trade condition does not need dates
-    self.assertEquals(None, sale_trade_condition.getEffectiveDate())
-    self.assertEquals(None, sale_trade_condition.getExpirationDate())
+    self.assertEqual(None, sale_trade_condition.getEffectiveDate())
+    self.assertEqual(None, sale_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
     business_process_list = \
               self.getBusinessConfigurationObjectList(business_configuration,
                                                            'Business Process')
-    self.assertEquals(len(business_process_list), 1)
+    self.assertEqual(len(business_process_list), 1)
 
     business_process = business_process_list[0]
-    self.assertEquals(business_process,
+    self.assertEqual(business_process,
                       sale_trade_condition.getSpecialiseValue())
 
     # Check relation with Organisation
@@ -797,8 +797,8 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                                                 'Organisation')
     organisation = organisation_list[0]
 
-    self.assertEquals(organisation, sale_trade_condition.getSourceValue())
-    self.assertEquals(organisation,
+    self.assertEqual(organisation, sale_trade_condition.getSourceValue())
+    self.assertEqual(organisation,
                       sale_trade_condition.getSourceSectionValue())
 
     # Check relation with Currency
@@ -806,7 +806,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                                     'Currency')
     currency = currency_list[0]
-    self.assertEquals(currency.getRelativeUrl(),
+    self.assertEqual(currency.getRelativeUrl(),
                       sale_trade_condition.getPriceCurrency())
 
   def stepCheckPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
@@ -817,25 +817,25 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     purchase_trade_condition_list = \
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                         'Purchase Trade Condition')
-    self.assertEquals(len(purchase_trade_condition_list), 1)
+    self.assertEqual(len(purchase_trade_condition_list), 1)
     purchase_trade_condition = purchase_trade_condition_list[0]
 
-    self.assertEquals("General Purchase Trade Condition",
+    self.assertEqual("General Purchase Trade Condition",
                                               purchase_trade_condition.getTitle())
-    self.assertEquals("PTC-General", purchase_trade_condition.getReference())
+    self.assertEqual("PTC-General", purchase_trade_condition.getReference())
 
     # Trade condition does not need dates
-    self.assertEquals(None, purchase_trade_condition.getEffectiveDate())
-    self.assertEquals(None, purchase_trade_condition.getExpirationDate())
+    self.assertEqual(None, purchase_trade_condition.getEffectiveDate())
+    self.assertEqual(None, purchase_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
     business_process_list = \
               self.getBusinessConfigurationObjectList(business_configuration,
                                                            'Business Process')
-    self.assertEquals(len(business_process_list), 1)
+    self.assertEqual(len(business_process_list), 1)
 
     business_process = business_process_list[0]
-    self.assertEquals(business_process,
+    self.assertEqual(business_process,
                       purchase_trade_condition.getSpecialiseValue())
 
     # Check relation with Organisation
@@ -844,9 +844,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                                                 'Organisation')
     organisation = organisation_list[0]
 
-    self.assertEquals(organisation,
+    self.assertEqual(organisation,
                       purchase_trade_condition.getDestinationValue())
-    self.assertEquals(organisation,
+    self.assertEqual(organisation,
                       purchase_trade_condition.getDestinationSectionValue())
 
     # Check relation with Currency
@@ -854,7 +854,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                                     'Currency')
     currency = currency_list[0]
-    self.assertEquals(currency.getRelativeUrl(),
+    self.assertEqual(currency.getRelativeUrl(),
                       purchase_trade_condition.getPriceCurrency())
 
   @expectedFailure
@@ -885,13 +885,13 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     # inventories of that resource are index in grams
-    self.assertEquals(3010,
+    self.assertEqual(3010,
         self.portal.portal_simulation.getCurrentInventory(
           resource_uid=resource.getUid(),
           node_uid=node.getUid()))
 
     # converted inventory also works
-    self.assertEquals(3.01,
+    self.assertEqual(3.01,
         self.portal.portal_simulation.getCurrentInventory(
           quantity_unit='mass/kilogram',
           resource_uid=resource.getUid(),
@@ -909,17 +909,17 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     inventory = portal.portal_types['Inventory']
     sale_packing_list = portal.portal_types['Sale Packing List']
     sale_packing_list_line = portal.portal_types['Sale Packing List Line']
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'TradeOrderLine' in sale_packing_list_line.getTypePropertySheetList())
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'TradeOrder' in purchase_order.getTypePropertySheetList())
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'TradeOrderLine' in purchase_order_line.getTypePropertySheetList())
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'TradeOrder' in sale_order.getTypePropertySheetList())
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'TradeOrderLine' in sale_order_line.getTypePropertySheetList())
-    self.assertEquals(True,
+    self.assertEqual(True,
                       'InventoryConstraint' in inventory.getTypePropertySheetList())
 
 
@@ -939,7 +939,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     business_process_list = \
               self.getBusinessConfigurationObjectList(business_configuration,
                                                            'Business Process')
-    self.assertEquals(len(business_process_list), 1)
+    self.assertEqual(len(business_process_list), 1)
 
     business_process = business_process_list[0]
     destination_decision = portal.portal_catalog.getResultValue(
@@ -976,41 +976,41 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     # stepPlanSaleOrders
-    self.assertEquals(order.getSimulationState(), 'draft')
+    self.assertEqual(order.getSimulationState(), 'draft')
     order.plan()
     self.tic()
-    self.assertEquals(order.getSimulationState(), 'planned')
+    self.assertEqual(order.getSimulationState(), 'planned')
 
     # stepOrderSaleOrders
     order.order()
     self.tic()
-    self.assertEquals(order.getSimulationState(), 'ordered')
+    self.assertEqual(order.getSimulationState(), 'ordered')
 
     # stepConfirmSaleOrders
     order.confirm()
     self.tic()
-    self.assertEquals(order.getSimulationState(), 'confirmed')
+    self.assertEqual(order.getSimulationState(), 'confirmed')
 
     # stepCheckSaleOrderSimulation
     causality_list = order.getCausalityRelatedValueList(portal_type='Applied Rule')
-    self.assertEquals(len(causality_list), 1)
+    self.assertEqual(len(causality_list), 1)
     applied_rule = causality_list[0]
-    self.assertEquals(applied_rule.getPortalType(), 'Applied Rule')
+    self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
     rule = applied_rule.getSpecialiseValue()
     self.assertNotEquals(rule, None)
-    self.assertEquals(rule.getReference(), 'default_order_rule')
-    self.assertEquals(applied_rule.objectCount(), 1)
+    self.assertEqual(rule.getReference(), 'default_order_rule')
+    self.assertEqual(applied_rule.objectCount(), 1)
 
     simulation_movement = applied_rule.objectValues()[0]
-    self.assertEquals(simulation_movement.getPortalType(),
+    self.assertEqual(simulation_movement.getPortalType(),
                                                       'Simulation Movement')
-    self.assertEquals(simulation_movement.getQuantity(), 1.0)
-    self.assertEquals(simulation_movement.getResourceValue(), resource)
+    self.assertEqual(simulation_movement.getQuantity(), 1.0)
+    self.assertEqual(simulation_movement.getResourceValue(), resource)
 
     self.assertNotEquals(simulation_movement.getCausality(), None)
-    self.assertEquals(simulation_movement.getDestinationDecisionValue(),
+    self.assertEqual(simulation_movement.getDestinationDecisionValue(),
                                                        destination_decision)
-    self.assertEquals(simulation_movement.getDestinationAdministrationValue(),
+    self.assertEqual(simulation_movement.getDestinationAdministrationValue(),
                                                  destination_administration)
 
 
@@ -1165,9 +1165,9 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     """ Check if Confire Categories step was showed """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals(None, response_dict['previous'])
-    self.assertEquals('Configure Categories', response_dict['next'])
+      self.assertEqual('show', response_dict['command'])
+    self.assertEqual(None, response_dict['previous'])
+    self.assertEqual('Configure Categories', response_dict['next'])
     self.assertCurrentStep('Your Categories', response_dict)
 
   def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
@@ -1180,9 +1180,9 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     """ Check if Configure Roles step was showed """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Configure Roles', response_dict['next'])
-    self.assertEquals('Previous', response_dict['previous'])
+      self.assertEqual('show', response_dict['command'])
+    self.assertEqual('Configure Roles', response_dict['next'])
+    self.assertEqual('Previous', response_dict['previous'])
     self.assertCurrentStep('Your roles settings', response_dict)
 
   def stepCheckCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
@@ -1192,14 +1192,14 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     categories_spreadsheet_configuration_save = business_configuration['3']
     categories_spreadsheet_configuration_item =\
           categories_spreadsheet_configuration_save['1']
-    self.assertEquals('Categories Spreadsheet Configurator Item',
+    self.assertEqual('Categories Spreadsheet Configurator Item',
           categories_spreadsheet_configuration_item.getPortalType())
 
     spreadsheet = categories_spreadsheet_configuration_item\
                     .getConfigurationSpreadsheet()
     self.assertNotEquals(None, spreadsheet)
-    self.assertEquals('Embedded File', spreadsheet.getPortalType())
-    self.failUnless(spreadsheet.hasData())
+    self.assertEqual('Embedded File', spreadsheet.getPortalType())
+    self.assertTrue(spreadsheet.hasData())
 
   def stepSetupRolesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Load the Roles """
@@ -1212,7 +1212,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     response_dict = sequence.get("response_dict")
     TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
                          self, sequence, sequence_list, **kw)
-    self.assertEquals('Previous', response_dict['previous'])
+    self.assertEqual('Previous', response_dict['previous'])
 
   def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Create one Organisation with French information """
@@ -1227,28 +1227,28 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     business_configuration = sequence.get("business_configuration")
     # last one: a step for what the client selected
     organisation_config_save = business_configuration['5']
-    self.assertEquals(1, len(organisation_config_save.contentValues()))
+    self.assertEqual(1, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
-    self.assertEquals(organisation_config_item.getPortalType(),
+    self.assertEqual(organisation_config_item.getPortalType(),
                       'Organisation Configurator Item')
     # this organisation configurator items contains all properties that the
     # orgnanisation will have.
-    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
+    self.assertEqual(organisation_config_item.getDefaultAddressCity(),
                       'LILLE')
-    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
+    self.assertEqual(organisation_config_item.getDefaultAddressRegion(),
                       'europe/western_europe/france')
-    self.assertEquals(organisation_config_item.getDefaultEmailText(),
+    self.assertEqual(organisation_config_item.getDefaultEmailText(),
                       'me@example.com')
-    self.assertEquals('01234567890',
+    self.assertEqual('01234567890',
         organisation_config_item.getDefaultTelephoneTelephoneNumber())
 
     configuration_save_list = business_configuration.contentValues(
                                              portal_type="Configuration Save")
-    self.assertEquals(5, len(configuration_save_list))
+    self.assertEqual(5, len(configuration_save_list))
 
     link_list = business_configuration.contentValues(portal_type="Link")
-    self.assertEquals(0, len(link_list))
+    self.assertEqual(0, len(link_list))
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1261,47 +1261,47 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
     person_business_configuration_item =\
           person_business_configuration_save['1']
-    self.assertEquals('Person Configurator Item',
+    self.assertEqual('Person Configurator Item',
             person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
+    self.assertEqual('Person',
             person_business_configuration_item.getFirstName())
-    self.assertEquals('Creator',
+    self.assertEqual('Creator',
             person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_creator_reference,
+    self.assertEqual(self.person_creator_reference,
             person_business_configuration_item.getReference())
-    self.assertEquals('person_creator',
+    self.assertEqual('person_creator',
             person_business_configuration_item.getPassword())
-    self.assertEquals('hr/manager',
+    self.assertEqual('hr/manager',
             person_business_configuration_item.getFunction())
 
     person_business_configuration_item =\
           person_business_configuration_save['2']
-    self.assertEquals('Person Configurator Item',
+    self.assertEqual('Person Configurator Item',
             person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
+    self.assertEqual('Person',
             person_business_configuration_item.getFirstName())
-    self.assertEquals('Assignee',
+    self.assertEqual('Assignee',
             person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_assignee_reference,
+    self.assertEqual(self.person_assignee_reference,
             person_business_configuration_item.getReference())
-    self.assertEquals('person_assignee',
+    self.assertEqual('person_assignee',
             person_business_configuration_item.getPassword())
-    self.assertEquals('af/accounting/manager',
+    self.assertEqual('af/accounting/manager',
             person_business_configuration_item.getFunction())
 
     person_business_configuration_item =\
           person_business_configuration_save['3']
-    self.assertEquals('Person Configurator Item',
+    self.assertEqual('Person Configurator Item',
             person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
+    self.assertEqual('Person',
             person_business_configuration_item.getFirstName())
-    self.assertEquals('Assignor',
+    self.assertEqual('Assignor',
             person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_assignor_reference,
+    self.assertEqual(self.person_assignor_reference,
             person_business_configuration_item.getReference())
-    self.assertEquals('person_assignor',
+    self.assertEqual('person_assignor',
             person_business_configuration_item.getPassword())
-    self.assertEquals('sales/manager',
+    self.assertEqual('sales/manager',
             person_business_configuration_item.getFunction())
 
   def test_consulting_workflow(self):
@@ -1466,7 +1466,7 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
     response_dict = sequence.get("response_dict")
     TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
                          self, sequence, sequence_list, **kw)
-    self.assertEquals(None, response_dict['previous'])
+    self.assertEqual(None, response_dict['previous'])
 
   def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
@@ -1476,31 +1476,31 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
 
     # last one: a step for what the client selected
     organisation_config_save = business_configuration['5']
-    self.assertEquals(2, len(organisation_config_save.contentValues()))
+    self.assertEqual(2, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
-    self.assertEquals(organisation_config_item.getPortalType(),
+    self.assertEqual(organisation_config_item.getPortalType(),
                       'Organisation Configurator Item')
     # this organisation configurator items contains all properties that the
     # orgnanisation will have.
-    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
+    self.assertEqual(organisation_config_item.getDefaultAddressCity(),
                       default_address_city)
-    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
+    self.assertEqual(organisation_config_item.getDefaultAddressRegion(),
                       default_address_region)
-    self.assertEquals(organisation_config_item.getDefaultEmailText(),
+    self.assertEqual(organisation_config_item.getDefaultEmailText(),
                       'me@example.com')
-    self.assertEquals('01234567890',
+    self.assertEqual('01234567890',
         organisation_config_item.getDefaultTelephoneTelephoneNumber())
 
     # we also create a category for our group
     category_config_item = organisation_config_save['2']
-    self.assertEquals(category_config_item.getPortalType(),
+    self.assertEqual(category_config_item.getPortalType(),
                       'Category Configurator Item')
-    self.assertEquals(category_config_item.getTitle(),
+    self.assertEqual(category_config_item.getTitle(),
                       'My Organisation')
 
-    self.assertEquals(5, len(business_configuration.contentValues(portal_type="Configuration Save")))
-    self.assertEquals(0, len(business_configuration.contentValues(portal_type="Link")))
+    self.assertEqual(5, len(business_configuration.contentValues(portal_type="Configuration Save")))
+    self.assertEqual(0, len(business_configuration.contentValues(portal_type="Link")))
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1513,33 +1513,33 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
 
     person_business_configuration_item =\
           person_business_configuration_save['1']
-    self.assertEquals('Person Configurator Item',
+    self.assertEqual('Person Configurator Item',
             person_business_configuration_item.getPortalType())
-    self.assertEquals('Sales',
+    self.assertEqual('Sales',
             person_business_configuration_item.getFirstName())
-    self.assertEquals('Manager',
+    self.assertEqual('Manager',
             person_business_configuration_item.getLastName())
-    self.assertEquals(self.sales_manager_reference,
+    self.assertEqual(self.sales_manager_reference,
             person_business_configuration_item.getReference())
-    self.assertEquals('sales_manager',
+    self.assertEqual('sales_manager',
             person_business_configuration_item.getPassword())
-    self.assertEquals('sales/manager',
+    self.assertEqual('sales/manager',
             person_business_configuration_item.getFunction())
 
     # ...
     person_business_configuration_item =\
           person_business_configuration_save['3']
-    self.assertEquals('Person Configurator Item',
+    self.assertEqual('Person Configurator Item',
             person_business_configuration_item.getPortalType())
-    self.assertEquals('Accounting',
+    self.assertEqual('Accounting',
             person_business_configuration_item.getFirstName())
-    self.assertEquals('Agent',
+    self.assertEqual('Agent',
             person_business_configuration_item.getLastName())
-    self.assertEquals(self.accounting_agent_reference,
+    self.assertEqual(self.accounting_agent_reference,
             person_business_configuration_item.getReference())
-    self.assertEquals('accounting_agent',
+    self.assertEqual('accounting_agent',
             person_business_configuration_item.getPassword())
-    self.assertEquals('af/accounting/agent',
+    self.assertEqual('af/accounting/agent',
             person_business_configuration_item.getFunction())
 
   ##########################################

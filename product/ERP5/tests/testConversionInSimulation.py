@@ -311,9 +311,9 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
     invoice_transaction_movement_1 =\
          invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           invoice_transaction_movement_1.getResourceValue())
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
      (invoice_transaction_movement_1.getDestinationTotalAssetPrice(),
@@ -323,9 +323,9 @@ class TestConversionInSimulation(AccountingTestCase):
         None)
     invoice_transaction_movement_2 =\
          invoice_transaction_applied_rule.contentValues()[1]
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           invoice_transaction_movement_2.getResourceValue())
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement_2.getDestinationTotalAssetPrice(),
@@ -403,9 +403,9 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           invoice_transaction_movement.getResourceValue())
-    self.assertEquals(currency,
+    self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement.getSourceTotalAssetPrice(),
@@ -496,7 +496,7 @@ class TestConversionInSimulation(AccountingTestCase):
       portal_type=self.portal.getPortalAccountingMovementTypeList())
     self.assertNotEquals(line_list, None)
     for line in line_list:
-       self.assertEquals(line.getDestinationTotalAssetPrice(),
+       self.assertEqual(line.getDestinationTotalAssetPrice(),
               round(655.957*delivery_movement.getTotalPrice()))
 
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
@@ -568,13 +568,13 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertNotEquals(related_packing_list, None)
     related_packing_list_line_list=related_packing_list.getMovementList()
     related_packing_list_line= related_packing_list_line_list[0]
-    self.assertEquals(related_packing_list_line.getQuantity(),5.0)
+    self.assertEqual(related_packing_list_line.getQuantity(),5.0)
     old_destination_asset_price = \
           round(655.957*related_packing_list_line.getTotalPrice())
 
     related_packing_list_line.edit(quantity=3.0)
     self.tic()
-    self.assertEquals(related_packing_list.getCausalityState(),
+    self.assertEqual(related_packing_list.getCausalityState(),
                              'diverged')
     self._solveDivergence(related_packing_list, 'quantity', 'accept')
     self.tic()
@@ -592,7 +592,7 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEquals(
+    self.assertEqual(
        invoice_transaction_movement.getDestinationTotalAssetPrice(),
                 old_destination_asset_price *(3.0/5.0))
 
@@ -666,13 +666,13 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertNotEquals(related_packing_list, None)
     related_packing_list_line_list=related_packing_list.getMovementList()
     related_packing_list_line= related_packing_list_line_list[0]
-    self.assertEquals(related_packing_list_line.getQuantity(),5.0)
+    self.assertEqual(related_packing_list_line.getQuantity(),5.0)
     old_source_asset_price = \
           round(655.957*related_packing_list_line.getTotalPrice())
 
     related_packing_list_line.edit(quantity=3.0)
     self.tic()
-    self.assertEquals(related_packing_list.getCausalityState(),
+    self.assertEqual(related_packing_list.getCausalityState(),
                              'diverged')
 
     self._solveDivergence(related_packing_list, 'quantity','accept')
@@ -691,7 +691,7 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
     invoice_transaction_movement =\
          invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEquals(invoice_transaction_movement.\
+    self.assertEqual(invoice_transaction_movement.\
         getSourceTotalAssetPrice(),
         old_source_asset_price *(3.0/5.0))
 
@@ -764,9 +764,9 @@ class TestConversionInSimulation(AccountingTestCase):
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
-    self.assertEquals(related_packing_list.getDeliveryMode(),
+    self.assertEqual(related_packing_list.getDeliveryMode(),
                          order.getDeliveryMode())
-    self.assertEquals(related_packing_list.getIncoterm(),
+    self.assertEqual(related_packing_list.getIncoterm(),
                          order.getIncoterm())
     related_packing_list.start()
     related_packing_list.stop()
@@ -775,9 +775,9 @@ class TestConversionInSimulation(AccountingTestCase):
     related_invoice = related_packing_list.getCausalityRelatedValue(
                              portal_type='Sale Invoice Transaction')
     self.assertNotEquals(related_invoice, None)
-    self.assertEquals(related_invoice.getDeliveryMode(),
+    self.assertEqual(related_invoice.getDeliveryMode(),
                          order.getDeliveryMode())
-    self.assertEquals(related_invoice.getIncoterm(),
+    self.assertEqual(related_invoice.getIncoterm(),
                          order.getIncoterm())
 
   def test_01_quantity_unit_on_sale_packing_list(
@@ -842,10 +842,10 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertNotEquals(related_packing_list, None)
     movement_list = related_packing_list.getMovementList()
     movement_list.sort(key=lambda x:x.getCausalityId())
-    self.assertEquals(len(movement_list),2)
-    self.assertEquals(movement_list[0].getQuantityUnit(),
+    self.assertEqual(len(movement_list),2)
+    self.assertEqual(movement_list[0].getQuantityUnit(),
                          first_order_line.getQuantityUnit())
-    self.assertEquals(movement_list[1].getQuantityUnit(),
+    self.assertEqual(movement_list[1].getQuantityUnit(),
                          second_order_line.getQuantityUnit())
 
 def test_suite():

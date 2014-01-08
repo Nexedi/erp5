@@ -141,15 +141,15 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     template_tool = self.getPortal().portal_templates
     erp5_core_bt_list = [x for x in template_tool.objectValues()
                          if x.getTitle()=='erp5_core']
-    self.assertEquals(len(erp5_core_bt_list), 1)
+    self.assertEqual(len(erp5_core_bt_list), 1)
     erp5_core_bt = erp5_core_bt_list[0]
     erp5_core_bt.setRevision(1561)
     # Delete all new generators
     generator_id_list = [x for x in id_tool.objectIds()]
     id_tool.manage_delObjects(ids=generator_id_list)
     id_list = id_tool.generateNewLengthIdList(id_group='foo', store=1)
-    self.assertEquals(id_list, [5])
-    self.assertEquals(int(id_tool.dict_length_ids['foo'].value), 6)
+    self.assertEqual(id_list, [5])
+    self.assertEqual(int(id_tool.dict_length_ids['foo'].value), 6)
     # Now, reinstall erp5_core, and make sure we still have the possibility
     # to continue generating ids
     cp_data = template_tool.manage_copyObjects(ids=(erp5_core_bt.getId(),))
@@ -163,31 +163,31 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     skin_folder.manage_pasteObjects(cp_data)
     id_list = id_tool.generateNewLengthIdList(id_group='foo')
     # it is known that with current upgrade there is a whole
-    self.assertEquals(id_list, [7])
+    self.assertEqual(id_list, [7])
     new_id = id_tool.generateNewId(id_group='foo')
-    self.assertEquals(new_id, 4)
+    self.assertEqual(new_id, 4)
     new_id = id_tool.generateNewId(id_group=('bar','baz'))
-    self.assertEquals(new_id, 3)
+    self.assertEqual(new_id, 3)
     # Make sure that the old code is not used any more, so the dic on
     # id tool should not change, checking for length_dict
-    self.assertEquals(int(id_tool.dict_length_ids['foo'].value), 6)
+    self.assertEqual(int(id_tool.dict_length_ids['foo'].value), 6)
     id_list = id_tool.generateNewLengthIdList(id_group='bar')
-    self.assertEquals(id_list, [11])
+    self.assertEqual(id_list, [11])
     generator_list = [x for x in id_tool.objectValues()
                       if x.getReference()=='mysql_non_continuous_increasing']
-    self.assertEquals(len(generator_list), 1)
+    self.assertEqual(len(generator_list), 1)
     generator = generator_list[0]
-    self.assertEquals(generator.last_max_id_dict['foo'].value, 7)
-    self.assertEquals(generator.last_max_id_dict['bar'].value, 11)
+    self.assertEqual(generator.last_max_id_dict['foo'].value, 7)
+    self.assertEqual(generator.last_max_id_dict['bar'].value, 11)
     # Make sure that the old code is not used any more, so the dic on
     # id tool should not change, checking for dict
-    self.assertEquals(id_tool.dict_ids['foo'], 3)
+    self.assertEqual(id_tool.dict_ids['foo'], 3)
     generator_list = [x for x in id_tool.objectValues()
                       if x.getReference()=='zodb_continuous_increasing']
-    self.assertEquals(len(generator_list), 1)
+    self.assertEqual(len(generator_list), 1)
     generator = generator_list[0]
-    self.assertEquals(generator.last_id_dict['foo'], 4)
-    self.assertEquals(generator.last_id_dict["('bar', 'baz')"], 3)
+    self.assertEqual(generator.last_id_dict['foo'], 4)
+    self.assertEqual(generator.last_id_dict["('bar', 'baz')"], 3)
 
 
   def _setUpLastMaxIdDict(self, id_generator_reference):
@@ -231,11 +231,11 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
 
   def _assertIdGeneratorLastMaxIdDict(self, id_generator):
     last_id_dict = self._getLastIdDict(id_generator)
-    self.assertEquals(2, self._getValueFromLastIdDict(last_id_dict, 'A-01'))
-    self.assertEquals(1, self._getValueFromLastIdDict(last_id_dict, 'B-01'))
+    self.assertEqual(2, self._getValueFromLastIdDict(last_id_dict, 'A-01'))
+    self.assertEqual(1, self._getValueFromLastIdDict(last_id_dict, 'B-01'))
     for x in xrange(self.a_lot_of_key):
       key = 'C-%04d' % x
-      self.assertEquals(0, self._getValueFromLastIdDict(last_id_dict, key))
+      self.assertEqual(0, self._getValueFromLastIdDict(last_id_dict, key))
 
     # 1(A-01) + 1(B-01) + a_lot_of_key(C-*)
     number_of_group_id = self.a_lot_of_key + 2
@@ -259,7 +259,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     }
     try:
       portal_type = reference_portal_type_dict[id_generator_reference]
-      self.assertEquals(id_generator.getPortalType(), portal_type)
+      self.assertEqual(id_generator.getPortalType(), portal_type)
     except:
       raise ValueError("reference is not valid: %s" % id_generator_reference)
 

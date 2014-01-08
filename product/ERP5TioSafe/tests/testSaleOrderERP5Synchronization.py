@@ -131,7 +131,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 2.1)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        self.failUnless(line.getTitle() in ['Delivery', 'Stylo'])
+        self.assertTrue(line.getTitle() in ['Delivery', 'Stylo'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -620,7 +620,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 2.1)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        self.failUnless(line.getTitle() in ['Delivery', 'Stylo', 'Discount'])
+        self.assertTrue(line.getTitle() in ['Delivery', 'Stylo', 'Discount'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -700,7 +700,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 2.1)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        self.failUnless(line.getTitle() in ['Delivery', 'Stylo'])
+        self.assertTrue(line.getTitle() in ['Delivery', 'Stylo'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -910,7 +910,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 2.1)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        self.failUnless(line.getTitle() in ['Delivery', 'Stylo'])
+        self.assertTrue(line.getTitle() in ['Delivery', 'Stylo'])
 
         raise 'A line has not been checked'
     # Check the accounting

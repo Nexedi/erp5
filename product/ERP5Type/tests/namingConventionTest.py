@@ -71,7 +71,7 @@ class TestNamingConvention(ERP5TypeTestCase):
         result += self.getPortal().portal_skins.erp5_core.ERP5Site_checkNamingConventions(html_output=None)
         problems_re = re.compile('([0-9]+) problems found')
         problems = int(problems_re.search(result).group(1))
-        self.assertEquals(0, problems, result)
+        self.assertEqual(0, problems, result)
 
 def test_suite():
     suite = unittest.TestSuite()

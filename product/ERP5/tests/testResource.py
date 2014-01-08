@@ -619,7 +619,7 @@ class TestResource(ERP5TypeTestCase):
       self.tic()
       # Check resource price
       self.logMessage("Check product price...", tab=1)
-      self.assertEquals(config['price'], product.getPrice())
+      self.assertEqual(config['price'], product.getPrice())
 
   def test_10_getPriceWithOptions(self, quiet=quiet, run=run_all_test):
     """
@@ -694,19 +694,19 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     # Check resource price
     self.logMessage("Check product price without option...", tab=1)
-    self.assertEquals(1, product.getPrice(context=supply_line))
+    self.assertEqual(1, product.getPrice(context=supply_line))
     # Check resource option price
     self.logMessage("Check product price with option: %s..." % \
                     'industrial_phase/phase1', tab=1)
-    self.assertEquals(3, product.getPrice(
+    self.assertEqual(3, product.getPrice(
                                    categories=['industrial_phase/phase1']))
     self.logMessage("Check product price with option: %s..." % \
                     'industrial_phase/phase2', tab=1)
-    self.assertEquals(8, product.getPrice(
+    self.assertEqual(8, product.getPrice(
                                    categories=['industrial_phase/phase2']))
     self.logMessage("Check product price with options: %s..." % \
                     'industrial_phase/phase1 industrial_phase/phase2', tab=1)
-    self.assertEquals(10, product.getPrice(
+    self.assertEqual(10, product.getPrice(
                                    categories=['industrial_phase/phase1',
                                                'industrial_phase/phase2']))
 
@@ -760,7 +760,7 @@ class TestResource(ERP5TypeTestCase):
       self.logMessage("Check product %s with destination section %s" % \
                       (product.getTitle(), node.getTitle()),
                       tab=1)
-      self.assertEquals(base_price, 
+      self.assertEqual(base_price, 
                         product.getPrice(
                   categories=['destination_section/%s' % node.getRelativeUrl()]))
 
@@ -973,11 +973,11 @@ class TestResource(ERP5TypeTestCase):
         portal_type=self.sale_order_line_portal_type,
         resource_value=product)
     self.tic()
-    self.assertEquals(sale_order_line.getPrice(), 400.0)
+    self.assertEqual(sale_order_line.getPrice(), 400.0)
     sale_order.setDestinationSectionValue(orga2)
     self.tic()
     sale_order_line.setPrice(None)
-    self.assertEquals(sale_order_line.getPrice(), 200.0)
+    self.assertEqual(sale_order_line.getPrice(), 200.0)
     # Create purchase order and check price
     purchase_order = purchase_order_module.newContent(
         portal_type="Purchase Order",
@@ -987,11 +987,11 @@ class TestResource(ERP5TypeTestCase):
         portal_type="Purchase Order Line",
         resource_value=product)
     self.tic()
-    self.assertEquals(purchase_order_line.getPrice(), 40.0)
+    self.assertEqual(purchase_order_line.getPrice(), 40.0)
     purchase_order.setSourceSectionValue(orga2)
     self.tic()
     purchase_order_line.setPrice(None)
-    self.assertEquals(purchase_order_line.getPrice(), 20.0)
+    self.assertEqual(purchase_order_line.getPrice(), 20.0)
     # Create internal packing list and check price
     internal_packing_list = internal_packing_list_module.newContent(
         portal_type="Internal Packing List",
@@ -1001,11 +1001,11 @@ class TestResource(ERP5TypeTestCase):
         portal_type="Internal Packing List Line",
         resource_value=product)
     self.tic()
-    self.assertEquals(internal_packing_list_line.getPrice(), 4.0)
+    self.assertEqual(internal_packing_list_line.getPrice(), 4.0)
     internal_packing_list.setDestinationSectionValue(orga2)
     self.tic()
     internal_packing_list_line.setPrice(None)
-    self.assertEquals(internal_packing_list_line.getPrice(), 2.0)
+    self.assertEqual(internal_packing_list_line.getPrice(), 2.0)
   
   def testGetPriceWithQuantityUnit(self):
     resource = self.portal.getDefaultModule(self.product_portal_type)\
@@ -1021,8 +1021,8 @@ class TestResource(ERP5TypeTestCase):
                           portal_type=self.sale_order_line_portal_type,
                           resource_value=resource,
                           quantity=5)
-    self.assertEquals(1000, sale_order_line.getPrice())
-    self.assertEquals(5000, sale_order_line.getTotalPrice())
+    self.assertEqual(1000, sale_order_line.getPrice())
+    self.assertEqual(5000, sale_order_line.getTotalPrice())
     
     # if we give the quantity unit in grams
     sale_order_line = sale_order.newContent(
@@ -1030,8 +1030,8 @@ class TestResource(ERP5TypeTestCase):
                           resource_value=resource,
                           quantity=5000,
                           quantity_unit_value=self.quantity_unit_gram)
-    self.assertEquals(1, sale_order_line.getPrice())
-    self.assertEquals(5000, sale_order_line.getTotalPrice())
+    self.assertEqual(1, sale_order_line.getPrice())
+    self.assertEqual(5000, sale_order_line.getTotalPrice())
 
   def testGetPriceWithPriceCurrency(self):
     currency_module = self.portal.getDefaultModule("Currency")
@@ -1058,14 +1058,14 @@ class TestResource(ERP5TypeTestCase):
                           resource_value=resource,
                           quantity=5)
     # order and supply lines uses different currency, price does not apply
-    self.assertEquals(None, sale_order_line.getPrice())
+    self.assertEqual(None, sale_order_line.getPrice())
     
     # set the same currency
     sale_order.setPriceCurrencyValue(currency)
 
     # price applies
-    self.assertEquals(1000, sale_order_line.getPrice())
-    self.assertEquals(5000, sale_order_line.getTotalPrice())
+    self.assertEqual(1000, sale_order_line.getPrice())
+    self.assertEqual(5000, sale_order_line.getTotalPrice())
     
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
@@ -1073,11 +1073,11 @@ class TestResource(ERP5TypeTestCase):
     resource = self.portal.getDefaultModule(self.product_portal_type)\
                 .newContent(portal_type=self.product_portal_type)
     # default is 1
-    self.assertEquals(1, resource.getBaseUnitQuantity())
-    self.assertEquals(0, resource.getQuantityPrecision())
+    self.assertEqual(1, resource.getBaseUnitQuantity())
+    self.assertEqual(0, resource.getQuantityPrecision())
     # quantity precision is calculated using base quantity unit
     resource.setBaseUnitQuantity(0.001)
-    self.assertEquals(3, resource.getQuantityPrecision())
+    self.assertEqual(3, resource.getQuantityPrecision())
 
   def test_defaultSupplyLineAfterClone(self):
     """Check that default supply line is properly set up after clone"""
@@ -1125,17 +1125,17 @@ class TestResource(ERP5TypeTestCase):
         internal_supply_line_source_reference='test_source_reference_on_internal_supply_line',
         internal_supply_line_destination_reference='test_destination_reference_on_internal_supply_line',
     )
-    self.assertEquals(resource.getPurchaseSupplyLineSourceReference(),
+    self.assertEqual(resource.getPurchaseSupplyLineSourceReference(),
         'test_source_reference_on_purchase_supply_line')
-    self.assertEquals(resource.getPurchaseSupplyLineDestinationReference(),
+    self.assertEqual(resource.getPurchaseSupplyLineDestinationReference(),
         'test_destination_reference_on_purchase_supply_line')
-    self.assertEquals(resource.getSaleSupplyLineSourceReference(),
+    self.assertEqual(resource.getSaleSupplyLineSourceReference(),
         'test_source_reference_on_sale_supply_line')
-    self.assertEquals(resource.getSaleSupplyLineDestinationReference(),
+    self.assertEqual(resource.getSaleSupplyLineDestinationReference(),
         'test_destination_reference_on_sale_supply_line')
-    self.assertEquals(resource.getInternalSupplyLineSourceReference(),
+    self.assertEqual(resource.getInternalSupplyLineSourceReference(),
         'test_source_reference_on_internal_supply_line')
-    self.assertEquals(resource.getInternalSupplyLineDestinationReference(),
+    self.assertEqual(resource.getInternalSupplyLineDestinationReference(),
         'test_destination_reference_on_internal_supply_line')
 
   def testQuantityUnitOnMovement(self):

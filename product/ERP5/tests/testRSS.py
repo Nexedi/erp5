@@ -88,8 +88,8 @@ class TestRSS(ERP5TypeTestCase):
       Check we have people.
     """
     module = self.portal.person_module
-    self.assertEquals(module.one.getTitle(), "One")
-    self.assertEquals(module.two.getTitle(), "Two")
+    self.assertEqual(module.one.getTitle(), "One")
+    self.assertEqual(module.two.getTitle(), "Two")
 
   def test_01_renderRSS(self, quiet=0, run=run_all_test):
     """
@@ -108,32 +108,32 @@ class TestRSS(ERP5TypeTestCase):
     doc = parseString(feed_string)
     rss = doc.childNodes[0]
     channel = rss.getElementsByTagName('channel')[0]
-    self.assertEquals(len(rss.getElementsByTagName('channel')), 1)
-    self.assertEquals(len(channel.getElementsByTagName('item')), 2)
+    self.assertEqual(len(rss.getElementsByTagName('channel')), 1)
+    self.assertEqual(len(channel.getElementsByTagName('item')), 2)
 
     titles = [getNodeContent(n) for n in channel.getElementsByTagName('title')]
     titles.sort()
-    self.assertEquals(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
+    self.assertEqual(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
 
     item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form
-    self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
-    self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
-    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'title'), 'Two')
+    self.assertEqual(getSubnodeContent(item, 'description'), 'Person Two')
+    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
     expected_link = '%s/view' %two.absolute_url()
-    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
-    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEqual(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
     item = channel.getElementsByTagName('item')[1] # the one person
-    self.assertEquals(getSubnodeContent(item, 'title'), 'One')
-    self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
-    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'title'), 'One')
+    self.assertEqual(getSubnodeContent(item, 'description'), 'Person One')
+    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
     expected_link = '%s/view' %one.absolute_url()
-    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
-    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEqual(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
   def test_02_renderRSS(self, quiet=0, run=run_all_test):
     """
@@ -181,32 +181,32 @@ class TestRSS(ERP5TypeTestCase):
     doc = parseString(feed_string)
     rss = doc.childNodes[0]
     channel = rss.getElementsByTagName('channel')[0]
-    self.assertEquals(len(rss.getElementsByTagName('channel')), 1)
-    self.assertEquals(len(channel.getElementsByTagName('item')), 2)
+    self.assertEqual(len(rss.getElementsByTagName('channel')), 1)
+    self.assertEqual(len(channel.getElementsByTagName('item')), 2)
 
     titles = [getNodeContent(n) for n in channel.getElementsByTagName('title')]
     titles.sort()
-    self.assertEquals(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
+    self.assertEqual(titles, ['One', 'Persons',  'Two']) # there is channel title and person titles
 
     item = channel.getElementsByTagName('item')[0] # the two person, because we have default sorting in form
-    self.assertEquals(getSubnodeContent(item, 'title'), 'Two')
-    self.assertEquals(getSubnodeContent(item, 'description'), 'Person Two')
-    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'title'), 'Two')
+    self.assertEqual(getSubnodeContent(item, 'description'), 'Person Two')
+    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
     expected_link = two.absolute_url()
-    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
-    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEqual(two.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
     item = channel.getElementsByTagName('item')[1] # the one person
-    self.assertEquals(getSubnodeContent(item, 'title'), 'One')
-    self.assertEquals(getSubnodeContent(item, 'description'), 'Person One')
-    self.assertEquals(getSubnodeContent(item, 'author'), 'seb')
+    self.assertEqual(getSubnodeContent(item, 'title'), 'One')
+    self.assertEqual(getSubnodeContent(item, 'description'), 'Person One')
+    self.assertEqual(getSubnodeContent(item, 'author'), 'seb')
     expected_link = one.absolute_url()
-    self.assertEquals(getSubnodeContent(item, 'link'), expected_link)
-    self.assertEquals(len(item.getElementsByTagName('pubDate')), 1)
+    self.assertEqual(getSubnodeContent(item, 'link'), expected_link)
+    self.assertEqual(len(item.getElementsByTagName('pubDate')), 1)
     # is date formatted correctly?
-    self.assertEquals(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
+    self.assertEqual(one.getCreationDate().rfc822(), getSubnodeContent(item, 'pubDate'))
 
 def test_suite():
   suite = unittest.TestSuite()

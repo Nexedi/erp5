@@ -122,11 +122,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/PersonModule_viewPersonList'
                     % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_list_domain_tree(self):
@@ -142,11 +142,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/PersonModule_viewPersonList'
                     % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view(self):
@@ -155,11 +155,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
         '/%s/person_module/pers/default_address/GeographicAddress_view'
         % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_empty_listbox(self):
@@ -169,11 +169,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/pers/Person_view'
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_non_empty_listbox(self):
@@ -181,11 +181,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/pers/Person_view'
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_format(self):
@@ -193,33 +193,33 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/pers/Person_view?format='
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
     # format=pdf uses oood for conversion
     response = self.publish(
                    '/%s/person_module/pers/Person_view?format=pdf'
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals(content_type, 'application/pdf')
+    self.assertEqual(content_type, 'application/pdf')
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
 
   def test_report_view_form_view(self):
     # Test report view rendering forms using form_view
-    self.assertEquals('form_view', self.portal.Base_viewWorkflowHistory.pt)
+    self.assertEqual('form_view', self.portal.Base_viewWorkflowHistory.pt)
     response = self.publish(
                    '/%s/person_module/pers/Base_viewHistory'
                     % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_form_list(self):
@@ -234,11 +234,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     finally:
       self.portal.Base_viewWorkflowHistory.pt = 'form_view'
       self.commit()
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
 
@@ -246,44 +246,44 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
        '/%s/person_module/pers/Base_viewHistory?landscape=1'
         % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_sheet_per_report_section(self):
     response = self.publish(
        '/%s/person_module/pers/Base_viewHistory?sheet_per_report_section=1'
         % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_encoding(self):
     self.portal.person_module.pers.setFirstName('Jérome')
     response = self.publish('/%s/person_module/pers/Person_view'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_category(self):
     self.portal.person_module.pers.setGender('male')
     response = self.publish('/%s/person_module/pers/Person_view'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_broken_category(self):
@@ -291,42 +291,42 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.person_module.pers.setCareerRole('not exist')
     response = self.publish('/%s/person_module/pers/Person_view'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_embedded_image(self):
     # with image
     response = self.publish('/%s/person_module/pers/Person_viewDetails'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
     # without image
     response = self.publish('/%s/person_module/pers_without_image/Person_viewDetails'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_encoding(self):
     self.portal.person_module.pers.setFirstName('Jérome')
     response = self.publish('/%s/person_module/pers/Base_viewHistory'
                           % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_list_encoding(self):
@@ -334,11 +334,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
        '/%s/person_module/PersonModule_viewPersonList'
         % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_image_field_form_view(self):
@@ -346,11 +346,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
        '/%s/person_module/pers/img/Image_view'
         % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_image_field_form_view_bottom_group(self):
@@ -359,11 +359,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
        '/%s/person_module/pers/img/Image_viewFullSizedImage'
         % self.portal.getId(), basic=self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_textarea_center_group(self):
@@ -374,11 +374,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/person_module/pers/Person_view'
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     body = response.getBody()
     self._validate(body)
 
@@ -406,11 +406,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
                    '/%s/foo_module/FooModule_viewFooList?portal_skin='
                    % self.portal.getId(), self.auth)
-    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('attachment', content_disposition.split(';')[0])
+    self.assertEqual('attachment', content_disposition.split(';')[0])
     body = response.getBody()
     self._validate(body)
 

@@ -99,20 +99,20 @@ class TestSafeImage(ERP5TypeTestCase):
      self.tic()
      self.assertNotEqual(tile,None)
      image_property = getattr(tile, "ImageProperties.xml", None)
-     self.assertEquals(image_property.getData(),
+     self.assertEqual(image_property.getData(),
  """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
-     self.assertEquals("Embedded File", image_property.getPortalType())
+     self.assertEqual("Embedded File", image_property.getPortalType())
      image_group = getattr(tile, "TileGroup0", None)
      self.assertNotEquals(image_group, None)
-     self.assertEquals("Image Tile Group",image_group.getPortalType())
+     self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
-     self.assertEquals(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
+     self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEquals(123,image_group['0-0-0'].getHeight()) 
-     self.assertEquals(165,image_group['0-0-0'].getWidth()) 
+     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
+     self.assertEqual(165,image_group['0-0-0'].getWidth()) 
 
   def test_03_CreateTileImageTransformed(self):
      """"
@@ -129,24 +129,24 @@ class TestSafeImage(ERP5TypeTestCase):
      self.tic()
      self.assertNotEqual(tile_transformed,None)
      image_property = getattr(tile_transformed, "ImageProperties.xml", None)
-     self.assertEquals(image_property.getData(),
+     self.assertEqual(image_property.getData(),
  """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
-     self.assertEquals("Embedded File", image_property.getPortalType())
+     self.assertEqual("Embedded File", image_property.getPortalType())
      image_transform = getattr(tile_transformed, "TransformFile.txt", None)
      self.assertTrue(image_transform.getData().split()[1],'2-0-0')
      self.assertNotEqual(image_transform, None)
-     self.assertEquals("Embedded File", image_transform.getPortalType())
+     self.assertEqual("Embedded File", image_transform.getPortalType())
      image_group = getattr(tile_transformed, "TileGroup0", None)
      self.assertNotEquals(image_group, None)
-     self.assertEquals("Image Tile Group",image_group.getPortalType())
+     self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
-     self.assertEquals(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
+     self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEquals(123,image_group['0-0-0'].getHeight()) 
-     self.assertEquals(165,image_group['0-0-0'].getWidth())
+     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
+     self.assertEqual(165,image_group['0-0-0'].getWidth())
      if getattr(self.image_module,'testTileTransformed',None) is not None:
       self.image_module.manage_delObjects(ids=['testTileTransformed'])
      transaction.commit()

@@ -68,7 +68,7 @@ class MilestoneReportingMixin:
     report_html = \
         self.portal.project_module.ProjectModule_generateMilestoneReport(
              from_date=from_date, at_date=at_date)
-    self.failIf('Site Error' in report_html)
+    self.assertFalse('Site Error' in report_html)
 
     line_list = self.portal.sale_order_module.\
         ProjectModule_viewMilestoneReport.listbox.\
@@ -96,7 +96,7 @@ class MilestoneReportingMixin:
     # Foo        Foo Milestone A   2009/10/27
     data_line_list = self.getDataLineLineListByCallingMilestoneReport(
         from_date=DateTime('2009/10/01'), at_date=DateTime('2009/10/31'))
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              project_title='Foo',
                              milestone_title='Foo Milestone A',
@@ -143,7 +143,7 @@ class MilestoneReportingMixin:
     # (this checks that dates are well taken into account)
     data_line_list = self.getDataLineLineListByCallingMilestoneReport(
         from_date=DateTime('2009/10/01'), at_date=DateTime('2009/10/31'))
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              project_title='Foo',
                              milestone_title='Foo Milestone A',
@@ -154,7 +154,7 @@ class MilestoneReportingMixin:
     # project names
     data_line_list = self.getDataLineLineListByCallingMilestoneReport(
         from_date=DateTime('2009/01/01'), at_date=DateTime('2009/12/31'))
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                              project_title='Bar',
                              milestone_title='Bar Milestone A',

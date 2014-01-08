@@ -75,7 +75,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
     message = portal.foo_module.FooModule_createObjects()
-    self.failUnless('Created Successfully' in message)
+    self.assertTrue('Created Successfully' in message)
     if not hasattr(portal.person_module, 'user'):
       user = portal.person_module.newContent(portal_type='Person', id='user', reference='user')
       asg = user.newContent(portal_type='Assignment')

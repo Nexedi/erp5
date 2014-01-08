@@ -142,10 +142,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     person = person_module.newContent(id='John Dough', portal_type='Person')
 
     person_type = portal.portal_types.Person
-    self.assertEquals(person_type.getTypeMixinList() or [], [])
+    self.assertEqual(person_type.getTypeMixinList() or [], [])
 
     try:
-      self.assertEquals(getattr(person, 'asText', None), None)
+      self.assertEqual(getattr(person, 'asText', None), None)
       # just use a mixin/method that Person does not have yet
       person_type.setTypeMixin('TextConvertableMixin')
 
@@ -167,10 +167,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     person = person_module.newContent(id='Eva Dough', portal_type='Person')
 
     person_type = portal.portal_types.Person
-    self.assertEquals(person_type.getTypeClass(), 'Person')
+    self.assertEqual(person_type.getTypeClass(), 'Person')
 
     try:
-      self.assertEquals(getattr(person, 'getCorporateName', None), None)
+      self.assertEqual(getattr(person, 'getCorporateName', None), None)
       # change the base type class
       person_type.setTypeClass('Organisation')
 
@@ -234,7 +234,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # it's necessary to load the class
     # to have a correct list of interfaces
     implemented_by = list(implementedBy(InterfaceTestType))
-    self.failIf(IForTest in implemented_by)
+    self.assertFalse(IForTest in implemented_by)
     InterfaceTestType.loadClass()
 
     implemented_by = list(implementedBy(InterfaceTestType))
@@ -243,7 +243,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     InterfaceTestType.restoreGhostState()
     implemented_by = list(implementedBy(InterfaceTestType))
-    self.failIf(IForTest in implemented_by)
+    self.assertFalse(IForTest in implemented_by)
 
   def testClassHierarchyAfterReset(self):
     """
@@ -625,7 +625,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     portal = self.getPortal()
     person_type = portal.portal_types.Person
 
-    self.failIf('TestMigration' in person_type.getTypePropertySheetList())
+    self.assertFalse('TestMigration' in person_type.getTypePropertySheetList())
 
     new_person = None
     try:
@@ -659,12 +659,12 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Standard Property
       self.assertHasAttribute(new_person, 'setTestStandardPropertyAssign')
 
-      self.assertEquals(new_person.getTestStandardPropertyAssign(),
+      self.assertEqual(new_person.getTestStandardPropertyAssign(),
                         "test_default_value")
 
       new_person.setTestStandardPropertyAssign('value')
 
-      self.assertEquals(new_person.getTestStandardPropertyAssign(), 'value')
+      self.assertEqual(new_person.getTestStandardPropertyAssign(), 'value')
 
       # Acquired Property
       self.assertHasAttribute(
@@ -674,9 +674,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       self.assertHasAttribute(new_person, 'default_address')
       self.assertHasAttribute(new_person.default_address, 'getDefaultAddress')
-      self.failIfEqual(None, new_person.default_address.getDefaultAddress())
+      self.assertNotEqual(None, new_person.default_address.getDefaultAddress())
 
-      self.assertEquals(
+      self.assertEqual(
         new_person.getDefaultTestAcquiredPropertyAssignStreetAddress(),
         'value')
 
@@ -685,7 +685,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       new_person.setTestCategoryPropertyAssign('sub_category1')
 
-      self.assertEquals(new_person.getTestCategoryPropertyAssign(),
+      self.assertEqual(new_person.getTestCategoryPropertyAssign(),
                         'sub_category1')
 
       # Dynamic Category Property
@@ -694,7 +694,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       new_person.setTestDynamicCategoryPropertyAssign('sub_category1')
 
-      self.assertEquals(new_person.getTestDynamicCategoryPropertyAssign(),
+      self.assertEqual(new_person.getTestDynamicCategoryPropertyAssign(),
                         'sub_category1')
 
     finally:
@@ -718,7 +718,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # unassigned by creating a new person in Person module
     self.commit()
 
-    self.failIf('TestMigration' in person_type.getTypePropertySheetList())
+    self.assertFalse('TestMigration' in person_type.getTypePropertySheetList())
 
     try:
       new_person = portal.person_module.newContent(
@@ -916,16 +916,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                        *args,
                        **kw):
     constraint = self._getConstraintByReference(constraint_reference)
-    self.failIfEqual(None, constraint)
+    self.assertNotEqual(None, constraint)
 
     # Use Base.checkConsistency!!
     # This is the standard interface which real users are always using.
     # Never call ConstraintMixin.checkConsistency directly in unit test.
     # You will miss serious bugs.
-    self.assertEquals(1, len(self.test_module.checkConsistency(filter={'reference':constraint_reference})))
+    self.assertEqual(1, len(self.test_module.checkConsistency(filter={'reference':constraint_reference})))
 
     setter_function(*args, **kw)
-    self.assertEquals([], self.test_module.checkConsistency(filter={'reference':constraint_reference}))
+    self.assertEqual([], self.test_module.checkConsistency(filter={'reference':constraint_reference}))
 
   def testPropertyExistenceConstraint(self):
     """
@@ -1025,13 +1025,13 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     constraint = self._getConstraintByReference(
       'test_category_related_membership_arity_constraint')
 
-    self.failIfEqual(None, constraint)
-    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
+    self.assertNotEqual(None, constraint)
+    self.assertEqual(1, len(constraint.checkConsistency(self.test_module)))
 
     self.test_module.setCategoryList(('gender/Test Migration',))
     self.tic()
 
-    self.assertEquals([], constraint.checkConsistency(self.test_module))
+    self.assertEqual([], constraint.checkConsistency(self.test_module))
 
   def testTALESConstraint(self):
     """
@@ -1453,17 +1453,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.validate()
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getReference(), valid_reference)
-    self.assertEquals(component.getReference(validated_only=True), valid_reference)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getReference(), valid_reference)
+    self.assertEqual(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
 
     # Check that checkConsistency returns the proper error message for the
@@ -1490,14 +1490,14 @@ class _TestZodbComponent(SecurityTestCase):
         ComponentTool.reset = ComponentTool._original_reset
 
       # Should be in modified state as an error has been encountered
-      self.assertEquals(component.getValidationState(), 'modified')
-      self.assertEquals([m.getMessage().translate()
+      self.assertEqual(component.getValidationState(), 'modified')
+      self.assertEqual([m.getMessage().translate()
                          for m in component.checkConsistency()],
                         [error_message])
-      self.assertEquals(component.getTextContentErrorMessageList(), [])
-      self.assertEquals(component.getTextContentWarningMessageList(), [])
-      self.assertEquals(component.getReference(), invalid_reference)
-      self.assertEquals(component.getReference(validated_only=True), valid_reference)
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+      self.assertEqual(component.getReference(), invalid_reference)
+      self.assertEqual(component.getReference(validated_only=True), valid_reference)
       self._component_tool.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable(valid_reference)
@@ -1509,17 +1509,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.setReference(valid_reference)
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getReference(), valid_reference)
-    self.assertEquals(component.getReference(validated_only=True), valid_reference)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getReference(), valid_reference)
+    self.assertEqual(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
 
   def testVersionWithReservedKeywords(self):
@@ -1542,17 +1542,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.validate()
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getVersion(), valid_version)
-    self.assertEquals(component.getVersion(validated_only=True), valid_version)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getVersion(), valid_version)
+    self.assertEqual(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
 
     # Check that checkConsistency returns the proper error message for the
@@ -1573,14 +1573,14 @@ class _TestZodbComponent(SecurityTestCase):
         ComponentTool.reset = ComponentTool._original_reset
 
       # Should be in modified state as an error has been encountered
-      self.assertEquals(component.getValidationState(), 'modified')
-      self.assertEquals([m.getMessage().translate()
+      self.assertEqual(component.getValidationState(), 'modified')
+      self.assertEqual([m.getMessage().translate()
                          for m in component.checkConsistency()],
                         [error_message])
-      self.assertEquals(component.getTextContentErrorMessageList(), [])
-      self.assertEquals(component.getTextContentWarningMessageList(), [])
-      self.assertEquals(component.getVersion(), invalid_version)
-      self.assertEquals(component.getVersion(validated_only=True), valid_version)
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+      self.assertEqual(component.getVersion(), invalid_version)
+      self.assertEqual(component.getVersion(validated_only=True), valid_version)
       self._component_tool.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable(reference)
@@ -1592,17 +1592,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.setVersion(valid_version)
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getVersion(), valid_version)
-    self.assertEquals(component.getVersion(validated_only=True), valid_version)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getVersion(), valid_version)
+    self.assertEqual(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
 
   def testInvalidSourceCode(self):
@@ -1618,25 +1618,25 @@ class _TestZodbComponent(SecurityTestCase):
     # modified, even in Draft state
     component = self._newComponent('TestComponentWithSyntaxError', 'print "ok"')
     self.tic()
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
 
     component.setTextContent('import sys')
     self.tic()
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(),
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1, 0: Unused import sys (unused-import)"])
 
     component.setTextContent('import unexistent_module')
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       [m.getMessage().translate() for m in component.checkConsistency()],
       ["Error in Source Code: F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEquals(component.getTextContentErrorMessageList(),
+    self.assertEqual(component.getTextContentErrorMessageList(),
                       ["F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEquals(component.getTextContentWarningMessageList(),
+    self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1, 0: Unused import unexistent_module (unused-import)"])
 
     valid_code = 'def foobar():\n  return 42'
@@ -1646,17 +1646,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.validate()
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getTextContent(), valid_code)
-    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getTextContent(), valid_code)
+    self.assertEqual(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
     # Check that checkConsistency returns the proper error message for the
@@ -1692,15 +1692,15 @@ class _TestZodbComponent(SecurityTestCase):
         ComponentTool.reset = ComponentTool._original_reset
 
       # Should be in modified state as an error has been encountered
-      self.assertEquals(component.getValidationState(), 'modified')
-      self.assertEquals([m.getMessage().translate()
+      self.assertEqual(component.getValidationState(), 'modified')
+      self.assertEqual([m.getMessage().translate()
                          for m in component.checkConsistency()],
                         check_consistency_list)
-      self.assertEquals(component.getTextContentErrorMessageList(), error_list)
-      self.assertEquals(component.getTextContentWarningMessageList(), warning_list)
+      self.assertEqual(component.getTextContentErrorMessageList(), error_list)
+      self.assertEqual(component.getTextContentWarningMessageList(), warning_list)
 
-      self.assertEquals(component.getTextContent(), invalid_code)
-      self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+      self.assertEqual(component.getTextContent(), invalid_code)
+      self.assertEqual(component.getTextContent(validated_only=True), valid_code)
       self._component_tool.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable('TestComponentWithSyntaxError')
@@ -1712,17 +1712,17 @@ class _TestZodbComponent(SecurityTestCase):
       component.setTextContent(valid_code)
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       ComponentTool._reset_performed = False
 
-    self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.checkConsistency(), [])
-    self.assertEquals(component.getTextContentErrorMessageList(), [])
-    self.assertEquals(component.getTextContentWarningMessageList(), [])
-    self.assertEquals(component.getTextContent(), valid_code)
-    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getTextContent(), valid_code)
+    self.assertEqual(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
   def testImportVersionedComponentOnly(self):
@@ -1772,7 +1772,7 @@ def bar(*args, **kwargs):
     self.assertHasAttribute(
       top_module.erp5_version.TestImportedVersionedComponentOnly, 'foo')
 
-    self.assertEquals(
+    self.assertEqual(
       top_module.erp5_version.TestImportedVersionedComponentOnly.foo(),
       'TestImportedVersionedComponentOnly')
 
@@ -1784,7 +1784,7 @@ def bar(*args, **kwargs):
     self._importModule('TestImportVersionedComponentOnly')
     self.assertHasAttribute(top_module.TestImportVersionedComponentOnly, 'bar')
 
-    self.assertEquals(
+    self.assertEqual(
       top_module.TestImportVersionedComponentOnly.bar(),
       'BarTestImportedVersionedComponentOnly')
 
@@ -1826,7 +1826,7 @@ def bar(*args, **kwargs):
 
     self._importModule('TestVersionPriority')
     self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
-    self.assertEquals(top_module.TestVersionPriority.function_foo(),
+    self.assertEqual(top_module.TestVersionPriority.function_foo(),
                       "TestERP5VersionPriority")
 
     from Products.ERP5.ERP5Site import getSite
@@ -1839,7 +1839,7 @@ def bar(*args, **kwargs):
       site.setVersionPriorityList(('foo | 99.0',) + priority_tuple)
       self.tic()
 
-      self.assertEquals(ComponentTool._reset_performed, True)
+      self.assertEqual(ComponentTool._reset_performed, True)
 
       self.assertModuleImportable(
         'TestVersionPriority',
@@ -1848,7 +1848,7 @@ def bar(*args, **kwargs):
 
       self._importModule('TestVersionPriority')
       self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
-      self.assertEquals(top_module.TestVersionPriority.function_foo(),
+      self.assertEqual(top_module.TestVersionPriority.function_foo(),
                         "TestFooVersionPriority")
 
     finally:
@@ -1923,7 +1923,7 @@ def bar(*args, **kwargs):
                       self.portal.portal_workflow.doActionFor,
                       component_dup, 'validate_action')
 
-    self.assertEquals(component_dup.getValidationState(), 'draft')
+    self.assertEqual(component_dup.getValidationState(), 'draft')
 
     component_dup.setReference(reference + '_copy')
     component_dup.validate()
@@ -1931,9 +1931,9 @@ def bar(*args, **kwargs):
 
     component_dup.setReference(reference)
     self.tic()
-    self.assertEquals(component_dup.getValidationState(), 'modified')
-    self.assertEquals(component_dup.getReference(), reference)
-    self.assertEquals(component_dup.getReference(validated_only=True),
+    self.assertEqual(component_dup.getValidationState(), 'modified')
+    self.assertEqual(component_dup.getReference(), reference)
+    self.assertEqual(component_dup.getReference(validated_only=True),
                       reference + '_copy')
 
     component_dup.invalidate()
@@ -1943,7 +1943,7 @@ def bar(*args, **kwargs):
                       self.portal.portal_workflow.doActionFor,
                       component_dup, 'validate_action')
 
-    self.assertEquals(component_dup.getValidationState(), 'invalidated')
+    self.assertEqual(component_dup.getValidationState(), 'invalidated')
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
@@ -2016,7 +2016,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     try:
       external_method()
     except RuntimeError, e:
-      self.assertEquals(e.message,
+      self.assertEqual(e.message,
                         'external method could not be called because it is None')
     else:
       self.fail("TestExternalMethod should not be callable")
@@ -2069,7 +2069,7 @@ class TestPortalType(Person):
 
     person_type = self.getPortal().portal_types.Person
     person_type_class = person_type.getTypeClass()
-    self.assertEquals(person_type_class, 'Person')
+    self.assertEqual(person_type_class, 'Person')
 
     # Create a new Person
     person_module = self.getPortal().person_module
@@ -2094,7 +2094,7 @@ class TestPortalType(Person):
       self.commit()
 
       self.assertHasAttribute(person, 'test42')
-      self.assertEquals(person.test42(), 42)
+      self.assertEqual(person.test42(), 42)
 
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component

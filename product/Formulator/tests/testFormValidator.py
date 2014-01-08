@@ -132,11 +132,11 @@ class EmailValidatorTestCase(ValidatorTestCase):
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0, required=1, unicode=0),
             'f', {'f': 'foo@bar.com'})
-        self.assertEquals('foo@bar.com', result)
+        self.assertEqual('foo@bar.com', result)
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0, required=1, unicode=0),
             'f', {'f': 'm.faassen@vet.uu.nl'})
-        self.assertEquals('m.faassen@vet.uu.nl', result) 
+        self.assertEqual('m.faassen@vet.uu.nl', result) 
 
     def test_error_not_email(self):
         # a few wrong email addresses should raise error
@@ -172,15 +172,15 @@ class BooleanValidatorTestCase(ValidatorTestCase):
         result = self.v.validate(
             TestField('f'),
             'f', {'f': ''})
-        self.assertEquals(0, result)
+        self.assertEqual(0, result)
         result = self.v.validate(
             TestField('f'),
             'f', {'f': 1})
-        self.assertEquals(1, result)
+        self.assertEqual(1, result)
         result = self.v.validate(
             TestField('f'),
             'f', {'f': 0})
-        self.assertEquals(0, result)
+        self.assertEqual(0, result)
 
 class IntegerValidatorTestCase(ValidatorTestCase):
     def setUp(self):
@@ -191,19 +191,19 @@ class IntegerValidatorTestCase(ValidatorTestCase):
             TestField('f', max_length=0, truncate=0,
                       required=0, start="", end=""),
             'f', {'f': '15'})
-        self.assertEquals(15, result)  
+        self.assertEqual(15, result)  
 
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0,
                       required=0, start="", end=""),
             'f', {'f': '0'})
-        self.assertEquals(0, result)
+        self.assertEqual(0, result)
 
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0,
                       required=0, start="", end=""),
             'f', {'f': '-1'})
-        self.assertEquals(-1, result)
+        self.assertEqual(-1, result)
         
     def test_no_entry(self):
         # result should be empty string if nothing entered
@@ -211,7 +211,7 @@ class IntegerValidatorTestCase(ValidatorTestCase):
             TestField('f', max_length=0, truncate=0,
                       required=0, start="", end=""),
             'f', {'f': ''})
-        self.assertEquals("", result)
+        self.assertEqual("", result)
 
     def test_ranges(self):
         # first check whether everything that should be in range is
@@ -221,7 +221,7 @@ class IntegerValidatorTestCase(ValidatorTestCase):
                 TestField('f', max_length=0, truncate=0, required=1,
                           start=0, end=100),
                 'f', {'f': str(i)})
-            self.assertEquals(i, result)
+            self.assertEqual(i, result)
         # now check out of range errors
         self.assertValidatorRaises(
             Validator.ValidationError, 'integer_out_of_range',
@@ -349,11 +349,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
                   'subfield_f_day': '1',
                   'subfield_f_hour': '10',
                   'subfield_f_minute': '30'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(10, result.hour())
-        self.assertEquals(30, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(10, result.hour())
+        self.assertEqual(30, result.minute())
 
     def test_ampm(self):
         result = self.v.validate(
@@ -364,11 +364,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
                   'subfield_f_hour': '10',
                   'subfield_f_minute': '30',
                   'subfield_f_ampm': 'am'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(10, result.hour())
-        self.assertEquals(30, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(10, result.hour())
+        self.assertEqual(30, result.minute())
 
         result = self.v.validate(
             DateTimeField('f', ampm_time_style=1),
@@ -378,11 +378,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
                   'subfield_f_hour': '10',
                   'subfield_f_minute': '30',
                   'subfield_f_ampm': 'pm'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(22, result.hour())
-        self.assertEquals(30, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(22, result.hour())
+        self.assertEqual(30, result.minute())
         
         self.assertValidatorRaises(
             KeyError, 'not_datetime',
@@ -400,11 +400,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
             'f', {'subfield_f_year': '2002',
                   'subfield_f_month': '12',
                   'subfield_f_day': '1'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(0, result.hour())
-        self.assertEquals(0, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(0, result.hour())
+        self.assertEqual(0, result.minute())
 
         result = self.v.validate(
             DateTimeField('f', date_only=1),
@@ -413,11 +413,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
                   'subfield_f_day': '1',
                   'subfield_f_hour': '10',
                   'subfield_f_minute': '30'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(0, result.hour())
-        self.assertEquals(0, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(0, result.hour())
+        self.assertEqual(0, result.minute())
 
     def test_allow_empty_time(self):
         result = self.v.validate(
@@ -425,11 +425,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
             'f', {'subfield_f_year': '2002',
                   'subfield_f_month': '12',
                   'subfield_f_day': '1'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(0, result.hour())
-        self.assertEquals(0, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(0, result.hour())
+        self.assertEqual(0, result.minute())
 
         result = self.v.validate(
             DateTimeField('f', allow_empty_time=1),
@@ -438,11 +438,11 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
                   'subfield_f_day': '1',
                   'subfield_f_hour': '10',
                   'subfield_f_minute': '30'})
-        self.assertEquals(2002, result.year())
-        self.assertEquals(12, result.month())
-        self.assertEquals(1, result.day())
-        self.assertEquals(10, result.hour())
-        self.assertEquals(30, result.minute())
+        self.assertEqual(2002, result.year())
+        self.assertEqual(12, result.month())
+        self.assertEqual(1, result.day())
+        self.assertEqual(10, result.hour())
+        self.assertEqual(30, result.minute())
 
 class LinesValidatorTestCase(ValidatorTestCase):
     def setUp(self):

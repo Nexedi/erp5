@@ -172,24 +172,24 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     order = sequence.get('order')
-    self.assertEquals(packing_list.getCausalityValue(), order)
-    self.assertEquals(packing_list.getSource(), order.getSource())
-    self.assertEquals(packing_list.getDestination(), order.getDestination())
-    self.assertEquals(packing_list.getDestinationSection(),
+    self.assertEqual(packing_list.getCausalityValue(), order)
+    self.assertEqual(packing_list.getSource(), order.getSource())
+    self.assertEqual(packing_list.getDestination(), order.getDestination())
+    self.assertEqual(packing_list.getDestinationSection(),
                                        order.getDestinationSection())
-    self.assertEquals(packing_list.getSourceSection(),
+    self.assertEqual(packing_list.getSourceSection(),
                                        order.getSourceSection())
-    self.assertEquals(packing_list.getSourceDecision(),
+    self.assertEqual(packing_list.getSourceDecision(),
                                        order.getSourceDecision())
-    self.assertEquals(packing_list.getDestinationAdministration(),
+    self.assertEqual(packing_list.getDestinationAdministration(),
                                        order.getDestinationAdministration())
-    self.assertEquals(packing_list.getSourceAdministration(),
+    self.assertEqual(packing_list.getSourceAdministration(),
                                        order.getSourceAdministration())
-    self.assertEquals(packing_list.getPriceCurrency(),
+    self.assertEqual(packing_list.getPriceCurrency(),
                                        order.getPriceCurrency())
-    self.assertEquals(packing_list.getDestinationProject(),
+    self.assertEqual(packing_list.getDestinationProject(),
                                        order.getDestinationProject())
-    self.assertEquals(packing_list.getSourceProject(),
+    self.assertEqual(packing_list.getSourceProject(),
                                        order.getSourceProject())
 
   def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None,
@@ -199,7 +199,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    self.failIf('Site Error' in packing_list.view())
+    self.assertFalse('Site Error' in packing_list.view())
     self.assertTrue(packing_list.isDivergent())
 
   def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
@@ -214,25 +214,25 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is calculating
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals('calculating',packing_list.getCausalityState())
+    self.assertEqual('calculating',packing_list.getCausalityState())
 
   def stepCheckPackingListIsSolved(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is solved
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals('solved',packing_list.getCausalityState())
+    self.assertEqual('solved',packing_list.getCausalityState())
 
   def stepCheckNewPackingListIsSolved(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('new_packing_list')
-    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEqual('solved', packing_list.getCausalityState())
 
   def stepCheckPackingListIsDiverged(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is divergent
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals('diverged', packing_list.getCausalityState())
+    self.assertEqual('diverged', packing_list.getCausalityState())
 
   def stepCheckPackingListIsNotDivergent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -357,7 +357,7 @@ class TestPackingListMixin(TestOrderMixin):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(2,len(packing_list_list))
+    self.assertEqual(2,len(packing_list_list))
     packing_list1 = None
     packing_list2 = None
     for packing_list in packing_list_list:
@@ -368,10 +368,10 @@ class TestPackingListMixin(TestOrderMixin):
     sequence.edit(new_packing_list=packing_list2)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity-1,line.getQuantity())
+      self.assertEqual(self.default_quantity-1,line.getQuantity())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(1,line.getQuantity())
+      self.assertEqual(1,line.getQuantity())
 
   def stepCheckPackingListSplittedTwoTimes(self, sequence=None, sequence_list=None, **kw):
     """
@@ -380,7 +380,7 @@ class TestPackingListMixin(TestOrderMixin):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(2,len(packing_list_list))
+    self.assertEqual(2,len(packing_list_list))
     packing_list1 = None
     packing_list2 = None
     for packing_list in packing_list_list:
@@ -390,10 +390,10 @@ class TestPackingListMixin(TestOrderMixin):
         packing_list2 = packing_list
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity-2,line.getQuantity())
+      self.assertEqual(self.default_quantity-2,line.getQuantity())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(2,line.getQuantity())
+      self.assertEqual(2,line.getQuantity())
 
   def stepCheckPackingListNotSplitted(self, sequence=None, sequence_list=None, **kw):
     """
@@ -402,18 +402,18 @@ class TestPackingListMixin(TestOrderMixin):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(1,len(packing_list_list))
+    self.assertEqual(1,len(packing_list_list))
     packing_list1 = sequence.get('packing_list')
     last_delta = sequence.get('last_delta', 0.0)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity + last_delta,
+      self.assertEqual(self.default_quantity + last_delta,
           line.getQuantity())
       simulation_list = line.getDeliveryRelatedValueList(
                             portal_type='Simulation Movement')
-      self.assertEquals(len(simulation_list),1)
+      self.assertEqual(len(simulation_list),1)
       simulation_movement = simulation_list[0]
-      self.assertEquals(self.default_quantity + last_delta,
+      self.assertEqual(self.default_quantity + last_delta,
           simulation_movement.getCorrectedQuantity())
 
   def stepCheckPackingListNotSolved(self, sequence=None, sequence_list=None, **kw):
@@ -424,20 +424,20 @@ class TestPackingListMixin(TestOrderMixin):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
                                portal_type=self.packing_list_portal_type)
-    self.assertEquals(1,len(packing_list_list))
+    self.assertEqual(1,len(packing_list_list))
     packing_list1 = sequence.get('packing_list')
     last_delta = sequence.get('last_delta', 0.0)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
-      self.assertEquals(self.default_quantity + last_delta,
+      self.assertEqual(self.default_quantity + last_delta,
           line.getQuantity())
       simulation_list = line.getDeliveryRelatedValueList(
                             portal_type='Simulation Movement')
-      self.assertEquals(len(simulation_list),1)
+      self.assertEqual(len(simulation_list),1)
       simulation_movement = simulation_list[0]
 
       # Here we don't add last_delta, as the solver didn't do its work.
-      self.assertEquals(self.default_quantity,
+      self.assertEqual(self.default_quantity,
           simulation_movement.getCorrectedQuantity())
 
   def stepChangePackingListDestination(self, sequence=None,
@@ -464,11 +464,11 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     org3 = sequence.get('organisation3')
     for simulation_movement in simulation_movement_list:
       simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
-      self.assertEquals(simulation_movement.getDestinationValue(),org3)
+      self.assertEqual(simulation_movement.getDestinationValue(),org3)
 
   def stepChangePackingListStartDate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -483,12 +483,12 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     delivery_applied_rule = simulation_movement_list[0].objectValues()[0]
     simulation_movement_list = delivery_applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
-      self.assertEquals(simulation_movement.getStartDate(),self.datetime + 15)
+      self.assertEqual(simulation_movement.getStartDate(),self.datetime + 15)
 
   def stepCheckSimulationQuantityUpdated(self,sequence=None, sequence_list=None, **kw):
     """
@@ -496,10 +496,10 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
       simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
-      self.assertEquals(simulation_movement.getQuantity() +
+      self.assertEqual(simulation_movement.getQuantity() +
                         simulation_movement.getDeliveryError(),
                         self.default_quantity)
 
@@ -509,10 +509,10 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),2)
+    self.assertEqual(len(simulation_movement_list),2)
     for simulation_movement in simulation_movement_list:
       simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
-      self.assertEquals(simulation_movement.getQuantity() +
+      self.assertEqual(simulation_movement.getQuantity() +
                         simulation_movement.getDeliveryError(),
                         self.default_quantity)
 
@@ -550,23 +550,23 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     order_line = sequence.get('order_line')
     packing_list = sequence.get('packing_list')
     packing_list_line = sequence.get('packing_list_line')
     for simulation_movement in simulation_movement_list:
-      self.assertEquals(simulation_movement.getDeliveryValue(), order_line)
-      self.assertEquals(packing_list_line.getCausalityValue(),
+      self.assertEqual(simulation_movement.getDeliveryValue(), order_line)
+      self.assertEqual(packing_list_line.getCausalityValue(),
                         order_line)
       rule_list = simulation_movement.objectValues()
-      self.failUnless(len(rule_list), 1)
+      self.assertTrue(len(rule_list), 1)
       delivering_rule = rule_list[0]
-      self.failUnless(delivering_rule.getSpecialiseValue().getPortalType(),
+      self.assertTrue(delivering_rule.getSpecialiseValue().getPortalType(),
                       'Delivering Rule')
       child_simulation_movement_list = delivering_rule.objectValues()
-      self.failUnless(len(child_simulation_movement_list), 1)
+      self.assertTrue(len(child_simulation_movement_list), 1)
       child_simulation_movement = child_simulation_movement_list[0]
-      self.assertEquals(child_simulation_movement.getDeliveryValue(),
+      self.assertEqual(child_simulation_movement.getDeliveryValue(),
                         packing_list_line)
 
   def stepCheckSimulationDisconnected(self,sequence=None, sequence_list=None, **kw):
@@ -575,10 +575,10 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(len(simulation_movement_list),1)
+    self.assertEqual(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
       child_simulation_movement = simulation_movement.objectValues()[0].objectValues()[0]
-      self.assertEquals(child_simulation_movement.getDeliveryValue(),None)
+      self.assertEqual(child_simulation_movement.getDeliveryValue(),None)
 
   def stepCheckTwoSimulationLines(self, sequence):
     """
@@ -586,7 +586,7 @@ class TestPackingListMixin(TestOrderMixin):
     line(s)
     """
     simulation_movement_list = self._getSPLSimulationMovementList(sequence)
-    self.assertEquals(len(simulation_movement_list),2)
+    self.assertEqual(len(simulation_movement_list),2)
 
   def _getSPLSimulationMovementList(self, sequence):
     """ Get the simulation movement lines from sales packing list movements """
@@ -629,7 +629,7 @@ class TestPackingListMixin(TestOrderMixin):
       Modify start_date on only one simulation line related to SPL lines
     """
     simulation_movement_list = self._getSPLSimulationMovementList(sequence)
-    self.assertEquals(len(simulation_movement_list),
+    self.assertEqual(len(simulation_movement_list),
                       len(sequence['resource_list']))
     simulation_movement_list[-1].recordProperty('start_date')
     simulation_movement_list[-1].edit(start_date=self.datetime+15)
@@ -723,14 +723,14 @@ class TestPackingListMixin(TestOrderMixin):
       Look if the packing list has new previsions
     """
     packing_list_line = sequence.get('packing_list_line')
-    self.assertEquals(packing_list_line.getQuantity(),self.default_quantity-1)
+    self.assertEqual(packing_list_line.getQuantity(),self.default_quantity-1)
 
   def stepCheckPackingListLineWithNewQuantityPrevisionForMergedLine(self,sequence=None, sequence_list=None, **kw):
     """
       Look if the packing list has new previsions
     """
     packing_list_line = sequence.get('packing_list_line')
-    self.assertEquals(packing_list_line.getQuantity(),(self.default_quantity-1)*2)
+    self.assertEqual(packing_list_line.getQuantity(),(self.default_quantity-1)*2)
 
   def stepCheckPackingListLineWithNewResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -738,18 +738,18 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list_line = sequence.get('packing_list_line')
     new_resource = sequence.get('resource')
-    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity*2)
-    self.assertEquals(packing_list_line.getResourceValue(), new_resource)
+    self.assertEqual(packing_list_line.getQuantity(), self.default_quantity*2)
+    self.assertEqual(packing_list_line.getResourceValue(), new_resource)
     simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
     order_line_list = sum([x.getParentValue().getParentValue().getDeliveryList()
                            for x in simulation_line_list], [])
-    self.assertEquals(sorted(packing_list_line.getCausalityList()),
+    self.assertEqual(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 
   def stepCheckPackingListLineWithPreviousResource(self, sequence=None):
     packing_list_line = sequence.get('packing_list_line')
     old_resource = sequence['resource_list'][-2]
-    self.assertEquals(packing_list_line.getResourceValue(), old_resource)
+    self.assertEqual(packing_list_line.getResourceValue(), old_resource)
 
   def stepCheckPackingListLineWithSameResource(self,sequence=None, sequence_list=None, **kw):
     """
@@ -759,9 +759,9 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
     resource = sequence.get('resource')
     for line in sequence.get('packing_list').getMovementList():
-      self.assertEquals(line.getResourceValue(), resource)
-      self.assertEquals(line.getQuantity(), self.default_quantity)
-      self.assertEquals(line.getCausalityList(),
+      self.assertEqual(line.getResourceValue(), resource)
+      self.assertEqual(line.getQuantity(), self.default_quantity)
+      self.assertEqual(line.getCausalityList(),
                         [x.getParentValue().getParentValue().getDelivery()
                          for x in line.getDeliveryRelatedValueList()])
 
@@ -774,11 +774,11 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     LOG('CheckNewPackingList, self.datetime+15',0,self.datetime+15)
     LOG('CheckNewPackingList, packing_list.getStartDate',0,packing_list.getStartDate())
-    self.assertEquals(packing_list_line.getQuantity(),self.default_quantity)
-    self.assertEquals(packing_list.getStartDate(),self.datetime+15)
+    self.assertEqual(packing_list_line.getQuantity(),self.default_quantity)
+    self.assertEqual(packing_list.getStartDate(),self.datetime+15)
     simulation_movement_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
-    self.assertEquals(len(simulation_movement_list),len(resource_list))
+    self.assertEqual(len(simulation_movement_list),len(resource_list))
     delivery_value_list = []
     for simulation_movement in simulation_movement_list:
 #      self.assertNotEquals(simulation_movement.getDeliveryValue(),None)
@@ -787,7 +787,7 @@ class TestPackingListMixin(TestOrderMixin):
         delivery_value_list.append(delivery_value_list)
 #      new_packing_list = delivery_value.getParent()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
-    self.assertEquals(len(delivery_value_list),len(resource_list))
+    self.assertEqual(len(delivery_value_list),len(resource_list))
 
   def stepCheckNewSplitPackingListAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
     """
@@ -800,13 +800,13 @@ class TestPackingListMixin(TestOrderMixin):
     new_packing_list = self.portal.sale_packing_list_module[str(int(packing_list.getId())-1)]
     new_packing_list_line = [x for x in new_packing_list.getMovementList()
                              if x.getQuantity()][0]
-    self.assertEquals(packing_list_line.getQuantity(),self.default_quantity)
-    self.assertEquals(packing_list.getStartDate(),self.datetime+10)
-    self.assertEquals(new_packing_list_line.getQuantity(),self.default_quantity)
-    self.assertEquals(new_packing_list.getStartDate(),self.datetime+15)
+    self.assertEqual(packing_list_line.getQuantity(),self.default_quantity)
+    self.assertEqual(packing_list.getStartDate(),self.datetime+10)
+    self.assertEqual(new_packing_list_line.getQuantity(),self.default_quantity)
+    self.assertEqual(new_packing_list.getStartDate(),self.datetime+15)
     simulation_movement_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
-    self.assertEquals(len(simulation_movement_list),len(resource_list))
+    self.assertEqual(len(simulation_movement_list),len(resource_list))
     delivery_value_list = []
     for simulation_movement in simulation_movement_list:
 #      self.assertNotEquals(simulation_movement.getDeliveryValue(),None)
@@ -815,7 +815,7 @@ class TestPackingListMixin(TestOrderMixin):
         delivery_value_list.append(delivery_value_list)
 #      new_packing_list = delivery_value.getParent()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
-    self.assertEquals(len(delivery_value_list),len(resource_list))
+    self.assertEqual(len(delivery_value_list),len(resource_list))
 
   def stepAddPackingListContainer(self,sequence=None,
                                   packing_list=None,sequence_list=None, **kw):
@@ -860,8 +860,8 @@ class TestPackingListMixin(TestOrderMixin):
       Checks that quantity is set correctly on the container_line.
     """
     container_line = sequence.get('container_line')
-    self.assertEquals(self.default_quantity - 1, container_line.getQuantity())
-    self.assertEquals(self.default_quantity - 1,
+    self.assertEqual(self.default_quantity - 1, container_line.getQuantity())
+    self.assertEqual(self.default_quantity - 1,
                       container_line.getTotalQuantity())
 
   def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None,
@@ -895,8 +895,8 @@ class TestPackingListMixin(TestOrderMixin):
         quantity = line.getQuantity()
         container_line.edit(quantity=quantity)
         container_line.immediateReindexObject()
-        self.assertEquals(quantity, container_line.getQuantity())
-        self.assertEquals(quantity, container_line.getTotalQuantity())
+        self.assertEqual(quantity, container_line.getQuantity())
+        self.assertEqual(quantity, container_line.getTotalQuantity())
       # with variation
       elif line.hasCellContent():
         vcl = line.getVariationCategoryList()
@@ -916,15 +916,15 @@ class TestPackingListMixin(TestOrderMixin):
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
             cell.immediateReindexObject()
-          self.assertEquals(old_cell.getQuantity(), cell.getQuantity())
-          self.assertEquals(old_cell.getTotalQuantity(), cell.getTotalQuantity())
+          self.assertEqual(old_cell.getQuantity(), cell.getQuantity())
+          self.assertEqual(old_cell.getTotalQuantity(), cell.getTotalQuantity())
 
-        self.assertEquals(line.getQuantity(), container_line.getQuantity())
-        self.assertEquals(line.getTotalQuantity(), container_line.getTotalQuantity())
+        self.assertEqual(line.getQuantity(), container_line.getQuantity())
+        self.assertEqual(line.getTotalQuantity(), container_line.getTotalQuantity())
 
     # quantity is 1 on the container itself
-    self.assertEquals(1, container.getQuantity())
-    self.assertEquals(1, container.getTotalQuantity())
+    self.assertEqual(1, container.getQuantity())
+    self.assertEqual(1, container.getTotalQuantity())
 
   def stepCheckPackingListIsNotPacked(self,sequence=None, sequence_list=None, **kw):
     """
@@ -933,7 +933,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self.assertFalse(packing_list.isPacked())
-    self.assertEquals('missing', packing_list.getContainerState())
+    self.assertEqual('missing', packing_list.getContainerState())
 
   def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None,
                                    packing_list=None,**kw):
@@ -945,7 +945,7 @@ class TestPackingListMixin(TestOrderMixin):
       packing_list = sequence.get('packing_list')
     self.commit()
     self.assertTrue(packing_list.isPacked())
-    self.assertEquals('packed', packing_list.getContainerState())
+    self.assertEqual('packed', packing_list.getContainerState())
 
   def stepCheckNewPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
     """
@@ -1469,7 +1469,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       return
     pl = self.getPortal().getDefaultModule(self.packing_list_portal_type
                ).newContent(portal_type=self.packing_list_portal_type)
-    self.failUnless(hasattr(pl, 'getPriceCurrency'))
+    self.assertTrue(hasattr(pl, 'getPriceCurrency'))
 
   def test_PackingList_viewAsODT(self):
     # tests packing list printout
@@ -1758,13 +1758,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # check it's possible to sort by reference
     reference_result = packing_list.getMovementList(sort_on=
         [('reference', 'descending')])
-    self.assertEquals(reference_result, [line_ddd, line_ccc,
+    self.assertEqual(reference_result, [line_ddd, line_ccc,
       line_bbb_cell_bbb, line_bbb_cell_aaa, line_aaa])
 
     # check it's possible to sort by int_index
     int_index_result = packing_list.getMovementList(sort_on=
         [('int_index', 'ascending')])
-    self.assertEquals(int_index_result, [line_bbb_cell_aaa, line_bbb_cell_bbb,
+    self.assertEqual(int_index_result, [line_bbb_cell_aaa, line_bbb_cell_bbb,
       line_aaa, line_ddd, line_ccc])
 
   def test_subcontent_reindexing_container_line_cell(self):
@@ -1802,7 +1802,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                source_project_value = project1,
                destination_project_value = project2 )
     order.setPaymentConditionEfficiency(1.0)
-    self.failUnless('Site Error' not in order.view())
+    self.assertTrue('Site Error' not in order.view())
 
 
   def testTransferOfOwnership(self, quiet=quiet):
@@ -1923,9 +1923,9 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     new_packing_list = filter(lambda x:x != packing_list,
                               order.getCausalityRelatedValueList(
       portal_type=packing_list.getPortalType()))[0]
-    self.assertEquals(len(packing_list.getMovementList()),
+    self.assertEqual(len(packing_list.getMovementList()),
                       len(order.getMovementList()) - 10)
-    self.assertEquals(len(new_packing_list.getMovementList()), 10)
+    self.assertEqual(len(new_packing_list.getMovementList()), 10)
 
   def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
     """

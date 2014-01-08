@@ -173,18 +173,18 @@ class SerializeTestCase(unittest.TestCase):
             self.assert_(form2.has_field(field.getId()))
             field2 = getattr(form2, field.getId())
             # XXX test if values are the same
-            self.assertEquals(field.values, field2.values)
+            self.assertEqual(field.values, field2.values)
             # test if default renderings are the same
-            self.assertEquals(field.render(), field2.render())
+            self.assertEqual(field.render(), field2.render())
 
-        self.assertEquals(form.title, form2.title)
-        self.assertEquals(form.name, form2.name)
-        self.assertEquals(form.action, form2.action)
-        self.assertEquals(form.enctype, form2.enctype)
-        self.assertEquals(form.method, form2.method)
+        self.assertEqual(form.title, form2.title)
+        self.assertEqual(form.name, form2.name)
+        self.assertEqual(form.action, form2.action)
+        self.assertEqual(form.enctype, form2.enctype)
+        self.assertEqual(form.method, form2.method)
 
         # if we have forgotten something, this will usually remind us ;-)
-        self.assertEquals(form.render(), form2.render())
+        self.assertEqual(form.render(), form2.render())
 
 
     def test_messages(self):
@@ -211,17 +211,17 @@ class SerializeTestCase(unittest.TestCase):
             form.validate_all(request)
             self.fail('form should fail in validation')
         except FormValidationError, e:
-            self.assertEquals(1, len(e.errors))
+            self.assertEqual(1, len(e.errors))
             text1 = e.errors[0].error_text
 
         try:
             form2.validate_all(request)
             self.fail('form2 should fail in validation')
         except FormValidationError, e:
-            self.assertEquals(1, len(e.errors))
+            self.assertEqual(1, len(e.errors))
             text2 = e.errors[0].error_text
 
-        self.assertEquals(text1, text2)
+        self.assertEqual(text1, text2)
 
 
     def test_fieldValueTypes(self):
@@ -361,7 +361,7 @@ class SerializeTestCase(unittest.TestCase):
             # naively.
             message = 'the values of %r and %r are different: %r != %r' \
                     % (field, field2, field.values, field2.values)
-            self.assertEquals(sorted(field.values.iterkeys()),
+            self.assertEqual(sorted(field.values.iterkeys()),
                     sorted(field2.values.keys()),
                     message)
 
@@ -377,11 +377,11 @@ class SerializeTestCase(unittest.TestCase):
                         message)
 
             # test if default renderings are the same
-            self.assertEquals(field.render(REQUEST=request),
+            self.assertEqual(field.render(REQUEST=request),
                               field2.render(REQUEST=request))
 
         # brute force compare ...
-        self.assertEquals(form.render(REQUEST=request),
+        self.assertEqual(form.render(REQUEST=request),
                           form2.render(REQUEST=request))
         request.clear()
         request['field_int_field'] = '42'
@@ -409,12 +409,12 @@ class SerializeTestCase(unittest.TestCase):
             # XXX only render first error ...
             self.fail('error when editing form1, field %s; error message: %s' %
                        (e.errors[0].field_id, e.errors[0].error_text) )
-        self.assertEquals(result1, result2)
-        self.assertEquals(42, result2['int_field'])
-        self.assertEquals(2.71828, result2['float_field'])
+        self.assertEqual(result1, result2)
+        self.assertEqual(42, result2['int_field'])
+        self.assertEqual(2.71828, result2['float_field'])
 
         # check link field timeout value
-        self.assertEquals(link_field.get_value('check_timeout'),
+        self.assertEqual(link_field.get_value('check_timeout'),
                           form2.link_field.get_value('check_timeout'))
 
         # XXX not tested: equal form validation failure on invalid input
@@ -434,9 +434,9 @@ class SerializeTestCase(unittest.TestCase):
 
         # XXX actually the empty group is not rendered anyway, but
         # if we get here, we are behind the bug anyway ...
-        self.assertEquals(form.render(), form2.render())
+        self.assertEqual(form.render(), form2.render())
 
-        self.assertEquals(form.get_groups(), form2.get_groups())
+        self.assertEqual(form.get_groups(), form2.get_groups())
     
         
 def test_suite():

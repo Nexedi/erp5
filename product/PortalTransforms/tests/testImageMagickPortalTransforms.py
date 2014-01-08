@@ -24,57 +24,57 @@ class ImageMagickTransformsTest(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.pt.registerTransform(image_to_bmp())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/x-ms-bmp',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/x-ms-bmp')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/x-ms-bmp')
 
     def test_image_to_gif(self):
         self.pt.registerTransform(image_to_gif())
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/png')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/png')
         data = self.pt.convertTo(target_mimetype='image/gif',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/gif')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/gif')
 
     def test_image_to_jpeg(self):
         self.pt.registerTransform(image_to_jpeg())
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/gif')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/gif')
         data = self.pt.convertTo(target_mimetype='image/jpeg',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/jpeg')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/jpeg')
 
     def test_image_to_png(self):
         self.pt.registerTransform(image_to_png())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/png',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/png')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/png')
 
     def test_image_to_pcx(self):
         self.pt.registerTransform(image_to_pcx())
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/gif')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/gif')
         data = self.pt.convertTo(target_mimetype='image/pcx',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/pcx')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/pcx')
 
     def test_image_to_ppm(self):
         self.pt.registerTransform(image_to_ppm())
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/png')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/png')
         data = self.pt.convertTo(target_mimetype='image/x-portable-pixmap',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/x-portable-pixmap')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/x-portable-pixmap')
 
     def test_image_to_tiff(self):
         self.pt.registerTransform(image_to_tiff())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
+        self.assertEqual(self.portal.mimetypes_registry.classify(data),'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/tiff',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/tiff')
+        self.assertEqual(data.getMetadata()['mimetype'], 'image/tiff')
 
 
 # FIXME missing tests for image_to_html, st

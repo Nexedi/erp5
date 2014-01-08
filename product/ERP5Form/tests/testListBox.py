@@ -85,7 +85,7 @@ class TestListBox(ERP5TypeTestCase):
     portal.ListBoxZuite_reset()
 
     message = portal.foo_module.FooModule_createObjects()
-    self.failUnless('Created Successfully' in message)
+    self.assertTrue('Created Successfully' in message)
 
   def stepModifyListBoxForStat(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
@@ -93,7 +93,7 @@ class TestListBox(ERP5TypeTestCase):
     message = listbox.ListBox_setPropertyList(
       field_stat_columns = 'id|FooModule_statId\ntitle|FooModule_statTitle',
       field_stat_method = 'portal_catalog')
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
 
   def stepRenderList(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
@@ -109,7 +109,7 @@ class TestListBox(ERP5TypeTestCase):
     self.assertEqual(len(line_list), 12)
 
     title_line = line_list[0]
-    self.failUnless(title_line.isTitleLine())
+    self.assertTrue(title_line.isTitleLine())
     self.assertEqual(len(title_line.getColumnItemList()), 3)
     result = (('id', 'ID'), ('title', 'Title'), ('getQuantity', 'Quantity'))
     for i, (key, value) in enumerate(title_line.getColumnItemList()):
@@ -117,7 +117,7 @@ class TestListBox(ERP5TypeTestCase):
       self.assertEqual(value, result[i][1])
 
     for n, data_line in enumerate(line_list[1:-1]):
-      self.failUnless(data_line.isDataLine())
+      self.assertTrue(data_line.isDataLine())
       self.assertEqual(len(data_line.getColumnItemList()), 3)
       result = (('id', str(n)), ('title', 'Title %d' % n), ('getQuantity', str(10.0 - n)))
       for i, (key, value) in enumerate(data_line.getColumnItemList()):
@@ -125,7 +125,7 @@ class TestListBox(ERP5TypeTestCase):
         self.assertEqual(str(value).strip(), result[i][1])
 
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
+    self.assertTrue(stat_line.isStatLine())
     self.assertEqual(len(stat_line.getColumnItemList()), 3)
     result = (('id', 'foo_module'), ('title', 'Foos'), ('getQuantity', 'None'))
     for i, (key, value) in enumerate(stat_line.getColumnItemList()):
@@ -323,12 +323,12 @@ class TestListBox(ERP5TypeTestCase):
     listbox_title_column = form.listbox_title
 
     self.assertTrue(listbox_title_column.is_delegated('default'))
-    self.assertEquals(listbox_title_column.get_recursive_tales('default')._text,
+    self.assertEqual(listbox_title_column.get_recursive_tales('default')._text,
                       'python: cell.getTitle()')
     listboxline_list = form.listbox.get_value('default', render_format = 'list',
                                               REQUEST = request)
     first_item = dict(listboxline_list[1].getColumnItemList())
-    self.assertEquals(first_item['title'], 'Title 0')
+    self.assertEqual(first_item['title'], 'Title 0')
 
     # Use "cell" locally
     listbox_title_column.manage_tales_surcharged_xmlrpc(
@@ -337,7 +337,7 @@ class TestListBox(ERP5TypeTestCase):
     listboxline_list = form.listbox.get_value('default', render_format = 'list',
                                               REQUEST = request)
     first_item = dict(listboxline_list[1].getColumnItemList())
-    self.assertEquals(first_item['title'], 'Title 0 local')
+    self.assertEqual(first_item['title'], 'Title 0 local')
 
   def _helperExtraAndCssInListboxLine(self, field_type, editable):
     """
@@ -488,7 +488,7 @@ class TestListBox(ERP5TypeTestCase):
 
     msg = "editable_in_listbox: %s, editable_in_line: %s" \
             % (editable_in_listbox, editable_in_line)
-    self.assertEquals(len(editable_field_list) == 1, expected_editable, msg)
+    self.assertEqual(len(editable_field_list) == 1, expected_editable, msg)
 
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
@@ -518,10 +518,10 @@ class TestListBox(ERP5TypeTestCase):
     line_list = [l for l in listbox.get_value('default',
                                render_format='list',
                                REQUEST=request) if l.isDataLine()]
-    self.assertEquals(1, len(line_list))
-    self.assertEquals('Object Title', line_list[0].getColumnProperty('title'))
+    self.assertEqual(1, len(line_list))
+    self.assertEqual('Object Title', line_list[0].getColumnProperty('title'))
     html = listbox.render(REQUEST=request)
-    self.failUnless('Object Title' in html, html)
+    self.assertTrue('Object Title' in html, html)
 
   def test_ProxyFieldRenderFormatLines(self):
     # tests that listbox default value in render_format=list mode is
@@ -551,13 +551,13 @@ class TestListBox(ERP5TypeTestCase):
     request['here'] = portal.foo_module
     line_list = proxy_field.get_value('default',
                       render_format='list', REQUEST=request)
-    self.failUnless(isinstance(line_list, list))
+    self.assertTrue(isinstance(line_list, list))
 
     title_line = line_list[0]
-    self.failUnless(title_line.isTitleLine())
+    self.assertTrue(title_line.isTitleLine())
 
     # title of columns is the value overloaded by the proxy field.
-    self.assertEquals([('proxy_value', 'Proxy')],
+    self.assertEqual([('proxy_value', 'Proxy')],
                       title_line.getColumnItemList())
 
   def test_ListStyleColumnsSelections(self):

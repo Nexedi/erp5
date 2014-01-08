@@ -213,9 +213,9 @@ class TestBug(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('dummy <loggedperson@localhost>', mfrom)
-    self.assertEquals(['person1@localhost'], mto)
-    self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
+    self.assertEqual('dummy <loggedperson@localhost>', mfrom)
+    self.assertEqual(['person1@localhost'], mto)
+    self.assertTrue(bug.getTitle().replace(" ", "_") in messageText)
 
   def stepCheckBugMessageNotification(self, sequence=None,
                                          sequence_list=None, **kw):
@@ -226,9 +226,9 @@ class TestBug(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('person2@localhost', mfrom)
-    self.assertEquals(['person1@localhost'], mto)
-    self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
+    self.assertEqual('person2@localhost', mfrom)
+    self.assertEqual(['person1@localhost'], mto)
+    self.assertTrue(bug.getTitle().replace(" ", "_") in messageText)
 
   def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -289,7 +289,7 @@ class TestBug(ERP5TypeTestCase):
       check if the message is delivered the bug.
     """
     bug_message = sequence.get('bug_message')
-    self.assertEquals(bug_message.getSimulationState(), 'delivered') 
+    self.assertEqual(bug_message.getSimulationState(), 'delivered') 
 
   def stepCheckBugMessage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -297,9 +297,9 @@ class TestBug(ERP5TypeTestCase):
     """
     bug_message = sequence.get('bug_message')
     person = sequence.get('person1')
-    self.assertEquals( [ person ] , bug_message.getDestinationValueList())
-    self.failUnless( bug_message.getStartDate() is not None)
-    #self.assertEquals(bug_message.getSourceValue().getTitle(), 'dummy')
+    self.assertEqual( [ person ] , bug_message.getDestinationValueList())
+    self.assertTrue( bug_message.getStartDate() is not None)
+    #self.assertEqual(bug_message.getSourceValue().getTitle(), 'dummy')
 
   def stepCheckBugMessageNotificationReAssign(self, sequence=None, sequence_list=None, **kw):
     """
@@ -319,8 +319,8 @@ class TestBug(ERP5TypeTestCase):
       Create a dummy bug
     """
     bug = sequence.get('bug')
-    self.assertEquals("#%s" % bug.getId(), bug.getReference())
-    #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
+    self.assertEqual("#%s" % bug.getId(), bug.getReference())
+    #self.assertEqual(bug_message.getSourceTradeValue().getTitle(), 'dummy')
 
   def stepCloneAndCheckBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -329,8 +329,8 @@ class TestBug(ERP5TypeTestCase):
     bug_to_clone = sequence.get('bug')
     self.assertNotEquals(len(bug_to_clone.contentValues()), 0)
     bug = bug_to_clone.Base_createCloneDocument(batch_mode=1)
-    self.assertEquals("#%s" % bug.getId(), bug.getReference())
-    self.assertEquals(len(bug.contentValues()), 0)
+    self.assertEqual("#%s" % bug.getId(), bug.getReference())
+    self.assertEqual(len(bug.contentValues()), 0)
 
   def stepOpenBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -338,7 +338,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'confirmed')
+    self.assertEqual(bug.getSimulationState(), 'confirmed')
 
   def stepAssignBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -346,7 +346,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'set_ready_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'ready')
+    self.assertEqual(bug.getSimulationState(), 'ready')
 
   def stepResolveBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -354,7 +354,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'stopped')
+    self.assertEqual(bug.getSimulationState(), 'stopped')
 
   def stepReAssignBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -362,7 +362,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 're_assign_action', send_event=1, comment='Re-assign!')
-    self.assertEquals(bug.getSimulationState(), 'ready')
+    self.assertEqual(bug.getSimulationState(), 'ready')
 
   def stepCloseBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -370,7 +370,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'deliver_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'delivered')
+    self.assertEqual(bug.getSimulationState(), 'delivered')
 
   def stepCancelBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -378,7 +378,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     self.workflow_tool.doActionFor(bug, 'cancel_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'cancelled')
+    self.assertEqual(bug.getSimulationState(), 'cancelled')
 
   def stepSetTestedBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -386,7 +386,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     bug.setTested(True)
-    self.assertEquals(bug.getTested(), True)
+    self.assertEqual(bug.getTested(), True)
 
   def stepSetOldClosedDate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -394,14 +394,14 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     bug.setStopDate(self.datetime - 10)
-    self.assertEquals(bug.getStopDate().Date(), (self.datetime - 10).Date()) # Check that datetime is fixed
+    self.assertEqual(bug.getStopDate().Date(), (self.datetime - 10).Date()) # Check that datetime is fixed
 
   def stepCheckClosedDate(self, sequence=None, sequence_list=None, **kw):
     """
       Check that the closed date is set as today.
     """
     bug = sequence.get('bug')
-    self.assertEquals(bug.getStopDate().Date(), self.datetime.Date())
+    self.assertEqual(bug.getStopDate().Date(), self.datetime.Date())
 
   ##################################
   ##  Tests
@@ -592,12 +592,12 @@ class TestBug(ERP5TypeTestCase):
     bug_line = bug.newContent(portal_type='Bug Line')
     cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
     self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'confirmed')
+    self.assertEqual(bug.getSimulationState(), 'confirmed')
     self.tic()
     bug.deleteContent(id='2')
     self.tic()
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
-    self.assertEquals(bug.getSimulationState(), 'stopped')
+    self.assertEqual(bug.getSimulationState(), 'stopped')
  
 def test_suite():
   suite = unittest.TestSuite()

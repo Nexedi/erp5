@@ -78,7 +78,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_test", None), None)
-    self.assertEquals("Dummy Module Title",
+    self.assertEqual("Dummy Module Title",
                       self.portal.dummy_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
                         None)
@@ -106,7 +106,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_test", None), None)
-    self.assertEquals("Dummy Module Title",
+    self.assertEqual("Dummy Module Title",
                       self.portal.dummy_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
                         None)
@@ -134,7 +134,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     form = self.portal.portal_skins.erp5_test._getOb(
                                       'DummyModule_viewDummyList', None)
     self.assertNotEquals(form, None)
-    self.assertEquals(form.pt, 'form_list')
+    self.assertEqual(form.pt, 'form_list')
     self.assertTrue(hasattr(form, 'listbox'))
     # listbox is in bottom group
     self.assertTrue('listbox' in [field.getId() for field in 
@@ -165,7 +165,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_test", None), None)
-    self.assertEquals("Dummy Module Title",
+    self.assertEqual("Dummy Module Title",
                       self.portal.dummy_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
                         None)
@@ -189,7 +189,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
       'text_couscous', None), None)
     # the old field text_1 must have been removed
-    self.assertEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
+    self.assertEqual(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
       'text_1', None), None)
 
   def test_05_requiredFields(self):
@@ -211,7 +211,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_test", None), None)
-    self.assertEquals("Dummy Module Title",
+    self.assertEqual("Dummy Module Title",
                       self.portal.dummy_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
                         None)
@@ -234,7 +234,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     # check the required fields are required :
     for field_name in required_field_name_list:
       field = getattr(form, field_name, None)
-      self.assertEquals(field.values['required'], 1)
+      self.assertEqual(field.values['required'], 1)
 
     # check fields not required are not :
     for field_name in not_required_field_name_list:
@@ -258,7 +258,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('dummy_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_test", None), None)
-    self.assertEquals("Dummy Module Title",
+    self.assertEqual("Dummy Module Title",
                       self.portal.dummy_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy Module"),
                         None)
@@ -281,12 +281,12 @@ class TestScribusUtils(ERP5TypeTestCase):
     # check the read_only fields are read_only :
     for field_name in read_only_field_name_list:
       field = getattr(form, field_name, None)
-      self.assertEquals(field.values['editable'], 0)
+      self.assertEqual(field.values['editable'], 0)
 
     # check fields not read_only are not :
     for field_name in not_read_only_field_name_list:
       field = getattr(form, field_name, None)
-      self.assertEquals(field.values['editable'], 1)
+      self.assertEqual(field.values['editable'], 1)
 
   def test_07_DateTimeFieldWithModuleCreation(self):
     '''test DateTime format'''
@@ -308,7 +308,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('authorisation_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_authorisation", None), None)
-    self.assertEquals("Authorisation Module Title",
+    self.assertEqual("Authorisation Module Title",
                       self.portal.authorisation_module.getTitle())
     module_portal_type = portal_types.getTypeInfo("Authorisation Module")
     self.assertNotEqual(module_portal_type, None)
@@ -354,9 +354,9 @@ class TestScribusUtils(ERP5TypeTestCase):
                                                        authorisation))
     result_stop_date = expr_stop_date(getExprContext(authorisation, 
                                                      authorisation))
-    self.assertEquals(result_other_date, '')
-    self.assertEquals(result_start_date, start_date.strftime('%d/%m/%Y'))
-    self.assertEquals(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
+    self.assertEqual(result_other_date, '')
+    self.assertEqual(result_start_date, start_date.strftime('%d/%m/%Y'))
+    self.assertEqual(result_stop_date, stop_date.strftime('%Y/%m/%d %H:%M'))
 
   def test_08_ModuleCreationWithoutField(self):
     '''check it's possible to create a module using an empty scribus file without errors'''
@@ -372,13 +372,13 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('empty_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_empty", None), None)
-    self.assertEquals("Empty Module Title",
+    self.assertEqual("Empty Module Title",
                       self.portal.empty_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Empty Module"),
                         None)
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Empty"), None)
     form = self.portal.portal_skins.erp5_empty.Empty_view
-    self.assertEquals(0, len(form.objectValues()))
+    self.assertEqual(0, len(form.objectValues()))
 
   def test_09_creationRadioField(self):
     '''check it's possible to put a field radioField in ERP5 Form created with
@@ -399,17 +399,17 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertNotEqual(self.portal._getOb('radio_module', None), None)
     self.assertNotEqual(
         self.portal.portal_skins._getOb("erp5_radio", None), None)
-    self.assertEquals("Radio Module Title",
+    self.assertEqual("Radio Module Title",
                       self.portal.radio_module.getTitle())
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Radio Module"),
                         None)
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Radio"), None)
     form = self.portal.portal_skins.erp5_radio.Radio_view
     field_radio = form.my_radio
-    self.assertEquals(3,
+    self.assertEqual(3,
                       len(field_radio.get_value('items')))
     items_list = [('young', 'Young'), ('adult', 'Adult'), ('senior', 'Senior')]
-    self.assertEquals(items_list, field_radio.get_value('items'))
+    self.assertEqual(items_list, field_radio.get_value('items'))
 
 def test_suite():
   suite = unittest.TestSuite()

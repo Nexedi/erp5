@@ -144,7 +144,7 @@ class TestWorklist(ERP5TypeTestCase):
     return result
 
   def getWorklistDocumentCountFromActionName(self, action_name):
-    self.assertEquals(action_name[-1], ')')
+    self.assertEqual(action_name[-1], ')')
     left_parenthesis_offset = action_name.rfind('(')
     self.assertNotEquals(left_parenthesis_offset, -1)
     return int(action_name[left_parenthesis_offset + 1:-1])
@@ -206,9 +206,9 @@ class TestWorklist(ERP5TypeTestCase):
 
   def checkWorklist(self, result, name, count, url_parameter_dict=None):
     entry_list = [x for x in result if x['name'].startswith(name)]
-    self.assertEquals(len(entry_list), count and 1)
+    self.assertEqual(len(entry_list), count and 1)
     if count:
-      self.assertEquals(count,
+      self.assertEqual(count,
         self.getWorklistDocumentCountFromActionName(entry_list[0]['name']))
     if not entry_list:
       return
@@ -222,7 +222,7 @@ class TestWorklist(ERP5TypeTestCase):
                                                     self.module_selection_name)
       for parameter, value in url_parameter_dict.iteritems():
         self.assertTrue(parameter in selection_parameter_dict)
-        self.assertEquals(value, selection_parameter_dict[parameter])
+        self.assertEqual(value, selection_parameter_dict[parameter])
 
   def test_01_permission(self, quiet=0, run=run_all_test):
     """
@@ -262,7 +262,7 @@ class TestWorklist(ERP5TypeTestCase):
         self.logMessage("Check %s worklist" % user_id)
         self.login(user_id)
         result = workflow_tool.listActions(object=document)
-        self.assertEquals(result, [])
+        self.assertEqual(result, [])
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):

@@ -266,10 +266,10 @@ class TestIngestion(ERP5TypeTestCase):
       f = makeFileUpload(filename)
       document.edit(file=f)
       self.tic()
-      self.failUnless(document.hasFile())
+      self.assertTrue(document.hasFile())
       if document.isSupportBaseDataConversion():
         # this is how we know if it was ok or not
-        self.assertEquals(document.getExternalProcessingState(), 'converted')
+        self.assertEqual(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
         self.assert_('magic' in str(document.asText()))
       else:
@@ -332,12 +332,12 @@ class TestIngestion(ERP5TypeTestCase):
     for extension, portal_type in extension_to_type:
       document = created_documents[count]
       count+=1
-      self.assertEquals(document.getPortalType(), portal_type)
-      self.assertEquals(document.getReference(), 'TEST')
+      self.assertEqual(document.getPortalType(), portal_type)
+      self.assertEqual(document.getReference(), 'TEST')
       if document.isSupportBaseDataConversion():
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
-        self.assertEquals(document.getExternalProcessingState(), 'converted')
+        self.assertEqual(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
 
   def newPythonScript(self, script_id, argument_list, code):
@@ -381,7 +381,7 @@ class TestIngestion(ERP5TypeTestCase):
     is the same as expected_metadata
     """
     for k, v in expected_metadata.items():
-      self.assertEquals(document.getProperty(k), v)
+      self.assertEqual(document.getProperty(k), v)
 
   def receiveEmail(self, data,
                    portal_type='Document Ingestion Message',
@@ -475,7 +475,7 @@ class TestIngestion(ERP5TypeTestCase):
       (ie. no file upload has been done yet)
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEquals(document.getExternalProcessingState(), 'empty')
+    return self.assertEqual(document.getExternalProcessingState(), 'empty')
 
   def stepCheckUploadedState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -483,7 +483,7 @@ class TestIngestion(ERP5TypeTestCase):
       (ie. a file upload has been done)
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEquals(document.getExternalProcessingState(), 'uploaded')
+    return self.assertEqual(document.getExternalProcessingState(), 'uploaded')
 
   def stepCheckConvertingState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -491,7 +491,7 @@ class TestIngestion(ERP5TypeTestCase):
       (ie. a file upload has been done and the document is converting)
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEquals(document.getExternalProcessingState(), 'converting')
+    return self.assertEqual(document.getExternalProcessingState(), 'converting')
 
   def stepCheckConvertedState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -500,7 +500,7 @@ class TestIngestion(ERP5TypeTestCase):
       been converted)
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    return self.assertEquals(document.getExternalProcessingState(), 'converted')
+    return self.assertEqual(document.getExternalProcessingState(), 'converted')
 
   def stepStraightUpload(self, sequence=None, sequence_list=None, **kw):
     """
@@ -510,13 +510,13 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.doc'
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     # First revision is 1 (like web pages)
-    self.assertEquals(document.getRevision(), '1')
+    self.assertEqual(document.getRevision(), '1')
     f = makeFileUpload(filename)
     document.edit(file=f)
     self.assert_(document.hasFile())
-    self.assertEquals(document.getFilename(), filename) 
+    self.assertEqual(document.getFilename(), filename) 
     # Revision is 1 after upload (revisions are strings)
-    self.assertEquals(document.getRevision(), '2')
+    self.assertEqual(document.getRevision(), '2')
     document.reindexObject()
     self.commit()
     
@@ -528,7 +528,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.doc')
     revision = document.getRevision()
     document.edit(file=f)
-    self.assertEquals(document.getRevision(), str(int(revision) + 1))
+    self.assertEqual(document.getRevision(), str(int(revision) + 1))
     document.reindexObject()
     self.commit()
     
@@ -556,9 +556,9 @@ class TestIngestion(ERP5TypeTestCase):
 
     self.portal.portal_contributions.newContent(file=f)
     self.tic()
-    self.assertEquals(document.getRevision(), str(int(revision) + 1))
+    self.assertEqual(document.getRevision(), str(int(revision) + 1))
     self.assert_('This document is modified.' in document.asText())
-    self.assertEquals(len(self.portal.document_module.objectIds()),
+    self.assertEqual(len(self.portal.document_module.objectIds()),
                       number_of_document)
     document.reindexObject()
     self.commit()
@@ -572,9 +572,9 @@ class TestIngestion(ERP5TypeTestCase):
     sequence.edit(document_path=document.getPath())
     self.tic()
     self.assertTrue('This is a another very interesting document.' in document.asText())
-    self.assertEquals(document.getReference(), 'ANOTHE')
-    self.assertEquals(document.getVersion(), '001')
-    self.assertEquals(document.getLanguage(), 'en')
+    self.assertEqual(document.getReference(), 'ANOTHE')
+    self.assertEqual(document.getVersion(), '001')
+    self.assertEqual(document.getLanguage(), 'en')
 
   def stepDiscoverFromFilename(self, sequence=None, sequence_list=None, **kw):
     """
@@ -586,22 +586,22 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.doc'
     # First make sure the regular expressions work
     property_dict = document.getPropertyDictFromFilename(filename)
-    self.assertEquals(property_dict['reference'], 'TEST')
-    self.assertEquals(property_dict['language'], 'en')
-    self.assertEquals(property_dict['version'], '002')
+    self.assertEqual(property_dict['reference'], 'TEST')
+    self.assertEqual(property_dict['language'], 'en')
+    self.assertEqual(property_dict['version'], '002')
     # Then make sure content discover works
     # XXX - This part must be extended
     property_dict = document.getPropertyDictFromContent()
-    self.assertEquals(property_dict['title'], 'title')
-    self.assertEquals(property_dict['description'], 'comments')
-    self.assertEquals(property_dict['subject_list'], ['keywords'])
+    self.assertEqual(property_dict['title'], 'title')
+    self.assertEqual(property_dict['description'], 'comments')
+    self.assertEqual(property_dict['subject_list'], ['keywords'])
     # Then make sure metadata discovery works
     f = makeFileUpload(filename)
     document.edit(file=f)
-    self.assertEquals(document.getReference(), 'TEST')
-    self.assertEquals(document.getLanguage(), 'en')
-    self.assertEquals(document.getVersion(), '002')
-    self.assertEquals(document.getFilename(), filename)
+    self.assertEqual(document.getReference(), 'TEST')
+    self.assertEqual(document.getLanguage(), 'en')
+    self.assertEqual(document.getVersion(), '002')
+    self.assertEqual(document.getFilename(), filename)
 
   def stepCheckConvertedContent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -635,15 +635,15 @@ class TestIngestion(ERP5TypeTestCase):
     self.tic()
     # Then make sure content discover works
     property_dict = document.getPropertyDictFromUserLogin()
-    self.assertEquals(property_dict['contributor'], 'person_module/john')
+    self.assertEqual(property_dict['contributor'], 'person_module/john')
     # reference from filename (the rest was checked some other place)
-    self.assertEquals(document.getReference(), 'TEST')
+    self.assertEqual(document.getReference(), 'TEST')
     # short_title from content
-    self.assertEquals(document.getShortTitle(), 'short')
+    self.assertEqual(document.getShortTitle(), 'short')
     # title from metadata inside the document
-    self.assertEquals(document.getTitle(),  'title')
+    self.assertEqual(document.getTitle(),  'title')
     # contributors from user
-    self.assertEquals(document.getContributor(), 'person_module/john')
+    self.assertEqual(document.getContributor(), 'person_module/john')
 
   def stepEditMetadata(self, sequence=None, sequence_list=None, **kw):
     """
@@ -668,11 +668,11 @@ class TestIngestion(ERP5TypeTestCase):
     builder = OOoBuilder(newcontent)
     xml_tree = etree.fromstring(builder.extract('meta.xml'))
     title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
-    self.assertEquals(title, 'another title')
+    self.assertEqual(title, 'another title')
     subject = xml_tree.find('*/{%s}keyword' % xml_tree.nsmap['meta']).text
-    self.assertEquals(subject, u'another subject')
+    self.assertEqual(subject, u'another subject')
     description = xml_tree.find('*/{%s}description' % xml_tree.nsmap['dc']).text
-    self.assertEquals(description, u'another description')
+    self.assertEqual(description, u'another description')
 
   def stepIngestTextFormats(self, sequence=None, sequence_list=None, **kw):
     """
@@ -787,11 +787,11 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
     mime, text = document.convert('text')
-    self.failUnless('magic' in text)
-    self.failUnless(mime == 'text/plain')
+    self.assertTrue('magic' in text)
+    self.assertTrue(mime == 'text/plain')
     mime, html = document.convert('html')
-    self.failUnless('magic' in html)
-    self.failUnless(mime == 'text/html')
+    self.assertTrue('magic' in html)
+    self.assertTrue(mime == 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -802,7 +802,7 @@ class TestIngestion(ERP5TypeTestCase):
     image.edit(file=f)
     self.tic()
     mime, data = image.convert(None)
-    self.assertEquals(mime, 'image/jpeg')
+    self.assertEqual(mime, 'image/jpeg')
     mime, small_data = image.convert(None, display='small')
     mime, large_data = image.convert(None, display='xlarge')
     # Check we are able to resize the image.
@@ -945,7 +945,7 @@ class TestIngestion(ERP5TypeTestCase):
       Verify contributed for initial time multiple document per email.
     """
     attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
-    self.assertEquals('1', ingested_document.getRevision())
+    self.assertEqual('1', ingested_document.getRevision())
     
   def stepVerifyEmailedMultipleDocumentsMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
@@ -959,7 +959,7 @@ class TestIngestion(ERP5TypeTestCase):
       Verify contributed for initial time document per email.
     """
     attachment_list, ingested_document = self.verifyEmailedDocument()
-    self.assertEquals('1', ingested_document.getRevision())
+    self.assertEqual('1', ingested_document.getRevision())
 
   def stepVerifyEmailedDocumentMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1000,7 +1000,7 @@ class TestIngestion(ERP5TypeTestCase):
                                version='002')
       self.assertNotEquals(None, ingested_document)
       if ingested_document.isSupportBaseDataConversion():
-        self.assertEquals('converted', ingested_document.getExternalProcessingState())
+        self.assertEqual('converted', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertTrue(ingested_document in attachment_list)
     return attachment_list, ingested_document
@@ -1026,12 +1026,12 @@ class TestIngestion(ERP5TypeTestCase):
                                reference='MAIL',
                                language='en',
                                version='002')
-    self.assertEquals('MAIL-en-002.doc', ingested_document.getFilename())
-    self.assertEquals('converted', ingested_document.getExternalProcessingState())
+    self.assertEqual('MAIL-en-002.doc', ingested_document.getFilename())
+    self.assertEqual('converted', ingested_document.getExternalProcessingState())
     self.assertTrue('magic' in ingested_document.asText())
 
     # check aggregate between 'Document Ingestion Message' and ingested document
-    self.assertEquals(attachment_list[0], ingested_document)
+    self.assertEqual(attachment_list[0], ingested_document)
     return attachment_list, ingested_document
 
   ##################################
@@ -1044,10 +1044,10 @@ class TestIngestion(ERP5TypeTestCase):
     """
     preference_tool = self.portal.portal_preferences
     conversion_dict = _getConversionServerDict()
-    self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
-    self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
-    self.assertEquals(preference_tool.getPreferredDocumentFilenameRegularExpression(), FILENAME_REGULAR_EXPRESSION)
-    self.assertEquals(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
+    self.assertEqual(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
+    self.assertEqual(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
+    self.assertEqual(preference_tool.getPreferredDocumentFilenameRegularExpression(), FILENAME_REGULAR_EXPRESSION)
+    self.assertEqual(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
 
   def test_02_FileExtensionRegistry(self):
     """
@@ -1077,7 +1077,7 @@ class TestIngestion(ERP5TypeTestCase):
           }
     for type, portal_type in correct_type_mapping.items():
       filename = 'aaa.' + type
-      self.assertEquals(reg.findPortalTypeName(filename=filename),
+      self.assertEqual(reg.findPortalTypeName(filename=filename),
                         portal_type)
 
   def test_03_TextDoc(self):
@@ -1382,20 +1382,20 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'T&é@{T-en-002.doc'
     # First make sure the regular expressions work
     property_dict = context.getPropertyDictFromFilename(filename)
-    self.assertEquals(property_dict['reference'], 'T&é@{T')
-    self.assertEquals(property_dict['language'], 'en')
-    self.assertEquals(property_dict['version'], '002')
+    self.assertEqual(property_dict['reference'], 'T&é@{T')
+    self.assertEqual(property_dict['language'], 'en')
+    self.assertEqual(property_dict['version'], '002')
     # Then make sure content discover works
     # XXX - This part must be extended
     property_dict = context.getPropertyDictFromContent()
-    self.assertEquals(property_dict['title'], 'title')
-    self.assertEquals(property_dict['description'], 'comments')
-    self.assertEquals(property_dict['subject_list'], ['keywords'])
+    self.assertEqual(property_dict['title'], 'title')
+    self.assertEqual(property_dict['description'], 'comments')
+    self.assertEqual(property_dict['subject_list'], ['keywords'])
     # Then make sure metadata discovery works
-    self.assertEquals(context.getReference(), 'T&é@{T')
-    self.assertEquals(context.getLanguage(), 'en')
-    self.assertEquals(context.getVersion(), '002')
-    self.assertEquals(context.getFilename(), filename)
+    self.assertEqual(context.getReference(), 'T&é@{T')
+    self.assertEqual(context.getLanguage(), 'en')
+    self.assertEqual(context.getVersion(), '002')
+    self.assertEqual(context.getFilename(), filename)
 
   def test_13_UploadTextFromContributionToolWithNonASCIIFilename(self):
     """
@@ -1419,7 +1419,7 @@ class TestIngestion(ERP5TypeTestCase):
     portal = self.portal
 
     contribution_tool = getToolByName(portal, 'portal_contributions')
-    self.assertEquals(1,
+    self.assertEqual(1,
         len(portal.portal_catalog(path=contribution_tool.getPath())))
 
     # Clear catalog
@@ -1428,7 +1428,7 @@ class TestIngestion(ERP5TypeTestCase):
     # Reindex all
     portal.ERP5Site_reindexAll()
     self.tic()
-    self.assertEquals(1,
+    self.assertEqual(1,
         len(portal.portal_catalog(path=contribution_tool.getPath())))
 
   def test_15_TestFilenameDiscovery(self):
@@ -1440,12 +1440,12 @@ class TestIngestion(ERP5TypeTestCase):
     contribution_tool = getToolByName(portal, 'portal_contributions')
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
-    self.assertEquals(document.getFilename(), 'TEST-en-002.doc')
+    self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
     my_filename = 'Something.doc'
     document = contribution_tool.newContent(file=file_object,
                                             filename=my_filename)
     self.tic()
-    self.assertEquals(document.getFilename(), my_filename)
+    self.assertEqual(document.getFilename(), my_filename)
 
   def test_16_TestMetadataDiscoveryFromUserLogin(self):
     """
@@ -1465,10 +1465,10 @@ class TestIngestion(ERP5TypeTestCase):
     document = contribution_tool.newContent(file=file_object)
     document.discoverMetadata(document.getFilename(), 'contributor1') 
     self.tic()
-    self.assertEquals(document.getFilename(), 'TEST-en-002.doc')
-    self.assertEquals('musician/wind/saxophone', document.getFunction())
-    self.assertEquals('anybody', document.getGroup())
-    self.assertEquals('arctic/spitsbergen', document.getSite())
+    self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
+    self.assertEqual('musician/wind/saxophone', document.getFunction())
+    self.assertEqual('anybody', document.getGroup())
+    self.assertEqual('arctic/spitsbergen', document.getSite())
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase1(self):
     """How to configure meta data discovery so that each time a file
@@ -1516,18 +1516,18 @@ return result
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), first_doc.asNormalisedURL())
-    self.assertEquals(first_doc.getVersion(), '00001')
-    self.assertEquals(first_doc.asURL(), url)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), first_doc.asNormalisedURL())
+    self.assertEqual(first_doc.getVersion(), '00001')
+    self.assertEqual(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), second_doc.asNormalisedURL())
-    self.assertEquals(second_doc.getVersion(), '00002')
-    self.assertEquals(second_doc.asURL(), url)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), second_doc.asNormalisedURL())
+    self.assertEqual(second_doc.getVersion(), '00002')
+    self.assertEqual(second_doc.asURL(), url)
 
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
@@ -1538,18 +1538,18 @@ return result
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), first_doc.asNormalisedURL())
-    self.assertEquals(first_doc.getVersion(), '00001')
-    self.assertEquals(first_doc.asURL(), url2)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), first_doc.asNormalisedURL())
+    self.assertEqual(first_doc.getVersion(), '00001')
+    self.assertEqual(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), second_doc.asNormalisedURL())
-    self.assertEquals(second_doc.getVersion(), '00002')
-    self.assertEquals(second_doc.asURL(), url2)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), second_doc.asNormalisedURL())
+    self.assertEqual(second_doc.getVersion(), '00002')
+    self.assertEqual(second_doc.asURL(), url2)
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase2(self):
     """How to configure meta data discovery so that each time a file
@@ -1594,18 +1594,18 @@ return result
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), first_doc.asNormalisedURL())
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), first_doc.asNormalisedURL())
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), second_doc.asNormalisedURL())
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), second_doc.asNormalisedURL())
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url)
 
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
@@ -1616,18 +1616,18 @@ return result
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), first_doc.asNormalisedURL())
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url2)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), first_doc.asNormalisedURL())
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), second_doc.asNormalisedURL())
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url2)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), second_doc.asNormalisedURL())
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url2)
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase3(self):
     """How to discover metadata so that each new document
@@ -1652,18 +1652,18 @@ context.setReference(reference)
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 2')
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 2')
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url)
 
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
@@ -1671,24 +1671,24 @@ context.setReference(reference)
                                                           data='Hello World!')
     document_to_ingest2.publish()
     self.tic()
-    self.assertEquals(document_to_ingest2.getReference(),
+    self.assertEqual(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 3')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 4')
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url2)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 4')
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 5')
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url2)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 5')
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url2)
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase4(self):
     """How to configure meta data discovery so that each time a file
@@ -1743,18 +1743,18 @@ return result
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
-    self.assertEquals(first_doc.getVersion(), '00001')
-    self.assertEquals(first_doc.asURL(), url)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
+    self.assertEqual(first_doc.getVersion(), '00001')
+    self.assertEqual(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
-    self.assertEquals(second_doc.getVersion(), '00002')
-    self.assertEquals(second_doc.asURL(), url)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
+    self.assertEqual(second_doc.getVersion(), '00002')
+    self.assertEqual(second_doc.asURL(), url)
 
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
@@ -1762,24 +1762,24 @@ return result
                                                           data='Hello World!')
     document_to_ingest2.publish()
     self.tic()
-    self.assertEquals(document_to_ingest2.getReference(),
+    self.assertEqual(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 2')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
-    self.assertEquals(first_doc.getVersion(), '00001')
-    self.assertEquals(first_doc.asURL(), url2)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
+    self.assertEqual(first_doc.getVersion(), '00001')
+    self.assertEqual(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
-    self.assertEquals(second_doc.getVersion(), '00002')
-    self.assertEquals(second_doc.asURL(), url2)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
+    self.assertEqual(second_doc.getVersion(), '00002')
+    self.assertEqual(second_doc.asURL(), url2)
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase5(self):
     """How to configure meta data discovery so that each time a file
@@ -1833,18 +1833,18 @@ return result
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 1')
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url)
 
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
@@ -1852,24 +1852,24 @@ return result
                                                           data='Hello World!')
     document_to_ingest2.publish()
     self.tic()
-    self.assertEquals(document_to_ingest2.getReference(),
+    self.assertEqual(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 2')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(first_doc.getPortalType(), 'Text')
-    self.assertEquals(first_doc.getContentType(), 'text/plain')
-    self.assertEquals(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
-    self.assertEquals(first_doc.getVersion(), '001')
-    self.assertEquals(first_doc.asURL(), url2)
+    self.assertEqual(first_doc.getPortalType(), 'Text')
+    self.assertEqual(first_doc.getContentType(), 'text/plain')
+    self.assertEqual(first_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
+    self.assertEqual(first_doc.getVersion(), '001')
+    self.assertEqual(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
     self.tic()
-    self.assertEquals(second_doc.getPortalType(), 'Text')
-    self.assertEquals(second_doc.getContentType(), 'text/plain')
-    self.assertEquals(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
-    self.assertEquals(second_doc.getVersion(), '001')
-    self.assertEquals(second_doc.asURL(), url2)
+    self.assertEqual(second_doc.getPortalType(), 'Text')
+    self.assertEqual(second_doc.getContentType(), 'text/plain')
+    self.assertEqual(second_doc.getReference(), 'I CHOOSED THIS REFERENCE 3')
+    self.assertEqual(second_doc.getVersion(), '001')
+    self.assertEqual(second_doc.asURL(), url2)
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase6(self):
     """How to configure meta data discovery so that a Spreadsheet
@@ -1885,8 +1885,8 @@ return result
     self.tic()# Discover metadata will delete first ingested document
     # then reingest new one with appropriate portal_type
     result_list = self.portal.portal_catalog(reference='Custom.Reference')
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), 'Spreadsheet')
+    self.assertEqual(len(result_list), 1)
+    self.assertEqual(result_list[0].getPortalType(), 'Spreadsheet')
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase7(self):
     """How to reingest a published document, by a user action ?
@@ -1905,26 +1905,26 @@ return result
     # Now change it to a Text portal_type
     new_doc = document.migratePortalType('Text')
     self.tic()
-    self.assertEquals(new_doc.getPortalType(), 'Text')
-    self.assertEquals(new_doc.getProperty('property_which_doesnot_exists'),
+    self.assertEqual(new_doc.getPortalType(), 'Text')
+    self.assertEqual(new_doc.getProperty('property_which_doesnot_exists'),
                                           'Foo')
-    self.assertEquals(new_doc.getTitle(), 'One title')
-    self.assertEquals(new_doc.getReference(), 'EFAA')
-    self.assertEquals(new_doc.getValidationState(), 'published')
-    self.assertEquals(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getTitle(), 'One title')
+    self.assertEqual(new_doc.getReference(), 'EFAA')
+    self.assertEqual(new_doc.getValidationState(), 'published')
+    self.assertEqual(new_doc.getData(), 'Hello World!')
 
     # Migrate a document with url property
     url = new_doc.absolute_url() + '/getData'
     document = self.portal.portal_contributions.newContent(url=url)
     document.submit()
     self.tic()
-    self.assertEquals(document.getPortalType(), 'Text')
+    self.assertEqual(document.getPortalType(), 'Text')
     # Change it to File
     new_doc = document.migratePortalType('File')
-    self.assertEquals(new_doc.getPortalType(), 'File')
-    self.assertEquals(new_doc.asURL(), url)
-    self.assertEquals(new_doc.getData(), 'Hello World!')
-    self.assertEquals(new_doc.getValidationState(), 'submitted')
+    self.assertEqual(new_doc.getPortalType(), 'File')
+    self.assertEqual(new_doc.asURL(), url)
+    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getValidationState(), 'submitted')
 
   def test_User_Portal_Type_parameter_is_honoured(self):
     """Check that given portal_type is always honoured
@@ -1941,8 +1941,8 @@ return result
     self.tic()# Discover metadata will try change the portal_type
     # but user decision take precedence: PDF must be created
     result_list = self.portal.portal_catalog(reference='I.want.a.pdf')
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), 'PDF')
+    self.assertEqual(len(result_list), 1)
+    self.assertEqual(result_list[0].getPortalType(), 'PDF')
 
   def test_User_ID_parameter_is_honoured(self):
     """Check that given id is always honoured
@@ -1960,7 +1960,7 @@ return result
     self.tic()
     result_list = self.portal.portal_catalog(reference='I.want.a.pdf',
                                              id='this_id')
-    self.assertEquals(len(result_list), 1)
+    self.assertEqual(len(result_list), 1)
     self.assertRaises(BadRequest,
                       self.portal.portal_contributions.newContent,
                       id='this_id',
@@ -1998,12 +1998,12 @@ return result
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
     response = urllib2.urlopen(request)
-    self.assertEquals(response.getcode(), httplib.OK)
+    self.assertEqual(response.getcode(), httplib.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)
     self.assertTrue(document is not None)
-    self.assertEquals(document.getData(), data)
+    self.assertEqual(document.getData(), data)
 
 def test_suite():
   suite = unittest.TestSuite()

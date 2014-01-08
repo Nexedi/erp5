@@ -90,11 +90,11 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
 
     document = self.portal.portal_catalog.getResultValue(reference=self.key)
     self.assertNotEqual(None, document)
-    self.assertEquals(self.key, document.getTitle())
-    self.assertEquals(self.key, document.getReference())
-    self.assertEquals(self.data, document.getData())
-    self.assertEquals('application/octet-stream', document.getContentType())
-    self.assertEquals('Published', document.getValidationStateTitle())
+    self.assertEqual(self.key, document.getTitle())
+    self.assertEqual(self.key, document.getReference())
+    self.assertEqual(self.data, document.getData())
+    self.assertEqual('application/octet-stream', document.getContentType())
+    self.assertEqual('Published', document.getValidationStateTitle())
 
   def test_get_file(self):
     """
@@ -111,7 +111,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
 
     result, data = self.getFile()
     self.assertEqual(result, httplib.OK)
-    self.assertEquals(data, self.data)
+    self.assertEqual(data, self.data)
 
   def test_put_file_twice(self):
     """
@@ -120,17 +120,17 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.postFile()
     self.tic()
     document = self.portal.portal_catalog.getResultValue(reference=self.key)
-    self.assertEquals('published', document.getValidationState())
+    self.assertEqual('published', document.getValidationState())
 
     self.postFile()
     self.tic()
-    self.assertEquals(2, self.portal.portal_catalog.countResults(
+    self.assertEqual(2, self.portal.portal_catalog.countResults(
       reference=self.key)[0][0])
 
     document2 = self.portal.portal_catalog.getResultValue(reference=self.key,
       sort_on=(('uid', 'ASC'),))
-    self.assertEquals('published', document2.getValidationState())
-    self.assertEquals('archived', document.getValidationState())
+    self.assertEqual('published', document2.getValidationState())
+    self.assertEqual('archived', document.getValidationState())
 
   def test_put_file_twice_no_tic(self):
     self.postFile()

@@ -67,35 +67,35 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     person = self.getPersonModule().newContent(portal_type='Person')
     # check telephone
     telephone = person.newContent(portal_type='Telephone')
-    self.assertEquals(telephone.getCoordinateText(), None)
-    self.assertEquals(telephone.getCoordinateText(''), '')
+    self.assertEqual(telephone.getCoordinateText(), None)
+    self.assertEqual(telephone.getCoordinateText(''), '')
     phone_number = '0320595959'
     telephone.setCoordinateText(phone_number)
-    self.assertEquals(telephone.getCoordinateText(), phone_number)
-    self.assertEquals(telephone.asText(), '+(0)-' + phone_number)
+    self.assertEqual(telephone.getCoordinateText(), phone_number)
+    self.assertEqual(telephone.asText(), '+(0)-' + phone_number)
 
     # check address
     address = person.newContent(portal_type='Address')
-    self.assertEquals(address.getCoordinateText(), None)
-    self.assertEquals(address.getCoordinateText(''), '')
+    self.assertEqual(address.getCoordinateText(), None)
+    self.assertEqual(address.getCoordinateText(''), '')
     address_text = """15 flower street
 75016 PARIS"""
     address.setCoordinateText(address_text)
-    self.assertEquals(address.getCoordinateText(), address_text)
-    self.assertEquals(address.asText(), address_text)
+    self.assertEqual(address.getCoordinateText(), address_text)
+    self.assertEqual(address.asText(), address_text)
 
     # Check Email
     email = person.newContent(portal_type='Email')
-    self.assertEquals(email.getCoordinateText(), None)
-    self.assertEquals(email.getCoordinateText(''), '')
+    self.assertEqual(email.getCoordinateText(), None)
+    self.assertEqual(email.getCoordinateText(''), '')
     email_text = 'toto@example.com'
     email.setCoordinateText(email_text)
-    self.assertEquals(email.getCoordinateText(), email_text)
-    self.assertEquals(email.asText(), email_text)
+    self.assertEqual(email.getCoordinateText(), email_text)
+    self.assertEqual(email.asText(), email_text)
     # check acquired accessors
     person.setDefaultEmailCoordinateText(email_text)
-    self.assertEquals(person.getDefaultEmailCoordinateText(), email_text)
-    self.assertEquals(person.getDefaultEmailText(), email_text)
+    self.assertEqual(person.getDefaultEmailCoordinateText(), email_text)
+    self.assertEqual(person.getDefaultEmailText(), email_text)
 
   # Old API check backward compatibility
   def test_TelephoneAsText(self):
@@ -106,7 +106,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     tel.setTelephoneArea(2)
     tel.setTelephoneNumber(12345678)
     tel.setTelephoneExtension(999)
-    self.assertEquals('+33(0)2-12345678/999', tel.asText())
+    self.assertEqual('+33(0)2-12345678/999', tel.asText())
 
   def test_TelephonePreference(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
@@ -116,7 +116,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref.setPreferredTelephoneDefaultAreaNumber('2')
     pref.enable()
     tel.fromText(coordinate_text='11111111')
-    self.assertEquals('+33(0)2-11111111',tel.asText())
+    self.assertEqual('+33(0)2-11111111',tel.asText())
 
   def test_TelephoneCountryAndAreaCodeRemains(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
@@ -127,7 +127,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref.enable()
     tel.fromText(coordinate_text='+11 1 11111111')
     tel.fromText(coordinate_text='+22333445555')
-    self.assertEquals('+(0)-22333445555',tel.asText())
+    self.assertEqual('+(0)-22333445555',tel.asText())
 
   def test_TelephoneInputList(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
@@ -309,7 +309,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
 
     for i in input_list:
       tel.fromText(coordinate_text=i[0])
-      self.assertEquals(i[1],tel.asText())
+      self.assertEqual(i[1],tel.asText())
 
   def test_TelephoneWhenTheDefaultCountryAndAreaPreferenceIsBlank(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
@@ -319,13 +319,13 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref.setPreferredTelephoneDefaultAreaNumber('')
     pref.enable()
     tel.fromText(coordinate_text='12345678')
-    self.assertEquals('+(0)-12345678',tel.asText())
+    self.assertEqual('+(0)-12345678',tel.asText())
 
   def test_TelephoneAsTextBlankNumber(self):
     # Test asText method with blank number
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
-    self.assertEquals('', tel.asText())
+    self.assertEqual('', tel.asText())
 
   def test_TelephoneUrl(self):
     # http://www.rfc-editor.org/rfc/rfc3966.txt
@@ -333,40 +333,40 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     tel = pers.newContent(portal_type='Telephone')
     tel.setTelephoneCountry(33)
     tel.setTelephoneNumber(123456789)
-    self.assertEquals('tel:+33123456789', tel.asURL())
+    self.assertEqual('tel:+33123456789', tel.asURL())
     
     tel.setTelephoneCountry(None)
     tel.setTelephoneNumber(123456789)
-    self.assertEquals('tel:0123456789', tel.asURL())
+    self.assertEqual('tel:0123456789', tel.asURL())
 
   def test_EmptyTelephoneAsText(self):
     # asText method returns an empty string for empty telephones
     pers = self.getPersonModule().newContent(portal_type='Person')
-    self.assertEquals('', pers.newContent(portal_type='Telephone').asText())
+    self.assertEqual('', pers.newContent(portal_type='Telephone').asText())
 
 
   def test_EmptyFaxAsText(self):
     # asText method returns an empty string for empty faxes
     pers = self.getPersonModule().newContent(portal_type='Person')
-    self.assertEquals('', pers.newContent(portal_type='Fax').asText())
+    self.assertEqual('', pers.newContent(portal_type='Fax').asText())
 
   def test_EmailAsURL(self):
     # asURL method works on email
     pers = self.getPersonModule().newContent(portal_type='Person')
     pers.setDefaultEmailText('nobody@example.com')
     email = pers.getDefaultEmailValue()
-    self.assertEquals('mailto:nobody@example.com', email.asURL())
-    self.assertEquals('mailto:nobody@example.com',
+    self.assertEqual('mailto:nobody@example.com', email.asURL())
+    self.assertEqual('mailto:nobody@example.com',
                       pers.Entity_getDefaultEmailAsURL())
 
   def test_LinkAsURL(self):
     person = self.getPersonModule().newContent(portal_type='Person')
     link = person.newContent(portal_type='Link',
                              url_string='http://www.nexedi.com/')
-    self.assertEquals(link.asURL(), 'http://www.nexedi.com/')
+    self.assertEqual(link.asURL(), 'http://www.nexedi.com/')
     link = person.newContent(portal_type='Link',
                              url_string='www.nexedi.com')
-    self.assertEquals(link.asURL(), 'http://www.nexedi.com')
+    self.assertEqual(link.asURL(), 'http://www.nexedi.com')
     
 def test_suite():
   suite = unittest.TestSuite()

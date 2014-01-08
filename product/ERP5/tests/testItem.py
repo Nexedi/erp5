@@ -184,7 +184,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """ Check items """
     order_line = sequence.get('order_line')
     simulation_movement = order_line.getDeliveryRelatedValue()
-    self.failIf(simulation_movement is None)
+    self.assertFalse(simulation_movement is None)
     self.checkAggregate(line=simulation_movement, sequence=sequence)
 
   def stepCheckPackingListLineAggregate(self, sequence=None,
@@ -219,7 +219,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
       Check that start date is adopted.
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals(packing_list.getStartDate(),self.datetime+15)
+    self.assertEqual(packing_list.getStartDate(),self.datetime+15)
 
 
   def stepModifyOrderLinesQuantity(self,sequence=None, sequence_list=None, **kw):
@@ -238,7 +238,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     order = sequence.get('order')
     resource_list = sequence.get('resource_list')
     order_line_list = order.contentValues(portal_type=self.order_line_portal_type)
-    self.assertEquals(len(order_line_list),len(resource_list))
+    self.assertEqual(len(order_line_list),len(resource_list))
     order_line_list[-1].edit(start_date=self.datetime+15)
 
 
@@ -253,13 +253,13 @@ class TestItemMixin(TestSaleInvoiceMixin):
   def checkAggregate(self, line=None, sequence=None):
     """ Check items """
     item_list = sequence.get('item_list')
-    self.assertEquals(len(line.getAggregateList()),1)
-    self.failUnless(item_list[0] in line.getAggregateValueList())
+    self.assertEqual(len(line.getAggregateList()),1)
+    self.assertTrue(item_list[0] in line.getAggregateValueList())
 
   def checkAggregateList(self, line=None, sequence=None):
     """ Check items """
     item_list = self.portal.item_module.contentValues(portal_type='Item')
-    self.failUnless(line.getAggregateValueList()[0] in item_list)
+    self.assertTrue(line.getAggregateValueList()[0] in item_list)
 
 
   DEFAULT_ITEM_WITH_ORDER_SEQUENCE = \
@@ -415,7 +415,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.tic()
     resource = self.createVariatedResource()
     # XXX this tests depends on the relative url of the resource
-    self.assertEquals('product_module/1', resource.getRelativeUrl())
+    self.assertEqual('product_module/1', resource.getRelativeUrl())
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
@@ -448,44 +448,44 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot A')]) ,1)
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot B')]), 1)
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot C')]), 1)
 
-    self.assertEquals(packing_list_line.getTotalQuantity(), 45.0)
-    self.assertEquals(sorted(packing_list_line.getVariationCategoryList()),
+    self.assertEqual(packing_list_line.getTotalQuantity(), 45.0)
+    self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
                       sorted(['size/product_module/1/3',
                               'size/product_module/1/2',
                               'size/product_module/1/1']))
-    self.assertEquals(packing_list_line.getAggregateTitleList(), [])
+    self.assertEqual(packing_list_line.getAggregateTitleList(), [])
 
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
-    self.assertEquals(3, len(movement_cell_list))
+    self.assertEqual(3, len(movement_cell_list))
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/1/3', ))
-    self.assertEquals(cell.getQuantity(), 20)
-    self.assertEquals(['Lot A'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(['Lot A'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/1/2', ))
-    self.assertEquals(cell.getQuantity(), 10)
-    self.assertEquals(['Lot B'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 10)
+    self.assertEqual(['Lot B'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/1/1', ))
-    self.assertEquals(cell.getQuantity(), 15)
-    self.assertEquals(['Lot C'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 15)
+    self.assertEqual(['Lot C'], cell.getAggregateTitleList())
     
      
   def test_04_CreateItemsFromPackingListLineWithVariationDefined(self):
@@ -493,7 +493,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.tic()
     resource = self.createVariatedResource()
     # XXX this tests depends on the relative url of the resource
-    self.assertEquals('product_module/2', resource.getRelativeUrl())
+    self.assertEqual('product_module/2', resource.getRelativeUrl())
 
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
@@ -510,9 +510,9 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               },
               )
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
-    self.assertEquals(packing_list_line.getVariationCategoryList(),
+    self.assertEqual(packing_list_line.getVariationCategoryList(),
                       ['size/product_module/2/3'])
-    self.assertEquals(packing_list_line.getTotalQuantity(), 20)
+    self.assertEqual(packing_list_line.getTotalQuantity(), 20)
 
     # create listbox a second time
     listbox = ({ 'listbox_key': '000',
@@ -531,30 +531,30 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.tic()
 
-    self.assertEquals(packing_list_line.getTotalQuantity(), 55.0)
-    self.assertEquals(sorted(packing_list_line.getVariationCategoryList()),
+    self.assertEqual(packing_list_line.getTotalQuantity(), 55.0)
+    self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
                       sorted(['size/product_module/2/1',
                               'size/product_module/2/2',
                               'size/product_module/2/3']))
 
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
-    self.assertEquals(3, len(movement_cell_list))
+    self.assertEqual(3, len(movement_cell_list))
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/2/3', ))
-    self.assertEquals(cell.getQuantity(), 20)
-    self.assertEquals(['Lot A2'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(['Lot A2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/2/1', ))
-    self.assertEquals(cell.getQuantity(), 20)
-    self.assertEquals(['Lot B2'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(['Lot B2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *('size/product_module/2/2', ))
-    self.assertEquals(cell.getQuantity(), 15)
-    self.assertEquals(['Lot C2'], cell.getAggregateTitleList())
+    self.assertEqual(cell.getQuantity(), 15)
+    self.assertEqual(['Lot C2'], cell.getAggregateTitleList())
  
 
   def test_05_CreateItemsFromPackingListLineWithNotVariatedResource(self):
@@ -588,26 +588,26 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               )
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot A3')]), 1)
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot B3')]), 1)
-    self.assertEquals(
+    self.assertEqual(
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot C3')]), 1)
-    self.assertEquals(packing_list_line.getQuantity(),30.0)
+    self.assertEqual(packing_list_line.getQuantity(),30.0)
     
-    self.assertEquals(packing_list_line.getVariationCategoryList(), [])
-    self.assertEquals(packing_list_line.getAggregateTitleList(),
+    self.assertEqual(packing_list_line.getVariationCategoryList(), [])
+    self.assertEqual(packing_list_line.getAggregateTitleList(),
                       ['Lot A3', 'Lot B3', 'Lot C3'])
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
-    self.assertEquals(movement_cell_list,[])
+    self.assertEqual(movement_cell_list,[])
 
   @newSimulationExpectedFailure
   def test_06_VerifyHavingSameItemTwiceOnMovementCausesNoBug(self):
@@ -617,7 +617,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.tic()
     resource = self.createVariatedResource()
     # XXX this tests depends on the relative url of the resource
-    self.assertEquals('product_module/4', resource.getRelativeUrl())
+    self.assertEqual('product_module/4', resource.getRelativeUrl())
 
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
@@ -646,10 +646,10 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
       packing_list_cell.setAggregateValueList(packing_list_cell.getAggregateValueList()+[item])
     self.portal.portal_workflow.doActionFor(packing_list,
                'confirm_action')
-    self.assertEquals(packing_list.getSimulationState(),
+    self.assertEqual(packing_list.getSimulationState(),
               'confirmed')
     self.tic()
-    self.assertEquals(packing_list.getCausalityState(),'solved')
+    self.assertEqual(packing_list.getCausalityState(),'solved')
 
   def test_07_WithPackingListChangePackingListQuantityAndAccept(self, quiet=quiet, run=run_all_test):
     """
@@ -877,7 +877,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line.setAggregateValue(item)
     packing_list.confirm()
     packing_list.stop()
-    self.assertEquals('stopped', packing_list.getSimulationState())
+    self.assertEqual('stopped', packing_list.getSimulationState())
     self.tic()
     
 
@@ -895,7 +895,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     # the listbox contains the items physically in the source of the packing
     # list
-    self.assertEquals([item],
+    self.assertEqual([item],
                       packing_list_line.DeliveryLine_getSelectableItemList())
     
     packing_list_line.DeliveryLine_selectItemList(
@@ -903,8 +903,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               listbox_uid=(item.getUid(),),
               uids=(item.getUid(),))
 
-    self.assertEquals([item], packing_list_line.getAggregateValueList())
-    self.assertEquals(12, packing_list_line.getQuantity())
+    self.assertEqual([item], packing_list_line.getAggregateValueList())
+    self.assertEqual(12, packing_list_line.getQuantity())
 
 
   @newSimulationExpectedFailure
@@ -938,7 +938,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     packing_list.confirm()
     packing_list.stop()
-    self.assertEquals('stopped', packing_list.getSimulationState())
+    self.assertEqual('stopped', packing_list.getSimulationState())
     self.tic()
     
 
@@ -956,7 +956,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     # the listbox contains the items physically in the source of the packing
     # list, and have matching variations
-    self.assertEquals([item],
+    self.assertEqual([item],
                       packing_list_line.DeliveryLine_getSelectableItemList())
     
     packing_list_line.DeliveryLine_selectItemList(
@@ -964,17 +964,17 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               listbox_uid=(item.getUid(),),
               uids=(item.getUid(),))
 
-    self.assertEquals([variation],
+    self.assertEqual([variation],
                       packing_list_line.getVariationCategoryList())
-    self.assertEquals(12, packing_list_line.getTotalQuantity())
-    self.assertEquals([], packing_list_line.getAggregateValueList())
+    self.assertEqual(12, packing_list_line.getTotalQuantity())
+    self.assertEqual([], packing_list_line.getAggregateValueList())
 
-    self.assertEquals(1,
+    self.assertEqual(1,
         len(packing_list_line.getCellValueList(base_id='movement')))
     
     cell = packing_list_line.getCell(base_id='movement', *(variation, ))
-    self.assertEquals(12, cell.getQuantity())
-    self.assertEquals([item], cell.getAggregateValueList())
+    self.assertEqual(12, cell.getQuantity())
+    self.assertEqual([item], cell.getAggregateValueList())
 
 
 class TestItemScripts(ERP5TypeTestCase):
@@ -1056,50 +1056,50 @@ class TestItemScripts(ERP5TypeTestCase):
   # with line
   @newSimulationExpectedFailure
   def test_Item_getResourceValue(self):
-    self.assertEquals(None, self.item.Item_getResourceValue())
+    self.assertEqual(None, self.item.Item_getResourceValue())
     line = self._makeSalePackingListLine()
-    self.assertEquals(self.product, self.item.Item_getResourceValue())
-    self.assertEquals(None, self.item.Item_getResourceValue(
+    self.assertEqual(self.product, self.item.Item_getResourceValue())
+    self.assertEqual(None, self.item.Item_getResourceValue(
                                 at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getResourceTitle(self):
-    self.assertEquals(None, self.item.Item_getResourceTitle())
+    self.assertEqual(None, self.item.Item_getResourceTitle())
     line = self._makeSalePackingListLine()
-    self.assertEquals('Product', self.item.Item_getResourceTitle())
-    self.assertEquals(None, self.item.Item_getResourceTitle(
+    self.assertEqual('Product', self.item.Item_getResourceTitle())
+    self.assertEqual(None, self.item.Item_getResourceTitle(
                                 at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getCurrentOwnerValue(self):
-    self.assertEquals(None, self.item.Item_getCurrentOwnerValue())
+    self.assertEqual(None, self.item.Item_getCurrentOwnerValue())
     line = self._makeSalePackingListLine()
-    self.assertEquals(self.section, self.item.Item_getCurrentOwnerValue())
-    self.assertEquals(None,
+    self.assertEqual(self.section, self.item.Item_getCurrentOwnerValue())
+    self.assertEqual(None,
         self.item.Item_getCurrentOwnerValue(at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getCurrentOwnerTitle(self):
-    self.assertEquals(None, self.item.Item_getCurrentOwnerTitle())
+    self.assertEqual(None, self.item.Item_getCurrentOwnerTitle())
     line = self._makeSalePackingListLine()
-    self.assertEquals('Section', self.item.Item_getCurrentOwnerTitle())
-    self.assertEquals(None,
+    self.assertEqual('Section', self.item.Item_getCurrentOwnerTitle())
+    self.assertEqual(None,
         self.item.Item_getCurrentOwnerTitle(at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getCurrentSiteValue(self):
-    self.assertEquals(None, self.item.Item_getCurrentSiteValue())
+    self.assertEqual(None, self.item.Item_getCurrentSiteValue())
     line = self._makeSalePackingListLine()
-    self.assertEquals(self.node, self.item.Item_getCurrentSiteValue())
-    self.assertEquals(None, self.item.Item_getCurrentSiteValue(
+    self.assertEqual(self.node, self.item.Item_getCurrentSiteValue())
+    self.assertEqual(None, self.item.Item_getCurrentSiteValue(
                                             at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getCurrentSiteTitle(self):
-    self.assertEquals(None, self.item.Item_getCurrentSiteTitle())
+    self.assertEqual(None, self.item.Item_getCurrentSiteTitle())
     line = self._makeSalePackingListLine()
-    self.assertEquals('Node', self.item.Item_getCurrentSiteTitle())
-    self.assertEquals(None,
+    self.assertEqual('Node', self.item.Item_getCurrentSiteTitle())
+    self.assertEqual(None,
           self.item.Item_getCurrentSiteTitle(at_date=DateTime() - 2))
 
   # with cells
@@ -1129,20 +1129,20 @@ class TestItemScripts(ERP5TypeTestCase):
 
   @newSimulationExpectedFailure
   def test_Item_getVariationCategoryList(self):
-    self.assertEquals([], self.item.Item_getVariationCategoryList())
+    self.assertEqual([], self.item.Item_getVariationCategoryList())
     self._makeSalePackingListCellWithVariation()
-    self.assertEquals(['size/small'], self.item.Item_getVariationCategoryList())
-    self.assertEquals([],
+    self.assertEqual(['size/small'], self.item.Item_getVariationCategoryList())
+    self.assertEqual([],
         self.item.Item_getVariationCategoryList(at_date=DateTime() - 2))
 
   @newSimulationExpectedFailure
   def test_Item_getVariationRangeCategoryItemList(self):
-    self.assertEquals([], self.item.Item_getVariationRangeCategoryItemList())
+    self.assertEqual([], self.item.Item_getVariationRangeCategoryItemList())
     self._makeSalePackingListCellWithVariation()
-    self.assertEquals([['Big', 'size/big'],
+    self.assertEqual([['Big', 'size/big'],
                        ['Small', 'size/small']],
         self.item.Item_getVariationRangeCategoryItemList())
-    self.assertEquals([],
+    self.assertEqual([],
         self.item.Item_getVariationRangeCategoryItemList(
                           at_date=DateTime() - 2))
 

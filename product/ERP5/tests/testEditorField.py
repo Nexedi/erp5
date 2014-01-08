@@ -108,13 +108,13 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.commit()
 
     # Make sure preferred editor was set on preference
-    self.assertEquals(self.getDefaultSitePreference().getPreferredTextEditor(), preferred_editor)
+    self.assertEqual(self.getDefaultSitePreference().getPreferredTextEditor(), preferred_editor)
     # then on portal preferences
-    self.assertEquals(self.getPreferenceTool().getPreferredTextEditor(), preferred_editor)
+    self.assertEqual(self.getPreferenceTool().getPreferredTextEditor(), preferred_editor)
     # Make sure editor field preference is also set
     form = getattr(event, form_id)
     field = getattr(form, field_id)
-    self.assertEquals(field.get_value('text_editor'), editor)
+    self.assertEqual(field.get_value('text_editor'), editor)
 
   def _isFCKEditor(self, html_text, field_id, text_content):
     """

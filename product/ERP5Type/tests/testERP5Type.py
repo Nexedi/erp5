@@ -183,11 +183,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def testTemplateToolHasGetId(self):
       # Test if portal_templates has getId method (RAD)
-      self.assertEquals(self.getTemplateTool().getId(), 'portal_templates')
+      self.assertEqual(self.getTemplateTool().getId(), 'portal_templates')
 
     def testCategoryToolHasGetId(self):
       # Test if portal_categories has getId method (RAD)
-      self.assertEquals(self.getCategoryTool().getId(), 'portal_categories')
+      self.assertEqual(self.getCategoryTool().getId(), 'portal_categories')
 
     # erp5_core tests
     def testERP5CoreHasParentBaseCategory(self):
@@ -204,11 +204,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal_templates = self.getTemplateTool()
       business_template = self.getTemplateTool().newContent(
                             portal_type="Business Template")
-      self.assertEquals(business_template.getPortalType(), 'Business Template')
+      self.assertEqual(business_template.getPortalType(), 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()
       business_template.setTitle(test_string)
-      self.assertEquals(business_template.getTitle(), test_string)
+      self.assertEqual(business_template.getTitle(), test_string)
 
     # Test Dynamic Code Generation
     def test_02_AqDynamic(self):
@@ -231,53 +231,53 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 1.2)
       o.setTitle('toto')
-      self.assertEquals(o.getTitle(), 'toto')
-      self.assertEquals(str(o.getId()), str(1.2))
+      self.assertEqual(o.getTitle(), 'toto')
+      self.assertEqual(str(o.getId()), str(1.2))
 
       from Products.ERP5Type.Document import newTempOrganisation
       o = newTempOrganisation(portal, -123)
       o.setTitle('toto')
-      self.assertEquals(o.getTitle(), 'toto')
-      self.assertEquals(str(o.getId()), str(-123))
+      self.assertEqual(o.getTitle(), 'toto')
+      self.assertEqual(str(o.getId()), str(-123))
 
       # Try to edit with any property and then get it with getProperty
       o = newTempOrganisation(portal,'a')
       o.edit(tutu='toto')
-      self.assertEquals(o.getProperty('tutu'), 'toto')
+      self.assertEqual(o.getProperty('tutu'), 'toto')
 
       # Same thing with an integer
       o = newTempOrganisation(portal,'b')
       o.edit(tata=123)
-      self.assertEquals(o.getProperty('tata'), 123)
+      self.assertEqual(o.getProperty('tata'), 123)
 
       # Make sure this is a Temp Object
-      self.assertEquals(o.isTempObject(), 1)
+      self.assertEqual(o.isTempObject(), 1)
 
       # Create a subobject and make sure it is a Temp Object
       a = o.newContent(portal_type = 'Telephone')
-      self.assertEquals(a.isTempObject(), 1)
+      self.assertEqual(a.isTempObject(), 1)
 
       # Test newContent with the temp_object parameter
       o = portal.person_module.newContent(id=987, portal_type="Person", temp_object=1)
       o.setTitle('bar')
-      self.assertEquals(o.getTitle(), 'bar')
-      self.assertEquals(str(o.getId()), str(987))
-      self.assertEquals(o.isTempObject(), 1)
+      self.assertEqual(o.getTitle(), 'bar')
+      self.assertEqual(str(o.getId()), str(987))
+      self.assertEqual(o.isTempObject(), 1)
       a = o.newContent(id=1, portal_type="Telephone", temp_object=1)
-      self.assertEquals(str(a.getId()), str(1))
-      self.assertEquals(a.isTempObject(), 1)
+      self.assertEqual(str(a.getId()), str(1))
+      self.assertEqual(a.isTempObject(), 1)
       b = o.newContent(id=2, portal_type="Telephone")
-      self.assertEquals(b.isTempObject(), 1)
-      self.assertEquals(b.getId(), str(2))
+      self.assertEqual(b.isTempObject(), 1)
+      self.assertEqual(b.getId(), str(2))
 
       # check we can create temp object without specific roles/permissions
       self.logout()
       self.loginWithNoRole()
       o = newTempOrganisation(portal.organisation_module,'b')
-      self.assertEquals(o.isTempObject(), 1)
+      self.assertEqual(o.isTempObject(), 1)
       a = o.newContent(portal_type = 'Telephone')
-      self.assertEquals(a.isTempObject(), 1)
-      self.assertEquals(a, guarded_getattr(o, a.getId()))
+      self.assertEqual(a.isTempObject(), 1)
+      self.assertEqual(a, guarded_getattr(o, a.getId()))
       self.logout()
       self.login()
 
@@ -297,9 +297,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # the module is not changed from ZODB point of view
       self.assertFalse(portal.person_module._p_changed)
       # the object is not in ZODB
-      self.assertEquals(o._p_jar, None)
+      self.assertEqual(o._p_jar, None)
       self.commit()
-      self.assertEquals(o._p_jar, None)
+      self.assertEqual(o._p_jar, None)
 
       # Temp objects always get a dummy ID by default.
       o = portal.person_module.newContent(portal_type="Person",
@@ -308,8 +308,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       o = portal.person_module.newContent(portal_type="Person",
                                           temp_object=1)
       second_id = o.getId()
-      self.assertEquals(first_id, second_id)
-      self.assertEquals('None', second_id)
+      self.assertEqual(first_id, second_id)
+      self.assertEqual('None', second_id)
 
       # Make sure a temp object can't be stored in the ZODB
       portal.person_module._setObject(o.getId(), aq_base(o))
@@ -328,20 +328,20 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       child11 = child1.newContent(portal_type='Person', id='1')
       child2 = parent.newContent(portal_type='Person', id='2')
 
-      self.assertEquals(child1, parent._getOb('1'))
-      self.assertEquals(child2, parent._getOb('2'))
+      self.assertEqual(child1, parent._getOb('1'))
+      self.assertEqual(child2, parent._getOb('2'))
 
-      self.assertEquals(child1, parent['1'])
-      self.assertEquals(child2, parent['2'])
+      self.assertEqual(child1, parent['1'])
+      self.assertEqual(child2, parent['2'])
 
-      self.assertEquals(child1, getattr(parent, '1'))
-      self.assertEquals(child2, getattr(parent, '2'))
+      self.assertEqual(child1, getattr(parent, '1'))
+      self.assertEqual(child2, getattr(parent, '2'))
 
-      self.assertEquals(child1, parent.restrictedTraverse('1'))
-      self.assertEquals(child11, parent.restrictedTraverse('1/1'))
-      self.assertEquals(child2, parent.restrictedTraverse('2'))
+      self.assertEqual(child1, parent.restrictedTraverse('1'))
+      self.assertEqual(child11, parent.restrictedTraverse('1/1'))
+      self.assertEqual(child2, parent.restrictedTraverse('2'))
 
-      self.assertEquals(('person_module', 'None', '1', '1'),
+      self.assertEqual(('person_module', 'None', '1', '1'),
           self.portal.portal_url.getRelativeContentPath(child11))
 
 
@@ -389,22 +389,22 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
-        self.assertEquals( person_object.getRegion(), category_id)
-        self.assertEquals( person_object.getRegion(base=1), category_relative_url)
-        self.assertEquals( person_object.getRegionValue(), category_object)
-        self.assertEquals( person_object.getRegionId(), category_id)
-        self.assertEquals( person_object.getRegionTitle(), category_title)
-        self.assertEquals( category_object.getRegionRelatedValueList(
+        self.assertEqual( person_object.getRegion(), category_id)
+        self.assertEqual( person_object.getRegion(base=1), category_relative_url)
+        self.assertEqual( person_object.getRegionValue(), category_object)
+        self.assertEqual( person_object.getRegionId(), category_id)
+        self.assertEqual( person_object.getRegionTitle(), category_title)
+        self.assertEqual( category_object.getRegionRelatedValueList(
                             portal_type = "Person"), [person_object] )
-        self.assertEquals( category_object.getRegionRelatedTitleList(
+        self.assertEqual( category_object.getRegionRelatedTitleList(
                             portal_type = "Person"), [person_title] )
-        self.assertEquals( category_object.getRegionRelatedTitleSet(
+        self.assertEqual( category_object.getRegionRelatedTitleSet(
                             portal_type = "Person"), [person_title] )
-        self.assertEquals( category_object.getRegionRelatedList(
+        self.assertEqual( category_object.getRegionRelatedList(
                             portal_type = "Person"), [person_relative_url] )
-        self.assertEquals( category_object.getRegionRelatedIdList(
+        self.assertEqual( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [person_id] )
-        self.assertEquals( category_object.getRegionRelatedIdSet(
+        self.assertEqual( category_object.getRegionRelatedIdSet(
                             portal_type = "Person"), [person_id] )
 
       def checkRelationUnset(self):
@@ -412,17 +412,17 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
-        self.assertEquals( person_object.getRegion(), None)
-        self.assertEquals( person_object.getRegionValue(), None)
-        self.assertEquals( person_object.getRegionId(), None)
-        self.assertEquals( person_object.getRegionTitle(), None)
-        self.assertEquals( category_object.getRegionRelatedValueList(
+        self.assertEqual( person_object.getRegion(), None)
+        self.assertEqual( person_object.getRegionValue(), None)
+        self.assertEqual( person_object.getRegionId(), None)
+        self.assertEqual( person_object.getRegionTitle(), None)
+        self.assertEqual( category_object.getRegionRelatedValueList(
                             portal_type = "Person"), [] )
-        self.assertEquals( category_object.getRegionRelatedTitleList(
+        self.assertEqual( category_object.getRegionRelatedTitleList(
                             portal_type = "Person"), [] )
-        self.assertEquals( category_object.getRegionRelatedList(
+        self.assertEqual( category_object.getRegionRelatedList(
                             portal_type = "Person"), [] )
-        self.assertEquals( category_object.getRegionRelatedIdList(
+        self.assertEqual( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [] )
 
       # Test setRegion in default mode (base = 0)
@@ -487,16 +487,16 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       module = self.getOrganisationModule()
       organisation = module.newContent(id='1', portal_type='Organisation')
       organisation.setDefaultTelephoneText('+55(0)66-5555')
-      self.assertEquals(organisation.default_telephone.getTelephoneCountry(),'55')
-      self.assertEquals(organisation.default_telephone.getTelephoneArea(),'66')
-      self.assertEquals(organisation.default_telephone.getTelephoneNumber(),'5555')
+      self.assertEqual(organisation.default_telephone.getTelephoneCountry(),'55')
+      self.assertEqual(organisation.default_telephone.getTelephoneArea(),'66')
+      self.assertEqual(organisation.default_telephone.getTelephoneNumber(),'5555')
       organisation.setCorporateName('Nexedi')
-      #self.assertEquals(organisation.default_telephone.getProperty('corporate_name'),'Nexedi') # Who is right ? XXX
+      #self.assertEqual(organisation.default_telephone.getProperty('corporate_name'),'Nexedi') # Who is right ? XXX
       organisation.default_telephone.setProperty('corporate_name','Toto')
-      self.assertEquals(organisation.corporate_name,'Nexedi')
-      self.assertEquals(organisation.default_telephone.getCorporateName(),'Nexedi')
-      self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
-      self.assertEquals(organisation.default_telephone.getProperty('corporate_name'),'Toto')
+      self.assertEqual(organisation.corporate_name,'Nexedi')
+      self.assertEqual(organisation.default_telephone.getCorporateName(),'Nexedi')
+      self.assertEqual(organisation.default_telephone.corporate_name,'Toto')
+      self.assertEqual(organisation.default_telephone.getProperty('corporate_name'),'Toto')
 
     def test_06_CachingMethod(self):
       """Tests Caching methods."""
@@ -508,15 +508,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       from Products.ERP5Type.Cache import CachingMethod
       cache = CachingMethod(_cache, id='testing_cache')
 
-      self.assertEquals(cache(), cached_var)
+      self.assertEqual(cache(), cached_var)
 
       # change the variable
       cached_var = 'cached_var (modified)'
       # cache hit -> still the old variable
-      self.assertEquals(cache(), cached_var_orig)
+      self.assertEqual(cache(), cached_var_orig)
 
       self.portal.portal_caches.clearCache()
-      self.assertEquals(cache(), cached_var)
+      self.assertEqual(cache(), cached_var)
 
     def test_07_afterCloneScript(self):
       """manage_afterClone can call a type based script."""
@@ -539,7 +539,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       copy_data = folder.manage_copyObjects([pers.getId()])
       new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
       new_pers = folder[new_id]
-      self.assertEquals(new_pers.getTitle(), 'reseted')
+      self.assertEqual(new_pers.getTitle(), 'reseted')
 
       # we can even change subobjects in the script
       if not hasattr(pers, 'default_address'):
@@ -551,7 +551,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       copy_data = folder.manage_copyObjects([pers.getId()])
       new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
       new_pers = folder[new_id]
-      self.assertEquals(new_pers.default_address.getTitle(),
+      self.assertEqual(new_pers.default_address.getTitle(),
                         'address_title_reseted')
 
       # of course, other portal types are not affected
@@ -561,7 +561,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       copy_data = folder.manage_copyObjects([orga.getId()])
       new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
       new_orga = folder[new_id]
-      self.assertEquals(new_orga.getTitle(), 'something')
+      self.assertEqual(new_orga.getTitle(), 'something')
 
     def test_08_AccessorGeneration(self):
       """Tests accessor generation doesn't generate error messages.
@@ -593,14 +593,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       for obj in folder.objectValues():
         new_id = '%s_new' % obj.getId()
         folder.manage_renameObjects([obj.getId()], [new_id])
-        self.assertEquals(obj.getId(), new_id)
+        self.assertEqual(obj.getId(), new_id)
 
       for obj_id in folder.objectIds():
         self.assertTrue(obj_id.endswith('_new'),
                         'bad object id: %s' % obj_id)
       for id_ in id_list:
         new_id = '%s_new' % id_
-        self.assertEquals(folder._getOb(new_id).getId(), new_id)
+        self.assertEqual(folder._getOb(new_id).getId(), new_id)
 
     def test_11_valueAccessor(self):
       """
@@ -636,7 +636,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               id =          "nofunction",
               title =       "No Function", )
 
-      self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
+      self.assertEqual(alpha.getRelativeUrl(), 'region/alpha')
 
       alpha.reindexObject()
       beta.reindexObject()
@@ -651,77 +651,77 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Value setters (list, set, default)
       person.setFunction('nofunction')  # Fill at least one other category
       person.setDefaultRegionValue(alpha)
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
-      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
       person.setRegionValue(alpha)
-      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
       person.setRegionValueList([alpha, alpha])
-      self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'alpha'])
       person.setRegionValueSet([alpha, alpha])
-      self.assertEquals(person.getRegionList(), ['alpha'])
-      self.assertEquals(person.getRegionSet(), ['alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha'])
+      self.assertEqual(person.getRegionSet(), ['alpha'])
       person.setRegionValueList([alpha, beta, alpha])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta', 'alpha'])
       person.setRegionValueSet([alpha, beta, alpha])
       result = person.getRegionSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEqual(result, ['alpha', 'beta'])
       person.setDefaultRegionValue(beta)
-      self.assertEquals(person.getDefaultRegion(), 'beta')
+      self.assertEqual(person.getDefaultRegion(), 'beta')
       result = person.getRegionSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      self.assertEqual(result, ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
       person.setDefaultRegionValue(alpha)
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
       result = person.getRegionSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      self.assertEqual(result, ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta'])
       # Test accessor on documents rather than on categories
       person.setDefaultRegionValue(person)
-      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEqual(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
       person.setRegionValue([person, alpha, beta])
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
       # Category setters (list, set, default)
       person = module.newContent(portal_type='Person')
       person.setFunction('nofunction')  # Fill at least one other category
       person.setDefaultRegion('alpha')
-      self.assertEquals(person.getRegion(), 'alpha')
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
       person.setRegion('alpha')
-      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
       person.setRegionList(['alpha', 'alpha'])
-      self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
-      self.assertEquals(person.getRegionSet(), ['alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'alpha'])
+      self.assertEqual(person.getRegionSet(), ['alpha'])
       person.setRegionSet(['beta', 'alpha', 'alpha'])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta'])
       person.setRegionList(['beta', 'alpha', 'alpha'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha', 'alpha'])
+      self.assertEqual(person.getRegionList(), ['beta', 'alpha', 'alpha'])
       # at this point the person have a default region set to the first item in
       # the list.
-      self.assertEquals(person.getDefaultRegion(), 'beta')
+      self.assertEqual(person.getDefaultRegion(), 'beta')
       person.setRegionSet(['alpha', 'beta', 'alpha'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
       # calling a set setter did not change the default region
-      self.assertEquals(person.getDefaultRegion(), 'beta')
+      self.assertEqual(person.getDefaultRegion(), 'beta')
 
       person.setDefaultRegion('alpha')
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
-      self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(sorted(person.getRegionSet()), ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta'])
       person.setDefaultRegion('beta')
-      self.assertEquals(person.getDefaultRegion(), 'beta')
-      self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      self.assertEqual(person.getDefaultRegion(), 'beta')
+      self.assertEqual(sorted(person.getRegionSet()), ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
       # Test accessor on documents rather than on categories
       person.setDefaultRegion(person.getRelativeUrl())
-      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'beta', 'alpha'])
+      self.assertEqual(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'beta', 'alpha'])
       person.setRegion([person.getRelativeUrl(), 'alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
       # Uid setters (list, set, default)
       person = module.newContent(portal_type='Person')
@@ -729,32 +729,32 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.tic()# Make sure person is reindexed
       person.setFunction('nofunction')  # Fill at least one other category
       person.setDefaultRegionUid(alpha.getUid())
-      self.assertEquals(person.getRegion(), 'alpha')
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
       person.setRegionUid(alpha.getUid())
-      self.assertEquals(person.getRegion(), 'alpha')
+      self.assertEqual(person.getRegion(), 'alpha')
       person.setRegionUidList([beta.getUid(), beta.getUid()])
-      self.assertEquals(person.getRegionList(), ['beta', 'beta'])
+      self.assertEqual(person.getRegionList(), ['beta', 'beta'])
       person.setRegionUidSet([alpha.getUid(), alpha.getUid()])
-      self.assertEquals(person.getRegionList(), ['alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha'])
       person.setRegionUidList([alpha.getUid(), beta.getUid(), alpha.getUid()])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta', 'alpha'])
       person.setRegionUidSet([alpha.getUid(), beta.getUid(), alpha.getUid()])
-      self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
+      self.assertEqual(sorted(person.getRegionSet()), ['alpha', 'beta'])
       person.setDefaultRegionUid(beta.getUid())
-      self.assertEquals(person.getDefaultRegion(), 'beta')
-      self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      self.assertEqual(person.getDefaultRegion(), 'beta')
+      self.assertEqual(sorted(person.getRegionSet()), ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['beta', 'alpha'])
       person.setDefaultRegionUid(alpha.getUid())
-      self.assertEquals(person.getDefaultRegion(), 'alpha')
-      self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
-      self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
+      self.assertEqual(person.getDefaultRegion(), 'alpha')
+      self.assertEqual(sorted(person.getRegionSet()), ['alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), ['alpha', 'beta'])
       # Test accessor on documents rather than on categories
       person.setDefaultRegionUid(person.getUid())
-      self.assertEquals(person.getDefaultRegion(), person.getRelativeUrl())
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEqual(person.getDefaultRegion(), person.getRelativeUrl())
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
       person.setRegionUid([person.getUid(), alpha.getUid(), beta.getUid()])
-      self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
+      self.assertEqual(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
     def test_12_listAccessor(self):
       """
@@ -769,32 +769,32 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Do the same tests as in test_11_valueAccessor
       person.setSubject('beta')
-      self.assertEquals(person.getSubject(), 'beta')
+      self.assertEqual(person.getSubject(), 'beta')
       person.setSubjectList(['alpha', 'alpha'])
-      self.assertEquals(person.getSubjectList(), ['alpha', 'alpha'])
-      self.assertEquals(person.getSubjectSet(), ['alpha'])
+      self.assertEqual(person.getSubjectList(), ['alpha', 'alpha'])
+      self.assertEqual(person.getSubjectSet(), ['alpha'])
       person.setSubjectSet(['beta', 'beta'])
-      self.assertEquals(person.getSubjectList(), ['beta'])
-      self.assertEquals(person.getSubjectSet(), ['beta'])
+      self.assertEqual(person.getSubjectList(), ['beta'])
+      self.assertEqual(person.getSubjectSet(), ['beta'])
       person.setSubjectList(['beta', 'alpha', 'beta'])
-      self.assertEquals(person.getSubjectList(), ['beta', 'alpha', 'beta'])
+      self.assertEqual(person.getSubjectList(), ['beta', 'alpha', 'beta'])
       person.setSubjectSet(['alpha', 'beta', 'alpha'])
-      self.assertEquals(person.getSubjectList(), ['beta', 'alpha'])
+      self.assertEqual(person.getSubjectList(), ['beta', 'alpha'])
       result = person.getSubjectSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
+      self.assertEqual(result, ['alpha', 'beta'])
       person.setDefaultSubject('beta')
-      self.assertEquals(person.getDefaultSubject(), 'beta')
+      self.assertEqual(person.getDefaultSubject(), 'beta')
       result = person.getSubjectSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
-      self.assertEquals(person.getSubjectList(), ['beta', 'alpha'])
+      self.assertEqual(result, ['alpha', 'beta'])
+      self.assertEqual(person.getSubjectList(), ['beta', 'alpha'])
       person.setDefaultSubject('alpha')
-      self.assertEquals(person.getDefaultSubject(), 'alpha')
+      self.assertEqual(person.getDefaultSubject(), 'alpha')
       result = person.getSubjectSet()
       result.sort()
-      self.assertEquals(result, ['alpha', 'beta'])
-      self.assertEquals(person.getSubjectList(), ['alpha', 'beta'])
+      self.assertEqual(result, ['alpha', 'beta'])
+      self.assertEqual(person.getSubjectList(), ['alpha', 'beta'])
 
     def test_storage_id_accessor(self):
       self._addProperty('Person',
@@ -805,11 +805,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.setFooBar('foo')
-      self.assertEquals('foo', obj.getFooBar())
-      self.assertEquals('foo', getattr(obj, 'foo_bar_storage', 'unset'))
+      self.assertEqual('foo', obj.getFooBar())
+      self.assertEqual('foo', getattr(obj, 'foo_bar_storage', 'unset'))
       obj.edit(foo_bar='bar')
-      self.assertEquals('bar', obj.getFooBar())
-      self.assertEquals('bar', getattr(obj, 'foo_bar_storage', 'unset'))
+      self.assertEqual('bar', obj.getFooBar())
+      self.assertEqual('bar', getattr(obj, 'foo_bar_storage', 'unset'))
 
     def test_13_acquiredAccessor(self):
       """
@@ -843,26 +843,26 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.getFirstName = getFirstName
 
       # test static method
-      self.assertEquals(person.getFirstName(), None)
-      self.assertEquals(person.getFirstName('foo'), 'foo')
-      self.assertEquals(person.getFirstName(default='foo'), 'foo')
+      self.assertEqual(person.getFirstName(), None)
+      self.assertEqual(person.getFirstName('foo'), 'foo')
+      self.assertEqual(person.getFirstName(default='foo'), 'foo')
       # test dynamic method
-      self.assertEquals(person.getLastName(), None)
-      self.assertEquals(person.getLastName('foo'), 'foo')
-      #self.assertEquals(person.getLastName(default='foo'), 'foo')
+      self.assertEqual(person.getLastName(), None)
+      self.assertEqual(person.getLastName('foo'), 'foo')
+      #self.assertEqual(person.getLastName(default='foo'), 'foo')
       # test static method through getProperty
-      self.assertEquals(person.getProperty('first_name'), None)
-      self.assertEquals(person.getProperty('first_name', 'foo'), 'foo')
-      self.assertEquals(person.getProperty('first_name', d='foo'), 'foo')
+      self.assertEqual(person.getProperty('first_name'), None)
+      self.assertEqual(person.getProperty('first_name', 'foo'), 'foo')
+      self.assertEqual(person.getProperty('first_name', d='foo'), 'foo')
       # test dynamic method through getProperty
-      self.assertEquals(person.getProperty('last_name'), None)
-      self.assertEquals(person.getProperty('last_name', 'foo'), 'foo')
-      self.assertEquals(person.getProperty('last_name', d='foo'), 'foo')
+      self.assertEqual(person.getProperty('last_name'), None)
+      self.assertEqual(person.getProperty('last_name', 'foo'), 'foo')
+      self.assertEqual(person.getProperty('last_name', d='foo'), 'foo')
       # test simple property through getProperty
       property_name = 'XXXthis_property_does_not_exist123123'
-      self.assertEquals(person.getProperty(property_name), None)
-      self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
-      self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
+      self.assertEqual(person.getProperty(property_name), None)
+      self.assertEqual(person.getProperty(property_name, 'foo'), 'foo')
+      self.assertEqual(person.getProperty(property_name, d='foo'), 'foo')
 
     def test_15b_DefaultValueDefinedOnPropertySheet(self):
       """Tests that the default value is returned correctly when a default
@@ -878,24 +878,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       # The default ps value will be returned, when using generated accessor
-      self.assertEquals('ps_default', person.getDummyPsProp())
+      self.assertEqual('ps_default', person.getDummyPsProp())
       # (unless you explicitly pass a default value.
-      self.assertEquals('default', person.getDummyPsProp('default'))
+      self.assertEqual('default', person.getDummyPsProp('default'))
       # using getProperty
-      self.assertEquals('ps_default', person.getProperty('dummy_ps_prop'))
-      self.assertEquals('default', person.getProperty('dummy_ps_prop', 'default'))
+      self.assertEqual('ps_default', person.getProperty('dummy_ps_prop'))
+      self.assertEqual('default', person.getProperty('dummy_ps_prop', 'default'))
 
       # None can be a default value too
-      self.assertEquals(None, person.getProperty('dummy_ps_prop', None))
-      self.assertEquals(None, person.getDummyPsProp(None))
+      self.assertEqual(None, person.getProperty('dummy_ps_prop', None))
+      self.assertEqual(None, person.getDummyPsProp(None))
 
       # once the value has been set, there's no default
       value = 'a value'
       person.setDummyPsProp(value)
-      self.assertEquals(value, person.getDummyPsProp())
-      self.assertEquals(value, person.getDummyPsProp('default'))
-      self.assertEquals(value, person.getProperty('dummy_ps_prop'))
-      self.assertEquals(value, person.getProperty('dummy_ps_prop', d='default'))
+      self.assertEqual(value, person.getDummyPsProp())
+      self.assertEqual(value, person.getDummyPsProp('default'))
+      self.assertEqual(value, person.getProperty('dummy_ps_prop'))
+      self.assertEqual(value, person.getProperty('dummy_ps_prop', d='default'))
 
 
     def test_15b_ListAccessorsDefaultValueDefinedOnPropertySheet(self):
@@ -916,21 +916,21 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(hasattr(person, 'getDummyPsPropList'))
 
       # The default ps value will be returned, when using generated accessor
-      self.assertEquals([1, 2, 3], person.getDummyPsPropList())
+      self.assertEqual([1, 2, 3], person.getDummyPsPropList())
       # (unless you explicitly pass a default value.
-      self.assertEquals(['default'], person.getDummyPsPropList(['default']))
+      self.assertEqual(['default'], person.getDummyPsPropList(['default']))
       # using getProperty
-      self.assertEquals([1, 2, 3], person.getProperty('dummy_ps_prop_list'))
-      self.assertEquals(['default'],
+      self.assertEqual([1, 2, 3], person.getProperty('dummy_ps_prop_list'))
+      self.assertEqual(['default'],
                         person.getProperty('dummy_ps_prop_list', ['default']))
 
       # once the value has been set, there's no default
       value_list = ['some', 'values']
       person.setDummyPsPropList(value_list)
-      self.assertEquals(value_list, person.getDummyPsPropList())
-      self.assertEquals(value_list, person.getDummyPsPropList(['default']))
-      self.assertEquals(value_list, person.getProperty('dummy_ps_prop_list'))
-      self.assertEquals(value_list,
+      self.assertEqual(value_list, person.getDummyPsPropList())
+      self.assertEqual(value_list, person.getDummyPsPropList(['default']))
+      self.assertEqual(value_list, person.getProperty('dummy_ps_prop_list'))
+      self.assertEqual(value_list,
               person.getProperty('dummy_ps_prop_list', d=['default']))
 
 
@@ -942,8 +942,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # test default value of getDescription accessor
       # as defined in the DublinCore PropertySheet
-      self.assertEquals('', person.getDescription())
-      self.assertEquals('foo',
+      self.assertEqual('', person.getDescription())
+      self.assertEqual('foo',
                         person.getDescription('foo'))
 
     def test_16_SimpleStringAccessor(self):
@@ -955,26 +955,26 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           elementary_type='string',
           portal_type='Standard Property')
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
-      self.assertEquals('string', person.getPropertyType('dummy_ps_prop'))
+      self.assertEqual('string', person.getPropertyType('dummy_ps_prop'))
       self.assertTrue(hasattr(person, 'getDummyPsProp'))
       self.assertTrue(hasattr(person, 'setDummyPsProp'))
       person.setDummyPsProp('a value')
       self.assertTrue(person.hasProperty('dummy_ps_prop'))
-      self.assertEquals('a value', person.getDummyPsProp())
+      self.assertEqual('a value', person.getDummyPsProp())
 
       # string accessors converts the data type, if provided an unicode, it
       # will store an utf-8 encoded string
       person.setDummyPsProp(u'type convérsion')
-      self.assertEquals('type convérsion', person.getDummyPsProp())
+      self.assertEqual('type convérsion', person.getDummyPsProp())
       # if provided anything else, it will store it's string representation
       person.setDummyPsProp(1)
-      self.assertEquals('1', person.getDummyPsProp())
+      self.assertEqual('1', person.getDummyPsProp())
 
       class Dummy:
         def __str__(self):
           return 'string representation'
       person.setDummyPsProp(Dummy())
-      self.assertEquals('string representation', person.getDummyPsProp())
+      self.assertEqual('string representation', person.getDummyPsProp())
 
 
     def test_17_WorkflowStateAccessor(self):
@@ -989,7 +989,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # those are assumptions for this test.
       self.assertTrue(wf.getId() in
                         self.getWorkflowTool().getChainFor('Person'))
-      self.assertEquals('validation_state', wf.variables.getStateVar())
+      self.assertEqual('validation_state', wf.variables.getStateVar())
       initial_state = wf.states[wf.initial_state]
       other_state = wf.states['validated']
 
@@ -997,46 +997,46 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(hasattr(person, 'getValidationStateTitle'))
       self.assertTrue(hasattr(person, 'getTranslatedValidationStateTitle'))
 
-      self.assertEquals(initial_state.getId(), person.getValidationState())
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.getId(), person.getValidationState())
+      self.assertEqual(initial_state.title,
                         person.getValidationStateTitle())
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.title,
                         person.getTranslatedValidationStateTitle())
       self.assertTrue([initial_state.title], message_catalog._translated)
 
-      self.assertEquals(initial_state.getId(),
+      self.assertEqual(initial_state.getId(),
                         person.getProperty('validation_state'))
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.title,
                         person.getProperty('validation_state_title'))
       message_catalog._translated = []
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.title,
                         person.getProperty('translated_validation_state_title'))
       self.assertTrue([initial_state.title], message_catalog._translated)
 
       # default parameter is accepted by getProperty for compatibility
-      self.assertEquals(initial_state.getId(),
+      self.assertEqual(initial_state.getId(),
                         person.getProperty('validation_state', 'default'))
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.title,
                         person.getProperty('validation_state_title', 'default'))
       message_catalog._translated = []
-      self.assertEquals(initial_state.title,
+      self.assertEqual(initial_state.title,
                         person.getProperty('translated_validation_state_title',
                         'default'))
       self.assertTrue([initial_state.title], message_catalog._translated)
 
       # pass a transition and check accessors again.
       person.validate()
-      self.assertEquals(other_state.getId(), person.getValidationState())
-      self.assertEquals(other_state.title,
+      self.assertEqual(other_state.getId(), person.getValidationState())
+      self.assertEqual(other_state.title,
                         person.getValidationStateTitle())
-      self.assertEquals(other_state.title,
+      self.assertEqual(other_state.title,
                         person.getTranslatedValidationStateTitle())
-      self.assertEquals(other_state.getId(),
+      self.assertEqual(other_state.getId(),
                         person.getProperty('validation_state'))
-      self.assertEquals(other_state.title,
+      self.assertEqual(other_state.title,
                         person.getProperty('validation_state_title'))
       message_catalog._translated = []
-      self.assertEquals(other_state.title,
+      self.assertEqual(other_state.title,
                         person.getProperty('translated_validation_state_title'))
       self.assertTrue([other_state.title], message_catalog._translated)
 
@@ -1074,9 +1074,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # an organisation is created inside the person.
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
-      self.assertEquals('Organisation',
+      self.assertEqual('Organisation',
                         default_organisation.getPortalTypeName())
-      self.assertEquals('The organisation title',
+      self.assertEqual('The organisation title',
                         default_organisation.getTitle())
       self.assertTrue(person.hasDefaultOrganisation())
       self.assertTrue(person.hasOrganisation())
@@ -1084,7 +1084,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(person.hasOrganisationTitle())
       # make sure this new organisation is indexed
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1092,13 +1092,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # edit once again, this time no new organisation is created, the same is
       # edited, and reindexed
-      self.assertEquals(1, len(person.objectIds()))
+      self.assertEqual(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
       person.setDefaultOrganisationTitle('New title')
-      self.assertEquals('New title',
+      self.assertEqual('New title',
                         default_organisation.getTitle())
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1106,15 +1106,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # edit once again (this time, with edit method), this time no new
       # organisation is created, the same is edited, and reindexed
-      self.assertEquals(1, len(person.objectIds()))
+      self.assertEqual(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
       person.edit(default_organisation_title='New title 2')
-      self.assertEquals('New title 2',
+      self.assertEqual('New title 2',
                         default_organisation.getTitle())
-      self.assertEquals(0, len([m for m in
+      self.assertEqual(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1138,14 +1138,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
-      self.assertEquals('Organisation',
+      self.assertEqual('Organisation',
                         default_organisation.getPortalTypeName())
-      self.assertEquals('The organisation ref',
+      self.assertEqual('The organisation ref',
                         default_organisation.getReference())
 
       # make sure this new organisation is indexed
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1153,13 +1153,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # edit once again, this time no new organisation is created, the same is
       # edited, and reindexed
-      self.assertEquals(1, len(person.objectIds()))
+      self.assertEqual(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
       person.setDefaultOrganisationReference('New reference')
-      self.assertEquals('New reference',
+      self.assertEqual('New reference',
                         default_organisation.getReference())
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1167,15 +1167,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # edit once again (this time, with edit method), this time no new
       # organisation is created, the same is edited, and reindexed
-      self.assertEquals(1, len(person.objectIds()))
+      self.assertEqual(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
       person.edit(default_organisation_reference='New reference 2')
-      self.assertEquals('New reference 2',
+      self.assertEqual('New reference 2',
                         default_organisation.getReference())
-      self.assertEquals(0, len([m for m in
+      self.assertEqual(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
       self.commit()
-      self.assertEquals(1, len([m for m in
+      self.assertEqual(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
@@ -1205,7 +1205,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # an organisation is created inside the person.
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
-      self.assertEquals('The organisation title',
+      self.assertEqual('The organisation title',
                         person.getDefaultOrganisationTitle())
 
     DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP = {
@@ -1248,15 +1248,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setDestinationValue(other_pers)
 
       # title is acquired from the other person
-      self.assertEquals(other_pers_title,
+      self.assertEqual(other_pers_title,
                         person.getDefaultOrganisationTitle())
 
       # now if we save, it should create a default_organisation inside this
       # person, but do not modify the other_pers.
       person.setDefaultOrganisationTitle('Our organisation title')
-      self.assertEquals('Our organisation title',
+      self.assertEqual('Our organisation title',
                         person.getDefaultOrganisationTitle())
-      self.assertEquals(other_pers_title,
+      self.assertEqual(other_pers_title,
                         other_pers.getDefaultOrganisationTitle())
 
     def test_19b_AcquiredContentAccessorWithIdClash(self):
@@ -1289,7 +1289,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # an organisation is created inside the person.
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
-      self.assertEquals('The organisation title',
+      self.assertEqual('The organisation title',
                         person.getDefaultOrganisationTitle())
 
     DEFAULT_LANGUAGE_PROP = {
@@ -1323,15 +1323,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       email = person.newContent(portal_type='Email')
 
-      self.assertEquals(0, len(email.getAvailableLanguageList()))
+      self.assertEqual(0, len(email.getAvailableLanguageList()))
       email.setAvailableLanguageSet(['fr', 'en', 'ja'])
-      self.assertEquals(email.getAvailableLanguageList(), ('fr', 'en', 'ja'))
-      self.assertEquals(email.getAvailableLanguage(), 'fr')
-      self.assertEquals(email.getDefaultAvailableLanguage(), 'fr')
+      self.assertEqual(email.getAvailableLanguageList(), ('fr', 'en', 'ja'))
+      self.assertEqual(email.getAvailableLanguage(), 'fr')
+      self.assertEqual(email.getDefaultAvailableLanguage(), 'fr')
       email.setDefaultAvailableLanguage('ja')
-      self.assertEquals(email.getAvailableLanguage(), 'ja')
-      self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
-      self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
+      self.assertEqual(email.getAvailableLanguage(), 'ja')
+      self.assertEqual(email.getDefaultAvailableLanguage(), 'ja')
+      self.assertEqual(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
     SUBORDINATION_ORGANISATION_REFERENCE = {
             'portal_type': 'Acquired Property',
@@ -1362,22 +1362,22 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setSubordinationOrganisationReference(person_reference)
       # Relation is not setted up, accessor must return
       # local value
-      self.assertEquals(person.getSubordinationOrganisationReference(),
+      self.assertEqual(person.getSubordinationOrganisationReference(),
                         person_reference)
 
       person.setSubordinationValue(organisation)
       self.tic()
 
       # mask_value is True, so local value take precedence
-      self.assertEquals(person.getSubordinationOrganisationReference(),
+      self.assertEqual(person.getSubordinationOrganisationReference(),
                         person_reference)
 
       organisation_reference = 'organisation_terry'
       organisation.setReference(organisation_reference)
-      self.assertEquals(person.getSubordinationOrganisationReference(),
+      self.assertEqual(person.getSubordinationOrganisationReference(),
                         person_reference)
       person.setSubordinationOrganisationReference(None)
-      self.assertEquals(person.getSubordinationOrganisationReference(),
+      self.assertEqual(person.getSubordinationOrganisationReference(),
                         organisation_reference)
 
     SUBORDINATION_ORGANISATION_SOURCE_REFERENCE = {
@@ -1409,7 +1409,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setSubordinationOrganisationSourceReference(person_reference)
       # Relation is not setted up, accessor must return
       # local value
-      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+      self.assertEqual(person.getSubordinationOrganisationSourceReference(),
                         person_reference)
 
       person.setSubordinationValue(organisation)
@@ -1419,15 +1419,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Because relation exists but distant document has no
       # value, accessors fallback on local_value to display
       # something to the user.
-      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+      self.assertEqual(person.getSubordinationOrganisationSourceReference(),
                         person_reference)
 
       organisation_reference = 'organisation_terry'
       organisation.setSourceReference(organisation_reference)
-      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+      self.assertEqual(person.getSubordinationOrganisationSourceReference(),
                         organisation_reference)
       person.setSubordinationOrganisationSourceReference(None)
-      self.assertEquals(person.getSubordinationOrganisationSourceReference(),
+      self.assertEqual(person.getSubordinationOrganisationSourceReference(),
                         organisation_reference)
 
 
@@ -1502,13 +1502,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       obj.setTitle('obj title')
       copy = obj.asContext()
       self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
-      self.assertEquals(obj, copy.getOriginalDocument())
-      self.assertEquals(obj.absolute_url(),
+      self.assertEqual(obj, copy.getOriginalDocument())
+      self.assertEqual(obj.absolute_url(),
                         copy.getOriginalDocument().absolute_url())
       copy.setTitle('copy title')
-      self.assertEquals('obj title', obj.getTitle())
-      self.assertEquals('copy title', copy.getTitle())
-      self.assertEquals(obj.getId(), copy.getId())
+      self.assertEqual('obj title', obj.getTitle())
+      self.assertEqual('copy title', copy.getTitle())
+      self.assertEqual(obj.getId(), copy.getId())
 
       # asContext method accepts parameters, and edit the copy with those
       # parameters
@@ -1516,13 +1516,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       obj.setTitle('obj title')
       copy = obj.asContext(title='copy title')
       self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
-      self.assertEquals('obj title', obj.getTitle())
-      self.assertEquals('copy title', copy.getTitle())
-      self.assertEquals(obj.getId(), copy.getId())
+      self.assertEqual('obj title', obj.getTitle())
+      self.assertEqual('copy title', copy.getTitle())
+      self.assertEqual(obj.getId(), copy.getId())
 
       # acquisition context is the same
-      self.assertEquals(self.getPersonModule(), obj.getParentValue())
-      self.assertEquals(self.getPersonModule(), copy.getParentValue())
+      self.assertEqual(self.getPersonModule(), obj.getParentValue())
+      self.assertEqual(self.getPersonModule(), copy.getParentValue())
 
       # Test category accessor
       gender = self.getCategoryTool().gender._getOb('male', None)
@@ -1531,15 +1531,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                             portal_type='Category', id='male')
       # Category can not be used as asContext parameter
 #       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
-#       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
+#       self.assertEqual(gender.getCategoryRelativeUrl(), new_copy.getGender())
       new_copy = obj.asContext()
       self.assertTrue(new_copy.isTempObject(),
               '%r is not a temp object' % (new_copy,))
-      self.assertEquals(obj.getId(), new_copy.getId())
+      self.assertEqual(obj.getId(), new_copy.getId())
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
       self.tic()
-      self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
-      self.assertEquals(None, obj.getGender())
+      self.assertEqual(gender.getCategoryRelativeUrl(), new_copy.getGender())
+      self.assertEqual(None, obj.getGender())
 
       # Make sure that we can do the same for a tool.
       category_tool = self.getCategoryTool()
@@ -1548,9 +1548,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       copy_of_category_tool = category_tool.asContext(title=copy_title)
       self.assertTrue(copy_of_category_tool.isTempObject(),
               '%r is not a temp object' % (copy_of_category_tool,))
-      self.assertEquals(category_tool.getTitle(), original_title)
-      self.assertEquals(copy_of_category_tool.getTitle(), copy_title)
-      self.assertEquals(category_tool.getId(), copy_of_category_tool.getId())
+      self.assertEqual(category_tool.getTitle(), original_title)
+      self.assertEqual(copy_of_category_tool.getTitle(), copy_title)
+      self.assertEqual(category_tool.getId(), copy_of_category_tool.getId())
 
     def test_21_ActionCondition(self):
       """Tests action conditions
@@ -1598,10 +1598,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       default_view_list = [view for view in portal_type_object.listActions()
                            if view.getReference() == 'view']
       # we got only one default view on this portal type
-      self.assertEquals(1, len(default_view_list))
+      self.assertEqual(1, len(default_view_list))
       default_view = default_view_list[0]
 
-      self.assertEquals("Organisation_view",
+      self.assertEqual("Organisation_view",
                         portal_type_object.getDefaultViewFor(obj).getId())
 
       # Add new action with low priority to replace default view
@@ -1616,7 +1616,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           float_index=0.5)
 
       # check new default view is resturn
-      self.assertEquals("Organisation_viewDetails",
+      self.assertEqual("Organisation_viewDetails",
                   portal_type_object.getDefaultViewFor(obj).getId())
 
       # Add new action with low priority
@@ -1632,7 +1632,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           float_index=0.3)
 
       # Default view must not change
-      self.assertEquals("Organisation_viewDetails",
+      self.assertEqual("Organisation_viewDetails",
                   portal_type_object.getDefaultViewFor(obj).getId())
 
       # If no action belong to view category, getDefaultViewFor
@@ -1655,7 +1655,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           float_index=0.2)
 
       # check new custom action '_list' is return
-      self.assertEquals("Organisation_viewFinancialInformationList",
+      self.assertEqual("Organisation_viewFinancialInformationList",
                   portal_type_object.getDefaultViewFor(obj).getId())
 
       # Avoid deletion of actions fo rother tests
@@ -1689,7 +1689,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue('Auditor' not in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
-      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 0)
+      self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
       self.logout()
       self.login()
 
@@ -1704,7 +1704,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
-      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 0)
+      self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
       self.logout()
       self.login()
 
@@ -1715,7 +1715,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
-      self.assertEquals(len(person_module.searchFolder(id=person.getId())), 1)
+      self.assertEqual(len(person_module.searchFolder(id=person.getId())), 1)
       self.logout()
       self.login()
 
@@ -1746,7 +1746,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               title =       "Alpha System", )
       alpha_path = alpha.getRelativeUrl()
 
-      self.assertEquals(alpha.getRelativeUrl(), 'region/alpha')
+      self.assertEqual(alpha.getRelativeUrl(), 'region/alpha')
 
       # Create a new person
       module = self.getPersonModule()
@@ -1836,12 +1836,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 'temp_person_1')
       self.assertTrue(o.isTempObject())
-      self.assertEquals(o.getOriginalDocument(), None)
+      self.assertEqual(o.getOriginalDocument(), None)
 
       # This should generate a workflow method.
-      self.assertEquals(o.getValidationState(), 'draft')
+      self.assertEqual(o.getValidationState(), 'draft')
       o.validate()
-      self.assertEquals(o.getValidationState(), 'validated')
+      self.assertEqual(o.getValidationState(), 'validated')
 
       # Create a new persistent person object.
       person_module = portal.person_module
@@ -1849,12 +1849,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       if person_id in person_module.objectIds():
         person_module.manage_delObjects([person_id])
       o = person_module.newContent(id=person_id, portal_type='Person')
-      self.failIf(o.isTempObject())
+      self.assertFalse(o.isTempObject())
 
       # This should call methods generated above for the temporary object.
-      self.assertEquals(o.getValidationState(), 'draft')
+      self.assertEqual(o.getValidationState(), 'draft')
       o.validate()
-      self.assertEquals(o.getValidationState(), 'validated')
+      self.assertEqual(o.getValidationState(), 'validated')
 
       # Paranoia: test the reverse snenario as well, although this
       # should succeed anyway.
@@ -1864,24 +1864,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       if person_id in person_module.objectIds():
         person_module.manage_delObjects([person_id])
       o = person_module.newContent(id=person_id, portal_type='Person')
-      self.failIf(o.isTempObject())
+      self.assertFalse(o.isTempObject())
 
       # Clear out all generated methods.
       self.portal.portal_types.resetDynamicDocuments()
 
       # This should generate workflow methods.
-      self.assertEquals(o.getValidationState(), 'draft')
+      self.assertEqual(o.getValidationState(), 'draft')
       o.validate()
-      self.assertEquals(o.getValidationState(), 'validated')
+      self.assertEqual(o.getValidationState(), 'validated')
 
       # Create a new temporary person object.
       o = newTempPerson(portal, 'temp_person_2')
       self.assertTrue(o.isTempObject())
 
       # This should call methods generated for the persistent object.
-      self.assertEquals(o.getValidationState(), 'draft')
+      self.assertEqual(o.getValidationState(), 'draft')
       o.validate()
-      self.assertEquals(o.getValidationState(), 'validated')
+      self.assertEqual(o.getValidationState(), 'validated')
 
     def test_26_hasAccessors(self):
       """Test 'has' Accessor.
@@ -1894,7 +1894,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(hasattr(obj, 'hasFooBar'))
-      self.failIf(obj.hasFooBar())
+      self.assertFalse(obj.hasFooBar())
       obj.setFooBar('something')
       self.assertTrue(obj.hasFooBar())
 
@@ -1937,7 +1937,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Make sure categories are reindexed
       self.tic()
 
-      self.assertEquals(beta.getRelativeUrl(), 'region/beta')
+      self.assertEqual(beta.getRelativeUrl(), 'region/beta')
 
       # Create a new person
       module = self.getPersonModule()
@@ -1945,38 +1945,38 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Check getDefaultCategory accessor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_path, foo.getDefaultRegion())
-      self.assertEquals(
+      self.assertEqual(beta_path, foo.getDefaultRegion())
+      self.assertEqual(
           None,
           foo.getDefaultRegion(checked_permission=checked_permission))
 
       # Check getCategory accessor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_path, foo.getRegion())
-      self.assertEquals(
+      self.assertEqual(beta_path, foo.getRegion())
+      self.assertEqual(
           None,
           foo.getRegion(checked_permission=checked_permission))
 
       # Check getCategoryId accessor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_id, foo.getRegionId())
-      self.assertEquals(
+      self.assertEqual(beta_id, foo.getRegionId())
+      self.assertEqual(
           None,
           foo.getRegionId(checked_permission=checked_permission))
 
       # Check getCategoryTitle accessor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_title, foo.getRegionTitle())
-      self.assertEquals(
+      self.assertEqual(beta_title, foo.getRegionTitle())
+      self.assertEqual(
           None,
           foo.getRegionTitle(checked_permission=checked_permission))
 
       # Check getCategoryLogicalPath accesor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_title, foo.getRegionLogicalPath())
+      self.assertEqual(beta_title, foo.getRegionLogicalPath())
 
       foo.setDefaultRegionValue(alpha)
-      self.assertEquals('Gamma System/Alpha', foo.getRegionLogicalPath())
+      self.assertEqual('Gamma System/Alpha', foo.getRegionLogicalPath())
 
       # Check getCategoryValue accessor
       # XXX did you know ?
@@ -1984,8 +1984,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # the region list would be [beta, alpha].
       # bug or feature ? I don't know ...
       foo.setRegionValue(beta)
-      self.assertEquals(beta, foo.getRegionValue())
-      self.assertEquals(
+      self.assertEqual(beta, foo.getRegionValue())
+      self.assertEqual(
           None,
           foo.getRegionValue(checked_permission=checked_permission))
 
@@ -2050,10 +2050,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
             checked_permission=checked_permission))
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategoryValue accessor
       foo.setRegionValue(beta)
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegionValue(None)
       foo.setRegionValue(gamma,
                          checked_permission=checked_permission)
@@ -2064,105 +2064,105 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setDefaultCategoryValue accessor
       foo.setDefaultRegionValue(beta)
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       # XXX setDefaultValue seems buggy when passing None
 #       foo.setDefaultRegionValue(None)
       foo.setRegionValue(None)
       foo.setDefaultRegionValue(gamma,
                                 checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setDefaultRegionValue(beta_path)
       foo.setDefaultRegionValue(gamma_path,
                                 checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getDefaultRegion())
+      self.assertEqual(gamma_path, foo.getDefaultRegion())
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategory accessor
       foo.setRegion(beta_path)
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegion(None)
       foo.setRegion(gamma_path,
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setRegion(beta_path)
       foo.setRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
-      self.assertEquals(gamma_path,
+      self.assertEqual(gamma_path,
                         foo.getRegion(checked_permission=checked_permission))
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setDefaultCategory accessor
       foo.setDefaultRegion(beta_path)
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegion(None)
       foo.setDefaultRegion(gamma_path,
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setDefaultRegion(beta_path)
       foo.setDefaultRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
-      self.assertEquals(gamma_path,
+      self.assertEqual(gamma_path,
                         foo.getDefaultRegion())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategoryList accessor
       foo.setRegionList([beta_path])
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegionList([])
       foo.setRegionList([gamma_path],
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setRegionList([beta_path])
       foo.setRegionList([gamma_path],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategoryValueList accessor
       foo.setRegionValueList([beta])
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegionList([])
       foo.setRegionValueList([gamma],
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setRegionValueList([beta])
       foo.setRegionValueList([gamma],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategorySet accessor
       foo.setRegionSet([beta_path])
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegionSet([])
       foo.setRegionSet([gamma_path],
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setRegionSet([beta_path])
       foo.setRegionSet([gamma_path],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       # Check setCategoryValueSet accessor
       foo.setRegionValueSet([beta])
-      self.assertEquals(beta_path, foo.getRegion())
+      self.assertEqual(beta_path, foo.getRegion())
       foo.setRegionSet([])
       foo.setRegionValueSet([gamma],
                     checked_permission=checked_permission)
-      self.assertEquals(gamma_path, foo.getRegion())
+      self.assertEqual(gamma_path, foo.getRegion())
       foo.setRegionValueSet([beta])
       foo.setRegionValueSet([gamma],
                     checked_permission=checked_permission)
@@ -2170,7 +2170,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # check hasCategory accessors
       foo.setRegionValue(None)
-      self.assertEquals(None, foo.getRegion())
+      self.assertEqual(None, foo.getRegion())
       self.assertFalse(foo.hasRegion())
       foo.setRegionValue(beta)
       self.assertTrue(foo.hasRegion())
@@ -2212,22 +2212,22 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       foo.setRegionValueList((beta, gamma))
 
       # getRegionList returns relative URLs, no security checks are applied
-      self.assertEquals([beta_path, gamma_path],
+      self.assertEqual([beta_path, gamma_path],
                         foo.getRegionList())
-      self.assertEquals([gamma_path],
+      self.assertEqual([gamma_path],
           foo.getRegionList(checked_permission='View'))
 
       # getRegionValueList raises Unauthorized if document is related to
       # private documents (as always, unless you pass checked_permission)
       self.assertRaises(Unauthorized, foo.getRegionValueList)
       self.assertRaises(Unauthorized, foo.getRegionValueSet)
-      self.assertEquals([gamma],
+      self.assertEqual([gamma],
           foo.getRegionValueList(checked_permission='View'))
 
       # same for property accessors
       self.assertRaises(Unauthorized, foo.getRegionTitleList)
       self.assertRaises(Unauthorized, foo.getRegionTitleSet)
-      self.assertEquals(["Gamma System"],
+      self.assertEqual(["Gamma System"],
           foo.getRegionTitleList(checked_permission='View'))
 
       # same for default accessors
@@ -2284,15 +2284,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       foo.setRegionValueList((beta, gamma))
 
       # getRegionList returns relative URLs, no security checks are applied
-      self.assertEquals([beta_path, gamma_path],
+      self.assertEqual([beta_path, gamma_path],
                         foo.getRegionList())
-      self.assertEquals([gamma_path],
+      self.assertEqual([gamma_path],
           foo.getRegionList(checked_permission='View'))
 
       # getWrappedRegionTitleList raise Unauthorized if a related document is
       # private
       self.assertRaises(Unauthorized, foo.getWrappedRegionTitleList)
-      self.assertEquals(["Gamma System"],
+      self.assertEqual(["Gamma System"],
           foo.getWrappedRegionTitleList(checked_permission='View'))
 
       # Remove permission from parent object, the behaviour of acessor should
@@ -2301,19 +2301,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       gamma.getParentValue().manage_permission("View", [], acquire=0)
 
       # getProperty is used by forms
-      self.assertEquals(None,foo.getProperty("wrapped_region_title_list",
+      self.assertEqual(None,foo.getProperty("wrapped_region_title_list",
                                                             checked_permission='View'))
-      self.assertEquals(None,
+      self.assertEqual(None,
                 foo.getWrappedRegionTitleList(checked_permission='View'))
 
-      self.assertEquals(["Gamma System"],
+      self.assertEqual(["Gamma System"],
                       foo.getWrappedRegionTitleList(checked_permission='Access contents information'))
 
       gamma.getParentValue().manage_permission("Access contents information", [], acquire=0)
-      self.assertEquals(None,
+      self.assertEqual(None,
                 foo.getWrappedRegionTitleList(checked_permission='View'))
 
-      self.assertEquals(None,
+      self.assertEqual(None,
                       foo.getWrappedRegionTitleList(checked_permission='Access contents information'))
 
 
@@ -2339,19 +2339,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       foo = module.newContent(portal_type='Person', title='Foo')
       foo.setRegionList(('beta', 'gamma'))
 
-      self.assertEquals([beta_path, 'gamma'],
+      self.assertEqual([beta_path, 'gamma'],
                         foo.getRegionList())
       # using relations to non existant objects will issue a warning in
       # event.log
       self._catch_log_errors(ignored_level=sys.maxint)
-      self.assertEquals([beta],
+      self.assertEqual([beta],
                         foo.getRegionValueList())
-      self.assertEquals([beta_title],
+      self.assertEqual([beta_title],
                         foo.getRegionTitleList())
       self._ignore_log_errors()
       logged_errors = [ logrecord for logrecord in self.logged
                         if logrecord.name == 'CMFCategory' ]
-      self.assertEquals('Could not access object region/gamma',
+      self.assertEqual('Could not access object region/gamma',
                         logged_errors[0].getMessage())
 
     def test_list_accessors(self):
@@ -2368,19 +2368,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(hasattr(person, 'getDummy'))
       self.assertTrue(hasattr(person, 'getDummyList'))
 
-      self.assertEquals(person.getDummy(), None)
-      self.assertEquals(person.getDummyList(), None)
-      self.assertEquals(person.getDummySet(), None)
+      self.assertEqual(person.getDummy(), None)
+      self.assertEqual(person.getDummyList(), None)
+      self.assertEqual(person.getDummySet(), None)
 
       person.setDummyList(['a', 'b'])
-      self.assertEquals(person.getDummy(), 'a')
-      self.assertEquals(person.getDummyList(), ['a', 'b'])
-      self.assertEquals(person.getDummySet(), ['a', 'b'])
+      self.assertEqual(person.getDummy(), 'a')
+      self.assertEqual(person.getDummyList(), ['a', 'b'])
+      self.assertEqual(person.getDummySet(), ['a', 'b'])
 
       person.setDummy('value')
-      self.assertEquals(person.getDummy(), 'value')
-      self.assertEquals(person.getDummyList(), ['value'])
-      self.assertEquals(person.getDummySet(), ['value'])
+      self.assertEqual(person.getDummy(), 'value')
+      self.assertEqual(person.getDummyList(), ['value'])
+      self.assertEqual(person.getDummySet(), ['value'])
 
     def test_translated_accessors(self):
       self._addProperty('Person',
@@ -2397,27 +2397,27 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(hasattr(doc, 'getTranslatedDummy'))
       self.assertTrue(hasattr(doc, 'getDummyTranslationDomain'))
 
-      self.assertEquals('erp5_ui', doc.getDummyTranslationDomain())
+      self.assertEqual('erp5_ui', doc.getDummyTranslationDomain())
       doc.setDummy('foo')
-      self.assertEquals('foo', doc.getTranslatedDummy())
+      self.assertEqual('foo', doc.getTranslatedDummy())
       # the value of the property is translated with erp5_ui
-      self.assertEquals(['foo'], self.portal.Localizer.erp5_ui._translated)
+      self.assertEqual(['foo'], self.portal.Localizer.erp5_ui._translated)
 
       # we can change the translation domain on the portal type
       self.portal.portal_types.Person.setTranslationDomain('dummy',
           'erp5_content')
       self.commit()
 
-      self.assertEquals('erp5_content', doc.getDummyTranslationDomain())
-      self.assertEquals('foo', doc.getTranslatedDummy())
-      self.assertEquals(['foo'],
+      self.assertEqual('erp5_content', doc.getDummyTranslationDomain())
+      self.assertEqual('foo', doc.getTranslatedDummy())
+      self.assertEqual(['foo'],
                   self.portal.Localizer.erp5_content._translated)
 
       # set on instance. It has priority over portal type
       doc.setDummyTranslationDomain('default')
-      self.assertEquals('default', doc.getDummyTranslationDomain())
-      self.assertEquals('foo', doc.getTranslatedDummy())
-      self.assertEquals(['foo'], self.portal.Localizer.default._translated)
+      self.assertEqual('default', doc.getDummyTranslationDomain())
+      self.assertEqual('foo', doc.getTranslatedDummy())
+      self.assertEqual(['foo'], self.portal.Localizer.default._translated)
 
       # if domain is empty, no translation is performed
       doc = self.portal.person_module.newContent(portal_type='Person')
@@ -2427,8 +2427,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       doc.setDummy('foo')
       self.assertFalse(doc.getDummyTranslationDomain())
-      self.assertEquals('foo', doc.getTranslatedDummy())
-      self.assertEquals([], self.portal.Localizer.erp5_ui._translated)
+      self.assertEqual('foo', doc.getTranslatedDummy())
+      self.assertEqual([], self.portal.Localizer.erp5_ui._translated)
 
     def test_translated_category_accessors(self):
       region_category = self.portal.portal_categories.region
@@ -2442,17 +2442,17 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       doc = self.portal.person_module.newContent(portal_type='Person',
                                                  region='gamma/alpha')
 
-      self.assertEquals('Alpha', doc.getRegionTranslatedTitle())
+      self.assertEqual('Alpha', doc.getRegionTranslatedTitle())
       # the value of the category title is translated with erp5_content
-      self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
+      self.assertEqual(['Alpha'], self.portal.Localizer.erp5_content._translated)
 
       self.portal.Localizer.erp5_content._translated = []
-      self.assertEquals(['Alpha'], doc.getRegionTranslatedTitleList())
-      self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
+      self.assertEqual(['Alpha'], doc.getRegionTranslatedTitleList())
+      self.assertEqual(['Alpha'], self.portal.Localizer.erp5_content._translated)
 
       self.portal.Localizer.erp5_content._translated = []
-      self.assertEquals('Gamma System/Alpha', doc.getRegionTranslatedLogicalPath())
-      self.assertEquals(['Gamma System', 'Alpha'],
+      self.assertEqual('Gamma System/Alpha', doc.getRegionTranslatedLogicalPath())
+      self.assertEqual(['Gamma System', 'Alpha'],
                         self.portal.Localizer.erp5_content._translated)
 
 
@@ -2545,8 +2545,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           return 'returned_attr'
 
       ok = Ok().__of__(doc)
-      self.assertEquals('returned_attr', getattr(ok, 'attr'))
-      self.assertEquals(ok.aq_dynamic_calls, ['attr'])
+      self.assertEqual('returned_attr', getattr(ok, 'attr'))
+      self.assertEqual(ok.aq_dynamic_calls, ['attr'])
 
     def test_aq_dynamic_exception(self):
       # if an exception is raised in _aq_dynamic, it should not be hidden
@@ -2605,8 +2605,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       createZODBPythonScript(script_container, script_id, '', 'context.setTitle("couscous")')
       try:
         security_manager = getSecurityManager()
-        self.assertEquals(1, security_manager.checkPermission('Access contents information', object))
-        self.assertEquals(1, security_manager.checkPermission('Modify portal content', object))
+        self.assertEqual(1, security_manager.checkPermission('Access contents information', object))
+        self.assertEqual(1, security_manager.checkPermission('Modify portal content', object))
         object.manage_permission('Modify portal content')
         clipboard = folder.manage_copyObjects(ids=[object.id])
         # Test fails if this method raises.
@@ -2809,19 +2809,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
-      self.assertEquals(None, getattr(person, 'getFooBarList', None))
-      self.assertEquals(person.getFooBar(), None)
+      self.assertEqual(None, getattr(person, 'getFooBarList', None))
+      self.assertEqual(person.getFooBar(), None)
       self.assertFalse(person.hasProperty('foo_bar'))
-      self.assertEquals(person.getProperty('foo_bar'), None)
-      self.assertEquals(person.getPropertyList('foo_bar'), [None])
+      self.assertEqual(person.getProperty('foo_bar'), None)
+      self.assertEqual(person.getPropertyList('foo_bar'), [None])
       person.setFooBar('foo')
-      self.assertEquals(person.getProperty('foo_bar'), 'foo')
-      self.assertEquals(person.getPropertyList('foo_bar'), ['foo'])
+      self.assertEqual(person.getProperty('foo_bar'), 'foo')
+      self.assertEqual(person.getPropertyList('foo_bar'), ['foo'])
       person.setFooBar(None)
-      self.assertEquals(person.getProperty('foo_bar'), None)
+      self.assertEqual(person.getProperty('foo_bar'), None)
       person.setPropertyList('foo_bar', ['bar'])
-      self.assertEquals(person.getProperty('foo_bar'), 'bar')
-      self.assertEquals(person.getPropertyList('foo_bar'), ['bar'])
+      self.assertEqual(person.getProperty('foo_bar'), 'bar')
+      self.assertEqual(person.getPropertyList('foo_bar'), ['bar'])
       self.assertRaises(TypeError, person.setPropertyList, 'foo_bar',
                         ['a', 'b'])
 
@@ -2849,15 +2849,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           acquisition_accessor_id='getFooBar')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
-      self.assertEquals(email.getPropertyList('foo_bar'), [None])
+      self.assertEqual(email.getPropertyList('foo_bar'), [None])
       person.setPropertyList('foo_bar', ['foo'])
-      self.assertEquals(email.getPropertyList('foo_bar'), ['foo'])
+      self.assertEqual(email.getPropertyList('foo_bar'), ['foo'])
       email.setPropertyList('foo_bar', ['bar'])
-      self.assertEquals(email.getPropertyList('foo_bar'), ['bar'])
+      self.assertEqual(email.getPropertyList('foo_bar'), ['bar'])
       email.setPropertyList('foo_bar', [None])
-      self.assertEquals(email.getPropertyList('foo_bar'), ['foo'])
+      self.assertEqual(email.getPropertyList('foo_bar'), ['foo'])
       person.setPropertyList('foo_bar', [None])
-      self.assertEquals(email.getPropertyList('foo_bar'), [None])
+      self.assertEqual(email.getPropertyList('foo_bar'), [None])
 
     def testPropertyListWithMultiValuedProperty(self):
       """
@@ -2871,12 +2871,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       # We have None, like test_list_accessors
-      self.assertEquals(person.getFooBarList(), None)
-      self.assertEquals(person.getPropertyList('foo_bar'), None)
+      self.assertEqual(person.getFooBarList(), None)
+      self.assertEqual(person.getPropertyList('foo_bar'), None)
       person.setPropertyList('foo_bar', ['foo', 'bar'])
-      self.assertEquals(person.getPropertyList('foo_bar'), ['foo', 'bar'])
+      self.assertEqual(person.getPropertyList('foo_bar'), ['foo', 'bar'])
       person.setPropertyList('foo_bar', [])
-      self.assertEquals(person.getFooBarList(), [])
+      self.assertEqual(person.getFooBarList(), [])
 
     def testPropertyNoAcquisition(self):
       """
@@ -2892,11 +2892,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       person_module = self.getPersonModule()
       person_module.setPropertyList('multivalued_no_acquisition', ['foo'])
-      self.assertEquals(
+      self.assertEqual(
         person_module.getPropertyList('multivalued_no_acquisition'), ['foo'])
 
       person = self.getPersonModule().newContent(portal_type='Person')
-      self.assertEquals(
+      self.assertEqual(
         person.getPropertyList('multivalued_no_acquisition', ['bar']), ['bar'])
 
     def testUndefinedProperties(self):
@@ -2905,12 +2905,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       in a propertysheet is working properly.
       """
       person = self.getPersonModule().newContent(portal_type='Person')
-      self.assertEquals(person.getProperty('foo_bar'), None)
+      self.assertEqual(person.getProperty('foo_bar'), None)
       person.setProperty('foo_bar', 'foo')
-      self.assertEquals(person.getProperty('foo_bar'), 'foo')
-      self.assertEquals(person.getPropertyList('foo_bar_list'), None)
+      self.assertEqual(person.getProperty('foo_bar'), 'foo')
+      self.assertEqual(person.getPropertyList('foo_bar_list'), None)
       person.setProperty('foo_bar_list', ['foo', 'bar'])
-      self.assertEquals(list(person.getProperty('foo_bar_list')), ['foo', 'bar'])
+      self.assertEqual(list(person.getProperty('foo_bar_list')), ['foo', 'bar'])
 
     def test_objectValues_contentValues(self):
       """
@@ -2966,10 +2966,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = self.getPersonModule().newContent(portal_type='Person')
       method = getattr(person, 'isDeliveryType', None)
       self.assertNotEquals(None, method)
-      self.assertEquals(0, method())
+      self.assertEqual(0, method())
       method = getattr(person, 'isNodeType', None)
       self.assertNotEquals(None, method)
-      self.assertEquals(1, method())
+      self.assertEqual(1, method())
 
     def test_providesAccessors(self):
       """
@@ -2979,7 +2979,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = self.getPersonModule().newContent(portal_type='Person')
       method = getattr(person, 'providesIMovement', None)
       self.assertNotEquals(None, method)
-      self.assertEquals(False, method())
+      self.assertEqual(False, method())
       method = getattr(person, 'providesICategoryAccessProvider', None)
       self.assertNotEquals(None, method)
       self.assertTrue(method())
@@ -3006,7 +3006,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                                         types_tool.listTypeInfo()])
 
       # not existing types are not an error
-      self.assertEquals(None, types_tool.getTypeInfo(self.id()))
+      self.assertEqual(None, types_tool.getTypeInfo(self.id()))
 
       # we can create instances from our type provider
       container = self.portal.newContent(portal_type='Folder', id='test_folder')
@@ -3018,7 +3018,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.tic()
 
       dummy_instance.setReference('test')
-      self.assertEquals('test', dummy_instance.getReference())
+      self.assertEqual('test', dummy_instance.getReference())
 
     def test_getIcon(self):
       """
@@ -3054,9 +3054,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         addCustomAction('test_after', max_priority + 1)
         final_action_list = portal_actions.listFilteredActionsFor(person)\
             .get('object_view',[])
-        self.assertEquals(len(final_action_list), len(initial_action_list) + 2)
-        self.assertEquals(final_action_list[0]['id'], 'test_before')
-        self.assertEquals(final_action_list[-1]['id'], 'test_after')
+        self.assertEqual(len(final_action_list), len(initial_action_list) + 2)
+        self.assertEqual(final_action_list[0]['id'], 'test_before')
+        self.assertEqual(final_action_list[-1]['id'], 'test_after')
         # check that we have another portal types action in the middle
         self.assertTrue('view' in [x['id'] for x in final_action_list[1:-1]])
       finally:
@@ -3083,10 +3083,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal = self.getPortalObject()
       person = portal.person_module.newContent(portal_type='Person')
       person.edit(foo_property='bar')
-      self.assertEquals('bar', person.getProperty('foo_property'))
+      self.assertEqual('bar', person.getProperty('foo_property'))
       del person.__dict__['foo_property']
-      self.assertEquals(None, person.getProperty('foo_property'))
-      self.assertEquals(None, person.getProperty('foobar_property'))
+      self.assertEqual(None, person.getProperty('foo_property'))
+      self.assertEqual(None, person.getProperty('foobar_property'))
 
     def test_getInstancePropertyAndBaseCategoryList(self):
       """

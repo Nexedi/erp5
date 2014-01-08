@@ -231,20 +231,20 @@ class TestCMFCategory(ERP5TypeTestCase):
     region_path = 'region/%s' % self.region1
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(None)
-    self.failIf(p1.isMemberOf(region_path))
+    self.assertFalse(p1.isMemberOf(region_path))
     p1.setRegion(self.region1)
-    self.failUnless(p1.isMemberOf(region_path))
+    self.assertTrue(p1.isMemberOf(region_path))
 
   def test_isAcquiredMemberOf(self):
     region_path = 'region/%s' % self.region1
     p1 = self.getPersonModule()._getOb(self.id1)
     sub_person = p1._getOb(self.id1)
     p1.setRegion(None)
-    self.failIf(p1.isAcquiredMemberOf(region_path))
-    self.failIf(sub_person.isAcquiredMemberOf(region_path))
+    self.assertFalse(p1.isAcquiredMemberOf(region_path))
+    self.assertFalse(sub_person.isAcquiredMemberOf(region_path))
     p1.setRegion(self.region1)
-    self.failUnless(p1.isAcquiredMemberOf(region_path))
-    self.failUnless(sub_person.isAcquiredMemberOf(region_path))
+    self.assertTrue(p1.isAcquiredMemberOf(region_path))
+    self.assertTrue(sub_person.isAcquiredMemberOf(region_path))
 
   def test_04_ReturnNone(self):
     # Test if we getCategory return None if the cat is '' or None
@@ -269,7 +269,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     o1.setRegion(self.region1)
     p1.setSubordinationValue(o1)
-    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+    self.assertTrue(p1.isMemberOf('region/%s' % self.region1))
 
   def test_06_ListAcquisition(self):
     # Test if the acquisition for a single value is working
@@ -288,7 +288,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     o1.setRegion(self.region_list)
     p1.setSubordinationValue(o1)
-    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+    self.assertTrue(p1.isMemberOf('region/%s' % self.region1))
 
   def test_07_SubordinationValue(self):
     # Test if an infinite loop of the acquisition for a single value is working
@@ -349,7 +349,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1.setSubordinationValue(o1)
-    self.failUnless(p1.isMemberOf('gender/organisation_module/%s' % self.id1))
+    self.assertTrue(p1.isMemberOf('gender/organisation_module/%s' % self.id1))
 
   def test_11_ParentAcquisition(self):
     # Test if we can use an alternative base category
@@ -365,16 +365,16 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     sub_person = p1._getOb(self.id1)
     p1.setRegion(self.region1)
-    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
-    self.failUnless(sub_person.isMemberOf('region/%s' % self.region1))
+    self.assertTrue(p1.isMemberOf('region/%s' % self.region1))
+    self.assertTrue(sub_person.isMemberOf('region/%s' % self.region1))
 
   def test_parentAcquisitionIsMemberOfWithDifferentCategories(self):
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
     sub_person = p1._getOb(self.id1)
-    self.failUnless(p1.isMemberOf('region/%s' % self.region1))
+    self.assertTrue(p1.isMemberOf('region/%s' % self.region1))
     sub_person.setRegion(self.region2)
-    self.failUnless(sub_person.isMemberOf('region/%s' % self.region2))
+    self.assertTrue(sub_person.isMemberOf('region/%s' % self.region2))
 
   def test_12_GetRelatedValueAndValueList(self):
     # Test if an infinite loop of the acquisition for a single value is working
@@ -408,7 +408,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/europe/ouest'))
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
-    self.failUnless(p1 in west.getRegionRelatedValueList())
+    self.assertTrue(p1 in west.getRegionRelatedValueList())
 
   def test_13b_RenameCategoryUsingCutAndPaste(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -428,7 +428,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/west'))
     self.assertEqual(p1.getRegion(), 'west/france')
-    self.failUnless(p1 in west.getRegionRelatedValueList())
+    self.assertTrue(p1 in west.getRegionRelatedValueList())
 
   def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -449,8 +449,8 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.portal.portal_categories.resolveCategory('region/europe/west'))
     self.assertEqual(p1.getRegion(), 'europe/west/france')
     # we are not member of the copy
-    self.failUnless('west/france' not in p1.getRegionList())
-    self.failUnless(p1 in west.getRegionRelatedValueList())
+    self.assertTrue('west/france' not in p1.getRegionList())
+    self.assertTrue(p1 in west.getRegionRelatedValueList())
 
 
   def test_14_MultiplePortalTypes(self):
@@ -469,82 +469,82 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     for loop in range(3):
       org_a.setDestinationValue(pers_a, portal_type='Person')
-      self.assertEquals(
+      self.assertEqual(
           org_a.getDestinationValue(portal_type='Person'), pers_a)
-      self.assertEquals(
+      self.assertEqual(
           org_a.getDestinationValue(portal_type='Organisation'), org_b)
-      self.assertEquals(len(org_a.getDestinationValueList()), 2)
+      self.assertEqual(len(org_a.getDestinationValueList()), 2)
 
       org_a.setDestinationValue(org_b, portal_type='Organisation')
-      self.assertEquals(
+      self.assertEqual(
           org_a.getDestinationValue(portal_type='Person'), pers_a)
-      self.assertEquals(
+      self.assertEqual(
           org_a.getDestinationValue(portal_type='Organisation'), org_b)
-      self.assertEquals(len(org_a.getDestinationValueList()), 2)
+      self.assertEqual(len(org_a.getDestinationValueList()), 2)
 
   def test_15_SortChildValues(self):
     """ Checks on sorting child categories"""
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='sort_test')
-    self.failUnless(bc is not None)
+    self.assertTrue(bc is not None)
     bc.newContent(portal_type='Category', id='1', title='a', int_index=3)
     bc.newContent(portal_type='Category', id='2', title='b', int_index=1)
     bc.newContent(portal_type='Category', id='3', title='c', int_index=1)
 
     # simple sorting
     category_list = bc.getCategoryChildValueList(sort_on='title')
-    self.assertEquals(len(category_list), 3)
-    self.assertEquals(category_list[0].getId(), '1')
-    self.assertEquals(category_list[1].getId(), '2')
-    self.assertEquals(category_list[2].getId(), '3')
+    self.assertEqual(len(category_list), 3)
+    self.assertEqual(category_list[0].getId(), '1')
+    self.assertEqual(category_list[1].getId(), '2')
+    self.assertEqual(category_list[2].getId(), '3')
 
     # reverse sorting
     category_list = bc.getCategoryChildValueList(sort_on='title', sort_order='reverse')
-    self.assertEquals(len(category_list), 3)
-    self.assertEquals(category_list[0].getId(), '3')
-    self.assertEquals(category_list[1].getId(), '2')
-    self.assertEquals(category_list[2].getId(), '1')
+    self.assertEqual(len(category_list), 3)
+    self.assertEqual(category_list[0].getId(), '3')
+    self.assertEqual(category_list[1].getId(), '2')
+    self.assertEqual(category_list[2].getId(), '1')
 
     # another reverse sorting
     category_list = bc.getCategoryChildValueList(sort_on=(('title', 'reverse'),))
-    self.assertEquals(len(category_list), 3)
-    self.assertEquals(category_list[0].getId(), '3')
-    self.assertEquals(category_list[1].getId(), '2')
-    self.assertEquals(category_list[2].getId(), '1')
+    self.assertEqual(len(category_list), 3)
+    self.assertEqual(category_list[0].getId(), '3')
+    self.assertEqual(category_list[1].getId(), '2')
+    self.assertEqual(category_list[2].getId(), '1')
 
     # multiple sort parameters
     category_list = bc.getCategoryChildValueList(sort_on=('int_index', 'title'))
-    self.assertEquals(len(category_list), 3)
-    self.assertEquals(category_list[0].getId(), '2')
-    self.assertEquals(category_list[1].getId(), '3')
-    self.assertEquals(category_list[2].getId(), '1')
+    self.assertEqual(len(category_list), 3)
+    self.assertEqual(category_list[0].getId(), '2')
+    self.assertEqual(category_list[1].getId(), '3')
+    self.assertEqual(category_list[2].getId(), '1')
 
     # another multiple sort parameters
     category_list = bc.getCategoryChildValueList(sort_on=(('int_index', 'reverse'), 'title'))
-    self.assertEquals(len(category_list), 3)
-    self.assertEquals(category_list[0].getId(), '1')
-    self.assertEquals(category_list[1].getId(), '2')
-    self.assertEquals(category_list[2].getId(), '3')
+    self.assertEqual(len(category_list), 3)
+    self.assertEqual(category_list[0].getId(), '1')
+    self.assertEqual(category_list[1].getId(), '2')
+    self.assertEqual(category_list[2].getId(), '3')
 
   def test_16_GetRelatedValues(self):
     """ Checks on getting related values"""
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='related_value_test')
-    self.failUnless(bc is not None)
+    self.assertTrue(bc is not None)
     self.tic()
     # A newly created base category should be referred to only by itself
     value_list = pc.getRelatedValueList(bc)
-    self.assertEquals(len(value_list), 1)
+    self.assertEqual(len(value_list), 1)
 
     c = bc.newContent(portal_type='Category', id='1')
-    self.failUnless(c is not None)
+    self.assertTrue(c is not None)
     self.tic()
     value_list = pc.getRelatedValueList(bc)
     # Now the base category should be referred to by itself and this sub category
-    self.assertEquals(len(value_list), 2)
+    self.assertEqual(len(value_list), 2)
     # This sub category should be referred to only by itself
     value_list = pc.getRelatedValueList(c)
-    self.assertEquals(len(value_list), 1)
+    self.assertEqual(len(value_list), 1)
 
     #test _getDefaultRelatedProperty Accessor
     person = self.portal.person_module.newContent(id='person_test')
@@ -552,7 +552,7 @@ class TestCMFCategory(ERP5TypeTestCase):
                                   id='organisation_test',
                                   destination='person_module/person_test')
     self.tic()
-    self.assertEquals(person.getDefaultDestinationRelated(),
+    self.assertEqual(person.getDefaultDestinationRelated(),
                                   'organisation_module/organisation_test' )
 
   def test_17_CategoriesAndDomainSelection(self):
@@ -578,8 +578,8 @@ class TestCMFCategory(ERP5TypeTestCase):
     http://svn.erp5.org/erp5/trunk/products/CMFCategory/CategoryTool.py?r1=8850&r2=9997
     """
     europe = self.portal.portal_categories.resolveCategory('region/europe')
-    self.failUnless('region/europe' in europe.getCategoryList())
-    self.failUnless(europe.isMemberOf('region/europe'))
+    self.assertTrue('region/europe' in europe.getCategoryList())
+    self.assertTrue(europe.isMemberOf('region/europe'))
 
   def test_19_getCategoryList(self):
     """
@@ -599,28 +599,28 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals([x.getObject() for x in
+    self.assertEqual([x.getObject() for x in
                         portal_categories.getCategoryMemberValueList(
                           portal_categories.region.west.france,
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
 
-    self.assertEquals([x.getObject() for x in
+    self.assertEqual([x.getObject() for x in
                        portal_categories.getCategoryMemberValueList(
                           portal_categories.region.west.france,
                           base_category='region',
                           strict_membership=1,
                           portal_type='Organisation')], [organisation])
 
-    self.assertEquals([x.getObject() for x in
+    self.assertEqual([x.getObject() for x in
                        portal_categories.getCategoryMemberValueList(
                           portal_categories.region.west,
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
 
-    self.assertEquals([x.getObject() for x in
+    self.assertEqual([x.getObject() for x in
                       portal_categories.getCategoryMemberValueList(
                           portal_categories.region.west,
                           base_category='region',
@@ -632,7 +632,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
     cat = base_cat.newContent(portal_type='Category',
                               id='the_id', title='The Title')
-    self.assertEquals([['', ''], ['The Title (the_id)', 'the_id']],
+    self.assertEqual([['', ''], ['The Title (the_id)', 'the_id']],
                        base_cat.getCategoryChildTitleAndIdItemList())
 
   def test_20_CategoryChildCompactTitleItemList(self):
@@ -640,9 +640,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
     cat = base_cat.newContent(portal_type='Category',
           id='the_id', title='The Title', short_title='The T.')
-    self.assertEquals([['', ''], ['The T.', 'the_id']],
+    self.assertEqual([['', ''], ['The T.', 'the_id']],
                        base_cat.getCategoryChildCompactTitleItemList())
-    self.assertEquals([['', ''], ['The T.', 'the_id']],
+    self.assertEqual([['', ''], ['The T.', 'the_id']],
              base_cat.getCategoryChildTranslatedCompactTitleItemList())
 
   def test_21_AcquiredPortalType(self):
@@ -653,17 +653,17 @@ class TestCMFCategory(ERP5TypeTestCase):
     person = self.getPersonModule()[self.id1]
 
     person.setTitle('toto')
-    self.assertEquals(person.getTitle(), 'toto')
+    self.assertEqual(person.getTitle(), 'toto')
 
     order.setDestinationAdministrationValue(person)
-    self.assertEquals(order.getDestinationAdministrationPersonTitle(), 'toto')
+    self.assertEqual(order.getDestinationAdministrationPersonTitle(), 'toto')
 
     packing_list.setDestinationAdministrationValue(None)
     packing_list.setOrderValue(None)
-    self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), None)
+    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), None)
 
     packing_list.setOrderValue(order)
-    self.assertEquals(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
 
   def test_22_UserFriendlyException(self):
     """Test message raise if bad use of setter."""
@@ -682,7 +682,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     try:
       p1.setCareerSubordination(o1)
     except Exception, e:
-      self.failUnless(isinstance(e, TypeError))
+      self.assertTrue(isinstance(e, TypeError))
       self.assertEqual(e.args[0], 'Category must be of string, tuple of '
                                   'string or list of string type.')
 
@@ -725,9 +725,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     c3 = bc.newContent(portal_type='Category', id='3', int_index=20, title='A')
     
     # the default ordering is preorder:
-    self.assertEquals(list(bc.getCategoryChildValueList()),
+    self.assertEqual(list(bc.getCategoryChildValueList()),
                       [c1, c11, c111, c12, c2, c3])
-    self.assertEquals(list(c1.getCategoryChildValueList()), [c11, c111, c12])
+    self.assertEqual(list(c1.getCategoryChildValueList()), [c11, c111, c12])
     
     # but this order can be controlled for categories of the same depth, ie. we
     # can sort each level independantly (this is different from sort_on /
@@ -739,21 +739,21 @@ class TestCMFCategory(ERP5TypeTestCase):
     def sort_func(a, b):
       return cmp(a.getTitle(), b.getTitle())
     # here c1, c2, c3 are sorted by their titles
-    self.assertEquals(list(bc.getCategoryChildValueList(
+    self.assertEqual(list(bc.getCategoryChildValueList(
                                         local_sort_method=sort_func)),
                       [c3, c2, c1, c11, c111, c12])
     # here c11 & c12 are sorted by their titles
-    self.assertEquals(list(c1.getCategoryChildValueList(
+    self.assertEqual(list(c1.getCategoryChildValueList(
                               local_sort_method=sort_func)), [c11, c111, c12])
 
     # This can also be done with a local_sort_id, then objects are sorted by
     # comparing this 'sort_id' property (using getProperty())
     # here c1, c2, c3 are sorted by their int_index
-    self.assertEquals(list(bc.getCategoryChildValueList(
+    self.assertEqual(list(bc.getCategoryChildValueList(
                                         local_sort_id='int_index')),
                       [c1, c12, c11, c111, c3, c2])
     # here c11 & c12 are sorted by their titles
-    self.assertEquals(list(c1.getCategoryChildValueList(
+    self.assertEqual(list(c1.getCategoryChildValueList(
                               local_sort_id='int_index')), [c12, c11, c111])
 
     # local_sort_id can be a list, in this case document are sorted with the
@@ -767,7 +767,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     c1.setIntIndex(None)
     c2.setIntIndex(None)
     # and we sort on int_index then title, we should have this order:
-    self.assertEquals(list(bc.getCategoryChildValueList(
+    self.assertEqual(list(bc.getCategoryChildValueList(
                           local_sort_id=['int_index', 'title'])),
                       [c2, c1, c12, c11, c111, c3])
 
@@ -777,13 +777,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     bc = pc.newContent(portal_type='Base Category', id='foo')
     c1 = bc.newContent(portal_type='Category', id='1', title='C')
     
-    self.assertEquals([['', ''], ['C', '1']],
+    self.assertEqual([['', ''], ['C', '1']],
                       bc.getCategoryChildTitleItemList())
-    self.assertEquals([['', ''], ['C', '1']],
+    self.assertEqual([['', ''], ['C', '1']],
                       bc.getCategoryChildTitleItemList(base=0))
-    self.assertEquals([['', ''], ['C', 'foo/1']],
+    self.assertEqual([['', ''], ['C', 'foo/1']],
                       bc.getCategoryChildTitleItemList(base=1))
-    self.assertEquals([['', ''], ['C', 'bar/foo/1']],
+    self.assertEqual([['', ''], ['C', 'bar/foo/1']],
                       bc.getCategoryChildTitleItemList(base='bar'))
 
     
@@ -793,24 +793,24 @@ class TestCMFCategory(ERP5TypeTestCase):
     region_url = self.region1
     obj.setRegion(region_url)
 
-    self.assertEquals([region_url],
+    self.assertEqual([region_url],
           pc.getSingleCategoryMembershipList(obj, 'region'))
 
-    self.assertEquals([region_url],
+    self.assertEqual([region_url],
           pc.getSingleCategoryMembershipList(obj, 'region',
                         portal_type='Category'))
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'region',
                         portal_type='Organisation'))
 
-    self.assertEquals(['region/%s' % region_url],
+    self.assertEqual(['region/%s' % region_url],
           pc.getSingleCategoryMembershipList(obj, 'region', base=1))
 
-    self.assertEquals([region_url],
+    self.assertEqual([region_url],
           pc.getSingleCategoryMembershipList(obj, 'region',
                                 checked_permission='View'))
     noSecurityManager()
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'region',
                                 checked_permission='Manage portal'))
 
@@ -825,41 +825,41 @@ class TestCMFCategory(ERP5TypeTestCase):
     #parent_url = self.portal.person_module.getRelativeUrl()
     parent_url = parent.getRelativeUrl()
 
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent'))
 
-    #self.assertEquals([parent_url],
-    self.assertEquals([parent],
+    #self.assertEqual([parent_url],
+    self.assertEqual([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                         portal_type='Person Module'))
 
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                         portal_type='Organisation'))
 
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent', base=1))
 
-    #self.assertEquals(['parent/%s' % parent_url],
-    self.assertEquals([parent],
+    #self.assertEqual(['parent/%s' % parent_url],
+    self.assertEqual([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent', base=1,
                         portal_type='Person Module'))
 
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='View'))
 
-    #self.assertEquals([parent_url],
-    self.assertEquals([parent],
+    #self.assertEqual([parent_url],
+    self.assertEqual([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='View',
                                 portal_type='Person Module'))
 
     noSecurityManager()
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='Manage portal'))
-    self.assertEquals([],
+    self.assertEqual([],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='Manage portal',
                                 portal_type='Person Module'))
@@ -875,34 +875,34 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     checked_permission = 'View'
     
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(cache=0))
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
 
     b.manage_permission(checked_permission, roles=[], acquire=0)
     
-    self.assertEquals(
+    self.assertEqual(
       3, len(bc.getCategoryChildValueList(cache=0)))
-    self.assertEquals(
+    self.assertEqual(
       1,
       len(bc.getCategoryChildValueList(checked_permission=checked_permission,
                                        cache=0)))
     
-    self.assertEquals(
+    self.assertEqual(
       ['%s/1' % bc_id, '%s/2' % bc_id, '%s/2/21' % bc_id],
       bc.getCategoryChildRelativeUrlList())
-    self.assertEquals(
+    self.assertEqual(
       ['%s/1' % bc_id],
       bc.getCategoryChildRelativeUrlList(checked_permission=checked_permission))
     
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(cache=0))
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
@@ -926,12 +926,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     
     b.manage_permission(checked_permission, roles=['Assignor'], acquire=0)
     login(self, 'alice')
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
     
     login(self, 'bob')
-    self.assertEquals(
+    self.assertEqual(
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
 
@@ -942,7 +942,7 @@ class TestCMFCategory(ERP5TypeTestCase):
                           id='first_id')
     self.tic()
     bc.setId('new_id')
-    self.assertEquals('new_id', bc.getId())
+    self.assertEqual('new_id', bc.getId())
 
   def test_30_resolveCategory(self):
     portal = self.getPortal()
@@ -973,11 +973,11 @@ class TestCMFCategory(ERP5TypeTestCase):
             ('sale_order_module/foo/bar/sale_order_module', None),
             ):
       obj = category_tool.resolveCategory(relative_url)
-      self.assertEquals(obj, value)
+      self.assertEqual(obj, value)
       obj = category_tool.resolveCategory('order/' + relative_url)
-      self.assertEquals(obj, value)
+      self.assertEqual(obj, value)
       obj = category_tool.resolveCategory('mapping/order/' + relative_url)
-      self.assertEquals(obj, value)
+      self.assertEqual(obj, value)
 
   def test_31_assert_raise_if_base_category_is_missing(self):
     #First remove Base Category
@@ -1034,14 +1034,14 @@ class TestCMFCategory(ERP5TypeTestCase):
     person = self.getPersonModule().newContent(portal_type='Person',
                               default_career_subordination_value=organisation)
     self.assertTrue(organisation.hasRegion())
-    self.assertEquals(organisation.getRegion(), 'europe/west')
-    self.assertEquals(organisation.getRegionList(), ['europe/west'])
+    self.assertEqual(organisation.getRegion(), 'europe/west')
+    self.assertEqual(organisation.getRegionList(), ['europe/west'])
     old_west_region = organisation.getRegionValue()
-    self.assertEquals(old_west_region.getPortalType(), 'Category')
+    self.assertEqual(old_west_region.getPortalType(), 'Category')
 
     # Check acquired categories
-    self.assertEquals(person.getRegion(), 'europe/west')
-    self.assertEquals(person.getRegionList(), ['europe/west'])
+    self.assertEqual(person.getRegion(), 'europe/west')
+    self.assertEqual(person.getRegionList(), ['europe/west'])
 
     region_base_category = portal_categories.region
     new_region = region_base_category.newContent(portal_type='Category',
@@ -1049,31 +1049,31 @@ class TestCMFCategory(ERP5TypeTestCase):
     new_region = new_region.newContent(portal_type='Category', id='europe')
     new_region = new_region.newContent(portal_type='Category', id='west')
 
-    self.assertEquals(organisation.getRegion(), 'europe/west')
-    self.assertEquals(organisation.getRegionList(), ['europe/west'])
-    self.assertEquals(organisation.getRegionValue().getPortalType(), 'Category')
-    self.assertEquals(organisation.getRegionValue(), old_west_region)
+    self.assertEqual(organisation.getRegion(), 'europe/west')
+    self.assertEqual(organisation.getRegionList(), ['europe/west'])
+    self.assertEqual(organisation.getRegionValue().getPortalType(), 'Category')
+    self.assertEqual(organisation.getRegionValue(), old_west_region)
 
-    self.assertEquals(person.getRegion(), 'europe/west')
-    self.assertEquals(person.getRegionList(), ['europe/west'])
+    self.assertEqual(person.getRegion(), 'europe/west')
+    self.assertEqual(person.getRegionList(), ['europe/west'])
 
     # Let's continue with resource because its ID conflict with 
     # "traversing namespaces" names
     resource_value = portal_categories.resource.newContent(portal_type='Category', id='id1')
     organisation.setResource('resource/id1')
-    self.assertEquals(organisation.getResource(), 'id1')
-    self.assertEquals(organisation.getResourceValue(), resource_value)
-    self.assertEquals(organisation.getResourceList(), ['id1'])
-    self.assertEquals(organisation.getResourceValue(portal_type='Category'),
+    self.assertEqual(organisation.getResource(), 'id1')
+    self.assertEqual(organisation.getResourceValue(), resource_value)
+    self.assertEqual(organisation.getResourceList(), ['id1'])
+    self.assertEqual(organisation.getResourceValue(portal_type='Category'),
                       resource_value)
-    self.assertEquals(organisation.getResourceValueList(portal_type='Category'),
+    self.assertEqual(organisation.getResourceValueList(portal_type='Category'),
                       [resource_value])
 
     # Check other public methods of CategoryTool
-    self.assertEquals(portal_categories.getCategoryMembershipList(organisation,
+    self.assertEqual(portal_categories.getCategoryMembershipList(organisation,
                                            'resource', portal_type='Category'),
                       ['id1'])
-    self.assertEquals(portal_categories.getSingleCategoryMembershipList(
+    self.assertEqual(portal_categories.getSingleCategoryMembershipList(
                                                     organisation, 'resource',
                                                     portal_type='Category'),
                       ['id1'])

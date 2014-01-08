@@ -623,7 +623,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                    (expected_amount_list_len, actual_amount_list_len,
                     expected['id'])
       # Check the number of aggregated components
-      self.assertEquals(actual_amount_list_len, expected_amount_list_len,
+      self.assertEqual(actual_amount_list_len, expected_amount_list_len,
                         error_msg)
         
       # Check quantity for each component
@@ -644,7 +644,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                     'amount.categories : %s)' % \
                     (e_price, a_price, a_amount.getResource(),
                      expected['id'], a_amount.getCategoryList())
-        self.failIf(error, error_msg)
+        self.assertFalse(error, error_msg)
           
       # Check duration for each component
         a_duration = a_amount.getDuration()
@@ -663,14 +663,14 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                     (e_duration, a_duration,
                      a_amount.getResource(), expected['id'],
                      a_amount.getCategoryList())
-        self.failIf(error, error_msg)
+        self.assertFalse(error, error_msg)
             
       # Check global quantity
       total_price = aggregated_amount_list.getTotalPrice()
       error_msg = 'Total price for AggregatedAmountList differs between ' \
                   'expected (%s) and aggregated (%s) (%s)' % \
                   (total_price, expected['total'], expected['id'])
-      self.assertEquals(round(total_price, 10), round(expected['total'], 10),
+      self.assertEqual(round(total_price, 10), round(expected['total'], 10),
                         error_msg)
         
       # Check global duration
@@ -691,7 +691,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         LOG('TEST ERROR :', 0, error_msg)
       # XXX Is it alright to exit this test with an error without raising
       # anything?
-      # self.failIf(error, error_msg)
+      # self.assertFalse(error, error_msg)
        
                
   def test_01_getAggregatedAmountList(self):

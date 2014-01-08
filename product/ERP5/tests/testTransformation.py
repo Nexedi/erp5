@@ -121,9 +121,9 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         resource_value=component,
         quantity=2)
     aggregated_amount_list = transformation.getAggregatedAmountList()
-    self.assertEquals(len(aggregated_amount_list), 1)
+    self.assertEqual(len(aggregated_amount_list), 1)
     aggregated_amount = aggregated_amount_list[0]
-    self.assertEquals(aggregated_amount.quantity, 2)
+    self.assertEqual(aggregated_amount.quantity, 2)
 
   def test_01_getAggregatedAmountListWithVariatedProperty(self):
     """
@@ -327,17 +327,17 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         amount_list = transformation.getAggregatedAmountList(temp_amount)
 
         # fabric + button + sewing
-        self.assertEquals(len(amount_list), 3)
+        self.assertEqual(len(amount_list), 3)
         for amount in amount_list:
           resource = amount.getResource()
           if resource == fabric.getRelativeUrl():
-            self.assertEquals(amount.getVariationCategoryList(), [colour])
-            self.assertEquals(amount.getQuantity(), (i+1)*swimsuit_quantity)
+            self.assertEqual(amount.getVariationCategoryList(), [colour])
+            self.assertEqual(amount.getQuantity(), (i+1)*swimsuit_quantity)
           elif resource == button.getRelativeUrl():
-            self.assertEquals(amount.getVariationCategoryList(), [size])
-            self.assertEquals(amount.getQuantity(), button_number*swimsuit_quantity)
+            self.assertEqual(amount.getVariationCategoryList(), [size])
+            self.assertEqual(amount.getQuantity(), button_number*swimsuit_quantity)
           elif resource == "operation/sewing":
-            self.assertEquals(amount.getQuantity(), n*swimsuit_quantity)
+            self.assertEqual(amount.getQuantity(), n*swimsuit_quantity)
           else:
             self.fail("Invalid Resource: %s" % resource)
         n += 1
@@ -355,11 +355,11 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
                                   button.getRelativeUrl(),
                                   "operation/sewing"],
             )
-    self.assertEquals(len(inv),
+    self.assertEqual(len(inv),
           len(transformation) * len(self.size_category_list) \
             * len(self.colour_category_list))
 
-    self.assertEquals(len(self.getSimulationTool().getInventoryList(
+    self.assertEqual(len(self.getSimulationTool().getInventoryList(
             node_uid=self.node.getUid(),
             transformed_resource=[fabric.getRelativeUrl(),
                                   button.getRelativeUrl(),
@@ -378,20 +378,20 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
                                       "operation/sewing"],
                 variation_text=variation_text,
               )
-        self.assertEquals(len(inv), len(transformation))
+        self.assertEqual(len(inv), len(transformation))
         for line in inv:
-          self.assertEquals(line.getVariationText(), variation_text)
-          self.assertEquals(line.getResource(), swimsuit.getRelativeUrl())
+          self.assertEqual(line.getVariationText(), variation_text)
+          self.assertEqual(line.getResource(), swimsuit.getRelativeUrl())
           transformed_resource = line.transformed_resource_relative_url
           if transformed_resource == fabric.getRelativeUrl():
-            self.assertEquals(line.transformed_variation_text, colour)
-            self.assertEquals(line.total_quantity, (i+1)*swimsuit_quantity)
+            self.assertEqual(line.transformed_variation_text, colour)
+            self.assertEqual(line.total_quantity, (i+1)*swimsuit_quantity)
           elif transformed_resource == button.getRelativeUrl():
-            self.assertEquals(line.transformed_variation_text, size)
-            self.assertEquals(line.total_quantity, button_number*swimsuit_quantity)
+            self.assertEqual(line.transformed_variation_text, size)
+            self.assertEqual(line.total_quantity, button_number*swimsuit_quantity)
           elif transformed_resource == "operation/sewing":
-            self.assertEquals(line.total_quantity, n*swimsuit_quantity)
-            self.assertEquals(line.transformed_variation_text, "")
+            self.assertEqual(line.total_quantity, n*swimsuit_quantity)
+            self.assertEqual(line.transformed_variation_text, "")
           else:
             self.fail("Invalid Transformed Resource: %s" % transformed_resource)
         n += 1
@@ -414,15 +414,15 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
 
     # add transformations lines and check the don't acquire the resource
     operation = transformation.newContent(portal_type='Transformation Operation')
-    self.assertEquals(operation.getResource(), None)
+    self.assertEqual(operation.getResource(), None)
 
     optional_resource = transformation.newContent(portal_type=\
         'Transformation Optional Resource')
-    self.assertEquals(optional_resource.getResource(), None)
+    self.assertEqual(optional_resource.getResource(), None)
 
     transformed_resource = transformation.newContent(portal_type=\
         'Transformation Transformed Resource')
-    self.assertEquals(transformed_resource.getResource(), None)
+    self.assertEqual(transformed_resource.getResource(), None)
 
 def test_suite():
   import unittest

@@ -194,8 +194,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
 
   def test_02_noSender(self):
     sequence_list = SequenceList()
@@ -234,8 +234,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['site@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['site@example.invalid'], mto)
 
   def stepCheckNotificationWithoutMessage(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -247,8 +247,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
 
   def test_05_noMessage(self):
     sequence_list = SequenceList()
@@ -270,12 +270,12 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    self.assertEquals(mail_dict['body'], 'Message')
+    self.assertEqual(mail_dict['headers']['subject'], 'Subject')
+    self.assertEqual(mail_dict['body'], 'Message')
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_06_simpleMessage(self):
@@ -311,13 +311,13 @@ class TestNotificationTool(ERP5TypeTestCase):
 
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
 
     # Check Message
     mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    self.assertEquals(mail_dict['body'], 'Message')
+    self.assertEqual(mail_dict['headers']['subject'], 'Subject')
+    self.assertEqual(mail_dict['body'], 'Message')
     self.assertSameSet([('Attachment 1', 'text/plain', 'Text 1'),
                         ('Attachment 2', 'application/octet-stream', 'Text 2')], 
                        mail_dict['attachment_list'])
@@ -343,14 +343,14 @@ class TestNotificationTool(ERP5TypeTestCase):
 
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userB@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userB@example.invalid'], mto)
 
     previous_message = self.portal.MailHost._previous_message
     self.assertNotEquals((), previous_message)
     mfrom, mto, messageText = previous_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
 
   def test_08_MultiRecipient(self):
     sequence_list = SequenceList()
@@ -402,12 +402,12 @@ class TestNotificationTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    self.assertEquals(mail_dict['body'], 'Message')
+    self.assertEqual(mail_dict['headers']['subject'], 'Subject')
+    self.assertEqual(mail_dict['body'], 'Message')
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_10_PersonNotification(self):
@@ -436,12 +436,12 @@ Yes, I will go."""
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    self.assertEquals(mail_dict['body'], message)
+    self.assertEqual(mail_dict['headers']['subject'], 'Subject')
+    self.assertEqual(mail_dict['body'], message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_11_TextMessage(self):
@@ -467,12 +467,12 @@ Yes, I will go."""
         message_text_format='text/html', message=message)
     last_message, = self.portal.MailHost._message_list
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
     # Check Message
     mail_dict = decode_email(messageText)
-    self.assertEquals(mail_dict['headers']['subject'], 'Subject')
-    self.assertEquals(mail_dict['body'], '<html><body>%s</body></html>' % message)
+    self.assertEqual(mail_dict['headers']['subject'], 'Subject')
+    self.assertEqual(mail_dict['body'], '<html><body>%s</body></html>' % message)
     self.assertSameSet([], mail_dict['attachment_list'])
 
   def test_12_HtmlMessage(self):
@@ -517,22 +517,22 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     last_message, = self.portal.MailHost._message_list
     mfrom, mto, messageText = last_message
     mail_dict = decode_email(messageText)
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
     
     # check that an event has been created
     event_list = self.portal.event_module.contentValues()
-    self.assertEquals(1, len(event_list))
+    self.assertEqual(1, len(event_list))
     
     event = event_list[0]
-    self.assertEquals(mail_dict['headers']['message-id'],
+    self.assertEqual(mail_dict['headers']['message-id'],
                       event.getSourceReference())
-    self.assertEquals('Mail Message', event.getPortalTypeName())
-    self.assertEquals('Subject', event.getTitle())
-    self.assertEquals('Message', event.getTextContent())
+    self.assertEqual('Mail Message', event.getPortalTypeName())
+    self.assertEqual('Subject', event.getTitle())
+    self.assertEqual('Message', event.getTextContent())
     self.assertNotEquals(None, event.getStartDate())
-    self.assertEquals(person, event.getDestinationValue())
-    self.assertEquals('started', event.getSimulationState())
+    self.assertEqual(person, event.getDestinationValue())
+    self.assertEqual('started', event.getSimulationState())
 
 
 def test_suite():

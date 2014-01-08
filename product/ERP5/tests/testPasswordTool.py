@@ -107,7 +107,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     Check existence of password tool
     """
-    self.failUnless(self.getPasswordTool() is not None)
+    self.assertTrue(self.getPasswordTool() is not None)
 
   def stepCheckUserLogin(self, sequence=None, sequence_list=None, **kw):
     """
@@ -150,7 +150,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Check mail has not been sent after fill in wrong the form password
     """
     last_message = self.portal.MailHost._last_message
-    self.assertEquals((), last_message)
+    self.assertEqual((), last_message)
 
   def stepCheckMailSent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -159,8 +159,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEquals(['userA@example.invalid'], mto)
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
 
   def stepGoToRandomAddress(self, sequence=None, sequence_list=None, **kw):
     """
@@ -318,16 +318,16 @@ class TestPasswordTool(ERP5TypeTestCase):
     self._assertUserExists('userA', 'passwordA')
     self._assertUserExists('userB', 'passwordB')
 
-    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
+    self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
-    self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
+    self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
     self.tic()
 
     self.portal.portal_password.mailPasswordResetRequest(user_login="userB")
     possible_key_list =\
         self.portal.portal_password._password_request_dict.keys()
-    self.assertEquals(2, len(possible_key_list))
+    self.assertEqual(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
     self.tic()
 
@@ -364,12 +364,12 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self._assertUserExists('userZ ', 'passwordZ')
 
-    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
+    self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     # No reset should be send if trailing space is not entered
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
-    self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
+    self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ ")
-    self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
+    self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
 
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
     self.tic()

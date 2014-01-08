@@ -94,7 +94,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session.clear()
     session.update(primitives_kw)
     session = self.portal.portal_sessions[self.session_id]
-    self.assertEquals(primitives_kw, session)
+    self.assertEqual(primitives_kw, session)
 
     # API check
     self.assert_(self.portal.portal_sessions[self.session_id] ==  \
@@ -102,7 +102,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session.clear()
     session.edit(**primitives_kw)
     session = self.portal.portal_sessions[self.session_id]
-    self.assertEquals(primitives_kw, session)
+    self.assertEqual(primitives_kw, session)
 
   def stepTestAcquisitionRamSessionStorage(self, sequence=None, \
                                            sequence_list=None, **kw):
@@ -185,10 +185,10 @@ class TestSessionTool(ERP5TypeTestCase):
     session.clear()    
     session['foo'] = 'Bar'
     self.assertTrue('foo' in session)
-    self.assertEquals('Bar', session['foo'])
-    self.assertEquals('Bar', session.get('foo'))
+    self.assertEqual('Bar', session['foo'])
+    self.assertEqual('Bar', session.get('foo'))
     self.assertFalse('bar' in session)
-    self.assertEquals('Default', session.get('bar', 'Default'))
+    self.assertEqual('Default', session.get('bar', 'Default'))
     self.assertRaises(KeyError, session.__getitem__, 'bar')
 
   def stepTestSessionGetattr(self, sequence=None, \
@@ -196,8 +196,8 @@ class TestSessionTool(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
     session['foo'] = 'Bar'
-    #self.assertEquals('Bar', session.foo)
-    self.assertEquals('Default', getattr(session, 'bar', 'Default'))
+    #self.assertEqual('Bar', session.foo)
+    self.assertEqual('Default', getattr(session, 'bar', 'Default'))
     self.assertRaises(AttributeError, getattr, session, 'bar')
 
   def stepTestSessionBulkStorage(self, sequence=None, \
@@ -214,7 +214,7 @@ class TestSessionTool(ERP5TypeTestCase):
       session[i] = v
       kw[i] = v
     session = self.portal.portal_sessions[self.session_id]
-    self.assertEquals(kw, session)
+    self.assertEqual(kw, session)
 
     # test big session 
     session.clear()
@@ -222,7 +222,7 @@ class TestSessionTool(ERP5TypeTestCase):
       kw[key] = ''.join([choice(LETTERS) for x in range(1000)])
     session.update(kw)
     session = self.portal.portal_sessions[self.session_id]
-    self.assertEquals(kw, session)
+    self.assertEqual(kw, session)
 
   def stepTestSessionExpire(self, sequence=None, \
                             sequence_list=None, **kw):
@@ -257,7 +257,7 @@ class TestSessionTool(ERP5TypeTestCase):
                                         reference='test')
 
     session = self.portal.portal_sessions[self.session_id]
-    self.assertEquals(session.get('key'),  'value')
+    self.assertEqual(session.get('key'),  'value')
     self.abort()
 
   def test_01_CheckSessionTool(self):

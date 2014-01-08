@@ -226,7 +226,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     group_calendar = sequence.get('group_calendar')
     group_calendar.confirm()
-    self.assertEquals('confirmed', group_calendar.getSimulationState())
+    self.assertEqual('confirmed', group_calendar.getSimulationState())
 
   def stepConfirmActionGroupCalendar(self, sequence=None, 
                                sequence_list=None, **kw):
@@ -238,7 +238,7 @@ class TestCalendar(ERP5ReportTestCase):
                           group_calendar,
                           'confirm_action',
                           'group_calendar_workflow')
-    self.assertEquals('confirmed', group_calendar.getSimulationState())
+    self.assertEqual('confirmed', group_calendar.getSimulationState())
 
 
   def stepCreateLeaveRequest(self, sequence=None, 
@@ -319,7 +319,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     leave_request = sequence.get('leave_request')
     leave_request.plan()
-    self.assertEquals('planned', leave_request.getSimulationState())
+    self.assertEqual('planned', leave_request.getSimulationState())
 
   def stepConfirmLeaveRequest(self, sequence=None, 
                                sequence_list=None, **kw):
@@ -328,7 +328,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     leave_request = sequence.get('leave_request')
     leave_request.confirm()
-    self.assertEquals('confirmed', leave_request.getSimulationState())
+    self.assertEqual('confirmed', leave_request.getSimulationState())
 
   def getSqlUidList(self):
     """
@@ -368,7 +368,7 @@ class TestCalendar(ERP5ReportTestCase):
     obj_to_check = sequence.get('obj_to_check')
     self.assertTrue(obj_to_check.getUid() in uid_list)
 
-#     self.assertEquals(len(obj_to_check.getDatePeriodList()),
+#     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
 
   def stepCheckCataloguedAsMovement(self, sequence=None, 
@@ -379,7 +379,7 @@ class TestCalendar(ERP5ReportTestCase):
     uid_list = self.getSqlMovementUidList()
     obj_to_check = sequence.get('obj_to_check')
     self.assertTrue(obj_to_check.getUid() in uid_list)
-#     self.assertEquals(len(obj_to_check.getDatePeriodList()),
+#     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
 
   def test_01_CatalogCalendarPeriod(self, quiet=0, run=run_all_test):
@@ -454,25 +454,25 @@ class TestCalendar(ERP5ReportTestCase):
     date_period_list = obj_to_check._getDatePeriodList()
 
     # Check 1 period
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=stop_date))
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=stop_date))
-    self.assertEquals(second_availability / 2,
+    self.assertEqual(second_availability / 2,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=self.middle_date))
-    self.assertEquals(second_availability / 2,
+    self.assertEqual(second_availability / 2,
                       person.getAvailableTime(from_date=self.middle_date, 
                                                      to_date=stop_date))
     # Check 2 periods
-    self.assertEquals(2 * second_availability,
+    self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
                                          from_date=start_date, 
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
-#     self.assertEquals(len(date_period_list) * second_availability,
+#     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
   def stepCheckDoubleGetTimeAvailability(self, sequence=None, 
@@ -490,16 +490,16 @@ class TestCalendar(ERP5ReportTestCase):
     date_period_list = obj_to_check._getDatePeriodList()
 
     # Check 1 period
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date, 
                                                  to_date=stop_date))
     # Check 2 periods
-    self.assertEquals(2 * second_availability,
+    self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
                                          from_date=start_date, 
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
-#     self.assertEquals(len(date_period_list) * second_availability,
+#     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
   def stepCheckPersonalTimeAvailability(self, sequence=None, 
@@ -515,25 +515,25 @@ class TestCalendar(ERP5ReportTestCase):
     date_period_list = obj_to_check._getDatePeriodList()
 
     # Check 1 period
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=stop_date))
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=stop_date))
-    self.assertEquals(second_availability / 2,
+    self.assertEqual(second_availability / 2,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=self.middle_date))
-    self.assertEquals(second_availability / 2,
+    self.assertEqual(second_availability / 2,
                       person.getAvailableTime(from_date=self.middle_date, 
                                                      to_date=stop_date))
     # Check 2 periods
-    self.assertEquals(2 * second_availability,
+    self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
                                          from_date=start_date, 
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
-#     self.assertEquals(len(date_period_list) * second_availability,
+#     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
   def stepCheckCumulativeTimeAvailability(self, sequence=None, 
@@ -549,16 +549,16 @@ class TestCalendar(ERP5ReportTestCase):
     date_period_list = obj_to_check._getDatePeriodList()
 
     # Check 1 period
-    self.assertEquals(0,
+    self.assertEqual(0,
                       person.getAvailableTime(from_date=start_date, 
                                               to_date=stop_date))
     # Check 2 periods
-    self.assertEquals(second_availability,
+    self.assertEqual(second_availability,
                       person.getAvailableTime(
                                          from_date=start_date, 
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
-#     self.assertEquals(len(date_period_list) * second_availability,
+#     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
   def test_03_getAvailableTime(self, quiet=0, run=run_all_test):
@@ -748,55 +748,55 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
     # no lines
-    self.assertEquals(1, len(group_calendar.checkConsistency()))
+    self.assertEqual(1, len(group_calendar.checkConsistency()))
     group_calendar_period = group_calendar.newContent(
                                   portal_type='Group Presence Period')
     # invalid line (no dates, no resource)
-    self.assertEquals(3, len(group_calendar.checkConsistency()))
+    self.assertEqual(3, len(group_calendar.checkConsistency()))
     group_calendar_period.setStartDate(self.start_date)
     group_calendar_period.setStopDate(self.stop_date)
-    self.assertEquals(1, len(group_calendar.checkConsistency()))
+    self.assertEqual(1, len(group_calendar.checkConsistency()))
     group_calendar_period.setResourceValue(
           self.portal.portal_categories.calendar_period_type.type1)
-    self.assertEquals(0, len(group_calendar.checkConsistency()))
+    self.assertEqual(0, len(group_calendar.checkConsistency()))
 
   def test_LeaveRequestCalendarConstraint(self):
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
     # no lines, no person
-    self.assertEquals(2, len(leave_request.checkConsistency()))
+    self.assertEqual(2, len(leave_request.checkConsistency()))
     leave_request_period = leave_request.newContent(
                                   portal_type='Leave Request Period')
     # no person, invalid line (no dates, no resource)
-    self.assertEquals(4, len(leave_request.checkConsistency()))
+    self.assertEqual(4, len(leave_request.checkConsistency()))
     leave_request_period.setStartDate(self.start_date)
     leave_request_period.setStopDate(self.stop_date)
-    self.assertEquals(2, len(leave_request.checkConsistency()))
+    self.assertEqual(2, len(leave_request.checkConsistency()))
     leave_request_period.setResourceValue(
           self.portal.portal_categories.calendar_period_type.type1)
-    self.assertEquals(1, len(leave_request.checkConsistency()))
+    self.assertEqual(1, len(leave_request.checkConsistency()))
     person = self.portal.person_module.newContent(portal_type='Person')
     leave_request.setDestinationValue(person)
-    self.assertEquals(0, len(leave_request.checkConsistency()))
+    self.assertEqual(0, len(leave_request.checkConsistency()))
 
   def test_PresenceRequestCalendarConstraint(self):
     presence_request = self.portal.presence_request_module.newContent(
                                   portal_type='Presence Request')
     # no lines, no person
-    self.assertEquals(2, len(presence_request.checkConsistency()))
+    self.assertEqual(2, len(presence_request.checkConsistency()))
     presence_request_period = presence_request.newContent(
                                   portal_type='Presence Request Period')
     # no person, invalid line (no dates, no resource)
-    self.assertEquals(4, len(presence_request.checkConsistency()))
+    self.assertEqual(4, len(presence_request.checkConsistency()))
     presence_request_period.setStartDate(self.start_date)
     presence_request_period.setStopDate(self.stop_date)
-    self.assertEquals(2, len(presence_request.checkConsistency()))
+    self.assertEqual(2, len(presence_request.checkConsistency()))
     presence_request_period.setResourceValue(
           self.portal.portal_categories.calendar_period_type.type1)
-    self.assertEquals(1, len(presence_request.checkConsistency()))
+    self.assertEqual(1, len(presence_request.checkConsistency()))
     person = self.portal.person_module.newContent(portal_type='Person')
     presence_request.setDestinationValue(person)
-    self.assertEquals(0, len(presence_request.checkConsistency()))
+    self.assertEqual(0, len(presence_request.checkConsistency()))
 
   def test_SimpleLeaveRequestWithSameDateAsGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
@@ -817,10 +817,10 @@ class TestCalendar(ERP5ReportTestCase):
     # there is 43200 seconds between self.start_date and self.stop_date
     total_time = 43200
 
-    self.assertEquals(total_time, person.getAvailableTime(
+    self.assertEqual(total_time, person.getAvailableTime(
                                 from_date=self.start_date-1,
                                 to_date=self.stop_date+1))
-    self.assertEquals([total_time], [x.total_quantity for x in 
+    self.assertEqual([total_time], [x.total_quantity for x in 
                               person.getAvailableTimeSequence(
                                 year=1,
                                 from_date=self.start_date-1,
@@ -829,8 +829,8 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                                             from_date=self.start_date-1,
                                             to_date=self.stop_date+1)
-    self.assertEquals(1, len(available_time_movement_list))
-    self.assertEquals([(self.start_date.ISO(), self.stop_date.ISO())],
+    self.assertEqual(1, len(available_time_movement_list))
+    self.assertEqual([(self.start_date.ISO(), self.stop_date.ISO())],
                       [(x.getStartDate().ISO(), x.getStopDate().ISO()) for x in
                           available_time_movement_list])
 
@@ -848,10 +848,10 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals(0, person.getAvailableTime(
+    self.assertEqual(0, person.getAvailableTime(
                                 from_date=self.start_date-1,
                                 to_date=self.stop_date+1))
-    self.assertEquals([0], [x.total_quantity for x in 
+    self.assertEqual([0], [x.total_quantity for x in 
                               person.getAvailableTimeSequence(
                                 year=1,
                                 from_date=self.start_date-1,
@@ -860,7 +860,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                                             from_date=self.start_date-1,
                                             to_date=self.stop_date+1)
-    self.assertEquals(0, len(available_time_movement_list))
+    self.assertEqual(0, len(available_time_movement_list))
 
 
   def test_LeaveRequestWithSameDateAsGroupCalendar(self):
@@ -886,11 +886,11 @@ class TestCalendar(ERP5ReportTestCase):
                                    calendar_value=group_calendar)
     self.tic()
     
-    self.assertEquals((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18 - 14 + 12 - 8) * 60 * 60],
+    self.assertEqual([(18 - 14 + 12 - 8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -899,8 +899,8 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(2, len(available_time_movement_list))
-    self.assertEquals(
+    self.assertEqual(2, len(available_time_movement_list))
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'), DateTime('2008/01/01 12:00')),
          (DateTime('2008/01/01 14:00'), DateTime('2008/01/01 18:00'))],
         [(m.getStartDate(), m.getStopDate()) for m in
@@ -919,11 +919,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals(0, person.getAvailableTime(
+    self.assertEqual(0, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([0],
+    self.assertEqual([0],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -932,7 +932,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(0, len(available_time_movement_list))
+    self.assertEqual(0, len(available_time_movement_list))
 
 
   def test_LeaveRequestWithSameDateAsRepeatedGroupCalendar(self):
@@ -956,11 +956,11 @@ class TestCalendar(ERP5ReportTestCase):
     self.tic()
     
     # 2008/01/07 was a Monday
-    self.assertEquals((18 - 8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 6).earliestTime(),
                             to_date=DateTime(2008, 1, 7).latestTime()))
 
-    self.assertEquals([(18 - 8) * 60 * 60],
+    self.assertEqual([(18 - 8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=2,
                   from_date=DateTime(2008, 1, 6).earliestTime(),
@@ -969,8 +969,8 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 6).earliestTime(),
                   to_date=DateTime(2008, 1, 7).latestTime())
-    self.assertEquals(1, len(available_time_movement_list))
-    self.assertEquals(
+    self.assertEqual(1, len(available_time_movement_list))
+    self.assertEqual(
         [(DateTime('2008/01/07 08:00'), DateTime('2008/01/07 18:00'))],
         [(m.getStartDate(), m.getStopDate()) for m in
           available_time_movement_list])
@@ -989,11 +989,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals(0, person.getAvailableTime(
+    self.assertEqual(0, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 6).earliestTime(),
                             to_date=DateTime(2008, 1, 7).latestTime()))
                             
-    self.assertEquals([0],
+    self.assertEqual([0],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=2,
                   from_date=DateTime(2008, 1, 6).earliestTime(),
@@ -1001,7 +1001,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 6).earliestTime(),
                   to_date=DateTime(2008, 1, 7).latestTime())
-    self.assertEquals(0, len(available_time_movement_list))
+    self.assertEqual(0, len(available_time_movement_list))
 
   def test_LeaveRequestOverlappingGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
@@ -1019,11 +1019,11 @@ class TestCalendar(ERP5ReportTestCase):
                                    calendar_value=group_calendar)
     self.tic()
     
-    self.assertEquals((18 - 8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18 - 8) * 60 * 60],
+    self.assertEqual([(18 - 8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1032,8 +1032,8 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(1, len(available_time_movement_list))
-    self.assertEquals(
+    self.assertEqual(1, len(available_time_movement_list))
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'), DateTime('2008/01/01 18:00'))],
         [(m.getStartDate(), m.getStopDate()) for m in
           available_time_movement_list])
@@ -1051,11 +1051,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((9-8 + 18-17) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((9-8 + 18-17) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(9-8 + 18-17) * 60 * 60],
+    self.assertEqual([(9-8 + 18-17) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1064,8 +1064,8 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(2, len(available_time_movement_list))
-    self.assertEquals(
+    self.assertEqual(2, len(available_time_movement_list))
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'),
           DateTime('2008/01/01 09:00')),
          (DateTime('2008/01/01 17:00'),
@@ -1101,11 +1101,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((18-9) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18-9) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18-9) * 60 * 60],
+    self.assertEqual([(18-9) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1114,7 +1114,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(
+    self.assertEqual(
         [(DateTime('2008/01/01 09:00'),
           DateTime('2008/01/01 18:00'),)],
         [(m.getStartDate(), m.getStopDate()) for m in
@@ -1148,11 +1148,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((17-8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((17-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(17-8) * 60 * 60],
+    self.assertEqual([(17-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1161,7 +1161,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'),
           DateTime('2008/01/01 17:00'),)],
         [(m.getStartDate(), m.getStopDate()) for m in
@@ -1201,11 +1201,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((18-13 + 12-10 + 9-8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18-13 + 12-10 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18-13 + 12-10 + 9-8) * 60 * 60],
+    self.assertEqual([(18-13 + 12-10 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1214,7 +1214,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'),
           DateTime('2008/01/01 09:00'),),
          (DateTime('2008/01/01 10:00'),
@@ -1258,11 +1258,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18-11 + 9-8) * 60 * 60],
+    self.assertEqual([(18-11 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1271,7 +1271,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'),
           DateTime('2008/01/01 09:00'),),
          (DateTime('2008/01/01 11:00'),
@@ -1313,11 +1313,11 @@ class TestCalendar(ERP5ReportTestCase):
     
     self.tic()
     
-    self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
+    self.assertEqual((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
                             
-    self.assertEquals([(18-11 + 9-8) * 60 * 60],
+    self.assertEqual([(18-11 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
                   from_date=DateTime(2008, 1, 1).earliestTime(),
@@ -1326,7 +1326,7 @@ class TestCalendar(ERP5ReportTestCase):
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                   from_date=DateTime(2008, 1, 1).earliestTime(),
                   to_date=DateTime(2008, 1, 1).latestTime())
-    self.assertEquals(
+    self.assertEqual(
         [(DateTime('2008/01/01 08:00'),
           DateTime('2008/01/01 09:00'),),
          (DateTime('2008/01/01 11:00'),
@@ -1405,13 +1405,13 @@ class TestCalendar(ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
                              self.portal.person_module,
                              'PersonModule_viewLeaveRequestReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
       
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
-    self.assertEquals(data_line_list[0].column_id_list,
+    self.assertEqual(data_line_list[0].column_id_list,
         ['person_career_reference', 'person_title',
          'calendar_period_type/type2', 'calendar_period_type/type3', 'total'])
 
@@ -1427,7 +1427,7 @@ class TestCalendar(ERP5ReportTestCase):
                              **{'calendar_period_type/type2': 1.0,
                                 'calendar_period_type/type3': 1.5,})
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
                              total=3.5,
                              **{'calendar_period_type/type2': 2.0,

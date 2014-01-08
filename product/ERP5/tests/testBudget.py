@@ -79,14 +79,14 @@ class TestBudget(ERP5TypeTestCase):
                     inventory_axis='node_category',
                     variation_base_category='site',
                     )
-    self.assertEquals([], budget_model.checkConsistency())
+    self.assertEqual([], budget_model.checkConsistency())
 
   def test_simple_create_budget(self):
     budget = self.portal.budget_module.newContent(
                             portal_type='Budget')
     budget_line = budget.newContent(portal_type='Budget Line')
     budget_cell = budget_line.newContent(portal_type='Budget Cell')
-    self.assertEquals([], budget.checkConsistency())
+    self.assertEqual([], budget.checkConsistency())
 
   def test_budget_cell_node_variation_with_aggregate(self):
     budget_model = self.portal.budget_model_module.newContent(
@@ -105,22 +105,22 @@ class TestBudget(ERP5TypeTestCase):
                     portal_type='Budget',
                     specialise_value=budget_model)
     budget_line = budget.newContent(portal_type='Budget Line')
-    self.assertEquals(['source'],
+    self.assertEqual(['source'],
                       budget_line.getVariationBaseCategoryList())
-    self.assertEquals(
+    self.assertEqual(
         [('Goods Purchase', 'source/account_module/goods_purchase'),
          ('Fixed Assets', 'source/account_module/fixed_assets')],
         budget_line.BudgetLine_getVariationRangeCategoryList())
 
     budget_line.setVariationCategoryList(
          ('source/account_module/goods_purchase',))
-    self.assertEquals(
+    self.assertEqual(
         ['source/account_module/goods_purchase'],
         budget_line.getVariationCategoryList())
   
     # This was a budget cell variation, so no criterion is set on budget line
-    self.assertEquals(budget_line.getMembershipCriterionCategoryList(), [])
-    self.assertEquals(
+    self.assertEqual(budget_line.getMembershipCriterionCategoryList(), [])
+    self.assertEqual(
         budget_line.getMembershipCriterionBaseCategoryList(), [])
     
 
@@ -141,20 +141,20 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
     budget_cell = budget_line.getCell('source/account_module/goods_purchase')
     self.assertNotEquals(None, budget_cell)
 
-    self.assertEquals(['source/account_module/goods_purchase'],
+    self.assertEqual(['source/account_module/goods_purchase'],
         budget_cell.getMembershipCriterionCategoryList())
-    self.assertEquals(5, budget_cell.getQuantity())
+    self.assertEqual(5, budget_cell.getQuantity())
 
     # there is no budget consumption
-    self.assertEquals(0, budget_cell.getConsumedBudget())
-    self.assertEquals(0, budget_cell.getEngagedBudget())
-    self.assertEquals(5, budget_cell.getAvailableBudget())
+    self.assertEqual(0, budget_cell.getConsumedBudget())
+    self.assertEqual(0, budget_cell.getEngagedBudget())
+    self.assertEqual(5, budget_cell.getAvailableBudget())
     # there is no budget transfer
-    self.assertEquals(5, budget_cell.getCurrentBalance())
+    self.assertEqual(5, budget_cell.getCurrentBalance())
 
 
   def test_category_budget_cell_variation(self):
@@ -170,7 +170,7 @@ class TestBudget(ERP5TypeTestCase):
                     portal_type='Budget',
                     specialise_value=budget_model)
     budget_line = budget.newContent(portal_type='Budget Line')
-    self.assertEquals(['account_type'],
+    self.assertEqual(['account_type'],
                       budget_line.getVariationBaseCategoryList())
 
     variation_range_category_list = \
@@ -194,7 +194,7 @@ class TestBudget(ERP5TypeTestCase):
                     specialise_value=budget_model)
     budget_line = budget.newContent(portal_type='Budget Line')
 
-    self.assertEquals(['group'],
+    self.assertEqual(['group'],
                       budget_line.getVariationBaseCategoryList())
 
     variation_range_category_list = \
@@ -204,9 +204,9 @@ class TestBudget(ERP5TypeTestCase):
     self.assertTrue(['Demo Group', 'group/demo_group'] in variation_range_category_list)
     
     budget_line.edit(variation_category_list=['group/demo_group'])
-    self.assertEquals(['group'],
+    self.assertEqual(['group'],
         budget_line.getMembershipCriterionBaseCategoryList())
-    self.assertEquals(['group/demo_group'],
+    self.assertEqual(['group/demo_group'],
         budget_line.getMembershipCriterionCategoryList())
 
   def test_category_budget_line_and_budget_cell_variation(self):
@@ -231,14 +231,14 @@ class TestBudget(ERP5TypeTestCase):
                     specialise_value=budget_model)
     budget_line = budget.newContent(portal_type='Budget Line')
 
-    self.assertEquals(['group', 'account_type'],
+    self.assertEqual(['group', 'account_type'],
                       budget_line.getVariationBaseCategoryList())
     
     budget_line.edit(variation_category_list=['group/demo_group',
                                               'account_type/expense'])
-    self.assertEquals(['group'],
+    self.assertEqual(['group'],
         budget_line.getMembershipCriterionBaseCategoryList())
-    self.assertEquals(['group/demo_group'],
+    self.assertEqual(['group/demo_group'],
         budget_line.getMembershipCriterionCategoryList())
 
     form = budget_line.BudgetLine_view
@@ -256,11 +256,11 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
     budget_cell = budget_line.getCell('account_type/expense')
-    self.assertEquals(['account_type'],
+    self.assertEqual(['account_type'],
                        budget_cell.getMembershipCriterionBaseCategoryList())
-    self.assertEquals(['account_type/expense'],
+    self.assertEqual(['account_type/expense'],
                        budget_cell.getMembershipCriterionCategoryList())
 
 
@@ -277,7 +277,7 @@ class TestBudget(ERP5TypeTestCase):
                     portal_type='Budget',
                     specialise_value=budget_model)
 
-    self.assertEquals(['group'],
+    self.assertEqual(['group'],
                       budget.getVariationBaseCategoryList())
 
     variation_range_category_list = \
@@ -288,8 +288,8 @@ class TestBudget(ERP5TypeTestCase):
 
     # setting this variation on the budget also sets membership
     budget.edit(variation_category_list=['group/demo_group'])
-    self.assertEquals('demo_group', budget.getGroup())
-    self.assertEquals('Demo Group', budget.getGroupTitle())
+    self.assertEqual('demo_group', budget.getGroup())
+    self.assertEqual('Demo Group', budget.getGroupTitle())
 
   # consumptions
   def test_simple_consumption(self):
@@ -361,11 +361,11 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(2, len(budget_line.contentValues()))
+    self.assertEqual(2, len(budget_line.contentValues()))
     budget_cell = budget_line.getCell('source/account_module/goods_purchase',
                                       'account_type/expense')
     self.assertNotEquals(None, budget_cell)
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category=['account_type/expense'],
@@ -376,7 +376,7 @@ class TestBudget(ERP5TypeTestCase):
     budget_cell = budget_line.getCell('source/account_module/fixed_assets',
                                       'account_type/asset')
     self.assertNotEquals(None, budget_cell)
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category=['account_type/asset'],
@@ -384,7 +384,7 @@ class TestBudget(ERP5TypeTestCase):
              section_category=['group/demo_group'],),
         budget_model.getInventoryQueryDict(budget_cell))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category=['account_type/expense', 'account_type/asset'],
@@ -416,14 +416,14 @@ class TestBudget(ERP5TypeTestCase):
     # a confirmed transaction engages budget
     self.tic()
 
-    self.assertEquals(dict(), budget_line.getConsumedBudgetDict())
+    self.assertEqual(dict(), budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
@@ -432,17 +432,17 @@ class TestBudget(ERP5TypeTestCase):
     # a stopped transaction consumes budget
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
@@ -522,9 +522,9 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(2, len(budget_line.contentValues()))
+    self.assertEqual(2, len(budget_line.contentValues()))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',
@@ -554,17 +554,17 @@ class TestBudget(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/budget_special_node/all_other', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/budget_special_node/all_other', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/budget_special_node/all_other', 'account_type/asset'): 102.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
@@ -624,22 +624,22 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(2, len(budget_line.contentValues()))
+    self.assertEqual(2, len(budget_line.contentValues()))
 
     class ReferenceQuery:
       """Helper class to compare queries
       """
       def __eq__(me, query):
         self.assertTrue(isinstance(query, ComplexQuery))
-        self.assertEquals(query.logical_operator, 'or')
-        self.assertEquals(2, len(query.query_list))
-        self.assertEquals(query.query_list[0].kw, {'project_uid': None})
-        self.assertEquals(query.query_list[1].kw,
+        self.assertEqual(query.logical_operator, 'or')
+        self.assertEqual(2, len(query.query_list))
+        self.assertEqual(query.query_list[0].kw, {'project_uid': None})
+        self.assertEqual(query.query_list[1].kw,
           {'project_uid':
             [self.portal.organisation_module.my_organisation.getUid()]})
         return True
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',],
@@ -667,12 +667,12 @@ class TestBudget(ERP5TypeTestCase):
     
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/none',): -300.0
        }, budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/none',): -300.0
        }, budget_line.getEngagedBudgetDict())
@@ -728,17 +728,17 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
     class ReferenceQuery:
       """Helper class to compare queries
       """
       def __eq__(me, query):
         self.assertTrue(isinstance(query, Query))
-        self.assertEquals(query.kw, {'project_uid': None})
+        self.assertEqual(query.kw, {'project_uid': None})
         return True
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',],
@@ -749,7 +749,7 @@ class TestBudget(ERP5TypeTestCase):
         budget_model.getInventoryListQueryDict(budget_line))
 
     budget_cell = budget_line.contentValues()[0]
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',],
@@ -775,15 +775,15 @@ class TestBudget(ERP5TypeTestCase):
     
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/budget_special_node/none',): -300.0
        }, budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/budget_special_node/none',): -300.0
        }, budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(-300, budget_cell.getConsumedBudget())
+    self.assertEqual(-300, budget_cell.getConsumedBudget())
 
   def test_none_and_all_others_virtual_nodes_together(self):
     # tests consumptions, by using "none" and "all other" virtual nodes
@@ -843,9 +843,9 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(3, len(budget_line.contentValues()))
+    self.assertEqual(3, len(budget_line.contentValues()))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',],
@@ -879,13 +879,13 @@ class TestBudget(ERP5TypeTestCase):
     
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/all_other',): -80.0,
        ('source_project/budget_special_node/none',): -120.0
        }, budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/all_other',): -80.0,
        ('source_project/budget_special_node/none',): -120.0
@@ -957,23 +957,23 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
     # At this time there are no consumption, so consumption and definition cell
     # ranges are all the same.
     default_cell_range = [['source/account_module/goods_purchase'],
                            ['account_type/asset', 'account_type/expense']]
 
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('cell'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('consumed'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('engaged'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('available'))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_category_strict_membership=['account_type/expense',
@@ -1009,34 +1009,34 @@ class TestBudget(ERP5TypeTestCase):
     consumption_cell_range = [['source/account_module/goods_purchase',
                                'source/account_module/fixed_assets'],
                            ['account_type/asset', 'account_type/expense']]
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('cell'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('consumed'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('engaged'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('available'))
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): 100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
 
     cell = budget_line.getCell('source/account_module/goods_purchase',
         'account_type/expense')
-    self.assertEquals(100, cell.getConsumedBudget())
-    self.assertEquals(100, cell.getEngagedBudget())
+    self.assertEqual(100, cell.getConsumedBudget())
+    self.assertEqual(100, cell.getEngagedBudget())
 
   def test_full_consumption_detail_category_variation(self):
     # tests consumptions, by using "full consumption detail" on a category
@@ -1105,7 +1105,7 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
     # At this time there are no consumption, so consumption and definition cell
     # ranges are all the same.
@@ -1113,16 +1113,16 @@ class TestBudget(ERP5TypeTestCase):
                             'source/account_module/fixed_assets'],
                            ['account_type/expense']]
 
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('cell'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('consumed'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('engaged'))
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('available'))
 
-    if 0 :self.assertEquals(
+    if 0 :self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              #node_category_strict_membership=['account_type/expense',
@@ -1160,35 +1160,35 @@ class TestBudget(ERP5TypeTestCase):
     consumption_cell_range = [['source/account_module/goods_purchase',
                                'source/account_module/fixed_assets'],
                            ['account_type/asset', 'account_type/expense']]
-    self.assertEquals(default_cell_range,
+    self.assertEqual(default_cell_range,
         budget_line.BudgetLine_asCellRange('cell'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('consumed'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('engaged'))
-    self.assertEquals(consumption_cell_range,
+    self.assertEqual(consumption_cell_range,
         budget_line.BudgetLine_asCellRange('available'))
 
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): 100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
 
     cell = budget_line.getCell('source/account_module/goods_purchase',
         'account_type/expense')
-    self.assertEquals(100, cell.getConsumedBudget())
-    self.assertEquals(100, cell.getEngagedBudget())
+    self.assertEqual(100, cell.getConsumedBudget())
+    self.assertEqual(100, cell.getEngagedBudget())
 
   def test_consumption_movement_category(self):
     # test for budget consumption using movement category
@@ -1266,13 +1266,13 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(2, len(budget_line.contentValues()))
+    self.assertEqual(2, len(budget_line.contentValues()))
 
     product_line_1 = self.portal.portal_categories.product_line['1']
     product_line_1_11 = product_line_1['1.1']
     product_line_1_12 = product_line_1['1.2']
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_uid=[self.portal.account_module.goods_purchase.getUid(),
@@ -1310,7 +1310,7 @@ class TestBudget(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): -100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): 100.0,
        # summary lines are automatically added
@@ -1319,7 +1319,7 @@ class TestBudget(ERP5TypeTestCase):
        },
         budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): -100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): 100.0,
        ('source/account_module/fixed_assets', 'product_line/1'): -100.0,
@@ -1327,7 +1327,7 @@ class TestBudget(ERP5TypeTestCase):
        },
         budget_line.getEngagedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): 100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): -98.0,
        ('source/account_module/fixed_assets', 'product_line/1'): 100.0,
@@ -1388,9 +1388,9 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_uid=[self.portal.account_module.goods_purchase.getUid(),],
@@ -1419,12 +1419,12 @@ class TestBudget(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('group/demo_group/sub1', 'source/account_module/goods_purchase'): 100.0,
        ('group/demo_group', 'source/account_module/goods_purchase'): 100.0,},
        budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('group/demo_group/sub1', 'source/account_module/goods_purchase'): 100.0,
        ('group/demo_group', 'source/account_module/goods_purchase'): 100.0,},
        budget_line.getEngagedBudgetDict())
@@ -1479,9 +1479,9 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              section_category=['group/demo_group/sub1',],
@@ -1507,11 +1507,11 @@ class TestBudget(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('group/demo_group/sub1', ): 0.0, },
        budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('group/demo_group/sub1', ): 0.0, },
        budget_line.getEngagedBudgetDict())
 
@@ -1565,9 +1565,9 @@ class TestBudget(ERP5TypeTestCase):
         ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
-    self.assertEquals(
+    self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_uid=[self.portal.account_module.goods_purchase.getUid(),],
@@ -1593,11 +1593,11 @@ class TestBudget(ERP5TypeTestCase):
 
     self.tic()
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/goods_purchase', ): 100.0, },
        budget_line.getConsumedBudgetDict())
 
-    self.assertEquals(
+    self.assertEqual(
       {('source/account_module/goods_purchase', ): 100.0, },
        budget_line.getEngagedBudgetDict())
 
@@ -1643,7 +1643,7 @@ class TestBudget(ERP5TypeTestCase):
                                  'source/account_module/goods_purchase',
                                  'source/account_module/fixed_assets',
                                  ])
-    self.assertEquals({
+    self.assertEqual({
       'from_date': None,
       'group_by_node': True,
       'group_by_section_category': True,
@@ -1653,7 +1653,7 @@ class TestBudget(ERP5TypeTestCase):
                    self.portal.account_module.fixed_assets.getUid()], },
       budget_model.getInventoryListQueryDict(budget_line))
 
-    self.assertEquals({
+    self.assertEqual({
       'from_date': None,
       'simulation_state': ('delivered', 'stopped', 'started'),
       'transit_simulation_state': ('started', ),
@@ -1757,56 +1757,56 @@ class TestBudget(ERP5TypeTestCase):
     line_list, line_count = budget.Budget_getBudgetConsumptionReportData()
     # the number of lines, which will be used in the report to set the print
     # range
-    self.assertEquals(6, line_count)
+    self.assertEqual(6, line_count)
     # number of line can be different from the length of the line list, because
     # line list is a recursive structure.
-    self.assertEquals(4, len(line_list))
+    self.assertEqual(4, len(line_list))
     
     # first line is for the title of the budget
-    self.assertEquals('Budget Title', line_list[0]['title'])
+    self.assertEqual('Budget Title', line_list[0]['title'])
     self.assertTrue(line_list[0]['is_budget'])
     
     # then we have a first level for budget lines
-    self.assertEquals('Budget Line Title', line_list[1]['title'])
+    self.assertEqual('Budget Line Title', line_list[1]['title'])
     self.assertTrue(line_list[1]['is_level_1'])
     # we can see global consumptions for the budget
-    self.assertEquals(200, line_list[2]['initial_budget'])
-    self.assertEquals(200, line_list[2]['current_budget'])
-    self.assertEquals(100, line_list[2]['consumed_budget'])
-    self.assertEquals(100, line_list[2]['engaged_budget'])
-    self.assertEquals(.5, line_list[2]['consumed_ratio'])
+    self.assertEqual(200, line_list[2]['initial_budget'])
+    self.assertEqual(200, line_list[2]['current_budget'])
+    self.assertEqual(100, line_list[2]['consumed_budget'])
+    self.assertEqual(100, line_list[2]['engaged_budget'])
+    self.assertEqual(.5, line_list[2]['consumed_ratio'])
     
     # the dimensions are reversed in the budget report, so on level 2 we have
     # the last dimension from cell range, here "account type"
-    self.assertEquals('Asset', line_list[2]['title'])
+    self.assertEqual('Asset', line_list[2]['title'])
     # we can see global consumptions for that summary line
-    self.assertEquals(200, line_list[2]['initial_budget'])
-    self.assertEquals(200, line_list[2]['current_budget'])
-    self.assertEquals(100, line_list[2]['consumed_budget'])
-    self.assertEquals(100, line_list[2]['engaged_budget'])
-    self.assertEquals(.5, line_list[2]['consumed_ratio'])
+    self.assertEqual(200, line_list[2]['initial_budget'])
+    self.assertEqual(200, line_list[2]['current_budget'])
+    self.assertEqual(100, line_list[2]['consumed_budget'])
+    self.assertEqual(100, line_list[2]['engaged_budget'])
+    self.assertEqual(.5, line_list[2]['consumed_ratio'])
 
     # no we have a recursive list, for the next dimension: node.
     self.assertTrue(isinstance(line_list[3], list))
-    self.assertEquals(3, len(line_list[3]))
+    self.assertEqual(3, len(line_list[3]))
 
     # first is again a title XXX why ??
-    self.assertEquals('Asset', line_list[3][0]['title'])
+    self.assertEqual('Asset', line_list[3][0]['title'])
     # then we have two level 3 cells
     self.assertTrue(line_list[3][1]['is_level_3'])
-    self.assertEquals('Goods Purchase', line_list[3][1]['title'])
-    self.assertEquals(0, line_list[3][1]['initial_budget'])
-    self.assertEquals(0, line_list[3][1]['current_budget'])
-    self.assertEquals(0, line_list[3][1]['consumed_budget'])
-    self.assertEquals(0, line_list[3][1]['engaged_budget'])
-    self.assertEquals(0, line_list[3][1]['consumed_ratio'])
+    self.assertEqual('Goods Purchase', line_list[3][1]['title'])
+    self.assertEqual(0, line_list[3][1]['initial_budget'])
+    self.assertEqual(0, line_list[3][1]['current_budget'])
+    self.assertEqual(0, line_list[3][1]['consumed_budget'])
+    self.assertEqual(0, line_list[3][1]['engaged_budget'])
+    self.assertEqual(0, line_list[3][1]['consumed_ratio'])
 
-    self.assertEquals('Fixed Assets', line_list[3][2]['title'])
-    self.assertEquals(200, line_list[3][2]['initial_budget'])
-    self.assertEquals(200, line_list[3][2]['current_budget'])
-    self.assertEquals(100, line_list[3][2]['consumed_budget'])
-    self.assertEquals(100, line_list[3][2]['engaged_budget'])
-    self.assertEquals(.5, line_list[3][2]['consumed_ratio'])
+    self.assertEqual('Fixed Assets', line_list[3][2]['title'])
+    self.assertEqual(200, line_list[3][2]['initial_budget'])
+    self.assertEqual(200, line_list[3][2]['current_budget'])
+    self.assertEqual(100, line_list[3][2]['consumed_budget'])
+    self.assertEqual(100, line_list[3][2]['engaged_budget'])
+    self.assertEqual(.5, line_list[3][2]['consumed_ratio'])
 
     # validate report ODF
     from Products.ERP5OOo.tests.utils import Validator
@@ -1945,59 +1945,59 @@ class TestBudget(ERP5TypeTestCase):
 
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(6, len(budget_line.contentValues()))
+    self.assertEqual(6, len(budget_line.contentValues()))
 
     budget_line.BudgetLine_setQuantityOnSummaryCellList()
 
     # summary cells have been created:
-    self.assertEquals(14, len(budget_line.contentValues()))
+    self.assertEqual(14, len(budget_line.contentValues()))
 
     # those cells are aggregating
-    self.assertEquals(1+2, budget_line.getCell(
+    self.assertEqual(1+2, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group/sub1',).getQuantity())
-    self.assertEquals(4+3, budget_line.getCell(
+    self.assertEqual(4+3, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/fixed_assets',
                               'group/demo_group/sub1',).getQuantity())
-    self.assertEquals(1+5, budget_line.getCell(
+    self.assertEqual(1+5, budget_line.getCell(
                               'product_line/1/1.1',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(1+2+5, budget_line.getCell(
+    self.assertEqual(1+2+5, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
 
     # the cell that we have modified is erased
-    self.assertEquals(4, budget_line.getCell(
+    self.assertEqual(4, budget_line.getCell(
                               'product_line/1/1.2',
                               'source/account_module/fixed_assets',
                               'group/demo_group',).getQuantity())
 
     # test all cells for complete coverage
-    self.assertEquals(6, budget_line.getCell(
+    self.assertEqual(6, budget_line.getCell(
                               'product_line/1/1.1',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(2, budget_line.getCell(
+    self.assertEqual(2, budget_line.getCell(
                               'product_line/1/1.2',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(3+4, budget_line.getCell(
+    self.assertEqual(3+4, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/fixed_assets',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(3, budget_line.getCell(
+    self.assertEqual(3, budget_line.getCell(
                               'product_line/1/1.1',
                               'source/account_module/fixed_assets',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(4, budget_line.getCell(
+    self.assertEqual(4, budget_line.getCell(
                               'product_line/1/1.2',
                               'source/account_module/fixed_assets',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(5, budget_line.getCell(
+    self.assertEqual(5, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group/sub2',).getQuantity())
@@ -2008,25 +2008,25 @@ class TestBudget(ERP5TypeTestCase):
         'source/account_module/goods_purchase',
         'group/demo_group/sub1')
     self.assertNotEquals(None, budget_cell)
-    self.assertEquals(2, budget_cell.getQuantity())
+    self.assertEqual(2, budget_cell.getQuantity())
     budget_cell.setQuantity(6)
 
     budget_line.BudgetLine_setQuantityOnSummaryCellList()
-    self.assertEquals(14, len(budget_line.contentValues()))
+    self.assertEqual(14, len(budget_line.contentValues()))
 
-    self.assertEquals(1+6, budget_line.getCell(
+    self.assertEqual(1+6, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group/sub1',).getQuantity())
-    self.assertEquals(4+3, budget_line.getCell(
+    self.assertEqual(4+3, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/fixed_assets',
                               'group/demo_group/sub1',).getQuantity())
-    self.assertEquals(1+5, budget_line.getCell(
+    self.assertEqual(1+5, budget_line.getCell(
                               'product_line/1/1.1',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
-    self.assertEquals(1+6+5, budget_line.getCell(
+    self.assertEqual(1+6+5, budget_line.getCell(
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
@@ -2106,24 +2106,24 @@ class TestBudget(ERP5TypeTestCase):
           ))
     budget_line.Base_edit(form_id=form.getId())
 
-    self.assertEquals(1, len(budget_line.contentValues()))
+    self.assertEqual(1, len(budget_line.contentValues()))
 
     budget_line.BudgetLine_setQuantityOnSummaryCellList()
-    self.assertEquals(3, len(budget_line.contentValues()))
+    self.assertEqual(3, len(budget_line.contentValues()))
 
     budget_cell = budget_line.getCell(
         'product_line/1/1.1',
         'source/account_module/goods_purchase',
         'account_type/asset/cash')
     self.assertNotEquals(None, budget_cell)
-    self.assertEquals(1, budget_cell.getQuantity())
+    self.assertEqual(1, budget_cell.getQuantity())
 
     budget_cell = budget_line.getCell(
         'product_line/1/1.1',
         'source/account_module/goods_purchase',
         'account_type/asset',)
     self.assertNotEquals(None, budget_cell)
-    self.assertEquals(1, budget_cell.getQuantity())
+    self.assertEqual(1, budget_cell.getQuantity())
 
   def updateBudgetCellList(self, budget_line, table_list):
     updateCellList(self.portal,
@@ -2244,13 +2244,13 @@ class TestBudget(ERP5TypeTestCase):
        'source_section/organisation_module/my_organisation'),
       None)
     self.assertNotEquals(None, total_price)
-    self.assertEquals(500.0, total_price)
+    self.assertEqual(500.0, total_price)
     total_price = budget_line.getEngagedBudgetDict().get(
       ('resource/product_module/demo_product',
        'source_section/organisation_module/main_organisation'),
       None)
     self.assertNotEquals(None, total_price)
-    self.assertEquals(1200.0, total_price)
+    self.assertEqual(1200.0, total_price)
 
 
   # Other TODOs:

@@ -196,8 +196,8 @@ class TestConstraint(PropertySheetTestCase):
     object = sequence.get('object')
     property_name = 'ean13code'
     # make sure the property is defined on the object
-    self.failUnless(not object.hasProperty(property_name))
-    self.failUnless(object.getPropertyType(property_name) != 'int')
+    self.assertTrue(not object.hasProperty(property_name))
+    self.assertTrue(object.getPropertyType(property_name) != 'int')
     object.setProperty(property_name, 12)
 
   def stepSetObjectIntLocalProperty(self, sequence=None,
@@ -279,7 +279,7 @@ class TestConstraint(PropertySheetTestCase):
     Check that checkConsistency does not return an empty list
     """
     error_list = sequence.get('error_list')
-    self.failUnless(error_list != [],
+    self.assertTrue(error_list != [],
                     "error_list : %s" % error_list)
     # call getTranslatedMessage, to make sure messages have a valid mapping.
     for error in error_list:
@@ -1130,7 +1130,7 @@ class TestConstraint(PropertySheetTestCase):
     obj.fixConsistency()
     # should be fixed now
     self.assertEqual([], obj.checkConsistency())
-    self.failUnless(obj.getPropertyType(prop_name))
+    self.assertTrue(obj.getPropertyType(prop_name))
 
   def test_TALESConstraint(self):
     """Tests TALESConstraint

@@ -129,7 +129,7 @@ class TestDataProtection(ERP5TypeTestCase):
       # or default value is returned.
       self.assertFalse(document.getProperty(property_id))
     # View History permission is now granted only for Manager
-    self.assertEquals(document._View_History_Permission, ('Manager',))
+    self.assertEqual(document._View_History_Permission, ('Manager',))
 
   def stepEraseWorkflowHistoryCommentList(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -156,7 +156,7 @@ class TestDataProtection(ERP5TypeTestCase):
     # Last comment of edit workflow is filled by data protection action
     self.assertTrue(workflow_history['edit_workflow'][-1].get('comment'))
     # View History permission is now granted only for Manager
-    self.assertEquals(document._View_History_Permission, ('Manager',))
+    self.assertEqual(document._View_History_Permission, ('Manager',))
 
   def test_01_dataProtectionRequest(self):
     """This test create a person with a compromised description.

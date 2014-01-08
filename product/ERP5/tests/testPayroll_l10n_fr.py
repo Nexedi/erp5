@@ -63,7 +63,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
         'Pay Sheet Transaction')
     paysheet_list = paysheet_module.contentValues(portal_type=\
         'Pay Sheet Transaction')
-    self.assertEquals(len(paysheet_list), 2) # 2 paysheet have been created
+    self.assertEqual(len(paysheet_list), 2) # 2 paysheet have been created
                                              # for this test
 
     # set nice date on paysheet (ie. one paysheet per month)
@@ -84,13 +84,13 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
     # - 200 to 400
     # - 400 to 5000
     # the salary is of 3000
-    self.assertEquals(400, # 200 from the 1st paysheet + 200 from the 2e
+    self.assertEqual(400, # 200 from the 1st paysheet + 200 from the 2e
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(
             base_contribution, 'salary_range/france/slice_0_to_200'))
-    self.assertEquals(400, # 200 from the 1st paysheet + 200 from the 2e
+    self.assertEqual(400, # 200 from the 1st paysheet + 200 from the 2e
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
             base_contribution, 'salary_range/france/slice_200_to_400'))
-    self.assertEquals(5200, # (3000 - 400)*2
+    self.assertEqual(5200, # (3000 - 400)*2
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
             base_contribution, 'salary_range/france/slice_400_to_5000'))
 

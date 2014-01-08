@@ -278,21 +278,21 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     self.tic()
     self.portal.Localizer._default_language = 'fr'
 
-    self.assertEquals(item.getTranslatedValidationStateTitle(), 'Draft')
+    self.assertEqual(item.getTranslatedValidationStateTitle(), 'Draft')
     item.validate()
-    self.assertEquals(item.getTranslatedValidationStateTitle(), "En bon usage")
-    self.assertEquals(organisation.getTranslatedValidationStateTitle(),
+    self.assertEqual(item.getTranslatedValidationStateTitle(), "En bon usage")
+    self.assertEqual(organisation.getTranslatedValidationStateTitle(),
                       'Validé')
     # Now run indexation of translations.
     self.portal.ERP5Site_updateTranslationTable()
     self.tic()
     # Ckeck queries with translated workflow state title generated with
     # getMessageIdWithContext
-    self.assertEquals(1, len(self.portal.portal_catalog(
+    self.assertEqual(1, len(self.portal.portal_catalog(
       translated_validation_state_title="En bon usage")))
-    self.assertEquals(1, len(self.portal.portal_catalog(
+    self.assertEqual(1, len(self.portal.portal_catalog(
       translated_validation_state_title="En bon usage", portal_type='Item')))
-    self.assertEquals(0, len(self.portal.portal_catalog(
+    self.assertEqual(0, len(self.portal.portal_catalog(
       translated_validation_state_title="En bon usage",
       portal_type='Organisation')))
 
@@ -340,7 +340,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
       assert(len(self.portal.portal_catalog(portal_type=portal_type_id)) == 1)
       result = self.portal.portal_catalog(portal_type=portal_type_id,
           translated_simulation_state_title='!="%s in context"' % state_title)
-      self.assertEquals(len(result), 0)
+      self.assertEqual(len(result), 0)
     finally:
       # Clean the new context message
       message_catalog.message_del(getMessageIdWithContext(state_title,
@@ -416,8 +416,8 @@ class TestTranslation(ERP5TypeTestCase):
     self._cleanUpTranslations()
     # test clean-up actually worked
     erp5_ui = self.portal.Localizer.erp5_ui
-    self.assertEquals(erp5_ui.gettext('Person', lang=self.lang), 'Person')
-    self.assertEquals(erp5_ui.gettext('Draft', lang=self.lang), 'Draft')
+    self.assertEqual(erp5_ui.gettext('Person', lang=self.lang), 'Person')
+    self.assertEqual(erp5_ui.gettext('Draft', lang=self.lang), 'Draft')
 
     # erase created objects
     for module in (self.portal.person_module, self.portal.organisation_module):
@@ -430,7 +430,7 @@ class TestTranslation(ERP5TypeTestCase):
   def test_Localizer_translation(self):
     # basically, test afterSetUp worked...
     erp5_ui = self.portal.Localizer.erp5_ui
-    self.assertEquals(erp5_ui.gettext('Person', lang=self.lang), 'Personne')
+    self.assertEqual(erp5_ui.gettext('Person', lang=self.lang), 'Personne')
 
   def translate_by_zpt(self, domain, *words):
     zpt_template = """
@@ -446,12 +446,12 @@ class TestTranslation(ERP5TypeTestCase):
 
   def test_ZPT_translation(self):
     results = self.translate_by_zpt('erp5_ui', 'Person', 'Draft')
-    self.assertEquals(results, ['Personne', 'Brouillon'])
+    self.assertEqual(results, ['Personne', 'Brouillon'])
 
   def test_ZPT_translation_with_domain_alias(self):
     # test with a translation domain alias
     results = self.translate_by_zpt('ui', 'Person', 'Draft')
-    self.assertEquals(results, ['Personne', 'Brouillon'])
+    self.assertEqual(results, ['Personne', 'Brouillon'])
 
   def test_portal_type_and_state_title_translation_on_portal_catalog(self):
     # make sure we can search by "translated_validation_state_title" and
@@ -463,15 +463,15 @@ class TestTranslation(ERP5TypeTestCase):
                             portal_type='Organisation')
 
     self.tic()
-    self.assertEquals(set([person_1, person_2]),
+    self.assertEqual(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))
 
-    self.assertEquals(set([person_2, organisation]),
+    self.assertEqual(set([person_2, organisation]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      portal_type=('Person', 'Organisation'))]))
-    self.assertEquals([person_2],
+    self.assertEqual([person_2],
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])

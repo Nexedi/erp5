@@ -335,19 +335,19 @@ class TestDocument(TestDocumentMixin):
     docs[3] = self.createTestDocument(reference='TEST', version='004', language='en')
     docs[4] = self.createTestDocument(reference='ANOTHER', version='002', language='en')
     self.tic()
-    self.failIf(docs[1].isVersionUnique())
-    self.failIf(docs[2].isVersionUnique())
-    self.failUnless(docs[3].isVersionUnique())
+    self.assertFalse(docs[1].isVersionUnique())
+    self.assertFalse(docs[2].isVersionUnique())
+    self.assertTrue(docs[3].isVersionUnique())
     docs[2].setVersion('003')
     self.tic()
-    self.failUnless(docs[1].isVersionUnique())
-    self.failUnless(docs[2].isVersionUnique())
-    self.failUnless(docs[3].isVersionUnique())
-    self.failUnless(docs[1].getLatestVersionValue() == docs[3])
-    self.failUnless(docs[2].getLatestVersionValue() == docs[3])
-    self.failUnless(docs[3].getLatestVersionValue() == docs[3])
+    self.assertTrue(docs[1].isVersionUnique())
+    self.assertTrue(docs[2].isVersionUnique())
+    self.assertTrue(docs[3].isVersionUnique())
+    self.assertTrue(docs[1].getLatestVersionValue() == docs[3])
+    self.assertTrue(docs[2].getLatestVersionValue() == docs[3])
+    self.assertTrue(docs[3].getLatestVersionValue() == docs[3])
     version_list = [br.getRelativeUrl() for br in docs[2].getVersionValueList()]
-    self.failUnless(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
+    self.assertTrue(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
 
   def test_04_VersioningWithLanguage(self):
     """
@@ -388,19 +388,19 @@ class TestDocument(TestDocumentMixin):
     time.sleep(1)
     self.tic()
     doc = docs[2] # can be any
-    self.failUnless(doc.getOriginalLanguage() == 'en')
-    self.failUnless(doc.getLanguageList() == ['en', 'fr', 'pl', 'sp'])
-    self.failUnless(doc.getLatestVersionValue() == docs[4]) # there are two latest - it chooses the one in user language
-    self.failUnless(doc.getLatestVersionValue('en') == docs[4])
-    self.failUnless(doc.getLatestVersionValue('fr') == docs[2])
-    self.failUnless(doc.getLatestVersionValue('pl') == docs[3])
-    self.failUnless(doc.getLatestVersionValue('ru') == None)
+    self.assertTrue(doc.getOriginalLanguage() == 'en')
+    self.assertTrue(doc.getLanguageList() == ['en', 'fr', 'pl', 'sp'])
+    self.assertTrue(doc.getLatestVersionValue() == docs[4]) # there are two latest - it chooses the one in user language
+    self.assertTrue(doc.getLatestVersionValue('en') == docs[4])
+    self.assertTrue(doc.getLatestVersionValue('fr') == docs[2])
+    self.assertTrue(doc.getLatestVersionValue('pl') == docs[3])
+    self.assertTrue(doc.getLatestVersionValue('ru') == None)
     localizer.changeLanguage('sp') # change user language
-    self.failUnless(doc.getLatestVersionValue() == docs[5]) # there are two latest - it chooses the one in user language
+    self.assertTrue(doc.getLatestVersionValue() == docs[5]) # there are two latest - it chooses the one in user language
     docs[6] = document_module.newContent(reference='TEST', version='004', language='pl')
     docs[7] = document_module.newContent(reference='TEST', version='004', language='en')
     self.tic()
-    self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
+    self.assertTrue(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
   def test_06_testExplicitRelations(self):
     """
@@ -605,7 +605,7 @@ class TestDocument(TestDocumentMixin):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
     doc.edit(file=makeFileUpload('import_data_list.ods'))
-    self.assertEquals(len(makeFileUpload('import_data_list.ods').read()),
+    self.assertEqual(len(makeFileUpload('import_data_list.ods').read()),
                       doc.get_size())
 
   def testTempOOoDocument_get_size(self):
@@ -613,22 +613,22 @@ class TestDocument(TestDocumentMixin):
     from Products.ERP5Type.Document import newTempOOoDocument
     doc = newTempOOoDocument(self.portal, 'tmp')
     doc.edit(data='OOo')
-    self.assertEquals(len('OOo'), doc.get_size())
+    self.assertEqual(len('OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
     # test hasData on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
-    self.failIf(doc.hasData())
+    self.assertFalse(doc.hasData())
     doc.edit(file=makeFileUpload('import_data_list.ods'))
-    self.failUnless(doc.hasData())
+    self.assertTrue(doc.hasData())
 
   def testTempOOoDocument_hasData(self):
     # test hasData on TempOOoDocument
     from Products.ERP5Type.Document import newTempOOoDocument
     doc = newTempOOoDocument(self.portal, 'tmp')
-    self.failIf(doc.hasData())
+    self.assertFalse(doc.hasData())
     doc.edit(file=makeFileUpload('import_data_list.ods'))
-    self.failUnless(doc.hasData())
+    self.assertTrue(doc.hasData())
 
   def test_Owner_Base_download(self):
     # tests that owners can download OOo documents, and all headers (including
@@ -645,11 +645,11 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s/Base_download' % doc.getPath(),
                             basic='member_user1:secret')
-    self.assertEquals(makeFileUpload('import_data_list.ods').read(),
+    self.assertEqual(makeFileUpload('import_data_list.ods').read(),
                       response.getBody())
-    self.assertEquals('application/vnd.oasis.opendocument.spreadsheet',
+    self.assertEqual('application/vnd.oasis.opendocument.spreadsheet',
                       response.headers['content-type'])
-    self.assertEquals('attachment; filename="import_data_list.ods"',
+    self.assertEqual('attachment; filename="import_data_list.ods"',
                       response.headers['content-disposition'])
     self.tic()
 
@@ -670,8 +670,8 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
-    self.assertEquals('application/pdf', response.getHeader('content-type'))
-    self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
+    self.assertEqual('application/pdf', response.getHeader('content-type'))
+    self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.getHeader('content-disposition'))
     response_body = response.getBody()
     conversion = str(doc.convert('pdf')[1])
@@ -679,13 +679,13 @@ class TestDocument(TestDocumentMixin):
                                           conversion.splitlines(),
                                           fromfile='first_call.pdf',
                                           tofile='second_call.pdf'))
-    self.assertEquals(response_body, conversion, diff)
+    self.assertEqual(response_body, conversion, diff)
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
-    self.assertEquals('application/pdf',
+    self.assertEqual('application/pdf',
                       response.headers['content-type'])
-    self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
+    self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
 
   def test_05_getCreationDate(self):
@@ -710,9 +710,9 @@ class TestDocument(TestDocumentMixin):
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
 
-    self.assertEquals('converting', document.getExternalProcessingState())
+    self.assertEqual('converting', document.getExternalProcessingState())
     self.commit()
-    self.assertEquals('converting', document.getExternalProcessingState())
+    self.assertEqual('converting', document.getExternalProcessingState())
 
     # Clone a uploaded document
     container = document.getParentValue()
@@ -720,14 +720,14 @@ class TestDocument(TestDocumentMixin):
     paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
     new_document = container[paste_result[0]['new_id']]
 
-    self.assertEquals('converting', new_document.getExternalProcessingState())
+    self.assertEqual('converting', new_document.getExternalProcessingState())
     self.commit()
-    self.assertEquals('converting', new_document.getExternalProcessingState())
+    self.assertEqual('converting', new_document.getExternalProcessingState())
 
     # Change workflow state to converted
     self.tic()
-    self.assertEquals('converted', document.getExternalProcessingState())
-    self.assertEquals('converted', new_document.getExternalProcessingState())
+    self.assertEqual('converted', document.getExternalProcessingState())
+    self.assertEqual('converted', new_document.getExternalProcessingState())
 
     # Clone a converted document
     container = document.getParentValue()
@@ -735,11 +735,11 @@ class TestDocument(TestDocumentMixin):
     paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
     new_document = container[paste_result[0]['new_id']]
 
-    self.assertEquals('converted', new_document.getExternalProcessingState())
+    self.assertEqual('converted', new_document.getExternalProcessingState())
     self.commit()
-    self.assertEquals('converted', new_document.getExternalProcessingState())
+    self.assertEqual('converted', new_document.getExternalProcessingState())
     self.tic()
-    self.assertEquals('converted', new_document.getExternalProcessingState())
+    self.assertEqual('converted', new_document.getExternalProcessingState())
 
   def test_07_EmbeddedDocumentOfAClonedDocument(self):
     """
@@ -749,9 +749,9 @@ class TestDocument(TestDocumentMixin):
     document = self.portal.person_module.newContent(portal_type='Person')
 
     sub_document = document.newContent(portal_type='Embedded File')
-    self.assertEquals('embedded', sub_document.getValidationState())
+    self.assertEqual('embedded', sub_document.getValidationState())
     self.tic()
-    self.assertEquals('embedded', sub_document.getValidationState())
+    self.assertEqual('embedded', sub_document.getValidationState())
 
     # Clone document
     container = document.getParentValue()
@@ -761,11 +761,11 @@ class TestDocument(TestDocumentMixin):
     new_document = container[paste_result[0]['new_id']]
 
     new_sub_document_list = new_document.contentValues(portal_type='Embedded File')
-    self.assertEquals(1, len(new_sub_document_list))
+    self.assertEqual(1, len(new_sub_document_list))
     new_sub_document = new_sub_document_list[0]
-    self.assertEquals('embedded', new_sub_document.getValidationState())
+    self.assertEqual('embedded', new_sub_document.getValidationState())
     self.tic()
-    self.assertEquals('embedded', new_sub_document.getValidationState())
+    self.assertEqual('embedded', new_sub_document.getValidationState())
 
   def test_08_NoImagesCreatedDuringHTMLConversion(self):
     """Converting an ODT to html no longer creates Images embedded in the
@@ -777,10 +777,10 @@ class TestDocument(TestDocumentMixin):
 
     self.tic()
 
-    self.assertEquals(0, len(document.contentValues(portal_type='Image')))
+    self.assertEqual(0, len(document.contentValues(portal_type='Image')))
     document.convert(format='html')
     image_list = document.contentValues(portal_type='Image')
-    self.assertEquals(0, len(image_list))
+    self.assertEqual(0, len(image_list))
 
   def test_09_SearchableText(self):
     """
@@ -894,10 +894,10 @@ class TestDocument(TestDocumentMixin):
     document = portal.document_module.newContent(
                    portal_type = 'Presentation',)
     # searchable text is empty by default
-    self.assertEquals('', document.SearchableText())
+    self.assertEqual('', document.SearchableText())
     # it contains title
     document.setTitle('foo')
-    self.assertEquals('foo', document.SearchableText())
+    self.assertEqual('foo', document.SearchableText())
     # and description
     document.setDescription('bar')
     self.assertTrue('bar' in document.SearchableText(),
@@ -913,38 +913,38 @@ class TestDocument(TestDocumentMixin):
     parse = portal.Base_parseSearchString
     
     # directly pasing searchable string
-    self.assertEquals('searchable text',
+    self.assertEqual('searchable text',
                       assemble(**{'searchabletext': 'searchable text'}))
     kw = {'searchabletext_any': 'searchabletext_any',
           'searchabletext_phrase': 'searchabletext_phrase1 searchabletext_phrase1'}
     # exact phrase
     search_string = assemble(**kw)
-    self.assertEquals('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
+    self.assertEqual('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEquals(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], parsed_string.keys())
 
     
     # search "with all of the words"
     kw["searchabletext_all"] = "searchabletext_all1 searchabletext_all2"
     search_string = assemble(**kw)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEquals(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], parsed_string.keys())
     
     # search without these words 
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
     search_string = assemble(**kw)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEquals(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], parsed_string.keys())
     
     # search limited to a certain date range
     kw['created_within'] = '1w'
     search_string = assemble(**kw)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
                       search_string)
     parsed_string = parse(search_string)
     self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
@@ -953,126 +953,126 @@ class TestDocument(TestDocumentMixin):
     kw['search_portal_type'] = 'Document'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     
     # search by reference
     kw['reference'] = 'Nxd-test'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
     
     # search by version
     kw['version'] = '001'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
     
     # search by language
     kw['language'] = 'en'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
-    self.assertEquals(kw['language'], parsed_string['language'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['language'], parsed_string['language'])
     
     # contributor title search
     kw['contributor_title'] = 'John'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
-    self.assertEquals(kw['language'], parsed_string['language'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['language'], parsed_string['language'])
     
     # only my docs
     kw['mine'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
-    self.assertEquals(kw['language'], parsed_string['language'])
-    self.assertEquals(kw['mine'], parsed_string['mine'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['language'], parsed_string['language'])
+    self.assertEqual(kw['mine'], parsed_string['mine'])
     
     # only newest versions 
     kw['newest'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
-    self.assertEquals(kw['language'], parsed_string['language'])
-    self.assertEquals(kw['mine'], parsed_string['mine'])
-    self.assertEquals(kw['newest'], parsed_string['newest'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['language'], parsed_string['language'])
+    self.assertEqual(kw['mine'], parsed_string['mine'])
+    self.assertEqual(kw['newest'], parsed_string['newest'])
     
     # search mode 
     kw['search_mode'] = 'in_boolean_mode'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
+    self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
-    self.assertEquals(kw['reference'], parsed_string['reference'])
-    self.assertEquals(kw['version'], parsed_string['version'])
-    self.assertEquals(kw['language'], parsed_string['language'])
-    self.assertEquals(kw['mine'], parsed_string['mine'])
-    self.assertEquals(kw['newest'], parsed_string['newest'])
-    self.assertEquals('boolean', parsed_string['mode'])
+    self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
+    self.assertEqual(kw['reference'], parsed_string['reference'])
+    self.assertEqual(kw['version'], parsed_string['version'])
+    self.assertEqual(kw['language'], parsed_string['language'])
+    self.assertEqual(kw['mine'], parsed_string['mine'])
+    self.assertEqual(kw['newest'], parsed_string['newest'])
+    self.assertEqual('boolean', parsed_string['mode'])
 
     # search with multiple portal_type
     kw = {'search_portal_type': ['Document','Presentation','Web Page'],
            'searchabletext_any': 'erp5'}
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
+    self.assertEqual('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
                         parsed_string.keys())
-    #self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
+    #self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
     search_string = 'erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")'
     parsed_string = parse(search_string)
-    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','"Web Page"'])
+    self.assertEqual(parsed_string['portal_type'], ['Document','Presentation','"Web Page"'])
 
   def test_11_Base_getAdvancedSearchResultList(self):
     """
@@ -1258,8 +1258,8 @@ class TestDocument(TestDocumentMixin):
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
-    self.assertEquals('PDF', document.getPortalType())
-    self.assertEquals('I use reference to look up TEST\n',
+    self.assertEqual('PDF', document.getPortalType())
+    self.assertEqual('I use reference to look up TEST\n',
                       document._convertToText())
     html_data = re.sub(self.re_html_nbsp, ' ', document._convertToHTML())
     self.assert_('I use reference to look up TEST' in html_data)
@@ -1269,23 +1269,23 @@ class TestDocument(TestDocumentMixin):
   def test_PDFToImage(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
-    self.assertEquals('PDF', document.getPortalType())
+    self.assertEqual('PDF', document.getPortalType())
 
     content_type, image_data = document.convert(format='png',
                                                 frame=0,
                                                 display='thumbnail')
     # it's a valid PNG
-    self.assertEquals('PNG', image_data[1:4])
+    self.assertEqual('PNG', image_data[1:4])
 
   def test_PDF_content_information(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
-    self.assertEquals('PDF', document.getPortalType())
+    self.assertEqual('PDF', document.getPortalType())
     content_information = document.getContentInformation()
-    self.assertEquals('1', content_information['Pages'])
-    self.assertEquals('subject', content_information['Subject'])
-    self.assertEquals('title', content_information['Title'])
-    self.assertEquals('application/pdf', document.getContentType())
+    self.assertEqual('1', content_information['Pages'])
+    self.assertEqual('subject', content_information['Subject'])
+    self.assertEqual('title', content_information['Title'])
+    self.assertEqual('application/pdf', document.getContentType())
 
   def test_PDF_content_information_extra_metadata(self):
     # Extra metadata, such as those stored by pdftk update_info are also
@@ -1293,11 +1293,11 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('metadata.pdf', as_name='REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.tic()
-    self.assertEquals('PDF', document.getPortalType())
+    self.assertEqual('PDF', document.getPortalType())
     content_information = document.getContentInformation()
-    self.assertEquals('the value', content_information['NonStandardMetadata'])
-    self.assertEquals('1', content_information['Pages'])
-    self.assertEquals('REF', document.getReference())
+    self.assertEqual('the value', content_information['NonStandardMetadata'])
+    self.assertEqual('1', content_information['Pages'])
+    self.assertEqual('REF', document.getReference())
 
     # contribute file which will be merged to current document in synchronous mode
     # and check content_type recalculated 
@@ -1319,13 +1319,13 @@ class TestDocument(TestDocumentMixin):
     document.setFile(upload_file)
     self.tic()
     content_information = document.getContentInformation()
-    self.assertEquals('1', content_information['Pages'])    
+    self.assertEqual('1', content_information['Pages'])    
 
   def test_empty_PDF_content_information(self):
     document = self.portal.document_module.newContent(portal_type='PDF')
     content_information = document.getContentInformation()
     # empty PDF have no content information
-    self.assertEquals(dict(), content_information)
+    self.assertEqual(dict(), content_information)
 
   def test_apple_PDF_metadata(self):
     # PDF created with Apple software have a special 'AAPL:Keywords' info tag
@@ -1354,7 +1354,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     pdf.share()
     self.tic()
-    self.assertEquals(pdf.getValidationState(), "shared")
+    self.assertEqual(pdf.getValidationState(), "shared")
     result = pdf.getContentInformation()
     self.assertNotEquals(result, None)
 
@@ -1364,7 +1364,7 @@ class TestDocument(TestDocumentMixin):
     # Here we use edit instead of setFile,
     # because only edit method set filename as filename.
     document.edit(file=upload_file)
-    self.assertEquals('application/pdf', document.getContentType())
+    self.assertEqual('application/pdf', document.getContentType())
 
   def test_PDF_watermark(self):
     original_document = self.portal.portal_contributions.newContent(
@@ -1429,46 +1429,46 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('metadata.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
     document.edit(file=upload_file)
-    self.assertEquals(document.getStandardFilename(), 'metadata.pdf')
-    self.assertEquals(document.getStandardFilename(format='png'),
+    self.assertEqual(document.getStandardFilename(), 'metadata.pdf')
+    self.assertEqual(document.getStandardFilename(format='png'),
                       'metadata.png')
     document.setVersion('001')
     document.setLanguage('en')
-    self.assertEquals(document.getStandardFilename(), 'metadata-001-en.pdf')
-    self.assertEquals(document.getStandardFilename(format='png'),
+    self.assertEqual(document.getStandardFilename(), 'metadata-001-en.pdf')
+    self.assertEqual(document.getStandardFilename(format='png'),
                       'metadata-001-en.png')
     # check when format contains multiple '.'
     upload_file = makeFileUpload('TEST-en-003.odp')
     document = self.portal.document_module.newContent(portal_type='Presentation')
     document.edit(file=upload_file)
-    self.assertEquals(document.getStandardFilename(), 'TEST-en-003.odp')
-    self.assertEquals('TEST-en-003.odg', document.getStandardFilename(format='odp.odg'))
+    self.assertEqual(document.getStandardFilename(), 'TEST-en-003.odp')
+    self.assertEqual('TEST-en-003.odg', document.getStandardFilename(format='odp.odg'))
 
 
   def test_CMYKImageTextContent(self):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
-    self.assertEquals('Image', document.getPortalType())
-    self.assertEquals('ERP5 is a free software\n\n', document.asText())
+    self.assertEqual('Image', document.getPortalType())
+    self.assertEqual('ERP5 is a free software\n\n', document.asText())
 
   def test_MonochromeImageResize(self):
     upload_file = makeFileUpload('monochrome_sample.tiff')
     document = self.portal.portal_contributions.newContent(file=upload_file)
-    self.assertEquals('Image', document.getPortalType())
+    self.assertEqual('Image', document.getPortalType())
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
     self.assertFalse('1-bit' in identify_output)
-    self.assertEquals('ERP5 is a free software\n\n', document.asText())
+    self.assertEqual('ERP5 is a free software\n\n', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Drawing')
-    self.assertEquals('empty', document.getExternalProcessingState())
+    self.assertEqual('empty', document.getExternalProcessingState())
 
     upload_file = makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
     self.tic()
-    self.assertEquals('converted', document.getExternalProcessingState())
+    self.assertEqual('converted', document.getExternalProcessingState())
 
     # Delete base_data
     document.edit(base_data=None)
@@ -1476,14 +1476,14 @@ class TestDocument(TestDocumentMixin):
     # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
-    self.assertEquals('This document is not converted yet.',
+    self.assertEqual('This document is not converted yet.',
                       document.Base_showFoundText())
     
     # upload again good content
     upload_file = makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
     self.tic()
-    self.assertEquals('converted', document.getExternalProcessingState())
+    self.assertEqual('converted', document.getExternalProcessingState())
 
   def test_Base_contribute(self):
     """
@@ -1500,15 +1500,15 @@ class TestDocument(TestDocumentMixin):
                                      description=None,
                                      attach_document_to_context=True,
                                      file=makeFileUpload('TEST-en-002.odt'))
-    self.assertEquals('Text', contributed_document.getPortalType())
+    self.assertEqual('Text', contributed_document.getPortalType())
     self.tic()
     document_list = person.getFollowUpRelatedValueList()
-    self.assertEquals(1, len(document_list))
+    self.assertEqual(1, len(document_list))
     document = document_list[0]
-    self.assertEquals('converted', document.getExternalProcessingState())
-    self.assertEquals('Text', document.getPortalType())
-    self.assertEquals('title', document.getTitle())
-    self.assertEquals(contributed_document, document)
+    self.assertEqual('converted', document.getExternalProcessingState())
+    self.assertEqual('Text', document.getPortalType())
+    self.assertEqual('title', document.getTitle())
+    self.assertEqual(contributed_document, document)
 
   def test_Base_contribute_empty(self):
     """
@@ -1533,10 +1533,10 @@ class TestDocument(TestDocumentMixin):
                                     file=empty_file_upload)
     self.tic()
     document_list = person.getFollowUpRelatedValueList()
-    self.assertEquals(1, len(document_list))
+    self.assertEqual(1, len(document_list))
     document = document_list[0]
-    self.assertEquals('File', document.getPortalType())
-    self.assertEquals(contributed_document, document)
+    self.assertEqual('File', document.getPortalType())
+    self.assertEqual(contributed_document, document)
 
   def test_Base_contribute_forced_type(self):
     """Test contributing while forcing the portal type.
@@ -1545,7 +1545,7 @@ class TestDocument(TestDocumentMixin):
     contributed_document = person.Base_contribute(
                                      portal_type='PDF',
                                      file=makeFileUpload('TEST-en-002.odt'))
-    self.assertEquals('PDF', contributed_document.getPortalType())
+    self.assertEqual('PDF', contributed_document.getPortalType())
 
   def test_Base_contribute_input_parameter_dict(self):
     """Test contributing while entering input parameters.
@@ -1555,7 +1555,7 @@ class TestDocument(TestDocumentMixin):
                                      title='user supplied title',
                                      file=makeFileUpload('TEST-en-002.pdf'))
     self.tic()
-    self.assertEquals('user supplied title', contributed_document.getTitle())
+    self.assertEqual('user supplied title', contributed_document.getTitle())
 
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
@@ -1611,7 +1611,7 @@ class TestDocument(TestDocumentMixin):
     image_count = builder._image_count
     failure_message = 'Expected image not found in ODF zipped archive'
     # fetch image from zipped archive content then compare with ERP5 Image
-    self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
+    self.assertEqual(builder.extract('Pictures/%s.jpeg' % image_count),
                       image.getData(), failure_message)
 
     # Continue the test with image resizing support
@@ -1627,7 +1627,7 @@ class TestDocument(TestDocumentMixin):
     mime, converted_image = image.convert(format='jpeg', display=image_display)
     # fetch image from zipped archive content
     # then compare with resized ERP5 Image
-    self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
+    self.assertEqual(builder.extract('Pictures/%s.jpeg' % image_count),
                       converted_image, failure_message)
 
     # Let's continue with Presentation Document as embbeded image
@@ -1649,7 +1649,7 @@ class TestDocument(TestDocumentMixin):
                                              quality=75)
     # fetch image from zipped archive content
     # then compare with resized ERP5 Image
-    self.assertEquals(builder.extract('Pictures/%s.png' % image_count),
+    self.assertEqual(builder.extract('Pictures/%s.png' % image_count),
                       converted_image, failure_message)
 
 
@@ -1963,7 +1963,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
         result_list.append(i)
-    self.assertEquals(result_list, [])
+    self.assertEqual(result_list, [])
 
   def test_conversionCache_reseting(self):
     """Check that modifying a document with edit method,
@@ -2021,7 +2021,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     module = self.portal.getDefaultModule(portal_type)
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEquals(document.asText(), 'ERP5 is a free software.\n\n')
+    self.assertEqual(document.asText(), 'ERP5 is a free software.\n\n')
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
@@ -2093,7 +2093,7 @@ return 1
     upload_file = makeFileUpload('TEST-en-003.odp')
     document.edit(file=upload_file)
     self.tic()
-    self.assertEquals('converted', document.getExternalProcessingState())
+    self.assertEqual('converted', document.getExternalProcessingState())
     for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
       for credential in ['ERP5TypeTestCase:', 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
@@ -2425,7 +2425,7 @@ return 1
          'version': '001'}
     document1 = portal.document_module.newContent(portal_type="Presentation", **kw)
     self.tic()
-    self.assertEquals(0, len(document1.Document_getOtherVersionDocumentList()))
+    self.assertEqual(0, len(document1.Document_getOtherVersionDocumentList()))
 
     kw['version'] == '002'
     document2 = portal.document_module.newContent(portal_type="Spreadsheet", **kw)
@@ -2472,11 +2472,11 @@ return 1
     event_list.reverse()
     # all actions by logged in user
     for event in event_list:
-      self.assertEquals(event.actor, logged_in_user)
-    self.assertEquals(event_list[0].action, 'Edit')
-    self.assertEquals(event_list[-1].action, 'Share Document')
-    self.assertEquals(event_list[-2].action, 'Reject Document')
-    self.assertEquals(event_list[-3].action, 'Publish Document')
+      self.assertEqual(event.actor, logged_in_user)
+    self.assertEqual(event_list[0].action, 'Edit')
+    self.assertEqual(event_list[-1].action, 'Share Document')
+    self.assertEqual(event_list[-2].action, 'Reject Document')
+    self.assertEqual(event_list[-3].action, 'Publish Document')
 
   def test_ContributeToExistingDocument(self):
     """
@@ -2494,7 +2494,7 @@ return 1
     # Then User takes a decision to choose which document to publish
     kw['portal_type'] = "Spreadsheet"
     new_document = self.portal.Base_contribute(**kw)
-    self.assertEquals(new_document.getValidationState(), 'draft')
+    self.assertEqual(new_document.getValidationState(), 'draft')
 
     # make it read only
     document.manage_permission(Permissions.ModifyPortalContent, [])
@@ -2520,9 +2520,9 @@ return 1
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
-    self.assertEquals('test-en-003-description', document.getDescription())
-    self.assertEquals('test-en-003-title', document.getTitle())
-    self.assertEquals('test-en-003-keywords', document.getSubject())
+    self.assertEqual('test-en-003-description', document.getDescription())
+    self.assertEqual('test-en-003-title', document.getTitle())
+    self.assertEqual('test-en-003-keywords', document.getSubject())
 
   def test_DocumentIndexation(self):
     """
@@ -2544,8 +2544,8 @@ return 1
     for subject_list in (['subject1',], ['subject2',],
                          ['subject1', 'subject2',],):
       subject_result = portal.portal_catalog(subject=subject_list)
-      self.assertEquals(len(subject_result), 1)
-      self.assertEquals(subject_result[0].getPath(), document.getPath())
+      self.assertEqual(len(subject_result), 1)
+      self.assertEqual(subject_result[0].getPath(), document.getPath())
 
   def test_base_convertable_behaviour_with_successive_updates(self):
     """Check that update content's document (with setData and setFile)
@@ -2563,12 +2563,12 @@ return 1
 
     # Clone document: base_data must not be computed once again
     cloned_document = document.Base_createCloneDocument(batch_mode=True)
-    self.assertEquals(previous_md5, cloned_document.getContentMd5())
-    self.assertEquals(document.getData(), cloned_document.getData())
-    self.assertEquals(document.getBaseData(), cloned_document.getBaseData())
-    self.assertEquals(document.getExternalProcessingState(),
+    self.assertEqual(previous_md5, cloned_document.getContentMd5())
+    self.assertEqual(document.getData(), cloned_document.getData())
+    self.assertEqual(document.getBaseData(), cloned_document.getBaseData())
+    self.assertEqual(document.getExternalProcessingState(),
                       cloned_document.getExternalProcessingState())
-    self.assertEquals(document.getExternalProcessingState(), 'converted')
+    self.assertEqual(document.getExternalProcessingState(), 'converted')
 
     # Update document with another content by using setData:
     # base_data must be recomputed
@@ -2578,7 +2578,7 @@ return 1
     self.assertNotEquals(previous_base_data, document.getBaseData(),
                          'base data is not refreshed')
     self.assertNotEquals(previous_md5, document.getContentMd5())
-    self.assertEquals(document.getExternalProcessingState(), 'converted')
+    self.assertEqual(document.getExternalProcessingState(), 'converted')
     previous_md5 = document.getContentMd5()
     previous_base_data = document.getBaseData()
 
@@ -2590,7 +2590,7 @@ return 1
     self.assertNotEquals(previous_base_data, document.getBaseData(),
                          'base data is not refreshed')
     self.assertNotEquals(previous_md5, document.getContentMd5())
-    self.assertEquals(document.getExternalProcessingState(), 'converted')
+    self.assertEqual(document.getExternalProcessingState(), 'converted')
 
   # Currently, 'empty' state in processing_status_workflow is only set
   # when creating a document and before uploading any file. Once the
@@ -2617,7 +2617,7 @@ return 1
     self.tic()
     self.assertFalse(document.hasBaseData())
     self.assertFalse(document.hasContentMd5())
-    self.assertEquals(document.getExternalProcessingState(), 'empty')
+    self.assertEqual(document.getExternalProcessingState(), 'empty')
 
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)
@@ -2815,9 +2815,9 @@ return 1
     document.setReference('TEST')
     request = self.app.REQUEST
     download_file = document.index_html(REQUEST=request, format=None)
-    self.assertEquals(download_file, 'foo\n')
+    self.assertEqual(download_file, 'foo\n')
     document_format = None
-    self.assertEquals('TEST-001-en.dummy', document.getStandardFilename(
+    self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
 
 class TestDocumentWithSecurity(TestDocumentMixin):
@@ -2867,7 +2867,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.tic()
 
     # the document should be automatically converted to html
-    self.assertEquals(text_document.getExternalProcessingState(), 'converted')
+    self.assertEqual(text_document.getExternalProcessingState(), 'converted')
 
     # check there is nothing in the cache for pdf conversion
     self.assertFalse(text_document.hasConversion(format='pdf'))
@@ -2881,7 +2881,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.assertTrue(text_document.hasConversion(format='pdf'))
 
     # check the size of the pdf conversion
-    self.assertEquals(text_document.getConversionSize(format='pdf'), pdf_size)
+    self.assertEqual(text_document.getConversionSize(format='pdf'), pdf_size)
 
   def test_ImageSizePreference(self):
     """

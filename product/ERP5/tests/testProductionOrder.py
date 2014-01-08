@@ -264,7 +264,7 @@ class TestProductionOrderMixin(TestOrderMixin):
         'invalidate_action'
     )
 
-    self.assertEquals('invalidated',transformation.getValidationState())
+    self.assertEqual('invalidated',transformation.getValidationState())
 
   def stepValidateTransformation(self, sequence=None, sequence_list=None,
                                **kw):
@@ -277,7 +277,7 @@ class TestProductionOrderMixin(TestOrderMixin):
         'validate_action'
     )
 
-    self.assertEquals('validated',transformation.getValidationState())
+    self.assertEqual('validated',transformation.getValidationState())
 
   def stepCreateEmptyTransformation(self, sequence=None, sequence_list=None,
                                **kw):
@@ -564,7 +564,7 @@ class TestProductionOrderMixin(TestOrderMixin):
           portal_type='Simulation Movement')
       produced_movement = order_simulation_movement.contentValues()[0].contentValues()[0]
 
-      self.assertEquals(
+      self.assertEqual(
         want_produced_quantity,
         produced_movement.getQuantity()
       )
@@ -576,12 +576,12 @@ class TestProductionOrderMixin(TestOrderMixin):
       production_delivery_movement = [q for q in transformation_rule.contentValues() \
           if q.getId().startswith('pr')][0]
 
-      self.assertEquals(
+      self.assertEqual(
           want_consume_for_production,
           consumption_movement.getQuantity()
       )
 
-      self.assertEquals(
+      self.assertEqual(
         want_produced_quantity,
         production_delivery_movement.getQuantity()
       )
@@ -590,7 +590,7 @@ class TestProductionOrderMixin(TestOrderMixin):
 
       consume_delivery_movement = transformation_sourcing_rule.contentValues()[0]
 
-      self.assertEquals(
+      self.assertEqual(
         want_consume_for_production,
         consume_delivery_movement.getQuantity()
       )
@@ -607,7 +607,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     order_simulation_movement_list = applied_rule.contentValues()
 
     # XXX: hardcode
-    self.assertEquals(
+    self.assertEqual(
         1,
         len(order_simulation_movement_list)
     )
@@ -622,7 +622,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     consumed_movement = [q for q in transformation_applied_rule.contentValues() \
         if q.getId().startswith('cr')][0]
 
-    self.assertEquals(
+    self.assertEqual(
         consumed_movement.getQuantity(),
         self.quantity_after_efficiency_calculation
     )
@@ -632,7 +632,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     consumption_delivery_movement = [q for q in transformation_sourcing_rule.contentValues() \
         if q.getId().startswith('ts')][0]
     
-    self.assertEquals(
+    self.assertEqual(
         consumption_delivery_movement.getQuantity(),
         self.quantity_after_efficiency_calculation
     )
@@ -643,12 +643,12 @@ class TestProductionOrderMixin(TestOrderMixin):
 
     self.assertNotEquals(None, transformation)
 
-    self.assertEquals(order_line.getSpecialiseValue(), transformation)
+    self.assertEqual(order_line.getSpecialiseValue(), transformation)
 
   def stepCheckOrderLineTransformationIsNotSet(self, sequence=None, sequence_list=None, **kw):
     order_line = sequence.get('order_line')
 
-    self.assertEquals(order_line.getSpecialiseValue(), None)
+    self.assertEqual(order_line.getSpecialiseValue(), None)
 
   def stepRemoveResourceFromOrderLine(self, sequence=None, sequence_list=None, **kw):
     order_line = sequence.get('order_line')
@@ -667,15 +667,15 @@ class TestProductionOrderMixin(TestOrderMixin):
     no_applied_rule_state = ('draft', 'auto_planned')
     order_state = order.getSimulationState()
     if order_state in no_applied_rule_state:
-      self.assertEquals(0, len(related_applied_rule_list))
+      self.assertEqual(0, len(related_applied_rule_list))
     else:
-      self.assertEquals(1, len(related_applied_rule_list))
+      self.assertEqual(1, len(related_applied_rule_list))
       applied_rule = related_applied_rule_list[0].getObject()
       sequence.edit(applied_rule=applied_rule)
-      self.failUnless(applied_rule is not None)
+      self.assertTrue(applied_rule is not None)
       # Test if applied rule has a specialise value with default_order_rule
       # XXX hardcoded value
-      self.assertEquals('default_production_order_rule', \
+      self.assertEqual('default_production_order_rule', \
                         applied_rule.getSpecialiseReference())
       
       simulation_movement_list = applied_rule.objectValues()
@@ -685,7 +685,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     LOG('checkObjectAttributes object.getPath',0,object.getPath())
     for value, attribute in attribute_list:
       try:
-        self.assertEquals(value,
+        self.assertEqual(value,
                           getattr(object, attribute)())
       except AssertionError:
         LOG('Raise Assertion error',0,'')
@@ -707,12 +707,12 @@ class TestProductionOrderMixin(TestOrderMixin):
                                   sequence_list=sequence_list, **kw)
     # Test simulation movement generated related to order line
     simulation_movement_list = sequence.get('simulation_movement_list')
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
     related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
-    self.assertEquals(1, len(related_simulation_movement_list))
+    self.assertEqual(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
-    self.assertEquals(related_simulation_movement,
+    self.assertEqual(related_simulation_movement,
                       simulation_movement_list[0])
     production_organisation1 = sequence.get('production_organisation1')
     # XXX FIXME test date
@@ -729,24 +729,24 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
     applied_rule_list = related_simulation_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_delivering_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     simulation_movement = simulation_movement_list[0]
     applied_rule_list = simulation_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(2, len(simulation_movement_list))
+    self.assertEqual(2, len(simulation_movement_list))
     # Test consumed movement
     transformation = sequence.get('transformation')
     consumed_movement_id = 'cr_%s_1_%s' % (transformation.getId(),
@@ -830,12 +830,12 @@ class TestProductionOrderMixin(TestOrderMixin):
                                   sequence_list=sequence_list, **kw)
     # Test simulation movement generated related to order line
     simulation_movement_list = sequence.get('simulation_movement_list')
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
     related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
-    self.assertEquals(1, len(related_simulation_movement_list))
+    self.assertEqual(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
-    self.assertEquals(related_simulation_movement,
+    self.assertEqual(related_simulation_movement,
                       simulation_movement_list[0])
     production_organisation1 = sequence.get('production_organisation1')
     # XXX FIXME test date
@@ -852,15 +852,15 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
     applied_rule_list = related_simulation_movement.objectValues()[0].objectValues()[0].objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
-    self.assertEquals(3, len(simulation_movement_list))
+    self.assertEqual(3, len(simulation_movement_list))
     # Test produced resource
     produced_movement = applied_rule.pr
     resource = sequence.get('resource')
@@ -874,7 +874,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getDestinationSectionValue'),
              (None, 'getSourceValue'),
              (None, 'getSourceSectionValue')))
-    self.assertEquals(0, len(produced_movement.objectValues()))
+    self.assertEqual(0, len(produced_movement.objectValues()))
 
     simulation_movement_list.remove(produced_movement)
     # All code before is a stupid copy (except movement count)
@@ -898,7 +898,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (None, 'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(0, len(operation_movement.objectValues()))
+    self.assertEqual(0, len(operation_movement.objectValues()))
     # Check component movement
     self.checkObjectAttributes(
            component_movement, (
@@ -909,16 +909,16 @@ class TestProductionOrderMixin(TestOrderMixin):
              (None, 'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(1, len(component_movement.objectValues()))
+    self.assertEqual(1, len(component_movement.objectValues()))
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_sourcing_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     # Test supply resource
     supply_movement = applied_rule.ts
     supply_organisation1 = sequence.get('supply_organisation1')
@@ -931,7 +931,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getDestinationSectionValue'),
              (supply_organisation1, 'getSourceValue'),
              (supply_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(0, len(supply_movement.objectValues()))
+    self.assertEqual(0, len(supply_movement.objectValues()))
     
     sequence.edit(
       produced_movement = produced_movement,
@@ -1029,12 +1029,12 @@ class TestProductionOrderMixin(TestOrderMixin):
                                   sequence_list=sequence_list, **kw)
     # Test simulation movement generated related to order line
     simulation_movement_list = sequence.get('simulation_movement_list')
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     order_line = sequence.get('order_line')
     related_simulation_movement_list = order_line.getDeliveryRelatedValueList()
-    self.assertEquals(1, len(related_simulation_movement_list))
+    self.assertEqual(1, len(related_simulation_movement_list))
     related_simulation_movement = related_simulation_movement_list[0]
-    self.assertEquals(related_simulation_movement,
+    self.assertEqual(related_simulation_movement,
                       simulation_movement_list[0])
     production_organisation1 = sequence.get('production_organisation1')
     # XXX FIXME test date
@@ -1051,25 +1051,25 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue')))
     # Test next applied rule
     applied_rule_list = related_simulation_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_delivering_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
     simulation_movement_list = applied_rule.objectValues()
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     simulation_movement = simulation_movement_list[0]
     applied_rule_list = simulation_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
-    self.assertEquals(4, len(simulation_movement_list))
+    self.assertEqual(4, len(simulation_movement_list))
     # Test produced resource
     produced_movement = applied_rule.pr
     resource = sequence.get('resource')
@@ -1083,7 +1083,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getDestinationSectionValue'),
              (None, 'getSourceValue'),
              (None, 'getSourceSectionValue')))
-    self.assertEquals(0, len(produced_movement.objectValues()))
+    self.assertEqual(0, len(produced_movement.objectValues()))
 
     # Get modified resource (test later)
     modified_movement = applied_rule.mr_1
@@ -1110,7 +1110,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (None, 'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(0, len(operation_movement.objectValues()))
+    self.assertEqual(0, len(operation_movement.objectValues()))
     # Check component movement
     self.checkObjectAttributes(
            component_movement, (
@@ -1121,16 +1121,16 @@ class TestProductionOrderMixin(TestOrderMixin):
              (None, 'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(1, len(component_movement.objectValues()))
+    self.assertEqual(1, len(component_movement.objectValues()))
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_sourcing_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     # Test supply resource
     supply_movement = applied_rule.ts
     supply_organisation1 = sequence.get('supply_organisation1')
@@ -1143,7 +1143,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getDestinationSectionValue'),
              (supply_organisation1, 'getSourceValue'),
              (supply_organisation1, 'getSourceSectionValue')))
-    self.assertEquals(0, len(supply_movement.objectValues()))
+    self.assertEqual(0, len(supply_movement.objectValues()))
 
     # Test modified movement
     resource = sequence.get('resource')
@@ -1157,16 +1157,16 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation1, 'getSourceSectionValue'),
              (None, 'getDestinationValue'),
              (None, 'getDestinationSectionValue')))
-    self.assertEquals(1, len(modified_movement.objectValues()))
+    self.assertEqual(1, len(modified_movement.objectValues()))
     # Test next applied rule
     applied_rule_list = modified_movement.objectValues()
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_sourcing_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     # Test produced resource
     sourcing_movement = simulation_movement_list[0]
     resource = sequence.get('resource')
@@ -1182,18 +1182,18 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation2, 'getSourceValue'),
 # XXX             (production_organisation2, 'getSourceSectionValue')))
            ))
-    self.assertEquals(1, len(sourcing_movement.objectValues()))
+    self.assertEqual(1, len(sourcing_movement.objectValues()))
     # Test next applied rule
     applied_rule_list = sourcing_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation 
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
-    self.assertEquals(3, len(simulation_movement_list))
+    self.assertEqual(3, len(simulation_movement_list))
     # Test produced resource
     produced_movement = applied_rule.pr
     resource = sequence.get('resource')
@@ -1207,7 +1207,7 @@ class TestProductionOrderMixin(TestOrderMixin):
 # XXX             (production_organisation2, 'getDestinationSectionValue'),
              (None, 'getSourceValue'),
              (None, 'getSourceSectionValue')))
-    self.assertEquals(0, len(produced_movement.objectValues()))
+    self.assertEqual(0, len(produced_movement.objectValues()))
 
     simulation_movement_list.remove(produced_movement)
     # All code before is a stupid copy (except movement count)
@@ -1231,7 +1231,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation2, 'getSourceValue'),
 # XXX              (production_organisation2, 'getSourceSectionValue')))
            ))
-    self.assertEquals(0, len(operation_movement.objectValues()))
+    self.assertEqual(0, len(operation_movement.objectValues()))
     # Check component movement
     self.checkObjectAttributes(
            component_movement, (
@@ -1243,16 +1243,16 @@ class TestProductionOrderMixin(TestOrderMixin):
              (production_organisation2, 'getSourceValue'),
 # XXX              (production_organisation2, 'getSourceSectionValue')))
            ))
-    self.assertEquals(1, len(component_movement.objectValues()))
+    self.assertEqual(1, len(component_movement.objectValues()))
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
-    self.assertEquals("Applied Rule", applied_rule.getPortalType())
-    self.assertEquals('default_transformation_sourcing_rule', \
+    self.assertEqual("Applied Rule", applied_rule.getPortalType())
+    self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
     simulation_movement_list = applied_rule.objectValues()
     # FIXME
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     # Test supply resource
     supply_movement = applied_rule.ts
     supply_organisation2  = sequence.get('supply_organisation2')
@@ -1266,7 +1266,7 @@ class TestProductionOrderMixin(TestOrderMixin):
              (supply_organisation2, 'getSourceValue'),
 # XXX              (supply_organisation2, 'getSourceSectionValue')))
            ))
-    self.assertEquals(0, len(supply_movement.objectValues()))
+    self.assertEqual(0, len(supply_movement.objectValues()))
 
   SOURCING_ORDER_SEQUENCE = '\
                       CreateProductionOrganisation1 \
@@ -1470,7 +1470,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
     pasted_sc = sequence.get('pasted_sc')
     pasted_supply_node = pasted_sc.contentValues(portal_type='Supply Node')[0]
     pasted_supply_link = pasted_sc.contentValues(portal_type='Supply Link')[0]
-    self.assertEquals(pasted_supply_node.getRelativeUrl(),
+    self.assertEqual(pasted_supply_node.getRelativeUrl(),
                       pasted_supply_link.getDestination())
 
   def test_07_testTransformationInteractionProductionOrderLine(self, quiet=0, run=run_all_test):
@@ -1786,7 +1786,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     supply_node = empty_supply_chain.contentValues(portal_type='Supply Node')[0]
     supply_link = supply_chain.contentValues(portal_type='Supply Link')[0]
-    self.assertEquals(supply_node.getRelativeUrl(),
+    self.assertEqual(supply_node.getRelativeUrl(),
                       supply_link.getDestination())
 
   def test_51_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):

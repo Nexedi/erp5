@@ -134,10 +134,10 @@ class TestSpellChecking(ERP5TypeTestCase):
       Simple test for Aspell class.
     """
     # check a well spelled world
-    self.assertEquals(self.validate_spell('cancelled'), {})
-    self.assertEquals(self.validate_spell('globally enabled'), {})
-    self.assertEquals(self.validate_spell('http://www.erp5.com'), {})
-    self.assertEquals(self.validate_spell('2010/11/20'), {})
+    self.assertEqual(self.validate_spell('cancelled'), {})
+    self.assertEqual(self.validate_spell('globally enabled'), {})
+    self.assertEqual(self.validate_spell('http://www.erp5.com'), {})
+    self.assertEqual(self.validate_spell('2010/11/20'), {})
 
     # check some suggestion are given for a small mistake
     self.assertNotEquals(self.validate_spell('canceled'), {})

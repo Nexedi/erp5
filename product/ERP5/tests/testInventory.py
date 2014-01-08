@@ -282,7 +282,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section = sequence.get('section').getRelativeUrl(),
       node = sequence.get('node').getRelativeUrl(),
       )
-    self.assertEquals(inventory, 100.,
+    self.assertEqual(inventory, 100.,
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -292,7 +292,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section = sequence.get('section').getRelativeUrl(),
       node = sequence.get('node').getRelativeUrl(),
       )
-    self.assertEquals(inventory, 101.,
+    self.assertEqual(inventory, 101.,
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -693,7 +693,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
             if len(c.split('/')) == 1:
               variation[i] = '%s/%s' % (base_category_list[i], resource_value[c].getRelativeUrl())
           new_variation = []
-          self.failUnless(len(packing_list_line.getVariationBaseCategoryList())>0)
+          self.assertTrue(len(packing_list_line.getVariationBaseCategoryList())>0)
           for bc in packing_list_line.getVariationBaseCategoryList():
             new_variation.append(variation[base_category_dict[bc]])
           variation = new_variation
@@ -959,9 +959,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       inventory_object = inventory.getObject()
       if inventory_object.getUid()==uid:
         found=1
-        self.assertEquals(inventory_object.getQuantity(), 0.5)
-        self.assertEquals(inventory.getQuantity(), 0.5)
-    self.failUnless(found==1)
+        self.assertEqual(inventory_object.getQuantity(), 0.5)
+        self.assertEqual(inventory.getQuantity(), 0.5)
+    self.assertTrue(found==1)
 
 
 
@@ -1230,7 +1230,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
              % (repr(e_inventory), repr(a_inventory))
       LOG('TestInventory._testGetInventory', 0, msg)
       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
-      self.assertEquals(e_inventory, a_inventory, msg)
+      self.assertEqual(e_inventory, a_inventory, msg)
 
 
   def stepTestGetInventoryOnSimulationState(self, sequence=None,
@@ -1309,7 +1309,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         if method is None:
           LOG('TEST ERROR : Simulation Tool has no %s method'
               % method_name, 0, '')
-          self.failUnless(0)
+          self.assertTrue(0)
         a_inventory = method(section=organisation_url,
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
@@ -1320,7 +1320,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
                              at_date=date, src__=1))
-          self.assertEquals(a_inventory, e_inventory)
+          self.assertEqual(a_inventory, e_inventory)
 
     # First, test with draft state everywhere
     LOG('Testing Inventory with every Packing List in draft state...', 0, '')
@@ -1707,7 +1707,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         if not hasattr(inventory, attr):
           LOG('TEST ERROR : Result of getInventoryList has no %s attribute' % attr, 0, '')
           LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
-          self.failUnless(0)
+          self.assertTrue(0)
         a_attributes[attr] = getattr(inventory, attr)
       a_inventory = inventory.inventory
       # Build a function to filter on attributes
@@ -1736,7 +1736,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     if len(expected) > 0:
       LOG('TEST ERROR : Not all expected values were matched. Remaining =', 0, expected)
       LOG('SQL Query was : ', 0, str(simulation.getInventoryList(src__=1, **kw)))
-      self.failUnless(len(expected), 0)
+      self.assertTrue(len(expected), 0)
 
 
   def stepTestGetNextNegativeInventoryDate(self, sequence=None, sequence_list=None, **kw):
@@ -1855,7 +1855,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                     resource=resource_value.getRelativeUrl(),
                     node=organisation_list[node].getRelativeUrl(),
                     variation_category=variation_categories, src__=1))
-    self.assertEquals(next_date, expected_negative_date)
+    self.assertEqual(next_date, expected_negative_date)
 
 
   def checkVariatedInventory(self, sequence=None, sequence_list=None,
@@ -1873,7 +1873,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       node = sequence.get('node').getRelativeUrl(),
       variation_text = variation_text
       )
-    self.assertEquals(inventory, quantity)
+    self.assertEqual(inventory, quantity)
 
   def stepTestInitialVariatedInventory(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1953,7 +1953,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section = sequence.get('section').getRelativeUrl(),
       node = sequence.get('node').getRelativeUrl(),
       )
-    self.assertEquals(inventory, 101.,
+    self.assertEqual(inventory, 101.,
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -1973,7 +1973,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                     node=sequence.get('node').getRelativeUrl(),
                     at_date=inventory_list[expected[step][1]].getStartDate()
                 )
-    self.assertEquals(inventory, expected[step][0],
+    self.assertEqual(inventory, expected[step][0],
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -1993,7 +1993,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section = sequence.get('section').getRelativeUrl(),
       node = sequence.get('node').getRelativeUrl(),
       )
-    self.assertEquals(inventory, 0.,
+    self.assertEqual(inventory, 0.,
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -2003,7 +2003,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section = sequence.get('section').getRelativeUrl(),
       node = sequence.get('node').getRelativeUrl(),
       )
-    self.assertEquals(inventory, 101.,
+    self.assertEqual(inventory, 101.,
                     'section=%s, node=%s' % (
                     sequence.get('section').getRelativeUrl(),
                     sequence.get('node').getRelativeUrl()))
@@ -2088,19 +2088,19 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     node = sequence.get('node')
     section = sequence.get('section')
     getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(10, getInventory(section_uid=section.getUid(),
+    self.assertEqual(10, getInventory(section_uid=section.getUid(),
                                         node_uid=node.getUid(),
                                         resource_category='product_line/level1',
                                         optimisation__=False))
-    self.assertEquals(10, getInventory(section_uid=section.getUid(),
+    self.assertEqual(10, getInventory(section_uid=section.getUid(),
                                         node_uid=node.getUid(),
                                         resource_category='product_line/level1',
                                         optimisation__=True))
-    self.assertEquals(100, getInventory(section_uid=section.getUid(),
+    self.assertEqual(100, getInventory(section_uid=section.getUid(),
                                         node_uid=node.getUid(),
                                         resource_category='product_line/apparel',
                                         optimisation__=False))
-    self.assertEquals(100, getInventory(section_uid=section.getUid(),
+    self.assertEqual(100, getInventory(section_uid=section.getUid(),
                                         node_uid=node.getUid(),
                                         resource_category='product_line/apparel',
                                         optimisation__=True))
@@ -2159,11 +2159,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     node = sequence.get('node')
     section = sequence.get('section')
     getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(202, getInventory(node_uid=node.getUid()))
-    self.assertEquals(101, getInventory(section_category='group/level1/level2',
+    self.assertEqual(202, getInventory(node_uid=node.getUid()))
+    self.assertEqual(101, getInventory(section_category='group/level1/level2',
                                         node_uid=node.getUid(),
                                         optimisation__=False))
-    self.assertEquals(101, getInventory(node_uid=node.getUid(),
+    self.assertEqual(101, getInventory(node_uid=node.getUid(),
                                         section_category='group/level1/level2',
                                         optimisation__=True))
 
@@ -2190,11 +2190,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     node = sequence.get('node')
     section = sequence.get('section')
     getInventory = self.getSimulationTool().getInventory
-    self.assertEquals(202, getInventory(section_uid=section.getUid()))
-    self.assertEquals(101, getInventory(section_uid=section.getUid(),
+    self.assertEqual(202, getInventory(section_uid=section.getUid()))
+    self.assertEqual(101, getInventory(section_uid=section.getUid(),
                                         node_category='region/level1/level2',
                                         optimisation__=False))
-    self.assertEquals(101, getInventory(section_uid=section.getUid(),
+    self.assertEqual(101, getInventory(section_uid=section.getUid(),
                                         node_category='region/level1/level2',
                                         optimisation__=True))
 
@@ -2381,12 +2381,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Note: Now only checking total_quantity but can be checked more
     actual_history = [{'total_quantity':x.total_quantity} for x in result]
     try:
-      self.assertEquals(len(expected_history), len(actual_history))
+      self.assertEqual(len(expected_history), len(actual_history))
       for expected, actual in zip(expected_history, actual_history):
         shared_keys = set(expected.keys()) & set(actual.keys())
-        self.assertEquals(len(shared_keys), len(expected.keys()))
+        self.assertEqual(len(shared_keys), len(expected.keys()))
         shared_item = set(expected.items()) & set(actual.items())
-        self.assertEquals(len(shared_item), len(expected.keys()))
+        self.assertEqual(len(shared_item), len(expected.keys()))
     except AssertionError:
       msg = 'History differs between expected:\n%s\nand real:\n%s'\
              % (repr(expected_history), repr(actual_history))

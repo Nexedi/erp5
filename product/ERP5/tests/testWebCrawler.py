@@ -187,11 +187,11 @@ class TestWebCrawler(ERP5TypeTestCase):
     web_page_portal_type = 'Web Page'
     web_page_module = self.portal.getDefaultModule(web_page_portal_type)
     web_page = web_page_module.newContent(portal_type=web_page_portal_type)
-    self.assertEquals(web_page.getContentBaseURL(), '')
+    self.assertEqual(web_page.getContentBaseURL(), '')
     web_page.fromURL('http://www.example.com')
-    self.assertEquals(web_page.getContentBaseURL(), 'http://www.example.com')
+    self.assertEqual(web_page.getContentBaseURL(), 'http://www.example.com')
     web_page.fromURL('http://www.example.com/section/sub_section')
-    self.assertEquals(web_page.getContentBaseURL(),
+    self.assertEqual(web_page.getContentBaseURL(),
                       'http://www.example.com/section')
     text_content = """<html>
     <head>
@@ -211,8 +211,8 @@ class TestWebCrawler(ERP5TypeTestCase):
     </body>
     </html>"""
     web_page.edit(text_content=text_content)
-    self.assertEquals(web_page.getContentBaseURL(), "http://www.example.com")
-    self.assertEquals(web_page.getContentNormalisedURLList(),
+    self.assertEqual(web_page.getContentBaseURL(), "http://www.example.com")
+    self.assertEqual(web_page.getContentNormalisedURLList(),
                     ["http://www.example.com/I%20don't%20care%20I%20put%20what/%20I%20want/",
                      'http://www.example.com/section',
                      'http://www.example.com/section2',
@@ -227,10 +227,10 @@ class TestWebCrawler(ERP5TypeTestCase):
     </html>"""
     web_page.edit(text_content=text_content)
     web_page.fromURL('http://www.example.com/#fffff')
-    self.assertEquals(web_page.getContentBaseURL(), "http://www.example.com")
-    self.assertEquals(web_page.getContentNormalisedURLList(),
+    self.assertEqual(web_page.getContentBaseURL(), "http://www.example.com")
+    self.assertEqual(web_page.getContentNormalisedURLList(),
                       ['http://www.example.com/section2',])
-    self.assertEquals(web_page.asNormalisedURL(),
+    self.assertEqual(web_page.asNormalisedURL(),
                       'http://www.example.com/#fffff')
 
   def test_02_crawlWebSite(self):
@@ -252,19 +252,19 @@ class TestWebCrawler(ERP5TypeTestCase):
     #     + 3 Web Sections
     #     + 1 absolute link to home_page
     #     + 1 relative link from home_page to another web page
-    self.assertEquals(len(web_crawler), 6)
-    self.assertEquals(len(self.portal.portal_url_registry._getMappingDict()),
+    self.assertEqual(len(web_crawler), 6)
+    self.assertEqual(len(self.portal.portal_url_registry._getMappingDict()),
                       6)
     date_before = web_crawler.getModificationDate()
     web_crawler.crawlContent()
     self.tic()
     # Nothing happens, portal_url_registry keep crawling twice
     # the same url
-    self.assertEquals(len(web_crawler), 6)
-    self.assertEquals(len(self.portal.portal_url_registry._getMappingDict()),
+    self.assertEqual(len(web_crawler), 6)
+    self.assertEqual(len(self.portal.portal_url_registry._getMappingDict()),
                       6)
     # not modified
-    self.assertEquals(date_before, web_crawler.getModificationDate())
+    self.assertEqual(date_before, web_crawler.getModificationDate())
 
     new_web_crawler = web_crawler_module.newContent(
                                        portal_type=external_source_portal_type,
@@ -283,7 +283,7 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.tic()
     new_web_crawler.crawlContent()
     self.tic()
-    self.assertEquals(len(web_crawler), 6)
+    self.assertEqual(len(web_crawler), 6)
 
 
 def test_suite():

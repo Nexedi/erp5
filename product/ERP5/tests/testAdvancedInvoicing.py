@@ -147,7 +147,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
       portal_type=self.invoice_portal_type)
     self.assertNotEquals(invoice, None)
     invoice.start()
-    self.assertEquals('started', invoice.getSimulationState())
+    self.assertEqual('started', invoice.getSimulationState())
 
   def stepAddInvoiceTransactionLines(self, sequence=None, sequence_list=[]):
     """
@@ -188,7 +188,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
     self.assertNotEquals(invoice, None)
     invoice_line_list = invoice.getMovementList()
-    self.assertEquals(1, len(invoice_line_list))
+    self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
@@ -199,7 +199,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
     builder_list = invoice.getBuilderList()
-    self.assertEquals(1, len(builder_list))
+    self.assertEqual(1, len(builder_list))
     divergence_list = invoice.getDivergenceList()
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
@@ -208,43 +208,43 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   def stepCheckDivergenceOnInvoice(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
-    self.assertEquals('solved', invoice.getCausalityState())
+    self.assertEqual('solved', invoice.getCausalityState())
     new_quantity = sequence.get('invoice_line_doubled_quantity')
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual([], invoice.getDivergenceList())
 
     invoice_line_list = invoice.getMovementList()
-    self.assertEquals(1, len(invoice_line_list))
+    self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
-    self.assertEquals(new_quantity, invoice_line.getQuantity())
-    self.assertEquals(new_quantity,
+    self.assertEqual(new_quantity, invoice_line.getQuantity())
+    self.assertEqual(new_quantity,
           invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
               ).getQuantity())
 
   def stepCheckDivergedOnPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self.assertEquals('diverged', packing_list.getCausalityState())
+    self.assertEqual('diverged', packing_list.getCausalityState())
 
   def stepCheckSolvedOnPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEqual('solved', packing_list.getCausalityState())
 
   def stepCheckDivergedQuantityOnInvoice(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
     self.assertTrue(invoice.isDivergent())
     divergence_list = invoice.getDivergenceList()
-    self.assertEquals(1, len(divergence_list))
+    self.assertEqual(1, len(divergence_list))
 
     divergence = divergence_list[0]
-    self.assertEquals('quantity', divergence.tested_property)
+    self.assertEqual('quantity', divergence.tested_property)
 
   def stepCheckDivergedQuantityOnPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     divergence_list = packing_list.getDivergenceList()
-    self.assertEquals(1, len(divergence_list))
+    self.assertEqual(1, len(divergence_list))
 
     divergence = divergence_list[0]
-    self.assertEquals('quantity', divergence.tested_property)
+    self.assertEqual('quantity', divergence.tested_property)
 
   def stepAdoptPrevisionOnPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
@@ -259,7 +259,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
  
     divergence_list = invoice.getDivergenceList()
     builder_list = invoice.getBuilderList()
-    self.assertEquals(1, len(builder_list))
+    self.assertEqual(1, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_adopt_list=divergence_list)
@@ -272,15 +272,15 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
     
     packing_list = sequence.get('packing_list')
-    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEqual('solved', packing_list.getCausalityState())
     invoice = packing_list.getCausalityRelatedValue()
-    self.assertEquals(self.invoice_portal_type, invoice.getPortalType())
-    self.assertEquals('solved', invoice.getCausalityState())
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual(self.invoice_portal_type, invoice.getPortalType())
+    self.assertEqual('solved', invoice.getCausalityState())
+    self.assertEqual([], invoice.getDivergenceList())
 
     invoice_transaction  = invoice.getCausalityRelatedValue()
     self.assertNotEquals(invoice_transaction, None)
-    self.assertEquals('solved', invoice_transaction.getCausalityState())
+    self.assertEqual('solved', invoice_transaction.getCausalityState())
     
   def test_AcceptQuantityDivergenceOnInvoiceWithStoppedPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """Accept divergence with stopped packing list"""
@@ -308,8 +308,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
 
     sequence_list.play(self, quiet=quiet)
     packing_list = sequence.get('packing_list')
-    self.assertEquals([], packing_list.getDivergenceList())
-    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEqual([], packing_list.getDivergenceList())
+    self.assertEqual('solved', packing_list.getCausalityState())
 
   def test_AdoptQuantityDivergenceOnInvoiceLineWithStoppedPackingList(self, quiet=quiet,
                                                                       run=RUN_ALL_TESTS):
@@ -333,19 +333,19 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue()
-    self.assertEquals([], invoice.getDivergenceList())
-    self.assertEquals('solved', invoice.getCausalityState())
+    self.assertEqual([], invoice.getDivergenceList())
+    self.assertEqual('solved', invoice.getCausalityState())
 
-    self.assertEquals(1,
+    self.assertEqual(1,
         len(invoice.getMovementList(portal_type=self.invoice_line_portal_type)))
     invoice_line = invoice.getMovementList(portal_type=self.invoice_line_portal_type)[0]
-    self.assertEquals(99.0, invoice_line.getQuantity())
-    self.assertEquals(555.0, invoice_line.getPrice())
-    self.assertEquals(99.0,
+    self.assertEqual(99.0, invoice_line.getQuantity())
+    self.assertEqual(555.0, invoice_line.getPrice())
+    self.assertEqual(99.0,
           invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
               ).getQuantity())
-    self.assertEquals([], packing_list.getDivergenceList())
-    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEqual([], packing_list.getDivergenceList())
+    self.assertEqual('solved', packing_list.getCausalityState())
 
   def test_PackingListEditAndInvoiceRule(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
@@ -444,7 +444,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
         if invoice_transaction.getSimulationState() in state_list:
           invoice_transaction_line_list = invoice_transaction.contentValues(
             portal_type=self.invoice_transaction_line_portal_type)
-          self.assertEquals(3, len(invoice_transaction_line_list))
+          self.assertEqual(3, len(invoice_transaction_line_list))
           
           for line_id, line_source, line_dest, line_ratio in \
                   self.transaction_line_definition_list:
@@ -456,7 +456,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
               else:
                 self.fail('No line found that matches %s' % line_id)
               resource_precision = line.getResourceValue().getQuantityPrecision()
-              self.assertEquals(round(line.getQuantity(), resource_precision),
+              self.assertEqual(round(line.getQuantity(), resource_precision),
                                 round(expected_price * line_ratio, resource_precision))
 
   def stepRemoveDateMovementGroupForAdvancedTransactionBuilder(self, sequence=None, sequence_list=None, **kw):
@@ -947,7 +947,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
 
     # We could generate a better reference here.
-    self.assertEquals('1', invoice.getReference())
+    self.assertEqual('1', invoice.getReference())
 
   def test_10_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
@@ -1070,8 +1070,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     sequence_list.play(self, quiet=quiet)
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
-    self.assertEquals('solved', packing_list.getCausalityState())
-    self.assertEquals('solved', invoice.getCausalityState())
+    self.assertEqual('solved', packing_list.getCausalityState())
+    self.assertEqual('solved', invoice.getCausalityState())
 
 class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
   """Tests for purchase invoice.
@@ -1132,7 +1132,7 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
     packing_list.setReady()
     packing_list.start()
     packing_list.stop()
-    self.assertEquals('stopped', packing_list.getSimulationState())
+    self.assertEqual('stopped', packing_list.getSimulationState())
     self.commit()
 
 
@@ -1201,9 +1201,9 @@ class TestWorkflow(SecurityTestCase):
 
   def test_autoplanned(self):
     sale_invoice = self.portal.getDefaultModule('Sale Invoice').newContent(portal_type='Sale Invoice')
-    self.assertEquals(sale_invoice.getSimulationState(), 'draft')
+    self.assertEqual(sale_invoice.getSimulationState(), 'draft')
     sale_invoice.autoPlan()
-    self.assertEquals(sale_invoice.getSimulationState(), 'auto_planned')
+    self.assertEqual(sale_invoice.getSimulationState(), 'auto_planned')
 
     # other as anonymous
     username = self.other.getReference()

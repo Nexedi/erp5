@@ -106,7 +106,7 @@ else:
             self.MailHost.checkSent()
         
             # check we're not setting a content type
-            self.failIf(self.r.RESPONSE.headers.get('content-type'),
+            self.assertFalse(self.r.RESPONSE.headers.get('content-type'),
                         self.r.RESPONSE.headers)
 
         def test_properties(self):
@@ -117,7 +117,7 @@ else:
         def test_zodbclone(self):
             from Products.MailTemplates.MailTemplate import MailTemplate
             clone = self.ob.fake_skin.test._createZODBClone()
-            self.failUnless(isinstance(clone,MailTemplate),'Clone not a MailTemplate!')
+            self.assertTrue(isinstance(clone,MailTemplate),'Clone not a MailTemplate!')
             self.assertEqual(self.ob.fake_skin.test.read(),clone.read())
             self.assertEqual(clone.getProperty('mailhost'),None)
             self.assertEqual(clone.mailhost,'MailHost')
@@ -136,7 +136,7 @@ else:
             self.ob.fake_skin.test.manage_main()
             # ugh, okay, so we can't really test for security, but lets
             # test for the missing docstring that was causing problems!
-            self.failUnless(self.ob.fake_skin.test.__doc__)
+            self.assertTrue(self.ob.fake_skin.test.__doc__)
             
         def test_example2(self):
             # login

@@ -130,15 +130,15 @@ CREATE TABLE alternate_roles_and_users (
         reference='user1')
       user1.newContent(portal_type='Assignment', group='g1').open()
       user1.updateLocalRolesOnSecurityGroups()
-      self.assertEquals(user1.__ac_local_roles__.get('user1'), ['Auditor'])
-      self.assertEquals(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
+      self.assertEqual(user1.__ac_local_roles__.get('user1'), ['Auditor'])
+      self.assertEqual(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
 
       user2 = self.portal.person_module.newContent(portal_type='Person',
         reference='user2')
       user2.newContent(portal_type='Assignment', group='g1').open()
       user2.updateLocalRolesOnSecurityGroups()
-      self.assertEquals(user2.__ac_local_roles__.get('user2'), ['Auditor'])
-      self.assertEquals(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
+      self.assertEqual(user2.__ac_local_roles__.get('user2'), ['Auditor'])
+      self.assertEqual(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
       self.tic()
 
       # security_uid_dict in catalog contains entries for user1 and user2:
@@ -167,20 +167,20 @@ CREATE TABLE alternate_roles_and_users (
       alternate_security_query, = [q for q in
           security_query.query_list[0].query_list if
           q.kw.get('alternate_security_uid')]
-      self.assertEquals([user1_alternate_security_uid],
+      self.assertEqual([user1_alternate_security_uid],
         alternate_security_query.kw['alternate_security_uid'])
 
       # high level check that that logged in user can see document
-      self.assertEquals([user1],
+      self.assertEqual([user1],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
       # also with local_roles= argument which is used in worklists
-      self.assertEquals([user1],
+      self.assertEqual([user1],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person',
           local_roles='Auditor')])
 
       # searches still work for other users
       self.login('user2')
-      self.assertEquals([user2],
+      self.assertEqual([user2],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
 
       self.login('ERP5TypeTestCase')

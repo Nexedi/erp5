@@ -39,28 +39,28 @@ class TestGeneratorCall(unittest.TestCase):
   def test_dump(self):
     call = GeneratorCall()
     dumped = call.dump()
-    self.failUnless(isinstance(dumped, str))
+    self.assertTrue(isinstance(dumped, str))
     load = xmlrpclib.loads(dumped)
-    self.failUnless(isinstance(load, tuple))
-    self.assertEquals(len(load), 2)
-    self.assertEquals(load[1], 'GeneratorAnswer')
+    self.assertTrue(isinstance(load, tuple))
+    self.assertEqual(len(load), 2)
+    self.assertEqual(load[1], 'GeneratorAnswer')
 
-    self.failUnless(isinstance(load[0], tuple))
-    self.assertEquals(len(load[0]), 1)
+    self.assertTrue(isinstance(load[0], tuple))
+    self.assertEqual(len(load[0]), 1)
     server_response_dict = load[0][0]
-    self.failUnless(isinstance(server_response_dict, dict))
+    self.assertTrue(isinstance(server_response_dict, dict))
 
 
   def test_dump_load(self):
     call = GeneratorCall(data='Foo')
-    self.assertEquals(call['data'], 'Foo')
+    self.assertEqual(call['data'], 'Foo')
     dumped = call.dump()
-    self.failUnless(isinstance(dumped, str))
+    self.assertTrue(isinstance(dumped, str))
 
     # reread it in a new call
     read = GeneratorCall()
     read.load(dumped)
-    self.assertEquals(read['data'], 'Foo')
+    self.assertEqual(read['data'], 'Foo')
 
 
 def test_suite():

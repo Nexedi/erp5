@@ -146,7 +146,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
           if selection_name in ("",None) and \
             form_path not in self.FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
             error_list.append(form_path)
-    self.assertEquals(error_list, [])
+    self.assertEqual(error_list, [])
 
   def test_duplicatingSelectionNameInListbox(self):
     """
@@ -184,7 +184,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True).communicate(body)
       except OSError, e:
         raise OSError, '%r\n%r' % (os.environ, e)
-      self.assertEquals(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
+      self.assertEqual(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
     portal_skins_path = '%s/portal_skins' % self.portal.getId()
     for path in path_list:
       check_path = '%s/%s' % (portal_skins_path, path)
@@ -199,7 +199,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                 tool, obj_metatypes=['Script (Python)'], search_sub=1):
         if script.errors!=():
           # we need to add script id as well in test failure
-          self.assertEquals('%s : %s' %(script_path, script.errors), ())
+          self.assertEqual('%s : %s' %(script_path, script.errors), ())
 
   def test_SkinItemId(self):
     """
@@ -228,7 +228,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
               method = list_method
             if not callable(method):
               error_list.append((form_path, list_method))
-    self.assertEquals(error_list, [])
+    self.assertEqual(error_list, [])
 
   def test_listActionInListbox(self):
     # check all list_action in listboxes

@@ -101,20 +101,20 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     # Asserting Data Set
     data_set = self.portal.portal_catalog.getResultValue(
       reference=self.key)
-    self.assertEquals(self.key, data_set.getReference())
-    self.assertEquals('published', data_set.getValidationState())
+    self.assertEqual(self.key, data_set.getReference())
+    self.assertEqual('published', data_set.getValidationState())
 
     # Asserting Document
     document = self.portal.portal_catalog.getResultValue(
       reference=self.sha512sum)
-    self.assertEquals(self.sha512sum, document.getTitle())
-    self.assertEquals(self.sha512sum, document.getReference())
-    self.assertEquals(self.data, document.getData())
-    self.assertEquals(data_set, document.getFollowUpValue())
-    self.assertEquals(str(self.expiration_date),
+    self.assertEqual(self.sha512sum, document.getTitle())
+    self.assertEqual(self.sha512sum, document.getReference())
+    self.assertEqual(self.data, document.getData())
+    self.assertEqual(data_set, document.getFollowUpValue())
+    self.assertEqual(str(self.expiration_date),
                                     str(document.getExpirationDate()))
-    self.assertEquals('application/json', document.getContentType())
-    self.assertEquals('Published', document.getValidationStateTitle())
+    self.assertEqual('application/json', document.getContentType())
+    self.assertEqual('Published', document.getValidationStateTitle())
 
   def test_get_information(self):
     """
@@ -129,8 +129,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
 
     information_list = json.loads(data)
 
-    self.assertEquals(1, len(information_list))
-    self.assertEquals(json.dumps(information_list[0]), self.data)
+    self.assertEqual(1, len(information_list))
+    self.assertEqual(json.dumps(information_list[0]), self.data)
 
   def test_post_information_more_than_once(self):
     """
@@ -160,8 +160,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(result, httplib.OK)
     information_list = json.loads(data)
 
-    self.assertEquals(1, len(information_list))
-    self.assertEquals(json.dumps(information_list[0]), self.data)
+    self.assertEqual(1, len(information_list))
+    self.assertEqual(json.dumps(information_list[0]), self.data)
 
   def test_post_information_more_than_once_no_tic(self):
     """
@@ -198,8 +198,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(result, httplib.OK)
     information_list = json.loads(data)
 
-    self.assertEquals(1, len(information_list))
-    self.assertEquals(json.dumps(information_list[0]), self.data)
+    self.assertEqual(1, len(information_list))
+    self.assertEqual(json.dumps(information_list[0]), self.data)
 
   def test_get_information_from_different_data_set(self):
     """
@@ -229,19 +229,19 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation(key_2, data_2)
     self.tic()
 
-    self.assertEquals(2, len(self.portal.data_set_module))
-    self.assertEquals(2, len(self.portal.document_module))
+    self.assertEqual(2, len(self.portal.data_set_module))
+    self.assertEqual(2, len(self.portal.document_module))
 
     result, document = self.getInformation()
-    self.assertEquals(1, len(json.loads(document)))
+    self.assertEqual(1, len(json.loads(document)))
 
     result, document2 = self.getInformation(key_2)
-    self.assertEquals(1, len(json.loads(document2)))
+    self.assertEqual(1, len(json.loads(document2)))
 
     self.postInformation()
     self.tic()
-    self.assertEquals(2, len(self.portal.data_set_module))
-    self.assertEquals(3, len(self.portal.document_module))
+    self.assertEqual(2, len(self.portal.data_set_module))
+    self.assertEqual(3, len(self.portal.document_module))
 
     result, document3 = self.getInformation()
-    self.assertEquals(1, len(json.loads(document3)))
+    self.assertEqual(1, len(json.loads(document3)))

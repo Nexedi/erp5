@@ -89,12 +89,12 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         Ids are incremented at content creation and start at 1.
       """
       # No id generator defined
-      self.assertEquals(self.folder.getIdGenerator(), '')
-      self.assertEquals(len(self.folder), 0)
+      self.assertEqual(self.folder.getIdGenerator(), '')
+      self.assertEqual(len(self.folder), 0)
       obj = self.newContent()
-      self.assertEquals(obj.getId(), '1')
+      self.assertEqual(obj.getId(), '1')
       obj = self.newContent()
-      self.assertEquals(obj.getId(), '2')
+      self.assertEqual(obj.getId(), '2')
     
     def test_03_customGenerateNewId(self):
       """
@@ -106,11 +106,11 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                id_generator_script_name, '',
                'return %s[len(context)]' % (repr(id_generator_id_list), ))
       self.folder.setIdGenerator(id_generator_script_name)
-      self.assertEquals(self.folder.getIdGenerator(), id_generator_script_name)
+      self.assertEqual(self.folder.getIdGenerator(), id_generator_script_name)
       for expected_length in xrange(len(id_generator_id_list)):
-        self.assertEquals(len(self.folder), expected_length)
+        self.assertEqual(len(self.folder), expected_length)
         obj = self.newContent()
-        self.assertEquals(obj.getId(), id_generator_id_list[expected_length])
+        self.assertEqual(obj.getId(), id_generator_id_list[expected_length])
 
     def test_03_unkownGenerateNewId(self):
       self.folder.setIdGenerator('no such method')
@@ -186,9 +186,9 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       result = self.folder.upgradeObjectClass(test_script, from_class, 
                                               to_class, test_script)
       self.commit()
-      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertEqual(self.folder[obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
-      self.assertEquals([1], result)
+      self.assertEqual([1], result)
 
     def test_upgradeObjectClassOnlyTest(self):
       """ Test if it DOES NOT change Object Class, only test it. """
@@ -202,8 +202,8 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                                        to_class, test_script, test_only=1)
       self.commit()
       self.assertNotEquals(self.folder[obj.getId()].__class__, to_class)
-      self.assertEquals(self.folder[obj.getId()].__class__, from_class)
-      self.assertEquals([1], result)
+      self.assertEqual(self.folder[obj.getId()].__class__, from_class)
+      self.assertEqual([1], result)
 
     def test_upgradeObjectClassHierarchicaly(self):
       """ Test if migrate sub objects Hierarchicaly """
@@ -217,9 +217,9 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
       self.commit()
-      self.assertEquals(subfolder[obj.getId()].__class__, to_class)
+      self.assertEqual(subfolder[obj.getId()].__class__, to_class)
       self.assertNotEquals(subfolder[obj.getId()].__class__, from_class)
-      self.assertEquals([1], result)
+      self.assertEqual([1], result)
 
     def test_upgradeObjectClassWithSubObject(self):
       """ Test If upgrade preseve subobjects """
@@ -233,11 +233,11 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
       self.commit()
-      self.assertEquals(self.folder[subobject.getId()].__class__, to_class)
+      self.assertEqual(self.folder[subobject.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[subobject.getId()].__class__, from_class)
-      self.assertEquals(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
+      self.assertEqual(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
-      self.assertEquals([1, 1], result)
+      self.assertEqual([1, 1], result)
 
     def test_upgradeObjectClassWithStrings(self):
       """ Test if it changes Object Class """
@@ -252,9 +252,9 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       result = self.folder.upgradeObjectClass(test_script, from_class_as_string,
                                               to_class_as_string, test_script)
       self.commit()
-      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertEqual(self.folder[obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
-      self.assertEquals([1], result)
+      self.assertEqual([1], result)
 
     def test_FolderMixinSecurity(self):
       """ Test if FolderMix methods cannot be called by URL """
@@ -265,7 +265,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       response = self.publish('%s/deleteContent?id=%s' % (
               self.folder.absolute_url(relative=True), obj.getId()))
       self.assertTrue(obj.getId() in self.folder.objectIds())
-      self.assertEquals(302, response.getStatus())
+      self.assertEqual(302, response.getStatus())
 
 def test_suite():
   suite = unittest.TestSuite()

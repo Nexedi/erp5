@@ -133,9 +133,9 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
   
   def test_AccountingPlanInstallation(self):
     """Tests that the accounting plan is well installed."""
-    self.failUnless('m9' in self.category_tool.gap.fr.objectIds())
+    self.assertTrue('m9' in self.category_tool.gap.fr.objectIds())
     self.assertNotEquals(0, len(self.category_tool.gap.fr.m9.objectIds()))
-    self.failUnless('gap/fr/m9' in [x[1] for x in
+    self.assertTrue('gap/fr/m9' in [x[1] for x in
            self.portal.account_module.AccountModule_getAvailableGapList()])
 
   def test_SimpleTransmissionSheet(self):
@@ -146,14 +146,14 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     transmission_sheet_module = self.getInvoiceTransmissionSheetModule()
     transmission_sheet = transmission_sheet_module.newContent(
             portal_type=self.invoice_transmission_sheet_portal_type)
-    self.assertEquals(transmission_sheet.getValidationState(), 'draft')
+    self.assertEqual(transmission_sheet.getValidationState(), 'draft')
     # add an invoice to the transamission sheet
     invoice.setAggregateValue(transmission_sheet)
     invoice.recursiveImmediateReindexObject()
     self.getWorkflowTool().doActionFor(
                             transmission_sheet,
                             'emit_action')
-    self.assertEquals(transmission_sheet.getValidationState(),
+    self.assertEqual(transmission_sheet.getValidationState(),
                             'new')
 
   def test_TransmissionSheetEmitRefusedIfNoInvoice(self):
@@ -162,49 +162,49 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     transmission_sheet_module = self.getInvoiceTransmissionSheetModule()
     transmission_sheet = transmission_sheet_module.newContent(
             portal_type=self.invoice_transmission_sheet_portal_type)
-    self.assertEquals(transmission_sheet.getValidationState(), 'draft')
+    self.assertEqual(transmission_sheet.getValidationState(), 'draft')
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transmission_sheet, 'emit_action')
 
   def checkAccountTypeConsistency(self, account, fixit=1):
-    self.assertEquals(1, len([x for x in account.checkConsistency(fixit=1)
+    self.assertEqual(1, len([x for x in account.checkConsistency(fixit=1)
            if x.class_name.find('Account Type Constraint')>=0]))
 
   def test_AccountTypeConstaintForExpense(self):
     account = self._getAccount('account',
                                gap='fr/m9/6/60/602/6022/60225',
                                account_type='expense')
-    self.assertEquals([], account.checkConsistency())
+    self.assertEqual([], account.checkConsistency())
   
   def test_AccountTypeConstaintFixForExpense(self):
     account = self._getAccount('account',
                                gap='fr/m9/6/60/602/6022/60225',
                                account_type='equity')
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('expense', account.getAccountType())
+    self.assertEqual('expense', account.getAccountType())
 
   def test_AccountTypeConstaintForPayable(self):
     account = self._getAccount('payable_account',
                                gap='fr/m9/4/40',
                                account_type='liability/payable')
-    self.assertEquals([], account.checkConsistency())
+    self.assertEqual([], account.checkConsistency())
   
   def test_AccountTypeConstaintFixForPayable(self):
     account = self._getAccount('payable_account',
                                gap='fr/m9/4/40',
                                account_type='equity')
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('liability/payable', account.getAccountType())
+    self.assertEqual('liability/payable', account.getAccountType())
 
   def test_AccountTypeConstaintForClass4(self):
     # members of class 4 can be payable or receivable
     account = self._getAccount('class4_account',
                                gap='fr/m9/4/44',
                                account_type='liability/payable')
-    self.assertEquals([], account.checkConsistency())
+    self.assertEqual([], account.checkConsistency())
     
     account.edit(account_type='asset/receivable')
-    self.assertEquals([], account.checkConsistency())
+    self.assertEqual([], account.checkConsistency())
     
   def test_AccountTypeConstaintFixForClass4(self):
     # members of class 4 can be payable or receivable
@@ -212,7 +212,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/4/44',
                                account_type='equity')
     self.checkAccountTypeConsistency(account)
-    self.failUnless(account.getAccountType() in ('liability/payable',
+    self.assertTrue(account.getAccountType() in ('liability/payable',
                                                  'asset/receivable'))
 
   # Members of gap/fr/m9/4/47 are very specific
@@ -221,25 +221,25 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     account = self._getAccount('4718',
                                gap='fr/m9/4/47/471/4718', )
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('liability/payable', account.getAccountType())
+    self.assertEqual('liability/payable', account.getAccountType())
   
   def test_AccountTypeConstaintFixFor4721(self):
     account = self._getAccount('4721',
                                gap='fr/m9/4/47/472/4721', )
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('asset/receivable', account.getAccountType())
+    self.assertEqual('asset/receivable', account.getAccountType())
 
   def test_AccountTypeConstaintFixFor4731(self):
     account = self._getAccount('4731',
                                gap='fr/m9/4/47/473/4731', )
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('asset/receivable', account.getAccountType())
+    self.assertEqual('asset/receivable', account.getAccountType())
 
   def test_AccountTypeConstaintFixFor4735(self):
     account = self._getAccount('4735',
                                gap='fr/m9/4/47/473/4735', )
     self.checkAccountTypeConsistency(account)
-    self.assertEquals('liability/payable', account.getAccountType())
+    self.assertEqual('liability/payable', account.getAccountType())
     
 def test_suite():
   suite = unittest.TestSuite()

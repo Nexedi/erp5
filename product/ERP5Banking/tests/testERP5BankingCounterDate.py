@@ -176,7 +176,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       id = 'counter_date_%s_%s' % (date.strftime('%Y%m%d'), site.getId())
       self.openCounterDate(site=site, date=date, id=id)
       counter_date = getattr(self, id)
-      self.assertEquals(counter_date.getReference(), reference)
+      self.assertEqual(counter_date.getReference(), reference)
       counter_date.close()
       self.tic()
 

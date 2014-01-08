@@ -215,7 +215,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
     next_cell_id_list = list(matrix.objectIds())
     # the cells on coordinates 2b, 3b, 3b and 3c are kept
-    self.assertEquals(4, len(next_cell_id_list))
+    self.assertEqual(4, len(next_cell_id_list))
     for coord in [['2', 'b'],
                   ['2', 'c'],
                   ['3', 'b'],
@@ -314,7 +314,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     
     cell_range = [['1', ], ['a', ]]
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEquals(0, len(matrix.getCellValueList(**kwd)))
+    self.assertEqual(0, len(matrix.getCellValueList(**kwd)))
     new_cell = matrix.newCell(*['1', 'a'], **kwd)
     self.tic()
 
@@ -331,7 +331,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     
     cell_range = [['1', ]]
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEquals(0, len(matrix.getCellValueList(**kwd)))
+    self.assertEqual(0, len(matrix.getCellValueList(**kwd)))
     self.tic()
 
   def test_increase_dimension(self):
@@ -348,12 +348,12 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     
     cell_range = [['1', '2', ], ['a']]
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
     # previous cell is kept
-    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    self.assertEqual(cell, matrix.getCell(*['1', 'a'], **kwd))
     self.tic()
     # the cell is still in catalog
-    self.assertEquals(cell,
+    self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
 
   def test_decrease_dimension(self):
@@ -370,12 +370,12 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     
     cell_range = [['1', ], ['a']]
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
     # previous cell is kept
-    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    self.assertEqual(cell, matrix.getCell(*['1', 'a'], **kwd))
     self.tic()
     # the cell is still in catalog
-    self.assertEquals(cell,
+    self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
 
 
@@ -393,12 +393,12 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     
     cell_range = [['1', ], ['a', 'b']]
     matrix.setCellRange(*cell_range, **kwd)
-    self.assertEquals(1, len(matrix.getCellValueList(**kwd)))
+    self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
     # previous cell is kept
-    self.assertEquals(cell, matrix.getCell(*['1', 'a'], **kwd))
+    self.assertEqual(cell, matrix.getCell(*['1', 'a'], **kwd))
     self.tic()
     # the cell is still in catalog
-    self.assertEquals(cell,
+    self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
 
   def test_change_dimension_cell_change_id(self):
@@ -414,7 +414,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       matrix.newCell(*place, **kwd)
     
     cell = matrix.getCell('2', 'b', **kwd)
-    self.assertEquals('quantity_1_1', cell.getId())
+    self.assertEqual('quantity_1_1', cell.getId())
     cell.setTitle('This one')
     self.tic()
     
@@ -424,13 +424,13 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse('quantity_0_1' in matrix.objectIds())
 
     cell = matrix.getCell('2', 'b', **kwd)
-    self.assertEquals('quantity_1_1', cell.getId())
-    self.assertEquals('This one', cell.getTitle())
+    self.assertEqual('quantity_1_1', cell.getId())
+    self.assertEqual('This one', cell.getTitle())
   
     self.tic()
 
     # the cell is still in catalog
-    self.assertEquals(cell,
+    self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
     
 

@@ -151,7 +151,7 @@ class TestMailTemplate(TestCase):
     def test_addAddFormNoMailHosts(self):
         self.app.manage_delObjects(ids=['MailHost'])
         res = self.app.manage_addProduct['MailTemplates'].addMailTemplateForm()
-        self.failUnless(
+        self.assertTrue(
             res.find(
             '<option value="MailHost">MHTID</option>'
             )==-1
@@ -160,7 +160,7 @@ class TestMailTemplate(TestCase):
     def test_addAddFormMailHost(self):
         self.app._objects = ({'meta_type': 'Mail Host', 'id': 'MailHost'},)
         res = self.app.manage_addProduct['MailTemplates'].addMailTemplateForm()
-        self.failIf(
+        self.assertFalse(
             res.find(
             '<option value="MailHost">MHTID</option>'
             )==-1
@@ -172,7 +172,7 @@ class TestMailTemplate(TestCase):
         self.MailHost = self.app.MailHost = DummyMailDropHost()
         self.app._objects = ({'meta_type': 'Maildrop Host', 'id': 'MailHost'},)
         res = self.app.manage_addProduct['MailTemplates'].addMailTemplateForm()
-        self.failIf(
+        self.assertFalse(
             res.find(
             '<option value="MailHost">MHTID</option>'
             )==-1
@@ -282,7 +282,7 @@ class TestMailTemplate(TestCase):
 
     def test_PropertiesStartsEmpty(self):
         self.test_add()
-        self.failIf(self.mt.propertyMap())
+        self.assertFalse(self.mt.propertyMap())
 
     # Test Test tab, well, actually, make sure it's not there ;-)
     
@@ -291,7 +291,7 @@ class TestMailTemplate(TestCase):
         for option in MailTemplate.manage_options:
             if option['label']=='Test':
                 self.fail('Test label found')
-        self.failIf(MailTemplate.ZScriptHTML_tryForm, 'try form not None')
+        self.assertFalse(MailTemplate.ZScriptHTML_tryForm, 'try form not None')
 
     # Test Editing
 
@@ -303,7 +303,7 @@ class TestMailTemplate(TestCase):
         self.test_add()
         self.app.manage_delObjects('MailHost')
         r = self.mt.pt_editForm()
-        self.failIf(
+        self.assertFalse(
             r.find(
             """<option selected="selected" value="MailHost">'MailHost' is no longer valid!</option>"""
             )==-1,'No warning for MailHost being invalid found in:\n'+r
@@ -332,7 +332,7 @@ class TestMailTemplate(TestCase):
             self.assertEqual(r.args,('http://foo/test_mt/pt_editForm',))
         # ugh, okay, so we can't really test for security, but lets
         # test for the missing docstring that was causing problems!
-        self.failUnless(self.mt.__doc__)
+        self.assertTrue(self.mt.__doc__)
 
     def test_view_manage_main(self):
         self.test_add()
@@ -359,7 +359,7 @@ class TestMailTemplate(TestCase):
         self.MailHost.checkSent()
 
         # check we're not setting a content type
-        self.failIf(self.r.RESPONSE.headers.get('content-type'),
+        self.assertFalse(self.r.RESPONSE.headers.get('content-type'),
                     self.r.RESPONSE.headers)
 
     def testMailHostNotAMailHost(self):
@@ -547,7 +547,7 @@ class TestMailTemplate(TestCase):
                                  boundary='111',
                                  subtype='alternative')
 
-        self.failUnless(isinstance(msg,MIMEMultipart))
+        self.assertTrue(isinstance(msg,MIMEMultipart))
         attachment = MIMEText('A Test Attachment',_subtype='plain')
         attachment.add_header('Content-Disposition', 'attachment', filename='test.txt')
         msg.attach(attachment)
@@ -580,7 +580,7 @@ class TestMailTemplate(TestCase):
                                  boundary='111',
                                  subtype='alternative')
 
-        self.failUnless(isinstance(msg,MIMEMultipart))
+        self.assertTrue(isinstance(msg,MIMEMultipart))
         return msg
         
     def testZopeFileObject(self):

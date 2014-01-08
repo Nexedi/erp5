@@ -57,29 +57,29 @@ class TestQueryModule(ERP5TypeTestCase):
     # check the action is visible
     action_list = self.portal.portal_actions.listFilteredActionsFor(
                 self.doc).get('object_action')
-    self.assertEquals(1, len([ai for ai in
+    self.assertEqual(1, len([ai for ai in
             action_list if ai['name'] == 'Post a Query']))
 
   def test_jump_query_action_visible(self):
     action_list = self.portal.portal_actions.listFilteredActionsFor(
                 self.doc).get('object_jump')
-    self.assertEquals(1, len([ai for ai in
+    self.assertEqual(1, len([ai for ai in
             action_list if ai['name'] == 'Queries']))
 
   def test_post_query(self):
     self.doc.Base_postQuery(description='question ?')
-    self.assertEquals(len(self.portal.query_module), 1)
+    self.assertEqual(len(self.portal.query_module), 1)
     query = self.portal.query_module.contentValues()[0]
-    self.assertEquals(self.doc, query.getAgentValue())
-    self.assertEquals('Person', query.getTitle())
-    self.assertEquals('posted', query.getValidationState())
+    self.assertEqual(self.doc, query.getAgentValue())
+    self.assertEqual('Person', query.getTitle())
+    self.assertEqual('posted', query.getValidationState())
 
   def test_reply_query(self):
     self.doc.Base_postQuery(description='question ?')
     query = self.portal.query_module.contentValues()[0]
     self.portal.portal_workflow.doActionFor(
                       query, 'answer_action')
-    self.assertEquals('answered', query.getValidationState())
+    self.assertEqual('answered', query.getValidationState())
 
 
   def test_reply_query_with_persons(self):
@@ -122,13 +122,13 @@ class TestQueryModule(ERP5TypeTestCase):
  
     newSecurityManager(None, owner_user)
     self.portal.portal_workflow.doActionFor(query, 'answer_action')
-    self.assertEquals('answered', query.getValidationState())
+    self.assertEqual('answered', query.getValidationState())
     # this should have sent an email from owner_user to question_user
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('owner_user@example.invalid', mfrom)
-    self.assertEquals(['question_user@example.invalid'], mto)
+    self.assertEqual('owner_user@example.invalid', mfrom)
+    self.assertEqual(['question_user@example.invalid'], mto)
     self.assertTrue('Query' in messageText, messageText)
 
 

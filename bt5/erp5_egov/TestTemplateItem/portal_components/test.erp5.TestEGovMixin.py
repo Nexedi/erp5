@@ -344,10 +344,10 @@ class TestEGovMixin(SecurityTestCase):
         self.portal,
         workflow_list=['egov_universal_workflow', 'egov_anonymous_workflow'])
     self.assertNotEquals(worklist_dict, {})
-    self.assertEquals(worklist_dict.has_key(portal_type), True)
+    self.assertEqual(worklist_dict.has_key(portal_type), True)
     portal_type_dict = worklist_dict[portal_type]
-    self.assertEquals(portal_type_dict.has_key(validation_state), True)
-    self.assertEquals(portal_type_dict[validation_state]['count'], count)
+    self.assertEqual(portal_type_dict.has_key(validation_state), True)
+    self.assertEqual(portal_type_dict[validation_state]['count'], count)
 
     # relog with previous user
     if previous_user in ('Anonymous User', 'ERP5TypeTestCase'):

@@ -306,10 +306,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = portal_catalog.getResultValue(reference=reference,
                                            portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
-    self.assertEquals(len(assignment_list), 1)
+    self.assertEqual(len(assignment_list), 1)
     assignment = assignment_list[0]
-    self.assertEquals(assignment.getFunction(), assignment_function)
-    self.assertEquals(assignment.getRole(), assignment_role)
+    self.assertEqual(assignment.getFunction(), assignment_function)
+    self.assertEqual(assignment.getRole(), assignment_role)
 
   def getUserFolder(self):
     """Returns the acl_users. """
@@ -379,7 +379,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = credential_request_module.contentValues(\
         portal_type='Credential Request', first_name='Homer',
         last_name='Simpson', reference='homie')
-    self.assertEquals(len(result), 1)
+    self.assertEqual(len(result), 1)
     sequence.edit(subscription_request=result[0],
         person_reference=credential_reference)
 
@@ -401,16 +401,16 @@ class TestERP5Credential(ERP5TypeTestCase):
     # check a person have been created
     person_module = self.portal.getDefaultModule('Person')
     person_result = person_module.contentValues(reference='homie')
-    self.assertEquals(len(person_result), 1)
+    self.assertEqual(len(person_result), 1)
     person = person_result[0].getObject()
-    self.assertEquals(person.getTitle(), 'Homer Simpson')
-    self.assertEquals(person.getDefaultEmailText(), 'homer.simpson@fox.com')
+    self.assertEqual(person.getTitle(), 'Homer Simpson')
+    self.assertEqual(person.getDefaultEmailText(), 'homer.simpson@fox.com')
 
     # check homie can log in the system
     self._assertUserExists('homie', 'secret')
     self.login('homie')
     from AccessControl import getSecurityManager
-    self.assertEquals(str(getSecurityManager().getUser()), 'homie')
+    self.assertEqual(str(getSecurityManager().getUser()), 'homie')
 
   def stepCreateCredentialUpdate(self, sequence=None, sequence_list=None, **kw):
     '''
@@ -421,7 +421,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     # get the 'homie' person object
     person_module = self.portal.getDefaultModule('Person')
     result = person_module.searchFolder(reference='homie')
-    self.assertEquals(len(result), 1)
+    self.assertEqual(len(result), 1)
     homie = result[0]
 
     # create a credential update
@@ -435,7 +435,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         destination_decision=homie.getRelativeUrl())
 
     credential_update.submit()
-    self.assertEquals(credential_update.getValidationState(), 'submitted')
+    self.assertEqual(credential_update.getValidationState(), 'submitted')
     sequence.edit(credential_update=credential_update)
 
   def stepAcceptCredentialUpdate(self, sequence=None, sequence_list=None,
@@ -454,10 +454,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     # check that informations on the person object have been updated
     person_module = self.portal.getDefaultModule('Person')
     related_person_result = person_module.searchFolder(reference='homie')
-    self.assertEquals(len(related_person_result), 1)
+    self.assertEqual(len(related_person_result), 1)
     related_person = related_person_result[0]
-    self.assertEquals(related_person.getLastName(), 'Simpsons')
-    self.assertEquals(related_person.getDefaultEmailText(),
+    self.assertEqual(related_person.getLastName(), 'Simpsons')
+    self.assertEqual(related_person.getDefaultEmailText(),
     'homie.simpsons@fox.com')
 
   def stepCreateSubscriptionRequestWithSecurityQuestionCategory(self, sequence=None,
@@ -483,18 +483,18 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = credential_request_module.contentValues(\
         portal_type='Credential Request', first_name='Homer',
         last_name='Simpson', reference='homie')
-    self.assertEquals(len(result), 1)
+    self.assertEqual(len(result), 1)
     sequence.edit(subscription_request=result[0])
 
   def stepCheckSecurityQuestionCategoryAsBeenCopiedOnPersonObject(self, sequence=None,
       sequence_list=None, **kw):
     person_module = self.portal.getDefaultModule('Person')
     related_person_result = person_module.contentValues(reference='homie')
-    self.assertEquals(len(related_person_result), 1)
+    self.assertEqual(len(related_person_result), 1)
     related_person = related_person_result[0]
-    self.assertEquals(related_person.getDefaultCredentialQuestionQuestion(),
+    self.assertEqual(related_person.getDefaultCredentialQuestionQuestion(),
         'credential/library_card_number')
-    self.assertEquals(related_person.getDefaultCredentialQuestionAnswer(),
+    self.assertEqual(related_person.getDefaultCredentialQuestionAnswer(),
         '923R4293')
 
   def stepCreateSubscriptionRequestWithSecurityQuestionFreeText(self, sequence=None,
@@ -523,18 +523,18 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = credential_request_module.contentValues(\
         portal_type='Credential Request', first_name='Homer',
         last_name='Simpson', reference='homie')
-    self.assertEquals(len(result), 1)
+    self.assertEqual(len(result), 1)
     sequence.edit(subscription_request=result[0])
 
   def stepCheckSecurityQuestionFreeTextAsBeenCopiedOnPersonObject(self, sequence=None,
       sequence_list=None, **kw):
     person_module = self.portal.getDefaultModule('Person')
     related_person_result = person_module.contentValues(reference='homie')
-    self.assertEquals(len(related_person_result), 1)
+    self.assertEqual(len(related_person_result), 1)
     related_person = related_person_result[0]
-    self.assertEquals(related_person.getDefaultCredentialQuestionQuestionFreeText(),
+    self.assertEqual(related_person.getDefaultCredentialQuestionQuestionFreeText(),
         'Which car model do you have ?')
-    self.assertEquals(related_person.getDefaultCredentialQuestionAnswer(),
+    self.assertEqual(related_person.getDefaultCredentialQuestionAnswer(),
         'Renault 4L')
 
   def stepCreatePerson(self, sequence=None, sequence_list=None,
@@ -597,7 +597,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._assertUserExists('barney', 'secret')
     self.login('barney')
     from AccessControl import getSecurityManager
-    self.assertEquals(str(getSecurityManager().getUser()), 'barney')
+    self.assertEqual(str(getSecurityManager().getUser()), 'barney')
 
     self.login()
     # create a credential recovery
@@ -668,7 +668,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.login()
     result_list = self.portal.portal_catalog(
         portal_type='Credential Recovery', reference=person_reference)
-    self.assertEquals(1, len(result_list))
+    self.assertEqual(1, len(result_list))
     credential_recovery = result_list[0]
     sequence.edit(credential_recovery=credential_recovery)
 
@@ -684,11 +684,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     person_reference = sequence["person_reference"]
     result_list = self.portal.portal_catalog(
         portal_type='Credential Recovery', reference=person_reference)
-    self.assertEquals(1, len(result_list))
+    self.assertEqual(1, len(result_list))
     credential_recovery = result_list[0]
     person = credential_recovery.getDestinationDecisionValue()
-    self.assertEquals("Barney", person.getTitle())
-    self.assertEquals("barney@duff.com", person.getEmailText())
+    self.assertEqual("Barney", person.getTitle())
+    self.assertEqual("barney@duff.com", person.getEmailText())
     sequence["credential_recovery"] = credential_recovery
 
   def stepSubmitCredentialRecovery(self, sequence=None, sequence_list=None,
@@ -825,7 +825,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Request", reference=credential_reference_str)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                         default_follow_up_uid=credential_reference.getUid())
-    self.assertEquals(mail_message.getSimulationState(), "started")
+    self.assertEqual(mail_message.getSimulationState(), "started")
     self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
 
   def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
@@ -851,10 +851,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.login()
     person = self.portal.portal_catalog.getResultValue(
       reference=sequence["person_reference"], portal_type="Person")
-    self.assertEquals("Homer", person.getFirstName())
-    self.assertEquals("Simpson", person.getLastName())
-    self.assertEquals("homer.simpson@fox.com", person.getDefaultEmailText())
-    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
+    self.assertEqual("Homer", person.getFirstName())
+    self.assertEqual("Simpson", person.getLastName())
+    self.assertEqual("homer.simpson@fox.com", person.getDefaultEmailText())
+    self.assertEqual(DateTime('1970/01/01'), person.getStartDate())
     self.logout()
 
   def stepSetAuditorRoleToCurrentPerson(self, sequence=None,
@@ -870,16 +870,16 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence_list=None, **kw):
     person = self.portal.portal_catalog.getResultValue(
       reference=sequence["person_reference"], portal_type="Person")
-    self.assertEquals("tom", person.getFirstName())
-    self.assertEquals("Simpson", person.getLastName())
-    self.assertEquals("tom@host.com", person.getDefaultEmailText())
-    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
+    self.assertEqual("tom", person.getFirstName())
+    self.assertEqual("Simpson", person.getLastName())
+    self.assertEqual("tom@host.com", person.getDefaultEmailText())
+    self.assertEqual(DateTime('1970/01/01'), person.getStartDate())
 
   def stepCheckPersonWhenCredentialUpdateFail(self, sequence=None,
       sequence_list=None, **kw):
     person = self.portal.portal_catalog.getResultValue(
       reference=sequence["person_reference"], portal_type="Person")
-    self.assertEquals("Barney", person.getFirstName())
+    self.assertEqual("Barney", person.getFirstName())
 
   def stepCheckCredentialRecoveryNotEmptyDestinationDecision(self, sequence):
     credential_recovery = self.portal.portal_catalog.getResultValue(
@@ -1061,8 +1061,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, message_text = last_message
-    self.assertEquals(mfrom, 'Portal Administrator <postmaster@localhost>')
-    self.assertEquals(['Vifib Test <barney@duff.com>'], mto)
+    self.assertEqual(mfrom, 'Portal Administrator <postmaster@localhost>')
+    self.assertEqual(['Vifib Test <barney@duff.com>'], mto)
     self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
     self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
     decoded_message = self.decode_email(last_message[2])
@@ -1115,10 +1115,10 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
     self.assertNotEquals(assignment_list, [])
-    self.assertEquals(len(assignment_list), 1)
+    self.assertEqual(len(assignment_list), 1)
     assignment = assignment_list[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(person.getValidationState(), "validated")
+    self.assertEqual(assignment.getValidationState(), "open")
+    self.assertEqual(person.getValidationState(), "validated")
 
   def testERP5Site_newCredentialRequest(self):
     """
@@ -1132,11 +1132,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference="barney")
-    self.assertEquals(credential_request.getFirstName(), "Barney")
-    self.assertEquals(credential_request.getDefaultEmailText(),
+    self.assertEqual(credential_request.getFirstName(), "Barney")
+    self.assertEqual(credential_request.getDefaultEmailText(),
         "barney@duff.com")
-    self.assertEquals(credential_request.getRole(), "internal")
-    self.assertEquals(credential_request.getFunction(), "member")
+    self.assertEqual(credential_request.getRole(), "internal")
+    self.assertEqual(credential_request.getFunction(), "member")
 
   def test_double_ERP5Site_newCredentialRequest(self):
     """Check that ERP5Site_newCredentialRequest will not create conflicting
@@ -1149,11 +1149,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference="barney")
-    self.assertEquals(credential_request.getFirstName(), "Barney")
-    self.assertEquals(credential_request.getDefaultEmailText(),
+    self.assertEqual(credential_request.getFirstName(), "Barney")
+    self.assertEqual(credential_request.getDefaultEmailText(),
         "barney@duff.com")
-    self.assertEquals(credential_request.getRole(), "internal")
-    self.assertEquals(credential_request.getFunction(), "member")
+    self.assertEqual(credential_request.getRole(), "internal")
+    self.assertEqual(credential_request.getFunction(), "member")
 
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     self.tic()
@@ -1363,28 +1363,28 @@ class TestERP5Credential(ERP5TypeTestCase):
     # test to prevent regression with a bug in property sheet definition
     cr = self.portal.credential_request_module.newContent(
       portal_type='Credential Request')
-    self.assertEquals(cr.getDefaultAddressCity(), None)
-    self.assertEquals(cr.getDefaultAddressRegion(), None)
-    self.assertEquals(cr.getOrganisationDefaultAddressCity(), None)
-    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), None)
+    self.assertEqual(cr.getDefaultAddressCity(), None)
+    self.assertEqual(cr.getDefaultAddressRegion(), None)
+    self.assertEqual(cr.getOrganisationDefaultAddressCity(), None)
+    self.assertEqual(cr.getOrganisationDefaultAddressRegion(), None)
 
     cr.setDefaultAddressRegion('europe/fr')
 
-    self.assertEquals(cr.getDefaultAddressCity(), None)
-    self.assertEquals(cr.getDefaultAddressRegion(), 'europe/fr')
-    self.assertEquals(cr.getOrganisationDefaultAddressCity(), None)
-    self.assertEquals(cr.getOrganisationDefaultTelephoneText(), None)
-    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), None)
+    self.assertEqual(cr.getDefaultAddressCity(), None)
+    self.assertEqual(cr.getDefaultAddressRegion(), 'europe/fr')
+    self.assertEqual(cr.getOrganisationDefaultAddressCity(), None)
+    self.assertEqual(cr.getOrganisationDefaultTelephoneText(), None)
+    self.assertEqual(cr.getOrganisationDefaultAddressRegion(), None)
 
     cr.deleteContent('default_address')
 
     cr.setOrganisationDefaultAddressCity('Lille')
     cr.setOrganisationDefaultAddressRegion('europe/fr')
 
-    self.assertEquals(cr.getOrganisationDefaultAddressCity(), 'Lille')
-    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), 'europe/fr')
-    self.assertEquals(cr.getDefaultAddressCity(), None)
-    self.assertEquals(cr.getDefaultAddressRegion(), None)
+    self.assertEqual(cr.getOrganisationDefaultAddressCity(), 'Lille')
+    self.assertEqual(cr.getOrganisationDefaultAddressRegion(), 'europe/fr')
+    self.assertEqual(cr.getDefaultAddressCity(), None)
+    self.assertEqual(cr.getDefaultAddressRegion(), None)
 
 
 

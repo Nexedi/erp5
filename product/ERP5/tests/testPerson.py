@@ -77,7 +77,7 @@ class TestPerson(ERP5TypeTestCase):
     person_copy_obj = person_module[person_copy_id]
     ## because we copy/paste Person object in the same ERP5 
     ## instance its reference must be resetted
-    self.assertEquals(person_copy_obj.getReference(), None)
+    self.assertEqual(person_copy_obj.getReference(), None)
     
     ## set object as if installed from bt5 (simulate it)
     request = self.app.REQUEST
@@ -87,37 +87,37 @@ class TestPerson(ERP5TypeTestCase):
     person_copy_obj = person_module[person_copy_id]
     ## because we setup Person object from business template 
     ## its reference must NOT be resetted
-    self.assertEquals(person_copy_obj.getReference(), person.getReference())
+    self.assertEqual(person_copy_obj.getReference(), person.getReference())
 
   # title & first_name, last_name
   def testEmptyTitle(self):
     p = self._makeOne()
-    self.assertEquals('', p.getTitle())
+    self.assertEqual('', p.getTitle())
   
   def testSetFirstName(self):
     p = self._makeOne()
     p.setFirstName('first')
-    self.assertEquals('first', p.getFirstName())
+    self.assertEqual('first', p.getFirstName())
 
   def testSetLastName(self):
     p = self._makeOne(id='person')
     p.setLastName('last')
-    self.assertEquals('last', p.getLastName())
+    self.assertEqual('last', p.getLastName())
 
   def testTitleFromFirstLastName(self):
     p = self._makeOne(id='person')
     p.setFirstName('first')
     p.setLastName('last')
-    self.assertEquals('first last', p.getTitle())
+    self.assertEqual('first last', p.getTitle())
 
   def testEditFirstNameLastName(self):
     # using 'edit' method
     p = self._makeOne(id='person')
     p.edit( first_name='first',
             last_name='last' )
-    self.assertEquals('first', p.getFirstName())
-    self.assertEquals('last', p.getLastName())
-    self.assertEquals('first last', p.getTitle())
+    self.assertEqual('first', p.getFirstName())
+    self.assertEqual('last', p.getLastName())
+    self.assertEqual('first last', p.getTitle())
 
   def testEditTitleFirstNameLastName(self):
     p = self._makeOne(id='person')
@@ -128,13 +128,13 @@ class TestPerson(ERP5TypeTestCase):
     
   def testGetTitleOrId(self):
     p = self._makeOne(id='person')
-    self.assertEquals('person', p.getTitleOrId())
-    self.assertEquals('person', p.title_or_id())
+    self.assertEqual('person', p.getTitleOrId())
+    self.assertEqual('person', p.title_or_id())
 
     p.edit( first_name='first',
             last_name='last', )
-    self.assertEquals('first last', p.getTitleOrId())
-    self.assertEquals('first last', p.title_or_id())
+    self.assertEqual('first last', p.getTitleOrId())
+    self.assertEqual('first last', p.title_or_id())
     
   def testHasTitle(self):
     p = self._makeOne(id='person')
@@ -166,14 +166,14 @@ class TestPerson(ERP5TypeTestCase):
     p = self._makeOne(id='person')
     p._setEncodedPassword('pass_A', format='A')
     p._setEncodedPassword('pass_B', format='B')
-    self.assertEquals('pass_A', p.getPassword(format='A'))
-    self.assertEquals('pass_B', p.getPassword(format='B'))
+    self.assertEqual('pass_A', p.getPassword(format='A'))
+    self.assertEqual('pass_B', p.getPassword(format='B'))
 
-    self.assertEquals(None, p.getPassword(format='unknown'))
-    self.assertEquals('default', p.getPassword('default', format='unknown'))
+    self.assertEqual(None, p.getPassword(format='unknown'))
+    self.assertEqual('default', p.getPassword('default', format='unknown'))
 
-    self.assertEquals(None, p.getPassword())
-    self.assertEquals('default', p.getPassword('default'))
+    self.assertEqual(None, p.getPassword())
+    self.assertEqual('default', p.getPassword('default'))
 
   def testPreferenceInteractionWorkflow(self):
     """ when setting reference, a script create preference is

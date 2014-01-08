@@ -206,7 +206,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.tic()
     invoice_transaction_rule.deleteContent(
                 [x for x in invoice_transaction_rule.objectIds()])
-    self.assertEquals(len(invoice_transaction_rule.objectValues()), 0)
+    self.assertEqual(len(invoice_transaction_rule.objectValues()), 0)
     self.commit()
 
     # and add new content, predicate product_line
@@ -249,10 +249,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       membership_criterion_category_list = ['destination_region/region/africa'],
     )
     # sanity checks
-    self.failUnless(predicate_product_notebook != None)
-    self.failUnless(predicate_product_barebone != None)
-    self.failUnless(predicate_region_france  != None)
-    self.failUnless(predicate_region_africa  != None)
+    self.assertTrue(predicate_product_notebook != None)
+    self.assertTrue(predicate_product_barebone != None)
+    self.assertTrue(predicate_region_france  != None)
+    self.assertTrue(predicate_region_africa  != None)
     predicate_list = invoice_transaction_rule.contentValues(
           filter = {'portal_type': self.predicate_portal_type})
     self.assertEqual(len(predicate_list), 4)
@@ -995,7 +995,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                         product_notebook_region_france_movement ))
 
     # finally check the matching cell is the good one
-    self.assertEquals(product_notebook_region_france_cell,
+    self.assertEqual(product_notebook_region_france_cell,
               invoice_transaction_rule._getMatchingCell(
                 product_notebook_region_france_movement ))
     self.assertEqual(product_barebone_region_france_cell,
@@ -1106,14 +1106,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     # inside this movement there are applied rules which specialize
     # invoice_transaction_rule and trade_model_rule...
     applied_rule_list = simulation_movement.contentValues()
-    self.assertEquals( len(applied_rule_list), 2)
+    self.assertEqual( len(applied_rule_list), 2)
     # ...but only invoice_transaction_rule is interesting
     applied_rule = [applied_rule for applied_rule in applied_rule_list if
       applied_rule.getSpecialiseValue().getPortalType() ==
       'Invoice Transaction Simulation Rule'][0]
-    self.assertEquals( applied_rule.getPortalType(),
+    self.assertEqual( applied_rule.getPortalType(),
                       self.applied_rule_portal_type)
-    self.assertEquals( applied_rule.getSpecialise(),
+    self.assertEqual( applied_rule.getSpecialise(),
                       invoice_transaction_rule.getRelativeUrl())
 
     # and in this applied rule, we got simulation movements,
@@ -1122,22 +1122,22 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEqual( len(simulation_movement_list), 3)
     rule_movement_found = {}
     for simulation_movement in simulation_movement_list :
-      self.assertEquals( simulation_movement.getSourceSection(),
+      self.assertEqual( simulation_movement.getSourceSection(),
                         vendor.getRelativeUrl())
-      self.assertEquals( simulation_movement.getDestinationSection(),
+      self.assertEqual( simulation_movement.getDestinationSection(),
                         client.getRelativeUrl())
-      self.assertEquals( simulation_movement.getResource(),
+      self.assertEqual( simulation_movement.getResource(),
                         currency.getRelativeUrl())
-      self.assertEquals( simulation_movement.getCausalityState(),
+      self.assertEqual( simulation_movement.getCausalityState(),
                          'expanded')
       for rule_movement in invoice_transaction_rule_cell.contentValues() :
         if simulation_movement.getSource() == rule_movement.getSource() :
           rule_movement_found[rule_movement.getSource()] = 1
-          self.assertEquals(simulation_movement.getQuantity(),
+          self.assertEqual(simulation_movement.getQuantity(),
                 rule_movement.getQuantity() * invoice_line.getTotalPrice())
-          self.assertEquals(simulation_movement.getSourceCredit(),
+          self.assertEqual(simulation_movement.getSourceCredit(),
                 rule_movement.getSourceCredit() * invoice_line.getTotalPrice())
-          self.assertEquals(simulation_movement.getSourceDebit(),
+          self.assertEqual(simulation_movement.getSourceDebit(),
                 rule_movement.getSourceDebit() * invoice_line.getTotalPrice())
       self.assert_(len(rule_movement_found.keys()), 3)
     sequence.edit( simulation_movement_list = simulation_movement_list )
@@ -1149,7 +1149,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_line = sequence.get('invoice_line')
 
     applied_rule_list = self.getSimulationTool().contentValues()
-    self.assertEquals(len(applied_rule_list), 1)
+    self.assertEqual(len(applied_rule_list), 1)
     simulation_movement_list = []
     simulation_movement_quantities = {}
     simulation_movement_resources = {}
@@ -1197,19 +1197,19 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     for simulation_movement in simulation_movement_list :
       path = simulation_movement.getPath()
-      self.assertEquals(
+      self.assertEqual(
         simulation_movement.getQuantity(),
         simulation_movement_quantities[path]
       )
-      self.assertEquals(
+      self.assertEqual(
         simulation_movement.getResource(),
         simulation_movement_resources[path]
       )
-      self.assertEquals(
+      self.assertEqual(
         (simulation_movement.getSource(), simulation_movement.getDestination()),
         simulation_movement_paths[path]
       )
-      self.assertEquals(
+      self.assertEqual(
            ( simulation_movement.getSourceSection(),
              simulation_movement.getDestinationSection()),
         simulation_movement_section_paths[path]
@@ -1222,17 +1222,17 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     simulation_movement = invoice_line.getDeliveryRelatedValue()
     applied_rule_list = simulation_movement.objectValues()
     # Invoice Transaction Rule and Trade Model Rule
-    self.assertEquals(2, len(applied_rule_list))
+    self.assertEqual(2, len(applied_rule_list))
     applied_rule = [x for x in applied_rule_list \
                     if x.getSpecialiseReference() == \
                     'default_invoice_transaction_rule'][0]
     simulation_movement_list = [x for x in applied_rule.objectValues() \
                                 if x.getSourceTitle() in ('Receivable',
                                                           'Payable')]
-    self.assertEquals(1, len(simulation_movement_list))
+    self.assertEqual(1, len(simulation_movement_list))
     simulation_movement = simulation_movement_list[0]
     applied_rule_list = simulation_movement.objectValues()
-    self.assertEquals(1, len(applied_rule_list))
+    self.assertEqual(1, len(applied_rule_list))
     payment_applied_rule = applied_rule_list[0]
 
   def stepPlanInvoice(self, sequence, **kw) :
@@ -1243,7 +1243,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       invoice, 'plan_action',
       skip_period_validation=1
     )
-    self.assertEquals(invoice.getSimulationState(), 'planned')
+    self.assertEqual(invoice.getSimulationState(), 'planned')
 
   def stepConfirmInvoice(self, sequence, **kw) :
     """ put the invoice in the `confirmed` state, which does nothing specific,
@@ -1255,11 +1255,11 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       wf_id = 'accounting_workflow',
       skip_period_validation = 1
     )
-    self.assertEquals(invoice.getSimulationState(), 'confirmed')
+    self.assertEqual(invoice.getSimulationState(), 'confirmed')
 
   def stepCheckNoAccountingLinesBuiltYet(self, sequence, **kw) :
     invoice = sequence.get('invoice')
-    self.assertEquals(0, len(invoice.getMovementList(
+    self.assertEqual(0, len(invoice.getMovementList(
                     portal_type=invoice.getPortalAccountingMovementTypeList())))
 
   def stepStartInvoice(self, sequence, **kw) :
@@ -1272,7 +1272,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       wf_id = 'accounting_workflow',
       skip_period_validation = 1
     )
-    self.assertEquals(invoice.getSimulationState(), 'started')
+    self.assertEqual(invoice.getSimulationState(), 'started')
 
   def stepCheckAccountingLinesCoherantWithSimulation(self, sequence, **kw) :
     """ checks that accounting lines are created on the sale invoice
@@ -1288,29 +1288,29 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type':
                   self.invoice_transaction_line_portal_type})
-    self.assertEquals( len(invoice_transaction_line_list),
+    self.assertEqual( len(invoice_transaction_line_list),
                        len(simulation_movement_list))
 
     simulation_movement_found = {}
     for invoice_transaction_line in invoice_transaction_line_list :
-      self.assertEquals( invoice_transaction_line.getSourceSection(),
+      self.assertEqual( invoice_transaction_line.getSourceSection(),
                          vendor.getRelativeUrl())
-      self.assertEquals( invoice_transaction_line.getDestinationSection(),
+      self.assertEqual( invoice_transaction_line.getDestinationSection(),
                          client.getRelativeUrl())
-      self.assertEquals( invoice_transaction_line.getResource(),
+      self.assertEqual( invoice_transaction_line.getResource(),
                          currency.getRelativeUrl())
       for simulation_movement in simulation_movement_list :
         if simulation_movement.getSource() == \
                             invoice_transaction_line.getSource() :
           simulation_movement_found[simulation_movement.getSource()] = 1
-          self.assertEquals(simulation_movement.getQuantity(),
+          self.assertEqual(simulation_movement.getQuantity(),
                             invoice_transaction_line.getQuantity())
-          self.assertEquals(simulation_movement.getSourceCredit(),
+          self.assertEqual(simulation_movement.getSourceCredit(),
                             invoice_transaction_line.getSourceCredit())
-          self.assertEquals(simulation_movement.getSourceDebit(),
+          self.assertEqual(simulation_movement.getSourceDebit(),
                             invoice_transaction_line.getSourceDebit())
 
-          self.assertEquals(simulation_movement.getDelivery(),
+          self.assertEqual(simulation_movement.getDelivery(),
                             invoice_transaction_line.getRelativeUrl())
       self.assert_(len(simulation_movement_found.keys()), 3)
 
@@ -1338,7 +1338,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type': self.invoice_transaction_line_portal_type})
-    self.assertEquals(len(invoice_transaction_line_list), 3)
+    self.assertEqual(len(invoice_transaction_line_list), 3)
 
     accounting_lines_layout = {
       'income'            : (0, 100),
@@ -1352,8 +1352,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
           'unexepected source_id %s' % invoice_transaction_line.getSourceId())
       debit, credit = accounting_lines_layout[
                             invoice_transaction_line.getSourceId()]
-      self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
-      self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
+      self.assertEqual(debit, invoice_transaction_line.getSourceDebit())
+      self.assertEqual(credit, invoice_transaction_line.getSourceCredit())
       self.assertNotEquals(
               len(invoice_transaction_line.getDeliveryRelatedValueList(
                               portal_type='Simulation Movement')), 0)
@@ -1377,7 +1377,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     payment_transaction_line_list = payment.contentValues(
         filter = {'portal_type': self.payment_transaction_line_portal_type})
-    self.assertEquals(len(payment_transaction_line_list), 2)
+    self.assertEqual(len(payment_transaction_line_list), 2)
 
     accounting_lines_layout = {
       'receivable'        : (0, 119.60),
@@ -1391,8 +1391,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
             'unexepected destination_id %s' % payment_transaction_line.getDestinationId())
         debit, credit = accounting_lines_layout[
                               payment_transaction_line.getDestinationId()]
-        self.assertEquals(debit, payment_transaction_line.getDestinationDebit())
-        self.assertEquals(credit, payment_transaction_line.getDestinationCredit())
+        self.assertEqual(debit, payment_transaction_line.getDestinationDebit())
+        self.assertEqual(credit, payment_transaction_line.getDestinationCredit())
         self.assertNotEquals(
                 len(payment_transaction_line.getDeliveryRelatedValueList(
                                 portal_type='Simulation Movement')), 0)
@@ -1402,8 +1402,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
             'unexepected source_id %s' % payment_transaction_line.getSourceId())
         debit, credit = accounting_lines_layout[
                               payment_transaction_line.getSourceId()]
-        self.assertEquals(debit, payment_transaction_line.getSourceDebit())
-        self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+        self.assertEqual(debit, payment_transaction_line.getSourceDebit())
+        self.assertEqual(credit, payment_transaction_line.getSourceCredit())
         self.assertNotEquals(
                 len(payment_transaction_line.getDeliveryRelatedValueList(
                                 portal_type='Simulation Movement')), 0)
@@ -1432,7 +1432,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     invoice_transaction_line_list = invoice.contentValues(
         filter = {'portal_type': self.invoice_transaction_line_portal_type})
-    self.assertEquals(len(invoice_transaction_line_list), 4)
+    self.assertEqual(len(invoice_transaction_line_list), 4)
 
     accounting_lines_layout = {
       'income'            : (0, 100),
@@ -1444,8 +1444,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     for invoice_transaction_line in invoice_transaction_line_list :
       debit, credit = accounting_lines_layout[
                                     invoice_transaction_line.getSourceId()]
-      self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
-      self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
+      self.assertEqual(debit, invoice_transaction_line.getSourceDebit())
+      self.assertEqual(credit, invoice_transaction_line.getSourceCredit())
       self.assertNotEquals(
               len(invoice_transaction_line.getDeliveryRelatedValueList(
                               portal_type='Simulation Movement')), 0)
@@ -1469,7 +1469,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     payment_transaction_line_list = payment.contentValues(
         filter = {'portal_type': self.payment_transaction_line_portal_type})
-    self.assertEquals(len(payment_transaction_line_list), 2)
+    self.assertEqual(len(payment_transaction_line_list), 2)
 
     accounting_lines_layout = {
       'receivable'        : (0, 1315.60),
@@ -1483,8 +1483,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
             'unexepected source_id %s' % payment_transaction_line.getDestinationId())
         debit, credit = accounting_lines_layout[
                               payment_transaction_line.getDestinationId()]
-        self.assertEquals(debit, payment_transaction_line.getDestinationDebit())
-        self.assertEquals(credit, payment_transaction_line.getDestinationCredit())
+        self.assertEqual(debit, payment_transaction_line.getDestinationDebit())
+        self.assertEqual(credit, payment_transaction_line.getDestinationCredit())
         self.assertNotEquals(
                 len(payment_transaction_line.getDeliveryRelatedValueList(
                                 portal_type='Simulation Movement')), 0)
@@ -1494,8 +1494,8 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
             'unexepected source_id %s' % payment_transaction_line.getSourceId())
         debit, credit = accounting_lines_layout[
                               payment_transaction_line.getSourceId()]
-        self.assertEquals(debit, payment_transaction_line.getSourceDebit())
-        self.assertEquals(credit, payment_transaction_line.getSourceCredit())
+        self.assertEqual(debit, payment_transaction_line.getSourceDebit())
+        self.assertEqual(credit, payment_transaction_line.getSourceCredit())
         self.assertNotEquals(
                 len(payment_transaction_line.getDeliveryRelatedValueList(
                                 portal_type='Simulation Movement')), 0)
@@ -1529,7 +1529,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.tic()
 
     # nothing should have changed
-    self.assertEquals(accounting_transaction_count,
+    self.assertEqual(accounting_transaction_count,
             len(self.getAccountingModule().objectIds()))
 
     for transaction in self.getAccountingModule().objectValues() :
@@ -1537,7 +1537,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       for accounting_line in transaction.objectValues() :
         if accounting_line.getPortalType() != \
                           self.invoice_line_portal_type :
-          self.assertEquals(
+          self.assertEqual(
               transaction_dict[accounting_line.getId()],
               accounting_line.getTotalQuantity())
 
@@ -1549,19 +1549,19 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       portal_type = self.applied_rule_portal_type,
         )
 
-    self.assertEquals(
+    self.assertEqual(
         1,
         len(applied_rule_list)
     )
 
     applied_rule = applied_rule_list[0]
 
-    self.assertEquals(
+    self.assertEqual(
       'default_invoice_rule',
       applied_rule.getSpecialiseReference()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       # reduntant?
       invoice.getRelativeUrl(),
       applied_rule.getCausality()
@@ -1569,7 +1569,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     simulation_movement_list = applied_rule.objectValues()
 
-    self.assertEquals(
+    self.assertEqual(
         1,
         len(simulation_movement_list)
     )
@@ -1582,37 +1582,37 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     client = sequence.get('client')
     currency = sequence.get('currency')
 
-    self.assertEquals(
+    self.assertEqual(
       resource.getRelativeUrl(),
       simulation_movement.getResource()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       currency.getRelativeUrl(),
       simulation_movement.getPriceCurrency()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       vendor.getRelativeUrl(),
       simulation_movement.getSourceSection()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       client.getRelativeUrl(),
       simulation_movement.getDestinationSection()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       invoice_line.getRelativeUrl(),
       simulation_movement.getDelivery()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       10,
       simulation_movement.getQuantity()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       10,
       simulation_movement.getPrice()
     )

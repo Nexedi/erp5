@@ -51,5 +51,5 @@ class TestConfiguratorTool(TestLiveConfiguratorWorkflowMixin):
     checkPermission = self.portal.portal_membership.checkPermission
     configurator_tool = self.portal.portal_configurator
     self.logout()
-    self.assertEquals(None, checkPermission('View', configurator_tool))
+    self.assertEqual(None, checkPermission('View', configurator_tool))
     self.assertRaises(Unauthorized, configurator_tool)

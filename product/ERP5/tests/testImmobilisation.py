@@ -449,7 +449,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def stepTestItemValidationState(self, sequence=None, sequence_list=None, **kw):
     item = self.getItemModule()['item1']
-    self.assertEquals(item.getValidationState(), 'exploited')
+    self.assertEqual(item.getValidationState(), 'exploited')
 
 
   def stepAggregateItems(self, sequence=None, sequence_list=None, **kw):
@@ -571,13 +571,13 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.stepTestPackingListImmobilisationState(pl, "calculating")
 
   def stepTestPackingListImmobilisationState(self, pl, state, **kw):
-    self.assertEquals(pl.getImmobilisationState(), state)
+    self.assertEqual(pl.getImmobilisationState(), state)
 
   def stepTestPackingListSimulationState(self, pl, state, **kw):
-    self.assertEquals(pl.getSimulationState(), state)
+    self.assertEqual(pl.getSimulationState(), state)
 
   def stepTestPackingListValidationState(self, pl, state, **kw):
-    self.assertEquals(pl.getValidationState(), state)
+    self.assertEqual(pl.getValidationState(), state)
 
   def stepCreatePackingListsForContinuousAmortisationPeriodList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1002,7 +1002,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for item in self.getItemModule().contentValues():
       applied_rule_list = item.getCausalityRelatedValueList()
       for applied_rule in applied_rule_list:
-        self.assertEquals(len(applied_rule.contentValues()), 0)
+        self.assertEqual(len(applied_rule.contentValues()), 0)
 
   def stepTestLinearAmortisationImmobilisationPeriods(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1128,14 +1128,14 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for c_period in c_period_list:
       #LOG('c_period :', 0, c_period)
       if e_period_cursor >= len(e_period_list):
-        self.assertEquals(len(c_period_list), len(e_period_list))
+        self.assertEqual(len(c_period_list), len(e_period_list))
       e_period = e_period_list[e_period_cursor]
       #LOG('e_period :', 0, e_period)
       e_period_cursor += 1
       for key in e_period.keys():
         e_value = e_period[key]
         #LOG('testing c_period %s "%s" value' % (e_period_cursor-1, key), 0, '')
-        self.failUnless(c_period.has_key(key))
+        self.assertTrue(c_period.has_key(key))
         c_value = c_period[key]
         is_float = 0
         try:
@@ -1145,11 +1145,11 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         except:
           pass
         if is_float:
-          self.assertEquals(round(c_value,2),e_value)
+          self.assertEqual(round(c_value,2),e_value)
         else:
-          self.assertEquals(c_value,e_value)
+          self.assertEqual(c_value,e_value)
     if e_period_cursor != len(e_period_list):
-      self.assertEquals(len(c_period_list), len(e_period_list))
+      self.assertEqual(len(c_period_list), len(e_period_list))
 
 
   def stepTestLinearAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
@@ -1172,7 +1172,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       #LOG('c_price',0,c_price)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
   
   """
   09BIS
@@ -1196,7 +1196,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       #LOG('c_price',0,c_price)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
 
   def stepTestDegressiveAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1217,7 +1217,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
       
     
   def stepTestUncontinuousDegressiveAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
@@ -1239,7 +1239,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
       
     
   def stepTestActualUseAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
@@ -1262,7 +1262,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
       
     
   def stepTestNoAmortisationMethodPriceCalculation(self, sequence=None, sequence_list=None, **kw):
@@ -1284,7 +1284,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for date, e_price in price_list:
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
-      self.assertEquals(round(c_price,2), e_price)
+      self.assertEqual(round(c_price,2), e_price)
       
   
   def _createExpectedMovement(self, date, quantity, source=None, destination=None,
@@ -1358,7 +1358,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2006/01/01', -1666.67, 'depreciation_account', None, 'A', None))
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1402,7 +1402,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1487,7 +1487,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1519,7 +1519,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1564,7 +1564,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1607,7 +1607,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1656,7 +1656,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1709,7 +1709,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1763,7 +1763,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1817,7 +1817,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1854,7 +1854,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1897,7 +1897,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -1947,7 +1947,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2079,7 +2079,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2143,7 +2143,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       e_simulation_movement_list.remove(e_found_movement)
     if len(e_simulation_movement_list) > 0:
       #LOG('More expected movements than calculated ! Remaining expected ones are', 0, e_simulation_movement_list)
-      self.assertEquals(len(e_simulation_movement_list),0)
+      self.assertEqual(len(e_simulation_movement_list),0)
 
   def _buildExpectedTransaction(self, date, source_section, destination_section, causality_state, causality_list=[]):
     self.id_transaction+=1
@@ -2322,7 +2322,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2384,7 +2384,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2449,7 +2449,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2726,7 +2726,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2777,7 +2777,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2828,7 +2828,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2863,7 +2863,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
@@ -2915,14 +2915,14 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
-    self.assertEquals(len(applied_rule_list),1)
+    self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
     
     
   def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
-    self.assertEquals(len(c_transaction_list), len(e_transaction_list))
+    self.assertEqual(len(c_transaction_list), len(e_transaction_list))
     e_removed_list = []
     for c_transaction in c_transaction_list:
       #LOG('c_transaction %s :' % c_transaction, 0, 
@@ -2973,7 +2973,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         e_cursor += 1
       if e_found_transaction is None:
         #LOG('No expected transaction found for this calculated one !',0,'')
-        self.failUnless(e_found_transaction is not None)
+        self.assertTrue(e_found_transaction is not None)
       #e_transaction_list.remove(e_transaction)
       e_removed_list.append(e_transaction_list.pop(e_transaction_list.index(e_transaction)))
       e_line_list = e_transaction['line_list']
@@ -3024,10 +3024,10 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                     pprint.pformat(e_line_list)))
         e_line_list.remove(e_found_line)
       if len(e_line_list) > 0:
-        self.assertEquals(len(e_line_list),0)
+        self.assertEqual(len(e_line_list),0)
 
     if len(e_transaction_list) > 0:
-      self.assertEquals(len(e_transaction_list),0)
+      self.assertEqual(len(e_transaction_list),0)
 
 class TestImmobilisation(TestImmobilisationMixin):
 
@@ -3613,17 +3613,17 @@ class TestImmobilisation(TestImmobilisationMixin):
     self.tic()
     # Now we can check several Accounting methods
     account = self.getPortal().account_module.account3
-    self.assertEquals(10000.0,account.AccountModule_getTotalSourceDebit(brain=account))
-    self.assertEquals(10000.0,account.AccountModule_getTotalSourceCredit(brain=account))
+    self.assertEqual(10000.0,account.AccountModule_getTotalSourceDebit(brain=account))
+    self.assertEqual(10000.0,account.AccountModule_getTotalSourceCredit(brain=account))
     preference.edit(preferred_accounting_transaction_section_category=\
                         'group/group B')
     self.tic()
-    self.assertEquals('group/group B',
+    self.assertEqual('group/group B',
         preference_tool.getPreferredAccountingTransactionSectionCategory())
     # Make sure to not use the cache
     self.portal.REQUEST['ERP5Accounting_getParams'] = None
-    self.assertEquals(5000.0,account.AccountModule_getTotalSourceDebit(brain=account))
-    self.assertEquals(0.0,account.AccountModule_getTotalSourceCredit(brain=account))
+    self.assertEqual(5000.0,account.AccountModule_getTotalSourceDebit(brain=account))
+    self.assertEqual(0.0,account.AccountModule_getTotalSourceCredit(brain=account))
 
   def test_19_TestAccountingBuildingAndDivergence(self, quiet=0, run=run_all_test):
     if not run: return

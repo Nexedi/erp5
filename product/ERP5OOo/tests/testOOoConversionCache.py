@@ -99,12 +99,12 @@ class TestDocumentConversionCache(TestDocumentMixin):
                                            quality=40))
     if magic is not None:
       mime_detector = magic.Magic(mime=True)
-      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format)[1]),
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format)[1]),
                         'image/png')
-      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format,
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format,
                                                                          display='large')[1]),
                         'image/png')
-      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format,
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format,
                                                                          display='large',
                                                                          quality=40)[1]),
                         'image/png')
@@ -127,7 +127,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       document.convert(format=format)
       self.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEquals(DateTime().Date(), document.getConversionDate(format=format).Date())
+      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format).Date())
       self.assertTrue(document.getConversionMd5(format=format))
       self.assertTrue(document.getConversionSize(format=format))
     document.edit(title='Foo')
@@ -160,7 +160,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       document.convert(format=format)
       self.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEquals(DateTime().Date(), document.getConversionDate(format=format).Date())
+      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format).Date())
       self.assertTrue(document.getConversionMd5(format=format))
       self.assertTrue(document.getConversionSize(format=format))
     document.edit(title='Foo')
@@ -302,7 +302,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    self.assertEquals(document.getId(), document_id)
+    self.assertEqual(document.getId(), document_id)
     document.convert(format='txt')
     self.assertTrue(document.getConversion(format='txt'))
 

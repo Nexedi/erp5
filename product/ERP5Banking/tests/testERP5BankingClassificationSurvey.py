@@ -320,7 +320,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
       variation_text = cell.getBaobabDestinationVariationText()
       cash_status = [x for x in variation_text.split('\n') 
                      if x.startswith('cash_status')][0]
-      self.assertEquals(cash_status, 'cash_status/retired')
+      self.assertEqual(cash_status, 'cash_status/retired')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -363,7 +363,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
       variation_text = cell.getBaobabDestinationVariationText()
       cash_status = [x for x in variation_text.split('\n') 
                      if x.startswith('cash_status')][0]
-      self.assertEquals(cash_status, 'cash_status/cancelled')
+      self.assertEqual(cash_status, 'cash_status/cancelled')
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)

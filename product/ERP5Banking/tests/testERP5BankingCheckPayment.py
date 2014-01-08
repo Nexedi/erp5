@@ -497,27 +497,27 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     Make sure that the check is in delivered state
     """
     check = self.check_payment.getAggregateValue()
-    self.assertEquals(check, self.check_1)
-    self.assertEquals(check.getSimulationState(), 'delivered')
+    self.assertEqual(check, self.check_1)
+    self.assertEqual(check.getSimulationState(), 'delivered')
 
   def stepCheckUndeliverCheck(self, sequence=None, sequence_list=None, **kwd):
     """
     Make sure that the check is in delivered state
     """
     check = self.check_payment.getAggregateValue()
-    self.assertEquals(check, self.check_1)
+    self.assertEqual(check, self.check_1)
     self.workflow_tool.doActionFor(check, 'undeliver_action', 
         wf_id='check_workflow')
-    self.assertEquals(check.getSimulationState(), 'confirmed')
+    self.assertEqual(check.getSimulationState(), 'confirmed')
 
   def stepCheckCheckAfterReject(self, sequence=None, sequence_list=None, **kwd):
     """
     Make sure that the check is in delivered state
     """
     check = self.check_payment.getAggregateValue()
-    self.assertEquals(check, self.check_2)
-    self.assertEquals(check.getSimulationState(), 'delivered')
-    self.assertEquals(self.check_1.getSimulationState(), 'confirmed')
+    self.assertEqual(check, self.check_2)
+    self.assertEqual(check.getSimulationState(), 'delivered')
+    self.assertEqual(self.check_1.getSimulationState(), 'confirmed')
 
 class TestERP5BankingCheckPayment(TestERP5BankingCheckPaymentMixin):
 

@@ -83,27 +83,27 @@ class TestPreferences(PropertySheetTestCase):
     self.tic()
 
     # check preference levels are Ok
-    self.assertEquals(person1.getPriority(), Priority.USER)
-    self.assertEquals(person2.getPriority(), Priority.USER)
-    self.assertEquals(group.getPriority(),   Priority.GROUP)
-    self.assertEquals(site.getPriority(),    Priority.SITE)
+    self.assertEqual(person1.getPriority(), Priority.USER)
+    self.assertEqual(person2.getPriority(), Priority.USER)
+    self.assertEqual(group.getPriority(),   Priority.GROUP)
+    self.assertEqual(site.getPriority(),    Priority.SITE)
     # check initial states
-    self.assertEquals(person1.getPreferenceState(), 'disabled')
-    self.assertEquals(person2.getPreferenceState(), 'disabled')
-    self.assertEquals(group.getPreferenceState(),   'disabled')
-    self.assertEquals(site.getPreferenceState(),    'disabled')
+    self.assertEqual(person1.getPreferenceState(), 'disabled')
+    self.assertEqual(person2.getPreferenceState(), 'disabled')
+    self.assertEqual(group.getPreferenceState(),   'disabled')
+    self.assertEqual(site.getPreferenceState(),    'disabled')
 
   def test_PreferenceToolTitle(self):
     """Tests that the title of the preference tool is correct.
     """
-    self.assertEquals('Preferences', self.getPreferenceTool().Title())
+    self.assertEqual('Preferences', self.getPreferenceTool().Title())
 
   def test_AllowedContentTypes(self):
     """Tests Preference can be added in Preference Tool.
     """
-    self.failUnless('Preference' in [x.getId() for x in
+    self.assertTrue('Preference' in [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
-    self.failUnless('System Preference' in [x.getId() for x in
+    self.assertTrue('System Preference' in [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
 
   def test_EnablePreferences(self):
@@ -121,7 +121,7 @@ class TestPreferences(PropertySheetTestCase):
     person1.portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     self.commit()
-    self.assertEquals(person1.getPreferenceState(), 'enabled')
+    self.assertEqual(person1.getPreferenceState(), 'enabled')
 
     self.assertEqual( person1, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
@@ -129,8 +129,8 @@ class TestPreferences(PropertySheetTestCase):
 
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(person1.getPreferenceState(), 'enabled')
-    self.assertEquals(site.getPreferenceState(),    'global')
+    self.assertEqual(person1.getPreferenceState(), 'enabled')
+    self.assertEqual(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
@@ -138,9 +138,9 @@ class TestPreferences(PropertySheetTestCase):
 
     portal_workflow.doActionFor(
        group, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(person1.getPreferenceState(), 'enabled')
-    self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'global')
+    self.assertEqual(person1.getPreferenceState(), 'enabled')
+    self.assertEqual(group.getPreferenceState(),   'enabled')
+    self.assertEqual(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
@@ -152,11 +152,11 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(person2, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
-    self.assertEquals(person2.getPreferenceState(), 'enabled')
+    self.assertEqual(person2.getPreferenceState(), 'enabled')
     # enabling a preference disable all other of the same level
-    self.assertEquals(person1.getPreferenceState(), 'disabled')
-    self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'global')
+    self.assertEqual(person1.getPreferenceState(), 'disabled')
+    self.assertEqual(group.getPreferenceState(),   'enabled')
+    self.assertEqual(site.getPreferenceState(),    'global')
 
   def test_GetPreference(self):
     """ checks that getPreference returns the good preferred value"""
@@ -172,26 +172,26 @@ class TestPreferences(PropertySheetTestCase):
        group, 'enable_action', wf_id='preference_workflow')
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(person1.getPreferenceState(), 'enabled')
-    self.assertEquals(group.getPreferenceState(),   'enabled')
-    self.assertEquals(site.getPreferenceState(),    'global')
+    self.assertEqual(person1.getPreferenceState(), 'enabled')
+    self.assertEqual(group.getPreferenceState(),   'enabled')
+    self.assertEqual(site.getPreferenceState(),    'global')
     person1.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(
+    self.assertEqual(
       person1.getPreferredAccountingTransactionSimulationState(), None)
     group.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(
+    self.assertEqual(
       group.getPreferredAccountingTransactionSimulationState(), None)
     site.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(
+    self.assertEqual(
       site.getPreferredAccountingTransactionSimulationState(), None)
 
-    self.assertEquals(len(pref_tool.getPreference(
+    self.assertEqual(len(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')), 0)
 
     site.edit(
       preferred_accounting_transaction_simulation_state_list=
       ['stopped', 'delivered'])
-    self.assertEquals(list(pref_tool.getPreference(
+    self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(site.getPreferredAccountingTransactionSimulationStateList()))
 
@@ -200,29 +200,29 @@ class TestPreferences(PropertySheetTestCase):
     for prop in ['preferred_accounting_transaction_simulation_state',
             'preferred_accounting_transaction_simulation_state_list']:
 
-      self.assertEquals(pref_tool.getPreference(prop),
+      self.assertEqual(pref_tool.getPreference(prop),
                         site.getProperty(prop))
 
     group.edit(
       preferred_accounting_transaction_simulation_state_list=['draft'])
-    self.assertEquals(list(pref_tool.getPreference(
+    self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
     person1.edit(preferred_accounting_transaction_simulation_state_list=
               ['cancelled'])
-    self.assertEquals(list(pref_tool.getPreference(
+    self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
     self.commit()
-    self.assertEquals(list(pref_tool.getPreference(
+    self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
-    self.assertEquals('default', pref_tool.getPreference(
+    self.assertEqual('default', pref_tool.getPreference(
                                         'this_does_not_exists', 'default'))
 
 
@@ -234,20 +234,20 @@ class TestPreferences(PropertySheetTestCase):
     person1 = self.getPreferenceTool()['person1']
     group = self.getPreferenceTool()['group']
     site = self.getPreferenceTool()['site']
-    self.assertEquals(person1.getPreferenceState(), 'disabled')
+    self.assertEqual(person1.getPreferenceState(), 'disabled')
     portal_workflow.doActionFor(
        group, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(group.getPreferenceState(),    'enabled')
+    self.assertEqual(group.getPreferenceState(),    'enabled')
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(site.getPreferenceState(),     'global')
+    self.assertEqual(site.getPreferenceState(),     'global')
     group.setPreferredAccountingTransactionSimulationStateList(['cancelled'])
 
     self.assertNotEquals( None,
       pref_tool.getPreferredAccountingTransactionSimulationStateList())
     self.assertNotEquals( [],
       list(pref_tool.getPreferredAccountingTransactionSimulationStateList()))
-    self.assertEquals(
+    self.assertEqual(
       list(pref_tool.getPreferredAccountingTransactionSimulationStateList()),
       list(pref_tool.getPreference(
          'preferred_accounting_transaction_simulation_state_list')))
@@ -270,15 +270,15 @@ class TestPreferences(PropertySheetTestCase):
 
     portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(person1.getPreferenceState(),    'enabled')
+    self.assertEqual(person1.getPreferenceState(),    'enabled')
     person1.setPreferredAccountingTransactionAtDate(DateTime(2005, 01, 01))
     pref_tool.setPreference(
       'preferred_accounting_transaction_at_date', DateTime(2004, 12, 31))
     self.tic()
-    self.assertEquals(
+    self.assertEqual(
       pref_tool.getPreferredAccountingTransactionAtDate(),
       DateTime(2004, 12, 31))
-    self.assertEquals(
+    self.assertEqual(
       person1.getPreferredAccountingTransactionAtDate(),
       DateTime(2004, 12, 31))
 
@@ -303,8 +303,8 @@ class TestPreferences(PropertySheetTestCase):
     # enable a pref
     portal_workflow.doActionFor(
        user_a_1, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
-    self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
+    self.assertEqual(user_a_1.getPreferenceState(), 'enabled')
+    self.assertEqual(user_a_2.getPreferenceState(), 'disabled')
 
     self.login('user_b')
 
@@ -317,11 +317,11 @@ class TestPreferences(PropertySheetTestCase):
     # enable this preference
     portal_workflow.doActionFor(
        user_b_1, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
+    self.assertEqual(user_b_1.getPreferenceState(), 'enabled')
 
     # check user_a's preference is still enabled
-    self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
-    self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
+    self.assertEqual(user_a_1.getPreferenceState(), 'enabled')
+    self.assertEqual(user_a_2.getPreferenceState(), 'disabled')
 
     # Checks that a manager preference doesn't disable any other user
     # preferences
@@ -339,13 +339,13 @@ class TestPreferences(PropertySheetTestCase):
     # enable this preference
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
+    self.assertEqual(manager_pref.getPreferenceState(), 'enabled')
     self.tic()
 
     # check users preferences are still enabled
-    self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
-    self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
-    self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
+    self.assertEqual(user_a_1.getPreferenceState(), 'enabled')
+    self.assertEqual(user_b_1.getPreferenceState(), 'enabled')
+    self.assertEqual(user_a_2.getPreferenceState(), 'disabled')
 
     # A user with Manager and Owner can view all preferences, because this user
     # is Manager and Owner, but for Manager, we have an exception, only
@@ -354,7 +354,7 @@ class TestPreferences(PropertySheetTestCase):
     self.login('manager_and_owner')
     self.assert_('Owner' in
       getSecurityManager().getUser().getRolesInContext(manager_pref))
-    self.assertEquals(None,
+    self.assertEqual(None,
         portal_preferences.getPreferredAccountingTransactionAtDate())
 
   def test_proxy_roles(self):
@@ -399,7 +399,7 @@ class TestPreferences(PropertySheetTestCase):
     script.manage_proxy(['Manager'])
     
     self.login('user_a')
-    self.assertEquals(['user_a'],
+    self.assertEqual(['user_a'],
         portal_preferences.PreferenceTool_testPreferencesProxyRole())
 
   def test_GlobalPreference(self):
@@ -409,10 +409,10 @@ class TestPreferences(PropertySheetTestCase):
                           ['this_is_visible_by_anonymous'])
     self.getPortal().portal_workflow.doActionFor(
                   ptool.site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals('global', ptool.site.getPreferenceState())
+    self.assertEqual('global', ptool.site.getPreferenceState())
     self.tic()
     noSecurityManager()
-    self.assertEquals(['this_is_visible_by_anonymous'],
+    self.assertEqual(['this_is_visible_by_anonymous'],
         ptool.getPreferredAccountingTransactionSimulationStateList())
 
   def test_GetDefault(self):
@@ -421,33 +421,33 @@ class TestPreferences(PropertySheetTestCase):
     site = self.getPreferenceTool()['site']
     portal_workflow.doActionFor(
        site, 'enable_action', wf_id='preference_workflow')
-    self.assertEquals(site.getPreferenceState(),    'global')
+    self.assertEqual(site.getPreferenceState(),    'global')
 
     method = pref_tool.getPreferredAccountingTransactionSimulationState
     state = method()
-    self.assertEquals(state, [])
+    self.assertEqual(state, [])
     state = method('default')
-    self.assertEquals(state, 'default')
+    self.assertEqual(state, 'default')
 
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state', *args)
     state = method()
-    self.assertEquals(state, [])
+    self.assertEqual(state, [])
     state = method('default')
-    self.assertEquals(state, 'default')
+    self.assertEqual(state, 'default')
 
     method = pref_tool.getPreferredAccountingTransactionSimulationStateList
     state_list = method()
-    self.assertEquals(state_list, [])
+    self.assertEqual(state_list, [])
     state_list = method(('default',))
     # Initially, tuples were always casted to lists. This is not the case
     # anymore when preference_tool.getXxxList returns the default value.
-    self.assertEquals(state_list, ('default',))
+    self.assertEqual(state_list, ('default',))
 
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state_list', *args)
     state_list = method()
-    self.assertEquals(state_list, [])
+    self.assertEqual(state_list, [])
     state_list = method(('default',))
-    self.assertEquals(state_list, ('default',))
+    self.assertEqual(state_list, ('default',))
 
   def test_Permissions(self):
     # create a new site preference for later
@@ -456,7 +456,7 @@ class TestPreferences(PropertySheetTestCase):
                           portal_type='Preference',
                           priority=Priority.SITE)
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
-    self.assertEquals(site_pref.getPreferenceState(), 'global')
+    self.assertEqual(site_pref.getPreferenceState(), 'global')
 
     # Members can add new preferences
     uf = self.getPortal().acl_users
@@ -471,7 +471,7 @@ class TestPreferences(PropertySheetTestCase):
     # preference.
     cp_data = preference_tool.manage_copyObjects(ids=[site_pref.getId()])
     copy_id = preference_tool.manage_pasteObjects(cp_data)[0]['new_id']
-    self.assertEquals(Priority.USER, preference_tool[copy_id].getPriority())
+    self.assertEqual(Priority.USER, preference_tool[copy_id].getPriority())
 
     # Globally enabled preferences can be viewed by Members
     self.assertTrue(member.has_permission('View', site_pref))
@@ -611,7 +611,7 @@ class TestPreferences(PropertySheetTestCase):
 
     preference_tool = self.portal.portal_preferences
     self.assertTrue(guarded_hasattr(preference_tool, 'getPreferredToto'))
-    self.assertEquals("A TEST", preference_tool.getPreferredToto())
+    self.assertEqual("A TEST", preference_tool.getPreferredToto())
 
     preference_tool.manage_permission(write_permission, [], 0)
     self.assertTrue(guarded_hasattr(preference_tool, 'getPreferredToto'))

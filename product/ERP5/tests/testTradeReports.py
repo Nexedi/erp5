@@ -203,7 +203,7 @@ class TestTradeReports(ERP5ReportTestCase):
       inventory.deliver()
     
     # sanity check
-    self.assertEquals(simulation_state, inventory.getSimulationState())
+    self.assertEqual(simulation_state, inventory.getSimulationState())
     return inventory
 
   @reindex
@@ -218,10 +218,10 @@ class TestTradeReports(ERP5ReportTestCase):
                                               quantity=values["quantity"],
                                               price=values["price"])
       
-    self.assertEquals(sale_order.getSimulationState(), 'draft')
+    self.assertEqual(sale_order.getSimulationState(), 'draft')
     if cancel:
       sale_order.cancel()
-      self.assertEquals(sale_order.getSimulationState(), 'cancelled')
+      self.assertEqual(sale_order.getSimulationState(), 'cancelled')
       
     return sale_order
       
@@ -293,11 +293,11 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(0, len(data_line_list))
+    self.assertEqual(0, len(data_line_list))
 
     #
     # Year 2005 + 2006, all documents
@@ -307,17 +307,17 @@ class TestTradeReports(ERP5ReportTestCase):
 
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     stat_line_list = [l for l in line_list if l.isStatLine()]
-    self.assertEquals(6, len(data_line_list))
-    self.assertEquals(1, len(stat_line_list))
+    self.assertEqual(6, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
 
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list, ['client',
+    self.assertEqual(line.column_id_list, ['client',
                     'product',
                     'Amount 2005',
                     'Quantity 2005',
@@ -429,13 +429,13 @@ class TestTradeReports(ERP5ReportTestCase):
     request['section_category'] = 'group/g2'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     stat_line_list = [l for l in line_list if l.isStatLine()]
-    self.assertEquals(3, len(data_line_list))
-    self.assertEquals(1, len(stat_line_list))
+    self.assertEqual(3, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
     # First organisation    
     d = {'Amount 2006': 75.0,
                  'Amount 2007': 9.0,
@@ -494,10 +494,10 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                    **{'Amount 2006-05': 11*3 + 7*6,
@@ -516,7 +516,7 @@ class TestTradeReports(ERP5ReportTestCase):
                       'client': 'Organisation_2',
                       'total amount': 5*3 + 6})
 
-    self.failUnless(line_list[-1].isStatLine())
+    self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
                    **{'Amount 2006-05': 11*3 + 7*6,
                       'Amount 2006-06': None,
@@ -536,13 +536,13 @@ class TestTradeReports(ERP5ReportTestCase):
     request['section_category'] = 'group/g2'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     stat_line_list = [l for l in line_list if l.isStatLine()]
-    self.assertEquals(3, len(data_line_list))
-    self.assertEquals(1, len(stat_line_list))
+    self.assertEqual(3, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
     # First organisation    
     d = {'Amount 2006': 75.0,
                  'Amount 2007': 9.0,
@@ -599,13 +599,13 @@ class TestTradeReports(ERP5ReportTestCase):
     request['section_category'] = 'group/g3'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     stat_line_list = [l for l in line_list if l.isStatLine()]
-    self.assertEquals(0, len(data_line_list))
-    self.assertEquals(1, len(stat_line_list))
+    self.assertEqual(0, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
     # stat line
     d = {'Amount 2006': None,
                  'Amount 2007': None,
@@ -708,7 +708,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=request)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(0, len(data_line_list))
+    self.assertEqual(0, len(data_line_list))
     ################################
     # Middle date
     ################################
@@ -720,7 +720,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
@@ -748,7 +748,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
     
     self.checkLineProperties(
                    data_line_list[0],
@@ -869,7 +869,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     self.checkLineProperties(
                    data_line_list[0],
@@ -900,7 +900,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_A',
@@ -937,7 +937,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_B',
@@ -977,7 +977,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_A',
@@ -1000,7 +1000,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(1, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_B',
@@ -1023,7 +1023,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='variated product',
@@ -1053,7 +1053,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
   
-    self.assertEquals(0, len(data_line_list))
+    self.assertEqual(0, len(data_line_list))
 
     
   def test_Folder_generateWorkflowReport(self):
@@ -1098,13 +1098,13 @@ class TestTradeReports(ERP5ReportTestCase):
     # call the report first, it will set selection
     report_html = \
         self.portal.sale_order_module.Folder_generateWorkflowReport()
-    self.failIf('Site Error' in report_html)
+    self.assertFalse('Site Error' in report_html)
 
     line_list = self.portal.sale_order_module.Folder_viewWorkflowReport.listbox.\
         get_value('default',
                   render_format='list', REQUEST=self.portal.REQUEST)
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(8, len(data_line_list))
+    self.assertEqual(8, len(data_line_list))
     order_workflow_name = 'Sale Order - Order Workflow'
     causality_workflow_name = 'Sale Order - Causality Workflow'
     self.checkLineProperties(data_line_list[0],

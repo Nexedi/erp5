@@ -169,7 +169,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
 
     # created preference is reused to store template
-    self.assertEquals('enabled', user_preference.getPreferenceState())
+    self.assertEqual('enabled', user_preference.getPreferenceState())
     self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreferenceWithExistingNonAuthorizedPreference(self):
@@ -200,8 +200,8 @@ class TestTemplate(ERP5TypeTestCase):
     preference_id = [x for x in new_preference_id_list if x not in
                             preference_id_list][0]
     preference = self.portal.portal_preferences._getOb(preference_id)
-    self.assertEquals('Preference', preference.getPortalType())
-    self.assertEquals('enabled', preference.getPreferenceState())
+    self.assertEqual('Preference', preference.getPortalType())
+    self.assertEqual('enabled', preference.getPreferenceState())
 
     self.assertEqual(len(preference.objectIds()), 1)
 
@@ -261,7 +261,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
 
     # created preference is reused to store template
-    self.assertEquals('enabled', user_preference.getPreferenceState())
+    self.assertEqual('enabled', user_preference.getPreferenceState())
     self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreference(self):
@@ -269,7 +269,7 @@ class TestTemplate(ERP5TypeTestCase):
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
-    self.assertEquals([], active_user_preference_list)
+    self.assertEqual([], active_user_preference_list)
 
     preference_id_list = list(self.portal.portal_preferences.objectIds())
     document = self.portal.foo_module.newContent(portal_type='Foo')
@@ -284,10 +284,10 @@ class TestTemplate(ERP5TypeTestCase):
     preference_id = [x for x in new_preference_id_list if x not in
                             preference_id_list][0]
     preference = self.portal.portal_preferences._getOb(preference_id)
-    self.assertEquals('Preference', preference.getPortalType())
-    self.assertEquals('Document Template Container', preference.getTitle())
-    self.assertEquals(Priority.USER, preference.getPriority())
-    self.assertEquals('enabled', preference.getPreferenceState())
+    self.assertEqual('Preference', preference.getPortalType())
+    self.assertEqual('Document Template Container', preference.getTitle())
+    self.assertEqual(Priority.USER, preference.getPriority())
+    self.assertEqual('enabled', preference.getPreferenceState())
 
     self.assertEqual(len(preference.objectIds()), 1)
 
@@ -308,7 +308,7 @@ class TestTemplate(ERP5TypeTestCase):
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
-    self.assertEquals([], active_user_preference_list)
+    self.assertEqual([], active_user_preference_list)
 
     preference_id_list = list(self.portal.portal_preferences.objectIds())
 
@@ -332,8 +332,8 @@ class TestTemplate(ERP5TypeTestCase):
                             preference_id_list][0]
     preference = self.portal.portal_preferences._getOb(preference_id)
 
-    self.assertEquals('Preference', preference.getPortalType())
-    self.assertEquals('enabled', preference.getPreferenceState())
+    self.assertEqual('Preference', preference.getPortalType())
+    self.assertEqual('enabled', preference.getPreferenceState())
     self.assertEqual(len(preference.objectIds()), 2)
 
   def _testTemplateNotIndexable(self, document, additional_role_list=[]):
@@ -362,9 +362,9 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertFalse(template.isIndexable)
 
     # Because they are not indexable, they cannot be found by catalog
-    self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
+    self.assertEqual(0, len(self.portal.portal_catalog(uid=template.getUid())))
     template_line = template.objectValues()[0]
-    self.assertEquals(0,
+    self.assertEqual(0,
         len(self.portal.portal_catalog(uid=template_line.getUid())))
 
     # change the title, because creating another template with same title will

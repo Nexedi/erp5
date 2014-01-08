@@ -88,37 +88,37 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.tic()
 
     result1 = portal.portal_catalog(content_translation_title='Yusuke')
-    self.assertEquals(len(result1), 1)
+    self.assertEqual(len(result1), 1)
     result_obj1 = result1[0].getObject()
 
     result2 = portal.portal_catalog(content_translation_title='友介')
-    self.assertEquals(len(result2), 1)
+    self.assertEqual(len(result2), 1)
     result_obj2 = result2[0].getObject()
 
-    self.assertEquals(result_obj1, result_obj2)
+    self.assertEqual(result_obj1, result_obj2)
 
     # re-catalog
     person3.setNobReadTranslatedFirstName('ゆうすけ')
     self.tic()
 
     result3 = portal.portal_catalog(content_translation_title='友介')
-    self.assertEquals(len(result3), 0)
+    self.assertEqual(len(result3), 0)
 
     # un-catalog
     portal.person_module.manage_delObjects(person3.getId())
     self.tic()
 
     result4 = portal.portal_catalog(content_translation_title='村岡')
-    self.assertEquals(len(result4), 0)
+    self.assertEqual(len(result4), 0)
 
     # Low level columns test. This behaviour is not guaranteed. I'm not sure
     # content_translation must be a search table - jerome
     result5 = portal.portal_catalog(property_name='title')
-    self.assertEquals(len(result5), 2)
+    self.assertEqual(len(result5), 2)
     result6 = portal.portal_catalog(content_language='nob-read')
-    self.assertEquals(len(result6), 2)
+    self.assertEqual(len(result6), 2)
     result7 = portal.portal_catalog(translated_text='XXX YYY')
-    self.assertEquals(len(result7), 1)
+    self.assertEqual(len(result7), 1)
 
   def testCatalogSearchTranslatedTitleScriptableKey(self):
     # Test 'translated_title' scriptable key.
@@ -136,10 +136,10 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.tic()
 
     # We can search either by the translated title
-    self.assertEquals(person,
+    self.assertEqual(person,
       portal.portal_catalog.getResultValue(translated_title='友介'))
     # Or the original title
-    self.assertEquals(person,
+    self.assertEqual(person,
       portal.portal_catalog.getResultValue(translated_title='Yusuke'))
 
     # documents for which translation is not set can also be found with
@@ -148,7 +148,7 @@ class TestContentTranslation(ERP5TypeTestCase):
                                              first_name='Jérome',
                                              last_name='Perrin')
     self.tic()
-    self.assertEquals(not_translated_person,
+    self.assertEqual(not_translated_person,
       portal.portal_catalog.getResultValue(translated_title='Jérome'))
 
 
@@ -217,20 +217,20 @@ class TestContentTranslation(ERP5TypeTestCase):
                      'タハラ ユウセイ')
 
     # check with acquisition
-    self.assertEquals(person.getAddress(), None)
+    self.assertEqual(person.getAddress(), None)
     
     person.setDefaultAddressStreetAddress('Taito-ku Tokyo')
-    self.assertEquals(person.getDefaultAddressStreetAddress(), 'Taito-ku Tokyo')
+    self.assertEqual(person.getDefaultAddressStreetAddress(), 'Taito-ku Tokyo')
 
     person.setDefaultAddressJaKanaTranslatedStreetAddress('東京都 台東区')
-    self.assertEquals(person.getDefaultAddressJaKanaTranslatedStreetAddress(), '東京都 台東区')
-    self.assertEquals(person.getDefaultAddressTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
+    self.assertEqual(person.getDefaultAddressJaKanaTranslatedStreetAddress(), '東京都 台東区')
+    self.assertEqual(person.getDefaultAddressTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
 
     # check acquired target
     address = person.getDefaultAddress()
-    self.assertEquals(address.getStreetAddress(), 'Taito-ku Tokyo')
-    self.assertEquals(address.getJaKanaTranslatedStreetAddress(), '東京都 台東区')
-    self.assertEquals(address.getTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
+    self.assertEqual(address.getStreetAddress(), 'Taito-ku Tokyo')
+    self.assertEqual(address.getJaKanaTranslatedStreetAddress(), '東京都 台東区')
+    self.assertEqual(address.getTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
 
 
 def test_suite():

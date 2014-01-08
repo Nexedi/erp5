@@ -136,29 +136,29 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'_setTitle')
     # Needed so that the message are removed from the queue
     self.commit()
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
     organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'_setTitle')
     # Needed so that the message are removed from the queue
     self.commit()
-    self.assertEquals(self.title2,organisation.getTitle())
+    self.assertEqual(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
   def DeferredSetTitleActivity(self, activity):
     """
@@ -168,15 +168,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     organisation = portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     self.commit()
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     portal.portal_activities.tic()
-    self.assertEquals(self.title2,organisation.getTitle())
+    self.assertEqual(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
   def CallOnceWithActivity(self, activity):
     """
@@ -196,27 +196,27 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Organisation.getFoobar = getFoobar
     organisation.foobar = 0
     organisation._setTitle(self.title1)
-    self.assertEquals(0,organisation.getFoobar())
+    self.assertEqual(0,organisation.getFoobar())
     organisation.activate(activity=activity).setFoobar()
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.tic()
-    self.assertEquals(1,organisation.getFoobar())
+    self.assertEqual(1,organisation.getFoobar())
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
     organisation.activate(activity=activity).setFoobar()
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setFoobar')
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(2,organisation.getFoobar())
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(2,organisation.getFoobar())
 
   def TryFlushActivity(self, activity):
     """
@@ -227,18 +227,18 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation._setTitle(self.title1)
     organisation.activate(activity=activity)._setTitle(self.title2)
     organisation.flushActivity(invoke=1)
-    self.assertEquals(organisation.getTitle(),self.title2)
+    self.assertEqual(organisation.getTitle(),self.title2)
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title2)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title2)
     # Try again with different commit order
     organisation._setTitle(self.title1)
     organisation.activate(activity=activity)._setTitle(self.title2)
     self.commit()
     organisation.flushActivity(invoke=1)
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title2)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title2)
     self.commit()
 
   def TryActivateInsideFlush(self, activity):
@@ -257,8 +257,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.tic()
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title2)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title2)
 
   def TryTwoMethods(self, activity):
     """
@@ -281,9 +281,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.tic()
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title1)
-    self.assertEquals(organisation.getDescription(),self.title1)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title1)
+    self.assertEqual(organisation.getDescription(),self.title1)
 
   def TryTwoMethodsAndFlushThem(self, activity):
     """
@@ -307,9 +307,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.tic()
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title1)
-    self.assertEquals(organisation.getDescription(),self.title1)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title1)
+    self.assertEqual(organisation.getDescription(),self.title1)
 
   def TryActivateFlushActivateTic(self, activity,second=None,commit_sub=0):
     """
@@ -337,9 +337,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.tic()
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title1)
-    self.assertEquals(organisation.getDescription(),self.title1)
+    self.assertEqual(len(message_list),0)
+    self.assertEqual(organisation.getTitle(),self.title1)
+    self.assertEqual(organisation.getDescription(),self.title1)
 
   def TryMessageWithErrorOnActivity(self, activity):
     """
@@ -355,17 +355,17 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     message_list = portal.portal_activities.getMessageList()
     LOG('Before MessageWithErrorOnActivityFails, message_list',0,[x.__dict__ for x in message_list])
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.tic()
     # XXX HERE WE SHOULD USE TIME SHIFT IN ORDER TO SIMULATE MULTIPLE TICS
     # Test if there is still the message after it crashed
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'crashThisActivity')
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
   def DeferredSetTitleWithRenamedObject(self, activity):
     """
@@ -375,11 +375,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     self.commit()
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     self.assertRaises(ActivityPendingError,organisation.edit,id=self.company_id2)
     portal.portal_activities.tic()
 
@@ -391,18 +391,18 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation =  portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
     active_process = portal.portal_activities.newActiveProcess()
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     organisation.activate(activity=activity,active_process=active_process).getTitle()
     # Needed so that the message are commited into the queue
     self.commit()
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
-    self.assertEquals(self.title1,organisation.getTitle())
+    self.assertEqual(self.title1,organisation.getTitle())
     result = active_process.getResultList()[0]
-    self.assertEquals(result.method_id , 'getTitle')
-    self.assertEquals(result.result , self.title1)
+    self.assertEqual(result.method_id , 'getTitle')
+    self.assertEqual(result.result , self.title1)
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
   def TryMethodAfterMethod(self, activity):
     """
@@ -415,7 +415,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = portal.organisation._getOb(self.company_id)
 
     o.setTitle('a')
-    self.assertEquals(o.getTitle(), 'a')
+    self.assertEqual(o.getTitle(), 'a')
     self.tic()
 
     def toto(self, value):
@@ -429,7 +429,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o.activate(after_method_id = 'titi', activity = activity).toto('b')
     o.activate(activity = activity).titi('c')
     self.tic()
-    self.assertEquals(o.getTitle(), 'acb')
+    self.assertEqual(o.getTitle(), 'acb')
 
   def TryAfterTag(self, activity):
     """
@@ -442,13 +442,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = portal.organisation._getOb(self.company_id)
 
     o.setTitle('?')
-    self.assertEquals(o.getTitle(), '?')
+    self.assertEqual(o.getTitle(), '?')
     self.tic()
 
     o.activate(after_tag = 'toto', activity = activity).setTitle('b')
     o.activate(tag = 'toto', activity = activity).setTitle('a')
     self.tic()
-    self.assertEquals(o.getTitle(), 'b')
+    self.assertEqual(o.getTitle(), 'b')
 
     o.setDefaultActivateParameterDict({'tag': 'toto'})
     def titi(self):
@@ -457,7 +457,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o.activate(after_tag_and_method_id=('toto', 'setTitle'), activity = activity).titi()
     o.activate(activity = activity).setTitle('c')
     self.tic()
-    self.assertEquals(o.getCorporateName(), 'cd')
+    self.assertEqual(o.getCorporateName(), 'cd')
 
   def TryFlushActivityWithAfterTag(self, activity):
     """
@@ -471,8 +471,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     o.setTitle('?')
     o.setDescription('?')
-    self.assertEquals(o.getTitle(), '?')
-    self.assertEquals(o.getDescription(), '?')
+    self.assertEqual(o.getTitle(), '?')
+    self.assertEqual(o.getDescription(), '?')
     self.tic()
 
     o.activate(after_tag = 'toto', activity = activity).setDescription('b')
@@ -482,12 +482,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertRaises(ActivityFlushError,tool.manageInvoke,o.getPath(),'setDescription')
     tool.manageInvoke(o.getPath(),'setTitle')
     self.commit()
-    self.assertEquals(o.getTitle(), 'a')
-    self.assertEquals(o.getDescription(), '?')
+    self.assertEqual(o.getTitle(), 'a')
+    self.assertEqual(o.getDescription(), '?')
     self.tic()
-    self.assertEquals(len(tool.getMessageList()),0)
-    self.assertEquals(o.getTitle(), 'a')
-    self.assertEquals(o.getDescription(), 'b')
+    self.assertEqual(len(tool.getMessageList()),0)
+    self.assertEqual(o.getTitle(), 'a')
+    self.assertEqual(o.getDescription(), 'b')
 
   def CheckScheduling(self, activity):
     """
@@ -500,7 +500,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = portal.organisation._getOb(self.company_id)
 
     o.setTitle('?')
-    self.assertEquals(o.getTitle(), '?')
+    self.assertEqual(o.getTitle(), '?')
     self.tic()
 
     def toto(self, s):
@@ -513,7 +513,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     o.activate(tag = 'titi', after_tag = 'toto', activity = activity).setTitle('c')
     self.tic()
-    self.assertEquals(o.getTitle(), 'cb')
+    self.assertEqual(o.getTitle(), 'cb')
 
   def CheckSchedulingAfterTagList(self, activity):
     """
@@ -539,7 +539,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     o.activate(after_tag=('A', 'B'), activity=activity).setTitle('last')
     self.tic()
-    self.assertEquals(o.getTitle(), 'last')
+    self.assertEqual(o.getTitle(), 'last')
 
   def CheckClearActivities(self, activity, activity_count=1):
     """
@@ -553,10 +553,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     def check(o):
       message_list = portal.portal_activities.getMessageList()
-      self.assertEquals(len(message_list), activity_count)
+      self.assertEqual(len(message_list), activity_count)
       m = message_list[0]
-      self.assertEquals(m.object_path, o.getPhysicalPath())
-      self.assertEquals(m.method_id, '_setTitle')
+      self.assertEqual(m.object_path, o.getPhysicalPath())
+      self.assertEqual(m.method_id, '_setTitle')
 
     o = portal.organisation._getOb(self.company_id)
     for i in range(activity_count):
@@ -570,7 +570,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     self.tic()
 
-    self.assertEquals(o.getTitle(), 'foo')
+    self.assertEqual(o.getTitle(), 'foo')
 
   def CheckCountMessageWithTag(self, activity):
     """
@@ -587,11 +587,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     o.activate(tag = 'toto', activity = activity).setTitle('a')
     self.commit()
-    self.assertEquals(o.getTitle(), '?')
-    self.assertEquals(portal_activities.countMessageWithTag('toto'), 1)
+    self.assertEqual(o.getTitle(), '?')
+    self.assertEqual(portal_activities.countMessageWithTag('toto'), 1)
     self.tic()
-    self.assertEquals(o.getTitle(), 'a')
-    self.assertEquals(portal_activities.countMessageWithTag('toto'), 0)
+    self.assertEqual(o.getTitle(), 'a')
+    self.assertEqual(portal_activities.countMessageWithTag('toto'), 0)
 
   def TryConflictErrorsWhileValidating(self, activity):
     """Try to execute active objects which may throw conflict errors
@@ -607,7 +607,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = organisation_module._getOb(self.company_id)
     self.commit()
     self.flushAllActivities(silent = 1, loop_size = 10)
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
     # Monkey patch Queue to induce conflict errors artificially.
     def validate(self, *args, **kwargs):
@@ -629,7 +629,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         o.activate(activity = activity).getId()
         self.commit()
         self.flushAllActivities(silent = 1, loop_size = i + 10)
-        self.assertEquals(len(activity_tool.getMessageList()), 0)
+        self.assertEqual(len(activity_tool.getMessageList()), 0)
     finally:
       Queue.validate = Queue.original_validate
       del Queue.original_validate
@@ -650,7 +650,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = organisation_module._getOb(self.company_id)
     self.commit()
     self.flushAllActivities(silent = 1, loop_size = 10)
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
     from _mysql_exceptions import OperationalError
 
@@ -668,7 +668,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Test some range of conflict error occurences.
       organisation_module.recursiveReindexObject()
       self.commit()
-      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      self.assertEqual(len(activity_tool.getMessageList()), 1)
       DB.original_query = DB.query
       DB.query = query
       portal.portal_activities.distribute()
@@ -676,7 +676,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       DB.query = DB.original_query
       message_list = portal.portal_activities.getMessageList()
-      self.assertEquals(len(message_list),1)
+      self.assertEqual(len(message_list),1)
     finally:
       DB.query = DB.original_query
       del DB.original_query
@@ -690,46 +690,46 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool.manageClearActivities(keep=0)
     self.commit()
     # First case: creating the same activity twice must only register one.
-    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
     object_a.activate(activity=activity).getId()
     object_a.activate(activity=activity).getId()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
     activity_tool.manageClearActivities(keep=0)
     self.commit()
     # Second case: creating activity with same tag must only register one.
     # This behaviour is actually the same as the no-tag behaviour.
-    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
     object_a.activate(activity=activity, tag='foo').getId()
     object_a.activate(activity=activity, tag='foo').getId()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
     activity_tool.manageClearActivities(keep=0)
     self.commit()
     # Third case: creating activities with different tags must register both.
-    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
     object_a.activate(activity=activity, tag='foo').getId()
     object_a.activate(activity=activity, tag='bar').getId()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.manageClearActivities(keep=0)
     self.commit()
     # Fourth case: creating activities on different objects must register
     # both.
-    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
     object_a.activate(activity=activity).getId()
     object_b.activate(activity=activity).getId()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.manageClearActivities(keep=0)
     self.commit()
     # Fifth case: creating activities with different method must register
     # both.
-    self.assertEquals(len(activity_tool.getMessageList()), 0) # Sanity check
+    self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
     object_a.activate(activity=activity).getId()
     object_a.activate(activity=activity).getTitle()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 2)
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.manageClearActivities(keep=0)
     self.commit()
 
@@ -1003,7 +1003,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.tic()
     email = organisation.get('email')
     # Check if what we did was executed as toto
-    self.assertEquals(email.getOwnerInfo()['id'],'toto')
+    self.assertEqual(email.getOwnerInfo()['id'],'toto')
 
   def test_59_TryAfterTagWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if after_tag can be used
@@ -1159,9 +1159,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.fail('failingMethod should not have been flushed')
       if len(remaining_messages) != 1:
         self.fail('Activity tool should have one blocked setTitle activity')
-      self.assertEquals(remaining_messages[0].activity_kw['after_method_id'],
+      self.assertEqual(remaining_messages[0].activity_kw['after_method_id'],
           ['failingMethod'])
-      self.assertEquals(obj.getTitle(), original_title)
+      self.assertEqual(obj.getTitle(), original_title)
 
   def test_66_TestCountMessageWithTagWithSQLDict(self, quiet=0, run=run_all_test):
     """
@@ -1201,17 +1201,17 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # First, index the object.
     self.commit()
     self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
     # Insert a failing active object.
     obj.activate().failingMethod()
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
 
     # Just wait for the active object to be abandoned.
     self.flushAllActivities(silent=1, loop_size=100)
-    self.assertEquals(len(activity_tool.getMessageList()), 1)
-    self.assertEquals(activity_tool.getMessageList()[0].processing_node, 
+    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(activity_tool.getMessageList()[0].processing_node, 
                       INVOKE_ERROR_STATE)
 
     # Make sure that persistent objects are not present in the connection
@@ -1223,7 +1223,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message = activity_tool.getMessageList()[0]
     activity_tool.manageCancel(message.object_path, message.method_id)
     self.commit()
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
   def test_68_RetryMessageExecution(self, quiet=0):
     if not quiet:
@@ -1360,7 +1360,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                        if m.object_path == o1.getPhysicalPath()]
     self.assertNotEquals(0, len(messages_for_o1))
     for m in messages_for_o1:
-      self.assertEquals(m.activity_kw.get('tag'), 'The Tag')
+      self.assertEqual(m.activity_kw.get('tag'), 'The Tag')
 
 
   def test_77_FlushAfterMultipleActivate(self, quiet=0, run=run_all_test):
@@ -1478,7 +1478,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Organisation.getFoobar = getFoobar
 
     organisation.foobar = 0
-    self.assertEquals(0,organisation.getFoobar())
+    self.assertEqual(0,organisation.getFoobar())
 
     # Test group_method_id is working without group_id
     for x in xrange(5):
@@ -1486,10 +1486,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
 
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),5)
+    self.assertEqual(len(message_list),5)
     portal.portal_activities.tic()
     expected = dict(SQLDict=1, SQLQueue=5)[activity]
-    self.assertEquals(expected, organisation.getFoobar())
+    self.assertEqual(expected, organisation.getFoobar())
 
 
     # Test group_method_id is working with one group_id defined
@@ -1498,11 +1498,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
 
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),5)
+    self.assertEqual(len(message_list),5)
     portal.portal_activities.tic()
-    self.assertEquals(expected * 2, organisation.getFoobar())
+    self.assertEqual(expected * 2, organisation.getFoobar())
 
-    self.assertEquals([expected, expected], foobar_list)
+    self.assertEqual([expected, expected], foobar_list)
     del foobar_list[:]
 
     # Test group_method_id is working with many group_id defined
@@ -1517,14 +1517,14 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
 
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),20)
+    self.assertEqual(len(message_list),20)
     portal.portal_activities.tic()
-    self.assertEquals(dict(SQLDict=11, SQLQueue=60)[activity],
+    self.assertEqual(dict(SQLDict=11, SQLQueue=60)[activity],
                       organisation.getFoobar())
-    self.assertEquals(dict(SQLDict=[1, 1, 1], SQLQueue=[5, 5, 10])[activity],
+    self.assertEqual(dict(SQLDict=[1, 1, 1], SQLQueue=[5, 5, 10])[activity],
                       sorted(foobar_list))
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list), 0)
+    self.assertEqual(len(message_list), 0)
 
   def test_80a_CallWithGroupIdParamaterSQLDict(self, quiet=0, run=run_all_test):
     """
@@ -1556,7 +1556,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                        if m.object_path == o1.getPhysicalPath()]
     self.assertNotEquals(0, len(messages_for_o1))
     for m in messages_for_o1:
-      self.assertEquals(m.activity_kw.get('tag'), 'The Tag')
+      self.assertEqual(m.activity_kw.get('tag'), 'The Tag')
   
   def test_82_LossOfVolatileAttribute(self, quiet=0, run=run_all_test):
     """
@@ -1570,7 +1570,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     activity_tool = self.getActivityTool()
     message_list = activity_tool.getMessageList()
-    self.assertEquals(len(message_list), 0)
+    self.assertEqual(len(message_list), 0)
     def delete_volatiles():
       for property_id in activity_tool.__dict__.keys():
         if property_id.startswith('_v_'):
@@ -1586,7 +1586,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     active_organisation_module.getId()
     self.commit()
     message_list = activity_tool.getMessageList()
-    self.assertEquals(len(message_list), 2)
+    self.assertEqual(len(message_list), 2)
 
   def test_83_ActivityModificationsViaCMFActivityConnectionRolledBackOnErrorSQLDict(self, quiet=0, run=run_all_test):
     """
@@ -1638,7 +1638,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'modifySQLAndFail')
       delattr(Organisation, 'dummy')
@@ -1686,7 +1686,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       obj.activate(activity='SQLQueue').modifySQLAndFail()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'modifySQLAndFail')
 
@@ -1741,7 +1741,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       obj2.activate(activity='SQLDict', group_method_id=group_method_id).dummy()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'dummy')
       activity_tool.__class__.invoke = invoke
@@ -1795,7 +1795,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       obj.activate(activity='SQLQueue').dummy()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'dummy')
       activity_tool.__class__.invoke = invoke
@@ -2020,7 +2020,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.flushAllActivities(silent=1, loop_size=100)
       finally:
         transaction.get().__class__.commit = commit
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'modifySQL')
   
@@ -2072,7 +2072,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.flushAllActivities(silent=1, loop_size=100)
       finally:
         transaction.get().__class__.commit = commit
-      self.assertEquals(activity_tool.countMessage(method_id='dummy_activity'), 0)
+      self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'modifySQL')
 
@@ -2134,7 +2134,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
       self.commit()
-      self.assertEquals(activity_tool.countMessage(method_id='registerFailingTransactionManager'), 1)
+      self.assertEqual(activity_tool.countMessage(method_id='registerFailingTransactionManager'), 1)
     finally:
       delattr(Organisation, 'registerFailingTransactionManager')
 
@@ -2165,9 +2165,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.tic()
       organisation.activate(activity=activity).changeSkinToNone()
       self.commit()
-      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      self.assertEqual(len(activity_tool.getMessageList()), 1)
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEquals(len(activity_tool.getMessageList()), 0)
+      self.assertEqual(len(activity_tool.getMessageList()), 0)
     finally:
       delattr(Organisation, 'changeSkinToNone')
 
@@ -2458,7 +2458,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     try:
       o = self.portal.organisation_module.newContent(
                     portal_type='Organisation', id='test_obj')
-      self.assertEquals(o.absolute_url(),
+      self.assertEqual(o.absolute_url(),
           'http://test.erp5.org:9080/virtual_root/test_obj')
       o.activate().checkAbsoluteUrl()
       
@@ -2469,13 +2469,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
-      self.assertEquals(o.absolute_url(),
+      self.assertEqual(o.absolute_url(),
           'https://anotherhost.erp5.org/%s/organisation_module/test_obj'
            % self.portal.getId())
 
       # but activities are executed using the previous request information
       self.flushAllActivities(loop_size=1000)
-      self.assertEquals(calls, ['http://test.erp5.org:9080/virtual_root/test_obj'])
+      self.assertEqual(calls, ['http://test.erp5.org:9080/virtual_root/test_obj'])
     finally:
       delattr(Organisation, 'checkAbsoluteUrl')
 
@@ -2568,7 +2568,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Forcibly restore skin selection, otherwise getMessageList would only
       # emit a log when retrieving the ZSQLMethod.
       portal.changeSkin(None)
-      self.assertEquals(len(activity_tool.getMessageList()), 0)
+      self.assertEqual(len(activity_tool.getMessageList()), 0)
     finally:
       delattr(Organisation, 'firstTest')
       delattr(Organisation, 'secondTest')
@@ -2753,7 +2753,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         o.activate(activity='SQLQueue').dummy_counter()
         
       self.flushAllActivities()
-      self.assertEquals(call_count, 10)
+      self.assertEqual(call_count, 10)
     finally:
       SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
       del Organisation.dummy_counter
@@ -2778,7 +2778,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         getattr(o.activate(activity='SQLDict'), method_name)()
         
       self.flushAllActivities()
-      self.assertEquals(call_count, 10)
+      self.assertEqual(call_count, 10)
     finally:
       SQLDict.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
       for i in range(10):
@@ -2904,21 +2904,21 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, \
                                                 **original_reindex_parameters)
     current_default_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
-    self.assertEquals({'activate_kw': {'tag': tag}}, \
+    self.assertEqual({'activate_kw': {'tag': tag}}, \
                        current_default_reindex_parameters)
     person = portal.person_module.newContent(portal_type='Person')
     self.commit()
     # as we specified it in setPlacelessDefaultReindexParameters we should have
     # an activity for this tags
-    self.assertEquals(1, portal.portal_activities.countMessageWithTag(tag))
+    self.assertEqual(1, portal.portal_activities.countMessageWithTag(tag))
     self.tic()
-    self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))
+    self.assertEqual(0, portal.portal_activities.countMessageWithTag(tag))
     
     # restore originals ones
     portal.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
     person = portal.person_module.newContent(portal_type='Person')
     # .. now no messages with this tag should apper
-    self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))    
+    self.assertEqual(0, portal.portal_activities.countMessageWithTag(tag))    
 
   def TryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
     activity_tool = self.getActivityTool()
@@ -3032,7 +3032,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o = organisation_module._getOb(self.company_id)
     self.commit()
     self.flushAllActivities(silent = 1, loop_size = 10)
-    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
     class ActivityUnitTestError(Exception):
       pass
     activity_unit_test_error = ActivityUnitTestError()
@@ -3050,7 +3050,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self._catch_log_errors()
       o.activate(activity = activity).failingMethod()
       self.commit()
-      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      self.assertEqual(len(activity_tool.getMessageList()), 1)
       self.flushAllActivities(silent = 1)
       SiteErrorLog.raising = original_raising
       self.commit()
@@ -3106,7 +3106,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       activity_tool.tic()
       message_list = activity_tool.getMessageList()
-      self.assertEquals(['doSomething'],[x.method_id for x in message_list])
+      self.assertEqual(['doSomething'],[x.method_id for x in message_list])
       activity_tool.manageClearActivities(keep=0)
     finally:
       SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
@@ -3179,14 +3179,14 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         stdconn.connection_string,
     )
     oldconn = portal.cmf_activity_sql_connection
-    self.assertEquals(oldconn.meta_type, 'Z MySQL Database Connection')
+    self.assertEqual(oldconn.meta_type, 'Z MySQL Database Connection')
     # de-initialize and check that migration of the connection happens
     # automatically
     Products.CMFActivity.ActivityTool.is_initialized = False
     activity_tool.activate(activity='SQLQueue').getId()
     self.tic()
     newconn = portal.cmf_activity_sql_connection
-    self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
+    self.assertEqual(newconn.meta_type, 'CMFActivity Database Connection')
 
   def test_connection_installable(self):
     """
@@ -3208,7 +3208,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         stdconn.connection_string
     )
     newconn = portal.cmf_activity_sql_connection
-    self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
+    self.assertEqual(newconn.meta_type, 'CMFActivity Database Connection')
 
   def test_connection_sortkey(self):
     """
@@ -3308,7 +3308,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       c[i].activate(priority=priority, **kw).doSomething()
     def check(*expected):
       self.tic()
-      self.assertEquals(tuple(invoked), expected)
+      self.assertEqual(tuple(invoked), expected)
       del invoked[:]
     invoked = []
     def doSomething(self):

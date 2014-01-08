@@ -83,7 +83,7 @@ class TestAccessTab(ERP5TypeTestCase):
                          'renderer': 'ERP5Site_renderViewActionList',
                          'id': 'browse_tab',
                          'icon': 'tab_icon/list.png'}
-    self.assertEquals(tab_info, expected_tab_info)
+    self.assertEqual(tab_info, expected_tab_info)
 
   def checkStatusDict(self):
     """ Check a script which is used in access tab view """
@@ -91,7 +91,7 @@ class TestAccessTab(ERP5TypeTestCase):
     expected_status_dict = {'express_mode': 'support_disabled',
                             'dms_mode': False,
                             'basic_mode': True}
-    self.assertEquals(status_dict, expected_status_dict)
+    self.assertEqual(status_dict, expected_status_dict)
 
   def checkInformationDictBasic(self):
     """ Check a script which is used in the main part in access tab view """
@@ -99,25 +99,25 @@ class TestAccessTab(ERP5TypeTestCase):
     info_dict = portal.ERP5Site_getCategorizedModuleActionInformationDict()
     view_list = info_dict['view']
 
-    self.assertEquals(len(view_list), 1)
-    self.assertEquals(len(view_list[0]), 2)
+    self.assertEqual(len(view_list), 1)
+    self.assertEqual(len(view_list[0]), 2)
 
     base = view_list[0]
     (label, menu_list) = base
-    self.assertEquals(label, 'base')
-    self.assertEquals(len(menu_list), 2)
+    self.assertEqual(label, 'base')
+    self.assertEqual(len(menu_list), 2)
     organisation_menu = menu_list[0]
     person_menu = menu_list[1]
 
-    self.assertEquals(len(organisation_menu), 2)
-    self.assertEquals(type(organisation_menu), tuple)
-    self.assertEquals(len(person_menu), 2)
-    self.assertEquals(type(person_menu), tuple)
+    self.assertEqual(len(organisation_menu), 2)
+    self.assertEqual(type(organisation_menu), tuple)
+    self.assertEqual(len(person_menu), 2)
+    self.assertEqual(type(person_menu), tuple)
 
     (organisation_label, organisation_url) = organisation_menu
     (person_label, person_url) = person_menu
-    self.assertEquals(organisation_label, 'Organisations')
-    self.assertEquals(person_label, 'Persons')
+    self.assertEqual(organisation_label, 'Organisations')
+    self.assertEqual(person_label, 'Persons')
 
   def addCurrencyModuleIntoAccessTab(self):
     """ add currency module into access tab page so that we can
@@ -137,19 +137,19 @@ class TestAccessTab(ERP5TypeTestCase):
     # different when the view is cached.
     info_dict = portal.ERP5Site_getCategorizedModuleActionInformationDict()
     view_list = info_dict['view']
-    self.assertEquals(len(view_list), 1)
-    self.assertEquals(len(view_list[0]), 2)
+    self.assertEqual(len(view_list), 1)
+    self.assertEqual(len(view_list[0]), 2)
 
     base = view_list[0]
     (label, menu_list) = base
-    self.assertEquals(len(menu_list), 3)
+    self.assertEqual(len(menu_list), 3)
     currency_menu = menu_list[0]
 
-    self.assertEquals(len(currency_menu), 2)
-    self.assertEquals(type(currency_menu), tuple)
+    self.assertEqual(len(currency_menu), 2)
+    self.assertEqual(type(currency_menu), tuple)
 
     (currency_label, currency_url) = currency_menu
-    self.assertEquals(currency_label, 'Currencies')
+    self.assertEqual(currency_label, 'Currencies')
     self.assertTrue('https' in currency_url[0][1])
 
   def test_01_testAccessTab(self):

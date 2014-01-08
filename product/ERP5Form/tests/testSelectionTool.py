@@ -58,9 +58,9 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.portal_selections.setSelectionParamsFor('test_selection', {'key':'value'})
 
   def testGetSelectionContainer(self):
-    self.assertEquals(['test_selection'],
+    self.assertEqual(['test_selection'],
                       self.portal_selections.getSelectionNameList())
-    self.assertEquals(['test_selection'],
+    self.assertEqual(['test_selection'],
                       self.portal_selections.getSelectionNames())
     self.assert_(self.portal_selections._getContainer() is not None)
     self.assert_(getattr(self.portal_selections, 'selection_data', None)
@@ -71,104 +71,104 @@ class TestSelectionTool(ERP5TypeTestCase):
   def testGetSelectionFor(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assert_(isinstance(selection, Selection))
-    self.assertEquals('test_selection', selection.name)
+    self.assertEqual('test_selection', selection.name)
 
   def testGetSelectionParamsFor(self):
-    self.assertEquals({'key':'value'},
+    self.assertEqual({'key':'value'},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
 
   def testGetSelectionParamsDictInterface(self):
-    self.assertEquals('value',
+    self.assertEqual('value',
                       self.portal_selections['test_selection']['key'])
     # the main use case is to have a dict interface in TALES expressions:
     from Products.PageTemplates.Expressions import getEngine
     evaluate_tales = getEngine().getContext(dict(context=self.portal)).evaluate
-    self.assertEquals('value',
+    self.assertEqual('value',
             evaluate_tales('context/portal_selections/test_selection/key'))
-    self.assertEquals('default', evaluate_tales(
+    self.assertEqual('default', evaluate_tales(
       'context/portal_selections/test_selection/not_found | string:default'))
 
 
   @skip('Test to be written')
   def testCallSelectionFor(self):
-    self.assertEquals(None,
+    self.assertEqual(None,
                       self.portal_selections.callSelectionFor('not_found_selection'))
     raise NotImplementedError('more tests needed')
 
   def testCheckedUids(self):
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
     self.portal_selections.setSelectionCheckedUidsFor('test_selection',
                                                       ['foo'])
-    self.assertEquals(['foo'],
+    self.assertEqual(['foo'],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
     self.portal_selections.updateSelectionCheckedUidList('test_selection',
                                                          ['foo'], ['bar'])
-    self.assertEquals(['bar'],
+    self.assertEqual(['bar'],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
     self.portal_selections.checkAll('test_selection',
                                     ['foo', 'baz'])
-    self.assertEquals(sorted(['foo', 'bar', 'baz']),
+    self.assertEqual(sorted(['foo', 'bar', 'baz']),
                       sorted(self.portal_selections.getSelectionCheckedUidsFor('test_selection')))
     self.portal_selections.uncheckAll('test_selection',
                                     ['foo', 'bar'])
-    self.assertEquals(['baz'],
+    self.assertEqual(['baz'],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
 
   def testGetSelectionListUrlFor(self):
-    self.assertEquals('',
+    self.assertEqual('',
                       self.portal_selections.getSelectionListUrlFor('test_selection'))
 
   def testInvertMode(self):
     self.portal_selections.setSelectionInvertModeFor('test_selection', 1)
-    self.assertEquals(1,
+    self.assertEqual(1,
                       self.portal_selections.getSelectionInvertModeFor('test_selection'))
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionInvertModeUidListFor('test_selection'))
 
   def testSetSelectionToAll(self):
     self.portal_selections.checkAll('test_selection',
                                     ['foo', 'bar'])
     self.portal_selections.setSelectionToAll('test_selection')
-    self.assertEquals(0,
+    self.assertEqual(0,
                       self.portal_selections.getSelectionInvertModeFor('test_selection'))
-    self.assertEquals({},
+    self.assertEqual({},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionCheckedUidsFor('test_selection'))
 
   def testSortOrder(self):
     self.portal_selections.setSelectionSortOrder('test_selection',
                                                  [('title', 'ascending')])
-    self.assertEquals([('title', 'ascending')],
+    self.assertEqual([('title', 'ascending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
     self.portal_selections.setSelectionQuickSortOrder('test_selection',
                                                       'title')
-    self.assertEquals([('title', 'descending')],
+    self.assertEqual([('title', 'descending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
     self.portal_selections.setSelectionQuickSortOrder('test_selection',
                                                       'date')
-    self.assertEquals([('date', 'ascending')],
+    self.assertEqual([('date', 'ascending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
 
   def testColumns(self):
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionColumns('test_selection'))
-    self.assertEquals([('default_key', 'default_val')],
+    self.assertEqual([('default_key', 'default_val')],
                       self.portal_selections.getSelectionColumns('test_selection', [('default_key', 'default_val')]))
     self.portal_selections.setSelectionColumns('test_selection',
                                                  [('key', 'val')])
-    self.assertEquals([('key', 'val')],
+    self.assertEqual([('key', 'val')],
                       self.portal_selections.getSelectionColumns('test_selection'))
-    self.assertEquals([('key', 'val')],
+    self.assertEqual([('key', 'val')],
                       self.portal_selections.getSelectionColumns('test_selection', [('default_key', 'default_val')]))
 
   def testStats(self):
-    self.assertEquals([' ', ' ', ' ', ' ', ' ', ' '],
+    self.assertEqual([' ', ' ', ' ', ' ', ' ', ' '],
                       self.portal_selections.getSelectionStats('test_selection'))
     self.portal_selections.setSelectionStats('test_selection',
                                                  [])
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionStats('test_selection'))
 
   @skip('Test to be written')
@@ -180,38 +180,38 @@ class TestSelectionTool(ERP5TypeTestCase):
     raise NotImplementedError('test should be added')
 
   def testDomainSelection(self):
-    self.assertEquals('',
+    self.assertEqual('',
                       self.portal_selections.buildSQLJoinExpressionFromDomainSelection({}))
-    self.assertEquals('',
+    self.assertEqual('',
                       self.portal_selections.buildSQLExpressionFromDomainSelection({}))
     from Products.ERP5Form.Selection import DomainSelection
-    self.assertEquals('',
+    self.assertEqual('',
                       self.portal_selections.buildSQLJoinExpressionFromDomainSelection(DomainSelection({}).__of__(self.portal_selections)))
     category_tool = self.getCategoryTool()
     base = category_tool.newContent(portal_type = 'Base Category',
                                    id='test_base_cat')
     base_uid = base.getUid()
-    self.assertEquals('category AS test_base_cat_category',
+    self.assertEqual('category AS test_base_cat_category',
                       self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
-    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (base_uid, base_uid),
+    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (base_uid, base_uid),
                       self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
     test = base.newContent(portal_type = 'Category', id = 'test_cat')
     test_uid = test.getUid()
-    self.assertEquals('category AS test_base_cat_category',
+    self.assertEqual('category AS test_base_cat_category',
                       self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
-    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (test_uid, base_uid),
+    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (test_uid, base_uid),
                       self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
-    self.assertEquals('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d AND test_base_cat_category.category_strict_membership = 1) )' % (test_uid, base_uid),
+    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d AND test_base_cat_category.category_strict_membership = 1) )' % (test_uid, base_uid),
                       self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}, strict_membership = 1))
 
   def testDict(self):
-    self.assertEquals({},
+    self.assertEqual({},
                       self.portal_selections.getSelectionDomainDictFor('test_selection'))
-    self.assertEquals({},
+    self.assertEqual({},
                       self.portal_selections.getSelectionReportDictFor('test_selection'))
 
   def testIndex(self):
-    self.assertEquals(None,
+    self.assertEqual(None,
                       self.portal_selections.getSelectionIndexFor('test_selection'))
 
   def testDeleteSelection(self):
@@ -310,9 +310,9 @@ class TestSelectionPersistence(unittest.TestCase):
     # This would raise a ConflictError without conflict resolution code
     transaction.commit()
     params = self.portal_selections.getSelectionParamsFor('test_selection1')
-    self.assertEquals(params.get('a'), 'b')
+    self.assertEqual(params.get('a'), 'b')
     params = self.portal_selections.getSelectionParamsFor('test_selection2')
-    self.assertEquals(params.get('a'), 'b')
+    self.assertEqual(params.get('a'), 'b')
 
   def testDifferentUsernameConflictResolution(self):
     # different users edits selections
@@ -343,7 +343,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # this check is quite low level.
     # we know that setUp stored one selection, and each of our 2 threads stored
     # one selection.
-    self.assertEquals(3, len(self.portal_selections.selection_data.keys()))
+    self.assertEqual(3, len(self.portal_selections.selection_data.keys()))
 
   def testPersistentSelections(self):
     # test that selection parameters are persistent
@@ -354,7 +354,7 @@ class TestSelectionPersistence(unittest.TestCase):
 
     self.cnx = self.db.open()
     portal_selections = self.cnx.root().portal_selections
-    self.assertEquals('saved_value',
+    self.assertEqual('saved_value',
         portal_selections.getSelectionParamsFor('test_selection').get('key'))
 
 class TestSelectionToolMemcachedStorage(TestSelectionTool):
@@ -374,9 +374,9 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
     TestSelectionTool.afterSetUp(self)
 
   def testGetSelectionContainer(self):
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionNameList())
-    self.assertEquals([],
+    self.assertEqual([],
                       self.portal_selections.getSelectionNames())
     self.assert_(self.portal_selections._getContainer() is not None)
     self.assert_(getattr(self.portal_selections, '_v_selection_container', None)

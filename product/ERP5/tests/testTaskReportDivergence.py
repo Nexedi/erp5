@@ -48,21 +48,21 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
       Test if task report is calculating
     """
     task_report = sequence.get('task_report')
-    self.assertEquals('calculating', task_report.getCausalityState())
+    self.assertEqual('calculating', task_report.getCausalityState())
 
   def stepCheckTaskReportIsDiverged(self, sequence=None, sequence_list=None, **kw):
     """
       Test if task report is in diverged state
     """
     task_report = sequence.get('task_report')
-    self.assertEquals('diverged', task_report.getCausalityState())
+    self.assertEqual('diverged', task_report.getCausalityState())
 
   def stepCheckTaskReportIsSolved(self, sequence=None, sequence_list=None, **kw):
     """
       Test if task report is in solved state
     """
     task_report = sequence.get('task_report')
-    self.assertEquals('solved', task_report.getCausalityState())
+    self.assertEqual('solved', task_report.getCausalityState())
 
   def stepChangeTaskReportLineQuantity(self, sequence=None,
       sequence_list=None, **kw):
@@ -110,7 +110,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
   def stepChangeCommentOnTaskReport(self, sequence=None, **kw):
     task_report = sequence.get('task_report')
     task_report.edit(comment='foo')
-    self.assertEquals('foo', task_report.getComment())
+    self.assertEqual('foo', task_report.getComment())
 
   def stepAcceptDateDecision(self, sequence=None, **kw):
     task_report = sequence.get('task_report')
@@ -132,7 +132,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     logical (the comment remains) is true
     """
     task_report = sequence.get('task_report')
-    self.assertEquals('foo', task_report.getComment())
+    self.assertEqual('foo', task_report.getComment())
   
   def stepCloneTaskReportAndDoWfTransitions(self, sequence=None, **kw):
     """
@@ -143,12 +143,12 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     self.login('alex')
     cloned_task_report = task_report.Base_createCloneDocument(batch_mode=1)
     self.tic()
-    self.assertEquals(cloned_task_report.getCausalityState(), 'draft')
-    self.assertEquals(cloned_task_report.getSimulationState(), 'draft')
+    self.assertEqual(cloned_task_report.getCausalityState(), 'draft')
+    self.assertEqual(cloned_task_report.getSimulationState(), 'draft')
     self.assertUserCanPassWorkflowTransition('alex', 'confirm_action', cloned_task_report)
     cloned_task_report.confirm()
     self.tic()
-    self.assertEquals(cloned_task_report.getCausalityState(), 'draft')
+    self.assertEqual(cloned_task_report.getCausalityState(), 'draft')
     self.assertUserCanPassWorkflowTransition('alex', 'start_action', cloned_task_report)
     self.assertUserCanPassWorkflowTransition('alex', 'stop_action', cloned_task_report)
 
@@ -300,17 +300,17 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     task_report = sequence.get('task_report')
     task_line_1 = task_report.contentValues()[0]
     task_line_2 = task_report.contentValues()[1]
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_start_date'), task_report.getStartDate())
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_stop_date'), task_report.getStopDate())
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_line_1_start_date'), task_line_1.getStartDate())
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_line_1_stop_date'), task_line_1.getStopDate())
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_line_2_start_date'), task_line_2.getStartDate())
-    self.assertEquals(
+    self.assertEqual(
         sequence.get('task_report_line_2_stop_date'), task_line_2.getStopDate())
 
   @expectedFailure

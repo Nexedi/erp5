@@ -39,16 +39,16 @@ class TestCSSPacker(unittest.TestCase):
     result = compressCSS(script)
     
     output = open(join(PREFIX, 'output/output_erp5.css')).read()
-    self.assertEquals(result, output)
+    self.assertEqual(result, output)
 
   def test_CSSStyleWithoutSemicolon(self):
     result = compressCSS('.something {color: #FFFFF}')
-    self.assertEquals('.something{color:#FFFFF;}', result)
+    self.assertEqual('.something{color:#FFFFF;}', result)
 
   def test_CSSStyleAndClassWithSpaces(self):
     css = '.something       {color: #FFFFFF; border: 0px;        }'
     result = compressCSS(css)
-    self.assertEquals('.something{color:#FFFFFF;border:0px;}', result)
+    self.assertEqual('.something{color:#FFFFFF;border:0px;}', result)
 
   def test_CSSClassWithSpecialCharacter(self):
     css = 'div#main_content input.button, input[type="submit"] { \
@@ -59,7 +59,7 @@ class TestCSSPacker(unittest.TestCase):
     expected_result = 'div#main_content input.button, \
 input[type="submit"]{background:#fff url(erp5-website-button.png) bottom \
 repeat-x;}'
-    self.assertEquals(result, expected_result)
+    self.assertEqual(result, expected_result)
 
 if __name__ == '__main__':
   unittest.main()

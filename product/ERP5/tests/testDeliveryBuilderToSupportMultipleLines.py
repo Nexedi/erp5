@@ -229,23 +229,23 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     # order = sequence.get('order')
     # packing_list = sequence.get('packing_list')
     document = sequence.get('invoice')
-    self.assertEquals('Sale Invoice Transaction', document.getPortalType())
+    self.assertEqual('Sale Invoice Transaction', document.getPortalType())
     line_list = document.objectValues(
       portal_type=self.portal.getPortalInvoiceMovementTypeList())
-    self.assertEquals(1, len(line_list))
+    self.assertEqual(1, len(line_list))
 
     line = line_list[0]
-    self.assertEquals('Invoice Line', line.getPortalType())
-    self.assertEquals(None, line.getQuantity(None))
-    self.assertEquals(1, len(line))
+    self.assertEqual('Invoice Line', line.getPortalType())
+    self.assertEqual(None, line.getQuantity(None))
+    self.assertEqual(1, len(line))
 
     line_line = line.objectValues()[0]
-    self.assertEquals('Invoice Line', line_line.getPortalType())
+    self.assertEqual('Invoice Line', line_line.getPortalType())
 
-    self.assertEquals(self.default_price * self.default_quantity, document.getTotalPrice())
-    self.assertEquals(self.default_quantity, document.getTotalQuantity())
-    self.assertEquals(self.default_price, line_line.getPrice())
-    self.assertEquals(self.default_quantity, line_line.getQuantity())
+    self.assertEqual(self.default_price * self.default_quantity, document.getTotalPrice())
+    self.assertEqual(self.default_quantity, document.getTotalQuantity())
+    self.assertEqual(self.default_price, line_line.getPrice())
+    self.assertEqual(self.default_quantity, line_line.getQuantity())
 
 
   def test_02_AdoptingPrevision(self, quiet=quiet):
@@ -267,22 +267,22 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
 
     document = sequence.get('invoice')
-    self.assertEquals('solved', document.getCausalityState())
+    self.assertEqual('solved', document.getCausalityState())
     line_list = document.objectValues(
       portal_type=self.portal.getPortalInvoiceMovementTypeList())
-    self.assertEquals(1, len(line_list))
+    self.assertEqual(1, len(line_list))
 
     line = line_list[0]
-    self.assertEquals('Invoice Line', line.getPortalType())
-    self.assertEquals(None, line.getQuantity(None))
-    self.assertEquals(1, len(line))
+    self.assertEqual('Invoice Line', line.getPortalType())
+    self.assertEqual(None, line.getQuantity(None))
+    self.assertEqual(1, len(line))
 
     line_line = line.objectValues()[0]
-    self.assertEquals('Invoice Line', line_line.getPortalType())
+    self.assertEqual('Invoice Line', line_line.getPortalType())
 
-    self.assertEquals(self.default_price * self.new_packing_list_quantity, document.getTotalPrice())
-    self.assertEquals(self.new_packing_list_quantity, document.getTotalQuantity())
-    self.assertEquals(self.new_packing_list_quantity, line_line.getQuantity())
+    self.assertEqual(self.default_price * self.new_packing_list_quantity, document.getTotalPrice())
+    self.assertEqual(self.new_packing_list_quantity, document.getTotalQuantity())
+    self.assertEqual(self.new_packing_list_quantity, line_line.getQuantity())
 
   @newSimulationExpectedFailure
   def test_03_AcceptingDecision(self, quiet=quiet):
@@ -306,22 +306,22 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
 
     document = sequence.get('invoice')
     
-    self.assertEquals('solved', document.getCausalityState())
+    self.assertEqual('solved', document.getCausalityState())
     line_list = document.objectValues(
       portal_type=self.portal.getPortalInvoiceMovementTypeList())
-    self.assertEquals(1, len(line_list))
+    self.assertEqual(1, len(line_list))
 
     line = line_list[0]
-    self.assertEquals('Invoice Line', line.getPortalType())
-    self.assertEquals(None, line.getQuantity(None))
-    self.assertEquals(1, len(line))
+    self.assertEqual('Invoice Line', line.getPortalType())
+    self.assertEqual(None, line.getQuantity(None))
+    self.assertEqual(1, len(line))
 
     line_line = line.objectValues()[0]
-    self.assertEquals('Invoice Line', line_line.getPortalType())
+    self.assertEqual('Invoice Line', line_line.getPortalType())
 
-    self.assertEquals(self.default_price * self.new_invoice_quantity, document.getTotalPrice())
-    self.assertEquals(self.new_invoice_quantity, document.getTotalQuantity())
-    self.assertEquals(self.new_invoice_quantity, line_line.getQuantity())
+    self.assertEqual(self.default_price * self.new_invoice_quantity, document.getTotalPrice())
+    self.assertEqual(self.new_invoice_quantity, document.getTotalQuantity())
+    self.assertEqual(self.new_invoice_quantity, line_line.getQuantity())
 
   def stepPrioritizeInvoiceUpdateCausalityStateTic(self, sequence):
     invoice = sequence['invoice']
@@ -387,28 +387,28 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     )
     sequence_list.play(self, quiet=quiet)
 
-    self.assertEquals(1, len(self.portal.accounting_module))
+    self.assertEqual(1, len(self.portal.accounting_module))
 
     document = self.portal.accounting_module.objectValues()[0]
-    self.assertEquals('solved', document.getCausalityState())
+    self.assertEqual('solved', document.getCausalityState())
     line_list = document.objectValues(
       portal_type=self.portal.getPortalInvoiceMovementTypeList())
-    self.assertEquals(1, len(line_list))
+    self.assertEqual(1, len(line_list))
 
     line = line_list[0]
-    self.assertEquals('Invoice Line', line.getPortalType())
-    self.assertEquals(None, line.getQuantity(None))
-    self.assertEquals(1, len(line))
+    self.assertEqual('Invoice Line', line.getPortalType())
+    self.assertEqual(None, line.getQuantity(None))
+    self.assertEqual(1, len(line))
 
     line_line = line.objectValues()[0]
-    self.assertEquals('Invoice Line', line_line.getPortalType())
+    self.assertEqual('Invoice Line', line_line.getPortalType())
 
     # The sale invoice summed up from two sale orders.
     # The quantity of a sale order is self.default_quantity, and
     # that of the other one is self.new_order_quantity.
-    self.assertEquals(self.default_price * (self.default_quantity + self.new_order_quantity), document.getTotalPrice())
-    self.assertEquals(self.default_quantity + self.new_order_quantity, document.getTotalQuantity())
-    self.assertEquals(self.default_quantity + self.new_order_quantity, line_line.getQuantity())
+    self.assertEqual(self.default_price * (self.default_quantity + self.new_order_quantity), document.getTotalPrice())
+    self.assertEqual(self.default_quantity + self.new_order_quantity, document.getTotalQuantity())
+    self.assertEqual(self.default_quantity + self.new_order_quantity, line_line.getQuantity())
 
 
 def test_suite():

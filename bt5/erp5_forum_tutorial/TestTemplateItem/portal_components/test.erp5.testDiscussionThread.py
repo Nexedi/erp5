@@ -70,16 +70,16 @@ class TestDiscussionThread(SecurityTestCase):
     thread_posts = thread.objectValues()
 
     # thread should have only one post
-    self.assertEquals(len(thread_posts), 1)
+    self.assertEqual(len(thread_posts), 1)
 
     # that unique post should have the right content
-    self.assertEquals(thread_posts[0].getTextContent(), thread_content)
+    self.assertEqual(thread_posts[0].getTextContent(), thread_content)
 
     # Check that the thread is inserted in the forum module
-    self.assertEquals(thread.getParentValue().getRelativeUrl(), self.forum_module.getRelativeUrl())
+    self.assertEqual(thread.getParentValue().getRelativeUrl(), self.forum_module.getRelativeUrl())
 
     # the thread should have been published
-    self.assertEquals(thread.getValidationState(), 'public')
+    self.assertEqual(thread.getValidationState(), 'public')
 
     reply_content='Can we add a reply?'
     post = thread.DiscussionThreadModule_addReply(
@@ -98,10 +98,10 @@ class TestDiscussionThread(SecurityTestCase):
 
     # original thread and reply:
     # thread should have two posts
-    self.assertEquals(len(thread_posts), 2)
+    self.assertEqual(len(thread_posts), 2)
 
     # Check that post was inserted in thread
-    self.assertEquals(post.getParentValue().getRelativeUrl(), thread.getRelativeUrl())
+    self.assertEqual(post.getParentValue().getRelativeUrl(), thread.getRelativeUrl())
 
   def testSpyCannotAccessButVisitorCan(self):
     """
@@ -131,7 +131,7 @@ class TestDiscussionThread(SecurityTestCase):
                     (self.portal.getId(), thread.getRelativeUrl()),
                      'visitor:visitor'
                      )
-    self.assertEquals(response.getStatus(), HTTP_OK)
+    self.assertEqual(response.getStatus(), HTTP_OK)
 
   def testVisitorCannotPost(self):
     """
@@ -201,4 +201,4 @@ class TestDiscussionThread(SecurityTestCase):
                     (self.portal.getId(), thread.getRelativeUrl()),
                      'another_forum_user:another_forum_user'
                      )
-    self.assertEquals(response.getStatus(), HTTP_OK)
+    self.assertEqual(response.getStatus(), HTTP_OK)

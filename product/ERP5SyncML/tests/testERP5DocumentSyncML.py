@@ -327,12 +327,12 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     # Check for each signature that the tempXML is None
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
       for m in sub.contentValues():
-        self.assertEquals(m.getTemporaryData(), None)
-        self.assertEquals(m.getPartialData(), None)
+        self.assertEqual(m.getTemporaryData(), None)
+        self.assertEqual(m.getPartialData(), None)
     for pub in portal_sync.contentValues(portal_type='SyncML Publication'):
       for sub in pub.contentValues(portal_type='SyncML Subscription'):
         for m in sub.contentValues():
-          self.assertEquals(m.getPartialData(), None)
+          self.assertEqual(m.getPartialData(), None)
 
   def checkFirstSynchronization(self, nb_document=0):
 
@@ -347,13 +347,13 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
    self.assertEqual(doc1_s.getVersion(), self.version1)
    self.assertEqual(doc1_s.getLanguage(), self.language1)
    self.assertEqual(doc1_s.getFilename(), self.filename_text)
-   self.assertEquals(self.size_filename_text, doc1_s.get_size())
+   self.assertEqual(self.size_filename_text, doc1_s.get_size())
    doc2_s = document_server._getOb(self.id2)
    self.assertEqual(doc2_s.getReference(), self.reference2)
    self.assertEqual(doc2_s.getVersion(), self.version2)
    self.assertEqual(doc2_s.getLanguage(), self.language2)
    self.assertEqual(doc2_s.getFilename(), self.filename_pdf)
-   self.assertEquals(self.size_filename_pdf, doc2_s.get_size())
+   self.assertEqual(self.size_filename_pdf, doc2_s.get_size())
    document_client1 = self.getDocumentClient1()
    document_c = document_client1._getOb(self.id1)
    self.assertEqual(document_c.getId(), self.id1)
@@ -361,7 +361,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
    self.assertEqual(document_c.getVersion(), self.version1)
    self.assertEqual(document_c.getLanguage(), self.language1)
    self.assertEqual(document_c.getFilename(), self.filename_text)
-   self.assertEquals(self.size_filename_text, document_c.get_size())
+   self.assertEqual(self.size_filename_text, document_c.get_size())
    self.assertXMLViewIsEqual(self.sub_id1, doc1_s, document_c)
    self.assertXMLViewIsEqual(self.sub_id1, doc2_s,
                              document_client1._getOb(self.id2))
@@ -381,7 +381,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
       self.assertEqual(document.getDescription(), description)
       if filename is not None:
         self.assertEqual(document.getFilename(), filename)
-        self.assertEquals(size_filename, document.get_size())
+        self.assertEqual(size_filename, document.get_size())
     else:
       self.fail("Document is None to check this information")
 
@@ -446,12 +446,12 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     nb_document = self.createDocumentServerList()
     portal_sync = self.getSynchronizationTool()
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
 
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
     self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     self.checkSynchronizationStateIsSynchronized()
     self.checkFirstSynchronization(nb_document=nb_document)
@@ -478,7 +478,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(document_s.getLanguage(), self.language3)
     self.assertEqual(document_s.getVersion(), self.version3)
     self.assertEqual(document_c.getFilename(), self.filename_text)
-    self.assertEquals(self.size_filename_text, document_c.get_size())
+    self.assertEqual(self.size_filename_text, document_c.get_size())
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c)
     # Then we do only modification on a client (the gid) of client => add a object
     kw = {'reference':self.reference1,'version':self.version3}
@@ -493,7 +493,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(document_s.getLanguage(), self.language3)
     self.assertEqual(document_s.getVersion(), self.version3)
     self.assertEqual(document_c.getFilename(), self.filename_odt)
-    self.assertEquals(self.size_filename_odt, document_c.get_size())
+    self.assertEqual(self.size_filename_odt, document_c.get_size())
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c)
     # Then we do only modification the field (useless for the gid)
     # on both the client and the server and of course, on the same object
@@ -538,7 +538,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.synchronize(self.sub_id1)
     # It has transmitted some object
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
-      self.assertEquals(sub.getSyncmlAlertCode(), 'two_way')
+      self.assertEqual(sub.getSyncmlAlertCode(), 'two_way')
     self.checkSynchronizationStateIsSynchronized()
     self.checkFirstSynchronizationWithMultiDocument(nb_document=nb_document)
 
@@ -740,7 +740,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(document_c1.getShortTitle(), self.short_title3)
     self.assertEqual(document_c1.getFilename(), self.filename_ppt)
     #XXX Error in convert XML
-    #self.assertEquals(self.size_filename_text, document_c1.get_size())
+    #self.assertEqual(self.size_filename_text, document_c1.get_size())
     document_s = document_server._getOb(self.id1)
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1,
                               ignore_processing_status_workflow=True)
@@ -774,7 +774,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
       self.assertEqual(document_s.getReference(), self.reference1)
       self.assertEqual(document_s.getLanguage(), self.language1)
       self.assertEqual(document_s.getFilename(), self.filename_text)
-      self.assertEquals(self.size_filename_text, document_c.get_size())
+      self.assertEqual(self.size_filename_text, document_c.get_size())
       self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c)
     finally:
       SyncMLSubscription.MAX_LEN = previous_max_lines
@@ -806,13 +806,13 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     nb_document = self.createDocumentServerList(one_way=True)
     portal_sync = self.getSynchronizationTool()
     sub_from_server = portal_sync[self.sub_id_from_server]
-    self.assertEquals(sub_from_server.getSyncmlAlertCode(), 'one_way_from_server')
+    self.assertEqual(sub_from_server.getSyncmlAlertCode(), 'one_way_from_server')
     # First do the sync from the server to the client
     nb_message1 = self.synchronize(self.sub_id_from_server)
     sub_from_server = portal_sync[self.sub_id_from_server]
-    self.assertEquals(sub_from_server.getSyncmlAlertCode(), 'one_way_from_server')
-    self.assertEquals(nb_message1, self.nb_message_first_synchronization)
-    self.assertEquals(len(sub_from_server.getDocumentList()), nb_document)
+    self.assertEqual(sub_from_server.getSyncmlAlertCode(), 'one_way_from_server')
+    self.assertEqual(nb_message1, self.nb_message_first_synchronization)
+    self.assertEqual(len(sub_from_server.getDocumentList()), nb_document)
     document_server = self.getDocumentServer() # We also check we don't
                                            # modify initial ob
     document_s = document_server._getOb(self.id1)
@@ -832,24 +832,24 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_s.edit(**kw)
     self.tic()
     self.assertEqual(document_s.getFilename(), self.filename_text)
-    self.assertEquals(self.size_filename_text, document_s.get_size())
+    self.assertEqual(self.size_filename_text, document_s.get_size())
     nb_message1 = self.synchronize(self.sub_id_from_server)
     #In One_From_Server Sync not modify the first_name in client because any
     #datas client sent
     self.assertEqual(document_c.getFilename(), self.filename_odt)
-    self.assertEquals(self.size_filename_odt, document_c.get_size())
-    self.assertEquals(document_c.getShortTitle(), self.short_title2)
+    self.assertEqual(self.size_filename_odt, document_c.get_size())
+    self.assertEqual(document_c.getShortTitle(), self.short_title2)
     self.assertEqual(document_s.getFilename(), self.filename_text)
-    self.assertEquals(self.size_filename_text, document_s.get_size())
-    self.assertEquals(document_s.getShortTitle(), self.short_title2)
+    self.assertEqual(self.size_filename_text, document_s.get_size())
+    self.assertEqual(document_s.getShortTitle(), self.short_title2)
 
     #reset for refresh sync
     #after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()
     nb_message1 = self.synchronize(self.sub_id_from_server)
     self.assertEqual(document_c.getFilename(), self.filename_text)
-    self.assertEquals(self.size_filename_text, document_c.get_size())
-    self.assertEquals(document_c.getShortTitle(), self.short_title2)
+    self.assertEqual(self.size_filename_text, document_c.get_size())
+    self.assertEqual(document_c.getShortTitle(), self.short_title2)
     self.checkSynchronizationStateIsSynchronized()
     document_s = document_server._getOb(self.id1)
     document_c = document_client1._getOb(self.id1)

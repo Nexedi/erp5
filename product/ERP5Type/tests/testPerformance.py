@@ -197,7 +197,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if PROFILE:
           self.profile(bar.Bar_viewPerformance)
       if DO_TEST:
-          self.failUnless(min < req_time < max,
+          self.assertTrue(min < req_time < max,
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
     def profile(self, func, suffix=''):
@@ -306,14 +306,14 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             add_value = add_result[key]
             min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
             max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-            self.failUnless(min_view < module_value < max_view,
+            self.assertTrue(min_view < module_value < max_view,
                             'View: %.4f < %.4f < %.4f' % (
                 min_view, module_value, max_view))
-            self.failUnless(
+            self.assertTrue(
                 MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
                 'Create: %.4f < %.4f < %.4f' % (
                 MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
-            self.failUnless(MIN_TIC < tic_value < MAX_TIC,
+            self.assertTrue(MIN_TIC < tic_value < MAX_TIC,
                             'Tic: %.4f < %.4f < %.4f' % (
                 MIN_TIC, tic_value, MAX_TIC))
             i += 1
@@ -347,7 +347,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if PROFILE:
         self.profile(foo.Foo_viewProxyField)
       if DO_TEST:
-        self.failUnless( MIN_OBJECT_PROXYFIELD_VIEW < req_time
+        self.assertTrue( MIN_OBJECT_PROXYFIELD_VIEW < req_time
                                     < MAX_OBJECT_PROXYFIELD_VIEW,
           '%.4f < %.4f < %.4f' % (
               MIN_OBJECT_PROXYFIELD_VIEW,
@@ -379,7 +379,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if PROFILE:
           self.profile(foo.Foo_viewPerformance)
       if DO_TEST:
-        self.failUnless( MIN_OBJECT_MANY_LINES_VIEW < req_time
+        self.assertTrue( MIN_OBJECT_MANY_LINES_VIEW < req_time
                                     < MAX_OBJECT_MANY_LINES_VIEW,
           '%.4f < %.4f < %.4f' % (
               MIN_OBJECT_MANY_LINES_VIEW,

@@ -263,7 +263,7 @@ class TestERP5BankingTravelerCheckSale(TestERP5BankingCheckbookUsualCashTransfer
     self.assertEqual(len(checkbook_list), 0)
     # check we have cash checkbook 1
     checkbook_object_list = [x.getObject() for x in checkbook_list]
-    self.assertEquals(len(checkbook_object_list), 0)
+    self.assertEqual(len(checkbook_object_list), 0)
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(
                      payment=self.bank_account_1.getRelativeUrl(),

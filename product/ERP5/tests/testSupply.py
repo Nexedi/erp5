@@ -267,9 +267,9 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     # check supply line in predicate table
     result = self.catalog_tool(**kw)
-    self.assertEquals(1, len(result) )
+    self.assertEqual(1, len(result) )
     result = result[0]
-    self.assertEquals(result.start_date_range_min, original_date.toZone('UTC'))
+    self.assertEqual(result.start_date_range_min, original_date.toZone('UTC'))
 
     # set new date on supply...
     supply.edit(start_date_range_min=new_date)
@@ -277,9 +277,9 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     
     # ...and check supply line
     result = self.catalog_tool(**kw)
-    self.assertEquals(1, len(result) )
+    self.assertEqual(1, len(result) )
     result = result[0]
-    self.assertEquals(result.start_date_range_min, new_date.toZone('UTC'))
+    self.assertEqual(result.start_date_range_min, new_date.toZone('UTC'))
 
 
   def test_SupplyLineApplied(self):
@@ -317,9 +317,9 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply.validate()
     supply_line = self._makeSupplyLine(supply)
     supply_line.setSourceReference('my_source_reference')
-    self.assertEquals(supply_line.getSourceReference(), 'my_source_reference')
+    self.assertEqual(supply_line.getSourceReference(), 'my_source_reference')
     supply_line.setDestinationReference('my_destination_reference')
-    self.assertEquals(supply_line.getDestinationReference(), 'my_destination_reference')
+    self.assertEqual(supply_line.getDestinationReference(), 'my_destination_reference')
 
   def test_subcontent_reindexing_supply(self):
     """Tests, that modification on Supply are propagated to children"""

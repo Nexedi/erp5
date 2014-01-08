@@ -17,12 +17,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = Success()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 0)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 0)
 
     self.assert_(result.wasSuccessful())
 
@@ -34,12 +34,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = Failure()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 1)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 0)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 1)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 0)
 
     self.assert_(not result.wasSuccessful())
 
@@ -52,12 +52,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = Skipped()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 1)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 1)
 
     self.assert_(result.wasSuccessful())
 
@@ -71,12 +71,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = Skipped()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 1)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 1)
 
     self.assert_(result.wasSuccessful())
 
@@ -89,12 +89,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = Skipped()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 1)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 1)
 
     self.assert_(result.wasSuccessful())
 
@@ -107,12 +107,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = WillFail()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 1)
-    self.assertEquals(len(result.unexpectedSuccesses), 0)
-    self.assertEquals(len(result.skipped), 0)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 1)
+    self.assertEqual(len(result.unexpectedSuccesses), 0)
+    self.assertEqual(len(result.skipped), 0)
 
     self.assert_(result.wasSuccessful())
 
@@ -125,12 +125,12 @@ class TestBackportUnittest(unittest.TestCase):
     test_instance = WillNotFail()
     result = self.runner.run(test_instance)
 
-    self.assertEquals(result.testsRun, 1)
-    self.assertEquals(len(result.errors), 0)
-    self.assertEquals(len(result.failures), 0)
-    self.assertEquals(len(result.expectedFailures), 0)
-    self.assertEquals(len(result.unexpectedSuccesses), 1)
-    self.assertEquals(len(result.skipped), 0)
+    self.assertEqual(result.testsRun, 1)
+    self.assertEqual(len(result.errors), 0)
+    self.assertEqual(len(result.failures), 0)
+    self.assertEqual(len(result.expectedFailures), 0)
+    self.assertEqual(len(result.unexpectedSuccesses), 1)
+    self.assertEqual(len(result.skipped), 0)
 
     # Unexpected success does not FAIL the test
     self.assert_(not result.wasSuccessful())

@@ -248,7 +248,7 @@ class TestTaskMixin:
         description="This is a very simple task. You can do it quickly.",
         specialise=self.business_process)
     # Check if no task lines are created at the start
-    self.assertEquals(len(task.contentValues()), 0)
+    self.assertEqual(len(task.contentValues()), 0)
     sequence.edit(task=task)
 
   def stepCreateCurrency(self, sequence, **kw) :
@@ -322,7 +322,7 @@ class TestTaskMixin:
         title=str(self),
         specialise=self.business_process)
     # Check if no task lines are created at the start
-    self.assertEquals(len(task_report.contentValues()), 0)
+    self.assertEqual(len(task_report.contentValues()), 0)
     sequence.edit(task_report = task_report)
 
   def stepFillTaskReportWithData(self, sequence=None, sequence_list=None, **kw):
@@ -377,28 +377,28 @@ class TestTaskMixin:
     """
     task = sequence.get('task')
     task_report = sequence.get('task_report')
-    self.assertEquals('confirmed', task_report.getSimulationState())
-    self.assertEquals(task.getSource(), task_report.getSource())
-    self.assertEquals(task.getSourceSection(), task_report.getSourceSection())
-    self.assertEquals(task.getSourceProject(), task_report.getSourceProject())
-    self.assertEquals(task.getDestination(), task_report.getDestination())
-    self.assertEquals(task.getDestinationSection(),
+    self.assertEqual('confirmed', task_report.getSimulationState())
+    self.assertEqual(task.getSource(), task_report.getSource())
+    self.assertEqual(task.getSourceSection(), task_report.getSourceSection())
+    self.assertEqual(task.getSourceProject(), task_report.getSourceProject())
+    self.assertEqual(task.getDestination(), task_report.getDestination())
+    self.assertEqual(task.getDestinationSection(),
                       task_report.getDestinationSection())
-    self.assertEquals(task.getDestinationDecision(),
+    self.assertEqual(task.getDestinationDecision(),
                       task_report.getDestinationDecision())
-    self.assertEquals(task.getTitle(),
+    self.assertEqual(task.getTitle(),
                       task_report.getTitle())
-    self.assertEquals(task.getDescription(),
+    self.assertEqual(task.getDescription(),
                       task_report.getDescription())
-    self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
-    self.assertEquals(task.getDescription(), task_report.getDescription())
-    self.assertEquals(task.getPriceCurrency(), task_report.getPriceCurrency())
-    self.assertEquals(len(task_report.contentValues()), 1)
+    self.assertEqual(task.getPredecessor(), task_report.getPredecessor())
+    self.assertEqual(task.getDescription(), task_report.getDescription())
+    self.assertEqual(task.getPriceCurrency(), task_report.getPriceCurrency())
+    self.assertEqual(len(task_report.contentValues()), 1)
     task_report_line = task_report.contentValues()[0]
-    self.assertEquals(task.getTaskLineResource(), task_report_line.getResource())
-    self.assertEquals(task.getTaskLineQuantity(), task_report_line.getQuantity())
-    self.assertEquals(task.getTaskLinePrice(), task_report_line.getPrice())
-    self.assertEquals(task.getTaskLineRequirement(), 
+    self.assertEqual(task.getTaskLineResource(), task_report_line.getResource())
+    self.assertEqual(task.getTaskLineQuantity(), task_report_line.getQuantity())
+    self.assertEqual(task.getTaskLinePrice(), task_report_line.getPrice())
+    self.assertEqual(task.getTaskLineRequirement(), 
                       task_report_line.getRequirement())
 
   def stepCreateTaskLine(self, sequence=None, sequence_list=None, **kw):
@@ -434,7 +434,7 @@ class TestTaskMixin:
     task_report = sequence.get('task_report') 
     task_content_list = task.contentValues()
     self.assertNotEquals(len(task_content_list), 0)
-    self.assertEquals(len(task_report.contentValues()),
+    self.assertEqual(len(task_report.contentValues()),
                       len(task_content_list))
 
     # Task report values not tested
@@ -514,30 +514,30 @@ class TestTaskMixin:
     """
     task = sequence.get('task')
     task_report = sequence.get('task_report')
-    self.assertEquals('confirmed', task_report.getSimulationState())
-    self.assertEquals(task.getSource(), task_report.getSource())
-    self.assertEquals(task.getSourceSection(), task_report.getSourceSection())
-    self.assertEquals(task.getSourceProject(), task_report.getSourceProject())
-    self.assertEquals(task.getDestination(), task_report.getDestination())
-    self.assertEquals(task.getDestinationSection(),
+    self.assertEqual('confirmed', task_report.getSimulationState())
+    self.assertEqual(task.getSource(), task_report.getSource())
+    self.assertEqual(task.getSourceSection(), task_report.getSourceSection())
+    self.assertEqual(task.getSourceProject(), task_report.getSourceProject())
+    self.assertEqual(task.getDestination(), task_report.getDestination())
+    self.assertEqual(task.getDestinationSection(),
                       task_report.getDestinationSection())
-    self.assertEquals(task.getDestinationDecision(),
+    self.assertEqual(task.getDestinationDecision(),
                       task_report.getDestinationDecision())
-    self.assertEquals(task.getTitle(),
+    self.assertEqual(task.getTitle(),
                       task_report.getTitle())
-    self.assertEquals(task.getDescription(),
+    self.assertEqual(task.getDescription(),
                       task_report.getDescription())
-    self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
-    self.assertEquals(task.getDescription(), task_report.getDescription())
-    self.assertEquals(len(task_report.contentValues()), 2)
+    self.assertEqual(task.getPredecessor(), task_report.getPredecessor())
+    self.assertEqual(task.getDescription(), task_report.getDescription())
+    self.assertEqual(len(task_report.contentValues()), 2)
     for task_report_line in task_report.contentValues():
-      self.assertEquals(task.contentValues()[0].getResource(), 
+      self.assertEqual(task.contentValues()[0].getResource(), 
                         task_report_line.getResource())
-      self.assertEquals(task.contentValues()[0].getQuantity(), 
+      self.assertEqual(task.contentValues()[0].getQuantity(), 
                         task_report_line.getQuantity())
-      self.assertEquals(task.contentValues()[0].getPrice(), 
+      self.assertEqual(task.contentValues()[0].getPrice(), 
                         task_report_line.getPrice())
-      self.assertEquals(task.contentValues()[0].getRequirement(), 
+      self.assertEqual(task.contentValues()[0].getRequirement(), 
                         task_report_line.getRequirement())
 
 class TestTask(TestTaskMixin, ERP5TypeTestCase):
@@ -737,22 +737,22 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
       sequence('CreateResource')
       (source, destination) = sequence.get('organisation_list')
       check_result = task.checkConsistency()
-      self.assertEquals(len(check_result), 4)
+      self.assertEqual(len(check_result), 4)
       task.setDestinationValue(destination)
       task.setSourceValue(source)
       check_result = task.checkConsistency()
-      self.assertEquals(len(check_result), 2)
+      self.assertEqual(len(check_result), 2)
       task.setStartDate(DateTime())
       task.setStopDate(DateTime() + 1)
       check_result = task.checkConsistency()
-      self.assertEquals(len(check_result), 1)
+      self.assertEqual(len(check_result), 1)
       resource = sequence.get('resource_list')[0]
       task.edit(task_line_resource_value = resource,
                 task_line_quantity = self.default_quantity,
                 task_line_price = self.default_price,
       )
       check_result = task.checkConsistency()
-      self.assertEquals(len(check_result), 0)
+      self.assertEqual(len(check_result), 0)
 
     finally:
       portal_type.setTypePropertySheetList(original_property_sheet_list)

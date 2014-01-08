@@ -328,7 +328,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                           )
       exchange_line.setPriceCurrencyValue(self.getCurrencyModule()[price_currency])
       cell_list = exchange_line.objectValues()
-      self.assertEquals(len(cell_list), 3)
+      self.assertEqual(len(cell_list), 3)
       for cell in cell_list:
         cell.setBasePrice(cell_price)
 

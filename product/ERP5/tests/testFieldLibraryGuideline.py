@@ -76,7 +76,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder(self.skin_folder_name)
     skin_folder = ps._getOb(self.skin_folder_name, None)
-    self.failUnless(skin_folder is not None)
+    self.assertTrue(skin_folder is not None)
     sequence.edit(skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -105,10 +105,10 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('1_create_form', modifiable_field.choice[0])
-    self.assertEquals('%s/%s' % (self.skin_folder_name, self.field_library_id), 
+    self.assertEqual('1_create_form', modifiable_field.choice[0])
+    self.assertEqual('%s/%s' % (self.skin_folder_name, self.field_library_id), 
                       modifiable_field.object_id)
 
   def test_01_missingFieldLibrary(self):
@@ -166,11 +166,11 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('0_keep_non_proxy_field', 
+    self.assertEqual('0_keep_non_proxy_field', 
                       modifiable_field.choice_item_list[0][1])
-    self.assertEquals('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -210,11 +210,11 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('0_keep_dead_proxy_field', 
+    self.assertEqual('0_keep_dead_proxy_field', 
                       modifiable_field.choice_item_list[0][1])
-    self.assertEquals('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -254,11 +254,11 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('0_unused_proxy_field', 
+    self.assertEqual('0_unused_proxy_field', 
                       modifiable_field.choice_item_list[0][1])
-    self.assertEquals('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
                                           self.field_library_id),
                       modifiable_field.object_id)
 
@@ -300,11 +300,11 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('2_unproxify_field', 
+    self.assertEqual('2_unproxify_field', 
                       modifiable_field.choice_item_list[0][1])
-    self.assertEquals('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -344,10 +344,10 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     business_template = sequence.get('custom_business_template')
     modifiable_field_list = \
         business_template.BusinessTemplate_getModifiableFieldList()
-    self.assertEquals(1, len(modifiable_field_list))
+    self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEquals('4_delete_form', modifiable_field.choice[0])
-    self.assertEquals('%s/%s' % (self.skin_folder_name, 
+    self.assertEqual('4_delete_form', modifiable_field.choice[0])
+    self.assertEqual('%s/%s' % (self.skin_folder_name, 
                                  self.wrong_field_library_id), 
                       modifiable_field.object_id)
 

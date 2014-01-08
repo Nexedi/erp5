@@ -171,7 +171,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     current_title = sequence.get('current_title')
-    self.assertEquals(object_instance.getTitle(), current_title)
+    self.assertEqual(object_instance.getTitle(), current_title)
 
   def stepSetDifferentTitleValueWithEdit(self, sequence=None, 
                                          sequence_list=None, **kw):
@@ -197,10 +197,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     method_id_list = [x.method_id for x in message_list]
     # XXX FIXME: how many activities should be created normally ?
     # Sometimes it's one, sometimes 2...
-    self.failUnless(len(message_list) > 0)
-    self.failUnless(len(message_list) < 3)
+    self.assertTrue(len(message_list) > 0)
+    self.assertTrue(len(message_list) < 3)
     for method_id in method_id_list:
-      self.failUnless(method_id in ["immediateReindexObject", 
+      self.assertTrue(method_id in ["immediateReindexObject", 
                                     "recursiveImmediateReindexObject"])
 
   def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None, 
@@ -218,7 +218,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     portal = self.getPortal()
     message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list), 0)
+    self.assertEqual(len(message_list), 0)
 
   def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=quiet,
                                                       run=run_all_test):
@@ -301,7 +301,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     current_group_value = sequence.get('current_group_value')
-    self.assertEquals(object_instance.getGroupValue(), current_group_value)
+    self.assertEqual(object_instance.getGroupValue(), current_group_value)
 
   def stepSetDifferentGroupValueWithEdit(self, sequence=None, 
                                          sequence_list=None, **kw):
@@ -585,7 +585,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check if a not defined property is stored on the object_instance.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.not_defined_property_value,
+    self.assertEqual(self.not_defined_property_value,
                       getattr(object_instance, self.not_defined_property_id))
 
   def stepCheckGetNotDefinedProperty(self, sequence=None, 
@@ -594,7 +594,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check getProperty with a not defined property.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.not_defined_property_value,
+    self.assertEqual(self.not_defined_property_value,
                     object_instance.getProperty(self.not_defined_property_id))
 
   def stepCheckObjectPortalType(self, sequence=None, 
@@ -604,7 +604,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     object_instance.getPortalType()
-    self.assertEquals(self.object_portal_type,
+    self.assertEqual(self.object_portal_type,
                       object_instance.getPortalType())
 
   def stepCreateTempObject(self, sequence=None, sequence_list=None, **kw):
@@ -665,7 +665,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     object_instance.getPortalType()
-    self.assertEquals(self.temp_class,
+    self.assertEqual(self.temp_class,
                       object_instance.getPortalType())
 
   def stepSetObjectDefinedProperty(self, sequence=None, 
@@ -683,7 +683,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check if a defined property is stored on the object_instance.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.defined_property_value,
+    self.assertEqual(self.defined_property_value,
                       getattr(object_instance, self.defined_property_id))
 
   def stepCheckGetDefinedProperty(self, sequence=None, 
@@ -692,7 +692,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check getProperty with a defined property.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.defined_property_value,
+    self.assertEqual(self.defined_property_value,
                     object_instance.getProperty(self.defined_property_id))
 
   def stepSetObjectNotRelatedProperty(self, sequence=None, 
@@ -711,7 +711,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check if a defined property is stored on the object_instance.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.not_related_to_temp_object_property_value,
+    self.assertEqual(self.not_related_to_temp_object_property_value,
                       getattr(object_instance, 
                               self.not_related_to_temp_object_property_id))
 
@@ -721,7 +721,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Check getProperty with a defined property.
     """
     object_instance = sequence.get('object_instance')
-    self.assertEquals(self.not_related_to_temp_object_property_value,
+    self.assertEqual(self.not_related_to_temp_object_property_value,
                     object_instance.getProperty(
                          self.not_related_to_temp_object_property_id))
 
@@ -756,9 +756,9 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     object_instance.edit(title='toto')
-    self.assertEquals(object_instance.getTitle(),'toto')
+    self.assertEqual(object_instance.getTitle(),'toto')
     object_instance.edit(title='tutu')
-    self.assertEquals(object_instance.getTitle(),'tutu')
+    self.assertEqual(object_instance.getTitle(),'tutu')
 
   def stepSetEditProperty(self, sequence=None, 
                           sequence_list=None, **kw):
@@ -821,7 +821,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     object_instance = sequence.get('object_instance')
     tales_expression = sequence.get('tales_expression')
-    self.assertEquals(object_instance.getAcquisitionPortalTypeList(evaluate=0),
+    self.assertEqual(object_instance.getAcquisitionPortalTypeList(evaluate=0),
                       tales_expression)
 
   def stepSetGoodTalesExpression(self, sequence=None, 
@@ -864,10 +864,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     obj = module.newContent(portal_type=portal_type)
     # XXX title is an empty string by default, but it's still unsure wether it
     # should be None or ''
-    self.assertEquals(obj.title, '')
-    self.assertEquals(obj.getProperty("title"), obj.getId())
-    self.assertEquals(obj._baseGetTitle(), obj.getId())
-    self.assertEquals(obj.getTitle(), obj.getId())
+    self.assertEqual(obj.title, '')
+    self.assertEqual(obj.getProperty("title"), obj.getId())
+    self.assertEqual(obj._baseGetTitle(), obj.getId())
+    self.assertEqual(obj.getTitle(), obj.getId())
 
   def test_09_setPropertyDefinedProperty(self, quiet=quiet, run=run_all_test):
     """Test for setProperty on Base, when the property is defined.
@@ -879,11 +879,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     obj = module.newContent(portal_type=portal_type)
     title = 'Object title'
     obj.setProperty('title', title)
-    self.assertEquals(obj.getProperty('title'), title)
+    self.assertEqual(obj.getProperty('title'), title)
     obj.setProperty('title', title)
-    self.assertEquals(obj.getProperty('title'), title)
+    self.assertEqual(obj.getProperty('title'), title)
     obj.edit(title=title)
-    self.assertEquals(obj.getProperty('title'), title)
+    self.assertEqual(obj.getProperty('title'), title)
 
   def test_10_setPropertyNotDefinedProperty(self, quiet=quiet,
                                             run=run_all_test):
@@ -897,11 +897,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     property_value = 'Object title'
     property_name = 'a_dummy_not_exising_property'
     obj.setProperty(property_name, property_value)
-    self.assertEquals(obj.getProperty(property_name), property_value)
+    self.assertEqual(obj.getProperty(property_name), property_value)
     obj.setProperty(property_name, property_value)
-    self.assertEquals(obj.getProperty(property_name), property_value)
+    self.assertEqual(obj.getProperty(property_name), property_value)
     obj.edit(**{property_name: property_value})
-    self.assertEquals(obj.getProperty(property_name), property_value)
+    self.assertEqual(obj.getProperty(property_name), property_value)
   
   def test_11_setPropertyPropertyDefinedOnInstance(self,
                                         quiet=quiet, run=run_all_test):
@@ -931,7 +931,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     from Products.ERP5Type.Document import newTempOrganisation
     tmp_object = newTempOrganisation(portal, "a_wonderful_id")
     tmp_object.edit(title='new title')
-    self.assertEquals('new title', tmp_object.getTitle())
+    self.assertEqual('new title', tmp_object.getTitle())
 
   def test_13_aqDynamicWithNonExistentWorkflow(self, quiet=quiet, run=run_all_test):
     """Test if _aq_dynamic still works even if an associated workflow
@@ -1063,21 +1063,21 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Test getViewPermissionOwner method behaviour"""
     portal = self.getPortal()
     obj = portal.organisation_module.newContent(portal_type='Organisation')
-    self.assertEquals(self.username, obj.getViewPermissionOwner())
+    self.assertEqual(self.username, obj.getViewPermissionOwner())
 
   def test_getViewPermissionOwnerNoOwnerLocalRole(self):
     # the actual owner doesn't have Owner local role
     portal = self.getPortal()
     obj = portal.organisation_module.newContent(portal_type='Organisation')
     obj.manage_delLocalRoles(self.username)
-    self.assertEquals(self.username, obj.getViewPermissionOwner())
+    self.assertEqual(self.username, obj.getViewPermissionOwner())
 
   def test_getViewPermissionOwnerNoViewPermission(self):
     # the owner cannot view the object
     portal = self.getPortal()
     obj = portal.organisation_module.newContent(portal_type='Organisation')
     obj.manage_permission('View', [], 0)
-    self.assertEquals(None, obj.getViewPermissionOwner())
+    self.assertEqual(None, obj.getViewPermissionOwner())
 
   def test_Member_Base_download(self):
     # tests that members can download files
@@ -1101,10 +1101,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     basic = '%s:' % self.username
     response = self.publish('%s/Base_download' % file_document.getPath(),
                             basic=basic)
-    self.assertEquals(file_document.getData(), response.body)
-    self.assertEquals('text/plain',
+    self.assertEqual(file_document.getData(), response.body)
+    self.assertEqual('text/plain',
                       response.getHeader('content-type').split(';')[0])
-    self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
+    self.assertEqual('attachment; filename="%s"' % os.path.basename(__file__),
                       response.getHeader('content-disposition'))
 
   def test_getTypeBasedMethod(self):
@@ -1187,9 +1187,9 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.getPortal().person_module.newContent(portal_type='Person',
                                          title='translate_table_test')
     self.tic()
-    self.assertEquals(1, len(self.getPortal().portal_catalog(
+    self.assertEqual(1, len(self.getPortal().portal_catalog(
       portal_type='Person', title='translate_table_test')))
-    self.assertEquals(1, len(self.getPortal().portal_catalog(
+    self.assertEqual(1, len(self.getPortal().portal_catalog(
       translated_portal_type='Person', title='translate_table_test')))
 
   def test_TemporaryObjectPublicMethodListForAnonymous(self):
@@ -1244,7 +1244,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     person.isIndexable = 0
     self.tic()
     self.assertFalse(person.isIndexable)
-    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+    self.assertEqual(0, len(self.portal.portal_catalog(uid=person.getUid())))
 
   @skip("isIndexable is not designed to work like tested here, this test \
       must be rewritten once we know how to handle correctly templates")
@@ -1254,7 +1254,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     person = self.portal.person_module.newContent(portal_type='Person')
     self.tic()
     self.assertTrue(person.isIndexable)
-    self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
+    self.assertEqual(1, len(self.portal.portal_catalog(uid=person.getUid())))
 
     # edit() will register a reindex activity because isIndexable is
     # not yet False when edit() is called.
@@ -1262,7 +1262,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     person.isIndexable = 0
     self.tic()
     self.assertFalse(person.isIndexable)
-    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+    self.assertEqual(0, len(self.portal.portal_catalog(uid=person.getUid())))
 
   @skip("isIndexable is not designed to work like tested here, this test \
       must be rewritten once we know how to handle correctly templates")
@@ -1272,7 +1272,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     person = self.portal.person_module.newContent(portal_type='Person')
     self.tic()
     self.assertTrue(person.isIndexable)
-    self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
+    self.assertEqual(1, len(self.portal.portal_catalog(uid=person.getUid())))
 
     # edit() will not register a reindex activity because isIndexable
     # is already False when edit() is called.
@@ -1280,7 +1280,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     person.edit()
     self.tic()
     self.assertFalse(person.isIndexable)
-    self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
+    self.assertEqual(0, len(self.portal.portal_catalog(uid=person.getUid())))
 
   def test_metaWorkflowTransition(self):
     """Test Meta Transtion, jump from state to another without explicitely
@@ -1288,35 +1288,35 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     module = self.portal.person_module
     person = module.newContent(portal_type='Person')
-    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertEqual(person.getValidationState(), 'draft')
     self.assertFalse(self.portal.portal_workflow.isTransitionPossible(person,
                                                                  'invalidate'))
     # test low-level implementation
     self.portal.portal_workflow.validation_workflow._executeMetaTransition(
                                                          person, 'invalidated')
-    self.assertEquals(person.getValidationState(), 'invalidated')
+    self.assertEqual(person.getValidationState(), 'invalidated')
     validation_history = person.workflow_history['validation_workflow']
-    self.assertEquals(len(validation_history), 2)
-    self.assertEquals(validation_history[-1]['comment'],
+    self.assertEqual(len(validation_history), 2)
+    self.assertEqual(validation_history[-1]['comment'],
                                       'Jump from \'draft\' to \'invalidated\'')
     person = module.newContent(portal_type='Person')
-    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertEqual(person.getValidationState(), 'draft')
 
     # test high-level implementation
     self.portal.portal_workflow._jumpToStateFor(person, 'invalidated')
-    self.assertEquals(person.getValidationState(), 'invalidated')
+    self.assertEqual(person.getValidationState(), 'invalidated')
 
     person = module.newContent(portal_type='Person')
-    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertEqual(person.getValidationState(), 'draft')
     self.portal.portal_workflow._jumpToStateFor(person, 'invalidated',
                                                wf_id='validation_workflow')
-    self.assertEquals(person.getValidationState(), 'invalidated')
+    self.assertEqual(person.getValidationState(), 'invalidated')
     person = module.newContent(portal_type='Person')
-    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertEqual(person.getValidationState(), 'draft')
     self.assertRaises(WorkflowException,
                       self.portal.portal_workflow._jumpToStateFor,
                       person, 'invalidated', wf_id='edit_workflow')
-    self.assertEquals(person.getValidationState(), 'draft')
+    self.assertEqual(person.getValidationState(), 'draft')
 
 
 class TestERP5PropertyManager(unittest.TestCase):
@@ -1337,17 +1337,17 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob._setProperty('a_dummy_property', dummy_property_value)
 
     # the property appears in property map
-    self.failUnless('a_dummy_property' in [x['id'] for x in ob.propertyMap()])
+    self.assertTrue('a_dummy_property' in [x['id'] for x in ob.propertyMap()])
     # the value and can be retrieved using getProperty
-    self.assertEquals(ob.getProperty('a_dummy_property'), dummy_property_value)
+    self.assertEqual(ob.getProperty('a_dummy_property'), dummy_property_value)
     # the value is also stored as a class attribute
-    self.assertEquals(ob.a_dummy_property, dummy_property_value)
+    self.assertEqual(ob.a_dummy_property, dummy_property_value)
 
   def test_setPropertyExistingProperty(self):
     """_setProperty raises an error if the property already exists."""
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.failUnless('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
     # trying to call _setProperty will with an existing property raises:
     #         BadRequest: Invalid or duplicate property id: title
     self.assertRaises(BadRequest, ob._setProperty, 'title', 'property value')
@@ -1357,20 +1357,20 @@ class TestERP5PropertyManager(unittest.TestCase):
     """
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.failUnless('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
     prop_value = 'title value'
     ob._updateProperty('title', prop_value)
-    self.assertEquals(ob.getProperty('title'), prop_value)
-    self.assertEquals(ob.title, prop_value)
+    self.assertEqual(ob.getProperty('title'), prop_value)
+    self.assertEqual(ob.title, prop_value)
 
   def test_setPropertyTypeInt(self):
     """You can specify the type of the property in _setProperty"""
     ob = self._makeOne('ob')
     dummy_property_value = 3
     ob._setProperty('a_dummy_property', dummy_property_value, type='int')
-    self.assertEquals(['int'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['int'], [x['type'] for x in ob.propertyMap()
                                         if x['id'] == 'a_dummy_property'])
-    self.assertEquals(type(ob.getProperty('a_dummy_property')), type(1))
+    self.assertEqual(type(ob.getProperty('a_dummy_property')), type(1))
 
   def test_setPropertyTALESType(self):
     """ERP5PropertyManager can use TALES Type for properties, TALES will then
@@ -1379,7 +1379,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob = self._makeOne('ob')
     dummy_property_value = 'python: 1+2'
     ob._setProperty('a_dummy_property', dummy_property_value, type='tales')
-    self.assertEquals(ob.getProperty('a_dummy_property'), 1+2)
+    self.assertEqual(ob.getProperty('a_dummy_property'), 1+2)
 
   def test_setPropertyTypeDate(self):
     """You can specify the type of the property in _setProperty"""
@@ -1387,50 +1387,50 @@ class TestERP5PropertyManager(unittest.TestCase):
     from DateTime import DateTime
     dummy_property_value = DateTime()
     ob._setProperty('a_dummy_property', dummy_property_value, type='date')
-    self.assertEquals(['date'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['date'], [x['type'] for x in ob.propertyMap()
                                         if x['id'] == 'a_dummy_property'])
-    self.assertEquals(type(ob.getProperty('a_dummy_property')), type(DateTime()))
+    self.assertEqual(type(ob.getProperty('a_dummy_property')), type(DateTime()))
     #Set Property without type argument
     ob._setProperty('a_second_dummy_property', dummy_property_value)
-    self.assertEquals(['date'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['date'], [x['type'] for x in ob.propertyMap()
                                         if x['id'] == 'a_second_dummy_property'])
-    self.assertEquals(type(ob.getProperty('a_second_dummy_property')),
+    self.assertEqual(type(ob.getProperty('a_second_dummy_property')),
                       type(DateTime()))
 
   def test_setPropertyTypeLines(self):
     ob = self._makeOne('ob')
     ob._setProperty('a_dummy_list_property', ('1', '2'), type='lines')
-    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['lines'], [x['type'] for x in ob.propertyMap()
                                         if x['id'] == 'a_dummy_list_property'])
-    self.assertEquals(ob.getProperty('a_dummy_list_property'), ('1', '2'))
+    self.assertEqual(ob.getProperty('a_dummy_list_property'), ('1', '2'))
 
     #Set Property without type argument
     ob._setProperty('a_second_dummy_property_list', ('3', '4'))
-    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['lines'], [x['type'] for x in ob.propertyMap()
                                 if x['id'] == 'a_second_dummy_property_list'])
-    self.assertEquals(ob.getProperty('a_second_dummy_property_list'),
+    self.assertEqual(ob.getProperty('a_second_dummy_property_list'),
                                     ('3', '4'))
     # same, but passing a list, not a tuple
     ob._setProperty('a_third_dummy_property_list', ['5', '6'])
-    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+    self.assertEqual(['lines'], [x['type'] for x in ob.propertyMap()
                                 if x['id'] == 'a_third_dummy_property_list'])
-    self.assertEquals(ob.getProperty('a_third_dummy_property_list'),
+    self.assertEqual(ob.getProperty('a_third_dummy_property_list'),
                                     ('5', '6'))
 
   def test_getPropertyNonExistantProps(self):
     """getProperty return None if the value is not found.
     """
     ob = self._makeOne('ob')
-    self.assertEquals(ob.getProperty('a_dummy_property'), None)
+    self.assertEqual(ob.getProperty('a_dummy_property'), None)
 
   def test_getPropertyDefaultValue(self):
     """getProperty accepts a default value, if the property is not defined.
     """
     ob = self._makeOne('ob')
-    self.assertEquals(ob.getProperty('a_dummy_property', 100), 100)
+    self.assertEqual(ob.getProperty('a_dummy_property', 100), 100)
     prop_value = 3
     ob._setProperty('a_dummy_property', prop_value)
-    self.assertEquals(ob.getProperty('a_dummy_property', 100), prop_value)
+    self.assertEqual(ob.getProperty('a_dummy_property', 100), prop_value)
 
 def test_suite():
   suite = unittest.TestSuite()

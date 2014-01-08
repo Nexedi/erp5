@@ -131,45 +131,45 @@ class TestEngine(ATSiteTestCase):
     def testCall(self):
         self.register()
         data = self.engine('HtmlToText', self.data)
-        self.failUnlessEqual(data, "foo")
+        self.assertEqual(data, "foo")
 
         data = self.engine('FooToBar', self.data)
-        self.failUnlessEqual(data, "<b>bar</b>")
+        self.assertEqual(data, "<b>bar</b>")
 
     def testConvert(self):
         self.register()
 
         data = self.engine.convert('HtmlToText', self.data)
-        self.failUnlessEqual(data.getData(), "foo")
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.failUnlessEqual(data.getMetadata().get('encoding'), None)
-        self.failUnlessEqual(data.name(), "HtmlToText")
+        self.assertEqual(data.getData(), "foo")
+        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(data.getMetadata().get('encoding'), None)
+        self.assertEqual(data.name(), "HtmlToText")
 
         self.engine.registerTransform(HtmlToTextWithEncoding())
         data = self.engine.convert('HtmlToTextWithEncoding', self.data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.failUnlessEqual(data.getMetadata()['encoding'], 'ascii')
-        self.failUnlessEqual(data.name(), "HtmlToTextWithEncoding")
+        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(data.getMetadata()['encoding'], 'ascii')
+        self.assertEqual(data.name(), "HtmlToTextWithEncoding")
 
     def testConvertTo(self):
         self.register()
 
         data = self.engine.convertTo('text/plain', self.data, mimetype="text/html")
-        self.failUnlessEqual(data.getData(), "foo")
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.failUnlessEqual(data.getMetadata().get('encoding'), None)
-        self.failUnlessEqual(data.name(), "text/plain")
+        self.assertEqual(data.getData(), "foo")
+        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(data.getMetadata().get('encoding'), None)
+        self.assertEqual(data.name(), "text/plain")
 
         self.engine.unregisterTransform('HtmlToText')
         self.engine.unregisterTransform('FooToBar')
         self.engine.registerTransform(HtmlToTextWithEncoding())
         data = self.engine.convertTo('text/plain', self.data, mimetype="text/html")
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
         # HtmlToTextWithEncoding. Now None is the right 
-        #self.failUnlessEqual(data.getMetadata()['encoding'], 'ascii')
+        #self.assertEqual(data.getMetadata()['encoding'], 'ascii')
         # XXX the new algorithm is choosing html_to_text instead of 
-        self.failUnlessEqual(data.getMetadata()['encoding'], None)
-        self.failUnlessEqual(data.name(), "text/plain")
+        self.assertEqual(data.getMetadata()['encoding'], None)
+        self.assertEqual(data.name(), "text/plain")
 
     def testChain(self):
         self.register()
@@ -179,15 +179,15 @@ class TestEngine(ATSiteTestCase):
 
         self.engine.registerTransform(hb)
         cache = self.engine.convert('hbar', self.data)
-        self.failUnlessEqual(cache.getData(), "bar")
-        self.failUnlessEqual(cache.name(), "hbar")
+        self.assertEqual(cache.getData(), "bar")
+        self.assertEqual(cache.name(), "hbar")
 
     def testPolicy(self):
         mt = 'text/x-html-safe'
         data = '<script>this_is_unsafe();</script><p>this is safe</p>'
         
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
-        self.failUnlessEqual(cache.getData(), '<p>this is safe</p>')
+        self.assertEqual(cache.getData(), '<p>this is safe</p>')
 
         self.engine.registerTransform(DummyHtmlFilter1())
         self.engine.registerTransform(DummyHtmlFilter2())
@@ -196,16 +196,16 @@ class TestEngine(ATSiteTestCase):
         self.engine.manage_addPolicy(mt, required)
         expected_policy = [('text/x-html-safe',
                             ('dummy_html_filter1', 'dummy_html_filter2'))]
-        self.failUnlessEqual(self.engine.listPolicies(), expected_policy)
+        self.assertEqual(self.engine.listPolicies(), expected_policy)
 
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
-        self.failUnlessEqual(cache.getData(), '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
+        self.assertEqual(cache.getData(), '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
 
-        self.failUnlessEqual(cache.getMetadata()['mimetype'], mt)
-        self.failUnlessEqual(cache.name(), mt)
+        self.assertEqual(cache.getMetadata()['mimetype'], mt)
+        self.assertEqual(cache.name(), mt)
 
         path = self.engine._findPath('text/html', mt, required)
-        self.failUnlessEqual(str(path),
+        self.assertEqual(str(path),
                              "[<Transform at dummy_html_filter1>, "
                              "<Transform at dummy_html_filter2>, "
                              "<Transform at safe_html>]")
@@ -214,8 +214,8 @@ class TestEngine(ATSiteTestCase):
         data = "This is a test"
         mt = "text/plain"
         out = self.engine.convertTo('text/plain', data, mimetype=mt)
-        self.failUnlessEqual(out.getData(), data)
-        self.failUnlessEqual(out.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(out.getData(), data)
+        self.assertEqual(out.getMetadata()['mimetype'], 'text/plain')
 
     def testCache(self):
         data = "This is a test"
@@ -223,14 +223,14 @@ class TestEngine(ATSiteTestCase):
         mt = "text/plain"
         self.engine.max_sec_in_cache = 20
         out = self.engine.convertTo(mt, data, mimetype=mt, object=self)
-        self.failUnlessEqual(out.getData(), data, out.getData())
+        self.assertEqual(out.getData(), data, out.getData())
         out = self.engine.convertTo(mt, other_data, mimetype=mt, object=self)
-        self.failUnlessEqual(out.getData(), data, out.getData())
+        self.assertEqual(out.getData(), data, out.getData())
         self.engine.max_sec_in_cache = -1
         out = self.engine.convertTo(mt, data, mimetype=mt, object=self)
-        self.failUnlessEqual(out.getData(), data, out.getData())
+        self.assertEqual(out.getData(), data, out.getData())
         out = self.engine.convertTo(mt, other_data, mimetype=mt, object=self)
-        self.failUnlessEqual(out.getData(), other_data, out.getData())
+        self.assertEqual(out.getData(), other_data, out.getData())
 
     def testCacheWithVHost(self):
         """Ensure that the transform cache key includes virtual
@@ -248,7 +248,7 @@ class TestEngine(ATSiteTestCase):
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self.folder,
             context=self.folder)
-        self.failUnlessEqual(
+        self.assertEqual(
             out.getData(), '<a href="http://nohost">vhost link</a>',
             out.getData())
 
@@ -256,7 +256,7 @@ class TestEngine(ATSiteTestCase):
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self,
             context=self.folder)
-        self.failUnlessEqual(
+        self.assertEqual(
             out.getData(), '<a href="http://nohost">vhost link</a>',
             out.getData())
 
@@ -266,7 +266,7 @@ class TestEngine(ATSiteTestCase):
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self.folder,
             context=self.folder)
-        self.failUnlessEqual(
+        self.assertEqual(
             out.getData(), '<a href="http://otherhost">vhost link</a>',
             out.getData())
 
@@ -274,7 +274,7 @@ class TestEngine(ATSiteTestCase):
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self,
             context=self.folder)
-        self.failUnlessEqual(
+        self.assertEqual(
             out.getData(), '<a href="http://otherhost">vhost link</a>',
             out.getData())
 

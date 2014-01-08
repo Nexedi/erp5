@@ -109,19 +109,19 @@ class TestICal(ERP5TypeTestCase):
     self.assertTrue('END:VCALENDAR' in feed_dict)
     self.assertTrue('BEGIN:VEVENT' in feed_dict)
     self.assertTrue('END:VEVENT' in feed_dict)
-    self.assertEquals(feed_dict['SUMMARY'], 'Event One')
+    self.assertEqual(feed_dict['SUMMARY'], 'Event One')
     # if not set start date, it must be same as creation date
     # if not set end date, it must be same as start date
-    self.assertEquals(feed_dict['DTSTART'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
-    self.assertEquals(feed_dict['DTEND'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
-    self.assertEquals(feed_dict['CREATED'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
-    self.assertEquals(feed_dict['LAST-MODIFIED'], event.getModificationDate().HTML4().replace('-','').replace(':',''))
-    self.assertEquals(feed_dict['URL'],  event.absolute_url())
-    self.assertEquals(feed_dict['UID'], 'uuid%s' % event.getUid())
+    self.assertEqual(feed_dict['DTSTART'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
+    self.assertEqual(feed_dict['DTEND'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
+    self.assertEqual(feed_dict['CREATED'], event.getCreationDate().HTML4().replace('-','').replace(':',''))
+    self.assertEqual(feed_dict['LAST-MODIFIED'], event.getModificationDate().HTML4().replace('-','').replace(':',''))
+    self.assertEqual(feed_dict['URL'],  event.absolute_url())
+    self.assertEqual(feed_dict['UID'], 'uuid%s' % event.getUid())
     # there is no description
     self.assertFalse('DESCRIPTION' in feed_dict)
     # current workflow state - draft
-    self.assertEquals(feed_dict['STATUS'], 'TENTATIVE')
+    self.assertEqual(feed_dict['STATUS'], 'TENTATIVE')
     
     # set start date, description and change workflow state - new
     event.plan()
@@ -131,11 +131,11 @@ class TestICal(ERP5TypeTestCase):
     
     feed_dict = self.getICalFeed(module)
     # DSTART and DTEND are the date in UTC
-    self.assertEquals(feed_dict['DTSTART'], '20070815T083000Z')
+    self.assertEqual(feed_dict['DTSTART'], '20070815T083000Z')
     # if not set end date, it must be same as start date
-    self.assertEquals(feed_dict['DTEND'], '20070815T083000Z')
-    self.assertEquals(feed_dict['STATUS'], 'TENTATIVE')
-    self.assertEquals(feed_dict['DESCRIPTION'],  'Event One description')
+    self.assertEqual(feed_dict['DTEND'], '20070815T083000Z')
+    self.assertEqual(feed_dict['STATUS'], 'TENTATIVE')
+    self.assertEqual(feed_dict['DESCRIPTION'],  'Event One description')
     
     # check categorization
     sale_op = self.portal.sale_opportunity_module.newContent(portal_type='Sale Opportunity', title='New Opportunity', reference='NEWSALEOP')
@@ -152,8 +152,8 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['DTEND'], '20070815T133000Z')
-    self.assertEquals(feed_dict['STATUS'], 'CONFIRMED')
+    self.assertEqual(feed_dict['DTEND'], '20070815T133000Z')
+    self.assertEqual(feed_dict['STATUS'], 'CONFIRMED')
     
     # cancel event but first remove previously created
     module.manage_delObjects([event.getId()])
@@ -162,7 +162,7 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
      
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['STATUS'], 'CANCELLED')
+    self.assertEqual(feed_dict['STATUS'], 'CANCELLED')
 
   def test_02_renderTask(self, quiet=0, run=run_all_test):
     """
@@ -182,9 +182,9 @@ class TestICal(ERP5TypeTestCase):
     self.assertTrue('END:VCALENDAR' in feed_dict)
     self.assertTrue('BEGIN:VTODO' in feed_dict)
     self.assertTrue('END:VTODO' in feed_dict)
-    self.assertEquals(feed_dict['SUMMARY'], 'Task One')
-    self.assertEquals(feed_dict['STATUS'], 'NEEDS-ACTION')
-    self.assertEquals(feed_dict.get('PERCENT-COMPLETE', '0'), '0') # when it is zero it doesn't have to be there
+    self.assertEqual(feed_dict['SUMMARY'], 'Task One')
+    self.assertEqual(feed_dict['STATUS'], 'NEEDS-ACTION')
+    self.assertEqual(feed_dict.get('PERCENT-COMPLETE', '0'), '0') # when it is zero it doesn't have to be there
     # now we check categorization (while we can edit the object)
     project = self.portal.project_module.newContent(portal_type='Project', 
                                                                           title='New Project', 
@@ -193,31 +193,31 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['CATEGORIES'], 'NEWPROJ')
+    self.assertEqual(feed_dict['CATEGORIES'], 'NEWPROJ')
     
     # change workflow state - planned
     task.plan()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['STATUS'], 'NEEDS-ACTION')
-    self.assertEquals(feed_dict['PERCENT-COMPLETE'], '33')
+    self.assertEqual(feed_dict['STATUS'], 'NEEDS-ACTION')
+    self.assertEqual(feed_dict['PERCENT-COMPLETE'], '33')
     
     # change workflow state - ordered
     task.order()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['STATUS'], 'IN-PROCESS')
-    self.assertEquals(feed_dict['PERCENT-COMPLETE'], '66')
+    self.assertEqual(feed_dict['STATUS'], 'IN-PROCESS')
+    self.assertEqual(feed_dict['PERCENT-COMPLETE'], '66')
     
     # change workflow state - confirmed
     task.confirm()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals(feed_dict['STATUS'], 'COMPLETED')
-    self.assertEquals(feed_dict['PERCENT-COMPLETE'], '100')
+    self.assertEqual(feed_dict['STATUS'], 'COMPLETED')
+    self.assertEqual(feed_dict['PERCENT-COMPLETE'], '100')
     
   def test_03_renderJournal(self, quiet=0, run=run_all_test):
     """
@@ -256,9 +256,9 @@ class TestICal(ERP5TypeTestCase):
     self.assertTrue('END:VCALENDAR' in feed_dict)
     self.assertTrue('BEGIN:VJOURNAL' in feed_dict)
     self.assertTrue('END:VJOURNAL' in feed_dict)
-    self.assertEquals(feed_dict['SUMMARY'], 'One')
-    self.assertEquals(feed_dict['DESCRIPTION'], 'Person One')
-    self.assertEquals(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))  
+    self.assertEqual(feed_dict['SUMMARY'], 'One')
+    self.assertEqual(feed_dict['DESCRIPTION'], 'Person One')
+    self.assertEqual(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))  
     
 def test_suite():
   suite = unittest.TestSuite()

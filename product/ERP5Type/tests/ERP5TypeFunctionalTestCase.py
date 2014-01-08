@@ -430,7 +430,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
-    self.assertEquals([], error_title_list, '\n'.join(error_title_list))
+    self.assertEqual([], error_title_list, '\n'.join(error_title_list))
 
 # monkey patch HTTPResponse._unauthorized so that we will not have HTTP
 # authentication dialog in case of Unauthorized exception to prevent

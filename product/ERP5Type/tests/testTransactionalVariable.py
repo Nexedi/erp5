@@ -51,75 +51,75 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       """Check if a transaction variable behaves in the same way as a dict.  """
    
       tv = getTransactionalVariable()
-      self.failIfEqual(tv, None)
+      self.assertNotEqual(tv, None)
 
       # Test frequently used dict methods. This does not cover everything,
       # but should be enough.
       tv.clear()
-      self.failUnlessEqual(len(tv), 0)
-      self.failUnlessRaises(KeyError, tv.__getitem__, 'toto')
+      self.assertEqual(len(tv), 0)
+      self.assertRaises(KeyError, tv.__getitem__, 'toto')
 
       tv['toto'] = 'titi'
-      self.failUnlessEqual(len(tv), 1)
-      self.failUnlessEqual(tv['toto'], 'titi')
+      self.assertEqual(len(tv), 1)
+      self.assertEqual(tv['toto'], 'titi')
 
-      self.failUnlessEqual(tv.get('foo'), None)
+      self.assertEqual(tv.get('foo'), None)
       tv.setdefault('foo', 'bar')
-      self.failUnlessEqual(len(tv), 2)
-      self.failUnlessEqual(tv['foo'], 'bar')
+      self.assertEqual(len(tv), 2)
+      self.assertEqual(tv['foo'], 'bar')
 
-      self.failUnless('foo' in tv)
+      self.assertTrue('foo' in tv)
       del tv['foo']
-      self.failIf('foo' in tv)
-      self.failUnlessEqual(len(tv), 1)
+      self.assertFalse('foo' in tv)
+      self.assertEqual(len(tv), 1)
 
     def test_02_Expiration(self):
       """Check if a transaction variable does not persist over multiple
       transactions.
       """
       tv = getTransactionalVariable()
-      self.failIfEqual(tv, None)
+      self.assertNotEqual(tv, None)
 
       tv.clear()
-      self.failUnlessEqual(len(tv), 0)
+      self.assertEqual(len(tv), 0)
 
       # Commit and check.
       tv['toto'] = 'titi'
-      self.failUnlessEqual(tv['toto'], 'titi')
+      self.assertEqual(tv['toto'], 'titi')
       self.commit()
-      self.failIf('toto' in tv)
+      self.assertFalse('toto' in tv)
 
       # Abort and check.
       tv['toto'] = 'titi'
-      self.failUnlessEqual(tv['toto'], 'titi')
+      self.assertEqual(tv['toto'], 'titi')
       self.abort()
-      self.failIf('toto' in tv)
+      self.assertFalse('toto' in tv)
 
     def test_03_Durability(self):
       """Check if a transaction variable does not disappear within the same
       transaction.
       """
       tv = getTransactionalVariable()
-      self.failIfEqual(tv, None)
+      self.assertNotEqual(tv, None)
 
       tv.clear()
-      self.failUnlessEqual(len(tv), 0)
+      self.assertEqual(len(tv), 0)
 
       # Set both a transaction variable and a volatile attribute,
       # in order to detect the difference between their behaviors.
       tv['toto'] = 'titi'
-      self.failUnlessEqual(tv['toto'], 'titi')
+      self.assertEqual(tv['toto'], 'titi')
       portal = self.getPortal()
       vattr = '_v_erp5type_test_durability'
       setattr(portal, vattr, 'dummy')
-      self.failUnlessEqual(getattr(portal, vattr), 'dummy')
+      self.assertEqual(getattr(portal, vattr), 'dummy')
 
       # Force to minimize the connection cache so that volatile attributes
       # and unghostified objects are discarded.
       portal._p_jar.cacheMinimize()
-      self.failUnless('toto' in tv)
-      self.failUnlessEqual(tv['toto'], 'titi')
-      self.failUnlessEqual(getattr(portal, vattr, None), None)
+      self.assertTrue('toto' in tv)
+      self.assertEqual(tv['toto'], 'titi')
+      self.assertEqual(getattr(portal, vattr, None), None)
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -203,7 +203,7 @@ class TestTaskReporting(TestTaskReportingMixin):
     report_section_list = self.getReportSectionList(
         self.portal.project_module.Project_1,
         'Project_viewMonthlyReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -212,7 +212,7 @@ class TestTaskReporting(TestTaskReportingMixin):
     # 2009-07             3
     #  Project1
     #   Project1/Line1    3
-    self.assertEquals(3, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                    **{'person_module/Person_1': 3.0,
                       })
@@ -295,11 +295,11 @@ class TestTaskReporting(TestTaskReportingMixin):
     report_section_list = self.getReportSectionList(
         self.portal.project_module.Project_1,
         'Project_viewMonthlyReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(9, len(data_line_list))
+    self.assertEqual(9, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                    **{'person_module/Person_1': 3.0,
                       'person_module/Person_2': 6.5,

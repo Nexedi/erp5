@@ -57,18 +57,18 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
     self.tic()
 
   def test_getChildCount(self):
-    self.assertEquals(0, self.person_1.Person_getChildCount())
+    self.assertEqual(0, self.person_1.Person_getChildCount())
     
     self.person_2.setNaturalParentValue(self.person_1)
     self.tic()
-    self.assertEquals(1, self.person_1.Person_getChildCount())
+    self.assertEqual(1, self.person_1.Person_getChildCount())
     
-    self.assertEquals(1, self.person_1.Person_getChildCount(max_age=1000))
-    self.assertEquals(0, self.person_1.Person_getChildCount(max_age=2))
+    self.assertEqual(1, self.person_1.Person_getChildCount(max_age=1000))
+    self.assertEqual(0, self.person_1.Person_getChildCount(max_age=2))
   
 
   def test_SocialContract(self):
-    self.assertEquals(0, self.person_1.Person_getPartnerCount())
+    self.assertEqual(0, self.person_1.Person_getPartnerCount())
     contract_1 = self.portal.social_contract_module.newContent(
                           portal_type='Social Contract',
                           social_contract_type='marriage',
@@ -76,7 +76,7 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
     contract_1.setDestinationValueList((self.person_1, self.person_2))
     contract_1.validate()
     self.tic()
-    self.assertEquals(1, self.person_1.Person_getPartnerCount())
+    self.assertEqual(1, self.person_1.Person_getPartnerCount())
 
     contract_2 = self.portal.social_contract_module.newContent(
                           portal_type='Social Contract',
@@ -86,19 +86,19 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
     contract_2.validate()
 
     self.tic()
-    self.assertEquals(2, self.person_1.Person_getPartnerCount())
+    self.assertEqual(2, self.person_1.Person_getPartnerCount())
     
     # you can specify a date
-    self.assertEquals(1,
+    self.assertEqual(1,
       self.person_1.Person_getPartnerCount(at_date=DateTime(3000, 1, 2)))
     
     # you can restrict to some social contracts types only
-    self.assertEquals(1, self.person_1.Person_getPartnerCount(
+    self.assertEqual(1, self.person_1.Person_getPartnerCount(
                       valid_social_contract_type_list=('marriage', )))
 
     # only validated social contracts are used
     contract_1.invalidate()
-    self.assertEquals(1, self.person_1.Person_getPartnerCount())
+    self.assertEqual(1, self.person_1.Person_getPartnerCount())
 
 
 def test_suite():

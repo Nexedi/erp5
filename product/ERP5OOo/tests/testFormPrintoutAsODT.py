@@ -251,15 +251,15 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     span_list = content_tree.xpath('//text:reference-mark-start[@text:name="week"]/following-sibling::text:span',
                                    namespaces=content_tree.nsmap)
     if span_list:
-      self.assertEquals(1, len(span_list))
+      self.assertEqual(1, len(span_list))
       span = span_list[0]
-      self.assertEquals('line1', span.text)
-      self.assertEquals('line2', span[0].tail)
+      self.assertEqual('line1', span.text)
+      self.assertEqual('line2', span[0].tail)
     else:
       reference_mark_node = content_tree.xpath('//text:reference-mark-start[@text:name="week"][1]',
                                                namespaces=content_tree.nsmap)[0]
-      self.assertEquals('line1', reference_mark_node.tail)
-      self.assertEquals('line2', reference_mark_node.getnext().tail)
+      self.assertEqual('line1', reference_mark_node.tail)
+      self.assertEqual('line2', reference_mark_node.getnext().tail)
     self._validate(odf_document)
 
   def test_01_Paragraph_08_Field_Format(self):
@@ -342,7 +342,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -381,7 +381,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     self.assertEqual(listbox.get_value('columns'),
                      [('id', 'ID'), ('title', 'Title'), ('quantity', 'Quantity')])
     listboxline_list = listbox.get_value('default', render_format = 'list',
@@ -424,7 +424,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\n'
                       'start_date|Date\nstatus|Status',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -460,7 +460,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = '',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     for line in listboxline_list:
@@ -520,7 +520,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox2.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -535,10 +535,10 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_tree = etree.XML(content_xml)
     #Check that foo_1 is inside table, with the same style
     xpath_style_name_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p[@text:style-name="P4"]/text()'
-    self.assertEquals(['foo_1', 'foo_2'], content_tree.xpath(xpath_style_name_expression, namespaces=content_tree.nsmap))
+    self.assertEqual(['foo_1', 'foo_2'], content_tree.xpath(xpath_style_name_expression, namespaces=content_tree.nsmap))
     #Check that each listbox values are inside ODT table cells
     xpath_result_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p/text()'
-    self.assertEquals(['foo_1', 'foo_title_5', '0.0', 'foo_2', 'foo_2', '0.0', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
+    self.assertEqual(['foo_1', 'foo_title_5', '0.0', 'foo_2', 'foo_2', '0.0', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
     self.assertFalse(content_xml.find("foo_title_4") > 0)
     self._validate(odf_document)
 
@@ -575,7 +575,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox3.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -612,7 +612,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -653,7 +653,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test1.foo_1.setTitle('foo_title_8')
     message = listbox.ListBox_setPropertyList(
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     # title line only
@@ -713,7 +713,7 @@ for n in xrange(6, 0, -1):
       field_portal_types = 'Foo Line | Foo Line',
       field_row_css_method = 'Foo_getRowCssList',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     listboxline_list = listbox4.get_value('default', render_format = 'list',
                                           REQUEST = request)
     self.assertEqual(len(listboxline_list), 7)
@@ -800,7 +800,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     createZODBPythonScript(
       self.portal.portal_skins.custom,
       'FooReport_getReportSectionList',
@@ -904,7 +904,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
     createZODBPythonScript(
       self.portal.portal_skins.custom,
       'FooReport_getReportSectionList',
@@ -1006,7 +1006,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.failUnless('Set Successfully' in message)
+    self.assertTrue('Set Successfully' in message)
 
     # report box
     foo2_view = erp5form.addERP5Form(id='Foo2_view', title='Foo2 View')
@@ -1237,25 +1237,25 @@ return []
       field_id, klass, value = field_configuration
       xpath = '//text:variable-set[@text:name = "%s"]' % field_id
       node_list = content_tree.xpath(xpath, namespaces=nsmap)
-      self.assertEquals(1, len(node_list))
+      self.assertEqual(1, len(node_list))
       node = node_list[0]
       if klass == 'StringField':
-        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+        self.assertEqual(node.get('{%s}value-type' % nsmap['office']),
                           'string')
-        self.assertEquals(node.text, value)
+        self.assertEqual(node.text, value)
       elif klass in ('IntegerField', 'FloatField'):
-        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+        self.assertEqual(node.get('{%s}value-type' % nsmap['office']),
                           'float')
-        self.assertEquals(node.get('{%s}value' % nsmap['office']), str(value))
+        self.assertEqual(node.get('{%s}value' % nsmap['office']), str(value))
       elif klass == 'DateTimeField':
-        self.assertEquals(node.get('{%s}value-type' % nsmap['office']), 'date')
-        self.assertEquals(node.text, value.strftime('%d/%m/%Y %H:%M:%S'))
+        self.assertEqual(node.get('{%s}value-type' % nsmap['office']), 'date')
+        self.assertEqual(node.text, value.strftime('%d/%m/%Y %H:%M:%S'))
       elif klass == 'CheckBoxField':
-        self.assertEquals(node.get('{%s}value-type' % nsmap['office']),
+        self.assertEqual(node.get('{%s}value-type' % nsmap['office']),
                           'boolean')
-        self.assertEquals(node.get('{%s}boolean-value' % nsmap['office']),
+        self.assertEqual(node.get('{%s}boolean-value' % nsmap['office']),
                           'false')
-        self.assertEquals(node.text, 'FALSE')
+        self.assertEqual(node.text, 'FALSE')
       else:
         raise NotImplementedError
 

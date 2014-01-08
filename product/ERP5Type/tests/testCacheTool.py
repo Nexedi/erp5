@@ -231,11 +231,11 @@ return result
                         result=result)
     end = time.time()
     calculation_time = end-start
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     after_cookie_value = self._getCacheCookieValue()
     # if there is cache miss, then real calculation is done,
     # then the cookie is increased with a value 1
-    self.assertEquals(after_cookie_value-before_cookie_value,
+    self.assertEqual(after_cookie_value-before_cookie_value,
                       int(real_calculation))
     return calculation_time
 
@@ -332,7 +332,7 @@ return result
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (1st call)", calculation_time
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     self.commit()
 
     ## 2nd call - should be cached now
@@ -344,7 +344,7 @@ return result
     calculation_time = end-start
     print "\n\tCalculation time (2nd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     self.commit()
 
     # Clear only another_ram_cache_factory
@@ -358,7 +358,7 @@ return result
     calculation_time = end-start
     print "\n\tCalculation time (3rd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     self.commit()
 
   def test_05_CheckLongKeysAndLargeValues(self):
@@ -411,7 +411,7 @@ return 'a' * 1024 * 1024 * 25
                            cache_factory='distributed_ram_cache_factory')
     cached_method()
     # Check that Cache plugin create new connection in pool
-    self.assertEquals(1, len(connection_pool.local_dict))
+    self.assertEqual(1, len(connection_pool.local_dict))
 
     # Now test long keys and large values
     cached_method = CachingMethod(py_script_obj,
@@ -425,11 +425,11 @@ return 'a' * 1024 * 1024 * 25
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (1st call)", calculation_time
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     self.commit()
 
     # Check that Cache plugin create a second connection in pool
-    self.assertEquals(2, len(connection_pool.local_dict))
+    self.assertEqual(2, len(connection_pool.local_dict))
 
     ## 2nd call - should be cached now
     start = time.time()
@@ -439,7 +439,7 @@ return 'a' * 1024 * 1024 * 25
     calculation_time = end-start
     print "\n\tCalculation time (2nd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
-    self.assertEquals(cached, result)
+    self.assertEqual(cached, result)
     self.commit()
 
   def test_06_CheckCacheExpiration(self):

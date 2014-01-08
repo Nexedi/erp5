@@ -201,12 +201,12 @@ class TestERP5Category(ERP5TypeTestCase):
     organisation2 = self.organisation2
     organisation.setAbcValueList([organisation2])
     self.commitAndTic()
-    self.assertEquals(organisation.getAbcValueList(),[organisation2])
-    self.assertEquals(organisation.getAbcIdList(),['2'])
+    self.assertEqual(organisation.getAbcValueList(),[organisation2])
+    self.assertEqual(organisation.getAbcIdList(),['2'])
     organisation2.edit(id='new_id')
     self.commitAndTic()
-    self.assertEquals(organisation.getAbcValueList(),[organisation2])
-    self.assertEquals(organisation.getAbcIdList(),['new_id'])
+    self.assertEqual(organisation.getAbcValueList(),[organisation2])
+    self.assertEqual(organisation.getAbcIdList(),['new_id'])
 
   def test_04_RenameObjectWithRelatedSubObject(
                             self, quiet=quiet, run=run_all_test):
@@ -218,12 +218,12 @@ class TestERP5Category(ERP5TypeTestCase):
     organisation2 = self.organisation2
     organisation.setAbcValueList([telephone2])
     self.commitAndTic()
-    self.assertEquals(organisation.getAbcValueList(),[telephone2])
-    self.assertEquals(organisation.getAbcList(),[telephone2.getRelativeUrl()])
+    self.assertEqual(organisation.getAbcValueList(),[telephone2])
+    self.assertEqual(organisation.getAbcList(),[telephone2.getRelativeUrl()])
     organisation2.edit(id='new_id')
     self.commitAndTic()
-    self.assertEquals(organisation.getAbcValueList(),[telephone2])
-    self.assertEquals(organisation.getAbcList(),[telephone2.getRelativeUrl()])
+    self.assertEqual(organisation.getAbcValueList(),[telephone2])
+    self.assertEqual(organisation.getAbcList(),[telephone2.getRelativeUrl()])
 
   def test_05_RenameMembershipCriterionCategory(
                             self, quiet=quiet, run=run_all_test):
@@ -250,10 +250,10 @@ class TestERP5Category(ERP5TypeTestCase):
     person = self.person
     person.setSubordinationValue(organisation)
     self.commitAndTic()
-    self.assertEquals(person.getSubordinationValue(),organisation)
+    self.assertEqual(person.getSubordinationValue(),organisation)
     organisation_module.edit(id='new_id')
     self.commitAndTic()
-    self.assertEquals(person.getSubordinationValue(),organisation)
+    self.assertEqual(person.getSubordinationValue(),organisation)
 
   def test_07_RenameBaseCategoryWithPersonRelatedToSubSubSubCategory(
                                   self, quiet=quiet, run=run_all_test):
@@ -276,17 +276,17 @@ class TestERP5Category(ERP5TypeTestCase):
     om = self.getOrganisationModule()
     om['1'].setAbcValue(om['2'])
     self.commitAndTic()
-    self.assertEquals(len(om['2'].getRelatedValueList('abc')), 1)
-    self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)    
-    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
+    self.assertEqual(len(om['2'].getRelatedValueList('abc')), 1)
+    self.assertEqual(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)    
+    self.assertEqual(om['1'].getAbc(),om['2'].getRelativeUrl())
     original_uid = om['2'].getUid()
     om.edit(id='new_id')
     self.commitAndTic()
     om = self.getPortal()['new_id']
-    self.assertEquals(original_uid, om['2'].getUid())
-    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
-    self.assertEquals(len(om['2'].getRelatedValueList('abc')), 1)
-    self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
+    self.assertEqual(original_uid, om['2'].getUid())
+    self.assertEqual(om['1'].getAbc(),om['2'].getRelativeUrl())
+    self.assertEqual(len(om['2'].getRelatedValueList('abc')), 1)
+    self.assertEqual(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
 
   def test_09_Base_viewDictWithCategoryWithSubCategory(
                         self, quiet=quiet, run=run_all_test):
@@ -309,10 +309,10 @@ class TestERP5Category(ERP5TypeTestCase):
         acquisition_portal_type="python:['Organisation', 'Telephone']",)
     test_aq_category.newContent(portal_type='Category', id='1')
     # this category will acquire from parent category
-    self.assertEquals(['parent'], test_aq_category.getAcquisitionBaseCategoryList())
+    self.assertEqual(['parent'], test_aq_category.getAcquisitionBaseCategoryList())
     # only if portal type of the current document and his parent are in
     # acquisition portal type
-    self.assertEquals(['Organisation', 'Telephone'],
+    self.assertEqual(['Organisation', 'Telephone'],
                       test_aq_category.getAcquisitionPortalTypeList())
     
     # associate the base category with our portal types
@@ -325,16 +325,16 @@ class TestERP5Category(ERP5TypeTestCase):
     subdoc = doc['1']
 
     doc.setCategoryList(['test_aq_category/1'])
-    self.assertEquals(['test_aq_category/1'], ctool.getAcquiredCategoryList(doc))
-    self.assertEquals(['test_aq_category/1'], doc.getAcquiredCategoryList())
+    self.assertEqual(['test_aq_category/1'], ctool.getAcquiredCategoryList(doc))
+    self.assertEqual(['test_aq_category/1'], doc.getAcquiredCategoryList())
     
     # Telephone subdocument acquire categories, because 'test_aq_category' has
     # 'parent' in its acquisition_base_category_list
-    self.assertEquals([], subdoc.getCategoryList())
-    self.assertEquals(['test_aq_category/1'], subdoc.getAcquiredCategoryList())
+    self.assertEqual([], subdoc.getCategoryList())
+    self.assertEqual(['test_aq_category/1'], subdoc.getAcquiredCategoryList())
     
     doc.setCategoryList([])
-    self.assertEquals([], ctool.getAcquiredCategoryList(doc))
+    self.assertEqual([], ctool.getAcquiredCategoryList(doc))
 
     # XXX this test's beforeTearDown commits transaction
     self.abort()

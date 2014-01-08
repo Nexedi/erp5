@@ -86,7 +86,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_UserFolder(self):
     """Tests user folder has correct meta type."""
-    self.failUnless(isinstance(self.getUserFolder(),
+    self.assertTrue(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
 
   def loginAsUser(self, username):
@@ -222,7 +222,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_searchUsers(self):
     p1 = self._makePerson(reference='person1')
     p2 = self._makePerson(reference='person2')
-    self.assertEquals(set(['person1', 'person2']),
+    self.assertEqual(set(['person1', 'person2']),
       set([x['userid'] for x in
         self.portal.acl_users.searchUsers(id='person')]))
 
@@ -230,7 +230,7 @@ class TestUserManagement(ERP5TypeTestCase):
     p = self._makePerson(reference='person')
     p1 = self._makePerson(reference='person1')
     p2 = self._makePerson(reference='person2')
-    self.assertEquals(['person', ],
+    self.assertEqual(['person', ],
          [x['userid'] for x in
            self.portal.acl_users.searchUsers(id='person', exact_match=True)])
 
@@ -555,9 +555,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Test users have the Member role.
     """
     self.loginAsUser(self.username)
-    self.failUnless('Member' in
+    self.assertTrue('Member' in
             getSecurityManager().getUser().getRolesInContext(self.portal))
-    self.failUnless('Member' in
+    self.assertTrue('Member' in
             getSecurityManager().getUser().getRoles())
 
   def testSimpleLocalRole(self):
@@ -660,16 +660,16 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     module = obj.getParentValue()
     module.updateLocalRolesOnSecurityGroups()
     # we said the we do not want acquire local roles.
-    self.failIf(obj._getAcquireLocalRoles())
+    self.assertFalse(obj._getAcquireLocalRoles())
     # the local role is set on the module
-    self.assertEquals(['Assignor'], module.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertEqual(['Assignor'], module.__ac_local_roles__.get('F1_G1_S1'))
     # but not on the document
-    self.assertEquals(None, obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertEqual(None, obj.__ac_local_roles__.get('F1_G1_S1'))
     # same testing with roles in context.
     self.loginAsUser(self.username)
-    self.failUnless('Assignor' in
+    self.assertTrue('Assignor' in
             getSecurityManager().getUser().getRolesInContext(module))
-    self.failIf('Assignor' in
+    self.assertFalse('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
 
   def testGetUserByLogin(self):
@@ -681,30 +681,30 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(self.username)
-    self.assertEquals(1, len(person_list))
-    self.assertEquals(self.username, person_list[0].getReference())
+    self.assertEqual(1, len(person_list))
+    self.assertEqual(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a list
     self.portal.portal_caches.clearAllCache()
     self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin([self.username])
-    self.assertEquals(1, len(person_list))
-    self.assertEquals(self.username, person_list[0].getReference())
+    self.assertEqual(1, len(person_list))
+    self.assertEqual(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a tuple
     self.portal.portal_caches.clearAllCache()
     self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin((self.username,))
-    self.assertEquals(1, len(person_list))
-    self.assertEquals(self.username, person_list[0].getReference())
+    self.assertEqual(1, len(person_list))
+    self.assertEqual(self.username, person_list[0].getReference())
 
     # PreferenceTool pass a user as parameter
     user = getSecurityManager().getUser()
     self.portal.portal_caches.clearAllCache()
     self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
-    self.assertEquals(1, len(person_list))
-    self.assertEquals(self.username, person_list[0].getReference())
+    self.assertEqual(1, len(person_list))
+    self.assertEqual(self.username, person_list[0].getReference())
 
   def testLocalRoleWithTraverser(self):
     """Make sure that local role works correctly when traversing
@@ -794,7 +794,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # encrypt & decrypt works
     key = erp5_auth_key_plugin.encrypt(reference)
     self.assertNotEquals(reference, key)
-    self.assertEquals(reference, erp5_auth_key_plugin.decrypt(key))
+    self.assertEqual(reference, erp5_auth_key_plugin.decrypt(key))
     base_url = portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
@@ -858,7 +858,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
   def test_owner_local_role_on_clone(self):
     # check that tested stuff is ok
     parent_type = 'Person'
-    self.assertEquals(self.portal.portal_types[parent_type].acquire_local_roles, 0)
+    self.assertEqual(self.portal.portal_types[parent_type].acquire_local_roles, 0)
 
     original_owner_id = 'original_user' + self.id()
     cloning_owner_id = 'cloning_user' + self.id()
@@ -890,8 +890,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # check that tested stuff is ok
     parent_type = 'Person'
     acquiring_type = 'Email'
-    self.assertEquals(self.portal.portal_types[acquiring_type].acquire_local_roles, 1)
-    self.assertEquals(self.portal.portal_types[parent_type].acquire_local_roles, 0)
+    self.assertEqual(self.portal.portal_types[acquiring_type].acquire_local_roles, 1)
+    self.assertEqual(self.portal.portal_types[parent_type].acquire_local_roles, 0)
 
     original_owner_id = 'original_user' + self.id()
     cloning_owner_id = 'cloning_user' + self.id()

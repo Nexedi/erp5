@@ -72,12 +72,12 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # create a document and associate it to this workflow
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     workflow.initializeDocument(doc)
-    self.assertEquals(s1.getRelativeUrl(),
+    self.assertEqual(s1.getRelativeUrl(),
               doc._getDefaultAcquiredCategoryMembership('current_state'))
     
     # pass a transition
     t1.execute(doc)
-    self.assertEquals(s2.getRelativeUrl(),
+    self.assertEqual(s2.getRelativeUrl(),
               doc._getDefaultAcquiredCategoryMembership('current_state'))
     
 
@@ -97,7 +97,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     workflow.initializeDocument(doc)
-    self.assertEquals([t1], s1.getAvailableTransitionList(doc))
+    self.assertEqual([t1], s1.getAvailableTransitionList(doc))
     
 
   def test_WorkflowVariables(self):
@@ -121,14 +121,14 @@ class TestERP5Workflow(ERP5TypeTestCase):
     t1.execute(doc)
     
     current_state = workflow.getCurrentStatusDict(doc)
-    self.failUnless(isinstance(current_state, dict))
-    self.assertEquals(s1.getRelativeUrl(), current_state.get('current_state'))
-    self.assertEquals('ERP5TypeTestCase', current_state.get('actor'))
-    self.assertEquals(0, current_state.get('undo'))
+    self.assertTrue(isinstance(current_state, dict))
+    self.assertEqual(s1.getRelativeUrl(), current_state.get('current_state'))
+    self.assertEqual('ERP5TypeTestCase', current_state.get('actor'))
+    self.assertEqual(0, current_state.get('undo'))
     
     # XXX workflow history is a method on State ?
     history = s1.getWorkflowHistory(doc)
-    self.assertEquals(len(history), 2)
+    self.assertEqual(len(history), 2)
 
 
   def test_afterScript(self):
@@ -156,7 +156,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     
     workflow.initializeDocument(doc)
     t1.execute(doc)
-    self.assertEquals(['called {}'], called)
+    self.assertEqual(['called {}'], called)
     # FIXME: not passing parameter to an after script is probably too
     # restrictive
 
@@ -185,7 +185,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     workflow.initializeDocument(doc)
     t1.execute(doc)
-    self.assertEquals(['called {}'], called)
+    self.assertEqual(['called {}'], called)
     # FIXME: not passing parameter to an before script is probably too
     # restrictive
 

@@ -71,7 +71,7 @@ class TestPackaging(testTioSafeMixin):
                        'erp5_syncml',
                        'erp5_integration',
                      ):
-      self.failUnless(skin_name in self.skin_tool.objectIds(), skin_name)
+      self.assertTrue(skin_name in self.skin_tool.objectIds(), skin_name)
 
 
 import unittest

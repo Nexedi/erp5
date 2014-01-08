@@ -147,10 +147,10 @@ class TestERP5Web(ERP5TypeTestCase):
                                                 **kw)
       webpage.publish()
       self.tic()
-      self.assertEquals(language, webpage.getLanguage())
-      self.assertEquals(reference, webpage.getReference())
-      self.assertEquals(version, webpage.getVersion())
-      self.assertEquals('published', webpage.getValidationState())
+      self.assertEqual(language, webpage.getLanguage())
+      self.assertEqual(reference, webpage.getReference())
+      self.assertEqual(version, webpage.getVersion())
+      self.assertEqual('published', webpage.getValidationState())
       webpage_list.append(webpage)
 
     return webpage_list
@@ -176,8 +176,8 @@ class TestERP5Web(ERP5TypeTestCase):
     """
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<b>OK</b>')
-    self.assertEquals('text/html', page.getContentType())
-    self.assertEquals('<b>OK</b>', page.getTextContent())
+    self.assertEqual('text/html', page.getContentType())
+    self.assertEqual('<b>OK</b>', page.getTextContent())
 
   def test_02a_WebPageAsText(self):
     """
@@ -189,10 +189,10 @@ class TestERP5Web(ERP5TypeTestCase):
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
     self.tic()
-    self.assertEquals('Hé Hé Hé!', page.asText().strip())
+    self.assertEqual('Hé Hé Hé!', page.asText().strip())
     page.edit(text_content='<p>Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé!</p>')
     self.tic()
-    self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
+    self.assertEqual("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
   @skip('WebSite_createWebSiteAccount is disabled by default.')
@@ -219,19 +219,19 @@ Hé Hé Hé!""", page.asText().strip())
     # find person object by reference
     person = website.ERP5Site_getAuthenticatedMemberPersonValue(
                                                            kw['reference'])
-    self.assertEquals(person.getReference(), kw['reference'])
-    self.assertEquals(person.getFirstName(), kw['first_name'])
-    self.assertEquals(person.getLastName(), kw['last_name'])
-    self.assertEquals(person.getDefaultEmailText(), kw['default_email_text'])
-    self.assertEquals(person.getValidationState(), 'validated')
+    self.assertEqual(person.getReference(), kw['reference'])
+    self.assertEqual(person.getFirstName(), kw['first_name'])
+    self.assertEqual(person.getLastName(), kw['last_name'])
+    self.assertEqual(person.getDefaultEmailText(), kw['default_email_text'])
+    self.assertEqual(person.getValidationState(), 'validated')
 
     # check if user account is 'loggable'
     uf = portal.acl_users
     user = uf.getUserById(kw['reference'])
-    self.assertEquals(str(user), kw['reference'])
-    self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
+    self.assertEqual(str(user), kw['reference'])
+    self.assertEqual(1, user.has_role(('Member', 'Authenticated',)))
     self.login(kw['reference'])
-    self.assertEquals(kw['reference'],
+    self.assertEqual(kw['reference'],
                       str(portal.portal_membership.getAuthenticatedMember()))
 
     # test redirection to person oobject
@@ -244,7 +244,7 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path, '%s:%s' % (kw['reference'], kw['password']))
     self.assertTrue('portal_preferences' in response.getHeader("Location"))
     # one preference should be created for user
-    self.assertEquals(1,
+    self.assertEqual(1,
         self.portal.portal_catalog.countResults(**{'portal_type': 'Preference',
                                               'owner': kw['reference']})[0][0])
 
@@ -268,7 +268,7 @@ Hé Hé Hé!""", page.asText().strip())
                       websection.getAggregateReferenceList())
     # even though we create many pages we should get only one
     # this is the most recent one since all share the same reference
-    self.assertEquals(1, len(websection.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(websection.WebSection_getDocumentValueList()))
 
     # use already created few pages in different languages with same reference
     # and check that we always get the right one based on selected
@@ -279,7 +279,7 @@ Hé Hé Hé!""", page.asText().strip())
       # XXX: Extend API so we can select language from REQUEST
       portal.Localizer.manage_changeDefaultLang(language=language)
       default_document = websection.getDefaultDocumentValue()
-      self.assertEquals(language, default_document.getLanguage())
+      self.assertEqual(language, default_document.getLanguage())
 
   def test_05_WebPageTextContentSubstitutions(self):
     """
@@ -298,16 +298,16 @@ Hé Hé Hé!""", page.asText().strip())
             text_content=content)
 
     # No substitution should occur.
-    self.assertEquals(document.asStrippedHTML(), content)
-    self.assertEquals(document.asText(), asText_content)
+    self.assertEqual(document.asStrippedHTML(), content)
+    self.assertEqual(document.asText(), asText_content)
 
     klass = document.__class__
     klass.getTestSubstitutionMapping = lambda self, **kw: mapping
     document.setTextContentSubstitutionMappingMethodId('getTestSubstitutionMapping')
 
     # Substitutions should occur.
-    self.assertEquals(document.asStrippedHTML(), substituted_content)
-    self.assertEquals(document.asText(), substituted_asText_content)
+    self.assertEqual(document.asStrippedHTML(), substituted_content)
+    self.assertEqual(document.asText(), substituted_asText_content)
 
     klass._getTestSubstitutionMapping = klass.getTestSubstitutionMapping
     document.setTextContentSubstitutionMappingMethodId('_getTestSubstitutionMapping')
@@ -679,8 +679,8 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Check if they have good acquisition wrappers.
     for doc in (default_document, document1, document2) + tuple(document_list):
-      self.assertEquals(doc.aq_parent, websection)
-      self.assertEquals(doc.aq_parent.aq_parent, website)
+      self.assertEqual(doc.aq_parent, websection)
+      self.assertEqual(doc.aq_parent.aq_parent, website)
 
   def test_09_WebSiteSkinSelection(self):
     """Test skin selection through a Web Site.
@@ -724,14 +724,14 @@ Hé Hé Hé!""", page.asText().strip())
 
     # With the default skin.
     request['PARENTS'] = [self.app]
-    self.assertEquals(request.traverse(path)(), 'foo')
+    self.assertEqual(request.traverse(path)(), 'foo')
 
     # With the test skin.
     website.setSkinSelectionName('Test ERP5 Web')
     self.tic()
 
     request['PARENTS'] = [self.app]
-    self.assertEquals(request.traverse(path)(), 'bar')
+    self.assertEqual(request.traverse(path)(), 'bar')
 
   def test_10_getDocumentValueList(self):
     """Make sure that getDocumentValueList works."""
@@ -835,17 +835,17 @@ Hé Hé Hé!""", page.asText().strip())
     webpage_module_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr/web_page_module' % website_id)
 
-    self.assertEquals(website_relative_url,
+    self.assertEqual(website_relative_url,
                       website.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(website_relative_url_fr,
+    self.assertEqual(website_relative_url_fr,
                       website_fr.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(website_relative_url,
+    self.assertEqual(website_relative_url,
                       webpage.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(website_relative_url_fr,
+    self.assertEqual(website_relative_url_fr,
                       webpage_fr.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(website_relative_url,
+    self.assertEqual(website_relative_url,
                       webpage_module.getWebSiteValue().absolute_url(relative=1))
-    self.assertEquals(website_relative_url_fr,
+    self.assertEqual(website_relative_url_fr,
                       webpage_module_fr.getWebSiteValue().absolute_url(relative=1))
 
     webpage = self.portal.restrictedTraverse(
@@ -858,17 +858,17 @@ Hé Hé Hé!""", page.asText().strip())
     webpage_module_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr/%s/web_page_module' % (website_id, websection_id))
 
-    self.assertEquals(websection_relative_url,
+    self.assertEqual(websection_relative_url,
                       websection.getWebSectionValue().absolute_url(relative=1))
-    self.assertEquals(websection_relative_url_fr,
+    self.assertEqual(websection_relative_url_fr,
                       websection_fr.getWebSectionValue().absolute_url(relative=1))
-    self.assertEquals(websection_relative_url,
+    self.assertEqual(websection_relative_url,
                       webpage.getWebSectionValue().absolute_url(relative=1))
-    self.assertEquals(websection_relative_url_fr,
+    self.assertEqual(websection_relative_url_fr,
                       webpage_fr.getWebSectionValue().absolute_url(relative=1))
-    self.assertEquals(websection_relative_url,
+    self.assertEqual(websection_relative_url,
                       webpage_module.getWebSectionValue().absolute_url(relative=1))
-    self.assertEquals(websection_relative_url_fr,
+    self.assertEqual(websection_relative_url_fr,
                       webpage_module_fr.getWebSectionValue().absolute_url(relative=1))
 
   def test_13_DocumentCache(self):
@@ -892,7 +892,7 @@ Hé Hé Hé!""", page.asText().strip())
             text_content=content)
     document.publish()
     self.tic()
-    self.assertEquals(document.asText().strip(), 'initial text')
+    self.assertEqual(document.asText().strip(), 'initial text')
 
     # First make sure conversion already exists on the web site
     web_document = website.restrictedTraverse('NXD-Document.Cache')
@@ -912,7 +912,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # modified the web_page content
     document.edit(text_content=new_content)
-    self.assertEquals(document.asText().strip(), 'modified text')
+    self.assertEqual(document.asText().strip(), 'modified text')
     self.tic()
 
     # check the cache doesn't send again the old content
@@ -952,7 +952,7 @@ Hé Hé Hé!""", page.asText().strip())
             text_content=content)
     document.publish()
     self.tic()
-    self.assertEquals(document.asText().strip(), 'initial text')
+    self.assertEqual(document.asText().strip(), 'initial text')
 
     # Make sure document cache keeps converted content even if ID changes
     self.assertTrue(document.hasConversion(format='txt'))
@@ -984,7 +984,7 @@ Hé Hé Hé!""", page.asText().strip())
             text_content=content)
     document.publish()
     self.tic()
-    self.assertEquals(document.asText().strip(), 'initial text')
+    self.assertEqual(document.asText().strip(), 'initial text')
 
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
@@ -1003,7 +1003,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertFalse(web_document.hasConversion(format='txt'))
     self.assertFalse(document.hasConversion(format='txt'))
     # Make sure cache is regenerated
-    self.assertEquals(web_document.asText().strip(), 'modified text')
+    self.assertEqual(web_document.asText().strip(), 'modified text')
     self.tic()
 
     # First make sure conversion already exists (since it should
@@ -1016,18 +1016,18 @@ Hé Hé Hé!""", page.asText().strip())
 
     # check the cache doesn't send again the old content
     # test this fist on the initial document
-    self.assertEquals(document.asText().strip(), 'modified text')
+    self.assertEqual(document.asText().strip(), 'modified text')
 
     # Through a web_section.
     web_document = web_section.restrictedTraverse('NXD-Document.Cache')
-    self.assertEquals(web_document.asText().strip(), 'modified text')
+    self.assertEqual(web_document.asText().strip(), 'modified text')
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
     # Through a web_site.
     web_document = website.restrictedTraverse('NXD-Document.Cache')
-    self.assertEquals(web_document.asText().strip(), 'modified text')
+    self.assertEqual(web_document.asText().strip(), 'modified text')
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
@@ -1194,11 +1194,11 @@ Hé Hé Hé!""", page.asText().strip())
 
     website = self.setupWebSite()
     # Check that language in defined in the URL
-    self.assertEquals(True, website.getStaticLanguageSelection())
+    self.assertEqual(True, website.getStaticLanguageSelection())
     self.assertNotEquals(language, website.getDefaultAvailableLanguage())
 
     websection = self.setupWebSection()
-    self.assertEquals(websection.getId(), websection.getTitle())
+    self.assertEqual(websection.getId(), websection.getTitle())
 
     self.tic()
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
@@ -1216,22 +1216,22 @@ Hé Hé Hé!""", page.asText().strip())
                      }
                     )
 
-    self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
+    self.assertEqual(MOVED_TEMPORARILY, response.getStatus())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
     self.tic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    self.assertEquals('text/html; charset=utf-8',
+    self.assertEqual(HTTP_OK, response.getStatus())
+    self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
     self.tic()
 
-    self.assertEquals('%s_edited' % websection.getId(), websection.getTitle())
-    self.assertEquals(1, len(self.portal.portal_catalog(
+    self.assertEqual('%s_edited' % websection.getId(), websection.getTitle())
+    self.assertEqual(1, len(self.portal.portal_catalog(
                                     relative_url=websection.getRelativeUrl(),
                                     title=websection.getTitle())))
 
@@ -1250,10 +1250,10 @@ Hé Hé Hé!""", page.asText().strip())
 
     website = self.setupWebSite()
     # Check that language in defined in the URL
-    self.assertEquals(True, website.getStaticLanguageSelection())
+    self.assertEqual(True, website.getStaticLanguageSelection())
     self.assertNotEquals(language, website.getDefaultAvailableLanguage())
 
-    self.assertEquals(website.getId(), website.getTitle())
+    self.assertEqual(website.getId(), website.getTitle())
 
     self.tic()
 
@@ -1272,22 +1272,22 @@ Hé Hé Hé!""", page.asText().strip())
                      }
                     )
 
-    self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
+    self.assertEqual(MOVED_TEMPORARILY, response.getStatus())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
     self.tic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
-    self.assertEquals(HTTP_OK, response.getStatus())
-    self.assertEquals('text/html; charset=utf-8',
+    self.assertEqual(HTTP_OK, response.getStatus())
+    self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
     self.tic()
 
-    self.assertEquals('%s_edited' % website.getId(), website.getTitle())
-    self.assertEquals(1, len(self.portal.portal_catalog(
+    self.assertEqual('%s_edited' % website.getId(), website.getTitle())
+    self.assertEqual(1, len(self.portal.portal_catalog(
                                     relative_url=website.getRelativeUrl(),
                                     title=website.getTitle())))
 
@@ -1299,19 +1299,19 @@ Hé Hé Hé!""", page.asText().strip())
     website = self.setupWebSite()
 
     # web mode
-    self.assertEquals(False, self.portal.person_module.isWebMode())
-    self.assertEquals(True, website.isWebMode())
-    self.assertEquals(True, getattr(website, 'person_module').isWebMode())
+    self.assertEqual(False, self.portal.person_module.isWebMode())
+    self.assertEqual(True, website.isWebMode())
+    self.assertEqual(True, getattr(website, 'person_module').isWebMode())
 
     # editable mode
-    self.assertEquals(False, self.portal.person_module.isEditableMode())
-    self.assertEquals(False, website.isEditableMode())
-    self.assertEquals(False, getattr(website, 'person_module').isEditableMode())
+    self.assertEqual(False, self.portal.person_module.isEditableMode())
+    self.assertEqual(False, website.isEditableMode())
+    self.assertEqual(False, getattr(website, 'person_module').isEditableMode())
 
     request.set('editable_mode', 1)
-    self.assertEquals(1, self.portal.person_module.isEditableMode())
-    self.assertEquals(1, website.isEditableMode())
-    self.assertEquals(1, getattr(website, 'person_module').isEditableMode())
+    self.assertEqual(1, self.portal.person_module.isEditableMode())
+    self.assertEqual(1, website.isEditableMode())
+    self.assertEqual(1, getattr(website, 'person_module').isEditableMode())
 
   def test_20_reStructuredText(self):
     web_page = self.portal.web_page_module.newContent(portal_type='Web Page',
@@ -1608,28 +1608,28 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
     self.portal.Localizer.changeLanguage('en')
 
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     self.login('erp5user')
     page_en_0.publish()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
-    self.assertEquals(page_en_0.getUid(),
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(page_en_0.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
 
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
-    self.assertEquals(page_en_0.getUid(),
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(page_en_0.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # Second Object
     self.login('erp5user')
@@ -1637,17 +1637,17 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
-    self.assertEquals(page_en_1.getUid(),
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(page_en_1.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
-    self.assertEquals(page_en_1.getUid(),
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(page_en_1.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
 
     # Trird Object
@@ -1656,16 +1656,16 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # First Japanese Object
     self.login('erp5user')
@@ -1673,17 +1673,17 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEquals(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
-    self.assertEquals(page_jp_0.getUid(),
+    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(page_jp_0.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
 
   def test_04_ExpireUserAction(self):
@@ -1736,7 +1736,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     site_2_copy = web_site_module.manage_copyObjects(ids=(site_2.getId(),))
     site_2_clone = web_site_module[web_site_module.manage_pasteObjects(
       site_2_copy)[0]['new_id']]
-    self.assertEquals(site_2_clone.getPortalType(), 'Web Site')
+    self.assertEqual(site_2_clone.getPortalType(), 'Web Site')
 
   def test_06_createWebSection(self):
     """ Test to create or clone web sections with many users """
@@ -1760,11 +1760,11 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section_2_copy = site.manage_copyObjects(ids=(section_2.getId(),))
     section_2_clone = site[site.manage_pasteObjects(
       section_2_copy)[0]['new_id']]
-    self.assertEquals(section_2_clone.getPortalType(), 'Web Section')
+    self.assertEqual(section_2_clone.getPortalType(), 'Web Section')
     section_3_copy = section_2.manage_copyObjects(ids=(section_3.getId(),))
     section_3_clone = section_2[section_2.manage_pasteObjects(
       section_3_copy)[0]['new_id']]
-    self.assertEquals(section_3_clone.getPortalType(), 'Web Section')
+    self.assertEqual(section_3_clone.getPortalType(), 'Web Section')
 
   def test_07_createCategory(self):
     """ Test to create or clone categories with many users """
@@ -1785,11 +1785,11 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     category_1_copy = publication_section.manage_copyObjects(ids=(category_1.getId(),))
     category_1_clone = publication_section[publication_section.manage_pasteObjects(
       category_1_copy)[0]['new_id']]
-    self.assertEquals(category_1_clone.getPortalType(), 'Category')
+    self.assertEqual(category_1_clone.getPortalType(), 'Category')
     category_2_copy = category_1.manage_copyObjects(ids=(category_2.getId(),))
     category_2_clone = category_1[category_1.manage_pasteObjects(
       category_2_copy)[0]['new_id']]
-    self.assertEquals(category_2_clone.getPortalType(), 'Category')
+    self.assertEqual(category_2_clone.getPortalType(), 'Category')
 
     # test as a web user (assignor)
     self.login('webmaster')
@@ -1808,17 +1808,17 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     category_3_copy = publication_section.manage_copyObjects(ids=(category_3.getId(),))
     category_3_clone = publication_section[publication_section.manage_pasteObjects(
       category_3_copy)[0]['new_id']]
-    self.assertEquals(category_3_clone.getPortalType(), 'Category')
+    self.assertEqual(category_3_clone.getPortalType(), 'Category')
     # try to clone a sub category of the different owner
     category_2_copy = category_1.manage_copyObjects(ids=(category_2.getId(),))
     category_2_clone = category_1[category_1.manage_pasteObjects(
       category_2_copy)[0]['new_id']]
-    self.assertEquals(category_2_clone.getPortalType(), 'Category')
+    self.assertEqual(category_2_clone.getPortalType(), 'Category')
     # try to clone a sub category of the same owner
     category_4_copy = category_3.manage_copyObjects(ids=(category_4.getId(),))
     category_4_clone = category_3[category_3.manage_pasteObjects(
       category_4_copy)[0]['new_id']]
-    self.assertEquals(category_4_clone.getPortalType(), 'Category')
+    self.assertEqual(category_4_clone.getPortalType(), 'Category')
 
   def test_08_createAndrenameCategory(self):
     """ Test to create or rename categories with many users """
@@ -1912,10 +1912,10 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     web_page_no_follow_up.publish()
     self.tic()
 
-    self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(website.WebSection_getDocumentValueList()))
 
     self.logout()
-    self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(website.WebSection_getDocumentValueList()))
 
   def test_WebSiteModuleDefaultSecurity(self):
     """

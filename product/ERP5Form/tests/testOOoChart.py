@@ -130,7 +130,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       form = getattr(portal.portal_skins.custom, self.form_id)
       #listbox = form.listbox
       listbox = getattr(form, 'listbox')
-      self.assertEquals(listbox.meta_type, 'ListBox')
+      self.assertEqual(listbox.meta_type, 'ListBox')
       request = get_request()
       request['here'] = portal.portal_skins.custom
       line_list = [l for l in listbox.get_value('default',
@@ -138,23 +138,23 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
                               REQUEST=request) ]
 
       # listbox is empty?
-      self.assertEquals(2, len(line_list))
+      self.assertEqual(2, len(line_list))
 
       # Does the field OOoChart exist ?
       ooochart = getattr(form, self.ooo_chart_id)
-      self.assertEquals(ooochart.meta_type, 'OOoChart')
+      self.assertEqual(ooochart.meta_type, 'OOoChart')
 
       response = self.publish(
                     '/%s/%s/%s?render_format=&display=medium'
                     % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # test render raw
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
       content_type = response.getHeader('content-type')
 
       # test content type : application/vnd.oasis.opendocument.graphics
       self.assertTrue(content_type.startswith(self.content_type), content_type)
       content_disposition = response.getHeader('content-disposition')
-      self.assertEquals('attachment', content_disposition.split(';')[0])
+      self.assertEqual('attachment', content_disposition.split(';')[0])
       # Test ODG (zip)
       body = response.getBody()
       # Test Validation Relax NG
@@ -177,7 +177,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertNotEquals(0, len(value_list))
       # 2 values because there are - 10 document created by a owner 
       #                            - 0 Reference count
-      self.assertEquals(2, len(value_list))
+      self.assertEqual(2, len(value_list))
 
       # Test the differents render
       # render image
@@ -185,13 +185,13 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
-        self.assertEquals(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
+        self.assertEqual(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
 
       # render pdf
       response = self.publish(
                     '/%s/%s/%s?render_format=pdf&display=medium'
                     % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
 
 
       # Change some params  and restart (circle, bar, ...)
@@ -236,18 +236,18 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       form.proxifyField({self.ooo_chart_id:'TestOOochart_viewForm.your_ooochart'})
       # Does the field OOoChart exist ?
       ooochart = getattr(form, self.ooo_chart_id)
-      self.assertEquals(ooochart.meta_type, 'ProxyField')
+      self.assertEqual(ooochart.meta_type, 'ProxyField')
       response = self.publish(
                     '/%s/%s/%s?render_format=&display=medium'
                     % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
       # test render raw
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
       content_type = response.getHeader('content-type')
 
       # test content type : application/vnd.oasis.opendocument.graphics
       self.assertTrue(content_type.startswith(self.content_type), content_type)
       content_disposition = response.getHeader('content-disposition')
-      self.assertEquals('attachment', content_disposition.split(';')[0])
+      self.assertEqual('attachment', content_disposition.split(';')[0])
       # Test ODG (zip)
       body = response.getBody()
       # Test Validation Relax NG
@@ -270,7 +270,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertNotEquals(0, len(value_list))
       # 2 values because there are - 10 document created by a owner 
       #                            - 0 Reference count
-      self.assertEquals(2, len(value_list))
+      self.assertEqual(2, len(value_list))
 
       # Test the differents render
       # render image
@@ -278,13 +278,13 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
-        self.assertEquals(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
+        self.assertEqual(HTTP_OK, response.getStatus(), '%s rendering failed: %s' % (image_format, response.getStatus()))
 
       # render pdf
       response = self.publish(
                     '/%s/%s/%s?render_format=pdf&display=medium'
                     % (self.portal.getId(), self.form_id, self.ooo_chart_id), self.auth )
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
 
 
       # Change some params  and restart (circle, bar, ...)
@@ -325,7 +325,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
           '/%s/%s' % (self.portal.getId(), self.form_id),
           self.auth,
           handle_errors=False )
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
       body = response.getBody()
       self._validate(body)
 
@@ -336,7 +336,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
           '/%s/%s' % (self.portal.getId(), self.form_id),
           self.auth,
           handle_errors=False )
-      self.assertEquals(HTTP_OK, response.getStatus())
+      self.assertEqual(HTTP_OK, response.getStatus())
       body = response.getBody()
       self._validate(body)
 

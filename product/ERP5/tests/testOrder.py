@@ -369,14 +369,14 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     if destination_project is None:
       destination_project = sequence.get('project')
     order = sequence.get('order')
-    self.assertEquals(self.datetime+10, order.getStartDate())
-    self.assertEquals(self.datetime+20, order.getStopDate())
-    self.assertEquals(source_organisation, order.getSourceValue())
-    self.assertEquals(destination_organisation, order.getDestinationValue())
-    self.assertEquals(source_organisation, order.getSourceSectionValue())
-    self.assertEquals(destination_organisation, order.getDestinationSectionValue())
-    self.assertEquals(source_project, order.getSourceProjectValue())
-    self.assertEquals(destination_project, order.getDestinationProjectValue())
+    self.assertEqual(self.datetime+10, order.getStartDate())
+    self.assertEqual(self.datetime+20, order.getStopDate())
+    self.assertEqual(source_organisation, order.getSourceValue())
+    self.assertEqual(destination_organisation, order.getDestinationValue())
+    self.assertEqual(source_organisation, order.getSourceSectionValue())
+    self.assertEqual(destination_organisation, order.getDestinationSectionValue())
+    self.assertEqual(source_project, order.getSourceProjectValue())
+    self.assertEqual(destination_project, order.getDestinationProjectValue())
 
 
   def stepCreateOrderLine(self,sequence=None, sequence_list=None, **kw):
@@ -486,13 +486,13 @@ class TestOrderMixin(SubcontentReindexingWrapper):
 
     l = len(vcl)
     s = sum(map(lambda x: len(x), cell_range))
-    self.assertEquals(l,s)
+    self.assertEqual(l,s)
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     if cell_range == []:
-      self.assertEquals(len(cell_key_list), 0)
+      self.assertEqual(len(cell_key_list), 0)
     else:
       len_range = map(lambda x: len(x), cell_range)
-      self.assertEquals(len(cell_key_list), reduce(lambda x,y: x*y, len_range))
+      self.assertEqual(len(cell_key_list), reduce(lambda x,y: x*y, len_range))
 
   def stepCompleteOrderLineMatrix(self,sequence=None, sequence_list=None, \
                                   **kw):
@@ -525,16 +525,16 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
     cell_key_list.sort()
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
-    self.assertEquals(len(cell_list), len(cell_key_list))
+    self.assertEqual(len(cell_list), len(cell_key_list))
     price = 100
     quantity = 200
     for cell_key in cell_key_list:
-      self.failUnless(order_line.hasCell(base_id=base_id, *cell_key))
+      self.assertTrue(order_line.hasCell(base_id=base_id, *cell_key))
       cell = order_line.getCell(base_id=base_id, *cell_key)
-      self.assertEquals(self.order_cell_portal_type, cell.getPortalType())
+      self.assertEqual(self.order_cell_portal_type, cell.getPortalType())
       # XXX How can I check the cell content ?
-#       self.assertEquals(price , cell.getProperty('price'))
-#       self.assertEquals(quantity, cell.getProperty('quantity'))
+#       self.assertEqual(price , cell.getProperty('price'))
+#       self.assertEqual(quantity, cell.getProperty('quantity'))
 #       self.failIfDifferentSet(cell.getMembershipCriterionCategoryList(),
 #                               cell_key)
       price += 1
@@ -601,8 +601,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       Check the default price and quantity on the order line.
     """
     order_line = sequence.get('order_line')
-    self.assertEquals(self.default_quantity, order_line.getQuantity())
-    self.assertEquals(self.default_price, order_line.getPrice())
+    self.assertEqual(self.default_quantity, order_line.getQuantity())
+    self.assertEqual(self.default_price, order_line.getPrice())
 
   def stepCheckOrderLineTotalQuantity(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -617,7 +617,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     if list(cell_key_list) == []:
-      self.assertEquals(order_line.getQuantity(), \
+      self.assertEqual(order_line.getQuantity(), \
                         order_line.getTotalQuantity())
     else:
       total_quantity = 0
@@ -625,8 +625,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
         if order_line.hasCell(base_id = base_id, *cell_key):
           cell = order_line.getCell(base_id = base_id, *cell_key)
           total_quantity += cell.getProperty('quantity')
-      self.assertEquals(total_quantity, order_line.getTotalQuantity())
-    self.assertEquals( order_line.getTotalQuantity(fast = 0),
+      self.assertEqual(total_quantity, order_line.getTotalQuantity())
+    self.assertEqual( order_line.getTotalQuantity(fast = 0),
                        order_line.getTotalQuantity(fast = 1) )
     self.assertNotEquals(order_line.getTotalQuantity(fast = 1),0)
 
@@ -643,7 +643,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     if list(cell_key_list) == []:
-      self.assertEquals(order_line.getProperty('price') *
+      self.assertEqual(order_line.getProperty('price') *
                         order_line.getProperty('quantity'),
                         order_line.getTotalPrice())
     else:
@@ -653,8 +653,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
           cell = order_line.getCell(base_id = base_id, *cell_key)
           total_price +=  ( cell.getProperty('quantity') *
                             cell.getProperty('price'))
-      self.assertEquals(total_price, order_line.getTotalPrice())
-    self.assertEquals( order_line.getTotalPrice(fast = 0),
+      self.assertEqual(total_price, order_line.getTotalPrice())
+    self.assertEqual( order_line.getTotalPrice(fast = 0),
                        order_line.getTotalPrice(fast = 1) )
     self.assertNotEquals(order_line.getTotalPrice(fast = 1),0)
 
@@ -677,20 +677,20 @@ class TestOrderMixin(SubcontentReindexingWrapper):
         total_price +=  ( cell.getProperty('quantity') *
                           cell.getProperty('price'))
         total_quantity += (cell.getProperty('quantity'))
-    self.assertEquals(len(portal_catalog(
+    self.assertEqual(len(portal_catalog(
                           relative_url=order_line.getRelativeUrl())),0)
-    self.assertEquals(total_price, order_line.getTotalPrice(fast=0))
-    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=0))
-    self.assertEquals(0, order_line.getTotalPrice(fast=1))
-    self.assertEquals(0, order_line.getTotalQuantity(fast=1))
+    self.assertEqual(total_price, order_line.getTotalPrice(fast=0))
+    self.assertEqual(total_quantity, order_line.getTotalQuantity(fast=0))
+    self.assertEqual(0, order_line.getTotalPrice(fast=1))
+    self.assertEqual(0, order_line.getTotalQuantity(fast=1))
     self.assertNotEquals(total_price, 0)
     self.tic()
-    self.assertEquals(len(portal_catalog(relative_url=
+    self.assertEqual(len(portal_catalog(relative_url=
                                          order_line.getRelativeUrl())),1)
-    self.assertEquals(total_price, order_line.getTotalPrice(fast=1))
-    self.assertEquals(total_price, order_line.getTotalPrice(fast=0))
-    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=1))
-    self.assertEquals(total_quantity, order_line.getTotalQuantity(fast=0))
+    self.assertEqual(total_price, order_line.getTotalPrice(fast=1))
+    self.assertEqual(total_price, order_line.getTotalPrice(fast=0))
+    self.assertEqual(total_quantity, order_line.getTotalQuantity(fast=1))
+    self.assertEqual(total_quantity, order_line.getTotalQuantity(fast=0))
 
   def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -708,8 +708,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     total_quantity = 0
     for order_line in order_line_list:
       total_quantity += order_line.getTotalQuantity()
-    self.assertEquals(total_quantity, order.getTotalQuantity())
-    self.assertEquals( order.getTotalQuantity(fast = 0),
+    self.assertEqual(total_quantity, order.getTotalQuantity())
+    self.assertEqual( order.getTotalQuantity(fast = 0),
                        order.getTotalQuantity(fast = 1) )
 
   def stepCheckOrderTotalPrice(self, sequence=None, sequence_list=None, \
@@ -728,8 +728,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     total_price = 0
     for order_line in order_line_list:
       total_price += order_line.getTotalPrice()
-    self.assertEquals(total_price, order.getTotalPrice())
-    self.assertEquals( order.getTotalPrice(fast = 0),
+    self.assertEqual(total_price, order.getTotalPrice())
+    self.assertEqual( order.getTotalPrice(fast = 0),
                        order.getTotalPrice(fast = 1) )
 
   def stepCheckOrderTotalPriceAndQuantityFastParameter(self,
@@ -748,14 +748,14 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     total_price = 0
     for order_line in order_line_list:
       total_price += order_line.getTotalPrice()
-    self.assertEquals(0, len(portal_catalog(relative_url=order.getRelativeUrl())))
-    self.assertEquals(total_price, order.getTotalPrice(fast=0))
+    self.assertEqual(0, len(portal_catalog(relative_url=order.getRelativeUrl())))
+    self.assertEqual(total_price, order.getTotalPrice(fast=0))
     self.assertNotEquals(total_price, 0)
-    self.assertEquals(0, order.getTotalPrice(fast=1))
+    self.assertEqual(0, order.getTotalPrice(fast=1))
     self.tic()
-    self.assertEquals(1, len(portal_catalog(relative_url=order.getRelativeUrl())))
-    self.assertEquals(total_price, order.getTotalPrice(fast=1))
-    self.assertEquals(total_price, order.getTotalPrice(fast=0))
+    self.assertEqual(1, len(portal_catalog(relative_url=order.getRelativeUrl())))
+    self.assertEqual(total_price, order.getTotalPrice(fast=1))
+    self.assertEqual(total_price, order.getTotalPrice(fast=0))
 
   def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -763,7 +763,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       Check if the first state of a order is draft.
     """
     order = sequence.get('order')
-    self.assertEquals('draft', order.getSimulationState())
+    self.assertEqual('draft', order.getSimulationState())
 
   def stepCheckOrderLineState(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -772,7 +772,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
     order = sequence.get('order')
     order_line = sequence.get('order_line')
-    self.assertEquals(order.getSimulationState(), order_line.getSimulationState())
+    self.assertEqual(order.getSimulationState(), order_line.getSimulationState())
 
   def stepCheckOrderCellState(self, sequence=None, sequence_list=None, \
                                   **kw):
@@ -783,11 +783,11 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order_line = sequence.get('order_line')
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     for cell in cell_list:
-      self.assertEquals(order.getSimulationState(), cell.getSimulationState())
+      self.assertEqual(order.getSimulationState(), cell.getSimulationState())
 
   def stepCheckOrderPlanned(self, sequence=None, sequence_list=None, **kw):
     order = sequence.get('order')
-    self.assertEquals('planned', order.getSimulationState())
+    self.assertEqual('planned', order.getSimulationState())
 
   def checkAcquisition(self, object, acquired_object):
     """
@@ -795,17 +795,17 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
     # packing_list_movement, simulation_movement
 
-    self.assertEquals(acquired_object.getStartDate(), object.getStartDate())
-    self.assertEquals(acquired_object.getStopDate(), object.getStopDate())
-    self.assertEquals(acquired_object.getSourceValue(), \
+    self.assertEqual(acquired_object.getStartDate(), object.getStartDate())
+    self.assertEqual(acquired_object.getStopDate(), object.getStopDate())
+    self.assertEqual(acquired_object.getSourceValue(), \
                       object.getSourceValue())
-    self.assertEquals(acquired_object.getDestinationValue(), \
+    self.assertEqual(acquired_object.getDestinationValue(), \
                       object.getDestinationValue())
 
 
-    self.assertEquals(acquired_object.getSourceSectionValue(), \
+    self.assertEqual(acquired_object.getSourceSectionValue(), \
                       object.getSourceSectionValue())
-    self.assertEquals(acquired_object.getDestinationSectionValue(), \
+    self.assertEqual(acquired_object.getDestinationSectionValue(), \
                       object.getDestinationSectionValue())
 
   def stepCheckOrderLineAcquisition(self, sequence=None, \
@@ -829,16 +829,16 @@ class TestOrderMixin(SubcontentReindexingWrapper):
 
     self.checkAcquisition(cell, order_line)
     # Test resource
-    self.assertEquals(order_line.getResource(), \
+    self.assertEqual(order_line.getResource(), \
                       cell.getResource())
     # Test resource variation
     cvcl = cell.getVariationCategoryList()
     olvcl = order_line.getVariationCategoryList()
     # This test is not valide anymore, because of option variation
-#     self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
+#     self.assertEqual(len(order_line.getVariationRangeBaseCategoryList()), \
 #                       len(cvcl))
     for variation_category in cvcl:
-      self.failUnless(variation_category in olvcl)
+      self.assertTrue(variation_category in olvcl)
 
   def stepCheckOrderSimulation(self, sequence=None, sequence_list=None, **kw):
     """
@@ -859,18 +859,18 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order_state = order.getSimulationState()
 
     if order_state in no_applied_rule_state:
-      self.assertEquals(0, len(related_applied_rule_list))
+      self.assertEqual(0, len(related_applied_rule_list))
     else:
       LOG('stepCheckOrderRuleSimulation', 0, 'related_applied_rule_list: %s' %
                    str([x.getObject() for x in related_applied_rule_list]))
-      self.assertEquals(1, len(related_applied_rule_list))
+      self.assertEqual(1, len(related_applied_rule_list))
       applied_rule = related_applied_rule_list[0].getObject()
       sequence.edit(applied_rule=applied_rule)
-      self.failUnless(applied_rule is not None)
+      self.assertTrue(applied_rule is not None)
 
       # Test if applied rule has a specialise value with passed rule_reference
       portal_rules = getToolByName(order, 'portal_rules')
-      self.assertEquals(rule_reference,
+      self.assertEqual(rule_reference,
                         applied_rule.getSpecialiseReference())
 
       simulation_movement_list = applied_rule.objectValues()
@@ -879,7 +879,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       # Count the number of movement in order
       movement_list = order.getMovementList()
       # Check if number of movement is equal to number of simulation movement
-      self.assertEquals(len(movement_list), len(simulation_movement_list))
+      self.assertEqual(len(movement_list), len(simulation_movement_list))
       # Check if each movement has only one simulation movement related
       order_movement_list = [x.getDeliveryValue() for x in \
                              simulation_movement_list]
@@ -889,18 +889,18 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       for simulation_movement in simulation_movement_list:
         order_movement = simulation_movement.getDeliveryValue()
         # Test quantity
-        self.assertEquals(order_movement.getQuantity(), \
+        self.assertEqual(order_movement.getQuantity(), \
                           simulation_movement.getQuantity())
         # Test price
-        self.assertEquals(order_movement.getPrice(), \
+        self.assertEqual(order_movement.getPrice(), \
                           simulation_movement.getPrice())
         # Test resource
-        self.assertEquals(order_movement.getResource(), \
+        self.assertEqual(order_movement.getResource(), \
                           simulation_movement.getResource())
         # Test resource variation
-        self.assertEquals(order_movement.getVariationText(), \
+        self.assertEqual(order_movement.getVariationText(), \
                           simulation_movement.getVariationText())
-        self.assertEquals(order_movement.getVariationCategoryList(), \
+        self.assertEqual(order_movement.getVariationCategoryList(), \
                           simulation_movement.getVariationCategoryList())
         # XXX Test acquisition
         self.checkAcquisition(simulation_movement, order_movement)
@@ -927,8 +927,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       Test if some portal method are well defined
     """
     order = sequence.get('order')
-    self.failUnless('Simulation Movement' in order.getPortalMovementTypeList())
-    self.failUnless(self.order_line_portal_type in order.getPortalMovementTypeList())
+    self.assertTrue('Simulation Movement' in order.getPortalMovementTypeList())
+    self.assertTrue(self.order_line_portal_type in order.getPortalMovementTypeList())
 
   def stepCheckDeliveryBuilderPresence(self, sequence=None,
                                        sequence_list=None, **kw):
@@ -937,7 +937,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
     delivery_builder = getattr(self.getPortal().portal_deliveries,
                                self.delivery_builder_id)
-    self.assertEquals('Delivery Builder', delivery_builder.getPortalType())
+    self.assertEqual('Delivery Builder', delivery_builder.getPortalType())
 
   def stepCreateOrganisation1(self,sequence=None, sequence_list=None, **kw):
     """
@@ -993,7 +993,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                 source_project_value = project1,
                 destination_project_value = project2 )
     order.setPaymentConditionEfficiency(1.0)
-    self.failUnless('Site Error' not in order.view())
+    self.assertTrue('Site Error' not in order.view())
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1007,12 +1007,12 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     packing_list_building_state = 'confirmed'
     order_state = order.getSimulationState()
     if order_state != packing_list_building_state:
-      self.assertEquals(0, len(related_packing_list_list))
+      self.assertEqual(0, len(related_packing_list_list))
     else:
-      self.assertEquals(1, len(related_packing_list_list))
+      self.assertEqual(1, len(related_packing_list_list))
 
       packing_list = related_packing_list_list[0].getObject()
-      self.failUnless(packing_list is not None)
+      self.assertTrue(packing_list is not None)
       sequence.edit(packing_list = packing_list)
 
       applied_rule = related_applied_rule_list[0].getObject()
@@ -1020,7 +1020,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
 
       # Test that packing list is confirmed
       packing_list_state = packing_list.getSimulationState()
-      self.assertEquals(packing_list_building_state, packing_list_state)
+      self.assertEqual(packing_list_building_state, packing_list_state)
 
       # First, test if each Simulation Movement is related to a Packing List
       # Movement
@@ -1028,23 +1028,23 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       packing_list_relative_url = packing_list.getRelativeUrl()
       for simulation_movement in simulation_movement_list:
         order_movement_list = simulation_movement.getDeliveryValueList()
-        self.failUnless(len(order_movement_list), 1)
+        self.assertTrue(len(order_movement_list), 1)
         order_movement = order_movement_list[0]
-        self.failUnless(order_movement is not None)
-        self.failUnless(order_movement.getRelativeUrl().\
+        self.assertTrue(order_movement is not None)
+        self.assertTrue(order_movement.getRelativeUrl().\
                                       startswith(order_relative_url))
         rule_list = simulation_movement.objectValues()
-        self.failUnless(len(rule_list), 1)
+        self.assertTrue(len(rule_list), 1)
         delivering_rule = rule_list[0]
-        self.failUnless(delivering_rule.getSpecialiseValue().getPortalType(),
+        self.assertTrue(delivering_rule.getSpecialiseValue().getPortalType(),
                         'Delivering Rule')
         child_simulation_movement_list = delivering_rule.objectValues()
-        self.failUnless(len(child_simulation_movement_list), 1)
+        self.assertTrue(len(child_simulation_movement_list), 1)
         packing_list_movement_list = child_simulation_movement_list[0].getDeliveryValueList()
-        self.failUnless(len(packing_list_movement_list), 1)
+        self.assertTrue(len(packing_list_movement_list), 1)
         packing_list_movement = packing_list_movement_list[0]
-        self.failUnless(packing_list_movement is not None)
-        self.failUnless(packing_list_movement.getRelativeUrl().\
+        self.assertTrue(packing_list_movement is not None)
+        self.assertTrue(packing_list_movement.getRelativeUrl().\
                                       startswith(packing_list_relative_url))
 
       # Then, test if each packing list movement is equals to the sum of somes
@@ -1064,7 +1064,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       for packing_list_movement in packing_list_movement_list:
         related_simulation_movement_list = packing_list_movement.\
                  getDeliveryRelatedValueList(portal_type='Simulation Movement')
-        self.failUnless(len(related_simulation_movement_list)>0)
+        self.assertTrue(len(related_simulation_movement_list)>0)
         quantity = 0
         total_price = 0
         packing_list_movement_quantity = packing_list_movement.getQuantity()
@@ -1073,31 +1073,31 @@ class TestOrderMixin(SubcontentReindexingWrapper):
           total_price += related_simulation_movement.getPrice() *\
                          related_simulation_movement.getQuantity()
           # Test resource
-          self.assertEquals(packing_list_movement.getResource(), \
+          self.assertEqual(packing_list_movement.getResource(), \
                             related_simulation_movement.getResource())
           # Test resource variation
-          self.assertEquals(packing_list_movement.getVariationText(), \
+          self.assertEqual(packing_list_movement.getVariationText(), \
                             related_simulation_movement.getVariationText())
-          self.assertEquals(packing_list_movement.getVariationCategoryList(), \
+          self.assertEqual(packing_list_movement.getVariationCategoryList(), \
                         related_simulation_movement.getVariationCategoryList())
           # Test acquisition
           self.checkAcquisition(packing_list_movement,
                                 related_simulation_movement)
           # Test delivery ratio
-          self.assertEquals(related_simulation_movement.getQuantity() /\
+          self.assertEqual(related_simulation_movement.getQuantity() /\
                             packing_list_movement_quantity, \
                             related_simulation_movement.getDeliveryRatio())
 
 
-        self.assertEquals(quantity, packing_list_movement.getQuantity())
+        self.assertEqual(quantity, packing_list_movement.getQuantity())
         # Test price
-        self.assertEquals(total_price / quantity, packing_list_movement.getPrice())
+        self.assertEqual(total_price / quantity, packing_list_movement.getPrice())
 
       sequence.edit(packing_list=packing_list)
 
       # Finally, test Packing List getTotalQuantity and getTotalPrice
-      self.assertEquals(order.getTotalQuantity(), packing_list.getTotalQuantity())
-      self.assertEquals(order.getTotalPrice(), packing_list.getTotalPrice())
+      self.assertEqual(order.getTotalQuantity(), packing_list.getTotalQuantity())
+      self.assertEqual(order.getTotalPrice(), packing_list.getTotalPrice())
 
   def stepModifyOrderStartDate(self, sequence=None, sequence_list=None, \
                                **kw):
@@ -1215,8 +1215,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                       order.getUid()
     result = sql_connection.manage_test(sql)
     simulation_state_list = [x['simulation_state'] for x in result]
-    self.assertEquals(1, len(simulation_state_list))
-    self.assertEquals(order.getSimulationState(),
+    self.assertEqual(1, len(simulation_state_list))
+    self.assertEqual(order.getSimulationState(),
                       simulation_state_list[0])
 
   def stepCheckCataloguedSimulation(self, sequence=None,
@@ -1232,8 +1232,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                           sim_mvt.getUid()
         result = sql_connection.manage_test(sql)
         simulation_state_list = [x['simulation_state'] for x in result]
-        self.assertEquals(1, len(simulation_state_list))
-        self.assertEquals(order.getSimulationState(),
+        self.assertEqual(1, len(simulation_state_list))
+        self.assertEqual(order.getSimulationState(),
                           simulation_state_list[0])
 
   def stepPackingListBuilderAlarm(self, sequence=None,
@@ -1291,8 +1291,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #         new_quantity = 0.0
 #       if new_price == None:
 #         new_price = 0.0
-#       self.assertEquals(new_quantity, cell.getProperty('quantity'))
-#       self.assertEquals(new_price, cell.getProperty('price'))
+#       self.assertEqual(new_quantity, cell.getProperty('quantity'))
+#       self.assertEqual(new_price, cell.getProperty('price'))
 #
 #       # XXX test getTotalPrice on OrderLine
 
@@ -1441,7 +1441,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #     if cell is not None:
 #       # Then, store new properties
 #       cell.edit(price=price)
-#       self.assertEquals(price, cell.getProperty('price'))
+#       self.assertEqual(price, cell.getProperty('price'))
 #
 # #     for new_quantity, new_price in [(None, 346), (123, None), (None, None), \
 # #                                     (quantity, price)]:
@@ -1865,7 +1865,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #       Test if confirmed order can not be modificated anymore.
 #     """
 #     if not run: return
-#     self.failUnless(1==2)
+#     self.assertTrue(1==2)
 
   def test_15_deliveryBuilder(self, quiet=0, run=run_all_test):
     """
@@ -2132,7 +2132,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 #       Test if packing list get some properties from order.
 #     """
 #     if not run: return
-#     self.failUnless(1==2)
+#     self.assertTrue(1==2)
 
   def test_18_SimulationStateIndexation(self, quiet=0, run=run_all_test):
     """
@@ -2180,29 +2180,29 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     order = order_module.newContent(portal_type=self.order_portal_type,
                                     specialise=self.business_process)
     # No line, no movement
-    self.assertEquals(0, len(order.getMovementList()))
+    self.assertEqual(0, len(order.getMovementList()))
 
     # One line is considered as a movement
     order_line = order.newContent(portal_type=self.order_line_portal_type)
-    self.assertEquals(1, len(order.getMovementList()))
+    self.assertEqual(1, len(order.getMovementList()))
 
     # If a sub line is created, its parent should not be considered
     # as a movement
     sub_order_line = order_line.newContent(
                portal_type=self.order_line_portal_type)
-    self.assertEquals(1, len(order.getMovementList()))
+    self.assertEqual(1, len(order.getMovementList()))
 
     # Create another subline to be sure it increases the line count
     sub_order_line = order_line.newContent(
                portal_type=self.order_line_portal_type)
-    self.assertEquals(2, len(order.getMovementList()))
+    self.assertEqual(2, len(order.getMovementList()))
 
     # Create recursively sub lines, and check that the ovement number
     # is still the same.
     for i in range(5):
       sub_order_line = sub_order_line.newContent(
           portal_type=self.order_line_portal_type)
-      self.assertEquals(2, len(order.getMovementList()))
+      self.assertEqual(2, len(order.getMovementList()))
 
     # Create a variated resource
     resource_module = portal.getDefaultModule(self.resource_portal_type)
@@ -2226,7 +2226,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # Check that those cells increase the movement count
     sub_order_line.setResourceValue(resource)
     sub_order_line.setVariationCategoryList(order_line_vcl)
-    self.assertEquals(1, len(order.getMovementList()))
+    self.assertEqual(1, len(order.getMovementList()))
 
     base_id = 'movement'
     cell_key_list = list(sub_order_line.getCellKeyList(base_id=base_id))
@@ -2235,12 +2235,12 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       cell = sub_order_line.newCell(base_id=base_id,
                                 portal_type=self.order_cell_portal_type,
                                 *cell_key)
-    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+    self.assertEqual(2-1+len(cell_key_list), len(order.getMovementList()))
 
     # Check that cells defined on a non leaf line are not returned.
     order_line.setResourceValue(resource)
     order_line.setVariationCategoryList(order_line_vcl)
-    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+    self.assertEqual(2-1+len(cell_key_list), len(order.getMovementList()))
 
     base_id = 'movement'
     cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
@@ -2249,7 +2249,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       cell = order_line.newCell(base_id=base_id,
                                 portal_type=self.order_cell_portal_type,
                                 *cell_key)
-    self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
+    self.assertEqual(2-1+len(cell_key_list), len(order.getMovementList()))
 
     # Make sure that portal_type argument works correctly.
     self.assertEqual(len(order.getMovementList(portal_type='Sale Order Line')),
@@ -2287,10 +2287,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                                     destination_value=section,
                                     specialise=self.business_process)
     # No line, no movement
-    self.assertEquals(order.getTotalQuantity(fast=0), 0)
-    self.assertEquals(order.getTotalQuantity(fast=1), 0)
-    self.assertEquals(order.getTotalPrice(fast=0), 0)
-    self.assertEquals(order.getTotalPrice(fast=1), 0)
+    self.assertEqual(order.getTotalQuantity(fast=0), 0)
+    self.assertEqual(order.getTotalQuantity(fast=1), 0)
+    self.assertEqual(order.getTotalPrice(fast=0), 0)
+    self.assertEqual(order.getTotalPrice(fast=1), 0)
 
     # Create a variated resource
     resource_module = portal.getDefaultModule(self.resource_portal_type)
@@ -2307,17 +2307,17 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         quantity=3)
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 3)
-    self.assertEquals(order.getTotalQuantity(fast=1), 3)
-    self.assertEquals(order.getTotalPrice(fast=0), 6)
-    self.assertEquals(order.getTotalPrice(fast=1), 6)
+    self.assertEqual(order.getTotalQuantity(fast=0), 3)
+    self.assertEqual(order.getTotalQuantity(fast=1), 3)
+    self.assertEqual(order.getTotalPrice(fast=0), 6)
+    self.assertEqual(order.getTotalPrice(fast=1), 6)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 3)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 3)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 6)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 6)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 3)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 3)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 6)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 6)
 
     # add cell to line, line is not a movement anymore
     order_line.setVariationCategoryList(order_line_vcl)
@@ -2334,42 +2334,42 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         variation_category_list=cell_key)
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order.getTotalPrice(fast=0), 12)
-    self.assertEquals(order.getTotalPrice(fast=1), 12)
+    self.assertEqual(order.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order.getTotalPrice(fast=0), 12)
+    self.assertEqual(order.getTotalPrice(fast=1), 12)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 12)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 12)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 12)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 12)
 
-    self.assertEquals(cell.getTotalQuantity(), 4)
-    self.assertEquals(cell.getTotalPrice(), 12)
+    self.assertEqual(cell.getTotalQuantity(), 4)
+    self.assertEqual(cell.getTotalPrice(), 12)
 
     # if cell has no price, the total price is None, but a default value can be
     # provided
     cell.setPrice(None)
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order.getTotalPrice(fast=0), 0)
-    self.assertEquals(order.getTotalPrice(fast=1), 0)
+    self.assertEqual(order.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order.getTotalPrice(fast=0), 0)
+    self.assertEqual(order.getTotalPrice(fast=1), 0)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 0)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 0)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 0)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 0)
 
-    self.assertEquals(cell.getTotalQuantity(), 4)
-    self.assertEquals(cell.getTotalPrice(), 0)
+    self.assertEqual(cell.getTotalQuantity(), 4)
+    self.assertEqual(cell.getTotalPrice(), 0)
 
     # restore the price on the line
     cell.setPrice(3)
@@ -2382,52 +2382,52 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         quantity=5)
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), False)
-    self.assertEquals(sub_order_line.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), False)
+    self.assertEqual(sub_order_line.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 5)
-    self.assertEquals(order.getTotalQuantity(fast=1), 5)
-    self.assertEquals(order.getTotalPrice(fast=0), 20)
-    self.assertEquals(order.getTotalPrice(fast=1), 20)
+    self.assertEqual(order.getTotalQuantity(fast=0), 5)
+    self.assertEqual(order.getTotalQuantity(fast=1), 5)
+    self.assertEqual(order.getTotalPrice(fast=0), 20)
+    self.assertEqual(order.getTotalPrice(fast=1), 20)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 5)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 5)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 20)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 20)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 5)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 5)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 20)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 20)
 
-    self.assertEquals(cell.getTotalQuantity(), 0)
-    self.assertEquals(cell.getTotalPrice(), 0)
+    self.assertEqual(cell.getTotalQuantity(), 0)
+    self.assertEqual(cell.getTotalPrice(), 0)
 
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 5)
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 5)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 20)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 20)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=0), 5)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=1), 5)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=0), 20)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=1), 20)
 
     # if this line has no price, getTotalPrice returns 0
     sub_order_line.setPrice(None)
     self.tic()
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), False)
-    self.assertEquals(sub_order_line.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), False)
+    self.assertEqual(sub_order_line.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 5)
-    self.assertEquals(order.getTotalQuantity(fast=1), 5)
-    self.assertEquals(order.getTotalPrice(fast=0), 0)
-    self.assertEquals(order.getTotalPrice(fast=1), 0)
+    self.assertEqual(order.getTotalQuantity(fast=0), 5)
+    self.assertEqual(order.getTotalQuantity(fast=1), 5)
+    self.assertEqual(order.getTotalPrice(fast=0), 0)
+    self.assertEqual(order.getTotalPrice(fast=1), 0)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 5)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 5)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 0)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 0)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 5)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 5)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 0)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 0)
 
-    self.assertEquals(cell.getTotalQuantity(), 0)
-    self.assertEquals(cell.getTotalPrice(), 0)
+    self.assertEqual(cell.getTotalQuantity(), 0)
+    self.assertEqual(cell.getTotalPrice(), 0)
 
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 5)
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 5)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 0)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 0)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=0), 5)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=1), 5)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=0), 0)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=1), 0)
 
     # restore price on the sub line
     sub_order_line.setPrice(4)
@@ -2447,68 +2447,68 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         variation_category_list=cell_key)
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), False)
-    self.assertEquals(sub_order_line.isMovement(), False)
-    self.assertEquals(sub_cell.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), False)
+    self.assertEqual(sub_order_line.isMovement(), False)
+    self.assertEqual(sub_cell.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 6)
-    self.assertEquals(order.getTotalQuantity(fast=1), 6)
-    self.assertEquals(order.getTotalPrice(fast=0), 30)
-    self.assertEquals(order.getTotalPrice(fast=1), 30)
+    self.assertEqual(order.getTotalQuantity(fast=0), 6)
+    self.assertEqual(order.getTotalQuantity(fast=1), 6)
+    self.assertEqual(order.getTotalPrice(fast=0), 30)
+    self.assertEqual(order.getTotalPrice(fast=1), 30)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 6)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 6)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 30)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 30)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 6)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 6)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 30)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 30)
 
-    self.assertEquals(cell.getTotalQuantity(), 0)
-    self.assertEquals(cell.getTotalPrice(), 0)
+    self.assertEqual(cell.getTotalQuantity(), 0)
+    self.assertEqual(cell.getTotalPrice(), 0)
 
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=0), 6)
-    self.assertEquals(sub_order_line.getTotalQuantity(fast=1), 6)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=0), 30)
-    self.assertEquals(sub_order_line.getTotalPrice(fast=1), 30)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=0), 6)
+    self.assertEqual(sub_order_line.getTotalQuantity(fast=1), 6)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=0), 30)
+    self.assertEqual(sub_order_line.getTotalPrice(fast=1), 30)
 
-    self.assertEquals(sub_cell.getTotalQuantity(), 6)
-    self.assertEquals(sub_cell.getTotalPrice(), 30)
+    self.assertEqual(sub_cell.getTotalQuantity(), 6)
+    self.assertEqual(sub_cell.getTotalPrice(), 30)
 
     # delete sub_line, cell is movement again
     order_line.manage_delObjects([sub_order_line.getId()])
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), False)
-    self.assertEquals(cell.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), False)
+    self.assertEqual(cell.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order.getTotalPrice(fast=0), 12)
-    self.assertEquals(order.getTotalPrice(fast=1), 12)
+    self.assertEqual(order.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order.getTotalPrice(fast=0), 12)
+    self.assertEqual(order.getTotalPrice(fast=1), 12)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 4)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 4)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 12)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 12)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 4)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 4)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 12)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 12)
 
-    self.assertEquals(cell.getTotalQuantity(), 4)
-    self.assertEquals(cell.getTotalPrice(), 12)
+    self.assertEqual(cell.getTotalQuantity(), 4)
+    self.assertEqual(cell.getTotalPrice(), 12)
 
     # delete cell, line is movement again
     order_line.manage_delObjects([cell.getId()])
     order_line.setVariationCategoryList([])
     self.tic()
 
-    self.assertEquals(order_line.isMovement(), True)
+    self.assertEqual(order_line.isMovement(), True)
 
-    self.assertEquals(order.getTotalQuantity(fast=0), 3)
-    self.assertEquals(order.getTotalQuantity(fast=1), 3)
-    self.assertEquals(order.getTotalPrice(fast=0), 6)
-    self.assertEquals(order.getTotalPrice(fast=1), 6)
+    self.assertEqual(order.getTotalQuantity(fast=0), 3)
+    self.assertEqual(order.getTotalQuantity(fast=1), 3)
+    self.assertEqual(order.getTotalPrice(fast=0), 6)
+    self.assertEqual(order.getTotalPrice(fast=1), 6)
 
-    self.assertEquals(order_line.getTotalQuantity(fast=0), 3)
-    self.assertEquals(order_line.getTotalQuantity(fast=1), 3)
-    self.assertEquals(order_line.getTotalPrice(fast=0), 6)
-    self.assertEquals(order_line.getTotalPrice(fast=1), 6)
+    self.assertEqual(order_line.getTotalQuantity(fast=0), 3)
+    self.assertEqual(order_line.getTotalQuantity(fast=1), 3)
+    self.assertEqual(order_line.getTotalPrice(fast=0), 6)
+    self.assertEqual(order_line.getTotalPrice(fast=1), 6)
 
   def stepCreateSubOrderLine(self,sequence=None, sequence_list=None, **kw):
     """
@@ -2622,48 +2622,48 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             resource_value=resource,
                             quantity=10,
                             price=3)
-    self.assertEquals(10, line.getTotalQuantity())
-    self.assertEquals(10 * 3, line.getTotalPrice())
-    self.assertEquals(10, order.getTotalQuantity())
-    self.assertEquals(10 * 3, order.getTotalPrice())
+    self.assertEqual(10, line.getTotalQuantity())
+    self.assertEqual(10 * 3, line.getTotalPrice())
+    self.assertEqual(10, order.getTotalQuantity())
+    self.assertEqual(10 * 3, order.getTotalPrice())
 
     line.setVariationCategoryList(['size/Baby', 'size/Child/32'])
-    self.assertEquals(0, line.getTotalQuantity())
-    self.assertEquals(0, line.getTotalPrice())
-    self.assertEquals(0, order.getTotalQuantity())
-    self.assertEquals(0, order.getTotalPrice())
+    self.assertEqual(0, line.getTotalQuantity())
+    self.assertEqual(0, line.getTotalPrice())
+    self.assertEqual(0, order.getTotalQuantity())
+    self.assertEqual(0, order.getTotalPrice())
 
     self.assertTrue(line.hasInRange('size/Baby', base_id='movement'))
     cell_baby = line.newCell('size/Baby', base_id='movement',
                              portal_type=self.order_cell_portal_type)
-    self.assertEquals(0, cell_baby.getProperty("quantity"))
-    self.assertEquals(0, cell_baby.getQuantity())
+    self.assertEqual(0, cell_baby.getProperty("quantity"))
+    self.assertEqual(0, cell_baby.getQuantity())
     self.assertFalse(cell_baby.hasProperty('quantity'))
     cell_baby.edit(quantity=10,
                    price=4,
                    variation_category_list=['size/Baby'],
                    mapped_value_property_list=['quantity', 'price'],
                    edit_order=[])
-    self.assertEquals(10, cell_baby.getQuantity())
-    self.assertEquals(4, cell_baby.getPrice())
+    self.assertEqual(10, cell_baby.getQuantity())
+    self.assertEqual(4, cell_baby.getPrice())
 
     self.assertTrue(line.hasInRange('size/Child/32', base_id='movement'))
     cell_child_32 = line.newCell('size/Child/32', base_id='movement',
                                  portal_type=self.order_cell_portal_type)
-    self.assertEquals(0, cell_child_32.getQuantity())
+    self.assertEqual(0, cell_child_32.getQuantity())
     cell_child_32.edit(quantity=20,
                        price=5,
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],
                        edit_order=[])
-    self.assertEquals(20, cell_child_32.getQuantity())
-    self.assertEquals(5, cell_child_32.getPrice())
+    self.assertEqual(20, cell_child_32.getQuantity())
+    self.assertEqual(5, cell_child_32.getPrice())
 
-    self.assertEquals(10 + 20, line.getTotalQuantity())
-    self.assertEquals(10*4 + 20*5, line.getTotalPrice())
+    self.assertEqual(10 + 20, line.getTotalQuantity())
+    self.assertEqual(10*4 + 20*5, line.getTotalPrice())
 
-    self.assertEquals(10 + 20, order.getTotalQuantity())
-    self.assertEquals(10*4 + 20*5, order.getTotalPrice())
+    self.assertEqual(10 + 20, order.getTotalQuantity())
+    self.assertEqual(10*4 + 20*5, order.getTotalPrice())
 
   def test_order_payment_condition_copied(self):
     # Payment Condition should be copied in the packing list
@@ -2690,7 +2690,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             price=3)
     # set properties, on the default payment condition
     order.setDefaultPaymentConditionQuantity(10)
-    self.assertEquals(1, len(order.contentValues(
+    self.assertEqual(1, len(order.contentValues(
                               portal_type='Payment Condition')))
 
     order.confirm()
@@ -2700,7 +2700,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     related_packing_list = order.getCausalityRelatedValue(
                                    portal_type=self.packing_list_portal_type)
     self.assertNotEquals(related_packing_list, None)
-    self.assertEquals(1, len(related_packing_list.contentValues(
+    self.assertEqual(1, len(related_packing_list.contentValues(
                                           portal_type='Payment Condition')))
 
   def test_Order_viewAsODT(self):
@@ -2738,7 +2738,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       self.fail(''.join(err_list))
     # The name of the printout is the reference of the order
     content_disposition = self.portal.REQUEST.RESPONSE.getHeader('content-disposition')
-    self.assertEquals(content_disposition, 'attachment; filename="OrderReference.odt"')
+    self.assertEqual(content_disposition, 'attachment; filename="OrderReference.odt"')
 
   def test_Order_viewAsODT_person(self):
     # test order printout with a person as destination
@@ -2973,7 +2973,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     
     # XXX: hard coding a selection_name is bad
     selection_name = 'SaleOrder_view_listbox_selection'
-    self.assertEquals(selection_name,
+    self.assertEqual(selection_name,
         sale_order.SaleOrder_view.listbox.get_value('selection_name'))
     
     # activate report tree

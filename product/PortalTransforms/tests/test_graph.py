@@ -14,7 +14,7 @@ class TestGraph(ATSiteTestCase):
         requirements = self.engine._policies.get('text/plain', [])
         if requirements:
             out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
-            self.failUnless(out.getData())
+            self.assertTrue(out.getData())
 
     def testFindPath(self):
         originalMap = self.engine._mtmap
@@ -86,7 +86,7 @@ class TestGraph(ATSiteTestCase):
                     if gotPath is not None:
                         gotPath = [transform.name() for transform in gotPath]
                     # this must be the same as in our expectation
-                    self.assertEquals(expectedPath, gotPath)
+                    self.assertEqual(expectedPath, gotPath)
         self.engine._mtmap = originalMap
 
     def testFindPathWithEmptyTransform(self):
@@ -101,7 +101,7 @@ class TestGraph(ATSiteTestCase):
         orig = 'Some text'
         converted = self.engine.convertTo(
             'text/plain', 'Some text', mimetype='text/plain')
-        self.assertEquals(orig, str(converted))
+        self.assertEqual(orig, str(converted))
 
 
 def test_suite():

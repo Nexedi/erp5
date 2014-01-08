@@ -92,11 +92,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def test_01_createTestNode(self):
     test_node = self._createTestNode()[0]
-    self.assertEquals(test_node.getPortalType(), "Test Node")
+    self.assertEqual(test_node.getPortalType(), "Test Node")
 
   def test_02_createTestSuite(self):
     test_suite,  = self._createTestSuite()
-    self.assertEquals(test_suite.getPortalType(), "Test Suite")
+    self.assertEqual(test_suite.getPortalType(), "Test Suite")
 
   def _callOptimizeAlarm(self):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
@@ -105,14 +105,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def test_03_startTestSuiteWithOneTestNode(self):
     config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP32-Node1"))
-    self.assertEquals([], config_list)
+    self.assertEqual([], config_list)
     self._createTestSuite(quantity=3)
     self.tic()
     self._callOptimizeAlarm()
     config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP32-Node1"))
-    self.assertEquals(3, len(config_list))
-    self.assertEquals(set(['B0','B1','B2']),
+    self.assertEqual(3, len(config_list))
+    self.assertEqual(set(['B0','B1','B2']),
                       set([x['test_suite'] for x in config_list]))
 
   def test_04_startTestSuiteWithTwoTestNode(self):
@@ -124,14 +124,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
                              title="COMP32-Node1"))
     config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP32-Node2"))
-    self.assertEquals([], config_list)
+    self.assertEqual([], config_list)
     self._createTestSuite(quantity=2)
     self.tic()
     self._callOptimizeAlarm()
     def checkConfigListForTestNode(test_node_title):
       config_list = json.loads(self.distributor.startTestSuite(
                              title=test_node_title))
-      self.assertEquals(1, len(config_list))
+      self.assertEqual(1, len(config_list))
       return (test_node_title, set([x['test_suite'] for x in config_list]))
     config1 = checkConfigListForTestNode("COMP32-Node1")
     config2 = checkConfigListForTestNode("COMP32-Node2")
@@ -164,26 +164,26 @@ class TestTaskDistribution(ERP5TypeTestCase):
     We will check the method createTestResult of task distribution tool
     """
     test_result_path, revision = self._createTestResult()
-    self.assertEquals("r0=a,r1=a", revision)
+    self.assertEqual("r0=a,r1=a", revision)
     self.assertTrue(test_result_path.startswith("test_result_module/"))
     # If we ask again with another revision, we should get with previous
     # revision
     next_test_result_path, next_revision = self._createTestResult(
       revision="r0=a,r1=b", node_title="Node1")
-    self.assertEquals(revision, next_revision)
-    self.assertEquals(next_test_result_path, test_result_path)
+    self.assertEqual(revision, next_revision)
+    self.assertEqual(next_test_result_path, test_result_path)
     # Check if test result object is well created
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
-    self.assertEquals("Test Result", test_result.getPortalType())
-    self.assertEquals(0, len(test_result.objectValues(
+    self.assertEqual("Test Result", test_result.getPortalType())
+    self.assertEqual(0, len(test_result.objectValues(
                              portal_type="Test Result Line")))
     # now check that if we pass list of test, new lines will be created
     next_test_result_path, next_revision = self._createTestResult(
       test_list=['testFoo', 'testBar'])
-    self.assertEquals(next_test_result_path, test_result_path)
+    self.assertEqual(next_test_result_path, test_result_path)
     line_list = test_result.objectValues(portal_type="Test Result Line")
-    self.assertEquals(2, len(line_list))
-    self.assertEquals(set(['testFoo', 'testBar']), set([x.getTitle() for x
+    self.assertEqual(2, len(line_list))
+    self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
 
   def test_06_startStopUnitTest(self):
@@ -197,7 +197,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     next_line_url, next_test = self.tool.startUnitTest(test_result_path)
     # first launch, we have no time optimisations, so tests are
     # launched in the given order
-    self.assertEquals(['testFoo', 'testBar'], [test, next_test])
+    self.assertEqual(['testFoo', 'testBar'], [test, next_test])
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     self.tool.stopUnitTest(next_line_url, status_dict)
@@ -213,31 +213,31 @@ class TestTaskDistribution(ERP5TypeTestCase):
     next_line.duration = line.duration + 1
     # So if we launch another unit test, it will process first the
     # one wich is the slowest
-    self.assertEquals("stopped", test_result.getSimulationState())
+    self.assertEqual("stopped", test_result.getSimulationState())
     self.tic()
     next_test_result_path, revision = self._createTestResult(
       test_list=['testFoo', 'testBar'], revision="r0=a,r1=b")
     self.assertNotEquals(next_test_result_path, test_result_path)
     line_url, test = self.tool.startUnitTest(next_test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(next_test_result_path)
-    self.assertEquals(['testBar', 'testFoo'], [test, next_test])
+    self.assertEqual(['testBar', 'testFoo'], [test, next_test])
 
   def test_07_reportTaskFailure(self):
     test_result_path, revision = self._createTestResult(node_title="Node0")
     test_result_path, revision = self._createTestResult(node_title="Node1")
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)    
-    self.assertEquals("started", test_result.getSimulationState())
+    self.assertEqual("started", test_result.getSimulationState())
     node_list = test_result.objectValues(portal_type="Test Result Node",
                                          sort_on=[("title", "ascending")])
     def checkNodeState(first_state, second_state):
-      self.assertEquals([("Node0", first_state), ("Node1", second_state)],
+      self.assertEqual([("Node0", first_state), ("Node1", second_state)],
               [(x.getTitle(), x.getSimulationState()) for x in node_list])
     checkNodeState("started", "started")
     self.tool.reportTaskFailure(test_result_path, {}, "Node0")
-    self.assertEquals("started", test_result.getSimulationState())
+    self.assertEqual("started", test_result.getSimulationState())
     checkNodeState("failed", "started")
     self.tool.reportTaskFailure(test_result_path, {}, "Node1")
-    self.assertEquals("failed", test_result.getSimulationState())
+    self.assertEqual("failed", test_result.getSimulationState())
     checkNodeState("failed", "failed")
 
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
@@ -250,7 +250,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
                                       node_title="Node0", tic=0)
     next_test_result_path, revision = self._createTestResult(
                                       node_title="Node1", tic=0)
-    self.assertEquals(test_result_path, next_test_result_path)
+    self.assertEqual(test_result_path, next_test_result_path)
 
   def _checkCreateTestResultAndAllowRestart(self, tic=False):
     test_result_path, revision = self._createTestResult(test_list=["testFoo"])
@@ -260,8 +260,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     if tic:
       self.tic()
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
-    self.assertEquals("stopped", test_result.getSimulationState())
-    self.assertEquals(None, self._createTestResult(test_list=["testFoo"]))
+    self.assertEqual("stopped", test_result.getSimulationState())
+    self.assertEqual(None, self._createTestResult(test_list=["testFoo"]))
     next_test_result_path, next_revision = self._createTestResult(
       test_list=["testFoo"], allow_restart=True)
     self.assertTrue(next_test_result_path != test_result_path)
@@ -290,7 +290,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.tic()
     self._callOptimizeAlarm()
     for test_node, aggregate_list in args:
-      self.assertEquals(set(test_node.getAggregateList()),
+      self.assertEqual(set(test_node.getAggregateList()),
         set(aggregate_list),
         "incorrect aggregate for %r, got %r instead of %r" % \
         (test_node.getTitle(), test_node.getAggregateList(), aggregate_list))
@@ -458,14 +458,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def test_13_startTestSuiteWithOneTestNodeAndPerformanceDistributor(self):
     config_list = json.loads(self.performance_distributor.startTestSuite(
                              title="COMP32-Node1"))
-    self.assertEquals([], config_list)
+    self.assertEqual([], config_list)
     self._createTestSuite(quantity=2, 
                           specialise_value=self.performance_distributor)
     self.tic()
     self._callOptimizeAlarm()
     config_list = json.loads(self.performance_distributor.startTestSuite(
                              title="COMP32-Node1"))
-    self.assertEquals(2, len(config_list))
-    self.assertEquals(set(['test suite 1-COMP32-Node1',
+    self.assertEqual(2, len(config_list))
+    self.assertEqual(set(['test suite 1-COMP32-Node1',
                            'test suite 2-COMP32-Node1']),
                       set([x['test_suite_title'] for x in config_list]))

@@ -125,23 +125,23 @@ class TestLocalizer(ERP5TypeTestCase):
     self.commit()
     while self.portal.portal_activities.getMessageList():
       self.portal.portal_activities.process_timer(None, None)
-    self.assertEquals(tmp_obj.getComment(), "C'est 1€.")
+    self.assertEqual(tmp_obj.getComment(), "C'est 1€.")
 
   def test_get_selected_language(self):
     # default selected language is en
-    self.assertEquals('en', self.portal.Localizer.get_selected_language())
+    self.assertEqual('en', self.portal.Localizer.get_selected_language())
 
   def test_translationContext(self):
     self.message_catalog._messages['This is 1€.'] = PersistentMapping(
       {'fr':"C'est 1€.", 'note':'',})
     localizer = self.portal.Localizer
     with localizer.translationContext('fr'):
-      self.assertEquals('fr', localizer.get_selected_language())
-      self.assertEquals("C'est 1€.",
+      self.assertEqual('fr', localizer.get_selected_language())
+      self.assertEqual("C'est 1€.",
         self.portal.Base_translateString("This is 1€."))
     # outside of this context manager we are back to english
-    self.assertEquals('en', localizer.get_selected_language())
-    self.assertEquals("This is 1€.",
+    self.assertEqual('en', localizer.get_selected_language())
+    self.assertEqual("This is 1€.",
       self.portal.Base_translateString("This is 1€."))
 
   def test_translationContextActivity(self):
@@ -168,22 +168,22 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     portal.portal_activities.activate().test_script()
     self.tic()
     # after activity execution we are still in english
-    self.assertEquals('en', localizer.get_selected_language())
-    self.assertEquals("This is 1€.",
+    self.assertEqual('en', localizer.get_selected_language())
+    self.assertEqual("This is 1€.",
       self.portal.Base_translateString("This is 1€."))
 
     # execute activity with group_method
     portal.portal_activities.activate(group_method_id=None).test_script()
     self.tic()
     # after activity execution we are still in english
-    self.assertEquals('en', localizer.get_selected_language())
-    self.assertEquals("This is 1€.",
+    self.assertEqual('en', localizer.get_selected_language())
+    self.assertEqual("This is 1€.",
       self.portal.Base_translateString("This is 1€."))
 
   def test_get_request(self):
     # check that Localizer's get_request hack works as expected
     from Products.Localizer.utils import get_request
-    self.assertEquals(get_request(), self.portal.REQUEST)
+    self.assertEqual(get_request(), self.portal.REQUEST)
 
   def test_default_not_changed(self):
     """
@@ -196,13 +196,13 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     # Base_translateString == Localizer.translate() currently, which calls
     # zope.i18n.translate and sets 'default' to 'message' before passing it to
     # MessageCatalog (Localizer.erp5_ui.translate)
-    self.assertEquals(message, self.portal.Base_translateString(message))
-    self.assertEquals(message,
+    self.assertEqual(message, self.portal.Base_translateString(message))
+    self.assertEqual(message,
                       self.portal.Localizer.translate('ui', message).encode('utf-8'))
 
     # default=None, thus 'message' was previously stripped before being set as
     # 'default' value (MessageCatalog.gettext)
-    self.assertEquals(message, self.portal.Localizer.erp5_ui.translate(message))
+    self.assertEqual(message, self.portal.Localizer.erp5_ui.translate(message))
 
 def test_suite():
   suite = unittest.TestSuite()

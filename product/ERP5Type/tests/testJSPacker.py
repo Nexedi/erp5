@@ -39,7 +39,7 @@ class TestJSPacker(unittest.TestCase):
     result = compressJavaScript(script)
     
     output = open(join(PREFIX, 'output/output_erp5.js')).read()
-    self.assertEquals(result, output)
+    self.assertEqual(result, output)
 
   def test_JavaScriptHandleMultLineComment(self):
     script = '/*** ' \
@@ -61,7 +61,7 @@ class TestJSPacker(unittest.TestCase):
                       '(2)!="6"){  2.5("0.3");}\\n\',14,14,\'MochiKit||dojo|'\
                       'Base||provide|undefined|typeof|if|Reserved|rights|'\
                       'All|VERSION|PACKED\'.split(\'|\'),0,{}))\n'
-    self.assertEquals(result, expected_result)
+    self.assertEqual(result, expected_result)
 
 if __name__ == '__main__':
   unittest.main()

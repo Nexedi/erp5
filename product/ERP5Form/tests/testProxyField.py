@@ -126,7 +126,7 @@ class TestProxyField(ERP5TypeTestCase):
     field.manage_edit_xmlrpc(dict(
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
 
-    self.assertEquals(my_title_value, field.get_value('title'))
+    self.assertEqual(my_title_value, field.get_value('title'))
 
     # Reveal a bug, causes infinite loop when ProxyField.getTemplateField
     # returns the proxyfield itself.
@@ -174,7 +174,7 @@ class TestProxyField(ERP5TypeTestCase):
     field.manage_edit_xmlrpc(dict(
       form_id='erp5_geek/Base_viewGeekFieldLibrary', field_id='my_title'))
 
-    self.assertEquals('Generic Title', field.get_value('title'))
+    self.assertEqual('Generic Title', field.get_value('title'))
 
   @expectedFailure
   def testSkinSelectionTemplateField(self):
@@ -228,11 +228,11 @@ class TestProxyField(ERP5TypeTestCase):
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
     self.commit()
 
-    self.assertEquals(None, field.get_value('title'))
+    self.assertEqual(None, field.get_value('title'))
     self.changeSkin('GenericView')
-    self.assertEquals('Generic Title', field.get_value('title'))
+    self.assertEqual('Generic Title', field.get_value('title'))
     self.changeSkin('CustomizedView')
-    self.assertEquals('Customized Title', field.get_value('title'))
+    self.assertEqual('Customized Title', field.get_value('title'))
 
   def testEmptySurchargedFieldLibrary_acquisition(self):
     """
@@ -330,7 +330,7 @@ return printed
     xml_string = formToXML(form)
     xml_tree = etree.fromstring(xml_string)
     field_node = xml_tree.find('groups/group/fields/field')
-    self.assertEquals(field_node.find('type').text, 'ProxyField')
+    self.assertEqual(field_node.find('type').text, 'ProxyField')
     self.assertTrue(field_node.find('delegated_list/title') is not None)
 
     skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewSuperGeek',

@@ -87,8 +87,8 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     def getDataResult(result):
       data_list = []
       column_id_list = [x[0] for x in result.column_list]
-      self.assertEquals(column_id_list[0], "source_title")
-      self.assertEquals(column_id_list[-1], "total")
+      self.assertEqual(column_id_list[0], "source_title")
+      self.assertEqual(column_id_list[-1], "total")
       column_id_list.pop(0)
       column_id_list.pop(-1)
       column_id_list.sort()
@@ -108,7 +108,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     at_date = DateTime("2014/01/01")
     result = callReport()
     # Initially we should have only one line for an empty total
-    self.assertEquals((["Worker", "Total"],
+    self.assertEqual((["Worker", "Total"],
                       [["Total", None]]),
                       getDataResult(result))
 
@@ -119,7 +119,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           source='person_module/Person_1',
           )
     result = callReport()
-    self.assertEquals((["Worker", "undefined", "Total"],
+    self.assertEqual((["Worker", "undefined", "Total"],
                        [["Person_1", 3, 3],
                        ["Total", 3, 3]]),
                       getDataResult(result))
@@ -132,7 +132,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           line_aggregate_relative_url='research_item_module/Item_1',
           )
     result = callReport()
-    self.assertEquals((["Worker",   "undefined", "Item_1", "Total"],
+    self.assertEqual((["Worker",   "undefined", "Item_1", "Total"],
                        [["Person_1",     3,        None,        3],
                         ["Person_2",  None,         5.2,      5.2],
                         ["Total",        3,         5.2,      8.2]]),
@@ -158,7 +158,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           line_aggregate_relative_url='research_item_module/Item_2',
           )
     result = callReport()
-    self.assertEquals((["Worker",   "undefined", "Item_1", "Item_2", "Total"],
+    self.assertEqual((["Worker",   "undefined", "Item_1", "Item_2", "Total"],
                        [["Person_1",     3,        None,      1.7,     4.7],
                         ["Person_2",  None,         7.6,      0.9,     8.5],
                         ["Total",        3,         7.6,      2.6,    13.2]]),

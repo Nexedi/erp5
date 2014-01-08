@@ -161,7 +161,7 @@ class TestDomainTool(TestPredicateMixIn):
     # Test with order line and predicate to none
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
         portal_type=self.portal_type_query)
-    self.assertEquals(len(predicate_list),1) # Actually, a predicate where
+    self.assertEqual(len(predicate_list),1) # Actually, a predicate where
                                              # nothing is defined is ok
 
     # Test with order line not none and predicate to none
@@ -169,7 +169,7 @@ class TestDomainTool(TestPredicateMixIn):
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
         portal_type=self.portal_type_query)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     # Test with order line not none and predicate to identity
     order_line.setQuantity(45)
@@ -177,12 +177,12 @@ class TestDomainTool(TestPredicateMixIn):
     predicate.setCriterion('quantity',identity=45,min=None,max=None)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     order_line.setQuantity(40)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     # Test with order line not none and predicate to min
     order_line.setQuantity(45)
@@ -190,13 +190,13 @@ class TestDomainTool(TestPredicateMixIn):
     predicate.setCriterion('quantity',identity=None,min=30,max=None)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     order_line.setQuantity(10)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
         portal_type=self.portal_type_query)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     # Test with order line not none and predicate to max
     order_line.setQuantity(45)
@@ -204,12 +204,12 @@ class TestDomainTool(TestPredicateMixIn):
     predicate.setCriterion('quantity',identity=None,min=None,max=50)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     order_line.setQuantity(60)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     # Test with order line not none and predicate to min max
     order_line.setQuantity(20)
@@ -217,17 +217,17 @@ class TestDomainTool(TestPredicateMixIn):
     predicate.setCriterion('quantity',identity=None,min=30,max=50)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     order_line.setQuantity(60)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     order_line.setQuantity(45)
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.tic()
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     # Test with order line not none and predicate to min max
     # and also predicate to a category
@@ -235,22 +235,22 @@ class TestDomainTool(TestPredicateMixIn):
     predicate.setMembershipCriterionCategoryList(['region/europe'])
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     order_line.setCategoryList(['region/africa'])
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     order_line.setCategoryList(['region/europe'])
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
     order_line.setQuantity(60)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     # Test with order line not none and predicate to date min and date max
     kw = {'portal_type':'Supply Line'}
@@ -258,8 +258,8 @@ class TestDomainTool(TestPredicateMixIn):
     self.supply_line.setPricedQuantity(1)
     self.supply_line.setDefaultResourceValue(self.resource)
     order_line.setDefaultResourceValue(self.resource)
-    self.assertEquals(self.supply_line.getDefaultResourceValue(),self.resource)
-    self.assertEquals(order_line.getDefaultResourceValue(),self.resource)
+    self.assertEqual(self.supply_line.getDefaultResourceValue(),self.resource)
+    self.assertEqual(order_line.getDefaultResourceValue(),self.resource)
     date1 = DateTime('2005/04/08 10:47:26.388 GMT-4')
     date2 = DateTime('2005/04/10 10:47:26.388 GMT-4')
     self.supply_line.setStartDateRangeMin(date1)
@@ -268,13 +268,13 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setStartDate(current_date)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),0)
+    self.assertEqual(len(predicate_list),0)
 
     current_date = DateTime('2005/04/09 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEquals(len(predicate_list),1)
+    self.assertEqual(len(predicate_list),1)
 
   def test_01_SearchPredidateListWithNoTest(self):
     self.createData()
@@ -297,7 +297,7 @@ class TestDomainTool(TestPredicateMixIn):
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context, portal_type="Supply Line")
-    self.assertEquals(mapped_value.getBasePrice(),23)
+    self.assertEqual(mapped_value.getBasePrice(),23)
 
   def test_04_GenerateMappedValueWithRanges(self):
     self.createData()
@@ -317,11 +317,11 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setStartDate(current_date)
     kw = {'portal_type':('Supply Line','Supply Cell')}
     mapped_value = domain_tool.generateMappedValue(order_line,**kw)
-    self.assertEquals(mapped_value,None)
+    self.assertEqual(mapped_value,None)
     current_date = DateTime('2005/04/09')
     order_line.setStartDate(current_date)
     mapped_value = domain_tool.generateMappedValue(order_line,**kw)
-    self.assertEquals(mapped_value.getBasePrice(),23)
+    self.assertEqual(mapped_value.getBasePrice(),23)
 
   def test_05_GenerateMappedValueWithVariation(self):
     self.createData()
@@ -373,28 +373,28 @@ class TestDomainTool(TestPredicateMixIn):
     mapped_value = domain_tool.generateMappedValue(context,
                      portal_type=self.portal_type_query,
                      sort_method=sort_method)
-    self.assertEquals(mapped_value.getProperty('base_price'),45)
+    self.assertEqual(mapped_value.getProperty('base_price'),45)
     mapped_value = domain_tool.generateMappedValue(context,
                      portal_type=self.portal_type_query,
                      sort_key_method=sort_key_method)
-    self.assertEquals(mapped_value.getProperty('base_price'),45)
+    self.assertEqual(mapped_value.getProperty('base_price'),45)
     context = self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/red' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,
                      portal_type=self.portal_type_query,
                      sort_method=sort_method)
-    self.assertEquals(mapped_value.getProperty('base_price'),26)
+    self.assertEqual(mapped_value.getProperty('base_price'),26)
     mapped_value = domain_tool.generateMappedValue(context,
                      portal_type=self.portal_type_query,
                      sort_key_method=sort_key_method)
-    self.assertEquals(mapped_value.getProperty('base_price'),26)
+    self.assertEqual(mapped_value.getProperty('base_price'),26)
     # Now check the price
-    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
+    self.assertEqual(self.resource.getPrice(context=self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_method=sort_method),45)
-    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
+    self.assertEqual(self.resource.getPrice(context=self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_key_method=sort_key_method),45)

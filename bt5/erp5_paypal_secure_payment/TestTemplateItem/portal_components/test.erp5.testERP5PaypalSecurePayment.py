@@ -84,7 +84,7 @@ business=<tal:block tal:replace='here/service_username'/>
     }
     try:
       result = self.service.navigate(page_template=pt_id, paypal_dict=paypal_dict)
-      self.assertEquals(result, """key=return value=http://ipn/
+      self.assertEqual(result, """key=return value=http://ipn/
 link=http://paypal/
 business=business@sample.com""")
     finally:

@@ -92,7 +92,7 @@ class TestClassTool(ERP5TypeTestCase):
     doc_helper = folder.asDocumentationHelper()
     self.assertNotEquals(doc_helper, None)
     # We simply check that we can access methods of the documentation helper
-    self.failUnless('Base' in doc_helper.getInheritanceList())
+    self.assertTrue('Base' in doc_helper.getInheritanceList())
     self.assertNotEquals([], doc_helper.getStaticMethodList())
 
 
@@ -117,7 +117,7 @@ class TestClassTool(ERP5TypeTestCase):
     self.tic()
     doc_helper = folder.asDocumentationHelper()
     self.commit()
-    self.assertEquals(0, len(portal.portal_activities.getMessageList()))
+    self.assertEqual(0, len(portal.portal_activities.getMessageList()))
 
 
   def test_DocumentationHelperExpressionCategory(self):

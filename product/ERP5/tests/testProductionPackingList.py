@@ -73,82 +73,82 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
   def stepSetReadyProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
+    self.assertEqual(packing_list.getSimulationState(), 'ready')
 
   def stepStartProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'started')
+    self.assertEqual(packing_list.getSimulationState(), 'started')
 
   def stepStopProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+    self.assertEqual(packing_list.getSimulationState(), 'stopped')
 
   def stepDeliverProducedDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+    self.assertEqual(packing_list.getSimulationState(), 'delivered')
 
   def stepSetReadySupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
     self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
+    self.assertEqual(packing_list.getSimulationState(), 'ready')
 
   def stepStartSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
     self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'started')
+    self.assertEqual(packing_list.getSimulationState(), 'started')
 
   def stepStopSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
     self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+    self.assertEqual(packing_list.getSimulationState(), 'stopped')
 
   def stepDeliverSupplyDeliveryPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+    self.assertEqual(packing_list.getSimulationState(), 'delivered')
 
   def stepSetReadyProducedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
     self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
+    self.assertEqual(packing_list.getSimulationState(), 'ready')
 
   def stepStartProducedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
     self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'started')
+    self.assertEqual(packing_list.getSimulationState(), 'started')
 
   def stepStopProducedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
     self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+    self.assertEqual(packing_list.getSimulationState(), 'stopped')
 
   def stepDeliverProducedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+    self.assertEqual(packing_list.getSimulationState(), 'delivered')
 
   def stepSetReadyConsumedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
     self.modifyPackingListState('set_ready_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'ready')
+    self.assertEqual(packing_list.getSimulationState(), 'ready')
 
   def stepStartConsumedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
     self.modifyPackingListState('start_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'started')
+    self.assertEqual(packing_list.getSimulationState(), 'started')
 
   def stepStopConsumedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
     self.modifyPackingListState('stop_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+    self.assertEqual(packing_list.getSimulationState(), 'stopped')
 
   def stepDeliverConsumedReport(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
     self.modifyPackingListState('deliver_action', sequence=sequence, packing_list=packing_list)
-    self.assertEquals(packing_list.getSimulationState(), 'delivered')
+    self.assertEqual(packing_list.getSimulationState(), 'delivered')
 
   def stepDecreaseProducedDeliveryPackingListQuantity(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
@@ -193,32 +193,32 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
 
     operation_report = operation_movement.getDeliveryValue().getParentValue()
     component_report = component_movement.getDeliveryValue().getParentValue()
-    self.assertEquals(operation_report, component_report)
+    self.assertEqual(operation_report, component_report)
     consumed_report = operation_report
 
     # checks that simulations are same
     # TODO: resources, quantities, dates, ...
-    self.assertEquals(
+    self.assertEqual(
       produced_delivery_movement.getSimulationState(),
       produced_delivery_packing_list.getSimulationState()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       supply_movement.getSimulationState(),
       supply_delivery_packing_list.getSimulationState()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       produced_movement.getSimulationState(),
       produced_report.getSimulationState()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       component_movement.getSimulationState(),
       consumed_report.getSimulationState()
     )
 
-    self.assertEquals(
+    self.assertEqual(
       operation_movement.getSimulationState(),
       consumed_report.getSimulationState()
     )
@@ -234,7 +234,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'confirmed',
       packing_list.getSimulationState()
     )
@@ -243,7 +243,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'delivered',
       packing_list.getSimulationState()
     )
@@ -252,7 +252,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'delivered',
       packing_list.getSimulationState()
     )
@@ -261,7 +261,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'delivered',
       packing_list.getSimulationState()
     )
@@ -270,7 +270,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'delivered',
       packing_list.getSimulationState()
     )
@@ -279,7 +279,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'solved',
       packing_list.getCausalityState()
     )
@@ -288,7 +288,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'diverged',
       packing_list.getCausalityState()
     )
@@ -297,7 +297,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'calculating',
       packing_list.getCausalityState()
     )
@@ -306,7 +306,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'calculating',
       packing_list.getCausalityState()
     )
@@ -315,7 +315,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'confirmed',
       packing_list.getSimulationState()
     )
@@ -324,7 +324,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'solved',
       packing_list.getCausalityState()
     )
@@ -333,7 +333,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('supply_delivery_packing_list')
 
-    self.assertEquals(
+    self.assertEqual(
       'diverged',
       packing_list.getCausalityState()
     )
@@ -342,7 +342,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'confirmed',
       packing_list.getSimulationState()
     )
@@ -351,7 +351,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'solved',
       packing_list.getCausalityState()
     )
@@ -360,7 +360,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('produced_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'diverged',
       packing_list.getCausalityState()
     )
@@ -369,7 +369,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'confirmed',
       packing_list.getSimulationState()
     )
@@ -378,7 +378,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'solved',
       packing_list.getCausalityState()
     )
@@ -387,7 +387,7 @@ class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPacking
                                     sequence_list=None, **kw):
     packing_list = sequence.get('consumed_report')
 
-    self.assertEquals(
+    self.assertEqual(
       'diverged',
       packing_list.getCausalityState()
     )

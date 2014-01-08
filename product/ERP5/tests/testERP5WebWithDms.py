@@ -191,10 +191,10 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                 **kw)
       webpage.publish()
       self.tic()
-      self.assertEquals(language, webpage.getLanguage())
-      self.assertEquals(reference, webpage.getReference())
-      self.assertEquals(version, webpage.getVersion())
-      self.assertEquals('published', webpage.getValidationState())
+      self.assertEqual(language, webpage.getLanguage())
+      self.assertEqual(reference, webpage.getReference())
+      self.assertEqual(version, webpage.getVersion())
+      self.assertEqual('published', webpage.getValidationState())
       webpage_list.append(webpage)
 
     return webpage_list
@@ -235,15 +235,15 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
     # is old archived?
-    self.assertEquals('archived', en_01.getValidationState())
+    self.assertEqual('archived', en_01.getValidationState())
 
     # is new public and default web page for section?
     portal.Localizer.manage_changeDefaultLang(language = 'en')
     default_document = websection.getDefaultDocumentValue()
-    self.assertEquals(en_02, default_document)
-    self.assertEquals('en', default_document.getLanguage())
-    self.assertEquals('0.2', default_document.getVersion())
-    self.assertEquals('published', default_document.getValidationState())
+    self.assertEqual(en_02, default_document)
+    self.assertEqual('en', default_document.getLanguage())
+    self.assertEqual('0.2', default_document.getVersion())
+    self.assertEqual('published', default_document.getValidationState())
 
   def test_02_WebSectionAuthorizationForced(self, quiet=quiet, run=run_all_test):
     """ Check that when a document is requested within a Web Section we have a chance to
@@ -310,15 +310,15 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                                               %publication_section_category_id_list[0]])
     self.tic()
 
-    self.assertEquals(0,  len(websection.getDocumentValueList()))
+    self.assertEqual(0,  len(websection.getDocumentValueList()))
     # create pages belonging to this publication_section 'documentation'
     web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page',
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
     self.tic()
-    self.assertEquals(1,  len(websection.getDocumentValueList(language='en')))
-    self.assertEquals(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
+    self.assertEqual(1,  len(websection.getDocumentValueList(language='en')))
+    self.assertEqual(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
 
     # create pages belonging to this publication_section 'documentation' but for 'bg' language
     web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page',
@@ -326,19 +326,19 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
     self.tic()
-    self.assertEquals(1,  len(websection.getDocumentValueList(language='bg')))
-    self.assertEquals(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
+    self.assertEqual(1,  len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
     self.tic()
-    self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
+    self.assertEqual(0,  len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
     self.tic()
-    self.assertEquals(1,  len(websection.getDocumentValueList()))
-    self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
+    self.assertEqual(1,  len(websection.getDocumentValueList()))
+    self.assertEqual(web_page_en,  websection.getDocumentValueList()[0].getObject())
 
   def test_04_WebSectionAuthorizationForcedForDefaultDocument(self, quiet=quiet, run=run_all_test):
     """ Check that when a Web Section contains a default document not accessible by user we have a chance to
@@ -467,9 +467,12 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                        reference,
                        'img%s.png' % i))
       response = self.publish(path)
+      policy_list = self.portal.caching_policy_manager.listPolicies()
+      policy = [policy for policy in policy_list\
+                                          if policy[0] == 'unauthenticated'][0]
       self.assertEquals(response.getHeader('Content-Type'), 'image/png')
       self.assertEquals(response.getHeader('Cache-Control'),
-                        'max-age=%s, public' % policy.getMaxAgeSecs())
+                        'max-age=%s, public' % policy[1].getMaxAgeSecs())
 
   def test_07_TestDocumentViewBehaviour(self):
     """All Documents shared the same downloading behaviour
@@ -515,60 +518,60 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # testing TextDocument
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
     self.assertTrue('<form' in response.getBody()) # means the web_page
                                       # is rendered in web_site context
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
     self.assertTrue('<form' in response.getBody()) # means the web_page
                                       # is rendered in web_site context
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference + '?format=pdf', credential)
-    self.assertEquals(response.getHeader('content-type'), 'application/pdf')
+    self.assertEqual(response.getHeader('content-type'), 'application/pdf')
 
     # testing Image
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference, credential)
     # image is rendered in web_site context
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=png', credential)
     # image is downloaded because format parameter is passed
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?display=small', credential)
     # image is downloaded because display parameter is passed
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
 
     # image is rendered in web_site context
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference, credential)
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 
     # testing OOoDocument
     # Document is downloaded
     response = self.publish(website.absolute_url_path() + '/' +\
                             document_reference, credential)
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
     response = self.publish(website.absolute_url_path() + '/' +\
                             document_reference + '?format=odp', credential)
     # document is resturned because format parameter is passed
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                       'application/vnd.oasis.opendocument.presentation')
     # Document is rendered in web_site context
     response = self.publish(website.absolute_url_path() + '/' +\
                             document_reference, credential)
-    self.assertEquals(response.getHeader('content-type'),
+    self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 
   def test_08_RFC5861(self):
@@ -683,13 +686,13 @@ return True
 
       # find the img src
       img_list = etree.HTML(html).findall('.//img')
-      self.assertEquals(1, len(img_list))
+      self.assertEqual(1, len(img_list))
       src = img_list[0].get('src')
 
       # and make another query for this img
       response = self.publish('%s/%s' % ( document.absolute_url_path(), src),
                               credential)
-      self.assertEquals(response.getHeader('content-type'), 'image/png')
+      self.assertEqual(response.getHeader('content-type'), 'image/png')
       png = response.getBody()
       self.assertTrue(png.startswith('\x89PNG'))
 
@@ -707,13 +710,13 @@ return True
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
-    self.assertEquals(1, len(img_list))
+    self.assertEqual(1, len(img_list))
     src = img_list[0].get('src')
 
     # and make another query for this img
     response = self.publish('%s/%s/%s' % (
            website.absolute_url_path(), document_reference, src))
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
     png = response.getBody()
     self.assertTrue(png.startswith('\x89PNG'))
 
@@ -729,7 +732,7 @@ return True
 
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
-    self.assertEquals(1, len(img_list))
+    self.assertEqual(1, len(img_list))
     src = img_list[0].get('src')
 
   def test_ImageConversionThroughWebSite_using_file(self):
@@ -772,17 +775,17 @@ return True
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
 
     # testing Image conversions, png
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=png', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
 
     # testing Image conversions, jpg
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=jpg', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/jpeg')
+    self.assertEqual(response.getHeader('content-type'), 'image/jpeg')
 
     # testing Image conversions, svg
     # disable Image permissiions checks format checks
@@ -790,16 +793,16 @@ return True
                            '**kw', 'return 1')
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=svg', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/svg+xml')
+    self.assertEqual(response.getHeader('content-type'), 'image/svg+xml')
 
     # testing Image conversions, resizing
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?display=large', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
     large_image = response.getBody()
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?display=small', credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    self.assertEqual(response.getHeader('content-type'), 'image/png')
     small_image = response.getBody()
     # if larger image is longer than smaller, then
     # Resizing works
@@ -844,9 +847,9 @@ return True
                                     reference="NXD-DOCUMENT")
     image.publish()
     self.tic()
-    self.assertEquals(image.getContentType(), 'image/svg+xml')
+    self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
-    self.assertEquals(mime, 'image/png')
+    self.assertEqual(mime, 'image/png')
     expected_image = makeFileUpload('%s.png' % filename)
 
     # Compare images and accept some minimal difference,
@@ -874,9 +877,9 @@ return True
                                     reference="NXD-DOCYMENT")
     image.publish()
     self.tic()
-    self.assertEquals(image.getContentType(), 'image/svg+xml')
+    self.assertEqual(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
-    self.assertEquals(mime, 'image/png')
+    self.assertEqual(mime, 'image/png')
     expected_image = makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
@@ -952,8 +955,8 @@ return True
     image.publish()
     image2.publish()
     self.tic()
-    self.assertEquals(image.getContentType(), 'image/svg+xml')
-    self.assertEquals(image2.getContentType(), 'image/svg+xml')
+    self.assertEqual(image.getContentType(), 'image/svg+xml')
+    self.assertEqual(image2.getContentType(), 'image/svg+xml')
     self.assertRaises(ConversionError, image.convert, "png")
     self.assertRaises(ConversionError, image2.convert, "png")
 
@@ -972,7 +975,7 @@ return True
 
     image.publish()
     self.tic()
-    self.assertEquals(image.getContentType(), 'image/svg+xml')
+    self.assertEqual(image.getContentType(), 'image/svg+xml')
     self.assertRaises(ConversionError, image.convert, "png")
 
   def test_ImageConversionFromSVGToPNG_embeeded_data(self):

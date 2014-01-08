@@ -94,13 +94,13 @@ class TestTemplateTool(ERP5TypeTestCase):
   def checkFolderReindexAllActivityNotPresent(self):
     message_list = [m for m in self.portal.portal_activities.getMessageList()
                       if m.method_id == 'Folder_reindexAll']
-    self.assertEquals(len(message_list), 0)
+    self.assertEqual(len(message_list), 0)
 
   def testUpdateBT5FromRepository(self, quiet=quiet, run=run_all_test):
     """ Test the list of bt5 returned for upgrade """
     # edit bt5 revision so that it will be marked as updatable
     bt_list = self.templates_tool.searchFolder(title='erp5_base')
-    self.assertEquals(len(bt_list), 1)
+    self.assertEqual(len(bt_list), 1)
     erp5_base = bt_list[0].getObject()
     try:
       erp5_base.edit(revision=0)
@@ -122,8 +122,8 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_download_http(self):
     test_web = self.portal.portal_templates.download(
         'http://www.erp5.org/dists/snapshot/test_bt5/test_web.bt5')
-    self.assertEquals(test_web.getPortalType(), 'Business Template')
-    self.assertEquals(test_web.getTitle(), 'test_web')
+    self.assertEqual(test_web.getPortalType(), 'Business Template')
+    self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
 
   def _svn_setup_ssl(self):
@@ -146,8 +146,8 @@ class TestTemplateTool(ERP5TypeTestCase):
     self._svn_setup_ssl()
     bt5_url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_web'
     test_web = self.portal.portal_templates.download(bt5_url)
-    self.assertEquals(test_web.getPortalType(), 'Business Template')
-    self.assertEquals(test_web.getTitle(), 'test_web')
+    self.assertEqual(test_web.getPortalType(), 'Business Template')
+    self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
 
   def test_updateBusinessTemplateFromUrl_simple(self):
@@ -166,7 +166,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool.updateBusinessTemplateFromUrl(url)
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     self.assertNotEquals(old_bt, new_bt)
-    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    self.assertEqual('erp5_csv_style', new_bt.getTitle())
 
     # Test Another time with definning an ID
     old_bt = new_bt
@@ -174,22 +174,22 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     self.assertNotEquals(old_bt, new_bt)
-    self.assertEquals('erp5_csv_style', new_bt.getTitle())
-    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+    self.assertEqual('erp5_csv_style', new_bt.getTitle())
+    self.assertEqual('new_erp5_csv_style', new_bt.getId())
 
     # Test if the new instance with same revision is not installed.
     old_bt = new_bt
     template_tool.updateBusinessTemplateFromUrl(url, id="not_installed_bt5")
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
-    self.assertEquals(old_bt, new_bt)
-    self.assertEquals('erp5_csv_style', new_bt.getTitle())
-    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+    self.assertEqual(old_bt, new_bt)
+    self.assertEqual('erp5_csv_style', new_bt.getTitle())
+    self.assertEqual('new_erp5_csv_style', new_bt.getId())
     not_installed_bt5 = getattr(template_tool, "not_installed_bt5", None)
     self.assertNotEquals(not_installed_bt5, None)
-    self.assertEquals('erp5_csv_style', not_installed_bt5.getTitle())
-    self.assertEquals(not_installed_bt5.getInstallationState(),
+    self.assertEqual('erp5_csv_style', not_installed_bt5.getTitle())
+    self.assertEqual(not_installed_bt5.getInstallationState(),
                       "not_installed")
-    self.assertEquals(not_installed_bt5.getRevision(), new_bt.getRevision())
+    self.assertEqual(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
     """
@@ -207,7 +207,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = getattr(self.portal.portal_skins, 'erp5_test', None)
     self.assertNotEquals(None, erp5_test)
     test_file = getattr(erp5_test, 'test_file', None)
-    self.assertEquals(None, test_file)
+    self.assertEqual(None, test_file)
 
   def test_updateBusinessTemplateFromUrl_after_before_script(self):
     """
@@ -244,15 +244,15 @@ class TestTemplateTool(ERP5TypeTestCase):
                                    after_triggered_bt5_id_list=after_triggered_bt5_id_list)
     bt = template_tool.getInstalledBusinessTemplate('test_html_style')
     self.assertNotEquals(None, bt)
-    self.assertEquals(bt.getDescription(), 'MODIFIED')
-    self.assertEquals(bt.getChangeLog(), 'MODIFIED')
-    self.assertEquals(portal.getTitle(), 'MODIFIED')
+    self.assertEqual(bt.getDescription(), 'MODIFIED')
+    self.assertEqual(bt.getChangeLog(), 'MODIFIED')
+    self.assertEqual(portal.getTitle(), 'MODIFIED')
 
   def test_updateBusinessTemplateFromUrl_stringCastingBug(self):
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.failUnless(template.getBuildingState() == 'draft')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
     title = 'install_casting_to_int_bug_check'
     template.edit(title=title,
                   version='1.0',
@@ -268,7 +268,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     if os.path.exists(template_path):
       shutil.rmtree(template_path)
     template.export(path=template_path, local=1)
-    self.failUnless(os.path.exists(template_path))
+    self.assertTrue(os.path.exists(template_path))
 
     # setup version '9'
     first_revision = '9'
@@ -293,15 +293,15 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_CompareVersions(self):
     """Tests compare version on template tool. """
     compareVersions = self.getPortal().portal_templates.compareVersions
-    self.assertEquals(0, compareVersions('1', '1'))
-    self.assertEquals(0, compareVersions('1.2', '1.2'))
-    self.assertEquals(0, compareVersions('1.2rc3', '1.2rc3'))
-    self.assertEquals(0, compareVersions('1.0.0', '1.0'))
+    self.assertEqual(0, compareVersions('1', '1'))
+    self.assertEqual(0, compareVersions('1.2', '1.2'))
+    self.assertEqual(0, compareVersions('1.2rc3', '1.2rc3'))
+    self.assertEqual(0, compareVersions('1.0.0', '1.0'))
 
-    self.assertEquals(-1, compareVersions('1.0', '1.0.1'))
-    self.assertEquals(-1, compareVersions('1.0rc1', '1.0'))
-    self.assertEquals(-1, compareVersions('1.0a', '1.0.1'))
-    self.assertEquals(-1, compareVersions('1.1', '2.0'))
+    self.assertEqual(-1, compareVersions('1.0', '1.0.1'))
+    self.assertEqual(-1, compareVersions('1.0rc1', '1.0'))
+    self.assertEqual(-1, compareVersions('1.0a', '1.0.1'))
+    self.assertEqual(-1, compareVersions('1.1', '2.0'))
 
   def test_CompareVersionStrings(self):
     """Test compareVersionStrings on template tool"""
@@ -317,14 +317,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertNotEquals(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_core'))
 
-    self.assertEquals(None, self.getPortal()\
+    self.assertEqual(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_toto'))
 
   def test_getInstalledBusinessTemplateRevision(self):
     self.assertTrue(300 < self.getPortal()\
         .portal_templates.getInstalledBusinessTemplateRevision('erp5_core'))
 
-    self.assertEquals(None, self.getPortal()\
+    self.assertEqual(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplateRevision('erp5_toto'))
 
   def test_getInstalledBusinessTemplateList(self):
@@ -332,11 +332,11 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5_list = templates_tool.getInstalledBusinessTemplateList()
     another_bt_list = [i for i in templates_tool.contentValues() \
                        if i.getInstallationState() == 'installed']
-    self.assertEquals(len(bt5_list), len(another_bt_list))
+    self.assertEqual(len(bt5_list), len(another_bt_list))
     for bt in bt5_list:
-      self.failUnless(bt in another_bt_list)
+      self.assertTrue(bt in another_bt_list)
 
-    self.assertEquals(bt5_list,
+    self.assertEqual(bt5_list,
                       templates_tool._getInstalledBusinessTemplateList())
 
   def test_getInstalledBusinessTemplateTitleList(self):
@@ -346,13 +346,13 @@ class TestTemplateTool(ERP5TypeTestCase):
                        if i.getInstallationState() == 'installed']
     bt5_list.sort()
     another_bt_list.sort()
-    self.assertEquals(bt5_list, another_bt_list)
+    self.assertEqual(bt5_list, another_bt_list)
     for bt in bt5_list:
-      self.failUnless(bt in another_bt_list)
+      self.assertTrue(bt in another_bt_list)
 
     new_list = templates_tool._getInstalledBusinessTemplateList(only_title=1)
     new_list.sort()
-    self.assertEquals(bt5_list, new_list)
+    self.assertEqual(bt5_list, new_list)
 
   def test_getBusinessTemplateUrl(self):
     """ Test if this method can find which repository is the business
@@ -371,25 +371,25 @@ class TestTemplateTool(ERP5TypeTestCase):
     getBusinessTemplateUrl = template_tool.getBusinessTemplateUrl
 
     # Test Exists
-    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5),
+    self.assertEqual(getBusinessTemplateUrl(url_list, exist_bt5),
                   'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
-    self.assertEquals(getBusinessTemplateUrl(url_list[1:], exist_bt5),
+    self.assertEqual(getBusinessTemplateUrl(url_list[1:], exist_bt5),
                       'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
-    self.assertEquals(getBusinessTemplateUrl(url_list[2:], exist_bt5),
+    self.assertEqual(getBusinessTemplateUrl(url_list[2:], exist_bt5),
                       'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
     INSTANCE_HOME = getConfiguration().instancehome
     local_bt = None
     if os.path.exists(INSTANCE_HOME + "/bt5/erp5_base"):
       local_bt = 'file://' + INSTANCE_HOME + "/bt5/erp5_base"
-    self.assertEquals(getBusinessTemplateUrl(url_list[3:], exist_bt5), local_bt)
-    self.assertEquals(getBusinessTemplateUrl(url_list[4:], exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[3:], exist_bt5), local_bt)
+    self.assertEqual(getBusinessTemplateUrl(url_list[4:], exist_bt5), None)
 
     # Test Not exists
-    self.assertEquals(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
-    self.assertEquals(getBusinessTemplateUrl(url_list[1:], not_exist_bt5), None)
-    self.assertEquals(getBusinessTemplateUrl(url_list[2:], not_exist_bt5), None)
-    self.assertEquals(getBusinessTemplateUrl(url_list[3:], not_exist_bt5), None)
-    self.assertEquals(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[1:], not_exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[2:], not_exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[3:], not_exist_bt5), None)
+    self.assertEqual(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
 
   def test_resolveBusinessTemplateListDependency(self):
     """ Test API able to return a complete list of bt5s to setup a sub set of
@@ -426,19 +426,19 @@ class TestTemplateTool(ERP5TypeTestCase):
     
     bt5_id_list = ['baz']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([(repository, 'foo.bt5'),
+    self.assertEqual([(repository, 'foo.bt5'),
                        (repository, 'bar.bt5'),
                        (repository, 'baz.bt5')], bt5_list)
 
     bt5_id_list = ['foo']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(
                       bt5_id_list)
-    self.assertEquals([(repository, 'foo.bt5')], bt5_list)
+    self.assertEqual([(repository, 'foo.bt5')], bt5_list)
 
     bt5_id_list = ['biz', 'end']
 
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([(repository, 'foo.bt5'),
+    self.assertEqual([(repository, 'foo.bt5'),
                        (repository, 'a.bt5'),
                        (repository, 'bar.bt5'),
                        (repository, 'b.bt5'),
@@ -466,18 +466,18 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5_name = 'erp5_odt_style'
     self.tic()
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
-    self.assertEquals(bt, None)
+    self.assertEqual(bt, None)
     operation_log = \
       self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
     self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
     self.assertNotEquals(bt, None)
-    self.assertEquals(bt.getTitle(), bt5_name)
+    self.assertEqual(bt.getTitle(), bt5_name)
 
     # Repeat operation, the bt5 should be ignored
     self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
     bt_old = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
-    self.assertEquals(bt.getId(), bt_old.getId())
+    self.assertEqual(bt.getId(), bt_old.getId())
 
     # Repeat operation, new bt5 should be inslalled due only_newer = False
     operation_log = self.templates_tool.installBusinessTemplateListFromRepository(
@@ -496,7 +496,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       template_tool = self.portal.portal_templates
       self.tic()
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt, None)
+      self.assertEqual(bt, None)
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_newer=False, update_catalog=0)
 
@@ -517,7 +517,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                             only_newer=False, update_catalog=1)
       self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt.getTitle(), bt5_name)
+      self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
       self.checkFolderReindexAllActivityPresense()
       self.tic()
@@ -528,7 +528,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
-      self.assertEquals(bt.getTitle(), bt5_name)
+      self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
       self.checkFolderReindexAllActivityNotPresent()
       self.tic()
@@ -548,20 +548,20 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt, None)
+      self.assertEqual(bt, None)
 
     self.templates_tool.installBusinessTemplateListFromRepository(
                             bt5_name_list, activate=True)
 
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt, None)
+      self.assertEqual(bt, None)
 
     self.tic()
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
-      self.assertEquals(bt.getTitle(), bt5_name)
+      self.assertEqual(bt.getTitle(), bt5_name)
 
   def test_installBusinessTemplatesFromRepository_install_dependency(self):
     """Test if dependencies are automatically installed properly
@@ -576,12 +576,12 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt, None)
+      self.assertEqual(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertEquals(bt, None)
+    self.assertEqual(bt, None)
     bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
-    self.assertEquals(bt, None)
+    self.assertEqual(bt, None)
 
     self.assertRaises(BusinessTemplateMissingDependency,
               template_tool.installBusinessTemplateListFromRepository,
@@ -594,7 +594,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEquals(bt, None)
+      self.assertEqual(bt, None)
       dependency_list = template_tool.getDependencyList(
                    (repository, bt5_name))
       self.assertNotEquals(dependency_list, [])

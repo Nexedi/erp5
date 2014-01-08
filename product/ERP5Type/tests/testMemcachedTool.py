@@ -200,7 +200,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     value = 'a'*100
     tested_dict[key] = value
     self.commit()
-    self.assertEquals(tested_dict.get(key), value)
+    self.assertEqual(tested_dict.get(key), value)
     self.commit()
     # Sleep epliration_time + 1 second to be sure that it is well expired
     time.sleep(self.expiration_time + 1)

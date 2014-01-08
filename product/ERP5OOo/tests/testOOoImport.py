@@ -646,11 +646,11 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
+    self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
 
   def test_CategoryTool_importCategoryFileDeletionSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
@@ -666,11 +666,11 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
+    self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
 
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
@@ -687,11 +687,11 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
+    self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
 
   def test_CategoryTool_importCategoryFileXLS(self):
     # tests that CategoryTool_importCategoryFile supports .xls files
@@ -704,10 +704,10 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('France', france.getTitle())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
   
   def test_CategoryTool_importCategoryFile_PathStars(self):
     # tests CategoryTool_importCategoryFile with * in the paths columns
@@ -720,10 +720,10 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('France', france.getTitle())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
     
   def test_CategoryTool_importCategoryFile_PathStars_noID(self):
     # tests CategoryTool_importCategoryFile with * in the paths columns, and no
@@ -738,10 +738,10 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('Frànce', france.getTitle())
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('Frànce', france.getTitle())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
 
   def test_CategoryTool_importCategoryFile_DuplicateIds(self):
     # tests CategoryTool_importCategoryFile when a document contain same
@@ -752,11 +752,11 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(1, len(region))
-    self.assertEquals(['europe'], list(region.objectIds()))
-    self.assertEquals(['france'], list(region.europe.objectIds()))
-    self.assertEquals(['europe'], list(region.europe.france.objectIds()))
-    self.assertEquals(['france'], list(region.europe.france.europe.objectIds()))
-    self.assertEquals([], list(region.europe.france.europe.france.objectIds()))
+    self.assertEqual(['europe'], list(region.objectIds()))
+    self.assertEqual(['france'], list(region.europe.objectIds()))
+    self.assertEqual(['europe'], list(region.europe.france.objectIds()))
+    self.assertEqual(['france'], list(region.europe.france.europe.objectIds()))
+    self.assertEqual([], list(region.europe.france.europe.france.objectIds()))
 
   # Base_getCategoriesSpreadSheetMapping tests
   def test_Base_getCategoriesSpreadSheetMapping(self):
@@ -764,19 +764,19 @@ class TestOOoImport(TestOOoImportMixin):
     mapping = self.portal.Base_getCategoriesSpreadSheetMapping(
         import_file=makeFileUpload('import_region_category.sxc'))
     self.assertTrue(isinstance(mapping, dict))
-    self.assertEquals(['region'], list(mapping.keys()))
+    self.assertEqual(['region'], list(mapping.keys()))
     region = mapping['region']
     self.assertTrue(isinstance(region, list))
-    self.assertEquals(6, len(region))
+    self.assertEqual(6, len(region))
     # base category is contained in the list
-    self.assertEquals(dict(path='region',
+    self.assertEqual(dict(path='region',
                            title='region'),
                       region[0])
-    self.assertEquals(dict(path='region/europe',
+    self.assertEqual(dict(path='region/europe',
                            short_title='Europe',
                            title='Europe'),
                       region[1])
-    self.assertEquals(dict(codification='FR',
+    self.assertEqual(dict(codification='FR',
                            description='A Country',
                            int_index='1',
                            path='region/europe/france',
@@ -815,7 +815,7 @@ class TestOOoImport(TestOOoImportMixin):
     self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(import_file,
          invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
     
-    self.assertEquals(1, len(message_list))
+    self.assertEqual(1, len(message_list))
     self.assertTrue('france' in str(message_list[0]))
 
   def test_Base_getCategoriesSpreadSheetMapping_WrongHierarchy(self):
@@ -852,12 +852,12 @@ class TestOOoImport(TestOOoImportMixin):
     mapping = self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
     self.assertTrue(isinstance(mapping, dict))
-    self.assertEquals(['region'], list(mapping.keys()))
+    self.assertEqual(['region'], list(mapping.keys()))
     region = mapping['region']
     self.assertTrue(isinstance(region, list))
-    self.assertEquals(7, len(region))
+    self.assertEqual(7, len(region))
     # Check that category can have a reserved property as title
-    self.assertEquals(dict(codification='codification',
+    self.assertEqual(dict(codification='codification',
                            description='codification',
                            path='region/antartica',
                            short_title='codification',
@@ -872,7 +872,7 @@ class TestOOoImport(TestOOoImportMixin):
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
     for spread, values in mapping.iteritems():
-      self.assertEquals(len(values), 41001)
+      self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:
       self.fail('Spreadsheet not read!')
@@ -911,11 +911,11 @@ class TestOOoImportWeb(TestOOoImportMixin):
     self.assertTrue('germany' in region.europe.objectIds())
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
-    self.assertEquals('France', france.getTitle())
+    self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
-    self.assertEquals('A Country', france.getDescription())
-    self.assertEquals('FR', france.getCodification())
-    self.assertEquals(1, france.getIntIndex())
+    self.assertEqual('A Country', france.getDescription())
+    self.assertEqual('FR', france.getCodification())
+    self.assertEqual(1, france.getIntIndex())
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -422,33 +422,33 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       for order in module.contentValues(portal_type='Sale Order'):
         order.edit(destination_decision=destination_decision,
                 destination_administration=destination_administration)
-        self.assertEquals(order.getDestinationDecision(), destination_decision)
-        self.assertEquals(order.getDestinationAdministration(),
+        self.assertEqual(order.getDestinationDecision(), destination_decision)
+        self.assertEqual(order.getDestinationAdministration(),
                 destination_administration)
 
     def stepPlanSaleOrders(self, sequence=None, sequence_list=None, **kw):
       portal = self.getPortal()
       module = portal.sale_order_module
       for order in module.contentValues(portal_type='Sale Order'):
-        self.assertEquals(order.getSimulationState(), 'draft')
+        self.assertEqual(order.getSimulationState(), 'draft')
         order.plan()
-        self.assertEquals(order.getSimulationState(), 'planned')
+        self.assertEqual(order.getSimulationState(), 'planned')
 
     def stepOrderSaleOrders(self, sequence=None, sequence_list=None, **kw):
       portal = self.getPortal()
       module = portal.sale_order_module
       for order in module.contentValues(portal_type='Sale Order'):
-        self.assertEquals(order.getSimulationState(), 'planned')
+        self.assertEqual(order.getSimulationState(), 'planned')
         order.order()
-        self.assertEquals(order.getSimulationState(), 'ordered')
+        self.assertEqual(order.getSimulationState(), 'ordered')
 
     def stepConfirmSaleOrders(self, sequence=None, sequence_list=None, **kw):
       portal = self.getPortal()
       module = portal.sale_order_module
       for order in module.contentValues(portal_type='Sale Order'):
-        self.assertEquals(order.getSimulationState(), 'ordered')
+        self.assertEqual(order.getSimulationState(), 'ordered')
         order.confirm()
-        self.assertEquals(order.getSimulationState(), 'confirmed')
+        self.assertEqual(order.getSimulationState(), 'confirmed')
 
     def stepCheckSaleOrderSimulation(self, sequence=None, sequence_list=None,
             **kw):
@@ -459,29 +459,29 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       destination_decision = sequence.get('destination_decision')
       destination_administration = sequence.get('destination_administration')
       resource = sequence.get('resource')
-      self.assertEquals(module.objectCount(), number_of_sale_orders)
+      self.assertEqual(module.objectCount(), number_of_sale_orders)
       for order in module.contentValues(portal_type='Sale Order'):
         causality_list = order.getCausalityRelatedValueList(portal_type='Applied Rule')
-        self.assertEquals(len(causality_list), 1)
+        self.assertEqual(len(causality_list), 1)
         applied_rule = causality_list[0]
-        self.assertEquals(applied_rule.getPortalType(), 'Applied Rule')
+        self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
         rule = applied_rule.getSpecialiseValue()
         self.assertNotEquals(rule, None)
-        self.assertEquals(rule.getReference(),
+        self.assertEqual(rule.getReference(),
                 'test_order_root_simulation_rule')
-        self.assertEquals(applied_rule.objectCount(),
+        self.assertEqual(applied_rule.objectCount(),
                 number_of_sale_order_lines)
         for simulation_movement in applied_rule.objectValues():
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(simulation_movement.getQuantity(), 1.0)
-          self.assertEquals(simulation_movement.getResource(), resource)
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(simulation_movement.getQuantity(), 1.0)
+          self.assertEqual(simulation_movement.getResource(), resource)
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/order_path',
                   'business_process_module/test_bp/order')))
-          self.assertEquals(simulation_movement.getDestinationDecision(),
+          self.assertEqual(simulation_movement.getDestinationDecision(),
                   destination_decision)
-          self.assertEquals(simulation_movement.getDestinationAdministration(),
+          self.assertEqual(simulation_movement.getDestinationAdministration(),
                   destination_administration)
 
     def stepCheckBuiltSalePackingLists(self, sequence=None, sequence_list=None,
@@ -493,26 +493,26 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       destination_decision = sequence.get('destination_decision')
       destination_administration = sequence.get('destination_administration')
       resource = sequence.get('resource')
-      self.assertEquals(module.objectCount(), number_of_sale_orders)
+      self.assertEqual(module.objectCount(), number_of_sale_orders)
       for packing_list in module.contentValues():
-        self.assertEquals(packing_list.getSimulationState(), 'confirmed')
-        self.assertEquals(packing_list.getCausalityState(), 'solved')
-        self.assertEquals(packing_list.getDestinationDecision(),
+        self.assertEqual(packing_list.getSimulationState(), 'confirmed')
+        self.assertEqual(packing_list.getCausalityState(), 'solved')
+        self.assertEqual(packing_list.getDestinationDecision(),
                 destination_decision)
-        self.assertEquals(packing_list.getDestinationAdministration(),
+        self.assertEqual(packing_list.getDestinationAdministration(),
                 destination_administration)
-        self.assertEquals(packing_list.objectCount(), 1)
+        self.assertEqual(packing_list.objectCount(), 1)
         for line in packing_list.objectValues():
-          self.assertEquals(line.getResource(), resource)
+          self.assertEqual(line.getResource(), resource)
           self.assertAlmostEquals(line.getQuantity(),
                   1.0 * number_of_sale_order_lines)
           simulation_movement_list = line.getDeliveryRelatedValueList()
-          self.assertEquals(len(simulation_movement_list),
+          self.assertEqual(len(simulation_movement_list),
                   number_of_sale_order_lines)
           for simulation_movement in simulation_movement_list:
-            self.assertEquals(simulation_movement.getPortalType(),
+            self.assertEqual(simulation_movement.getPortalType(),
                     'Simulation Movement')
-            self.assertEquals(set(simulation_movement.getCausalityList()), set((
+            self.assertEqual(set(simulation_movement.getCausalityList()), set((
                     'business_process_module/test_bp/deliver_path',
                     'business_process_module/test_bp/deliver')))
 
@@ -520,19 +520,19 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
             **kw):
       portal = self.getPortal()
       module = portal.accounting_module
-      self.assertEquals(module.objectCount(), 1)
+      self.assertEqual(module.objectCount(), 1)
       number_of_sale_orders = sequence.get('number_of_sale_orders')
       number_of_sale_order_lines = sequence.get('number_of_sale_order_lines')
       number_of_additional_sale_packing_list_lines \
               = sequence.get('number_of_additional_sale_packing_list_lines')
       for invoice in module.contentValues():
-        self.assertEquals(invoice.getSimulationState(), 'confirmed')
-        self.assertEquals(invoice.getCausalityState(), 'solved')
-        self.assertEquals(invoice.objectCount(), 2)
+        self.assertEqual(invoice.getSimulationState(), 'confirmed')
+        self.assertEqual(invoice.getCausalityState(), 'solved')
+        self.assertEqual(invoice.objectCount(), 2)
         invoice_line_list = invoice.objectValues(sort_on='resource')
 
         commodity_invoice_line = invoice_line_list[0]
-        self.assertEquals(commodity_invoice_line.getResource(),
+        self.assertEqual(commodity_invoice_line.getResource(),
                 'product_module/commodity')
         self.assertAlmostEquals(commodity_invoice_line.getQuantity(),
                 1.0 * (number_of_sale_order_lines \
@@ -540,19 +540,19 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                         * number_of_sale_orders)
         simulation_movement_list \
                 = commodity_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 (number_of_sale_order_lines \
                         + number_of_additional_sale_packing_list_lines) \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice')))
 
         tax_invoice_line = invoice_line_list[1]
-        self.assertEquals(tax_invoice_line.getResource(),
+        self.assertEqual(tax_invoice_line.getResource(),
                 'service_module/vat_low')
         self.assertAlmostEquals(tax_invoice_line.getQuantity(),
                 commodity_invoice_line.getPrice() \
@@ -561,14 +561,14 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                         * number_of_sale_orders)
         simulation_movement_list \
                 = tax_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 (number_of_sale_order_lines \
                         + number_of_additional_sale_packing_list_lines) \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
                   'sale_trade_condition_module/test_stc/vat_low')))
@@ -577,19 +577,19 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
             **kw):
       portal = self.getPortal()
       module = portal.accounting_module
-      self.assertEquals(module.objectCount(), 1)
+      self.assertEqual(module.objectCount(), 1)
       number_of_sale_orders = sequence.get('number_of_sale_orders')
       number_of_sale_order_lines = sequence.get('number_of_sale_order_lines')
       number_of_additional_sale_packing_list_lines \
               = sequence.get('number_of_additional_sale_packing_list_lines')
       for invoice in module.contentValues():
-        self.assertEquals(invoice.getSimulationState(), 'confirmed')
-        self.assertEquals(invoice.getCausalityState(), 'solved')
-        self.assertEquals(invoice.objectCount(), 4)
+        self.assertEqual(invoice.getSimulationState(), 'confirmed')
+        self.assertEqual(invoice.getCausalityState(), 'solved')
+        self.assertEqual(invoice.objectCount(), 4)
         invoice_line_list = invoice.objectValues(sort_on='resource')
 
         commodity_invoice_line = invoice_line_list[0]
-        self.assertEquals(commodity_invoice_line.getResource(),
+        self.assertEqual(commodity_invoice_line.getResource(),
                 'product_module/commodity')
         self.assertAlmostEquals(commodity_invoice_line.getQuantity(),
                 1.0 * (number_of_sale_order_lines \
@@ -597,37 +597,37 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                         * number_of_sale_orders)
         simulation_movement_list \
                 = commodity_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 (number_of_sale_order_lines \
                         + number_of_additional_sale_packing_list_lines) \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice')))
 
         luxury_invoice_line = invoice_line_list[1]
-        self.assertEquals(luxury_invoice_line.getResource(),
+        self.assertEqual(luxury_invoice_line.getResource(),
                 'product_module/luxury')
         self.assertAlmostEquals(luxury_invoice_line.getQuantity(),
                 1.0 * number_of_additional_sale_packing_list_lines \
                         * number_of_sale_orders)
         simulation_movement_list \
                 = luxury_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 number_of_additional_sale_packing_list_lines \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice')))
 
         high_tax_invoice_line = invoice_line_list[2]
-        self.assertEquals(high_tax_invoice_line.getResource(),
+        self.assertEqual(high_tax_invoice_line.getResource(),
                 'service_module/vat_high')
         self.assertAlmostEquals(high_tax_invoice_line.getQuantity(),
                 luxury_invoice_line.getPrice() \
@@ -635,19 +635,19 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                         * number_of_sale_orders)
         simulation_movement_list \
                 = high_tax_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 number_of_additional_sale_packing_list_lines \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
                   'sale_trade_condition_module/test_stc/vat_high')))
 
         low_tax_invoice_line = invoice_line_list[3]
-        self.assertEquals(low_tax_invoice_line.getResource(),
+        self.assertEqual(low_tax_invoice_line.getResource(),
                 'service_module/vat_low')
         self.assertAlmostEquals(low_tax_invoice_line.getQuantity(),
                 commodity_invoice_line.getPrice() \
@@ -656,14 +656,14 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                         * number_of_sale_orders)
         simulation_movement_list \
                 = low_tax_invoice_line.getDeliveryRelatedValueList()
-        self.assertEquals(len(simulation_movement_list),
+        self.assertEqual(len(simulation_movement_list),
                 (number_of_sale_order_lines \
                         + number_of_additional_sale_packing_list_lines) \
                         * number_of_sale_orders)
         for simulation_movement in simulation_movement_list:
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
                   'sale_trade_condition_module/test_stc/vat_low')))
@@ -673,14 +673,14 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       portal = self.getPortal()
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues():
-        self.assertEquals(packing_list.getCausalityState(), 'solved')
+        self.assertEqual(packing_list.getCausalityState(), 'solved')
 
     def stepCheckDivergedSalePackingLists(self, sequence=None,
             sequence_list=None, **kw):
       portal = self.getPortal()
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues():
-        self.assertEquals(packing_list.getCausalityState(), 'diverged')
+        self.assertEqual(packing_list.getCausalityState(), 'diverged')
 
     def stepCheckSalePackingListSimulation(self, sequence=None,
             sequence_list=None, **kw):
@@ -691,34 +691,34 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       destination_decision = sequence.get('destination_decision')
       destination_administration = sequence.get('destination_administration')
       for packing_list in module.contentValues(portal_type='Sale Packing List'):
-        self.assertEquals(packing_list.getCausalityState(), 'solved')
+        self.assertEqual(packing_list.getCausalityState(), 'solved')
         causality_list = packing_list.getCausalityRelatedValueList(portal_type='Applied Rule')
-        self.assertEquals(len(causality_list), 1)
+        self.assertEqual(len(causality_list), 1)
         applied_rule = causality_list[0]
-        self.assertEquals(applied_rule.getPortalType(), 'Applied Rule')
+        self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
         rule = applied_rule.getSpecialiseValue()
         self.assertNotEquals(rule, None)
-        self.assertEquals(rule.getReference(),
+        self.assertEqual(rule.getReference(),
                 'test_delivery_root_simulation_rule')
-        self.assertEquals(applied_rule.objectCount(),
+        self.assertEqual(applied_rule.objectCount(),
                 number_of_additional_sale_packing_list_lines)
         for simulation_movement in applied_rule.objectValues():
-          self.assertEquals(simulation_movement.getPortalType(),
+          self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
           delivery_list = simulation_movement.getDeliveryValueList()
-          self.assertEquals(len(delivery_list), 1)
+          self.assertEqual(len(delivery_list), 1)
           delivery = delivery_list[0]
-          self.assertEquals(delivery.getPortalType(), 'Sale Packing List Line')
-          self.assertEquals(simulation_movement.getQuantity(),
+          self.assertEqual(delivery.getPortalType(), 'Sale Packing List Line')
+          self.assertEqual(simulation_movement.getQuantity(),
                   delivery.getQuantity())
-          self.assertEquals(simulation_movement.getResource(),
+          self.assertEqual(simulation_movement.getResource(),
                   delivery.getResource())
-          self.assertEquals(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), set((
                   'business_process_module/test_bp/deliver_path',
                   'business_process_module/test_bp/deliver')))
-          self.assertEquals(simulation_movement.getDestinationDecision(),
+          self.assertEqual(simulation_movement.getDestinationDecision(),
                   destination_decision)
-          self.assertEquals(simulation_movement.getDestinationAdministration(),
+          self.assertEqual(simulation_movement.getDestinationAdministration(),
                   destination_administration)
 
     def stepSetSolverTargetToDestinationAdministration(self, sequence=None,
@@ -733,7 +733,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues(portal_type='Sale Packing List'):
         divergence = packing_list.getDivergenceList()[0]
-        self.assertEquals(divergence.tested_property, solver_target)
+        self.assertEqual(divergence.tested_property, solver_target)
         packing_list.activate().SalePackingList_solveForTesting(
           solver_target, divergence.prevision_value)
         # XXX: Because divergence is ignored for 'destination_decision',
@@ -754,7 +754,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues(portal_type='Sale Packing List'):
         divergence = packing_list.getDivergenceList()[0]
-        self.assertEquals(divergence.tested_property, solver_target)
+        self.assertEqual(divergence.tested_property, solver_target)
         packing_list.activate().SalePackingList_solveForTesting(
           solver_target, divergence.decision_value)
       # Make sure that the same taget is not used again.
@@ -775,18 +775,18 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       portal = self.getPortal()
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues(portal_type='Sale Packing List'):
-        self.assertEquals(packing_list.getSimulationState(), 'confirmed')
+        self.assertEqual(packing_list.getSimulationState(), 'confirmed')
         packing_list.stop()
-        self.assertEquals(packing_list.getSimulationState(), 'stopped')
+        self.assertEqual(packing_list.getSimulationState(), 'stopped')
 
     def stepDeliverSalePackingLists(self, sequence=None, sequence_list=None,
             **kw):
       portal = self.getPortal()
       module = portal.sale_packing_list_module
       for packing_list in module.contentValues(portal_type='Sale Packing List'):
-        self.assertEquals(packing_list.getSimulationState(), 'stopped')
+        self.assertEqual(packing_list.getSimulationState(), 'stopped')
         packing_list.deliver()
-        self.assertEquals(packing_list.getSimulationState(), 'delivered')
+        self.assertEqual(packing_list.getSimulationState(), 'delivered')
 
     def stepTestResult(self, sequence=None, sequence_list=None, **kw):
       measurable = sequence.get('measurable')

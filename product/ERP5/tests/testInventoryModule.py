@@ -66,7 +66,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
       pl.start()
       pl.stop()
       pl.deliver()
-      self.assertEquals(pl.getSimulationState(), 'delivered')
+      self.assertEqual(pl.getSimulationState(), 'delivered')
 
     # we create content :
     #   1 purchase packing list
@@ -179,7 +179,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(self.default_quantity,quantity)
+    self.assertEqual(self.default_quantity,quantity)
 
   def stepCheckSecondNotVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None, **kw):
@@ -189,7 +189,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(self.default_quantity-2,quantity)
+    self.assertEqual(self.default_quantity-2,quantity)
 
   def stepCheckSecondNotVariatedInventoryModified(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
@@ -199,7 +199,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(self.default_quantity,quantity)
+    self.assertEqual(self.default_quantity,quantity)
 
 
   def test_01_NotVariatedInventory(self, quiet=0, run=run_all_test):
@@ -246,7 +246,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     resource_vcl = list(resource.getVariationCategoryList(
         omit_individual_variation=1, omit_optional_variation=1))
     resource_vcl.sort()
-    self.assertEquals(len(resource_vcl),2)
+    self.assertEqual(len(resource_vcl),2)
     inventory_line.setVariationCategoryList(resource_vcl)
     base_id = 'movement'
     cell_key_list = list(inventory_line.getCellKeyList(base_id=base_id))
@@ -314,14 +314,14 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     variation_text = 'size/Child/32'
     total_quantity = 99
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
 
   def stepCheckSecondVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
@@ -332,14 +332,14 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     variation_text = 'size/Child/32'
     total_quantity = 89
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
 
   def test_02_VariatedInventory(self, run=run_all_test):
     """
@@ -411,14 +411,14 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     variation_text = 'size/Child/32'
     total_quantity = (99) * 2
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
                         to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     # Also check when we look stock for a particular aggregate
     sub_variation_text = self.getAggregateRelativeUrlText(
                                             sequence.get('item_list'))
@@ -428,7 +428,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                         variation_text=variation_text,
                         to_date=date,
                         sub_variation_text=sub_variation_text)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
 
   def stepCheckExplanationTextInInventoryList(self, start_date=None,
                                 quantity=None, sequence=None, **kw):
@@ -478,14 +478,14 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     variation_text = 'size/Child/32'
     total_quantity = (89) * 2
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
                         to_date=date,simulation_state='delivered')
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     # Also check when we look stock for a particular aggregate
     sub_variation_text = self.getAggregateRelativeUrlText(
                                                 sequence.get('item_list'))
@@ -495,7 +495,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                         to_date=date,
                         sub_variation_text=sub_variation_text,
                         simulation_state='delivered')
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
     sub_variation_text = self.getAggregateRelativeUrlText(
                                     sequence.get('item_list')[:1])
 
@@ -585,14 +585,14 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
                                                      to_date=date)
-    self.assertEquals(total_quantity, quantity)
+    self.assertEqual(total_quantity, quantity)
     variation_text = 'size/Child/32'
     total_quantity = (99*100 + 99)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
                                                      variation_text=variation_text,
                                                      to_date=date)
-    self.assertEquals(total_quantity,quantity)
+    self.assertEqual(total_quantity,quantity)
 
   def test_05_VariatedMultipleQuantityUnitResourceInventory(self, run=run_all_test):
     """

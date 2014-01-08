@@ -61,7 +61,7 @@ class TestIntrospectionTool(ERP5TypeTestCase):
 
     self.assertSameSet(signature_by_json.keys(), signature.keys())
     for key in signature:
-      self.assertEquals(signature[key], signature_by_json[key])
+      self.assertEqual(signature[key], signature_by_json[key])
 
 def test_suite():
   suite = unittest.TestSuite()

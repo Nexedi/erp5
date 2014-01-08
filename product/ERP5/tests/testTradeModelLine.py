@@ -469,7 +469,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         str(rounded_total_price + rounded_tax_price + rounded_discount_price))
     self.assertEqual(str(abs(line_dict['vat'])),
         str(rounded_tax_price))
-    self.assertEquals(str(abs(line_dict['income_expense'])),
+    self.assertEqual(str(abs(line_dict['income_expense'])),
         str(rounded_total_price + rounded_discount_price))
 
   def buildPackingLists(self):
@@ -911,7 +911,7 @@ return lambda *args, **kw: 1""")
     packing_list = order.getCausalityRelatedValue(
                       portal_type=self.packing_list_portal_type)
     self.assertNotEquals(packing_list, None)
-    self.assertEquals(1000, packing_list.getTotalPrice())
+    self.assertEqual(1000, packing_list.getTotalPrice())
     
     packing_list.start()
     packing_list.stop()
@@ -922,41 +922,41 @@ return lambda *args, **kw: 1""")
     invoice = packing_list.getCausalityRelatedValue(
                       portal_type=self.invoice_portal_type)
     self.assertNotEquals(invoice, None)
-    self.assertEquals(2, len(invoice.getMovementList()))
-    self.assertEquals(1150, invoice.getTotalPrice())
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual(2, len(invoice.getMovementList()))
+    self.assertEqual(1150, invoice.getTotalPrice())
+    self.assertEqual([], invoice.getDivergenceList())
     
     invoice.start()
     self.tic()
 
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual([], invoice.getDivergenceList())
     accounting_line_list = invoice.getMovementList(
              portal_type=self.invoice_transaction_line_portal_type)
-    self.assertEquals(3, len(accounting_line_list))
+    self.assertEqual(3, len(accounting_line_list))
 
     receivable_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.receivable_account]
-    self.assertEquals(1, len(receivable_movement_list))
+    self.assertEqual(1, len(receivable_movement_list))
     receivable_movement = receivable_movement_list[0]
-    self.assertEquals(receivable_movement.getDestinationValue(),
+    self.assertEqual(receivable_movement.getDestinationValue(),
                       self.payable_account)
-    self.assertEquals(1150, receivable_movement.getSourceDebit())
+    self.assertEqual(1150, receivable_movement.getSourceDebit())
 
     collected_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.collected_tax_account]
-    self.assertEquals(1, len(collected_movement_list))
+    self.assertEqual(1, len(collected_movement_list))
     collected_movement = collected_movement_list[0]
-    self.assertEquals(collected_movement.getDestinationValue(),
+    self.assertEqual(collected_movement.getDestinationValue(),
                       self.refundable_tax_account)
-    self.assertEquals(150, collected_movement.getSourceCredit())
+    self.assertEqual(150, collected_movement.getSourceCredit())
 
     income_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.income_account]
-    self.assertEquals(1, len(income_movement_list))
+    self.assertEqual(1, len(income_movement_list))
     income_movement = income_movement_list[0]
-    self.assertEquals(income_movement.getDestinationValue(),
+    self.assertEqual(income_movement.getDestinationValue(),
                       self.expense_account)
-    self.assertEquals(1000, income_movement.getSourceCredit())
+    self.assertEqual(1000, income_movement.getSourceCredit())
 
   def test_BuildTradeModelLineAndAccountingFromInvoice(self):
     business_process = self.createBusinessProcess()
@@ -996,41 +996,41 @@ return lambda *args, **kw: 1""")
     invoice.confirm()
     self.tic()
 
-    self.assertEquals(2, len(invoice.getMovementList()))
-    self.assertEquals(1150, invoice.getTotalPrice())
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual(2, len(invoice.getMovementList()))
+    self.assertEqual(1150, invoice.getTotalPrice())
+    self.assertEqual([], invoice.getDivergenceList())
 
     invoice.start()
     self.tic()
 
-    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEqual([], invoice.getDivergenceList())
     accounting_line_list = invoice.getMovementList(
              portal_type=self.invoice_transaction_line_portal_type)
-    self.assertEquals(3, len(accounting_line_list))
+    self.assertEqual(3, len(accounting_line_list))
 
     receivable_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.receivable_account]
-    self.assertEquals(1, len(receivable_movement_list))
+    self.assertEqual(1, len(receivable_movement_list))
     receivable_movement = receivable_movement_list[0]
-    self.assertEquals(receivable_movement.getDestinationValue(),
+    self.assertEqual(receivable_movement.getDestinationValue(),
                       self.payable_account)
-    self.assertEquals(1150, receivable_movement.getSourceDebit())
+    self.assertEqual(1150, receivable_movement.getSourceDebit())
 
     collected_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.collected_tax_account]
-    self.assertEquals(1, len(collected_movement_list))
+    self.assertEqual(1, len(collected_movement_list))
     collected_movement = collected_movement_list[0]
-    self.assertEquals(collected_movement.getDestinationValue(),
+    self.assertEqual(collected_movement.getDestinationValue(),
                       self.refundable_tax_account)
-    self.assertEquals(150, collected_movement.getSourceCredit())
+    self.assertEqual(150, collected_movement.getSourceCredit())
 
     income_movement_list = [m for m in accounting_line_list if
         m.getSourceValue() == self.income_account]
-    self.assertEquals(1, len(income_movement_list))
+    self.assertEqual(1, len(income_movement_list))
     income_movement = income_movement_list[0]
-    self.assertEquals(income_movement.getDestinationValue(),
+    self.assertEqual(income_movement.getDestinationValue(),
                       self.expense_account)
-    self.assertEquals(1000, income_movement.getSourceCredit())
+    self.assertEqual(1000, income_movement.getSourceCredit())
 
   def test_tradeModelLineWithTargetLevelSetting(self):
     """

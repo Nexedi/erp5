@@ -90,7 +90,7 @@ class CrmTestCase(ERP5ReportTestCase):
         tk.validate()
     
     # sanity check
-    self.assertEquals(simulation_state, tk.getSimulationState())
+    self.assertEqual(simulation_state, tk.getSimulationState())
     return tk
 
   def _makeOneEvent(self, portal_type='Fax Message', 
@@ -155,7 +155,7 @@ class CrmTestCase(ERP5ReportTestCase):
     elif simulation_state == 'stopped':
       ev.stop()
     # sanity check
-    self.assertEquals(simulation_state, ev.getSimulationState())
+    self.assertEqual(simulation_state, ev.getSimulationState())
     return ev
 
   def login(self):
@@ -371,16 +371,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.campaign_module,
                                'CampaignModule_viewCampaignStatusReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 campaigns
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source', 'start_date', 'stop_date','validation_state','outgoing',
          'incoming','progression','efficiency'])
@@ -518,16 +518,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.campaign_module,
                                'CampaignModule_viewCampaignDetailedReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
-    self.assertEquals(7, len(data_line_list))
+    self.assertEqual(7, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['campaign', 'direction', 'title', 'type','destination_title_list',
          'source', 'start_date','stop_date','validation_state'])
     for i in range(len(data_line_list)):
@@ -681,16 +681,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.meeting_module,
                                'MeetingModule_viewMeetingStatusReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 meetings
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'destination_title','source', 'start_date', 'stop_date',
          'validation_state','outgoing','incoming'])
@@ -826,16 +826,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                                self.portal.meeting_module,
                                'MeetingModule_viewMeetingDetailedReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
-    self.assertEquals(7, len(data_line_list))
+    self.assertEqual(7, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['meeting', 'direction', 'title', 'type','destination_title_list',
          'source', 'start_date','stop_date','validation_state'])
     for i in range(len(data_line_list)):
@@ -989,16 +989,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                         self.portal.support_request_module,
                         'SupportRequestModule_viewSupportRequestStatusReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 Support Request
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source', 'source_decision', 'start_date', 'stop_date',
          'validation_state','incoming','outgoing'])
@@ -1134,16 +1134,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                       self.portal.support_request_module,
                       'SupportRequestModule_viewSupportRequestDetailedReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
-    self.assertEquals(7, len(data_line_list))
+    self.assertEqual(7, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['support_request', 'direction', 'title', 'type','destination_title_list',
          'source', 'start_date','stop_date','validation_state'])
     for i in range(len(data_line_list)):
@@ -1297,16 +1297,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                       self.portal.sale_opportunity_module,
                       'SaleOpportunityModule_viewSaleOpportunityStatusReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 Sale Opportunity
-    self.assertEquals(2, len(data_line_list))
+    self.assertEqual(2, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source','source_decision','start_date', 'stop_date',
          'validation_state','outgoing','incoming'])
@@ -1442,16 +1442,16 @@ class TestCrmReports(CrmTestCase):
     report_section_list = self.getReportSectionList(
                      self.portal.sale_opportunity_module,
                     'SaleOpportunityModule_viewSaleOpportunityDetailedReport')
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
         
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
-    self.assertEquals(7, len(data_line_list))
+    self.assertEqual(7, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['sale_opportunity', 'direction', 'title', 'type','destination_title_list',
          'source', 'start_date','stop_date','validation_state'])
     for i in range(len(data_line_list)):
@@ -1699,17 +1699,17 @@ class TestCrmReports(CrmTestCase):
                                     self.portal.event_module,
                                     'EventModule_viewEventActivityReport')
     #Obtain 2 listbox with outgoing and incoming events
-    self.assertEquals(2, len(report_section_list))
+    self.assertEqual(2, len(report_section_list))
     
     #Outgoing
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 6 states
-    self.assertEquals(6, len(data_line_list))
+    self.assertEqual(6, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['validation_state','Campaign', 'Meeting', 
          'SaleOpportunity','SupportRequest', 'unassigned','total'])
     for i in range(len(data_line_list)):
@@ -1771,24 +1771,24 @@ class TestCrmReports(CrmTestCase):
                          total = ptotal)
     # Stat Line
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.assertEquals('Total', stat_line.getColumnProperty('validation_state'))
-    self.assertEquals(4, stat_line.getColumnProperty('Campaign'))
-    self.assertEquals(1, stat_line.getColumnProperty('Meeting'))
-    self.assertEquals(4, stat_line.getColumnProperty('SaleOpportunity'))
-    self.assertEquals(1, stat_line.getColumnProperty('SupportRequest'))
-    self.assertEquals(1, stat_line.getColumnProperty('unassigned'))
-    self.assertEquals(11, stat_line.getColumnProperty('total'))
+    self.assertTrue(stat_line.isStatLine())
+    self.assertEqual('Total', stat_line.getColumnProperty('validation_state'))
+    self.assertEqual(4, stat_line.getColumnProperty('Campaign'))
+    self.assertEqual(1, stat_line.getColumnProperty('Meeting'))
+    self.assertEqual(4, stat_line.getColumnProperty('SaleOpportunity'))
+    self.assertEqual(1, stat_line.getColumnProperty('SupportRequest'))
+    self.assertEqual(1, stat_line.getColumnProperty('unassigned'))
+    self.assertEqual(11, stat_line.getColumnProperty('total'))
 
     #Incoming
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 4 states
-    self.assertEquals(4, len(data_line_list))
+    self.assertEqual(4, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['validation_state','Campaign', 'Meeting', 
          'SaleOpportunity','SupportRequest', 'unassigned','total'])
     for i in range(len(data_line_list)):
@@ -1834,14 +1834,14 @@ class TestCrmReports(CrmTestCase):
                          total = ptotal)
     # Stat Line
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.assertEquals('Total', stat_line.getColumnProperty('validation_state'))
-    self.assertEquals(1, stat_line.getColumnProperty('Campaign'))
-    self.assertEquals(1, stat_line.getColumnProperty('Meeting'))
-    self.assertEquals(1, stat_line.getColumnProperty('SaleOpportunity'))
-    self.assertEquals(1, stat_line.getColumnProperty('SupportRequest'))
-    self.assertEquals(1, stat_line.getColumnProperty('unassigned'))
-    self.assertEquals(5, stat_line.getColumnProperty('total'))
+    self.assertTrue(stat_line.isStatLine())
+    self.assertEqual('Total', stat_line.getColumnProperty('validation_state'))
+    self.assertEqual(1, stat_line.getColumnProperty('Campaign'))
+    self.assertEqual(1, stat_line.getColumnProperty('Meeting'))
+    self.assertEqual(1, stat_line.getColumnProperty('SaleOpportunity'))
+    self.assertEqual(1, stat_line.getColumnProperty('SupportRequest'))
+    self.assertEqual(1, stat_line.getColumnProperty('unassigned'))
+    self.assertEqual(5, stat_line.getColumnProperty('total'))
                   
   def testEventDetailedReport(self):
     # Event Detailed Report report.
@@ -2041,16 +2041,16 @@ class TestCrmReports(CrmTestCase):
                                     self.portal.event_module,
                                     'EventModule_viewEventDetailedReport')
     #Obtain 1 listbox with outgoing and incoming events
-    self.assertEquals(1, len(report_section_list))
+    self.assertEqual(1, len(report_section_list))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 5 lines
-    self.assertEquals(5, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
     
     # test columns values
     line = data_line_list[0]
-    self.assertEquals(line.column_id_list,
+    self.assertEqual(line.column_id_list,
         ['ticket_title','ticket_type', 'resource', 
          'delivered', 'ordered', 'acknowledged', 'assigned', 
          'started', 'draft', 'planned', 'cancelled', 'new', 
@@ -2148,20 +2148,20 @@ class TestCrmReports(CrmTestCase):
                         total = ptotal)
     # Stat Line
     stat_line = line_list[-1]
-    self.failUnless(stat_line.isStatLine())
-    self.assertEquals('Total', stat_line.getColumnProperty('ticket_title'))
-    self.assertEquals(2, stat_line.getColumnProperty('delivered'))
-    self.assertEquals(1, stat_line.getColumnProperty('ordered'))
-    self.assertEquals(1, stat_line.getColumnProperty('acknowledged'))
-    self.assertEquals(1, stat_line.getColumnProperty('assigned'))
-    self.assertEquals(1, stat_line.getColumnProperty('started'))
-    self.assertEquals(1, stat_line.getColumnProperty('draft'))
-    self.assertEquals(1, stat_line.getColumnProperty('planned'))
-    self.assertEquals(1, stat_line.getColumnProperty('cancelled'))
-    self.assertEquals(5, stat_line.getColumnProperty('new'))
-    self.assertEquals(1, stat_line.getColumnProperty('expired'))
-    self.assertEquals(2, stat_line.getColumnProperty('responded'))
-    self.assertEquals(17, stat_line.getColumnProperty('total'))
+    self.assertTrue(stat_line.isStatLine())
+    self.assertEqual('Total', stat_line.getColumnProperty('ticket_title'))
+    self.assertEqual(2, stat_line.getColumnProperty('delivered'))
+    self.assertEqual(1, stat_line.getColumnProperty('ordered'))
+    self.assertEqual(1, stat_line.getColumnProperty('acknowledged'))
+    self.assertEqual(1, stat_line.getColumnProperty('assigned'))
+    self.assertEqual(1, stat_line.getColumnProperty('started'))
+    self.assertEqual(1, stat_line.getColumnProperty('draft'))
+    self.assertEqual(1, stat_line.getColumnProperty('planned'))
+    self.assertEqual(1, stat_line.getColumnProperty('cancelled'))
+    self.assertEqual(5, stat_line.getColumnProperty('new'))
+    self.assertEqual(1, stat_line.getColumnProperty('expired'))
+    self.assertEqual(2, stat_line.getColumnProperty('responded'))
+    self.assertEqual(17, stat_line.getColumnProperty('total'))
 
 def test_suite():
   suite = unittest.TestSuite()

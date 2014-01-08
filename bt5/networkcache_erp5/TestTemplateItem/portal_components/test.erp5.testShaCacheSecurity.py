@@ -141,7 +141,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
         document.publishAlive()
         self.tic()
 
-        self.assertEquals('Published Alive',
+        self.assertEqual('Published Alive',
                             document.getValidationStateTitle())
 
         self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', document)

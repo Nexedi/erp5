@@ -118,32 +118,32 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
       if property_id == telephone_key:
         value =  '+(0)-%s' % value
 
-      self.assertEquals(event.getProperty(property_id), value)
-    self.assertEquals(event.getSourceCarrier(), web_section.getRelativeUrl())
+      self.assertEqual(event.getProperty(property_id), value)
+    self.assertEqual(event.getSourceCarrier(), web_section.getRelativeUrl())
     self.assertTrue(event.hasStartDate())
 
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'delivered')
+    self.assertEqual(event.getSimulationState(), 'delivered')
     ticket = event.getFollowUpValue()
     self.assertTrue(ticket is not None)
-    self.assertEquals(ticket.getSimulationState(), 'submitted')
+    self.assertEqual(ticket.getSimulationState(), 'submitted')
     person = event.getSourceValue()
     self.assertTrue(person is not None)
-    self.assertEquals(person.getFirstName(),
+    self.assertEqual(person.getFirstName(),
                       form_kw['source_person_first_name'])
-    self.assertEquals(person.getLastName(),
+    self.assertEqual(person.getLastName(),
                       form_kw['source_person_last_name'])
-    self.assertEquals(person.getDefaultEmailText(),
+    self.assertEqual(person.getDefaultEmailText(),
                       form_kw['source_person_default_email_text'])
     self.assertTrue(form_kw['source_person_default_telephone_text'] in\
                     person.getDefaultTelephoneText())
-    self.assertEquals(person.getValidationState(), 'validated')
+    self.assertEqual(person.getValidationState(), 'validated')
     organisation = person.getSubordinationValue()
     self.assertTrue(organisation is not None)
-    self.assertEquals(organisation.getValidationState(), 'validated')
-    self.assertEquals(organisation.getTitle(),
+    self.assertEqual(organisation.getValidationState(), 'validated')
+    self.assertEqual(organisation.getTitle(),
                       form_kw['source_organisation_title'])
 
   def test_02_Contact_Us_with_Aunthenticated_user(self):
@@ -198,9 +198,9 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     for property_id, value in form_kw.iteritems():
       if property_id == telephone_key:
         value =  '+(0)-%s' % value
-      self.assertEquals(event.getProperty(property_id), value)
+      self.assertEqual(event.getProperty(property_id), value)
 
-    self.assertEquals(event.getSourceCarrier(), web_section.getRelativeUrl())
+    self.assertEqual(event.getSourceCarrier(), web_section.getRelativeUrl())
     self.assertTrue(event.hasStartDate())
     self.assertTrue(event.hasSource()) # User was connected
                                        # he became source of event
@@ -208,7 +208,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'delivered')
+    self.assertEqual(event.getSimulationState(), 'delivered')
 
 def test_suite():
   suite = unittest.TestSuite()

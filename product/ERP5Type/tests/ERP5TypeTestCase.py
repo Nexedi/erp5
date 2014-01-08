@@ -569,16 +569,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
         msg='%r != %r' % (a, b)
-      self.assertEquals(set(a), set(b), msg)
+      self.assertEqual(set(a), set(b), msg)
     assertSameSet = failIfDifferentSet
 
     def assertHasAttribute(self, obj, attribute, msg=None):
-      self.failIfEqual(None, getattr(obj, attribute, None),
+      self.assertNotEqual(None, getattr(obj, attribute, None),
                        msg or "'%r': no attribute '%s'" % (obj,
                                                            attribute))
 
     def failIfHasAttribute(self, obj, attribute, msg=None):
-      self.assertEquals(None, getattr(obj, attribute, None),
+      self.assertEqual(None, getattr(obj, attribute, None),
                         msg or "'%r': attribute '%s' present" % (obj,
                                                                  attribute))
 

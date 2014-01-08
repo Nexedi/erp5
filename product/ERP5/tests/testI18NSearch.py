@@ -52,12 +52,12 @@ class TestI18NSearch(ERP5TypeTestCase):
     self.tic()
     # check if 'é' == 'e' collation works
     result = person_module.searchFolder(SearchableText='Faure')
-    self.assertEquals(len(result), 1)
-    self.assertEquals(result[0].getPath(), person1.getPath())
+    self.assertEqual(len(result), 1)
+    self.assertEqual(result[0].getPath(), person1.getPath())
     # check if a partial string of CJK string matches
     result = person_module.searchFolder(SearchableText='武者')
-    self.assertEquals(len(result), 1)
-    self.assertEquals(result[0].getPath(), person2.getPath())
+    self.assertEqual(len(result), 1)
+    self.assertEqual(result[0].getPath(), person2.getPath())
 
 def test_suite():
   suite = unittest.TestSuite()

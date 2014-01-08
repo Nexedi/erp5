@@ -69,7 +69,7 @@ class TestTrashTool(ERP5TypeTestCase):
     """
     pc = self.getCategoryTool()
     base_category = pc.newContent(portal_type = 'Base Category')
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     sequence.edit(bc_id=base_category.getId())
 
   def stepAddCategories(self, sequence=None, sequence_list=None, **kw):
@@ -79,11 +79,11 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     category_list = []
     for i in xrange(10):
       category = base_category.newContent(portal_type='Category')
-      self.failUnless(category is not None)
+      self.assertTrue(category is not None)
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
 
@@ -101,7 +101,7 @@ class TestTrashTool(ERP5TypeTestCase):
     """
     Check existence of trash tool
     """
-    self.failUnless(self.getTrashTool() is not None)
+    self.assertTrue(self.getTrashTool() is not None)
 
   def stepCreateTrashBin(self, sequence=None, sequence_list=None, **kw):
     """
@@ -115,10 +115,10 @@ class TestTrashTool(ERP5TypeTestCase):
       n = n + 1
       bt_id = 'fake_id_%s' %(n)
     bt = pt.newContent(id=bt_id, portal_type="Business Template")
-    self.failUnless(bt is not None)
+    self.assertTrue(bt is not None)
     trashbin = trash.newTrashBin(bt_title='fake_bin', bt=bt)
-    self.failUnless(trashbin is not None)
-    self.failUnless('fake_bin' in trashbin.getId())
+    self.assertTrue(trashbin is not None)
+    self.assertTrue('fake_bin' in trashbin.getId())
     sequence.edit(trash_id=trashbin.getId())
 
   def stepCheckTrashBinIndexable(self, sequence=None, sequence_list=None, **kw ):
@@ -128,8 +128,8 @@ class TestTrashTool(ERP5TypeTestCase):
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.failUnless(trashbin is not None)
-    self.failUnless(trashbin.isIndexable)
+    self.assertTrue(trashbin is not None)
+    self.assertTrue(trashbin.isIndexable)
 
   def stepCheckObjectNotBackup(self, sequence=None, sequence_list=None, **kw):
     """
@@ -138,7 +138,7 @@ class TestTrashTool(ERP5TypeTestCase):
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.failUnless(trashbin is not None)
+    self.assertTrue(trashbin is not None)
     self.assertEqual(len(list(trashbin.objectIds())), 0)
 
   def stepCheckObjectBackupWithoutSubObjects(self, sequence=None, sequence_list=None, **kw):
@@ -148,9 +148,9 @@ class TestTrashTool(ERP5TypeTestCase):
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.failUnless(trashbin is not None)
+    self.assertTrue(trashbin is not None)
     trashbin_objects_list = list(trashbin.objectValues())
-    self.failUnless(len(trashbin_objects_list) > 0)
+    self.assertTrue(len(trashbin_objects_list) > 0)
     self.assertEqual(len(trashbin_objects_list), 1)
     # get portal_catogories trash folder
     obj = trashbin_objects_list[0]
@@ -176,11 +176,11 @@ class TestTrashTool(ERP5TypeTestCase):
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.failUnless(trashbin is not None)
+    self.assertTrue(trashbin is not None)
     # get category trash folder
     bc_id = sequence.get('bc_id')
     trashbin_objects_list = list(trashbin.objectValues())
-    self.failUnless(len(trashbin_objects_list) > 0)
+    self.assertTrue(len(trashbin_objects_list) > 0)
     self.assertEqual(len(trashbin_objects_list), 1)
     obj = trashbin_objects_list[0]
     self.assertEqual(obj.getId(), 'portal_categories_items')
@@ -199,10 +199,10 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertNotEqual(len(subcat_objects_list), 0)
     categ_id_list = sequence.get('category_id_list')
     for id in subcat_objects_list:
-      self.failUnless(id in categ_id_list)
+      self.assertTrue(id in categ_id_list)
       cat = cat_object._getOb(id, None)
-      self.failUnless(cat is not None)
-      self.failUnless(cat.isIndexable, 0)
+      self.assertTrue(cat is not None)
+      self.assertTrue(cat.isIndexable, 0)
       self.assertEqual(cat.getPortalType(), 'Category')
 
   def stepCheckFolderObjectBackup(self, sequence=None, sequence_list=None, **kw):
@@ -212,10 +212,10 @@ class TestTrashTool(ERP5TypeTestCase):
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.failUnless(trashbin is not None)
+    self.assertTrue(trashbin is not None)
     bc_id = sequence.get('bc_id')
     trashbin_objects_list = list(trashbin.objectValues())
-    self.failUnless(len(trashbin_objects_list) > 0)
+    self.assertTrue(len(trashbin_objects_list) > 0)
     self.assertEqual(len(trashbin_objects_list), 1)
     obj = trashbin_objects_list[0]
     self.assertEqual(obj.getId(), 'portal_skins_items')
@@ -227,19 +227,19 @@ class TestTrashTool(ERP5TypeTestCase):
     skin = skin_objects_list[0]
     self.assertEqual(skin.id, 'erp5_core')
     from OFS.Folder import Folder
-    self.failUnless(isinstance(skin, Folder))
+    self.assertTrue(isinstance(skin, Folder))
     # get image folder
     skin_objects_list = list(skin.objectValues())
     self.assertEqual(len(skin_objects_list), 1)
     skin = skin_objects_list[0]
     self.assertEqual(skin.id, 'image')
-    self.failUnless(skin.getPortalType(), "Trash Folder")
+    self.assertTrue(skin.getPortalType(), "Trash Folder")
     # get file
     f_objects_list = list(skin.objectValues())
     self.assertEqual(len(f_objects_list), 1)
     f = f_objects_list[0]
     self.assertEqual(f.getId(), 'file')
-    self.failUnless(f.getPortalType(), "Trash Folder")
+    self.assertTrue(f.getPortalType(), "Trash Folder")
     
 
   def stepBackupObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
@@ -253,12 +253,12 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     subobjects_ids = base_category.objectIds()
     bc_path = base_category.getPath().split('/')[2:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=1)
-    self.failUnless(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
 
   def stepBackupFolderObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
     """
@@ -283,12 +283,12 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     subobjects_ids = base_category.objectIds()
     bc_path = base_category.getPath().split('/')[1:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=0)
-    self.failUnless(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
 
   def stepBackupObjectsWithKeepingSubobjects(self, sequence=None, sequence_list=None, **kw):
     """
@@ -301,7 +301,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     subobjects_ids = base_category.objectIds()
     bc_path = base_category.getPath().split('/')[2:-1]
     # check backup
@@ -331,11 +331,11 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
-    self.failUnless(base_category is not None)
+    self.assertTrue(base_category is not None)
     cat = base_category._getOb(cat_id, None)
-    self.failUnless(cat is not None)
+    self.assertTrue(cat is not None)
     subcat = cat.newContent(portal_type='Category')
-    self.failUnless(subcat is not None)
+    self.assertTrue(subcat is not None)
     sequence.edit(subcat_path=subcat.getPath())
     
   # tests
