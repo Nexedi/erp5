@@ -77,7 +77,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/accounting_module/AccountModule_viewGeneralLedgerReportDialog?mirror_section=${object/getRelativeUrl}&your_portal_skin=ODS&your_format=
+string:${object_url}/AccountModule_viewGeneralLedgerReportDialog?mirror_section=${object/getRelativeUrl}&your_portal_skin=ODS&your_format=
 
 ]]></string> </value>
         </item>
