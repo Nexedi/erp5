@@ -1,3 +1,6 @@
+2014-01-09 arnaud.fontaine
+* BusinessTemplate: Fix warning because of newly ListBox added parameter (following ca3440e).
+
 2013-12-12 arnaud.fontaine
 * Get rid of Business Template format version 0 as it's been deprecated for a while.
 
