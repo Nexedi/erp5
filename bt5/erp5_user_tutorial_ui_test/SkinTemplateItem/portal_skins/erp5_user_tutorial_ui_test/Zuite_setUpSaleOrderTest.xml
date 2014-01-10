@@ -117,6 +117,10 @@ my_organisation.setRole(\'supplier\')\n
 my_organisation.setGroup(\'my_group\')\n
 my_organisation.validate()\n
 \n
+bank_account = my_organisation.newContent(portal_type="Bank Account",\n
+                           title=howto_dict["sale_howto_bank_account_title"],\n
+                           reference=howto_dict["sale_howto_bank_account_reference"],)\n
+\n
 organisation = portal.organisation_module.newContent(portal_type=\'Organisation\',\n
                                                      title=howto_dict[\'sale_howto_organisation2_title\'],\n
                                                      corporate_name=howto_dict[\'sale_howto_organisation2_title\'])\n

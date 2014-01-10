@@ -30,7 +30,6 @@
 import os
 import sys
 import time
-import signal
 import re
 import subprocess
 import shutil
@@ -279,14 +278,18 @@ class FunctionalTestRunner:
 
   def getStatus(self):
     transaction.begin()
-    return self.portal.portal_tests.TestTool_getResults(self.run_only)
+    if self.remote_code_url_list is not None:
+      # Zuite Results are posted at the root of the portal in this case
+      return self.portal.portal_tests.TestTool_getResults()
+    else:
+      return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
     if self.remote_code_url_list is not None:
       remote_code_url = "&".join(["url_list:list=%s" % url for url in self.remote_code_url_list])
       if self.run_only != "":
         remote_code_url += "&zuite_id=%s" % self.run_only
-      return '%s/portal_tests/Zuite_runSeleniumTest?%s&__ac_name=%s&__ac_password=%s' \
+      return '%s/portal_tests/Zuite_runSeleniumTest?%s&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s' \
                  % (self.portal.portal_url(), remote_code_url, self.user, self.password)
 
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,

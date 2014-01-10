@@ -89,6 +89,8 @@ return {\'now\': DateTime(),\n
         \'product_howto_currency_tag\': \'EUR\',\n
         \'sale_howto_product_title\': \'ZUITE-TEST-SALEORDER-PRODUCT-001\',\n
         \'sale_howto_organisation_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-001\',\n
+        \'sale_howto_bank_account_title\': \'Main account\',\n
+        \'sale_howto_bank_account_reference\': \'0123456789 0123456789\',\n
         \'sale_howto_organisation2_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-002\',\n
         \'sale_howto_organisation3_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-003\',\n
         \'sale_howto_person_title\': \'ZUITE-TEST-SALEORDER USER-001\',\n
@@ -107,6 +109,8 @@ return {\'now\': DateTime(),\n
         \'campaign_howto_campaign_reference\': \'ZUITE-TEST-CAMPAIGN-CAMPAIGN-001\',\n
         \'create_event_howto_person_title\': \'ZUITE-TEST-CREATE-EVENT-PERSON-SUPERVISOR\',\n
         \'create_event_howto_person2_title\': \'ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER\',\n
+        \'create_event_howto_person_email\': \'me@erp5.org\',\n
+        \'create_event_howto_person2_email\': \'me@erp5.org\',\n
         \'create_event_howto_organisation_title\': \'ZUITE-TEST-CREATE-EVENT-ORGANISATION-001\',\n
         \'create_event_howto_currency_title\': \'Euro\',\n
         \'create_event_howto_currency_tag\': \'EUR\',\n
@@ -162,6 +166,7 @@ return {\'now\': DateTime(),\n
         \'outgoing_event_howto_ticket_comment\': \'ZUITE-TEST-OUTGOING-EVENT-TICKET-COMMENT This is a comment of a ticket\',\n
         \'outgoing_event_howto_ticket_content\': \'ZUITE-TEST-OUTGOING-EVENT-TICKET-CONTENT This is the content of the ticket\',\n
         \'howto_preference_id\': \'zuite_erp5_ui_test_preference\',\n
+        \'howto_system_preference_id\': \'zuite_erp5_ui_test_system_preference\',\n
         \'full_text_person_title\': \'ZUITE_TEST_FULL_TEXT_PERSON_TITLE_001\',\n
         \'full_text_person_reference\': \'ZUITE_TEST_FULL_TEXT_PERSON_REFERENCE_001\',\n
         \'full_text_person_email\': \'ZUITE_TEST_FULL_TEXT_PERSON_REFERENCE_001@tiolive.com\',\n

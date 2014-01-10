@@ -30,31 +30,31 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
-from Products.ERP5Type.tests.testFunctionalStandaloneUserTutorial import \
-        BASE_REMOTE_SELENIUM_TEST_URL_LIST
-
 class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
+  foreground = 0
   run_only = "configurator_standard_zuite"
 
-  remote_code_url_list = [
-     "http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator/TestPage_viewSeleniumTest"
-     ] + BASE_REMOTE_SELENIUM_TEST_URL_LIST
-
   def afterSetUp(self):
-     self.setupAutomaticBusinessTemplateRepository()
-     print self.portal.portal_templates.getRepositoryList()
-     ERP5TypeFunctionalTestCase.afterSetUp(self)
+    url_list = []
+    for x in self.portal.test_page_module.objectValues():
+      if x.getId() == "user-Howto.Configure.ERP5.for.SMB.With.Configurator":
+        url_list.append("test_page_module/"+x.getId())
+    self.remote_code_url_list = url_list
+    self.setupAutomaticBusinessTemplateRepository()
+    ERP5TypeFunctionalTestCase.afterSetUp(self)
 
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
-            'erp5_base', 'erp5_workflow', 
-            'erp5_configurator', 'erp5_configurator_standard',
-            # Test suite
-           'erp5_ui_test_core', 'erp5_configurator_standard_ui_test',
-           'erp5_user_tutorial_ui_test'
+            'erp5_base', 'erp5_workflow', 'erp5_configurator',
+            'erp5_configurator_standard', 'erp5_jquery',
+            'erp5_ui_test_core', 'erp5_accounting',
+            'erp5_web', 'erp5_ingestion',
+            'erp5_jquery', 'erp5_dms', 'erp5_jquery_ui', 'erp5_web',
+            'erp5_slideshow_style', 'erp5_knowledge_pad', 'erp5_run_my_doc',
+            'erp5_configurator_standard_ui_test',
            )
 
 def test_suite():
