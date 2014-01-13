@@ -191,3 +191,4 @@ Workflow
 XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference
+RecursiveCheckConsistencyConstraint

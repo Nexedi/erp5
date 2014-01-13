@@ -62,6 +62,7 @@ Property Sheet Tool
 Property Type Validity Constraint
 Python Script
 Ram Cache
+Recursive Check Consistency Constraint
 Role Information
 Rule Tool
 SQL Non Continuous Increasing Id Generator

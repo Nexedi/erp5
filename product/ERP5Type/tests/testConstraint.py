@@ -1581,6 +1581,64 @@ class TestConstraint(PropertySheetTestCase):
 
     sequence_list.play(self)
 
+  def test_RecursiveCheckConsistencyConstraint(self):
+    """
+      Check that by default checkConsistency are not recursive and assiging
+      RecursiveCheckConsistencyConstraint to the portal type, checkConsistency
+      is called in all sub objects.
+    """
+    portal = self.portal
+    script_id = "Organisation_checkCustomReference"
+    skin_folder = portal.portal_skins.custom
+    custom_script = getattr(skin_folder, script_id, None)
+    if custom_script is None:
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
+      custom_script = getattr(skin_folder, script_id)
+      script_body = "error_list = []\n" + \
+        "reference = context.getReference()\n" + \
+        "if reference and not reference.startswith('old_'):\n" + \
+        "  kw = {'relative_url': context.getRelativeUrl(), 'reference': reference}\n" + \
+        "  error_list.append('%(relative_url)s <> %(reference)s -> old_%(reference)s' % kw)\n" + \
+        "  if fixit:\n" + \
+        "    context.setReference('old_%s' % reference)\nreturn error_list"
+      custom_script.ZPythonScript_edit('fixit=False, **kw', script_body)
+    property_sheet = portal.portal_property_sheets.newContent(
+        id="CustomOrganisationReferenceConstraint",
+        portal_type="Property Sheet")
+    script_constraint = property_sheet.newContent(
+        id="reference_constraint",
+        script_id=script_id,
+        portal_type="Script Constraint")
+    self.tic()
+    organisation = portal.organisation_module.newContent(
+      reference="org_reference",
+      portal_type="Organisation")
+    self.tic()
+    self.assertEquals(organisation.checkConsistency(), [])
+    organisation_portal_type = portal.portal_types['Organisation']
+    organisation_portal_type.setTypePropertySheetList(
+       organisation_portal_type.getTypePropertySheetList() + \
+       ['CustomOrganisationReferenceConstraint',])
+    self.tic()
+    self.assertNotEquals(organisation.checkConsistency(), [])
+    self.assertEquals(portal.organisation_module.checkConsistency(), [])
+    organisation_module_portal_type = portal.portal_types['Organisation Module']
+    original_property_sheet_list = \
+      organisation_module_portal_type.getTypePropertySheetList()
+    organisation_module_portal_type.setTypePropertySheetList(
+       original_property_sheet_list + ['RecursiveCheckConsistencyConstraint',])
+    self.tic()
+    message_list = [m.message for m in \
+        portal.organisation_module.checkConsistency()]
+    self.assertNotEquals(message_list, [])
+    self.assertTrue(organisation.getRelativeUrl() in " ".join(message_list),
+      "%s not in %s"% (organisation.getRelativeUrl(), message_list))
+    organisation_module_portal_type.setTypePropertySheetList(
+      original_property_sheet_list)
+    self.tic()
+    self.assertEquals(portal.organisation_module.checkConsistency(), [])
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestConstraint))

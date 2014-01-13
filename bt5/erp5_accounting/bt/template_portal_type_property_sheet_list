@@ -11,3 +11,4 @@ Purchase Invoice Transaction Line | AccountingTransactionLineConstraint
 Purchase Invoice Transaction | AccountingTransactionConstraint
 Sale Invoice Transaction Line | AccountingTransactionLineConstraint
 Sale Invoice Transaction | AccountingTransactionConstraint
+Accounting Transaction | RecursiveCheckConsistencyConstraint

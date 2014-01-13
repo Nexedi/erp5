@@ -1,4 +1,16 @@
 <property_sheet_list>
+ <portal_type id="Group Calendar">
+  <item>RecursiveCheckConsistencyConstraint</item>
+ </portal_type>
+ <portal_type id="Group Presence Period">
+  <item>RecursiveCheckConsistencyConstraint</item>
+ </portal_type>
+ <portal_type id="Leave Request">
+  <item>RecursiveCheckConsistencyConstraint</item>
+ </portal_type>
+ <portal_type id="Presence Request">
+  <item>RecursiveCheckConsistencyConstraint</item>
+ </portal_type>
  <portal_type id="System Preference">
   <item>CalendarPreference</item>
  </portal_type>

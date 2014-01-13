@@ -4,6 +4,7 @@
  </portal_type>
  <portal_type id="Accounting Transaction">
   <item>AccountingTransactionConstraint</item>
+  <item>RecursiveCheckConsistencyConstraint</item>
  </portal_type>
  <portal_type id="Accounting Transaction Line">
   <item>AccountingTransactionLineConstraint</item>

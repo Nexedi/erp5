@@ -2,5 +2,6 @@ Notification Message | ItemAggregation
 Notification Message | Reference
 Organisation | DefaultImage
 Person | DefaultImage
+Person | RecursiveCheckConsistencyConstraint
 Preference | TelephonePreference
 Query | TextDocument

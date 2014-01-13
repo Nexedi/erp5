@@ -8,6 +8,7 @@
  </portal_type>
  <portal_type id="Person">
   <item>DefaultImage</item>
+  <item>RecursiveCheckConsistencyConstraint</item>
  </portal_type>
  <portal_type id="Preference">
   <item>TelephonePreference</item>
