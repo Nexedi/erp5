@@ -118,7 +118,7 @@
 <th align="left">Activities (later)</th>
 <td>
 <select name="activate_script_name:list" multiple size="5">
-<option value="">(None)</option>
+<option value="None">(None)</option>
 <dtml-in getAvailableScriptIds sort>
  <dtml-let selected="_['sequence-item'] in activate_script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>

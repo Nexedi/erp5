@@ -149,6 +149,8 @@ class InteractionDefinition (SimpleItem):
           activate_script_name = ()
         if 'None' in script_name:
           script_name = ()
+        if 'None' in before_commit_script_name:
+          before_commit_script_name = ()
         self.portal_type_filter = portal_type_filter
         self.portal_type_group_filter = portal_type_group_filter
         self.title = str(title)
