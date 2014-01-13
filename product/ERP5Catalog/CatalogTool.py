@@ -976,6 +976,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
+      """Upgrade all catalog tables, with ALTER or CREATE queries"""
       catalog = self.getSQLCatalog(sql_catalog_id)
       connection_id = catalog.z_create_catalog.connection_id
       src = []
