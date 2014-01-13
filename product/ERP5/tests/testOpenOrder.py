@@ -25,11 +25,18 @@
 #
 ##############################################################################
 import unittest
-from time import tzname
+import os
+import time
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from DateTime import DateTime
 
+# explicitly set Europe/Paris timezone
+os.environ['TZ']='Europe/Paris'
+time.tzset()
+DateTime._localzone0 = 'GMT+1'
+DateTime._localzone1 = 'GMT+2'
+DateTime._multipleZones = True
 
 class TestOpenOrder(ERP5TypeTestCase):
   """
@@ -232,8 +239,7 @@ class TestOpenOrder(ERP5TypeTestCase):
                       (D(2008,3,3,10,0), D(2008,3,4,10,0)),
                       ])
 
-  testPeriodicityDateList = (skip("can't run if machine timezone is UTC")
-    if "UTC" in tzname else expectedFailure)(_testPeriodicityDateList)
+  testPeriodicityDateList = expectedFailure(_testPeriodicityDateList)
 
   def testPeriodicityDateListUniversal(self):
     self._testPeriodicityDateList('Universal')
