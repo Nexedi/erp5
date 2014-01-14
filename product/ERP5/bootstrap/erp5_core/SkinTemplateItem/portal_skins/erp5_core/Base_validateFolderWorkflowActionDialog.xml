@@ -58,7 +58,7 @@ if len(choosen) == 1:\n
 # XXX listbox validator does not show the validation failed message, so use portal status message instead\n
 if len(choosen) == 0:\n
   container.REQUEST.set(\'portal_status_message\', translateString("You must select one action."))\n
-else:
+else:\n
   container.REQUEST.set(\'portal_status_message\', translateString("You must select only one action."))\n
 return False\n
 </string> </value>
