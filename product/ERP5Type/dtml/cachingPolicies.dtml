@@ -1,0 +1,396 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<dtml-in listPolicies>
+<dtml-if sequence-start>
+<h2> Edit Caching Policies </h2>
+
+<table>
+</dtml-if>
+ <dtml-let policy_id=sequence-key
+           policy=sequence-item
+ >
+  <tr valign="top">
+   <td align="left">
+
+    <form action="&dtml-absolute_url;">
+
+     <dtml-with policy>
+      <dtml-let nc_checked="getNoCache() and 'checked' or ''"
+                ns_checked="getNoStore() and 'checked' or ''"
+                mr_checked="getMustRevalidate() and 'checked' or ''"
+                pr_checked="getProxyRevalidate() and 'checked' or ''"
+                pub_checked="getPublic() and 'checked' or ''"
+                priv_checked="getPrivate() and 'checked' or ''"
+                nt_checked="getNoTransform() and 'checked' or ''"
+                e304_checked="getEnable304s() and 'checked' or ''"
+                s_max_age_secs="getSMaxAgeSecs() is not None and getSMaxAgeSecs() or ''"
+                last_modified_checked="getLastModified() and 'checked' or ''"
+                pre_check="getPreCheck() is not None and getPreCheck() or ''"
+                post_check="getPostCheck() is not None and getPostCheck() or ''">
+
+       <input type="hidden" name="policy_id" value="&dtml-getPolicyId;">
+       <input type="hidden" name="no_cache:default:int" value="0">
+       <input type="hidden" name="no_store:default:int" value="0">
+       <input type="hidden" name="must_revalidate:default:int" value="0">
+       <input type="hidden" name="proxy_revalidate:default:int" value="0">
+       <input type="hidden" name="public:default:int" value="0">
+       <input type="hidden" name="private:default:int" value="0">
+       <input type="hidden" name="no_transform:default:int" value="0">
+       <input type="hidden" name="enable_304s:default:int" value="0">
+       <input type="hidden" name="last_modified:default:int" value="0">
+
+       <table>
+
+       <tr valign="top">
+       <th align="right"> Policy ID </th>
+       <td>
+         &dtml-getPolicyId;
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Predicate </th>
+       <td>
+         <input type="text"
+                name="predicate"
+                value="&dtml-getPredicate;"
+                size="40">
+       </td>
+
+       <td colspan="2">&nbsp;</td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Mod. Time </th>
+       <td>
+         <input type="text"
+                name="mtime_func"
+                value="&dtml-getMTimeFunc;"
+                size="40">
+       </td>
+
+       <th align="right">Last-Modified?</th>
+       <td>
+         <input type="checkbox"
+                name="last_modified:int"
+                value="1" &dtml-last_modified_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> No-cache? </th>
+       <td>
+         <input type="checkbox" name="no_cache:int"
+                                value="1" &dtml-nc_checked;>
+       </td>
+
+       <th align="right"> No-store? </th>
+       <td>
+         <input type="checkbox" name="no_store:int"
+                                value="1" &dtml-ns_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Max age (secs) </th>
+       <td>
+         <input type="text"
+                name="max_age_secs:int"
+               value="&dtml-getMaxAgeSecs;">
+       </td>
+
+       <th align="right"> Must-revalidate? </th>
+       <td>
+         <input type="checkbox" name="must_revalidate:int"
+                                value="1" &dtml-mr_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Stale While Revalidate (secs) </th>
+       <td>
+         <input type="text"
+                name="stale_revalidate_secs:int"
+               value="&dtml-getStaleWhileRevalidateSecs;">
+       </td>
+       <th align="right"> Stale If Error (secs) </th>
+       <td>
+         <input type="text"
+                name="stale_error_secs:int"
+               value="&dtml-getStaleIfErrorSecs;">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Max proxy cache age (secs) </th>
+       <td>
+         <input type="text"
+                name="s_max_age_secs"
+               value="&dtml-s_max_age_secs;">
+       </td>
+
+       <th align="right"> Proxy-revalidate? </th>
+       <td>
+         <input type="checkbox" name="proxy_revalidate:int"
+                                value="1" &dtml-pr_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Pre-check (secs) </th>
+       <td>
+         <input type="text"
+                name="pre_check"
+                value="&dtml-pre_check;">
+       </td>
+
+       <th align="right"> Post-check (secs) </th>
+       <td>
+         <input type="text"
+                name="post_check"
+                value="&dtml-post_check;">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Vary </th>
+       <td>
+         <input type="text"
+                name="vary"
+                value="&dtml-getVary;"
+                size="40">
+       </td>
+       <th align="right"> Public? </th>
+       <td>
+         <input type="checkbox" name="public:int"
+                                value="1" &dtml-pub_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> ETag </th>
+       <td>
+         <input type="text"
+                name="etag_func"
+                value="&dtml-getETagFunc;"
+                size="40">
+       </td>
+       <th align="right"> Private? </th>
+       <td>
+         <input type="checkbox" name="private:int"
+                                value="1" &dtml-priv_checked;>
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Enable 304s? </th>
+       <td>
+         <input type="checkbox" name="enable_304s:int"
+                                value="1" &dtml-e304_checked;>
+       </td>
+       <th align="right"> No-transform? </th>
+       <td>
+         <input type="checkbox" name="no_transform:int"
+                                value="1" &dtml-nt_checked;>
+       </td>
+       </tr>
+
+
+       <tr valign="top">
+       <td><br /></td>
+       <td colspan="3">
+         <input type="submit" name="updatePolicy:method" value=" Change ">
+         <input type="submit" name="removePolicy:method" value=" Delete ">
+         <input type="submit" name="movePolicyUp:method" value=" Up ">
+         <input type="submit" name="movePolicyDown:method" value=" Down ">
+       </td>
+       </tr>
+
+       </table>
+
+      </dtml-let>
+     </dtml-with>
+
+
+    </form>
+
+   </td>
+   <td> <br> </td>
+  </tr>
+ </dtml-let>
+<dtml-if sequence-end>
+</table>
+</dtml-if>
+</dtml-in>
+
+<h2> Add Caching Policy </h2>
+
+<table>
+ <tr valign="top">
+  <td align="left">
+    <form action="&dtml-absolute_url;">
+
+       <input type="hidden" name="last_modified:default:int" value="0">
+       <input type="hidden" name="no_cache:default:int" value="0">
+       <input type="hidden" name="no_store:default:int" value="0">
+       <input type="hidden" name="must_revalidate:default:int" value="0">
+       <input type="hidden" name="proxy_revalidate:default:int" value="0">
+       <input type="hidden" name="public:default:int" value="0">
+       <input type="hidden" name="private:default:int" value="0">
+       <input type="hidden" name="no_transform:default:int" value="0">
+       <input type="hidden" name="enable_304s:default:int" value="0">
+
+       <table>
+
+       <tr valign="top">
+       <th align="right"> Policy ID </th>
+       <td>
+         <input type="text" name="policy_id">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Predicate </th>
+       <td>
+         <input type="text" name="predicate" size="40">
+       </td>
+
+       <td colspan="2">&nbsp;</td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Mod. time </th>
+       <td>
+         <input type="text" name="mtime_func" size="40">
+       </td>
+
+       <th align="right"> Last-Modified? </th>
+       <td>
+         <input type="checkbox" name="last_modified:int" value="1">
+       </td>
+       </tr>
+
+       <tr>
+       <th align="right"> No-cache? </th>
+       <td>
+         <input type="checkbox" name="no_cache:int" value="1">
+       </td>
+
+       <th align="right"> No-store? </th>
+       <td>
+         <input type="checkbox" name="no_store:int" value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Max age (secs) </th>
+       <td>
+         <input type="text" name="max_age_secs:int" value="0">
+       </td>
+
+
+       <th align="right"> Must-revalidate? </th>
+       <td>
+         <input type="checkbox" name="must_revalidate:int"
+                              value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+
+       <th align="right"> Stale While Revalidate (secs) </th>
+       <td>
+         <input type="text" name="stale_revalidate_secs:int" value="0">
+       </td>
+
+       <th align="right"> Stale If Error (secs) </th>
+       <td>
+         <input type="text" name="stale_error_secs:int" value="0">
+       </td>
+       </tr>
+
+
+       <tr valign="top">
+       <th align="right"> Max proxy cache age (secs) </th>
+       <td>
+         <input type="text"
+                name="s_max_age_secs"
+                value="">
+       </td>
+
+       <th align="right"> Proxy-revalidate? </th>
+       <td>
+         <input type="checkbox" name="proxy_revalidate:int"
+                                value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Pre-check (secs) </th>
+       <td>
+         <input type="text"
+                name="pre_check"
+                value="">
+       </td>
+
+       <th align="right"> Post-check (secs) </th>
+       <td>
+         <input type="text"
+                name="post_check"
+                value="">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Vary </th>
+       <td>
+         <input type="text" name="vary" size="40">
+       </td>
+       <th align="right"> Public? </th>
+       <td>
+         <input type="checkbox" name="public:int"
+                                value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> ETag </th>
+       <td>
+         <input type="text" name="etag_func" size="40">
+       </td>
+       <th align="right"> Private? </th>
+       <td>
+         <input type="checkbox" name="private:int"
+                                value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <th align="right"> Enable 304s? </th>
+       <td>
+         <input type="checkbox" name="enable_304s:int"
+                                value="1">
+       </td>
+       <th align="right"> No-transform? </th>
+       <td>
+         <input type="checkbox" name="no_transform:int"
+                                value="1">
+       </td>
+       </tr>
+
+       <tr valign="top">
+       <td><br /></td>
+       <td>
+         <input type="submit" name="addPolicy:method" value=" Add ">
+       </td>
+       </tr>
+       </table>
+
+    </form>
+  </td>
+ </tr>
+</table>
+
+<dtml-var manage_page_footer>
+
