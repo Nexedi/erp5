@@ -67,7 +67,7 @@ return url\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, selection_name=None</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
