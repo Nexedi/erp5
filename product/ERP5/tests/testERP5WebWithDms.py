@@ -108,7 +108,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def afterSetUp(self):
     self.login()
-    portal = self.getPortal()
     self.setDefaultSitePreference()
     self.web_page_module = self.portal.web_page_module
     self.web_site_module = self.portal.web_site_module
@@ -136,7 +135,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       Setup Web Site
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
 
     # add supported languages for Localizer
     localizer = portal.Localizer
@@ -180,11 +178,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       Setup some Web Pages.
     """
     webpage_list = []
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    web_site_module = self.portal.getDefaultModule('Web Site')
-    website = web_site_module[self.website_id]
-
     # create sample web pages
     for language in language_list:
       if suffix is not None:
@@ -216,11 +209,10 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       message = '\ntest_01_WebPageVersioning'
       ZopeTestCase._print(message)
     portal = self.getPortal()
-    request = self.app.REQUEST
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     page_reference = 'default-webpage-versionning'
-    webpage_list  = self.setupWebSitePages(prefix = page_reference)
+    self.setupWebSitePages(prefix = page_reference)
 
     # set default web page for section
     found_by_reference = portal.portal_catalog(reference = page_reference,
@@ -265,8 +257,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     request = self.app.REQUEST
     website = self.setupWebSite()
     websection = self.setupWebSection()
-    webpage_list  = self.setupWebSitePages(prefix = 'test-web-page')
-    webpage = webpage_list[0]
+    self.setupWebSitePages(prefix = 'test-web-page')
     document_reference = 'default-document-reference'
     document = self.portal.web_page_module.newContent(
                                       portal_type = 'Web Page',
@@ -306,7 +297,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       message = '\ntest_03_LatestContent'
       ZopeTestCase._print(message)
     portal = self.getPortal()
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     portal_categories = portal.portal_categories
     publication_section_category_id_list = ['documentation',  'administration']
@@ -358,8 +349,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     if not quiet:
       message = '\ntest_04_WebSectionAuthorizationForcedForDefaultDocument'
       ZopeTestCase._print(message)
-    request = self.app.REQUEST
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     web_page_reference = 'default-document-reference'
     web_page_en = self.portal.web_page_module.newContent(
@@ -431,17 +421,15 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     is correctly filled with getModificationDate of content.
     This test check "unauthenticated" Policy installed by erp5_web:
     """
-    request = self.portal.REQUEST
     website = self.setupWebSite()
-    path = website.absolute_url_path()
-    response = self.publish(path)
+    website_url = website.absolute_url_path()
+    response = self.publish(website_url)
     self.assertTrue(response.getHeader('x-cache-headers-set-by'),
                     'CachingPolicyManager: /erp5/caching_policy_manager')
 
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
-    path = web_section.absolute_url_path()
-    response = self.publish(path)
+    response = self.publish(web_section.absolute_url_path())
     self.assertTrue(response.getHeader('x-cache-headers-set-by'),
                     'CachingPolicyManager: /erp5/caching_policy_manager')
 
@@ -452,8 +440,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                           reference='NXD-Document-TEXT.Cache')
     document.publish()
     self.tic()
-    path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
-    response = self.publish(path)
+    response = self.publish(website_url + '/NXD-Document-TEXT.Cache')
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)
     from App.Common import rfc1123_date
@@ -469,21 +456,20 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.edit(reference=reference)
     document.publish()
     self.tic()
-    website_url = website.absolute_url_path()
     # Check we can access to the 3 drawings converted into images.
     # Those images can be accessible through extensible content
     # url : path-of-document + '/' + 'img' + page-index + '.png'
-    for i in range(3):
+    policy_list = self.portal.caching_policy_manager.listPolicies()
+    policy = [policy[1] for policy in policy_list\
+                if policy[0] == 'unauthenticated'][0]
+    for i in xrange(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
       response = self.publish(path)
-      policy_list = self.portal.caching_policy_manager.listPolicies()
-      policy = [policy for policy in policy_list\
-                                          if policy[0] == 'unauthenticated'][0]
       self.assertEquals(response.getHeader('Content-Type'), 'image/png')
       self.assertEquals(response.getHeader('Cache-Control'),
-                        'max-age=%s, public' % policy[1].getMaxAgeSecs())
+                        'max-age=%s, public' % policy.getMaxAgeSecs())
 
   def test_07_TestDocumentViewBehaviour(self):
     """All Documents shared the same downloading behaviour
@@ -499,7 +485,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     request['PARENTS'] = [self.app]
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
-    web_section = website.newContent(portal_type=web_section_portal_type)
+    website.newContent(portal_type=web_section_portal_type)
 
     web_page_reference = 'NXD-WEB-PAGE'
     content = '<p>initial text</p>'
@@ -669,14 +655,14 @@ return True
 """
     createZODBPythonScript(portal.portal_skins.custom, script_id,
                            'format, **kw', python_code)
-    
+
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
     self.getPortalObject().aq_parent.acl_users._doAddUser(
       'zope_user', '', ['Manager',], [])
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
-    web_section = website.newContent(portal_type=web_section_portal_type)
+    website.newContent(portal_type=web_section_portal_type)
 
     document_reference = 'tiolive-ERP5.Freedom.TioLive'
     upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive-001-en.odp')
@@ -740,7 +726,7 @@ return True
     self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
     self.assertTrue('<img' in html, html)
-    
+
     # find the img src
     img_list = etree.HTML(html).findall('.//img')
     self.assertEquals(1, len(img_list))
@@ -751,7 +737,7 @@ return True
     are hounoured to display an image in context of a website
     """
     self.test_ImageConversionThroughWebSite("File")
-    
+
   def test_ImageConversionThroughWebSite(self, image_portal_type="Image"):
     """Check that conversion parameters pass in url
     are hounoured to display an image in context of a website
@@ -761,7 +747,7 @@ return True
     request['PARENTS'] = [self.app]
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
-    web_section = website.newContent(portal_type=web_section_portal_type)
+    website.newContent(portal_type=web_section_portal_type)
 
     web_page_reference = 'NXD-WEB-PAGE'
     content = '<p>initial text</p>'
@@ -801,7 +787,7 @@ return True
     # testing Image conversions, svg
     # disable Image permissiions checks format checks
     createZODBPythonScript(portal.portal_skins.custom, 'Image_checkConversionFormatPermission',
-                           '**kw', 'return 1')    
+                           '**kw', 'return 1')
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=svg', credential)
     self.assertEquals(response.getHeader('content-type'), 'image/svg+xml')
@@ -845,7 +831,7 @@ return True
     self._test_document_publication_workflow('Web Page',
         'share_alive_action')
 
-  def _testImageConversionFromSVGToPNG(self, portal_type="Image", 
+  def _testImageConversionFromSVGToPNG(self, portal_type="Image",
                                        filename="user-TESTSVG-CASE-EMBEDDEDDATA"):
     """ Test Convert one SVG Image (Image, TextDocument, File ...) to
         PNG and compare the generated image is well generated.
@@ -1002,7 +988,7 @@ return True
          <image xlink:href="data:...." >
     """
     self._testImageConversionFromSVGToPNG("File")
-  
+
   def test_WebPageConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
