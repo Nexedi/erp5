@@ -585,6 +585,74 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
 
+  def test_08_RFC5861(self):
+    """
+    Checks that RFC5861 is well implemented
+    """
+    website = self.setupWebSite()
+    website_url = website.absolute_url_path()
+    response = self.publish(website_url)
+    self.assertTrue(response.getHeader('x-cache-headers-set-by'),
+                    'CachingPolicyManager: /erp5/caching_policy_manager')
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+    response = self.publish(web_section.absolute_url_path())
+    self.assertTrue(response.getHeader('x-cache-headers-set-by'),
+                    'CachingPolicyManager: /erp5/caching_policy_manager')
+
+    # unauthenticated
+    document_portal_type = 'Text'
+    document_module = self.portal.getDefaultModule(document_portal_type)
+    document = document_module.newContent(portal_type=document_portal_type,
+                                          reference='NXD-Document-1-TEXT.Cache')
+    document.publish()
+    self.tic()
+    response = self.publish(website_url + '/NXD-Document-1-TEXT.Cache')
+    last_modified_header = response.getHeader('Last-Modified')
+    self.assertTrue(last_modified_header)
+    from App.Common import rfc1123_date
+    # Convert the Date into string according RFC 1123 Time Format
+    modification_date = rfc1123_date(document.getModificationDate())
+    self.assertEqual(modification_date, last_modified_header)
+
+    # Upload a presentation with 3 pages.
+    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    document = document_module.newContent(portal_type='Presentation',
+                                          file=upload_file)
+    reference = 'P-DMS-Presentation-001-.3.Pages'
+    document.edit(reference=reference)
+    document.publish()
+    self.tic()
+    # Check we can access to the 3 drawings converted into images.
+    # Those images can be accessible through extensible content
+    # url : path-of-document + '/' + 'img' + page-index + '.png'
+    # Update policy to have stale values
+    self.portal.caching_policy_manager._updatePolicy(
+      "unauthenticated", "python: member is None",
+      "python: getattr(object, 'getModificationDate', object.modified)()",
+      1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
+      0, 1, 0, 0, 1, 1, None, None)
+    self.tic()
+    policy_list = self.portal.caching_policy_manager.listPolicies()
+    policy = [policy[1] for policy in policy_list\
+                if policy[0] == 'unauthenticated'][0]
+    # Check policy has been updated
+    self.assertEquals(policy.getMaxAgeSecs(), 1200)
+    self.assertEquals(policy.getStaleWhileRevalidateSecs(), 30)
+    self.assertEquals(policy.getStaleIfErrorSecs(), 600)
+    for i in xrange(3):
+      path = '/'.join((website_url,
+                       reference,
+                       'img%s.png' % i))
+      response = self.publish(path)
+      self.assertEquals(response.getHeader('Content-Type'), 'image/png')
+      self.assertEquals(response.getHeader('Cache-Control'),
+            'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
+                          (policy.getMaxAgeSecs(),
+                           policy.getStaleWhileRevalidateSecs(),
+                           policy.getStaleIfErrorSecs()))
+
+
   def test_PreviewOOoDocumentWithEmbeddedImage(self):
     """Tests html preview of an OOo document with images as extensible content.
     For this test, Presentation_checkConversionFormatPermission does not allow
