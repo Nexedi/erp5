@@ -22,6 +22,7 @@ Drawing | local_permission
 Drawing | print
 Drawing | related_document
 Drawing | update_content_from_url
+Drawing | version_view
 Drawing | view
 Drawing | web_view
 External Source Module | view
@@ -34,6 +35,7 @@ File | jump_to_successor
 File | jump_to_wiki_predecessor
 File | local_permission
 File | related_document
+File | version_view
 File | view_editor
 Image Module | list_ui
 Image Module | sort_on
@@ -61,6 +63,7 @@ PDF | jump_to_wiki_successor
 PDF | local_permission
 PDF | related_document
 PDF | update_content_from_url
+PDF | version_view
 PDF | view
 PDF | web_view
 Presentation | create_snapshot
@@ -80,6 +83,7 @@ Presentation | local_permission
 Presentation | print
 Presentation | related_document
 Presentation | update_content_from_url
+Presentation | version_view
 Presentation | view
 Presentation | web_view
 RSS Feed | crawl
@@ -102,6 +106,7 @@ Spreadsheet | local_permission
 Spreadsheet | print
 Spreadsheet | related_document
 Spreadsheet | update_content_from_url
+Spreadsheet | version_view
 Spreadsheet | view
 Spreadsheet | web_view
 System Preference | dms_preference
@@ -123,6 +128,7 @@ Text | print
 Text | related_document
 Text | suggest_reference
 Text | update_content_from_url
+Text | version_view
 Text | view
 Text | web_view
 URL Crawler | crawl
