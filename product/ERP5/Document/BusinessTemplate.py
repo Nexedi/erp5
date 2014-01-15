@@ -63,6 +63,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -3952,31 +3953,43 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   def _importFile(self, file_name, file_obj):
     """
-    Upon import, only consider XML file for ZODB Components (as the Python
-    source file will be read and set to text_content property on the new
-    object when the XML will be processed) and for backward compatibility,
-    handle non-migrated Document as well
+    This will be called once for non-migrated Document and twice for ZODB
+    Components (for .xml (metadata) and .py (source code)). This code MUST
+    consider both bt5 folder (everything is on the FS) and tarball (where in
+    case of ZODB Components, .xml may have been processed before .py and vice
+    versa.
     """
-    if file_name.endswith('.py'):
-      # If portal_components/XXX.py, then ignore it as it will be handled when
-      # the .xml file will be processed
+    tv = getTransactionalVariable()
+    obj_key, file_ext = os.path.splitext(file_name)
+    # id() for installing several bt5 in the same transaction
+    tv_obj_key = "%s-%s" % (id(self), obj_key)
+    if file_ext == '.py':
+      # If this Document has not been migrated yet (eg not matching
+      # "portal_components/XXX.py"), use legacy importer
       if file_obj.name.rsplit(os.path.sep, 2)[-2] != 'portal_components':
         FilesystemDocumentTemplateItem._importFile(self, file_name, file_obj)
-    elif file_name.endswith('.xml'):
+      # For ZODB Components: if .xml have been processed before, set the
+      # source code property, otherwise store it in a transactional variable
+      # so that it can be set once the .xml has been processed
+      else:
+        text_content = file_obj.read()
+        try:
+          obj = self._objects[obj_key]
+        except KeyError:
+          tv[tv_obj_key] = text_content
+        else:
+          obj.text_content = text_content
+    elif file_ext == '.xml':
       ObjectTemplateItem._importFile(self, file_name, file_obj)
-
-      name = file_name[:-4]
-      obj = self._objects[name]
-      with open(file_obj.name[:-4] + ".py") as f:
-        obj.text_content = f.read()
+      self._objects[obj_key].text_content = tv.get(tv_obj_key, None)
 
       # When importing a Business Template, there is no way to determine if it
       # has been already migrated or not in __init__() when it does not
       # already exist, therefore BaseTemplateItem.__init__() is called which
       # does not set _archive with portal_components/ like
       # ObjectTemplateItem.__init__()
-      self._archive[name] = None
-      del self._archive[name[len('portal_components/'):]]
+      self._archive[obj_key] = None
+      del self._archive[obj_key[len('portal_components/'):]]
     else:
       LOG('Business Template', 0, 'Skipping file "%s"' % file_name)
 
