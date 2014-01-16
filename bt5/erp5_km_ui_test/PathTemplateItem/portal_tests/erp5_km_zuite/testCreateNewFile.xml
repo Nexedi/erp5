@@ -40,13 +40,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title tal:content="template/getId"/>\n
+<title>testCreateNewFile (expected failure)</title>\n
 </head>\n
 <body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;\n
                   full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+<tr><td rowspan="1" colspan="3">testCreateNewFile (expected failure)</td></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
