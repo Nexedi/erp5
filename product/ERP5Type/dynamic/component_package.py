@@ -140,8 +140,9 @@ class ComponentDynamicPackage(ModuleType):
     module = __import__(fullname, fromlist=[fullname.rsplit('.', 1)[0]],
                         level=0)
 
-    return getattr(getSite().portal_components,
-                   module.__file__[1:-1]).getTextContent(validated_only=True)
+    component = getSite().unrestrictedTraverse(module.__file__[1:-1])
+
+    return component.getTextContent(validated_only=True)
 
   def find_module(self, fullname, path=None):
     """
@@ -320,6 +321,7 @@ class ComponentDynamicPackage(ModuleType):
         module_fullname_alias = self._namespace + '.' + name
 
       component = getattr(site.portal_components, component_id)
+      relative_url = component.getRelativeUrl()
 
       module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
       module = ModuleType(module_fullname, component.getDescription())
@@ -345,12 +347,13 @@ class ComponentDynamicPackage(ModuleType):
         sys.modules[module_fullname_alias] = module
 
       # This must be set for imports at least (see PEP 302)
-      module.__file__ = '<' + component.getId() + '>'
+      module.__file__ = '<' + relative_url + '>'
 
       try:
         # XXX: Any loading from ZODB while exec'ing the source code will result
         # in a deadlock
-        exec source_code_str in module.__dict__
+        source_code_obj = compile(source_code_str, module.__file__, 'exec')
+        exec source_code_obj in module.__dict__
       except Exception, error:
         del sys.modules[module_fullname]
         if module_fullname_alias:

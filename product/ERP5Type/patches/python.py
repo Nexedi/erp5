@@ -143,7 +143,8 @@ def patch_linecache():
         module_globals = get_globals(sys._getframe(1))
 
       # Get source code of ZODB Components (following PEP 302)
-      if filename == '<string>' and '__loader__' in module_globals:
+      if (filename.startswith('<portal_components/') and
+          '__loader__' in module_globals):
         data = None
         name = module_globals.get('__name__')
         loader = module_globals['__loader__']
