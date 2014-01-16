@@ -128,9 +128,9 @@ def patch_linecache():
     display ZODB Components, Python Script source code and TALES Expressions
     properly without requiring to create a temporary file on the filesystem
 
-    The filename is is always '<string>' for any code executed by exec() (ZODB
-    Components), '(FILENAME)?Script \(Python\)' for Zope Python Scripts and
-    'Python Expression "CODE"' for TALES expressions.
+    The filename is is always '<portal_components/*>' for ZODB Components,
+    '(FILENAME)?Script \(Python\)' for Zope Python Scripts and 'Python
+    Expression "CODE"' for TALES expressions.
 
     linecache.cache filled by linecache.updatecache() called by the original
     linecache.getlines() is bypassed for Python Script to avoid getting
@@ -142,7 +142,7 @@ def patch_linecache():
       if module_globals is None:
         module_globals = get_globals(sys._getframe(1))
 
-      # Get source code of ZODB Components (following PEP 302)
+      # Get source code of ZODB Components following PEP 302
       if (filename.startswith('<portal_components/') and
           '__loader__' in module_globals):
         data = None

@@ -76,6 +76,7 @@ class ComponentDynamicPackage(ModuleType):
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
     self.__registry_dict = collections.defaultdict(dict)
+    self.__fullname_source_code_dict = {}
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -132,17 +133,14 @@ class ComponentDynamicPackage(ModuleType):
 
   def get_source(self, fullname):
     """
-    Get the source code of the given module name from the ID defined on the
-    dynamic module (setting getTextContent() on the module directly may not
-    work properly upon reset and there is no need for performance there as it
-    is only used for traceback or pdb anyway)
+    PEP-302 function to get the source code, used mainly by linecache for
+    tracebacks, pdb...
+
+    Use internal cache rather than accessing the Component directly as this
+    would require accessing ERP5 Site even though the source code may be
+    retrieved outside of ERP5 (eg DeadlockDebugguer).
     """
-    module = __import__(fullname, fromlist=[fullname.rsplit('.', 1)[0]],
-                        level=0)
-
-    component = getSite().unrestrictedTraverse(module.__file__[1:-1])
-
-    return component.getTextContent(validated_only=True)
+    return self.__fullname_source_code_dict.get(fullname)
 
   def find_module(self, fullname, path=None):
     """
@@ -390,6 +388,9 @@ class ComponentDynamicPackage(ModuleType):
 
       module_cache_set.add(module)
 
+      # Only useful for get_source()
+      self.__fullname_source_code_dict[module_fullname] = source_code_str
+
       return module
     finally:
       # load_module() can be called outside of import machinery, for example
@@ -415,8 +416,9 @@ class ComponentDynamicPackage(ModuleType):
     if sub_package:
       package = sub_package
     else:
-      # Clear the Component registry only once
+      # Clear the Component registry and source code dict only once
       self.__registry_dict.clear()
+      self.__fullname_source_code_dict.clear()
       package = self
 
     for name, module in package.__dict__.items():
