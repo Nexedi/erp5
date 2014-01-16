@@ -64,7 +64,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection, selection_name</string> </value>
+            <value> <string>brain, selection, selection_name, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
