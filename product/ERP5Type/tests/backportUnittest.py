@@ -9,31 +9,87 @@ import unittest
 import sys
 import time
 
-class SkipTest(Exception):
-    """
-    Raise this exception in a test to skip it.
+try:
+    SkipTest = unittest.SkipTest
+    _ExpectedFailure = unittest.case._ExpectedFailure
+    _UnexpectedSuccess = unittest.case._UnexpectedSuccess
+    skip = unittest.skip
+    skipIf = unittest.skipIf
+    skipUnless = unittest.skipUnless
+    expectedFailure = unittest.expectedFailure
+except AttributeError:
+    class SkipTest(Exception):
+        """
+        Raise this exception in a test to skip it.
 
-    Usually you can use TestResult.skip() or one of the skipping decorators
-    instead of raising this directly.
-    """
-    pass
+        Usually you can use TestResult.skip() or one of the skipping decorators
+        instead of raising this directly.
+        """
+        pass
 
-class _ExpectedFailure(Exception):
-    """
-    Raise this when a test is expected to fail.
+    class _ExpectedFailure(Exception):
+        """
+        Raise this when a test is expected to fail.
 
-    This is an implementation detail.
-    """
+        This is an implementation detail.
+        """
 
-    def __init__(self, exc_info):
-        Exception.__init__(self)
-        self.exc_info = exc_info
+        def __init__(self, exc_info):
+            Exception.__init__(self)
+            self.exc_info = exc_info
 
-class _UnexpectedSuccess(Exception):
-  """
-  The test was supposed to fail, but it didn't!
-  """
-  pass
+    class _UnexpectedSuccess(Exception):
+      """
+      The test was supposed to fail, but it didn't!
+      """
+      pass
+
+    def _id(obj):
+        return obj
+
+    def skip(reason):
+        """
+        Unconditionally skip a test.
+        """
+        def decorator(test_item):
+            if isinstance(test_item, type) and issubclass(test_item, TestCase):
+                test_item.__unittest_skip__ = True
+                test_item.__unittest_skip_why__ = reason
+                return test_item
+            def skip_wrapper(*args, **kwargs):
+                raise SkipTest(reason)
+            skip_wrapper.__name__ = test_item.__name__
+            skip_wrapper.__doc__ = test_item.__doc__
+            return skip_wrapper
+        return decorator
+
+    def skipIf(condition, reason):
+        """
+        Skip a test if the condition is true.
+        """
+        if condition:
+            return skip(reason)
+        return _id
+
+    def skipUnless(condition, reason):
+        """
+        Skip a test unless the condition is true.
+        """
+        if not condition:
+            return skip(reason)
+        return _id
+
+
+    def expectedFailure(func):
+        def wrapper(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+            except Exception:
+                raise _ExpectedFailure(sys.exc_info())
+            raise _UnexpectedSuccess
+        wrapper.__name__ = func.__name__
+        wrapper.__doc__ = func.__doc__
+        return wrapper
 
 class SetupSiteError(Exception):
     """
@@ -43,53 +99,6 @@ class SetupSiteError(Exception):
     in traceback for readability.
     """
     pass
-
-def _id(obj):
-    return obj
-
-def skip(reason):
-    """
-    Unconditionally skip a test.
-    """
-    def decorator(test_item):
-        if isinstance(test_item, type) and issubclass(test_item, TestCase):
-            test_item.__unittest_skip__ = True
-            test_item.__unittest_skip_why__ = reason
-            return test_item
-        def skip_wrapper(*args, **kwargs):
-            raise SkipTest(reason)
-        skip_wrapper.__name__ = test_item.__name__
-        skip_wrapper.__doc__ = test_item.__doc__
-        return skip_wrapper
-    return decorator
-
-def skipIf(condition, reason):
-    """
-    Skip a test if the condition is true.
-    """
-    if condition:
-        return skip(reason)
-    return _id
-
-def skipUnless(condition, reason):
-    """
-    Skip a test unless the condition is true.
-    """
-    if not condition:
-        return skip(reason)
-    return _id
-
-
-def expectedFailure(func):
-    def wrapper(*args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except Exception:
-            raise _ExpectedFailure(sys.exc_info())
-        raise _UnexpectedSuccess
-    wrapper.__name__ = func.__name__
-    wrapper.__doc__ = func.__doc__
-    return wrapper
 
 class TestCase(unittest.TestCase):
     """We redefine here the run() method, and add a skipTest() method.
