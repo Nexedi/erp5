@@ -50,6 +50,7 @@ Image | jump_to_successor
 Image | jump_to_wiki_predecessor
 Image | local_permission
 Image | related_document
+Image | version_view
 PDF | download
 PDF | file_upload
 PDF | html_view
@@ -135,3 +136,4 @@ URL Crawler | crawl
 URL Crawler | crawled_content
 URL Crawler | view
 Web Page | related
+Web Page | version_view
