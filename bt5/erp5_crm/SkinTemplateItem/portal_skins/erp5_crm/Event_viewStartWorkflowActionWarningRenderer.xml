@@ -37,7 +37,12 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <div tal:condition="python: context.getPortalType() == \'Mail Message\'" class="error" i18n:translate="" i18n:domain="erp5_ui">\n
-<h2>Warning</h2>An email will be sent to <span i18n:name="mto" tal:replace="python: \', \'.join([recipient.getDefaultEmailText() or \'\' for recipient in context.getDestinationValueList()])"/>\n
+<tal:block tal:condition="not: request/mass_workflow_action | nothing">\n
+  <h2>Warning</h2>An email will be sent to <span i18n:name="mto" tal:replace="python: \', \'.join([recipient.getDefaultEmailText() or \'\' for recipient in context.getDestinationValueList()])"/>\n
+</tal:block>\n
+<tal:block tal:condition="request/mass_workflow_action | nothing">\n
+  <h2>Warning</h2>An email will be sent to each recipent.\n
+</tal:block>\n
 </div>
 
 ]]></unicode> </value>
