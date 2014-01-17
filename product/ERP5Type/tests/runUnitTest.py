@@ -412,8 +412,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
 
           bt5_path = os.environ.get('erp5_tests_bt5_path')
           if bt5_path:
-            bt5_path_list.extend([ bt5_path.replace('*', '')
-                                   for bt5_path in bt5_path.split(',') ])
+            bt5_path_list.extend(set([re.sub("(\/\*|\*)", '', bt5_path)
+                                   for bt5_path in bt5_path.split(',')]))
           else:
             from App.config import getConfiguration
             instancehome = getConfiguration().instancehome
@@ -421,7 +421,6 @@ class ERP5TypeTestLoader(unittest.TestLoader):
 
           bt5_path_list = [bt5_path for bt5_path in bt5_path_list
                            if os.path.exists(bt5_path)]
-
           template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
 
           url_bt_tuple_list = [
