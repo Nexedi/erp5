@@ -159,6 +159,12 @@ msgstr "hier"
 msgid "10 Newest Items"
 msgstr "10 derniers documents"
 
+msgid "<h2>Warning</h2>An email will be sent to ${mto}"
+msgstr "<h2>Attention</h2>Un email va être envoyé à ${mto}"
+
+msgid "<h2>Warning</h2>An email will be sent to each recipient"
+msgstr "<h2>Attention</h2>Un email va être envoyé à chaque destinataire"
+
 msgid "A Query about the current ${portal_type} was posted with ID ${query_id}."
 msgstr "Une question a été posée à propos de ${portal_type}, avec l'ID ${query_id}."
 
