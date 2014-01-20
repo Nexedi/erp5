@@ -7,12 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88758160.13</string> </value>
+            <value> <string>ts90205200.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,9 +20,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQCAYAAABvWArbAAAAPklEQVQ4je3PMQqAMABD0Z/c/7aC
-IAXjJIhD10LJ8vgZw30eMUApZV/GhZNgSTjoLYElY/hNMJ/S6gullCkPiCIPCr4NiEwAAAAASUVO
-RK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAIAAACwqkHPAAAABmJLR0T///////8JWPfcAAAACXBI
+WXMAAABIAAAASABGyWs+AAAAiklEQVRIx+3PsQ0BYRiH8ef/FhLnXCFWEI3WDkojWMAAltDQi0R9
+ExiADS5m+D7JHYnuPgWxgVC81a94qoe0eMzuEwMAx3Ec59vQtnUdAsmacZySsmYXK9LwNrqujR5b
+nY1cpcKHgqOS0debV6NUNHLtuRiZNjoZXVY6GB3mLA0oGPzFtOM4zg95AkctKGSanwlIAAAAJXRF
+WHRkYXRlOmNyZWF0ZQAyMDE0LTAxLTE5VDE4OjU1OjEzLTA4OjAwFToN5gAAACV0RVh0ZGF0ZTpt
+b2RpZnkAMjAxNC0wMS0xOVQxODo1NToxMy0wODowMGRntVoAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -38,7 +37,7 @@ RK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>119</long> </value>
+            <value> <int>332</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
