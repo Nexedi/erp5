@@ -1,4 +1,7 @@
 2014-01-20 arnaud.fontaine
+* As jquery-ui is imported straightaway, license should have always been jquery-ui one.
+
+2014-01-20 arnaud.fontaine
 * Update to 1.10.4.
 
 2013-01-15 Kazuhiko
