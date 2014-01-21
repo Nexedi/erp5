@@ -33,15 +33,12 @@ from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
-import re
-
-FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
 class FullTextKey(SearchKey):
   """
     This SearchKey generates SQL fulltext comparisons.
   """
-  default_comparison_operator = 'match'
+  default_comparison_operator = 'boolean_match'
   get_operator_from_value = False
 
   def parseSearchText(self, value, is_column):
@@ -52,32 +49,6 @@ class FullTextKey(SearchKey):
 
   def _renderValueAsSearchText(self, value, operator):
     return '(%s)' % (value, )
-
-  def _processSearchValue(self, search_value, logical_operator,
-                          comparison_operator):
-    """
-      Special SearchValue processor for FullText queries: if a searched value
-      from 'match' operator group contains an operator recognised in boolean
-      mode, make the operator for that value be 'match_boolean'.
-    """
-    operator_value_dict, logical_operator, parsed = \
-      SearchKey._processSearchValue(self, search_value, logical_operator,
-                                    comparison_operator)
-    new_value_list = []
-    append = new_value_list.append
-    for value in operator_value_dict.pop('match', []):
-      if isinstance(value, basestring) and \
-         FULLTEXT_BOOLEAN_DETECTOR.match(value) is not None:
-        operator_value_dict.setdefault('match_boolean', []).append(value)
-      else:
-        append(value)
-    if len(new_value_list):
-      if 'match_boolean' in operator_value_dict:
-        # use boolean mode for all expressions
-        operator_value_dict['match_boolean'].extend(new_value_list)
-      else:
-        operator_value_dict['match'] = new_value_list
-    return operator_value_dict, logical_operator, parsed
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """

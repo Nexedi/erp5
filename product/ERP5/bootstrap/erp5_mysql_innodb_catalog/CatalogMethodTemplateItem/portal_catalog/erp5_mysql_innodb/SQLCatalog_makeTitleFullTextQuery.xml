@@ -55,7 +55,7 @@
 """\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-query = Query(**{\'full_text.SearchableText\': value})\n
+query = Query(**{\'catalog_full_text.fulltext_title\': value} )\n
 return query\n
 </string> </value>
         </item>
@@ -65,7 +65,7 @@ return query\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_makeFullTextQuery</string> </value>
+            <value> <string>SQLCatalog_makeTitleFullTextQuery</string> </value>
         </item>
       </dictionary>
     </pickle>
