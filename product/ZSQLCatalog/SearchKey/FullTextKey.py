@@ -41,7 +41,7 @@ class FullTextKey(SearchKey):
   """
     This SearchKey generates SQL fulltext comparisons.
   """
-  default_comparison_operator = 'match'
+  default_comparison_operator = 'boolean_match'
   get_operator_from_value = False
 
   def parseSearchText(self, value, is_column):
@@ -53,6 +53,7 @@ class FullTextKey(SearchKey):
   def _renderValueAsSearchText(self, value, operator):
     return '(%s)' % (value, )
 
+<<<<<<< HEAD
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):
     """
