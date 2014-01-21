@@ -361,9 +361,12 @@ class SlapOSControler(object):
     # XXX: Hack to minimize writes to storage holding MySQL databases.
     #      Note this is something we want for all test suites, so it would
     #      not be better to define this parameter on each test suite.
+    # XXX: Also move here the number of test db to create, so that software
+    #      release stop create ones by default.
     config['instance_dict']['_'] = json.dumps({"mariadb": {
       "relaxed-writes": True,
       "mariadb-relaxed-writes": True, # BBB
+      "test-database-amount": 30,
       }})
     for path in self.software_path_list:
       try:
