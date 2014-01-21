@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.collections import OrderedDict\n
-from Products.ERP5Type.JSON import dumps\n
+from json import dumps\n
 label_list = context.getLabelValueList()\n
 num = len(label_list)\n
 result_list = []\n

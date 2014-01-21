@@ -1,2 +1,5 @@
+2014-01-21 arnaud.fontaine
+* Use json instead of deprecated Products.ERP5Type.JSON.
+
 2010-10-13 Kazuhiko
 * initial implementation.

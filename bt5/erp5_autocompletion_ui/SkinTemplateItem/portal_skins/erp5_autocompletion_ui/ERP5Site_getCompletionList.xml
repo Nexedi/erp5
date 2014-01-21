@@ -65,7 +65,7 @@ if portal_type is not None:\n
 result = [o.title for o in context.portal_catalog(**kw)]\n
 \n
 \n
-from Products.ERP5Type.JSON import dumps\n
+from json import dumps\n
 return dumps(result, indent=4)\n
 </string> </value>
         </item>
