@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.37 (2014-01-21)
+-------------------
+
+ * erp5.util.testnode:
+
+  - Minimize writes to storage holding MySQL databases.
+
 0.4.36 (2013-06-30)
 -------------------
 

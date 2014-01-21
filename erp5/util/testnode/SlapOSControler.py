@@ -34,6 +34,7 @@ import shutil
 import sys
 import glob
 import argparse
+import json
 from slapos import client
 
 MAX_PARTIONS = 10
@@ -357,6 +358,13 @@ class SlapOSControler(object):
     config['instance_dict']['report-url'] = config.get("report-url", "")
     config['instance_dict']['report-project'] = config.get("report-project", "")
     config['instance_dict']['suite-url'] = config.get("suite-url", "")
+    # XXX: Hack to minimize writes to storage holding MySQL databases.
+    #      Note this is something we want for all test suites, so it would
+    #      not be better to define this parameter on each test suite.
+    config['instance_dict']['_'] = json.dumps({"mariadb": {
+      "relaxed-writes": True,
+      "mariadb-relaxed-writes": True, # BBB
+      }})
     for path in self.software_path_list:
       try:
         self.slap.registerOpenOrder().request(path,
