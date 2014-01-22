@@ -347,6 +347,13 @@ class ComponentDynamicPackage(ModuleType):
       # This must be set for imports at least (see PEP 302)
       module.__file__ = '<' + relative_url + '>'
 
+      # Only useful for get_source(), do it before exec'ing the source code
+      # so that the source code is properly display in case of error
+      module.__loader__ = self
+      module.__path__ = []
+      module.__name__ = module_fullname
+      self.__fullname_source_code_dict[module_fullname] = source_code_str
+
       try:
         # XXX: Any loading from ZODB while exec'ing the source code will result
         # in a deadlock
@@ -357,13 +364,9 @@ class ComponentDynamicPackage(ModuleType):
         if module_fullname_alias:
           del sys.modules[module_fullname_alias]
 
-        raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
-                                                                 name,
-                                                                 error))
-
-      module.__path__ = []
-      module.__loader__ = self
-      module.__name__ = module_fullname
+        raise ImportError(
+          "%s: cannot load Component %s (%s)" % (fullname, name, error)), \
+          None, sys.exc_info()[2]
 
       # Add the newly created module to the Version package and add it as an
       # alias to the top-level package as well
@@ -387,9 +390,6 @@ class ComponentDynamicPackage(ModuleType):
         request_obj._module_cache_set = module_cache_set
 
       module_cache_set.add(module)
-
-      # Only useful for get_source()
-      self.__fullname_source_code_dict[module_fullname] = source_code_str
 
       return module
     finally:
