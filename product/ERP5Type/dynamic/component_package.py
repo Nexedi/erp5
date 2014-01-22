@@ -407,6 +407,32 @@ class ComponentDynamicPackage(ModuleType):
     with aq_method_lock:
       return self.__load_module(fullname)
 
+  def find_load_module(self, name):
+    """
+    Find and load a Component module.
+
+    When FS fallback is required (mainly for Document and Extension), this
+    should be used over a plain import to distinguish a document not available
+    as ZODB Component to an error in a Component, especially because in the
+    latter case only ImportError can be raised (PEP-302).
+
+    For example: if a Component tries to import another Component module but
+    the latter has been disabled and there is a fallback on the filesystem, a
+    plain import would hide the real error, instead log it...
+    """
+    fullname = self._namespace + '.' + name
+    loader = self.find_module(fullname)
+    if loader is not None:
+      try:
+        return loader.load_module(fullname)
+      except ImportError, e:
+        import traceback
+        LOG("ERP5Type.dynamic", WARNING,
+            "Could not load Component module '%s'\n%s" % (fullname,
+                                                          traceback.format_exc()))
+
+    return None
+
   def reset(self, sub_package=None):
     """
     Reset the content of the current package and its version package as well
