@@ -78,6 +78,7 @@ from Products.ERP5Type.patches import DCWorkflowGraph
 from Products.ERP5Type.patches import AceEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
+from Products.ERP5Type.patches import ExceptionFormatter
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
