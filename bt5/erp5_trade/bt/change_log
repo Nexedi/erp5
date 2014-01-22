@@ -1,3 +1,6 @@
+2014-01-15 tatuya
+* Add Pricing Preference Tab so that we can optimise pricing query.
+
 2013-09-03 arnaud.fontaine
 * ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
 

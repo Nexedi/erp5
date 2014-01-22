@@ -134,6 +134,39 @@ def getRelatedTradeConditionList(trade_condition):\n
           getRelatedTradeConditionList(related_trade_condition))\n
   return related_trade_condition_list\n
 \n
+def getOptimisedPriceCalculationOperandDict(default=None, context=None, **kw):\n
+  """\n
+   Price Method optimised by the preference \n
+  """\n
+  movement_portal_type = context.portal_type\n
+  preferences = context.portal_preferences\n
+  supply_portal_type_list = []\n
+  if movement_portal_type in context.getPortalSaleTypeList():\n
+    supply_portal_type_list = preferences.getPreferredSaleMovementSupplyPathTypeList()\n
+  elif movement_portal_type in context.getPortalPurchaseTypeList():\n
+    supply_portal_type_list = preferences.getPreferredPurchaseMovementSupplyPathTypeList()\n
+  elif movement_portal_type in context.getPortalInternalTypeList():\n
+    supply_portal_type_list = preferences.getPreferredInternalMovementSupplyPathTypeList()\n
+  if supply_portal_type_list:\n
+    supply_kw = dict(portal_type=supply_portal_type_list)\n
+    for key in preferences.getPreferredPricingSupplyPathKeyCategoryList():\n
+      key_uid = \'%s_uid\' % key\n
+      supply_kw[\'default_%s\' % key_uid] = context.getProperty(key_uid)\n
+    supply_uid_list = [str(brain.uid) for brain in context.portal_catalog(**supply_kw)]\n
+    if len(supply_uid_list):\n
+      kw[\'query\'] = \' catalog.uid IN (%s)\' % \',\'.join(supply_uid_list)\n
+    else:\n
+      return default\n
+  return resource.getPriceCalculationOperandDict(default=default, context=context, **kw)\n
+\n
+def isPricingOptimise():\n
+  """Check whether pricing optimisation is enabled or not """\n
+  try:\n
+    return context.portal_preferences.getPreferredPricingOptimise()\n
+  except AttributeError:\n
+    # When the preference is not support the property, for instance, old sites\n
+    return False\n
+\n
 try:\n
   explanation = context.getExplanationValue()\n
 except AttributeError:\n
@@ -171,8 +204,12 @@ if explanation is not None:\n
                                   high_priority_supply_line_list)\n
 \n
 resource = context.getResourceValue()\n
+\n
 if resource is not None:\n
-  r = resource.getPriceCalculationOperandDict(\n
+  if isPricingOptimise():\n
+    return getOptimisedPriceCalculationOperandDict(default=default, context=context, **kw)\n
+  else:\n
+    r = resource.getPriceCalculationOperandDict(\n
                 default=default, context=context, **kw)\n
   return r\n
 \n

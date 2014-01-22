@@ -51,6 +51,20 @@ class TestSupplyMixin:
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
     self.folder = self.portal.testing_folder
+    self.setUpPreferences()
+
+  def setUpPreferences(self):
+    portal_preferences = self.getPreferenceTool()
+    preference = getattr(portal_preferences, 'test_system_preference', None)
+    if preference is None:
+      preference = portal_preferences.newContent(
+                      portal_type='System Preference',
+                      title='System Preference',
+                      id='test_system_preference')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    self.tic()
+
 
   def beforeTearDown(self):
     module = self.portal.getDefaultModule(self.supply_portal_type)
@@ -69,6 +83,8 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   generic_supply_line_portal_type = 'Supply Line'
   generic_supply_cell_portal_type = 'Supply Cell'
   predicate_portal_type = 'Predicate'
+  delivery_portal_type = 'Sale Order'
+  movement_portal_type = 'Sale Order Line'
 
   @reindex
   def _makeMovement(self, **kw):
@@ -79,12 +95,28 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     return mvt
 
   @reindex
+  def _makeRealMovement(self, **kw):
+    """Creates a real movement.
+    """
+    mvt = self.portal \
+      .getDefaultModule(portal_type=self.delivery_portal_type) \
+      .newContent(portal_type=self.delivery_portal_type) \
+      .newContent(portal_type=self.movement_portal_type)
+    mvt.edit(**kw)
+    return mvt
+
+
+  @reindex
   def _makeSupply(self, **kw):
     """Creates a supply.
     """
+    if 'portal_type' in kw:
+      portal_type = kw.pop('portal_type')
+    else:
+      portal_type = self.supply_portal_type
     supply = self.portal \
-      .getDefaultModule(portal_type=self.supply_portal_type) \
-      .newContent(portal_type=self.supply_portal_type)
+      .getDefaultModule(portal_type=portal_type) \
+      .newContent(portal_type=portal_type)
     supply.edit(**kw)
     return supply
 
@@ -92,7 +124,11 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   def _makeSupplyLine(self, supply, **kw):
     """Creates a supply line.
     """
-    supply_line = supply.newContent(portal_type=self.supply_line_portal_type)
+    if 'portal_type' in kw:
+      portal_type = kw.pop('portal_type')
+    else:
+      portal_type = self.supply_line_portal_type
+    supply_line = supply.newContent(portal_type=portal_type)
     supply_line.edit(**kw)
     return supply_line
 
@@ -103,6 +139,58 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply_cell = supply_line.newContent(portal_type=self.supply_cell_portal_type)
     supply_cell.edit(**kw)
     return supply_cell
+
+  def _makeSections(self):
+    """ make organisations """
+    self._makeOrganisation('my_section')
+    self._makeOrganisation('your_section')
+    self.tic()
+
+  def _makeOrganisation(self, organisation_id):
+    """ make an organisation with the id"""
+    organisation_module = self.portal.organisation_module
+    if getattr(organisation_module, organisation_id, None) is None:
+      organisation_module.newContent(portal_type='Organisation',
+                                     id=organisation_id)
+
+  def _makeResource(self, resouce_id):
+    """ make a resource with the id"""
+    product_module = self.portal.product_module
+    if getattr(product_module, resouce_id, None) is None:
+      product_module.newContent(portal_type="Product",
+                                id=resouce_id)
+  @reindex
+  def _makeVariableSupplyLine(self,
+                              supply_portal_type=None,
+                              supply_line_portal_type=None,
+                              resource_value=None,
+                              source_section_value=None,
+                              destination_section_value=None,
+                              price=None):
+    """ Make a supply line with the parameters. """
+    supply = self._makeSupply(
+      start_date_range_min='2014/01/01',
+      start_date_range_max='2014/01/31',
+      portal_type=supply_portal_type,
+      source_section_value=source_section_value,
+      destination_section_value=destination_section_value,
+    )
+    supply.validate()
+    supply_line = self._makeSupplyLine(supply,
+                                       portal_type=supply_line_portal_type)
+    supply_line.edit(resource_value=resource_value,
+                     base_price=price)
+
+    self.tic()
+
+
+  def _clearCache(self):
+    """ Clear cache to test preferences.
+    """
+    self.portal.portal_caches.clearCache(
+      cache_factory_list=('erp5_ui_short', # for preference cache
+                          ))
+
 
   def test_MovementAndSupplyModification(self):
     """
@@ -370,6 +458,135 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertEqual(None, another_supply_line.getBaseUnitPrice())
 
 
+  def testGetPriceWithOptimisation(self):
+    """
+     Test pricing optimisation based on the preference configuration.
+    """
+    preference = getattr(self.getPreferenceTool(), 'test_system_preference')
+    preference.setPreferredPricingOptimise(False)
+    # every time modifying preference, need to clear cache
+    self._clearCache()
+    self.assertEquals(preference.getPreferredPricingOptimise(), False)
+    self._makeSections()
+    self._makeResource(self.id())
+    self.tic()
+
+    resource_value = self.portal.product_module[self.id()]
+    source_section_value = self.portal.organisation_module['my_section']
+    destination_section_value = self.portal.organisation_module['your_section']
+    movement = self._makeRealMovement(
+      start_date='2014/01/15',
+      resource_value=resource_value,
+      source_section_value=source_section_value,
+      destination_section_value=destination_section_value)
+    self.assertEquals(movement.getPrice(), None)
+
+    supply = self._makeSupply(
+      start_date_range_min='2014/01/01',
+      start_date_range_max='2014/01/31',
+      source_section_value=source_section_value,
+      destination_section_value=destination_section_value,
+    )
+    supply.validate()
+    supply_line = self._makeSupplyLine(supply)
+    supply_line.edit(resource_value=resource_value,
+                     base_price=100)
+
+    self.tic()
+
+    self.assertEquals(movement.getPrice(), 100)
+    # only the flag is enabled, the behavior is same with not-optimised one
+    preference.setPreferredPricingOptimise(True)
+    preference.getPreferredPricingSupplyPathKeyCategoryList(
+      ['resource', 'source_section', 'destination_section'])
+    self.tic()
+    self._clearCache()
+    self.assertEquals(movement.getPrice(), 100)
+
+    # With following setting, Movement_getPriceCalculationOperandDict creates
+    # efficient query from the RDBMS point of view.
+    # Note that following assertion does not check the efficiency, this only
+    # checks that the functionality is kept even after the optimisation.
+    preference.setPreferredSaleMovementSupplyPathTypeList(
+      ['Sale Supply Line'])
+    preference.setPreferredPurchaseMovementSupplyPathTypeList(
+      ['Purchase Supply Line'])
+    preference.setPreferredInternalMovementSupplyPathTypeList(
+      ['Internal Supply Line'])
+    self.tic()
+    self._clearCache()
+
+    movement.setPrice(None) # getPrice() sets the price, so clear it first.
+    self.assertEquals(movement.getPrice(), 100)
+    preference.setPreferredPricingOptimise(False)
+    self._clearCache()
+
+  def test_getPriceWithOptimisationWrongSetting(self):
+    """
+     Check Pricing optimisation with a strange setting.
+
+     With the setting, the strange supply path will be selected, thus
+     the following assertion make sure the preference certainly works.
+    """
+    preference = getattr(self.getPreferenceTool(), 'test_system_preference')
+    preference.setPreferredPricingOptimise(True)
+    self._clearCache()
+    self.assertEquals(preference.getPreferredPricingOptimise(), True)
+    self._makeSections()
+    self._makeResource(self.id())
+    self.tic()
+
+    resource_value = self.portal.product_module[self.id()]
+    source_section_value = self.portal.organisation_module['my_section']
+    destination_section_value = self.portal.organisation_module['your_section']
+    self.tic()
+    preference.getPreferredPricingSupplyPathKeyCategoryList(
+      ['resource', 'source_section', 'destination_section'])
+
+    movement = self._makeRealMovement(
+      start_date='2014/01/15',
+      resource_value=resource_value,
+      source_section_value=source_section_value,
+      destination_section_value=destination_section_value)
+    self._makeVariableSupplyLine(supply_portal_type='Sale Supply',
+                                 supply_line_portal_type='Sale Supply Line',
+                                 source_section_value=source_section_value,
+                                 destination_section_value=destination_section_value,
+                                 resource_value=resource_value,
+                                 price=5)
+    self._makeVariableSupplyLine(supply_portal_type='Purchase Supply',
+                                 supply_line_portal_type='Purchase Supply Line',
+                                 source_section_value=source_section_value,
+                                 destination_section_value=destination_section_value,
+                                 resource_value=resource_value,
+                                 price=10)
+    self._makeVariableSupplyLine(supply_portal_type='Internal Supply',
+                                 supply_line_portal_type='Internal Supply Line',
+                                 resource_value=resource_value,
+                                 source_section_value=source_section_value,
+                                 destination_section_value=destination_section_value,
+                                 price=15)
+    self.tic()
+    # wrong setting, then proper supply path can not be found, select wrong one
+    if self.delivery_portal_type == 'Sale Order':
+      preference.setPreferredSaleMovementSupplyPathTypeList([
+        'Purchase Supply Line'])
+      self._clearCache()
+      self.tic()
+      movement.setPrice(None)
+      self.assertEquals(movement.getPrice(), 10)
+    elif self.delivery_portal_type in ('Purchase Order', 'Internal Order'):
+      preference.setPreferredPurchaseMovementSupplyPathTypeList(
+        ['Sale Supply Line'])
+      preference.setPreferredInternalMovementSupplyPathTypeList(
+        ['Sale Supply Line'])
+      self._clearCache()
+      self.tic()
+      movement.setPrice(None)
+      self.assertEquals(movement.getPrice(), 5)
+    preference.setPreferredPricingOptimise(False)
+    self._clearCache()
+
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
@@ -377,6 +594,9 @@ class TestPurchaseSupply(TestSaleSupply):
   supply_portal_type = 'Purchase Supply'
   supply_line_portal_type = 'Purchase Supply Line'
   supply_cell_portal_type = 'Purchase Supply Cell'
+  delivery_portal_type = 'Purchase Order'
+  movement_portal_type = 'Purchase Order Line'
+
 
 class TestInternalSupply(TestSaleSupply):
   """
@@ -385,6 +605,8 @@ class TestInternalSupply(TestSaleSupply):
   supply_portal_type = 'Internal Supply'
   supply_line_portal_type = 'Internal Supply Line'
   supply_cell_portal_type = 'Internal Supply Cell'
+  delivery_portal_type = 'Internal Order'
+  movement_portal_type = 'Internal Order Line'
 
 
 def test_suite():

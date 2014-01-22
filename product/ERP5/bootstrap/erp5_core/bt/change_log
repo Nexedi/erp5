@@ -1,3 +1,6 @@
+2014-01-15 tatuya
+* Add optimised Pricing Method which can be enabled/disabled by the preference.
+
 2014-01-09 arnaud.fontaine
 * BusinessTemplate: Fix warning because of newly ListBox added parameter (following ca3440e).
 
