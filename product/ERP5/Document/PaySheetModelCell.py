@@ -48,7 +48,7 @@ class PaySheetModelCell(TradeModelCell):
         if not result:
             if not self.hasCellContent(base_id='variation'):
                 result = self.getVariationRangeBaseCategoryList() # The current resource variation
-        return result + ['trade_phase', 'quantity_unit']
+        return list(result) + ['trade_phase', 'quantity_unit']
 
     # Redefine some methods as we do not want to turn cells into predicate
     def edit(self, **kw):
