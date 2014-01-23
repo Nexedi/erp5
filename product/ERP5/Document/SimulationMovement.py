@@ -652,7 +652,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       path='%s/%%' % self.getPath().replace('_', r'\_'))
 
     for movement in catalog_simulation_movement_list:
-      path = movement.getCausalityValue()
+      path = movement.getCausalityValue(portal_type='Business Link')
       if not isBuiltAndCompleted(movement, path):
         return False
       updateTree(movement, path)
@@ -678,7 +678,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
           # we had not visited it in step #2
           subdocument = document._getOb(id)
           if subdocument.getPortalType() == "Simulation Movement":
-            path = subdocument.getCausalityValue()
+            path = subdocument.getCausalityValue(portal_type='Business Link')
             t = (subdocument, path)
             tree_node.visited_movement_dict[id] = t
             if path in path_set_to_check:
