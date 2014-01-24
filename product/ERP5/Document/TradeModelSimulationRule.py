@@ -86,13 +86,10 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
     portal = self._applied_rule.getPortalObject()
-    # List of types passed to simulation_movemet.asComposedDocument()
-    # it needs to include portal types of all 'amount_generator*' groups:
-    composition_type_list = (portal.getPortalAmountGeneratorTypeList() +
-                             portal.getPortalAmountGeneratorLineTypeList() +
-                             portal.getPortalAmountGeneratorCellTypeList())
     amount_list = simulation_movement.getAggregatedAmountList(
-        amount_generator_type_list=composition_type_list)
+      # List of types passed to simulation_movement.asComposedDocument()
+      # it needs to include portal types of all 'amount_generator*' groups:
+      amount_generator_type_list=portal.getPortalAmountGeneratorAllTypeList(0))
     input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
     for amount in amount_list:
       # Do not ignore amount with price = 0 (such behaviour can be obtained by

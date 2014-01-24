@@ -8,6 +8,24 @@ Production Packing List | Production Packing List Line
 Production Report Line | Production Report Cell
 Production Report Module | Production Report
 Production Report | Production Report Line
+Rule Tool | Transformation Simulation Rule
+Rule Tool | Transformation Sourcing Simulation Rule
 Supply Chain Module | Supply Chain
 Supply Chain | Supply Link
 Supply Chain | Supply Node
+Transformation Simulation Rule | Category Membership Divergence Tester
+Transformation Simulation Rule | DateTime Divergence Tester
+Transformation Simulation Rule | Float Divergence Tester
+Transformation Simulation Rule | Mapped Property
+Transformation Simulation Rule | Net Converted Quantity Divergence Tester
+Transformation Simulation Rule | Specialise Divergence Tester
+Transformation Simulation Rule | String Divergence Tester
+Transformation Simulation Rule | Variation Divergence Tester
+Transformation Sourcing Simulation Rule | Category Membership Divergence Tester
+Transformation Sourcing Simulation Rule | DateTime Divergence Tester
+Transformation Sourcing Simulation Rule | Float Divergence Tester
+Transformation Sourcing Simulation Rule | Mapped Property
+Transformation Sourcing Simulation Rule | Net Converted Quantity Divergence Tester
+Transformation Sourcing Simulation Rule | Specialise Divergence Tester
+Transformation Sourcing Simulation Rule | String Divergence Tester
+Transformation Sourcing Simulation Rule | Variation Divergence Tester

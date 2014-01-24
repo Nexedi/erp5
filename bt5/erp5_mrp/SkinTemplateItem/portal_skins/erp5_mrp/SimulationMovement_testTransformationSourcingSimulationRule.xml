@@ -50,16 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \'default_production_order_rule\'\n
+            <value> <string>rule = context.getParentValue().getSpecialiseValue()\n
+return rule.getPortalType() == "Transformation Simulation Rule" \\\n
+   and rule.testTransformationSourcing(context)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionOrder_getRuleReference</string> </value>
+            <value> <string>SimulationMovement_testTransformationSourcingSimulationRule</string> </value>
         </item>
       </dictionary>
     </pickle>
