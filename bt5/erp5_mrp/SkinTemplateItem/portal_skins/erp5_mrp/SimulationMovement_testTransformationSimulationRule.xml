@@ -50,24 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-packing_list = context\n
- \n
-packing_list_state = packing_list.getSimulationState()\n
-if packing_list_state == "draft":\n
-  packing_list.portal_workflow.doActionFor(\n
-                                  packing_list,\n
-                                  \'confirm_action\',\n
-                                  comment=Message(\'erp5_ui\', \'Initialised by Delivery Builder\'))\n
+            <value> <string>specialise_list = context.getSpecialiseValueList(portal_type="Transformation")\n
+if  (len(specialise_list) == 1 and\n
+     context.getResource() == specialise_list[0].getResource()):\n
+  parent = context.getParentValue()\n
+  if parent.getSpecialiseValue().getPortalType() == "Delivery Simulation Rule":\n
+    movement = context.getParentValue().getDeliveryValue()\n
+\n
+    return movement is not None and movement.getPortalType() in (\n
+      "Production Order Line", "Production Order Cell")\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>rule</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionDelivery_confirm</string> </value>
+            <value> <string>SimulationMovement_testTransformationSimulationRule</string> </value>
         </item>
       </dictionary>
     </pickle>

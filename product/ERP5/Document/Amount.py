@@ -28,6 +28,7 @@
 ##############################################################################
 
 import zope.interface
+from collections import defaultdict
 from math import log
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.mixin.variated import VariatedMixin
@@ -85,19 +86,15 @@ class Amount(Base, VariatedMixin):
           " omit_option_base_category.", DeprecationWarning)
       omit_optional_variation = omit_option_base_category
 
-    result = []
     resource = self.getDefaultResourceValue()
-    if resource is not None:
-      resource_variation_list = resource.getVariationBaseCategoryList(
-          omit_optional_variation=omit_optional_variation)
-      if len(base_category_list) > 0 :
-        variation_list = filter(lambda x: x in base_category_list,
-                                resource_variation_list)
-      else :
-        variation_list = resource_variation_list
-      if len(variation_list) > 0:
-        result = self.getAcquiredCategoryMembershipList(variation_list, base=1)
-    return result
+    if resource is None:
+      return []
+    variation_list = resource.getVariationBaseCategoryList(
+        omit_optional_variation=omit_optional_variation)
+    variation_list.append('industrial_phase')
+    if base_category_list:
+      variation_list = filter(base_category_list.__contains__, variation_list)
+    return self.getAcquiredCategoryMembershipList(variation_list, base=1)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryItemList')
@@ -110,43 +107,32 @@ class Amount(Base, VariatedMixin):
       Result is left display.
     """
     variation_category_item_list = []
-    if base_category_list == ():
-      base_category_list = self.getVariationRangeBaseCategoryList()
+    category_list = self.getVariationCategoryList()
+    if category_list:
+      variation_dict = defaultdict(lambda: ([], []))
+      resolveCategory = self.getPortalObject().portal_categories.resolveCategory
+      for category in category_list:
+        resource = resolveCategory(category)
+        variation_dict[category.split('/', 1)[0]] \
+          [resource.getPortalType() == 'Category'].append(resource)
 
-    for base_category in base_category_list:
-      variation_category_list = self.getVariationCategoryList(
-                                          base_category_list=[base_category])
-
-      resource_list = [self.portal_categories.resolveCategory(x) for x in\
-                       variation_category_list]
-      category_list = [x for x in resource_list \
-                       if x.getPortalType() == 'Category']
-      variation_category_item_list.extend(Renderer(
-                             is_right_display=0,
-                             display_none_category=0, base=base,
-                             current_category=current_category,
-                             display_id=display_id, **kw).\
-                                               render(category_list))
-      object_list = [x for x in resource_list \
-                       if x.getPortalType() != 'Category']
-      variation_category_item_list.extend(Renderer(
-                             is_right_display=0,
-                             base_category=base_category,
-                             display_none_category=0, base=base,
-                             current_category=current_category,
-                             display_id='title', **kw).\
-                                               render(object_list))
+      kw = dict(is_right_display=0, display_none_category=0, base=base,
+                current_category=current_category, **kw)
+      render_category_list = Renderer(display_id=display_id, **kw).render
+      kw['display_id'] = 'title'
+      for base_category, (object_list,
+                          category_list) in variation_dict.iteritems():
+        variation_category_item_list += render_category_list(category_list)
+        variation_category_item_list += Renderer(base_category=base_category,
+                                                 **kw).render(object_list)
     return variation_category_item_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
-                            '_setVariationCategoryList')
   def _setVariationCategoryList(self, value):
-    result = []
     resource = self.getDefaultResourceValue()
     if resource is not None:
       variation_list = resource.getVariationBaseCategoryList()
-      if len(variation_list) > 0:
-        self._setCategoryMembership(variation_list, value, base = 1)
+      variation_list.append('industrial_phase')
+      self._setCategoryMembership(variation_list, value, base=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'setVariationCategoryList')
@@ -209,7 +195,6 @@ class Amount(Base, VariatedMixin):
     """
     return VariationValue(context = self)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setVariationValue')
   def _setVariationValue(self, variation_value):
     return variation_value.setVariationValue(self)
 

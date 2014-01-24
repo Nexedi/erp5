@@ -50,26 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-from ZTUtils import LazyFilter\n
-resource = context.getResourceValue()\n
+            <value> <string>resource = context.getResourceValue()\n
 \n
 result = []\n
-\n
 if include_empty:\n
-  result.append([\'\',\'\'])\n
-if resource is None:\n
-  return result\n
+  result.append((\'\',\'\'))\n
 \n
-# XXX: Is it possible to use cache? Hook it on resource?\n
-for transformation in LazyFilter(\n
-  resource.getResourceRelatedValueList(portal_type=portal.getPortalTransformationTypeList()),\n
-  skip=\'View\'\n
-  ):\n
-  if not skip_invalidated or transformation.getProperty(\'validation_state\',\'default\') != \'invalidated\':\n
-    result.append( (transformation.getTitle(),transformation.getRelativeUrl()) )\n
+if resource is not None:\n
+  portal = context.getPortalObject()\n
+  kw = {\'validation_state\': \'!=invalidated\'} if skip_invalidated else {}\n
+  result.extend((transformation.title, transformation.relative_url)\n
+    for transformation in portal.portal_catalog(\n
+      select_list=(\'title\', \'relative_url\'),\n
+      portal_type=portal.getPortalTransformationTypeList(),\n
+      strict_resource_uid=resource.getUid(),\n
+      sort_on=(\'title\', \'relative_url\'),\n
+      **kw))\n
 \n
-result.sort(key=lambda x: x[0])\n
 return result\n
 </string> </value>
         </item>

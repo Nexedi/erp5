@@ -27,90 +27,102 @@
 ##############################################################################
 
 import unittest
-
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.utils import reindex
-
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
-from Products.ERP5Type.tests.backportUnittest import skip
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestMRPMixin(TestBPMMixin):
-  transformation_portal_type = 'Transformation'
-  transformed_resource_portal_type = 'Transformation Transformed Resource'
-  product_portal_type = 'Product'
-  organisation_portal_type = 'Organisation'
-  order_portal_type = 'Production Order'
-  order_line_portal_type = 'Production Order Line'
+
+  def afterSetUp(self):
+    super(TestMRPMixin, self).afterSetUp()
+    self._createRule("Transformation Simulation Rule")
+    rule = self._createRule("Transformation Sourcing Simulation Rule")
+    rule._setSameTotalQuantity(False)
 
   def getBusinessTemplateList(self):
     return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_mrp', )
 
-  def invalidateRules(self):
-    """
-    do reversely of validateRules
-    """
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-      portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getValidationState() == 'validated':
-        rule.invalidate()
+  def _createRule(self, portal_type):
+    x = portal_type.replace(' Simulation ', ' ').replace(' ', '_').lower()
+    reference = "default_" + x
+    id = "testMRP_" + x
+    rule_tool = self.portal.portal_rules
+    try:
+      rule = self.getRule(reference=reference)
+      self.assertEqual(rule.getId(), id)
+    except IndexError:
+      rule = rule_tool.newContent(id, portal_type,
+        reference=reference,
+        test_method_id="SimulationMovement_test" + portal_type.replace(' ', ''))
+      def newTester(p, t, **kw):
+        kw.setdefault("tested_property", (p,))
+        return rule.newContent(p  + "_tester", t + " Divergence Tester",
+                               title=p + " divergence tester", **kw)
+      for x in ("aggregate",
+                "base_application",
+                "base_contribution",
+                "destination_section",
+                "destination",
+                "price_currency",
+                "resource",
+                "source_section",
+                "source",
+                "use"):
+        newTester(x, "Category Membership")
+      for x in ("start_date", "stop_date"):
+        newTester(x, "DateTime")
+      newTester("price", "Float")
+      newTester("quantity", "Net Converted Quantity",
+                tested_property=("quantity", "quantity_unit"))
+      newTester("specialise", "Specialise")
+      newTester("variation", "Variation",
+                tested_property=("variation_category_list",
+                                 "variation_property_dict"))
+      newTester("reference", "String",  matching_provider=1,
+                                        divergence_provider=0)
+    if rule.getValidationState() != 'validated':
+      rule.validate()
+    return rule
 
   def _createDocument(self, portal_type, **kw):
-    module = self.portal.getDefaultModule(
-        portal_type=portal_type)
-    return self._createObject(module, portal_type, **kw)
-
-  def _createObject(self, parent, portal_type, id=None, **kw):
-    o = None
-    if id is not None:
-      o = parent.get(str(id), None)
-    if o is None:
-      o = parent.newContent(portal_type=portal_type)
-    o.edit(**kw)
-    return o
+    return self.portal.getDefaultModule(portal_type=portal_type).newContent(
+      portal_type=portal_type, **kw)
 
   def createTransformation(self, **kw):
-    return self._createDocument(self.transformation_portal_type, **kw)
+    return self._createDocument('Transformation', **kw)
 
   def createProduct(self, **kw):
-    return self._createDocument(self.product_portal_type, **kw)
+    return self._createDocument('Product', **kw)
 
-  def createOrganisation(self, **kw):
-    return self._createDocument(self.organisation_portal_type, **kw)
+  def createNode(self, **kw):
+    return self._createDocument('Organisation', **kw)
 
   def createOrder(self, **kw):
-    return self._createDocument(self.order_portal_type, **kw)
+    return self._createDocument('Production Order', **kw)
 
   def createOrderLine(self, order, **kw):
-    return self._createObject(order, self.order_line_portal_type, **kw)
+    return order.newContent(portal_type=order.getPortalType() + ' Line', **kw)
 
   def createTransformedResource(self, transformation, **kw):
-    return self._createObject(transformation, self.transformed_resource_portal_type, **kw)
+    return transformation.newContent(
+      portal_type='Transformation Transformed Resource', **kw)
 
-  @reindex
   def createCategories(self):
-    category_tool = getToolByName(self.portal, 'portal_categories')
-    self.createCategoriesInCategory(category_tool.base_amount, ['weight'])
-    self.createCategoriesInCategory(category_tool.base_amount.weight, ['kg'])
+    category_tool = self.portal.portal_categories
+    self.createCategoriesInCategory(category_tool.quantity_unit, ['weight'])
+    self.createCategoriesInCategory(category_tool.quantity_unit.weight, ['kg'])
     self.createCategoriesInCategory(category_tool.trade_phase, ['mrp',])
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
-        ['p' + str(i) for i in range(5)]) # phase0 ~ 4
+        ('p' + str(i) for i in xrange(2)))
+    self.createCategoriesInCategory(category_tool.trade_phase.mrp,
+        ('s' + str(i) for i in xrange(1)))
     self.createCategoriesInCategory(category_tool.trade_state,
-      ('ready', 'partial', 'done'))
+        ('s' + str(i) for i in xrange(5)))
 
-  @reindex
-  def createDefaultOrder(self, transformation=None, business_process=None):
+  def createDefaultOrder(self, business_process, transformation=None):
     if transformation is None:
       transformation = self.createDefaultTransformation()
-    if business_process is None:
-      business_process = self.createSimpleBusinessProcess()
-
     base_date = DateTime()
-
     order = self.createOrder(specialise_value=business_process,
                              start_date=base_date,
                              stop_date=base_date+3)
@@ -118,390 +130,166 @@ class TestMRPMixin(TestBPMMixin):
                                       quantity=10,
                                       resource=transformation.getResource(),
                                       specialise_value=transformation)
-    # XXX in some case, specialise_value is not related to order_line by edit,
-    #     but by setSpecialise() is ok, Why?
-    order_line.setSpecialiseValue(transformation)
     return order
-    
-  @reindex
-  def createDefaultTransformation(self):
-    resource1 = self.createProduct(id='1', quantity_unit_list=['weight/kg'])
-    resource2 = self.createProduct(id='2', quantity_unit_list=['weight/kg'])
-    resource3 = self.createProduct(id='3', quantity_unit_list=['weight/kg'])
-    resource4 = self.createProduct(id='4', quantity_unit_list=['weight/kg'])
-    resource5 = self.createProduct(id='5', quantity_unit_list=['weight/kg'])
 
-    transformation = self.createTransformation(resource_value=resource5)
+  def createDefaultTransformation(self):
+    resource = lambda: self.createProduct(quantity_unit_list=['weight/kg'])
+    transformation = self.createTransformation(resource_value=resource())
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource1,
+                                   resource_value=resource(),
                                    quantity=3,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p2')
+                                   trade_phase='mrp/p0')
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource2,
+                                   resource_value=resource(),
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p2')
+                                   trade_phase='mrp/p0')
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource3,
+                                   resource_value=resource(),
                                    quantity=4,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p3')
+                                   trade_phase='mrp/p1')
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource4,
+                                   resource_value=resource(),
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p3')
+                                   trade_phase='mrp/p1')
     return transformation
 
-  @reindex
-  def createSimpleBusinessProcess(self):
-    """    mrp/p2                    mrp/3
-    ready -------- partial_produced ------- done
+  def createBusinessProcess1(self, node_p0=None):
+    """ order      p0      s0      p1     deliver
+       ------- S0 ---- S1 ---- S2 ---- S3 ------- S4
+         PO        PR     PPL      PR       PPL
     """
-    # organisations
-    source_section = self.createOrganisation(title='source_section')
-    source = self.createOrganisation(title='source')
-    destination_section = self.createOrganisation(title='destination_section')
-    destination = self.createOrganisation(title='destination')
-
-    business_process = self.createBusinessProcess(referential_date='stop_date')
-    self.createBusinessLink(business_process,
-                            id='p2',
-                            predecessor='trade_state/ready',
-                            successor='trade_state/partial',
-                            quantity=1,
-                            trade_phase=['mrp/p2'],
-                            source_section_value=source_section,
-                            source_value=source,
-                            destination_section_value=destination_section,
-                            destination_value=destination)
-    self.createBusinessLink(business_process,
-                            id='p3',
-                            predecessor='trade_state/partial',
-                            successor='trade_state/done',
-                            quantity=1,
-                            deliverable=1, # root explanation
-                            trade_phase=['mrp/p3'],
-                            source_section_value=source_section,
-                            source_value=source,
-                            destination_section_value=destination_section,
-                            destination_value=destination)
+    business_process = self._createDocument("Business Process")
+    builder = 'portal_deliveries/production_packing_list_builder'
+    completed = 'delivered', 'started', 'stopped'
+    phase_list = [('default/order', None, ('confirmed',)),
+                  ('default/delivery', builder, completed)]
+    phase_list[1:1] = [('mrp/p' + str(i),
+                        'portal_deliveries/production_report_builder',
+                        completed)
+                       for i in xrange(2)]
+    if node_p0 is not None:
+      phase_list.insert(2, ('mrp/s0', builder, completed))
+    predecessor = None
+    for i, (phase, builder, completed) in enumerate(phase_list):
+      successor = 'trade_state/s' + str(i)
+      self.createBusinessLink(business_process,
+                              completed_state=completed,
+                              predecessor=predecessor,
+                              successor=successor,
+                              trade_phase=phase,
+                              delivery_builder=builder)
+      predecessor = successor
+    phase_list = [x[0] for x in phase_list]
+    if node_p0 is not None:
+      self.createTradeModelPath(business_process,
+                                destination_value=node_p0,
+                                trade_phase=phase_list.pop(1))
+      self.createTradeModelPath(business_process,
+                                test_tales_expression="here/getSource",
+                                trade_phase=phase_list.pop(1))
+    self.createTradeModelPath(business_process, trade_phase_list=phase_list)
     return business_process
 
-  @reindex
-  def createConcurrentBusinessProcess(self):
-    """    mrp/p2
-    ready ======== partial_produced
-           mrp/p3
-    """
-    # organisations
-    source_section = self.createOrganisation(title='source_section')
-    source = self.createOrganisation(title='source')
-    destination_section = self.createOrganisation(title='destination_section')
-    destination = self.createOrganisation(title='destination')
-
-    business_process = self.createBusinessProcess(referential_date='stop_date')
-    self.createBusinessLink(business_process,
-                            id='p2',
-                            predecessor='trade_state/ready',
-                            successor='trade_state/partial',
-                            quantity=1,
-                            trade_phase=['mrp/p2'],
-                            source_section_value=source_section,
-                            source_value=source,
-                            destination_section_value=destination_section,
-                            destination_value=destination)
-    self.createBusinessLink(business_process,
-                            id='p3',
-                            predecessor='trade_state/ready',
-                            successor='trade_state/partial',
-                            quantity=1,
-                            deliverable=1, # root explanation
-                            trade_phase=['mrp/p3'],
-                            source_section_value=source_section,
-                            source_value=source,
-                            destination_section_value=destination_section,
-                            destination_value=destination)
-    return business_process
-
+  def checkStock(self, resource, *node_variation_quantity):
+    if isinstance(resource, str):
+      resource = self.portal.unrestrictedTraverse(resource)
+    expected_dict = dict(((x[0].getUid(), x[1]), x[2])
+      for x in node_variation_quantity)
+    for r in resource.getCurrentInventoryList(group_by_node=1,
+                                              group_by_variation=1):
+      self.assertEqual(expected_dict.pop((r.node_uid, r.variation_text), 0),
+                       r.inventory)
+    self.assertFalse(any(expected_dict.itervalues()), expected_dict)
 
 class TestMRPImplementation(TestMRPMixin):
   """the test for implementation"""
 
-  @skip('Unfinished experimental feature')
-  def test_TransformationRule_getHeadProductionPathList(self):
-    rule = self.getRule(reference='default_transformation_model_rule')
-
-    transformation = self.createDefaultTransformation()
-
-    business_process = self.createSimpleBusinessProcess()
-    self.assertEqual([business_process.p2],
-                      rule.getHeadProductionPathList(transformation, business_process))
-
-    business_process = self.createConcurrentBusinessProcess()
-    self.assertEqual(set([business_process.p2, business_process.p3]),
-                      set(rule.getHeadProductionPathList(transformation, business_process)))
-
-  @newSimulationExpectedFailure
-  def test_TransformationRule_expand(self):
-    # mock order
-    order = self.createDefaultOrder()
-    order_line = order.objectValues()[0]
-
-    business_process = order.getSpecialiseValue()
-
-    # paths
-    path_p2 = '%s/p2' % business_process.getRelativeUrl()
-    path_p3 = '%s/p3' % business_process.getRelativeUrl()
-
-    # organisations
-    path = business_process.p2
-    source_section = path.getSourceSection()
-    source = path.getSource()
-    destination_section = path.getDestinationSection()
-    destination = path.getDestination()
-    consumed_organisations = (source_section, source, destination_section, None)
-    produced_organisations = (source_section, None, destination_section, destination)
-
-    # don't need another rules, just need TransformationRule for test
-    self.invalidateRules()
-
+  def test(self):
+    workshop = self.createNode(title='workshop')
+    workshop2 = self.createNode(title='workshop2')
+    destination = self.createNode(title='destination')
+    business_process = self.createBusinessProcess1(workshop2)
+    order = self.createDefaultOrder(business_process)
+    order_line, = order.objectValues()
+    order._edit(source_value=workshop, destination_value=destination)
     self.tic()
 
-    # alter simulations of the order
-    # root
-    applied_rule = self.portal.portal_simulation.newContent(portal_type='Applied Rule')
-    movement = applied_rule.newContent(portal_type='Simulation Movement')
-    applied_rule.edit(causality_value=order)
-    movement.edit(order_value=order_line,
-                  quantity=order_line.getQuantity(),
-                  resource=order_line.getResource())
-    # test mock
-    applied_rule = movement.newContent(potal_type='Applied Rule')
-
-    rule = self.getRule(reference='default_transformation_model_rule')
-    rule.expand(applied_rule)
-
-    # assertion
-    expected_value_set = set([
-      ((path_p2,), 'product_module/5', produced_organisations, 'mrp/p3', -10),
-      ((path_p2,), 'product_module/1', consumed_organisations, 'mrp/p2', 30),
-      ((path_p2,), 'product_module/2', consumed_organisations, 'mrp/p2', 10),
-      ((path_p3,), 'product_module/5', consumed_organisations, 'mrp/p3', 10),
-      ((path_p3,), 'product_module/3', consumed_organisations, 'mrp/p3', 40),
-      ((path_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 10),
-      ((path_p3,), 'product_module/5', produced_organisations, None, -10)])
-    movement_list = applied_rule.objectValues()
-    self.assertEqual(len(expected_value_set), len(movement_list))
-    movement_value_set = set([])
-    for movement in movement_list:
-      movement_value_set |= set([(tuple(movement.getCausalityList()),
-                                  movement.getResource(),
-                                  (movement.getSourceSection(),
-                                   movement.getSource(),
-                                   movement.getDestinationSection(),
-                                   movement.getDestination(),), # organisations
-                                  movement.getTradePhase(),
-                                  movement.getQuantity())])
-    self.assertEqual(expected_value_set, movement_value_set)
-
-  @skip('Unfinished experimental feature')
-  def test_TransformationRule_expand_concurrent(self):
-    business_process = self.createConcurrentBusinessProcess()
-
-    # mock order
-    order = self.createDefaultOrder(business_process=business_process)
-    order_line = order.objectValues()[0]
-
-    # phases
-    phase_p2 = '%s/p2' % business_process.getRelativeUrl()
-    phase_p3 = '%s/p3' % business_process.getRelativeUrl()
-
-    # organisations
-    path = business_process.p2
-    source_section = path.getSourceSection()
-    source = path.getSource()
-    destination_section = path.getDestinationSection()
-    destination = path.getDestination()
-    organisations = (source_section, source, destination_section, destination)
-    consumed_organisations = (source_section, source, destination_section, None)
-    produced_organisations = (source_section, None, destination_section, destination)
-
-    # don't need another rules, just need TransformationRule for test
-    self.invalidateRules()
-
+    order.plan()
     self.tic()
 
-    # alter simulations of the order
-    # root
-    applied_rule = self.portal.portal_simulation.newContent(portal_type='Applied Rule')
-    movement = applied_rule.newContent(portal_type='Simulation Movement')
-    applied_rule.edit(causality_value=order)
-    movement.edit(order_value=order_line,
-                  quantity=order_line.getQuantity(),
-                  resource=order_line.getResource())
-    # test mock
-    applied_rule = movement.newContent(potal_type='Applied Rule')
+    ar, = order.getCausalityRelatedValueList(portal_type="Applied Rule")
+    sm, = ar.objectValues() # order
+    ar, = sm.objectValues()
+    sm, = ar.objectValues() # deliver
+    ar, = sm.objectValues()
 
-    rule = self.getRule(reference='default_transformation_model_rule')
-    rule.expand(applied_rule)
+    movement_list = []
+    resource = order_line.getResource()
+    for sm in ar.objectValues():
+      self.assertEqual(sm.getSource(), None)
+      self.assertTrue(sm.getDestination())
+      # Reference is used to match movements when reexpanding.
+      reference = sm.getReference()
+      if reference.split('/', 1)[0] in ('pr', 'cr'):
+        self.assertEqual(sm.getResource(), resource)
+      else:
+        cr = self.portal.unrestrictedTraverse(reference).getResource()
+        self.assertTrue(None != sm.getResource() == cr != resource)
+        reference = None
+      movement_list.append((sm.getTradePhase(), sm.getQuantity(),
+                            reference, sm.getIndustrialPhaseList()))
+    movement_list.sort()
+    self.assertEqual(movement_list, sorted((
+      ('mrp/p0', -10, None, []),
+      ('mrp/p0', -30, None, []),
+      ('mrp/p0', 10, 'pr/mrp/p0', ['trade_phase/mrp/p0']),
+      ('mrp/p1', -10, 'cr/mrp/p1', ['trade_phase/mrp/p0']),
+      ('mrp/p1', -10, None, []),
+      ('mrp/p1', -40, None, []),
+      ('mrp/p1', 10, 'pr', []),
+      )))
 
-    # assertion
-    expected_value_set = set([
-      ((phase_p2,), 'product_module/1', consumed_organisations, 'mrp/p2', 30),
-      ((phase_p2,), 'product_module/2', consumed_organisations, 'mrp/p2', 10),
-      ((phase_p3,), 'product_module/3', consumed_organisations, 'mrp/p3', 40),
-      ((phase_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 10),
-      ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, -10)])
-    movement_list = applied_rule.objectValues()
-    self.assertEqual(len(expected_value_set), len(movement_list))
-    movement_value_set = set([])
-    for movement in movement_list:
-      movement_value_set |= set([(tuple(movement.getCausalityList()),
-                                  movement.getResource(),
-                                  (movement.getSourceSection(),
-                                   movement.getSource(),
-                                   movement.getDestinationSection(),
-                                   movement.getDestination(),), # organisations
-                                  movement.getTradePhase(),
-                                  movement.getQuantity())])
-    self.assertEqual(expected_value_set, movement_value_set)
-
-  @skip('Unfinished experimental feature')
-  def test_TransformationRule_expand_reexpand(self):
-    """
-    test case of difference when any movement are frozen
-    by using above result
-    """
-    self.test_TransformationRule_expand_concurrent()
-
+    order.confirm()
+    order.localBuild()
     self.tic()
+    self.checkStock(resource)
 
-    applied_rule = self.portal.portal_simulation.objectValues()[0]
+    def getRelatedDeliveryList(portal_type):
+      return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    business_process = applied_rule.getCausalityValue().getSpecialiseValue()
-
-    # phases
-    phase_p2 = '%s/p2' % business_process.getRelativeUrl()
-    phase_p3 = '%s/p3' % business_process.getRelativeUrl()
-
-    # organisations
-    path = business_process.p2
-    source_section = path.getSourceSection()
-    source = path.getSource()
-    destination_section = path.getDestinationSection()
-    destination = path.getDestination()
-    consumed_organisations = (source_section, source, destination_section, None)
-    produced_organisations = (source_section, None, destination_section, destination)
-
-    movement = applied_rule.objectValues()[0]
-    applied_rule = movement.objectValues()[0]
-
-    # these movements are made by transformation
-    for movement in applied_rule.objectValues():
-      movement.edit(quantity=1)
-      # set the state value of isFrozen to 1,
-      movement._baseSetFrozen(1)
-
-    # re-expand
-    rule = self.getRule(reference='default_transformation_model_rule')
-    rule.expand(applied_rule)
-
-    # assertion
-    expected_value_set = set([
-      ((phase_p2,), 'product_module/1', consumed_organisations, 'mrp/p2', 1), # Frozen
-      ((phase_p2,), 'product_module/1', consumed_organisations, 'mrp/p2', 29),
-      ((phase_p2,), 'product_module/2', consumed_organisations, 'mrp/p2', 1), # Frozen
-      ((phase_p2,), 'product_module/2', consumed_organisations, 'mrp/p2', 9),
-      ((phase_p3,), 'product_module/3', consumed_organisations, 'mrp/p3', 1), # Frozen
-      ((phase_p3,), 'product_module/3', consumed_organisations, 'mrp/p3', 39),
-      ((phase_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 1), # Frozen
-      ((phase_p3,), 'product_module/4', consumed_organisations, 'mrp/p3', 9),
-      ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, 1), # Frozen
-      ((phase_p2, phase_p3), 'product_module/5', produced_organisations, None, -11)])
-    movement_list = applied_rule.objectValues()
-    self.assertEqual(len(expected_value_set), len(movement_list))
-    movement_value_set = set([])
-    for movement in movement_list:
-      movement_value_set |= set([(tuple(movement.getCausalityList()),
-                                  movement.getResource(),
-                                  (movement.getSourceSection(),
-                                   movement.getSource(),
-                                   movement.getDestinationSection(),
-                                   movement.getDestination(),), # organisations
-                                  movement.getTradePhase(),
-                                  movement.getQuantity())])
-    self.assertEqual(expected_value_set, movement_value_set)
-
-  @skip('Unfinished experimental feature')
-  def test_TransformationSourcingRule_expand(self):
-    # mock order
-    order = self.createDefaultOrder()
-    order_line = order.objectValues()[0]
-
-    # don't need another rules, just need TransformationSourcingRule for test
-    self.invalidateRules()
-
+    pr1, = getRelatedDeliveryList("Production Report")
+    pr1.start()
+    pr1.deliver()
+    order.localBuild()
     self.tic()
+    variation = 'industrial_phase/trade_phase/mrp/p0'
+    self.checkStock(resource, (workshop2, variation, 10))
 
-    business_process = order.getSpecialiseValue()
-
-    # get last path of a business process
-    # in simple business path, the last is between "partial_produced" and "done"
-    causality_path = None
-    for state in business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessStateTypeList()):
-      if len(state.getRemainingTradePhaseList(self.portal)) == 0:
-        causality_path = state.getSuccessorRelatedValue()
-
-    # phases
-    phase_p2 = '%s/p2' % business_process.getRelativeUrl()
-
-    # organisations
-    source_section = causality_path.getSourceSection()
-    source = causality_path.getSource()
-    destination_section = causality_path.getDestinationSection()
-    destination = causality_path.getDestination()
-    organisations = (source_section, source, destination_section, destination)
-
-    # sourcing resource
-    sourcing_resource = order_line.getResource()
-
-    # alter simulations of the order
-    # root
-    applied_rule = self.portal.portal_simulation.newContent(portal_type='Applied Rule')
-    movement = applied_rule.newContent(portal_type='Simulation Movement')
-    applied_rule.edit(causality_value=order)
-    movement.edit(order_value=order_line,
-                  causality_value=causality_path,
-                  quantity=order_line.getQuantity(),
-                  resource=sourcing_resource,
-                  )
-
+    ppl1, = getRelatedDeliveryList("Production Packing List")
+    ppl1.start()
+    ppl1.deliver()
+    order.localBuild()
     self.tic()
+    self.checkStock(resource, (workshop, variation, 10))
 
-    # test mock
-    applied_rule = movement.newContent(potal_type='Applied Rule')
+    pr2, = (x for x in getRelatedDeliveryList("Production Report")
+              if x.aq_base is not pr1.aq_base)
+    pr2.start()
+    pr2.deliver()
+    order.localBuild()
+    self.tic()
+    self.checkStock(resource, (workshop, '', 10))
 
-    rule = self.getRule(reference='default_transformation_sourcing_model_rule')
-    rule.expand(applied_rule)
-
-    # assertion
-    expected_value_set = set([
-      ((phase_p2,), sourcing_resource, organisations, 10)])
-    movement_list = applied_rule.objectValues()
-    self.assertEqual(len(expected_value_set), len(movement_list))
-    movement_value_set = set([])
-    for movement in movement_list:
-      movement_value_set |= set([(tuple(movement.getCausalityList()),
-                                  movement.getResource(),
-                                  (movement.getSourceSection(),
-                                   movement.getSource(),
-                                   movement.getDestinationSection(),
-                                   movement.getDestination(),), # organisations
-                                  movement.getQuantity())])
-    self.assertEqual(expected_value_set, movement_value_set)
+    ppl2, = (x for x in getRelatedDeliveryList("Production Packing List")
+               if x.aq_base is not ppl1.aq_base)
+    ppl2.start()
+    ppl2.deliver()
+    self.tic()
+    self.checkStock(resource, (destination, '', 10))
 
 
 def test_suite():

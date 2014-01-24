@@ -37,3 +37,7 @@ Supply Chain | edit_workflow
 Supply Chain | validation_workflow
 Supply Link | edit_workflow
 Supply Node | edit_workflow
+Transformation Simulation Rule | edit_workflow
+Transformation Simulation Rule | rule_validation_workflow
+Transformation Sourcing Simulation Rule | edit_workflow
+Transformation Sourcing Simulation Rule | rule_validation_workflow
