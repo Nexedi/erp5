@@ -39,7 +39,7 @@ def ZCache_set(self, ob, data, view_name, keywords, mtime_func):
                                        %(self.stale_if_error_interval))
     if getattr(self, 'stale_while_revalidate_interval', 0):
         cache_control_parameter.append("stale-while-revalidate=%d" \
-                                       %(self.stale_while_revalida_interval))
+                                       %(self.stale_while_revalidate_interval))
     RESPONSE.setHeader('Last-Modified', rfc1123_date(time.time()))
     RESPONSE.setHeader('Cache-Control', ", ".join(cache_control_parameter))
     RESPONSE.setHeader('Expires', expires)
