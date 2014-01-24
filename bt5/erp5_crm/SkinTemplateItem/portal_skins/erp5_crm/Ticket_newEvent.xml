@@ -60,7 +60,7 @@ portal = context.getPortalObject()\n
 translateString = portal.Base_translateString\n
 module = portal.getDefaultModule(portal_type)\n
 \n
-if portal_type not in module.getVisibleAllowedContentTypeList():\n
+if not portal.Base_checkPermission(module.getId(), "Add portal content"):\n
   return context.Base_redirect(form_id,\n
                                keep_items=dict(\n
        portal_status_message=translateString("You do not have permission to add new event.")))\n
