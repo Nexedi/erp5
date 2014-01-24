@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>kept_names = (\'editable_mode\', \'ignore_layout\',            # erp5_web\n
               \'selection_name\', \'selection_index\',         # list mode\n
+              \'selection_key\',                             # list mode\n
               \'bt_list\',                                   # business template installation system\n
               \'ignore_hide_rows\',\n
              )\n

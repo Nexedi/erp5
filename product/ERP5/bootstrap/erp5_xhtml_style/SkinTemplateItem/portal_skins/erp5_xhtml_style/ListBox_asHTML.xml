@@ -546,6 +546,11 @@
           </tbody>\n
 \n
       </table>\n
+      <input type="hidden" name="selection_name_selection_key" value="md5"\n
+             tal:define="selection_key here/getSelectionKey"\n
+             tal:condition="selection_key"\n
+             tal:attributes="name string:${selection_name}_selection_key;\n
+                             value selection_key" />\n
     </div>\n
 \n
     <div class="listbox-footer">\n

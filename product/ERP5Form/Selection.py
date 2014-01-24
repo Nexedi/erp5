@@ -33,6 +33,7 @@ from OFS.Traversable import Traversable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.PythonScripts.Utility import allow_class
+from hashlib import md5
 
 # Put a try in front XXX
 from Products.CMFCategory.Category import Category
@@ -367,6 +368,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     security.declarePublic('getReportTreeMode')
     def getReportTreeMode(self):
         return getattr(self, 'report_tree_mode', 0)
+
+    security.declarePublic('getAnonymousSelectionKey')
+    def getAnonymousSelectionKey(self):
+        return md5(repr(dict([(k, v) for k, v in self.__dict__.iteritems() if k != 'index']))).hexdigest()
 
 InitializeClass(Selection)
 allow_class(Selection)

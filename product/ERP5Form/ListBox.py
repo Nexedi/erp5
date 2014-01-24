@@ -1196,7 +1196,20 @@ class ListBoxRenderer:
     if self.getListMethodName():
       # Update parameters, only if list_method is defined.
       # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
-      params.update(self.request.form)
+      listbox_prefix = '%s_' % self.getId()
+      for k, v in self.request.form.iteritems():
+        # Ignore parameters for other listboxes and selection keys.
+        if 'listbox_' in k or k.endswith('selection_key'):
+          continue
+        elif k.startswith(listbox_prefix):
+          k = k[len(listbox_prefix):]
+          # <listbox_field_id>_uid is already handled in
+          # ListBoxValidator.validate() and putting uid in selection
+          # will limit the contents for the selection.
+          if k != 'uid':
+            params[k] = v
+        else:
+          params[k] = v
       for k, v in self.getDefaultParamList():
         params.setdefault(k, v)
 
@@ -2102,6 +2115,11 @@ class ListBoxRenderer:
     """
     return self.render(**kw)
 
+  def getSelectionKey(self):
+    selection_tool = self.getSelectionTool()
+    selection_name = self.getSelectionName()
+    return selection_tool.getAnonymousSelectionKey(selection_name)
+
 class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
@@ -2447,6 +2465,9 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
               params.extend(('selection_name=%s' % selection_name,
                              'selection_index=%s' % self.index,
                              'reset:int=1'))
+              selection_tool = self.getObject().getPortalObject().portal_selections
+              if selection_tool._isAnonymous():
+                params.append('selection_key=%s' % selection.getAnonymousSelectionKey())
             if params:
               url = '%s?%s' % (url, '&amp;'.join(params))
           except AttributeError:

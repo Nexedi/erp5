@@ -32,7 +32,6 @@
 """
 
 from OFS.SimpleItem import SimpleItem
-from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -43,8 +42,6 @@ from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 from hashlib import md5
 import string, re
-from time import time
-from random import random
 from urlparse import urlsplit, urlunsplit
 from zLOG import LOG, INFO, WARNING
 from Acquisition import aq_base
@@ -273,6 +270,17 @@ class SelectionTool( BaseTool, SimpleItem ):
         return None
       return selection(method=method, context=context, REQUEST=REQUEST, params=params)
 
+    def _getRequest(self, REQUEST=None):
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+      return REQUEST
+
+    def _getSelectionKeyFromRequest(self, selection_name, REQUEST):
+      REQUEST = self._getRequest(REQUEST=REQUEST)
+      if REQUEST is not None:
+        return REQUEST.get('%s_selection_key' % selection_name, None) or \
+          REQUEST.get('selection_key', None)
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
     def getSelectionFor(self, selection_name, REQUEST=None):
       """
@@ -283,6 +291,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       if not selection_name:
         return None
       selection = self._getSelectionFromContainer(selection_name)
+      if selection is None and self._isAnonymous():
+        selection_key = self._getSelectionKeyFromRequest(selection_name, REQUEST)
+        if selection_key is not None:
+          selection = self.getAnonymousSelection(selection_key, selection_name)
+          self._setSelectionToContainer(selection_name, selection)
       if selection is not None:
         return selection.__of__(self)
 
@@ -296,19 +309,21 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if not selection_name:
         return
-      anonymous_uid = REQUEST and REQUEST.get('anonymous_uid', None)
-      if anonymous_uid is not None:
-        self.REQUEST.response.setCookie('anonymous_uid', anonymous_uid,
-                                        path='/')
-
       if not (selection_object is None or
               selection_name == selection_object.name):
         LOG('SelectionTool', WARNING,
             "Selection not set: new Selection name ('%s') differs from existing one ('%s')" % \
             (selection_name,
              selection_object.name))
-      elif self.getSelectionFor(selection_name) != selection_object:
+      elif self.getSelectionFor(selection_name, REQUEST=REQUEST) != selection_object:
         self._setSelectionToContainer(selection_name, selection_object)
+      if selection_object is None and self._isAnonymous():
+        REQUEST = self._getRequest(REQUEST=REQUEST)
+        for key in ('%s_selection_key' % selection_name, 'selection_key'):
+          try:
+            del REQUEST.form[key]
+          except KeyError:
+            pass
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
     def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
@@ -447,7 +462,10 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        return selection.getListUrl()
+        url = selection.getListUrl()
+        if self._isAnonymous() and '?' in url:
+          url += '&selection_key=%s' % self._getSelectionKeyFromRequest(selection_name, REQUEST)
+        return url
       else:
         return None
 
@@ -669,88 +687,30 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
         Access first item in a selection
       """
-      if not REQUEST:
-        REQUEST = get_request()
-      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      if selection:
-        method = self.unrestrictedTraverse(selection.method_path)
-        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        if len(selection_list):
-          o = selection_list[0]
-          url = o.absolute_url()
-          form_id = self._getExistingFormId(o.getObject(), form_id)
-        else:
-          url = REQUEST.getURL()
-      else:
-        url = REQUEST.getURL()
-      ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      if form_id != 'view':
-        url += '/%s' % form_id
-      url += '?selection_index=%s&selection_name=%s' % (0, selection_name)
-      if ignore_layout:
-        url += '&ignore_layout:int=1'
-      REQUEST.RESPONSE.redirect(url)
+      return self._redirectToIndex(0, selection_name, form_id, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'viewLast')
     def viewLast(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access last item in a selection
       """
-      if not REQUEST:
-        REQUEST = get_request()
-      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      if selection:
-        method = self.unrestrictedTraverse(selection.method_path)
-        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        if len(selection_list):
-          o = selection_list[-1]
-          url = o.absolute_url()
-          form_id = self._getExistingFormId(o.getObject(), form_id)
-        else:
-          url = REQUEST.getURL()
-      else:
-        url = REQUEST.getURL()
-      ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      if form_id != 'view':
-        url += '/%s' % form_id
-      url += '?selection_index=%s&selection_name=%s' % (-1, selection_name)
-      if ignore_layout:
-        url += '&ignore_layout:int=1'
-      REQUEST.RESPONSE.redirect(url)
+      return self._redirectToIndex(-1, selection_name, form_id, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'viewNext')
     def viewNext(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access next item in a selection
       """
-      if not REQUEST:
-        REQUEST = get_request()
-      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      if selection:
-        method = self.unrestrictedTraverse(selection.method_path)
-        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
-        if len(selection_list):
-          o = selection_list[(int(selection_index) + 1) % len(selection_list)]
-          url = o.absolute_url()
-          form_id = self._getExistingFormId(o.getObject(), form_id)
-        else:
-          url = REQUEST.getURL()
-      else:
-        url = REQUEST.getURL()
-      ignore_layout = int(REQUEST.get('ignore_layout', 0))
-      if form_id != 'view':
-        url += '/%s' % form_id
-      url += '?selection_index=%s&selection_name=%s' % (int(selection_index)+1,
-                                                        selection_name)
-      if ignore_layout:
-        url += '&ignore_layout:int=1'
-      REQUEST.RESPONSE.redirect(url)
+      return self._redirectToIndex(int(selection_index) + 1, selection_name, form_id, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'viewPrevious')
     def viewPrevious(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
       """
         Access previous item in a selection
       """
+      return self._redirectToIndex(int(selection_index) - 1, selection_name, form_id, REQUEST)
+
+    def _redirectToIndex(self, selection_index, selection_name, form_id, REQUEST):
       if not REQUEST:
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
@@ -758,7 +718,9 @@ class SelectionTool( BaseTool, SimpleItem ):
         method = self.unrestrictedTraverse(selection.method_path)
         selection_list = selection(method = method, context=self, REQUEST=REQUEST)
         if len(selection_list):
-          o = selection_list[(int(selection_index) - 1) % len(selection_list)]
+          if selection_index > 0:
+            selection_index = selection_index % len(selection_list)
+          o = selection_list[selection_index]
           url = o.absolute_url()
           form_id = self._getExistingFormId(o.getObject(), form_id)
         else:
@@ -768,12 +730,12 @@ class SelectionTool( BaseTool, SimpleItem ):
       ignore_layout = int(REQUEST.get('ignore_layout', 0))
       if form_id != 'view':
         url += '/%s' % form_id
-      url += '?selection_index=%s&selection_name=%s' % (int(selection_index)-1,
-                                                        selection_name)
+      url += '?selection_index=%s&selection_name=%s' % (selection_index, selection_name)
       if ignore_layout:
         url += '&ignore_layout:int=1'
+      if self._isAnonymous():
+        url += '&selection_key=%s' % self.getAnonymousSelectionKey(selection_name, REQUEST=REQUEST)
       REQUEST.RESPONSE.redirect(url)
-
 
     # ListBox related methods
 
@@ -1467,12 +1429,6 @@ class SelectionTool( BaseTool, SimpleItem ):
       if user_id is not None:
         return user_id
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-      if user_id == 'Anonymous User' and self.getAnonymousStorage() is not None:
-        anonymous_uid = self.REQUEST.get('anonymous_uid', None)
-        if anonymous_uid is None:
-          anonymous_uid = md5('%s.%s' % (time(), random())).hexdigest()
-          self.REQUEST['anonymous_uid'] = anonymous_uid
-        user_id = 'Anonymous:%s' % anonymous_uid
       tv['_user_id'] = user_id
       return user_id
 
@@ -1497,6 +1453,25 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection_name in temporary_selection_dict and \
          temporary_selection_dict[selection_name]:
         temporary_selection_dict[selection_name].pop()
+
+    def getAnonymousSelection(self, key, selection_name):
+      container_id = '_v_anonymous_selection_container'
+      storage = self.getAnonymousStorage() or self.getStorage()
+      container = self._getContainerFromStorage(container_id, storage)
+      return container.getSelection(key, selection_name)
+
+    def getAnonymousSelectionKey(self, selection_name, REQUEST=None):
+      if not self._isAnonymous():
+        return ''
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is None:
+        return ''
+      key = selection.getAnonymousSelectionKey()
+      container_id = '_v_anonymous_selection_container'
+      storage = self.getAnonymousStorage() or self.getStorage()
+      container = self._getContainerFromStorage(container_id, storage)
+      container.setSelection(key, selection_name, selection)
+      return key
 
     def _getSelectionFromContainer(self, selection_name):
       user_id = self._getUserId()
@@ -1540,15 +1515,20 @@ class SelectionTool( BaseTool, SimpleItem ):
                       self.getTemporarySelectionDict().keys()))
 
     def _isAnonymous(self):
-      return self.portal_membership.isAnonymousUser()
+      return self._getUserId() == 'Anonymous User'
 
     def _getContainer(self):
       if self._isAnonymous():
-        container_id = '_v_anonymous_selection_container'
-        storage = self.getAnonymousStorage() or self.getStorage()
+        tv = getTransactionalVariable()
+        storage = tv.setdefault('_transactional_selection_container', {})
+        container = TransactionalCacheContainer(storage)
+        return container
       else:
         container_id = '_v_selection_container'
         storage = self.getStorage()
+        return self._getContainerFromStorage(container_id, storage)
+
+    def _getContainerFromStorage(self, container_id, storage):
       container = getattr(aq_base(self), container_id, None)
       if container is None:
         if storage.startswith('portal_memcached/'):
@@ -1567,10 +1547,11 @@ class SelectionTool( BaseTool, SimpleItem ):
 
 InitializeClass( SelectionTool )
 
-class MemcachedContainer(object):
+class BaseContainer(object):
   def __init__(self, container):
     self._container = container
 
+class MemcachedContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     return []
 
@@ -1589,10 +1570,11 @@ class MemcachedContainer(object):
   def deleteGlobalSelection(self, user_id, selection_name):
     pass
 
-class PersistentMappingContainer(object):
-  def __init__(self, container):
-    self._container = container
+class TransactionalCacheContainer(MemcachedContainer):
+  def setSelection(self, user_id, selection_name, selection):
+    self._container.__setitem__('%s-%s' % (user_id, selection_name), aq_base(selection))
 
+class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
       return self._container[user_id].keys()
