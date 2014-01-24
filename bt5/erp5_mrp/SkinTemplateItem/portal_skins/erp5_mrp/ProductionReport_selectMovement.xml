@@ -50,51 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'explanation_portal_type\'] = \'Production Order\'\n
-\n
-kw[\'delivery_uid\'] = None\n
-kw[\'left_join_list\'] = [\'delivery_uid\']\n
-kw[\'select_dict\'] = dict(delivery_uid=None)\n
-kw[\'group_by\'] = (\'uid\',)\n
-\n
-kw[\'src__\'] = src__ \n
-result = context.portal_catalog(**kw)\n
-if src__:\n
-  result\n
-\n
-movement_list = []\n
-for movement in result:\n
-  movement = movement.getObject()\n
-  root_movement = movement.getRootSimulationMovement()\n
-  root_type = root_movement.getParentValue().getSpecialiseValue().getPortalType()\n
-  parent_type = movement.getParentValue().getSpecialiseValue().getPortalType()\n
-  if (root_type == "Production Order Rule" and\n
-      parent_type in ("Transformation Sourcing Rule",\n
-                      "Production Order Rule") or\n
-      root_type == "Production Order Root Simulation Rule" and\n
-      parent_type in ("Transformation Sourcing Rule",\n
-                      "Delivery Simulation Rule")) \\\n
-     and root_movement.getSimulationState() == "confirmed":\n
-    movement_list.append(movement)\n
-\n
-return movement_list\n
+            <value> <string>return context.portal_catalog(\n
+  explanation_portal_type="Production Order",\n
+  parent_specialise_portal_type="Transformation Simulation Rule",\n
+  delivery_uid=None,\n
+  left_join_list=("delivery_uid",),\n
+  select_list=("delivery_uid",),\n
+  group_by=("uid",),\n
+  **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>src__=0, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransformationSourcingRule_selectMovement</string> </value>
+            <value> <string>ProductionReport_selectMovement</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

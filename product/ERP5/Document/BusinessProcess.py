@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -845,3 +846,41 @@ class BusinessProcess(Path, XMLObject):
     """
     for business_link in self.getBuildableBusinessLinkValueList(explanation):
       business_link.build(explanation=explanation)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPreviousTradePhaseDict')
+  def getPreviousTradePhaseDict(self, trade_phase_list=None):
+    """Return a dict mapping each phase to a set of previous ones
+
+    If trade_phase_list is given, the return graph is reduced to only keep
+    phases in this list.
+    """
+    state_dict = defaultdict(set)
+    phase_list = []
+    for link in self.getBusinessLinkValueList(sort_on=None):
+      phase, = link.getTradePhaseList() # BL must have exactly 1 TP
+      phase_list.append((phase, link.getPredecessor()))
+      state_dict[link.getSuccessor()].add(phase)
+    result = dict((phase, state_dict[state]) for phase, state in phase_list)
+    if trade_phase_list: # reduce graph
+      next_dict = defaultdict(set)
+      # build {phase: next_set} (i.e. reverse result)
+      for next, phase_set in result.iteritems():
+        for phase in phase_set:
+          next_dict[phase].add(next)
+      # for each phase to remove
+      for phase in set(result).difference(trade_phase_list):
+        # edit the graph like we would do for a doubly linked list
+        previous_set = result.pop(phase)
+        next_set = next_dict[phase]
+        # i.e. edit next phases to replace current phase by previous ones
+        for next in next_set:
+          phase_set = result[next]
+          phase_set.remove(phase)
+          phase_set |= previous_set
+        # and previous phases to replace current by next ones
+        for previous in previous_set:
+          phase_set = next_dict[previous]
+          phase_set.remove(phase)
+          phase_set |= next_set
+    return result

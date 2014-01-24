@@ -1421,6 +1421,20 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('amount_generator_cell')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalAmountGeneratorAllTypeList')
+  def getPortalAmountGeneratorAllTypeList(self, transformation):
+    """
+    Return amount generator types, including lines & cells,
+    but only or without those related to transformations.
+    """
+    result = list(self.getPortalAmountGeneratorTypeList())
+    result += self.getPortalAmountGeneratorLineTypeList()
+    result += self.getPortalAmountGeneratorCellTypeList()
+    if transformation:
+      return tuple(x for x in result if x.startswith('Transformation'))
+    return tuple(x for x in result if not x.startswith('Transformation'))
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalBusinessProcessTypeList')
   def getPortalBusinessProcessTypeList(self):
     """

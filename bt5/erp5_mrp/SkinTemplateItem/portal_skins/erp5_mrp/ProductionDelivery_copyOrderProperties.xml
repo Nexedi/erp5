@@ -50,25 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = context\n
+            <value> <string>if context.getSimulationState() == \'draft\':\n
+  order = context.getCausalityValue()\n
+  context.edit(\n
+    comment=order.getComment(),\n
+    title=order.getTitle(),\n
+  )\n
 \n
-tag = packing_list.getPath() + \'_confirm\'\n
-\n
-# First, copy Order properties\n
-related_order = packing_list.getCausalityValue()\n
-packing_list.edit(\n
-  comment=related_order.getComment(),\n
-  delivery_mode=related_order.getDeliveryMode(),\n
-  incoterm=related_order.getIncoterm(),\n
-  destination_administration_value=\\\n
-      related_order.getDestinationAdministrationValue(),\n
-  activate_kw={\'tag\':tag},\n
-)\n
-\n
-packing_list.startBuilding()\n
-packing_list.activate(after_tag=tag).updateCausalityState()\n
-\n
-packing_list.activate(after_tag=tag).ProductionDelivery_confirm()\n
+context.Delivery_confirm()\n
 </string> </value>
         </item>
         <item>
