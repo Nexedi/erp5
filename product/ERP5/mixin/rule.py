@@ -260,18 +260,10 @@ class RuleMixin(Predicate):
     """
     raise NotImplementedError
 
-  def _getMovementGeneratorContext(self, applied_rule):
-    """
-    Return the movement generator context to use for expand
-    XXX-JPS likely useless
-    """
-    raise NotImplementedError
-
   def _getMovementGeneratorMovementList(self, applied_rule):
     """
     Return the movement lists to provide to the movement generator
     """
-    raise NotImplementedError
 
   def _getDivergenceTesterList(self, exclude_quantity=True):
     """

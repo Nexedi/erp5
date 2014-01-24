@@ -72,18 +72,6 @@ class DeliveryRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     """
     return DeliveryRuleMovementGenerator(applied_rule=context, rule=self)
 
-  def _getMovementGeneratorContext(self, context):
-    """
-    Return the movement generator context to use for expand
-    """
-    return context
-
-  def _getMovementGeneratorMovementList(self, context):
-    """
-    Return the movement lists to provide to the movement generator
-    """
-    return []
-
   def _isProfitAndLossMovement(self, movement):
     # For a kind of trade rule, a profit and loss movement lacks source
     # or destination.
