@@ -38,7 +38,7 @@ from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type.Globals import get_request
 from . import aq_method_lock
 from types import ModuleType
-from zLOG import LOG, BLATHER
+from zLOG import LOG, BLATHER, WARNING
 
 class ComponentVersionPackage(ModuleType):
   """
