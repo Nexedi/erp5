@@ -204,6 +204,7 @@ div.gadget-management{\n
 div.right-gadget{\n
   float:right;\n
   display:block;\n
+  width: 100%;\n
 }\n
 \n
 /* hide labels for columns */\n
