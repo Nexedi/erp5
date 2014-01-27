@@ -52,6 +52,9 @@ $(function() {\n
                 dataType: "json",\n
                 data: data,\n
                 success: response,\n
+                // Otherwise JQuery would serialize an array to portal_type[]=p1&portal_type[]=p2\n
+                // instead of Zope portal_type=p1&portal_type=p2\n
+                traditional: true,\n
             });\n
         };\n
     }\n
