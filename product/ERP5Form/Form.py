@@ -255,13 +255,14 @@ class OverrideValue(StaticValue):
 
 class DefaultValue(StaticValue):
   def __init__(self, field_id, value):
-    self.key = field_id[3:]
+    self.key = field_id.split('_', 1)[1]
     self.value = value
 
   def __call__(self, field, id, **kw):
+    REQUEST = get_request()
     try:
       form = field.aq_parent
-      ob = getattr(form, 'aq_parent', None)
+      ob = REQUEST.get('cell', getattr(form, 'aq_parent', None))
       value = self.value
       try:
         if value not in (None, ''):
@@ -337,7 +338,8 @@ def getFieldValue(self, field, id, **kw):
 
   field_id = field.id
 
-  if id == 'default' and field_id.startswith('my_'):
+  if id == 'default' and (field_id.startswith('my_') or
+                          field_id.startswith('listbox_')):
     if field.meta_type == 'ProxyField' and \
         field.getRecursiveTemplateField().meta_type == 'CheckBoxField' or \
         self.meta_type == 'CheckBoxField':

@@ -679,7 +679,8 @@ class ProxyField(ZMIField):
     value = copyMethod(value)
     cacheable = isCacheable(value)
 
-    if id == 'default' and field_id.startswith('my_'):
+    if id == 'default' and (field_id.startswith('my_') or
+                            field_id.startswith('listbox_')):
       # XXX far from object-oriented programming
       if template_field.meta_type == 'CheckBoxField':
         return DefaultCheckBoxValue(field_id, value), cacheable
