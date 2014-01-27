@@ -1,4 +1,7 @@
 2014-01-27 arnaud.fontaine
+* Increase delay before searching from 300ms (default) to 600ms, this should be enough...
+
+2014-01-27 arnaud.fontaine
 * Serialization of array was broken with ERP5.
 
 2014-01-21 arnaud.fontaine

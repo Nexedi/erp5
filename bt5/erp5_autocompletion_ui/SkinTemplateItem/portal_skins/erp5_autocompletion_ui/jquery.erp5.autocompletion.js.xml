@@ -76,7 +76,8 @@ $(function() {\n
      *   });\n
      */\n
     $.fn.ERP5Autocomplete = function(kw) {\n
-        return this.autocomplete({source: generateSource(kw)});\n
+        return this.autocomplete({source: generateSource(kw),\n
+                                  delay: 600});\n
     };\n
 });\n
 </tal:block>\n
