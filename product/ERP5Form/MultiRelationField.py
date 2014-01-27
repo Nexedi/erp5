@@ -277,11 +277,22 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                             value_instance, sub_index in render_parameter_list:
       sub_html_string = widget_instance.render(field, key, 
                                                value_instance, REQUEST)
+
+      here = self._getContextValue(field, REQUEST)
+      portal = here.getPortalObject()
+      autocomplete_enabled = getattr(portal.portal_skins,
+                                     'erp5_autocompletion_ui',
+                                     None)
+
+      if autocomplete_enabled:
+        sub_html_string += self.render_autocomplete(field, key)
+
       if relation_item_list is not None:
         ####################################
         # Render wheel
         ####################################
-        sub_html_string += self.render_wheel(
+        if not autocomplete_enabled:
+          sub_html_string += self.render_wheel(
                   field, value_instance, REQUEST,
                   relation_index=relation_field_index,
                   sub_index=sub_index)
@@ -360,6 +371,31 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       html_string = "<span class='%s'>%s</span>" % (css_class, html_string)
     return html_string
 
+  def render_autocomplete(self, field, key):
+    """
+    Use jquery-ui autocompletion for all relation fields by default, requiring
+    only erp5_autocompletion_ui bt5 to be installed
+    """
+    # XXX: Allow to specify more parameters to jquery-ui autocomplete widget?
+    import json
+    return """
+<script type="text/javascript">
+$(document).ready(function() {
+  $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
+                                          search_catalog_key: "%s"})
+  .data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li></li>").data("item.autocomplete", item)
+           .append("<a><b>" +
+                   item.label +
+                   "</b><br><span style='font-size:70%%;'>" +
+                    item.description + "</span></a>" )
+           .appendTo(ul);
+   };
+});
+</script>""" % (key,
+                json.dumps(map(lambda x: x[0], field.get_value('portal_type'))),
+                field.get_value('catalog_index'))
+
   def render_wheel(self, field, value, REQUEST, relation_index=0,
                    sub_index=None, render_prefix=None):
     """
@@ -385,7 +421,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render link to the related object.
     """
     html_string = ''
-    here = self._getContextValue(field, REQUEST)
+    here = REQUEST.get('cell', self._getContextValue(field, REQUEST))
     portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
