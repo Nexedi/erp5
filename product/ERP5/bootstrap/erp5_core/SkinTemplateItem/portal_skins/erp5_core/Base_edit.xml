@@ -117,15 +117,25 @@ def editListBox(listbox_field, listbox):\n
     for url, v in listbox.items():\n
       v.update(gv)\n
       # Form: \'\' -> ERP5: None\n
-      cleaned_v = v.copy()\n
-      for key, value in cleaned_v.items():\n
-        if value == \'\':\n
-          cleaned_v[key] = None\n
+      encapsulated_editor_list = []\n
+      cleaned_v = {}\n
+      for key, value in v.items():\n
+        if hasattr(value, \'edit\'):\n
+          encapsulated_editor_list.append(value)\n
+        else:\n
+          if value == \'\':        \n
+            value = None\n
+          cleaned_v[key] = value\n
+\n
+      obj = context.restrictedTraverse(url)\n
       if cleaned_v:\n
         if listbox_edit is None:\n
-          context.restrictedTraverse(url).edit(edit_order=edit_order, **cleaned_v)\n
+          obj.edit(edit_order=edit_order, **cleaned_v)\n
         else:\n
           listbox_edit(url, edit_order, cleaned_v)\n
+\n
+      for encapsulated_editor in encapsulated_editor_list:\n
+        encapsulated_editor.edit(obj)\n
 \n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
