@@ -1,4 +1,7 @@
 2014-01-27 arnaud.fontaine
+* Allow getting field parameter dict for a ListBox field.
+
+2014-01-27 arnaud.fontaine
 * Likewise a non-ListBox field, call custom edit() if available (eg encapsulated editor). For example, MultiRelationStringField does not return a plain value, but a MultiRelationEditor overriding Base_edit default behavior.
 
 2014-01-27 arnaud.fontaine

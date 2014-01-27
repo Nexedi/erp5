@@ -55,7 +55,8 @@
   based on its id\n
 """\n
 pieces = context.getId().split(\'_\')\n
-if pieces.pop(0) != \'my\':\n
+prefix = pieces.pop(0)\n
+if prefix != \'my\' and prefix != \'listbox\':\n
   return {} # this should not happen\n
 \n
 if pieces[-1] == \'list\':\n
