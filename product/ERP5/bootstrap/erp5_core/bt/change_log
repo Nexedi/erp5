@@ -1,3 +1,6 @@
+2014-01-27 arnaud.fontaine
+* TemplateTool: Move BusinessTemplate ListBox field to hidden group (1c5578f).
+
 2014-01-15 tatuya
 * Add optimised Pricing Method which can be enabled/disabled by the preference.
 
