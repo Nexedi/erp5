@@ -1,3 +1,6 @@
+2014-01-15 tatuya
+* Add Pricing Preference so that we can optimise the Pricing query.
+
 2013-12-12 arnaud.fontaine
 * Get rid of Business Template format version 0 as it's been deprecated for a while.
 

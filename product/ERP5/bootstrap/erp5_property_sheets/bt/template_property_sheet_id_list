@@ -132,6 +132,7 @@ Predicate
 Preference
 Price
 Pricing
+PricingPreference
 ProductDataPreference
 ProductionOrder
 ProductionOrderLine
