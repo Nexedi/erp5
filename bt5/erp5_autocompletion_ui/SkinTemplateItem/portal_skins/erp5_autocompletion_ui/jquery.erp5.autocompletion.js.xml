@@ -41,9 +41,10 @@ $(function() {\n
     // private\n
     function generateSource(params) {\n
         var data = {};\n
-\n
-        if (params.portal_type) data.portal_type = params.portal_type;\n
-        if (params.search_key) data.key = params.search_key;\n
+        if (params.search_portal_type)\n
+          data.search_portal_type = params.search_portal_type;\n
+        if (params.search_catalog_key)\n
+          data.search_catalog_key = params.search_catalog_key;\n
 \n
         return function(request, response) {\n
             $.extend(data, {starts_with: request.term});\n
@@ -61,18 +62,18 @@ $(function() {\n
 \n
     /*\n
      * Wrapper around jQuery.ui.autocomplete that queries catalog\n
-     * to return matching terms. Titles are displayed.\n
+     * to return matching terms. Display title by default.\n
      *\n
      * Parameters:\n
-     *   - search_key: catalog key that should be matched against\n
+     *   - search_catalog_key: catalog key that should be matched against\n
      *     user input. For example, "title" to match titles,\n
      *     your_custom_reference to search for customized reference, etc\n
-     *   - optional portal_type\n
+     *   - optional search_portal_type\n
      *\n
      * Example:\n
      *   $(".your_input").ERP5Autocomplete({\n
-     *     portal_type: "Product",\n
-     *     search_key: "title",\n
+     *     search_portal_type: "Product",\n
+     *     search_catalog_key: "title",\n
      *   });\n
      */\n
     $.fn.ERP5Autocomplete = function(kw) {\n
@@ -80,8 +81,7 @@ $(function() {\n
                                   delay: 600});\n
     };\n
 });\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

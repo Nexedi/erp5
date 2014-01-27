@@ -50,20 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>req = container.REQUEST.get\n
-kw = dict(limit=20)\n
+            <value> <string>kw = dict(limit=20)\n
 \n
-term = req("starts_with")\n
-key = req("key")\n
-if term is not None and key is not None:\n
-  kw[key] = "%s%%" % term\n
+if starts_with is not None and search_catalog_key is not None:\n
+  kw[search_catalog_key] = "%s%%" % starts_with\n
 \n
-portal_type = req("portal_type")\n
-if portal_type is not None:\n
-  kw["portal_type"] = portal_type\n
+if search_portal_type is not None:\n
+  kw["portal_type"] = search_portal_type\n
 \n
-result = [o.title for o in context.portal_catalog(**kw)]\n
-\n
+result = []\n
+for brain in context.portal_catalog(**kw):\n
+  result.append({\'label\': brain.getTitle(),\n
+                 \'value\': brain.getTitle(),\n
+                 \'description\': brain.getRelativeUrl()})\n
 \n
 from json import dumps\n
 return dumps(result, indent=4)\n
@@ -71,7 +70,7 @@ return dumps(result, indent=4)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>starts_with=None, search_catalog_key=None, search_portal_type=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

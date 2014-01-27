@@ -1,4 +1,7 @@
 2014-01-27 arnaud.fontaine
+* Clean up and make parameters names consistent with ERP5.
+
+2014-01-27 arnaud.fontaine
 * Increase delay before searching from 300ms (default) to 600ms, this should be enough...
 
 2014-01-27 arnaud.fontaine
