@@ -31,13 +31,6 @@
   <item>Transformation Simulation Rule</item>
   <item>Transformation Sourcing Simulation Rule</item>
  </portal_type>
- <portal_type id="Supply Chain">
-  <item>Supply Link</item>
-  <item>Supply Node</item>
- </portal_type>
- <portal_type id="Supply Chain Module">
-  <item>Supply Chain</item>
- </portal_type>
  <portal_type id="Transformation Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>

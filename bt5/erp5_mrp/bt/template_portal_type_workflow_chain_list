@@ -33,10 +33,6 @@ Production Report | delivery_causality_workflow
 Production Report | delivery_simulation_interaction_workflow
 Production Report | edit_workflow
 Production Report | production_packing_list_workflow
-Supply Chain | edit_workflow
-Supply Chain | validation_workflow
-Supply Link | edit_workflow
-Supply Node | edit_workflow
 Transformation Simulation Rule | edit_workflow
 Transformation Simulation Rule | rule_validation_workflow
 Transformation Sourcing Simulation Rule | edit_workflow
