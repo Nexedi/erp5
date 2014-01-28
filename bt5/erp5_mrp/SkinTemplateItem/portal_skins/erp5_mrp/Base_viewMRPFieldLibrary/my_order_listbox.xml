@@ -13,15 +13,18 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>all_columns</string>
-                <string>list_method</string>
+                <string>sort</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>report_tree</string>
+                <string>report_root_list</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_production_packing_list_lines_listbox</string> </value>
+            <value> <string>my_order_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -94,11 +97,11 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product</string>
                         </tuple>
                         <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
+                          <string>specialise_title</string>
+                          <string>Transformation</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -145,11 +148,11 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product</string>
                         </tuple>
                         <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
+                          <string>specialise_title</string>
+                          <string>Transformation</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -179,28 +182,84 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_production_order_lines_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Production Order Line</string>
+                          <string>Production Order Line</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>parent_domain</string>
+                          <string>Object Tree</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Resource</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>production_packing_list_line_selection</string> </value>
+                    <value> <string>production_order_line_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -208,26 +267,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Production Packing List Lines</string> </value>
+                    <value> <string>Production Order Lines</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getMovementList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -38,6 +38,16 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -96,11 +106,21 @@
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_total_price</string>
-                        <string>my_production_order_lines_listbox</string>
+                        <string>my_order_listbox</string>
                         <string>my_comment</string>
                         <string>my_description</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_reference</string>
+                        <string>my_causality_title</string>
+                        <string>my_packing_list_listbox</string>
+                        <string>my_translated_causality_state_title</string>
+                        <string>my_int_index</string>
+                        <string>my_price</string>
+                        <string>my_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_resource_title</string>
+                        <string>my_specialise</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -115,7 +135,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
+            <value> <string>Base_viewMRPFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +143,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -135,11 +159,19 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Production Order Field Library</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

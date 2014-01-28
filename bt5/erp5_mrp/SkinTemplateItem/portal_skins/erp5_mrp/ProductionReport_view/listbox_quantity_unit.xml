@@ -11,8 +11,6 @@
             <value>
               <list>
                 <string>items</string>
-                <string>enabled</string>
-                <string>editable</string>
               </list>
             </value>
         </item>
@@ -55,14 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -88,20 +78,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_quantity_unit</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionReportLine_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
