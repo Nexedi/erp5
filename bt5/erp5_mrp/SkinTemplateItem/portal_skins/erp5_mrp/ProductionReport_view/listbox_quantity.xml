@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>enabled</string>
-                <string>editable</string>
               </list>
             </value>
         </item>
@@ -73,10 +72,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -86,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionReportLine_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

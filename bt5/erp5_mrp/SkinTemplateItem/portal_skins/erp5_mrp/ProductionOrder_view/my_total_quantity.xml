@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_total_quantity</string> </value>
         </item>
@@ -69,7 +75,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
