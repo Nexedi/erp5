@@ -9,7 +9,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>selection_name</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -71,15 +74,23 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_production_report_lines_listbox</string> </value>
+                    <value> <string>my_packing_list_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>ProductionReport_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewMRPFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>production_report_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Production Report Lines</string> </value>
                 </item>
               </dictionary>
             </value>

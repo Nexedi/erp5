@@ -94,11 +94,10 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section_title</string>
-                        <string>my_source_title</string>
-                        <string>my_incoterm</string>
-                        <string>my_delivery_mode</string>
+                        <string>my_reference</string>
                         <string>my_causality_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_section_title</string>
                       </list>
                     </value>
                 </item>
@@ -106,14 +105,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
-                        <string>my_destination_section_title</string>
-                        <string>my_destination_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_comment</string>
-                        <string>my_total_quantity</string>
-                        <string>my_total_price</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_translated_causality_state_title</string>
                       </list>
