@@ -36,18 +36,6 @@
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Supply Chain</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Supply Link</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Supply Node</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Transformation Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>

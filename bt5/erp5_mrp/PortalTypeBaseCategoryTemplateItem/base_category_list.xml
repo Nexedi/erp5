@@ -11,7 +11,4 @@
  <portal_type id="Production Report Module">
   <item>business_application</item>
  </portal_type>
- <portal_type id="Supply Chain Module">
-  <item>business_application</item>
- </portal_type>
 </base_category_list>
