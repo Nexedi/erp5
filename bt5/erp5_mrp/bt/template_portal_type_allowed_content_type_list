@@ -10,9 +10,6 @@ Production Report Module | Production Report
 Production Report | Production Report Line
 Rule Tool | Transformation Simulation Rule
 Rule Tool | Transformation Sourcing Simulation Rule
-Supply Chain Module | Supply Chain
-Supply Chain | Supply Link
-Supply Chain | Supply Node
 Transformation Simulation Rule | Category Membership Divergence Tester
 Transformation Simulation Rule | DateTime Divergence Tester
 Transformation Simulation Rule | Float Divergence Tester
