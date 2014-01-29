@@ -30,9 +30,9 @@ import unittest
 from Products.ERP5Type.tests.testFunctionalCore import \
         TestZeleniumCore
 
-# monkey patch SelectionTool._isAnonymous to render as anonymous selection.
+# monkey patch SelectionTool.isAnonymous to render as anonymous selection.
 from Products.ERP5Form.Tool.SelectionTool import SelectionTool
-SelectionTool._isAnonymous = lambda *args, **kw:True
+SelectionTool.isAnonymous = lambda *args, **kw:True
 
 class TestAnonymousSelection(TestZeleniumCore):
     foreground = 0

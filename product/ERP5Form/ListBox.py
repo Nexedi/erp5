@@ -2466,7 +2466,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                              'selection_index=%s' % self.index,
                              'reset:int=1'))
               selection_tool = self.getObject().getPortalObject().portal_selections
-              if selection_tool._isAnonymous():
+              if selection_tool.isAnonymous():
                 params.append('selection_key=%s' % selection.getAnonymousSelectionKey())
             if params:
               url = '%s?%s' % (url, '&amp;'.join(params))

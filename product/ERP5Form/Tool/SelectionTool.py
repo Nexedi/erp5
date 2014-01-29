@@ -291,7 +291,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if not selection_name:
         return None
       selection = self._getSelectionFromContainer(selection_name)
-      if selection is None and self._isAnonymous():
+      if selection is None and self.isAnonymous():
         selection_key = self._getSelectionKeyFromRequest(selection_name, REQUEST)
         if selection_key is not None:
           selection = self.getAnonymousSelection(selection_key, selection_name)
@@ -317,7 +317,7 @@ class SelectionTool( BaseTool, SimpleItem ):
              selection_object.name))
       elif self.getSelectionFor(selection_name, REQUEST=REQUEST) != selection_object:
         self._setSelectionToContainer(selection_name, selection_object)
-      if selection_object is None and self._isAnonymous():
+      if selection_object is None and self.isAnonymous():
         REQUEST = self._getRequest(REQUEST=REQUEST)
         for key in ('%s_selection_key' % selection_name, 'selection_key'):
           try:
@@ -463,7 +463,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         url = selection.getListUrl()
-        if self._isAnonymous() and '?' in url:
+        if self.isAnonymous() and '?' in url:
           url += '&selection_key=%s' % self._getSelectionKeyFromRequest(selection_name, REQUEST)
         return url
       else:
@@ -733,7 +733,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       url += '?selection_index=%s&selection_name=%s' % (selection_index, selection_name)
       if ignore_layout:
         url += '&ignore_layout:int=1'
-      if self._isAnonymous():
+      if self.isAnonymous():
         url += '&selection_key=%s' % self.getAnonymousSelectionKey(selection_name, REQUEST=REQUEST)
       REQUEST.RESPONSE.redirect(url)
 
@@ -1461,7 +1461,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return container.getSelection(key, selection_name)
 
     def getAnonymousSelectionKey(self, selection_name, REQUEST=None):
-      if not self._isAnonymous():
+      if not self.isAnonymous():
         return ''
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is None:
@@ -1514,11 +1514,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       return list(set(self._getContainer().getSelectionNameList(user_id) + \
                       self.getTemporarySelectionDict().keys()))
 
-    def _isAnonymous(self):
+    def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
 
     def _getContainer(self):
-      if self._isAnonymous():
+      if self.isAnonymous():
         tv = getTransactionalVariable()
         storage = tv.setdefault('_transactional_selection_container', {})
         container = TransactionalCacheContainer(storage)
