@@ -59,7 +59,7 @@ search_kw = dict(\n
   section_uid=context.getSourceSectionUid(),\n
   payment_uid=context.getSourcePaymentUid(),\n
   resource_uid=context.getPriceCurrencyUid(),\n
-  node_category_uid=portal.potral_categories.account_type.asset.cash.bank.getUid(),\n
+  node_category_uid=portal.portal_categories.account_type.asset.cash.bank.getUid(),\n
 #  group_by=(\'parent_uid\', ), # The limit is not applied on the number of payment transactions, but on the number of lines (to simplify setting aggregate relation).\n
 \n
   # we have \'aggregate/payment_transaction_module/xxx\' in sub_variation_text if the line is already grouped.\n
