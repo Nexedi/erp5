@@ -385,16 +385,18 @@
                               is_report_opened python: int(not here.getSelection().isReportOpened());\n
                               requested_selection_name here/getRequestedSelectionName;\n
                               url here/getUrl;\n
+                              selection_key here/getSelectionKey;\n
+                              selection_key_param python:selection_key and (\'&amp;selection_key=%s\' % selection_key) or \'\';\n
                               report_depth python: selection.getParams().get(\'report_depth\', request.get(\'report_depth\', 0))">\n
                 <tal:block tal:repeat="i python: range(0, 6)">&nbsp;\n
                   <a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"\n
-                     tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i};\n
+                     tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}${selection_key_param}&amp;report_depth:int=${i};\n
                                      class python: test(i==report_depth, \'selected\', \'\');"\n
                      tal:content="i"/>\n
                 </tal:block>&nbsp;-&nbsp;\n
                 <a \n
                   href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"\n
-                  tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"\n
+                  tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}${selection_key_param}&amp;is_report_opened:int=${is_report_opened}"\n
                   tal:content="python: is_report_opened and \'Show\' or \'Hide\'"\n
                   i18n:domain="ui" i18n:translate="">Show</a>\n
               </th>\n
@@ -479,8 +481,10 @@
                       class="listbox-table-report-tree-selection-cell"                   \n
                       tal:define="section_name python: line.getDomainTitle()">\n
                     <a  tal:condition="section_name"\n
-                        tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\'"\n
-                        tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name};\n
+                        tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\';\n
+                                    selection_key here/getSelectionKey;\n
+                                    selection_key_param python:selection_key and (\'&amp;selection_key=%s\' % selection_key) or \'\'"\n
+                        tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}${selection_key_param};\n
                                         class python:test(line.isOpen(), \'tree-open\', \'tree-closed\');\n
                                         style python:\'white-space: nowrap;; margin-left: %spx\' % (line.getDepth() * 15)"\n
                         tal:content="section_name"/>\n
