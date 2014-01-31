@@ -45,7 +45,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Dependency Handling</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Dependency Handling<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
 </thead><tbody>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n

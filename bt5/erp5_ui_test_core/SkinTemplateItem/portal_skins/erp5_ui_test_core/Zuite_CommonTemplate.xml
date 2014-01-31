@@ -87,8 +87,11 @@
   </tr> \n
 </tal:block>\n
 \n
+<tal:block metal:define-macro="expected_failure_for_anonymous_selection">\n
+  <tal:block tal:condition="here/portal_selections/isAnonymous"> (expected failure)</tal:block>\n
 </tal:block>\n
-
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>

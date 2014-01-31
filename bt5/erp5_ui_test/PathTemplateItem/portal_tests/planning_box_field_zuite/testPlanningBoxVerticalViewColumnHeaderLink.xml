@@ -45,7 +45,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Vertical Column Header Link</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Vertical Column Header Link<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
 </thead><tbody tal:define="year python: DateTime().year()">\n
 <!-- Planning Box is not displayed in mobile skin\n
      So this test is skipped -->\n

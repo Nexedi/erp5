@@ -46,7 +46,7 @@
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Folder Workflow Action Invert Mode\n
-    Selection</td></tr>\n
+    Selection<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n

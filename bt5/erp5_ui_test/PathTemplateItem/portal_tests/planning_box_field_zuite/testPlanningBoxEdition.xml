@@ -45,7 +45,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Data Info</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Data Info<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
 </thead><tbody tal:define="t python:DateTime();\n
                            datestring python:\'%04d/%02d/%02d \' % (t.year(),t.month(), t.day())">\n
 <!-- Planning Box is not displayed in mobile skin\n
