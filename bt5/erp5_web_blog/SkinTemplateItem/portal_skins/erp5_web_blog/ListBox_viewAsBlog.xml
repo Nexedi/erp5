@@ -36,13 +36,26 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<tal:block\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="field_id here/getId;\n
+              selection_name here/getSelectionName;\n
+              real_context here/getContext;\n
+              global is_gadget_mode request/is_gadget_mode | nothing;\n
+              line_list here/query;\n
+              listbox_max_lines  python: int(here.getMaxLineNumber());\n
+              total_line         python: int(here.total_size);\n
+              need_pagination python: total_line > listbox_max_lines;\n
+              page_navigation_template python: request.get(\'page_navigation_template\', here.getPageNavigationTemplate());\n
+              is_slider_mode python:  \'Slider\' in page_navigation_template;\n
+              is_default_listbox_field python: field_id==\'listbox\';\n
+              base_url_string real_context/absolute_url;\n
+              date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;">\n
 <div class="blog_rss"><a href="./WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
 \n
-<tal:block tal:define="real_context here/getContext; \n
-                       base_url_string real_context/absolute_url;\n
-                       date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;" \n
-           tal:repeat="line here/query">\n
-\n
+<tal:block tal:repeat="line line_list">\n
 \n
   <!--Here is a post-->\n
   <div class="blog_post" tal:define="render_result line/render">\n
@@ -86,6 +99,25 @@
   </div><!--End blog_post-->\n
 \n
     <tal:block tal:condition="not: repeat/line/end"><br /><hr class="post_separator" /></tal:block>\n
+\n
+</tal:block>\n
+\n
+<tal:block tal:condition="need_pagination">\n
+  <input type="hidden" \n
+         name="list_selection_name" \n
+         value="default" \n
+         tal:attributes="value selection_name" />\n
+  <input type="hidden" \n
+         name="listbox_uid:list" />\n
+  <input type="hidden" name="selection_name_selection_key" value="md5"\n
+         tal:define="selection_key here/getSelectionKey"\n
+         tal:condition="selection_key"\n
+         tal:attributes="name string:${selection_name}_selection_key;\n
+                         value selection_key" />\n
+  <div class="listbox-footer-box">\n
+    <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_navigation" />\n
+  </div>\n
+</tal:block>\n
 \n
 </tal:block>
 
