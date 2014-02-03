@@ -56,7 +56,7 @@ search_kw = dict(\n
   parent_portal_type=\'Payment Transaction\',\n
   section_uid=context.getSourceSectionUid(),\n
   default_aggregate_uid=context.getUid(),\n
-  node_category_uid=portal.portal_categories.account_type.asset.cash.bank.getUid(),\n
+  node_category=\'account_type/asset/cash/bank\',\n
 )\n
 \n
 return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
