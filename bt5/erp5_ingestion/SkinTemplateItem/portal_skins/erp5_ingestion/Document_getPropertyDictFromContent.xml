@@ -77,7 +77,11 @@ for k, v in information.items():  \n
       if p is not None:\n
         result[\'contributor\'] = p.getRelativeUrl()\n
     elif key == \'keywords\':\n
-      result[\'subject_list\'] = v.split()\n
+      if isinstance(v, (list, tuple)):\n
+        v = [isinstance(x, unicode) and x.encode(\'utf-8\') or x for x in v]\n
+      else:\n
+        v = v.split()\n
+      result[\'subject_list\'] = v\n
 \n
 # Erase titles which are meaningless\n
 title = result.get(\'title\', None)\n
