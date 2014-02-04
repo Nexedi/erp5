@@ -91,7 +91,12 @@ class Amount(Base, VariatedMixin):
       return []
     variation_list = resource.getVariationBaseCategoryList(
         omit_optional_variation=omit_optional_variation)
-    variation_list.append('industrial_phase')
+    # BBB: 'industrial_phase' should be used exclusively for production and
+    #      should not appear on resource. But many unit tests still use it.
+    #      For the same reason, we treat as an optional variation.
+    if ('industrial_phase' not in variation_list
+        and not omit_optional_variation):
+      variation_list.append('industrial_phase')
     if base_category_list:
       variation_list = filter(base_category_list.__contains__, variation_list)
     return self.getAcquiredCategoryMembershipList(variation_list, base=1)
