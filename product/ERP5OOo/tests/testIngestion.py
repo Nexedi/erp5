@@ -304,7 +304,6 @@ class TestIngestion(ERP5TypeTestCase):
     created_documents = []
     extension_to_type = (('ppt', 'Presentation')
                         ,('doc', 'Text')
-                        ,('sdc', 'Spreadsheet')
                         ,('sxc', 'Spreadsheet')
                         ,('pdf', 'PDF')
                         ,('jpg', 'Image')
@@ -679,7 +678,7 @@ class TestIngestion(ERP5TypeTestCase):
       ingest all supported text formats
       make sure they are converted
     """
-    format_list = ['rtf', 'doc', 'txt', 'sxw', 'sdw']
+    format_list = ['rtf', 'doc', 'txt', 'sxw']
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.ingestFormatList(document, format_list)
 
@@ -689,7 +688,7 @@ class TestIngestion(ERP5TypeTestCase):
       ingest all supported spreadsheet formats
       make sure they are converted
     """
-    format_list = ['xls', 'sxc', 'sdc']
+    format_list = ['xls', 'sxc']
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.ingestFormatList(document, format_list)
 
@@ -699,7 +698,7 @@ class TestIngestion(ERP5TypeTestCase):
       ingest all supported presentation formats
       make sure they are converted
     """
-    format_list = ['ppt', 'sxi', 'sdd']
+    format_list = ['ppt', 'sxi']
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.ingestFormatList(document, format_list)
 
@@ -1068,7 +1067,6 @@ class TestIngestion(ERP5TypeTestCase):
             'pdf' : 'PDF',
             'xls' : 'Spreadsheet',
             'ods' : 'Spreadsheet',
-            'sdc' : 'Spreadsheet',
             'ppt' : 'Presentation',
             'odp' : 'Presentation',
             'sxi' : 'Presentation',
