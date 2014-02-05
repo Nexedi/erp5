@@ -651,7 +651,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     kw = dict(title='another title',
-              subject='another subject',
+              subject_list=['another', 'subject'],
               description='another description')
     document.edit(**kw)
     self.tic()
@@ -669,8 +669,8 @@ class TestIngestion(ERP5TypeTestCase):
     xml_tree = etree.fromstring(builder.extract('meta.xml'))
     title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
     self.assertEqual(title, 'another title')
-    subject = xml_tree.find('*/{%s}keyword' % xml_tree.nsmap['meta']).text
-    self.assertEqual(subject, u'another subject')
+    subject = [x.text for x in xml_tree.findall('*/{%s}keyword' % xml_tree.nsmap['meta'])]
+    self.assertEqual(subject, [u'another', u'subject'])
     description = xml_tree.find('*/{%s}description' % xml_tree.nsmap['dc']).text
     self.assertEqual(description, u'another description')
 

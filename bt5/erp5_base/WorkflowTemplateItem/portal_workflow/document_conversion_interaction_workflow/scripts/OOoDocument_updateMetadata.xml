@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
 when OOoDocument is edited, we update metadata in the ODF file\n
 \n
 XXX - This script must be verified, written with clean syntax\n
@@ -70,12 +68,7 @@ if document.hasBaseData():\n
   for field in metadata_field_mapping_dict.keys():\n
     value = kw.get(field, None)\n
     if value is None:\n
-      value_list = kw.get(\'%s_list\' % field, None)\n
-      if value_list is not None:\n
-        if len(value_list)>0:\n
-          value = \' \'.join(map(str, value_list))\n
-        else:\n
-          value = \'\'\n
+      value = kw.get(\'%s_list\' % field, None)\n
     if value is not None:\n
       metadata_key = metadata_field_mapping_dict[field]\n
       new_metadata[metadata_key] = value\n
@@ -83,9 +76,7 @@ if document.hasBaseData():\n
     # edit metadata via server\n
     after_tag = \'document_%s_convert\' % document.getPath()\n
     document.activate(after_tag=after_tag).Document_tryToUpdateBaseMetadata(**new_metadata)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
