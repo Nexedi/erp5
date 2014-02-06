@@ -1,3 +1,6 @@
+2014-02-07 arnaud.fontaine
+* Move away generic JS code from RelationField as it should be reusable anywhere.
+
 2014-02-06 arnaud.fontaine
 * Limit the number of results to 15 instead of 20 as it seems to be enough (taken from an existing customer project).
 

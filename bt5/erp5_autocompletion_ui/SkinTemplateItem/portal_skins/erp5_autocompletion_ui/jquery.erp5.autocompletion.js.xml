@@ -84,9 +84,32 @@ $(function() {\n
      *   });\n
      */\n
     $.fn.ERP5Autocomplete = function(kw) {\n
-        return this.autocomplete({source: generateSource(kw),\n
-                                  delay: 600,\n
-                                  search: search});\n
+      var autocomplete = \n
+        this.autocomplete({source: generateSource(kw),\n
+                           delay: 600,\n
+                           search: search})\n
+        .keyup(function(event) {\n
+           // With Input Method Editor, Enter allows to select between choices\n
+           if(event.keyCode == 13)\n
+             $(this).autocomplete("search");\n
+        });\n
+\n
+      autocomplete = autocomplete.data("autocomplete") ?\n
+                     // jQuery UI <= 1.8\n
+                     autocomplete.data("autocomplete") :\n
+                     // jQuery UI > 1.8\n
+                     autocomplete.data("ui-autocomplete");\n
+\n
+      autocomplete._renderItem = function(ul, item) {\n
+        return $("<li></li>").data("item.autocomplete", item)\n
+          .append("<a><b>" +\n
+                  item.label +\n
+                  \'</b><br><span style="font-size: 70%">\' +\n
+                  item.description + "</span></a>")\n
+          .appendTo(ul);\n
+      };\n
+\n
+      return autocomplete;\n
     };\n
 });\n
 </tal:block>

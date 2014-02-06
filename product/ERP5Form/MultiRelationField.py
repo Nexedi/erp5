@@ -381,29 +381,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     return """
 <script type="text/javascript">
 $(document).ready(function() {
-  var autocomplete = $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
-                                                             search_catalog_key: "%s"})
-    .keyup(function(event) {
-             // With Input Method Editor, Enter allows to select between choices
-             if(event.keyCode == 13) {
-               $(this).autocomplete("search");
-             }
-  });
-
-  autocomplete = autocomplete.data("autocomplete") ?
-                 // jQuery UI <= 1.8
-                 autocomplete.data("autocomplete") :
-                 // jQuery UI > 1.8
-                 autocomplete.data("ui-autocomplete");
-
-  autocomplete._renderItem = function(ul, item) {
-    return $("<li></li>").data("item.autocomplete", item)
-           .append("<a><b>" +
-                   item.label +
-                   "</b><br><span style='font-size:70%%;'>" +
-                    item.description + "</span></a>" )
-           .appendTo(ul);
-   };
+  $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
+                                          search_catalog_key: "%s"});
 });
 </script>""" % (key,
                 json.dumps(map(lambda x: x[0], field.get_value('portal_type'))),
