@@ -382,7 +382,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
 <script type="text/javascript">
 $(document).ready(function() {
   var autocomplete = $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
-                                                             search_catalog_key: "%s"});
+                                                             search_catalog_key: "%s"})
+    .keyup(function(event) {
+             // With Input Method Editor, Enter allows to select between choices
+             if(event.keyCode == 13) {
+               $(this).autocomplete("search");
+             }
+  });
 
   autocomplete = autocomplete.data("autocomplete") ?
                  // jQuery UI <= 1.8

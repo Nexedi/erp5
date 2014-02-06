@@ -1,3 +1,6 @@
+2014-02-06 arnaud.fontaine
+* Support properly Input Method Editor for autocompletion.
+
 2014-01-27 arnaud.fontaine
 * RelationField: Implement autocompletion and use it by default once erp5_autocompletion_ui is installed.
 

@@ -60,6 +60,13 @@ $(function() {\n
         };\n
     }\n
 \n
+    function search(event, ui) {\n
+      // Ignore key input if processing with Input Method Editor\n
+      if(event.keyCode == 229)\n
+        return false;\n
+      return true;\n
+    }      \n
+\n
     /*\n
      * Wrapper around jQuery.ui.autocomplete that queries catalog\n
      * to return matching terms. Display title by default.\n
@@ -78,7 +85,8 @@ $(function() {\n
      */\n
     $.fn.ERP5Autocomplete = function(kw) {\n
         return this.autocomplete({source: generateSource(kw),\n
-                                  delay: 600});\n
+                                  delay: 600,\n
+                                  search: search});\n
     };\n
 });\n
 </tal:block>
