@@ -381,9 +381,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     return """
 <script type="text/javascript">
 $(document).ready(function() {
-  $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
-                                          search_catalog_key: "%s"})
-  .data("ui-autocomplete")._renderItem = function(ul, item) {
+  var autocomplete = $("input[name='%s']").ERP5Autocomplete({search_portal_type: %s,
+                                                             search_catalog_key: "%s"});
+
+  autocomplete = autocomplete.data("autocomplete") ?
+                 // jQuery UI <= 1.8
+                 autocomplete.data("autocomplete") :
+                 // jQuery UI > 1.8
+                 autocomplete.data("ui-autocomplete");
+
+  autocomplete._renderItem = function(ul, item) {
     return $("<li></li>").data("item.autocomplete", item)
            .append("<a><b>" +
                    item.label +
