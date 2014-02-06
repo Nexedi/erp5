@@ -75,6 +75,8 @@
                         <string>my_user_allowed_login</string>
                         <string>my_user_allowed_request_new_account</string>
                         <string>my_user_allowed_request_password_reset</string>
+                        <string>my_credential_password_recovery_message_reference</string>
+                        <string>my_credential_username_recovery_message_reference</string>
                       </list>
                     </value>
                 </item>
