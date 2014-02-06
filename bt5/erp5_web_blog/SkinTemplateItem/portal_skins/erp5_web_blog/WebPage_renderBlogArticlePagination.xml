@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="pagination here/WebPage_getBlogArticlePagination;\n
+              prev python:pagination[0];\n
+              next python:pagination[1];\n
+              web_section_url python:here.getWebSectionValue().absolute_url();">\n
+  <div class="blog-previous-article">\n
+    <a href="prev_url" tal:condition="python:prev is not None" tal:content="prev/title | prev/reference" tal:attributes="href python:\'%s/%s\' % (web_section_url, prev.reference)" />\n
+  </div>\n
+  <div class="blog-next-article">\n
+    <a href="next_url" tal:condition="python:next is not None" tal:content="next/title | next/reference" tal:attributes="href python:\'%s/%s\' % (web_section_url, next.reference)" />\n
+  </div>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebPage_renderBlogArticlePagination</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

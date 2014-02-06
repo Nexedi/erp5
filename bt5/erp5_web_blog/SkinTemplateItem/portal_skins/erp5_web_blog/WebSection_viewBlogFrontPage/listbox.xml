@@ -60,6 +60,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -68,7 +80,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -151,6 +183,10 @@
                           <string>creation_date</string>
                           <string>descending</string>
                         </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>reference</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -176,7 +212,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getDocumentValueList</string> </value>
+            <value> <string>WebSection_getCachedDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1272,6 +1272,24 @@ button.formbt > span{\n
   max-width: 720px;\n
 }\n
 \n
+/* blog */\n
+.blog-previous-article {\n
+  width:45%;\n
+  float:left;\n
+  text-align:left;\n
+}\n
+.blog-previous-article:before {\n
+  content:"<"\n
+}\n
+\n
+.blog-next-article {\n
+  width:45%;\n
+  float:right;\n
+  text-align:right;\n
+}\n
+.blog-next-article:after {\n
+  content:">"\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>
