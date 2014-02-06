@@ -1,4 +1,7 @@
 2014-02-06 arnaud.fontaine
+* Limit the number of results to 15 instead of 20 as it seems to be enough (taken from an existing customer project).
+
+2014-02-06 arnaud.fontaine
 * Support properly Input Method Editor for autocompletion.
 
 2014-01-27 arnaud.fontaine
