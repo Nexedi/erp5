@@ -631,12 +631,14 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue(doc.hasData())
 
   def test_Owner_Base_download(self):
-    # tests that owners can download OOo documents, and all headers (including
-    # filenames) are set correctly
+    # tests that owners can download original documents and OOo
+    # documents, and all headers (including filenames) are set
+    # correctly
     doc = self.portal.document_module.newContent(
                                   filename='test.ods',
                                   portal_type='Spreadsheet')
-    doc.edit(file=makeFileUpload('import_data_list.ods'))
+    doc.edit(file=makeFileUpload('TEST-en-002.doc'))
+    self.tic()
 
     uf = self.portal.acl_users
     uf._doAddUser('member_user1', 'secret', ['Member', 'Owner'], [])
@@ -645,13 +647,18 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s/Base_download' % doc.getPath(),
                             basic='member_user1:secret')
-    self.assertEqual(makeFileUpload('import_data_list.ods').read(),
+    self.assertEqual(makeFileUpload('TEST-en-002.doc').read(),
                       response.getBody())
-    self.assertEqual('application/vnd.oasis.opendocument.spreadsheet',
+    self.assertEqual('application/msword',
                       response.headers['content-type'])
-    self.assertEqual('attachment; filename="import_data_list.ods"',
+    self.assertEqual('attachment; filename="TEST-en-002.doc"',
                       response.headers['content-disposition'])
-    self.tic()
+    response = self.publish('%s/OOoDocument_getOOoFile' % doc.getPath(),
+                            basic='member_user1:secret')
+    self.assertEqual('application/vnd.oasis.opendocument.text',
+                      response.headers['content-type'])
+    self.assertEqual('attachment; filename="TEST-en-002.odt"',
+                      response.headers['content-disposition'])
 
   def test_Member_download_pdf_format(self):
     # tests that members can download OOo documents in pdf format (at least in

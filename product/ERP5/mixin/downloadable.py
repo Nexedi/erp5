@@ -85,7 +85,7 @@ class DownloadableMixin:
                       'format')
     mime, data = self.convert(format, **kw)
     output_format = None
-    if not format:
+    if not format or format == 'base-data':
       # Guess the format from original mimetype
       if mime:
         mimetypes_registry = getToolByName(self.getPortalObject(),
@@ -98,7 +98,7 @@ class DownloadableMixin:
           elif mimetype_object.globs:
             output_format = mimetype_object.globs.strip('*.')
             break
-    else:
+    if output_format is None:
       output_format = format
 
     RESPONSE.setHeader('Content-Length', len(data))
@@ -111,7 +111,10 @@ class DownloadableMixin:
       inline = output_format in (VALID_TEXT_FORMAT_LIST + VALID_IMAGE_FORMAT_LIST)
     if not inline:
       # need to return it as attachment
-      filename = self.getStandardFilename(format=format)
+      if format == 'base-data':
+        filename = self.getStandardFilename(format=output_format)
+      else:
+        filename = self.getStandardFilename(format=format)
       RESPONSE.setHeader('Cache-Control', 'Private') # workaround for Internet Explorer's bug
       # workaround for IE's bug to download files over SSL
       RESPONSE.setHeader('Pragma', '')
