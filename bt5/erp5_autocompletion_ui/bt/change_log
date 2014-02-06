@@ -1,4 +1,7 @@
 2014-02-07 arnaud.fontaine
+* Allow customisation of object property being showed with autocompletion.
+
+2014-02-07 arnaud.fontaine
 * Move away generic JS code from RelationField as it should be reusable anywhere.
 
 2014-02-06 arnaud.fontaine
