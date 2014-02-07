@@ -1,4 +1,7 @@
 2014-02-07 arnaud.fontaine
+* Autocompletion property value set to the field should be the one queried from the Catalog.
+
+2014-02-07 arnaud.fontaine
 * Consider that description may not be needed, thus only one line, the label, is displayed.
 
 2014-02-07 arnaud.fontaine
