@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="update_path python: container.ERP5Site_getCompletionList.absolute_url()">\n
+<tal:block tal:define="update_path python: container.ERP5Site_getCompletionDictList.absolute_url()">\n
 $(function() {\n
     // private\n
     function generateSource(params) {\n

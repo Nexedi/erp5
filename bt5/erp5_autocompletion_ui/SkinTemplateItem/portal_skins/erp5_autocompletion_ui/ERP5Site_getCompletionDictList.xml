@@ -79,7 +79,7 @@ return dumps(result_dict_list, indent=4)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getCompletionList</string> </value>
+            <value> <string>ERP5Site_getCompletionDictList</string> </value>
         </item>
       </dictionary>
     </pickle>

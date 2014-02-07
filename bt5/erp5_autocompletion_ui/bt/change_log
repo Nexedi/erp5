@@ -1,4 +1,7 @@
 2014-02-07 arnaud.fontaine
+* Rename ERP5Site_getCompletionList for naming consistency sake.
+
+2014-02-07 arnaud.fontaine
 * Allow customisation of object property being showed with autocompletion.
 
 2014-02-07 arnaud.fontaine
