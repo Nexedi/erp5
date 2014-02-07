@@ -47,6 +47,9 @@ $(function() {\n
           data.search_catalog_key = params.search_catalog_key;\n
 \n
         return function(request, response) {\n
+            if(params.transformSearchTextFunction)\n
+              request.term = params.transformSearchTextFunction(request.term);\n
+\n
             $.extend(data, {starts_with: request.term});\n
             $.ajax({\n
                 url: "<tal:block tal:replace="update_path" />",\n
