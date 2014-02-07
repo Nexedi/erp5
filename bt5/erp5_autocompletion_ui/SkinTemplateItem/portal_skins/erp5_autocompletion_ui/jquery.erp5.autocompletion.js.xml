@@ -101,11 +101,14 @@ $(function() {\n
                      autocomplete.data("ui-autocomplete");\n
 \n
       autocomplete._renderItem = function(ul, item) {\n
+        item_html = "<a><b>" + item.label + "</b>";\n
+        if(item.description)\n
+          item_html += \'<br><span style="font-size: 70%">\' +\n
+                        item.description + "</span>";\n
+\n
+        item_html += "</a>";\n
         return $("<li></li>").data("item.autocomplete", item)\n
-          .append("<a><b>" +\n
-                  item.label +\n
-                  \'</b><br><span style="font-size: 70%">\' +\n
-                  item.description + "</span></a>")\n
+          .append(item_html)\n
           .appendTo(ul);\n
       };\n
 \n
