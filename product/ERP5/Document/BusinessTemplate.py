@@ -1473,29 +1473,26 @@ class PathTemplateItem(ObjectTemplateItem):
     update_dict = defaultdict(list)
     for path in self._objects:
       obj = p.unrestrictedTraverse(path, None)
-
+      # Ignore any object without PortalType (non-ERP5 objects)
       try:
         portal_type = aq_base(obj).getPortalType()
       except Exception, e:
-        LOG("BusinessTemplate", WARNING,
-            "Could not update Local Roles as Portal Type for '%s' (obj: %s)"
-            " is not available" % (path, obj), error=True)
+        pass
+      else:
+        if portal_type not in p.portal_types:
+          LOG("BusinessTemplate", WARNING,
+              "Could not update Local Roles as Portal Type '%s' could not "
+              "be found" % portal_type)
 
-        continue
+          continue
 
-      if portal_type not in p.portal_types:
-        LOG("BusinessTemplate", WARNING,
-            "Could not update Local Roles as Portal Type '%s' could not "
-            "be found" % portal_type)
+        if portal_type not in portal_type_role_list_len_dict:
+          portal_type_role_list_len_dict[portal_type] = \
+              len(p.portal_types[portal_type].getRoleInformationList())
 
-        continue
+        if portal_type_role_list_len_dict[portal_type]:
+          update_dict[portal_type].append(obj)
 
-      if portal_type not in portal_type_role_list_len_dict:
-        portal_type_role_list_len_dict[portal_type] = \
-            len(p.portal_types[portal_type].getRoleInformationList())
-
-      if portal_type_role_list_len_dict[portal_type]:
-        update_dict[portal_type].append(obj)
     if update_dict:
       def updateLocalRolesOnDocument():
         for portal_type, obj_list in update_dict.iteritems():
