@@ -27,7 +27,6 @@ Category Property
 Category Related Membership Arity Constraint
 Category Related Membership State Constraint
 Category Tool
-Class Tool
 Component Tool
 Conceptual Id Generator
 Content Existence Constraint
@@ -37,11 +36,9 @@ Delivery Tool
 Distributed Ram Cache
 Document
 Document Component
-Documentation Helper
 Domain
 Domain Generator
 Domain Tool
-Dummy Class Tool
 Dynamic Category Property
 Event
 Extension Component

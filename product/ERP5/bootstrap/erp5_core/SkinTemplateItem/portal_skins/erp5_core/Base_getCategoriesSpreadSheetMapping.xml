@@ -91,10 +91,8 @@ def default_invalid_spreadsheet_error_handler(error_message):\n
 if invalid_spreadsheet_error_handler is None:\n
   invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler\n
 \n
-# FIXME: we are actually only interested in properties defined on Category\n
-# type information.\n
-property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
-\n
+property_id_set = context.portal_types.Category.getInstancePropertySet()\n
+property_id_set.update(getattr(context.portal_types, \'Base Category\').getInstancePropertySet())\n
 \n
 def getIDFromString(string=None):\n
   """\n
@@ -288,7 +286,7 @@ for table_name in spreadsheet_list.keys():\n
               category_property_list[\'title\'] = clean_title\n
 \n
           # Detect invalid IDs\n
-          if path_element_id in property_id_list:\n
+          if path_element_id in property_id_set:\n
             cont = invalid_spreadsheet_error_handler(\n
                       translateString("The ID ${id} in ${table} at line ${line} is invalid, it\'s a reserved property name",\n
                         mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n

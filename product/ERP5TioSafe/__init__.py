@@ -83,7 +83,3 @@ for handler_id, module_id in handler_module_dict.iteritems():
           'Unable to register module %r. error is %r.' % \
           (module_id, msg),
           error=sys.exc_info())
-      
-
-# Initialise patches
-# from Products.ERP5TioSafe.patches import ClassTool

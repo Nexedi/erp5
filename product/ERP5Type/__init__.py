@@ -82,24 +82,16 @@ import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available
 
-# ClassTool will not be available unless a special file is created with
-# read permissions for zope - this prevents security holes in 
-# production environment  
-class_tool_security_path = '%s%s%s' % (product_path, os.sep, 'ALLOW_CLASS_TOOL')
-
 # allow our workflow definitions to be registered
 import Products.ERP5Type.Workflow
 
-def allowClassTool():
-  return os.access(class_tool_security_path, os.F_OK)
-
 def initialize( context ):
   # Import Product Components
-  from Tool import (ClassTool, CacheTool, MemcachedTool, SessionTool,
+  from Tool import (CacheTool, MemcachedTool, SessionTool,
                     TypesTool, WebServiceTool, PropertySheetTool,
                     ComponentTool)
   import Document
-  from Base import Base, DocumentationHelper
+  from Base import Base
   import XMLObject
   from ERP5Type import ERP5TypeInformation
   import CodingStyle
@@ -107,11 +99,9 @@ def initialize( context ):
   object_classes = ()
   content_constructors = ()
   content_classes = ( Base,
-                      DocumentationHelper,
                       XMLObject.XMLObject,
                       ERP5TypeInformation )
-  portal_tools = ( ClassTool.ClassTool,
-                   CacheTool.CacheTool,
+  portal_tools = ( CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
                    SessionTool.SessionTool,
                    TypesTool.TypesTool,

@@ -864,6 +864,31 @@ class TestOOoImport(TestOOoImportMixin):
                            title='codification'),
                       region[6])
 
+    # Check that category cannot have a Base Category nor Category property
+    # id/storage_id as their ID
+    message_set = set()
+    def on_invalid_spreadsheet(message):
+      message_set.add(message.translate())
+      # To continue processing and get all the errors
+      return True
+
+    self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+      import_file=makeFileUpload('import_category_with_reserved_id_in_id.sxc'),
+      invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
+
+    self.assertEquals(
+      message_set,
+      set(["The ID source_title in region at line 2 is invalid, "
+           "it's a reserved property name",
+           "The ID source_title in region at line 4 is invalid, "
+           "it's a reserved property name",
+           "The ID fallback_base_category_list in region at line 5 is invalid, "
+           "it's a reserved property name",
+           "The ID fallback_base_category_list in region at line 6 is invalid, "
+           "it's a reserved property name",
+           "The ID default_source_reference in region at line 7 is invalid, "
+           "it's a reserved property name"]))
+
   def test_BigSpreadSheet_can_be_parsed(self,):
     """Test than OOoimport can parse a file with more than 40000 lines
     """

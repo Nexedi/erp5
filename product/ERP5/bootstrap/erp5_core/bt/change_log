@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* ZODB Components: Remove ClassTool and DocumentationHelper relying on it.
+
 2014-01-27 arnaud.fontaine
 * Allow getting field parameter dict for a ListBox field.
 

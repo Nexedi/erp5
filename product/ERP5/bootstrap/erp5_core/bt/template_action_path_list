@@ -58,8 +58,6 @@ Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
 Category | view
-Class Tool | run_live_test
-Class Tool | view
 Component Tool | run_live_test
 Component Tool | view
 Conceptual Id Generator | view

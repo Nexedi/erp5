@@ -29,7 +29,6 @@ from Products.CMFDefault.Portal import CMFSite
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
-from Products.ERP5Type import allowClassTool
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
@@ -1881,12 +1880,6 @@ class ERP5Generator(PortalGenerator):
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
-
-    # Add ERP5Type Tools
-    if allowClassTool():
-      addERP5Tool(p, 'portal_classes', 'Class Tool')
-    else:
-      addERP5Tool(p, 'portal_classes', 'Dummy Class Tool')
 
     # Add ERP5 SQL Catalog Tool
     addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool

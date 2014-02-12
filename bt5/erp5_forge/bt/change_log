@@ -1,4 +1,7 @@
 2014-02-19 Arnaud Fontaine
+* ZODB Components: Remove ClassTool and DocumentationHelper relying on it.
+
+2014-02-19 Arnaud Fontaine
 * Migrate Glossary Extension to ZODB Property Sheets and Portal Types as classes.
 
 2013-09-03 arnaud.fontaine

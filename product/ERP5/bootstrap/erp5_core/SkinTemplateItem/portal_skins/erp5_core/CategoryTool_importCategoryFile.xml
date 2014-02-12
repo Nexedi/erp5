@@ -62,8 +62,8 @@ base_category_id_list = []\n
 category_path_dict = {}\n
 simulation_new_category_id_list = []\n
 \n
-property_id_list = portal.portal_classes.getPropertySheetPropertyIdList()\n
-category_property_id_list = None\n
+base_category_property_id_set = getattr(context.portal_types, \'Base Category\').getInstancePropertySet()\n
+category_property_id_set = context.portal_types.Category.getInstancePropertySet()\n
 \n
 getRelatedValueList = portal.portal_categories.getRelatedValueList\n
 def Object_hasRelation(obj):\n
@@ -82,8 +82,11 @@ def Object_hasRelation(obj):\n
   return result\n
 \n
 \n
-def isValidID(id):\n
-  return id not in property_id_list\n
+def isValidID(id, is_base_category):\n
+  if is_base_category:\n
+    return id not in base_category_property_id_set\n
+  else:\n
+    return id not in category_property_id_set\n
 \n
 # Some statistics\n
 new_category_counter = 0\n
@@ -144,7 +147,7 @@ for base_category, category_list in \\\n
             category_type = \'Base Category\'\n
           else:\n
             category_type = \'Category\'\n
-          if isValidID(category_id):\n
+          if isValidID(category_id, is_base_category):\n
             if simulation_mode:\n
               simulation_new_category_id_list.append({\'category\':category_id,\'path\':parent_path})\n
               if \'created\' in displayed_report:\n

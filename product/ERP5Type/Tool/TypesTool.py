@@ -128,7 +128,6 @@ class TypesTool(TypeProvider):
       'Business Template',
       'Standard Property',
       'Acquired Property',
-      'Dummy Class Tool',
       # the following ones are required to upgrade an existing site
       'Category Property',
     ))

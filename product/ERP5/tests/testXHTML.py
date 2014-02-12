@@ -348,7 +348,6 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_advanced_invoicing',
 
       'erp5_odt_style',
-      'erp5_documentation',
 
       'erp5_administration',
 

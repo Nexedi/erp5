@@ -170,8 +170,6 @@ if 1:
     except AttributeError:
       log.warn("no portal type was found for %r (class %s)", self, klass)
       return Base__setstate__(self, value)
-    if portal_type == 'Dummy Class Tool':
-      return Base__setstate__(self, value)
     # proceed with migration
     try:
       self._fixPortalTypeBeforeMigration(portal_type)

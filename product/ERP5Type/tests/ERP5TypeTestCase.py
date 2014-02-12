@@ -353,9 +353,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def getRuleTool(self):
       return getattr(self.getPortal(), 'portal_rules', None)
 
-    def getClassTool(self):
-      return getattr(self.getPortal(), 'portal_classes', None)
-
     def getSimulationTool(self):
       return getToolByName(self.getPortal(), 'portal_simulation', None)
 

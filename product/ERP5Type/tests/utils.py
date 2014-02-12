@@ -221,27 +221,6 @@ def createZODBFile(container, file_id, file_content_type, file_content):
   container.portal_url.getPortalObject().changeSkin(None)
   return zodb_file
 
-# class tool
-def installRealClassTool(portal):
-  """Replaces portal_classes by a real class tool object.
-  """
-  Products.ERP5Type.allowClassTool = lambda: 1
-  _recreateClassTool(portal)
-
-def installDummyClassTool(portal):
-  """Replaces portal_classes by a dummy class tool object.
-  """
-  Products.ERP5Type.allowClassTool = lambda: 0
-  _recreateClassTool(portal)
-
-def _recreateClassTool(portal):
-  """Recreate the class tool for this portal.
-  """
-  from Products.ERP5Type.Tool import ClassTool
-  reload(ClassTool)
-  portal.manage_delObjects(['portal_classes'])
-  portal._setObject('portal_classes', ClassTool.ClassTool())
-
 # memcache tool
 def installRealMemcachedTool(portal):
   """Replaces portal_memcached by a real memcached tool object.

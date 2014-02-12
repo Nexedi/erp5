@@ -176,7 +176,6 @@ class ComponentTool(BaseTool):
       transaction.get().addBeforeCommitHook(self.reset,
                                             args=(True, True))
 
-  # XXX-arnau: copy/paste from ClassTool
   __test_text_content_template = '''\
 ##############################################################################
 #
@@ -255,8 +254,6 @@ class Test(ERP5TypeTestCase):
 
     return super(ComponentTool, self).newContent(*args, **kwargs)
 
-  # XXX-arnau: copy/paste from ClassTool which portal_components is supposed
-  # to replace at some point
   security.declarePrivate('_getCommaSeparatedParameterList')
   def _getCommaSeparatedParameterList(self, parameter_list):
     # clean parameter_list and split it by commas if necessary

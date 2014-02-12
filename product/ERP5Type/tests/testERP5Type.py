@@ -40,7 +40,6 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.tests.utils import installRealClassTool
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
@@ -57,11 +56,6 @@ class PropertySheetTestCase(ERP5TypeTestCase):
 
   TODO : only property sheets are supported at this time.
   """
-  def setUp(self):
-    """Set up the fixture. """
-    super(PropertySheetTestCase,self).setUp()
-    installRealClassTool(self.getPortal())
-
   def beforeTearDown(self):
     """Clean up """
     ttool = self.getTypesTool()

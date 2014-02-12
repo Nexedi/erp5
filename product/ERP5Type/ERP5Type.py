@@ -512,6 +512,26 @@ class ERP5TypeInformation(XMLObject,
       return list(self._getPropertyHolder()._categories)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstancePropertySet')
+    def getInstancePropertySet(self):
+      """
+      Return all the properties of the Portal Type
+      """
+      cls = self.getPortalObject().portal_types.getPortalTypeClass(self.getId())
+      return_set = set()
+      for property_dict in cls.getAccessorHolderPropertyList(content=True):
+        if property_dict['type'] == 'content':
+          for suffix in property_dict['acquired_property_id']:
+            return_set.add(property_dict['id'] + '_' + suffix)
+        else:
+          return_set.add(property_dict['id'])
+
+        if property_dict['storage_id']:
+          return_set.add(property_dict['storage_id'])
+
+      return return_set
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstancePropertyAndBaseCategorySet')
     def getInstancePropertyAndBaseCategorySet(self):
       """Return all the properties and base categories of the portal type. """
@@ -520,13 +540,7 @@ class ERP5TypeInformation(XMLObject,
       #      (e.g. temporary property sheets).
       #      See also AcquiredProperty._asPropertyMap
       cls = self.getPortalObject().portal_types.getPortalTypeClass(self.getId())
-      return_set = set()
-      for property in cls.getAccessorHolderPropertyList(content=True):
-        if property['type'] == 'content':
-          for suffix in property['acquired_property_id']:
-            return_set.add(property['id'] + '_' + suffix)
-        else:
-          return_set.add(property['id'])
+      return_set = self.getInstancePropertySet()
       for category in cls._categories:
         return_set.add(category)
         return_set.add(category + '_free_text')
