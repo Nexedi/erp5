@@ -99,6 +99,7 @@ def fork():
   pid = os.fork()
   if pid:
     # recreate event pipes that already exist
+    # BBB: This is useless on Zope 2.13+ since ZEO now imports cleanly.
     for obj in socket_map.values():
       obj.close()
       if obj is ZEvent.the_trigger:
