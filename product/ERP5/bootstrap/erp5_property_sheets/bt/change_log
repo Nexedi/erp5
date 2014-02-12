@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* Move Constraint Property Sheets and Views to their proper bt5s.
+
 2014-01-15 tatuya
 * Add Pricing Preference so that we can optimise the Pricing query.
 

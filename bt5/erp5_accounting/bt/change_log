@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* Move Constraint Property Sheets and Views to their proper bt5s.
+
 2013-09-09 Gabriel Monnerat
 * Refactor ERP5Site_getAccountItemList and AccountingTransactionLine_getProjectItemList to not search for Movements becauses it generate slow queries
 

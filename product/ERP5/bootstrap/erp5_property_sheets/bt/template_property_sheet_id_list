@@ -5,8 +5,6 @@ StringAttributeMatchConstraint
 AttributeUnicityConstraint
 AccountingPreference
 AccountingRuleCellLine
-AccountingTransactionBalanceConstraint
-AccountingTransactionConstraint
 AccountingTransactionLineConstraint
 AcquiredProperty
 ActionInformation
@@ -32,7 +30,6 @@ BaseCategory
 BaseType
 Budget
 BudgetConstraint
-BudgetTransactionConstraint
 BudgetVariation
 Bug
 BugConstraint
@@ -144,8 +141,6 @@ QuantityUnitConversionDefinition
 Reference
 ReportPreference
 Resource
-ResourceConstraint
-ResourceMeasuresConsistencyConstraint
 RoleDefinition
 RoleInformation
 RoundingModel
@@ -177,8 +172,6 @@ Ticket
 TradeCondition
 TradeConditionConstraint
 TradeModelLine
-TradeModelLineCellConsistencyConstraint
-TradeModelLineConstraint
 TradeModelPath
 TradeOrder
 TradeOrderLine

@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* Move Constraint Property Sheets and Views to their proper bt5s.
+
 2011-11-22 yusei
 * Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
 
