@@ -3,34 +3,35 @@ def setPortalTypeDescription(self, portal_type, description):
     'description', description)
 
 def getPropertySheetList(self, portal_type):
-  from Products.ERP5Type.DocumentationHelper.PortalTypeDocumentationHelper \
-       import PortalTypeDocumentationHelper
-  portal = self.getPortalObject()
-  portal_type_uri = '%s/portal_types/%s' % (portal.getUrl(),
-                                            portal_type)
-  return PortalTypeDocumentationHelper(portal_type_uri).__of__(
-    portal).getPropertySheetList()
+  import erp5.portal_type
 
+  return (getattr(self.getPortalObject().portal_types, portal_type).getTypePropertySheetList() +
+          list(getattr(erp5.portal_type, portal_type).property_sheets))
 
 def getPropertySheetAttributeList(self, name):
-  from Products.ERP5Type import PropertySheet
-  class_ = PropertySheet.__dict__.get(name, None)
-  result = []
-  for i in getattr(class_, '_properties', ()):
-    if 'acquired_property_id' in i:
-      continue
-    # we want to get only normal property.
-    result.append((i['id'], i.get('description', '')))
-  for i in getattr(class_, '_categories', ()):
-    try:
-      result.append((i, self.getPortalObject().portal_categories[i].getDescription()))
-    except KeyError:
-      result.append((i, ''))
-    except TypeError:
-      # if category is Expression(...), TypeError raises
-      pass
-  return result
+  portal = self.getPortalObject()
+  try:
+    property_sheet_obj = portal.portal_property_sheets[name]
+  except KeyError:
+    return []
 
+  result = []
+  # We don't want Acquired Property nor Category TALES Expression  
+  for property_obj in property_sheet_obj.contentValues(portal_type=('Category Property',
+                                                                    'Standard Property')):
+    reference = property_obj.getReference('')
+    description = ''
+    if property_obj.getPortalType() == 'Category Property':
+      try:
+        description = portal.portal_categories[reference].getDescription('')
+      except KeyError:
+        pass
+    else:
+      description = property_obj.getDescription('')
+
+    result.append((reference, description))
+
+  return result
 
 def getActionTitleListFromAllActionProvider(portal):
   result = []

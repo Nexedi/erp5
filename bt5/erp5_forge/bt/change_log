@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* Migrate Glossary Extension to ZODB Property Sheets and Portal Types as classes.
+
 2013-09-03 arnaud.fontaine
 * ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
 
