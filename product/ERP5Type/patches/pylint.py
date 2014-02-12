@@ -31,6 +31,15 @@ else:
             return importnode.do_import_module(modname)
         except astroid.InferenceError, ex:
             # BEGIN
+
+            # XXX-arnau: Ignore ERP5 dynamic modules, hackish but required
+            # until proper introspection is implemented because otherwise it
+            # is impossible to validate Components importing other Components
+            # and as it is static analysis, the module should not be loaded
+            # anyway
+            if modname.startswith('erp5'):
+                return
+
             # Handle ImportError try/except checking for missing module before
             # falling back to code handling such case (#9386)
             pnode = importnode.parent
