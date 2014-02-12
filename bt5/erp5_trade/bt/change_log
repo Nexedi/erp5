@@ -1,4 +1,7 @@
 2014-02-19 Arnaud Fontaine
+* Portal Types of ZODB Property Sheets Constraint should be in 'constraint' 'group'.
+
+2014-02-19 Arnaud Fontaine
 * Move Constraint Property Sheets and Views to their proper bt5s.
 
 2014-01-15 tatuya
