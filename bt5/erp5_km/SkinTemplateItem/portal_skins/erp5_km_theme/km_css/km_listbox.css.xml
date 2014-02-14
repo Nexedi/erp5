@@ -203,6 +203,10 @@ table.listbox tr.listbox-search-line{\n
 table.listbox tr.listbox-search-line th{\n
   padding:4px;\n
 }\n
+table.listbox tr.listbox-stat-line{\n
+  background-color:#F0EFE9;\n
+  border:none;\n
+}\n
 \n
 /* Listbox table itself */\n
 table.listbox {\n
