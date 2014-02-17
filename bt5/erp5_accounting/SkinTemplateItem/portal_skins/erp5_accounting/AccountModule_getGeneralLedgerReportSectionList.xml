@@ -357,7 +357,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
-  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
+  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -391,7 +391,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
-  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
+  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -422,7 +422,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
-  selection_params[\'payment_uid\'] = inventory.payment_uid\n
+  selection_params[\'payment_uid\'] = inventory.payment_uid or Query(payment_uid=None)\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
@@ -455,7 +455,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
-  selection_params[\'payment_uid\'] = inventory.payment_uid\n
+  selection_params[\'payment_uid\'] = inventory.payment_uid or Query(payment_uid=None)\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
