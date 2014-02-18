@@ -2,10 +2,14 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -21,6 +25,18 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
                                 <key> <string>name_subpath</string> </key>
                                 <value> <string>traverse_subpath</string> </value>
                             </item>
@@ -33,51 +49,33 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
 
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
-             tal:define="dummy here/setupCurrentSkin;" />\n
-  <tal:block tal:define="response request/RESPONSE;\n
-             mtool here/portal_membership;\n
-             isAnon mtool/isAnonymousUser|nothing;">\n
-    <tal:block tal:condition="isAnon">\n
-      <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
-                 url python: \'%s/login_form?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'Login and/or password is incorrect.\'));\n
-                 url python: request.get(\'came_from\') and  \'%s&amp;came_from=%s\' % (url, request[\'came_from\']) or url;\n
-                 dummy python: response.redirect(url);" />\n
-    </tal:block>\n
-    <tal:block tal:condition="not: isAnon">\n
-      <tal:block tal:define="came_from python: request.get(\'came_from\') or here.absolute_url();\n
-                 dummy python: response.redirect(came_from);" />\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>
+portal = context.getPortalObject()\n
+if portal.portal_skins.updateSkinCookie():\n
+  portal.setupCurrentSkin()\n
+url = REQUEST.get("came_from")\n
+if portal.portal_membership.isAnonymousUser():\n
+  RESPONSE.expireCookie("__ac", path="/")\n
+  url = "%s/login_form?portal_status_message=%s" % (\n
+    context.absolute_url(),\n
+    context.Base_translateString("Login and/or password is incorrect.")\n
+    + ("&amp;came_from=" + url if url else ""))\n
+elif not url:\n
+  url = context.absolute_url()\n
+return RESPONSE.redirect(url)\n
 
-]]></unicode> </value>
+
+]]></string> </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>expand</string> </key>
-            <value> <int>0</int> </value>
+            <key> <string>_params</string> </key>
+            <value> <string>REQUEST, RESPONSE</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>logged_in</string> </value>
-        </item>
-        <item>
-            <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
