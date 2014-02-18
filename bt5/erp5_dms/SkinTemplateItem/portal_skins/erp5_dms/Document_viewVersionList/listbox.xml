@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
-                <string>search</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -83,10 +83,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -107,6 +103,21 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -140,8 +151,8 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state</string>
-                          <string>State</string>
+                          <string>translated_validation_state_title</string>
+                          <string>Publication State</string>
                         </tuple>
                       </list>
                     </value>
@@ -174,10 +185,6 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
