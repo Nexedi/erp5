@@ -52,9 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
 portal_type (None, string)\n
-  Used to determine "use" category to start recursing from, using preference\n
-  settings for this portal type.\n
+  Ignored if use_relative_url is not None.\n
+  Used to determine use_relative_url, using preference settings for given\n
+  portal type.\n
   When None, context\'s portal_type is used.\n
+include_context (bool)\n
+  Add context\'s category to return value if not already present.\n
 empty_item (bool)\n
   Controls presence of [\'\', \'\'] element in result.\n
 indent_category (bool)\n
@@ -72,6 +75,8 @@ empty_category (bool)\n
   in result.\n
   When false, categories with no resource children (at any depth) are pruned\n
   from result.\n
+use_relative_url (None, string)\n
+  The "use"-category-relative path of category to start recursing from.\n
 \n
 When indent_category, indent_resource and compact are simultaneously not\n
 provided (or None), a default is built from\n
@@ -87,9 +92,10 @@ getPreferredCategoryChildItemListMethodId.\n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
-category_id = portal_preferences.getPreference(\n
-  \'preferred_\' + (portal_type or context.getPortalType()).lower().replace(\' \', \'_\') + \'_use\',\n
-)\n
+if use_relative_url is None:\n
+  use_relative_url = portal_preferences.getPreference(\n
+    \'preferred_\' + (portal_type or context.getPortalType()).lower().replace(\' \', \'_\') + \'_use\',\n
+  )\n
 if indent_category == indent_resource == compact == None:\n
   indent_category, indent_resource, compact = {\n
     \'getCategoryChildTranslatedCompactLogicalPathItemList\': (False, False, True),\n
@@ -144,7 +150,7 @@ def getResourceItemList():\n
           append((caption, None))\n
         extend(grand_child_list)\n
     return result\n
-  category = portal.portal_categories.getCategoryValue(category_id, base_category=\'use\')\n
+  category = portal.portal_categories.getCategoryValue(use_relative_url, base_category=\'use\')\n
   if category is None:\n
     return []\n
   return recurse(category, 0)\n
@@ -158,7 +164,7 @@ result = CachingMethod(\n
     bool(indent_category),\n
     accessor_id,\n
     bool(empty_category),\n
-    category_id,\n
+    use_relative_url,\n
   ),\n
   cache_factory=\'erp5_ui_long\',\n
 )()\n
@@ -176,7 +182,7 @@ return prefix + result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=None, include_context=True, empty_item=True, indent_category=None, indent_resource=None, compact=None, empty_category=False</string> </value>
+            <value> <string>portal_type=None, include_context=True, empty_item=True, indent_category=None, indent_resource=None, compact=None, empty_category=False, use_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
