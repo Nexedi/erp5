@@ -56,7 +56,7 @@ forbidden_property = [\'uid\', \'portal_type\']\n
 property_list = []\n
 \n
 for portal_type in module.allowedContentTypes():\n
-  for property in portal_type.getInstancePropertyAndBaseCategoryList():\n
+  for property in portal_type.getInstancePropertyAndBaseCategorySet():\n
     if property not in forbidden_property:\n
       property_list.append((portal_type.id, property))\n
 \n

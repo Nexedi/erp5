@@ -1,3 +1,6 @@
+2014-02-19 Arnaud Fontaine
+* Support for Zope 2.8 has been dropped so set() can now be used without problem.
+
 2009-04-18 Kazuhiko
 * Version 5.4.1
 

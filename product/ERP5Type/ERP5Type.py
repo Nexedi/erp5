@@ -512,8 +512,8 @@ class ERP5TypeInformation(XMLObject,
       return list(self._getPropertyHolder()._categories)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getInstancePropertyAndBaseCategoryList')
-    def getInstancePropertyAndBaseCategoryList(self):
+                              'getInstancePropertyAndBaseCategorySet')
+    def getInstancePropertyAndBaseCategorySet(self):
       """Return all the properties and base categories of the portal type. """
       # XXX: Hack until introspection methods are defined. At least, this works
       #      for portal_type whose properties are defined dynamically
@@ -530,8 +530,15 @@ class ERP5TypeInformation(XMLObject,
       for category in cls._categories:
         return_set.add(category)
         return_set.add(category + '_free_text')
-      # XXX Can't return set to restricted code in Zope 2.8.
-      return list(return_set)
+      return return_set
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstancePropertyAndBaseCategoryList')
+    @deprecated('getInstancePropertyAndBaseCategoryList is deprecated '
+                'in favor of getInstancePropertyAndBaseCategorySet')
+    def getInstancePropertyAndBaseCategoryList(self):
+      """Return all the properties and base categories of the portal type"""
+      return list(self.getInstancePropertyAndBaseCategorySet())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstancePropertyMap')

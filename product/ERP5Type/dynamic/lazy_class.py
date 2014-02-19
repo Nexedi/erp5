@@ -167,7 +167,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     Properties whose type is 'content' should not be visible in ZMI
     so they are not returned by default. This would also slow down
     MovementCollectionDiff._getPropertyList (ERP5 product). However,
-    ERP5TypeInformation.getInstancePropertyAndBaseCategoryList needs them.
+    ERP5TypeInformation.getInstancePropertyAndBaseCategorySet needs them.
 
     @see Products.ERP5Type.Base.Base._propertyMap
     """

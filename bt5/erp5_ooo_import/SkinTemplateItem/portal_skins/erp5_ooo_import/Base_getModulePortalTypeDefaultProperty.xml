@@ -72,7 +72,7 @@ if spreadsheet_column is None:\n
   return \'\'\n
 spreadsheet_column_property_list = extract_keyword(spreadsheet_column)\n
 for portal_type in module.allowedContentTypes():\n
-  for property in portal_type.getInstancePropertyAndBaseCategoryList():\n
+  for property in portal_type.getInstancePropertyAndBaseCategorySet():\n
     if property not in forbidden_property:\n
       property_dict = {}\n
       key = \'%s.%s\' % (portal_type.id, property)\n
