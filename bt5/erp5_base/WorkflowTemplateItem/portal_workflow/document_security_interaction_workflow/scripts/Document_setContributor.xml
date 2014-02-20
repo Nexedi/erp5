@@ -56,7 +56,7 @@
 """\n
 document = state_change[\'object\']\n
 contributor_list = document.getContributorValueList()\n
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+person = document.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if person is not None and person not in contributor_list:\n
   # a real ERP5 Person object does exist\n
   contributor_list.append(person)\n
