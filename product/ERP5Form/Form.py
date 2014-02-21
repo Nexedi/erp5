@@ -74,7 +74,7 @@ class FieldValueCacheDict(dict):
       if cookie != self._last_sync:
         LOG("ERP5Form.Form", 0, "Resetting form field value cache")
         self._last_sync = cookie
-        self.clear()
+        super(FieldValueCacheDict, self).clear()
         raise KeyError('Field cache is outdated and has been reset')
 
     return super(FieldValueCacheDict, self).__getitem__(cache_id)
