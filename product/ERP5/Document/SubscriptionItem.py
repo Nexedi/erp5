@@ -119,7 +119,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
     for movement in catalog_tool(portal_type="Open Sale Order Line",
         default_aggregate_uid=self.getUid(),
         validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
-        sort_on=(('effective_date', 'descending'),),
+        sort_on=(('effective_date', 'descending'),
+                 # Do not return archived if effective dates are identical
+                 ('validation_state', 'descending')),
         limit=1 # Note Luke: Support the newest Open Order which defines
                 # something for current subscription item
         ): # YXU-Why we have a list here?
