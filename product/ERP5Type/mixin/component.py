@@ -297,6 +297,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
         compile(source_code, '<string>', 'exec')
         return [], []
       except BaseException, error:
+        if isinstance(error, SyntaxError):
+          error = '%4d, %4d: %s' % (error.lineno,
+                                    error.offset,
+                                    error.message)
+
         return ['F: %s' % error], []
 
     import cStringIO
