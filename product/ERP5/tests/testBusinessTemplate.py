@@ -7415,9 +7415,17 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                         sequence['document_id'], None)
 
     self.assertNotEqual(component, None)
-    self.assertEqual(sorted(list(component.workflow_history)),
-                      ['component_validation_workflow', 'edit_workflow'])
-    self.assertFalse(len(component.workflow_history['component_validation_workflow']) <= 1)
+
+    all_wf_history_dict = component.workflow_history
+    self.assertEqual(sorted(list(all_wf_history_dict)),
+                     ['component_validation_workflow', 'edit_workflow'])
+
+    wf_history_dict_list = all_wf_history_dict['component_validation_workflow']
+    self.assertFalse(len(wf_history_dict_list) <= 1)
+    for wf_history_dict in wf_history_dict_list:
+      self.assertNotEqual(wf_history_dict.get('time'), None)
+      self.assertNotEqual(wf_history_dict.get('actor'), None)
+      self.assertNotEqual(wf_history_dict.get('comment'), None)
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.getPortalObject().portal_components.deleteContent(
@@ -7430,13 +7438,17 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     self.assertNotEqual(component, None)
     self.assertEqual(component.getValidationState(), 'validated')
 
-    # Only the last Workflow History should have been exported
+    # Only the last Workflow History should have been exported and without
+    # 'time' as it is not needed and create conflicts with VCSs
     self.assertEqual(list(component.workflow_history),
                       ['component_validation_workflow'])
 
     validation_state_only_list = []
-    for validation_dict in list(component.workflow_history['component_validation_workflow']):
+    for validation_dict in component.workflow_history['component_validation_workflow']:
       validation_state_only_list.append(validation_dict.get('validation_state'))
+      self.assertEqual(validation_dict.get('time'), None)
+      self.assertEqual(validation_dict.get('actor'), None)
+      self.assertEqual(validation_dict.get('comment'), None)
 
     self.assertEqual(validation_state_only_list, ['validated'])
 

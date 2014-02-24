@@ -3945,8 +3945,13 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
         del obj.workflow_history[wf_id]
         continue
 
-      wf_history_list = obj.workflow_history[wf_id]
-      obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history_list[-1]])
+      wf_history = obj.workflow_history[wf_id][-1]
+      # Remove useless modifcation 'time' and 'actor' (conflicts with VCSs)
+      del wf_history['time']
+      del wf_history['actor']
+      del wf_history['comment']
+
+      obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
   def _importFile(self, file_name, file_obj):
     """
