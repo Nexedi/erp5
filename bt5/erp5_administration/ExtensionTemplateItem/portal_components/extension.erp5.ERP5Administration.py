@@ -136,16 +136,12 @@ def checkConversionToolAvailability(self):
   result.edit(severity=severity)
   active_process.activateResult(result)
 
-def runPyflakes(script_code, script_path):
-  # TODO: reuse _runPyflakes ...
-  from pyflakes.api import check
-  from pyflakes import reporter
-  from StringIO import StringIO
-  stream = StringIO()
-  check(script_code, script_path, reporter.Reporter(stream, stream))
-  return stream.getvalue()
+from Products.ERP5Type.Utils import checkPythonSourceCode
 
-def runPyflakesOnPythonScript(self, data):
+def checkPythonSourceCodeAsJSON(self, data):
+  """
+  Check Python source suitable for Ace Editor and return a JSON object
+  """
   import json
 
   # XXX data is encoded as json, because jQuery serialize lists as []
@@ -153,56 +149,35 @@ def runPyflakesOnPythonScript(self, data):
     data = json.loads(data)
 
   # data contains the code, the bound names and the script params. From this
-  # we reconstruct a function that can be parsed with pyflakes.
-  code = data
+  # we reconstruct a function that can be checked
   def indent(text):
     return ''.join(("  " + line) for line in text.splitlines(True))
 
-  bound_names = data['bound_names']
-  signature_parts = data['bound_names']
-  if data['params']:
-    signature_parts += [data['params']]
-  signature = ", ".join(signature_parts)
+  is_python_script = 'bound_names' in data
+  if is_python_script:
+    signature_parts = data['bound_names']
+    if data['params']:
+      signature_parts += [data['params']]
+    signature = ", ".join(signature_parts)
 
-  function_name = "function_name"
-  body = "def %s(%s):\n%s" % (function_name,
-                              signature,
-                              indent(data['code']) or "  pass")
+    function_name = "function_name"
+    body = "def %s(%s):\n%s" % (function_name,
+                                signature,
+                                indent(data['code']) or "  pass")
+  else:
+    body = data['code']
 
-  error_list = _runPyflakes(body, lineno_offset=-1)
+  message_list = checkPythonSourceCode(body)
+  for message_dict in message_list:
+    if is_python_script:
+      message_dict['row'] = message_dict['row'] - 2
+    else:
+      message_dict['row'] = message_dict['row'] - 1
+
+    if message_dict['type'] in ('E', 'F'):
+      message_dict['type'] = 'error'
+    else:
+      message_dict['type'] = 'warning'
 
   self.REQUEST.RESPONSE.setHeader('content-type', 'application/json')
-  return json.dumps(dict(annotations=error_list))
-
-
-def _runPyflakes(code, lineno_offset=0):
-  import pyflakes.api
-  error_list = []
-
-  class Reporter(object):
-    def unexpectedError(self, filename, msg):
-        error_list.append(
-         { 'row': 0,
-           'column': 0,
-           'text': msg,
-           'type': 'error' }
-        )
-
-    def syntaxError(self, filename, msg, lineno, offset, text):
-        error_list.append(
-         { 'row': lineno - 1 + lineno_offset,
-           'column': offset,
-           'text': msg + (text and ": " + text or ''),
-           'type': 'error' }
-        )
-
-    def flake(self, message):
-      error_list.append(
-         { 'row': message.lineno - 1 + lineno_offset,
-           'column': getattr(message, 'col', 0),
-           'text': message.message % message.message_args,
-           'type': 'warning' }
-      )
-
-  pyflakes.api.check(code, '', Reporter())
-  return error_list
+  return json.dumps(dict(annotations=message_list))

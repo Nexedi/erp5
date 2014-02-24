@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>runPyflakesOnPythonScript</string> </value>
+            <value> <string>checkPythonSourceCodeAsJSON</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_checkPythonScriptAsJSON</string> </value>
+            <value> <string>ERP5Site_checkPythonSourceCodeAsJSON</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

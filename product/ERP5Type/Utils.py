@@ -419,6 +419,116 @@ def fill_args_from_request(*optional_args):
     return decorator(function)
   return decorator
 
+_pylint_message_re = re.compile(
+  '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
+
+def checkPythonSourceCode(source_code_str):
+  """
+  Check source code with pylint or compile() builtin if not available.
+
+  TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
+              allow passing a string) and this should probably return a proper
+              ERP5 object rather than a dict...
+  """
+  if not source_code_str:
+    return []
+
+  try:
+    from pylint.lint import Run
+    from pylint.reporters.text import TextReporter
+  except ImportError, error:
+    try:
+      compile(source_code_str, '<string>', 'exec')
+      return []
+    except Exception, error:
+      if isinstance(error, SyntaxError):
+        message = {'type': 'F',
+                   'row': error.lineno,
+                   'column': error.offset,
+                   'text': error.message}
+      else:
+        message = {'type': 'F',
+                   'row': -1,
+                   'column': -1,
+                   'text': str(error)}
+
+      return [message]
+
+  import cStringIO
+  import tempfile
+  import sys
+
+  #import time
+  #started = time.time()
+  message_list = []
+  output_file = cStringIO.StringIO()
+
+  # pylint prints directly on stderr/stdout (only reporter content matters)
+  stderr = sys.stderr
+  stdout = sys.stdout
+  try:
+    sys.stderr = cStringIO.StringIO()
+    sys.stdout = cStringIO.StringIO()
+
+    with tempfile.NamedTemporaryFile() as input_file:
+      input_file.write(source_code_str)
+      input_file.seek(0)
+
+      Run([input_file.name, '--reports=n', '--indent-string="  "', '--zope=y',
+           # Disable Refactoring and Convention messages which are too verbose
+           # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
+           '--disable=R,C',
+           # 'String statement has no effect': eg docstring at module level
+           '--disable=W0105',
+           # 'Using possibly undefined loop variable %r': Spurious warning
+           # (loop variables used after the loop)
+           '--disable=W0631',
+           # 'fixme': No need to display TODO/FIXME entry in warnings
+           '--disable=W0511',
+           # 'Unused argument %r': Display for readability or when defining abstract methods
+           '--disable=W0613',
+           # 'Catching too general exception %s': Too coarse
+           # TODO-arnau: Should consider raise in except
+           '--disable=W0703',
+           # 'Used * or ** magic': commonly used in ERP5
+           '--disable=W0142',
+           # 'Class has no __init__ method': Spurious warning
+           '--disable=W0232',
+           # 'Attribute %r defined outside __init__': Spurious warning
+           '--disable=W0201',
+           # Dynamic class generation so some attributes may not be found
+           # TODO-arnau: Enable it properly would require inspection API
+           # '%s %r has no %r member'
+           '--disable=E1101,E1103',
+           # 'No name %r in module %r'
+           '--disable=E0611',
+           # map and filter should not be considered bad as in some cases
+           # map is faster than its recommended replacement (list
+           # comprehension)
+           '--bad-functions=apply,input',
+           # 'Access to a protected member %s of a client class'
+           '--disable=W0212',
+           # string module does not only contain deprecated functions...
+           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec'],
+          reporter=TextReporter(output_file), exit=False)
+
+    output_file.reset()
+    for line in output_file:
+      match_obj = _pylint_message_re.match(line)
+      if match_obj:
+        message_list.append({'type': match_obj.group('type'),
+                             'row': int(match_obj.group('row')),
+                             'column': int(match_obj.group('column')),
+                             'text': match_obj.group('message')})
+
+  finally:
+    output_file.close()
+    sys.stderr = stderr
+    sys.stdout = stdout
+
+  #LOG('Utils', INFO, 'Checking time (pylint): %.2f' % (time.time() - started))
+  return message_list
+
 #####################################################
 # Globals initialization
 #####################################################

@@ -41,10 +41,7 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zLOG import LOG, INFO
 
 from ExtensionClass import ExtensionClass
-from Products.ERP5Type.Utils import convertToUpperCase
-
-import re
-pylint_message_re = re.compile('^(?P<type>[CRWEF]):\s*\d+,\s*\d+:\s*.*$')
+from Products.ERP5Type.Utils import convertToUpperCase, checkPythonSourceCode
 
 class RecordablePropertyMetaClass(ExtensionClass):
   """
@@ -279,109 +276,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   security.declareProtected(Permissions.ModifyPortalContent, 'checkSourceCode')
   def checkSourceCode(self):
     """
-    Check source code with pylint
-
-    TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
-                allow passing a string)
+    Check Component source code through Pylint or compile() builtin if not
+    available
     """
-    source_code = self.getTextContent()
-    # checkConsistency() ensures that it cannot happen once validated/modified
-    if not source_code:
-      return [], []
-
-    try:
-      from pylint.lint import Run
-      from pylint.reporters.text import TextReporter
-    except ImportError, error:
-      try:
-        compile(source_code, '<string>', 'exec')
-        return [], []
-      except Exception, error:
-        if isinstance(error, SyntaxError):
-          error = '%4d, %4d: %s' % (error.lineno,
-                                    error.offset,
-                                    error.message)
-
-        return ['F: %s' % error], []
-
-    import cStringIO
-    import tempfile
-    import sys
-
-    #import time
-    #started = time.time()
-    error_list = []
-    warning_list = []
-    output_file = cStringIO.StringIO()
-
-    # pylint prints directly on stderr/stdout (only reporter content matters)
-    stderr = sys.stderr
-    stdout = sys.stdout
-    try:
-      sys.stderr = cStringIO.StringIO()
-      sys.stdout = cStringIO.StringIO()
-
-      with tempfile.NamedTemporaryFile() as input_file:
-        input_file.write(source_code)
-        input_file.seek(0)
-
-        Run([input_file.name, '--reports=n', '--indent-string="  "', '--zope=y',
-             # Disable Refactoring and Convention messages which are too verbose
-             # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
-             '--disable=R,C',
-             # 'String statement has no effect': eg docstring at module level
-             '--disable=W0105',
-             # 'Using possibly undefined loop variable %r': Spurious warning
-             # (loop variables used after the loop)
-             '--disable=W0631',
-             # 'fixme': No need to display TODO/FIXME entry in warnings
-             '--disable=W0511',
-             # 'Unused argument %r': Display for readability or when defining abstract methods
-             '--disable=W0613',
-             # 'Catching too general exception %s': Too coarse
-             # TODO-arnau: Should consider raise in except
-             '--disable=W0703',
-             # 'Used * or ** magic': commonly used in ERP5
-             '--disable=W0142',
-             # 'Class has no __init__ method': Spurious warning
-             '--disable=W0232',
-             # 'Attribute %r defined outside __init__': Spurious warning
-             '--disable=W0201',
-             # Dynamic class generation so some attributes may not be found
-             # TODO-arnau: Enable it properly would require inspection API
-             # '%s %r has no %r member'
-             '--disable=E1101,E1103',
-             # 'No name %r in module %r'
-             '--disable=E0611',
-             # map and filter should not be considered bad as in some cases
-             # map is faster than its recommended replacement (list
-             # comprehension)
-             '--bad-functions=apply,input',
-             # 'Access to a protected member %s of a client class'
-             '--disable=W0212',
-             # string module does not only contain deprecated functions...
-             '--deprecated-modules=regsub,TERMIOS,Bastion,rexec'],
-            reporter=TextReporter(output_file), exit=False)
-
-      output_file.reset()
-      for line in output_file:
-        message_obj = pylint_message_re.match(line)
-        if message_obj:
-          line = line.strip()
-          if line[0] in ('E', 'F'):
-            error_list.append(line)
-          else:
-            warning_list.append(line)
-
-    finally:
-      output_file.close()
-      sys.stderr = stderr
-      sys.stdout = stdout
-
-      #LOG('component', INFO, 'Checking time (pylint): %.2f' % (time.time() -
-      #                                                         started))
-
-    return error_list, warning_list
+    return checkPythonSourceCode(self.getTextContent())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):

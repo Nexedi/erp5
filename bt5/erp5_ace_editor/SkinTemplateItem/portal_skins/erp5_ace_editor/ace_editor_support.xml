@@ -415,14 +415,35 @@
     ace_editor.getSession().setUseSoftTabs(true);\n
     ace_editor.getSession().setTabSize(2);\n
 \n
+    ace.require(\'ace/ext/language_tools\');\n
+    ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });\n
+\n
+    timer = 0;\n
+    function checkPythonSourceCode() {\n
+      if (timer) {\n
+        window.clearTimeout(timer);\n
+        timer = 0;\n
+      }\n
+      timer = window.setTimeout(function() {\n
+        $.post(\'${portal_url}/ERP5Site_checkPythonSourceCodeAsJSON\',\n
+          {\'data\': JSON.stringify(\n
+          { code: ace_editor.getSession().getValue() })},\n
+          function(data){\n
+            ace_editor.getSession().setAnnotations(data.annotations);\n
+          }\n
+        )\n
+      }, 500);\n
+    }\n
+\n
+    checkPythonSourceCode();\n
+\n
     var textarea = $(\'#${id}\');\n
     ace_editor.getSession().on(\'change\', function() {\n
       changed = true; // This is the dirty flag for onbeforeunload warning in erp5.js\n
       textarea.val(ace_editor.getSession().getValue());\n
+      checkPythonSourceCode();\n
     });\n
-    ace.require(\'ace/ext/language_tools\');\n
-    ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });\n
-    \n
+\n
     /* Only display the source code saving button if the main save button is\n
      * displayed. This specific save button allows to save without reloading the\n
      * page (and thus keep the cursor position and mode (maximize/fullscreen)\n

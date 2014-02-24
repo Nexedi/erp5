@@ -1627,17 +1627,17 @@ class _TestZodbComponent(SecurityTestCase):
     self.assertEqual(component.checkConsistency(), [])
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(),
-                      ["W:  1, 0: Unused import sys (unused-import)"])
+                      ["W:  1,  0: Unused import sys (unused-import)"])
 
     component.setTextContent('import unexistent_module')
     self.tic()
     self.assertEqual(
       [m.getMessage().translate() for m in component.checkConsistency()],
-      ["Error in Source Code: F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+      ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentErrorMessageList(),
-                      ["F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+                      ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentWarningMessageList(),
-                      ["W:  1, 0: Unused import unexistent_module (unused-import)"])
+                      ["W:  1,  0: Unused import unexistent_module (unused-import)"])
 
     valid_code = 'def foobar():\n  return 42'
     ComponentTool.reset = assertResetCalled
@@ -1669,15 +1669,15 @@ class _TestZodbComponent(SecurityTestCase):
        [],
        []),
       ('def foobar(*args, **kwargs)\n  return 42',
-       ["Error in Source Code: E:  1, 0: invalid syntax (syntax-error)"],
-       ["E:  1, 0: invalid syntax (syntax-error)"],
+       ["Error in Source Code: E:  1,  0: invalid syntax (syntax-error)"],
+       ["E:  1,  0: invalid syntax (syntax-error)"],
        []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
       ('foobar',
-       ["Error in Source Code: E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
-       ["E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
-       ["W:  1, 0: Statement seems to have no effect (pointless-statement)"]))
+       ["Error in Source Code: E:  1,  0: Undefined variable 'foobar' (undefined-variable)"],
+       ["E:  1,  0: Undefined variable 'foobar' (undefined-variable)"],
+       ["W:  1,  0: Statement seems to have no effect (pointless-statement)"]))
 
     for (invalid_code,
          check_consistency_list,

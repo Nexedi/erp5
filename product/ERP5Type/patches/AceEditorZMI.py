@@ -98,7 +98,7 @@ $(document).ready(function() {
           timer = 0;
         }
         timer = window.setTimeout(function() {
-          $.post('%(portal_url)s/ERP5Site_checkPythonScriptAsJSON',
+          $.post('%(portal_url)s/ERP5Site_checkPythonSourceCodeAsJSON',
             {'data': JSON.stringify(
             { code: editor.getSession().getValue(),
               bound_names: %(bound_names)s,

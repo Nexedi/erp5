@@ -52,7 +52,19 @@
             <key> <string>_body</string> </key>
             <value> <string>obj = state_change[\'object\']\n
 \n
-error_list, warning_list = obj.checkSourceCode()\n
+error_list = []\n
+warning_list = []\n
+for message_dict in obj.checkSourceCode():\n
+  message = \'%s:%3d,%3d: %s\' % (message_dict[\'type\'],\n
+                                  message_dict[\'row\'],\n
+                                  message_dict[\'column\'],\n
+                                  message_dict[\'text\'])\n
+\n
+  if message_dict[\'type\'] in (\'F\', \'E\'):\n
+    error_list.append(message)\n
+  else:\n
+    warning_list.append(message)\n
+\n
 obj.setTextContentWarningMessageList(warning_list)\n
 obj.setTextContentErrorMessageList(error_list)\n
 \n
