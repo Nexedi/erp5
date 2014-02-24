@@ -352,6 +352,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
              # map is faster than its recommended replacement (list
              # comprehension)
              '--bad-functions=apply,input',
+             # 'Access to a protected member %s of a client class'
+             '--disable=W0212',
              # string module does not only contain deprecated functions...
              '--deprecated-modules=regsub,TERMIOS,Bastion,rexec'],
             reporter=TextReporter(output_file), exit=False)
