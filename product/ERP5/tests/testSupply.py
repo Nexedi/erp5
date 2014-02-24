@@ -33,6 +33,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 from DateTime import DateTime
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
+import transaction
 
 class TestSupplyMixin:
   def getBusinessTemplateList(self):
@@ -586,6 +588,78 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       self.assertEquals(movement.getPrice(), 5)
     preference.setPreferredPricingOptimise(False)
     self._clearCache()
+
+
+  def _createTwoHundredSupplyLineInASupply(self):
+    supply = self._makeSupply(
+      start_date_range_min='2014/01/01',
+      start_date_range_max='2014/01/31',
+    )
+    for i in range(200):
+      resource_value = self.portal.product_module['%s_%d' % (self.id(), i)]
+      supply_line = self._makeSupplyLine(supply)
+      supply_line.edit(resource_value=resource_value,
+                       base_price=100)
+    return supply
+
+  def _createTwoHundredResource(self):
+    for i in range(200):
+      self._makeResource('%s_%d' % (self.id(), i))
+
+  def testReindexOnLargeSupply(self):
+    """
+      Make sure that recursiveImmediateReindexObject is not called on the root
+      document when the document has more than 100 sub objects.
+    """
+    self._makeSections()
+    self._createTwoHundredResource()
+    supply = self._createTwoHundredSupplyLineInASupply()
+    # First, clear activities just in case.
+    self.tic()
+    # Editing triggers reindexObject(active_kw={}) through DCWorkflowDefinition.
+    # Not only edit(), but also all the workflow transitions can trigger it.
+    # Likewise, recursiveReindexObject(active_kw={}) is triggered, for instance
+    # in Supply.py, Delivery.py and etc,.
+    # This is because of the reindexObject() method definition on the Documents.
+    supply.edit(title='xx')
+
+    transaction.commit()
+
+    sql_connection = self.getSQLConnection()
+    supply_path = supply.getPath()
+    sql = """SELECT
+               count(*)
+             FROM
+               message
+             WHERE
+               path like '%s'
+             AND
+               method_id = 'recursiveImmediateReindexObject'
+          """ % (supply_path.replace('_', r'\_') + '/%')
+    result = sql_connection.manage_test(sql)
+    all_the_spply_line_activities_count  = result[0]['COUNT(*)']
+    # supply line reindex activity count must be 200 since created 200 lines
+    self.assertEqual(200, all_the_spply_line_activities_count)
+
+    sql_connection = self.getSQLConnection()
+    sql = "SELECT count(*) FROM message WHERE path='%s'" % supply_path
+    result = sql_connection.manage_test(sql)
+    supply_document_reindex_count = result[0]['COUNT(*)']
+    # reindex activity with the same supply must be only one in this case.
+    self.assertEqual(1, supply_document_reindex_count)
+
+    sql = "SELECT count(*) FROM message WHERE path='%s' AND method_id='%s'" \
+           % (supply_path, 'recursiveImmediateReindexObject')
+    result = sql_connection.manage_test(sql)
+    supply_recursive_immediate_reindex_count = result[0]['COUNT(*)']
+
+    # the count of recursiveImmediateReindex on Supply document must be zero
+    # because the supply contains >100 sub objects. And the the suply lines
+    # reindex are already triggerred. Thus if recursiveImmediateReindex
+    # is also triggered on Supply, the reindex will be duplicated. Moreover,
+    # recursiveImmediateReindex in a single node is less efficient comparing
+    # to use all nodes for the reindex, in such a >100 case.
+    self.assertEqual(0, supply_recursive_immediate_reindex_count)
 
 class TestPurchaseSupply(TestSaleSupply):
   """

@@ -1292,7 +1292,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     """Recursively indexes the content of self.
     """
     if self.isIndexable:
-      if activate_kw is None and self.objectCount() > REINDEX_SPLIT_COUNT:
+      if not activate_kw and self.objectCount() > REINDEX_SPLIT_COUNT:
         # If the number of objects to reindex is too high
         # we should try to split reindexing in order to be more efficient
         # NOTE: this heuristic will fail for example with orders which
