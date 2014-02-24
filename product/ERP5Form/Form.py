@@ -47,6 +47,7 @@ from Acquisition import aq_base
 from Products.PageTemplates.Expressions import SecureModuleImporter
 
 from Products.ERP5Type.PsycoWrapper import psyco
+from Products.ERP5Type.Base import Base
 import sys
 
 class FieldValueCacheDict(dict):
@@ -563,12 +564,13 @@ def create_settings_form():
 
 from OFS.Cache import filterCacheTab
 
-class ERP5Form(ZMIForm, ZopePageTemplate):
+class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     """
         A Formulator form with a built-in rendering parameter based
         on page templates or DTML.
     """
     meta_type = "ERP5 Form"
+    portal_type = "Form"
     icon = "www/Form.png"
 
     # Declarative Security
@@ -589,7 +591,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem)
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.Folder
+                      , PropertySheet.CategoryCore
+                      )
 
     # Constructors
     constructors =   (manage_addForm, addERP5Form)
@@ -620,6 +625,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Special Settings
     settings_form = create_settings_form()
+
+    manage_main = ZMIForm.manage_main
+    objectIds = ZMIForm.objectIds
+    objectItems = ZMIForm.objectItems
+    objectValues = ZMIForm.objectValues
 
     def __init__(self, id, title, unicode_mode=0, encoding='UTF-8',
                  stored_encoding='UTF-8'):
