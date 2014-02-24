@@ -296,7 +296,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       try:
         compile(source_code, '<string>', 'exec')
         return [], []
-      except BaseException, error:
+      except Exception, error:
         if isinstance(error, SyntaxError):
           error = '%4d, %4d: %s' % (error.lineno,
                                     error.offset,
