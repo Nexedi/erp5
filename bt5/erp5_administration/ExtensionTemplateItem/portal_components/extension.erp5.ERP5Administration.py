@@ -20,15 +20,15 @@ def dumpWorkflowChain(self):
   ti = workflow_tool._listTypeInfo()
   types_info = []
   for t in ti:
-    id = t.getId()
+    id_ = t.getId()
     title = t.Title()
-    if title == id:
+    if title == id_:
       title = None
-    if cbt is not None and cbt.has_key(id):
-      chain = sorted(cbt[id])
+    if cbt is not None and cbt.has_key(id_):
+      chain = sorted(cbt[id_])
     else:
       chain = ['(Default)']
-    types_info.append({'id': id,
+    types_info.append({'id': id_,
                        'title': title,
                        'chain': chain})
   output = []
@@ -94,7 +94,7 @@ def MessageCatalog_deleteNotTranslatedMessageDict(self):
     Delete from  Localizer's MessageCatalog instance messages that are NOT translated.
   """
   not_translated_message_dict = MessageCatalog_getNotTranslatedMessageDict(self)
-  for k,v in not_translated_message_dict.iteritems():
+  for k,_ in not_translated_message_dict.iteritems():
     # delete message from dict
     del(self._messages[k])
   return len(not_translated_message_dict.keys())
@@ -117,7 +117,7 @@ def checkConversionToolAvailability(self):
   try:
     temp_document = newTempOOoDocument(self, document_id, data=document_file.data, source_reference=document_id)
     temp_document.convertToBaseFormat()
-    mimetype, html_result = temp_document.convert(format='html')
+    _, html_result = temp_document.convert(format='html')
   except ConflictError:
     raise
   except: #Which Errors should we catch ?

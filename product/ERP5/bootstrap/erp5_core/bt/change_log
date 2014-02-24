@@ -1,4 +1,7 @@
 2014-02-24 arnaud.fontaine
+* Cosmetic: Fix Pylint warnings.
+
+2014-02-24 arnaud.fontaine
 * Follow API changes to unify ZODB Components and Python Script source code checking.
 
 2014-02-19 Arnaud Fontaine

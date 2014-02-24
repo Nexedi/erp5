@@ -1,4 +1,7 @@
 2014-02-24 arnaud.fontaine
+* Cosmetic: Fix Pylint warnings.
+
+2014-02-24 arnaud.fontaine
 * Use Pylint to check source code to unify ZODB Components and Python Script source code checking.
 
 2013-09-03 arnaud.fontaine

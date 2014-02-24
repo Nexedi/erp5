@@ -53,8 +53,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 import re\n
-message_re = re.compile(\'[CRWEF]:\\s*(?P<line>\\d+),\\s*(?P<column>\\d+):\\s*.*\')\n
-error_warning_dict = {\'error_list\': [], \'warning_list\': []}\n
+message_re = re.compile(r\'[CRWEF]:\\s*(?P<line>\\d+),\\s*(?P<column>\\d+):\\s*.*\')\n
 \n
 def getParsedMessageList(message_list):\n
   result_list = []\n
