@@ -209,6 +209,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
+# Patches over original listObjectActions:
+# - Factorise consecutive tests.
 def DCWorkflowDefinition_listObjectActions(self, info):
     '''
     Allows this workflow to
@@ -224,17 +226,16 @@ def DCWorkflowDefinition_listObjectActions(self, info):
     res = []
     for tid in sdef.transitions:
         tdef = self.transitions.get(tid, None)
-        if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION:
-            if tdef.actbox_name:
-                if self._checkTransitionGuard(tdef, ob):
-                    res.append((tid, {
-                        'id': tid,
-                        'name': tdef.actbox_name % info,
-                        'url': tdef.actbox_url % info,
-                        'icon': tdef.actbox_icon % info,
-                        'permissions': (),  # Predetermined.
-                        'category': tdef.actbox_category,
-                        'transition': tdef}))
+        if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
+                tdef.actbox_name and self._checkTransitionGuard(tdef, ob):
+            res.append((tid, {
+                'id': tid,
+                'name': tdef.actbox_name % info,
+                'url': tdef.actbox_url % info,
+                'icon': tdef.actbox_icon % info,
+                'permissions': (),  # Predetermined.
+                'category': tdef.actbox_category,
+                'transition': tdef}))
     res.sort()
     return [ result[1] for result in res ]
 DCWorkflowDefinition.listObjectActions = DCWorkflowDefinition_listObjectActions
