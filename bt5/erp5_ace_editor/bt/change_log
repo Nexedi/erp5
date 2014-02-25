@@ -1,3 +1,6 @@
+2014-02-25 arnaud.fontaine
+* Allow to specify the line to go to from URL parameter.
+
 2014-02-24 arnaud.fontaine
 * Add annotations support to check source code without saving.
 

@@ -112,6 +112,12 @@ $(document).ready(function() {
     }
 
     editor.getSession().setValue(textarea.val());
+    var href_line_array = /.*?[^#]*line=(\d+)/.exec(window.location.href)
+    if(href_line_array && href_line_array.length == 2) {
+      editor.focus();
+      editor.gotoLine(href_line_array[1], 0, false);
+    }
+
     editor.getSession().on('change', function(){
       textarea.val(editor.getSession().getValue());
       if (!beforeunload_warning_set) {

@@ -415,6 +415,12 @@
     ace_editor.getSession().setUseSoftTabs(true);\n
     ace_editor.getSession().setTabSize(2);\n
 \n
+    var href_line_array = /.*?[^#]*line=(\\d+)/.exec(window.location.href)\n
+    if(href_line_array && href_line_array.length == 2) {\n
+      ace_editor.focus();\n
+      ace_editor.gotoLine(href_line_array[1], 0, false);\n
+    }\n
+\n
     ace.require(\'ace/ext/language_tools\');\n
     ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });\n
 \n
