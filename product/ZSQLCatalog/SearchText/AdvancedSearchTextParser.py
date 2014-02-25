@@ -275,9 +275,10 @@ class AdvancedSearchTextParser(lexer):
   def p_string(self, p):
     '''string : WORD
               | STRING
-              | STRING_PREFIX string'''
-    if len(p) == 3:
-      p[0] = p[1] + p[2]
+              | STRING_PREFIX string
+              | STRING_PREFIX OPERATOR string'''
+    if len(p) > 2:
+      p[0] = ''.join(p[1:])
     else:
       p[0] = p[1]
 
