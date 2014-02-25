@@ -21,6 +21,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -207,6 +208,36 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
+
+def DCWorkflowDefinition_listObjectActions(self, info):
+    '''
+    Allows this workflow to
+    include actions to be displayed in the actions box.
+    Called only when this workflow is applicable to
+    info.object.
+    Returns the actions to be displayed to the user.
+    '''
+    ob = info.object
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+        return None
+    res = []
+    for tid in sdef.transitions:
+        tdef = self.transitions.get(tid, None)
+        if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION:
+            if tdef.actbox_name:
+                if self._checkTransitionGuard(tdef, ob):
+                    res.append((tid, {
+                        'id': tid,
+                        'name': tdef.actbox_name % info,
+                        'url': tdef.actbox_url % info,
+                        'icon': tdef.actbox_icon % info,
+                        'permissions': (),  # Predetermined.
+                        'category': tdef.actbox_category,
+                        'transition': tdef}))
+    res.sort()
+    return [ result[1] for result in res ]
+DCWorkflowDefinition.listObjectActions = DCWorkflowDefinition_listObjectActions
 
 from Products.DCWorkflow.Expression import Expression
 
