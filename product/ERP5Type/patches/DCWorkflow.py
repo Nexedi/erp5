@@ -211,6 +211,7 @@ DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
 # Patches over original listObjectActions:
 # - Factorise consecutive tests.
+# - Add "transition_id" when rendering name, url and icon properties.
 def DCWorkflowDefinition_listObjectActions(self, info):
     '''
     Allows this workflow to
@@ -219,6 +220,7 @@ def DCWorkflowDefinition_listObjectActions(self, info):
     info.object.
     Returns the actions to be displayed to the user.
     '''
+    fmt_data = None
     ob = info.object
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
@@ -228,14 +230,19 @@ def DCWorkflowDefinition_listObjectActions(self, info):
         tdef = self.transitions.get(tid, None)
         if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
                 tdef.actbox_name and self._checkTransitionGuard(tdef, ob):
+            if fmt_data is None:
+                fmt_data = TemplateDict()
+                fmt_data._push(info)
+            fmt_data._push({'transition_id': tid})
             res.append((tid, {
                 'id': tid,
-                'name': tdef.actbox_name % info,
-                'url': tdef.actbox_url % info,
-                'icon': tdef.actbox_icon % info,
+                'name': tdef.actbox_name % fmt_data,
+                'url': tdef.actbox_url % fmt_data,
+                'icon': tdef.actbox_icon % fmt_data,
                 'permissions': (),  # Predetermined.
                 'category': tdef.actbox_category,
                 'transition': tdef}))
+            fmt_data._pop()
     res.sort()
     return [ result[1] for result in res ]
 DCWorkflowDefinition.listObjectActions = DCWorkflowDefinition_listObjectActions
