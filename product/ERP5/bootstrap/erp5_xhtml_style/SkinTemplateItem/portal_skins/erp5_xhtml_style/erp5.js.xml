@@ -129,7 +129,7 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
       var first_element = row_list[0][0];\n
       var fake_table = $("<table>");\n
       fake_table.addClass(tableClassName);\n
-      fake_table.insertbefore(first_element);\n
+      fake_table.insertBefore(first_element);\n
       $.each(row_list, function() {\n
         var fake_row = $("<tr>");\n
         $.each(this, function() {\n
