@@ -176,17 +176,19 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               if fmt_data is None:
                   fmt_data = TemplateDict()
                   fmt_data._push(info)
-              fmt_data._push({'count': searchres_len})
-              # Patch for ERP5 by JP Smets in order to
-              # filter per portal type more easily (ie. without
-              # hardcoding it all)
-              fmt_data._push({'portal_type': '&portal_type='.join(dict['portal_type'])})
-              # Patch for ERP5 by JP Smets in order
-              # to implement worklists and search of local roles
-              if dict.has_key('local_roles'):
-                fmt_data._push({'local_roles': '&local_roles='.join(dict['local_roles'])})
+              # Patches for ERP5 by JP Smets:
+              # - add "portal_type" to filter per portal type more easily
+              #   (ie. without hardcoding it all)
+              # - "local_roles" to allow filtering by local roles
+              if 'local_roles' in dict:
+                local_roles = '&local_roles='.join(dict['local_roles'])
               else:
-                fmt_data._push({'local_roles': ''})
+                local_roles = ''
+              fmt_data._push({
+                  'count': searchres_len,
+                  'portal_type': '&portal_type='.join(dict['portal_type']),
+                  'local_roles': local_roles,
+              })
               res.append((id, {'name': qdef.actbox_name % fmt_data,
                               'url': '%s/%s' % (portal_url, qdef.actbox_url % fmt_data),
                               'worklist_id': id,
