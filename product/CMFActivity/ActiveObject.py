@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
-
+from AccessControl import Unauthorized
 from Products.CMFCore import permissions
 
 DEFAULT_ACTIVITY = 'SQLDict'
@@ -59,7 +59,7 @@ class ActiveObject(ExtensionClass.Base):
   security = ClassSecurityInfo()
 
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
-               activate_kw=None, **kw):
+               activate_kw=None, REQUEST=None, **kw):
     """Returns an active wrapper for this object.
 
       Reserved Optional parameters:
@@ -88,6 +88,9 @@ class ActiveObject(ExtensionClass.Base):
                            tagged with this tag.
 
     """
+    if REQUEST is not None:
+      # Prevent publication loudly.
+      raise Unauthorized
     # Get activate values from activate_kw, then default_activate_parameter
     # transactional variable only if they are not set directly as arguments
     # to activate()
