@@ -7,8 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts54096599.77</string> </value>
+            <value> <string>ts93420566.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -226,7 +230,7 @@
 \t\t_continueToNextStep : function(){\n
 \t\t\tif(this.isLastStep){\n
 \t\t\t\tfor(var i = 0; i < this.activatedSteps.length; i++){\n
-\t\t\t\t\tthis.steps.filter("#" + this.activatedSteps[i]).find(":input").not(".wizard-ignore").removeAttr("disabled");\n
+\t\t\t\t\tthis.steps.filter("[id=\'"+this.activatedSteps[i]+"\']").find(":input").not(".wizard-ignore").removeAttr("disabled");\n
 \t\t\t\t}\n
 \t\t\t\tif(!this.options.formPluginEnabled){\n
 \t\t\t\t\treturn true;\n
@@ -286,8 +290,8 @@
 \n
 \t\t_animate : function(oldStep, newStep, stepShownCallback){\n
 \t\t\tthis._disableNavigation();\n
-\t\t\tvar old = this.steps.filter("#" + oldStep);\n
-\t\t\tvar current = this.steps.filter("#" + newStep);\n
+\t\t\tvar old = this.steps.filter("[id=\'"+oldStep+"\']");\n
+\t\t\tvar current = this.steps.filter("[id=\'"+newStep+"\']");\n
 \t\t\told.find(":input").not(".wizard-ignore").attr("disabled","disabled");\n
 \t\t\tcurrent.find(":input").not(".wizard-ignore").removeAttr("disabled");\n
 \t\t\tvar wizard = this;\n
@@ -305,14 +309,14 @@
 \n
 \t\t_checkIflastStep : function(step){\n
 \t\t\tthis.isLastStep = false;\n
-\t\t\tif($("#" + step).hasClass(this.options.submitStepClass) || this.steps.filter(":last").attr("id") == step){\n
+\t\t\tif($("[id=\'"+step+"\']").hasClass(this.options.submitStepClass) || this.steps.filter(":last").attr("id") == step){\n
 \t\t\t\tthis.isLastStep = true;\n
 \t\t\t}\n
 \t\t},\n
 \n
 \t\t_getLink : function(step){\n
 \t\t\tvar link = undefined;\n
-\t\t\tvar links = this.steps.filter("#" + step).find(this.options.linkClass);\n
+\t\t\tvar links = this.steps.filter("[id=\'"+step+"\']").find(this.options.linkClass);\n
 \n
 \t\t\tif(links != undefined){\n
 \t\t\t\tif(links.filter(":radio,:checkbox").size() > 0){\n
@@ -327,12 +331,12 @@
 \t\t_navigate : function(step){\n
 \t\t\tvar link = this._getLink(step);\n
 \t\t\tif(link != undefined){\n
-\t\t\t\tif((link != "" && link != null && link != undefined) && this.steps.filter("#" + link).attr("id") != undefined){\n
+\t\t\t\tif((link != "" && link != null && link != undefined) && this.steps.filter("[id=\'"+link+"\']").attr("id") != undefined){\n
 \t\t\t\t\treturn link;\n
 \t\t\t\t}\n
 \t\t\t\treturn this.currentStep;\n
 \t\t\t}else if(link == undefined && !this.isLastStep){\n
-\t\t\t\tvar step1 =  this.steps.filter("#" + step).next().attr("id");\n
+\t\t\t\tvar step1 =  this.steps.filter("[id=\'"+step+"\']").next().attr("id");\n
 \t\t\t\treturn step1;\n
 \t\t\t}\n
 \t\t},\n
@@ -371,7 +375,7 @@
 \t\t\tthis.element.resetForm()\n
 \t\t\t$("label,:input,textarea",this).removeClass("error");\n
 \t\t\tfor(var i = 0; i < this.activatedSteps.length; i++){\n
-\t\t\t\tthis.steps.filter("#" + this.activatedSteps[i]).hide().find(":input").attr("disabled","disabled");\n
+\t\t\t\tthis.steps.filter("[id=\'"+this.activatedSteps[i]+"\']").hide().find(":input").attr("disabled","disabled");\n
 \t\t\t}\n
 \t\t\tthis.activatedSteps = new Array();\n
 \t\t\tthis.previousStep = undefined;\n
@@ -451,7 +455,7 @@
 \t\tupdate_steps : function(){\n
 \t\t\tthis.steps = this.element.find(".step").addClass("ui-formwizard-content");\n
 \t\t\tthis.firstStep = this.steps.eq(0).attr("id");\n
-\t\t\tthis.steps.not("#" + this.currentStep).hide().find(":input").addClass("ui-wizard-content").attr("disabled","disabled");\n
+\t\t\tthis.steps.not("[id=\'"+this.currentStep+"\']").hide().find(":input").addClass("ui-wizard-content").attr("disabled","disabled");\n
 \t\t\tthis._checkIflastStep(this.currentStep);\n
 \t\t\tthis._enableNavigation();\n
 \t\t\tif(!this.options.disableUIStyles){\n
@@ -496,7 +500,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14327</int> </value>
+            <value> <int>14390</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
