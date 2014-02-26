@@ -538,7 +538,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         on page templates or DTML.
     """
     meta_type = "ERP5 Form"
-    portal_type = "Form"
+    portal_type = "ERP5 Form"
     icon = "www/Form.png"
 
     # Declarative Security
