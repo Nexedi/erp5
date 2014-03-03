@@ -64,8 +64,8 @@ SELECT path, uid\n
 FROM\n
 (\n
 SELECT DISTINCT\n
-path,\n
-(select uid from catalog where catalog.path=sub.path) as uid\n
+sub.path,\n
+uid\n
 FROM\n
 ( SELECT\n
     @current_path:=IF(@current_reference = reference, @current_path, path) AS path,\n
@@ -93,7 +93,7 @@ FROM\n
     ORDER BY reference, language_order DESC, version DESC, revision DESC\n
   ) AS innersub\n
 )\n
-AS sub\n
+AS sub inner join catalog on catalog.path = sub.path\n
 )\n
 AS main\n
 WHERE\n
