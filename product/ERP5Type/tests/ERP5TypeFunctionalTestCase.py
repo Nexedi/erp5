@@ -310,6 +310,8 @@ class FunctionalTestRunner:
           # TODO: here we could take a screenshot and display it in the report
           # (maybe using data: scheme inside a <img>)
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
+        if self.browser.process.poll():
+          raise RuntimeError('Test browser is no longer running.')
     except:
       print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
       raise
