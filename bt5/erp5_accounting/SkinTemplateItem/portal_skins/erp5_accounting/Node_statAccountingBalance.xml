@@ -137,7 +137,7 @@ if period_start_date and params.get(\'node_uid\'):\n
     # if we are in the regular user interface, we only limit\n
     if \'from_date\' in kw:\n
       params[\'from_date\'] = min(kw[\'from_date\'], period_start_date)\n
-  else:\n
+  elif kw.get(\'from_date\'):\n
     # for other account, we calculate the initial balance as the "absolute"\n
     # balance at the beginning of the period, plus debit or credit from this\n
     # beginning of period to the from_date\n

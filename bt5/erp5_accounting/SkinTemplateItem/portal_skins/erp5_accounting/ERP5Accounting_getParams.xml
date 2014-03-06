@@ -109,11 +109,14 @@ if section_category:\n
   # calculate the period_start_date for this section\n
   # note that reports that precalculate a section_uid but no section_category\n
   # will have to calculate period_start_date themselves.\n
-  if from_date or at_date:\n
-    params[\'period_start_date\'] = \\\n
+  period_start_date = selection_params.get(\'period_start_date\')\n
+  if not period_start_date and (from_date or at_date):\n
+    period_start_date = \\\n
           context.Base_getAccountingPeriodStartDateForSectionCategory(\n
               section_category=section_category, date=from_date or at_date)\n
-\n
+  if period_start_date:\n
+    params[\'period_start_date\'] = period_start_date\n
+    \n
 # if we have a section uid, it haves priority\n
 section_uid = selection_params.get(\'section_uid\', None)\n
 if section_uid:\n
