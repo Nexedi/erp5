@@ -65,6 +65,11 @@ class TransformationSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     """
     return TransformationRuleMovementGenerator(applied_rule=context, rule=self)
 
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
   def testTransformationSourcing(self, context):
     if context.getReference().split('/', 1)[0] == 'pr':
       return False
