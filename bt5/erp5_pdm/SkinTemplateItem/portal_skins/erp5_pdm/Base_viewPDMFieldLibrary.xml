@@ -195,7 +195,9 @@
                         <string>my_view_mode_version</string>
                         <string>my_view_mode_listbox_read_only_start_date_range_min</string>
                         <string>my_view_mode_listbox_read_only_start_date_range_max</string>
+                        <string>my_view_mode_listbox_trade_phase</string>
                         <string>my_view_mode_resource_module_listbox</string>
+                        <string>my_view_mode_trade_phase</string>
                         <string>listbox_purchase_supply_line_destination_account</string>
                         <string>listbox_sale_supply_line_source_account</string>
                       </list>

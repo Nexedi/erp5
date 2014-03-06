@@ -95,7 +95,6 @@
                       <list>
                         <string>my_description</string>
                         <string>my_efficiency</string>
-                        <string>my_industrial_phase</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_resource_title</string>

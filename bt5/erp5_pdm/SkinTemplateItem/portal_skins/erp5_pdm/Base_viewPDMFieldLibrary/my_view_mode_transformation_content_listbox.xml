@@ -121,8 +121,8 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>industrial_phase_translated_title</string>
-                          <string>Industrial Phase</string>
+                          <string>trade_phase_translated_title</string>
+                          <string>Trade Phase</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -179,7 +179,7 @@
                           <string>efficiency</string>
                         </tuple>
                         <tuple>
-                          <string>industrial_phase</string>
+                          <string>trade_phase</string>
                           <string>industrial_phase</string>
                         </tuple>
                       </list>
