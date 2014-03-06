@@ -1,3 +1,6 @@
+2014-3-6 yusei
+* Fix mass workflow transition function. If transition is customized and its actbox_url does not use ERP5 Form, then use the default workflow action dialog form instead.
+
 2013-07-19 arnaud.fontaine
 * Add save button to Ace Editor to save source code while staying on the same page.
 
