@@ -93,18 +93,13 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
                         <string>my_efficiency</string>
-                        <string>my_industrial_phase</string>
                         <string>my_option</string>
-                        <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_resource_title</string>
                         <string>my_specialise_title</string>
-                        <string>my_title</string>
                         <string>my_variation_category_list</string>
                         <string>my_int_index</string>
-                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>
