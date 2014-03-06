@@ -195,6 +195,8 @@
                         <string>my_view_mode_version</string>
                         <string>my_view_mode_listbox_read_only_start_date_range_min</string>
                         <string>my_view_mode_listbox_read_only_start_date_range_max</string>
+                        <string>my_view_mode_trade_phase</string>
+                        <string>my_view_mode_listbox_trade_phase</string>
                       </list>
                     </value>
                 </item>
