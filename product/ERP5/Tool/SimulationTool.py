@@ -2036,22 +2036,18 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
-    def getMovementHistoryStat(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0,
-                               only_accountable=True, omit_input=0,
-                               omit_output=0, selection_domain=None,
-                               selection_report=None, precision=None, **kw):
+    def getMovementHistoryStat(self, src__=0, **kw):
       """
       getMovementHistoryStat is the pending to getMovementHistoryList
       for ListBox stat
+
+      supported parameters are similar to ones accepted by getInventoryList
+      with the exception of group_by_*
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
-      return self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise,
-          omit_simulation=omit_simulation, only_accountable=only_accountable,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report,
-          precision=precision, **sql_kw)
+      inventory_list = self.getInventoryList(ignore_group_by=1, **kw)
+      assert len(inventory_list) == 1
+      return inventory_list[0]
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getNextNegativeInventoryDate')
