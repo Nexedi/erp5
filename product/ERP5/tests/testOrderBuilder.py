@@ -55,8 +55,14 @@ class TestOrderBuilderMixin(TestOrderMixin):
 
   # defaults
   decrease_quantity = 1.0
-  max_delay = 0.0
-  min_flow = 0.0
+  max_delay = 4.0
+  min_flow = 7.0
+
+  def afterSetUp(self):
+    """
+    Make sure to not use special apparel setting from TestOrderMixin
+    """
+    self.createCategories()
 
   def stepSetMaxDelayOnResource(self, sequence):
     """
@@ -78,6 +84,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     """
     order_builder = sequence.get('order_builder')
     organisation = sequence.get('organisation')
+    resource = sequence.get('resource')
 
     order_builder.edit(
       delivery_module = self.order_module,
@@ -86,8 +93,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
       delivery_cell_portal_type = self.order_cell_portal_type,
       destination_value = organisation,
       resource_portal_type = self.resource_portal_type,
+      simulation_select_method_id='generateMovementListForStockOptimisation',
     )
-
     order_builder.newContent(
       portal_type = 'Category Movement Group',
       collect_order_group='delivery',
@@ -162,7 +169,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     # XXX: ... and for more lines/cells too
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
     self.assertEqual(order_line.getResourceValue(), resource)
-    self.assertEqual(order_line.getTotalQuantity(), self.wanted_quantity)
+    self.assertEqual(order_line.getTotalQuantity(), self.min_flow)
 
   def stepBuildOrderBuilder(self, sequence):
     """
@@ -197,7 +204,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
     packing_list = packing_list_module.newContent(
       portal_type = self.packing_list_portal_type,
       source_value = organisation,
-      start_date = self.datetime
+      start_date = self.datetime,
+      specialise = self.business_process,
     )
 
     packing_list_line = packing_list.newContent(
@@ -243,7 +251,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
     packing_list = packing_list_module.newContent(
       portal_type = self.packing_list_portal_type,
       source_value = organisation,
-      start_date = self.datetime
+      start_date = self.datetime+14,
+      specialise = self.business_process,
     )
 
     packing_list.newContent(
@@ -259,6 +268,8 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     Test Order Builder functionality
   """
   run_all_test = 1
+
+  resource_portal_type = "Product"
 
   common_sequence_string = """
       CreateOrganisation
@@ -279,7 +290,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Order Builder"
 
-  @newSimulationExpectedFailure
   def test_01_simpleOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test simple Order Builder
@@ -291,7 +301,8 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
       str(self.datetime.earliestTime()
           + self.order_builder_hardcoded_time_diff))
 
-    self.wanted_stop_date = self.wanted_start_date
+    # We add 4 days to start date to reflect delays
+    self.wanted_stop_date = self.wanted_start_date + 4
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
