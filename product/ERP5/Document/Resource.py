@@ -566,12 +566,22 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                               'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, **kw):
       """
-      Returns list of inventory grouped by section or site
+      Returns next date where the inventory will be negative
+      """
+      return self.getNextAlertInventoryDate(
+                  reference_quantity=0, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getNextNegativeInventoryDate')
+    def getNextAlertInventoryDate(self, reference_quantity=0, **kw):
+      """
+      Returns next date where the inventory will be below reference
+      quantity
       """
       kw['resource_uid'] = self.getUid()
       portal_simulation = self.getPortalObject().portal_simulation
-      return portal_simulation.getNextNegativeInventoryDate(**kw)
-
+      return portal_simulation.getNextAlertInventoryDate(
+                          reference_quantity=reference_quantity, **kw)
 
     # Asset Price API
     security.declareProtected(Permissions.AccessContentsInformation,

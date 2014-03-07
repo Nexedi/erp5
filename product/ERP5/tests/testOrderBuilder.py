@@ -55,8 +55,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
 
   # defaults
   decrease_quantity = 1.0
-  max_delay = 4.0
-  min_flow = 7.0
+  max_delay = 0.0
+  min_flow = 0.0
 
   def afterSetUp(self):
     """
@@ -76,7 +76,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     Sets min_flow on resource
     """
     resource = sequence.get('resource')
-    resource.edit(min_flow=self.min_flow)
+    resource.edit(purchase_supply_line_min_flow=self.min_flow)
 
   def stepFillOrderBuilder(self, sequence):
     """
@@ -169,7 +169,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     # XXX: ... and for more lines/cells too
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
     self.assertEqual(order_line.getResourceValue(), resource)
-    self.assertEqual(order_line.getTotalQuantity(), self.min_flow)
+    self.assertEqual(order_line.getTotalQuantity(), self.wanted_quantity)
 
   def stepBuildOrderBuilder(self, sequence):
     """
@@ -204,7 +204,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     packing_list = packing_list_module.newContent(
       portal_type = self.packing_list_portal_type,
       source_value = organisation,
-      start_date = self.datetime,
+      start_date = self.datetime+10,
       specialise = self.business_process,
     )
 
@@ -213,6 +213,13 @@ class TestOrderBuilderMixin(TestOrderMixin):
       resource_value = resource,
       quantity = self.decrease_quantity,
     )
+
+    self.decrease_quantity_matrix = {
+      'variation/%s/blue' % resource.getRelativeUrl() : 1.0,
+      'variation/%s/green' % resource.getRelativeUrl() : 2.0,
+    }
+
+    self.wanted_quantity_matrix = self.decrease_quantity_matrix.copy()
 
     packing_list_line.setVariationCategoryList(
       self.decrease_quantity_matrix.keys(),
@@ -251,7 +258,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     packing_list = packing_list_module.newContent(
       portal_type = self.packing_list_portal_type,
       source_value = organisation,
-      start_date = self.datetime+14,
+      start_date = self.datetime+10,
       specialise = self.business_process,
     )
 
@@ -262,6 +269,23 @@ class TestOrderBuilderMixin(TestOrderMixin):
     )
 
     packing_list.confirm()
+
+  def stepCreateVariatedResource(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+      Create a resource with variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "VariatedResource%s" % resource.getId(),
+      variation_base_category_list = ['variation'],
+    )
+    for color in ['blue', 'green']:
+      resource.newContent(portal_type='Product Individual Variation',
+                          id=color, title=color)
+    sequence.edit(resource=resource)
 
 class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
   """
@@ -301,14 +325,12 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
       str(self.datetime.earliestTime()
           + self.order_builder_hardcoded_time_diff))
 
-    # We add 4 days to start date to reflect delays
-    self.wanted_stop_date = self.wanted_start_date + 4
+    self.wanted_stop_date = self.wanted_start_date
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
     sequence_list.play(self)
 
-  @newSimulationExpectedFailure
   def test_01a_simpleOrderBuilderVariatedResource(self, quiet=0, run=run_all_test):
     """
     Test simple Order Builder for Variated Resource
@@ -338,25 +360,17 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     self.wanted_stop_date = self.wanted_start_date
 
-    self.decrease_quantity_matrix = {
-      'size/Man' : 1.0,
-      'size/Woman' : 2.0,
-    }
-
-    self.wanted_quantity_matrix = self.decrease_quantity_matrix.copy()
-
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  @newSimulationExpectedFailure
   def test_02_maxDelayResourceOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test max_delay impact on generated order start date
     """
     if not run: return
 
-    self.max_delay = 14.0
+    self.max_delay = 4.0
 
     self.wanted_quantity = 1.0
     self.wanted_start_date = DateTime(
@@ -372,7 +386,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(self.common_sequence_string)
     sequence_list.play(self)
 
-  @newSimulationExpectedFailure
   def test_03_minFlowResourceOrderBuilder(self, quiet=0, run=run_all_test):
     """
     Test min_flow impact on generated order line quantity
@@ -390,20 +403,9 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(self.common_sequence_string)
 
     # case when min_flow > decreased_quantity
-    self.min_flow = 144.0
-    self.wanted_quantity = self.min_flow + self.decrease_quantity
-    # why to order more than needed?
-    # self.wanted_quantity = self.min_flow
-
-    sequence_list.play(self)
-
-    # case when min_flow < decreased_quantity
     self.min_flow = 15.0
-    self.decrease_quantity = 20.0
 
-    self.wanted_quantity = self.min_flow + self.decrease_quantity
-    # why to order more than needed?
-    # self.wanted_quantity = self.decreased_quantity
+    self.wanted_quantity = self.min_flow
 
     sequence_list.play(self)
 

@@ -183,6 +183,18 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                                    group_by_section=0,
                                                    **kw)
     id_count = 0
+    # min_flow and max_delay are stored on a supply line. By default
+    # we can get them through a method having the right supply type prefix
+    # like getPurchaseSupplyLineMinFlow. So we need to guess the supply prefix
+    supply_prefix = ''
+    delivery_type = self.getDeliveryPortalType()
+    portal = self.getPortalObject()
+    if delivery_type in portal.getPortalPurchaseTypeList():
+      supply_prefix = 'purchase'
+    elif delivery_type in portal.getPortalSaleTypeList():
+      supply_prefix = 'sale'
+    else:
+      supply_prefix = 'internal'
     for inventory_item in sql_list:
       if (inventory_item.inventory is not None):
         dumb_movement = inventory_item.getObject()
@@ -191,27 +203,29 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                    str(id_count))
         id_count += 1
         resource_portal_type = self.getResourcePortalType()
+        resource = portal.portal_catalog.getObject(inventory_item.resource_uid)
+        assert resource.getPortalType() == resource_portal_type
         movement.edit(
             resource=inventory_item.resource_relative_url,
             variation_category_list=dumb_movement.getVariationCategoryList(),
             destination_value=self.getDestinationValue(),
             resource_portal_type=resource_portal_type,
             destination_section_value=self.getDestinationSectionValue())
-        # We can do other test on inventory here
-        # XXX It is better if it can be sql parameters
-        #resource_portal_type = self.getResourcePortalType()
-        resource = movement.getResourceValue()
-        # FIXME: XXX Those properties are defined on a supply line !!
-        # min_flow, max_delay
-        min_flow = resource.getMinFlow(0)
-        assert resource.getPortalType() == resource_portal_type
-        if round(inventory_item.inventory, 5) < min_flow:
-          stop_date = resource.getNextNegativeInventoryDate(
+        # Get min_flow, max_delay on supply line
+        min_flow = 0
+        max_delay = 0
+        min_stock = 0
+        if supply_prefix:
+          min_flow = resource.getProperty(supply_prefix + '_supply_line_min_flow', 0)
+          max_delay = resource.getProperty(supply_prefix + '_supply_line_max_delay', 0)
+          min_stock = resource.getProperty(supply_prefix + '_supply_line_min_stock', 0)
+        if round(inventory_item.inventory, 5) < min_stock:
+          stop_date = resource.getNextAlertInventoryDate(
+                               reference_quantity=min_stock,
                                variation_text=movement.getVariationText(),
                                from_date=DateTime(),
                                **kw)
-          if stop_date is None:
-            stop_date = DateTime()
+          assert stop_date is not None
           max_delay = resource.getMaxDelay(0)
           movement.edit(
             start_date=DateTime(((stop_date-max_delay).Date())),

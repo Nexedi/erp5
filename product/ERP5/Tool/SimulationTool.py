@@ -2050,28 +2050,40 @@ class SimulationTool(BaseTool):
       return inventory_list[0]
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getNextDeficientInventoryDate')
+    def getNextAlertInventoryDate(self, reference_quantity=0, src__=0, **kw):
+      """
+      Give the next date where the quantity is lower than the
+      reference quantity.
+      """
+      result = None
+      # First look at current inventory, we might have already an inventory
+      # lower than reference_quantity
+      current_inventory = self.getCurrentInventory(**kw)
+      if current_inventory < reference_quantity:
+        result = DateTime()
+      else:
+        result = self.getInventoryList(src__=src__,
+            sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
+        if src__ :
+          return result
+        total_inventory = 0.
+        for inventory in result:
+          if inventory['inventory'] is not None:
+            total_inventory += inventory['inventory']
+            if total_inventory < reference_quantity:
+              result = inventory['date']
+              break
+      return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getNextNegativeInventoryDate')
-    def getNextNegativeInventoryDate(self, src__=0, **kw):
+    def getNextNegativeInventoryDate(self, **kw):
       """
-      Returns statistics of inventory grouped by section or site
+      Deficient Inventory with a reference_quantity of 0, so when the
+      stock will be negative
       """
-      #sql_kw = self._generateSQLKeywordDict(order_by_expression='stock.date', **kw)
-      #sql_kw['group_by_expression'] = 'stock.uid'
-      #sql_kw['order_by_expression'] = 'stock.date'
-
-      result = self.getInventoryList(src__=src__,
-          sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
-      if src__ :
-        return result
-
-      total_inventory = 0.
-      for inventory in result:
-        if inventory['inventory'] is not None:
-          total_inventory += inventory['inventory']
-          if total_inventory < 0:
-            return inventory['date']
-
-      return None
+      return self.getNextAlertInventoryDate(reference_quantity=0, **kw)
 
     #######################################################
     # Traceability management
