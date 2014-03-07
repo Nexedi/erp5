@@ -166,7 +166,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def generateMovementListForStockOptimisation(self, **kw):
-    # XXX: unused
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
@@ -185,42 +184,39 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                                    **kw)
     id_count = 0
     for inventory_item in sql_list:
-      # XXX FIXME SQL return None inventory...
-      # It may be better to return always good values
       if (inventory_item.inventory is not None):
         dumb_movement = inventory_item.getObject()
         # Create temporary movement
         movement = newTempMovement(self.getPortalObject(),
                                    str(id_count))
         id_count += 1
+        resource_portal_type = self.getResourcePortalType()
         movement.edit(
             resource=inventory_item.resource_relative_url,
             variation_category_list=dumb_movement.getVariationCategoryList(),
             destination_value=self.getDestinationValue(),
+            resource_portal_type=resource_portal_type,
             destination_section_value=self.getDestinationSectionValue())
         # We can do other test on inventory here
         # XXX It is better if it can be sql parameters
-        resource_portal_type = self.getResourcePortalType()
+        #resource_portal_type = self.getResourcePortalType()
         resource = movement.getResourceValue()
         # FIXME: XXX Those properties are defined on a supply line !!
         # min_flow, max_delay
         min_flow = resource.getMinFlow(0)
-        if (resource.getPortalType() == resource_portal_type) and\
-           (round(inventory_item.inventory, 5) < min_flow):
-          # FIXME XXX getNextNegativeInventoryDate must work
-          stop_date = DateTime()+10
-#         stop_date = resource.getNextNegativeInventoryDate(
-#                               variation_text=movement.getVariationText(),
-#                               from_date=DateTime(),
-# #                             node_category=node_category,
-# #                             section_category=section_category)
-#                               node_uid=self.getDestinationUid(),
-#                               section_uid=self.getDestinationSectionUid())
+        assert resource.getPortalType() == resource_portal_type
+        if round(inventory_item.inventory, 5) < min_flow:
+          stop_date = resource.getNextNegativeInventoryDate(
+                               variation_text=movement.getVariationText(),
+                               from_date=DateTime(),
+                               **kw)
+          if stop_date is None:
+            stop_date = DateTime()
           max_delay = resource.getMaxDelay(0)
           movement.edit(
             start_date=DateTime(((stop_date-max_delay).Date())),
             stop_date=DateTime(stop_date.Date()),
-            quantity=min_flow-inventory_item.inventory,
+            quantity=max(min_flow, -inventory_item.inventory),
             quantity_unit=resource.getQuantityUnit()
             # XXX FIXME define on a supply line
             # quantity_unit
@@ -234,7 +230,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       simulation movements) to construct a new delivery.
     """
     method_id = self.getSimulationSelectMethodId() or 'portal_catalog'
-    select_method = getattr(self.getPortalObject(), method_id)
+    select_method = getattr(self, method_id)
 
     movement_list = [] # use list to preserve order
     movement_set = set()
