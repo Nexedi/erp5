@@ -81,10 +81,10 @@ else:\n
                    validation_state=validation_state)\n
   budget_type = request.get(\'budget_type\')\n
   if budget_type:\n
-    search_kw[\'default_budget_type_uid\'] = [portal.portal_categories.budget_type.restrictedTraverse(x).getUid() for x in budget_type]\n
+    search_kw[\'default_budget_type_uid\'] = [portal.portal_categories.budget_type.restrictedTraverse(x).getUid() for x in budget_type if x]\n
   specialise = request.get(\'specialise\')\n
   if specialise:\n
-    search_kw[\'default_specialise_uid\'] = [portal.restrictedTraverse(x).getUid() for x in specialise]\n
+    search_kw[\'default_specialise_uid\'] = [portal.restrictedTraverse(x).getUid() for x in specialise if x]\n
 \n
   budget_list = portal.portal_catalog.searchResults(**search_kw)\n
   group_filtered_budget_list = []\n
