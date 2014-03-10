@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from copy import deepcopy
 from collections import defaultdict
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
@@ -125,23 +124,8 @@ class IndexableObjectWrapper(object):
         allowed_role_set.discard('Owner')
 
         # XXX make this a method of base ?
-        local_roles_group_id_group_id = deepcopy(getattr(ob,
-          '__ac_local_roles_group_id_dict__', dict()))
-
-        # If we acquire a permission, then we also want to acquire the local
-        # roles group ids
-        local_roles_container = ob
-        while getattr(local_roles_container, 'isRADContent', 0):
-          if local_roles_container._getAcquireLocalRoles():
-            local_roles_container = local_roles_container.aq_parent
-            for role_definition_group, user_and_role_list in \
-                getattr(local_roles_container,
-                        '__ac_local_roles_group_id_dict__',
-                        dict()).items():
-              local_roles_group_id_group_id.setdefault(role_definition_group, set()
-                ).update(user_and_role_list)
-          else:
-            break
+        local_roles_group_id_group_id = getattr(ob,
+          '__ac_local_roles_group_id_dict__', dict())
 
         allowed_by_local_roles_group_id = {}
         allowed_by_local_roles_group_id[''] = allowed_role_set
