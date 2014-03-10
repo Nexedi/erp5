@@ -187,6 +187,25 @@ CREATE TABLE alternate_roles_and_users (
       self.assertSameSet([user1, user2],
         [o.getObject() for o in
           self.portal.portal_catalog(portal_type='Person')])
+
+      # portal types that acquire roles properly acquire the local role group
+      # id mapping
+      self.assertTrue(self.portal.portal_types.Career.getTypeAcquireLocalRole())
+      career = user1.newContent(portal_type='Career')
+      self.tic()
+
+      alternate_roles_and_users = sql_connection.manage_test(
+        "SELECT * from alternate_roles_and_users").dictionaries()
+      self.assertTrue(dict(uid=career.getUid(),
+                           alternate_security_uid=user1_alternate_security_uid) in
+                      alternate_roles_and_users)
+      self.login('user1')
+      self.assertEqual([career],
+        [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
+      self.login('user2')
+      self.assertEqual([],
+        [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
+      
     finally:
       # restore catalog configuration
       sql_catalog.sql_search_tables = current_sql_search_tables
