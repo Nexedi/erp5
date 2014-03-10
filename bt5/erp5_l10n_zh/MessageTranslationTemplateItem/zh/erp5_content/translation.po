@@ -1,0 +1,2935 @@
+msgid ""
+msgstr "Project-Id-Version: ERP5 Localized Content\n"
+"POT-Creation-Date: 2014-03-10 16:03+UTC\n"
+"PO-Revision-Date: 2014-03-10 16:03+UTC\n"
+"Last-Translator:  <>\n"
+"Language-Team: zh <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "Accounting"
+msgstr "会计"
+
+msgid "Accounting & Finance"
+msgstr ""
+
+msgid "Accounting & Finance Manager"
+msgstr ""
+
+msgid "Accounting Agent"
+msgstr ""
+
+msgid "Accounting Manager"
+msgstr ""
+
+msgid "Accounts Payable"
+msgstr ""
+
+msgid "Activities of membership organizations"
+msgstr ""
+
+msgid "Activities of private households"
+msgstr ""
+
+msgid "Administration"
+msgstr "行政机构"
+
+msgid "Administrative Support"
+msgstr ""
+
+msgid "Advertisement"
+msgstr ""
+
+msgid "Advertisment"
+msgstr ""
+
+msgid "Afghan"
+msgstr ""
+
+msgid "Afghanistan"
+msgstr ""
+
+msgid "Africa"
+msgstr ""
+
+msgid "Agent"
+msgstr ""
+
+msgid "Agriculture & Hunting"
+msgstr ""
+
+msgid "Agriculture & forestry"
+msgstr ""
+
+msgid "Agriculture & hunting"
+msgstr ""
+
+msgid "Air transport"
+msgstr ""
+
+msgid "Albania"
+msgstr ""
+
+msgid "Albanian"
+msgstr ""
+
+msgid "Algeria"
+msgstr ""
+
+msgid "Algerian"
+msgstr ""
+
+msgid "American Samoa"
+msgstr ""
+
+msgid "American Samoan"
+msgstr ""
+
+msgid "American; US citizen"
+msgstr ""
+
+msgid "Americas"
+msgstr ""
+
+msgid "Andorra"
+msgstr ""
+
+msgid "Andorran"
+msgstr ""
+
+msgid "Angola"
+msgstr ""
+
+msgid "Angolan"
+msgstr ""
+
+msgid "Anguilla"
+msgstr ""
+
+msgid "Anguillan"
+msgstr ""
+
+msgid "Announcement"
+msgstr ""
+
+msgid "Antigua and Barbuda"
+msgstr ""
+
+msgid "Antiguan"
+msgstr ""
+
+msgid "Antiguan; Barbudian"
+msgstr ""
+
+msgid "Antillean"
+msgstr ""
+
+msgid "Apparel and Luggage and Personal Care Products"
+msgstr ""
+
+msgid "Area"
+msgstr ""
+
+msgid "Argentina"
+msgstr ""
+
+msgid "Argentinian"
+msgstr ""
+
+msgid "Armenia"
+msgstr ""
+
+msgid "Armenian"
+msgstr ""
+
+msgid "Aruba"
+msgstr ""
+
+msgid "Aruban"
+msgstr ""
+
+msgid "Asia"
+msgstr ""
+
+msgid "Asset"
+msgstr ""
+
+msgid "Assets"
+msgstr ""
+
+msgid "Asynchronous"
+msgstr ""
+
+msgid "Australia"
+msgstr ""
+
+msgid "Australia & New Zealand"
+msgstr ""
+
+msgid "Australian"
+msgstr ""
+
+msgid "Austria"
+msgstr ""
+
+msgid "Austrian"
+msgstr ""
+
+msgid "Auxiliary activities"
+msgstr ""
+
+msgid "Azerbaijan"
+msgstr ""
+
+msgid "Azerbaijani"
+msgstr ""
+
+msgid "BV Islander"
+msgstr ""
+
+msgid "BVI"
+msgstr ""
+
+msgid "Bahamas"
+msgstr ""
+
+msgid "Bahamian"
+msgstr ""
+
+msgid "Bahrain"
+msgstr ""
+
+msgid "Bahraini"
+msgstr ""
+
+msgid "Bangladesh"
+msgstr ""
+
+msgid "Bangladeshi"
+msgstr ""
+
+msgid "Bank"
+msgstr ""
+
+msgid "Barbadian"
+msgstr ""
+
+msgid "Barbados"
+msgstr ""
+
+msgid "Base Application"
+msgstr ""
+
+msgid "Base Contribution"
+msgstr ""
+
+msgid "Base Salary"
+msgstr ""
+
+msgid "Basic Metal"
+msgstr ""
+
+msgid "Basic metals"
+msgstr ""
+
+msgid "Basotho"
+msgstr ""
+
+msgid "Belarus"
+msgstr ""
+
+msgid "Belarusian"
+msgstr ""
+
+msgid "Belgian"
+msgstr ""
+
+msgid "Belgium"
+msgstr ""
+
+msgid "Belize"
+msgstr ""
+
+msgid "Belizean"
+msgstr ""
+
+msgid "Benin"
+msgstr ""
+
+msgid "Beninese"
+msgstr ""
+
+msgid "Bermuda"
+msgstr ""
+
+msgid "Bermudian"
+msgstr ""
+
+msgid "Bhutan"
+msgstr ""
+
+msgid "Bhutanese"
+msgstr ""
+
+msgid "Bolivia"
+msgstr ""
+
+msgid "Bolivian"
+msgstr ""
+
+msgid "Bonus"
+msgstr ""
+
+msgid "Bosnia"
+msgstr ""
+
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+msgid "Botswana"
+msgstr ""
+
+msgid "Botswanan"
+msgstr ""
+
+msgid "Brazil"
+msgstr ""
+
+msgid "Brazilian"
+msgstr ""
+
+msgid "British"
+msgstr ""
+
+msgid "British Virgin Islander"
+msgstr ""
+
+msgid "British Virgin Islands"
+msgstr ""
+
+msgid "Brunei"
+msgstr ""
+
+msgid "Brunei Darussalam"
+msgstr ""
+
+msgid "Bruneian"
+msgstr ""
+
+msgid "Building and Construction Machinery and Accessories"
+msgstr ""
+
+msgid "Building and Construction and Maintenance Services"
+msgstr ""
+
+msgid "Bulgaria"
+msgstr ""
+
+msgid "Bulgarian"
+msgstr ""
+
+msgid "Burkina Faso"
+msgstr ""
+
+msgid "Burkinabe"
+msgstr ""
+
+msgid "Burmese"
+msgstr ""
+
+msgid "Burundi"
+msgstr ""
+
+msgid "Burundian"
+msgstr ""
+
+msgid "By Air"
+msgstr "空运"
+
+msgid "By Mail"
+msgstr "邮寄"
+
+msgid "By Road"
+msgstr "路运"
+
+msgid "By Sea"
+msgstr "水运"
+
+msgid "CRM"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Cambodia"
+msgstr ""
+
+msgid "Cambodian"
+msgstr ""
+
+msgid "Cameroon"
+msgstr ""
+
+msgid "Cameroonian"
+msgstr ""
+
+msgid "Campaign"
+msgstr ""
+
+msgid "Campaigns"
+msgstr ""
+
+msgid "Canada"
+msgstr ""
+
+msgid "Canadian"
+msgstr ""
+
+msgid "Cape Verde"
+msgstr ""
+
+msgid "Cape Verdean"
+msgstr ""
+
+msgid "Caribbean"
+msgstr ""
+
+msgid "Carriage Paid To"
+msgstr ""
+
+msgid "Carriage and Insurance Paid to"
+msgstr ""
+
+msgid "Cash"
+msgstr ""
+
+msgid "Cash and Cash Equivalents"
+msgstr ""
+
+msgid "Cayman Islands"
+msgstr ""
+
+msgid "Caymanian"
+msgstr ""
+
+msgid "Centrafrique"
+msgstr ""
+
+msgid "Central African"
+msgstr ""
+
+msgid "Central African Republic"
+msgstr ""
+
+msgid "Central America"
+msgstr ""
+
+msgid "Central Asia"
+msgstr ""
+
+msgid "Chad"
+msgstr ""
+
+msgid "Chadian"
+msgstr ""
+
+msgid "Channel Islands"
+msgstr ""
+
+msgid "Chemical products"
+msgstr ""
+
+msgid "Chemicals including Bio Chemicals and Gas Materials"
+msgstr ""
+
+msgid "Cheque"
+msgstr "支票"
+
+msgid "Chile"
+msgstr ""
+
+msgid "Chilean"
+msgstr ""
+
+msgid "China"
+msgstr ""
+
+msgid "Chinese"
+msgstr ""
+
+msgid "Cleaning Equipment and Supplies"
+msgstr ""
+
+msgid "Client"
+msgstr "客户"
+
+msgid "Clock"
+msgstr ""
+
+msgid "Coal & lignite"
+msgstr ""
+
+msgid "Cohabitating"
+msgstr ""
+
+msgid "Coke, refined petroleum & nuclear fuel"
+msgstr ""
+
+msgid "Collaborative"
+msgstr ""
+
+msgid "Collected VAT"
+msgstr ""
+
+msgid "Collection, purification & distribution of water"
+msgstr ""
+
+msgid "Colombia"
+msgstr ""
+
+msgid "Colombian"
+msgstr ""
+
+msgid "Commercial and Military and Private Vehicles and their Accessories"
+msgstr ""
+
+msgid "Commission"
+msgstr ""
+
+msgid "Comorian"
+msgstr ""
+
+msgid "Comoros"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Company Agent"
+msgstr ""
+
+msgid "Company Executive"
+msgstr ""
+
+msgid "Company Manager"
+msgstr ""
+
+msgid "Complaint"
+msgstr ""
+
+msgid "Component"
+msgstr ""
+
+msgid "Computer & related activities"
+msgstr ""
+
+msgid "Conference"
+msgstr ""
+
+msgid "Congo"
+msgstr ""
+
+msgid "Congo (Brazaville)"
+msgstr ""
+
+msgid "Congo (Kinshassa XX)"
+msgstr ""
+
+msgid "Congolese"
+msgstr ""
+
+msgid "Construction"
+msgstr ""
+
+msgid "Consumers' cooperative"
+msgstr ""
+
+msgid "Contact us"
+msgstr ""
+
+msgid "Container"
+msgstr ""
+
+msgid "Cook Islands"
+msgstr ""
+
+msgid "Cost and Freight"
+msgstr ""
+
+msgid "Cost of Sales"
+msgstr ""
+
+msgid "Cost, Insurance and Freight"
+msgstr ""
+
+msgid "Costa Rica"
+msgstr ""
+
+msgid "Costa Rican"
+msgstr ""
+
+msgid "Cote d'Ivoire"
+msgstr ""
+
+msgid "Credit Card"
+msgstr "信用卡"
+
+msgid "Croat"
+msgstr ""
+
+msgid "Croatia"
+msgstr ""
+
+msgid "Cuba"
+msgstr ""
+
+msgid "Cuban"
+msgstr ""
+
+msgid "Cubic Meter"
+msgstr ""
+
+msgid "Current Assets"
+msgstr ""
+
+msgid "Current Liabilities"
+msgstr ""
+
+msgid "Custom"
+msgstr "惯例"
+
+msgid "Cypriot"
+msgstr ""
+
+msgid "Cyprus"
+msgstr ""
+
+msgid "Czech"
+msgstr ""
+
+msgid "Czech Republic"
+msgstr ""
+
+msgid "Dane"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Death Insurance"
+msgstr ""
+
+msgid "Deductible Tax"
+msgstr ""
+
+msgid "Defense and Law Enforcement and Security and Safety Equipment"
+msgstr ""
+
+msgid "Delivered At Frontier"
+msgstr ""
+
+msgid "Delivered Duty Paid"
+msgstr ""
+
+msgid "Delivered Duty Unpaid"
+msgstr ""
+
+msgid "Delivered Ex Quay"
+msgstr ""
+
+msgid "Delivered Ex Ship"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Democratic People's Republic of Korea"
+msgstr ""
+
+msgid "Democratic Republic of the Congo"
+msgstr ""
+
+msgid "Denmark"
+msgstr ""
+
+msgid "Deprecation of Financials Assets"
+msgstr ""
+
+msgid "Deprecation of Fixed Assets"
+msgstr ""
+
+msgid "Deprecation of Intangible Assets"
+msgstr ""
+
+msgid "Deprecation of Other Receivables"
+msgstr ""
+
+msgid "Deprecation of Trade Receivables"
+msgstr ""
+
+msgid "Deprecation of inventories"
+msgstr ""
+
+msgid "Design"
+msgstr ""
+
+msgid "Developer"
+msgstr ""
+
+msgid "Developer for a Project"
+msgstr ""
+
+msgid "Discount"
+msgstr ""
+
+msgid "Discounted"
+msgstr "打折"
+
+msgid "Distribution and Conditioning Systems and Equipment and Components"
+msgstr ""
+
+msgid "Divorced"
+msgstr ""
+
+msgid "Djibouti"
+msgstr ""
+
+msgid "Djiboutian"
+msgstr ""
+
+msgid "Doctor"
+msgstr "博士"
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Domestic Appliances and Supplies and Consumer Electronic Products"
+msgstr ""
+
+msgid "Dominica"
+msgstr ""
+
+msgid "Dominican"
+msgstr ""
+
+msgid "Dominican Republic"
+msgstr ""
+
+msgid "Drugs and Pharmaceutical Products"
+msgstr ""
+
+msgid "ERP5"
+msgstr ""
+
+msgid "ERP5 Worklists"
+msgstr ""
+
+msgid "East Timorese"
+msgstr ""
+
+msgid "Eastern Africa"
+msgstr ""
+
+msgid "Eastern Asia"
+msgstr ""
+
+msgid "Eastern Europe"
+msgstr ""
+
+msgid "Ecuador"
+msgstr ""
+
+msgid "Ecuadorian"
+msgstr ""
+
+msgid "Editorial and Design and Graphic and Fine Art Services"
+msgstr ""
+
+msgid "Education"
+msgstr ""
+
+msgid "Education and Training Services"
+msgstr ""
+
+msgid "Egypt"
+msgstr ""
+
+msgid "Egyptian"
+msgstr ""
+
+msgid "El Salvador"
+msgstr ""
+
+msgid "Electrical Systems and Lighting and Components and Accessories"
+msgstr ""
+
+msgid "Electrical machinery & apparatus"
+msgstr ""
+
+msgid "Electricity, gas & water"
+msgstr ""
+
+msgid "Electricity, gas, steam & hot water supply"
+msgstr ""
+
+msgid "Electronic Components and Supplies"
+msgstr ""
+
+msgid "Emirian"
+msgstr ""
+
+msgid "Employee"
+msgstr ""
+
+msgid "Employee Share"
+msgstr ""
+
+msgid "Employer Share"
+msgstr ""
+
+msgid "Energy"
+msgstr ""
+
+msgid "Engineering and Research and Technology Based Services"
+msgstr ""
+
+msgid "Environmental Services"
+msgstr ""
+
+msgid "Equatorial Guinea"
+msgstr ""
+
+msgid "Equatorial Guinean"
+msgstr ""
+
+msgid "Equipment Components & Supplies"
+msgstr ""
+
+msgid "Equity"
+msgstr ""
+
+msgid "Eritrea"
+msgstr ""
+
+msgid "Eritrean"
+msgstr ""
+
+msgid "Estonia"
+msgstr ""
+
+msgid "Estonian"
+msgstr ""
+
+msgid "Ethiopia"
+msgstr ""
+
+msgid "Ethiopian"
+msgstr ""
+
+msgid "Europe"
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Ex Works"
+msgstr ""
+
+msgid "Executive"
+msgstr ""
+
+msgid "Expense"
+msgstr ""
+
+msgid "Extraterritorial organizations & bodies"
+msgstr ""
+
+msgid "Fabricated metal products except machinery"
+msgstr ""
+
+msgid "Faeroe Islands"
+msgstr ""
+
+msgid "Faeroese"
+msgstr ""
+
+msgid "Falkland Islander"
+msgstr ""
+
+msgid "Falkland Islands"
+msgstr ""
+
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+msgid "Farming and Fishing and Forestry and Wildlife Contracting Services"
+msgstr ""
+
+msgid "Farming and Fishing and Forestry and Wildlife Machinery and Accessories"
+msgstr ""
+
+msgid "Federated States of Micronesia"
+msgstr ""
+
+msgid "Feed Reader"
+msgstr ""
+
+msgid "Female"
+msgstr "女"
+
+msgid "Fiji"
+msgstr ""
+
+msgid "Fiji Islander"
+msgstr ""
+
+msgid "Filipino"
+msgstr ""
+
+msgid "Financial Reports"
+msgstr ""
+
+msgid "Financial Support"
+msgstr ""
+
+msgid "Financial and Insurance Services"
+msgstr ""
+
+msgid "Financial intermediation"
+msgstr ""
+
+msgid "Financial intermediation except insurance"
+msgstr ""
+
+msgid "Financials Assets"
+msgstr ""
+
+msgid "Finland"
+msgstr ""
+
+msgid "Finn"
+msgstr ""
+
+msgid "Fishing & aquaculture"
+msgstr ""
+
+msgid "Fixed Assets"
+msgstr ""
+
+msgid "Food Beverage and Tobacco Products"
+msgstr ""
+
+msgid "Food products & beverages"
+msgstr ""
+
+msgid "Foreign Languages"
+msgstr ""
+
+msgid "Forestry"
+msgstr ""
+
+msgid "France"
+msgstr ""
+
+msgid "Free Alongside Ship"
+msgstr ""
+
+msgid "Free Carrier"
+msgstr ""
+
+msgid "Free On Board"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "French Guiana"
+msgstr ""
+
+msgid "French Polynesia"
+msgstr ""
+
+msgid "Fuels and Fuel Additives and Lubricants and Anti corrosive Materials"
+msgstr ""
+
+msgid "Furniture"
+msgstr ""
+
+msgid "Furniture and Furnishings"
+msgstr ""
+
+msgid "Gabon"
+msgstr ""
+
+msgid "Gabonese"
+msgstr ""
+
+msgid "Gambia"
+msgstr ""
+
+msgid "Gambian"
+msgstr ""
+
+msgid "Georgia"
+msgstr ""
+
+msgid "Georgian"
+msgstr ""
+
+msgid "German"
+msgstr ""
+
+msgid "Germany"
+msgstr ""
+
+msgid "Ghana"
+msgstr ""
+
+msgid "Ghanaian"
+msgstr ""
+
+msgid "Gibraltar"
+msgstr ""
+
+msgid "Gibraltarian"
+msgstr ""
+
+msgid "Goods-producing activities for own use"
+msgstr ""
+
+msgid "Google Calendar"
+msgstr ""
+
+msgid "Google clock"
+msgstr ""
+
+msgid "Gram"
+msgstr ""
+
+msgid "Greece"
+msgstr ""
+
+msgid "Greek"
+msgstr ""
+
+msgid "Greenland"
+msgstr ""
+
+msgid "Greenlander"
+msgstr ""
+
+msgid "Grenada"
+msgstr ""
+
+msgid "Grenadian"
+msgstr ""
+
+msgid "Gross Salary"
+msgstr ""
+
+msgid "Guadeloupe"
+msgstr ""
+
+msgid "Guadeloupean"
+msgstr ""
+
+msgid "Guam"
+msgstr ""
+
+msgid "Guamanian"
+msgstr ""
+
+msgid "Guatemala"
+msgstr ""
+
+msgid "Guatemalan"
+msgstr ""
+
+msgid "Guernsey"
+msgstr ""
+
+msgid "Guinea"
+msgstr ""
+
+msgid "Guinea-Bissau"
+msgstr ""
+
+msgid "Guinean"
+msgstr ""
+
+msgid "Guyana"
+msgstr ""
+
+msgid "Guyanese"
+msgstr ""
+
+msgid "HQ"
+msgstr ""
+
+msgid "HR"
+msgstr ""
+
+msgid "Haiti"
+msgstr ""
+
+msgid "Haitian"
+msgstr ""
+
+msgid "Headquarters"
+msgstr ""
+
+msgid "Headquarters Agent"
+msgstr ""
+
+msgid "Headquarters Executive"
+msgstr ""
+
+msgid "Headquarters Manager"
+msgstr ""
+
+msgid "Health & social work"
+msgstr ""
+
+msgid "Health Insurance"
+msgstr ""
+
+msgid "Healthcare Services"
+msgstr ""
+
+msgid "Holy See"
+msgstr ""
+
+msgid "Honduran"
+msgstr ""
+
+msgid "Honduras"
+msgstr ""
+
+msgid "Hong Kong"
+msgstr ""
+
+msgid "Hong Kong Chinese"
+msgstr ""
+
+msgid "Hong Kong Special Administrative Region of China"
+msgstr ""
+
+msgid "Hotels & restaurants"
+msgstr ""
+
+msgid "Hour"
+msgstr "小时"
+
+msgid "Human Resources"
+msgstr ""
+
+msgid "Human Resources Agent"
+msgstr ""
+
+msgid "Human Resources Manager"
+msgstr ""
+
+msgid "Human resources"
+msgstr ""
+
+msgid "Hungarian"
+msgstr ""
+
+msgid "Hungary"
+msgstr ""
+
+msgid "IT Support"
+msgstr ""
+
+msgid "Iceland"
+msgstr ""
+
+msgid "Icelander"
+msgstr ""
+
+msgid "In Cash"
+msgstr "现金"
+
+msgid "Income"
+msgstr ""
+
+msgid "India"
+msgstr ""
+
+msgid "Indian"
+msgstr ""
+
+msgid "Indonesia"
+msgstr ""
+
+msgid "Indonesian"
+msgstr ""
+
+msgid "Industrial Cleaning Services"
+msgstr ""
+
+msgid "Industrial Equipment"
+msgstr ""
+
+msgid "Industrial Manufacturing and Processing Machinery and Accessories"
+msgstr ""
+
+msgid "Industrial Production and Manufacturing Services"
+msgstr ""
+
+msgid "Information"
+msgstr ""
+
+msgid "Information Systems"
+msgstr ""
+
+msgid "Information Systems Manager"
+msgstr ""
+
+msgid "Information Technology"
+msgstr ""
+
+msgid "Information Technology Broadcasting and Telecommunications"
+msgstr ""
+
+msgid "Inquiry"
+msgstr ""
+
+msgid "Insurance & pension funding"
+msgstr ""
+
+msgid "Intangible Assets"
+msgstr ""
+
+msgid "Interest Expense"
+msgstr ""
+
+msgid "Interest Income"
+msgstr ""
+
+msgid "Internal"
+msgstr "内部人员"
+
+msgid "Inventories"
+msgstr ""
+
+msgid "Invoice"
+msgstr "发票"
+
+msgid "Invoicing"
+msgstr ""
+
+msgid "Iran"
+msgstr ""
+
+msgid "Iran, Islamic Republic of"
+msgstr ""
+
+msgid "Iranian"
+msgstr ""
+
+msgid "Iraq"
+msgstr ""
+
+msgid "Iraqi"
+msgstr ""
+
+msgid "Ireland"
+msgstr ""
+
+msgid "Irishman"
+msgstr ""
+
+msgid "Isle of Man"
+msgstr ""
+
+msgid "Israel"
+msgstr ""
+
+msgid "Israeli"
+msgstr ""
+
+msgid "Italian"
+msgstr ""
+
+msgid "Italy"
+msgstr ""
+
+msgid "Ivorian"
+msgstr ""
+
+msgid "Jamaica"
+msgstr ""
+
+msgid "Jamaican"
+msgstr ""
+
+msgid "Japan"
+msgstr ""
+
+msgid "Japanese"
+msgstr ""
+
+msgid "Jersey"
+msgstr ""
+
+msgid "Jordan"
+msgstr ""
+
+msgid "Jordanian"
+msgstr ""
+
+msgid "Kazakh"
+msgstr ""
+
+msgid "Kazakhstan"
+msgstr ""
+
+msgid "Kenya"
+msgstr ""
+
+msgid "Kenyan"
+msgstr ""
+
+msgid "Kilogram"
+msgstr ""
+
+msgid "Kilowatt-Hour"
+msgstr ""
+
+msgid "Kiribati"
+msgstr ""
+
+msgid "Kiribatian"
+msgstr ""
+
+msgid "Kittsian; Nevisian"
+msgstr ""
+
+msgid "Korea (North)"
+msgstr ""
+
+msgid "Korea (South)"
+msgstr ""
+
+msgid "Kuwait"
+msgstr ""
+
+msgid "Kuwaiti"
+msgstr ""
+
+msgid "Kyrgyz"
+msgstr ""
+
+msgid "Kyrgyzstan"
+msgstr ""
+
+msgid "Laboratory and Measuring and Observing and Testing Equipment"
+msgstr ""
+
+msgid "Labour"
+msgstr ""
+
+msgid "Land Transport"
+msgstr ""
+
+msgid "Land transport"
+msgstr ""
+
+msgid "Lao"
+msgstr ""
+
+msgid "Lao People's Democratic Republic"
+msgstr ""
+
+msgid "Laos"
+msgstr ""
+
+msgid "Latvia"
+msgstr ""
+
+msgid "Latvian"
+msgstr ""
+
+msgid "Leave time"
+msgstr ""
+
+msgid "Lebanese"
+msgstr ""
+
+msgid "Lebanon"
+msgstr ""
+
+msgid "Legal"
+msgstr ""
+
+msgid "Legal documents"
+msgstr ""
+
+msgid "Length"
+msgstr ""
+
+msgid "Lesotho"
+msgstr ""
+
+msgid "Level 1"
+msgstr ""
+
+msgid "Level 2"
+msgstr ""
+
+msgid "Level 3"
+msgstr ""
+
+msgid "Level 4"
+msgstr ""
+
+msgid "Level 5"
+msgstr ""
+
+msgid "Liability"
+msgstr ""
+
+msgid "Liberia"
+msgstr ""
+
+msgid "Liberian"
+msgstr ""
+
+msgid "Libya"
+msgstr ""
+
+msgid "Libyan"
+msgstr ""
+
+msgid "Libyan Arab Jamahiriya"
+msgstr ""
+
+msgid "Liechtenstein"
+msgstr ""
+
+msgid "Liechtensteiner"
+msgstr ""
+
+msgid "Limited company (Ltd.)"
+msgstr ""
+
+msgid "Limited liability company (LLC)"
+msgstr ""
+
+msgid "Limited liability partnership (LLP)"
+msgstr ""
+
+msgid "Limited partnership (LP)"
+msgstr ""
+
+msgid "Lithuania"
+msgstr ""
+
+msgid "Lithuanian"
+msgstr ""
+
+msgid "Litre"
+msgstr ""
+
+msgid "Live Plant and Animal Material, Accessories and Supplies"
+msgstr ""
+
+msgid "Loans"
+msgstr ""
+
+msgid "Long Term Assets"
+msgstr ""
+
+msgid "Long Term Liabilities"
+msgstr ""
+
+msgid "Low Priority"
+msgstr "低优先性"
+
+msgid "Luxembourg"
+msgstr ""
+
+msgid "Luxembourger"
+msgstr ""
+
+msgid "Macanese"
+msgstr ""
+
+msgid "Macao"
+msgstr ""
+
+msgid "Macao Special Administrative Region of China"
+msgstr ""
+
+msgid "Macedonia"
+msgstr ""
+
+msgid "Macedonian"
+msgstr ""
+
+msgid "Machinery & equipment"
+msgstr ""
+
+msgid "Madagascar"
+msgstr ""
+
+msgid "Madam"
+msgstr "女士"
+
+msgid "Mahorais"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Main site"
+msgstr "主要站点"
+
+msgid "Malagasy"
+msgstr ""
+
+msgid "Malawi"
+msgstr ""
+
+msgid "Malawian"
+msgstr ""
+
+msgid "Malaysia"
+msgstr ""
+
+msgid "Malaysian"
+msgstr ""
+
+msgid "Maldives"
+msgstr ""
+
+msgid "Maldivian"
+msgstr ""
+
+msgid "Male"
+msgstr "男"
+
+msgid "Mali"
+msgstr ""
+
+msgid "Malian"
+msgstr ""
+
+msgid "Malta"
+msgstr ""
+
+msgid "Maltese"
+msgstr ""
+
+msgid "Management"
+msgstr ""
+
+msgid "Management and Business Professionals and Administrative Services"
+msgstr ""
+
+msgid "Manager"
+msgstr ""
+
+msgid "Manufactured Products"
+msgstr ""
+
+msgid "Manufacturing"
+msgstr ""
+
+msgid "Manufacturing Components and Supplies"
+msgstr ""
+
+msgid "Market Survey"
+msgstr ""
+
+msgid "Marketing"
+msgstr ""
+
+msgid "Marketing Agent"
+msgstr ""
+
+msgid "Marketing Campaign"
+msgstr ""
+
+msgid "Marketing Manager"
+msgstr ""
+
+msgid "Married"
+msgstr ""
+
+msgid "Marshall Islands"
+msgstr ""
+
+msgid "Marshallese"
+msgstr ""
+
+msgid "Martinican"
+msgstr ""
+
+msgid "Martinique"
+msgstr ""
+
+msgid "Mass"
+msgstr ""
+
+msgid "Material Handling and Conditioning and Storage Machinery"
+msgstr ""
+
+msgid "Mauritania"
+msgstr ""
+
+msgid "Mauritanian"
+msgstr ""
+
+msgid "Mauritian"
+msgstr ""
+
+msgid "Mauritius"
+msgstr ""
+
+msgid "Mayotte"
+msgstr ""
+
+msgid "Media"
+msgstr "组织"
+
+msgid "Medical Equipment and Accessories and Supplies"
+msgstr ""
+
+msgid "Medical, precision & optical instruments"
+msgstr ""
+
+msgid "Meeting"
+msgstr ""
+
+msgid "Meetings"
+msgstr ""
+
+msgid "Melanesia"
+msgstr ""
+
+msgid "Metal ores"
+msgstr ""
+
+msgid "Meter"
+msgstr ""
+
+msgid "Mexican"
+msgstr ""
+
+msgid "Mexico"
+msgstr ""
+
+msgid "Micronesia"
+msgstr ""
+
+msgid "Micronesia, Federated States of"
+msgstr ""
+
+msgid "Micronesian"
+msgstr ""
+
+msgid "Middle Africa"
+msgstr ""
+
+msgid "Millimeter"
+msgstr ""
+
+msgid "Mineral and Textile and Inedible Plant and Animal Materials"
+msgstr ""
+
+msgid "Mining & quarrying"
+msgstr ""
+
+msgid "Mining and Well Drilling Machinery and Accessories"
+msgstr ""
+
+msgid "Mining and oil and gas services"
+msgstr ""
+
+msgid "Minute"
+msgstr ""
+
+msgid "Miss"
+msgstr "小姐"
+
+msgid "Mister"
+msgstr "先生"
+
+msgid "Moldavia"
+msgstr ""
+
+msgid "Moldovan"
+msgstr ""
+
+msgid "Monaco"
+msgstr ""
+
+msgid "Monegasque"
+msgstr ""
+
+msgid "Mongolia"
+msgstr ""
+
+msgid "Mongolian"
+msgstr ""
+
+msgid "Montenegrin"
+msgstr ""
+
+msgid "Montenegro"
+msgstr ""
+
+msgid "Montserrat"
+msgstr ""
+
+msgid "Montserratian"
+msgstr ""
+
+msgid "Moroccan"
+msgstr ""
+
+msgid "Morocco"
+msgstr ""
+
+msgid "Motor vehicles & trailers"
+msgstr ""
+
+msgid "Mozambican"
+msgstr ""
+
+msgid "Mozambique"
+msgstr ""
+
+msgid "Musical Instruments and Games and Educational Equipment"
+msgstr ""
+
+msgid "Myanmar"
+msgstr ""
+
+msgid "Namibia"
+msgstr ""
+
+msgid "Namibian"
+msgstr ""
+
+msgid "National Defense and Public Order and Security and Safety Services"
+msgstr ""
+
+msgid "Nauru"
+msgstr ""
+
+msgid "Nauruan"
+msgstr ""
+
+msgid "Nepal"
+msgstr ""
+
+msgid "Nepalese"
+msgstr ""
+
+msgid "Net Salary"
+msgstr ""
+
+msgid "Netherlander"
+msgstr ""
+
+msgid "Netherlands"
+msgstr ""
+
+msgid "Netherlands Antilles"
+msgstr ""
+
+msgid "New Caledonia"
+msgstr ""
+
+msgid "New Caledonian"
+msgstr ""
+
+msgid "New Zealand"
+msgstr ""
+
+msgid "New Zealander"
+msgstr ""
+
+msgid "News"
+msgstr ""
+
+msgid "News Feed"
+msgstr ""
+
+msgid "Nicaragua"
+msgstr ""
+
+msgid "Nicaraguan"
+msgstr ""
+
+msgid "Niger"
+msgstr ""
+
+msgid "Nigeria"
+msgstr ""
+
+msgid "Nigerien"
+msgstr ""
+
+msgid "Niue"
+msgstr ""
+
+msgid "Niuean"
+msgstr ""
+
+msgid "Non Deductible Tax"
+msgstr ""
+
+msgid "Non Operating Expense"
+msgstr ""
+
+msgid "Non Operating Income"
+msgstr ""
+
+msgid "Non Tax Withholding"
+msgstr ""
+
+msgid "Non Taxable Bonus"
+msgstr ""
+
+msgid "Non-metallic mineral products"
+msgstr ""
+
+msgid "Non-profit organisation"
+msgstr ""
+
+msgid "Norfolk Island"
+msgstr ""
+
+msgid "Norfolk Islander"
+msgstr ""
+
+msgid "Normal"
+msgstr "普通"
+
+msgid "North Korean"
+msgstr ""
+
+msgid "Northern Africa"
+msgstr ""
+
+msgid "Northern America"
+msgstr ""
+
+msgid "Northern Europe"
+msgstr ""
+
+msgid "Northern Mariana"
+msgstr ""
+
+msgid "Northern Mariana Islander"
+msgstr ""
+
+msgid "Northern Mariana Islands"
+msgstr ""
+
+msgid "Norway"
+msgstr ""
+
+msgid "Norwegian"
+msgstr ""
+
+msgid "Occupied Palestinian Territory"
+msgstr ""
+
+msgid "Oceania"
+msgstr ""
+
+msgid "Office Equipment and Accessories and Supplies"
+msgstr ""
+
+msgid "Office, accounting & computing machinery"
+msgstr ""
+
+msgid "Oman"
+msgstr ""
+
+msgid "Omani"
+msgstr ""
+
+msgid "Operating Expenses"
+msgstr ""
+
+msgid "Operation"
+msgstr ""
+
+msgid "Order"
+msgstr "订单"
+
+msgid "Organizations and Clubs"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Other Current Liabilities"
+msgstr ""
+
+msgid "Other Marketing Service"
+msgstr ""
+
+msgid "Other Meeting"
+msgstr ""
+
+msgid "Other Receivables"
+msgstr ""
+
+msgid "Other Support Service"
+msgstr ""
+
+msgid "Other business activities"
+msgstr ""
+
+msgid "Other community, social & personal services"
+msgstr ""
+
+msgid "Other documents"
+msgstr ""
+
+msgid "Other event"
+msgstr ""
+
+msgid "Other service activities"
+msgstr ""
+
+msgid "Other transport equipment"
+msgstr ""
+
+msgid "Others Liabilities"
+msgstr ""
+
+msgid "Overtime"
+msgstr ""
+
+msgid "Packing List"
+msgstr "装箱单"
+
+msgid "Pakistan"
+msgstr ""
+
+msgid "Pakistani"
+msgstr ""
+
+msgid "Palau"
+msgstr ""
+
+msgid "Palauan"
+msgstr ""
+
+msgid "Palestine"
+msgstr ""
+
+msgid "Palestinian"
+msgstr ""
+
+msgid "Panama"
+msgstr ""
+
+msgid "Panamanian"
+msgstr ""
+
+msgid "Paper Materials and Products"
+msgstr ""
+
+msgid "Paper products"
+msgstr ""
+
+msgid "Papua New Guinea"
+msgstr ""
+
+msgid "Papua New Guinean"
+msgstr ""
+
+msgid "Paraguay"
+msgstr ""
+
+msgid "Paraguayan"
+msgstr ""
+
+msgid "Partner"
+msgstr ""
+
+msgid "Partnership Meeting"
+msgstr ""
+
+msgid "PayPal"
+msgstr ""
+
+msgid "Payable"
+msgstr ""
+
+msgid "Payment"
+msgstr ""
+
+msgid "Payroll"
+msgstr ""
+
+msgid "Payroll Calculation"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "Personal Management"
+msgstr ""
+
+msgid "Personal and Domestic Services"
+msgstr ""
+
+msgid "Persons"
+msgstr ""
+
+msgid "Peru"
+msgstr ""
+
+msgid "Peruvian"
+msgstr ""
+
+msgid "Petroleum & Gas"
+msgstr ""
+
+msgid "Petroleum & gas"
+msgstr ""
+
+msgid "Philippines"
+msgstr ""
+
+msgid "Piece"
+msgstr "件"
+
+msgid "Pitcairn"
+msgstr ""
+
+msgid "Pitcairner"
+msgstr ""
+
+msgid "Poland"
+msgstr ""
+
+msgid "Pole"
+msgstr ""
+
+msgid "Politics and Civic Affairs Services"
+msgstr ""
+
+msgid "Polynesia"
+msgstr ""
+
+msgid "Polynesian"
+msgstr ""
+
+msgid "Portugal"
+msgstr ""
+
+msgid "Portuguese"
+msgstr ""
+
+msgid "Post and telecommunications"
+msgstr ""
+
+msgid "Power Generation and Distribution Machinery and Accessories"
+msgstr ""
+
+msgid "Presence Time"
+msgstr ""
+
+msgid "Press Book"
+msgstr ""
+
+msgid "Printing and Photographic and Audio and Visual Equipment and Supplies"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Product"
+msgstr "产品"
+
+msgid "Production"
+msgstr ""
+
+msgid "Production Agent"
+msgstr ""
+
+msgid "Production Management"
+msgstr ""
+
+msgid "Production Manager"
+msgstr ""
+
+msgid "Production – Manufacturing"
+msgstr ""
+
+msgid "Profit or Loss"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Project Management"
+msgstr ""
+
+msgid "Project Management & Implementation"
+msgstr ""
+
+msgid "Project Manager"
+msgstr ""
+
+msgid "Project Meeting"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Public Utilities and Public Sector Related Services"
+msgstr ""
+
+msgid "Public administration & defence"
+msgstr ""
+
+msgid "Published Products"
+msgstr ""
+
+msgid "Publishing, printing of recorded media"
+msgstr ""
+
+msgid "Puerto Rican"
+msgstr ""
+
+msgid "Puerto Rico"
+msgstr ""
+
+msgid "Purchase"
+msgstr ""
+
+msgid "Purchase Agent"
+msgstr ""
+
+msgid "Purchase Manager"
+msgstr ""
+
+msgid "Purchases"
+msgstr ""
+
+msgid "Purchases Campaign"
+msgstr ""
+
+msgid "Purchases Contracts"
+msgstr ""
+
+msgid "Purchases Meeting"
+msgstr ""
+
+msgid "Qatar"
+msgstr ""
+
+msgid "Qatari"
+msgstr ""
+
+msgid "Quality Assurance"
+msgstr ""
+
+msgid "R&D"
+msgstr ""
+
+msgid "R&D Agent"
+msgstr ""
+
+msgid "Radio,TV & communication equipment"
+msgstr ""
+
+msgid "Raw Materials"
+msgstr ""
+
+msgid "Read RSS and ATOM feeds"
+msgstr ""
+
+msgid "Real estate"
+msgstr ""
+
+msgid "Real estate, renting & business activities"
+msgstr ""
+
+msgid "Receivable"
+msgstr ""
+
+msgid "Recreational, cultural & sporting activities"
+msgstr ""
+
+msgid "Recycling"
+msgstr ""
+
+msgid "Refundable VAT"
+msgstr ""
+
+msgid "Region"
+msgstr ""
+
+msgid "Renting of machinery"
+msgstr ""
+
+msgid "Republic of Korea"
+msgstr ""
+
+msgid "Republic of Moldova"
+msgstr ""
+
+msgid "Required Item Types"
+msgstr ""
+
+msgid "Research"
+msgstr ""
+
+msgid "Research and Development"
+msgstr ""
+
+msgid "Research and Development Agent"
+msgstr ""
+
+msgid "Research and Development Manager"
+msgstr ""
+
+msgid "Research and development"
+msgstr ""
+
+msgid "Resin and Rosin and Rubber and Foam and Film and Elastomeric Materials"
+msgstr ""
+
+msgid "Restricted"
+msgstr ""
+
+msgid "Retail trade, except of motor vehicles"
+msgstr ""
+
+msgid "Retirement"
+msgstr ""
+
+msgid "Reunionese"
+msgstr ""
+
+msgid "Revenue"
+msgstr ""
+
+msgid "Romania"
+msgstr ""
+
+msgid "Romanian"
+msgstr ""
+
+msgid "Rubber & plastics"
+msgstr ""
+
+msgid "Russian"
+msgstr ""
+
+msgid "Russian Federation"
+msgstr ""
+
+msgid "Rwanda"
+msgstr ""
+
+msgid "Rwandan"
+msgstr ""
+
+msgid "Réunion"
+msgstr ""
+
+msgid "Sahrawi"
+msgstr ""
+
+msgid "Saint Helena"
+msgstr ""
+
+msgid "Saint Helenian"
+msgstr ""
+
+msgid "Saint Kitts"
+msgstr ""
+
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+msgid "Saint Lucia"
+msgstr ""
+
+msgid "Saint Lucian"
+msgstr ""
+
+msgid "Saint Martin"
+msgstr ""
+
+msgid "Saint Martin (F)"
+msgstr ""
+
+msgid "Saint Martin (French part)"
+msgstr ""
+
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+msgid "Saint Vincent"
+msgstr ""
+
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+msgid "Saint-Barthélemy"
+msgstr ""
+
+msgid "Salary Range"
+msgstr ""
+
+msgid "Sale"
+msgstr ""
+
+msgid "Sale & maintenance of motor vehicles"
+msgstr ""
+
+msgid "Sale Opportunity"
+msgstr ""
+
+msgid "Sales"
+msgstr ""
+
+msgid "Sales Agent"
+msgstr ""
+
+msgid "Sales Campaign"
+msgstr ""
+
+msgid "Sales Contracts"
+msgstr ""
+
+msgid "Sales Lead"
+msgstr "销售线索"
+
+msgid "Sales Manager"
+msgstr ""
+
+msgid "Sales Meeting"
+msgstr ""
+
+msgid "Sales Prospect"
+msgstr "潜在客户"
+
+msgid "Salvadorian"
+msgstr ""
+
+msgid "Samoa"
+msgstr ""
+
+msgid "Samoan"
+msgstr ""
+
+msgid "San Marinese"
+msgstr ""
+
+msgid "San Marino"
+msgstr ""
+
+msgid "Sao Tome"
+msgstr ""
+
+msgid "Sao Tome and Principe"
+msgstr ""
+
+msgid "Saudi Arabia"
+msgstr ""
+
+msgid "Saudi Arabian"
+msgstr ""
+
+msgid "Second"
+msgstr ""
+
+msgid "Selling, General and Administrative Expenses"
+msgstr ""
+
+msgid "Senegal"
+msgstr ""
+
+msgid "Senegalese"
+msgstr ""
+
+msgid "Serb"
+msgstr ""
+
+msgid "Serbia"
+msgstr ""
+
+msgid "Service"
+msgstr "服务"
+
+msgid "Service Industry Machinery and Equipment and Supplies"
+msgstr ""
+
+msgid "Service-producing activities for own use"
+msgstr ""
+
+msgid "Services"
+msgstr ""
+
+msgid "Sewage & refuse disposal, sanitation"
+msgstr ""
+
+msgid "Seychelles"
+msgstr ""
+
+msgid "Seychellois"
+msgstr ""
+
+msgid "Share Capital"
+msgstr ""
+
+msgid "Shareholder"
+msgstr ""
+
+msgid "Show all or a set of persons."
+msgstr ""
+
+msgid "Sierra Leone"
+msgstr ""
+
+msgid "Sierra Leonean"
+msgstr ""
+
+msgid "Simple Google Calendar"
+msgstr ""
+
+msgid "Singapore"
+msgstr ""
+
+msgid "Singaporean"
+msgstr ""
+
+msgid "Single"
+msgstr ""
+
+msgid "Sitemap"
+msgstr "站点地图"
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovakia"
+msgstr ""
+
+msgid "Slovene"
+msgstr ""
+
+msgid "Slovenia"
+msgstr ""
+
+msgid "Social Security"
+msgstr ""
+
+msgid "Software Developer"
+msgstr ""
+
+msgid "Sole proprietorship"
+msgstr ""
+
+msgid "Solomon Islander"
+msgstr ""
+
+msgid "Solomon Islands"
+msgstr ""
+
+msgid "Somali"
+msgstr ""
+
+msgid "Somalia"
+msgstr ""
+
+msgid "Sourcing"
+msgstr ""
+
+msgid "South Africa"
+msgstr ""
+
+msgid "South African"
+msgstr ""
+
+msgid "South America"
+msgstr ""
+
+msgid "South Korean"
+msgstr ""
+
+msgid "South-Eastern Asia"
+msgstr ""
+
+msgid "Southern Africa"
+msgstr ""
+
+msgid "Southern Asia"
+msgstr ""
+
+msgid "Southern Europe"
+msgstr ""
+
+msgid "Spain"
+msgstr ""
+
+msgid "Spaniard"
+msgstr ""
+
+msgid "Sports and Recreational Equipment and Supplies and Accessories"
+msgstr ""
+
+msgid "Square Centimeter"
+msgstr ""
+
+msgid "Square Meter"
+msgstr ""
+
+msgid "Sri Lanka"
+msgstr ""
+
+msgid "Sri Lankan"
+msgstr ""
+
+msgid "St-Pierrais"
+msgstr ""
+
+msgid "St-Pierrais; Miquelonnais"
+msgstr ""
+
+msgid "Staff"
+msgstr ""
+
+msgid "Structures and Building and Construction and Manufacturing Components"
+msgstr ""
+
+msgid "Subsidiary"
+msgstr ""
+
+msgid "Subsidiary Agent"
+msgstr ""
+
+msgid "Subsidiary Manager"
+msgstr ""
+
+msgid "Sudan"
+msgstr ""
+
+msgid "Sudanese"
+msgstr ""
+
+msgid "Supplier"
+msgstr "供应商"
+
+msgid "Support Request"
+msgstr ""
+
+msgid "Supporting & auxiliary activities"
+msgstr ""
+
+msgid "Surchage"
+msgstr ""
+
+msgid "Suriname"
+msgstr ""
+
+msgid "Surinamer"
+msgstr ""
+
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+msgid "Svalbard and Jan Mayen Islands"
+msgstr ""
+
+msgid "Swazi"
+msgstr ""
+
+msgid "Swaziland"
+msgstr ""
+
+msgid "Swede"
+msgstr ""
+
+msgid "Sweden"
+msgstr ""
+
+msgid "Swiss"
+msgstr ""
+
+msgid "Switzerland"
+msgstr ""
+
+msgid "Synchronous"
+msgstr ""
+
+msgid "Syria"
+msgstr ""
+
+msgid "Syrian"
+msgstr ""
+
+msgid "Syrian Arab Republic"
+msgstr ""
+
+msgid "System Administrator"
+msgstr ""
+
+msgid "T&C Islander"
+msgstr ""
+
+msgid "Tajik"
+msgstr ""
+
+msgid "Tajikistan"
+msgstr ""
+
+msgid "Tanning & dressing of leather"
+msgstr ""
+
+msgid "Tanzania"
+msgstr ""
+
+msgid "Tanzanian"
+msgstr ""
+
+msgid "Task"
+msgstr ""
+
+msgid "Tax"
+msgstr ""
+
+msgid "Tax Category"
+msgstr ""
+
+msgid "Taxable"
+msgstr "应税"
+
+msgid "Team"
+msgstr ""
+
+msgid "Technical Library"
+msgstr ""
+
+msgid "Template"
+msgstr ""
+
+msgid "Textiles"
+msgstr ""
+
+msgid "Thai"
+msgstr ""
+
+msgid "Thailand"
+msgstr ""
+
+msgid "The former Yugoslav Republic of Macedonia"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Timepieces and Jewelry and Gemstone Products"
+msgstr ""
+
+msgid "Timor-Leste"
+msgstr ""
+
+msgid "Tobacco products"
+msgstr ""
+
+msgid "Togo"
+msgstr ""
+
+msgid "Togolese"
+msgstr ""
+
+msgid "Tokelau"
+msgstr ""
+
+msgid "Tokelauan"
+msgstr ""
+
+msgid "Ton"
+msgstr ""
+
+msgid "Tonga"
+msgstr ""
+
+msgid "Tongan"
+msgstr ""
+
+msgid "Tools and General Machinery"
+msgstr ""
+
+msgid "Total Deduction"
+msgstr ""
+
+msgid "Total Income"
+msgstr ""
+
+msgid "Trade"
+msgstr ""
+
+msgid "Trade Receivables"
+msgstr ""
+
+msgid "Trainee"
+msgstr ""
+
+msgid "Transforming"
+msgstr ""
+
+msgid "Transport, storage & communications"
+msgstr ""
+
+msgid "Transportation and Storage and Mail Services"
+msgstr ""
+
+msgid "Travel and Food and Lodging and Entertainment Services"
+msgstr ""
+
+msgid "Trinidad and Tobago"
+msgstr ""
+
+msgid "Trinidadian"
+msgstr ""
+
+msgid "Trinidadian; Tobagonian"
+msgstr ""
+
+msgid "Tunisia"
+msgstr ""
+
+msgid "Tunisian"
+msgstr ""
+
+msgid "Turk"
+msgstr ""
+
+msgid "Turkey"
+msgstr ""
+
+msgid "Turkmen"
+msgstr ""
+
+msgid "Turkmenistan"
+msgstr ""
+
+msgid "Turks and Caicos"
+msgstr ""
+
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+msgid "Tuvalu"
+msgstr ""
+
+msgid "Tuvaluan"
+msgstr ""
+
+msgid "US Virgin Islander"
+msgstr ""
+
+msgid "US Virgin Islands"
+msgstr ""
+
+msgid "US citizen"
+msgstr ""
+
+msgid "Uganda"
+msgstr ""
+
+msgid "Ugandan"
+msgstr ""
+
+msgid "Ukraine"
+msgstr ""
+
+msgid "Ukrainian"
+msgstr ""
+
+msgid "Unemployment Insurance"
+msgstr ""
+
+msgid "Unit"
+msgstr ""
+
+msgid "United Arab Emirates"
+msgstr ""
+
+msgid "United Kingdom"
+msgstr ""
+
+msgid "United Kingdom of Great Britain and Northern Ireland"
+msgstr ""
+
+msgid "United Republic of Tanzania"
+msgstr ""
+
+msgid "United States Virgin Islands"
+msgstr ""
+
+msgid "United States of America"
+msgstr ""
+
+msgid "Uranium"
+msgstr ""
+
+msgid "Urgent"
+msgstr "紧急"
+
+msgid "Uruguay"
+msgstr ""
+
+msgid "Uruguayan"
+msgstr ""
+
+msgid "Uzbek"
+msgstr ""
+
+msgid "Uzbekistan"
+msgstr ""
+
+msgid "VIFIB"
+msgstr ""
+
+msgid "Vanuatu"
+msgstr ""
+
+msgid "Vanuatuan"
+msgstr ""
+
+msgid "Venezuela"
+msgstr ""
+
+msgid "Venezuela (Bolivarian Republic of)"
+msgstr ""
+
+msgid "Venezuelan"
+msgstr ""
+
+msgid "Viet Nam"
+msgstr ""
+
+msgid "Vietnamese"
+msgstr ""
+
+msgid "Vincentian"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "Wallis and Futuna"
+msgstr ""
+
+msgid "Wallis and Futuna Islands"
+msgstr ""
+
+msgid "Wallisian"
+msgstr ""
+
+msgid "Wallisian; Futunan"
+msgstr ""
+
+msgid "Warehouse"
+msgstr ""
+
+msgid "Warehouse Agent"
+msgstr ""
+
+msgid "Warehouse Manager"
+msgstr ""
+
+msgid "Water transport"
+msgstr ""
+
+msgid "Wearing apparel"
+msgstr ""
+
+msgid "Web Section"
+msgstr ""
+
+msgid "Web Site Front"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Western Africa"
+msgstr ""
+
+msgid "Western Asia"
+msgstr ""
+
+msgid "Western Europe"
+msgstr ""
+
+msgid "Western Sahara"
+msgstr ""
+
+msgid "Wholesale & retail trade; motor vehicles"
+msgstr ""
+
+msgid "Wholesale trade except of motor vehicles"
+msgstr ""
+
+msgid "Widowed"
+msgstr ""
+
+msgid "Wire Transfer"
+msgstr "电汇"
+
+msgid "Wood products except furniture"
+msgstr ""
+
+msgid "Yemen"
+msgstr ""
+
+msgid "Yemeni"
+msgstr ""
+
+msgid "You are here:"
+msgstr ""
+
+msgid "Zambia"
+msgstr ""
+
+msgid "Zambian"
+msgstr ""
+
+msgid "Zimbabwe"
+msgstr ""
+
+msgid "Zimbabwean"
+msgstr ""
+
+msgid "discount"
+msgstr ""
+
+msgid "of Bosnia Herzegovina"
+msgstr ""
+
+msgid "of the Cook Islands"
+msgstr ""
+
+msgid "of the Holy See"
+msgstr ""
+
+msgid "Åland Islander"
+msgstr ""
+
+msgid "Åland Islands"
+msgstr ""
