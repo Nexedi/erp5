@@ -2050,7 +2050,8 @@ class SimulationTool(BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getNextDeficientInventoryDate')
-    def getNextAlertInventoryDate(self, reference_quantity=0, src__=0, **kw):
+    def getNextAlertInventoryDate(self, reference_quantity=0, src__=0,
+                                  from_date=None, **kw):
       """
       Give the next date where the quantity is lower than the
       reference quantity.
@@ -2058,16 +2059,16 @@ class SimulationTool(BaseTool):
       result = None
       # First look at current inventory, we might have already an inventory
       # lower than reference_quantity
-      current_inventory = self.getCurrentInventory(**kw)
+      current_inventory = self.getInventory(at_date=from_date, **kw)
       if current_inventory < reference_quantity:
         result = DateTime()
       else:
-        result = self.getInventoryList(src__=src__,
+        inventory_list = self.getInventoryList(src__=src__, from_date=from_date,
             sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
         if src__ :
-          return result
+          return inventory_list
         total_inventory = 0.
-        for inventory in result:
+        for inventory in inventory_list:
           if inventory['inventory'] is not None:
             total_inventory += inventory['inventory']
             if total_inventory < reference_quantity:
