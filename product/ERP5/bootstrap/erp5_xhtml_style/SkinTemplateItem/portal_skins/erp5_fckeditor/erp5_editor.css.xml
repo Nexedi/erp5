@@ -1119,7 +1119,14 @@ div.page div {\n
   line-height:16px;\n
   text-align:left;\n
 }\n
-
+\n
+blockquote {\n
+  background: #f9f9f9;\n
+  border-left: 10px solid #ccc;\n
+  margin: 1.5em 10px;\n
+  padding: 0.5em 10px;\n
+  quotes: "\\201C""\\201D""\\2018""\\2019";\n
+}
 
 ]]></string> </value>
         </item>
