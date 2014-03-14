@@ -3947,9 +3947,9 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
       wf_history = obj.workflow_history[wf_id][-1]
       # Remove useless modifcation 'time' and 'actor' (conflicts with VCSs)
-      del wf_history['time']
-      del wf_history['actor']
-      del wf_history['comment']
+      wf_history.pop('time', None)
+      wf_history.pop('actor', None)
+      wf_history.pop('comment', None)
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
