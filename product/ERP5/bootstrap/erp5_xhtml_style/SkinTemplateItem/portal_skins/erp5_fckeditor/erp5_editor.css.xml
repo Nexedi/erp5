@@ -550,7 +550,7 @@ div.index_html table {\n
 }\n
 \n
 /* XXX: Bug fix when not logged\n
-   by <chritophe@nexedi.com> */\n
+   by <christophe@nexedi.com> */\n
 .document .actions {\n
   min-height: 2.5em;\n
 }\n
