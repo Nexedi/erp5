@@ -539,7 +539,9 @@ class EmailDocument(TextDocument):
       if body:
         return '> ' + str(body).replace('\n', '\n> ')
     elif self.getContentType() == 'text/html':
-      return '<br/><blockquote type="cite">\n%s\n</blockquote>' %\
+      # XXX we add an empty <p> to be able to enter text before the quoted
+      # content in CKEditor
+      return '<p>&nbsp;</p><blockquote type="cite">\n%s\n</blockquote>' %\
                                 self.asStrippedHTML()
     return ''
 
