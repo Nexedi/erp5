@@ -113,7 +113,7 @@ class PasswordTool(BaseTool):
     user_login -- Reference of the user to send password reset link
     REQUEST -- Request object
     notification_message -- Notification Message Document used to build the email.
-                            As default, a standart text will be used.
+                            As default, a standard text will be used.
     sender -- Sender (Person or Organisation) of the email.
             As default, the default email address will be used
     store_as_event -- whenever CRM is available, store

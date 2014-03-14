@@ -63,7 +63,7 @@ This Form has meaning only if erp5_web is installed and if you are using standar
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sender Informations</string> </value>
+            <value> <string>Sender Information</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
