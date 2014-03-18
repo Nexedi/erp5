@@ -14,7 +14,6 @@
                 <string>count_method</string>
                 <string>description</string>
                 <string>editable_columns</string>
-                <string>hide_rows_on_no_search_criterion</string>
                 <string>lines</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -70,15 +69,9 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -130,7 +123,7 @@
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -165,17 +158,13 @@
                     <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -238,25 +227,12 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_hide_rows_on_no_search_criterion\', False)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
             <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
@@ -269,7 +245,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
