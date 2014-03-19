@@ -1432,6 +1432,11 @@ div.pdf-preview-navigation img.last{\n
 .horizontal_align_form_box >  div.input > fieldset > div.field > label {\n
     width: auto;\n
     padding-top: 2px;\n
+}\n
+\n
+.captchas_dot_net {\n
+    border: none; \n
+    vertical-align: bottom\n
 }
 
 ]]></string> </value>

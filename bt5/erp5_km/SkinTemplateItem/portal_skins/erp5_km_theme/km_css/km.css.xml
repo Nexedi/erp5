@@ -1290,6 +1290,11 @@ button.formbt > span{\n
 .blog-next-article:after {\n
   content:">"\n
 }\n
+\n
+.captchas_dot_net {\n
+    border: none; \n
+    vertical-align: bottom\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>

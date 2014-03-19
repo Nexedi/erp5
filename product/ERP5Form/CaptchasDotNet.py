@@ -86,7 +86,7 @@ class CaptchasDotNet:
     def image (self, random, id = 'captchas.net'):
         return '''
         <a href="http://captchas.net"><img
-            style="border: none; vertical-align: bottom"
+            class="captchas_dot_net"
             id="%(id)s" src="%(source)s" width="%(width)d" height="%(height)d"
             alt="The CAPTCHA image" /></a>
         <script type="text/javascript">
