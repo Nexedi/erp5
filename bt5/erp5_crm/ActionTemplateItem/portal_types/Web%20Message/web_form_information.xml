@@ -43,7 +43,7 @@ This Form has meaning only if erp5_web is installed and if you are using standar
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>web_form_informations</string> </value>
+            <value> <string>web_form_information</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
