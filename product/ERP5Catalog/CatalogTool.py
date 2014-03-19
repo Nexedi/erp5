@@ -30,7 +30,7 @@ from copy import deepcopy
 from collections import defaultdict
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.User import system as system_user
@@ -965,7 +965,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       packet_size = catalog_kw.pop('packet_size', 30)
       limit = packet_size * catalog_kw.pop('activity_count', 100)
       if min_uid:
-        catalog_kw['uid'] = {'query': min_uid, 'range': 'nlt'}
+        catalog_kw['min_uid'] = SimpleQuery(uid=min_uid,
+                                            comparison_operator='>')
       if catalog_kw.pop('restricted', False):
         search = self
       else:
