@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------------       
+#---------------------------------------------------------------------
 # Python module for easy utilization of http://captchas.net
 #
 # For documentation look at http://captchas.net/sample/python/
-# 
+#
 # Written by Sebastian Wilhelmi <seppi@seppi.de> and
 #            Felix Holderied <felix@holderied.de>
 # This file is in the public domain.
@@ -15,9 +15,9 @@
 # 2010-01-15: Adapt to ERP5 : a lot of code had to be removed or changed.
 #            Most of the work must be done in another class.
 #
-# 2006-09-08: Add new optional parameters alphabet, letters 
-#             height an width. Add audio_url. 
-#      
+# 2006-09-08: Add new optional parameters alphabet, letters
+#             height an width. Add audio_url.
+#
 # 2006-03-01: Only delete the random string from the repository in
 #             case of a successful verification.
 #
@@ -63,7 +63,7 @@ class CaptchasDotNet:
         # Return the random string.
         return random_string
 
-    def image_url (self, random, base = 'image.captchas.net/'):      
+    def image_url (self, random, base = 'image.captchas.net/'):
         url = '%s://%s?client=%s&amp;random=%s' % (self.__protocol,base,self.__client,random)
         if self.__alphabet != "abcdefghijklmnopqrstuvwxyz":
             url += '&amp;alphabet=%s' % self.__alphabet
@@ -91,10 +91,10 @@ class CaptchasDotNet:
             alt="The CAPTCHA image" /></a>
         <script type="text/javascript">
           <!--
-          function captchas_image_error (image) 
+          function captchas_image_error (image)
           {
             if (!image.timeout) return true;
-            image.src = image.src.replace (/^%(protocol)s:\/\/image\.captchas\.net/, 
+            image.src = image.src.replace (/^%(protocol)s:\/\/image\.captchas\.net/,
                                            '%(protocol)s://image.backup.captchas.net');
             return captchas_image_loaded (image);
           }
@@ -114,13 +114,13 @@ class CaptchasDotNet:
                "captchas_image_error (document.getElementById ('%(id)s'))",
                10000);
           image.src = image.src;
-          //-->      
-        </script>''' % ( {'id':id, 
-                          'source': self.image_url(random), 
-                          'width': self.__width, 
+          //-->
+        </script>''' % ( {'id':id,
+                          'source': self.image_url(random),
+                          'width': self.__width,
                           'height': self.__height,
                           'protocol': self.__protocol})
-        
+
     def get_answer (self, random ):
         # The format of the password.
         password_alphabet = self.__alphabet
@@ -138,5 +138,5 @@ class CaptchasDotNet:
         for pos in range (password_length):
             letter_num = ord (digest[pos]) % len (password_alphabet)
             correct_password += password_alphabet[letter_num]
-        
+
         return correct_password
