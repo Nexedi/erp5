@@ -529,20 +529,22 @@ class EmailDocument(TextDocument):
 
   # Methods which can be useful to prepare a reply by email to an event
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplyBody')
-  def getReplyBody(self):
+  def getReplyBody(self, content_type=None):
+    """This is used in order to respond to a mail, this put a '> ' before each
+    line of the body.
     """
-      This is used in order to respond to a mail,
-      this put a '> ' before each line of the body
-    """
-    if self.getContentType() == 'text/plain':
+    if not content_type:
+      content_type = self.getContentType()
+    if content_type == 'text/plain':
       body = self.asText()
       if body:
         return '> ' + str(body).replace('\n', '\n> ')
-    elif self.getContentType() == 'text/html':
-      # XXX we add an empty <p> to be able to enter text before the quoted
-      # content in CKEditor
-      return '<p>&nbsp;</p><blockquote type="cite">\n%s\n</blockquote>' %\
-                                self.asStrippedHTML()
+    elif content_type == 'text/html':
+      # XXX we add some empty <p> to be able to enter text before the quoted
+      # content in CKEditor.
+      return '''<p>&nbsp;</p><blockquote type="cite">
+%s
+</blockquote><p>&nbsp;</p>''' % self.asStrippedHTML()
     return ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplySubject')

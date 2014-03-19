@@ -87,6 +87,7 @@
                         <string>your_response_event_portal_type</string>
                         <string>your_response_event_resource</string>
                         <string>your_response_event_start_date</string>
+                        <string>your_response_event_content_type</string>
                       </list>
                     </value>
                 </item>

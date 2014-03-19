@@ -50,34 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns the preferred text editor and tries to take into account a default\n
-content type if any.\n
-The content type can also be passed, for example to use the editor in a dialog\n
-that will create a document of this target content type.\n
+            <value> <string>"""Returns the default text format for response events.\n
+\n
+This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
 """\n
-if not content_type:\n
-  # By default, everthing related to EditorField is HTML\n
-  content_type = \'text/html\'\n
-  \n
-  # If this document has a content type we use this information\n
-  if getattr(context, \'getContentType\', None) is not None:\n
-    content_type = context.getContentType() or \'text/html\'\n
-\n
-# If this is not HTML, fallback to TextArea\n
-if content_type != \'text/html\':\n
-  return \'text_area\'\n
-\n
-# Else return preferred value or TextArea if nothing defined\n
-return context.portal_preferences.getPreferredTextEditor() or \'text_area\'\n
+return context.getTextFormat()\\\n
+  or context.getPortalObject().portal_preferences.getPreferredTextFormat()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>content_type=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getEditorFieldPreferredTextEditor</string> </value>
+            <value> <string>Event_getPreferredResponseEventContentType</string> </value>
         </item>
       </dictionary>
     </pickle>
