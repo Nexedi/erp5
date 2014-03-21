@@ -50,56 +50,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>MARKER = (\'\', None,)\n
-visible_state_list = [\'visible\', \'public\']\n
-\n
-knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
-                                                             default_pad_group=default_pad_group)\n
-# use info from REQUEST\n
-active_pad, knowledge_pads = \\\n
-    context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
-                                                             \'active_pad_url\')\n
-if active_pad is not None and active_pad.getValidationState() in visible_state_list:\n
-  return active_pad, knowledge_pads\n
-\n
-# use info from REQUEST\n
-active_knowledge_pad, knowledge_pads = \\\n
-     context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
-                                                              \'override_catalog\')\n
-if active_knowledge_pad is not None:\n
-  return active_knowledge_pad, knowledge_pads\n
-\n
+            <value> <string>knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(\n
+  mode=mode, default_pad_group=default_pad_group)\n
 real_context = context.Base_getRealContext()\n
 real_context_url = real_context.getRelativeUrl()\n
 \n
+visible_pads = [x for x in knowledge_pads\n
+  if x.getValidationState() in (\'visible\', \'public\')]\n
+\n
 # first filter if we have a custom Pad for the context\n
-for knowledge_pad in knowledge_pads:\n
-  pad_state = knowledge_pad.getValidationState()\n
+for knowledge_pad in visible_pads:\n
   publication_section_list = knowledge_pad.getPublicationSectionList()\n
-  if real_context_url in publication_section_list and pad_state in visible_state_list:\n
-    if real_context.getPortalType() == \'Web Site\' and default_pad_group in MARKER:\n
+  if real_context_url in publication_section_list:\n
+    if real_context.getPortalType() == \'Web Site\' and not default_pad_group:\n
       # ERP5 Web Site front gadget\n
       return knowledge_pad, knowledge_pads\n
-    elif real_context_url in publication_section_list and knowledge_pad.getGroup() == default_pad_group:\n
+    if knowledge_pad.getGroup() == default_pad_group:\n
       # some Web Section can have a customized EXPLICILY "sticked" Pad\n
       return knowledge_pad, knowledge_pads\n
-  elif len(publication_section_list) == 0 and default_pad_group in MARKER and pad_state in visible_state_list:\n
+  elif not publication_section_list and not default_pad_group:\n
     # ERP5 Site front gadget \n
     return knowledge_pad, knowledge_pads\n
 \n
 # no customized version found for this context so\n
 # try finding pad by group\n
-for knowledge_pad in knowledge_pads:\n
-  if knowledge_pad.getGroup() == default_pad_group and \\\n
-    knowledge_pad.getValidationState() in visible_state_list:\n
-    return knowledge_pad, knowledge_pads\n
+for knowledge_pad in visible_pads:\n
+  if knowledge_pad.getGroup() == default_pad_group:\n
+    break\n
+else:\n
+  if create_default_pad and context.Base_isUserAllowedToUseKnowledgePad():\n
+    knowledge_pad = context.ERP5Site_createDefaultKnowledgePadListForUser(\n
+      default_pad_group=default_pad_group, mode=mode)\n
+    knowledge_pads.append(knowledge_pad)\n
+  else:\n
+    knowledge_pad = None\n
 \n
-return None, knowledge_pads\n
+return knowledge_pad, knowledge_pads\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>mode = None, default_pad_group=None</string> </value>
+            <value> <string>mode = None, default_pad_group=None, create_default_pad=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

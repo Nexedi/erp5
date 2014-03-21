@@ -53,9 +53,8 @@
             <value> <string>knowledge_pad = context.restrictedTraverse(knowledge_pad_url)\n
 knowledge_pad.delete()\n
 \n
-url = "%s?portal_status_message=%s"   %(cancel_url, \n
-         context.Base_translateString(\'Unsticked.\'))\n
-context.REQUEST.RESPONSE.redirect(url)\n
+return context.Base_redirect(cancel_url, keep_items={\n
+  "portal_status_message": context.Base_translateString(\'Unsticked.\')})\n
 </string> </value>
         </item>
         <item>

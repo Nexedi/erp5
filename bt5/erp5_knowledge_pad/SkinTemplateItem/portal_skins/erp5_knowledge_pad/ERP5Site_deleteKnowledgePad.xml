@@ -50,42 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-method_mapping = {\'erp5_front\': \'view\',\n
-                  \'web_front\': \'view\',\n
-                  \'web_section\': \'view\'}\n
-keep_items = {}\n
-pad = context.restrictedTraverse(knowledge_pad_relative_url)\n
-all_knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)\n
-next_active_pad = None\n
-if len(all_knowledge_pads)>1:\n
-  # determine next active pad (first one)\n
-  for item in all_knowledge_pads:\n
-    if item.getObject() != pad:\n
-      next_active_pad = item\n
-      break\n
+            <value> <string>pad = context.restrictedTraverse(knowledge_pad_relative_url)\n
+try:\n
+  # If the current active pad is deleted, activate last one.\n
+  for other_pad in context.ERP5Site_getKnowledgePadListForUser(mode=mode):\n
+    if other_pad != pad:\n
+      if other_pad.getValidationState() != \'invisible\':\n
+        break\n
+      invisible = other_pad\n
+  else:\n
+    invisible.visible()\n
   pad.delete()\n
-  pad.activate(\n
-     after_path = knowledge_pad_relative_url).ERP5Site_toggleActiveKnowledgePad(\n
-                      next_active_pad.getRelativeUrl(),\n
-                      mode = mode,\n
-                      redirect = False)\n
   msg = \'Pad removed.\'\n
-  # pass temporary ids of new_active and deleted pad\n
-  # this will help next view determine them correctly \n
-  # (i.e. overriding inconsistent catalog results)\n
-  keep_items[\'override_catalog\'] = \'%s|%s\' \\\n
-                         %(next_active_pad.getId(), pad.getId())\n
-else:\n
+except UnboundLocalError:\n
   msg = \'Can not remove the only one pad.\'\n
 \n
-keep_items[\'portal_status_message\'] = context.Base_translateString(msg)\n
-context.Base_redirect(method_mapping.get(mode, \'view\'),\n
-                      keep_items)\n
-
-
-]]></string> </value>
+return context.Base_redirect(form_id="view", keep_items={\n
+  "portal_status_message": context.Base_translateString(msg)})\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

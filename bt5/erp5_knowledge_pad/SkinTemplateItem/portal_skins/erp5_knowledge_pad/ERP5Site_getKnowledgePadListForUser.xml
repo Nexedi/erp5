@@ -50,85 +50,52 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-def filterKnowledgePadListForContext(results, mode, \n
-                                     default_pad_group):\n
+# in Web Mode we can have a temporary object created based on current language, document by reference\n
+real_context_url = context.Base_getRealContext().getRelativeUrl()\n
+if mode == \'web_front\':\n
+  # Web Site must at least one Pad referenced by context\n
+  filter_pad = lambda x: real_context_url in x.getPublicationSectionList() and x.getGroup() is None\n
+elif mode == \'web_section\':\n
+  # Web Sections, Web Pages can "reuse" tabs\n
+  filter_pad = lambda x: real_context_url in x.getPublicationSectionList() or x.getGroup() == default_pad_group\n
+elif mode == \'erp5_front\':\n
+  # leave only those not having a publication_section as \n
+  # this means belonging to root\n
+  filter_pad = lambda x: x.getPublicationSection() is None and x.getGroup() is None\n
+else:\n
+  filter_pad = lambda x: 1\n
+\n
+results = []\n
+def search(container, *states, **kw):\n
   # call getObject() explicitly so that further getter methods do not\n
   # invoke getObject().\n
-  results = [x.getObject() for x in results]\n
-
-  # in Web Mode we can have a temporary object created based on current language, document by reference\n
-  real_context = context.Base_getRealContext()\n
-  real_context_url = real_context.getRelativeUrl()\n
-  if mode == \'erp5_front\':\n
-    # leave only those not having a publication_section as \n
-    # this means belonging to root\n
-    results = filter(lambda x: x.getPublicationSection() is None and \\\n
-                              x.getGroup() is None, results)\n
-  elif mode == \'web_front\':\n
-    # Web Site must at least one Pad referenced by context\n
-    results = filter(lambda x: real_context_url in x.getPublicationSectionList() and \\\n
-                              x.getGroup() is None, results)\n
-  elif mode == \'web_section\':\n
-    # Web Sections, Web Pages can "reuse" tabs\n
-    results = filter(lambda x: real_context_url in x.getPublicationSectionList() or \\\n
-                                x.getGroup() == default_pad_group, results)\n
-  return results\n
-\n
-\n
-kw = {\'portal_type\': \'Knowledge Pad\',\n
-      \'sort_on\': ((\'creation_date\', \'ascending\',),),\n
-      \'limit\': 50,}\n
+  for pad in container.searchFolder(validation_state=states,\n
+                                    portal_type="Knowledge Pad",\n
+                                    sort_on=(("creation_date", "ascending"),),\n
+                                    limit=50, **kw):\n
+    try:\n
+      pad = pad.getObject()\n
+      if filter_pad(pad) and pad.getValidationState() in states:\n
+        results.append(pad)\n
+    except Exception:\n
+      pass\n
 \n
 # first for context\n
-results = context.knowledge_pad_module.searchFolder(\n
-                                validation_state = (\'visible\', \'invisible\',),\n
-                                local_roles = \'Owner\',\n
-                                **kw)\n
-\n
-if len(results)==0 and (isAnon and isAnonymousKnowledgePadUsed):\n
-  # try to get default pads for anonymous users if allowed on site\n
-  results = context.knowledge_pad_module.searchFolder(\n
-                                validation_state = (\'public\',),\n
-                                **kw)\n
-\n
-# use REQUEST to show immediately newly created pad\n
-# without waiting for reindex to be over\n
-active_pad, results = \\\n
-       context.ERP5Site_getActiveKnowledgePadForUserFromRequest(results,\n
-                                                         \'active_pad_url\')\n
-if active_pad is not None and active_pad.getValidationState() != \'deleted\':\n
-  found = False\n
-  new_results = []\n
-  active_pad_path = active_pad.getPath()\n
-  for brain in results:\n
-    new_results.append(brain)\n
-    if brain.getPath() == active_pad_path:\n
-      found = True\n
-  results = new_results\n
-  if not found:\n
-    # append it only if not from Catalog results\n
-    results.append(active_pad)\n
-\n
-# filter\n
-results = filterKnowledgePadListForContext(results, mode, \n
-                                     default_pad_group)\n
-\n
-if not len(results) and not isAnon:\n
-  # try getting default knowledge pads for user from global site preference\n
-  user_pref = context.Base_getActiveGlobalKnowledgePadPreference()\n
-\n
-  if user_pref is not None:\n
-    # use template from user\'s preferences \n
-    results = user_pref.searchFolder(validation_state = (\'public\',),\n
-                                     **kw)\n
-    # filter\n
-    results = filterKnowledgePadListForContext(results, mode, \n
-                                     default_pad_group)\n
-    if len(results):\n
+search(portal.knowledge_pad_module, \'visible\', \'invisible\', local_roles=\'Owner\')\n
+if not results:\n
+  request = portal.REQUEST\n
+  if request.get(\'is_anonymous_knowledge_pad_used\', 1):\n
+    # try to get default pads for anonymous users if allowed on site\n
+    search(portal.knowledge_pad_module, \'public\')\n
+  if not portal.portal_membership.isAnonymousUser():\n
+    # try getting default knowledge pads for user from global site preference\n
+    user_pref = context.Base_getActiveGlobalKnowledgePadPreference()\n
+    if user_pref is not None:\n
+      # use template from user\'s preferences \n
+      search(user_pref, \'public\')\n
+    if results:\n
       # set a REQUEST variable (this can be used in HTML views)\n
       request.set(\'is_knowledge_pad_template_used\', 1)\n
 \n

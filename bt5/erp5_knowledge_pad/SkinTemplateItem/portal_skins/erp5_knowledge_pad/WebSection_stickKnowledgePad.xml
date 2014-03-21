@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-knowledge_pad = context.restrictedTraverse(knowledge_pad_url)\n
+            <value> <string>knowledge_pad = context.restrictedTraverse(knowledge_pad_url)\n
 knowledge_pad_module = knowledge_pad.getParentValue()\n
 \n
 # copy/paste\n
@@ -67,21 +65,16 @@ new_knowledge_pad.visible()\n
 \n
 # because workflow state(i.e. visibility is set to default(invisible)\n
 # set manually with respect to original\n
-for original_box in knowledge_pad.contentValues(\n
-                         filter={\'portal_type\':\'Knowledge Box\'}):\n
+for original_box in knowledge_pad.objectValues(portal_type="Knowledge Box"):\n
   destination_box = new_knowledge_pad[original_box.getId()]\n
   if original_box.getValidationState() == \'visible\':\n
     destination_box.visible()\n
   elif original_box.getValidationState() == \'deleted\':\n
     destination_box.delete()\n
 \n
-url = "%s?portal_status_message=%s&active_pad_url=%s"   %(cancel_url, \n
-         context.Base_translateString(\'Sticked.\'), \n
-         new_knowledge_pad.getRelativeUrl())\n
-context.REQUEST.RESPONSE.redirect(url)\n
-
-
-]]></string> </value>
+return context.Base_redirect(cancel_url, keep_items={\n
+  "portal_status_message": context.Base_translateString(\'Sticked.\')})\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -37,27 +37,25 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="global_definitions">\n
-  <tal:block  \n
-    tal:define="global mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
-                global default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
-                global default_pad_group python: test(default_pad_group!=\'\', context.WebSection_getDefaultPadGroup(default_pad_group), default_pad_group);\n
-                kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
-                global isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\',request.get(\'use_anonymous_knowledge_pad\', False));\n
-                dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
-                struct python: here.ERP5Site_getActiveKnowledgePadForUser(**kw);\n
-                global active_knowledge_pad python: struct[0];\n
-                global knowledge_pads python: struct[1];\n
-                global columns python: options.get(\'columns\', 3);\n
-                global hasUserActivity python:  here.ERP5Site_hasUserActivity(active_knowledge_pad, **kw);\n
-                global isAnon python: here.portal_membership.isAnonymousUser();\n
-                global waitForActivitiesOnServer python: active_knowledge_pad is None and hasUserActivity;\n
-                global isUserAllowedToCreateKnowledgePads context/Base_isUserAllowedToUseKnowledgePad;\n
-                global isKnowledgePadTemplateUsed python: request.get(\'is_knowledge_pad_template_used\', 0);               \n
-                global createDefaultPadForUser python: options.get(\'create_default_pad\', False) and \n
-                                                         len(knowledge_pads)==0 and not hasUserActivity;\n
-                global make_security_check python: options.get(\'make_security_check\', False);\n
-                global pad_column python: options.get(\'pad_column\', 0);\n
-                global cancel_url here/absolute_url;"></tal:block>\n
+  <tal:block define="\n
+    global mode options/mode | request/gadget_mode | string:erp5_front;\n
+    global default_pad_group options/default_pad_group | request/gadget_default_pad_group | string:;\n
+    global default_pad_group python: default_pad_group and context.WebSection_getDefaultPadGroup(default_pad_group);\n
+    global isAnonymousKnowledgePadUsed options/use_anonymous_knowledge_pad | python: request.get(\'use_anonymous_knowledge_pad\', False);\n
+    dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
+    struct python: here.ERP5Site_getActiveKnowledgePadForUser(mode=mode,\n
+      default_pad_group=default_pad_group or None,\n
+      create_default_pad=options.get(\'create_default_pad\', False));\n
+    global active_knowledge_pad python: struct[0];\n
+    global knowledge_pads python: struct[1];\n
+    global columns python: options.get(\'columns\', 3);\n
+    global isAnon python: here.portal_membership.isAnonymousUser();\n
+    global isUserAllowedToCreateKnowledgePads context/Base_isUserAllowedToUseKnowledgePad;\n
+    global isKnowledgePadTemplateUsed python: request.get(\'is_knowledge_pad_template_used\', 0);\n
+    global make_security_check python: options.get(\'make_security_check\', False);\n
+    global pad_column python: options.get(\'pad_column\', 0);\n
+    global cancel_url here/absolute_url;\n
+    " />\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="disable_server_integration">\n
@@ -86,15 +84,15 @@
 \n
 </tal:block> \n
 \n
-<tal:block metal:define-macro="add_new_gadget"\n
-           tal:define="active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl;">\n
-  <a tal:condition="not: isKnowledgePadTemplateUsed"\n
-     tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=${cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad_relative_url}"\n
-     title="Add gadgets"\n
-     i18n:domain="ui"\n
-     i18n:attributes="title"\n
-     id="add-gadgets"><span i18n:translate="">Add gadgets</span></a>\n
-</tal:block>\n
+<a metal:define-macro="add_new_gadget"\n
+   tal:condition="python:active_knowledge_pad is not None and not isKnowledgePadTemplateUsed"\n
+   tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=${cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad/getRelativeUrl}"\n
+   title="Add gadgets"\n
+   i18n:domain="ui"\n
+   i18n:attributes="title"\n
+   id="add-gadgets">\n
+  <span i18n:translate="">Add gadgets</span>\n
+</a>\n
 \n
 <tal:block metal:define-macro="stick">\n
   <tal:block\n
@@ -267,37 +265,6 @@
   </div>\n
 </tal:block>\n
 \n
-\n
-<tal:block metal:define-macro="create_default_pad">\n
-  <!-- Create (asynch) default pad. -->\n
-  <div tal:condition="python: not waitForActivitiesOnServer and \n
-                              isUserAllowedToCreateKnowledgePads and\n
-                              createDefaultPadForUser">\n
-    <div class="wait_block">\n
-      <h2 i18n:translate="" i18n:domain="ui"> \n
-        Please wait while your home area is being prepared.\n
-      </h2>\n
-      <p i18n:translate="" i18n:domain="ui"> You will be automatically redirected.</p>\n
-      <script type="text/javascript"\n
-              tal:content="string: createDefaultPadOnServer(5000, \'${default_pad_group}\', \'view\', \'${mode}\');"/>\n
-      </div>\n
-  </div>\n
-</tal:block>\n
-\n
-\n
-<tal:block metal:define-macro="create_default_pad_started">\n
-\n
-  <!-- Show message that default pad is being prepared. -->\n
-  <div tal:condition="python: waitForActivitiesOnServer and isUserAllowedToCreateKnowledgePads">\n
-    <div class="wait_block">\n
-      <h2 i18n:translate="" i18n:domain="ui"> \n
-        Please wait while your home area is being updated.</h2>\n
-      <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
-      <script type="text/javascript" \n
-              tal:content="string: checkForActivitiesOnServer(5000, \'view\', \'${mode}\', \'${default_pad_group}\');"/>\n
-      </div>\n
-  </div>\n
-</tal:block>\n
 \n
 <tal:block metal:define-macro="loading_message">\n
   <div id="loading-wrapper" style="display:none;">\n
