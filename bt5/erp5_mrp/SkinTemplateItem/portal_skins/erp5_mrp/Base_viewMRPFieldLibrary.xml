@@ -121,6 +121,7 @@
                         <string>my_resource_title</string>
                         <string>my_specialise</string>
                         <string>my_variation_category_list</string>
+                        <string>my_view_mode_listbox_start_date</string>
                       </list>
                     </value>
                 </item>
