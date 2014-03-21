@@ -201,6 +201,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
         'selection_name': selection_name,
         'selection_index': selection_index,
         'domain_name': selection_name,
+        "node_uid": self.node_uid
       }
       # Add parameters to query_kw
       query_kw_update = {}
