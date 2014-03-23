@@ -53,7 +53,7 @@
             <value> <string>from Products.PythonScripts.standard import Object\n
 \n
 return [Object(uid="new_",\n
-               total_quantity=context.getMovementHistoryStat(**kw)[0][\'total_quantity\'],) ]\n
+               total_quantity=context.getMovementHistoryStat(**kw)[\'total_quantity\'],) ]\n
 </string> </value>
         </item>
         <item>
