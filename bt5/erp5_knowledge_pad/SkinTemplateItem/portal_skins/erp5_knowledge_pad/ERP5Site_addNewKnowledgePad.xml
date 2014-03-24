@@ -61,8 +61,11 @@ if mode in (\'web_front\', \'web_section\',):\n
 # set it as active\n
 context.ERP5Site_toggleActiveKnowledgePad(pad, mode=mode, redirect=False)\n
 \n
-if redirect_url is not None:\n
-  context.REQUEST.RESPONSE.redirect(\'%s?active_pad_url=%s\' %(redirect_url, pad.getRelativeUrl()))\n
+# See ERP5Site_createDefaultKnowledgePadListForUser\n
+pad.immediateReindexObject()\n
+\n
+if redirect_url:\n
+  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
 else:\n
   # adding is done though either AJAX call or programatically\n
   return pad.getRelativeUrl()\n

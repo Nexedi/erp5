@@ -134,6 +134,8 @@ class TestKM(TestKMMixIn):
                                                        mode = 'web_section')    
     self.web_section_content_knowledge_pad = portal.restrictedTraverse(
                                           self.web_section_content_knowledge_pad_relative_url)
+    self.web_front_knowledge_pad.visible()
+    self.web_section_knowledge_pad.visible()
     self.tic()
     # Publish all knowledge pad gadgets
     for gadget in self.portal.portal_gadgets.objectValues():
@@ -149,8 +151,8 @@ class TestKM(TestKMMixIn):
  
   def test_02(self):
     """ Check Gadgets """
-    portal = self.getPortal()
-    knowledge_pad_module = getattr(portal, 'knowledge_pad_module')
+    portal = self.portal
+    knowledge_pad_module = portal.knowledge_pad_module
     # remove created by login method pads
     knowledge_pad_module.manage_delObjects(list(knowledge_pad_module.objectIds()))
     self.tic()
@@ -422,11 +424,8 @@ class TestKM(TestKMMixIn):
 
   def test_04WebFrontGadgets(self):
     """ Check different Web / KM Gadgets """
-    portal = self.getPortal()
-    request = self.app.REQUEST
-
     # all known so far gadgets 
-    portal_gadgets = portal.portal_gadgets
+    portal_gadgets = self.portal.portal_gadgets
     km_my_tasks_gadget = portal_gadgets.km_my_tasks
     km_my_documents_gadget = portal_gadgets.km_my_documents
     km_my_contacts_gadget = portal_gadgets.km_my_contacts
@@ -439,9 +438,9 @@ class TestKM(TestKMMixIn):
     # Web Front gadgets
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
     for gadget in web_front_gadgets:
-      self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
+      self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
     self.tic()
-    
+
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
@@ -453,7 +452,7 @@ class TestKM(TestKMMixIn):
     km_my_tasks_gadget = portal.portal_gadgets.km_my_tasks
     
     # add gadget
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_tasks_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[km_my_tasks_gadget.getUid()])
     
     # "My Tasks" gadget (add a new document which should be shown shown in it)
     project = portal.project_module.newContent(portal_type = 'Project', \
@@ -492,7 +491,7 @@ class TestKM(TestKMMixIn):
     km_my_documents_gadget = portal.portal_gadgets.km_my_documents
     
     # add gadget
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_documents_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[km_my_documents_gadget.getUid()])
     
     # "My Documents" gadget (add a new document which should be shown shown in it)
     web_page = portal.web_page_module.newContent( \
@@ -535,7 +534,7 @@ class TestKM(TestKMMixIn):
     km_my_contacts_gadget = portal.portal_gadgets.km_my_contacts
     
     # add gadget
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[km_my_contacts_gadget.getUid()])
     
     # "My Contacts" gadget (add a new document which should be shown shown in it)
     person = portal.person_module.newContent(portal_type = 'Person',
@@ -567,25 +566,22 @@ class TestKM(TestKMMixIn):
     
   def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
-    portal = self.getPortal()
-    km_subsection_gadget = portal.portal_gadgets.km_subsection
-    km_latest_documents_gadget = portal.portal_gadgets.km_latest_documents
-    km_assigned_member_gadget = portal.portal_gadgets.km_assigned_member
-    km_document_relations_gadget = portal.portal_gadgets.km_document_relations
-    
-    web_section_gadgets = [km_subsection_gadget,  
-                           km_latest_documents_gadget,  
-                           km_assigned_member_gadget]
+    portal_gadgets = self.portal.portal_gadgets
+    pad = self.web_section_knowledge_pad
+    web_section_gadgets = (portal_gadgets.km_subsection,
+                           portal_gadgets.km_latest_documents,
+                           portal_gadgets.km_assigned_member)
     for gadget in web_section_gadgets:
-      self.web_section_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
+      pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
+    self.portal.ERP5Site_toggleActiveKnowledgePad(pad)
     self.tic()
-    
+
     # check that gadgets are added to web section page view
-    response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
-                               %(self.web_section_url, self.web_section_knowledge_pad.getRelativeUrl()), self.auth)
+    response = self.publish(
+      self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
    
     for gadget in web_section_gadgets:
-      self.assertTrue(gadget.getTitle() in response.getBody())     
+      self.assertTrue(gadget.getTitle() in response.getBody())
 
   def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
@@ -595,7 +591,7 @@ class TestKM(TestKMMixIn):
 
     # add gadget
     self.web_section_knowledge_pad.KnowledgePad_addBoxList(
-                               **{'uids':[km_latest_documents_gadget.getUid()]})
+                               uids=[km_latest_documents_gadget.getUid()])
 
     # "Latest Content" gadget
     gadget_view_form_id  = km_latest_documents_gadget.view_form_id
@@ -626,7 +622,7 @@ class TestKM(TestKMMixIn):
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(presentation.getTitle() in 
+    self.assertTrue(presentation.getTitle() in
           self.publish(self.base_url_pattern 
                     %(self.web_section_url+'/%s' %latest_docs_subsection.getId(),  
                       gadget_view_form_id, 
@@ -637,12 +633,11 @@ class TestKM(TestKMMixIn):
   def test_11AssignedMembersGadget(self):
     """ Check Assigned Members Gadgets """
     portal = self.getPortal()
-    request = self.app.REQUEST
     km_assigned_member_gadget = portal.portal_gadgets.km_assigned_member
     
     # add gadget
     self.web_section_knowledge_pad.KnowledgePad_addBoxList(
-                               **{'uids':[km_assigned_member_gadget.getUid()]})
+                               uids=[km_assigned_member_gadget.getUid()])
     gadget_view_form_id  = km_assigned_member_gadget.view_form_id
     project = portal.project_module.newContent(
                                    portal_type = 'Project',  
@@ -655,7 +650,7 @@ class TestKM(TestKMMixIn):
                                           self.web_section_knowledge_pad,  
                                           km_assigned_member_gadget)
     self.changeSkin('KM') 
-    self.assertTrue('No result' in 
+    self.assertTrue('No result' in
           self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
               gadget_view_form_id, 
@@ -669,7 +664,7 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment')
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(person.getTitle() in 
+    self.assertTrue(person.getTitle() in
                     self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
               gadget_view_form_id, 
@@ -682,18 +677,17 @@ class TestKM(TestKMMixIn):
     
   def test_11WebSectionContentGadget(self):
     """ Check  Web Section Content Gadgets """
-    portal = self.getPortal()
-    request = self.app.REQUEST
-
-    km_document_relations_gadget = portal.portal_gadgets.km_document_relations    
-    web_section_content_gadgets = [km_document_relations_gadget]
+    pad = self.web_section_content_knowledge_pad
+    web_section_content_gadgets = (
+      self.portal.portal_gadgets.km_document_relations,)
     for gadget in web_section_content_gadgets:
-      self.web_section_content_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
+      pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
+    self.portal.ERP5Site_toggleActiveKnowledgePad(pad)
     self.tic()
 
     # check that gadgets are added to web section page view
-    response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
-                               %(self.web_page_url,self.web_section_content_knowledge_pad.getRelativeUrl()), self.auth)
+    response = self.publish(
+      self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_content_gadgets:
       self.assertTrue(gadget.getTitle() in response.getBody())
@@ -706,7 +700,7 @@ class TestKM(TestKMMixIn):
     
     # add gadget
     self.web_section_content_knowledge_pad.KnowledgePad_addBoxList(
-                               **{'uids':[km_document_relations_gadget.getUid()]})
+                               uids=[km_document_relations_gadget.getUid()])
     self.tic()
 
     # "Relation" gadget
@@ -757,7 +751,6 @@ class TestKM(TestKMMixIn):
       nothing is raised but a message is shown to user.
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
     portal_gadgets = portal.portal_gadgets
 
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
@@ -765,7 +758,7 @@ class TestKM(TestKMMixIn):
     self.assertTrue(self.web_front_knowledge_pad.getTitle() in response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
     self.tic()
 
     # check that gadgets are added to web front page view
@@ -798,7 +791,7 @@ class TestKM(TestKMMixIn):
     web_site_browser_gadget = portal.portal_gadgets.web_site_browser
 
     # add gadget
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[web_site_browser_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[web_site_browser_gadget.getUid()])
     self.tic()
 
     self.changeSkin('KM')
@@ -815,14 +808,14 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id, 
                                   self.website.getRelativeUrl(),  
                                   box_url)    
-    self.assertTrue(subsection.getTitle() not in 
+    self.assertTrue(subsection.getTitle() not in
                     self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(subsection.getTitle() in 
+    self.assertTrue(subsection.getTitle() in
                     self.publish(url, self.auth).getBody())
 
   def test_17AddGadgets(self):
@@ -833,7 +826,7 @@ class TestKM(TestKMMixIn):
     km_my_contacts_gadget = portal.portal_gadgets.km_my_contacts
     
     # test directly adding a gadget
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[km_my_contacts_gadget.getUid()])
     self.tic()
     self.assertSameSet([km_my_contacts_gadget],
                         [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
@@ -847,7 +840,7 @@ class TestKM(TestKMMixIn):
     selection_name = 'gadget_tool_view_gadget_add_dialog'
     self.app.REQUEST.set('list_selection_name', selection_name)
     portal.portal_selections.setSelectionParamsFor(selection_name, {'uids':[km_my_documents_gadget.getUid()]})
-    self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
+    self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[km_my_contacts_gadget.getUid()])
     self.tic()
     # now even though we explicitly add only one gadget KnowledgePad_addBoxList should check and add one
     # in listbox selection as well

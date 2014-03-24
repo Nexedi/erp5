@@ -65,7 +65,7 @@ if toggable_pad is not None:\n
     if pad.getObject()!=toggable_pad and pad.getValidationState()==\'visible\':\n
       pad.invisible()\n
 if redirect:\n
-  context.Base_redirect(\'view\')\n
+  context.Base_redirect(form_id="view")\n
 </string> </value>
         </item>
         <item>

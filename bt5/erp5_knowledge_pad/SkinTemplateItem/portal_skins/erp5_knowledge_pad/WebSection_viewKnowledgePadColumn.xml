@@ -45,36 +45,24 @@
               current_web_section_url python: current_web_section.absolute_url();\n
               cancel_url string:${current_web_section_url}/view">\n
 \n
-    <tal:block tal:condition="python: not createDefaultPadForUser and \n
-                                      not waitForActivitiesOnServer and\n
-                                      active_knowledge_pad is not None">\n
-\n
       <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
 \n
-      <div class="portal-column" \n
+      <div class="portal-column"\n
+           tal:condition="python:active_knowledge_pad is not None"\n
            tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, \n
                                               \'portal-column-undraggable\', \n
                                               \'portal-column\');\n
-                           id python: \'portal-column-%s\' %pad_column"\n
-           tal:define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout;">\n
+                           id python: \'portal-column-%s\' %pad_column">\n
 \n
-        <span tal:condition="python: len(layout)>=pad_column+1"\n
-              tal:replace="structure python:\n
+        <tal:block define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout"\n
+                   condition="python: len(layout)>=pad_column+1"\n
+                   replace="structure python:\n
                   active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[pad_column],  \n
                                                                      real_context=here,\n
                                                                      cancel_url=cancel_url)"/>\n
     </div>\n
 \n
-    </tal:block>\n
-\n
-    <!-- Create (asynch) default pad. -->\n
-    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/create_default_pad"/>\n
-\n
-     <tal:block tal:condition="make_security_check">\n
-       <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/>\n
-    </tal:block>\n
-    \n
-  </tal:block>
+</tal:block>
 
 ]]></unicode> </value>
         </item>
