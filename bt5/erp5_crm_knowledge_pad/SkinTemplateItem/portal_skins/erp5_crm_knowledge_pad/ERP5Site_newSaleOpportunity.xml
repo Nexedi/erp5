@@ -50,7 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>from DateTime import DateTime\n
+portal = context.getPortalObject()\n
 form = context.REQUEST.form\n
 \n
 # XXX this form has to be validated !!!!!\n
@@ -65,7 +66,10 @@ if clientname:\n
 description = context.REQUEST.get(\'field_your_description\')\n
 quantity = context.REQUEST.get(\'field_your_quantity\')\n
 price = context.REQUEST.get(\'field_your_price\')\n
-stopdate = context.REQUEST.get(\'field_your_stop_date\')\n
+stopdate_day = context.REQUEST.get(\'subfield_field_your_stop_date_day\')\n
+stopdate_month = context.REQUEST.get(\'subfield_field_your_stop_date_month\')\n
+stopdate_year = context.REQUEST.get(\'subfield_field_your_stop_date_year\')\n
+stopdate = DateTime("%s/%s/%s" %(stopdate_year, stopdate_month, stopdate_day))\n
 \n
 sale_opportunity = portal.sale_opportunity_module.newContent(portal_type="Sale Opportunity")\n
 sale_opportunity.setTitle(saletitle)\n
