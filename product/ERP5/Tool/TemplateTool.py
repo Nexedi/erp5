@@ -1524,7 +1524,8 @@ class TemplateTool (BaseTool):
       update_bt5_list.sort(key=lambda x: dependency_list.index(x.title))
       for bt5 in update_bt5_list:
         reinstall = bt5.title in deprecated_reinstall_set
-        if not(reinstall) and bt5.version_state == 'present':
+        if (not(reinstall) and bt5.version_state == 'present') or \
+            bt5.title in keep_bt5_id_set:
           continue
         append("Update %s business template in state %s%s" % \
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
