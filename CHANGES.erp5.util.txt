@@ -4,6 +4,10 @@ Changes
 0.4.37 (2014-01-21)
 -------------------
 
+ * erp5.util.scalability:
+
+  - New module [Benjamin Blanc]
+
  * erp5.util.testnode:
 
   - Minimize writes to storage holding MySQL databases.
