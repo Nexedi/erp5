@@ -88,6 +88,10 @@ portal_tools = ( CategoryTool.CategoryTool,
 content_classes = ()
 content_constructors = ()
 
+
+# XXX-AUREL : see bug #20140326-1A7D11
+from mixin import periodicity
+
 # Finish installation
 def initialize( context ):
   import Document
