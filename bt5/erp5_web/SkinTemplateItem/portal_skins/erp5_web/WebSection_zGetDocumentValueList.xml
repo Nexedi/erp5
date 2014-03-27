@@ -85,7 +85,7 @@ kw</string> </value>
   </dtml-comment>\n
 \n
   SELECT\n
-    *\n
+    catalog.*\n
   FROM\n
     (\n
       SELECT\n
@@ -143,6 +143,10 @@ kw</string> </value>
         priority DESC\n
 \n
     ) AS catalog\n
+  <dtml-if "\'versioning\' in query[\'order_by_expression\']">\n
+    , versioning\n
+    WHERE catalog.uid = versioning.uid\n
+  </dtml-if>\n
 \n
   GROUP BY reference\n
 \n
