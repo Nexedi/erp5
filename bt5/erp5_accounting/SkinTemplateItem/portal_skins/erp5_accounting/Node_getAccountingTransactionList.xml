@@ -74,36 +74,23 @@ if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
-payment_uid = kw.get(\'payment_uid\')\n
-if payment_uid:\n
-  if payment_uid == \'None\':\n
-    params[\'payment_uid\'] = Query(payment_uid=None)\n
-  else:\n
-    params[\'payment_uid\'] = payment_uid\n
-project_uid = kw.get(\'project_uid\')\n
-if project_uid:\n
-  if project_uid == \'None\':\n
-    params[\'project_uid\'] = Query(project_uid=None)\n
-  else:\n
-    params[\'project_uid\'] = project_uid\n
-funding_uid = kw.get(\'funding_uid\')\n
-if funding_uid:\n
-  if funding_uid == \'None\':\n
-    params[\'funding_uid\'] = Query(funding_uid=None)\n
-  else:\n
-    params[\'funding_uid\'] = funding_uid\n
+\n
+category_uid_list = (\'payment_uid\', \'project_uid\', \'funding_uid\',\n
+  \'function_uid\', \'payment_request_uid\')\n
+for category_uid in category_uid_list:\n
+  category_uid_value = kw.get(category_uid)\n
+  if category_uid_value:\n
+    if category_uid_value == \'None\':\n
+      params[category_uid] = Query(None=None)\n
+    else:\n
+      params[category_uid] = category_uid_value\n
+\n
 funding_category = kw.get(\'funding_category\')\n
 if funding_category:\n
   if funding_category == \'None\':\n
     params[\'funding_uid\'] = Query(funding_uid=None)\n
   else:\n
     params[\'funding_category\'] = funding_category\n
-function_uid = kw.get(\'function_uid\')\n
-if function_uid:\n
-  if function_uid == \'None\':\n
-    params[\'function_uid\'] = Query(function_uid=None)\n
-  else:\n
-    params[\'function_uid\'] = function_uid\n
 function_category = kw.get(\'function_category\')\n
 if function_category:\n
   if function_category == \'None\':\n
