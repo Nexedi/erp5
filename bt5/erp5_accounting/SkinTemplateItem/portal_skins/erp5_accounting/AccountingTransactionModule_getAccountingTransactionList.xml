@@ -57,9 +57,12 @@ section_category = params.pop(\'section_category\', None)\n
 section_category_strict = params.pop(\'section_category_strict\', None)\n
 params[\'accounting_transaction.section_uid\'] = \'\'\n
 if section_category:\n
-  params[\'accounting_transaction.section_uid\'] = context.Base_getSectionUidListForSectionCategory(\n
+  params[\'accounting_transaction.section_uid\'] = portal.Base_getSectionUidListForSectionCategory(\n
                                    section_category, strict_membership=section_category_strict)\n
-\n
+  currency = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict)\n
+  precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+  portal.REQUEST.set(\'precision\', precision)\n
+  \n
 # rewrite payment_mode_relative_url to uid\n
 payment_mode_relative_url = params.pop(\'payment_mode_relative_url\', None)\n
 if payment_mode_relative_url:\n

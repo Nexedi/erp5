@@ -76,10 +76,14 @@ for sort_column, sort_order in orig_sort_on:\n
   elif sort_column == \'Movement_getMirrorSectionTitle\':\n
     sort_on += [(\'stock.mirror_section_uid\', sort_order)]\n
 \n
-extra_query_keys = {}\n
+section_category = portal.portal_preferences.getPreferredAccountingTransactionSectionCategory()\n
+section_category_strict = portal.portal_preferences.getPreferredAccountingSectionCategoryStrict()\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-     portal.portal_preferences.getPreferredAccountingTransactionSectionCategory(),\n
-     strict_membership=portal.portal_preferences.getPreferredAccountingSectionCategoryStrict())\n
+     section_category, section_category_strict)\n
+\n
+currency = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict)\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
 \n
 grouping = dialog_selection_params.get(\'grouping\', \'grouping\')\n
 \n

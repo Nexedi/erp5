@@ -50,62 +50,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns the most suitable currency for a section.\n
-\n
-If the section is an organisation, returns this organisation\'s accounting\n
-currency.\n
-If the section is a category, find the most suitable currency.\n
-\n
-XXX consider using Base_getCurrencyForSectionCategory instead, because it supports\n
-section_category_strict parameter and checks for duplicate currency used.\n
-"""\n
-\n
-def getCurrencyForSection(section_url):\n
-  portal = context.getPortalObject()\n
-  section = portal.portal_categories.restrictedTraverse(section_url)\n
-\n
-  if section.getPortalType() == \'Organisation\' and section.getPriceCurrency():\n
-    return section.getPriceCurrency()\n
-\n
-  if section.getPortalType() == \'Category\':\n
-    # first get the strict one\n
-    member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                                                   strict_membership=True,\n
-                                                   checked_permission=\'View\')\n
-    for member in member_list:\n
-      currency = member.getPriceCurrency()\n
-      if currency:\n
-        return currency\n
-\n
-    # then from mapping category\n
-    mapping = section.getMappingRelatedValue(portal_type=\'Organisation\')\n
-    if mapping is not None and mapping.getPriceCurrency():\n
-      return mapping.getPriceCurrency()\n
-\n
-    # otherwise, lookup all groups top down until we find one currency\n
-    for subsection in section.getCategoryChildValueList(local_sort_id=\'int_index\'):\n
-      member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                                        strict_membership=True,\n
-                                        checked_permission=\'View\')\n
-      for member in member_list:\n
-        currency = member.getPriceCurrency()\n
-        if currency:\n
-          return currency\n
-\n
+            <value> <string>\'\'\'Returns the currency that is used for this section category.\n
+Returns None if no currency defined or if mixed currency are used.\n
+\'\'\'\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
-getCurrencyForSection = CachingMethod(getCurrencyForSection,\n
-                                      id=script.getId())\n
-return getCurrencyForSection(section_url)\n
+\n
+def getCurrencyForSectionCategory(section_category, section_category_strict):\n
+  portal = context.getPortalObject()\n
+  currency_set = set()\n
+  for section_uid in portal.Base_getSectionUidListForSectionCategory(\n
+      section_category, section_category_strict):\n
+    if section_uid != -1:\n
+      section = portal.portal_catalog.getObject(section_uid)\n
+      currency = section.getPriceCurrency()\n
+      if currency:\n
+        currency_set.add(currency)\n
+  if len(currency_set) == 1:\n
+    return currency_set.pop()\n
+\n
+getCurrencyForSectionCategory = CachingMethod(\n
+              getCurrencyForSectionCategory,\n
+              id=script.getId(), cache_factory=\'erp5_content_long\')\n
+\n
+return getCurrencyForSectionCategory(section_category, section_category_strict)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_url</string> </value>
+            <value> <string>section_category, section_category_strict</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getCurrencyForSection</string> </value>
+            <value> <string>Base_getCurrencyForSectionCategory</string> </value>
         </item>
       </dictionary>
     </pickle>
