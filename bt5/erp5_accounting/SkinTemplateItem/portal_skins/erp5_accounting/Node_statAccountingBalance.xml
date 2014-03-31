@@ -73,9 +73,14 @@ for category_uid in category_uid_list:\n
   category_uid_value = kw.get(category_uid)\n
   if category_uid_value:\n
     if category_uid_value == \'None\':\n
-      # XXX This query needs some clarification\n
-      # This query will be translated as stock.project_uid IS NULL\n
-      params[category_uid] = Query(None=None)\n
+    # XXX Jerome: this code needs some clarification. It is used after a dialog\n
+    # with a list field for project (same for function, payment_request,\n
+    # funding) where the user can select an empty item which means no filter\n
+    # on project, can select a project which means only transactions for\n
+    # that specific project, or select a special value "None" which means\n
+    # transactions that are not related to a project. For that we need a\n
+    # query that will be translated as stock.project_uid IS NULL.\n
+      params[category_uid] = Query(**{category_uid: None})\n
     else:\n
       params[category_uid] = category_uid_value\n
 \n
