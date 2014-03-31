@@ -72,6 +72,9 @@ return [\n
   dict(id=\'ru\',\n
        name=Base_translateString(\'Russian\'),\n
        bt5=\'erp5_l10n_ru\',),\n
+  dict(id=\'zh\',\n
+       name=Base_translateString(\'Chinese\'),\n
+       bt5=\'erp5_l10n_zh\',),\n
 ]\n
 </string> </value>
         </item>
