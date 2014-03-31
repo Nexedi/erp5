@@ -2120,6 +2120,72 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=100, credit_price=200)
 
+  def testAccountStatementProject(self):
+    # test account statement to a project
+    self.createProjectAndFunctionDataSet()
+    
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['project'] = self.project_1.getRelativeUrl()
+    request_form['hide_analytic'] = False
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewAccountStatementReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Function a Project 1',
+          date=DateTime(2006, 2, 2),
+          Movement_getMirrorSectionTitle='Client 1',
+          debit_price=500, credit_price=0, running_total_price=500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
+
+
+  def testAccountStatementNoProject(self):
+    # test account statement to no project
+    self.createProjectAndFunctionDataSet()
+    
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['project'] = 'None'
+    request_form['hide_analytic'] = False
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewAccountStatementReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='3',
+          Movement_getExplanationTitle='No function no project',
+          date=DateTime(2006, 2, 2),
+          Movement_getMirrorSectionTitle='Client 1',
+          debit_price=700, credit_price=0, running_total_price=700, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=700, credit_price=0)
+
+
   def testTrialBalance(self):
     # Simple test of trial balance
     # we will use the same data set as account statement
