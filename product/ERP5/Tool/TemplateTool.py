@@ -1492,7 +1492,7 @@ class TemplateTool (BaseTool):
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
                     deprecated_reinstall_set=None, dry_run=False,
                     delete_orphaned=False,
-                    keep_bt5_id_set=[]):
+                    keep_bt5_id_set=None):
       """
       Upgrade many business templates at a time. bt5_list should
       contains only final business templates, then all dependencies
