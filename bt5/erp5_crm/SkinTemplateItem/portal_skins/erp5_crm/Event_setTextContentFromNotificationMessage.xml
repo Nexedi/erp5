@@ -68,9 +68,9 @@ substitution_method_parameter_dict.setdefault(\'event_value\', context)\n
 \n
 \n
 if notification_message is not None:\n
-  context.setTextFormat(notification_message.getTextFormat())\n
+  context.setContentType(notification_message.getContentType())\n
   target_format = "txt"\n
-  if context.getTextFormat() == \'text/html\':\n
+  if context.getContentType() == \'text/html\':\n
     target_format = "html"\n
   mime, text_content = notification_message.convert(target_format,\n
       substitution_method_parameter_dict=substitution_method_parameter_dict)\n

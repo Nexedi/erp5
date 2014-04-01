@@ -54,7 +54,7 @@
 \n
 This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
 """\n
-return context.getTextFormat()\\\n
+return context.getContentType()\\\n
   or context.getPortalObject().portal_preferences.getPreferredTextFormat()\n
 </string> </value>
         </item>

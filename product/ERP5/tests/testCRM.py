@@ -515,7 +515,7 @@ class TestCRM(BaseTestCRM):
     self.assertEqual(destination_list, [first_user])
     mail_message = event_list[0]
     self.assertEqual(sender.getRelativeUrl(), mail_message.getSource())
-    self.assertEqual(mail_message.getTextFormat(), "text/html")
+    self.assertEqual(mail_message.getContentType(), "text/html")
     self.assertEqual(mail_message.getTextContent(), "Hello %s" % first_user.getTitle())
     self.assertEqual(mail_message.getResourceValue(), service)
 

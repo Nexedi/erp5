@@ -364,7 +364,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.getTextFormat() == \'text/html\' and here.portal_preferences.getPreferredTextEditor()) or \'text_area\'</string> </value>
+            <value> <string>python:(here.getContentType() == \'text/html\' and here.portal_preferences.getPreferredTextEditor()) or \'text_area\'</string> </value>
         </item>
       </dictionary>
     </pickle>
