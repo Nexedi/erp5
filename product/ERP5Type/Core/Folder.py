@@ -30,6 +30,7 @@
 import transaction
 from collections import deque
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.ZopeGuards import NullIter
 from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.ObjectManager import ObjectManager
 from OFS.History import Historical
@@ -452,12 +453,7 @@ class FolderMixIn(ExtensionClass.Base):
             next_id = deque(x for x in container.objectIds() if x >= next_id)
             recurse_stack[depth] = next_id
           else:
-            if folder_handler == HBTREE_HANDLER:
-              iteritems = container._htree_iteritems
-            else:
-              iteritems = container._tree.iteritems
-            for id, ob in iteritems(next_id):
-              ob = ob.__of__(container)
+            for id, ob in container.iteritems(next_id):
               if not restricted or validate(container, container, id, ob):
                 recurse_stack[depth] = id
                 recurse(ob, depth + 1)
@@ -1053,6 +1049,15 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return []
       return CMFBTreeFolder.items(self, *args, **kw)
+
+  def iteritems(self, *args, **kw):
+    if self._folder_handler == HBTREE_HANDLER:
+      result = CMFHBTreeFolder._htree_iteritems(self, *args, **kw)
+    else:
+      if self._tree is None:
+        return ()
+      result = self._tree.iteritems(*args, **kw)
+    return NullIter(((x, y.__of__(self)) for x, y in result))
 
   def hasObject(self, id):
     if self._folder_handler == HBTREE_HANDLER:
