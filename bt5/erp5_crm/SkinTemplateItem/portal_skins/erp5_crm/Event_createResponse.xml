@@ -56,7 +56,7 @@ portal = context.getPortalObject()\n
 module = portal.getDefaultModule(response_event_portal_type)\n
 \n
 response = module.newContent(portal_type=response_event_portal_type,\n
-                             source=default_destination,\n
+                             source=default_destination or context.getDestination(),\n
                              destination=context.getSource(),\n
                              resource=response_event_resource,\n
                              title=response_event_title,\n
