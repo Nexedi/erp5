@@ -392,7 +392,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
       """
       LOG('TextDocument', WARNING,
-                'Usage of text_format is deprecated, use text_content instead')
+                'Usage of text_format is deprecated, use content_type instead')
       return self.getContentType(default)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setTextFormat')
@@ -400,7 +400,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
       """
       LOG('TextDocument', WARNING,
-                'Usage of text_format is deprecated, use text_content instead')
+                'Usage of text_format is deprecated, use content_type instead')
       return self.setContentType(value)
 
     security.declareProtected(Permissions.ModifyPortalContent,
@@ -409,7 +409,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
       """
       LOG('TextDocument', WARNING,
-                'Usage of text_format is deprecated, use text_content instead')
+                'Usage of text_format is deprecated, use content_type instead')
       return self._setContentType(value)
 
     def getData(self, default=_MARKER):
