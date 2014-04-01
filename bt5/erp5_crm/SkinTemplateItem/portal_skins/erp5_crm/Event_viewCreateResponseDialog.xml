@@ -95,7 +95,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_default_destination_title</string>
+                        <string>my_default_destination</string>
                         <string>my_default_source_title</string>
                       </list>
                     </value>
