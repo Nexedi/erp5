@@ -157,7 +157,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
                                      default=default)
     return range(new_id - id_count, new_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
   def initializeGenerator(self):
     """
@@ -206,7 +206,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if storage:
       self._updateSqlTable()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'clearGenerator')
   def clearGenerator(self):
     """

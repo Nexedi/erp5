@@ -87,7 +87,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
                                      default=default)
     return range(new_id - id_count, new_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
   def initializeGenerator(self):
     """
@@ -111,7 +111,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
           continue
         self.last_id_dict[id_group] = last_id
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'clearGenerator')
   def clearGenerator(self):
     """
