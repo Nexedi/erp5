@@ -775,6 +775,17 @@ class ItemsWidget(Widget):
                                default="",
                                required=0)
 
+    @staticmethod
+    def render_element(tag, **kw):
+        """
+        Similar to global render_element, but render None values as disabled
+        elements.
+        """
+        if kw['value'] is None:
+            kw.pop('value')
+            kw['disabled'] = None
+        return render_element(tag, **kw)
+
 class SingleItemsWidget(ItemsWidget):
   """A widget with a number of items that has only a single
   selectable item.
@@ -1119,14 +1130,11 @@ class ListWidget(SingleItemsWidget):
       return "\n".join([list_widget, input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
-        if value is None:
-          return render_element('option', contents=text, disabled=None,
-                                extra=extra_item)
-        return render_element('option', contents=text, value=value, 
+        return self.render_element('option', contents=text, value=value,
                               extra=extra_item)
 
     def render_selected_item(self, text, value, key, css_class, extra_item):
-        return render_element('option', contents=text, value=value,
+        return self.render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
 
 ListWidgetInstance = ListWidget()
@@ -1161,14 +1169,11 @@ class MultiListWidget(MultiItemsWidget):
       return "\n".join([multi_list,input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
-        if value is None:
-          return render_element('option', contents=text, disabled=None,
-                                extra=extra_item)
-        return render_element('option', contents=text, value=value, 
+        return self.render_element('option', contents=text, value=value,
                               extra=extra_item)
 
     def render_selected_item(self, text, value, key, css_class, extra_item):
-        return render_element('option', contents=text, value=value,
+        return self.render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
     
 MultiListWidgetInstance = MultiListWidget()
@@ -1202,7 +1207,7 @@ class RadioWidget(SingleItemsWidget):
       return string.join(rendered_items, "<br />")
 
   def render_item(self, text, value, key, css_class, extra_item):
-    return render_element('input',
+    return self.render_element('input',
                           type="radio",
                           css_class=css_class,
                           name=key,
@@ -1210,7 +1215,7 @@ class RadioWidget(SingleItemsWidget):
                           extra=extra_item) + text
 
   def render_selected_item(self, text, value, key, css_class, extra_item):
-    return render_element('input',
+    return self.render_element('input',
                           type="radio",
                           css_class=css_class,
                           name=key,
@@ -1247,7 +1252,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
         return string.join(rendered_items, "<br />")
 
     def render_item(self, text, value, key, css_class, extra_item):
-        return render_element('input',
+        return self.render_element('input',
                               type="checkbox",
                               css_class=css_class,
                               name=key,
@@ -1255,7 +1260,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
                               extra=extra_item) + text
     
     def render_selected_item(self, text, value, key, css_class, extra_item):
-        return render_element('input',
+        return self.render_element('input',
                               type="checkbox",
                               css_class=css_class,
                               name=key,
