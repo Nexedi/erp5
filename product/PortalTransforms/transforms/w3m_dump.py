@@ -44,7 +44,7 @@ class w3m_dump(subprocesstransform):
   __version__ = '2008.07.11-1'
 
   binaryName = "w3m"
-  binaryArgs = "-dump -T text/html -o document_charset=utf-8 -o display_charset=utf-8 -o ignore_null_img_alt=0 "
+  binaryArgs = "-dump -T text/html -o alt_entity=0 -o document_charset=utf-8 -o display_charset=utf-8 -o ignore_null_img_alt=0 "
   useStdin = True
 
 
