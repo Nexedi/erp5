@@ -179,17 +179,27 @@ class TestERP5Web(ERP5TypeTestCase):
     self.assertEqual('text/html', page.getContentType())
     self.assertEqual('<b>OK</b>', page.getTextContent())
 
-  def test_02a_WebPageAsText(self):
+  def test_WebPageAsTextUTF8(self):
+    """Check if Web Page's asText() returns utf-8 string correctly
     """
-      Check if Web Page's asText() returns utf-8 string correctly and
-      if it is wrapped by certian column width.
-    """
-    # disable portal_transforms cache
-    self.portal.portal_transforms.max_sec_in_cache = -1
     page = self.web_page_module.newContent(portal_type='Web Page')
-    page.edit(text_content='<p>Hé Hé Hé!</p>')
+    page.edit(text_content='<p>Hé Hé Hé!</p>', content_type='text/html')
     self.tic()
     self.assertEqual('Hé Hé Hé!', page.asText().strip())
+
+  def test_WebPageAsTextHTMLEntities(self):
+    """Check if Web Page's asText() converts html entities properly
+    """
+    page = self.web_page_module.newContent(portal_type='Web Page')
+    page.edit(text_content='<p>H&eacute;!</p>', content_type='text/html')
+    self.tic()
+    self.assertEqual('Hé!', page.asText().strip())
+
+  def test_WebPageAsTextWrap(self):
+    """Check if Web Page's asText() is wrapped by certain column width.
+    """
+    page = self.web_page_module.newContent(portal_type='Web Page')
+
     page.edit(text_content='<p>Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé!</p>')
     self.tic()
     self.assertEqual("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
