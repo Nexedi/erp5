@@ -330,11 +330,14 @@ branch = %(branch)s
                                                         portal_url,
                                                         logger=DummyLogger(log))
           self.test_suite_portal.subscribeNode(node_title=config['test_node_title'],
-                                               computer_guid=config['computer_id'])                  
-          test_suite_json = self.test_suite_portal.startTestSuite(
+                                               computer_guid=config['computer_id'])
+          test_suite_data = self.test_suite_portal.startTestSuite(
                                                node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
-          test_suite_data = Utils.deunicodeData(json.loads(test_suite_json))
+          if type(test_suite_data) == str:
+            # Backward compatiblity
+            test_suite_data = json.loads(test_suite_data)
+          test_suite_data = Utils.deunicodeData(test_suite_data)
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
           try:
