@@ -50,21 +50,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>"""This script is indented to be used in email emage to mark the event as received\n
+when the recipient opens the email in his email client.\n
+\n
+We do not want to mark an email as read when backoffice agent displays the event\n
+in ERP5 though.\n
+"""\n
+portal = context.getPortalObject()\n
 request = context.REQUEST\n
+event_id = request[\'id\']\n
 \n
 user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+# If we have a logged in user it\'s probably a backoffice agent.\n
 if user is None:\n
-  if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), request[\'id\']) != request["hash"]:\n
-    from zExceptions import Unauthorized\n
-    raise Unauthorized\n
+  # If the referer contains the url of the event we are probably viewing the event\n
+  # from ERP5 interface. We do not want to mark the event as received in that case\n
+  if not (\'/event_module/%s\' % event_id) in request.HTTP_REFERER:\n
+    if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), event_id) != request["hash"]:\n
+      from zExceptions import Unauthorized\n
+      raise Unauthorized()\n
     \n
-  portal.portal_activities.activate(\n
-    activity="SQLQueue").Base_markEventAsReceived(event_id=request[\'id\'], \n
-                                                  hmac=request["hash"])\n
+    portal.portal_activities.activate(\n
+      activity="SQLQueue").Base_markEventAsReceived(event_id=request[\'id\'], \n
+                                                    hmac=request["hash"])\n
 \n
-redirect_url = "%s/Base_download" %(context.getRelativeUrl(),)\n
-context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
+# serve the image\n
+return context.index_html(request, request.RESPONSE, format=None)\n
 </string> </value>
         </item>
         <item>
