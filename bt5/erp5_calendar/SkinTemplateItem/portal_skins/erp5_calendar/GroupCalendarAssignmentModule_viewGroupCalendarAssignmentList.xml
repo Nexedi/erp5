@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -59,11 +59,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,41 +70,8 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
                       <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_specialise_title</string>
-                        <string>my_resource_title</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -117,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GroupCalendarAssignment_view</string> </value>
+            <value> <string>GroupCalendarAssignmentModule_viewGroupCalendarAssignmentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -125,11 +88,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>GroupCalendarAssignment_view</string> </value>
+            <value> <string>GroupCalendarAssignmentModule_viewGroupCalendarAssignmentList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -141,7 +104,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Group Calendar Assignment</string> </value>
+            <value> <string>Group Calendar Assignments</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
