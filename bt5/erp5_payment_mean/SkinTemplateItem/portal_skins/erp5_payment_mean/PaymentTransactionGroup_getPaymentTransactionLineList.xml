@@ -59,6 +59,11 @@ search_kw = dict(\n
   node_category=\'account_type/asset/cash/bank\',\n
 )\n
 \n
+if context.getSourcePayment():\n
+  precision = context.getQuantityPrecisionFromResource(\n
+    context.getSourcePaymentValue().getPriceCurrency())\n
+  portal.REQUEST.set(\'precision\', precision)\n
+\n
 return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
 </string> </value>
         </item>
