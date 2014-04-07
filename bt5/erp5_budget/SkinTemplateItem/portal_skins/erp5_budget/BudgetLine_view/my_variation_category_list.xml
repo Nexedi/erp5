@@ -227,7 +227,7 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>style="max-width: none"</string> </value>
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
