@@ -51,9 +51,9 @@ class GroupCalendarAssignment(PresencePeriod):
     single destination.
     """
     result = []
-    if self.getDestinationUid() is None:
+    group_calendar = self.getSpecialiseValue()
+    if None in (self.getDestinationUid(), group_calendar):
       return result
-    group_calendar = self.getParentValue()
     presence_period_list = group_calendar.objectValues(portal_type="Group Presence Period")
     for presence_period in presence_period_list:
       for from_date, to_date in presence_period._getDatePeriodList():

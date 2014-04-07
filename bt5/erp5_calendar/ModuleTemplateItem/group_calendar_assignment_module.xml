@@ -1,0 +1,7 @@
+<module>
+ <id>group_calendar_assignment_module</id>
+ <permission_list>
+ </permission_list>
+ <portal_type>Group Calendar Assignment Module</portal_type>
+ <title>Group Calendar Assignments</title>
+</module>

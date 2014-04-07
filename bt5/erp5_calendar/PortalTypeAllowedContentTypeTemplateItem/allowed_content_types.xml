@@ -1,7 +1,9 @@
 <allowed_content_type_list>
  <portal_type id="Group Calendar">
-  <item>Group Calendar Assignment</item>
   <item>Group Presence Period</item>
+ </portal_type>
+ <portal_type id="Group Calendar Assignment Module">
+  <item>Group Calendar Assignment</item>
  </portal_type>
  <portal_type id="Group Calendar Module">
   <item>Group Calendar</item>

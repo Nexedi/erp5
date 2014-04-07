@@ -4,6 +4,10 @@
   <workflow>edit_workflow, group_calendar_workflow</workflow>
  </chain>
  <chain>
+  <type>Group Calendar Assignment</type>
+  <workflow>edit_workflow, group_calendar_workflow</workflow>
+ </chain>
+ <chain>
   <type>Group Presence Period</type>
   <workflow>edit_workflow</workflow>
  </chain>
