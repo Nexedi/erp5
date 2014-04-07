@@ -743,95 +743,9 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       Consult the doc string in Movement.getPriceCalculationOperandDict
       for more details.
       """
-      # First, try to use a new type-based method for the calculation.
-      # Note that this is based on self (i.e. a resource) instead of context
-      # (i.e. a movement).
-      method = self._getTypeBasedMethod('getPriceCalculationOperandDict')
-      if method is not None:
-        return unrestricted_apply(method, kw=dict(
-            default=default, movement=context, REQUEST=REQUEST, **kw))
-
-      # Next, try an old type-based method which returns only a final result.
-      method = self._getTypeBasedMethod('getPrice')
-      if method is not None:
-        price = method(default=default, movement=context, REQUEST=REQUEST, **kw)
-        if price is not None:
-          return {'price': price}
-        return default
-
-      # This below is used only if any type-based method is not
-      # available at all. We should provide the default implementation
-      # in a Business Template as Resource_getPrice, thus this will not
-      # be used in the future. Kept only for backward compatibility in
-      # case where the user still uses an older Business Template.
-
-      price_parameter_dict = self.getPriceParameterDict(
-                                     context=context, REQUEST=REQUEST, **kw)
-      # Calculate the unit price
-      unit_base_price = None
-      # Calculate
-#     ((base_price + SUM(additional_price) +
-#     variable_value * SUM(variable_additional_price)) *
-#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +
-#     SUM(non_discountable_additional_price)) *
-#     (1 + SUM(surcharge_ratio))
-      # Or, as (nearly) one single line :
-#     ((bp + S(ap) + v * S(vap))
-#       * (1 - m(1, M(S(dr), edr)))
-#       + S(ndap))
-#     * (1 + S(sr))
-      # Variable value is dynamically configurable through a python script.
-      # It can be anything, depending on business requirements.
-      # It can be seen as a way to define a pricing model that not only
-      # depends on discrete variations, but also on a continuous property
-      # of the object
-
-      base_price = price_parameter_dict['base_price']
-      if base_price in [None, '']:
-        # XXX Compatibility
-        # base_price must not be defined on resource
-        base_price = self.getBasePrice()
-      if base_price not in [None, '']:
-        unit_base_price = base_price
-        # Sum additional price
-        for additional_price in price_parameter_dict['additional_price']:
-          unit_base_price += additional_price
-        # Sum variable additional price
-        variable_value = self.getPricingVariable(context=context)
-        for variable_additional_price in \
-            price_parameter_dict['variable_additional_price']:
-          unit_base_price += variable_additional_price * variable_value
-        # Discount
-        sum_discount_ratio = 0
-        for discount_ratio in price_parameter_dict['discount_ratio']:
-          sum_discount_ratio += discount_ratio
-        exclusive_discount_ratio = \
-            price_parameter_dict['exclusive_discount_ratio']
-        d_ratio = 0
-        d_ratio = max(d_ratio, sum_discount_ratio)
-        if exclusive_discount_ratio not in [None, '']:
-          d_ratio = max(d_ratio, exclusive_discount_ratio)
-        if d_ratio != 0:
-          d_ratio = 1 - min(1, d_ratio)
-          unit_base_price = unit_base_price * d_ratio
-        # Sum non discountable additional price
-        for non_discountable_additional_price in\
-            price_parameter_dict['non_discountable_additional_price']:
-          unit_base_price += non_discountable_additional_price
-        # Surcharge ratio
-        sum_surcharge_ratio = 1
-        for surcharge_ratio in price_parameter_dict['surcharge_ratio']:
-          sum_surcharge_ratio += surcharge_ratio
-        unit_base_price = unit_base_price * sum_surcharge_ratio
-      # Divide by the priced quantity if not (None, 0)
-      if unit_base_price is not None\
-          and price_parameter_dict['priced_quantity']:
-        priced_quantity = price_parameter_dict['priced_quantity']
-        unit_base_price = unit_base_price / priced_quantity
-      # Return result
-      if unit_base_price is not None:
-        return {'price': unit_base_price}
-      return default
+      kw.update(default=default, movement=context, REQUEST=REQUEST)
+      return unrestricted_apply(
+        self._getTypeBasedMethod('getPriceCalculationOperandDict'), kw=kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')

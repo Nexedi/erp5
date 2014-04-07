@@ -50,69 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>price_parameter_dict = context.getPriceParameterDict(context=movement, REQUEST=REQUEST, **kw)\n
-\n
-# Calculate the unit price\n
-unit_base_price = None\n
-# Calculate\n
-#     ((base_price + SUM(additional_price) +\n
-#     variable_value * SUM(variable_additional_price)) *\n
-#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +\n
-#     SUM(non_discountable_additional_price)) *\n
-#     (1 + SUM(surcharge_ratio))\n
-#     Or, as (nearly) one single line :\n
-#     ((bp + S(ap) + v * S(vap))\n
-#       * (1 - m(1, M(S(dr), edr)))\n
-#       + S(ndap))\n
-#     * (1 + S(sr))\n
-# Variable value is dynamically configurable through a python script.\n
-# It can be anything, depending on business requirements.\n
-# It can be seen as a way to define a pricing model that not only\n
-# depends on discrete variations, but also on a continuous property\n
-# of the object\n
-\n
-base_price = price_parameter_dict[\'base_price\']\n
-if base_price in (None, \'\'):\n
-  # XXX Compatibility\n
-  # base_price must not be defined on resource\n
-  base_price = context.getBasePrice()\n
-\n
-if base_price not in (None, \'\'):\n
-  unit_base_price = base_price\n
-\n
-  # Sum additional price\n
-  unit_base_price += sum(price_parameter_dict[\'additional_price\'])\n
-\n
-  # Sum variable additional price\n
-  variable_value = 1.0\n
-  unit_base_price += sum(price_parameter_dict[\'variable_additional_price\']) * variable_value\n
-\n
-  # Discount\n
-  sum_discount_ratio = sum(price_parameter_dict[\'discount_ratio\'])\n
-  exclusive_discount_ratio = price_parameter_dict[\'exclusive_discount_ratio\'] or 0\n
-  d_ratio = max(0, sum_discount_ratio, exclusive_discount_ratio)\n
-  if d_ratio != 0:\n
-    unit_base_price *= 1 - min(1, d_ratio)\n
-\n
-  # Sum non discountable additional price\n
-  unit_base_price += sum(price_parameter_dict[\'non_discountable_additional_price\'])\n
-\n
-  # Surcharge ratio\n
-  sum_surcharge_ratio = sum(price_parameter_dict[\'surcharge_ratio\']) + 1\n
-  unit_base_price *= sum_surcharge_ratio\n
-\n
-  # Divide by the priced quantity\n
-  priced_quantity = price_parameter_dict[\'priced_quantity\']\n
-  if priced_quantity not in (None, 0):\n
-    unit_base_price /= priced_quantity\n
-\n
-# Return result\n
-return unit_base_price\n
+            <value> <string>return context.Resource_getPriceCalculationOperandDict(*args, **kw)["price"]\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default=None, movement=None, REQUEST=None, **kw</string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

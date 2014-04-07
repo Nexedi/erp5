@@ -50,10 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>price_parameter_dict = context.getPriceParameterDict(context=movement, REQUEST=REQUEST, **kw)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+result = context.getPriceParameterDict(context=movement, **kw)\n
 \n
-# Calculate the unit price\n
-unit_base_price = None\n
 # Calculate\n
 #     ((base_price + SUM(additional_price) +\n
 #     variable_value * SUM(variable_additional_price)) *\n
@@ -71,50 +71,54 @@ unit_base_price = None\n
 # depends on discrete variations, but also on a continuous property\n
 # of the object\n
 \n
-base_price = price_parameter_dict[\'base_price\']\n
-if base_price in (None, \'\'):\n
+base_price = result["base_price"]\n
+if base_price in (None, ""):\n
   # XXX Compatibility\n
   # base_price must not be defined on resource\n
   base_price = context.getBasePrice()\n
+  if base_price in (None, ""):\n
+    return {"price": default,\n
+            "base_unit_price": result.get(\'base_unit_price\')}\n
 \n
-if base_price not in (None, \'\'):\n
-  unit_base_price = base_price\n
+for x in ("additional_price",\n
+          "variable_additional_price",\n
+          "discount_ratio",\n
+          "non_discountable_additional_price",\n
+          "surcharge_ratio"):\n
+  result[x] = sum(result[x])\n
 \n
+unit_base_price = (base_price\n
   # Sum additional price\n
-  unit_base_price += sum(price_parameter_dict[\'additional_price\'])\n
-\n
+  + result["additional_price"]\n
   # Sum variable additional price\n
-  variable_value = 1.0\n
-  unit_base_price += sum(price_parameter_dict[\'variable_additional_price\']) * variable_value\n
+  + result["variable_additional_price"] \\\n
+    * context.getPricingVariable(context=movement))\n
 \n
-  # Discount\n
-  sum_discount_ratio = sum(price_parameter_dict[\'discount_ratio\'])\n
-  exclusive_discount_ratio = price_parameter_dict[\'exclusive_discount_ratio\'] or 0\n
-  d_ratio = max(0, sum_discount_ratio, exclusive_discount_ratio)\n
-  if d_ratio != 0:\n
-    unit_base_price *= 1 - min(1, d_ratio)\n
+# Discount\n
+d_ratio = max(result["discount_ratio"], result[\'exclusive_discount_ratio\'] or 0)\n
+if d_ratio > 0:\n
+  unit_base_price *= max(0, 1 - d_ratio)\n
 \n
-  # Sum non discountable additional price\n
-  unit_base_price += sum(price_parameter_dict[\'non_discountable_additional_price\'])\n
+# Sum non discountable additional price\n
+unit_base_price += result[\'non_discountable_additional_price\']\n
 \n
-  # Surcharge ratio\n
-  sum_surcharge_ratio = sum(price_parameter_dict[\'surcharge_ratio\']) + 1\n
-  unit_base_price *= sum_surcharge_ratio\n
+# Surcharge ratio\n
+unit_base_price *= 1 + result["surcharge_ratio"]\n
 \n
-  # Divide by the priced quantity\n
-  priced_quantity = price_parameter_dict[\'priced_quantity\']\n
-  if priced_quantity not in (None, 0):\n
-    unit_base_price /= priced_quantity\n
+# Divide by the priced quantity\n
+priced_quantity = result[\'priced_quantity\']\n
+if priced_quantity:\n
+  unit_base_price /= priced_quantity\n
 \n
-# Return result\n
-if unit_base_price is None:\n
-  unit_base_price = default\n
-return dict(price=unit_base_price, base_unit_price=price_parameter_dict.get(\'base_unit_price\'))\n
-</string> </value>
+result["price"] = unit_base_price\n
+return result\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default=None, movement=None, REQUEST=None, **kw</string> </value>
+            <value> <string>default=None, movement=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
