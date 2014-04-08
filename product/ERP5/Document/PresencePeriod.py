@@ -107,7 +107,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
                                    stop_date=from_date))
     return result
 
-  def _getDatePeriodList(self):
+  def _getDatePeriodDataList(self):
     """
     Get all periods between periodicity start date
     and periodicity stop date
@@ -159,8 +159,9 @@ class PresencePeriod(Movement, PeriodicityMixin):
           else:
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
-            result.append([next_start_date,
-               addToDate(next_start_date, second=second_duration)])
+            result.append({'start_date': next_start_date,
+                           'stop_date': addToDate(next_start_date, second=second_duration),
+                           'quantity': self.getQuantity()})
           next_start_date = self.getNextPeriodicalDate(next_start_date)
 
     return result
