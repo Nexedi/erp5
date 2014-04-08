@@ -40,7 +40,7 @@ class TestCalendar(ERP5ReportTestCase):
   leave_request_portal_type = "Leave Request"
   group_presence_period_portal_type = "Group Presence Period"
   leave_request_period_portal_type = "Leave Request Period"
-  start_date = DateTime()
+  start_date = DateTime(DateTime().ISO8601())
   stop_date = start_date + 0.5
   middle_date = start_date + 0.25
   periodicity_stop_date = start_date + 2
@@ -51,7 +51,7 @@ class TestCalendar(ERP5ReportTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base', 'erp5_calendar', 'erp5_core_proxy_field_legacy')
+    return ('erp5_base', 'erp5_pdm', 'erp5_calendar', 'erp5_core_proxy_field_legacy')
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -76,6 +76,14 @@ class TestCalendar(ERP5ReportTestCase):
       self.category_tool.group.newContent(portal_type='Category',
                                           id='my_group')
 
+  def createService(self):
+    """
+    Create service that will be used to fill stock
+    """
+    module = self.portal.service_module
+    if getattr(module, 'consulting_service', None) is None:
+      module.newContent(id='consulting_service', title='Consulting Service')
+
 
   def afterSetUp(self):
     """
@@ -83,6 +91,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     self.category_tool = self.getCategoryTool()
     self.createCategories()
+    self.createService()
     # activate constraints
     self._addPropertySheet('Group Calendar', 'CalendarConstraint')
     self._addPropertySheet('Presence Request', 'CalendarConstraint')
@@ -142,22 +151,21 @@ class TestCalendar(ERP5ReportTestCase):
         group_calendar=pc,
     )
 
-  def stepSetGroupCalendarSource(self, sequence=None,
+  def stepSetGroupCalendarAssignment(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Set the source
     """
     group_calendar = sequence.get('group_calendar')
     person = sequence.get('person')
-    assignment_list = person.contentValues(portal_type='Assignment')
-    if len(assignment_list) != 0:
-      assignment = assignment_list[0]
-    else:
-      assignment = person.newContent(
-        portal_type = 'Assignment',
-      )
-    assignment.setCalendarList(
-        assignment.getCalendarList()+[group_calendar.getRelativeUrl()])
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      destination_value=person,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=self.start_date,
+                      stop_date=self.stop_date,
+                      specialise_value=group_calendar)
+    assignment.confirm()
+    sequence.edit(assignment=assignment)
 
   def stepCreateGroupPresencePeriod(self, sequence=None,
                                       sequence_list=None, **kw):
@@ -190,6 +198,8 @@ class TestCalendar(ERP5ReportTestCase):
       start_date=self.start_date,
       stop_date=self.stop_date,
     )
+    # XXX(Seb), replace by interaction workflow
+    #sequence.get("assignment").reindexObject()
 
   def stepSetGroupPresencePeriodPerStopDate(self, sequence=None,
                                         sequence_list=None, **kw):
@@ -201,13 +211,13 @@ class TestCalendar(ERP5ReportTestCase):
       periodicity_stop_date=self.periodicity_stop_date,
     )
 
-  def stepSetGroupPresencePeriodToCheck(self, sequence=None,
+  def stepSetGroupCalendarAssignmentToCheck(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Set personal calendar period to check
     """
-    group_presence_period = sequence.get('group_presence_period')
-    sequence.edit(obj_to_check=group_presence_period)
+    assignment = sequence.get('assignment')
+    sequence.edit(obj_to_check=assignment)
 
   def stepSetGroupCalendarEventPerStopDate(self, sequence=None,
                                         sequence_list=None, **kw):
@@ -392,11 +402,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               CheckNotCatalogued \
               ConfirmGroupCalendar \
               Tic \
@@ -572,11 +582,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
               ConfirmActionGroupCalendar \
@@ -591,11 +601,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
               ConfirmActionGroupCalendar \
@@ -611,11 +621,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               GetLastCreatedPerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               PlanGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
@@ -651,11 +661,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
               ConfirmActionGroupCalendar \
@@ -690,11 +700,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
@@ -709,11 +719,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               CreatePerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
@@ -729,11 +739,11 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_string = '\
               GetLastCreatedPerson \
               CreateGroupCalendar \
-              SetGroupCalendarSource \
+              SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
               SetGroupPresencePeriodValues \
               Tic \
-              SetGroupPresencePeriodToCheck \
+              SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
               SetGroupPresencePeriodDates \
               SetGroupPresencePeriodPerStopDate \
