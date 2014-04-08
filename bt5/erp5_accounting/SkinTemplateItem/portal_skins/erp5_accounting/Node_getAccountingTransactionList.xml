@@ -220,7 +220,8 @@ if from_date or is_pl_account:\n
         Movement_getExplanationReference=\'\',\n
         Movement_getMirrorSectionTitle=\'\',\n
         Movement_getNodeGapId=\'\',\n
-        Movement_getExplanationUrl=lambda **kw: \'\',\n
+        getListItemUrl=lambda *args,**kw: None,\n
+        Movement_getExplanationUrl=lambda **kw:None,\n
         Movement_getFundingTitle=lambda: \'\',\n
         Movement_getFunctionTitle=lambda: \'\',\n
         Movement_getProjectTitle=lambda: \'\',\n

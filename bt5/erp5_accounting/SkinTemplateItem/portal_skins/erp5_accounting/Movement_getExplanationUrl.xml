@@ -50,12 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "%s/view" % brain.getObject().getExplanation()\n
+            <value> <string>from ZTUtils import make_query\n
+if selection and selection_name:\n
+  return "%s?%s" % (brain.getObject().getExplanationValue().absolute_url(),\n
+                    make_query(selection_index=selection.getIndex(),\n
+                               selection_name=selection_name))\n
+\n
+return brain.getObject().getExplanation()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection=None, **kwd</string> </value>
+            <value> <string>brain, selection=None, selection_name=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
