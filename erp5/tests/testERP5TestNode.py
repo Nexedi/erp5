@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 from erp5.util.testnode.testnode import TestNode
@@ -948,13 +949,17 @@ ignore-ssl-certificate = true
     # This case test may be dispensable on ScalabilityTest case
     # so..
     pass
+  @unittest.skip("Not implemented")
   def test_scalability_as_master_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type, grade='master')
   # TODO : add a test with master and a launchable testsuite -> patch a lot of methods
+  @unittest.skip("Not implemented")
   def test_scalability_as_slave_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type, grade='slave')
+  @unittest.skip("Not implemented")
   def test_scalability_as_master_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
     self.test_15_suite_log_directory(my_test_type, grade='master')
+  @unittest.skip("Not implemented")
   def test_scalability_as_slave_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
     self.test_15_suite_log_directory(my_test_type, grade='slave')
   def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='ScalabilityTest'):
