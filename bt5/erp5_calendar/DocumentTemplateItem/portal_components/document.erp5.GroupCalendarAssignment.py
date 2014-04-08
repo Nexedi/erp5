@@ -56,8 +56,8 @@ class GroupCalendarAssignment(PresencePeriod):
       return result
     presence_period_list = group_calendar.objectValues(portal_type="Group Presence Period")
     for presence_period in presence_period_list:
-      for from_date, to_date in presence_period._getDatePeriodList():
-        if from_date.greaterThanEqualTo(self.getStartDate()) and \
-            to_date.lessThanEqualTo(self.getStopDate() or group_calendar.getStopDate()):
-          result.append(self.asContext(self, start_date=to_date, stop_date=from_date))
+      for date_period_data in presence_period._getDatePeriodDataList():
+        if date_period_data['start_date'].greaterThanEqualTo(self.getStartDate()) and \
+            date_period_data['stop_date'].lessThanEqualTo(self.getStopDate() or group_calendar.getStopDate()):
+          result.append(self.asContext(self, **date_period_data))
     return result
