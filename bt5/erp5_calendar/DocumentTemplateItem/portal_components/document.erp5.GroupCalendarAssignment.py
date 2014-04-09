@@ -38,26 +38,13 @@ class GroupCalendarAssignment(PresencePeriod):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'asMovementList')
-  def asMovementList(self):
-    """
-    Generate multiple movement from a single one.
-    It is used for cataloging a movement multiple time in
-    the movement/stock tables.
-
-    Ex: a movement have multiple destinations.
-    asMovementList returns a list a movement context with different
-    single destination.
-    """
+  def _getDatePeriodDataList(self):
     result = []
     group_calendar = self.getSpecialiseValue()
-    if None in (self.getDestinationUid(), group_calendar):
-      return result
-    presence_period_list = group_calendar.objectValues(portal_type="Group Presence Period")
-    for presence_period in presence_period_list:
-      for date_period_data in presence_period._getDatePeriodDataList():
-        if date_period_data['start_date'].greaterThanEqualTo(self.getStartDate()) and \
-            date_period_data['stop_date'].lessThanEqualTo(self.getStopDate() or group_calendar.getStopDate()):
-          result.append(self.asContext(self, **date_period_data))
+    if not(None in (self.getDestinationUid(), group_calendar)):
+      presence_period_list = group_calendar.objectValues(
+                                portal_type="Group Presence Period")
+      for presence_period in presence_period_list:
+        result.extend(presence_period._getDatePeriodDataList())
     return result
+    
