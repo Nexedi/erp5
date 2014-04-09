@@ -67,12 +67,6 @@
     <link rel="shortcut icon" href="new_km/favicon.ico" type="image/x-icon" />\n
     <link rel="alternate" title="RSS" href="/" type="application/rss+xml" />\n
     <title>ERP5 KM - ERP5.com Knowledge Base | ERP5</title>\n
-    <!--[if lte IE 6]>\n
-      <link rel="stylesheet" type="text/css" href="css/noie6.css" media="screen" />\n
-      <![endif]-->\n
-    <!--[if gt IE 6]>\n
-      <link rel="stylesheet" type="text/css" href="css/fix-ie.css" media="screen" />\n
-      <![endif]-->\n
   </head>\n
 \n
 \n
@@ -138,11 +132,6 @@
     </div>\n
   </div>\n
   <![endif]-->\n
-\n
-  \t<!--[if gt IE 6]>\n
-    <link rel="stylesheet" type="text/css" href="css/fix-ie.css" media="screen" />\n
-    <![endif]-->\n
-\n
 \n
             <div id="mainwrapper">\n
 \n

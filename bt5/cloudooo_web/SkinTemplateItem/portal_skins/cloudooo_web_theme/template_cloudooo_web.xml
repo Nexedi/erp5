@@ -67,7 +67,6 @@
     <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
       <tal:block metal:fill-slot="head">\n
         <link rel="top" title="" href="/" />\n
-        <!--[if IE]><link rel="stylesheet" type="text/css" href="cloudooo_style/fix-ie.css" media="screen" /><![endif]-->\n
       </tal:block>\n
       <tal:block metal:fill-slot="layout">\n
         <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
