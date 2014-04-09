@@ -162,8 +162,8 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
     """
     send_script = self._getTypeBasedMethod('send')
     if send_script is None:
-      raise NotImplementedError("`send` type based method not found. "
-                                "Please update erp5_base and erp5_crm")
+      return
+
     return send_script(
         from_url, to_url, reply_url, subject, body, attachment_format, attachment_list,
         download, **kw
