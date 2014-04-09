@@ -137,7 +137,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Event_updateCreateResponse</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
