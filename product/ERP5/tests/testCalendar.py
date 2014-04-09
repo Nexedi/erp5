@@ -280,7 +280,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request = sequence.get('leave_request')
     personal_leave_period = leave_request.newContent(
         portal_type=self.leave_request_period_portal_type,
-        resource='calendar_period_type/type1',
+        resource_value=self.portal.service_module.consulting_service
     )
     sequence.edit(
         personal_leave_period=personal_leave_period,
@@ -461,7 +461,7 @@ class TestCalendar(ERP5ReportTestCase):
     start_date = self.start_date
     stop_date = self.stop_date
     second_availability = int(stop_date) - int(start_date)
-    date_period_list = obj_to_check._getDatePeriodList()
+    date_period_list = obj_to_check._getDatePeriodDataList()
 
     # Check 1 period
     self.assertEqual(second_availability,
@@ -480,7 +480,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
                                          from_date=start_date,
-                                         to_date=date_period_list[1][1]))
+                                         to_date=date_period_list[1]['stop_date']))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())

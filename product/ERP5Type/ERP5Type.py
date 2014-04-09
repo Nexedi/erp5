@@ -307,6 +307,7 @@ class ERP5TypeInformation(XMLObject,
       # Movement Group
       'movement_group',
       # Calendar
+      'calendar',
       'calendar_period',
       # Project
       'project',

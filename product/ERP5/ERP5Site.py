@@ -1445,6 +1445,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('trade_model_path')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalCalendarTypeList')
+  def getPortalCalendarTypeList(self):
+    """
+    Return calendar types.
+    """
+    return self._getPortalGroupedTypeList('calendar')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')
   def getPortalCalendarPeriodTypeList(self):
     """

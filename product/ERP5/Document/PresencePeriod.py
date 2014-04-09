@@ -102,9 +102,9 @@ class PresencePeriod(Movement, PeriodicityMixin):
     single destination.
     """
     result = []
-    for from_date, to_date in self._getDatePeriodList():
-      result.append(self.asContext(self, start_date=to_date,
-                                   stop_date=from_date))
+    if self.getSource() != None or self.getDestination() != None:
+      for date_period_data in self._getDatePeriodDataList():
+        result.append(self.asContext(self, **date_period_data))
     return result
 
   def _getDatePeriodDataList(self):
