@@ -227,6 +227,13 @@ class AmountGeneratorMixin:
       target_method = self.isTargetDelivery() and 'isDelivery' or default_target
       if target_method and not getattr(delivery_amount, target_method)():
         return
+      if not self.test(delivery_amount):
+        return
+      reference = self.getReference()
+      if reference:
+        if reference in reference_set:
+          return
+        reference_set.add(reference)
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application
       # for intermediate lines.
@@ -237,9 +244,7 @@ class AmountGeneratorMixin:
       base_application_list = self.getBaseApplicationList()
       base_contribution_list = self.getBaseContributionList()
       for cell in amount_generator_cell_list:
-        if not cell.test(delivery_amount):
-          if cell is self:
-            return
+        if not (cell is self or cell.test(delivery_amount)):
           continue
         key = cell.getCellAggregateKey()
         try:
@@ -253,7 +258,7 @@ class AmountGeneratorMixin:
             'efficiency': self.getEfficiency(),
             'quantity_unit': self.getQuantityUnit(),
             # XXX If they are several cells, we have duplicate references.
-            'reference': self.getReference(),
+            'reference': reference,
           }
         # Then collect the mapped values (quantity, price, trade_phase...)
         for key in cell.getMappedValuePropertyList():
@@ -371,6 +376,9 @@ class AmountGeneratorMixin:
       delivery_amount = base_amount.getObject()
       if not is_mapped_value:
         self = delivery_amount.asComposedDocument(amount_generator_type_list)
+      # If several amount generator lines have same reference, the first
+      # (sorted by int_index or float_index) matching one will mask the others.
+      reference_set = set()
       accumulateAmountList(self)
     return result
 

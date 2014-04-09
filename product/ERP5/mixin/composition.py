@@ -87,18 +87,20 @@ def _getEffectiveModel(self, start_date, stop_date):
 @transactional_cached()
 def _findPredicateList(container_list, portal_type):
   predicate_list = []
-  reference_dict = {}
+  mask_set = set()
   for container in container_list:
+    mask_list = []
     for ob in container.contentValues(portal_type=portal_type):
       if isinstance(ob, Predicate):
         # reference is used to hide lines on farther containers
         reference = ob.getProperty('reference')
         if reference:
-          reference_set = reference_dict.setdefault(ob.getPortalType(), set())
-          if reference in reference_set:
+          key = ob.getPortalType(), reference
+          if key in mask_set:
             continue
-          reference_set.add(reference)
+          mask_list.append(key)
         predicate_list.append(ob)
+    mask_set.update(mask_list)
   return predicate_list
 
 
