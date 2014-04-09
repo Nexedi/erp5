@@ -205,15 +205,20 @@ class AmountGeneratorMixin:
       base_amount_list = (BaseAmountDict(*args).__of__(amount)
                           for amount in amount_list)
 
-    # First define the method that will browse recursively
-    # the amount generator lines and accumulate applicable values
+    def getLineSortKey(line):
+      int_index = line.getIntIndex()
+      return (line.getFloatIndex() if int_index is None else int_index,
+              random.random())
+
     def accumulateAmountList(self):
+      """Browse recursively the amount generator lines
+         and accumulate applicable values
+      """
       amount_generator_line_list = self.contentValues(
         portal_type=amount_generator_line_type_list)
       # Recursively feed base_amount
       if amount_generator_line_list:
-        amount_generator_line_list.sort(key=lambda x: (x.getIntIndex(),
-                                                       random.random()))
+        amount_generator_line_list.sort(key=getLineSortKey)
         for amount_generator_line in amount_generator_line_list:
           accumulateAmountList(amount_generator_line)
         return
@@ -366,8 +371,6 @@ class AmountGeneratorMixin:
       delivery_amount = base_amount.getObject()
       if not is_mapped_value:
         self = delivery_amount.asComposedDocument(amount_generator_type_list)
-      # Browse recursively the amount generator lines and accumulate
-      # applicable values - now execute the method
       accumulateAmountList(self)
     return result
 
