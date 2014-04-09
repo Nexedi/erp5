@@ -353,7 +353,9 @@ class DomainTool(BaseTool):
         if explanation_only:
           return dict(explanation_dict)
         mapped_value = newTempSupplyCell(self.getPortalObject(),
-                                           'new_mapped_value')
+                                         'multivalued_mapped_value')
+        mapped_value._setMappedValuePropertyList(
+          mapped_value_property_dict.keys())
         mapped_value.__dict__.update(mapped_value_property_dict)
         return mapped_value
 

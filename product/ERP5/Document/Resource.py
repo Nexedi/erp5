@@ -697,22 +697,16 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       }
       if mapped_value is None:
         return price_parameter_dict
-      for price_parameter_name in price_parameter_dict.keys():
-        price_parameter_value = \
-          mapped_value.getProperty(price_parameter_name,
-              d=price_parameter_dict[price_parameter_name])
-        if price_parameter_value not in [None, [], '']:
-          try:
-            price_parameter_dict[price_parameter_name].extend(
-                                            price_parameter_value)
-          except AttributeError:
-            if price_parameter_dict[price_parameter_name] is None:
-              if price_parameter_name == 'exclusive_discount_ratio':
-                price_parameter_dict[price_parameter_name] = \
-                    max(price_parameter_value)
-              else:
-                price_parameter_dict[price_parameter_name] = \
-                    price_parameter_value[0]
+      for mapped_value_property in mapped_value.getMappedValuePropertyList():
+        value = getattr(mapped_value, mapped_value_property)
+        try:
+          price_parameter_dict[mapped_value_property].extend(value)
+        except AttributeError:
+          price_parameter_dict[mapped_value_property] = max(value) \
+            if mapped_value_property == 'exclusive_discount_ratio' \
+            else value[0]
+        except KeyError:
+          price_parameter_dict[mapped_value_property] = value
       return price_parameter_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
