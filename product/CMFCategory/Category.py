@@ -743,7 +743,7 @@ class Category(Folder):
       """
       Returns a list of objects or brains
       """
-      kw['display_id'] = 'getTitle'
+      kw['display_id'] = 'title'
       kw['display_method'] = None
       return self.portal_categories.getCategoryMemberItemList(self, **kw)
 

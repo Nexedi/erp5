@@ -421,35 +421,26 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
-    def getCategoryChildTitleItemList(self, base_category=None,
-                                recursive=1, base=0, display_none_category=0, sort_id=None):
+    def getCategoryChildTitleItemList(self, base_category=None, *args, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(base_category=base_category, recursive = recursive,base=base,
-       display_none_category=display_none_category,display_id='getTitle', sort_id=sort_id)
+      return self.getCategoryChildItemList(base_category, 'title', *args, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCategoryChildIdItemList')
-    def getCategoryChildIdItemList(self, base_category=None,
-              recursive=1, base=0, display_none_category=0, sort_id=None):
+    def getCategoryChildIdItemList(self, base_category=None, *args, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(
-                          base_category=base_category,
-                          recursive = recursive,
-                          base=base,
-                          display_none_category=display_none_category,
-                          display_id='getId',
-                          sort_id=sort_id )
+      return self.getCategoryChildItemList(base_category, 'id', *args, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCategoryChildItemList')
     def getCategoryChildItemList(self, base_category=None, display_id = None,
-          recursive=1, base=0, display_none_category=1, sort_id=None, **kw):
+          recursive=1, base=0, display_none_category=1, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -484,11 +475,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for base_category in base_category_list:
         category = self[base_category]
         if category is not None:
-          result.extend(category.getCategoryChildItemList(
+          result += category.getCategoryChildItemList(
                                base=base,
                                recursive=recursive,
                                display_id=display_id,
-                               **kw ))
+                               display_none_category=0,
+                               **kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1681,7 +1673,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return self.getCategoryMemberItemList(self, context, base_category = base_category,
                                 spec = spec, filter=filter, portal_type=portal_type,
                                 strict_membership = strict_membership, strict = strict,
-                                display_id = 'getTitle')
+                                display_id = 'title')
 
     security.declarePublic('resolveCategory')
     def resolveCategory(self, relative_url,  default=_marker):
