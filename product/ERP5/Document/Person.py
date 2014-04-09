@@ -214,11 +214,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
 
       See SimulationTool.getAvailableTime
       """
-      assignment_list = self.contentValues(portal_type='Assignment')
-      calendar_uid_list = []
-      for assignment in assignment_list:
-        calendar_uid_list.extend(assignment.getCalendarUidList())
-      kw['node'] = [self.getUid()] + calendar_uid_list
+      kw['node'] = [self.getUid()]
 
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableTime(*args, **kw)
@@ -231,11 +227,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
       
       See SimulationTool.getAvailableTimeSequence
       """
-      assignment_list = self.contentValues(portal_type='Assignment')
-      calendar_uid_list = []
-      for assignment in assignment_list:
-        calendar_uid_list.extend(assignment.getCalendarUidList())
-      kw['node'] = [self.getUid()] + calendar_uid_list
+      kw['node'] = [self.getUid()]
 
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableTimeSequence(*args, **kw)
