@@ -61,14 +61,6 @@ pass\n
             <value> <string>from_url=None, to_url=None, reply_url=None, subject=None, body=None, attachment_format=None, attachment_list=None, download=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Event_send</string> </value>
         </item>
