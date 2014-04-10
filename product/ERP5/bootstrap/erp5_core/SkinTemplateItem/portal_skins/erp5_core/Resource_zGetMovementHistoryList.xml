@@ -490,6 +490,7 @@ SELECT\n
   catalog.uid as uid,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date_utc,\n
+  stock.mirror_date AS mirror_date_utc,\n
 <dtml-if expr="precision is not None">\n
   <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
   <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,\n
