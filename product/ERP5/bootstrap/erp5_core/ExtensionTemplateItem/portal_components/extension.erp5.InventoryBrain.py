@@ -284,10 +284,14 @@ class TrackingListBrain(InventoryListBrain):
 class MovementHistoryListBrain(InventoryListBrain):
   """Brain for getMovementHistoryList
   """
-  def _date(self):
+
+  def _convertDateToZone(self, date_utc):
     # Convert the date in the movement's original timezone.
-    # ZSQL method selects date as date_, and here we find the object to get the
-    # timezone and convert the date to this timezone
+    # ZSQL method selects date as date_utc or mirror_date_utc, and here we find
+    # the object to get the timezone and convert the date to this timezone
+    # It could be better to index the timezone in SQL table so that we do
+    # need to retrieve object all the time
+    date = date_utc
     obj = self.getObject()
     if obj is not None:
       timezone = None
@@ -300,8 +304,15 @@ class MovementHistoryListBrain(InventoryListBrain):
         if stop_date is not None:
           timezone = stop_date.timezone()
       if timezone is not None:
-        return self.date_utc.toZone(timezone)
-    return self.date_utc
+        date = date_utc.toZone(timezone)
+    return date
+
+  def _mirror_date(self):
+    return self._convertDateToZone(self.mirror_date_utc)
+  mirror_date = ComputedAttribute(_mirror_date, 1)
+
+  def _date(self):
+    return self._convertDateToZone(self.date_utc)
   date = ComputedAttribute(_date, 1)
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
