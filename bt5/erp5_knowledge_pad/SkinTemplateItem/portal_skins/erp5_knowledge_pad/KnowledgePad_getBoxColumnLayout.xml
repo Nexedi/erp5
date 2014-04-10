@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>layout = []\n
+            <value> <string>if real_context is None:\n
+  real_context = context\n
+layout = []\n
 added_box_ids = []\n
 all_box_ids = []\n
 boxes = context.contentValues(portal_type = \'Knowledge Box\', \n
@@ -58,7 +60,7 @@ boxes = context.contentValues(portal_type = \'Knowledge Box\', \n
 isAnon = context.portal_membership.isAnonymousUser()\n
 validation_state_map = {1: (\'public\',),\n
                         0: (\'visible\', \'invisible\', \'public\',)}\n
-boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon] and x.test(context), boxes)\n
+boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon] and x.test(real_context), boxes)\n
 for box in boxes:\n
   all_box_ids.append(box.getId())\n
 \n
@@ -88,7 +90,7 @@ return layout\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>real_context=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

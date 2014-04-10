@@ -54,7 +54,7 @@
                                               \'portal-column\');\n
                            id python: \'portal-column-%s\' %pad_column">\n
 \n
-        <tal:block define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout"\n
+        <tal:block define="layout python:active_knowledge_pad.KnowledgePad_getBoxColumnLayout(real_context=here)"\n
                    condition="python: len(layout)>=pad_column+1"\n
                    replace="structure python:\n
                   active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[pad_column],  \n
