@@ -2985,6 +2985,69 @@ class SimulationTool(BaseTool):
                           src__=src__))
       return sequence
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getAvailableTimeSequence')
+    def getAvailableTimeMovementList(self, from_date, to_date,
+                                 **kw):
+      """
+      Calculate available time movement list by taking into account
+      both available time and not available time.
+
+      Necessary parameter is at least node.
+
+      Parameters supported by getMovementHistoryList are supported here.
+
+      from_date (>=) - return period which start >= from_date
+
+      to_date   (<)  - return period which start < to_date
+      """
+      portal = self.getPortalObject()
+      if kw.get("simulation_state", None) is None:
+        kw["simulation_state"] = portal.getPortalCurrentInventoryStateList() + \
+                         portal.getPortalTransitInventoryStateList() + \
+                         portal.getPortalReservedInventoryStateList()
+      movement_list = self.getMovementHistoryList(from_date=from_date,
+                                 to_date=to_date, group_by_movement=1,
+                                 group_by_date=1, **kw)
+      # do import on top, but better to avoid breaking instances with older softwares
+      from interval import IntervalSet, Interval
+      # we look at all movements, and we build a set of intervals for available
+      # time, another for not available time, and we do substraction of both sets
+      assignment_interval_set = IntervalSet()
+      leave_interval_set = IntervalSet()
+      result_list = []
+
+      def getOrderedMovementDates(movement):
+        date_list = [movement.date, movement.mirror_date]
+        date_list.sort()
+        return date_list
+
+      movement_availability_dict = {} # to later map availability intervals with their movements
+      for movement in movement_list:
+        start_date, stop_date = getOrderedMovementDates(movement)
+        current_interval = Interval(start_date, stop_date)
+        # case of available time
+        if movement.total_quantity > 0:
+          assignment_interval_set.add(current_interval)
+          movement_availability_dict[current_interval] = movement
+        # case of not available time
+        else:
+          leave_interval_set.add(current_interval)
+      i = 0
+      # Parse all calculated availability_interval to find matching movements to
+      # be returned in the result. IntervalSet are already ordered
+      for availability_interval in (assignment_interval_set - leave_interval_set):
+        while True:
+          assignment_interval = assignment_interval_set[i]
+          if availability_interval in assignment_interval:
+            result_list.append(movement_availability_dict[assignment_interval].asContext(
+              start_date=availability_interval.lower_bound,
+              stop_date=availability_interval.upper_bound))
+            break
+          else:
+            i += 1
+      return result_list
+
     def _checkExpandAll(self, activate_kw={}):
       """Check all simulation trees using AppliedRule._checkExpand
       """

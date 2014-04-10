@@ -50,155 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-self = context\n
-kw = {}\n
-\n
-# This script has proxy role to access Assignments here\n
-assignment_list = self.contentValues(portal_type=\'Assignment\')\n
-calendar_uid_list = []\n
-for assignment in assignment_list:\n
-  calendar_uid_list.extend(assignment.getCalendarUidList())\n
-node = [self.getUid()] + calendar_uid_list\n
-\n
-default_source = context.getRelativeUrl()\n
-\n
-portal_simulation = self.portal_simulation\n
-\n
-portal_type = []\n
-resource = None\n
-src__ = 0\n
-\n
-# if (from_date is None) or (to_date is None):\n
-#   zoom_level=context.REQUEST.get(\'zoom_level\', \'30\')\n
-#   from_date, to_date = self.planning_validate_date_list(DateTime(), zoom_level)\n
-\n
-# Calculate portal_type\n
-if portal_type == []:\n
-  portal_type = self.getPortalCalendarPeriodTypeList()\n
-\n
-simulation_state = self.getPortalCurrentInventoryStateList() + \\\n
-                   self.getPortalTransitInventoryStateList() + \\\n
-                   self.getPortalReservedInventoryStateList()\n
-\n
-movement_list = context.portal_simulation.getMovementHistoryList(\n
-                   node_uid=node,\n
-                   portal_type=portal_type,\n
-                   simulation_state=simulation_state, \n
-                   to_date=to_date, \n
-                   from_date=from_date,\n
-                   sort_on = ((\'stock.date\', \'ascending\'),),\n
-                   omit_mirror_date=0,\n
-)\n
-\n
-result_list = []\n
-\n
-date_list = [DateTime(\'1007/03/01\'), DateTime(\'1007/03/01\')]\n
-quantity_list = [-1]\n
-\n
-def flush_list():\n
-  start_date = date_list[0]\n
-  for k in range(1, len(date_list)):\n
-    stop_date = date_list[k]\n
-    quantity = quantity_list[k-1]\n
-    if quantity > 0 and start_date < stop_date:\n
-      \n
-      mov = mvt_list[k-1].asContext(\n
-        start_date = start_date,\n
-        stop_date = stop_date,\n
-      )\n
-      mov.edit(source = default_source)\n
-      result_list.append(mov)\n
-    start_date = stop_date\n
-\n
-\n
-for movement in movement_list:\n
-  default_range = movement.stop_date - movement.start_date\n
-  next_start_date = movement.date\n
-  if next_start_date <= movement.start_date:\n
-    next_stop_date = movement.stop_date\n
-  else:\n
-    next_stop_date = movement.date+default_range\n
-  next_quantity = movement.total_quantity\n
-  next_relative_url = movement.relative_url\n
-\n
-  if next_start_date >= date_list[-1]:\n
-    flush_list()\n
-    date_list = [next_start_date, next_stop_date]\n
-    quantity_list = [next_quantity]\n
-    mvt_list = [movement]\n
-  else:\n
-\n
-    i = 0\n
-    len_date_list = len(date_list)\n
-    while i < len_date_list:\n
-      current_date = date_list[i]\n
-      if next_start_date < current_date:\n
-        break\n
-      i += 1\n
-    j = i\n
-    while j < len_date_list:\n
-      current_date = date_list[j]\n
-      if next_stop_date < current_date:\n
-        break\n
-      j += 1\n
-\n
-    # Insert new quantities\n
-    if i == 0:\n
-      new_quantity_list = [next_quantity]\n
-      new_mvt_list = [movement]\n
-    else:\n
-      new_quantity_list = quantity_list[:i]\n
-      new_mvt_list = mvt_list[:i]\n
-\n
-    if i == j:\n
-      if (next_quantity <= 0) or (quantity_list[i-1] <= 0):\n
-        new_quantity_list.append(-1)\n
-      else:\n
-        new_quantity_list.append(1)\n
-      new_mvt_list.append(movement)\n
-    else:\n
-      for k in range(max(i, 1), min(j, len_date_list-1)+1):\n
-        if (next_quantity <= 0) or (quantity_list[k-1] <= 0):\n
-          new_quantity_list.append(-1)\n
-        else:\n
-          new_quantity_list.append(1)\n
-        new_mvt_list.append(mvt_list[k-1])\n
-\n
-    if j < len_date_list:\n
-      new_quantity_list.extend(quantity_list[j-1:])\n
-      new_mvt_list.extend(mvt_list[j-1:])\n
-    else:\n
-      new_quantity_list.append(next_quantity)\n
-      new_mvt_list.append(movement)\n
-\n
-    quantity_list = new_quantity_list\n
-    mvt_list = new_mvt_list\n
-    date_list.insert(j, next_stop_date)\n
-    date_list.insert(i, next_start_date)\n
-      \n
-flush_list()\n
-    \n
-return result_list\n
-
-
-]]></string> </value>
+            <value> <string>kw.setdefault("portal_type",context.getPortalCalendarPeriodTypeList())\n
+return context.portal_simulation.getAvailableTimeMovementList(\n
+  node_uid=[context.getUid()],\n
+  from_date=from_date,\n
+  to_date=to_date,\n
+  **kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>to_date=None, from_date=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Auditor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
