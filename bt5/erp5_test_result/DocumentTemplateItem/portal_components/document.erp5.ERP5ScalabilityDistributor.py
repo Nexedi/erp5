@@ -138,7 +138,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     """
     test_node_module = self._getTestNodeModule()
     test_node_master = [ node for node in test_node_module.searchFolder(portal_type="Test Node", title=title,
-                                      specialise=self.getRelativeUrl(),
+                                      specialise_uid=self.getUid(),
                                       validation_state="validated") if node.getMaster() == 1 ]
     if len(test_node_master) == 1:
       return True
@@ -170,7 +170,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     # If the testnode wich request testsuites is not the master
     # he does not have to receive any testsuites
     master_test_node_title_list = [x.getTitle() for x in test_node_module.searchFolder(
-                validatation_state = 'validated') if (x.getMaster() == True) ]
+                validation_state = 'validated') if (x.getMaster() == True) ]
 
     if len(master_test_node_title_list) == 1 and title == master_test_node_title_list[0]:
       return super(ERP5ScalabilityDistributor,
