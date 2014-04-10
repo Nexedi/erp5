@@ -42,6 +42,7 @@ from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
 from AccessControl import Unauthorized, ClassSecurityInfo
 from ZODB.POSException import ConflictError
+from zExceptions import Redirect
 from Acquisition import aq_base
 from Products.PageTemplates.Expressions import SecureModuleImporter
 
@@ -225,7 +226,7 @@ class TALESValue(StaticValue):
       kw['CONTEXTS'] = kw
     try:
       value = self.tales_expr.__of__(field)(**kw)
-    except (ConflictError, RuntimeError):
+    except (ConflictError, RuntimeError, Redirect):
       raise
     except:
       # We add this safety exception to make sure we always get
