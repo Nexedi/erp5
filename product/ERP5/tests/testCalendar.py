@@ -162,7 +162,7 @@ class TestCalendar(ERP5ReportTestCase):
                       destination_value=person,
                       resource_value=self.portal.service_module.consulting_service,
                       start_date=self.start_date,
-                      stop_date=self.stop_date,
+                      stop_date=self.periodicity_stop_date,
                       specialise_value=group_calendar)
     assignment.confirm()
     sequence.edit(assignment=assignment)
@@ -467,9 +467,6 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
-    self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date,
-                                              to_date=stop_date))
     self.assertEqual(second_availability / 2,
                       person.getAvailableTime(from_date=start_date,
                                               to_date=self.middle_date))
@@ -556,7 +553,7 @@ class TestCalendar(ERP5ReportTestCase):
     start_date = self.start_date
     stop_date = self.stop_date
     second_availability = int(stop_date) - int(start_date)
-    date_period_list = obj_to_check._getDatePeriodList()
+    date_period_list = obj_to_check._getDatePeriodDataList()
 
     # Check 1 period
     self.assertEqual(0,
@@ -566,7 +563,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(second_availability,
                       person.getAvailableTime(
                                          from_date=start_date,
-                                         to_date=date_period_list[1][1]))
+                                         to_date=date_period_list[1]['stop_date']))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
@@ -1241,13 +1238,16 @@ class TestCalendar(ERP5ReportTestCase):
                                   portal_type='Group Presence Period')
     group_calendar_period.setStartDate('2008/01/01 08:00')
     group_calendar_period.setStopDate('2008/01/01 18:00')
-    group_calendar_period.setResourceValue(
-          self.portal.portal_categories.calendar_period_type.type1)
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1256,13 +1256,13 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request_period_1.setStartDate('2008/01/01 09:00')
     leave_request_period_1.setStopDate('2008/01/01 10:00')
     leave_request_period_1.setResourceValue(
-          self.portal.portal_categories.calendar_period_type.type1)
+          self.portal.service_module.consulting_service)
     leave_request_period_2 = leave_request.newContent(
                                   portal_type='Leave Request Period')
     leave_request_period_2.setStartDate('2008/01/01 10:00')
     leave_request_period_2.setStopDate('2008/01/01 11:00')
     leave_request_period_2.setResourceValue(
-          self.portal.portal_categories.calendar_period_type.type1)
+          self.portal.service_module.consulting_service)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
 

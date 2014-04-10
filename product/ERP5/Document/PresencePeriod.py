@@ -29,6 +29,7 @@
 #
 ##############################################################################
 
+from copy import copy
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -84,7 +85,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
       calendar_stop_date = self.getStopDate()
       if (calendar_start_date is not None) and (calendar_stop_date is not None):
         # Convert Days to second
-        quantity = int(calendar_stop_date) - int(calendar_start_date)
+        quantity = abs(int(calendar_stop_date) - int(calendar_start_date))
       else:
         quantity = default
     return quantity
@@ -103,8 +104,13 @@ class PresencePeriod(Movement, PeriodicityMixin):
     """
     result = []
     if self.getSource() != None or self.getDestination() != None:
-      for date_period_data in self._getDatePeriodDataList():
-        result.append(self.asContext(self, **date_period_data))
+      for period_data in self._getDatePeriodDataList():
+        period_data = copy(period_data)
+        date_list = [period_data['start_date'], period_data['stop_date']]
+        date_list.sort()
+        period_data['start_date'] = date_list[0]
+        period_data['stop_date'] = date_list[1]
+        result.append(self.asContext(self, **period_data))
     return result
 
   def _getDatePeriodDataList(self):
