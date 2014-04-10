@@ -40,11 +40,16 @@ class GroupCalendarAssignment(PresencePeriod):
 
   def _getDatePeriodDataList(self):
     result = []
+    start_date = self.getStartDate()
+    stop_date = self.getStopDate()
     group_calendar = self.getSpecialiseValue()
-    if not(None in (self.getDestinationUid(), group_calendar)):
+    if not(None in (self.getDestinationUid(), group_calendar, start_date,
+            stop_date)):
       presence_period_list = group_calendar.objectValues(
                                 portal_type="Group Presence Period")
       for presence_period in presence_period_list:
-        result.extend(presence_period._getDatePeriodDataList())
+        for date_period_data in presence_period._getDatePeriodDataList():
+          if date_period_data['start_date'].greaterThanEqualTo(start_date) and \
+               date_period_data['stop_date'].lessThanEqualTo(stop_date):
+            result.append(date_period_data)
     return result
-    
