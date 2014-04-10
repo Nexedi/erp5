@@ -103,7 +103,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
 
   def test_anonymous_can_not_read_document_list(self):
     """
-      Anonymous can not read any document object under document_module
+      Anonymous can read a published document object under document_module
       and image_module.
     """
     for module in ('image_module', 'document_module',):
@@ -119,8 +119,8 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
          self.logout()
          self.assertTrue(self.portal.portal_membership.isAnonymousUser())
 
-         self.assertRaises(Unauthorized, document.view)
-         self.assertRaises(Unauthorized, document)
+         document.view()
+         document()
 
   def test_user_can_create_and_view_document_list(self):
     """
