@@ -88,6 +88,7 @@
                     <value>
                       <list>
                         <string>my_preferred_event_use_list</string>
+                        <string>my_preferred_event_response_use_list</string>
                         <string>my_preferred_event_resource</string>
                         <string>my_preferred_event_assessment_form_id_list</string>
                         <string>my_preferred_event_sender_email</string>

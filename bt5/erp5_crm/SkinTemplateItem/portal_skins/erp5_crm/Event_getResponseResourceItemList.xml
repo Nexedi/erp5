@@ -50,43 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Return the notification messages that can be used as a template to create an event.\n
-"""\n
-reference_set = set() # If there are two messages with same reference, we only\n
-                      # display one entry, because later code will use getDocumentValue\n
-item_list = [(\'\', \'\')]\n
-\n
-portal = context.getPortalObject()\n
-\n
-preferred_use_list = portal.portal_preferences.getPreferredEventResponseUseList()\n
-\n
-for notification_message in portal.portal_catalog(\n
-        validation_state=\'validated\', portal_type=\'Notification Message\'):\n
-  notification_message = notification_message.getObject()\n
-  reference = notification_message.getReference()\n
-  if reference and reference not in reference_set:\n
-    reference_set.add(reference)\n
-    service = notification_message.getSpecialiseValue()\n
-    if preferred_use_list:\n
-      if service is not None:\n
-        for preferred_use in preferred_use_list:\n
-          if service.isMemberOf(\'use/%s\' % preferred_use):\n
-            item_list.append(\n
-              (\'%s - %s\' % (reference, notification_message.getTranslatedTitle()), reference))\n
-    else:\n
-      item_list.append(\n
-        (\'%s - %s\' % (reference, notification_message.getTranslatedTitle()), reference))\n
-\n
-return sorted(item_list)\n
+            <value> <string>return context.Ticket_getResourceItemList(\n
+  portal_type=\'Event\',\n
+  use=context.getPortalObject().portal_preferences.getPreferredEventResponseUse())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>response_only=False</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_getNotificationMessageItemList</string> </value>
+            <value> <string>Event_getResponseResourceItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
