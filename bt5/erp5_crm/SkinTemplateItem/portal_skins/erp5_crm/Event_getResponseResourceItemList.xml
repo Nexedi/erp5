@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>return context.Ticket_getResourceItemList(\n
   portal_type=\'Event\',\n
-  use=context.getPortalObject().portal_preferences.getPreferredEventResponseUse())\n
+  use_relative_url=context.getPortalObject().portal_preferences.getPreferredEventResponseUse())\n
 </string> </value>
         </item>
         <item>
