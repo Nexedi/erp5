@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    possible (usually 'portal_type').</p>
 <dtml-in expr="getFilterableMethodList()" sort=id>
     <dtml-let method_id=id>
-    <h3>Method: <dtml-var id></h3>
+    <h3>Method: <a href="&dtml-id;/manage_main"><dtml-var id></a></h3>
     <table cellspacing="0" cellpadding="2" border="0">
       <tr>
         <td align="left" valign="top">
