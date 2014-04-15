@@ -817,8 +817,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=self.start_date,
+                      stop_date=self.stop_date,
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
 
     # there is 43200 seconds between self.start_date and self.stop_date
@@ -889,8 +894,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
 
     self.assertEqual((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
@@ -958,8 +968,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 10).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
 
     # 2008/01/07 was a Monday
@@ -1022,8 +1037,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
 
     self.assertEqual((18 - 8) * 60 * 60, person.getAvailableTime(
@@ -1092,8 +1112,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1139,8 +1164,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1186,8 +1216,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1301,8 +1336,13 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
 
     person = self.portal.person_module.newContent(portal_type='Person')
-    assignment = person.newContent(portal_type='Assignment',
-                                   calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.service_module.consulting_service,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person)
+    assignment.confirm()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1367,8 +1407,14 @@ class TestCalendar(ERP5ReportTestCase):
                                 title='Person 1',
                                 career_reference='1',
                                 subordination_value=organisation)
-    assignment = person1.newContent(portal_type='Assignment',
-                                    calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.portal_categories.calendar_period_type.type1,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person1)
+    assignment.confirm()
+    self.tic()
     leave_request1 = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request',
                                   destination_value=person1)
@@ -1385,8 +1431,14 @@ class TestCalendar(ERP5ReportTestCase):
                                 title='Person 2',
                                 career_reference='2',
                                 subordination_value=organisation)
-    assignment = person2.newContent(portal_type='Assignment',
-                                    calendar_value=group_calendar)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.portal_categories.calendar_period_type.type1,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 1).latestTime(),
+                      destination_value=person2)
+    assignment.confirm()
+    self.tic()
     leave_request2 = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request',
                                   destination_value=person2)
