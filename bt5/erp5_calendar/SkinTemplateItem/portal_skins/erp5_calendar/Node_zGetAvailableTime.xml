@@ -51,7 +51,7 @@ simulation_state:list</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_zGetAvailableTime</string> </value>
+            <value> <string>Node_zGetAvailableTime</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -83,7 +83,6 @@ SET @result := 0,\n
     @current_stop_date := <dtml-sqlvar expr="from_date" type="datetime">,\n
     @countable := -1,\n
     @total_quantity := 0;\n
-
 <dtml-var sql_delimiter>\n
 \n
 SELECT \n

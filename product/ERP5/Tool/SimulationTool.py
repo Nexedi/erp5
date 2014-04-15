@@ -2924,7 +2924,7 @@ class SimulationTool(BaseTool):
                          portal.getPortalTransitInventoryStateList() + \
                          portal.getPortalReservedInventoryStateList()
 
-      sql_result = portal.Person_zGetAvailableTime(
+      sql_result = portal.Node_zGetAvailableTime(
                           from_date=from_date,
                           to_date=to_date,
                           portal_type=portal_type,
