@@ -71,7 +71,7 @@ presence_resource_uid_list = [inventory.resource_uid for inventory\n
                           from_date=from_date,\n
                           to_date=to_date,\n
                           portal_type=(\'Presence Request Period\',\n
-                                       \'Group Presence Period\'),\n
+                                       \'Group Calendar Assignment\'),\n
                           group_by_resource=1)]\n
 \n
 \n
