@@ -108,8 +108,8 @@ class PresencePeriod(Movement, PeriodicityMixin):
         period_data = copy(period_data)
         date_list = [period_data['start_date'], period_data['stop_date']]
         date_list.sort()
-        period_data['start_date'] = date_list[0]
-        period_data['stop_date'] = date_list[1]
+        period_data['start_date'] = date_list[1]
+        period_data['stop_date'] = date_list[0]
         result.append(self.asContext(self, **period_data))
     return result
 
