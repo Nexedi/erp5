@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
+from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestCalendar(ERP5ReportTestCase):
 
@@ -875,6 +876,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(0, len(available_time_movement_list))
 
 
+  @skip("Need to check if we want later to support this again. Drop support for now")
   def test_LeaveRequestWithSameDateAsGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
@@ -952,6 +954,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(0, len(available_time_movement_list))
 
 
+  @skip("Need to check if we want later to support this again. Drop support for now")
   def test_LeaveRequestWithSameDateAsRepeatedGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
@@ -1100,6 +1103,7 @@ class TestCalendar(ERP5ReportTestCase):
         [(m.getStartDate(), m.getStopDate()) for m in
                         available_time_movement_list])
 
+  @skip("Need to check if we want later to support this again. Drop support for now")
   def test_LeaveRequestOverlappingBeforeGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
@@ -1152,6 +1156,7 @@ class TestCalendar(ERP5ReportTestCase):
         [(m.getStartDate(), m.getStopDate()) for m in
                         available_time_movement_list])
 
+  @skip("Need to check if we want later to support this again. Drop support for now")
   def test_LeaveRequestOverlappingAfterGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
@@ -1324,6 +1329,7 @@ class TestCalendar(ERP5ReportTestCase):
         [(m.getStartDate(), m.getStopDate()) for m in
                         available_time_movement_list])
 
+  @skip("Need to check if we want later to support this again. Drop support for now")
   def test_2OverlappedLeaveRequestOverlappingAfterGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
