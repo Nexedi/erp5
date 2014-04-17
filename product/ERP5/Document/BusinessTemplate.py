@@ -1291,39 +1291,30 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.groups = new_groups_dict
     # restore previous activities execution order
     context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
-    # Do not forget to delete all remaining objects if asked by user
-    # Fetch all sub objects path recursively
-    recursive_path_list = []
-    def fillRecursivePathList(from_path_list):
-      for from_path in from_path_list:
-        container = portal.unrestrictedTraverse(from_path, None)
-        if container is not None:
-          if from_path in recursive_path_list:
-            continue
-          recursive_path_list.append(from_path)
-          # Check that container support iteration of sub_content_id
-          if getattr(aq_base(container), 'objectIds', None) is not None:
-            fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
-                                      sub_content_id in container.objectIds()])
-    fillRecursivePathList(object_key_list)
-    for recursive_path in recursive_path_list:
-      if recursive_path in update_dict:
-        action = update_dict[recursive_path]
-        if action in ('remove', 'save_and_remove'):
-          document = self.unrestrictedResolveValue(portal, recursive_path, None)
-          if document is None:
-            # It happens if the parent of target path is removed before
-            continue
-          if getattr(aq_base(document), 'getParentValue', None) is not None:
-            # regular ERP5 object
-            parent = document.getParentValue()
-          else:
-            parent = document.aq_parent
-          document_id = document.getId()
-          container_path_list = recursive_path.split('/')[:-1]
-          self._backupObject(action, trashbin, container_path_list,
-                             document_id)
-          parent.manage_delObjects([document_id])
+    to_delete_dict = {}
+    # XXX: it is not clear why update_dict would contain subojects of any
+    # element of object_key_list, and not just these objects themselves.
+    # XXX: why does update_dict contain the path of documents not managed
+    # by current instance ?
+    for path, action in update_dict.iteritems():
+      if action not in ('remove', 'save_and_remove'):
+        continue
+      path_match = path + '/'
+      for object_key in object_key_list:
+        if path_match.startswith(object_key + '/'):
+          to_delete_dict[path] = action
+    for path, action in to_delete_dict.iteritems():
+      document = self.unrestrictedResolveValue(portal, path, None)
+      if document is None:
+        continue
+      if getattr(aq_base(document), 'getParentValue', None) is None:
+        parent = document.aq_parent
+      else:
+        parent = document.getParentValue()
+      document_id = document.getId()
+      self._backupObject(action, trashbin, path.split('/')[:-1],
+                         document_id)
+      parent.manage_delObjects([document_id])
 
     self.afterInstall()
 
