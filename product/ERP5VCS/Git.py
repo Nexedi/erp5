@@ -172,7 +172,8 @@ class Git(WorkingCopy):
   def getRemoteUrl(self):
     remote = self._getBranch()[1]
     if remote:
-      url, = self['remote.%s.url' % remote.split('/', 1)[0]]
+      remote_name = remote.split('/', 1)[0]
+      url, = self['remote.%s.pushurl' % remote_name] or self['remote.%s.url' % remote_name]
       return url
 
   def getRemoteComment(self):
