@@ -35,8 +35,6 @@ import subprocess
 import shutil
 import transaction
 from ZPublisher.HTTPResponse import HTTPResponse
-from Testing import ZopeTestCase
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
@@ -372,8 +370,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.setSystemPreference()
     self.portal.portal_tests.TestTool_cleanUpTestResults()
     self.tic()
-    utils = ZopeTestCase.utils
-    self.runner = FunctionalTestRunner(utils._Z2HOST, utils._Z2PORT,
+    host, port = self.startZServer()
+    self.runner = FunctionalTestRunner(host, port,
                                 self.portal, self.run_only, self.use_phanthom)
 
   def setSystemPreference(self):

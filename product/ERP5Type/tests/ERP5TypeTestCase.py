@@ -1064,7 +1064,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
             if len(setup_done) == 1: # make sure it is run only once
               self._setUpDummyMailHost()
-              self.serverhost, self.serverport = self.startZServer(verbose=True)
+              self.startZServer(verbose=True)
               self._registerNode(distributing=1, processing=1)
               self.loadPromise()
 
