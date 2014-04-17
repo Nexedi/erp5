@@ -915,7 +915,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       portal_memcached = self.portal.portal_memcached
       connection_dict = _getVolatileMemcachedServerDict()
       url_string = '%(hostname)s:%(port)s' % connection_dict
-      portal_memcached.default_memcached_plugin.setUrlString(url_string)
+      if portal_memcached.default_memcached_plugin.getUrlString() != url_string:
+        portal_memcached.default_memcached_plugin.setUrlString(url_string)
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
