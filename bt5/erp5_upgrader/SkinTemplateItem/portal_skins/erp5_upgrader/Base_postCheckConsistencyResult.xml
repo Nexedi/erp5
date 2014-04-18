@@ -50,22 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>traverse = context.getPortalObject().restrictedTraverse\n
-active_process = traverse(active_process)\n
+            <value> <string>active_process = context.getPortalObject().restrictedTraverse(active_process)\n
 \n
 # We don\'t need check more if something is already inconsistent\n
-if (active_process.ActiveProcess_sense() and not fixit):\n
+if active_process.ActiveProcess_sense() and not fixit:\n
   return\n
 \n
-constraint_message_list = context.checkConsistency(fixit=fixit,\n
-  filter=filter)\n
+constraint_message_list = context.checkConsistency(\n
+  fixit=fixit, filter=filter,)\n
 \n
 if constraint_message_list and not active_process.getResultList():\n
-  summary = "%s Consistency - At least one inconsistent object found" % \\\n
-    (fixit and \'Fix\' or \'Check\')\n
   active_process.postActiveResult(\n
-    severity=(not fixit and 1) or 0,\n
-    summary=summary,\n
+    severity=0 if fixit else 1,\n
+    summary="%s Consistency - At least one inconsistent object found" % (\'Fix\' if fixit else \'Check\', ),\n
     detail=[m.message for m in constraint_message_list])\n
 </string> </value>
         </item>

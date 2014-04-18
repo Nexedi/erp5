@@ -50,19 +50,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-constraint_type_per_type, _ = context.Base_getConstraintTypeListPerPortalType()\n
+            <value> <string>constraint_type_per_type, _ = context.Base_getConstraintTypeListPerPortalType()\n
 constraint_type = filter_dict.get("constraint_type")\n
+if not constraint_type:\n
+  return\n
 \n
+portal_type_list = []\n
+append = portal_type_list.append\n
 for portal_type, constraint_type_list in constraint_type_per_type.iteritems():\n
-  if not constraint_type and constraint_type not in constraint_type_list:\n
-    continue\n
-  method_kw = {\'fixit\': fixit,\n
-               \'filter\': filter_dict,\n
-               \'active_process\': active_process.getRelativeUrl()}\n
-  portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
-    portal_type=portal_type,\n
-    method_kw=method_kw)\n
+  if constraint_type in constraint_type_list:\n
+    append(portal_type)\n
+\n
+if portal_type_list:\n
+  context.getPortalObject().portal_catalog.searchAndActivate(\n
+    \'Base_postCheckConsistencyResult\',\n
+    portal_type=portal_type_list,\n
+    method_kw={\n
+      \'fixit\': fixit,\n
+      \'filter\': filter_dict,\n
+      \'active_process\': active_process.getRelativeUrl(),\n
+    },\n
+  )\n
 </string> </value>
         </item>
         <item>
