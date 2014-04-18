@@ -81,8 +81,8 @@ def __init__( self
     self._last_modified = int( last_modified )
     self._pre_check = pre_check
     self._post_check = post_check
-    self._stale_if_error_secs = stale_error_secs
-    self._stale_while_revalidate_secs = stale_revalidate_secs
+    self._stale_if_error_secs = int( stale_error_secs )
+    self._stale_while_revalidate_secs = int( stale_revalidate_secs )
 
 def getStaleIfErrorSecs( self ):
     """
@@ -309,11 +309,156 @@ def _updatePolicy( self
                                                , post_check
                                                )
 
+def addPolicy( self
+             , policy_id
+             , predicate           # TALES expr (def. 'python:1')
+             , mtime_func          # TALES expr (def. 'object/modified')
+             , max_age_secs        # integer, seconds (def. 0)
+             , stale_revalidate_secs # integer, seconds (def, 0)
+             , stale_error_secs    # integer, seconds (def, 0)
+             , no_cache            # boolean (def. 0)
+             , no_store            # boolean (def. 0)
+             , must_revalidate     # boolean (def. 0)
+             , vary                # string value
+             , etag_func           # TALES expr (def. '')
+             , REQUEST=None
+             , s_max_age_secs=None # integer, seconds (def. None)
+             , proxy_revalidate=0  # boolean (def. 0)
+             , public=0            # boolean (def. 0)
+             , private=0           # boolean (def. 0)
+             , no_transform=0      # boolean (def. 0)
+             , enable_304s=0       # boolean (def. 0)
+             , last_modified=1     # boolean (def. 1)
+             , pre_check=None      # integer, default None
+             , post_check=None     # integer, default None
+             ):
+    """
+        Add a caching policy.
+    """
+    if max_age_secs is None or str(max_age_secs).strip() == '':
+        max_age_secs = None
+    else:
+        max_age_secs = int(max_age_secs)
+
+    if stale_revalidate_secs is None or str(stale_revalidate_secs).strip() == '':
+        stale_revalidate_secs = None
+    else:
+        stale_revalidate_secs = int(stale_revalidate_secs)
+
+    if stale_error_secs is None or str(stale_error_secs).strip() == '':
+        stale_error_secs = None
+    else:
+        stale_error_secs = int(stale_error_secs)
+
+    if s_max_age_secs is None or str(s_max_age_secs).strip() == '':
+        s_max_age_secs = None
+    else:
+        s_max_age_secs = int(s_max_age_secs)
+
+    if pre_check is None or str(pre_check).strip() == '':
+        pre_check = None
+    else:
+        pre_check = int(pre_check)
+
+    if post_check is None or str(post_check).strip() == '':
+        post_check = None
+    else:
+        post_check = int(post_check)
+
+    self._addPolicy( policy_id
+                   , predicate
+                   , mtime_func
+                   , max_age_secs
+                   , stale_revalidate_secs
+                   , stale_error_secs
+                   , no_cache
+                   , no_store
+                   , must_revalidate
+                   , vary
+                   , etag_func
+                   , s_max_age_secs
+                   , proxy_revalidate
+                   , public
+                   , private
+                   , no_transform
+                   , enable_304s
+                   , last_modified
+                   , pre_check
+                   , post_check
+                   )
+    if REQUEST is not None: 
+        REQUEST[ 'RESPONSE' ].redirect( self.absolute_url()
+                                      + '/manage_cachingPolicies'
+                                      + '?manage_tabs_message='
+                                      + 'Policy+added.'
+                                      )
+
+def _addPolicy( self
+              , policy_id
+              , predicate
+              , mtime_func
+              , max_age_secs
+              , stale_revalidate_secs
+              , stale_error_secs
+              , no_cache
+              , no_store
+              , must_revalidate
+              , vary
+              , etag_func
+              , s_max_age_secs=None
+              , proxy_revalidate=0
+              , public=0
+              , private=0
+              , no_transform=0
+              , enable_304s=0
+              , last_modified=1
+              , pre_check=None
+              , post_check=None
+              ):
+    """
+        Add a policy to our registry.
+    """
+    policy_id = str( policy_id ).strip()
+
+    if not policy_id:
+        raise ValueError, "Policy ID is required!"
+
+    if policy_id in self._policy_ids:
+        raise KeyError, "Policy %s already exists!" % policy_id
+
+    self._policies[ policy_id ] = CachingPolicy( policy_id
+                                               , predicate
+                                               , mtime_func
+                                               , max_age_secs
+                                               , stale_revalidate_secs
+                                               , stale_error_secs
+                                               , no_cache
+                                               , no_store
+                                               , must_revalidate
+                                               , vary
+                                               , etag_func
+                                               , s_max_age_secs
+                                               , proxy_revalidate
+                                               , public
+                                               , private
+                                               , no_transform
+                                               , enable_304s
+                                               , last_modified
+                                               , pre_check
+                                               , post_check
+                                               )
+    idlist = list( self._policy_ids )
+    idlist.append( policy_id )
+    self._policy_ids = tuple( idlist )
+
+
 CachingPolicy.__init__ = __init__
 CachingPolicy.getStaleIfErrorSecs = getStaleIfErrorSecs
 CachingPolicy.getStaleWhileRevalidateSecs = getStaleWhileRevalidateSecs
 CachingPolicy.getHeaders = getHeaders
 CachingPolicyManager.updatePolicy = updatePolicy
 CachingPolicyManager._updatePolicy = _updatePolicy
+CachingPolicyManager.addPolicy = addPolicy
+CachingPolicyManager._addPolicy = _addPolicy
 CachingPolicyManager.manage_cachingPolicies = DTMLFile( 'cachingPolicies', _dtmldir )
 
