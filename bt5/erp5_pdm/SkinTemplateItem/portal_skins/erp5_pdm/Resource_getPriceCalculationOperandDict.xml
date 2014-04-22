@@ -87,12 +87,18 @@ for x in ("additional_price",\n
           "surcharge_ratio"):\n
   result[x] = sum(result[x])\n
 \n
-unit_base_price = (base_price\n
-  # Sum additional price\n
-  + result["additional_price"]\n
-  # Sum variable additional price\n
-  + result["variable_additional_price"] \\\n
-    * context.getPricingVariable(context=movement))\n
+unit_base_price = result["variable_additional_price"]\n
+if unit_base_price:\n
+  method = None if movement is None else \\\n
+           movement.getTypeBasedMethod("getPricingVariable")\n
+  if method is None:\n
+    method = context.getTypeBasedMethod("getPricingVariable")\n
+  if method is None:\n
+    unit_base_price = 0\n
+  else:\n
+    unit_base_price *= method()\n
+\n
+unit_base_price += base_price + result["additional_price"]\n
 \n
 # Discount\n
 d_ratio = max(result["discount_ratio"], result[\'exclusive_discount_ratio\'] or 0)\n

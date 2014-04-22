@@ -710,26 +710,6 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return price_parameter_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
-        'getPricingVariable')
-    def getPricingVariable(self, context=None):
-      """
-      Return the value of the property used to calculate variable pricing
-      This basically calls a script like Product_getPricingVariable
-      """
-      warn('Resource.getPricingVariable is deprecated; Please use' \
-           ' a type-based method for getPrice, and call whatever scripts' \
-           ' you need to invoke from that method.', DeprecationWarning)
-      method = None
-      if context is not None:
-        method = context._getTypeBasedMethod('getPricingVariable')
-      if method is None or context is None:
-        method = self._getTypeBasedMethod('getPricingVariable')
-
-      if method is None:
-        return 0.0
-      return float(method())
-
-    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPriceCalculationOperandDict')
     def getPriceCalculationOperandDict(self, default=None, context=None,
             REQUEST=None, **kw):
