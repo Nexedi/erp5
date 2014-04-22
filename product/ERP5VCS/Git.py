@@ -150,7 +150,7 @@ class Git(WorkingCopy):
                                'HEAD', '@{u}').splitlines()
       remote = remote[:13] == 'refs/remotes/' and remote[13:] or None
     except GitError, e:
-      local, _ = e.stdout.splitlines()
+      local = e.stdout.splitlines()[0]
       remote = None
     if local != 'HEAD':
       assert local[:11] == 'refs/heads/'
