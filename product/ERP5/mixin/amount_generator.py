@@ -229,6 +229,7 @@ class AmountGeneratorMixin:
         return
       if not self.test(delivery_amount):
         return
+      self = self.asPredicate()
       reference = self.getReference()
       if reference:
         if reference in reference_set:
@@ -244,8 +245,10 @@ class AmountGeneratorMixin:
       base_application_list = self.getBaseApplicationList()
       base_contribution_list = self.getBaseContributionList()
       for cell in amount_generator_cell_list:
-        if not (cell is self or cell.test(delivery_amount)):
-          continue
+        if cell is not self:
+          if not cell.test(delivery_amount):
+            continue
+          cell = cell.asPredicate()
         key = cell.getCellAggregateKey()
         try:
           property_dict = cell_aggregate[key]
