@@ -373,7 +373,7 @@ return lambda delivery_amount, base_application, **kw: \\
     self.appendBaseContributionCategory(order['1'], poster_present_3cd)
     self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None),
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=6000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=6300),
       VAT_AMOUNT=dict(total_price=300))
@@ -386,7 +386,7 @@ return lambda delivery_amount, base_application, **kw: \\
     self.appendBaseContributionCategory(line, poster_present_1dvd)
     self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=0, quantity=1,
                                               resource_value=self.poster),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=9000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=9450),
@@ -400,7 +400,7 @@ return lambda delivery_amount, base_application, **kw: \\
     self.appendBaseContributionCategory(line, poster_present_3cd)
     self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=0, quantity=1,
                                               resource_value=self.poster),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11400),
       TOTAL_PRICE_WITH_VAT=dict(total_price=11970),

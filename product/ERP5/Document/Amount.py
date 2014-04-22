@@ -408,7 +408,7 @@ class Amount(Base, VariatedMixin):
       
     """
     price = self.getPrice()
-    if not price:
+    if price is None:
       price = self.getResourcePrice()
     quantity = self.getNetConvertedQuantity()
     if isinstance(price, (int, float)) and isinstance(quantity, (int, float)):
