@@ -14,10 +14,15 @@
  <tr>
   <th align="left">Status</th>
   <td>
+    <tal:block tal:condition="context/finished">
     <span style="color: green"
           tal:condition="context/passed">PASSED</span>
     <span style="color: red"
           tal:condition="not: context/passed">FAILED</span>
+    </tal:block>
+    <tal:block tal:condition="not: context/finished">
+    <span style="color: blue">ONGOING</span>
+    </tal:block>
   </td>
  </tr>
 

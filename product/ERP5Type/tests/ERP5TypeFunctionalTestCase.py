@@ -307,7 +307,10 @@ class FunctionalTestRunner:
               " to use your existing display instead of Xvfb.")
         xvfb.run()
       self.browser.run(self._getTestURL() , xvfb.display)
-      while self.getStatus() is None:
+      while True:
+        status = self.getStatus()
+        if status is not None and not '>ONGOING<' in status:
+          break
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
           # TODO: here we could take a screenshot and display it in the report
@@ -411,18 +414,21 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       self.runner.remote_code_url_list = self.remote_code_url_list
 
     debug = self.foreground or os.environ.get("erp5_debug_mode")
-    self.runner.test(debug=debug)
+    error = None
     try:
-      detail, success, failure, \
-          expected_failure, error_title_list = self.runner.processResult()
+      self.runner.test(debug=debug)
     except TimeoutError, e:
+      error = repr(e)
       self._verboseErrorLog(20)
-      raise
+    else:
+      # In case of failure, verbose the error_log entries in order to collect
+      # appropriated information to debug the system.
+      if self._hasActivityFailure():
+        error = 'Failed activities exist.'
+        self._verboseErrorLog(20)
 
-    # In case of failure, verbose the error_log entries in order to collect
-    # appropriated information to debug the system.
-    if self._hasActivityFailure():
-       self._verboseErrorLog(20)
+    detail, success, failure, \
+        expected_failure, error_title_list = self.runner.processResult()
 
     self.logMessage("-" * 79)
     total = success + failure + expected_failure
@@ -437,6 +443,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage(detail)
     self.logMessage("-" * 79)
     self.assertEqual([], error_title_list, '\n'.join(error_title_list))
+    self.assertEqual(None, error, error)
 
 # monkey patch HTTPResponse._unauthorized so that we will not have HTTP
 # authentication dialog in case of Unauthorized exception to prevent

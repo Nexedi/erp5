@@ -317,7 +317,7 @@ class Zuite( OrderedFolder ):
           testTable.<n> -- Colorized HTML of each test run
         """
         completed = DateTime()
-        result_id = 'result_%s' % completed.strftime( '%Y%m%d_%H%M%S' )
+        result_id = 'result_%s' % completed.strftime( '%Y%m%d_%H%M%S.%f' )
         self._setObject( result_id, ZuiteResults( result_id ) )
         result = self._getOb( result_id )
         rfg = REQUEST.form.get
@@ -329,6 +329,10 @@ class Zuite( OrderedFolder ):
 
         result._updateProperty( 'passed'
                               , rfg( 'result' ).lower() == 'passed'
+                              )
+
+        result._updateProperty( 'finished'
+                              , rfg( 'finished' ).lower() == 'true'
                               )
 
         result._updateProperty( 'time_secs'
@@ -592,6 +596,10 @@ class ZuiteResults( Folder ):
                     },
                     { 'id' : 'completed'
                     , 'type' : 'date'
+                    , 'mode' : 'w'
+                    },
+                    { 'id' : 'finished'
+                    , 'type' : 'boolean'
                     , 'mode' : 'w'
                     },
                     { 'id' : 'passed'

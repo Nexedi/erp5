@@ -683,12 +683,15 @@ objectExtend(HtmlTestSuite.prototype, {
     },
 
     _startCurrentTestCase: function() {
+        if (this.currentRowInSuite > 1) {
+          new SeleniumTestResult(this.failed, this.getTestTable()).post(finished=false);
+        }
         this.getCurrentRow().loadTestCase(fnBind(htmlTestRunner.startTest, htmlTestRunner));
     },
 
     _onTestSuiteComplete: function() {
         this.markDone();
-        new SeleniumTestResult(this.failed, this.getTestTable()).post();
+        new SeleniumTestResult(this.failed, this.getTestTable()).post(finished=true);
     },
 
     updateSuiteWithResultOfPreviousTest: function() {
@@ -740,7 +743,7 @@ objectExtend(SeleniumTestResult.prototype, {
         this.suiteTable = suiteTable;
     },
 
-    post: function () {
+    post: function (finished) {
         if (!this.controlPanel.isAutomatedRun()) {
             return;
         }
@@ -782,6 +785,7 @@ objectExtend(SeleniumTestResult.prototype, {
         form.createHiddenField("selenium.revision", Selenium.revision);
 
         form.createHiddenField("result", this.suiteFailed ? "failed" : "passed");
+        form.createHiddenField("finished", finished && "true" || "");
 
         form.createHiddenField("totalTime", Math.floor((this.metrics.currentTime - this.metrics.startTime) / 1000));
         form.createHiddenField("numTestPasses", this.metrics.numTestPasses);
@@ -797,15 +801,13 @@ objectExtend(SeleniumTestResult.prototype, {
             if (this.suiteTable.rows[rowNum].cells.length > 1) {
                 var resultCell = this.suiteTable.rows[rowNum].cells[1];
                 form.createHiddenField("testTable." + rowNum, resultCell.innerHTML);
-                // remove the resultCell, so it's not included in the suite HTML
-                resultCell.parentNode.removeChild(resultCell);
             }
         }
 
         form.createHiddenField("numTestTotal", rowNum-1);
 
-        // Add HTML for the suite itself
-        form.createHiddenField("suite", this.suiteTable.parentNode.innerHTML);
+        // We don't use suite for our automated tests.
+        form.createHiddenField("suite", '');
 
         var logMessages = [];
         while (LOG.pendingMessages.length > 0) {
@@ -824,7 +826,7 @@ objectExtend(SeleniumTestResult.prototype, {
             form.submit();
         }
         document.body.removeChild(form);
-        if (this.controlPanel.closeAfterTests()) {
+        if (finished && this.controlPanel.closeAfterTests()) {
             window.top.close();
         }
     },
