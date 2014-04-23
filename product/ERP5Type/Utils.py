@@ -470,7 +470,7 @@ def checkPythonSourceCode(source_code_str):
     sys.stderr = cStringIO.StringIO()
     sys.stdout = cStringIO.StringIO()
 
-    with tempfile.NamedTemporaryFile() as input_file:
+    with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
       input_file.write(source_code_str)
       input_file.seek(0)
 
