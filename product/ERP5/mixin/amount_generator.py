@@ -38,7 +38,7 @@ from Products.ERP5.Document.MappedValue import MappedValue
 # XXX What should be done when there is no base_application ?
 #     There are 2 options:
 #     1. Make the amount generator line always apply, once, which provides an
-#        easy way to generator a fixed quantity.
+#        easy way to generate a fixed quantity.
 #     2. Use this criterion to know if a movement was created manually.
 #        This is required to not generate amounts from movements that
 #        are already the result of generated amounts.
@@ -106,12 +106,12 @@ class BaseAmountDict(Implicit):
 
   getGeneratedAmountQuantity__roles__ = None # public
   def getGeneratedAmountQuantity(self, base_amount, variation_category_list=()):
-    """Get final computed quantity for given base_amount
+    """Get final computed quantity for the given base_amount
 
-    Note: During a call to getQuantity, this method may be called again by
-          getGeneratedAmountQuantity for the same amount and key.
-          In this case, the returned value is the last intermediate value just
-          before finalization.
+    If not yet finalized, this method actually calls the (custom) method that
+    actually computes the final quantity, which in turn usually calls this
+    method again, for the same amount and key: in this case, the returned value
+    of this inner call is the last intermediate value just before finalization.
     """
     variated_base_amount = base_amount, variation_category_list
     if variated_base_amount in self._frozen:
@@ -170,7 +170,7 @@ class AmountGeneratorMixin:
     - is rounding really well supported (ie. before and after aggregation)
       very likely not - proxying before or after must be decided
     """
-    # It is the only place we can import this
+    # It is the only place where we can import this
     from Products.ERP5Type.Document import newTempAmount
     portal = self.getPortalObject()
     getRoundingProxy = portal.portal_roundings.getRoundingProxy
@@ -289,7 +289,7 @@ class AmountGeneratorMixin:
         # Ignore line (i.e. self) if cells produce unrelated amounts.
         # With Transformed Resource (Transformation), line is considered in
         # order to gather common properties and cells are used to describe
-        # varianted properties: only 1 amount is produced.
+        # variated properties: only 1 amount is produced.
         # In cases like trade, payroll or assorted resources,
         # we want to ignore the line if they are cells.
         # See also implementations of 'getCellAggregateKey'
