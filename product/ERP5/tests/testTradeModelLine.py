@@ -854,6 +854,51 @@ return getBaseAmountQuantity""")
       self.assertEqual(sorted(x[1:]),
                        sorted(y.getTotalPrice() for y in amount_list))
 
+  def test_04_cumulativePriceAdjustment(self):
+    """
+      Check a trade condition with 3 discounts that are applied one after the
+      other using a single base_amount category and trivial dependencies
+      between trade model lines, which can even be unordered.
+
+      The 10%, 40% & 30% discounts result in an overall 62.2% discount,
+      and not 80%.
+    """
+    base_amount = self.setBaseAmountQuantityMethod('cumulative', """\
+return lambda delivery_amount, base_application, **kw: \\
+  delivery_amount.getTotalPrice() + \\
+  delivery_amount.getAmountQuantity(base_application)""")
+    discount_list = .1, .4, .3
+    tax = self.createServiceTax()
+    trade_condition = self.createTradeCondition((), (
+      dict(reference='tax', resource_value=tax, price=.2,
+           base_application='base_amount/tax'),
+      ))
+    for discount in discount_list:
+      self.createTradeModelLine(trade_condition,
+        resource_value=self.createResource('Service', use='discount'),
+        price=-discount)
+    createZODBPythonScript(trade_condition, "TradeModelLine_asPredicate",
+                           "", """\
+if not context.getReference():
+  relative_url = context.getResourceValue().getRelativeUrl()
+  context = context.asContext()
+  context.setReference(relative_url)
+  context.setBaseApplicationList((%r, relative_url))
+  context.setBaseContributionList((%r, 'base_amount/tax'))
+return context""" % (base_amount, base_amount))
+
+    taxed = self.createProductTaxed()
+    order = self.createOrder(trade_condition, (
+      dict(price=1, quantity=2, resource_value=taxed),
+      dict(price=3, quantity=4, resource_value=taxed),
+      ))
+
+    total_price = order.getTotalPrice()
+    total_ratio = reduce(lambda x, y: x*(1-y), discount_list, 1.2)
+    amount_list = order.getAggregatedAmountList()
+    self.assertAlmostEqual(total_price * total_ratio,
+      sum((x.getTotalPrice() for x in amount_list), total_price))
+
   def test_tradeModelLineWithFixedPrice(self):
     """
       Check it's possible to have fixed quantity on lines. Sometimes we want

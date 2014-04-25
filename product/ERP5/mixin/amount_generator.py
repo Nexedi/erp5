@@ -101,6 +101,23 @@ class BaseAmountDict(Implicit):
       self._dict[variated_base_amount] = value
       return value
 
+  getAmountQuantity__roles__ = None # public
+  def getAmountQuantity(self, base_amount, variation_category_list=()):
+    """Get intermediate computed quantity for given base_application
+
+    Public wrapper to _getQuantity() that can be used directly to apply several
+    amount generators one after the other, without having to define a dedicated
+    base amount category at each step. Example:
+    - movement with quantity*price = 100
+    - N discounts of 10%, each one with:
+      - base_application=base_amount/cumulative,service_module/discount_<i>
+      - base_contribution=base_amount/cumulative
+    - with an appriate custom script using this method, you can get an overall
+      discount of .1^N
+    (with N=3, final price=72.9)
+    """
+    return self._getQuantity((base_amount, variation_category_list))
+
   getBaseAmountList__roles__ = None # public
   def getBaseAmountList(self):
     """Return list of amounts that are sub-objects of self
