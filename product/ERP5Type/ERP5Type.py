@@ -76,7 +76,7 @@ class LocalRoleAssignorMixIn(object):
 
     security.declarePrivate('updateLocalRolesOnObject')
     @UnrestrictedMethod
-    def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True):
+    def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True, activate_kw=()):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
@@ -132,7 +132,7 @@ class LocalRoleAssignorMixIn(object):
       # XXX: Document modification detection assumes local roles are always
       # part of ob and not separate persistent objects.
       if reindex and ob._p_changed:
-        ob.reindexObjectSecurity()
+        ob.reindexObjectSecurity(activate_kw=dict(activate_kw))
 
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):
@@ -159,34 +159,28 @@ class LocalRoleAssignorMixIn(object):
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateRoleMapping')
-    def updateRoleMapping(self, REQUEST=None, form_id=''):
+    def updateRoleMapping(self, REQUEST=None, form_id='', priority=3):
       """Update the local roles in existing objects.
-         XXX This should be implemented the same way as
-             ERP5Site_checkCatalogTable (cf erp5_administration).
       """
-      portal = self.getPortalObject()
-      update_role_tag = self.__class__.__name__ + ".updateRoleMapping"
-
-      object_list = [x.path for x in
-                     portal.portal_catalog(portal_type=self.id, limit=None)]
-      object_list_len = len(object_list)
-      # We need to use activities in order to make sure it will
-      # work for an important number of objects
-      activate = portal.portal_activities.activate
-      for i in xrange(0, object_list_len, 100):
-        current_path_list = object_list[i:i+100]
-        activate(activity='SQLQueue', priority=3, tag=update_role_tag) \
-        .callMethodOnObjectList(current_path_list,
-                                'updateLocalRolesOnSecurityGroups',
-                                reindex=False)
-        activate(activity='SQLQueue', priority=3, after_tag=update_role_tag) \
-        .callMethodOnObjectList(current_path_list,
-                                'reindexObjectSecurity')
-
+      self.getPortalObject().portal_catalog.searchAndActivate(
+        'updateLocalRolesOnSecurityGroups',
+        method_kw={
+          'activate_kw': {
+            'priority': priority,
+          },
+        },
+        activate_kw={
+          'priority': priority,
+          # XXX: Tag is just for easier manual lookup in activity tables.
+          'tag': self.id + '.updateRoleMapping',
+        },
+        portal_type=self.id,
+      )
       if REQUEST is not None:
-        message = '%d objects updated' % object_list_len
-        return REQUEST.RESPONSE.redirect('%s/%s?portal_status_message=%s'
-          % (self.absolute_url_path(), form_id, message))
+        return REQUEST.RESPONSE.redirect(
+          self.absolute_url_path() + '/' + form_id +
+          '?portal_status_message=Updating%20local%20roles',
+        )
 
     def _importRole(self, role_property_dict):
       """Import a role from a BT or from an old portal type"""
