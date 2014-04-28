@@ -115,19 +115,23 @@ class LocalRoleAssignorMixIn(object):
         if 'Owner' in role_list:
           group_id_role_dict.setdefault(group, set()).add('Owner')
       # Assign new roles
-      ob.__ac_local_roles__ = ac_local_roles = {}
+      ac_local_roles = {}
       for group, role_list in group_id_role_dict.iteritems():
         if role_list:
           ac_local_roles[group] = list(role_list)
 
+      if ac_local_roles != ob.__ac_local_roles__:
+        ob.__ac_local_roles__ = ac_local_roles
       if local_roles_group_id_group_id:
         ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
       elif getattr(aq_base(ob),
             '__ac_local_roles_group_id_dict__', None) is not None:
         delattr(ob, '__ac_local_roles_group_id_dict__')
 
-      ## Make sure that the object is reindexed
-      if reindex:
+      ## Make sure that the object is reindexed if modified
+      # XXX: Document modification detection assumes local roles are always
+      # part of ob and not separate persistent objects.
+      if reindex and ob._p_changed:
         ob.reindexObjectSecurity()
 
     security.declarePrivate('getFilteredRoleListFor')
