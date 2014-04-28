@@ -1306,7 +1306,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       for object_key in object_key_list:
         if path_match.startswith(object_key + '/'):
           to_delete_dict[path] = action
-    for path, action in to_delete_dict.iteritems():
+    # Sort by path so that, for example, form is created before its fields.
+    for path, action in sorted(to_delete_dict.iteritems()):
       document = self.unrestrictedResolveValue(portal, path, None)
       if document is None:
         continue
