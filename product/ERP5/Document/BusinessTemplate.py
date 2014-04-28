@@ -538,9 +538,12 @@ class BaseTemplateItem(Implicit, Persistent):
     bta.importFiles(item=self)
 
   def _removeAllButLastWorkflowHistory(self, obj):
-    for workflow_id in obj.workflow_history.keys():
-      obj.workflow_history[workflow_id] = WorkflowHistoryList(
-        obj.workflow_history[workflow_id][-1])
+    workflow_history = getattr(obj, 'workflow_history', None)
+    if workflow_history is None:
+      return
+    for workflow_id in workflow_history.keys():
+      workflow_history[workflow_id] = WorkflowHistoryList(
+        [workflow_history[workflow_id][-1]])
 
   def removeProperties(self,
                        obj,
