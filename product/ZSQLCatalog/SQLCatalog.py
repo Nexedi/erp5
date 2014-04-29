@@ -1971,11 +1971,10 @@ class Catalog(Folder,
     if key_list is None:
       key_list = []
     column_map = self._getSQLCatalogRelatedKeySet()
-    # Do not generate dynamic related key for acceptable_keys
-    dynamic_key_list = [k for k in key_list if k not in column_map]
-    dynamic_list = self.getDynamicRelatedKeyList(dynamic_key_list)
-    full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
-    return full_list
+    return self.getDynamicRelatedKeyList(
+      [k for k in key_list if k not in column_map],
+      sql_catalog_id=self.id,
+    ) + list(self.sql_catalog_related_keys)
 
   # Compatibililty SQL Sql
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
