@@ -1387,8 +1387,8 @@ def getCommonTimeZoneList():
   try:
     from pytz import common_timezones
   except ImportError:
-    return []
-  return common_timezones
+    return ()
+  return tuple(common_timezones)
 
 
 #####################################################
