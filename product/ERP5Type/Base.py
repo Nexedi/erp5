@@ -2366,9 +2366,7 @@ class Base( CopyContainer,
       r = self.getShortTitle()
       if r: return r
     return (self.getProperty('reference') or
-            # No need to test existence since all Base instances have this method
-            # Also useful whenever title is calculated
-            self._baseGetTitle() or
+            getattr(self, '_baseGetTitle', str)() or
             self.getId())
 
   security.declareProtected(Permissions.AccessContentsInformation,
