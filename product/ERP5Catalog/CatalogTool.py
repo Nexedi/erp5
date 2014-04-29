@@ -264,13 +264,21 @@ class RelatedBaseCategory(Method):
           'foreign_side': foreign_side,
           'query_table_side': query_table_side,
       }
+      self._monotable_template = """\
+%%(category_table)s.base_category_uid = %%(base_category_uid)s
+%(strict)sAND %%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
+          'strict': strict,
+          'query_table_side': query_table_side,
+      }
 
-    def __call__(self, instance, table_0, table_1, query_table='catalog',
+    def __call__(self, instance, table_0, table_1=None, query_table='catalog',
         RELATED_QUERY_SEPARATOR=' AND ', **kw):
       """Create the sql code for this related key."""
       # Note: in normal conditions, our category's uid will not change from
       # one invocation to the next.
-      return self._template % {
+      return (
+        self._monotable_template if table_1 is None else self._template
+      ) % {
         'base_category_uid': instance.getPortalObject().portal_categories.\
           _getOb(self._id).getUid(),
         'query_table': query_table,
@@ -884,6 +892,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       base_cat_id_list = self.portal_categories.getBaseCategoryDict()
       default_string = 'default_'
       strict_string = 'strict_'
+      related_string = 'related_'
       for key in key_list:
         prefix = ''
         strict = 0
@@ -903,22 +912,26 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
              expected_base_cat_id in base_cat_id_list:
             # We have found a base_category
             end_key = '_'.join(splitted_key[i:])
-
-            if end_key.startswith('related_'):
-              end_key = end_key[len('related_'):]
-              suffix = '_related'
-            else:
-              suffix = ''
+            related = end_key.startswith(related_string)
+            if related:
+              end_key = end_key[len(related_string):]
             # accept only some catalog columns
             if end_key in ('title', 'uid', 'description', 'reference',
                            'relative_url', 'id', 'portal_type',
                            'simulation_state'):
-              if strict:
-                pattern = '%s%s | category,catalog/%s/z_related_strict_%s%s'
-              else:
-                pattern = '%s%s | category,catalog/%s/z_related_%s%s'
-              related_key_list.append(pattern %
-                (prefix, key, end_key, expected_base_cat_id, suffix))
+              is_uid = end_key == 'uid'
+              if is_uid:
+                end_key = 'uid' if related else 'category_uid'
+              related_key_list.append(
+                prefix + key + ' | category' +
+                ('' if is_uid else ',catalog') +
+                '/' +
+                end_key +
+                '/z_related_' +
+                ('strict_' if strict else '') +
+                expected_base_cat_id +
+                ('_related' if related else '')
+              )
 
       return related_key_list
 
