@@ -84,7 +84,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
-  def getFile(self, filepath, binary=False):
+  def getFile(self, filepath, binary=True):
     """ Try to get a file on the remote server """
     conn = self.getConnection()
     try:

@@ -94,10 +94,13 @@ class SFTPConnection:
     except error, msg:
       raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path, self.url))
 
-  def _getFile(self, filepath):
+  def _getFile(self, filepath, binary=True):
     """Retrieve the file"""
     try:
-      tmp_file = self.conn.file(filepath)
+      if binary:
+        tmp_file = self.conn.file(filepath, 'rb')
+      else:
+        tmp_file = self.conn.file(filepath, 'r')
       tmp_file.seek(0)
       return Binary(tmp_file.read())
     except error, msg:
@@ -105,11 +108,11 @@ class SFTPConnection:
 
   def readBinaryFile(self, filepath):
     """Retrieve the file in binary mode"""
-    return StringIO(str(self._getFile(filepath)))
+    return StringIO(str(self._getFile(filepath, binary=True)))
 
   def readAsciiFile(self, filepath):
     """Retrieve the file in ASCII mode"""
-    binary = self._getFile(filepath)
+    binary = self._getFile(filepath, binary=False)
     if binary:
       return binary.data
     return None
