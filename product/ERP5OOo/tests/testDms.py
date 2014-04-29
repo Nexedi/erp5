@@ -113,11 +113,6 @@ class TestDocumentMixin(ERP5TypeTestCase):
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
-    # make sure every body can traverse document module
-    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
-    self.portal.document_module.manage_permission(
-                           'Access contents information', ['Anonymous'], 1)
-    self.tic()
 
   def afterSetUp(self):
     TestDocumentMixin.login(self)
