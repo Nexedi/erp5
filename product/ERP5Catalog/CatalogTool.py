@@ -893,6 +893,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       default_string = 'default_'
       strict_string = 'strict_'
       related_string = 'related_'
+      column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
       for key in key_list:
         prefix = ''
         strict = 0
@@ -915,10 +916,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             related = end_key.startswith(related_string)
             if related:
               end_key = end_key[len(related_string):]
-            # accept only some catalog columns
-            if end_key in ('title', 'uid', 'description', 'reference',
-                           'relative_url', 'id', 'portal_type',
-                           'simulation_state'):
+            # XXX: joining with non-catalog tables is not trivial and requires
+            # ZSQLCatalog's ColumnMapper cooperation, so only allow catalog
+            # columns.
+            if 'catalog' in column_map.get(end_key, ()):
               is_uid = end_key == 'uid'
               if is_uid:
                 end_key = 'uid' if related else 'category_uid'
