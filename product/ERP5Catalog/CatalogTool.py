@@ -897,7 +897,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         splitted_key = key.split('_')
         # look from the end of the key from the beginning if we
         # can find 'title', or 'portal_type'...
-        for i in range(1,len(splitted_key))[::-1]:
+        for i in xrange(len(splitted_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(splitted_key[0:i])
           if expected_base_cat_id != 'parent' and \
              expected_base_cat_id in base_cat_id_list:
