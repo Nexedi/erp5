@@ -54,6 +54,7 @@ from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
                                                   _AuthenticationFailure
 
 from Crypto.Cipher import AES
+from Crypto import Random
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 class AESCipher:
@@ -64,12 +65,15 @@ class AESCipher:
     self.encryption_key = encryption_key.ljust(32)[:32]
 
   def encrypt(self, login):
-    encryptor = AES.new(self.encryption_key, self.mode)
-    return urlsafe_b64encode(encryptor.encrypt(login.ljust(((len(login)-1)/16+1)*16)))
+    iv = Random.new().read(AES.block_size)
+    encryptor = AES.new(self.encryption_key, self.mode, IV=iv)
+    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)/16+1)*16)))
 
   def decrypt(self, crypted_login):
-    decryptor = AES.new(self.encryption_key, self.mode)
-    return decryptor.decrypt(urlsafe_b64decode(crypted_login)).rstrip()
+    decoded_crypted_login = urlsafe_b64decode(crypted_login)
+    iv = decoded_crypted_login[:AES.block_size]
+    decryptor = AES.new(self.encryption_key, self.mode, IV=iv)
+    return decryptor.decrypt(decoded_crypted_login[AES.block_size:]).rstrip()
 
 # This cipher is weak. Do not use.
 class CesarCipher:
