@@ -79,7 +79,7 @@
   `total_credit` real,\n
 \n
   PRIMARY KEY (`uid`, `order_id`),\n
-  KEY `section_uid` (`section_uid`)\n
+  KEY (`section_uid`, `mirror_section_uid`)\n
   -- TODO: keys\n
 ) ENGINE=InnoDB\n
 </string> </value>
