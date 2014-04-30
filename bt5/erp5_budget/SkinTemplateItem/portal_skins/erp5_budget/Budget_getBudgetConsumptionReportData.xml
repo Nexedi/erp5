@@ -291,7 +291,7 @@ for budget in budget_list:\n
           if not engaged_budget:\n
             engaged_budget = 0\n
 \n
-          initial_budget = None\n
+          initial_budget = 0\n
           if cell is not None:\n
             initial_budget = cell.getQuantity() * sign\n
 \n
