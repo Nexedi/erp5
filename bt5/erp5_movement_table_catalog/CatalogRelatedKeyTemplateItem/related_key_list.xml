@@ -2,5 +2,5 @@
  <key>explanation_destination_section_uid | movement,category,catalog/uid/z_related_explanation_destination_section</key>
  <key>explanation_portal_type | movement,catalog/portal_type/z_related_explanation</key>
  <key>explanation_simulation_state | movement,catalog/simulation_state/z_related_explanation</key>
- <key>explanation_source_section_uid | movement,category,catalog/uid/z_related_explanation_destination_section</key>
+ <key>explanation_source_section_uid | movement,category,catalog/uid/z_related_explanation_source_section</key>
 </key_list>
