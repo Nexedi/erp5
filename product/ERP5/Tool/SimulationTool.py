@@ -2986,7 +2986,7 @@ class SimulationTool(BaseTool):
       return sequence
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAvailableTimeSequence')
+                              'getAvailableTimeMovementList')
     def getAvailableTimeMovementList(self, from_date, to_date,
                                  **kw):
       """
