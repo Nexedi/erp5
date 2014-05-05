@@ -113,13 +113,28 @@ class PresencePeriod(Movement, PeriodicityMixin):
         result.append(self.asContext(self, **period_data))
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExceptionValueList')
+  def getCalendarPeriodExceptionValueList(self):
+    """
+    Return a list of objects that allows te define exception to the
+    current presence period. It could be used for particular
+    planned unavailability like banking holidays.
+    """
+    method = self._getTypeBasedMethod("getCalendarPeriodExceptionValueList")
+    if method is None:
+      exception_list = self.contentValues(portal_type="Calendar Exception")
+    else:
+      exception_list = method()
+    return exception_list
+
   def _getDatePeriodDataList(self):
     """
     Get all periods between periodicity start date
     and periodicity stop date
     """
     result = []
-    exception_value_list = self.contentValues(portal_type="Calendar Exception")
+    exception_value_list = self.getCalendarPeriodExceptionValueList()
     exception_date_list = [x.getExceptionDate() \
                                        for x in exception_value_list]
     exception_date_list = [x for x in exception_date_list if x is not None]
