@@ -38,18 +38,32 @@ class GroupCalendarAssignment(PresencePeriod):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                           'getPeriodList')
+  def getPeriodList(self):
+    period_list = []
+
+    method = self._getTypeBasedMethod("getPeriodList")
+    if method is None:
+      group_calendar = self.getSpecialiseValue()
+      if group_calendar is not None:
+        period_list = group_calendar.objectValues(
+                                  portal_type=self.getPortalCalendarPeriodTypeList())
+    else:
+      period_list = method()
+    return period_list
+
   def _getDatePeriodDataList(self):
     result = []
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    group_calendar = self.getSpecialiseValue()
-    if not(None in (self.getDestinationUid(), group_calendar, start_date,
-            stop_date)):
-      presence_period_list = group_calendar.objectValues(
-                                portal_type="Group Presence Period")
-      for presence_period in presence_period_list:
-        for date_period_data in presence_period._getDatePeriodDataList():
-          if date_period_data['start_date'].greaterThanEqualTo(start_date) and \
-               date_period_data['stop_date'].lessThanEqualTo(stop_date):
-            result.append(date_period_data)
+    if not(None in (self.getDestinationUid(), start_date)):
+      period_list = self.getPeriodList()
+      if len(period_list):
+        for period in period_list:
+          for date_period_data in period._getDatePeriodDataList():
+            if date_period_data['start_date'].greaterThanEqualTo(start_date):
+              if stop_date is None or date_period_data['stop_date'].lessThanEqualTo(
+                  stop_date):
+                result.append(date_period_data)
     return result
