@@ -94,28 +94,26 @@ class SFTPConnection:
     except error, msg:
       raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path, self.url))
 
-  def _getFile(self, filepath, binary=True):
+  def _getFile(self, filepath):
     """Retrieve the file"""
     try:
-      if binary:
-        tmp_file = self.conn.file(filepath, 'rb')
-      else:
-        tmp_file = self.conn.file(filepath, 'r')
+      # always open with binary mode, otherwise paramiko will raise
+      # UnicodeDecodeError for non-utf8 data. also SFTP has no ASCII
+      # mode like FTP that normalises CRLF/CR/LF.
+      tmp_file = self.conn.file(filepath, 'rb')
       tmp_file.seek(0)
-      return Binary(tmp_file.read())
+      return tmp_file.read()
     except error, msg:
       raise SFTPError(str(msg) + ' while retrieving file %s from %s' % (filepath, self.url))
 
   def readBinaryFile(self, filepath):
     """Retrieve the file in binary mode"""
-    return StringIO(str(self._getFile(filepath, binary=True)))
+    return self._getFile(filepath)
 
   def readAsciiFile(self, filepath):
     """Retrieve the file in ASCII mode"""
-    binary = self._getFile(filepath, binary=False)
-    if binary:
-      return binary.data
-    return None
+    # normalise CRLF/CR/LF like FTP's ASCII mode transfer.
+    return os.linesep.join(self._getFile(filepath).splitlines())
 
   def getDirectoryContent(self, path):
     """retrieve all entries in a givan path as a list"""
@@ -133,7 +131,7 @@ class SFTPConnection:
     try:
       self.conn.unlink(filepath)
     except error, msg:
-      raise SFTPError(str(msg) + 'while trying to delete %s on %s' % (filename, self.url))
+      raise SFTPError(str(msg) + 'while trying to delete %s on %s' % (filepath, self.url))
 
   def renameFile(self, old_path, new_path):
     """Rename a file"""
