@@ -585,21 +585,18 @@ class Predicate(XMLObject):
   def asPredicate(self, script_id=None):
     """
       This method tries to convert the current Document into a predicate
-      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
+      looking up methods named Class_asPredicate, MetaType_asPredicate, PortalType_asPredicate
     """
     cache = getTransactionalVariable()
-    key = id(self), script_id
-    if 'asPredicate' in cache:
-      cache = cache['asPredicate']
-      if key in cache:
-        return cache[key]
-    else:
-      cache = cache['asPredicate'] = {}
-    script = self._getTypeBasedMethod('asPredicate', script_id)
-    if script is not None:
-      self = script()
-    cache[key] = self
-    return self
+    key = 'asPredicate', self, script_id
+    try:
+      return cache[key]
+    except KeyError:
+      script = self._getTypeBasedMethod('asPredicate', script_id)
+      if script is not None:
+        self = script()
+      cache[key] = self
+      return self
 
   def searchPredicate(self, **kw):
     """
