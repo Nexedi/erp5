@@ -2876,10 +2876,6 @@ class Base( CopyContainer,
     return dict(redirect_url=container.absolute_url(),
                 selection_index=None, selection_name=None)
 
-  # Hash method
-  def __hash__(self):
-    return hash(self.getUid())
-
   security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
   def setGuid(self):
     """
