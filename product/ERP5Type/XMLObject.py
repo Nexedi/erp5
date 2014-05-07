@@ -108,9 +108,5 @@ class XMLObject( Folder ):
       conduit = ERP5Conduit()
       conduit.addNode(object=self, xml=xml)
 
-    # Hash method
-    def __hash__(self):
-      return hash(self.getUid())
-
 
 InitializeClass(XMLObject)
