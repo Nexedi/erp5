@@ -124,7 +124,7 @@ discussion_post = discussion_thread.newContent(\n
                       language = language)\n
 \n
 # depending on security model Thread and Post can be directly published or shared\n
-portal_status_message = "New discussion created in background."\n
+portal_status_message = "New discussion thread created."\n
 discussion_thread.publish()\n
 \n
 # handle attachments\n
@@ -177,7 +177,7 @@ if send_notification_text not in (\'\', None):\n
         message_text_format=notification_message.getContentType(),\n
         store_as_event=False)\n
 \n
-return context.Base_redirect(form_id,\n
+return context.Base_redirect(redirect_url=context.absolute_url(),\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),\n
                            thread_relative_url=discussion_thread.getRelativeUrl()))\n
 </string> </value>
