@@ -302,6 +302,14 @@ class AmountGeneratorMixin:
                                                   if x[:12] != 'base_amount/']))
         if variation_category_list:
           base_application_set.difference_update(variation_category_list)
+
+        # Before we ignored 'quantity=0' amount here for better performance,
+        # but it makes expand unstable (e.g. when the first expand causes
+        # non-zero quantity and then quantity becomes zero).
+        # Ignore only if there's no base_application.
+        if not base_application_set:
+          continue
+
         # property_dict may include
         #   resource - VAT service or a Component in MRP
         #              (if unset, the amount will only be used for reporting)
@@ -324,13 +332,6 @@ class AmountGeneratorMixin:
           if property_dict.get(key, 0) in (None, ''):
             del property_dict[key]
         quantity *= property_dict.pop('quantity', 1)
-
-        # Before we ignore 'quantity==0' amount here for better
-        # performance, but it is not a good idea, especially when the
-        # first expand causes non-zero quantity and then quantity
-        # becomes zero.
-        # if not (quantity or generate_empty_amounts):
-        #   continue
 
         # Backward compatibility
         if getattr(self.aq_base, 'create_line', None) == 0:
@@ -416,10 +417,6 @@ class AmountGeneratorMixin:
       # performance, but it is not a good idea, especially when the
       # first expand causes non-zero quantity and then quantity
       # becomes zero.
-      # if quantity or generate_empty_amounts:
-      #   amount._setQuantity(quantity)
-      # else:
-      #   result_list.remove(amount)
       amount._setQuantity(quantity)
     if 0:
       print 'getAggregatedAmountList(%r) -> (%s)' % (

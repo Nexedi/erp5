@@ -872,8 +872,7 @@ return lambda *args, **kw: 1""")
     order = self.createOrder(trade_condition, (
       dict(),
       ))
-    amount_list = order.getAggregatedAmountList()
-    self.assertEqual([0, 0], [x.getTotalPrice() for x in amount_list])
+    self.assertEqual([], order.getAggregatedAmountList())
     for line in trade_condition.objectValues():
       line.setBaseApplication(fixed_quantity)
     amount_list = order.getAggregatedAmountList()
