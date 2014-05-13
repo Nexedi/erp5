@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict, deque
 import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
@@ -82,8 +83,10 @@ class BaseAmountDict(Implicit):
       if variation_category_list:
         base_amount = (base_amount,) + variation_category_list
       raise ValueError("Can not contribute to %r because this base_amount is"
-                       " already applied. Order of Amount Generator Lines is"
-                       " wrong." % (base_amount,))
+        " already applied. This should only happen in you have custom"
+        " calculation for some base_amount and your code does not call"
+        " getGeneratedAmountQuantity unconditionally for all base_amount"
+        " it depends on." % (base_amount,))
     self._dict[variated_base_amount] = \
       self._getQuantity(variated_base_amount) + value
 
@@ -140,6 +143,11 @@ class BaseAmountDict(Implicit):
     if variated_base_amount in self._frozen:
       return self._getQuantity(variated_base_amount)
     self._frozen.add(variated_base_amount)
+    value = self._dict[variated_base_amount] = \
+      self._getGeneratedAmountQuantity(base_amount, variation_category_list)
+    return value
+
+  def _getGeneratedAmountQuantity(self, base_amount, variation_category_list):
     try:
       method = self._cache[base_amount]
     except KeyError:
@@ -155,9 +163,59 @@ class BaseAmountDict(Implicit):
                 variation_category_list=variation_category_list)
     else:
       kw = self._method_kw
-    value = method(self, base_amount, **kw)
-    self._dict[variated_base_amount] = value
-    return value
+    return method(self, base_amount, **kw)
+
+
+class BaseAmountResolver(BaseAmountDict):
+
+  _dummy_property_dict = {'_index': 0},
+
+  def __init__(self, cache, method_kw):
+    self._dict = cache.setdefault(None, {})
+    self._cache = cache
+    self._method_kw = method_kw
+
+  def __call__(self, delivery_amount, property_dict_list):
+    if property_dict_list:
+      recurseApplicationDependencies = \
+        self.__of__(delivery_amount).getGeneratedAmountQuantity
+      contribution_dict = defaultdict(list)
+      for property_dict in property_dict_list:
+        self._amount_generator_line = property_dict[None]
+        self._resolving = property_dict['_index'] = set()
+        for variated_base_amount in property_dict['_application']:
+          recurseApplicationDependencies(*variated_base_amount)
+        for variated_base_amount in property_dict['_contribution']:
+          contribution_dict[variated_base_amount].append(property_dict)
+      del self._resolving
+      contribution_dict.default_factory = lambda: self._dummy_property_dict
+      def sort_key(property_dict):
+        score = property_dict['_index']
+        if type(score) is set:
+          score = property_dict['_index'] = 1 + max(sort_key(x)
+            for x in score
+            for x in contribution_dict[x])
+        return score
+      property_dict_list.sort(key=sort_key)
+      for property_dict in property_dict_list:
+        del property_dict['_index']
+
+  def getBaseAmountList(self):
+    return ()
+
+  def _getQuantity(self, variated_base_amount):
+    return 0
+
+  def getGeneratedAmountQuantity(self, base_amount, variation_category_list=()):
+    variated_base_amount = base_amount, variation_category_list
+    resolving = self._resolving
+    if variated_base_amount not in self._dict:
+      self._resolving = self._dict[variated_base_amount] = set(
+        (variated_base_amount,))
+      self._getGeneratedAmountQuantity(base_amount, variation_category_list)
+      self._resolving = resolving
+    resolving |= self._dict[variated_base_amount]
+    return 0
 
 
 class AmountGeneratorMixin:
@@ -233,36 +291,48 @@ class AmountGeneratorMixin:
       return (line.getFloatIndex() if int_index is None else int_index,
               random.random())
 
-    def accumulateAmountList(self):
-      """Browse recursively the amount generator lines
-         and accumulate applicable values
-      """
-      if 1:
-        amount_generator_line_list = self.contentValues(
+    is_mapped_value = isinstance(self, MappedValue)
+    recurse_queue = deque()
+    resolver = BaseAmountResolver(*args)
+
+    for base_amount in base_amount_list:
+      delivery_amount = base_amount.getObject()
+      recurse_queue.append(self if is_mapped_value
+        else delivery_amount.asComposedDocument(amount_generator_type_list))
+      property_dict_list = []
+      # If several amount generator lines have same reference, the first
+      # (sorted by int_index or float_index) matching one will mask the others.
+      reference_set = set()
+      while recurse_queue:
+        self = recurse_queue.popleft()
+        amount_generator_line_list = self.objectValues(
           portal_type=amount_generator_line_type_list)
         # Recursively feed base_amount
         if amount_generator_line_list:
+          # First sort so that a line can mask other of same reference.
+          # We will sort again later to satisfy dependencies between
+          # base_application & base_contribution.
           amount_generator_line_list.sort(key=getLineSortKey)
-          for amount_generator_line in amount_generator_line_list:
-            accumulateAmountList(amount_generator_line)
-          return
-        elif (self.getPortalType() not in amount_generator_line_type_list):
-          return
-        target_method = self.isTargetDelivery() and 'isDelivery' or default_target
+          recurse_queue += amount_generator_line_list
+          continue
+        if self.getPortalType() not in amount_generator_line_type_list:
+          continue
+        target_method = 'isDelivery' if self.isTargetDelivery() \
+          else default_target
         if target_method and not getattr(delivery_amount, target_method)():
-          return
+          continue
         if not self.test(delivery_amount):
-          return
+          continue
         self = self.asPredicate()
         reference = self.getReference()
         if reference:
           if reference in reference_set:
-            return
+            continue
           reference_set.add(reference)
         # Try to collect cells and aggregate their mapped properties
         # using resource + variation as aggregation key or base_application
         # for intermediate lines.
-        amount_generator_cell_list = [self] + self.contentValues(
+        amount_generator_cell_list = [self] + self.objectValues(
           portal_type=amount_generator_cell_type_list)
         cell_aggregate = {} # aggregates final line information
 
@@ -273,11 +343,12 @@ class AmountGeneratorMixin:
             if not cell.test(delivery_amount):
               continue
             cell = cell.asPredicate()
-          key = cell.getCellAggregateKey()
+          aggregate_key = cell.getCellAggregateKey()
           try:
-            property_dict = cell_aggregate[key]
+            property_dict = cell_aggregate[aggregate_key]
           except KeyError:
-            cell_aggregate[key] = property_dict = {
+            cell_aggregate[aggregate_key] = property_dict = {
+              None: self,
               'base_application_set': set(base_application_list),
               'base_contribution_set': set(base_contribution_list),
               'category_list': [],
@@ -300,7 +371,9 @@ class AmountGeneratorMixin:
             cell.getMappedValueBaseCategoryList(), base=1)
           property_dict['category_list'] += category_list
           property_dict['resource'] = cell.getResource()
-          if cell is not self:
+          if cell is self:
+            self_key = aggregate_key
+          else:
             # cells inherit base_application and base_contribution from line
             property_dict['base_application_set'].update(
               cell.getBaseApplicationList())
@@ -308,8 +381,6 @@ class AmountGeneratorMixin:
               cell.getBaseContributionList())
           property_dict['causality_value_list'].append(cell)
 
-      base_amount.setAmountGeneratorLine(self)
-      for property_dict in cell_aggregate.itervalues():
         # Ignore line (i.e. self) if cells produce unrelated amounts.
         # With Transformed Resource (Transformation), line is considered in
         # order to gather common properties and cells are used to describe
@@ -317,23 +388,40 @@ class AmountGeneratorMixin:
         # In cases like trade, payroll or assorted resources,
         # we want to ignore the line if they are cells.
         # See also implementations of 'getCellAggregateKey'
-        causality_value = property_dict['causality_value_list'][-1]
-        if causality_value is self and len(cell_aggregate) > 1:
-          continue
-        base_application_set = property_dict['base_application_set']
-        # allow a single base_application to be variated
-        variation_category_list = tuple(sorted([x for x in base_application_set
-                                                  if x[:12] != 'base_amount/']))
-        if variation_category_list:
-          base_application_set.difference_update(variation_category_list)
+        if len(cell_aggregate) > 1 and \
+           len(cell_aggregate[self_key]['causality_value_list']) == 1:
+          del cell_aggregate[self_key]
 
-        # Before we ignored 'quantity=0' amount here for better performance,
-        # but it makes expand unstable (e.g. when the first expand causes
-        # non-zero quantity and then quantity becomes zero).
-        # Ignore only if there's no base_application.
-        if not base_application_set:
-          continue
+        # Allow base_application & base_contribution to be variated.
+        for property_dict in cell_aggregate.itervalues():
+          base_amount_set = property_dict['base_application_set']
+          variation_list = tuple(sorted(x for x in base_amount_set
+                                          if not x.startswith('base_amount/')))
+          base_amount_set.difference_update(variation_list)
+          # Before we ignored 'quantity=0' amount here for better performance,
+          # but it makes expand unstable (e.g. when the first expand causes
+          # non-zero quantity and then quantity becomes zero).
+          # Ignore only if there's no base_application.
+          if not base_amount_set:
+            continue
+          property_dict['_application'] = [(x, variation_list)
+            for x in base_amount_set]
+          base_amount_set = property_dict['base_contribution_set']
+          variation_list = tuple(sorted(x for x in base_amount_set
+                                          if not x.startswith('base_amount/')))
+          property_dict['_contribution'] = [(x, variation_list)
+            for x in base_amount_set.difference(variation_list)]
+          property_dict_list.append(property_dict)
 
+      # Sort amount generators according to
+      # base_application & base_contribution dependencies.
+      resolver(delivery_amount, property_dict_list)
+
+      # Accumulate applicable values.
+      for property_dict in property_dict_list:
+        self = property_dict.pop(None)
+        base_amount.setAmountGeneratorLine(self)
+        contribution_list = property_dict.pop('_contribution')
         # property_dict may include
         #   resource - VAT service or a Component in MRP
         #              (if unset, the amount will only be used for reporting)
@@ -349,9 +437,8 @@ class AmountGeneratorMixin:
         # for future simulation of efficiencies.
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-        quantity = float(sum(base_amount.getGeneratedAmountQuantity(
-                               base_application, variation_category_list)
-                             for base_application in base_application_set))
+        quantity = float(sum(base_amount.getGeneratedAmountQuantity(*x)
+                             for x in property_dict.pop('_application')))
         for key in 'quantity', 'price', 'efficiency':
           if property_dict.get(key, 0) in (None, ''):
             del property_dict[key]
@@ -363,7 +450,8 @@ class AmountGeneratorMixin:
         # Create an Amount object
         amount = newTempAmount(portal,
           # we only want the id to be unique so we pick a random causality
-          causality_value.getRelativeUrl().replace('/', '_'),
+          property_dict['causality_value_list'][-1]
+            .getRelativeUrl().replace('/', '_'),
           notify_workflow=False)
         amount._setCategoryList(property_dict.pop('category_list', ()))
         if amount.getQuantityUnit():
@@ -388,26 +476,10 @@ class AmountGeneratorMixin:
           quantity /= property_dict.get('efficiency', 1)
         except ZeroDivisionError:
           quantity *= float('inf')
-        base_contribution_set = property_dict['base_contribution_set']
-        # allow a single base_contribution to be variated
-        variation_category_list = tuple(sorted([x for x in base_contribution_set
-                                                  if x[:12] != 'base_amount/']))
-        if variation_category_list:
-          base_contribution_set.difference_update(variation_category_list)
-        for base_contribution in base_contribution_set:
+        for base_contribution, variation_category_list in contribution_list:
           base_amount.contribute(base_contribution, variation_category_list,
                                  quantity)
 
-    is_mapped_value = isinstance(self, MappedValue)
-
-    for base_amount in base_amount_list:
-      delivery_amount = base_amount.getObject()
-      if not is_mapped_value:
-        self = delivery_amount.asComposedDocument(amount_generator_type_list)
-      # If several amount generator lines have same reference, the first
-      # (sorted by int_index or float_index) matching one will mask the others.
-      reference_set = set()
-      accumulateAmountList(self)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,

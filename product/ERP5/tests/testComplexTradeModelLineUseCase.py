@@ -100,7 +100,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       dict(title='Total Price Without VAT',
            reference='TOTAL_PRICE_WITHOUT_VAT',
            price=1,
-           int_index=10,
            target_delivery=True,
            base_application_list=('base_amount/discount_amount_of_non_vat_taxable',
                                   'base_amount/discount_amount_of_vat_taxable',
@@ -110,7 +109,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       dict(title='Total Price Of VAT Taxable',
            reference='TOTAL_PRICE_OF_VAT_TAXABLE',
            price=1,
-           int_index=10,
            target_delivery=True,
            base_application_list=('base_amount/discount_amount_of_vat_taxable',
                                   'base_amount/vat_taxable'),
@@ -120,7 +118,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
            resource_value=self.service_discount,
            price=1,
            trade_phase='default/invoicing',
-           int_index=10,
            target_delivery=True,
            base_application_list=('base_amount/discount_amount_of_vat_taxable',
                                   'base_amount/discount_amount_of_non_vat_taxable'),
@@ -130,7 +127,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
            resource_value=self.service_vat,
            price=0.05,
            trade_phase='default/invoicing',
-           int_index=10,
            target_delivery=True,
            base_application_list=('base_amount/discount_amount_of_vat_taxable',
                                   'base_amount/vat_taxable'),
@@ -138,7 +134,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       dict(title='Total Price With VAT',
            reference='TOTAL_PRICE_WITH_VAT',
            price=1,
-           int_index=20,
            target_delivery=True,
            base_application_list=('base_amount/vat_amount',
                                   'base_amount/total_price_without_vat'),
@@ -182,7 +177,6 @@ return getBaseAmountQuantity""")
       dict(reference='SPECIAL_DISCOUNT_3CD_LINEAR',
            resource_value=self.service_discount,
            price=-0.1,
-           int_index=0,
            target_delivery=True,
            base_application=special_discount,
            base_contribution='base_amount/discount_amount_of_vat_taxable'),
@@ -238,7 +232,6 @@ return lambda delivery_amount, base_application, **kw: \\
            resource_value=self.service_discount,
            price=-1,
            quantity=500,
-           int_index=0,
            target_delivery=True,
            base_application=special_discount,
            base_contribution='base_amount/discount_amount_of_vat_taxable'),
@@ -289,6 +282,9 @@ def getBaseAmountQuantity(delivery_amount, base_application, **kw):
     if base_application in movement.getBaseContributionList()])
   if total_quantity < 3:
     return 0
+  # Following expression should be evaluated during dependency resolution
+  # but it's ok to optimize here when total_quantity < 3 because
+  # 'total_price_of_ordered_items' is only contributed by movements.
   return delivery_amount.getGeneratedAmountQuantity(
     'base_amount/total_price_of_ordered_items')
 return getBaseAmountQuantity""")
@@ -298,7 +294,6 @@ return getBaseAmountQuantity""")
       dict(reference='SPECIAL_DISCOUNT_3CD_LINEAR',
            resource_value=self.service_discount,
            price=-0.1,
-           int_index=0,
            target_delivery=True,
            base_application=special_discount,
            base_contribution='base_amount/discount_amount_of_vat_taxable'),
@@ -352,17 +347,19 @@ return getBaseAmountQuantity"""
       'poster_present_3cd', total_quantity)
     special_discount = self.setBaseAmountQuantityMethod(
       'special_discount', """\
-return lambda delivery_amount, base_application, **kw: \\
-  3 <= delivery_amount.getGeneratedAmountQuantity(%r) or \\
-  1 <= delivery_amount.getGeneratedAmountQuantity(%r)"""
-      % (poster_present_3cd, poster_present_1dvd))
+def getBaseAmountQuantity(delivery_amount, base_application, **kw):
+  # Compute B even if A < 3 for dependency resolution.
+  # But like in test_usecase3, we could optimize.
+  A = delivery_amount.getGeneratedAmountQuantity(%r)
+  B = delivery_amount.getGeneratedAmountQuantity(%r)
+  return 3 <= A or 1 <= B
+return getBaseAmountQuantity""" % (poster_present_3cd, poster_present_1dvd))
 
     trade_condition = self.createTradeCondition(
       self.trade_condition, (
       dict(reference='SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED',
            resource_value=self.poster,
            price=0,
-           int_index=0,
            target_delivery=True,
            base_application=special_discount),
       ))
@@ -433,7 +430,6 @@ return getBaseAmountQuantity""")
       dict(reference='SPECIAL_DISCOUNT_3CD',
            resource_value=self.service_discount,
            price=-0.15,
-           int_index=0,
            target_delivery=True,
            base_application=special_discount,
            base_contribution='base_amount/discount_amount_of_vat_taxable'),
@@ -476,7 +472,6 @@ return lambda *args, **kw: 1""")
       dict(reference='SHIPPING_FEE',
            resource_value=self.service_discount,
            quantity=500,
-           int_index=0,
            target_delivery=True,
            base_application=fixed_quantity,
            base_contribution_list=('base_amount/additional_charge',

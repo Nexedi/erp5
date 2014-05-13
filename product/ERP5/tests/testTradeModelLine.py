@@ -172,9 +172,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
         title=self.id(),
         specialise_value_list=specialise_value_list,
         **kw)
-    for int_index, line_kw in enumerate(trade_model_line_list):
-      kw = dict(int_index=int_index)
-      kw.update(line_kw)
+    for kw in trade_model_line_list:
       self.createTradeModelLine(trade_condition, **kw)
     return trade_condition
 
@@ -509,14 +507,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
            base_contribution='base_amount/tax',
            trade_phase='default/discount',
            resource_value=self.createServiceDiscount(),
-           reference='discount',
-           int_index=10),
+           reference='discount'),
       dict(price=self.default_tax_ratio,
            base_application='base_amount/tax',
            trade_phase='default/tax',
            resource_value=self.createServiceTax(),
-           reference='tax',
-           int_index=20),
+           reference='tax'),
       ))
     order = self.createOrder(trade_condition, (
       dict(price=1, quantity=2, id='taxed',
@@ -540,12 +536,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.tic()
 
     if not build:
-      # Check amount_generator refuses to produce amounts
-      # if lines are not ordered correctly.
-      self['trade_model_line/tax'].setIntIndex(0)
-      self.assertRaises(ValueError, order.getGeneratedAmountList)
-      self.abort()
-
       for movement in (order, order['taxed'], order['discounted'],
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
@@ -729,35 +719,30 @@ class TestTradeModelLine(TestTradeModelLineMixin):
            base_contribution='base_amount/total_tax',
            trade_phase='default/tax',
            resource_value=service_tax,
-           reference='service_tax',
-           int_index=10),
+           reference='service_tax'),
       dict(price=0.32,
            base_application='base_amount/discount',
            base_contribution='base_amount/total_discount',
            trade_phase='default/discount',
            resource_value=service_discount,
-           reference='total_dicount_2',
-           int_index=10),
+           reference='total_dicount_2'),
       dict(price=0.2,
            base_application='base_amount/tax',
            base_contribution='base_amount/total_tax',
            trade_phase='default/tax',
            resource_value=service_tax,
-           reference='service_tax_2',
-           int_index=10),
+           reference='service_tax_2'),
       dict(price=0.12,
            base_application='base_amount/total_tax',
            base_contribution='base_amount/total_discount',
            trade_phase='default/tax',
            resource_value=service_tax,
-           reference='tax_3',
-           int_index=20),
+           reference='tax_3'),
       dict(price=0.8,
            base_application='base_amount/total_discount',
            trade_phase='default/discount',
            resource_value=service_discount,
-           reference='total_discount',
-           int_index=30),
+           reference='total_discount'),
       ]
     random.shuffle(line_list)
     trade_condition = self.createTradeCondition(business_process, line_list)
@@ -812,16 +797,13 @@ return getBaseAmountQuantity""")
     trade_condition = self.createTradeCondition(business_process, (
       dict(price=0.3,
            base_application=base_amount,
-           reference='tax1',
-           int_index=10),
+           reference='tax1'),
       dict(base_application=base_amount,
            base_contribution='base_amount/total_tax',
-           reference='tax2',
-           int_index=20),
+           reference='tax2'),
       dict(base_application='base_amount/total_tax',
            base_contribution='base_amount/total',
-           reference='tax3',
-           int_index=30),
+           reference='tax3'),
       ))
     def createCells(line, matrix, base_application=(), base_contribution=()):
       range_list = [set() for x in iter(matrix).next()]
@@ -898,6 +880,37 @@ return context""" % (base_amount, base_amount))
     amount_list = order.getAggregatedAmountList()
     self.assertAlmostEqual(total_price * total_ratio,
       sum((x.getTotalPrice() for x in amount_list), total_price))
+
+  def test_05_dependencyResolution(self):
+    from Products.ERP5Type.Document import newTempAmount, newTempTradeModelLine
+    from Products.ERP5.mixin.amount_generator import BaseAmountResolver
+    resolver = BaseAmountResolver({}, {})
+    trade_model_line = newTempTradeModelLine(self.portal, '')
+    trade_model_line.getBaseAmountQuantity = \
+      lambda delivery_amount, base_amount: sum(map(
+        delivery_amount.getGeneratedAmountQuantity,
+        application_dict.get(base_amount, base_amount)))
+    application_dict = dict(B='bf', C='c', E='Bef')
+    property_dict_list = [{
+        None: trade_model_line,
+        'index': index,
+        '_application': [(x, ()) for x in application],
+        '_contribution': [(x, ()) for x in contribution],
+      } for index, application, contribution in (
+        (2, 'C', 'e'),
+        (3, 'dE', ''),
+        (0, 'a', 'b'),
+        (1, 'B', 'cd'),
+      )]
+    delivery_amount = newTempAmount(self.portal, '')
+    resolver(delivery_amount, property_dict_list)
+    self.assertEqual(range(len(property_dict_list)),
+                     [x['index'] for x in property_dict_list])
+    # Retry with cache already filled.
+    property_dict_list.reverse()
+    resolver(delivery_amount, property_dict_list)
+    self.assertEqual(range(len(property_dict_list)),
+                     [x['index'] for x in property_dict_list])
 
   def test_tradeModelLineWithFixedPrice(self):
     """

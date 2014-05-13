@@ -1187,7 +1187,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='intermediate line',
-                    int_index = 10,
                     reference='intermediate_line',
                     price=0.2,
                     base_contribution_list=['base_amount/payroll/base/income_tax'],
@@ -1201,7 +1200,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='line applied on intermediate line',
-                    int_index = 50,
                     trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='line_applied_on_intermediate_line',
@@ -1928,7 +1926,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       sequence=None, **kw):
     model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    property_list = ('title', 'description', 'int_index')
+    property_list = 'title', 'description'
     for model_line in model.contentValues(portal_type='Pay Sheet Model Line'):
       model_line_resource = model_line.getResource()
       line_found = False
@@ -1949,12 +1947,10 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
   def stepSetProperiesOnModelLines(self, sequence=None, **kw):
     model = sequence.get('model')
-    index = 0
-    for model_line in model.contentValues(portal_type='Pay Sheet Model Line'):
+    for index, model_line in enumerate(model.contentValues(
+        portal_type='Pay Sheet Model Line')):
       model_line.setTitle('Model line title %s' % index)
       model_line.setDescription('Model line description %s' % index)
-      model_line.setIntIndex(index)
-      index += 1
 
   def checkPrecisionOfListBox(self, report_section, precision):
     here = report_section.getObject(self.portal)
@@ -3421,8 +3417,8 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_propertiesAreSetOnPaysheetLines(self):
-    '''check porperties from model line (like description, int_index,
-    title, ...) are copied on the paysheet lines'''
+    '''check properties from model line (like description, title, ...)
+    are copied on the paysheet lines'''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                SetProperiesOnModelLines
