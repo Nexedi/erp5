@@ -631,7 +631,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       # Default value is None
       return None
 
-    def _pricingSortMethod(self, a, b):
+    def _pricingSortKeyMethod(self, a):
       # Simple method : the one that defines a destination section wins
       if a.getDestinationSection():
         return -1 # a defines a destination section and wins
@@ -666,7 +666,16 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       else:
         portal_type_list = (supply_path_type,)
 
-      sort_method = kw.pop('sort_method', self._pricingSortMethod)
+      sort_key_method = kw.pop('sort_key_method', None)
+      if sort_key_method is None:
+        sort_method = kw.pop('sort_method', None)
+        if sort_method is None:
+          # use default sort_key_method if neither sort_key_method nor
+          # sort_method is specified.
+          sort_key_method = self._pricingSortKeyMethod
+      else:
+        # if sort_key_method is specified, we don't need sort_method.
+        sort_method = None
       # Generate the fake context
       tmp_context = self.asContext(context=context,
                                    categories=new_category_list,
@@ -682,6 +691,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                                              tmp_context,
                                              portal_type=portal_type_list,
                                              has_cell_content=0,
+                                             sort_key_method=sort_key_method,
                                              sort_method=sort_method, **kw)
       # Get price parameters
       price_parameter_dict = {
