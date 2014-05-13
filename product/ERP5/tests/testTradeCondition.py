@@ -268,6 +268,10 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
   def test_movement_price_assignment(self):
     # supply line from the trade condition apply to the movements in order
     # where this trade condition is used
+    #
+    # Order ---> TC (123)
+    #
+    # price should be 123
     supply_line = self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
@@ -280,6 +284,79 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  resource_value=self.resource,
                                  quantity=1)
     self.assertEqual(123, line.getPrice())
+
+    # supply line in the direct trade condition should have priority
+    # than its specialised trade condition
+    #
+    # Order ---> TC (125) ---> TC (123)
+    #
+    # price should be 125
+    trade_condition2 = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      specialise_value=self.trade_condition)
+    trade_condition2.validate()
+    trade_condition2.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=125)
+    self.order.setSpecialiseValue(trade_condition2)
+    self.tic()
+    line.setPrice(None)
+    self.assertEqual(125, line.getPrice())
+
+    # supply line in the first direct trade condition should have
+    # priority than the second trade condition
+    #
+    # Order -+-> TC (127)
+    #        +-> TC (125) ---> TC (123)
+    #
+    # price should be 127
+    #
+    # Order -+-> TC (125) ---> TC (123)
+    #        +-> TC (127)
+    #
+    # price should be 125
+    trade_condition3 = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type)
+    trade_condition3.validate()
+    trade_condition3.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=127)
+    self.order.setSpecialiseValueList((trade_condition3, trade_condition2))
+    self.tic()
+    line.setPrice(None)
+    self.assertEqual(127, line.getPrice())
+    self.order.setSpecialiseValueList((trade_condition2, trade_condition3))
+    self.tic()
+    line.setPrice(None)
+    self.assertEqual(125, line.getPrice())
+
+    # supply line in the second direct trade condition should have
+    # priority than the first trade condition's specialised trade
+    # condition
+    #
+    # Order -+-> TC (---) ---> TC (123)
+    #        +-> TC (127)
+    #
+    # price should be 127
+    #
+    # Order -+-> TC (127)
+    #        +-> TC (---) ---> TC (123)
+    #
+    # price should be 127
+    trade_condition4 = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      specialise_value=self.trade_condition)
+    trade_condition4.validate()
+    self.order.setSpecialiseValueList((trade_condition4, trade_condition3))
+    self.tic()
+    line.setPrice(None)
+    self.assertEqual(127, line.getPrice())
+    self.order.setSpecialiseValueList((trade_condition3, trade_condition4))
+    self.tic()
+    line.setPrice(None)
+    self.assertEqual(127, line.getPrice())
 
   def test_supply_line_priority(self):
     # supply lines from related trade condition should have priority over

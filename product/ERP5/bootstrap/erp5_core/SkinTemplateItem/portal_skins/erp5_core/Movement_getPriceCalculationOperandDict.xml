@@ -64,9 +64,13 @@ def destinationSectionSortMethod(a, b):\n
 \n
 def getResourceInternalPriceSortMethod(high_priority_supply_line_list):\n
   def resourceInternalPriceSortMethod(a, b):\n
-    if a in high_priority_supply_line_list:\n
+    a_number = (a in high_priority_supply_line_list) and high_priority_supply_line_list.index(a)+1 or 0\n
+    b_number = (b in high_priority_supply_line_list) and high_priority_supply_line_list.index(b)+1 or 0\n
+    if a_number and b_number:\n
+      return a_number - b_number\n
+    elif a_number:\n
       return -1\n
-    elif b in high_priority_supply_line_list:\n
+    elif b_number:\n
       return 1\n
 \n
     if "Internal" in a.getPortalType():\n
@@ -84,9 +88,13 @@ def getResourceInternalPriceSortMethod(high_priority_supply_line_list):\n
 \n
 def getResourcePurchasePriceSortMethod(high_priority_supply_line_list):\n
   def resourcePurchasePriceSortMethod(a, b):\n
-    if a in high_priority_supply_line_list:\n
+    a_number = (a in high_priority_supply_line_list) and high_priority_supply_line_list.index(a)+1 or 0\n
+    b_number = (b in high_priority_supply_line_list) and high_priority_supply_line_list.index(b)+1 or 0\n
+    if a_number and b_number:\n
+      return a_number - b_number\n
+    elif a_number:\n
       return -1\n
-    elif b in high_priority_supply_line_list:\n
+    elif b_number:\n
       return 1\n
 \n
     if "Purchase" in a.getPortalType():\n
@@ -104,9 +112,13 @@ def getResourcePurchasePriceSortMethod(high_priority_supply_line_list):\n
 \n
 def getResourceSalePriceSortMethod(high_priority_supply_line_list):\n
   def resourceSalePriceSortMethod(a, b):\n
-    if a in high_priority_supply_line_list:\n
+    a_number = (a in high_priority_supply_line_list) and high_priority_supply_line_list.index(a)+1 or 0\n
+    b_number = (b in high_priority_supply_line_list) and high_priority_supply_line_list.index(b)+1 or 0\n
+    if a_number and b_number:\n
+      return a_number - b_number\n
+    elif a_number:\n
       return -1\n
-    elif b in high_priority_supply_line_list:\n
+    elif b_number:\n
       return 1\n
 \n
     if "Sale" in a.getPortalType():\n
@@ -121,18 +133,6 @@ def getResourceSalePriceSortMethod(high_priority_supply_line_list):\n
         return sourceSectionSortMethod(a, b)\n
   return resourceSalePriceSortMethod\n
 \n
-\n
-def getRelatedTradeConditionList(trade_condition):\n
-  """Get all trade conditions related to an order.\n
-  trade_condition parameter can be a trade condition or an order/invoice\n
-  """\n
-  related_trade_condition_list = trade_condition.getSpecialiseValueList(\n
-        portal_type=(\'Sale Trade Condition\', \'Purchase Trade Condition\'))\n
-  for related_trade_condition in trade_condition.getSpecialiseValueList(\n
-        portal_type=(\'Sale Trade Condition\', \'Purchase Trade Condition\')):\n
-    related_trade_condition_list.extend(\n
-          getRelatedTradeConditionList(related_trade_condition))\n
-  return related_trade_condition_list\n
 \n
 def getOptimisedPriceCalculationOperandDict(default=None, context=None, **kw):\n
   """\n
@@ -180,17 +180,13 @@ if explanation is not None:\n
                               context.getPortalOrderTypeList() + context.getPortalDeliveryTypeList():\n
     # if there are trade conditions containing supply lines related to that\n
     # order/invoice, we give high priority to those supply lines\n
-    for trade_condition in getRelatedTradeConditionList(explanation):\n
-      for supply_line in trade_condition.contentValues(\n
-                  portal_type=context.getPortalSupplyPathTypeList(),\n
-                  checked_permission=\'View\'):\n
-         supply_cell_list = supply_line.contentValues(\n
-                  portal_type=context.getPortalSupplyPathTypeList(),\n
-                  checked_permission=\'View\')\n
-         if supply_cell_list:\n
-            high_priority_supply_line_list.extend(list(supply_cell_list))\n
-         else:\n
-            high_priority_supply_line_list.append(supply_line)\n
+    for supply_line in explanation.asComposedDocument().objectValues(portal_type=context.getPortalSupplyPathTypeList()):\n
+      supply_cell_list = supply_line.objectValues(\n
+        portal_type=context.getPortalSupplyPathTypeList())\n
+      if supply_cell_list:\n
+        high_priority_supply_line_list.extend(list(supply_cell_list))\n
+      else:\n
+        high_priority_supply_line_list.append(supply_line)\n
 \n
   # XXX FIXME: Hardcoded values\n
   if "Internal" in explanation_type:\n
