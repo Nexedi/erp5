@@ -96,9 +96,10 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
   def getBaseAmountQuantity(delivery_amount, base_application,
                             variation_category_list=(), **kw):
     if variation_category_list:
+      model = delivery_amount.getAmountGeneratorLine().getParentValue()
       for variation in variation_category_list:
-        if variation.startswith('salary_range'):
-          cell = delivery_amount.getSpecialiseValue().getCell(variation)
+        if variation.startswith('salary_range/'):
+          cell = model.getCell(variation)
           if cell is not None:
             model_slice_min = cell.getQuantityRangeMin()
             model_slice_max = cell.getQuantityRangeMax()

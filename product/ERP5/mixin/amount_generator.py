@@ -29,7 +29,7 @@
 import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Acquisition import Implicit
+from Acquisition import aq_base, Implicit
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -55,8 +55,14 @@ class BaseAmountDict(Implicit):
     self._cache = cache
     self._method_kw = method_kw
 
+  getAmountGeneratorLine__roles__ = None # public
+  def getAmountGeneratorLine(self):
+    # Use aq_base to avoid additional wrapping.
+    return aq_base(self)._amount_generator_line
+
   def setAmountGeneratorLine(self, amount_generator_line):
-    self._amount_generator_line = amount_generator_line
+    # Use aq_base to keep acquisition context.
+    self.aq_base._amount_generator_line = amount_generator_line
 
   def recurseMovementList(self, movement_list):
     for amount in movement_list:
@@ -87,9 +93,9 @@ class BaseAmountDict(Implicit):
       return self._dict[variated_base_amount]
     except KeyError:
       value = 0
-      amount_generator_line = self._amount_generator_line
+      amount_generator_line = self.aq_base._amount_generator_line
       for base_amount_dict in self._amount_list:
-        base_amount_dict._amount_generator_line = amount_generator_line
+        base_amount_dict.aq_base._amount_generator_line = amount_generator_line
         value += base_amount_dict.getGeneratedAmountQuantity(
           *variated_base_amount)
       self._dict[variated_base_amount] = value
@@ -120,12 +126,12 @@ class BaseAmountDict(Implicit):
     try:
       method = self._cache[base_amount]
     except KeyError:
-      method = self._amount_generator_line._getTypeBasedMethod(
+      method = self.aq_base._amount_generator_line._getTypeBasedMethod(
         'getBaseAmountQuantityMethod')
       if method is not None:
         method = method(base_amount)
       if method is None:
-        method = self._amount_generator_line.getBaseAmountQuantity
+        method = self.aq_base._amount_generator_line.getBaseAmountQuantity
       self._cache[base_amount] = method
     if variation_category_list:
       kw = dict(self._method_kw,
