@@ -237,75 +237,76 @@ class AmountGeneratorMixin:
       """Browse recursively the amount generator lines
          and accumulate applicable values
       """
-      amount_generator_line_list = self.contentValues(
-        portal_type=amount_generator_line_type_list)
-      # Recursively feed base_amount
-      if amount_generator_line_list:
-        amount_generator_line_list.sort(key=getLineSortKey)
-        for amount_generator_line in amount_generator_line_list:
-          accumulateAmountList(amount_generator_line)
-        return
-      elif (self.getPortalType() not in amount_generator_line_type_list):
-        return
-      target_method = self.isTargetDelivery() and 'isDelivery' or default_target
-      if target_method and not getattr(delivery_amount, target_method)():
-        return
-      if not self.test(delivery_amount):
-        return
-      self = self.asPredicate()
-      reference = self.getReference()
-      if reference:
-        if reference in reference_set:
+      if 1:
+        amount_generator_line_list = self.contentValues(
+          portal_type=amount_generator_line_type_list)
+        # Recursively feed base_amount
+        if amount_generator_line_list:
+          amount_generator_line_list.sort(key=getLineSortKey)
+          for amount_generator_line in amount_generator_line_list:
+            accumulateAmountList(amount_generator_line)
           return
-        reference_set.add(reference)
-      # Try to collect cells and aggregate their mapped properties
-      # using resource + variation as aggregation key or base_application
-      # for intermediate lines.
-      amount_generator_cell_list = [self] + self.contentValues(
-        portal_type=amount_generator_cell_type_list)
-      cell_aggregate = {} # aggregates final line information
+        elif (self.getPortalType() not in amount_generator_line_type_list):
+          return
+        target_method = self.isTargetDelivery() and 'isDelivery' or default_target
+        if target_method and not getattr(delivery_amount, target_method)():
+          return
+        if not self.test(delivery_amount):
+          return
+        self = self.asPredicate()
+        reference = self.getReference()
+        if reference:
+          if reference in reference_set:
+            return
+          reference_set.add(reference)
+        # Try to collect cells and aggregate their mapped properties
+        # using resource + variation as aggregation key or base_application
+        # for intermediate lines.
+        amount_generator_cell_list = [self] + self.contentValues(
+          portal_type=amount_generator_cell_type_list)
+        cell_aggregate = {} # aggregates final line information
 
-      base_application_list = self.getBaseApplicationList()
-      base_contribution_list = self.getBaseContributionList()
-      for cell in amount_generator_cell_list:
-        if cell is not self:
-          if not cell.test(delivery_amount):
-            continue
-          cell = cell.asPredicate()
-        key = cell.getCellAggregateKey()
-        try:
-          property_dict = cell_aggregate[key]
-        except KeyError:
-          cell_aggregate[key] = property_dict = {
-            'base_application_set': set(base_application_list),
-            'base_contribution_set': set(base_contribution_list),
-            'category_list': [],
-            'causality_value_list': [],
-            'efficiency': self.getEfficiency(),
-            'quantity_unit': self.getQuantityUnit(),
-            # XXX If they are several cells, we have duplicate references.
-            'reference': reference,
-          }
-        # Then collect the mapped values (quantity, price, trade_phase...)
-        for key in cell.getMappedValuePropertyList():
-          if key in ('net_converted_quantity',
-                     'net_quantity', 'converted_quantity'):
-            # XXX only 'quantity' is accepted and it is treated
-            #     as if it was 'converted_quantity'
-            raise NotImplementedError
-          # XXX-JPS Make sure handling of list properties can be handled
-          property_dict[key] = cell.getProperty(key)
-        category_list = cell.getAcquiredCategoryMembershipList(
-          cell.getMappedValueBaseCategoryList(), base=1)
-        property_dict['category_list'] += category_list
-        property_dict['resource'] = cell.getResource()
-        if cell is not self:
-          # cells inherit base_application and base_contribution from line
-          property_dict['base_application_set'].update(
-            cell.getBaseApplicationList())
-          property_dict['base_contribution_set'].update(
-            cell.getBaseContributionList())
-        property_dict['causality_value_list'].append(cell)
+        base_application_list = self.getBaseApplicationList()
+        base_contribution_list = self.getBaseContributionList()
+        for cell in amount_generator_cell_list:
+          if cell is not self:
+            if not cell.test(delivery_amount):
+              continue
+            cell = cell.asPredicate()
+          key = cell.getCellAggregateKey()
+          try:
+            property_dict = cell_aggregate[key]
+          except KeyError:
+            cell_aggregate[key] = property_dict = {
+              'base_application_set': set(base_application_list),
+              'base_contribution_set': set(base_contribution_list),
+              'category_list': [],
+              'causality_value_list': [],
+              'efficiency': self.getEfficiency(),
+              'quantity_unit': self.getQuantityUnit(),
+              # XXX If they are several cells, we have duplicate references.
+              'reference': reference,
+            }
+          # Then collect the mapped values (quantity, price, trade_phase...)
+          for key in cell.getMappedValuePropertyList():
+            if key in ('net_converted_quantity',
+                       'net_quantity', 'converted_quantity'):
+              # XXX only 'quantity' is accepted and it is treated
+              #     as if it was 'converted_quantity'
+              raise NotImplementedError
+            # XXX-JPS Make sure handling of list properties can be handled
+            property_dict[key] = cell.getProperty(key)
+          category_list = cell.getAcquiredCategoryMembershipList(
+            cell.getMappedValueBaseCategoryList(), base=1)
+          property_dict['category_list'] += category_list
+          property_dict['resource'] = cell.getResource()
+          if cell is not self:
+            # cells inherit base_application and base_contribution from line
+            property_dict['base_application_set'].update(
+              cell.getBaseApplicationList())
+            property_dict['base_contribution_set'].update(
+              cell.getBaseContributionList())
+          property_dict['causality_value_list'].append(cell)
 
       base_amount.setAmountGeneratorLine(self)
       for property_dict in cell_aggregate.itervalues():
