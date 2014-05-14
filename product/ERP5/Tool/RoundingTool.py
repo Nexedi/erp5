@@ -73,19 +73,15 @@ class RoundingTool(BaseTool):
           parent_uid_list.append(current_document.getUid())
           current_document = current_document.aq_parent
 
-      def sortMethod(document_a, document_b):
-        def score(document):
-          context_path = context.getPhysicalPath()
-          result = len(context_path)
-          for a, b in zip(context_path,
-                          document.getPhysicalPath()):
-            if a==b:
-              result -= 1
-            else:
-              break
-          return result
-        return cmp(score(document_a), score(document_b))
-      kw['sort_method'] = sortMethod
+      context_path = context.getPhysicalPath()
+      def sortKeyMethod(document):
+        result = 0
+        for a, b in zip(context_path, document.getPhysicalPath()):
+          if a != b:
+            break
+          result -= 1
+        return result
+      kw['sort_key_method'] = sortKeyMethod
 
     result = portal.portal_domains.searchPredicateList(
       context=document,
