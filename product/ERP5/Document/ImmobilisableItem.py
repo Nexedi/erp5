@@ -85,7 +85,7 @@ class ImmobilisableItem(Item, Amount):
       """Returns the simulation state for this simulation movement.
       """
       portal = self.getPortalObject()
-      draft_state_list = portal.getDraftOrderStateList()
+      draft_state_list = portal.getPortalDraftOrderStateList()
       # if we have an order which is not draft, we'll consider the generated
       # simulation movement are planned.
       # This is probably oversimplified implementation, as we may want to look
