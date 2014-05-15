@@ -884,33 +884,46 @@ return context""" % (base_amount, base_amount))
   def test_05_dependencyResolution(self):
     from Products.ERP5Type.Document import newTempAmount, newTempTradeModelLine
     from Products.ERP5.mixin.amount_generator import BaseAmountResolver
-    resolver = BaseAmountResolver({}, {})
+    delivery_amount = newTempAmount(self.portal, '')
     trade_model_line = newTempTradeModelLine(self.portal, '')
+    def case(*lines):
+      return BaseAmountResolver({}, {}), [{
+        None: trade_model_line,
+        'index': index,
+        '_application': [(x, ()) for x in application],
+        '_contribution': [(x, ()) for x in contribution],
+      } for index, application, contribution in lines]
+    def check():
+      resolver(delivery_amount, property_dict_list)
+      self.assertEqual(range(len(property_dict_list)),
+                       [x['index'] for x in property_dict_list])
+
+    # Case 1: calculation of some base_amount depends on others.
     trade_model_line.getBaseAmountQuantity = \
       lambda delivery_amount, base_amount: sum(map(
         delivery_amount.getGeneratedAmountQuantity,
         application_dict.get(base_amount, base_amount)))
     application_dict = dict(B='bf', C='c', E='Bef')
-    property_dict_list = [{
-        None: trade_model_line,
-        'index': index,
-        '_application': [(x, ()) for x in application],
-        '_contribution': [(x, ()) for x in contribution],
-      } for index, application, contribution in (
-        (2, 'C', 'e'),
-        (3, 'dE', ''),
-        (0, 'a', 'b'),
-        (1, 'B', 'cd'),
-      )]
-    delivery_amount = newTempAmount(self.portal, '')
-    resolver(delivery_amount, property_dict_list)
-    self.assertEqual(range(len(property_dict_list)),
-                     [x['index'] for x in property_dict_list])
+    resolver, property_dict_list = case((2, 'C', 'e'),
+                                        (3, 'dE', ''),
+                                        (0, 'a', 'b'),
+                                        (1, 'B', 'cd'))
+    check()
     # Retry with cache already filled.
     property_dict_list.reverse()
-    resolver(delivery_amount, property_dict_list)
-    self.assertEqual(range(len(property_dict_list)),
-                     [x['index'] for x in property_dict_list])
+    check()
+    del trade_model_line.getBaseAmountQuantity
+
+    # Case 2: sorting by dependency resolution must be stable.
+    # This is important for compatibility in case that calculation of D
+    # applies d conditionally, whereas the user took care of ordering 3 after 2
+    # with indices: 3 must remain after 2.
+    resolver, property_dict_list = case((0, 'a', 'b'),
+                                        (1, 'b', 'c'),
+                                        (2, 'c', 'd'),
+                                        (3, 'bD', ''))
+    check()
+
 
   def test_tradeModelLineWithFixedPrice(self):
     """

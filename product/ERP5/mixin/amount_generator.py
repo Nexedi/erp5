@@ -168,7 +168,25 @@ class BaseAmountDict(Implicit):
 
 class BaseAmountResolver(BaseAmountDict):
 
-  _dummy_property_dict = {'_index': 0},
+  class _node(set):
+
+    contribution_dict = None
+
+    def __init__(self, property_dict, contribution_dict):
+      self.property_dict = property_dict
+      self.contribution_dict = contribution_dict
+
+    def __call__(self):
+      if self.contribution_dict:
+        contribution_dict_get = self.contribution_dict.get
+        del self.contribution_dict
+        for application in list(self):
+          for node in contribution_dict_get(application, ()):
+            self |= node()
+      return self
+
+    def __lt__(self, other):
+      return not other().isdisjoint(self.property_dict['_contribution'])
 
   def __init__(self, cache, method_kw):
     self._dict = cache.setdefault(None, {})
@@ -180,25 +198,18 @@ class BaseAmountResolver(BaseAmountDict):
       recurseApplicationDependencies = \
         self.__of__(delivery_amount).getGeneratedAmountQuantity
       contribution_dict = defaultdict(list)
+      node_list = []
       for property_dict in property_dict_list:
+        node = self._resolving = self._node(property_dict, contribution_dict)
+        node_list.append(node)
         self._amount_generator_line = property_dict[None]
-        self._resolving = property_dict['_index'] = set()
         for variated_base_amount in property_dict['_application']:
           recurseApplicationDependencies(*variated_base_amount)
         for variated_base_amount in property_dict['_contribution']:
-          contribution_dict[variated_base_amount].append(property_dict)
+          contribution_dict[variated_base_amount].append(node)
       del self._resolving
-      contribution_dict.default_factory = lambda: self._dummy_property_dict
-      def sort_key(property_dict):
-        score = property_dict['_index']
-        if type(score) is set:
-          score = property_dict['_index'] = 1 + max(sort_key(x)
-            for x in score
-            for x in contribution_dict[x])
-        return score
-      property_dict_list.sort(key=sort_key)
-      for property_dict in property_dict_list:
-        del property_dict['_index']
+      node_list.sort()
+      property_dict_list[:] = (node.property_dict for node in node_list)
 
   def getBaseAmountList(self):
     return ()
