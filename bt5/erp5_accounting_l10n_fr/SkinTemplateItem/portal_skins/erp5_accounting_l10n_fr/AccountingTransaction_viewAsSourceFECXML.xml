@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<ecriture xmlns:tal="http://xml.zope.org/namespaces/tal">\n
+  <EcritureNum tal:content="context/getSourceReference">Specific Reference</EcritureNum>\n
+  <EcritureDate tal:content="python: context.getStartDate().strftime(\'%Y-%m-%d\')">Specific Date</EcritureDate>\n
+  <EcritureLib tal:content="context/getTitle">Title</EcritureLib>\n
+  <PieceRef tal:content="context/getReference">Reference</PieceRef>\n
+  <PieceDate tal:content="python: context.getStartDate().strftime(\'%Y-%m-%d\')"></PieceDate>\n
+  <tal:block tal:replace="nothing"><EcritureLet></EcritureLet>\n
+  <DateLet></DateLet></tal:block>\n
+  <ValidDate tal:content="python: context.getModificationDate().strftime(\'%Y-%m-%d\')">Modification Date</ValidDate>\n
+  <tal:block tal:repeat="line python:context.contentValues(portal_type=context.getPortalAccountingMovementTypeList())"><ligne\n
+    tal:define="account python:line.getSourceValue(portal_type=\'Account\')" tal:condition="python: account is not None">\n
+      <CompteNum tal:content="account/Account_getGapId">Reference Compte (Account_getGapId)</CompteNum>\n
+      <CompteLib tal:content="account/getTranslatedTitle">Translated Title Compte</CompteLib>\n
+      <tal:block tal:replace="nothing"><CompteAuxNum></CompteAuxNum>\n
+      <CompteAuxLib></CompteAuxLib>\n
+      <Montantdevise></Montantdevise>\n
+      <Idevise></Idevise></tal:block>\n
+      <Debit tal:content="python: \'%0.2f\' % (line.getSourceAssetDebit() or line.getSourceDebit())"></Debit>\n
+      <Credit tal:content="python: \'%0.2f\' % (line.getSourceAssetCredit() or line.getSourceCredit())"></Credit>\n
+    </ligne></tal:block>\n
+</ecriture>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_viewAsSourceFECXML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
