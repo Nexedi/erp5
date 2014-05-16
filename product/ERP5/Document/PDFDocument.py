@@ -329,7 +329,7 @@ class PDFDocument(Image):
                 self.getRelativeUrl(), info_key, info_value))
             else:
               result.setdefault(info_key, info_value)
-        except PdfReadError:
+        except (PdfReadError, AssertionError):
           LOG("PDFDocument.getContentInformation", PROBLEM,
             "PyPDF2 is Unable to read PDF, probably corrupted PDF here : %s" % \
             (self.getRelativeUrl(),))
