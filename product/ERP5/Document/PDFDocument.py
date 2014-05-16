@@ -333,6 +333,10 @@ class PDFDocument(Image):
           LOG("PDFDocument.getContentInformation", PROBLEM,
             "PyPDF2 is Unable to read PDF, probably corrupted PDF here : %s" % \
             (self.getRelativeUrl(),))
+        except Exception:
+          # an exception of Exception class will be raised when the
+          # document is encrypted.
+          pass
     finally:
       tmp.close()
 
