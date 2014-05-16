@@ -2081,6 +2081,8 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
+        if 'total_size' in param_dict.keys():
+          param_dict.pop('total_size')
         row_css_class_name = self.getRowCSSClassName(
           brain=current_section.object_list[offset],
           field=self.field,
