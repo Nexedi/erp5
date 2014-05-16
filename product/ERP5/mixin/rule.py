@@ -325,7 +325,7 @@ class RuleMixin(Predicate):
     """
     raise NotImplementedError
 
-  def _isProfitAndLossMovement(movement): # applied_rule XXX-JPS add this ?
+  def _isProfitAndLossMovement(self, movement): # applied_rule XXX-JPS add this ?
     """
     Returns True if movement is a profit and loss movement.
     """
