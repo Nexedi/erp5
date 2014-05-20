@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>FCKeditor_viewImageSelectionDialog</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>rid</string> </key>

@@ -14,6 +14,7 @@
                 <string>count_method</string>
                 <string>default_params</string>
                 <string>domain_tree</string>
+                <string>hide_rows_on_no_search_criterion</string>
                 <string>list_action</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -177,6 +178,10 @@
                     <value> <int>5</int> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>list_action</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -315,10 +320,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
