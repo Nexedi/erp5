@@ -245,7 +245,7 @@ var ERP5Form = ( function () {\n
                       listbox_dict = field_dict.listbox;\n
                       listbox_data_url = listbox_dict.listbox_data_url;\n
                       $("#" + listbox_id + "_field").html(listbox_dict["listbox_html"]);\n
-                      return\n
+                      return;\n
           },\n
 \n
           ListBoxJavaScript:  function (field_id, field_dict) {\n
@@ -437,7 +437,7 @@ var ERP5Form = ( function () {\n
               \'gadget-\' + form_id,\n
               form_id + \'/Form_asRenderJSGadget\',\n
               \'ERP5Form.update\',\n
-              \'Form_asJSON?form_id=\' + form_id);;\n
+              \'Form_asJSON?form_id=\' + form_id);\n
             RenderJs.TabbularGadget.toggleVisibility($(\'#\' + form_id));\n
             ERP5Form.setCurrentFormId(form_id);\n
             // when all gadgets are loaded adjust left and right side of forms to have same height\n
@@ -456,7 +456,7 @@ var ERP5Form = ( function () {\n
           }\n
         }\n
 \n
-  }} ());\n
+  };} ());\n
 
 
 ]]></string> </value>
