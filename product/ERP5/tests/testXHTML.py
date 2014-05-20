@@ -455,7 +455,7 @@ class W3Validator(object):
                  "REQUEST_METHOD": "POST"}).communicate(source)
     # Output is a set of headers then the XML content.
     return self._parse_validation_results(
-      stdout.split('<?xml version="1.0" encoding="UTF-8"?>')[1])
+      stdout.split('\n\n', 1)[1])
 
 
 class TidyValidator(object):
