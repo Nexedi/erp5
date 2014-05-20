@@ -127,9 +127,9 @@ def editListBox(listbox_field, listbox):\n
             value = None\n
           cleaned_v[key] = value\n
 \n
-      obj = context.restrictedTraverse(url)\n
       if cleaned_v:\n
         if listbox_edit is None:\n
+          obj = context.restrictedTraverse(url)\n
           obj.edit(edit_order=edit_order, **cleaned_v)\n
         else:\n
           listbox_edit(url, edit_order, cleaned_v)\n
