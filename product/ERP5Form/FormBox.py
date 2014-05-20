@@ -65,6 +65,7 @@ class FormBoxWidget(Widget.Widget):
 
   property_names = Widget.Widget.property_names + [
     'formbox_target_id', \
+    'context_method_id', \
   ]
 
   # This name was changed to prevent naming collision with ProxyField
@@ -73,6 +74,14 @@ class FormBoxWidget(Widget.Widget):
                                 title='Form ID',
                                 description=(
     "ID of the form which must be rendered in this box."),
+                                default="",
+                                required=0)
+
+  context_method_id = fields.StringField(
+                                'context_method_id',
+                                title='Context method ID',
+                                description=(
+    "ID of the method that returns a context for this box."),
                                 default="",
                                 required=0)
 
@@ -101,6 +110,10 @@ class FormBoxWidget(Widget.Widget):
     target_id = field.get_value('formbox_target_id')
     if target_id not in (None, ''):
       here = REQUEST['here']
+      context_method_id = field.get_value('context_method_id')
+      if context_method_id:
+        original_here = here
+        REQUEST['here'] = here = getattr(here, context_method_id)()
       # If 'cell' is not defined, we define 'cell' just same as 'here', so
       # that we can use the same formbox for both ListBox and non-ListBox
       # using 'cell' parameter.
@@ -114,6 +127,9 @@ class FormBoxWidget(Widget.Widget):
                 (field.id, field.aq_parent.id))
       else:
         result = form(REQUEST=REQUEST, key_prefix=key)
+      finally:
+        if context_method_id:
+          REQUEST['here'] = original_here
     return result
 
 class FormBoxEditor:
@@ -165,6 +181,9 @@ class FormBoxValidator(Validator.Validator):
   def validate(self, field, key, REQUEST):
     # XXX hardcoded acquisition
     here = field.aq_parent.aq_parent
+    context_method_id = field.get_value('context_method_id')
+    if context_method_id:
+      here = getattr(here, context_method_id)()
     formbox_target_id = field.get_value('formbox_target_id')
 
     # Get current error fields
