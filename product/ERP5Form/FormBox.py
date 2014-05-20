@@ -88,15 +88,24 @@ class FormBoxWidget(Widget.Widget):
     """
         Render a form in a field
     """
-    here = REQUEST['here']
-    # If 'cell' is not defined, we define 'cell' just same as 'here', so
-    # that we can use the same formbox for both ListBox and non-ListBox
-    # using 'cell' parameter.
-    if not REQUEST.has_key('cell'):
-      REQUEST.set('cell', here)
+    return self._render(field, key, value, REQUEST, render_prefix=render_prefix)
+
+  def render_view(self, field, value, REQUEST, render_prefix=None):
+    """
+        Render a view form in a field
+    """
+    return self._render(field, None, value, REQUEST, render_prefix=render_prefix)
+
+  def _render(self, field, key, value, REQUEST, render_prefix=None):
     result = ''
     target_id = field.get_value('formbox_target_id')
     if target_id not in (None, ''):
+      here = REQUEST['here']
+      # If 'cell' is not defined, we define 'cell' just same as 'here', so
+      # that we can use the same formbox for both ListBox and non-ListBox
+      # using 'cell' parameter.
+      if not REQUEST.has_key('cell'):
+        REQUEST.set('cell', here)
       try:
         form = getattr(here, target_id)
       except AttributeError:
