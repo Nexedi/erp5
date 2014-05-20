@@ -185,9 +185,6 @@ class BaseAmountResolver(BaseAmountDict):
             self |= node()
       return self
 
-    def __lt__(self, other):
-      return not other().isdisjoint(self.property_dict['_contribution'])
-
   def __init__(self, cache, method_kw):
     self._dict = cache.setdefault(None, {})
     self._cache = cache
@@ -207,9 +204,20 @@ class BaseAmountResolver(BaseAmountDict):
           recurseApplicationDependencies(*variated_base_amount)
         for variated_base_amount in property_dict['_contribution']:
           contribution_dict[variated_base_amount].append(node)
-      del self._resolving
-      node_list.sort()
-      property_dict_list[:] = (node.property_dict for node in node_list)
+      del self._resolving, property_dict_list[:]
+      # O(n^2) sorting !! Yeah, shame on me but is it possible to do better
+      # when there are pairs of items that can't be compared (e.g. A & C in
+      # A -> B <- C), and original order shoud be preserved if possible ?
+      # Anyway, there are usually very few objects.
+      for node in reversed(node_list):
+        isdisjoint = node().isdisjoint
+        for i, property_dict in enumerate(property_dict_list):
+          if not isdisjoint(property_dict['_contribution']):
+            property_dict_list.insert(i, node.property_dict)
+            break
+        else:
+          property_dict_list.append(node.property_dict)
+      property_dict_list.reverse()
 
   def getBaseAmountList(self):
     return ()
