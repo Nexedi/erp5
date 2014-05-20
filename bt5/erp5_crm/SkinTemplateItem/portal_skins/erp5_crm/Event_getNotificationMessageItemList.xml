@@ -67,7 +67,7 @@ for notification_message in portal.portal_catalog(\n
   if reference and reference not in reference_set:\n
     reference_set.add(reference)\n
     service = notification_message.getSpecialiseValue()\n
-    if preferred_use_list:\n
+    if response_only and preferred_use_list:\n
       if service is not None:\n
         for preferred_use in preferred_use_list:\n
           if service.isMemberOf(\'use/%s\' % preferred_use):\n

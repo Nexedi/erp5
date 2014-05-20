@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Event_getNotificationMessageItemList</string> </value>
+            <value> <string>python: here.Event_getNotificationMessageItemList(response_only=True)</string> </value>
         </item>
       </dictionary>
     </pickle>
