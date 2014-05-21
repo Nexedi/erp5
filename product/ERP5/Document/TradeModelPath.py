@@ -160,6 +160,11 @@ class TradeModelPath(Path):
             )
 
   # XXX-JPS UNkonwn ?
+# AACT Specific: in getArrowCategory, if we use a script to set categories
+# dynamically, the script have to return all categories. In default
+# implementation, if the script does not return a value for a given category,
+# this category is taken from input movement. We don't want that, otherwise no
+# way to unset a category
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getArrowCategoryDict')
   def getArrowCategoryDict(self, context=None, **kw): # XXX-JPS do we need it in API ?
@@ -170,15 +175,33 @@ class TradeModelPath(Path):
     # dynamically computed values (if not exist).
     result = {}
     dynamic_category_list = self._getDynamicCategoryList(context)
-    for base_category in self.getSourceArrowBaseCategoryList() +\
-            self.getDestinationArrowBaseCategoryList():
-      category_url_list = self._getAcquiredCategoryMembershipList(
-        base_category, **kw)
-      if len(category_url_list) == 0 and len(dynamic_category_list) > 0:
-        category_url_list = self._filterCategoryList(dynamic_category_list,
-                                                     base_category, **kw)
-      if len(category_url_list) > 0:
-        result[base_category] = category_url_list
+
+    for base_category in self.getSourceArrowBaseCategoryList():
+      if self.getSourceMethodId() and context is not None:
+        result[base_category] = self._filterCategoryList(dynamic_category_list,
+                                                         base_category, **kw)
+      else:
+        category_url_list = Path._getAcquiredCategoryMembershipList(
+          self, base_category, **kw)
+        if len(category_url_list) == 0 and context is not None:
+          category_url_list = self._filterCategoryList(dynamic_category_list,
+                                                       base_category, **kw)
+        if len(category_url_list) > 0:
+          result[base_category] = category_url_list
+
+    for base_category in self.getDestinationArrowBaseCategoryList():
+      if self.getDestinationMethodId() and context is not None:
+        result[base_category] = self._filterCategoryList(dynamic_category_list,
+                                                         base_category, **kw)
+      else:
+        category_url_list = Path._getAcquiredCategoryMembershipList(
+          self, base_category, **kw)
+        if len(category_url_list) == 0 and context is not None:
+          category_url_list = self._filterCategoryList(dynamic_category_list,
+                                                       base_category, **kw)
+        if len(category_url_list) > 0:
+          result[base_category] = category_url_list
+
     return result
 
   def _filterCategoryList(self, category_list, category, spec=(),
