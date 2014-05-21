@@ -4789,6 +4789,9 @@ msgstr "Trouvés"
 msgid "French"
 msgstr "Français"
 
+msgid "French Accounting Transaction File"
+msgstr "Fichier des écritures comptables"
+
 msgid "Frequency"
 msgstr "Fréquence"
 
