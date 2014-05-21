@@ -112,13 +112,16 @@ class FormBoxWidget(Widget.Widget):
       here = REQUEST['here']
       context_method_id = field.get_value('context_method_id')
       if context_method_id:
-        original_here = here
+        REQUEST['original_context'] = original_here = here
         REQUEST['here'] = here = getattr(here, context_method_id)()
       # If 'cell' is not defined, we define 'cell' just same as 'here', so
       # that we can use the same formbox for both ListBox and non-ListBox
       # using 'cell' parameter.
       if not REQUEST.has_key('cell'):
+        set_cell = True
         REQUEST.set('cell', here)
+      else:
+        set_sell = False
       try:
         form = getattr(here, target_id)
       except AttributeError:
@@ -130,6 +133,9 @@ class FormBoxWidget(Widget.Widget):
       finally:
         if context_method_id:
           REQUEST['here'] = original_here
+          del REQUEST.other['original_context']
+        if set_cell:
+          del REQUEST.other['cell']
     return result
 
 class FormBoxEditor:
