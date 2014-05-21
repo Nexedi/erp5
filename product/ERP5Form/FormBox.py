@@ -121,7 +121,7 @@ class FormBoxWidget(Widget.Widget):
         set_cell = True
         REQUEST.set('cell', here)
       else:
-        set_sell = False
+        set_cell = False
       try:
         form = getattr(here, target_id)
       except AttributeError:
