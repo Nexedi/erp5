@@ -96,14 +96,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <div class="input"><input type="password" name="__ac_password" id="password"/></div>\n
         </div>\n
         <div class="field">\n
-\n
-          <input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember">\n
-          <span tal:content="python: \'Remember my name\'"></span>\n
-\n
-          <!-- <label for="cb_remember" i18n:translate="" i18n:domain="ui">Remember my name</label>\n
-          <div class="input"><input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember"/></div> -->\n
-        </div>\n
-        <div class="field">\n
           <label>&nbsp;</label>\n
           <div class="input">\n
             <input type="submit" value="Login" class="button"\n
@@ -124,13 +116,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     <div class="text_div">\n
       <p i18n:translate="" i18n:domain="ui" class="info">> Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
       <p i18n:translate="" i18n:domain="ui" class="info">> Don\'t forget to logout or exit your browser when you\'re done.</p>\n
-      <p i18n:translate="" i18n:domain="ui" class="info">> Setting the \'Remember my name\' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you.</p>\n
     </div>\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
