@@ -75,11 +75,6 @@
               <p class="clear"></p>\n
             </div>\n
             <div class="field">\n
-              <label for="cb_remember" i18n:translate="" i18n:domain="ui">Remember my name</label>\n
-              <div class="input"><input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" /></div>\n
-              <p class="clear"></p>\n
-            </div>\n
-            <div class="field">\n
               <label>&nbsp;</label>\n
               <div class="input">\n
                 <input type="submit" value="Login" class="submit"\n
@@ -99,7 +94,6 @@
           <script type="text/javascript">setFocus()</script>\n
           <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
           <p i18n:translate="" i18n:domain="ui">Do not forget to logout or exit your browser when you are done.</p>\n
-          <p i18n:translate="" i18n:domain="ui">Setting the \'Remember my name\' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you.</p>\n
         </div>\n
       </tal:block>\n
     </tal:block>\n
