@@ -50,6 +50,7 @@
             <value>
               <list>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -62,8 +63,16 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
                         <string>listbox_creation_date</string>
                         <string>listbox_modification_date</string>
+                        <string>listbox_effective_date</string>
                       </list>
                     </value>
                 </item>
