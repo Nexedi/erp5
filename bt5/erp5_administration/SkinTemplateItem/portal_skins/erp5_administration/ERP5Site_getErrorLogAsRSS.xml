@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<rss version="2.0">\n
+<channel xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      tal:define="error_log python:context.getPortalObject().error_log;\n
+                  dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
+    <title tal:content="string:Errors from ${error_log/absolute_url}"></title>\n
+    <description>Zope Error Log</description>\n
+    <link tal:content="error_log/absolute_url"></link>\n
+    <item tal:repeat="error error_log/getLogEntries">\n
+        <tal:block tal:define="error_time python:modules[\'DateTime\'].DateTime(error[\'time\'])">\n
+          <title tal:content="string:${error/userid} ${error/type} ${error/value} ${error_time}"></title>\n
+          <link tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"/>\n
+          <description>\n
+            &lt;table&gt;\n
+              &lt;tr&gt;&lt;th&gt;Login&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/userid"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;Date&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error_time"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/url"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;Error Type&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/type"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;Error Value&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/value"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;Traceback&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/tb_html"/>&lt;/td&gt;&lt;/tr&gt;\n
+              &lt;tr&gt;&lt;th&gt;Request&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/req_html"/>&lt;/td&gt;&lt;/tr&gt;\n
+            &lt;/table&gt;\n
+          </description>\n
+          <guid tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"></guid>\n
+        </tal:block>\n
+    </item>\n
+</channel>\n
+</rss>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getErrorLogAsRSS</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
