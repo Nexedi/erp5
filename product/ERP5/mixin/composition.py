@@ -36,6 +36,7 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.BusinessProcess import BusinessProcess
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
+_MARKER = []
 
 @transactional_cached()
 def _getEffectiveModel(self, start_date, stop_date):
@@ -170,6 +171,13 @@ class asComposedDocument(object):
                            object_list)
     return sortValueList(object_list, sort_on, sort_order, **kw)
 
+  def getProperty(self, key, d=_MARKER, **kw):
+    for obj in [self._original] + self._effective_model_list:
+      r = obj.getProperty(key, _MARKER, **kw)
+      if r is not _MARKER:
+        return r
+    if d is not _MARKER:
+      return d
 
 class CompositionMixin:
   """
