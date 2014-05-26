@@ -26,10 +26,11 @@
 #
 ##############################################################################
 
-
+from operator import methodcaller
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
+from Products.ERP5Type.Utils import convertToUpperCase
 
 class SetSetter(BaseSetter):
     """
@@ -119,6 +120,8 @@ class DefaultGetter(BaseGetter):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      if args:
+        kw['default'] = args[0]
       return instance._getDefaultAcquiredValue(self._key, **kw)
 
     psyco.bind(__call__)
@@ -148,6 +151,8 @@ class ListGetter(BaseGetter):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      if args:
+        kw['default'] = args[0]
       return instance._getAcquiredValueList(self._key, **kw)
 
     psyco.bind(__call__)
@@ -158,105 +163,52 @@ class SetGetter(ListGetter):
     Gets a category value set
     """
     def __call__(self, instance, *args, **kw):
-      result_list = ListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+      r = ListGetter.__call__(self, instance, **kw)
+      return list(set(r)) if r or not args else args[0]
 
 
-class DefaultTitleGetter(DefaultGetter):
+def defMethodGetter(key, method=None):
+  key = convertToUpperCase(key)
+  name = 'Default%sGetter' % key
+  if method is None:
+    method = methodcaller('get' + key)
   def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
+    o = DefaultGetter.__call__(self, instance, **kw)
     if o is None:
-      return None
-    return o.getTitle()
+      return args[0] if args else None
+    return method(o)
   psyco.bind(__call__)
+  globals()[name] = type(name, (DefaultGetter,), {'__call__': __call__})
 
-class TitleListGetter(ListGetter):
+  name = '%sListGetter' % key
   def __call__(self, instance, *args, **kw):
-    return [x.getTitle() for x in ListGetter.__call__(self, instance, *args, **kw)]
+    r = ListGetter.__call__(self, instance, **kw)
+    return map(method, r) if r or not args else args[0]
   psyco.bind(__call__)
+  globals()[name] = type(name, (ListGetter,), {'__call__': __call__})
 
-class TitleSetGetter(TitleListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = TitleListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
-
-class DefaultTranslatedTitleGetter(DefaultGetter):
+  name = '%sSetGetter' % key
   def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getTranslatedTitle()
+    r = ListGetter.__call__(self, instance, **kw)
+    return list(set(method(x) for x in r)) if r or not args else args[0]
   psyco.bind(__call__)
-
-class TranslatedTitleListGetter(ListGetter):
-  def __call__(self, instance, *args, **kw):
-    return [x.getTranslatedTitle() for x in ListGetter.__call__(self, instance, *args, **kw)]
-  psyco.bind(__call__)
-
-class TranslatedTitleSetGetter(TranslatedTitleListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = TranslatedTitleListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+  globals()[name] = type(name, (ListGetter,), {'__call__': __call__})
 
 
-class DefaultReferenceGetter(DefaultGetter):
-  def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getReference()
-  psyco.bind(__call__)
+defMethodGetter('id')
+defMethodGetter('logical_path')
+defMethodGetter('reference')
+defMethodGetter('title')
+defMethodGetter('title_or_id')
+defMethodGetter('translated_title')
+defMethodGetter('uid')
+defMethodGetter('translated_logical_path', methodcaller(
+  'getLogicalPath', item_method='getTranslatedTitle'))
 
-class ReferenceListGetter(ListGetter):
-  def __call__(self, instance, *args, **kw):
-    return [x.getReference() for x in ListGetter.__call__(self, instance, *args, **kw)]
-  psyco.bind(__call__)
-
-class ReferenceSetGetter(ReferenceListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = ReferenceListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
-
-class DefaultUidGetter(DefaultGetter):
-  def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getUid()
-  psyco.bind(__call__)
-UidGetter = DefaultUidGetter
-
-class UidListGetter(ListGetter):
-  def __call__(self, instance, *args, **kw):
-    return [x.getUid() for x in ListGetter.__call__(self, instance, *args, **kw)]
-  psyco.bind(__call__)
-
-class UidSetGetter(UidListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = UidListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+IdGetter = DefaultIdGetter
+TitleOrIdGetter = DefaultTitleOrIdGetter
+LogicalPathGetter = DefaultLogicalPathGetter
+TranslatedLogicalPathGetter = DefaultTranslatedLogicalPathGetter
 
 
 class UidSetSetter(BaseSetter):
@@ -318,80 +270,12 @@ class UidDefaultSetter(UidSetSetter):
                                                  checked_permission=kw.get('checked_permission', None))
       return (instance, )
 
-class DefaultIdGetter(DefaultGetter):
-  def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getId()
-  psyco.bind(__call__)
-
-IdGetter = DefaultIdGetter
-
-class DefaultTitleOrIdGetter(DefaultGetter):
-  def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getTitleOrId()
-  psyco.bind(__call__)
-
-TitleOrIdGetter = DefaultTitleOrIdGetter
-
-class DefaultLogicalPathGetter(DefaultGetter):
-  _item_method = 'getTitle'
-  def __call__(self, instance, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
-    if o is None:
-      return None
-    return o.getLogicalPath(item_method=self._item_method)
-  psyco.bind(__call__)
-
-LogicalPathGetter = DefaultLogicalPathGetter
-
-class DefaultTranslatedLogicalPathGetter(DefaultLogicalPathGetter):
-  _item_method = "getTranslatedTitle"
-
-TranslatedLogicalPathGetter = DefaultTranslatedLogicalPathGetter
-
-class IdListGetter(ListGetter):
-  def __call__(self, instance, *args, **kw):
-    return [x.getId() for x in ListGetter.__call__(self, instance, *args, **kw)]
-  psyco.bind(__call__)
-
-class IdSetGetter(IdListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = IdListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
-
-class LogicalPathListGetter(ListGetter):
-  _item_method = 'getTitle'
-  def __call__(self, instance, *args, **kw):
-    return [x.getLogicalPath(item_method=self._item_method) for x in
-            ListGetter.__call__(self, instance, *args, **kw)]
-
-class LogicalPathSetGetter(LogicalPathListGetter):
-    """
-    Gets a category value set
-    """
-    def __call__(self, instance, *args, **kw):
-      result_list = LogicalPathListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
 
 class DefaultPropertyGetter(DefaultGetter):
   def __call__(self, instance, key, *args, **kw):
-    o = DefaultGetter.__call__(self, instance, *args, **kw)
+    o = DefaultGetter.__call__(self, instance, **kw)
     if o is None:
-      return None
+      return args[0] if args else None
     return o.getProperty(key)
 
   psyco.bind(__call__)
@@ -400,7 +284,8 @@ PropertyGetter = DefaultPropertyGetter
 
 class PropertyListGetter(ListGetter):
   def __call__(self, instance, key, *args, **kw):
-    return [x.getProperty(key) for x in ListGetter.__call__(self, instance, *args, **kw)]
+    r = ListGetter.__call__(self, instance, **kw)
+    return [x.getProperty(key) for x in r] if r or not args else args[0]
   psyco.bind(__call__)
 
 class PropertySetGetter(PropertyListGetter):
@@ -408,7 +293,5 @@ class PropertySetGetter(PropertyListGetter):
     Gets a category value set
     """
     def __call__(self, instance, *args, **kw):
-      result_list = PropertyListGetter.__call__(
-           self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
+      r = PropertyListGetter.__call__(self, instance, **kw)
+      return list(set(r)) if r or not args else args[0]

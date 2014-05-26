@@ -1884,61 +1884,56 @@ class Base( CopyContainer,
                               checked_permission=None)
     self.reindexObject()
 
-  def _getDefaultValue(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
-    path = self._getDefaultCategoryMembership(id, spec=spec, filter=filter,
-                                      portal_type=portal_type,base=1,
-                                      checked_permission=checked_permission)
-    if path is None:
-      return None
-    else:
+  def _getDefaultValue(self, id, spec=(), filter=None, default=_MARKER, **kw):
+    path = self._getDefaultCategoryMembership(id, base=1, spec=spec,
+                                              filter=filter, **kw)
+    if path:
       return self._getCategoryTool().resolveCategory(path)
+    if default is not _MARKER:
+      return default
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultValue')
   getDefaultValue = _getDefaultValue
 
-  def _getValueList(self, id, spec=(), filter=None, portal_type=(), checked_permission=None):
+  def _getValueList(self, id, spec=(), filter=None, default=_MARKER, **kw):
     ref_list = []
-    for path in self._getCategoryMembershipList(id, spec=spec, filter=filter,
-                                                  portal_type=portal_type, base=1,
-                                                  checked_permission=checked_permission):
-      # LOG('_getValueList',0,str(path))
-      try:
-        value = self._getCategoryTool().resolveCategory(path)
-        if value is not None: ref_list.append(value)
-      except ConflictError:
-        raise
-      except:
-        LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
-    return ref_list
+    for path in self._getCategoryMembershipList(id, base=1, spec=spec,
+                                                filter=filter, **kw):
+      category = self._getCategoryTool().resolveCategory(path)
+      if category is not None:
+        ref_list.append(category)
+    return ref_list if ref_list or default is _MARKER else default
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getValueList')
   getValueList = _getValueList
 
   def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
-                               evaluate=1, checked_permission=None, **kw):
+                               evaluate=1, checked_permission=None,
+                               default=None, **kw):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
                                                   portal_type=portal_type, base=1,
                                                   checked_permission=checked_permission,
                                                   **kw)
-    if path is None:
-      return None
-    else:
+    if path:
       return self._getCategoryTool().resolveCategory(path)
+    if default is not _MARKER:
+      return default
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultAcquiredValue')
   getDefaultAcquiredValue = _getDefaultAcquiredValue
 
-  def _getAcquiredValueList(self, id, spec=(), filter=None, **kw):
+  def _getAcquiredValueList(self, id, spec=(), filter=None, default=_MARKER,
+                            **kw):
     ref_list = []
     for path in self._getAcquiredCategoryMembershipList(id, base=1,
                                                 spec=spec,  filter=filter, **kw):
       category = self._getCategoryTool().resolveCategory(path)
       if category is not None:
         ref_list.append(category)
-    return ref_list
+    return ref_list if ref_list or default is _MARKER else default
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAcquiredValueList')
@@ -2082,27 +2077,31 @@ class Base( CopyContainer,
     self.reindexObject()
 
   def _getCategoryMembershipList(self, category, spec=(), filter=None,
-      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
+      portal_type=(), base=0, keep_default=1, checked_permission=None,
+      default=_MARKER, **kw):
     """
       This returns the list of categories for an object
     """
-    return self._getCategoryTool().getCategoryMembershipList(self, category,
+    r = self._getCategoryTool().getCategoryMembershipList(self, category,
         spec=spec, filter=filter, portal_type=portal_type, base=base,
         keep_default=keep_default, checked_permission=checked_permission, **kw)
+    return r if r or default is _MARKER else default
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMembershipList' )
   getCategoryMembershipList = _getCategoryMembershipList
 
   def _getAcquiredCategoryMembershipList(self, category, spec=(), filter=None,
-      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
+      portal_type=(), base=0, keep_default=1, checked_permission=None,
+      default=_MARKER, **kw):
     """
       Returns the list of acquired categories
     """
-    return self._getCategoryTool().getAcquiredCategoryMembershipList(self,
+    r = self._getCategoryTool().getAcquiredCategoryMembershipList(self,
                              category, spec=spec, filter=filter,
                              portal_type=portal_type, base=base,
                              keep_default=keep_default,
                              checked_permission=checked_permission, **kw )
+    return r if r or default is _MARKER else default
 
   security.declareProtected( Permissions.AccessContentsInformation,
                                            'getAcquiredCategoryMembershipList' )
@@ -2117,29 +2116,17 @@ class Base( CopyContainer,
 
   def _getAcquiredCategoryMembershipItemList(self, category, spec=(),
              filter=None, portal_type=(), base=0, method_id=None, sort_id='default',
-             checked_permission=None):
-    # Standard behaviour - should be OK
-    # sort_id should be None for not sort - default behaviour in other methods
-    if method_id is None and sort_id in (None, 'default'):
-      membership_list = self._getAcquiredCategoryMembershipList(category,
+             checked_permission=None, default=_MARKER):
+    if method_id or sort_id not in (None, 'default'):
+      raise NotImplementedError
+    membership_list = self._getAcquiredCategoryMembershipList(category,
                            spec = spec, filter=filter, portal_type=portal_type, base=base,
                            checked_permission=checked_permission)
+    if membership_list or default is _MARKER:
       if sort_id == 'default':
         membership_list.sort()
       return [(x, x) for x in membership_list]
-    # Advanced behaviour XXX This is new and needs to be checked
-    membership_list = self._getAcquiredCategoryMembershipList(category,
-                           spec = spec, filter=filter, portal_type=portal_type, base=1,
-                           checked_permission=checked_permission)
-    result = []
-    for path in membership_list:
-      value = self._getCategoryTool().resolveCategory(path)
-      if value is not None:
-        result += [value]
-    result.sort(key=lambda x: getattr(x,sort_id)())
-    if method_id is None:
-      return [(x, x) for x in membership_list]
-    return [(x,getattr(x, method_id)()) for x in membership_list]
+    return [] if default is _MARKER else default
 
   def _getDefaultCategoryMembership(self, category, spec=(), filter=None,
       portal_type=(), base=0, default=None, checked_permission=None, **kw):

@@ -129,11 +129,8 @@ class DefaultGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      if len(args) > 0:
-        default = args[0]
-        kw['default'] = default
-      else:
-        default = None
+      if args:
+        kw['default'] = args[0]
       return instance._getDefaultAcquiredCategoryMembership(self._key, **kw)
     psyco.bind(__call__)
 
@@ -156,8 +153,9 @@ class ListGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      if not kw.has_key('base'):
-        kw['base'] = 0
+      if args:
+        kw['default'] = args[0]
+      kw.setdefault('base', 0)
       return instance._getAcquiredCategoryMembershipList(self._key, **kw)
     psyco.bind(__call__)
 
@@ -192,6 +190,8 @@ class ItemListGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
+      if args:
+        kw['default'] = args[0]
       return instance._getAcquiredCategoryMembershipItemList(self._key, base=0, **kw)
 
     psyco.bind(__call__)

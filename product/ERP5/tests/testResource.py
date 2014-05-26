@@ -1169,8 +1169,8 @@ class TestResource(ERP5TypeTestCase):
     # Create resource
     resource_value = self.portal.getDefaultModule(
       self.product_portal_type).newContent(portal_type=self.product_portal_type)
-    resource_value.edit(quantity_unit_value_list=(
-        quantity_unit_gram, quantity_unit_liter))
+    resource_value.edit(quantity_unit_value_list=[
+        quantity_unit_gram, quantity_unit_liter])
     self.commit()
     self.assertEqual(resource_value.getDefaultQuantityUnitValue(),
                      quantity_unit_gram)
@@ -1206,8 +1206,8 @@ class TestResource(ERP5TypeTestCase):
 
     # Change default quantity unit on resource
     # Now liter is default quantity unit.
-    resource_value.edit(quantity_unit_value_list=(
-        quantity_unit_liter, quantity_unit_gram))
+    resource_value.edit(quantity_unit_value_list=[
+        quantity_unit_liter, quantity_unit_gram])
     self.commit()
 
     # Check existing movement again and make sure that quantity
