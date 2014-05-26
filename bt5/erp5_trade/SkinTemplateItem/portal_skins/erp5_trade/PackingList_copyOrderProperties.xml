@@ -61,12 +61,6 @@ if packing_list.getSimulationState() == \'draft\':\n
     title = related_order.getTitle()\n
   )\n
 \n
-  # copy order\'s payment conditions\n
-  payment_condition_copy_id_list = related_order.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
-  if len(payment_condition_copy_id_list) > 0:\n
-    clipboard = related_order.manage_copyObjects(\n
-      ids=payment_condition_copy_id_list)\n
-    packing_list.manage_pasteObjects(clipboard)\n
 
 
 ]]></string> </value>
