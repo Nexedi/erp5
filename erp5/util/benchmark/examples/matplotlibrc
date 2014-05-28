@@ -1,0 +1,4 @@
+# By default for PDF document, matplotlib embedded Bitstream font which
+# cannot display Japanese characters (other possibilities: Unifont or
+# basically any font from ~/.matplotlib/fontList.cache)
+font.sans-serif: TakaoMincho
