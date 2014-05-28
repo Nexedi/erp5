@@ -556,7 +556,8 @@ def generateReport():
   is_range_user = len(per_nb_users_report_dict) > 1
   range_user_report_dict = {}
 
-  for nb_users, report_dict in sorted(per_nb_users_report_dict.items()):
+  for nb_users, report_dict in sorted(per_nb_users_report_dict.items(),
+                                      key=lambda d: d[0]):
     stat_list, use_case_dict = computeStatisticFromFilenameList(
       argument_namespace, report_dict['filename'], range_user_report_dict,
       is_range_user)
@@ -582,7 +583,7 @@ def generateReport():
         only_average=argument_namespace.only_average)
 
   if is_range_user:
-    nb_users_list = per_nb_users_report_dict.keys()
+    nb_users_list = sorted(per_nb_users_report_dict.keys())
     title_fmt = "%%s from %d to %d users" % \
         (nb_users_list[0],
          nb_users_list[-1])
