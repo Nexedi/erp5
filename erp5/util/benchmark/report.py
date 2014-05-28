@@ -103,7 +103,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
     reader_list.append(reader)
 
     # Get headers
-    row_list = reader.next()
+    row_list = [ unicode(row, 'utf-8') for row in reader.next() ]
     if not label_list:
       label_list = row_list
       label_merged_index = 0
