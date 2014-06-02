@@ -413,7 +413,14 @@ $(document).ready(function() {
     Render link to the related object.
     """
     html_string = ''
-    here = REQUEST.get('cell', self._getContextValue(field, REQUEST))
+    here = self._getContextValue(field, REQUEST)
+    # If we this relation field is used as a listbox/matrixbox editable
+    # field, then the context of this cell is set in REQUEST. XXX this is not
+    # 100% reliable way, maybe we need something to know that the field is
+    # beeing rendered as an editable field.
+    cell = REQUEST.get('cell')
+    if cell is not None:
+      here = cell
     portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
