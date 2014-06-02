@@ -135,7 +135,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>asStrippedHTML</string>
+                          <string>description</string>
                           <string>Summary</string>
                         </tuple>
                         <tuple>
