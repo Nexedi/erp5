@@ -202,6 +202,18 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Source Trade</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Sale Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender or Provider</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -437,6 +449,18 @@
                         <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Source Trade</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Sale Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender or Provider</string>
                         </tuple>
                       </list>
                     </value>
