@@ -168,7 +168,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
         use_case_suite = row_use_case_mapping_dict.get(idx, None)
         if use_case_suite:
           current_count = int(row)
-          current_duration = int(row_iter.next()[1]) / 3600.0
+          current_duration = float(row_iter.next()[1]) / 3600.0
           if not current_count:
             continue
 

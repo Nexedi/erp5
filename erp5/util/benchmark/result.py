@@ -217,7 +217,7 @@ class BenchmarkResult(object):
                                    self._current_suite_dict['expected'])
 
     self._current_suite_dict['all_use_case_result_list'].append(
-      (self._current_use_case_counter, int(elapsed_time)))
+      (self._current_use_case_counter, elapsed_time))
 
     if self._current_use_case_counter != 0:
       self._current_suite_dict['use_case_stat'].add(
