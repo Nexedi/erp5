@@ -72,7 +72,7 @@ def getSpreadsheet(file):\n
       tmp_ooo = newTempOOoDocument(context, file.filename)\n
       tmp_ooo.edit(data=file.read(), content_type=content_type)\n
       tmp_ooo.convertToBaseFormat()\n
-      ignored, import_file_content = tmp_ooo.convert(\'sxc\')\n
+      ignored, import_file_content = tmp_ooo.convert(\'ods\')\n
       ooo_parser.openFromString(str(import_file_content))\n
     else:\n
       ooo_parser.openFile(file)\n

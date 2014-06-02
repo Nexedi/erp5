@@ -142,7 +142,7 @@ if not (content_type.startswith(\'application/vnd.sun.xml\')\n
   tmp_ooo.edit(data=import_file.read(),\n
                content_type=content_type)\n
   tmp_ooo.convertToBaseFormat()\n
-  ignored, import_file_content = tmp_ooo.convert(\'sxc\')\n
+  ignored, import_file_content = tmp_ooo.convert(\'ods\')\n
   parser.openFromString(str(import_file_content))\n
 else:\n
   parser.openFile(import_file)\n
