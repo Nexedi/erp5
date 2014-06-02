@@ -1659,9 +1659,6 @@ msgstr "Impossible de trouver l'organisation correspondant à votre login, il n'
 msgid "Can't find corresponding person, it's not possible to reset your password."
 msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de réinitialiser votre mot de passe."
 
-msgid "Can't find corresponding person, it's not possible to update your credentials."
-msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
-
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -2660,6 +2657,9 @@ msgstr "Dénomination sociale"
 
 msgid "Corporate Registration Code"
 msgstr "SIRET"
+
+msgid "Could not find your user account."
+msgstr "Impossible de trouver votre compte utilisateur."
 
 msgid "Count"
 msgstr "Nombre"
