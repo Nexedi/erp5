@@ -132,6 +132,9 @@ def getConduitByName(conduit_name):
   elif conduit_name.startswith('Extensions'):
     conduit_module = __import__(conduit_name, globals(), locals(), [''])
     conduit_name = conduit_name.split('.')[-1]
+  elif conduit_name.startswith('extension.'):
+    conduit_module = __import__("erp5.component."+conduit_name, globals(), locals(), [''])
+    conduit_name = conduit_name.split('.')[-1]
   else:
     from Products.ERP5SyncML import Conduit
     conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]),
