@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts95081712.83</string> </value>
+            <value> <string>ts01809029.9</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -160,6 +160,11 @@ function submitGadgetPreferenceFormOnEnter(event, \n
                                                                 edit_form_id);}\n
 }\n
 \n
+function addHiddenInput(name, value){\n
+  $("form").find(\'input[name="\' + name + \'"]\').remove();\n
+  $("form").append(\'<input type="hidden" name="\' + name + \'" value="\' + value + \'">\');\n
+}\n
+\n
 function submitSynchronousGadgetPreferenceForm(\n
                                 form_fields_main_prefix, \n
                                 box_relative_url,\n
@@ -168,10 +173,10 @@ function submitSynchronousGadgetPreferenceForm(\n
      gadget ERP5 preference form field_prefix (so multiple gadgets can \n
      safely coexist in one HTML page with one HTML form */\n
   redirect_url = window.location.protocol + "//" + window.location.host + window.location.pathname;\n
-  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\');\n
-  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\');\n
-  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\');\n
-  $("form").append(\'<input type="hidden" name="form_id" value="\' +edit_form_id +  \'">\') ;\n
+  addHiddenInput("box_relative_url", box_relative_url);\n
+  addHiddenInput("form_fields_main_prefix", form_fields_main_prefix);\n
+  addHiddenInput("gadget_redirect_url", redirect_url);\n
+  addHiddenInput("form_id", edit_form_id);\n
   clickSaveButton(knowledge_box_edit_script_id);\n
 }\n
 \n
@@ -485,7 +490,7 @@ $(document).ready(initialize);
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18130</int> </value>
+            <value> <int>18140</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
