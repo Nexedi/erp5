@@ -777,35 +777,6 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </strong>\n
       </section><section class="screenshot">\n
         <strong>\n
-          <h1>The Payment tab is updated</h1>\n
-          <img alt="The Payment tab is updated" title="The Payment tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Payment?format=png" type="image/png">\n
-          <details open="open">\n
-            <p>The Information about the Payment mode has also been imported, you can find here the two lines we had just created in the Sale Trade Condition, one for the Advance Payment, and the other one for the Balance. If we don\'t apply the Trade Condition, this fields will be empty.</p>\n
-          </details>\n
-          <test>\n
-            <table class="test" style="display: none;">\n
-              <tbody>\n
-                <tr>\n
-                  <td>clickAndWait</td>\n
-                  <td>link=Payment</td>\n
-                  <td></td>\n
-                </tr>\n
-                <tr>\n
-                  <td>verifyTextPresent</td>\n
-                  <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>\n
-                  <td></td>\n
-                </tr>\n
-                <tr>\n
-                  <td>verifyTextPresent</td>\n
-                  <td>ZUITE-TEST-PAYMENT-CONDITION-002</td>\n
-                  <td></td>\n
-                </tr>\n
-              </tbody>\n
-            </table>\n
-          </test>\n
-        </strong>\n
-      </section><section class="screenshot">\n
-        <strong>\n
           <h1>The profile tab is updated</h1>\n
           <img alt="The profile tab is updated" title="The profile tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Profile?format=png" type="image/png">\n
           <details open="open">\n
