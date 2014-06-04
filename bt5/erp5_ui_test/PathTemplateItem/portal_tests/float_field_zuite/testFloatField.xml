@@ -104,6 +104,31 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="information_area"]</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="error"]</td>\n
+  <td>The number you input has too large precision.</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_quantity</td>\n
+  <td>1000000000000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>verifyPortalStatusMessage</td>\n
   <td>Data updated.</td>\n
   <td></td>\n
@@ -120,8 +145,7 @@
 </tr>\n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
