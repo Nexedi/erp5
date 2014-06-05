@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from email.utils import formataddr\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from email.utils import formataddr\n
 portal = context.getPortalObject()\n
 event = portal.restrictedTraverse(event_relative_url)\n
 \n
@@ -82,23 +84,23 @@ mail_message = portal.Base_createMailMessageAsString(from_url,\n
 \n
 event.sendMailHostMessage(mail_message)\n
 \n
-if not event.hasData():\n
+if not event.hasData() and len(event.getDestinationList()) > 1:\n
   # Store the content of the email as data, so that we can keep a reference to\n
   # the email that was actually sent.\n
-  # XXX this has no meaning in the case of an email with multiple recipents.\n
+  # We do not store when there is more than one recipent.\n
   if len(embedded_file_list):\n
     # do not store aggregated documents in Email document\n
     # to avoid duplicate data\n
-    tmp_mail_message = context.Base_createMailMessageAsString(from_url,\n
+    mail_message = context.Base_createMailMessageAsString(from_url,\n
       to_url,\n
       subject,\n
       body,\n
       content_type,\n
       attachment_list=attachment_list)\n
-    event.setData(tmp_mail_message)\n
-  else:\n
-    event.setData(mail_message)\n
-</string> </value>
+  event.setData(mail_message)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -50,10 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().portal_catalog.searchAndActivate(\n
+            <value> <string># We do not want to retry those activities, as sending email is not transactional safe\n
+activate_kw = kw.pop(\'activate_kw\', {})\n
+activate_kw[\'max_retry\'] = 0\n
+activate_kw[\'conflict_retry\'] = False\n
+\n
+context.getPortalObject().portal_catalog.searchAndActivate(\n
   method_id="Entity_sendEmail",\n
   destination_related_uid=context.getUid(),\n
-  method_kw=method_kw, **kw)\n
+  method_kw=method_kw,\n
+  activate_kw=activate_kw,\n
+  **kw)\n
 </string> </value>
         </item>
         <item>
