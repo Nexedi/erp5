@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>3836</string> </value>
+            <value> <string>3837</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Umsatzsteuer nach § 13b UStG 16%</string> </value>
+            <value> <string>Umsatzsteuer nach § 13b UStG 19%</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -90,10 +90,6 @@
             <value> <int>9</int> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>

@@ -90,16 +90,12 @@
             <value> <int>4</int> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Umsatzsteuer aus im Inland steuerpflichtigen EG-Lieferungen</string> </value>
+            <value> <string>Umsatzsteuer aus im Inland steuerpflichtigen EU-Lieferungen</string> </value>
         </item>
       </dictionary>
     </pickle>

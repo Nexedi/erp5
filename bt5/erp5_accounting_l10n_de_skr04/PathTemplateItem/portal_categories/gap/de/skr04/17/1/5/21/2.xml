@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>6870</string> </value>
+            <value> <string>6871</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Nicht abziehbare Vorsteuer 16%</string> </value>
+            <value> <string>Nicht abziehbare Vorsteuer 19%</string> </value>
         </item>
       </dictionary>
     </pickle>

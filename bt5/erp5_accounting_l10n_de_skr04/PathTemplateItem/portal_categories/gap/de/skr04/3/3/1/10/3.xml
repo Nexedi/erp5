@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>3805</string> </value>
+            <value> <string>3806</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Mehrwertsteuer 16%</string> </value>
+            <value> <string>Mehrwertsteuer 19%</string> </value>
         </item>
       </dictionary>
     </pickle>

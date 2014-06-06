@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Umsatzsteuer aus im anderen EG-Land steuerpflichtigen Lieferungen</string> </value>
+            <value> <string>Umsatzsteuer aus im anderen EU-Land steuerpflichtigen Lieferungen</string> </value>
         </item>
       </dictionary>
     </pickle>
