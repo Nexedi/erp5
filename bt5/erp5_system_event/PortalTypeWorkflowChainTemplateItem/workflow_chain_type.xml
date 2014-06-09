@@ -4,6 +4,10 @@
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
  <chain>
+  <type>HTTP Exchange</type>
+  <workflow>edit_workflow, system_event_workflow</workflow>
+ </chain>
+ <chain>
   <type>Password Event</type>
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>

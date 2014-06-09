@@ -10,15 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_request</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,62 +72,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Source</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Portal Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Authentication Event</string>
-                          <string>Authentication Event</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>system_event_list_search_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -137,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>System Events</string> </value>
+                    <value> <string>Request</string> </value>
                 </item>
               </dictionary>
             </value>
