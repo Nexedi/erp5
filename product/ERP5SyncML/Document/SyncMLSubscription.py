@@ -36,6 +36,7 @@ from copy import deepcopy
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
+from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet
@@ -1175,7 +1176,11 @@ class SyncMLSubscription(XMLObject):
 
       portal = self.getPortalObject()
       # First we must unindex everything
-      portal.z_unindex_syncml_data(path=self.getSearchableSourcePath())
+      try:
+        portal.z_unindex_syncml_data(path=self.getSearchableSourcePath())
+      except ProgrammingError:
+        # First use of syncml, create table
+        portal.z_create_syncml()
       if self.getIsActivityEnabled():
         activate_kw = {
           'activity' : 'SQLQueue',
