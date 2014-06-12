@@ -31,12 +31,12 @@ import os
 import sys
 import imp
 import re
+import thread
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
-from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCaseMixin, ERP5TypeTestCase
 from glob import glob
@@ -65,6 +65,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     - An eplicit list of exceptions to live tests remains to be
       defined. 
     """
+    portal = None
 
     def getPortalName(self):
       """ Return the default ERP5 site id.
@@ -74,18 +75,32 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
+      if self.portal is not None:
+        return self.portal
+
       from Products.ERP5.ERP5Site import getSite
-      return getSite(get_request())
+      site = getSite()
+      # reconstruct the acquistion chain with an independant request.
+      #   RequestContainer -> Application -> Site
+      from Testing.ZopeTestCase.utils import makerequest
+      portal = getattr(makerequest(site.aq_parent), site.getId())
+
+      # Make the various get_request patches return this request.
+      # This is for ERP5TypeTestCase patch
+      from Testing.ZopeTestCase.connections import registry
+      if registry:
+        registry._conns[-1] = portal
+
+      # This is for Localizer patch
+      from Products.Localizer import patches
+      request = portal.REQUEST
+      with patches._requests_lock:
+        patches._requests[thread.get_ident()] = request
+
+      self.portal = portal
+      return portal
 
     getPortalObject = getPortal
-
-    #def logout(self):
-    #  PortalTestCase.logout(self)
-    #  # clean up certain cache related REQUEST keys that might be associated
-    #  # with the logged in user
-    #  for key in ('_ec_cache', '_oai_cache'):
-    #    pass
-    #    #self.REQUEST.other.pop(key, None) # XXX
 
     def createSimpleUser(self, title, reference, *args, **kwargs):
       """
