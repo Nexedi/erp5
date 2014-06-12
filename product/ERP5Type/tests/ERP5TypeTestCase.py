@@ -78,27 +78,8 @@ config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
 from Testing.ZopeTestCase.layer import onsetup
 
 try:
-  # Workaround iHotFix patch that doesn't work with
-  # ZopeTestCase REQUESTs
-  from Products import iHotfix
-  from types import UnicodeType
-  # revert monkey patchs from iHotfix
-  iHotfix.get_request = get_request
-
-  originalStringIO = iHotfix.originalStringIO
-  class UnicodeSafeStringIO(originalStringIO):
-    """StringIO like class which never fails with unicode."""
-    def write(self, s):
-      if isinstance(s, UnicodeType):
-        s = s.encode('utf8', 'repr')
-      originalStringIO.write(self, s)
-  # iHotFix will patch PageTemplate StringIO with
-  iHotfix.iHotfixStringIO = UnicodeSafeStringIO
-except ImportError:
-  pass
-try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
-  # ZopeTestCase REQUESTs (it's the same as iHotFix
+  # ZopeTestCase REQUESTs
   from Products.Localizer import patches, utils
   # revert monkey patches from Localizer
   patches.get_request = get_request

@@ -57,17 +57,10 @@ from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
 
-try:
-  from Products import iHotfix
-  localizer_lock = iHotfix._the_lock
-  localizer_contexts = iHotfix.contexts
-  LocalizerContext = iHotfix.Context
-except ImportError:
-  # Localizer 1.2 includes iHotFix patches
-  import Products.Localizer.patches
-  localizer_lock = Products.Localizer.patches._requests_lock
-  localizer_contexts = Products.Localizer.patches._requests
-  LocalizerContext = lambda request: request
+import Products.Localizer.patches
+localizer_lock = Products.Localizer.patches._requests_lock
+localizer_contexts = Products.Localizer.patches._requests
+LocalizerContext = lambda request: request
 
 
 from ZODB.POSException import ConflictError
