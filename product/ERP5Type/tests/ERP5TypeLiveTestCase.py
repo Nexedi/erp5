@@ -44,24 +44,12 @@ import transaction
 
 from zLOG import LOG, DEBUG, INFO
 
-def profile_if_environ(environment_var_name):
-    if int(os.environ.get(environment_var_name, 0)):
-      def decorator(self, method):
-        def decorated():
-          self.runcall(method)
-        decorated.__name__ = method.__name__
-        decorated.__doc__ = method.__doc__
-        return decorated
-      return decorator
-    else:
-      # No profiling, return identity decorator
-      return lambda self, method: method
-
 # Disable patching of activity tool, 
-# Tic doesn't need help as TimserService is running
+# Tic doesn't need help as TimerService is running
 from Products.ERP5Type.tests import ProcessingNodeTestCase as\
                                     ProcessingNodeTestCaseModule
 ProcessingNodeTestCaseModule.patchActivityTool = lambda: None
+
 
 class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     """ERP5TypeLiveTestCase is the default class for *all* tests
