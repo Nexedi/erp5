@@ -89,7 +89,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <fieldset class="left fielset_login">\n
         <div class="field">\n
           <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>\n
-          <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></div>\n
+          <div class="input"><input type="text" name="__ac_name" id="name" /></div>\n
         </div>\n
         <div class="field">\n
           <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
