@@ -59,7 +59,7 @@
        </tr>\n
        <tr>\n
          <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
-             <input type="hidden" name="__ac_persistent" value="1"/>\n
+             <input type="hidden" name="__ac_persistent" value="0"/>\n
              <input type="submit" value="Login" name="WebSite_login:method"/>\n
          </td>\n
        </tr>\n
