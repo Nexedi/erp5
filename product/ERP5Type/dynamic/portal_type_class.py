@@ -203,7 +203,7 @@ def generatePortalTypeClass(site, portal_type_name):
           LOG("ERP5Type.dynamic", WARNING,
               "Could not get class '%s' in Component module '%s'" % \
               (type_class,
-               module_fullname))
+               module))
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
