@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Check that all transcations on payable and receivable accounts\n
+that a 0 balance are grouped.\n
+\n
+In other words, check that all transactions that can be grouped are grouped.\n
+"""\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
+active_process = context.newActiveProcess()\n
+\n
+portal = context.getPortalObject()\n
+\n
+# Section category & strict have to be configured on alarm\n
+section_category = context.getProperty(\'section_category\')\n
+assert section_category, "alarm not configured"\n
+section_category_strict = context.getProperty(\'section_category_strict\')\n
+\n
+section_uid_list = portal.Base_getSectionUidListForSectionCategory(section_category, section_category_strict)\n
+assert section_uid_list\n
+\n
+precision = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict) or 3\n
+\n
+\n
+search_params = dict(\n
+    node_category=(\'account_type/asset/receivable\',\n
+                   \'account_type/liability/payable\'),\n
+    section_uid=section_uid_list,\n
+    simulation_state=(\'stopped\', \'delivered\'),\n
+    portal_type=portal.getPortalAccountingMovementTypeList(),\n
+    group_by_mirror_section=True,\n
+    group_by_node=True,\n
+    grouping_reference=None,\n
+    )\n
+    \n
+\n
+for brain in portal.portal_simulation.getInventoryList(**search_params):\n
+  if round(brain.total_price, precision) == 0:\n
+    print \'%s has a 0 balance but some not grouped transactions.\' % brain.mirror_section_relative_url\n
+    if fixit:\n
+      tr = brain.getObject().getParentValue()\n
+      grouped_line_list = tr.AccountingTransaction_guessGroupedLines()\n
+      if not grouped_line_list:\n
+        # Group whatever can be grouped. XXX maybe we want to make this optional.\n
+        grouped_line_list = tr.AccountingTransaction_guessGroupedLines(accounting_transaction_line_uid_list=[\n
+            line.uid for line in portal.portal_simulation.getMovementHistoryList(\n
+                                    node_uid=brain.node_uid,\n
+                                    mirror_section_uid=brain.mirror_section_uid,\n
+                                    section_uid=section_uid_list,\n
+                                    simulation_state=(\'stopped\', \'delivered\'),\n
+                                    portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                                    grouping_reference=None,)])\n
+      if grouped_line_list:\n
+        print \'FIXED\', grouped_line_list\n
+      else:\n
+        print \'NOT FIXED\'\n
+        \n
+active_result = ActiveResult(\n
+  summary=context.getTitle(),\n
+  severity=str(printed) and 100 or 0,\n
+  detail=printed,)\n
+  \n
+active_process.postResult(active_result)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>tag, fixit=False</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Alarm_checkPayableAndReceivableAccountGrouped</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

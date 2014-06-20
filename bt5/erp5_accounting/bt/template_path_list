@@ -1,2 +1,4 @@
+portal_alarms/check_grouping_reference_validity
+portal_alarms/check_payable_receivable_account_grouped
 portal_categories/account_type/**
 portal_categories/financial_section/*
