@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Folder Workflow Action Without Confirmation Form/title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Folder Workflow Action Without Confirmation Form<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string:${here/portal_url}/foo_module/1/Foo_validate">Validate the first document</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Validated</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=2&amp;start:int=2</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Created Successfully.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Done.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/view</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>selectAndWait</td>\n
+\t<td>select_action</td>\n
+\t<td>Change State</td>\n
+</tr>\n
+<!-- we have a listbox with 2 lines, one for 2 Draft Foos, the other for 1\n
+Validated Foo -->\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//span[@class=&quot;listbox-current-page-total-number workflow_action_listbox-current-page-total-number&quot;]</td>\n
+\t<td>2 records</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
+\t<td>2</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
+\t<td>Foo</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
+\t<td>Draft</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
+\t<td>Foo Workflow</td>\n
+</tr>\n
+<tr>\n
+\t<td>select</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
+\t<td>label=Custom Action No Dialog</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[1]/a</td>\n
+\t<td>1</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[2]/a</td>\n
+\t<td>Foo</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[3]/a</td>\n
+\t<td>Validated</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[4]/a</td>\n
+\t<td>Foo Workflow</td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>field_your_enable_detail_list</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>Base_callDialogMethod:method</td>\n
+\t<td></td>\n
+</tr>\n
+<!-- Now we have the custom dialog, plus a listbox with the documents we are\n
+     modifying.\n
+-->\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>\n
+\t<td>2 records</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//a[@class=&quot;listbox_title&quot;]</td>\n
+\t<td>exact:Foos</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+\t<td>Title 2</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+\t<td>Custom Action No Dialog</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+\t<td>Title 3</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]</td>\n
+\t<td>Custom Action No Dialog</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_comment</td>\n
+\t<td>Comment !</td>\n
+</tr>\n
+<!-- this field only exist in our custom dialog for this workflow action. -->\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>Base_callDialogMethod:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertPortalStatusMessage</td>\n
+\t<td>Workflow modification in progress.</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertTextPresent</td>\n
+\t<td>Done.</td>\n
+\t<td></td>\n
+</tr>\n
+<!-- We\'ll check everything else (workflow history, comments, etc) in a python\n
+script. -->\n
+<tr>\n
+\t<td>open</td>\n
+\t<td>${base_url}/foo_module/Zuite_testFolderWorkflowActionCheckWorkflowHistory</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>assertText</td>\n
+\t<td>result</td>\n
+\t<td>OK</td>\n
+</tr>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testFolderWorkflowActionWithoutConfirmationForm</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

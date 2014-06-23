@@ -28,6 +28,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>custom_action_no_dialog</string>
                 <string>custom_dialog_action</string>
                 <string>delete</string>
                 <string>delete_action</string>

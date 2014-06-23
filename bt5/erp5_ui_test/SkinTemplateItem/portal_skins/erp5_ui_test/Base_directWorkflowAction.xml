@@ -50,27 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>Base_translateString = context.Base_translateString\n
-portal = context.getPortalObject()\n
-item_list = [(\'\', \'\')]\n
-for action in context.portal_actions.listFilteredActionsFor(brain).get(\'workflow\', []):\n
-  transition = action.get(\'transition\', None)\n
-  if transition is not None:\n
-    workflow_id = action[\'transition\'].aq_parent.aq_parent.getId()\n
-    if workflow_id == brain.workflow_id:\n
-      dialog_id = action[\'url\'].split(\'?\', 1)[0].split(\'/\')[-1]\n
-      dialog_object = getattr(portal, dialog_id, None)\n
-      if dialog_object is None or dialog_object.meta_type != \'ERP5 Form\':\n
-        dialog_id = portal.Base_viewWorkflowActionDialog.getId()\n
-      item_list.append((Base_translateString(action[\'title\']),\n
-                        \'%s/%s/%s\' % (workflow_id, action[\'id\'], dialog_id)))\n
-\n
-return item_list\n
+            <value> <string>request = context.REQUEST\n
+context.portal_workflow.doActionFor(context , workflow_action, comment=\'\', **kw)\n
+message = \'direct workflow action done.\'\n
+request.RESPONSE.redirect("%s/?portal_status_message=%s" % (context.absolute_url(), message) )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, **kw</string> </value>
+            <value> <string>workflow_action, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -82,7 +70,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getPossibleWorkflowActionItemList</string> </value>
+            <value> <string>Base_directWorkflowAction</string> </value>
         </item>
       </dictionary>
     </pickle>
