@@ -84,7 +84,7 @@ mail_message = portal.Base_createMailMessageAsString(from_url,\n
 \n
 event.sendMailHostMessage(mail_message)\n
 \n
-if not event.hasData() and len(event.getDestinationList()) > 1:\n
+if not event.hasData() and len(event.getDestinationList()) == 1:\n
   # Store the content of the email as data, so that we can keep a reference to\n
   # the email that was actually sent.\n
   # We do not store when there is more than one recipent.\n

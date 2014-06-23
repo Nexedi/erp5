@@ -1116,6 +1116,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # The getTextContent() gets the content from the file data instead the
     # Attribute text_content.
+    self.assertTrue(event.hasFile())
     self.assertEqual(event.text_content, text_content)
     text_content_from_data = '<html><body>Hello<br />World</body></html>'
     self.assertEqual(event.getTextContent(), text_content_from_data)
