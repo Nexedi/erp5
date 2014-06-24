@@ -68,6 +68,14 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
     if getattr(decision_movement, 'isPropertyRecorded',
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
+      # The following may be only for compatibility. Although current code does
+      # not seem to produce non-list values here, we really have existing data
+      # with such values, e.g. aggregate=None.
+      if not isinstance(decision_value, (list, tuple)):
+        if decision_value is None:
+          decision_value = []
+        else:
+          decision_value = [decision_value]
     else:
       decision_value = self._getTestedPropertyValue(decision_movement,
                                                     tested_property)
