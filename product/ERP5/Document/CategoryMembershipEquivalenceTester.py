@@ -68,6 +68,11 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
     if getattr(decision_movement, 'isPropertyRecorded',
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
+      if not isinstance(decision_value, (list, tuple)):
+        if decision_value is None:
+          decision_value = []
+        else:
+          decision_value = [decision_value]
     else:
       decision_value = self._getTestedPropertyValue(decision_movement,
                                                     tested_property)
