@@ -381,6 +381,10 @@ class Predicate(XMLObject):
       XXX - It would be better to return criteria in a Criterion class
             instance
     """
+    # We do not create PersistentMappings first time we *see* Predicate_view.
+    # Instead, we create them first time we modify Predicate document.
+    if not self.getCriterionPropertyList():
+      return []
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = PersistentMapping()
       self._range_criterion = PersistentMapping()

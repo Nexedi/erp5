@@ -599,6 +599,22 @@ class TestPredicates(TestPredicateMixIn):
         test_tales_expression="python: 'france' in here.getRegion()")
     self.assertTrue(pred_true.test(doc))
 
+  def testPredicateViewWithOutModification(self):
+    """ Make sure Predicate_view wihout modification does not change
+        the object."""
+    predicate = self.createPredicate()
+    # when init Predicate, they are  nothing
+    self.assertTrue(getattr(predicate, '_identity_criterion', None) is None)
+    self.assertTrue(getattr(predicate, '_range_criterion', None) is None)
+    # just view it, does not create PersistentMapping
+    predicate.Predicate_view()
+    self.assertTrue(getattr(predicate, '_identity_criterion', None) is None)
+    self.assertTrue(getattr(predicate, '_range_criterion', None) is None)
+    # add property and view it, creates PersistentMapping
+    predicate.setCriterionPropertyList(['quantity'])
+    predicate.Predicate_view()
+    self.assertFalse(getattr(predicate, '_identity_criterion', None) is None)
+    self.assertFalse(getattr(predicate, '_range_criterion', None) is None)
 
 # TODO :
 #  multi membership category
