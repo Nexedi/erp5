@@ -198,6 +198,7 @@ def defMethodGetter(key, method=None):
 defMethodGetter('id')
 defMethodGetter('logical_path')
 defMethodGetter('reference')
+defMethodGetter('short_title')
 defMethodGetter('title')
 defMethodGetter('title_or_id')
 defMethodGetter('translated_title')
