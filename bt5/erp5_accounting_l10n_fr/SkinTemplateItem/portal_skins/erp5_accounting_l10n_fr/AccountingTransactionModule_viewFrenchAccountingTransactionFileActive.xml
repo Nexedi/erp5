@@ -50,33 +50,59 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
+            <value> <string>import random\n
 portal = context.getPortalObject()\n
+at_date = at_date.latestTime()\n
 \n
-person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if person_value is None:\n
-  portal.changeSkin(None)\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=translateString("No person found for your user")))\n
+section_uid_list = portal.Base_getSectionUidListForSectionCategory(\n
+  section_category, section_category_strict)\n
 \n
-context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFileActive(\n
-  section_category,\n
-  section_category_strict,\n
+from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
+  section_category, at_date)\n
+\n
+# XXX we need proxy role for that\n
+active_process = portal.portal_activities.newActiveProcess()\n
+\n
+tag = "%s-%s" % (script.getId(),  random.randint(0, 1000))\n
+aggregate_tag = "%s:aggregate" % tag\n
+priority = 4\n
+\n
+for portal_type in portal.getPortalAccountingTransactionTypeList():\n
+  # XXX we need proxy role for that\n
+  this_portal_type_active_process = portal.portal_activities.newActiveProcess()\n
+  context.AccountingTransactionModule_viewFrenchAccountingTransactionFileForPortalType(\n
+    portal_type,\n
+    section_uid_list,\n
+    from_date,\n
+    at_date,\n
+    simulation_state,\n
+    active_process.getRelativeUrl(),\n
+    this_portal_type_active_process.getRelativeUrl(),\n
+    tag,\n
+    aggregate_tag,\n
+    priority)\n
+\n
+context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_aggregateFrenchAccountingTransactionFile(\n
   at_date,\n
-  simulation_state,\n
-  user_name=person_value.getReference())\n
-\n
-return context.Base_redirect(form_id, keep_items=dict(\n
-              portal_status_message=translateString("Report Started")))\n
+  active_process.getRelativeUrl(),\n
+  user_name=user_name)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_category, section_category_strict, at_date, simulation_state, form_id=None, **kw</string> </value>
+            <value> <string>section_category, section_category_strict, at_date, simulation_state, user_name, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_viewFrenchAccountingTransactionFile</string> </value>
+            <value> <string>AccountingTransactionModule_viewFrenchAccountingTransactionFileActive</string> </value>
         </item>
       </dictionary>
     </pickle>
