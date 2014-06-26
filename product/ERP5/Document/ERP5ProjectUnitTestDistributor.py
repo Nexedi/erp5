@@ -37,6 +37,7 @@ import string
 from zLOG import LOG,INFO,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ZSQLCatalog.SQLCatalog import Query
 TEST_SUITE_MAX = 4
 # Depending on the test suite priority, we will affect
 # more or less cores
@@ -228,6 +229,34 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       return test_node
     return None
 
+  def _getSortedNodeTestSuiteToRun(self, test_node):
+    """
+    Returned ordered list of test suites of a test node. More the
+    latest test result is old, more it will have priority. Like this
+    we try to run first test suites that have no results since a long
+    time
+    """
+    portal = self.getPortalObject()
+    test_suite_list = test_node.getAggregateValueList()
+    # Do not take results older than one month to avoid killing the
+    # sql server
+    now = DateTime()
+    from_date = now - 30
+    def getTestSuiteSortKey(test_suite):
+      test_result = portal.portal_catalog(portal_type="Test Result",
+                                          title='="%s"' % test_suite.getTitle(),
+                                          modification_date=Query(**{"creation_date": from_date,
+                                                                  "range": "min"}),
+                                          sort_on=[("modification_date", "descending")],
+                                          limit=1)
+      if len(test_result):
+        key = test_result[0].getObject().getModificationDate().timeTime()
+      else:
+        key = random.random()
+      return key
+    test_suite_list.sort(key=getTestSuiteSortKey)
+    return test_suite_list
+
   security.declarePublic("startTestSuite")
   def startTestSuite(self,title, batch_mode=0):
     """
@@ -252,18 +281,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                                       activate_kw={'tag': tag})
         self.activate(after_tag=tag).optimizeConfiguration()
       test_node.setPingDate()
-      test_suite_list = test_node.getAggregateList() 
-      # We sort the list according to timestamp
-      choice_list = []
-      if len(test_suite_list):
-        choice_list = [x.getObject() for x in test_suite_module.searchFolder(
-                relative_url=test_suite_list,
-                sort_on=[('indexation_timestamp','ascending')],
-                      )] 
-      # XXX we should have first test suite with no test node working on
-      # them since a long time. However we do not have this information yet,
-      # so random sort is better for now.
-      choice_list.sort(key=lambda x: random.random())
+      choice_list = self._getSortedNodeTestSuiteToRun(test_node)
       for test_suite in choice_list:
         config = {}
         config["project_title"] = test_suite.getSourceProjectTitle()

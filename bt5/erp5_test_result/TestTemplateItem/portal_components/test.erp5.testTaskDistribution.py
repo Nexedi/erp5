@@ -2,6 +2,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG,INFO,ERROR 
 import json 
 from Products.ERP5Type.Log import log
+from time import sleep
 
 class TestTaskDistribution(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -181,6 +182,69 @@ class TestTaskDistribution(ERP5TypeTestCase):
                     [('COMP32-Node1',set([u'B1'])), ('COMP32-Node2',set([u'B0']))]],
                     "%r" % ([config1, config2],))
 
+  def test_04b_startTestSuiteOrder(self):
+    """
+    When we have many test suites associated to one test nodes, the method
+    startTestSuite should give first test suites with oldest test results. Like
+    this we stop using the random order that was unfair for unlucky peoples
+    """
+    config_list = json.loads(self.distributor.startTestSuite(
+                             title="COMP42-Node1"))
+    self.assertEqual([], config_list)
+    self._createTestSuite(quantity=3)
+    self.tic()
+    self._callOptimizeAlarm()
+    def getTestSuiteList():
+      config_list = json.loads(self.distributor.startTestSuite(
+                             title="COMP42-Node1"))
+      return ["%s" % x["test_suite_title"] for x in config_list]
+    # By default we have random order between test suites
+    self.assertEquals(set(["test suite 1", "test suite 2", "test suite 3"]),
+                      set(getTestSuiteList()))
+    # Check that if test suite 1 and test suite 2 are recently processed,
+    # then next work must be test suite 3
+    def processTest(test_title, revision):
+      status_dict = {}
+      test_result_path, revision = self._createTestResult(revision=revision,
+        test_list=['testFoo', 'testBar'], test_title=test_title)
+      line_url, test = self.tool.startUnitTest(test_result_path)
+      next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+      self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
+      self.tool.stopUnitTest(line_url, status_dict)
+      self.tool.stopUnitTest(next_line_url, status_dict)
+      test_result = self.portal.restrictedTraverse(test_result_path)
+      self.assertEquals(test_result.getSimulationState(), "stopped")
+    processTest("test suite 1", "r0=a")
+    self.tic()
+    sleep(1) # needed because creation date sql value does not record millesecond
+    processTest("test suite 2", "r0=b")
+    self.tic()
+    sleep(1)
+    self.assertEquals(getTestSuiteList()[0], "test suite 3")
+    processTest("test suite 3", "r0=b")
+    # after test suite 3, we now have to process test suite 1
+    # since it is the oldest one
+    self.tic()
+    sleep(1)
+    self.assertEquals(getTestSuiteList()[0], "test suite 1")
+    processTest("test suite 1", "r0=c")
+    # after test suite 2, we now have to process test suite 2
+    # since it is the oldest one
+    self.tic()
+    sleep(1)
+    self.assertEquals(getTestSuiteList()[0], "test suite 2")
+    processTest("test suite 2", "r0=d")
+    self.tic()
+    sleep(1)
+    # now let's say for any reasyon test suite 1 has been done
+    processTest("test suite 1", "r0=e")
+    self.tic()
+    sleep(1)
+    # we should then have by order 3, 2, 1
+    self.assertEquals(["test suite 3", "test suite 2", "test suite 1"],
+                      getTestSuiteList())
+    
+
   def _cleanupTestResult(self):
     self.tic()
     cleanup_state_list = ['started', 'stopped']
@@ -192,10 +256,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.tic()
 
   def _createTestResult(self, revision="r0=a,r1=a", node_title="Node0",
-                              test_list=None, tic=1, allow_restart=False):
+                              test_list=None, tic=1, allow_restart=False,
+                              test_title="TEST FOO"):
     result =  self.tool.createTestResult(
                                "", revision, test_list or [], allow_restart,
-                               test_title="TEST FOO", node_title=node_title)
+                               test_title=test_title, node_title=node_title)
     # we commit, since usually we have a remote call only doing this
     (self.tic if tic else self.commit)()
     return result
