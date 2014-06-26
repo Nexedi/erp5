@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>#Clean-up inactive Test Nodes\n
 \n
-context.portal_alarms.task_distributor_alarm_optimize.activate(after_path=context.getPath()).TaskDistributorAlarm_optimize()\n
+context.portal_alarms.task_distributor_alarm_optimize.activate(after_path=context.getPath()).activeSense()\n
 </string> </value>
         </item>
         <item>
