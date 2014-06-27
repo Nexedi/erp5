@@ -49,6 +49,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
+  IGNORE_FILE_LIST = ['require.js','require.min.js','wz_dragdrop.js']
 
   def changeSkin(self, skin_name):
     """
@@ -167,12 +168,11 @@ class TestXHTMLMixin(ERP5TypeTestCase):
               skins_tool, obj_metatypes=['File','DTML Method','DTML Document'], search_sub=1):
       is_required_check_path = True
       ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor', 'erp5_jquery_ui']
-      ignore_files = ['require.js','require.min.js','wz_dragdrop.js']
       if script_path.endswith('.js'):
         for ignore_bt_name in ignore_bts:
           if  script_path.startswith(ignore_bt_name):
             is_required_check_path = False
-        for ignore_file in ignore_files:
+        for ignore_file in self.IGNORE_FILE_LIST:
           if  script_path.endswith(ignore_file):
             is_required_check_path = False
         if is_required_check_path:
