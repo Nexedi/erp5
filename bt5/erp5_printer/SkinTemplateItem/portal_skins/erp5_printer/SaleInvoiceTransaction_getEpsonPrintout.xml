@@ -101,11 +101,11 @@
             </tal:block>\n
           </div>\n
           <div id="client_detail">\n
-            <div tal:content=\'python: data_dict["destination_section_title"]\'>Astrium Geo-Information Services, Infoterra GmbH</div>\n
-            <div tal:content=\'python: data_dict["destination_section_address"]\'>Claude-Dornier-Strasse, 88090 Immenstaad, Germany</div>\n
-            <div tal:content=\'python: data_dict["destination_section_telfax"]\'>Tel: +49(0)-7545 8 5982, Fax: +49(0)-7545 8 1337</div>\n
-            <div tal:content=\'python: data_dict["destination_section_email"]\'>Email: volker.mueller@astrium.eads.net</div>\n
-            <div tal:content=\'python: data_dict["destination_section_vatid"]\' tal:condition="data_dict/destination_section_vatid">VAT ID: DE197540174</div>\n
+            <div tal:content=\'python: data_dict["destination_section_title"]\'>Acme Corporation</div>\n
+            <div tal:content=\'python: data_dict["destination_section_address"]\'>Anytown, USA</div>\n
+            <div tal:content=\'python: data_dict["destination_section_telfax"]\'>Tel: 1-234-555-0100, Fax: 1-234-555-0101</div>\n
+            <div tal:content=\'python: data_dict["destination_section_email"]\'>Email: john.smith@example.com</div>\n
+            <div tal:content=\'python: data_dict["destination_section_vatid"]\' tal:condition="data_dict/destination_section_vatid">VAT ID: N/A</div>\n
           </div>\n
         </div>\n
         <br>\n
