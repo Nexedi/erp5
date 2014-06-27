@@ -63,8 +63,6 @@ from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
 # XXX we need proxy role for that\n
 active_process = portal.portal_activities.newActiveProcess()\n
 \n
-tag = "%s-%s" % (script.getId(),  random.randint(0, 1000))\n
-aggregate_tag = "%s:aggregate" % tag\n
 priority = 4\n
 \n
 for portal_type in portal.getPortalAccountingTransactionTypeList():\n
@@ -90,7 +88,7 @@ context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_agg
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_category, section_category_strict, at_date, simulation_state, user_name, **kw</string> </value>
+            <value> <string>section_category, section_category_strict, at_date, simulation_state, user_name, tag, aggregate_tag, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
