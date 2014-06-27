@@ -80,6 +80,9 @@ portal.ERP5Site_notifyReportComplete(\n
     subject=unicode(translateString(\'French Accounting Transaction File\')),\n
     message=\'\',\n
     attachment_list=attachment_list)\n
+\n
+# delete no longer needed active process\n
+active_process.getParentValue().manage_delObjects(ids=[active_process.getId()])\n
 </string> </value>
         </item>
         <item>

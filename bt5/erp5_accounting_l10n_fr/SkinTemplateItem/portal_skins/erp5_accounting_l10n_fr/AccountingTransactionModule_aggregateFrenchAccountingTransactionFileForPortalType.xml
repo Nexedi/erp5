@@ -65,6 +65,9 @@ if result_list:\n
       result_list=result_list)\n
   \n
   active_process.postResult(ActiveResult(detail=journal_fragment.encode(\'utf8\').encode(\'zlib\')))\n
+\n
+# delete no longer needed active process\n
+this_portal_type_active_process.getParentValue().manage_delObjects(ids=[this_portal_type_active_process.getId()])\n
 </string> </value>
         </item>
         <item>
