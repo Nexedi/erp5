@@ -1097,8 +1097,7 @@ class Catalog(Folder,
     keys = set()
     add_key = keys.add
     for table in self.getCatalogSearchTableIds():
-      field_list = self._getCatalogSchema(table=table)
-      for field in field_list:
+      for field in self._getCatalogSchema(table=table):
         add_key(field)
         add_key('%s.%s' % (table, field))  # Is this inconsistent ?
     for related in self.getSQLCatalogRelatedKeyList():
@@ -1143,14 +1142,11 @@ class Catalog(Folder,
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    keys = {}
+    keys = set()
     for table in self.getCatalogSearchTableIds():
-      field_list = self._getCatalogSchema(table=table)
-      for field in field_list:
-        keys['%s.%s' % (table, field)] = 1
-    keys = keys.keys()
-    keys.sort()
-    return keys
+      for field in self._getCatalogSchema(table=table):
+        keys.add('%s.%s' % (table, field))
+    return sorted(keys)
 
   @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
   @caching_instance_method(id='SQLCatalog.getSortColumnIds',
@@ -1162,14 +1158,11 @@ class Catalog(Folder,
     Calls the show column method and returns dictionnary of
     Field Ids that can be used for a sort
     """
-    keys = {}
+    keys = set()
     for table in self.getTableIds():
-      field_list = self._getCatalogSchema(table=table)
-      for field in field_list:
-        keys['%s.%s' % (table, field)] = 1
-    keys = keys.keys()
-    keys.sort()
-    return keys
+      for field in self._getCatalogSchema(table=table):
+        keys.add('%s.%s' % (table, field))
+    return sorted(keys)
 
   def getTableIds(self):
     """
