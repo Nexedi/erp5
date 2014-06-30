@@ -34,7 +34,6 @@ from interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
                                                   TableAlias,
                                                   InnerJoin,
@@ -56,7 +55,6 @@ class ColumnMap(object):
 
   implements(IColumnMap)
 
-  @profiler_decorator
   def __init__(self,
                catalog_table_name=None,
                table_override_map=None,
@@ -110,7 +108,6 @@ class ColumnMap(object):
       "Cannot do left_joins while forcing implicit join"
     )
 
-  @profiler_decorator
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
     assert ' as ' not in raw_column.lower()
     # Sanitize input: extract column from raw column (might contain COUNT, ...).
@@ -151,7 +148,6 @@ class ColumnMap(object):
   def ignoreColumn(self, column):
     self.column_ignore_set.add(column)
 
-  @profiler_decorator
   def registerRelatedKey(self, related_column, column):
     # XXX: should we store the group, or directly the table on which the column is mapped ?
     # The former avoids duplicating data, but requires one more lookup (group + column -> table)
@@ -168,7 +164,6 @@ class ColumnMap(object):
     self.related_group_dict[group] = related_column
     return group
 
-  @profiler_decorator
   def registerCatalog(self):
     """
       Register catalog as being in use in query, and aliased with its own
@@ -189,7 +184,6 @@ class ColumnMap(object):
     self.registerTable(self.catalog_table_name)
     self.resolveTable(self.catalog_table_name, self.catalog_table_name)
 
-  @profiler_decorator
   def registerRelatedKeyColumn(self, related_column, position, group):
     assert group in self.related_group_dict
     group = self.getRelatedKeyGroup(position, group)
@@ -200,7 +194,6 @@ class ColumnMap(object):
   def getRelatedKeyGroup(self, position, group):
     return '%s_column_%s' % (group, position)
 
-  @profiler_decorator
   def registerTable(self, table_name, alias=None, group=DEFAULT_GROUP_ID):
     table_alias_dict = self.table_alias_dict
     table_alias_key = (group, table_name)
@@ -216,7 +209,6 @@ class ColumnMap(object):
     elif alias is not None and alias != existing_value:
       raise ValueError, 'Table %r for group %r is aliased as %r, can\'t alias it now as %r' % (table_name, group, existing_value, alias)
 
-  @profiler_decorator
   def _mapColumns(self, column_table_map, table_usage_dict, column_name_set, group, vote_result_dict):
     mapping_dict = {}
     catalog_table_name = self.catalog_table_name
@@ -320,7 +312,6 @@ class ColumnMap(object):
       if table_name != catalog_table_name:
         self._addJoinTableForColumn(table_name, column_name, group)
 
-  @profiler_decorator
   def build(self, sql_catalog):
     join_query_to_build_list = []
     catalog_table_name = self.catalog_table_name
@@ -497,7 +488,6 @@ class ColumnMap(object):
     else:
       return None
 
-  @profiler_decorator
   def resolveColumn(self, column, table_name, group=DEFAULT_GROUP_ID):
     assert group in self.registry
     assert column in self.registry[group]
@@ -513,7 +503,6 @@ class ColumnMap(object):
       else:
         raise ValueError, 'Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, column_map.get(column_map_key), table_name)
 
-  @profiler_decorator
   def resolveTable(self, table_name, alias, group=DEFAULT_GROUP_ID):
     table_alias_key = (group, table_name)
     assert table_alias_key in self.table_alias_dict
@@ -545,7 +534,6 @@ class ColumnMap(object):
     return []
     
 
-  @profiler_decorator
   def _addJoinTableForColumn(self, table_name, column, group=DEFAULT_GROUP_ID):
     """
       Declare given table as requiring to be joined with catalog table on uid.

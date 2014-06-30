@@ -35,7 +35,6 @@ from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.TableDefinition import LegacyTableDefinition
 
 def defaultDict(value):
@@ -55,7 +54,6 @@ class EntireQuery(object):
 
   column_map = None
 
-  @profiler_decorator
   def __init__(self, query,
                order_by_list=(),
                group_by_list=(),
@@ -82,7 +80,6 @@ class EntireQuery(object):
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
 
-  @profiler_decorator
   def asSQLExpression(self, sql_catalog, only_group_columns):
     column_map = self.column_map
     if column_map is None:

@@ -32,7 +32,6 @@ from Query import Query
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class AutoQuery(Query):
   """
@@ -46,7 +45,6 @@ class AutoQuery(Query):
   """
   wrapped_query = None
 
-  @profiler_decorator
   def __init__(self, *args, **kw):
     """
       Note: "operator" might contain a logical or a comparison operator.
@@ -64,7 +62,6 @@ class AutoQuery(Query):
       raise ValueError, '"key" parameter cannot be used when more than one column is given. key=%r' % (self.search_key, )
     self.search_key = kw.pop('key', None)
 
-  @profiler_decorator
   def _createWrappedQuery(self, sql_catalog):
     """
       Create wrapped query. This requires being able to reach catalog, since
@@ -112,25 +109,21 @@ class AutoQuery(Query):
       raise ValueError, '%r failed generating a query from its parameters.' % (self, )
     self.wrapped_query = query
 
-  @profiler_decorator
   def _asSearchTextExpression(self, sql_catalog, column=None):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)
     return self.wrapped_query._asSearchTextExpression(sql_catalog, column=column)
 
-  @profiler_decorator
   def asSearchTextExpression(self, sql_catalog, column=None):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)
     return self.wrapped_query.asSearchTextExpression(sql_catalog, column=column)
 
-  @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)
     return self.wrapped_query.asSQLExpression(sql_catalog, column_map, only_group_columns=only_group_columns)
 
-  @profiler_decorator
   def registerColumnMap(self, sql_catalog, column_map):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)

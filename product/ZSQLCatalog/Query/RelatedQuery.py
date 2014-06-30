@@ -32,13 +32,11 @@ from Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class RelatedQuery(Query):
   """
     A RelatedQuery represents the is a container for a join condition.
   """
-  @profiler_decorator
   def __init__(self, search_key, join_condition=None, table_alias_list=None):
     """
       search_key (SearchKey)
@@ -53,7 +51,6 @@ class RelatedQuery(Query):
     self.join_condition = join_condition
     self.table_alias_list = table_alias_list
 
-  @profiler_decorator
   def setTableAliasList(self, table_alias_list):
     """
       This function is here for backward compatibility.
@@ -64,7 +61,6 @@ class RelatedQuery(Query):
     """
     self.table_alias_list = table_alias_list
 
-  @profiler_decorator
   def _asSearchTextExpression(self, sql_catalog, column=None):
     assert column is None
     join_condition = self.join_condition
@@ -74,7 +70,6 @@ class RelatedQuery(Query):
       result = join_condition.asSearchTextExpression(sql_catalog, column=self.search_key.getColumn())
     return False, result
 
-  @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     sql_expression_list = [self.search_key.buildSQLExpression(sql_catalog, column_map, only_group_columns, self.group)]
     join_condition = self.join_condition
@@ -82,7 +77,6 @@ class RelatedQuery(Query):
       sql_expression_list.append(join_condition.asSQLExpression(sql_catalog, column_map, only_group_columns))
     return SQLExpression(self, sql_expression_list=sql_expression_list, where_expression_operator='and')
 
-  @profiler_decorator
   def registerColumnMap(self, sql_catalog, column_map):
     self.group = self.search_key.registerColumnMap(column_map, table_alias_list=self.table_alias_list)
     join_condition = self.join_condition

@@ -32,11 +32,6 @@ import threading
 from AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from AdvancedSearchTextParser import AdvancedSearchTextParser
 from lexer import ParserOrLexerError
-try:
-  from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
-except ImportError:
-  def profiler_decorator(funct):
-    return funct
 
 if __name__ == '__main__':
   DEBUG = 1
@@ -90,11 +85,9 @@ def safeParsingDecorator(func):
   wrapper.__name__ = func.__name__
   return wrapper
 
-@profiler_decorator
 def isAdvancedSearchText(input, is_column):
   return parser_pool.get(DETECTOR_ID)(input, is_column)
 
-@profiler_decorator
 @safeParsingDecorator
 def parse(input, is_column, *args, **kw):
   if isAdvancedSearchText(input, is_column):

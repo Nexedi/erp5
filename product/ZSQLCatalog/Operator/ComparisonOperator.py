@@ -32,10 +32,9 @@ from OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
+from Products.ZSQLCatalog.SQLCatalog import list_type_list
 
 class ComparisonOperatorBase(OperatorBase):
-  @profiler_decorator
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
       In a Comparison Operator, rendering order is:
@@ -53,7 +52,6 @@ class ComparisonOperatorBase(OperatorBase):
 verifyClass(IOperator, ComparisonOperatorBase)
 
 class MonovaluedComparisonOperator(ComparisonOperatorBase):
-  @profiler_decorator
   def renderValue(self, value_list):
     """
       value_list must either be a non-list or a single-value list.
@@ -65,7 +63,6 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
     return self._renderValue(value_list)
 
-  @profiler_decorator
   def render(self, column, value_list):
     """
       value_list must either be a non-list or a single-value list.
@@ -80,7 +77,6 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
 verifyClass(IOperator, MonovaluedComparisonOperator)
 
 class MultivaluedComparisonOperator(ComparisonOperatorBase):
-  @profiler_decorator
   def renderValue(self, value_list):
     """
       value_list must be a multi-value list (more than one item).
@@ -89,7 +85,6 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
       raise ValueError, '%r: value_list must be a list of more than one item. Got %r' % (self, value_list)
     return '(%s)' % ', '.join(map(self._renderValue, value_list))
 
-  @profiler_decorator
   def render(self, column, value_list):
     """
       value_list must be a multi-value list (more than one item).
@@ -105,7 +100,6 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     MonovaluedComparisonOperator.__init__(self, operator, '')
     self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
 
-  @profiler_decorator
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
@@ -150,7 +144,6 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
     value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 
-  @profiler_decorator
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides

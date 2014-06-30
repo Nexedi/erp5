@@ -34,7 +34,7 @@ from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
+from Products.ZSQLCatalog.SQLCatalog import list_type_list
 
 single_operator_dict = {
   'min': '>=',
@@ -91,14 +91,12 @@ class SearchKey(object):
   def getColumn(self):
     return self.column
 
-  @profiler_decorator
   def buildSQLExpression(self, operator, value, column_map, only_group_columns,
                          group):
     column_name = self.getColumn()
     rendered_column = column_map.asSQLColumn(column_name, group=group)
     return operator.asSQLExpression(rendered_column, value, only_group_columns)
 
-  @profiler_decorator
   def _renderValueAsSearchText(self, value, operator):
     """
       Render a single value as valid SearchText using provided operator.
@@ -115,7 +113,6 @@ class SearchKey(object):
       value = operator_value_deprocessor(value)
     return operator.asSearchText(value)
 
-  @profiler_decorator
   def buildSearchTextExpression(self, operator, value, column=None):
     operator_text = operator.getOperatorSearchText()
     if column is None:
@@ -137,13 +134,11 @@ class SearchKey(object):
       result = '%s:%s' % (column, result)
     return result
 
-  @profiler_decorator
   def registerColumnMap(self, column_map, group, simple_query):
     column_map.registerColumn(self.getColumn(), group=group,
                               simple_query=simple_query)
     return group
 
-  @profiler_decorator
   def _getComparisonOperator(self, value):
     """
       From a basestring instance, return a contained operator and value
@@ -164,7 +159,6 @@ class SearchKey(object):
       operator = self._guessComparisonOperator(value)
     return operator, value
 
-  @profiler_decorator
   def _guessComparisonOperator(self, value):
     """
       From a basestring instance, return an operator.
@@ -176,7 +170,6 @@ class SearchKey(object):
     """
     return self.default_comparison_operator
 
-  @profiler_decorator
   def _preprocessValue(self, value, operator):
     operator_value_preprocessor = operator_value_preprocessor_dict.get(
       operator)
@@ -184,7 +177,6 @@ class SearchKey(object):
       value = operator_value_preprocessor(value)
     return value
 
-  @profiler_decorator
   def _processSearchValue(self, search_value, default_logical_operator,
                           comparison_operator):
     """
@@ -325,7 +317,6 @@ class SearchKey(object):
       operator_value_dict[comparison_operator] = search_value
     return operator_value_dict, logical_operator, parsed
 
-  @profiler_decorator
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """
       Create Queries from values, logical and comparison operators.
@@ -354,7 +345,6 @@ class SearchKey(object):
                            group=group, **{column: value}))
     return query_list
 
-  @profiler_decorator
   def buildQuery(self, search_value, group=None, logical_operator=None,
                  comparison_operator=None):
     assert logical_operator in (None, 'and', 'or'), repr(logical_operator)

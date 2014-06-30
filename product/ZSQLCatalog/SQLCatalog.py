@@ -59,14 +59,6 @@ try:
 except ImportError:
   ActiveObject = ExtensionClass.Base
 
-
-PROFILING_ENABLED = False
-if PROFILING_ENABLED:
-  from tiny_profiler import profiler_decorator, profiler_report, profiler_reset
-else:
-  def profiler_decorator(func):
-    return func
-
 try:
   from Products.CMFCore.Expression import Expression
   from Products.PageTemplates.Expressions import getEngine
@@ -1108,14 +1100,11 @@ class Catalog(Folder,
     """
     return self._getColumnIds()[:]
 
-  @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
-  @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getColumnMap',
     cache_factory='erp5_content_long',
     cache_id_generator=generateCatalogCacheId,
   )
-  @profiler_decorator
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1128,14 +1117,11 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
-  @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
-  @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getResultColumnIds',
     cache_factory='erp5_content_long',
     cache_id_generator=generateCatalogCacheId,
   )
-  @profiler_decorator
   def getResultColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1150,14 +1136,11 @@ class Catalog(Folder,
     keys.sort()
     return keys
 
-  @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
-  @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getSortColumnIds',
       cache_factory='erp5_content_long',
       cache_id_generator=generateCatalogCacheId,
   )
-  @profiler_decorator
   def getSortColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1940,9 +1923,7 @@ class Catalog(Folder,
     """
     return self.getCatalogMethodIds(valid_method_meta_type_list=('Script (Python)', ))
 
-  @profiler_decorator
   @transactional_cache_decorator('SQLCatalog._getSQLCatalogRelatedKeyList')
-  @profiler_decorator
   def _getSQLCatalogRelatedKeySet(self):
     column_map = self.getColumnMap()
     column_set = set(column_map)
@@ -2008,7 +1989,6 @@ class Catalog(Folder,
     """
     return self._getTableIndex(table).copy()
 
-  @profiler_decorator
   def isValidColumn(self, column_id):
     """
       Tells wether given name is or not an existing column.
@@ -2023,7 +2003,6 @@ class Catalog(Folder,
         result = self.getRelatedKeyDefinition(column_id) is not None
     return result
 
-  @profiler_decorator
   def getRelatedKeyDefinition(self, key):
     """
       Returns the definition of given related key name if found, None
@@ -2067,7 +2046,6 @@ class Catalog(Folder,
   def getScriptableKeyScript(self, key):
     return self._getgetScriptableKeyDict().get(key)
 
-  @profiler_decorator
   def getColumnSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance for given key, using search_key_name
@@ -2096,7 +2074,6 @@ class Catalog(Folder,
   def hasColumn(self, column):
     return self.getColumnSearchKey(column)[0] is not None
 
-  @profiler_decorator
   def getColumnDefaultSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance which would ultimately receive the value
@@ -2112,7 +2089,6 @@ class Catalog(Folder,
           related_key_definition=related_key_definition)
     return search_key
 
-  @profiler_decorator
   def buildSingleQuery(self, key, value, search_key_name=None, logical_operator=None, comparison_operator=None):
     """
       From key and value, determine the SearchKey to use and generate a Query
@@ -2140,7 +2116,6 @@ class Catalog(Folder,
       result = script(value)
     return result
 
-  @profiler_decorator
   def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap):
     if search_key.dequoteParsedText():
       _dequote = dequote
@@ -2178,7 +2153,6 @@ class Catalog(Folder,
         result = None
     return result
 
-  @profiler_decorator
   def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
@@ -2229,7 +2203,6 @@ class Catalog(Folder,
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
-  @profiler_decorator
   def buildQuery(self, kw, ignore_empty_string=True, operator='and'):
     query_list = []
     append = query_list.append
@@ -2317,7 +2290,6 @@ class Catalog(Folder,
     return ComplexQuery(query_list, logical_operator=operator,
         unknown_column_dict=unknown_column_dict)
 
-  @profiler_decorator
   def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
     """
       Internal method. Should not be used by code outside buildSQLQuery.
@@ -2361,7 +2333,6 @@ class Catalog(Folder,
       order_by_list = [[x.strip()] for x in order_by_expression.split(',')]
     return order_by_list
 
-  @profiler_decorator
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
                        limit=None, extra_column_list=()):
     group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', ())))
@@ -2433,7 +2404,6 @@ class Catalog(Folder,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
 
-  @profiler_decorator
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
@@ -2447,14 +2417,11 @@ class Catalog(Folder,
   # Compatibililty SQL Sql
   buildSqlQuery = buildSQLQuery
 
-  @profiler_decorator
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
-  @profiler_decorator
   @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
     cache_factory='erp5_content_long',
     cache_id_generator=generateCatalogCacheId,
   )
-  @profiler_decorator
   def _getSearchKeyDict(self):
     result = {}
     search_key_column_dict = {
@@ -2476,7 +2443,6 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Wrong configuration for sql_catalog_search_keys: %r' % line)
     return result
 
-  @profiler_decorator
   def getSearchKey(self, column, search_key=None):
     """
       Return an instance of a SearchKey class.
@@ -2508,7 +2474,6 @@ class Catalog(Folder,
                                  # the ZSQLMethod class itself
                                  'zsql_brain',
                                ])
-  @profiler_decorator
   def _queryResults(self, REQUEST=None, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
@@ -2823,7 +2788,6 @@ import SearchKey
 SEARCH_KEY_INSTANCE_POOL = {}
 SEARCH_KEY_CLASS_CACHE = {}
 
-@profiler_decorator
 def getSearchKeyInstance(search_key_class_name, column):
   assert isinstance(search_key_class_name, basestring)
   try:
@@ -2877,14 +2841,3 @@ from Query.EntireQuery import EntireQuery
 from Query.SQLQuery import SQLQuery
 
 verifyClass(ISearchKeyCatalog, Catalog)
-
-if PROFILING_ENABLED:
-  def Catalog_dumpProfilerData(self):
-    return profiler_report()
-
-  def Catalog_resetProfilerData(self):
-    profiler_reset()
-
-  Catalog.dumpProfilerData = Catalog_dumpProfilerData
-  Catalog.resetProfilerData = Catalog_resetProfilerData
-

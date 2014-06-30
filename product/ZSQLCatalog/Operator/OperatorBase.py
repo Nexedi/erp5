@@ -32,29 +32,23 @@ from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
-@profiler_decorator
 def escapeString(value):
   # Inspired from ERP5Type/Utils:sqlquote, but this product must not depend on it.
   return "'" + value.replace('\\', '\\\\').replace("'", "''") + "'"
 
-@profiler_decorator
 def valueFloatRenderer(value):
   if isinstance(value, basestring):
     value = float(value.replace(' ', ''))
   return repr(value)
 
-@profiler_decorator
 def valueDateTimeRenderer(value):
   return '"%s"' % (value.toZone('UTC').ISO(), )
 
-@profiler_decorator
 def valueDefaultRenderer(value):
   LOG('OperatorBase', 0, 'Unhandled value class: %s (%r). Converted to string and escaped.' % (value.__class__.__name__, value))
   return escapeString(str(value))
 
-@profiler_decorator
 def valueNoneRenderer(value):
   return 'NULL'
 
@@ -70,7 +64,6 @@ value_search_text_renderer = {
   'DateTime': str,
 }
 
-@profiler_decorator
 def valueDefaultSearchTextRenderer(value):
   """
     This is just repr, but always surrounding text strings with doublequotes.
@@ -81,7 +74,6 @@ def valueDefaultSearchTextRenderer(value):
     result = repr(value)
   return result
 
-@profiler_decorator
 def columnFloatRenderer(column, format=None):
   """Format a float column.
 
@@ -98,7 +90,6 @@ def columnFloatRenderer(column, format=None):
       column = "TRUNCATE(%s, %s)" % (column, len(format.split('.')[-1]))
   return column
 
-@profiler_decorator
 def columnDefaultRenderer(column, format=None):
   return column
 
@@ -122,7 +113,6 @@ class OperatorBase(object):
   def getOperatorSearchText(self):
     return self.operator_search_text
 
-  @profiler_decorator
   def _render(self, column, value):
     """
       Render given column and value for use in SQL.
@@ -142,7 +132,6 @@ class OperatorBase(object):
       value = self._renderValue(value)
     return column, value
 
-  @profiler_decorator
   def _renderValue(self, value):
     """
       Render given value as string.
@@ -156,7 +145,6 @@ class OperatorBase(object):
       value = value_renderer.get(value.__class__.__name__, valueDefaultRenderer)(value)
     return value
 
-  @profiler_decorator
   def asSearchText(self, value):
     return value_search_text_renderer.get(value.__class__.__name__, valueDefaultSearchTextRenderer)(value)
 

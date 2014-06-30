@@ -30,7 +30,6 @@ from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class SphinxSEFullTextKey(SearchKey):
   """
@@ -48,7 +47,6 @@ class SphinxSEFullTextKey(SearchKey):
   def _renderValueAsSearchText(self, value, operator):
     return '(%s)' % (value, )
 
-  @profiler_decorator
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """
       Special Query builder for FullText queries: merge all values having the

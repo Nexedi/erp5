@@ -36,7 +36,6 @@ from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.TableDefinition import TableAlias, InnerJoin, LeftJoin
 
 from logging import getLogger
@@ -68,7 +67,6 @@ class RelatedKey(SearchKey):
 
   related_key_definition = None
 
-  @profiler_decorator
   def _buildRelatedKey(self, related_key_definition):
     """
       Extract RelatedKey parameters from its definition, and cache this
@@ -90,7 +88,6 @@ class RelatedKey(SearchKey):
       table_list, self.real_column, self.related_key_id = related_key_definition.split('/')
       self.table_list = table_list.split(',')
 
-  @profiler_decorator
   def _getSearchKey(self, sql_catalog, search_key_name):
     """
       Get search key relevant to the actual column.
@@ -102,7 +99,6 @@ class RelatedKey(SearchKey):
     """
     return sql_catalog.getSearchKey(self.real_column, search_key_name)
 
-  @profiler_decorator
   def getSearchKey(self, sql_catalog, related_key_definition, search_key_name=None):
     """
       Get search key relevant to the actual column, extracting information
@@ -118,7 +114,6 @@ class RelatedKey(SearchKey):
     self._buildRelatedKey(related_key_definition)
     return self._getSearchKey(sql_catalog, search_key_name)
 
-  @profiler_decorator
   def buildQuery(self, sql_catalog, related_key_definition,
                  search_value=None):
     self._buildRelatedKey(related_key_definition)
@@ -128,7 +123,6 @@ class RelatedKey(SearchKey):
     return RelatedQuery(search_key=self,
                         join_condition=join_condition)
 
-  @profiler_decorator
   def registerColumnMap(self, column_map, table_alias_list=None):
     related_column = self.getColumn()
     group = column_map.registerRelatedKey(related_column, self.real_column)
@@ -189,7 +183,6 @@ class RelatedKey(SearchKey):
       condition = join_query_list[-1]
       return InnerJoin(left, right, condition)
 
-  @profiler_decorator
   def buildSQLExpression(self, sql_catalog, column_map, only_group_columns, group):
     """
       Render RelatedKey's ZSQLMethod by providing it table aliases from

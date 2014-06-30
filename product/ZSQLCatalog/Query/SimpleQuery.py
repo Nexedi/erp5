@@ -31,7 +31,7 @@
 from Query import Query
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
+from Products.ZSQLCatalog.SQLCatalog import list_type_list
 from zLOG import LOG, WARNING
 
 NULL_SEARCH_TEXT_OPERATOR_DICT = {
@@ -46,7 +46,6 @@ class SimpleQuery(Query):
     A SimpleQuery represents a single comparison between a single column and
     one or more values.
   """
-  @profiler_decorator
   def __init__(self, search_key=None, comparison_operator='=', group=None, **kw):
     """
       search_key (None, SearchKey instance)
@@ -103,17 +102,14 @@ class SimpleQuery(Query):
     self.comparison_operator = comparison_operator
     self.group = group
 
-  @profiler_decorator
   def _asSearchTextExpression(self, sql_catalog, column=None):
     return False, self.getSearchKey(sql_catalog).buildSearchTextExpression(self.getOperator(sql_catalog), self.getValue(), column=column)
 
-  @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     return self.getSearchKey(sql_catalog).buildSQLExpression(
       self.getOperator(sql_catalog), self.getValue(),
       column_map, only_group_columns, group=self.group)
 
-  @profiler_decorator
   def registerColumnMap(self, sql_catalog, column_map):
     self.group = self.getSearchKey(sql_catalog).registerColumnMap(column_map, group=self.group, simple_query=self)
 

@@ -32,7 +32,6 @@ from interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from types import NoneType
-from SQLCatalog import profiler_decorator
 
 SQL_LIST_SEPARATOR = ', '
 SQL_TABLE_FORMAT = '%s' # XXX: should be changed to '`%s`', but this breaks some ZSQLMethods.
@@ -85,7 +84,6 @@ class SQLExpression(object):
 
   implements(ISQLExpression)
 
-  @profiler_decorator
   def __init__(self,
                query,
                table_alias_dict=None,
@@ -136,7 +134,6 @@ class SQLExpression(object):
                     DeprecationWarning)
     self.from_expression = from_expression
 
-  @profiler_decorator
   def getTableAliasDict(self):
     """
       Returns a dictionary:
@@ -163,7 +160,6 @@ class SQLExpression(object):
         result[alias] = table_name
     return result
 
-  @profiler_decorator
   def getFromExpression(self):
     """
       Returns a TableDefinition stored in one of the from_expressions or None
@@ -186,7 +182,6 @@ class SQLExpression(object):
         raise ValueError, message
     return result
 
-  @profiler_decorator
   def getOrderByList(self):
     """
       Returns a list of strings.
@@ -206,7 +201,6 @@ class SQLExpression(object):
           known_column_set.add(order_by[0])
     return result
 
-  @profiler_decorator
   def _getOrderByDict(self, delay_error=True):
     result_dict = self.order_by_dict.copy()
     for sql_expression in self.sql_expression_list:
@@ -232,7 +226,6 @@ class SQLExpression(object):
   def getOrderByDict(self):
     return self._getOrderByDict(delay_error=False)
 
-  @profiler_decorator
   def getOrderByExpression(self):
     """
       Returns a string.
@@ -251,7 +244,6 @@ class SQLExpression(object):
       append(expression)
     return SQL_LIST_SEPARATOR.join(result)
 
-  @profiler_decorator
   def getWhereExpression(self):
     """
       Returns a string.
@@ -273,7 +265,6 @@ class SQLExpression(object):
         result = '(%s)' % (operator.join(x.getWhereExpression() for x in self.sql_expression_list), )
     return result
 
-  @profiler_decorator
   def getLimit(self):
     """
       Returns a list of 1 or 2 items (int or string).
@@ -296,7 +287,6 @@ class SQLExpression(object):
         raise ValueError, message
     return result
 
-  @profiler_decorator
   def getLimitExpression(self):
     """
       Returns a string.
@@ -305,7 +295,6 @@ class SQLExpression(object):
     """
     return SQL_LIST_SEPARATOR.join(str(x) for x in self.getLimit())
 
-  @profiler_decorator
   def getGroupByset(self):
     """
       Returns a set of strings.
@@ -318,7 +307,6 @@ class SQLExpression(object):
       result.update(sql_expression.getGroupByset())
     return result
 
-  @profiler_decorator
   def getGroupByExpression(self):
     """
       Returns a string.
@@ -330,7 +318,6 @@ class SQLExpression(object):
   def canMergeSelectDict(self):
     return self.can_merge_select_dict
 
-  @profiler_decorator
   def _getSelectDict(self):
     result = self.select_dict.copy()
     mergeable_set = set()
@@ -361,7 +348,6 @@ class SQLExpression(object):
           mergeable_set.add(alias)
     return result, mergeable_set
 
-  @profiler_decorator
   def getSelectDict(self):
     """
       Returns a dict:
@@ -374,7 +360,6 @@ class SQLExpression(object):
     """
     return self._getSelectDict()[0]
 
-  @profiler_decorator
   def getSelectExpression(self):
     """
       Returns a string.
@@ -395,7 +380,6 @@ class SQLExpression(object):
       append((SQL_TABLE_FORMAT % (alias, ), SQL_TABLE_FORMAT % (table, )))
     return from_table_list
 
-  @profiler_decorator
   def asSQLExpressionDict(self):
     from_expression = self.getFromExpression()
     from_table_list = self.getFromTableList()

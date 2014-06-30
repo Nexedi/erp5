@@ -33,7 +33,6 @@ from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from SQLQuery import SQLQuery
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.Query.AutoQuery import AutoQuery
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 
@@ -46,7 +45,6 @@ class ComplexQuery(Query):
   """
     A ComplexQuery represents logical operations between Query instances.
   """
-  @profiler_decorator
   def __init__(self, *args, **kw):
     """
       *args (tuple of Query or of list of Query)
@@ -142,7 +140,6 @@ class ComplexQuery(Query):
         self.logical_operator == 'or'):
       raise NotImplementedError
 
-  @profiler_decorator
   def _asSearchTextExpression(self, sql_catalog, column=None):
     if column in (None, ''):
       query_column = column
@@ -186,7 +183,6 @@ class ComplexQuery(Query):
         result = '%s:%s' % (column, result)
     return self_is_composed, result
 
-  @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     sql_expression_list = [x.asSQLExpression(sql_catalog, column_map, only_group_columns)
                            for x in self.query_list]
@@ -197,7 +193,6 @@ class ComplexQuery(Query):
       where_expression_operator=self.logical_operator,
       from_expression=self.from_expression)
 
-  @profiler_decorator
   def registerColumnMap(self, sql_catalog, column_map):
     for query in self.query_list:
       query.registerColumnMap(sql_catalog, column_map)
@@ -205,7 +200,6 @@ class ComplexQuery(Query):
   def __repr__(self):
     return '<%s of %r.join(%r)>' % (self.__class__.__name__, self.logical_operator, self.query_list)
 
-  @profiler_decorator
   def setTableAliasList(self, table_alias_list):
     """
       This function is here for backward compatibility.
@@ -217,7 +211,6 @@ class ComplexQuery(Query):
     assert len(self.query_list) == 1
     self.query_list[0].setTableAliasList(table_alias_list)
 
-  @profiler_decorator
   def setGroup(self, group):
     for query in self.query_list:
       query.setGroup(group)

@@ -36,7 +36,6 @@ from zLOG import LOG
 from DateTime.DateTime import DateTime, DateTimeError, _cache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 from Products.ZSQLCatalog.SearchText import parse
 
 MARKER = []
@@ -48,11 +47,9 @@ date_completion_format_dict = {
   'international': ['%s/01/01', '%s/01']
 }
 
-@profiler_decorator
 def _DateTime(*args, **kw):
   return DateTime(*args, **kw)
 
-@profiler_decorator
 def castDate(value, change_timezone=True):
   if value is None:
     return None
@@ -114,7 +111,6 @@ def getYearLen(datetime):
 
 delta_list = [getYearLen, getMonthLen, 1, 1.0 / 24, 1.0 / (24 * 60), 1.0 / (24 * 60 * 60)]
 
-@profiler_decorator
 def countDelimiters(value):
   assert isinstance(value, basestring)
   # Detect if timezone was provided, to avoid counting it as in precision computation.
@@ -135,7 +131,6 @@ def countDelimiters(value):
       last_delimiter = None
   return delimiter_count
 
-@profiler_decorator
 def getPeriodBoundaries(value):
   first_date = castDate(value, change_timezone=False)
   if isinstance(value, dict):
@@ -152,7 +147,6 @@ def getPeriodBoundaries(value):
     delta = delta(first_date)
   return first_date.toZone('UTC'), (first_date + delta).toZone('UTC')
 
-@profiler_decorator
 def wholePeriod(search_key, group, column, value_list, exclude=False):
   if exclude:
     first_operator = '<'
@@ -177,7 +171,6 @@ def matchWholePeriod(search_key, group, column, value_list, *ignored):
 def matchNotWholePeriod(search_key, group, column, value_list, *ignored):
   return wholePeriod(search_key, group, column, value_list, exclude=True)
 
-@profiler_decorator
 def matchExact(search_key, group, column, value_list, comparison_operator, logical_operator):
   if comparison_operator is None:
     comparison_operator = '='
@@ -191,11 +184,9 @@ def matchExact(search_key, group, column, value_list, comparison_operator, logic
 def getNextPeriod(value):
   return getPeriodBoundaries(value)[1]
 
-@profiler_decorator
 def matchBeforeNextPeriod(search_key, group, column, value_list, comparison_operator, logical_operator):
   return matchExact(search_key, group, column, [getNextPeriod(x) for x in value_list], '<', logical_operator)
 
-@profiler_decorator
 def matchAfterPeriod(search_key, group, column, value_list, comparison_operator, logical_operator):
   return matchExact(search_key, group, column, [getNextPeriod(x) for x in value_list], '>=', logical_operator)
 
@@ -275,7 +266,6 @@ class DateTimeKey(SearchKey):
   def _renderValueAsSearchText(self, value, operator):
     return '"%s"' % (DateTime(value).ISO(), )
 
-  @profiler_decorator
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     column = self.getColumn()
     query_list = []
