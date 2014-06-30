@@ -88,6 +88,7 @@
                         <string>my_preferred_category_child_item_list_method_id</string>
                         <string>my_preferred_listbox_view_mode_line_count</string>
                         <string>my_preferred_listbox_list_mode_line_count</string>
+                        <string>my_preferred_html_style_zodb_history_size</string>
                         <string>my_preferred_string_field_width</string>
                         <string>my_preferred_textarea_width</string>
                         <string>my_preferred_textarea_height</string>
