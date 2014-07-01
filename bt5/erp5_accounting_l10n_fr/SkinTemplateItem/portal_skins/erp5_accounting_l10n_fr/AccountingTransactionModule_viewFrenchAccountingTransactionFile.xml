@@ -75,7 +75,7 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   simulation_state,\n
   user_name=person_value.getReference(),\n
   tag=tag,\n
-  after_tag=aggregate_tag)\n
+  aggregate_tag=aggregate_tag)\n
 \n
 return context.Base_redirect(form_id, keep_items=dict(\n
               portal_status_message=translateString("Report Started")))\n
