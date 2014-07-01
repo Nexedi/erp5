@@ -302,8 +302,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     line_url, test = self.tool.startUnitTest(test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(test_result_path)
     # first launch, we have no time optimisations, so tests are
-    # launched in the given order
-    self.assertEqual(['testFoo', 'testBar'], [test, next_test])
+    # launched in alphabetical order
+    self.assertEqual(['testBar', 'testFoo'], [test, next_test])
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     self.tool.stopUnitTest(next_line_url, status_dict)
@@ -318,7 +318,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     # Make sure second test takes more time
     next_line.duration = line.duration + 1
     # So if we launch another unit test, it will process first the
-    # one wich is the slowest
+    # one which is the slowest
     self.assertEqual("stopped", test_result.getSimulationState())
     self.tic()
     next_test_result_path, revision = self._createTestResult(
@@ -326,7 +326,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertNotEquals(next_test_result_path, test_result_path)
     line_url, test = self.tool.startUnitTest(next_test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(next_test_result_path)
-    self.assertEqual(['testBar', 'testFoo'], [test, next_test])
+    self.assertEqual(['testFoo', 'testBar'], [test, next_test])
 
   def test_07_reportTaskFailure(self):
     test_result_path, revision = self._createTestResult(node_title="Node0")

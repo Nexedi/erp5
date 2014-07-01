@@ -102,7 +102,9 @@ class TaskDistributionTool(BaseTool):
             duration_list.append((line.getTitle(),line.getProperty('duration')))
       duration_list.sort(key=lambda x: -x[1])
       sorted_test_list = [x[0] for x in duration_list]
-      for test_name in test_name_list:
+      # Sort tests by name to have consistent numbering of test result line on
+      # a test suite.
+      for test_name in sorted(test_name_list):
         index = 0
         if sorted_test_list:
           try:
