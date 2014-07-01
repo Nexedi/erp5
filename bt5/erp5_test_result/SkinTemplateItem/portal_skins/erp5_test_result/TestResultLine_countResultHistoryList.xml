@@ -50,53 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Return all previous test result line for the same test, same\n
+            <value> <string>"""Count all previous test result line for the same test, same\n
 test suite, but for older revisions.\n
-\n
-Note that creation_date is used, but it could be nicer to use\n
-the start date. However for now it is more convenient from a\n
-catalog point of view\n
 """\n
 \n
 test_result = context.getParentValue()\n
-\n
-query_params = {\'creation_date\' : dict(query=context.getCreationDate(), range=\'ngt\'),\n
-                \'portal_type\': \'Test Result\',\n
-                \'limit\': limit,\n
+query_params = {\'portal_type\': \'Test Result\',\n
                 \'title\': dict(query=test_result.getTitle(), key=\'ExactMatch\'),\n
                 \'simulation_state\': (\'stopped\', \'public_stopped\', \'failed\'),\n
-                \'sort_on\': ((\'creation_date\', \'descending\'),),}\n
-\n
-result_list = []\n
-expected_id = context.getId()\n
-expected_title = context.getTitle()\n
-for tr in context.portal_catalog(**query_params):\n
-  tr = tr.getObject()\n
-  # Optimisation: the test result line probably have the same id in the previous\n
-  # test result.\n
-  line = getattr(tr, expected_id, None)\n
-  if line is not None and line.getTitle() == expected_title \\\n
-      and line.getSimulationState() in (\'stopped\', \'public_stopped\', \'failed\'):\n
-    result_list.append(line)\n
-  else:\n
-    for line in tr.contentValues(portal_type=\'Test Result Line\'):\n
-      if line.getTitle() == context.getTitle() \\\n
-         and line.getSimulationState() in (\'stopped\', \'public_stopped\', \'failed\'):\n
-        result_list.append(line)\n
-        # next time, the test result line will likely have the same id as this one.\n
-        expected_id = line.getId()\n
-\n
-return result_list\n
+                }\n
+return context.portal_catalog.countResults(**query_params)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestResultLine_getResultHistoryList</string> </value>
+            <value> <string>TestResultLine_countResultHistoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
