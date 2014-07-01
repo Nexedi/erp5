@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Delivery</string> </value>
+            <value> <string>TestResultLine</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
