@@ -1839,7 +1839,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     safe_html = web_page.asStrippedHTML()
     self.assertTrue('inside very broken HTML code' in safe_html)
     self.assertTrue('AZERTYY' not in safe_html)
-    self.assertTrue('#FFAA44' in safe_html)
+    self.assertTrue('#FFAA44' not in safe_html)
 
     filename = 'broken_html.html'
     file_object = makeFileUpload(filename)
