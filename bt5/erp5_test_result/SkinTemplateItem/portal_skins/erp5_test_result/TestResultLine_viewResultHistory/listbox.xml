@@ -362,8 +362,8 @@
                           <string>Launch Date</string>
                         </tuple>
                         <tuple>
-                          <string>parent_int_index</string>
-                          <string>Revision</string>
+                          <string>parent_reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>all_tests</string>
@@ -439,12 +439,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>parent_int_index</string>
-                          <string>parent_int_index</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -89,7 +89,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_parent_int_index</string>
+                        <string>listbox_parent_reference</string>
                       </list>
                     </value>
                 </item>
