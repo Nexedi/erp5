@@ -181,3 +181,16 @@ def checkPythonSourceCodeAsJSON(self, data):
 
   self.REQUEST.RESPONSE.setHeader('content-type', 'application/json')
   return json.dumps(dict(annotations=message_list))
+
+def filterSecurityUidDict(security_uid_dict, referenced_security_uid_set):
+  """
+  Removes from security_uid_dict entries whose value is not present in referenced_security_uid_set.
+  Returns the list of uids dropped.
+  """
+  result = []
+  append = result.append
+  for key, value in list(security_uid_dict.items()):
+    if value not in referenced_security_uid_set:
+      append(value)
+      del security_uid_dict[key]
+  return result
