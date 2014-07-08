@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script validates a form to the current REQUEST,\n
+  processes the REQUEST to extract form data and editors,\n
+  then updates the current context with the form data\n
+  by calling edit on it or by invoking editors.\n
+\n
+  TODO: split the generic form validation logic\n
+  from the context update logic\n
+"""\n
+from Products.Formulator.Errors import FormValidationError\n
+from Products.CMFActivity.Errors import ActivityPendingError\n
+\n
+request=container.REQUEST\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+\n
+# Extra security\n
+if request.get(\'field_prefix\', None):\n
+  field_prefix = \'my_\' # Prevent changing the prefix through publisher\n
+\n
+# Use dialog_id if present, otherwise fall back on form_id.\n
+if dialog_id not in (\'\', None):\n
+  form_id = dialog_id\n
+\n
+# Prevent users who don\'t have rights to edit the object from\n
+# editing it by calling the Base_edit script with correct\n
+# parameters directly.\n
+if not silent_mode and not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
+  msg = Base_translateString("You do not have the permissions to edit the object.")\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % (context.absolute_url(), form_id, selection_index, selection_name, \'portal_status_message=%s\' % msg)\n
+#   return request[\'RESPONSE\'].redirect(redirect_url)\n
+  return context.Base_redirect(redirect_url)\n
+\n
+# Get the form\n
+form = getattr(context,form_id)\n
+edit_order = form.edit_order\n
+\n
+try:\n
+  # Validate\n
+  form.validate_all_to_request(request, key_prefix=key_prefix)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  # Make sure editors are pushed back as values into the REQUEST object\n
+  for f in form.get_fields():\n
+    field_id = f.id\n
+    if request.has_key(field_id):\n
+      value = request.get(field_id)\n
+      if callable(value):\n
+        value(request)\n
+  if silent_mode: return form(request), \'form\'\n
+  return form(request)\n
+\n
+def editListBox(listbox_field, listbox):\n
+  """ Function called to edit a listbox\n
+  """\n
+  if listbox is not None:\n
+    gv = {}\n
+    if listbox_field.has_value(\'global_attributes\'):\n
+      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
+      for k in hidden_attributes:\n
+        gv[k] = getattr(request, k, None)\n
+    for url, v in listbox.items():\n
+      v.update(gv)\n
+      # Form: \'\' -> ERP5: None\n
+      cleaned_v = v.copy()\n
+      for key, value in cleaned_v.items():\n
+        if value == \'\':\n
+          cleaned_v[key] = None\n
+      if listbox_edit is None:\n
+        context.restrictedTraverse(url).edit(edit_order=edit_order, **cleaned_v)\n
+      else:\n
+        listbox_edit(url, edit_order, cleaned_v)\n
+\n
+def editMatrixBox(matrixbox_field, matrixbox):\n
+  """ Function called to edit a Matrix box\n
+  """\n
+  if matrixbox is not None:\n
+    cell_base_id = matrixbox_field.get_value(\'cell_base_id\')\n
+    portal_type = matrixbox_field.get_value(\'cell_portal_type\')\n
+    getter_method = matrixbox_field.get_value(\'getter_method\')\n
+    if getter_method not in (None, \'\'):\n
+      matrix_context = getattr(context,getter_method)()\n
+    else:\n
+      matrix_context = context\n
+    if matrix_context is not None:\n
+      kd = {}\n
+      kd[\'portal_type\'] = portal_type\n
+      kd[\'base_id\'] = cell_base_id\n
+      gv = {}\n
+      if matrixbox_field.has_value(\'global_attributes\'):\n
+        hidden_attributes = [x[0] for x in matrixbox_field.get_value(\'global_attributes\')]\n
+        for k in hidden_attributes:\n
+          gv[k] = getattr(request, k, None)\n
+      if matrixbox_field.get_value(\'update_cell_range\'):\n
+        as_cell_range_script_id = matrixbox_field.get_value(\n
+                \'as_cell_range_script_id\')\n
+        lines = []\n
+        columns = []\n
+        tabs = []\n
+        extra_dimension_list_list = []\n
+        if as_cell_range_script_id:\n
+          cell_range = getattr(matrix_context,\n
+              as_cell_range_script_id)(matrixbox=True, base_id=cell_base_id)\n
+          if len(cell_range) == 1:\n
+            lines, = cell_range\n
+          elif len(cell_range) == 2:\n
+            lines, columns = cell_range\n
+          elif len(cell_range) == 3:\n
+            lines, columns, tabs = cell_range\n
+          elif len(cell_range) > 3:\n
+            lines = cell_range[0]\n
+            columns = cell_range[1]\n
+            tabs = cell_range[2]\n
+            extra_dimension_list_list = cell_range[3:]\n
+        else:\n
+          lines = matrixbox_field.get_value(\'lines\')\n
+          columns = matrixbox_field.get_value(\'columns\')\n
+          tabs = matrixbox_field.get_value(\'tabs\')\n
+\n
+        column_ids = map(lambda x: x[0], columns)\n
+        line_ids = map(lambda x: x[0], lines)\n
+        tab_ids = map(lambda x: x[0], tabs)\n
+        extra_dimension_category_list_list = [[category for category, label in dimension_list] for dimension_list in extra_dimension_list_list]\n
+\n
+        # There are 3 cases\n
+        # Case 1: we do 1 dimensional matrix\n
+        # Case 2: we do 2 dimensional matrix\n
+        # Case 3: we do 2 dimensional matrix + tabs\n
+        # Case 4: we do 2 dimensional matrix + tabs + extra\n
+        cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
+        if (len(column_ids) == 0) or (column_ids[0] is None):\n
+          matrixbox_cell_range = [line_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
+\n
+        elif (len(tab_ids) == 0) or (tab_ids[0] is None):\n
+          matrixbox_cell_range = [line_ids, column_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
+\n
+        else:\n
+          matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
+          if extra_dimension_category_list_list:\n
+            matrixbox_cell_range = matrixbox_cell_range + extra_dimension_category_list_list\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)\n
+\n
+      for k,v in matrixbox.items():\n
+        # Only update cells which still exist\n
+        if matrix_context.hasInRange(*k, **kd):\n
+          c = matrix_context.newCell(*k, **kd)\n
+          if c is not None:\n
+            c.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list\n
+            if v.has_key(\'variated_property\'):\n
+              # For Variated Properties\n
+              value = v[\'variated_property\']\n
+              del v[\'variated_property\']\n
+              if gv.has_key(\'mapped_value_property_list\'):\n
+                # Change the property which is defined by the\n
+                # first element of mapped_value_property_list\n
+                # XXX May require some changes with Sets\n
+                key = gv[\'mapped_value_property_list\'][0]\n
+                v[key] = value\n
+            # Form: \'\' -> ERP5: None\n
+            cleaned_v = v.copy()\n
+            for key, value in cleaned_v.items():\n
+              if value == \'\':\n
+                cleaned_v[key] = None\n
+            c.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values\n
+          else:\n
+            return "Could not create cell %s" % str(k)\n
+        else:\n
+          return "Cell %s does not exist" % str(k)\n
+\n
+field_prefix_len = len(field_prefix)\n
+\n
+def parseField(f):\n
+  """\n
+   Parse given form field, to put them in\n
+   kw or in encapsulated_editor_list\n
+  """\n
+  k = f.id\n
+  if f.has_value(\'alternate_name\'):\n
+    k = f.get_value(\'alternate_name\') or f.id\n
+  v = getattr(request, k, MARKER)\n
+  if hasattr(v, \'edit\'):\n
+    # This is an encapsulated editor\n
+    # call it\n
+    encapsulated_editor_list.append(v)\n
+  elif v is not MARKER:\n
+    if k.startswith(field_prefix):\n
+      # We only take into account\n
+      # the object attributes\n
+      k = k[field_prefix_len:]\n
+      # Form: \'\' -> ERP5: None\n
+      if v == \'\':\n
+        v = None\n
+      kw[k] = v\n
+\n
+# Some initilizations\n
+kw = {}\n
+encapsulated_editor_list = []\n
+MARKER = []\n
+message = Base_translateString("Data updated.")\n
+\n
+try:\n
+  # We process all the field in form and\n
+  # we check if they are in the request,\n
+  # then we edit them\n
+  for field in form.get_fields():\n
+    parseField(field)\n
+\n
+    ## XXX We need to find a way not to use meta_type.\n
+    field_meta_type = field.meta_type\n
+    if field_meta_type == \'ProxyField\':\n
+      field_meta_type = field.getRecursiveTemplateField().meta_type\n
+\n
+    if(field_meta_type == \'ListBox\'):\n
+      editListBox(field, request.get(field.id))\n
+    elif(field_meta_type == \'MatrixBox\'):\n
+      editMatrixBox(field, request.get(field.id))\n
+\n
+  # Return parsed values \n
+  if silent_mode: return (kw, encapsulated_editor_list), \'edit\'\n
+\n
+  # Maybe we should build a list of objects we need\n
+  # Update basic attributes\n
+  context.edit(REQUEST=request, edit_order=edit_order, **kw)\n
+  for encapsulated_editor in encapsulated_editor_list:\n
+    encapsulated_editor.edit(context)\n
+except ActivityPendingError,e:\n
+  message = Base_translateString("%s" % e)\n
+\n
+ignore_layout = int(ignore_layout)\n
+try:\n
+  editable_mode = int(editable_mode)\n
+except TypeError:\n
+  raise TypeError(str(editable_mode))\n
+spp = context.getPhysicalPath()\n
+spp =list(spp)\n
+s_url = request["SERVER_URL"]\n
+spp.insert(0,s_url)\n
+#calculate direct the url instead of using absolute_url\n
+new_url = \'/\'.join(spp)\n
+\n
+# for web mode, we should use \'view\' instead of passed form_id\n
+# after \'Save & View\'.\n
+if context.REQUEST.get(\'is_web_mode\', False) and \\\n
+    not editable_mode:\n
+  form_id = \'view\'\n
+\n
+if not selection_index:\n
+#   redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
+#                                   context.absolute_url(),\n
+  redirect_url = \'%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
+                                  form_id,\n
+                                  ignore_layout,\n
+                                  editable_mode,\n
+                                  message)\n
+\n
+\n
+else:\n
+#   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
+#                               context.absolute_url(),\n
+  redirect_url = \'%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
+                              form_id,\n
+                              selection_index,\n
+                              selection_name,\n
+                              ignore_layout,\n
+                              editable_mode,\n
+                              message)\n
+\n
+\n
+# result = request[\'RESPONSE\'].redirect(redirect_url) \n
+\n
+if silent_mode: return result, \'redirect\'\n
+return context.Base_redirect(redirect_url)\n
+# return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', key_prefix=None, listbox_edit=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
