@@ -7,6 +7,7 @@ import socket
 import sys
 import glob
 import threading
+import time
 import ZODB
 from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
@@ -45,6 +46,10 @@ if save_mysql:
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
     # faster, so this produce somewhat not nice to read sql
+    if os.path.exists(dump_sql_path):
+      _print("About to overwrite mysqldump at %s (press Ctrl+C to abort)" %
+             dump_sql_path)
+      time.sleep(5)
     command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
       _print('Dumping MySQL database with %s ...' % command)
@@ -83,6 +88,8 @@ if load:
           backup_path = os.path.basename(backup_path)
         os.symlink(backup_path, full_path)
 elif save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
+  _print("About to remove existing Data.fs %s (press Ctrl+C to abort)" % data_fs_path)
+  time.sleep(5)
   os.remove(data_fs_path)
 
 for static_dir in static_dir_list:
