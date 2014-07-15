@@ -136,7 +136,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<a class="bt-small" style="width:100px;" href="WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=%s"><span>Post message</span></a>\' %(here.absolute_url())
+python:\'\'\'<div class="discussion-thread-button">         <a class="share-button post-message" href="WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=%s"><div><span>Post Message</span></div></a>         <a class="share-button rss-feed" href="WebSection_viewLatestDiscussionPostListAsRSS"><div><span>RSS Feed</span></div></a>   </div>\'\'\' %(here.absolute_url())
 
 ]]></string> </value>
         </item>
