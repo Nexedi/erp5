@@ -1874,7 +1874,7 @@ return result
     as a application/octet-stream without explicit extension, become
     a Spreadsheet ?
     """
-    path = makeFilePath('import_region_category.xls')
+    path = makeFilePath('import_region_category.ods')
     data = open(path, 'r').read()
 
     document = self.portal.portal_contributions.newContent(filename='toto',
