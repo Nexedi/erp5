@@ -499,7 +499,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
             if (property_value is not None):\n
               if same_type(property_value, DateTime()):\n
                 # Serialize DateTime\n
-                property_value = rfc822()\n
+                property_value = property_value.rfc822()\n
               result_dict[property_name] = property_value \n
 \n
   ##############\n
