@@ -56,6 +56,7 @@ from BTrees.OIBTree import OIBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
+import transaction
 
 import Products.Localizer.patches
 localizer_lock = Products.Localizer.patches._requests_lock
@@ -286,6 +287,7 @@ class Message(BaseMessage):
     if user is not None:
       user = user.__of__(uf)
       newSecurityManager(None, user)
+      transaction.get().setUser(user_name, '/'.join(uf.getPhysicalPath()))
     else :
       LOG("CMFActivity", WARNING,
           "Unable to find user %r in the portal" % user_name)
@@ -311,6 +313,9 @@ class Message(BaseMessage):
           # XXX: There is no check to see if user is allowed to access
           #      that method !
           method = getattr(obj, self.method_id)
+          transaction.get().note(
+            'CMFActivity ' + '/'.join(self.object_path) + '/' + self.method_id
+          )
           # Store site info
           setSite(activity_tool.getParentValue())
           if activity_tool.activity_timing_log:
