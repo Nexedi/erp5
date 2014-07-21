@@ -1,0 +1,655 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_bin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_bin_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global jQuery, rJS, RSVP, Handlebars, initGadgetMixin */\n
+/*jslint nomen: true */\n
+(function (window, $, rJS, RSVP, Handlebars, initGadgetMixin) {\n
+  "use strict";\n
+  /////////////////////////////////////////////////////////////////\n
+  // Desactivate jQuery Mobile URL management\n
+  /////////////////////////////////////////////////////////////////\n
+  $.mobile.ajaxEnabled = false;\n
+  $.mobile.linkBindingEnabled = false;\n
+  $.mobile.hashListeningEnabled = false;\n
+  $.mobile.pushStateEnabled = false;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Minimalistic ERP5\'s like portal type configuration\n
+  /////////////////////////////////////////////////////////////////\n
+  // XXX we should use lists instead to keep ordering\n
+  var portal_types = {\n
+    "Input Module": {\n
+      "view": {\n
+        "gadget": "InputModule_viewInputList",\n
+        "type": "object_list",\n
+        "title": "Document List"\n
+      },\n
+      "view_fast_input": {\n
+        "gadget": "InputModule_viewAddDocumentDialog",\n
+        "type": "object_fast_input",\n
+        "title": "Create Document"\n
+      }\n
+    },\n
+    "Input": {\n
+      "view": {\n
+        "gadget": "Input_viewProductionLine",\n
+        "type": "object_view",\n
+        "title": "Production Line"\n
+      },\n
+      "view_wip_part_spreadsheet": {\n
+        "gadget": "Input_viewWipPartSpreadsheet",\n
+        "type": "object_view",\n
+        "title": "WIP Part Spreadsheet",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.wip_part_spreadsheet);\n
+        }\n
+      },\n
+      "view_shift_spreadsheet": {\n
+        "gadget": "Input_viewShiftSpreadsheet",\n
+        "type": "object_view",\n
+        "title": "Shift Spreadsheet",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.shift_spreadsheet);\n
+        }\n
+      },\n
+      "view_available_capacity_spreadsheet": {\n
+        "gadget": "Input_viewAvailableCapacitySpreadsheet",\n
+        "type": "object_view",\n
+        "title": "Available Capacity Spreadsheet",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.capacity_by_project_spreadsheet);\n
+        }\n
+      },\n
+      "view_required_capacity_spreadsheet": {\n
+        "gadget": "Input_viewRequiredCapacitySpreadsheet",\n
+        "type": "object_view",\n
+        "title": "Required Capacity Spreadsheet",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.capacity_by_station_spreadsheet);\n
+        }\n
+      },\n
+      "view_simu": {\n
+        "gadget": "Input_viewSimulation",\n
+        "type": "object_view",\n
+        "title": "Run simulation"\n
+      },\n
+      "view_management": {\n
+        "gadget": "Input_viewDocumentManagement",\n
+        "type": "object_view",\n
+        "title": "Manage document"\n
+      },\n
+      "view_result": {\n
+        "gadget": "Input_viewResultList",\n
+        "type": "object_view",\n
+        "title": "Results"\n
+      }\n
+    },\n
+    "Output": {\n
+      "view": {\n
+        "gadget": "Output_viewStationUtilisationGraph",\n
+        "type": "object_view",\n
+        "title": "Stations Utilization",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.station_utilisation_graph);\n
+        }\n
+      },\n
+      "view_capacity_utilization": {\n
+        "gadget": "Output_viewCapacityUtilisationGraph",\n
+        "type": "object_view",\n
+        "title": "Capacity Utilization",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.capacity_utilisation_graph);\n
+        }\n
+      },\n
+      "view_queue_stat": {\n
+        "gadget": "Output_viewQueueStatGraph",\n
+        "type": "object_view",\n
+        "title": "Queues Statistics",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.queue_stat);\n
+        }\n
+      },\n
+      "view_exit_stat": {\n
+        "gadget": "Output_viewExitStatistics",\n
+        "type": "object_view",\n
+        "title": "Exit Statistics",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.exit_stat);\n
+        }\n
+      },\n
+      "view_gantt": {\n
+        "gadget": "Output_viewJobGantt",\n
+        "type": "object_view",\n
+        "title": "Job Gantt",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.job_gantt);\n
+        }\n
+      },\n
+      "view_schedule": {\n
+        "gadget": "Output_viewJobScheduleSpreadsheet",\n
+        "type": "object_view",\n
+        "title": "Job Schedule",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.job_schedule_spreadsheet);\n
+        }\n
+      },\n
+      "view_debug": {\n
+        "gadget": "Output_viewDebugJson",\n
+        "type": "object_view",\n
+        "title": "Debug JSON",\n
+        "condition": function (gadget) {\n
+          return (gadget.props.configuration_dict[\'Dream-Configuration\']\n
+                        .gui.debug_json);\n
+        }\n
+      }\n
+    }\n
+  },\n
+    panel_template,\n
+    navigation_template,\n
+    active_navigation_template,\n
+    gadget_klass = rJS(window);\n
+\n
+  function calculateTabHTML(gadget, options, key, title, active) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        var kw = {\n
+          action: key,\n
+          id: options.id\n
+        };\n
+        if (options.result !== undefined) {\n
+          kw.result = options.result;\n
+        }\n
+        return gadget.aq_pleasePublishMyState(kw);\n
+      })\n
+      .push(function (url) {\n
+        var kw = {\n
+          title: title,\n
+          link: url\n
+        };\n
+        if (active === true) {\n
+          return active_navigation_template(kw);\n
+        }\n
+\n
+        return navigation_template(kw);\n
+\n
+      });\n
+  }\n
+\n
+  function getNextLink(gadget, portal_type, options) {\n
+    var forward_kw = {action: options.action || "view"},\n
+      queue = new RSVP.Queue();\n
+    if (portal_type === "Input") {\n
+      forward_kw.id = options.id;\n
+    } else if (portal_type === "Output") {\n
+      forward_kw.id = options.id;\n
+      queue\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("jio");\n
+        })\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment({\n
+            _id: options.id,\n
+            "_attachment": "simulation.json"\n
+          });\n
+        })\n
+        .push(function (sim_json) {\n
+          var document_list = JSON.parse(sim_json),\n
+            current = parseInt(options.result, 10);\n
+          if (current === (document_list.length - 1)) {\n
+            forward_kw.result = 0;\n
+          } else {\n
+            forward_kw.result = current + 1;\n
+          }\n
+        });\n
+    } else if (portal_type !== "Input Module") {\n
+      throw new Error("Unknown portal type: " + portal_type);\n
+    }\n
+    return queue.push(function () {\n
+      return gadget.aq_pleasePublishMyState(forward_kw);\n
+    });\n
+  }\n
+\n
+  function getTitle(gadget, portal_type, options) {\n
+    var title;\n
+    if (portal_type === "Input Module") {\n
+      title = "Documents";\n
+    } else if (portal_type === "Input") {\n
+      title = gadget.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.get({_id: options.id});\n
+        })\n
+        .push(function (jio_doc) {\n
+          return jio_doc.data.title + " (" + jio_doc.data.modified + ")";\n
+        });\n
+    } else if (portal_type === "Output") {\n
+      title = gadget.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment({\n
+            _id: options.id,\n
+            "_attachment": "simulation.json"\n
+          });\n
+        })\n
+        .push(function (sim_json) {\n
+          var document_list = JSON.parse(sim_json);\n
+          return document_list[options.result].score + " " +\n
+            document_list[options.result].key;\n
+        });\n
+    } else {\n
+      throw new Error("Unknown portal type: " + portal_type);\n
+    }\n
+    return title;\n
+  }\n
+\n
+  function calculateNavigationHTML(gadget, portal_type, options) {\n
+    var nav_html,\n
+      action;\n
+    if (portal_types[portal_type][options.action].type ===\n
+        "object_view") {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          var url_list = [],\n
+            key2;\n
+          for (key2 in portal_types[portal_type]) {\n
+            if (portal_types[portal_type].hasOwnProperty(key2)) {\n
+              action = portal_types[portal_type][key2];\n
+              if (action.type === "object_view") {\n
+                if ((action.condition === undefined) ||\n
+                    (action.condition(gadget))) {\n
+                  url_list.push(\n
+                    calculateTabHTML(gadget, options, key2, action.title,\n
+                                     (key2 === options.action))\n
+                  );\n
+                }\n
+              }\n
+\n
+            }\n
+          }\n
+          return RSVP.all(url_list);\n
+        })\n
+        .push(function (entry_list) {\n
+          var i;\n
+          nav_html =\n
+            \'<nav data-role="navbar" data-collapsible="true"><ul>\';\n
+          for (i = 0; i < entry_list.length; i += 1) {\n
+            nav_html += entry_list[i];\n
+          }\n
+          nav_html += \'</ul></nav>\';\n
+          return nav_html;\n
+        });\n
+    }\n
+  }\n
+\n
+  initGadgetMixin(gadget_klass);\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // Handle acquisition\n
+    /////////////////////////////////////////////////////////////////\n
+    // Bridge to jio gadget\n
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_ajax", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.ajax.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_post", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.post.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_remove", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.remove.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_get", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.get.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.putAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("jio")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("whoWantsToDisplayHome", function () {\n
+      // Hey, I want to display some URL\n
+      return this.aq_pleasePublishMyState({});\n
+    })\n
+    .allowPublicAcquisition("whoWantsToDisplayThisDocument",\n
+                            function (param_list) {\n
+        // Hey, I want to display some jIO document\n
+        // XXX should be merged with whoWantsToDisplayThisResult\n
+        var kw = {\n
+          action: param_list[1] || "view"\n
+        };\n
+        if (param_list[0] !== undefined) {\n
+          kw.id = param_list[0];\n
+        }\n
+        return this.aq_pleasePublishMyState(kw);\n
+      })\n
+    .allowPublicAcquisition("whoWantsToDisplayThisResult",\n
+                            function (param_list) {\n
+        // Hey, I want to display some jIO document\n
+\n
+        // We\'ll display the result using the first enabled action\n
+        var action = "view", action_info, action_id;\n
+        for (action_id in portal_types.Output) {\n
+          if (portal_types.Output.hasOwnProperty(action_id)) {\n
+            action_info = portal_types.Output[action_id];\n
+            if ((action_info.condition === undefined) ||\n
+                (action_info.condition(this))) {\n
+              action = action_id;\n
+              break;\n
+            }\n
+          }\n
+        }\n
+        return this.aq_pleasePublishMyState({\n
+          action: action,\n
+          id: param_list[0],\n
+          result: param_list[1]\n
+        });\n
+      })\n
+    .allowPublicAcquisition("getConfigurationDict", function () {\n
+      return this.props.configuration_dict;\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Precompile the templates while loading the first gadget instance\n
+    .ready(function () {\n
+      if (panel_template === undefined) {\n
+        // XXX Only works as root gadget\n
+        panel_template = Handlebars.compile(\n
+          document.getElementById("panel-template").innerHTML\n
+        );\n
+        navigation_template = Handlebars.compile(\n
+          document.getElementById("navigation-template").innerHTML\n
+        );\n
+        active_navigation_template = Handlebars.compile(\n
+          document.getElementById("active-navigation-template").innerHTML\n
+        );\n
+      }\n
+    })\n
+\n
+    // Create some link on the page\n
+    .ready(function (g) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            g.aq_pleasePublishMyState({}),\n
+            g.aq_pleasePublishMyState({action: "view_fast_input"})\n
+          ]);\n
+        })\n
+        .push(function (link_list) {\n
+          var panel = g.props.element.querySelector("#leftpanel");\n
+\n
+          panel.innerHTML =\n
+            panel_template({navigationlist: []});\n
+          panel.getElementsByClassName("home_link")[0].href = link_list[0];\n
+          panel.getElementsByClassName("fast_input_link")[0].href =\n
+            link_list[1];\n
+          // XXX JQuery mobile\n
+          $(panel).trigger("create");\n
+        });\n
+    })\n
+\n
+    // Configure jIO to use localstorage\n
+    // And load configuration from server\n
+    .ready(function (g) {\n
+      var jio_gadget;\n
+      return g.getDeclaredGadget("jio")\n
+        .push(function (gadget) {\n
+          jio_gadget = gadget;\n
+          return jio_gadget.createJio({\n
+            type: "local",\n
+            username: "dream",\n
+            applicationname: "dream"\n
+          });\n
+        })\n
+        .push(function () {\n
+          // XXX Hardcoded relative URL\n
+          return jio_gadget.ajax({url: "../../getConfigurationDict"});\n
+        })\n
+        .push(function (evt) {\n
+          g.props.configuration_dict = JSON.parse(evt.target.responseText);\n
+        });\n
+    })\n
+\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    // Render the page\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this,\n
+        back_kw = {action: "view"},\n
+        page_gadget,\n
+        portal_type = "Input Module",\n
+        nav_element = gadget.props.element\n
+                            .getElementsByClassName("nav_container")[0],\n
+        element = gadget.props.element\n
+                        .getElementsByClassName("gadget_container")[0];\n
+\n
+      if (options.action === undefined) {\n
+        // Redirect to the view action\n
+        options.action = "view";\n
+        return gadget.aq_pleasePublishMyState(options)\n
+          .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+      }\n
+\n
+      // Detect what is the kind of document displayed\n
+      if (options.id !== undefined) {\n
+        if (options.result === undefined) {\n
+          portal_type = "Input";\n
+        } else {\n
+          portal_type = "Output";\n
+          back_kw.action = "view_result";\n
+          back_kw.id = options.id;\n
+        }\n
+      }\n
+\n
+      // Get the action information\n
+      return gadget.declareGadget(\n
+        portal_types[portal_type][options.action].gadget + ".html"\n
+      )\n
+        .push(function (g) {\n
+          page_gadget = g;\n
+          if (page_gadget.render !== undefined) {\n
+            return page_gadget.render(options);\n
+          }\n
+        }).push(function () {\n
+          return RSVP.all([\n
+            page_gadget.getElement(),\n
+            calculateNavigationHTML(gadget, portal_type, options),\n
+            gadget.aq_pleasePublishMyState(back_kw),\n
+            getTitle(gadget, portal_type, options),\n
+            getNextLink(gadget, portal_type, options)\n
+          ]);\n
+        }).push(function (result_list) {\n
+          var nav_html = result_list[1],\n
+            page_element = result_list[0];\n
+\n
+          // Update title\n
+          gadget.props.element.querySelector("header h1").textContent =\n
+            result_list[3];\n
+\n
+          // XXX Hide the back button in case of module display?\n
+          // Update back link\n
+          gadget.props.element\n
+            .getElementsByClassName("back_link")[0].href = result_list[2];\n
+          // XXX Hide the forward button in case of non result?\n
+          // Update forward link\n
+          gadget.props.element\n
+            .getElementsByClassName("next_link")[0].href = result_list[4];\n
+\n
+          // Update the navigation panel\n
+          // Clear the previous rendering\n
+          while (nav_element.firstChild) {\n
+            nav_element.removeChild(nav_element.firstChild);\n
+          }\n
+          if (nav_html !== undefined) {\n
+            nav_element.innerHTML = nav_html;\n
+            $(nav_element).trigger("create");\n
+          }\n
+\n
+          // Append in the DOM at the end to reduce flickering and reduce DOM\n
+          // modifications\n
+          // Clear the previous rendering\n
+          while (element.firstChild) {\n
+            element.removeChild(element.firstChild);\n
+          }\n
+          element.appendChild(page_element);\n
+          $(element).trigger(\'create\');\n
+\n
+          // XXX RenderJS hack to start sub gadget services\n
+          // Only work if this gadget has no parent.\n
+          if (page_gadget.startService !== undefined) {\n
+            return page_gadget.startService();\n
+          }\n
+        });\n
+    });\n
+}(window, jQuery, rJS, RSVP));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget Bin JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

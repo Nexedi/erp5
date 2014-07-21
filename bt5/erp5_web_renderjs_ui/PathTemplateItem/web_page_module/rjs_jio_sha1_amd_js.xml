@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>jio_sha1.amd.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_jio_sha1_amd_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function (dependencies, module) {\n
+  if (typeof define === \'function\' && define.amd) {\n
+    return define(dependencies, module);\n
+  }\n
+  if (typeof exports === \'object\') {\n
+    return module(exports);\n
+  }\n
+  module(window);\n
+}([\'exports\'], function (exports) {\n
+/*\n
+ * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined\n
+ * in FIPS PUB 180-1\n
+ * Version 2.1a Copyright Paul Johnston 2000 - 2002.\n
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet\n
+ * Distributed under the BSD License\n
+ * See http://pajhome.org.uk/crypt/md5 for details.\n
+ */\n
+\n
+/*\n
+ * Configurable variables. You may need to tweak these to be compatible with\n
+ * the server-side, but the defaults work in most cases.\n
+ */\n
+\n
+var hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */\n
+var b64pad  = "="; /* base-64 pad character. "=" for strict RFC compliance   */\n
+var chrsz   = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode      */\n
+\n
+/*\n
+ * These are the functions you\'ll usually want to call\n
+ * They take string arguments and return either hex or base-64 encoded strings\n
+ */\n
+function hex_sha1(s){return binb2hex(core_sha1(str2binb(s),s.length * chrsz));}\n
+function b64_sha1(s){return binb2b64(core_sha1(str2binb(s),s.length * chrsz));}\n
+function str_sha1(s){return binb2str(core_sha1(str2binb(s),s.length * chrsz));}\n
+function hex_hmac_sha1(key, data){ return binb2hex(core_hmac_sha1(key, data));}\n
+function b64_hmac_sha1(key, data){ return binb2b64(core_hmac_sha1(key, data));}\n
+function str_hmac_sha1(key, data){ return binb2str(core_hmac_sha1(key, data));}\n
+\n
+/*\n
+ * Perform a simple self-test to see if the VM is working\n
+ */\n
+function sha1_vm_test()\n
+{\n
+  return hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";\n
+}\n
+\n
+/*\n
+ * Calculate the SHA-1 of an array of big-endian words, and a bit length\n
+ */\n
+function core_sha1(x, len)\n
+{\n
+  /* append padding */\n
+  x[len >> 5] |= 0x80 << (24 - len % 32);\n
+  x[((len + 64 >> 9) << 4) + 15] = len;\n
+\n
+  var w = Array(80);\n
+  var a =  1732584193;\n
+  var b = -271733879;\n
+  var c = -1732584194;\n
+  var d =  271733878;\n
+  var e = -1009589776;\n
+\n
+  for(var i = 0; i < x.length; i += 16)\n
+  {\n
+    var olda = a;\n
+    var oldb = b;\n
+    var oldc = c;\n
+    var oldd = d;\n
+    var olde = e;\n
+\n
+    for(var j = 0; j < 80; j++)\n
+    {\n
+      if(j < 16) w[j] = x[i + j];\n
+      else w[j] = rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);\n
+      var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)),\n
+                       safe_add(safe_add(e, w[j]), sha1_kt(j)));\n
+      e = d;\n
+      d = c;\n
+      c = rol(b, 30);\n
+      b = a;\n
+      a = t;\n
+    }\n
+\n
+    a = safe_add(a, olda);\n
+    b = safe_add(b, oldb);\n
+    c = safe_add(c, oldc);\n
+    d = safe_add(d, oldd);\n
+    e = safe_add(e, olde);\n
+  }\n
+  return Array(a, b, c, d, e);\n
+\n
+}\n
+\n
+/*\n
+ * Perform the appropriate triplet combination function for the current\n
+ * iteration\n
+ */\n
+function sha1_ft(t, b, c, d)\n
+{\n
+  if(t < 20) return (b & c) | ((~b) & d);\n
+  if(t < 40) return b ^ c ^ d;\n
+  if(t < 60) return (b & c) | (b & d) | (c & d);\n
+  return b ^ c ^ d;\n
+}\n
+\n
+/*\n
+ * Determine the appropriate additive constant for the current iteration\n
+ */\n
+function sha1_kt(t)\n
+{\n
+  return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :\n
+         (t < 60) ? -1894007588 : -899497514;\n
+}\n
+\n
+/*\n
+ * Calculate the HMAC-SHA1 of a key and some data\n
+ */\n
+function core_hmac_sha1(key, data)\n
+{\n
+  var bkey = str2binb(key);\n
+  if(bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);\n
+\n
+  var ipad = Array(16), opad = Array(16);\n
+  for(var i = 0; i < 16; i++)\n
+  {\n
+    ipad[i] = bkey[i] ^ 0x36363636;\n
+    opad[i] = bkey[i] ^ 0x5C5C5C5C;\n
+  }\n
+\n
+  var hash = core_sha1(ipad.concat(str2binb(data)), 512 + data.length * chrsz);\n
+  return core_sha1(opad.concat(hash), 512 + 160);\n
+}\n
+\n
+/*\n
+ * Add integers, wrapping at 2^32. This uses 16-bit operations internally\n
+ * to work around bugs in some JS interpreters.\n
+ */\n
+function safe_add(x, y)\n
+{\n
+  var lsw = (x & 0xFFFF) + (y & 0xFFFF);\n
+  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);\n
+  return (msw << 16) | (lsw & 0xFFFF);\n
+}\n
+\n
+/*\n
+ * Bitwise rotate a 32-bit number to the left.\n
+ */\n
+function rol(num, cnt)\n
+{\n
+  return (num << cnt) | (num >>> (32 - cnt));\n
+}\n
+\n
+/*\n
+ * Convert an 8-bit or 16-bit string to an array of big-endian words\n
+ * In 8-bit function, characters >255 have their hi-byte silently ignored.\n
+ */\n
+function str2binb(str)\n
+{\n
+  var bin = Array();\n
+  var mask = (1 << chrsz) - 1;\n
+  for(var i = 0; i < str.length * chrsz; i += chrsz)\n
+    bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (32 - chrsz - i%32);\n
+  return bin;\n
+}\n
+\n
+/*\n
+ * Convert an array of big-endian words to a string\n
+ */\n
+function binb2str(bin)\n
+{\n
+  var str = "";\n
+  var mask = (1 << chrsz) - 1;\n
+  for(var i = 0; i < bin.length * 32; i += chrsz)\n
+    str += String.fromCharCode((bin[i>>5] >>> (32 - chrsz - i%32)) & mask);\n
+  return str;\n
+}\n
+\n
+/*\n
+ * Convert an array of big-endian words to a hex string.\n
+ */\n
+function binb2hex(binarray)\n
+{\n
+  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";\n
+  var str = "";\n
+  for(var i = 0; i < binarray.length * 4; i++)\n
+  {\n
+    str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +\n
+           hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);\n
+  }\n
+  return str;\n
+}\n
+\n
+/*\n
+ * Convert an array of big-endian words to a base-64 string\n
+ */\n
+function binb2b64(binarray)\n
+{\n
+  var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";\n
+  var str = "";\n
+  for(var i = 0; i < binarray.length * 4; i += 3)\n
+  {\n
+    var triplet = (((binarray[i   >> 2] >> 8 * (3 -  i   %4)) & 0xFF) << 16)\n
+                | (((binarray[i+1 >> 2] >> 8 * (3 - (i+1)%4)) & 0xFF) << 8 )\n
+                |  ((binarray[i+2 >> 2] >> 8 * (3 - (i+2)%4)) & 0xFF);\n
+    for(var j = 0; j < 4; j++)\n
+    {\n
+      if(i * 8 + j * 6 > binarray.length * 32) str += b64pad;\n
+      else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);\n
+    }\n
+  }\n
+  return str;\n
+}\n
+\n
+  exports.hex_sha1 = hex_sha1;\n
+  exports.b64_sha1 = b64_sha1;\n
+  exports.str_sha1 = str_sha1;\n
+  exports.hex_hmac_sha1 = hex_hmac_sha1;\n
+  exports.b64_hmac_sha1 = b64_hmac_sha1;\n
+  exports.str_hmac_sha1 = str_hmac_sha1;\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jio_sha1.amd.js</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

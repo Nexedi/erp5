@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>jio_storage_erp5.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_jio_storage_erp5_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * Copyright 2013, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+// JIO ERP5 Storage Description :\n
+// {\n
+//   type: "erp5"\n
+//   url: {string}\n
+//   default_view: {string} (optional)\n
+// }\n
+\n
+/*jslint indent: 2, nomen: true, unparam: true */\n
+/*global jIO, UriTemplate, FormData, RSVP, URI, DOMParser, Blob,\n
+  ProgressEvent, define */\n
+\n
+(function (root, dependencies, module) {\n
+  "use strict";\n
+  if (typeof define === \'function\' && define.amd) {\n
+    return define(dependencies, module);\n
+  }\n
+  var namespace = module(RSVP, jIO, URI, UriTemplate);\n
+  if (namespace !== undefined) { root.ERP5Storage = namespace; }\n
+}(this, [\n
+  "rsvp",\n
+  "jio",\n
+  "uri",\n
+  "uritemplate"\n
+], function (RSVP, jIO, URI, UriTemplate) {\n
+  "use strict";\n
+\n
+  var hasOwnProperty = Function.prototype.call.bind(\n
+    Object.prototype.hasOwnProperty\n
+  ), constant = {};\n
+\n
+  constant.method_notification_message_obj = {\n
+    "get": "Getting document.",\n
+    "post": "Posting document.",\n
+    "put": "Putting document.",\n
+    "remove": "Removing document.",\n
+    "getAttachment": "Getting attachment.",\n
+    "putAttachment": "Putting attachment.",\n
+    "removeAttacment": "Removing attachment.",\n
+    "allDocs": "Getting document list."\n
+  };\n
+\n
+  // XXX docstring\n
+  function formatGetSuccessAnswer(answer) {\n
+    if (answer === undefined || answer === null) { throw answer; }\n
+    var result;\n
+    if (typeof answer.data === "object" && answer.data) {\n
+      return answer;\n
+    }\n
+    if (answer.target &&\n
+        typeof answer.target.status === "number" &&\n
+        typeof answer.target.statusText === "string") {\n
+      result = {\n
+        "status": answer.target.status\n
+      };\n
+      if (typeof answer.target.response === "object" &&\n
+          answer.target.response !== null) {\n
+        if (typeof answer.target.response.toJSON === "function") {\n
+          result.data = answer.target.response.toJSON();\n
+        } else {\n
+          result.data = answer.target.response;\n
+        }\n
+      } else if (answer.target.response instanceof Blob) {\n
+        return jIO.util.readBlobAsText(answer.target.response).\n
+          then(function (text) {\n
+            result.data = JSON.parse(text);\n
+            return result;\n
+          });\n
+      }\n
+      return result;\n
+    }\n
+    return answer;\n
+  }\n
+\n
+  // XXX docstring\n
+  function formatUpdateSuccessAnswer(answer) {\n
+    if (answer === undefined || answer === null) { throw answer; }\n
+    var result;\n
+    if (typeof answer.target === "object" && answer.target !== null &&\n
+        typeof answer.target.status === "number") {\n
+      result = {\n
+        "status": answer.target.status\n
+      };\n
+      return result;\n
+    }\n
+    return answer;\n
+  }\n
+\n
+  // XXX docstring\n
+  function formatErrorAnswer(answer) {\n
+    if (answer === undefined || answer === null) { throw answer; }\n
+    var result, dom;\n
+    if (answer.target &&\n
+        typeof answer.target.status === "number" &&\n
+        typeof answer.target.statusText === "string") {\n
+      // seams to be a ProgressEvent\n
+      result = {\n
+        "status": answer.target.status\n
+      };\n
+      if (typeof answer.target.response === "object" &&\n
+          answer.target.response !== null) {\n
+        if (typeof answer.target.response.toJSON === "function") {\n
+          result.data = answer.target.response.toJSON();\n
+        } else {\n
+          result.data = answer.target.response;\n
+        }\n
+      } else if (typeof answer.target.responseText === "string") {\n
+        dom = new DOMParser().parseFromString(\n
+          answer.target.responseText,\n
+          "text/html"\n
+        );\n
+        result.message = (dom.querySelector(\'#master\') ||\n
+                          dom.firstElementChild).textContent;\n
+        if (!result.message) { delete result.message; }\n
+      }\n
+      throw result;\n
+    }\n
+    throw answer;\n
+  }\n
+\n
+  // XXX docstring\n
+  function formatNotification(method, notif) {\n
+    var result;\n
+    if (notif) {\n
+      if (typeof notif.loaded === "number" &&\n
+          typeof notif.total === "number") {\n
+        result = {};\n
+        // can be a ProgressEvent or a jIO notification\n
+        if (notif.method !== method) {\n
+          result = {\n
+            "method": method,\n
+            "loaded": notif.loaded,\n
+            "total": notif.total\n
+          };\n
+          if (typeof notif.percentage === "number") {\n
+            result.percentage = notif.percentage;\n
+          }\n
+        }\n
+        if (typeof notif.message === "string") {\n
+          result.message = notif.message;\n
+        } else {\n
+          result.message = constant.method_notification_message_obj[method];\n
+        }\n
+        return result;\n
+      }\n
+    }\n
+    throw null; // stop propagation\n
+  }\n
+\n
+  constant.formatSuccessAnswerFor = {\n
+    "post": formatUpdateSuccessAnswer,\n
+    "put": formatUpdateSuccessAnswer,\n
+    "get": formatGetSuccessAnswer\n
+  };\n
+\n
+  //////////////////////////////////////////////////////////////////////\n
+\n
+  // XXX docstring\n
+  function ERP5Storage(spec) {\n
+    if (typeof spec.url !== "string" || !spec.url) {\n
+      throw new TypeError("ERP5 \'url\' must be a string " +\n
+                          "which contains more than one character.");\n
+    }\n
+    this._url = spec.url;\n
+    this._default_view = spec.default_view;\n
+  }\n
+\n
+  // XXX docstring\n
+  function methodGenerator(method) {\n
+    return function (command, param, options) {\n
+      RSVP.resolve().\n
+        then(function () {\n
+          var view = ERP5Storage.onView[options._view || this._default_view] ||\n
+            ERP5Storage.onView["default"];\n
+          if (typeof view[method] !== "function") {\n
+            view = ERP5Storage.onView["default"];\n
+          }\n
+          return view[method].call(this, param, options);\n
+        }.bind(this)).\n
+        then(constant.formatSuccessAnswerFor[method]).\n
+        then(null, formatErrorAnswer, formatNotification.bind(null, method)).\n
+        then(command.success, command.error, command.progress);\n
+    };\n
+  }\n
+\n
+  // XXX docstring\n
+  [\n
+    "post",\n
+    "put",\n
+    "get",\n
+    "remove",\n
+    "putAttachment",\n
+    "getAttachment",\n
+    "removeAttachment",\n
+    "allDocs",\n
+    "check",\n
+    "repair"\n
+  ].forEach(function (method) {\n
+    ERP5Storage.prototype[method] = methodGenerator(method);\n
+  });\n
+  // XXX docstring\n
+  function getSiteDocument(url) {\n
+    if (typeof url !== "string" &&\n
+        typeof (this && this._url) !== "string") {\n
+      throw new TypeError("ERP5Storage.getSiteDocument(): Argument 1 `url` " +\n
+                          "or `this._url` are not of type string.");\n
+    }\n
+    return jIO.util.ajax({\n
+      "type": "GET",\n
+      "url": url || this._url,\n
+      "xhrFields": {\n
+        withCredentials: true\n
+      }\n
+    }).then(function (event) {\n
+      return JSON.parse(event.target.responseText);\n
+    });\n
+  }\n
+  ERP5Storage.getSiteDocument = getSiteDocument;\n
+\n
+  // XXX docstring\n
+  function getDocumentAndHatoas(param, options) {\n
+    var this_ = this;\n
+    return ERP5Storage.getSiteDocument(this._url).\n
+      then(function (site_hal) {\n
+        // XXX need to get modified metadata\n
+        return jIO.util.ajax({\n
+          "type": "GET",\n
+          "url": UriTemplate.parse(site_hal._links.traverse.href)\n
+                            .expand({\n
+              relative_url: param._id,\n
+              view: options._view || this_._default_view || "view"\n
+            }),\n
+          "xhrFields": {\n
+            withCredentials: true\n
+          }\n
+        });\n
+      });\n
+  }\n
+\n
+  ERP5Storage.onView = {};\n
+  ERP5Storage.onView["default"] = {};\n
+\n
+  // XXX docstring\n
+  ERP5Storage.onView["default"].get = function (param, options) {\n
+    return getDocumentAndHatoas.call(this, param, options).\n
+      then(function (response) {\n
+        var result = JSON.parse(response.target.responseText);\n
+        result._id = param._id;\n
+        result.portal_type = result._links.type.name;\n
+        // XXX\n
+        // delete result._embedded;\n
+        // delete result._links;\n
+        // delete result._debug;\n
+        // new jIO.Metadata(result).format();\n
+        return {"data": result};\n
+      });\n
+  };\n
+\n
+  // XXX docstring\n
+  ERP5Storage.onView["default"].post = function (metadata, options) {\n
+    var final_response;\n
+    return getSiteDocument(this._url)\n
+      .then(function (site_hal) {\n
+        /*jslint forin: true */\n
+        var post_action = site_hal._actions.add,\n
+          data = new FormData();\n
+\n
+        data.append("portal_type", metadata.portal_type);\n
+\n
+        return jIO.util.ajax({\n
+          "type": post_action.method,\n
+          "url": post_action.href,\n
+          "data": data,\n
+          "xhrFields": {\n
+            withCredentials: true\n
+          }\n
+        });\n
+      }).then(function (event) {\n
+        final_response = {"status": event.target.status};\n
+        if (!metadata._id) {\n
+          // XXX Really depend on server response...\n
+          var uri = new URI(event.target.getResponseHeader("X-Location"));\n
+          final_response.id = uri.segment(2);\n
+          metadata._id = final_response.id;\n
+        }\n
+      }).\n
+      then(ERP5Storage.onView["default"].put.bind(this, metadata, options)).\n
+      then(function () { return final_response; });\n
+  };\n
+\n
+  // XXX docstring\n
+  ERP5Storage.onView["default"].put = function (metadata, options) {\n
+    return getDocumentAndHatoas.call(this, metadata, options).\n
+      then(function (result) {\n
+        /*jslint forin: true */\n
+        result = JSON.parse(result.target.responseText);\n
+        var put_action = result._embedded._view._actions.put,\n
+          renderer_form = result._embedded._view,\n
+          data = new FormData(),\n
+          key;\n
+        data.append(renderer_form.form_id.key,\n
+                    renderer_form.form_id[\'default\']);\n
+        for (key in metadata) {\n
+//           console.log(key);\n
+          if (hasOwnProperty(metadata, key)) {\n
+            if (key !== "_id") {\n
+              // Hardcoded my_ ERP5 behaviour\n
+              data.append(key, metadata[key]);\n
+//               if (hasOwnProperty(renderer_form, "my_" + key)) {\n
+//                 console.log("ok");\n
+//                 data.append(renderer_form["my_" + key].key, metadata[key]);\n
+//               }\n
+            }\n
+          }\n
+        }\n
+        return jIO.util.ajax({\n
+          "type": put_action.method,\n
+          "url": put_action.href,\n
+          "data": data,\n
+          "xhrFields": {\n
+            withCredentials: true\n
+          }\n
+        });\n
+      });\n
+  };\n
+\n
+  ERP5Storage.onView["default"].remove = function () {\n
+    return;\n
+  };\n
+\n
+  ERP5Storage.onView["default"].allDocs = function (param, options) {\n
+    if (typeof options.query !== "string") {\n
+      options.query = (options.query ?\n
+                       jIO.Query.objectToSearchText(options.query) :\n
+                       undefined);\n
+    }\n
+    return getSiteDocument(this._url)\n
+      .then(function (site_hal) {\n
+        return jIO.util.ajax({\n
+          "type": "GET",\n
+          "url": UriTemplate.parse(site_hal._links.raw_search.href)\n
+                            .expand({\n
+              query: options.query,\n
+              // XXX Force erp5 to return embedded document\n
+              select_list: options.select_list || ["title", "reference"],\n
+              limit: options.limit\n
+            }),\n
+          "xhrFields": {\n
+            withCredentials: true\n
+          }\n
+        });\n
+      })\n
+      .then(function (response) {\n
+        return JSON.parse(response.target.responseText);\n
+      })\n
+      .then(function (catalog_json) {\n
+        var data = catalog_json._embedded.contents,\n
+          count = data.length,\n
+          i,\n
+          uri,\n
+          item,\n
+          result = [],\n
+          promise_list = [result];\n
+        for (i = 0; i < count; i += 1) {\n
+          item = data[i];\n
+          uri = new URI(item._links.self.href);\n
+          result.push({\n
+            id: uri.segment(2),\n
+            key: uri.segment(2),\n
+            doc: {},\n
+            value: item\n
+          });\n
+//           if (options.include_docs) {\n
+//             promise_list.push(RSVP.Queue().push(function () {\n
+//               return this._get({_id: item.name}, {_view: "View"});\n
+//             }).push\n
+//           }\n
+        }\n
+        return RSVP.all(promise_list);\n
+      })\n
+      .then(function (promise_list) {\n
+        var result = promise_list[0];\n
+        return {"data": {"rows": result, "total_rows": result.length}};\n
+      });\n
+  };\n
+\n
+  ERP5Storage.onView["default"].check = function () {\n
+    return;\n
+  };\n
+\n
+  ERP5Storage.onView["default"].repair = function () {\n
+    return;\n
+  };\n
+\n
+  jIO.addStorage("erp5", ERP5Storage);\n
+\n
+  return ERP5Storage;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jio_storage_erp5.js</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

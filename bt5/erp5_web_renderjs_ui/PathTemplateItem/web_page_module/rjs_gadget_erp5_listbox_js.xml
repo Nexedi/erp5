@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_listbox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_listbox_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, document, RSVP, URI, console */\n
+/*jslint maxlen:120, nomen: true */\n
+(function (rJS, document, RSVP, window, URI) {\n
+  "use strict";\n
+\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    //////////////////////////////////////////////\n
+    // initialize the gadget content\n
+    //////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this,\n
+        thead = gadget.props.element.querySelector(\'thead\'),\n
+        field_json = options.field_json,\n
+        tr = document.createElement("tr"),\n
+        th,\n
+        i;\n
+\n
+      gadget.props.field_json = field_json;\n
+      gadget.props.begin_from = parseInt(options.begin_from, 10) || 0;\n
+\n
+      for (i = 0; i < field_json.column_list.length; i += 1) {\n
+        th = document.createElement("th");\n
+        th.textContent = field_json.column_list[i][1];\n
+        tr.appendChild(th);\n
+      }\n
+      thead.appendChild(tr);\n
+    })\n
+\n
+    //////////////////////////////////////////////\n
+    // render the listbox in an asynchronous way\n
+    //////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        field_json = gadget.props.field_json,\n
+        begin_from = gadget.props.begin_from,\n
+        table = gadget.props.element.querySelector(\'table\'),\n
+        tbody = document.createElement("tbody"),\n
+        select_list = [],\n
+        i;\n
+\n
+      for (i = 0; i < field_json.column_list.length; i += 1) {\n
+        select_list.push(field_json.column_list[i][0]);\n
+      }\n
+\n
+      return gadget.jio_allDocs({\n
+        "query": new URI(field_json.query).query(true).query,\n
+        "limit": [begin_from, begin_from + field_json.lines + 1],\n
+        "select_list": select_list\n
+      }).push(function (result) {\n
+        var promise_list = [result];\n
+\n
+        for (i = 0; i < (result.data.rows.length - 1); i += 1) {\n
+          promise_list.push(\n
+            gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
+          );\n
+        }\n
+        return RSVP.all(promise_list);\n
+\n
+      }).push(function (result_list) {\n
+        var j,\n
+          tr,\n
+          th,\n
+          a,\n
+          result = result_list[0],\n
+          url_param = {},\n
+          tmp_url;\n
+\n
+        for (i = 0; i < (result.data.rows.length - 1); i += 1) {\n
+          tr = document.createElement("tr");\n
+// tmp_url = "#/f/" + encodeURIComponent(result.data.rows[i].id) + "/view";\n
+          tmp_url = result_list[i + 1];\n
+\n
+          for (j = 0; j < field_json.column_list.length; j += 1) {\n
+            th = document.createElement("th");\n
+            a = document.createElement("a");\n
+            a.href = tmp_url;\n
+            a.textContent = (result.data.rows[i]\n
+                .value[field_json.column_list[j][0]] || "");\n
+            th.appendChild(a);\n
+            tr.appendChild(th);\n
+          }\n
+          tbody.appendChild(tr);\n
+        }\n
+\n
+        if (result.data.rows.length > field_json.lines) {\n
+          url_param.begin_from = begin_from + field_json.lines;\n
+        }\n
+//         return gadget.acquire("generateMyUrlXXX", url_param);\n
+        return RSVP.all([\n
+          gadget.aq_pleasePublishMyState({}),\n
+          gadget.aq_pleasePublishMyState(url_param)\n
+        ]);\n
+//         return gadget.acquire("generateMyUrlXXX", url_param);\n
+//                               [{jio_key: param_list[0]}]);\n
+      }).push(function () {\n
+//         if (begin_from !== 0) {\n
+//           tmp_element_1.innerHTML += "<a href=\'" + lala[0] +\n
+//                                      "\'>Start</a> ";\n
+//         }\n
+//         tmp_element_1.innerHTML += "<a href=\'" + lala[1] +\n
+//                                    "\'>Next page!</a>";\n
+        table.appendChild(tbody);\n
+// if (result.data.rows.length > field_json.lines) {\n
+//   tmp_element_1.innerHTML += "<a href=\'#begin_from=56\'>Next page!</a>";\n
+//         window.location = "http://www.free.fr";\n
+// }\n
+      });\n
+    });\n
+\n
+}(rJS, document, RSVP, window, URI));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Listbox JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

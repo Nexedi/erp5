@@ -1,0 +1,14 @@
+<property_sheet_list>
+ <portal_type id="Web Manifest">
+  <item>Reference</item>
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Web Script">
+  <item>Reference</item>
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Web Style">
+  <item>Reference</item>
+  <item>SortIndex</item>
+ </portal_type>
+</property_sheet_list>

@@ -1,0 +1,32 @@
+<base_category_list>
+ <portal_type id="Web Manifest">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+  <item>successor</item>
+ </portal_type>
+ <portal_type id="Web Script">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+  <item>successor</item>
+ </portal_type>
+ <portal_type id="Web Style">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+  <item>successor</item>
+ </portal_type>
+</base_category_list>

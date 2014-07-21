@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_global.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_global_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global RSVP, FileReader */\n
+/*jslint unparam: true */\n
+(function (window, RSVP, FileReader) {\n
+  "use strict";\n
+\n
+  window.loopEventListener = function (target, type, useCapture, callback,\n
+                                       allowDefault) {\n
+    //////////////////////////\n
+    // Infinite event listener (promise is never resolved)\n
+    // eventListener is removed when promise is cancelled/rejected\n
+    //////////////////////////\n
+    var handle_event_callback,\n
+      callback_promise;\n
+\n
+    function cancelResolver() {\n
+      if ((callback_promise !== undefined) &&\n
+          (typeof callback_promise.cancel === "function")) {\n
+        callback_promise.cancel();\n
+      }\n
+    }\n
+\n
+    function canceller() {\n
+      if (handle_event_callback !== undefined) {\n
+        target.removeEventListener(type, handle_event_callback, useCapture);\n
+      }\n
+      cancelResolver();\n
+    }\n
+    function itsANonResolvableTrap(resolve, reject) {\n
+\n
+      handle_event_callback = function (evt) {\n
+        evt.stopPropagation();\n
+        if (allowDefault !== true) {\n
+          evt.preventDefault();\n
+        }\n
+        cancelResolver();\n
+        callback_promise = new RSVP.Queue()\n
+          .push(function () {\n
+            return callback(evt);\n
+          })\n
+          .push(undefined, function (error) {\n
+            if (!(error instanceof RSVP.CancellationError)) {\n
+              canceller();\n
+              reject(error);\n
+            }\n
+          });\n
+      };\n
+\n
+      target.addEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+    return new RSVP.Promise(itsANonResolvableTrap, canceller);\n
+  };\n
+\n
+  window.promiseEventListener = function (target, type, useCapture) {\n
+    //////////////////////////\n
+    // Resolve the promise as soon as the event is triggered\n
+    // eventListener is removed when promise is cancelled/resolved/rejected\n
+    //////////////////////////\n
+    var handle_event_callback;\n
+\n
+    function canceller() {\n
+      target.removeEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+\n
+    function resolver(resolve) {\n
+      handle_event_callback = function (evt) {\n
+        canceller();\n
+        evt.stopPropagation();\n
+        evt.preventDefault();\n
+        resolve(evt);\n
+        return false;\n
+      };\n
+\n
+      target.addEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+    return new RSVP.Promise(resolver, canceller);\n
+  };\n
+\n
+  window.promiseReadAsText = function (file) {\n
+    return new RSVP.Promise(function (resolve, reject) {\n
+      var reader = new FileReader();\n
+      reader.onload = function (evt) {\n
+        resolve(evt.target.result);\n
+      };\n
+      reader.onerror = function (evt) {\n
+        reject(evt);\n
+      };\n
+      reader.readAsText(file);\n
+    });\n
+  };\n
+\n
+}(window, RSVP, FileReader));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>gadget_global.js</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

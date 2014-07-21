@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, URI, console */\n
+/*jslint nomen: true */\n
+(function (rJS, $, RSVP, URI) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Desactivate jQuery Mobile URL management\n
+  /////////////////////////////////////////////////////////////////\n
+  $.mobile.ajaxEnabled = false;\n
+  $.mobile.linkBindingEnabled = false;\n
+  $.mobile.hashListeningEnabled = false;\n
+  $.mobile.pushStateEnabled = false;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Gadget behaviour\n
+  /////////////////////////////////////////////////////////////////\n
+\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Configure jIO to use localstorage\n
+    // And load configuration from server\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.createJio({\n
+            type: "erp5",\n
+            url: "https://softinst51669.host.vifib.net/erp5/web_site_module/hateoas/"\n
+          });\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // handle acquisition\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    // Bridge to jio gadget\n
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_ajax", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.ajax.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_post", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.post.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_put", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.put.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_remove", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.remove.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_get", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.get.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.putAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
+      // Hey, I want to display some URL\n
+      return this.aq_pleasePublishMyState({jio_key: param_list[0]});\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    // Render the page\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this;\n
+\n
+//       $.mobile.loading(\'show\');\n
+      if (options.jio_key === undefined) {\n
+        // Redirect to the default view\n
+        return gadget.aq_pleasePublishMyState({jio_key: "person_module"})\n
+          .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+      }\n
+      return gadget.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          var jio_key = options.jio_key,\n
+            view = options.view || "view";\n
+          ///////////////////////////////////////////////\n
+          // Display erp5 document view\n
+          ///////////////////////////////////////////////\n
+          return jio_gadget.get({"_id": jio_key}, {"_view": view});\n
+        })\n
+        .push(function (result) {\n
+          var uri = new URI(\n
+            result.data._embedded._view._links.form_definition.href\n
+          );\n
+//           if ((uri.scheme() === "urn") &&\n
+//               (uri.segment(0) === "jio") &&\n
+//               (uri.segment(1) === "get")) {\n
+//           }\n
+          return RSVP.all([\n
+            result,\n
+            gadget.getDeclaredGadget("jio_gadget")\n
+              .push(function (jio_gadget) {\n
+                return jio_gadget.get(\n
+                  {"_id": uri.segment(2)},\n
+                  {"_view": "view"}\n
+                );\n
+              })\n
+          ]);\n
+        })\n
+        .push(function (result) {\n
+          var sub_options = options.form_gadget || {};\n
+          sub_options.erp5_document = result[0].data;\n
+          sub_options.form_definition = result[1].data;\n
+\n
+          return gadget.getDeclaredGadget("form_gadget")\n
+            .push(function (form_gadget) {\n
+              return form_gadget.render(sub_options);\n
+            });\n
+        })\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("form_gadget");\n
+        })\n
+        .push(function (form_gadget) {\n
+          return form_gadget.getElement();\n
+        })\n
+//         .push(function (element) {\n
+//           // XXX JQuery mobile\n
+// //           $.mobile.loading(\'hide\');\n
+// //           return $(element).trigger("create");\n
+//         })\n
+        .push(undefined, function (error) {\n
+          console.error(error);\n
+          console.error(error.stack);\n
+          $.mobile.loading(\'hide\');\n
+          throw error;\n
+        });\n
+    });\n
+\n
+}(rJS, jQuery, RSVP, URI));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget ERP5 JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

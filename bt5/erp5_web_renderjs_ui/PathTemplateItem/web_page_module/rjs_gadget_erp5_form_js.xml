@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_form.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_form_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, console */\n
+/*jslint nomen: true */\n
+/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+/*jslint maxlen:200, nomen: true */\n
+(function (window, rJS, RSVP, $) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window);\n
+\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+   .declareAcquiredMethod("aq_put", "jio_put")\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var i,\n
+        erp5_document = options.erp5_document,\n
+        form_definition = options.form_definition,\n
+        rendered_form = erp5_document._embedded._view,\n
+        group_list = form_definition.group_list,\n
+        queue = new RSVP.Queue(),\n
+        form_gadget = this,\n
+        parent_element = document.createElement("div");\n
+\n
+      delete options.erp5_document;\n
+      delete options.form_definition;\n
+\n
+\n
+      options = options.form_gadget || {};\n
+      form_gadget.state_parameter_dict = options;\n
+\n
+      form_gadget.props.gadget_list = [];\n
+      form_gadget.props.id = erp5_document._id;\n
+\n
+      function addGroup(group) {\n
+        queue\n
+          .push(function () {\n
+            var j,\n
+              fieldset_element = document.createElement("fieldset"),\n
+              group_queue = new RSVP.Queue();\n
+\n
+            function addField(field, scope) {\n
+              group_queue.push(function () {\n
+                if (rendered_form.hasOwnProperty(field[0])) {\n
+                  // Field is enabled in this context\n
+                  var field_queue = new RSVP.Queue(),\n
+                    field_url = \'gadget_erp5_stringfield.html\',\n
+                    field_element = document.createElement("div"),\n
+                    gadget_element = document.createElement("div"),\n
+                    label_element = document.createElement("label"),\n
+                    renderered_field = rendered_form[field[0]];\n
+\n
+//                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
+                  label_element.setAttribute(\'for\', renderered_field.key);\n
+                  label_element.textContent = renderered_field.title;\n
+                  field_element.appendChild(label_element);\n
+                  field_element.appendChild(gadget_element);\n
+                  fieldset_element.appendChild(field_element);\n
+\n
+                  if ((renderered_field.type === \'ListField\') ||\n
+                      (renderered_field.type === \'ParallelListField\') ||\n
+                      (renderered_field.type === \'MultiListField\')) {\n
+                    field_url = \'gadget_erp5_listfield.html\';\n
+                  } else if (renderered_field.type === \'ListBox\') {\n
+                    field_url = \'gadget_erp5_listbox.html\';\n
+                  } else if (renderered_field.type === \'EditorField\') {\n
+                    field_url = \'gadget_codemirror.html\';\n
+                  }\n
+\n
+                  return field_queue\n
+                    .push(function () {\n
+                      return form_gadget.declareGadget(field_url, {\n
+                        scope: renderered_field.key,\n
+                        element: gadget_element\n
+                      });\n
+                    })\n
+                    .push(function (field_gadget) {\n
+                      form_gadget.props.gadget_list.push(field_gadget);\n
+                      var suboptions = options[renderered_field.key] || {};\n
+                      suboptions.field_json = renderered_field;\n
+                      return field_gadget.render(suboptions);\n
+                    });\n
+                }\n
+              });\n
+            }\n
+\n
+            fieldset_element.setAttribute("class", group[0]);\n
+            for (j = 0; j < group[1].length; j += 1) {\n
+              addField(group[1][j]);\n
+            }\n
+            return group_queue.push(function () {\n
+              parent_element.appendChild(fieldset_element);\n
+            });\n
+          });\n
+      }\n
+\n
+      for (i = 0; i < group_list.length; i += 1) {\n
+        addGroup(group_list[i]);\n
+      }\n
+\n
+      return queue\n
+        .push(function () {\n
+          var dom_element = form_gadget.props.element\n
+            .querySelector(".field_container");\n
+          while (dom_element.firstChild) {\n
+            dom_element.removeChild(dom_element.firstChild);\n
+          }\n
+          dom_element.appendChild(parent_element);\n
+          return $(parent_element).trigger("create");\n
+\n
+        });\n
+    })\n
+\n
+\n
+    .declareService(function () {\n
+      var form_gadget = this;\n
+\n
+      function formSubmit() {\n
+        var k,\n
+          field_gadget,\n
+          count = form_gadget.props.gadget_list.length,\n
+//           // data = new FormData(),\n
+          data = {"_id": form_gadget.props.id},\n
+          queue = new RSVP.Queue();\n
+\n
+        function extendData(field_data) {\n
+          var key;\n
+          for (key in field_data) {\n
+            if (field_data.hasOwnProperty(key)) {\n
+              data[key] = field_data[key];\n
+            }\n
+          }\n
+        }\n
+\n
+        for (k = 0; k < count; k += 1) {\n
+          field_gadget = form_gadget.props.gadget_list[k];\n
+          // XXX Hack until better defined\n
+          if (field_gadget.getContent !== undefined) {\n
+            queue\n
+              .push(field_gadget.getContent.bind(field_gadget))\n
+              .push(extendData);\n
+          }\n
+        }\n
+        return queue\n
+          .push(function () {\n
+            return form_gadget.aq_put(data);//, {"_view": "XXX"});\n
+          });\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        form_gadget.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
+  });\n
+\n
+}(window, rJS, RSVP, jQuery));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Form JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

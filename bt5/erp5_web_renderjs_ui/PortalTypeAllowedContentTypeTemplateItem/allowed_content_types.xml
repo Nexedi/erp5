@@ -1,0 +1,7 @@
+<allowed_content_type_list>
+ <portal_type id="Web Page Module">
+  <item>Web Manifest</item>
+  <item>Web Script</item>
+  <item>Web Style</item>
+ </portal_type>
+</allowed_content_type_list>
