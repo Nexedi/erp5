@@ -111,7 +111,7 @@ def renderField(field, meta_type=None):\n
   elif meta_type in ("StringField", "FloatField", "RelationStringField",\n
                      "MultiRelationStringField", "EmailField", "TextAreaField",\n
                      "LinesField", "ImageField", "FileField", "IntegerField",\n
-                     "PasswordField"):\n
+                     "PasswordField", "EditorField"):\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
@@ -324,6 +324,13 @@ def renderFormDefinition(form, response_dict):\n
 \n
       group_list.append((group[\'gid\'], field_list))\n
   response_dict["group_list"] = group_list\n
+  response_dict["title"] = form.getTitle()\n
+  response_dict["pt"] = form.pt\n
+  response_dict["action"] = form.action\n
+\n
+\n
+  \n
+  \n
 \n
 \n
 context.Base_prepareCorsResponse(RESPONSE=response)\n
@@ -649,6 +656,9 @@ elif mode == \'search\':\n
     for select in select_list:\n
       property_value = document.getProperty(select, d=None)\n
       if property_value is not None:\n
+        if same_type(property_value, DateTime()):\n
+          # Serialize DateTime\n
+          property_value = property_value.rfc822()\n
         document_result[select] = property_value\n
     result_list.append(document_result)\n
   result_dict[\'_embedded\'] = {"contents": result_list}\n
