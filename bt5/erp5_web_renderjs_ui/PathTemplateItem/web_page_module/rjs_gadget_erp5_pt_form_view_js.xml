@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,12 +66,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_form.html</string> </value>
+            <value> <string>gadget_erp5_pt_form_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_form_html</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_form_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +85,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,35 +95,93 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Form</title>\n
+            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, console */\n
+/*jslint nomen: true */\n
+/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+/*jslint maxlen:200, nomen: true */\n
+(function (window, rJS, RSVP, $) {\n
+  "use strict";\n
 \n
-    <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window);\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_form.js" type="text/javascript"></script>\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
-  </head>\n
-  <body>\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
 \n
-    <div class="field_container"></div>\n
+   .declareAcquiredMethod("aq_put", "jio_put")\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var erp5_document = options.erp5_document,\n
+        form_gadget = this;\n
 \n
-  </body>\n
-</html>
-
-]]></string> </value>
+      form_gadget.props.id = erp5_document._id;\n
+      form_gadget.props.view = options.view;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            form_gadget.getDeclaredGadget("erp5_form"),\n
+            form_gadget.getDeclaredGadget("erp5_tab")\n
+          ]);\n
+        })\n
+        .push(function (all_gadget) {\n
+          return RSVP.all([\n
+            all_gadget[1].render(options),\n
+            all_gadget[0].render(options),\n
+          ]);\n
+        });\n
+\n
+    })\n
+\n
+\n
+    .declareService(function () {\n
+      var form_gadget = this;\n
+\n
+      function formSubmit() {\n
+        return form_gadget.getDeclaredGadget("erp5_form")\n
+          .push(function (erp5_form) {\n
+            return erp5_form.getContent();\n
+          })\n
+          .push(function (data) {\n
+            data["_id"] = form_gadget.props.id;\n
+            return form_gadget.aq_put(data, {"_view": form_gadget.props.view});\n
+          })\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        form_gadget.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
+  });\n
+\n
+}(window, rJS, RSVP, jQuery));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Form</string> </value>
+            <value> <string>Gadget ERP5 Form View JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

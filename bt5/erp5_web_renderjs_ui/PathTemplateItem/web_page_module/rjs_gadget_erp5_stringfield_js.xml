@@ -109,7 +109,6 @@
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
         field_json = options.field_json || {};\n
-      console.log(options);\n
       input.setAttribute(\n
         \'value\',\n
         field_json.value || field_json.default || ""\n

@@ -173,7 +173,9 @@
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
-                  field_element.appendChild(label_element);\n
+                  if (group[0] !== "bottom") {\n
+                    field_element.appendChild(label_element);\n
+                  }\n
                   field_element.appendChild(gadget_element);\n
                   fieldset_element.appendChild(field_element);\n
 \n
@@ -232,15 +234,14 @@
     })\n
 \n
 \n
-    .declareService(function () {\n
+    .declareMethod("getContent", function () {\n
       var form_gadget = this;\n
 \n
-      function formSubmit() {\n
         var k,\n
           field_gadget,\n
           count = form_gadget.props.gadget_list.length,\n
 //           // data = new FormData(),\n
-          data = {"_id": form_gadget.props.id},\n
+          data = {},\n
           queue = new RSVP.Queue();\n
 \n
         function extendData(field_data) {\n
@@ -263,17 +264,9 @@
         }\n
         return queue\n
           .push(function () {\n
-            return form_gadget.aq_put(data);//, {"_view": "XXX"});\n
+            return data;\n
           });\n
-      }\n
 \n
-      // Listen to form submit\n
-      return loopEventListener(\n
-        form_gadget.props.element.querySelector(\'form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
   });\n
 \n
 }(window, rJS, RSVP, jQuery));

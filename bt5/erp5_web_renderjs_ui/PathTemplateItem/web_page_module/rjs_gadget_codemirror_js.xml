@@ -125,7 +125,7 @@
         vimMode: true,\n
         matchBrackets: true,\n
         showCursorWhenSelecting: true,\n
-        autofocus: true,\n
+        autofocus: false,\n
       });\n
 \n
     });\n

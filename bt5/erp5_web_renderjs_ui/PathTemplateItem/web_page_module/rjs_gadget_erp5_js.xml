@@ -118,6 +118,11 @@
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
     // Configure jIO to use localstorage\n
     // And load configuration from server\n
     .ready(function (g) {\n
@@ -188,24 +193,36 @@
       // Hey, I want to display some URL\n
       return this.aq_pleasePublishMyState({jio_key: param_list[0]});\n
     })\n
+    .allowPublicAcquisition("whoWantToDisplayThisPage", function (param_list) {\n
+      // Hey, I want to display some URL\n
+      return this.aq_pleasePublishMyState({jio_key: this.props.jio_key, view: param_list[0].name});\n
+    })\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
-      var gadget = this;\n
+      var gadget = this,\n
+        sub_options;\n
 \n
 //       $.mobile.loading(\'show\');\n
       if (options.jio_key === undefined) {\n
         // Redirect to the default view\n
-        return gadget.aq_pleasePublishMyState({jio_key: "person_module"})\n
+        return gadget.aq_pleasePublishMyState({jio_key: "web_page_module", view: "view"})\n
+          .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+      }\n
+      if (options.view === undefined) {\n
+        // Redirect to the default view\n
+        return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: "view"})\n
           .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
       }\n
       return gadget.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
           var jio_key = options.jio_key,\n
-            view = options.view || "view";\n
+            view = options.view;\n
+\n
+          gadget.props.jio_key = jio_key;\n
           ///////////////////////////////////////////////\n
           // Display erp5 document view\n
           ///////////////////////////////////////////////\n
@@ -231,26 +248,40 @@
           ]);\n
         })\n
         .push(function (result) {\n
-          var sub_options = options.form_gadget || {};\n
+          sub_options = options.form_gadget || {};\n
           sub_options.erp5_document = result[0].data;\n
           sub_options.form_definition = result[1].data;\n
+          sub_options.view = options.view;\n
 \n
-          return gadget.getDeclaredGadget("form_gadget")\n
-            .push(function (form_gadget) {\n
-              return form_gadget.render(sub_options);\n
-            });\n
+          return gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
+            scope: "form_gadget"\n
+          });\n
         })\n
-        .push(function () {\n
-          return gadget.getDeclaredGadget("form_gadget");\n
-        })\n
+\n
         .push(function (form_gadget) {\n
-          return form_gadget.getElement();\n
+          return RSVP.all([\n
+            form_gadget.render(sub_options),\n
+            form_gadget.getElement()\n
+          ]);\n
         })\n
-//         .push(function (element) {\n
-//           // XXX JQuery mobile\n
+\n
+        .push(function (all_response) {\n
+          var page_element = all_response[1],\n
+            element = document.querySelector("article");\n
+          // XXX JQuery mobile\n
 // //           $.mobile.loading(\'hide\');\n
-// //           return $(element).trigger("create");\n
-//         })\n
+\n
+\n
+          // Append in the DOM at the end to reduce flickering and reduce DOM\n
+          // modifications\n
+          // Clear the previous rendering\n
+          while (element.firstChild) {\n
+            element.removeChild(element.firstChild);\n
+          }\n
+          element.appendChild(page_element);\n
+\n
+          return $(element).trigger("create");\n
+        })\n
         .push(undefined, function (error) {\n
           console.error(error);\n
           console.error(error.stack);\n
