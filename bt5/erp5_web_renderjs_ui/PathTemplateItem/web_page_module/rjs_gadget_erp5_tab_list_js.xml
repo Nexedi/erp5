@@ -162,10 +162,18 @@
         })\n
         .push(function (all_result) {\n
           for (i = 0; i < all_result.length; i += 1) {\n
-            nav_html += navigation_template({\n
-              title: view_list[i].title,\n
-              link: all_result[i],\n
-            });\n
+            if (view_list[i].name === options.view) {\n
+              nav_html += active_navigation_template({\n
+                title: view_list[i].title,\n
+                link: all_result[i],\n
+              });\n
+            } else {\n
+              nav_html += navigation_template({\n
+                title: view_list[i].title,\n
+                link: all_result[i],\n
+              });\n
+            }\n
+\n
           }\n
           nav_html += \'</ul></nav>\';\n
           nav_element.innerHTML = nav_html;\n
