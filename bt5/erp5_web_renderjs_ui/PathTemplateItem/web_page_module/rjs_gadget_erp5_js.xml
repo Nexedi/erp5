@@ -229,6 +229,7 @@
           return jio_gadget.get({"_id": jio_key}, {"_view": view});\n
         })\n
         .push(function (result) {\n
+          document.querySelector("h1").textContent = result.data.title || result.data.reference || options.jio_key;\n
           var uri = new URI(\n
             result.data._embedded._view._links.form_definition.href\n
           );\n
