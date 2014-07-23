@@ -109,6 +109,76 @@
   $.mobile.linkBindingEnabled = false;\n
   $.mobile.hashListeningEnabled = false;\n
   $.mobile.pushStateEnabled = false;\n
+  \n
+  /////////////////////////////////////////////////////////////////\n
+  // Some functions\n
+  /////////////////////////////////////////////////////////////////\n
+  function renderFrontpage(gadget, options) {\n
+    document.querySelector("h1").textContent = "ERP5";\n
+\n
+    return gadget.declareGadget("gadget_erp5_pt_frontpage.html", {\n
+      scope: "frontpage_gadget"\n
+    })\n
+    .push(function (sub_gadget) {\n
+        return RSVP.all([\n
+          sub_gadget.render(),\n
+          sub_gadget.getElement()\n
+        ]);\n
+    });\n
+  }\n
+  \n
+  function renderJioDocument(gadget, options) {\n
+    var sub_options;\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        var jio_key = options.jio_key,\n
+          view = options.view;\n
+\n
+        gadget.props.jio_key = jio_key;\n
+        ///////////////////////////////////////////////\n
+        // Display erp5 document view\n
+        ///////////////////////////////////////////////\n
+        return jio_gadget.get({"_id": jio_key}, {"_view": view});\n
+      })\n
+      .push(function (result) {\n
+        document.querySelector("h1").textContent = result.data.title || result.data.reference || options.jio_key;\n
+        var uri = new URI(\n
+          result.data._embedded._view._links.form_definition.href\n
+        );\n
+//           if ((uri.scheme() === "urn") &&\n
+//               (uri.segment(0) === "jio") &&\n
+//               (uri.segment(1) === "get")) {\n
+//           }\n
+        return RSVP.all([\n
+          result,\n
+          gadget.getDeclaredGadget("jio_gadget")\n
+            .push(function (jio_gadget) {\n
+              return jio_gadget.get(\n
+                {"_id": uri.segment(2)},\n
+                {"_view": "view"}\n
+              );\n
+            })\n
+        ]);\n
+      })\n
+      .push(function (result) {\n
+        sub_options = options.form_gadget || {};\n
+        sub_options.erp5_document = result[0].data;\n
+        sub_options.form_definition = result[1].data;\n
+        sub_options.view = options.view;\n
+\n
+        return gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
+          scope: "form_gadget"\n
+        });\n
+      })\n
+\n
+      .push(function (form_gadget) {\n
+        return RSVP.all([\n
+          form_gadget.render(sub_options),\n
+          form_gadget.getElement()\n
+        ]);\n
+      })\n
+  }\n
+\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Gadget behaviour\n
@@ -204,68 +274,21 @@
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
-        sub_options;\n
+        queue;\n
 \n
 //       $.mobile.loading(\'show\');\n
       if (options.jio_key === undefined) {\n
-        // Redirect to the default view\n
-        return gadget.aq_pleasePublishMyState({jio_key: "web_page_module", view: "view"})\n
-          .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+        queue = renderFrontpage(gadget, options);\n
+      } else {\n
+        if (options.view === undefined) {\n
+          // Redirect to the default view\n
+          return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: "view"})\n
+            .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+        }\n
+        queue = renderJioDocument(gadget, options);\n
       }\n
-      if (options.view === undefined) {\n
-        // Redirect to the default view\n
-        return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: "view"})\n
-          .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-      }\n
-      return gadget.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          var jio_key = options.jio_key,\n
-            view = options.view;\n
 \n
-          gadget.props.jio_key = jio_key;\n
-          ///////////////////////////////////////////////\n
-          // Display erp5 document view\n
-          ///////////////////////////////////////////////\n
-          return jio_gadget.get({"_id": jio_key}, {"_view": view});\n
-        })\n
-        .push(function (result) {\n
-          document.querySelector("h1").textContent = result.data.title || result.data.reference || options.jio_key;\n
-          var uri = new URI(\n
-            result.data._embedded._view._links.form_definition.href\n
-          );\n
-//           if ((uri.scheme() === "urn") &&\n
-//               (uri.segment(0) === "jio") &&\n
-//               (uri.segment(1) === "get")) {\n
-//           }\n
-          return RSVP.all([\n
-            result,\n
-            gadget.getDeclaredGadget("jio_gadget")\n
-              .push(function (jio_gadget) {\n
-                return jio_gadget.get(\n
-                  {"_id": uri.segment(2)},\n
-                  {"_view": "view"}\n
-                );\n
-              })\n
-          ]);\n
-        })\n
-        .push(function (result) {\n
-          sub_options = options.form_gadget || {};\n
-          sub_options.erp5_document = result[0].data;\n
-          sub_options.form_definition = result[1].data;\n
-          sub_options.view = options.view;\n
-\n
-          return gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
-            scope: "form_gadget"\n
-          });\n
-        })\n
-\n
-        .push(function (form_gadget) {\n
-          return RSVP.all([\n
-            form_gadget.render(sub_options),\n
-            form_gadget.getElement()\n
-          ]);\n
-        })\n
-\n
+      return queue\n
         .push(function (all_response) {\n
           var page_element = all_response[1],\n
             element = document.querySelector("article");\n

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Style" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,8 +66,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_codemirror.css</string> </value>
+            <value> <string>gadget_erp5_pt_frontpage.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -77,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_codemirror_css</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_frontpage_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -85,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Style</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -95,23 +99,44 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>// .CodeMirror, .codemirror_gadget {\n
-  // FIXME: hardcoded value\n
-//   height: 50em;\n
-// }\n
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>ERP5 PT Frontpage</title>\n
 \n
-.CodeMirror {\n
-  // border: 1px solid #eee;\n
-  height: 60em;\n
-}\n
-// .CodeMirror-scroll {\n
-//  overflow-y: hidden;\n
-//   overflow-x: auto;\n
-// }</string> </value>
+    <!-- renderjs -->\n
+    <script src="RSVP.js" type="text/javascript"></script>\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
+\n
+\n
+    <!-- custom script -->\n
+    <script src="gadget_global.js" type="text/javascript"></script>\n
+    <script src="gadget_erp5_pt_frontpage.js" type="text/javascript"></script>\n
+\n
+    <script id="table-template" type="text/x-handlebars-template">\n
+      <ul data-role="listview" data-inset="true" class="document-listview">\n
+        {{#each documentlist}}\n
+          <li><a href="{{link}}">{{title}}</a></li>\n
+        {{/each}}\n
+      </ul>\n
+    </script>\n
+\n
+  </head>\n
+  <body>\n
+    <section class="document_list"></section>\n
+  </body>\n
+</html>
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Codemirror Gadget CSS</string> </value>
+            <value> <string>Gadget ERP5 Frontpage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
