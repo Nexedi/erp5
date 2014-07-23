@@ -219,6 +219,18 @@ class TestUserManagement(ERP5TypeTestCase):
     from Products.ERP5Security.ERP5UserManager import SUPER_USER
     self._assertUserDoesNotExists(SUPER_USER, '')
 
+  def test_PersonWithSystemProcessesLoginCannotBeCreated(self):
+    """Tests one cannot create person with the "super user" special login."""
+    from AccessControl.User import system as system_user
+    self.assertRaises(RuntimeError,
+                      self._makePerson,
+                      reference=system_user.getUserName())
+
+  def test_PersonWithSystemProcessesLogin(self):
+    """Tests one cannot use the "super user" special login."""
+    from AccessControl.User import system as system_user
+    self._assertUserDoesNotExists(system_user.getUserName(), '')
+
   def test_searchUsers(self):
     p1 = self._makePerson(reference='person1')
     p2 = self._makePerson(reference='person2')
@@ -964,9 +976,68 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     check(['recursiveImmediateReindexObject'])
     self.tic()
 
+class SecurityManagerTestsBase(unittest.TestCase):
+
+    def _getModule(self):
+        
+
+    def _resetImplementation(self, implementation_name):
+        from AccessControl import Implementation
+        Implementation._implementation_name = None
+        Implementation._implementation_set = 0
+        Implementation.setImplementation(implementation_name)
+        self.assertEqual(Implementation.getImplementationName(), implementation_name)
+
+    def setUp(self):
+        from AccessControl.Implementation import getImplementationName
+        self._old_implementation_name = getImplementationName()
+        self._resetImplementation(self._implementation_name)
+
+        from AccessControl import ImplPython
+        self.assertEqual(self._getModule().__name__,
+                         ImplPython._defaultPolicy.__module__)
+
+        self._getModule().setDefaultBehaviors(True, True, False)
+
+    def tearDown(self):
+        self._resetImplementation(self._old_implementation_name)
+        self._getModule().setDefaultBehaviors(True, True, False)
+
+    def _makeContext(self):
+        from AccessControl.SecurityManagement import SecurityContext
+        from AccessControl.users import system #allows anything
+        return SecurityContext(system)
+
+    def _makeEO(self):
+        # create a faux executable whose owner forbids access
+        class Owner(object):
+            def allowed(self, obj, roles):
+                return False
+        class EO(object):
+            def getOwner(self):
+                return Owner()
+        return EO()
+
+    def test__ownerous_and__authenticated_defaults(self):
+        ctx = self._makeContext()
+        ctx.stack.append(self._makeEO())
+        mgr = self._getModule().SecurityManager(42, ctx)
+        self.assertFalse(mgr.checkPermission('testing', object()))
+
+    def test__ownerous_and__authenticated_after_updating_defaults(self):
+        """
+        LP #1169923
+        """
+        ctx = self._makeContext()
+        ctx.stack.append(self._makeEO())
+        self._getModule().setDefaultBehaviors(False, False, False)
+        mgr = self._getModule().SecurityManager(42, ctx)
+        self.assertTrue(mgr.checkPermission('testing', object()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestUserManagement))
   suite.addTest(unittest.makeSuite(TestUserManagementExternalAuthentication))
   suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
+  suite.addTest(unittest.makeSuite(TestZopeSecurityPolicy))
   return suite
