@@ -279,6 +279,10 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
 
+  @staticmethod
+  def foo():
+    import erp5.component.test.testStandardConfigurationWorkflow
+
   def loadTestsFromName(self, name, module=None):
     """
     This method is here for compatibility with old style arguments:
@@ -317,6 +321,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       __import__('erp5.component.test.%s' % name.split('.')[0],
                  ['erp5.component.test'],
                  level=0)
+
+#      self.foo() 
 
     return super(ERP5TypeTestLoader, self).loadTestsFromName(name, module)
 

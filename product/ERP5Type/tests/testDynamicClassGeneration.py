@@ -2248,6 +2248,68 @@ class Test(ERP5TypeTestCase):
     self.assertNotEqual(re.search(expected_msg_re_str, output, re.DOTALL), None,
                         "Expected '%s' in '%s'" % (expected_msg_re_str, output))
 
+  def testGlobalVariableAfterReset(self):
+    """
+    Check that globals are still available after reset is done while the code is
+    still executing. When the reference counter of a module reaches 0, all its
+    globals are reset to None, which should never happen until the code
+    execution is finished...
+    """
+    component = self._newComponent('GlobalVariableAfterReset', """
+from DateTime import DateTime
+
+class TestClass(object):
+  def checkGlobal(self):
+    from Products.ERP5.ERP5Site import getSite
+    getSite().portal_components.activate().reset(force=True)
+    
+    return (DateTime, 'initial')
+""")
+    component.validate()
+    self.tic()
+
+    from Products.ERP5Type.Globals import get_request
+    import sys
+
+    def wrapper(expected_str):
+      """
+      Wrapper to not keep around a reference to the module which would happened if
+      module is at the test method level and there was no clean up
+      """
+      module = self._importModule('GlobalVariableAfterReset')
+      ret = module.TestClass().checkGlobal()
+      self.assertNotEqual(ret[0], None)
+      self.assertEqual(ret[1], expected_str)
+
+      get_request()._module_cache_set.remove(module)
+      # reference_counter = module variable + sys.getrefcount() call
+      self.assertEqual(sys.getrefcount(module), 2)
+      print "ID: %s" % id(module)
+      del module
+
+    wrapper('initial')
+    import pdb; pdb.set_trace()
+
+    # Also, if DateTime is not in the source code anymore, it should not be
+    # available anymore after reset
+    component.setTextContent("""
+import abc
+from Products.ERP5.ERP5Site import getSite
+
+class TestClass(object):
+  def checkGlobal(self):
+    if 'DateTime' in globals():
+      raise RuntimeError('DateTime module should not be available')
+
+    getSite().portal_components.reset(force=True)
+    return (abc, 'updated')
+""")
+
+    self.tic()
+    import pdb; pdb.set_trace()
+    self.assertEqual(component.getValidationState(), 'validated')
+    wrapper('updated')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
