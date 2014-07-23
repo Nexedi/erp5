@@ -401,6 +401,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
   # Default properties shared by all ERP5 Document and Site\n
   action_dict = {}\n
 #   result_dict[\'_relative_url\'] = traversed_document.getRelativeUrl()\n
+  result_dict[\'title\'] = traversed_document.getTitle()\n
 \n
   # Add a link to the portal type if possible\n
   if not is_portal:\n
