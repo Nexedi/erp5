@@ -75,7 +75,8 @@ class EditorWidget(Widget.TextAreaWidget):
                                           ('Xinha Editor', 'xinha'),
                                           ('SVG Editor', 'svg_editor'),
                                           ('Spreadsheet Editor', 'spreadsheet_editor'),
-                                          ('Ace Editor', 'ace')])
+                                          ('Ace Editor', 'ace'),
+                                          ('CodeMirror', 'codemirror')])
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
@@ -118,6 +119,14 @@ class EditorWidget(Widget.TextAreaWidget):
         return ace_editor_support.pt_render(extra_context={'field': field,
                                                          'content': value,
                                                          'id': key})
+    elif text_editor == 'codemirror':
+      code_mirror_support = getattr(here, 'code_mirror_support', None)
+      if code_mirror_support is not None:
+        site_root = here.getWebSiteValue() or here.getPortalObject()
+        return code_mirror_support(field=field,
+                                   content=value,
+                                   field_id=key,
+                                   portal_url=site_root.absolute_url())
     elif text_editor != 'text_area':
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {
