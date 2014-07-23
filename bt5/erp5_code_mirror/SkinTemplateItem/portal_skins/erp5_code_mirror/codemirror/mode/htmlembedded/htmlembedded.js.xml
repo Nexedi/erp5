@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403097.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>htmlembedded.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("htmlembedded", function(config, parserConfig) {\n
+\n
+  //config settings\n
+  var scriptStartRegex = parserConfig.scriptStartRegex || /^<%/i,\n
+      scriptEndRegex = parserConfig.scriptEndRegex || /^%>/i;\n
+\n
+  //inner modes\n
+  var scriptingMode, htmlMixedMode;\n
+\n
+  //tokenizer when in html mode\n
+  function htmlDispatch(stream, state) {\n
+      if (stream.match(scriptStartRegex, false)) {\n
+          state.token=scriptingDispatch;\n
+          return scriptingMode.token(stream, state.scriptState);\n
+          }\n
+      else\n
+          return htmlMixedMode.token(stream, state.htmlState);\n
+    }\n
+\n
+  //tokenizer when in scripting mode\n
+  function scriptingDispatch(stream, state) {\n
+      if (stream.match(scriptEndRegex, false))  {\n
+          state.token=htmlDispatch;\n
+          return htmlMixedMode.token(stream, state.htmlState);\n
+         }\n
+      else\n
+          return scriptingMode.token(stream, state.scriptState);\n
+         }\n
+\n
+\n
+  return {\n
+    startState: function() {\n
+      scriptingMode = scriptingMode || CodeMirror.getMode(config, parserConfig.scriptingModeSpec);\n
+      htmlMixedMode = htmlMixedMode || CodeMirror.getMode(config, "htmlmixed");\n
+      return {\n
+          token :  parserConfig.startOpen ? scriptingDispatch : htmlDispatch,\n
+          htmlState : CodeMirror.startState(htmlMixedMode),\n
+          scriptState : CodeMirror.startState(scriptingMode)\n
+      };\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      return state.token(stream, state);\n
+    },\n
+\n
+    indent: function(state, textAfter) {\n
+      if (state.token == htmlDispatch)\n
+        return htmlMixedMode.indent(state.htmlState, textAfter);\n
+      else if (scriptingMode.indent)\n
+        return scriptingMode.indent(state.scriptState, textAfter);\n
+    },\n
+\n
+    copyState: function(state) {\n
+      return {\n
+       token : state.token,\n
+       htmlState : CodeMirror.copyState(htmlMixedMode, state.htmlState),\n
+       scriptState : CodeMirror.copyState(scriptingMode, state.scriptState)\n
+      };\n
+    },\n
+\n
+    innerMode: function(state) {\n
+      if (state.token == scriptingDispatch) return {state: state.scriptState, mode: scriptingMode};\n
+      else return {state: state.htmlState, mode: htmlMixedMode};\n
+    }\n
+  };\n
+}, "htmlmixed");\n
+\n
+CodeMirror.defineMIME("application/x-ejs", { name: "htmlembedded", scriptingModeSpec:"javascript"});\n
+CodeMirror.defineMIME("application/x-aspx", { name: "htmlembedded", scriptingModeSpec:"text/x-csharp"});\n
+CodeMirror.defineMIME("application/x-jsp", { name: "htmlembedded", scriptingModeSpec:"text/x-java"});\n
+CodeMirror.defineMIME("application/x-erb", { name: "htmlembedded", scriptingModeSpec:"ruby"});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2594</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

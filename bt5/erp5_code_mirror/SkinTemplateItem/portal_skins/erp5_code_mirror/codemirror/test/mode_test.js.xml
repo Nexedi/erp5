@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403104.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Helper to test CodeMirror highlighting modes. It pretty prints output of the\n
+ * highlighter and can check against expected styles.\n
+ *\n
+ * Mode tests are registered by calling test.mode(testName, mode,\n
+ * tokens), where mode is a mode object as returned by\n
+ * CodeMirror.getMode, and tokens is an array of lines that make up\n
+ * the test.\n
+ *\n
+ * These lines are strings, in which styled stretches of code are\n
+ * enclosed in brackets `[]`, and prefixed by their style. For\n
+ * example, `[keyword if]`. Brackets in the code itself must be\n
+ * duplicated to prevent them from being interpreted as token\n
+ * boundaries. For example `a[[i]]` for `a[i]`. If a token has\n
+ * multiple styles, the styles must be separated by ampersands, for\n
+ * example `[tag&error </hmtl>]`.\n
+ *\n
+ * See the test.js files in the css, markdown, gfm, and stex mode\n
+ * directories for examples.\n
+ */\n
+(function() {\n
+  function findSingle(str, pos, ch) {\n
+    for (;;) {\n
+      var found = str.indexOf(ch, pos);\n
+      if (found == -1) return null;\n
+      if (str.charAt(found + 1) != ch) return found;\n
+      pos = found + 2;\n
+    }\n
+  }\n
+\n
+  var styleName = /[\\w&-_]+/g;\n
+  function parseTokens(strs) {\n
+    var tokens = [], plain = "";\n
+    for (var i = 0; i < strs.length; ++i) {\n
+      if (i) plain += "\\n";\n
+      var str = strs[i], pos = 0;\n
+      while (pos < str.length) {\n
+        var style = null, text;\n
+        if (str.charAt(pos) == "[" && str.charAt(pos+1) != "[") {\n
+          styleName.lastIndex = pos + 1;\n
+          var m = styleName.exec(str);\n
+          style = m[0].replace(/&/g, " ");\n
+          var textStart = pos + style.length + 2;\n
+          var end = findSingle(str, textStart, "]");\n
+          if (end == null) throw new Error("Unterminated token at " + pos + " in \'" + str + "\'" + style);\n
+          text = str.slice(textStart, end);\n
+          pos = end + 1;\n
+        } else {\n
+          var end = findSingle(str, pos, "[");\n
+          if (end == null) end = str.length;\n
+          text = str.slice(pos, end);\n
+          pos = end;\n
+        }\n
+        text = text.replace(/\\[\\[|\\]\\]/g, function(s) {return s.charAt(0);});\n
+        tokens.push(style, text);\n
+        plain += text;\n
+      }\n
+    }\n
+    return {tokens: tokens, plain: plain};\n
+  }\n
+\n
+  test.mode = function(name, mode, tokens, modeName) {\n
+    var data = parseTokens(tokens);\n
+    return test((modeName || mode.name) + "_" + name, function() {\n
+      return compare(data.plain, data.tokens, mode);\n
+    });\n
+  };\n
+\n
+  function esc(str) {\n
+    return str.replace(\'&\', \'&amp;\').replace(\'<\', \'&lt;\');\n
+  }\n
+\n
+  function compare(text, expected, mode) {\n
+\n
+    var expectedOutput = [];\n
+    for (var i = 0; i < expected.length; i += 2) {\n
+      var sty = expected[i];\n
+      if (sty && sty.indexOf(" ")) sty = sty.split(\' \').sort().join(\' \');\n
+      expectedOutput.push(sty, expected[i + 1]);\n
+    }\n
+\n
+    var observedOutput = highlight(text, mode);\n
+\n
+    var s = "";\n
+    var diff = highlightOutputsDifferent(expectedOutput, observedOutput);\n
+    if (diff != null) {\n
+      s += \'<div class="mt-test mt-fail">\';\n
+      s +=   \'<pre>\' + esc(text) + \'</pre>\';\n
+      s +=   \'<div class="cm-s-default">\';\n
+      s += \'expected:\';\n
+      s +=   prettyPrintOutputTable(expectedOutput, diff);\n
+      s += \'observed:\';\n
+      s +=   prettyPrintOutputTable(observedOutput, diff);\n
+      s +=   \'</div>\';\n
+      s += \'</div>\';\n
+    }\n
+    if (observedOutput.indentFailures) {\n
+      for (var i = 0; i < observedOutput.indentFailures.length; i++)\n
+        s += "<div class=\'mt-test mt-fail\'>" + esc(observedOutput.indentFailures[i]) + "</div>";\n
+    }\n
+    if (s) throw new Failure(s);\n
+  }\n
+\n
+  function highlight(string, mode) {\n
+    var state = mode.startState()\n
+\n
+    var lines = string.replace(/\\r\\n/g,\'\\n\').split(\'\\n\');\n
+    var st = [], pos = 0;\n
+    for (var i = 0; i < lines.length; ++i) {\n
+      var line = lines[i], newLine = true;\n
+      if (mode.indent) {\n
+        var ws = line.match(/^\\s*/)[0];\n
+        var indent = mode.indent(state, line.slice(ws.length));\n
+        if (indent != CodeMirror.Pass && indent != ws.length)\n
+          (st.indentFailures || (st.indentFailures = [])).push(\n
+            "Indentation of line " + (i + 1) + " is " + indent + " (expected " + ws.length + ")");\n
+      }\n
+      var stream = new CodeMirror.StringStream(line);\n
+      if (line == "" && mode.blankLine) mode.blankLine(state);\n
+      /* Start copied code from CodeMirror.highlight */\n
+      while (!stream.eol()) {\n
+        var compare = mode.token(stream, state), substr = stream.current();\n
+        if (compare && compare.indexOf(" ") > -1) compare = compare.split(\' \').sort().join(\' \');\n
+        stream.start = stream.pos;\n
+        if (pos && st[pos-2] == compare && !newLine) {\n
+          st[pos-1] += substr;\n
+        } else if (substr) {\n
+          st[pos++] = compare; st[pos++] = substr;\n
+        }\n
+        // Give up when line is ridiculously long\n
+        if (stream.pos > 5000) {\n
+          st[pos++] = null; st[pos++] = this.text.slice(stream.pos);\n
+          break;\n
+        }\n
+        newLine = false;\n
+      }\n
+    }\n
+\n
+    return st;\n
+  }\n
+\n
+  function highlightOutputsDifferent(o1, o2) {\n
+    var minLen = Math.min(o1.length, o2.length);\n
+    for (var i = 0; i < minLen; ++i)\n
+      if (o1[i] != o2[i]) return i >> 1;\n
+    if (o1.length > minLen || o2.length > minLen) return minLen;\n
+  }\n
+\n
+  function prettyPrintOutputTable(output, diffAt) {\n
+    var s = \'<table class="mt-output">\';\n
+    s += \'<tr>\';\n
+    for (var i = 0; i < output.length; i += 2) {\n
+      var style = output[i], val = output[i+1];\n
+      s +=\n
+      \'<td class="mt-token"\' + (i == diffAt * 2 ? " style=\'background: pink\'" : "") + \'>\' +\n
+        \'<span class="cm-\' + esc(String(style)) + \'">\' +\n
+        esc(val.replace(/ /g,\'\\xb7\')) +\n
+        \'</span>\' +\n
+        \'</td>\';\n
+    }\n
+    s += \'</tr><tr>\';\n
+    for (var i = 0; i < output.length; i += 2) {\n
+      s += \'<td class="mt-style"><span>\' + (output[i] || null) + \'</span></td>\';\n
+    }\n
+    s += \'</table>\';\n
+    return s;\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5891</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

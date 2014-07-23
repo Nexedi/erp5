@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Multiple Buffer & Split View Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/css/css.js"></script>\n
+<style type="text/css" id=style>\n
+      .CodeMirror {border: 1px solid black; height: 250px;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Multiple Buffer & Split View</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Multiple Buffer & Split View Demo</h2>\n
+\n
+\n
+    <div id=code_top></div>\n
+    <div>\n
+      Select buffer: <select id=buffers_top></select>\n
+      &nbsp; &nbsp; <button onclick="newBuf(\'top\')">New buffer</button>\n
+    </div>\n
+    <div id=code_bot></div>\n
+    <div>\n
+      Select buffer: <select id=buffers_bot></select>\n
+      &nbsp; &nbsp; <button onclick="newBuf(\'bot\')">New buffer</button>\n
+    </div>\n
+\n
+    <script id=script>\n
+var sel_top = document.getElementById("buffers_top");\n
+CodeMirror.on(sel_top, "change", function() {\n
+  selectBuffer(ed_top, sel_top.options[sel_top.selectedIndex].value);\n
+});\n
+\n
+var sel_bot = document.getElementById("buffers_bot");\n
+CodeMirror.on(sel_bot, "change", function() {\n
+  selectBuffer(ed_bot, sel_bot.options[sel_bot.selectedIndex].value);\n
+});\n
+\n
+var buffers = {};\n
+\n
+function openBuffer(name, text, mode) {\n
+  buffers[name] = CodeMirror.Doc(text, mode);\n
+  var opt = document.createElement("option");\n
+  opt.appendChild(document.createTextNode(name));\n
+  sel_top.appendChild(opt);\n
+  sel_bot.appendChild(opt.cloneNode(true));\n
+}\n
+\n
+function newBuf(where) {\n
+  var name = prompt("Name for the buffer", "*scratch*");\n
+  if (name == null) return;\n
+  if (buffers.hasOwnProperty(name)) {\n
+    alert("There\'s already a buffer by that name.");\n
+    return;\n
+  }\n
+  openBuffer(name, "", "javascript");\n
+  selectBuffer(where == "top" ? ed_top : ed_bot, name);\n
+  var sel = where == "top" ? sel_top : sel_bot;\n
+  sel.value = name;\n
+}\n
+\n
+function selectBuffer(editor, name) {\n
+  var buf = buffers[name];\n
+  if (buf.getEditor()) buf = buf.linkedDoc({sharedHist: true});\n
+  var old = editor.swapDoc(buf);\n
+  var linked = old.iterLinkedDocs(function(doc) {linked = doc;});\n
+  if (linked) {\n
+    // Make sure the document in buffers is the one the other view is looking at\n
+    for (var name in buffers) if (buffers[name] == old) buffers[name] = linked;\n
+    old.unlinkDoc(linked);\n
+  }\n
+  editor.focus();\n
+}\n
+\n
+function nodeContent(id) {\n
+  var node = document.getElementById(id), val = node.textContent || node.innerText;\n
+  val = val.slice(val.match(/^\\s*/)[0].length, val.length - val.match(/\\s*$/)[0].length) + "\\n";\n
+  return val;\n
+}\n
+openBuffer("js", nodeContent("script"), "javascript");\n
+openBuffer("css", nodeContent("style"), "css");\n
+\n
+var ed_top = CodeMirror(document.getElementById("code_top"), {lineNumbers: true});\n
+selectBuffer(ed_top, "js");\n
+var ed_bot = CodeMirror(document.getElementById("code_bot"), {lineNumbers: true});\n
+selectBuffer(ed_bot, "js");\n
+</script>\n
+\n
+    <p>Demonstration of\n
+    using <a href="../doc/manual.html#linkedDoc">linked documents</a>\n
+    to provide a split view on a document, and\n
+    using <a href="../doc/manual.html#swapDoc"><code>swapDoc</code></a>\n
+    to use a single editor to display multiple documents.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>buffers.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

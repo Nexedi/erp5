@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Hard-wrapping Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/markdown/markdown.js"></script>\n
+<script src="../addon/wrap/hardwrap.js"></script>\n
+<style type="text/css">\n
+  .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Hard-wrapping</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Hard-wrapping Demo</h2>\n
+<form><textarea id="code" name="code">Lorem ipsum dolor sit amet, vim augue dictas constituto ex,\n
+sit falli simul viderer te. Graeco scaevola maluisset sit\n
+ut, in idque viris praesent sea. Ea sea eirmod indoctum\n
+repudiare. Vel noluisse suscipit pericula ut. In ius nulla\n
+alienum molestie. Mei essent discere democritum id.\n
+\n
+Equidem ponderum expetendis ius in, mea an erroribus\n
+constituto, congue timeam perfecto ad est. Ius ut primis\n
+timeam, per in ullum mediocrem. An case vero labitur pri,\n
+vel dicit laoreet et. An qui prompta conclusionemque, eam\n
+timeam sapientem in, cum dictas epicurei eu.\n
+\n
+Usu cu vide dictas deseruisse, eum choro graece adipiscing\n
+ut. Cibo qualisque ius ad, et dicat scripta mea, eam nihil\n
+mentitum aliquando cu. Debet aperiam splendide at quo, ad\n
+paulo nostro commodo duo. Sea adhuc utinam conclusionemque\n
+id, quas doming malorum nec ad. Tollit eruditi vivendum ad\n
+ius, eos soleat ignota ad.\n
+</textarea></form>\n
+\n
+<p>Demonstration of\n
+the <a href="../doc/manual.html#addon_hardwrap">hardwrap</a> addon.\n
+The above editor has its change event hooked up to\n
+the <code>wrapParagraphsInRange</code> method, so that the paragraphs\n
+are reflown as you are typing.</p>\n
+\n
+<script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  mode: "markdown",\n
+  lineNumbers: true,\n
+  extraKeys: {\n
+    "Ctrl-Q": function(cm) { cm.wrapParagraph(cm.getCursor(), options); }\n
+  }\n
+});\n
+var wait, options = {column: 60};\n
+editor.on("change", function(cm, change) {\n
+  clearTimeout(wait);\n
+  wait = setTimeout(function() {\n
+    console.log(cm.wrapParagraphsInRange(change.from, CodeMirror.changeEnd(change), options));\n
+  }, 200);\n
+});\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>hardwrap.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

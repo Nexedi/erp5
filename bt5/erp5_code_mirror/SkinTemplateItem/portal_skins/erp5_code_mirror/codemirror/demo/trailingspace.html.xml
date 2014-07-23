@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Trailing Whitespace Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/edit/trailingspace.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+      .cm-trailingspace {\n
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);\n
+        background-position: bottom left;\n
+        background-repeat: repeat-x;\n
+      }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Trailing Whitespace</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Trailing Whitespace Demo</h2>\n
+<form><textarea id="code" name="code">This text  \n
+ has some\t \n
+trailing whitespace!</textarea></form>\n
+\n
+    <script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  lineNumbers: true,\n
+  showTrailingSpace: true\n
+});\n
+</script>\n
+\n
+<p>Uses\n
+the <a href="../doc/manual.html#addon_trailingspace">trailingspace</a>\n
+addon to highlight trailing whitespace.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>trailingspace.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

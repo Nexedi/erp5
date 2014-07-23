@@ -1,0 +1,386 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403075.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>show-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var HINT_ELEMENT_CLASS        = "CodeMirror-hint";\n
+  var ACTIVE_HINT_ELEMENT_CLASS = "CodeMirror-hint-active";\n
+\n
+  CodeMirror.showHint = function(cm, getHints, options) {\n
+    // We want a single cursor position.\n
+    if (cm.somethingSelected()) return;\n
+    if (getHints == null) {\n
+      if (options && options.async) return;\n
+      else getHints = CodeMirror.hint.auto;\n
+    }\n
+\n
+    if (cm.state.completionActive) cm.state.completionActive.close();\n
+\n
+    var completion = cm.state.completionActive = new Completion(cm, getHints, options || {});\n
+    CodeMirror.signal(cm, "startCompletion", cm);\n
+    if (completion.options.async)\n
+      getHints(cm, function(hints) { completion.showHints(hints); }, completion.options);\n
+    else\n
+      return completion.showHints(getHints(cm, completion.options));\n
+  };\n
+\n
+  function Completion(cm, getHints, options) {\n
+    this.cm = cm;\n
+    this.getHints = getHints;\n
+    this.options = options;\n
+    this.widget = this.onClose = null;\n
+  }\n
+\n
+  Completion.prototype = {\n
+    close: function() {\n
+      if (!this.active()) return;\n
+      this.cm.state.completionActive = null;\n
+\n
+      if (this.widget) this.widget.close();\n
+      if (this.onClose) this.onClose();\n
+      CodeMirror.signal(this.cm, "endCompletion", this.cm);\n
+    },\n
+\n
+    active: function() {\n
+      return this.cm.state.completionActive == this;\n
+    },\n
+\n
+    pick: function(data, i) {\n
+      var completion = data.list[i];\n
+      if (completion.hint) completion.hint(this.cm, data, completion);\n
+      else this.cm.replaceRange(getText(completion), completion.from||data.from, completion.to||data.to);\n
+      CodeMirror.signal(data, "pick", completion);\n
+      this.close();\n
+    },\n
+\n
+    showHints: function(data) {\n
+      if (!data || !data.list.length || !this.active()) return this.close();\n
+\n
+      if (this.options.completeSingle != false && data.list.length == 1)\n
+        this.pick(data, 0);\n
+      else\n
+        this.showWidget(data);\n
+    },\n
+\n
+    showWidget: function(data) {\n
+      this.widget = new Widget(this, data);\n
+      CodeMirror.signal(data, "shown");\n
+\n
+      var debounce = 0, completion = this, finished;\n
+      var closeOn = this.options.closeCharacters || /[\\s()\\[\\]{};:>,]/;\n
+      var startPos = this.cm.getCursor(), startLen = this.cm.getLine(startPos.line).length;\n
+\n
+      var requestAnimationFrame = window.requestAnimationFrame || function(fn) {\n
+        return setTimeout(fn, 1000/60);\n
+      };\n
+      var cancelAnimationFrame = window.cancelAnimationFrame || clearTimeout;\n
+\n
+      function done() {\n
+        if (finished) return;\n
+        finished = true;\n
+        completion.close();\n
+        completion.cm.off("cursorActivity", activity);\n
+        if (data) CodeMirror.signal(data, "close");\n
+      }\n
+\n
+      function update() {\n
+        if (finished) return;\n
+        CodeMirror.signal(data, "update");\n
+        if (completion.options.async)\n
+          completion.getHints(completion.cm, finishUpdate, completion.options);\n
+        else\n
+          finishUpdate(completion.getHints(completion.cm, completion.options));\n
+      }\n
+      function finishUpdate(data_) {\n
+        data = data_;\n
+        if (finished) return;\n
+        if (!data || !data.list.length) return done();\n
+        completion.widget = new Widget(completion, data);\n
+      }\n
+\n
+      function clearDebounce() {\n
+        if (debounce) {\n
+          cancelAnimationFrame(debounce);\n
+          debounce = 0;\n
+        }\n
+      }\n
+\n
+      function activity() {\n
+        clearDebounce();\n
+        var pos = completion.cm.getCursor(), line = completion.cm.getLine(pos.line);\n
+        if (pos.line != startPos.line || line.length - pos.ch != startLen - startPos.ch ||\n
+            pos.ch < startPos.ch || completion.cm.somethingSelected() ||\n
+            (pos.ch && closeOn.test(line.charAt(pos.ch - 1)))) {\n
+          completion.close();\n
+        } else {\n
+          debounce = requestAnimationFrame(update);\n
+          if (completion.widget) completion.widget.close();\n
+        }\n
+      }\n
+      this.cm.on("cursorActivity", activity);\n
+      this.onClose = done;\n
+    }\n
+  };\n
+\n
+  function getText(completion) {\n
+    if (typeof completion == "string") return completion;\n
+    else return completion.text;\n
+  }\n
+\n
+  function buildKeyMap(options, handle) {\n
+    var baseMap = {\n
+      Up: function() {handle.moveFocus(-1);},\n
+      Down: function() {handle.moveFocus(1);},\n
+      PageUp: function() {handle.moveFocus(-handle.menuSize() + 1, true);},\n
+      PageDown: function() {handle.moveFocus(handle.menuSize() - 1, true);},\n
+      Home: function() {handle.setFocus(0);},\n
+      End: function() {handle.setFocus(handle.length - 1);},\n
+      Enter: handle.pick,\n
+      Tab: handle.pick,\n
+      Esc: handle.close\n
+    };\n
+    var ourMap = options.customKeys ? {} : baseMap;\n
+    function addBinding(key, val) {\n
+      var bound;\n
+      if (typeof val != "string")\n
+        bound = function(cm) { return val(cm, handle); };\n
+      // This mechanism is deprecated\n
+      else if (baseMap.hasOwnProperty(val))\n
+        bound = baseMap[val];\n
+      else\n
+        bound = val;\n
+      ourMap[key] = bound;\n
+    }\n
+    if (options.customKeys)\n
+      for (var key in options.customKeys) if (options.customKeys.hasOwnProperty(key))\n
+        addBinding(key, options.customKeys[key]);\n
+    if (options.extraKeys)\n
+      for (var key in options.extraKeys) if (options.extraKeys.hasOwnProperty(key))\n
+        addBinding(key, options.extraKeys[key]);\n
+    return ourMap;\n
+  }\n
+\n
+  function getHintElement(hintsElement, el) {\n
+    while (el && el != hintsElement) {\n
+      if (el.nodeName.toUpperCase() === "LI" && el.parentNode == hintsElement) return el;\n
+      el = el.parentNode;\n
+    }\n
+  }\n
+\n
+  function Widget(completion, data) {\n
+    this.completion = completion;\n
+    this.data = data;\n
+    var widget = this, cm = completion.cm, options = completion.options;\n
+\n
+    var hints = this.hints = document.createElement("ul");\n
+    hints.className = "CodeMirror-hints";\n
+    this.selectedHint = options.getDefaultSelection ? options.getDefaultSelection(cm,options,data) : 0;\n
+\n
+    var completions = data.list;\n
+    for (var i = 0; i < completions.length; ++i) {\n
+      var elt = hints.appendChild(document.createElement("li")), cur = completions[i];\n
+      var className = HINT_ELEMENT_CLASS + (i != this.selectedHint ? "" : " " + ACTIVE_HINT_ELEMENT_CLASS);\n
+      if (cur.className != null) className = cur.className + " " + className;\n
+      elt.className = className;\n
+      if (cur.render) cur.render(elt, data, cur);\n
+      else elt.appendChild(document.createTextNode(cur.displayText || getText(cur)));\n
+      elt.hintId = i;\n
+    }\n
+\n
+    var pos = cm.cursorCoords(options.alignWithWord !== false ? data.from : null);\n
+    var left = pos.left, top = pos.bottom, below = true;\n
+    hints.style.left = left + "px";\n
+    hints.style.top = top + "px";\n
+    // If we\'re at the edge of the screen, then we want the menu to appear on the left of the cursor.\n
+    var winW = window.innerWidth || Math.max(document.body.offsetWidth, document.documentElement.offsetWidth);\n
+    var winH = window.innerHeight || Math.max(document.body.offsetHeight, document.documentElement.offsetHeight);\n
+    (options.container || document.body).appendChild(hints);\n
+    var box = hints.getBoundingClientRect(), overlapY = box.bottom - winH;\n
+    if (overlapY > 0) {\n
+      var height = box.bottom - box.top, curTop = box.top - (pos.bottom - pos.top);\n
+      if (curTop - height > 0) { // Fits above cursor\n
+        hints.style.top = (top = curTop - height) + "px";\n
+        below = false;\n
+      } else if (height > winH) {\n
+        hints.style.height = (winH - 5) + "px";\n
+        hints.style.top = (top = pos.bottom - box.top) + "px";\n
+        var cursor = cm.getCursor();\n
+        if (data.from.ch != cursor.ch) {\n
+          pos = cm.cursorCoords(cursor);\n
+          hints.style.left = (left = pos.left) + "px";\n
+          box = hints.getBoundingClientRect();\n
+        }\n
+      }\n
+    }\n
+    var overlapX = box.left - winW;\n
+    if (overlapX > 0) {\n
+      if (box.right - box.left > winW) {\n
+        hints.style.width = (winW - 5) + "px";\n
+        overlapX -= (box.right - box.left) - winW;\n
+      }\n
+      hints.style.left = (left = pos.left - overlapX) + "px";\n
+    }\n
+\n
+    cm.addKeyMap(this.keyMap = buildKeyMap(options, {\n
+      moveFocus: function(n, avoidWrap) { widget.changeActive(widget.selectedHint + n, avoidWrap); },\n
+      setFocus: function(n) { widget.changeActive(n); },\n
+      menuSize: function() { return widget.screenAmount(); },\n
+      length: completions.length,\n
+      close: function() { completion.close(); },\n
+      pick: function() { widget.pick(); },\n
+      data: data\n
+    }));\n
+\n
+    if (options.closeOnUnfocus !== false) {\n
+      var closingOnBlur;\n
+      cm.on("blur", this.onBlur = function() { closingOnBlur = setTimeout(function() { completion.close(); }, 100); });\n
+      cm.on("focus", this.onFocus = function() { clearTimeout(closingOnBlur); });\n
+    }\n
+\n
+    var startScroll = cm.getScrollInfo();\n
+    cm.on("scroll", this.onScroll = function() {\n
+      var curScroll = cm.getScrollInfo(), editor = cm.getWrapperElement().getBoundingClientRect();\n
+      var newTop = top + startScroll.top - curScroll.top;\n
+      var point = newTop - (window.pageYOffset || (document.documentElement || document.body).scrollTop);\n
+      if (!below) point += hints.offsetHeight;\n
+      if (point <= editor.top || point >= editor.bottom) return completion.close();\n
+      hints.style.top = newTop + "px";\n
+      hints.style.left = (left + startScroll.left - curScroll.left) + "px";\n
+    });\n
+\n
+    CodeMirror.on(hints, "dblclick", function(e) {\n
+      var t = getHintElement(hints, e.target || e.srcElement);\n
+      if (t && t.hintId != null) {widget.changeActive(t.hintId); widget.pick();}\n
+    });\n
+\n
+    CodeMirror.on(hints, "click", function(e) {\n
+      var t = getHintElement(hints, e.target || e.srcElement);\n
+      if (t && t.hintId != null) {\n
+        widget.changeActive(t.hintId);\n
+        if (options.completeOnSingleClick) widget.pick();\n
+      }\n
+    });\n
+\n
+    CodeMirror.on(hints, "mousedown", function() {\n
+      setTimeout(function(){cm.focus();}, 20);\n
+    });\n
+\n
+    CodeMirror.signal(data, "select", completions[0], hints.firstChild);\n
+    return true;\n
+  }\n
+\n
+  Widget.prototype = {\n
+    close: function() {\n
+      if (this.completion.widget != this) return;\n
+      this.completion.widget = null;\n
+      this.hints.parentNode.removeChild(this.hints);\n
+      this.completion.cm.removeKeyMap(this.keyMap);\n
+\n
+      var cm = this.completion.cm;\n
+      if (this.completion.options.closeOnUnfocus !== false) {\n
+        cm.off("blur", this.onBlur);\n
+        cm.off("focus", this.onFocus);\n
+      }\n
+      cm.off("scroll", this.onScroll);\n
+    },\n
+\n
+    pick: function() {\n
+      this.completion.pick(this.data, this.selectedHint);\n
+    },\n
+\n
+    changeActive: function(i, avoidWrap) {\n
+      if (i >= this.data.list.length)\n
+        i = avoidWrap ? this.data.list.length - 1 : 0;\n
+      else if (i < 0)\n
+        i = avoidWrap ? 0  : this.data.list.length - 1;\n
+      if (this.selectedHint == i) return;\n
+      var node = this.hints.childNodes[this.selectedHint];\n
+      node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");\n
+      node = this.hints.childNodes[this.selectedHint = i];\n
+      node.className += " " + ACTIVE_HINT_ELEMENT_CLASS;\n
+      if (node.offsetTop < this.hints.scrollTop)\n
+        this.hints.scrollTop = node.offsetTop - 3;\n
+      else if (node.offsetTop + node.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)\n
+        this.hints.scrollTop = node.offsetTop + node.offsetHeight - this.hints.clientHeight + 3;\n
+      CodeMirror.signal(this.data, "select", this.data.list[this.selectedHint], node);\n
+    },\n
+\n
+    screenAmount: function() {\n
+      return Math.floor(this.hints.clientHeight / this.hints.firstChild.offsetHeight) || 1;\n
+    }\n
+  };\n
+\n
+  CodeMirror.registerHelper("hint", "auto", function(cm, options) {\n
+    var helpers = cm.getHelpers(cm.getCursor(), "hint"), words;\n
+    if (helpers.length) {\n
+      for (var i = 0; i < helpers.length; i++) {\n
+        var cur = helpers[i](cm, options);\n
+        if (cur && cur.list.length) return cur;\n
+      }\n
+    } else if (words = cm.getHelper(cm.getCursor(), "hintWords")) {\n
+      if (words) return CodeMirror.hint.fromList(cm, {words: words});\n
+    } else if (CodeMirror.hint.anyword) {\n
+      return CodeMirror.hint.anyword(cm, options);\n
+    }\n
+  });\n
+\n
+  CodeMirror.registerHelper("hint", "fromList", function(cm, options) {\n
+    var cur = cm.getCursor(), token = cm.getTokenAt(cur);\n
+    var found = [];\n
+    for (var i = 0; i < options.words.length; i++) {\n
+      var word = options.words[i];\n
+      if (word.slice(0, token.string.length) == token.string)\n
+        found.push(word);\n
+    }\n
+\n
+    if (found.length) return {\n
+      list: found,\n
+      from: CodeMirror.Pos(cur.line, token.start),\n
+            to: CodeMirror.Pos(cur.line, token.end)\n
+    };\n
+  });\n
+\n
+  CodeMirror.commands.autocomplete = CodeMirror.showHint;\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12782</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

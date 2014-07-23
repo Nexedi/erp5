@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403103.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>driver.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var tests = [], filters = [], allNames = [];\n
+\n
+function Failure(why) {this.message = why;}\n
+Failure.prototype.toString = function() { return this.message; };\n
+\n
+function indexOf(collection, elt) {\n
+  if (collection.indexOf) return collection.indexOf(elt);\n
+  for (var i = 0, e = collection.length; i < e; ++i)\n
+    if (collection[i] == elt) return i;\n
+  return -1;\n
+}\n
+\n
+function test(name, run, expectedFail) {\n
+  // Force unique names\n
+  var originalName = name;\n
+  var i = 2; // Second function would be NAME_2\n
+  while (indexOf(allNames, name) !== -1){\n
+    name = originalName + "_" + i;\n
+    i++;\n
+  }\n
+  allNames.push(name);\n
+  // Add test\n
+  tests.push({name: name, func: run, expectedFail: expectedFail});\n
+  return name;\n
+}\n
+var namespace = "";\n
+function testCM(name, run, opts, expectedFail) {\n
+  return test(namespace + name, function() {\n
+    var place = document.getElementById("testground"), cm = window.cm = CodeMirror(place, opts);\n
+    var successful = false;\n
+    try {\n
+      run(cm);\n
+      successful = true;\n
+    } finally {\n
+      if (!successful || verbose) {\n
+        place.style.visibility = "visible";\n
+      } else {\n
+        place.removeChild(cm.getWrapperElement());\n
+      }\n
+    }\n
+  }, expectedFail);\n
+}\n
+\n
+function runTests(callback) {\n
+  var totalTime = 0;\n
+  function step(i) {\n
+    if (i === tests.length){\n
+      running = false;\n
+      return callback("done");\n
+    } \n
+    var test = tests[i], expFail = test.expectedFail, startTime = +new Date;\n
+    if (filters.length) {\n
+      for (var j = 0; j < filters.length; j++) {\n
+        if (test.name.match(filters[j])) {\n
+          break;\n
+        }\n
+      }\n
+      if (j == filters.length) {      \n
+        callback("skipped", test.name, message);\n
+        return step(i + 1);\n
+      }\n
+    }\n
+    var threw = false;\n
+    try {\n
+      var message = test.func();\n
+    } catch(e) {\n
+      threw = true;\n
+      if (expFail) callback("expected", test.name);\n
+      else if (e instanceof Failure) callback("fail", test.name, e.message);\n
+      else {\n
+        var pos = /(?:\\bat |@).*?([^\\/:]+):(\\d+)/.exec(e.stack);\n
+        callback("error", test.name, e.toString() + (pos ? " (" + pos[1] + ":" + pos[2] + ")" : ""));\n
+      }\n
+    }\n
+    if (!threw) {\n
+      if (expFail) callback("fail", test.name, message || "expected failure, but succeeded");\n
+      else callback("ok", test.name, message);\n
+    }\n
+    if (!quit) { // Run next test\n
+      var delay = 0;\n
+      totalTime += (+new Date) - startTime;\n
+      if (totalTime > 500){\n
+        totalTime = 0;\n
+        delay = 50;\n
+      }\n
+      setTimeout(function(){step(i + 1);}, delay);\n
+    } else { // Quit tests\n
+      running = false;\n
+      return null;\n
+    }\n
+  }\n
+  step(0);\n
+}\n
+\n
+function label(str, msg) {\n
+  if (msg) return str + " (" + msg + ")";\n
+  return str;\n
+}\n
+function eq(a, b, msg) {\n
+  if (a != b) throw new Failure(label(a + " != " + b, msg));\n
+}\n
+function eqPos(a, b, msg) {\n
+  function str(p) { return "{line:" + p.line + ",ch:" + p.ch + "}"; }\n
+  if (a == b) return;\n
+  if (a == null) throw new Failure(label("comparing null to " + str(b), msg));\n
+  if (b == null) throw new Failure(label("comparing " + str(a) + " to null", msg));\n
+  if (a.line != b.line || a.ch != b.ch) throw new Failure(label(str(a) + " != " + str(b), msg));\n
+}\n
+function is(a, msg) {\n
+  if (!a) throw new Failure(label("assertion failed", msg));\n
+}\n
+\n
+function countTests() {\n
+  if (!filters.length) return tests.length;\n
+  var sum = 0;\n
+  for (var i = 0; i < tests.length; ++i) {\n
+    var name = tests[i].name;\n
+    for (var j = 0; j < filters.length; j++) {\n
+      if (name.match(filters[j])) {\n
+        ++sum;\n
+        break;\n
+      }\n
+    }\n
+  }\n
+  return sum;\n
+}\n
+\n
+function parseTestFilter(s) {\n
+  if (/_\\*$/.test(s)) return new RegExp("^" + s.slice(0, s.length - 2), "i");\n
+  else return new RegExp(s, "i");\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3723</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

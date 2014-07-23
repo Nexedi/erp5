@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403074.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pig-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function () {\n
+  "use strict";\n
+\n
+  function forEach(arr, f) {\n
+    for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);\n
+  }\n
+\n
+  function arrayContains(arr, item) {\n
+    if (!Array.prototype.indexOf) {\n
+      var i = arr.length;\n
+      while (i--) {\n
+        if (arr[i] === item) {\n
+          return true;\n
+        }\n
+      }\n
+      return false;\n
+    }\n
+    return arr.indexOf(item) != -1;\n
+  }\n
+\n
+  function scriptHint(editor, _keywords, getToken) {\n
+    // Find the token at the cursor\n
+    var cur = editor.getCursor(), token = getToken(editor, cur), tprop = token;\n
+    // If it\'s not a \'word-style\' token, ignore the token.\n
+\n
+    if (!/^[\\w$_]*$/.test(token.string)) {\n
+        token = tprop = {start: cur.ch, end: cur.ch, string: "", state: token.state,\n
+                         className: token.string == ":" ? "pig-type" : null};\n
+    }\n
+\n
+    if (!context) var context = [];\n
+    context.push(tprop);\n
+\n
+    var completionList = getCompletions(token, context);\n
+    completionList = completionList.sort();\n
+    //prevent autocomplete for last word, instead show dropdown with one word\n
+    if(completionList.length == 1) {\n
+      completionList.push(" ");\n
+    }\n
+\n
+    return {list: completionList,\n
+            from: CodeMirror.Pos(cur.line, token.start),\n
+            to: CodeMirror.Pos(cur.line, token.end)};\n
+  }\n
+\n
+  function pigHint(editor) {\n
+    return scriptHint(editor, pigKeywordsU, function (e, cur) {return e.getTokenAt(cur);});\n
+  }\n
+  CodeMirror.pigHint = pigHint; // deprecated\n
+  CodeMirror.registerHelper("hint", "pig", pigHint);\n
+\n
+  var pigKeywords = "VOID IMPORT RETURNS DEFINE LOAD FILTER FOREACH ORDER CUBE DISTINCT COGROUP "\n
+  + "JOIN CROSS UNION SPLIT INTO IF OTHERWISE ALL AS BY USING INNER OUTER ONSCHEMA PARALLEL "\n
+  + "PARTITION GROUP AND OR NOT GENERATE FLATTEN ASC DESC IS STREAM THROUGH STORE MAPREDUCE "\n
+  + "SHIP CACHE INPUT OUTPUT STDERROR STDIN STDOUT LIMIT SAMPLE LEFT RIGHT FULL EQ GT LT GTE LTE "\n
+  + "NEQ MATCHES TRUE FALSE";\n
+  var pigKeywordsU = pigKeywords.split(" ");\n
+  var pigKeywordsL = pigKeywords.toLowerCase().split(" ");\n
+\n
+  var pigTypes = "BOOLEAN INT LONG FLOAT DOUBLE CHARARRAY BYTEARRAY BAG TUPLE MAP";\n
+  var pigTypesU = pigTypes.split(" ");\n
+  var pigTypesL = pigTypes.toLowerCase().split(" ");\n
+\n
+  var pigBuiltins = "ABS ACOS ARITY ASIN ATAN AVG BAGSIZE BINSTORAGE BLOOM BUILDBLOOM CBRT CEIL "\n
+  + "CONCAT COR COS COSH COUNT COUNT_STAR COV CONSTANTSIZE CUBEDIMENSIONS DIFF DISTINCT DOUBLEABS "\n
+  + "DOUBLEAVG DOUBLEBASE DOUBLEMAX DOUBLEMIN DOUBLEROUND DOUBLESUM EXP FLOOR FLOATABS FLOATAVG "\n
+  + "FLOATMAX FLOATMIN FLOATROUND FLOATSUM GENERICINVOKER INDEXOF INTABS INTAVG INTMAX INTMIN "\n
+  + "INTSUM INVOKEFORDOUBLE INVOKEFORFLOAT INVOKEFORINT INVOKEFORLONG INVOKEFORSTRING INVOKER "\n
+  + "ISEMPTY JSONLOADER JSONMETADATA JSONSTORAGE LAST_INDEX_OF LCFIRST LOG LOG10 LOWER LONGABS "\n
+  + "LONGAVG LONGMAX LONGMIN LONGSUM MAX MIN MAPSIZE MONITOREDUDF NONDETERMINISTIC OUTPUTSCHEMA  "\n
+  + "PIGSTORAGE PIGSTREAMING RANDOM REGEX_EXTRACT REGEX_EXTRACT_ALL REPLACE ROUND SIN SINH SIZE "\n
+  + "SQRT STRSPLIT SUBSTRING SUM STRINGCONCAT STRINGMAX STRINGMIN STRINGSIZE TAN TANH TOBAG "\n
+  + "TOKENIZE TOMAP TOP TOTUPLE TRIM TEXTLOADER TUPLESIZE UCFIRST UPPER UTF8STORAGECONVERTER";\n
+  var pigBuiltinsU = pigBuiltins.split(" ").join("() ").split(" ");\n
+  var pigBuiltinsL = pigBuiltins.toLowerCase().split(" ").join("() ").split(" ");\n
+  var pigBuiltinsC = ("BagSize BinStorage Bloom BuildBloom ConstantSize CubeDimensions DoubleAbs "\n
+  + "DoubleAvg DoubleBase DoubleMax DoubleMin DoubleRound DoubleSum FloatAbs FloatAvg FloatMax "\n
+  + "FloatMin FloatRound FloatSum GenericInvoker IntAbs IntAvg IntMax IntMin IntSum "\n
+  + "InvokeForDouble InvokeForFloat InvokeForInt InvokeForLong InvokeForString Invoker "\n
+  + "IsEmpty JsonLoader JsonMetadata JsonStorage LongAbs LongAvg LongMax LongMin LongSum MapSize "\n
+  + "MonitoredUDF Nondeterministic OutputSchema PigStorage PigStreaming StringConcat StringMax "\n
+  + "StringMin StringSize TextLoader TupleSize Utf8StorageConverter").split(" ").join("() ").split(" ");\n
+\n
+  function getCompletions(token, context) {\n
+    var found = [], start = token.string;\n
+    function maybeAdd(str) {\n
+      if (str.lastIndexOf(start, 0) == 0 && !arrayContains(found, str)) found.push(str);\n
+    }\n
+\n
+    function gatherCompletions(obj) {\n
+      if(obj == ":") {\n
+        forEach(pigTypesL, maybeAdd);\n
+      }\n
+      else {\n
+        forEach(pigBuiltinsU, maybeAdd);\n
+        forEach(pigBuiltinsL, maybeAdd);\n
+        forEach(pigBuiltinsC, maybeAdd);\n
+        forEach(pigTypesU, maybeAdd);\n
+        forEach(pigTypesL, maybeAdd);\n
+        forEach(pigKeywordsU, maybeAdd);\n
+        forEach(pigKeywordsL, maybeAdd);\n
+      }\n
+    }\n
+\n
+    if (context) {\n
+      // If this is a property, see if it belongs to some object we can\n
+      // find in the current environment.\n
+      var obj = context.pop(), base;\n
+\n
+      if (obj.type == "variable")\n
+          base = obj.string;\n
+      else if(obj.type == "variable-3")\n
+          base = ":" + obj.string;\n
+\n
+      while (base != null && context.length)\n
+        base = base[context.pop().string];\n
+      if (base != null) gatherCompletions(base);\n
+    }\n
+    return found;\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5117</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

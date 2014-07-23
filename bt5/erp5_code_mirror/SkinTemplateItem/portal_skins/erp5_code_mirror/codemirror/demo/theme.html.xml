@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Theme Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../theme/3024-day.css">\n
+<link rel="stylesheet" href="../theme/3024-night.css">\n
+<link rel="stylesheet" href="../theme/ambiance.css">\n
+<link rel="stylesheet" href="../theme/base16-dark.css">\n
+<link rel="stylesheet" href="../theme/base16-light.css">\n
+<link rel="stylesheet" href="../theme/blackboard.css">\n
+<link rel="stylesheet" href="../theme/cobalt.css">\n
+<link rel="stylesheet" href="../theme/eclipse.css">\n
+<link rel="stylesheet" href="../theme/elegant.css">\n
+<link rel="stylesheet" href="../theme/erlang-dark.css">\n
+<link rel="stylesheet" href="../theme/lesser-dark.css">\n
+<link rel="stylesheet" href="../theme/mbo.css">\n
+<link rel="stylesheet" href="../theme/mdn-like.css">\n
+<link rel="stylesheet" href="../theme/midnight.css">\n
+<link rel="stylesheet" href="../theme/monokai.css">\n
+<link rel="stylesheet" href="../theme/neat.css">\n
+<link rel="stylesheet" href="../theme/night.css">\n
+<link rel="stylesheet" href="../theme/paraiso-dark.css">\n
+<link rel="stylesheet" href="../theme/paraiso-light.css">\n
+<link rel="stylesheet" href="../theme/pastel-on-dark.css">\n
+<link rel="stylesheet" href="../theme/rubyblue.css">\n
+<link rel="stylesheet" href="../theme/solarized.css">\n
+<link rel="stylesheet" href="../theme/the-matrix.css">\n
+<link rel="stylesheet" href="../theme/tomorrow-night-eighties.css">\n
+<link rel="stylesheet" href="../theme/twilight.css">\n
+<link rel="stylesheet" href="../theme/vibrant-ink.css">\n
+<link rel="stylesheet" href="../theme/xq-dark.css">\n
+<link rel="stylesheet" href="../theme/xq-light.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../keymap/extra.js"></script>\n
+<script src="../addon/selection/active-line.js"></script>\n
+<script src="../addon/edit/matchbrackets.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid black; font-size:13px}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Theme</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Theme Demo</h2>\n
+<form><textarea id="code" name="code">\n
+function findSequence(goal) {\n
+  function find(start, history) {\n
+    if (start == goal)\n
+      return history;\n
+    else if (start > goal)\n
+      return null;\n
+    else\n
+      return find(start + 5, "(" + history + " + 5)") ||\n
+             find(start * 3, "(" + history + " * 3)");\n
+  }\n
+  return find(1, "1");\n
+}</textarea></form>\n
+\n
+<p>Select a theme: <select onchange="selectTheme()" id=select>\n
+    <option selected>default</option>\n
+    <option>3024-day</option>\n
+    <option>3024-night</option>\n
+    <option>ambiance</option>\n
+    <option>base16-dark</option>\n
+    <option>base16-light</option>\n
+    <option>blackboard</option>\n
+    <option>cobalt</option>\n
+    <option>eclipse</option>\n
+    <option>elegant</option>\n
+    <option>erlang-dark</option>\n
+    <option>lesser-dark</option>\n
+    <option>mbo</option>\n
+    <option>mdn-like</option>\n
+    <option>midnight</option>\n
+    <option>monokai</option>\n
+    <option>neat</option>\n
+    <option>night</option>\n
+    <option>paraiso-dark</option>\n
+    <option>paraiso-light</option>\n
+    <option>pastel-on-dark</option>\n
+    <option>rubyblue</option>\n
+    <option>solarized dark</option>\n
+    <option>solarized light</option>\n
+    <option>the-matrix</option>\n
+    <option>tomorrow-night-eighties</option>\n
+    <option>twilight</option>\n
+    <option>vibrant-ink</option>\n
+    <option>xq-dark</option>\n
+    <option>xq-light</option>\n
+</select>\n
+</p>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    styleActiveLine: true,\n
+    matchBrackets: true\n
+  });\n
+  var input = document.getElementById("select");\n
+  function selectTheme() {\n
+    var theme = input.options[input.selectedIndex].innerHTML;\n
+    editor.setOption("theme", theme);\n
+  }\n
+  var choice = document.location.search &&\n
+               decodeURIComponent(document.location.search.slice(1));\n
+  if (choice) {\n
+    input.value = choice;\n
+    editor.setOption("theme", choice);\n
+  }\n
+</script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>theme.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

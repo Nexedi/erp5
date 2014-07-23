@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403076.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>placeholder.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  CodeMirror.defineOption("placeholder", "", function(cm, val, old) {\n
+    var prev = old && old != CodeMirror.Init;\n
+    if (val && !prev) {\n
+      cm.on("blur", onBlur);\n
+      cm.on("change", onChange);\n
+      onChange(cm);\n
+    } else if (!val && prev) {\n
+      cm.off("blur", onBlur);\n
+      cm.off("change", onChange);\n
+      clearPlaceholder(cm);\n
+      var wrapper = cm.getWrapperElement();\n
+      wrapper.className = wrapper.className.replace(" CodeMirror-empty", "");\n
+    }\n
+\n
+    if (val && !cm.hasFocus()) onBlur(cm);\n
+  });\n
+\n
+  function clearPlaceholder(cm) {\n
+    if (cm.state.placeholder) {\n
+      cm.state.placeholder.parentNode.removeChild(cm.state.placeholder);\n
+      cm.state.placeholder = null;\n
+    }\n
+  }\n
+  function setPlaceholder(cm) {\n
+    clearPlaceholder(cm);\n
+    var elt = cm.state.placeholder = document.createElement("pre");\n
+    elt.style.cssText = "height: 0; overflow: visible";\n
+    elt.className = "CodeMirror-placeholder";\n
+    elt.appendChild(document.createTextNode(cm.getOption("placeholder")));\n
+    cm.display.lineSpace.insertBefore(elt, cm.display.lineSpace.firstChild);\n
+  }\n
+\n
+  function onBlur(cm) {\n
+    if (isEmpty(cm)) setPlaceholder(cm);\n
+  }\n
+  function onChange(cm) {\n
+    var wrapper = cm.getWrapperElement(), empty = isEmpty(cm);\n
+    wrapper.className = wrapper.className.replace(" CodeMirror-empty", "") + (empty ? " CodeMirror-empty" : "");\n
+\n
+    if (empty) setPlaceholder(cm);\n
+    else clearPlaceholder(cm);\n
+  }\n
+\n
+  function isEmpty(cm) {\n
+    return (cm.lineCount() === 1) && (cm.getLine(0) === "");\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1546</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403098.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>julia.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
+  var ERRORCLASS = \'error\';\n
+\n
+  function wordRegexp(words) {\n
+    return new RegExp("^((" + words.join(")|(") + "))\\\\b");\n
+  }\n
+\n
+  var operators = parserConf.operators || /^\\.?[|&^\\\\%*+\\-<>!=\\/]=?|\\?|~|:|\\$|\\.[<>]|<<=?|>>>?=?|\\.[<>=]=|->?|\\/\\/|\\bin\\b/;\n
+  var delimiters = parserConf.delimiters || /^[;,()[\\]{}]/;\n
+  var identifiers = parserConf.identifiers|| /^[_A-Za-z][_A-Za-z0-9]*!*/;\n
+  var blockOpeners = ["begin", "function", "type", "immutable", "let", "macro", "for", "while", "quote", "if", "else", "elseif", "try", "finally", "catch", "do"];\n
+  var blockClosers = ["end", "else", "elseif", "catch", "finally"];\n
+  var keywordList = [\'if\', \'else\', \'elseif\', \'while\', \'for\', \'begin\', \'let\', \'end\', \'do\', \'try\', \'catch\', \'finally\', \'return\', \'break\', \'continue\', \'global\', \'local\', \'const\', \'export\', \'import\', \'importall\', \'using\', \'function\', \'macro\', \'module\', \'baremodule\', \'type\', \'immutable\', \'quote\', \'typealias\', \'abstract\', \'bitstype\', \'ccall\'];\n
+  var builtinList = [\'true\', \'false\', \'enumerate\', \'open\', \'close\', \'nothing\', \'NaN\', \'Inf\', \'print\', \'println\', \'Int\', \'Int8\', \'Uint8\', \'Int16\', \'Uint16\', \'Int32\', \'Uint32\', \'Int64\', \'Uint64\', \'Int128\', \'Uint128\', \'Bool\', \'Char\', \'Float16\', \'Float32\', \'Float64\', \'Array\', \'Vector\', \'Matrix\', \'String\', \'UTF8String\', \'ASCIIString\', \'error\', \'warn\', \'info\', \'@printf\'];\n
+\n
+  //var stringPrefixes = new RegExp("^[br]?(\'|\\")")\n
+  var stringPrefixes = /^(`|\'|"{3}|([br]?"))/;\n
+  var keywords = wordRegexp(keywordList);\n
+  var builtins = wordRegexp(builtinList);\n
+  var openers = wordRegexp(blockOpeners);\n
+  var closers = wordRegexp(blockClosers);\n
+  var macro = /^@[_A-Za-z][_A-Za-z0-9]*/;\n
+  var symbol = /^:[_A-Za-z][_A-Za-z0-9]*/;\n
+  var indentInfo = null;\n
+\n
+  function in_array(state) {\n
+    var ch = cur_scope(state);\n
+    if(ch=="[" || ch=="{") {\n
+      return true;\n
+    }\n
+    else {\n
+      return false;\n
+    }\n
+  }\n
+\n
+  function cur_scope(state) {\n
+    if(state.scopes.length==0) {\n
+      return null;\n
+    }\n
+    return state.scopes[state.scopes.length - 1];\n
+  }\n
+\n
+  // tokenizers\n
+  function tokenBase(stream, state) {\n
+    // Handle scope changes\n
+    var leaving_expr = state.leaving_expr;\n
+    if(stream.sol()) {\n
+      leaving_expr = false;\n
+    }\n
+    state.leaving_expr = false;\n
+    if(leaving_expr) {\n
+      if(stream.match(/^\'+/)) {\n
+        return \'operator\';\n
+      }\n
+\n
+    }\n
+\n
+    if(stream.match(/^\\.{2,3}/)) {\n
+      return \'operator\';\n
+    }\n
+\n
+    if (stream.eatSpace()) {\n
+      return null;\n
+    }\n
+\n
+    var ch = stream.peek();\n
+    // Handle Comments\n
+    if (ch === \'#\') {\n
+        stream.skipToEnd();\n
+        return \'comment\';\n
+    }\n
+    if(ch===\'[\') {\n
+      state.scopes.push("[");\n
+    }\n
+\n
+    if(ch===\'{\') {\n
+      state.scopes.push("{");\n
+    }\n
+\n
+    var scope=cur_scope(state);\n
+\n
+    if(scope===\'[\' && ch===\']\') {\n
+      state.scopes.pop();\n
+      state.leaving_expr=true;\n
+    }\n
+\n
+    if(scope===\'{\' && ch===\'}\') {\n
+      state.scopes.pop();\n
+      state.leaving_expr=true;\n
+    }\n
+\n
+    if(ch===\')\') {\n
+      state.leaving_expr = true;\n
+    }\n
+\n
+    var match;\n
+    if(!in_array(state) && (match=stream.match(openers, false))) {\n
+      state.scopes.push(match);\n
+    }\n
+\n
+    if(!in_array(state) && stream.match(closers, false)) {\n
+      state.scopes.pop();\n
+    }\n
+\n
+    if(in_array(state)) {\n
+      if(stream.match(/^end/)) {\n
+        return \'number\';\n
+      }\n
+\n
+    }\n
+\n
+    if(stream.match(/^=>/)) {\n
+      return \'operator\';\n
+    }\n
+\n
+\n
+    // Handle Number Literals\n
+    if (stream.match(/^[0-9\\.]/, false)) {\n
+      var imMatcher = RegExp(/^im\\b/);\n
+      var floatLiteral = false;\n
+      // Floats\n
+      if (stream.match(/^\\d*\\.(?!\\.)\\d+([ef][\\+\\-]?\\d+)?/i)) { floatLiteral = true; }\n
+      if (stream.match(/^\\d+\\.(?!\\.)\\d*/)) { floatLiteral = true; }\n
+      if (stream.match(/^\\.\\d+/)) { floatLiteral = true; }\n
+      if (floatLiteral) {\n
+          // Float literals may be "imaginary"\n
+          stream.match(imMatcher);\n
+          state.leaving_expr = true;\n
+          return \'number\';\n
+      }\n
+      // Integers\n
+      var intLiteral = false;\n
+      // Hex\n
+      if (stream.match(/^0x[0-9a-f]+/i)) { intLiteral = true; }\n
+      // Binary\n
+      if (stream.match(/^0b[01]+/i)) { intLiteral = true; }\n
+      // Octal\n
+      if (stream.match(/^0o[0-7]+/i)) { intLiteral = true; }\n
+      // Decimal\n
+      if (stream.match(/^[1-9]\\d*(e[\\+\\-]?\\d+)?/)) {\n
+          intLiteral = true;\n
+      }\n
+      // Zero by itself with no other piece of number.\n
+      if (stream.match(/^0(?![\\dx])/i)) { intLiteral = true; }\n
+      if (intLiteral) {\n
+          // Integer literals may be "long"\n
+          stream.match(imMatcher);\n
+          state.leaving_expr = true;\n
+          return \'number\';\n
+      }\n
+    }\n
+\n
+    if(stream.match(/^(::)|(<:)/)) {\n
+      return \'operator\';\n
+    }\n
+\n
+    // Handle symbols\n
+    if(!leaving_expr && stream.match(symbol)) {\n
+      return \'string\';\n
+    }\n
+\n
+    // Handle operators and Delimiters\n
+    if (stream.match(operators)) {\n
+      return \'operator\';\n
+    }\n
+\n
+\n
+    // Handle Strings\n
+    if (stream.match(stringPrefixes)) {\n
+      state.tokenize = tokenStringFactory(stream.current());\n
+      return state.tokenize(stream, state);\n
+    }\n
+\n
+    if (stream.match(macro)) {\n
+      return \'meta\';\n
+    }\n
+\n
+\n
+    if (stream.match(delimiters)) {\n
+      return null;\n
+    }\n
+\n
+    if (stream.match(keywords)) {\n
+      return \'keyword\';\n
+    }\n
+\n
+    if (stream.match(builtins)) {\n
+      return \'builtin\';\n
+    }\n
+\n
+\n
+    if (stream.match(identifiers)) {\n
+      state.leaving_expr=true;\n
+      return \'variable\';\n
+    }\n
+    // Handle non-detected items\n
+    stream.next();\n
+    return ERRORCLASS;\n
+  }\n
+\n
+  function tokenStringFactory(delimiter) {\n
+    while (\'rub\'.indexOf(delimiter.charAt(0).toLowerCase()) >= 0) {\n
+      delimiter = delimiter.substr(1);\n
+    }\n
+    var singleline = delimiter.length == 1;\n
+    var OUTCLASS = \'string\';\n
+\n
+    function tokenString(stream, state) {\n
+      while (!stream.eol()) {\n
+        stream.eatWhile(/[^\'"\\\\]/);\n
+        if (stream.eat(\'\\\\\')) {\n
+            stream.next();\n
+            if (singleline && stream.eol()) {\n
+              return OUTCLASS;\n
+            }\n
+        } else if (stream.match(delimiter)) {\n
+            state.tokenize = tokenBase;\n
+            return OUTCLASS;\n
+        } else {\n
+            stream.eat(/[\'"]/);\n
+        }\n
+      }\n
+      if (singleline) {\n
+        if (parserConf.singleLineStringErrors) {\n
+            return ERRORCLASS;\n
+        } else {\n
+            state.tokenize = tokenBase;\n
+        }\n
+      }\n
+      return OUTCLASS;\n
+    }\n
+    tokenString.isString = true;\n
+    return tokenString;\n
+  }\n
+\n
+  function tokenLexer(stream, state) {\n
+    indentInfo = null;\n
+    var style = state.tokenize(stream, state);\n
+    var current = stream.current();\n
+\n
+    // Handle \'.\' connected identifiers\n
+    if (current === \'.\') {\n
+      style = stream.match(identifiers, false) ? null : ERRORCLASS;\n
+      if (style === null && state.lastStyle === \'meta\') {\n
+          // Apply \'meta\' style to \'.\' connected identifiers when\n
+          // appropriate.\n
+        style = \'meta\';\n
+      }\n
+      return style;\n
+    }\n
+\n
+    return style;\n
+  }\n
+\n
+  var external = {\n
+    startState: function() {\n
+      return {\n
+        tokenize: tokenBase,\n
+        scopes: [],\n
+        leaving_expr: false\n
+      };\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      var style = tokenLexer(stream, state);\n
+      state.lastStyle = style;\n
+      return style;\n
+    },\n
+\n
+    indent: function(state, textAfter) {\n
+      var delta = 0;\n
+      if(textAfter=="end" || textAfter=="]" || textAfter=="}" || textAfter=="else" || textAfter=="elseif" || textAfter=="catch" || textAfter=="finally") {\n
+        delta = -1;\n
+      }\n
+      return (state.scopes.length + delta) * 4;\n
+    },\n
+\n
+    lineComment: "#",\n
+    fold: "indent",\n
+    electricChars: "edlsifyh]}"\n
+  };\n
+  return external;\n
+});\n
+\n
+\n
+CodeMirror.defineMIME("text/x-julia", "julia");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7728</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

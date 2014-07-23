@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<head>\n
+  <title>CodeMirror: HTML completion demo</title>\n
+  <meta charset="utf-8"/>\n
+  <link rel=stylesheet href="../doc/docs.css">\n
+\n
+  <link rel="stylesheet" href="../lib/codemirror.css">\n
+  <link rel="stylesheet" href="../addon/hint/show-hint.css">\n
+  <script src="../lib/codemirror.js"></script>\n
+  <script src="../addon/hint/show-hint.js"></script>\n
+  <script src="../addon/hint/xml-hint.js"></script>\n
+  <script src="../addon/hint/html-hint.js"></script>\n
+  <script src="../mode/xml/xml.js"></script>\n
+  <script src="../mode/javascript/javascript.js"></script>\n
+  <script src="../mode/css/css.js"></script>\n
+  <script src="../mode/htmlmixed/htmlmixed.js"></script>\n
+  <style type="text/css">\n
+    .CodeMirror {border-top: 1px solid #888; border-bottom: 1px solid #888;}\n
+  </style>\n
+</head>\n
+\n
+<body>\n
+  <div id=nav>\n
+    <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+    <ul>\n
+      <li><a href="../index.html">Home</a>\n
+      <li><a href="../doc/manual.html">Manual</a>\n
+      <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    </ul>\n
+    <ul>\n
+      <li><a class=active href="#">HTML completion</a>\n
+    </ul>\n
+  </div>\n
+\n
+  <article>\n
+    <h2>HTML completion demo</h2>\n
+\n
+    <p>Shows the <a href="xmlcomplete.html">XML completer</a>\n
+    parameterized with information about the tags in HTML.\n
+    Press <strong>ctrl-space</strong> to activate completion.</p>\n
+\n
+    <div id="code"></div>\n
+\n
+    <script type="text/javascript">\n
+      window.onload = function() {\n
+        editor = CodeMirror(document.getElementById("code"), {\n
+          mode: "text/html",\n
+          extraKeys: {"Ctrl-Space": "autocomplete"},\n
+          value: document.documentElement.innerHTML\n
+        });\n
+      };\n
+    </script>\n
+  </article>\n
+</body>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>html5complete.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

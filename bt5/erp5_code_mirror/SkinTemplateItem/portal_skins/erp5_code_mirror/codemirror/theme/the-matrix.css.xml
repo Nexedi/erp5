@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>the-matrix.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-the-matrix.CodeMirror { background: #000000; color: #00FF00; }\n
+.cm-s-the-matrix div.CodeMirror-selected { background: #2D2D2D !important; }\n
+.cm-s-the-matrix .CodeMirror-gutters { background: #060; border-right: 2px solid #00FF00; }\n
+.cm-s-the-matrix .CodeMirror-linenumber { color: #FFFFFF; }\n
+.cm-s-the-matrix .CodeMirror-cursor { border-left: 1px solid #00FF00 !important; }\n
+\n
+.cm-s-the-matrix span.cm-keyword {color: #008803; font-weight: bold;}\n
+.cm-s-the-matrix span.cm-atom {color: #3FF;}\n
+.cm-s-the-matrix span.cm-number {color: #FFB94F;}\n
+.cm-s-the-matrix span.cm-def {color: #99C;}\n
+.cm-s-the-matrix span.cm-variable {color: #F6C;}\n
+.cm-s-the-matrix span.cm-variable-2 {color: #C6F;}\n
+.cm-s-the-matrix span.cm-variable-3 {color: #96F;}\n
+.cm-s-the-matrix span.cm-property {color: #62FFA0;}\n
+.cm-s-the-matrix span.cm-operator {color: #999}\n
+.cm-s-the-matrix span.cm-comment {color: #CCCCCC;}\n
+.cm-s-the-matrix span.cm-string {color: #39C;}\n
+.cm-s-the-matrix span.cm-meta {color: #C9F;}\n
+.cm-s-the-matrix span.cm-qualifier {color: #FFF700;}\n
+.cm-s-the-matrix span.cm-builtin {color: #30a;}\n
+.cm-s-the-matrix span.cm-bracket {color: #cc7;}\n
+.cm-s-the-matrix span.cm-tag {color: #FFBD40;}\n
+.cm-s-the-matrix span.cm-attribute {color: #FFF700;}\n
+.cm-s-the-matrix span.cm-error {color: #FF0000;}\n
+\n
+.cm-s-the-matrix .CodeMirror-activeline-background {background: #040;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

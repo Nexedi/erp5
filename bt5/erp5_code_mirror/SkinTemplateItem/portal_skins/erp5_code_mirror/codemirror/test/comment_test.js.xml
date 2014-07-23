@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403105.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>comment_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>namespace = "comment_";\n
+\n
+(function() {\n
+  function test(name, mode, run, before, after) {\n
+    return testCM(name, function(cm) {\n
+      run(cm);\n
+      eq(cm.getValue(), after);\n
+    }, {value: before, mode: mode});\n
+  }\n
+\n
+  var simpleProg = "function foo() {\\n  return bar;\\n}";\n
+\n
+  test("block", "javascript", function(cm) {\n
+    cm.blockComment(Pos(0, 3), Pos(3, 0), {blockCommentLead: " *"});\n
+  }, simpleProg + "\\n", "/* function foo() {\\n *   return bar;\\n * }\\n */");\n
+\n
+  test("blockToggle", "javascript", function(cm) {\n
+    cm.blockComment(Pos(0, 3), Pos(2, 0), {blockCommentLead: " *"});\n
+    cm.uncomment(Pos(0, 3), Pos(2, 0), {blockCommentLead: " *"});\n
+  }, simpleProg, simpleProg);\n
+\n
+  test("line", "javascript", function(cm) {\n
+    cm.lineComment(Pos(1, 1), Pos(1, 1));\n
+  }, simpleProg, "function foo() {\\n//   return bar;\\n}");\n
+\n
+  test("lineToggle", "javascript", function(cm) {\n
+    cm.lineComment(Pos(0, 0), Pos(2, 1));\n
+    cm.uncomment(Pos(0, 0), Pos(2, 1));\n
+  }, simpleProg, simpleProg);\n
+\n
+  test("fallbackToBlock", "css", function(cm) {\n
+    cm.lineComment(Pos(0, 0), Pos(2, 1));\n
+  }, "html {\\n  border: none;\\n}", "/* html {\\n  border: none;\\n} */");\n
+\n
+  test("fallbackToLine", "ruby", function(cm) {\n
+    cm.blockComment(Pos(0, 0), Pos(1));\n
+  }, "def blah()\\n  return hah\\n", "# def blah()\\n#   return hah\\n");\n
+\n
+  test("commentRange", "javascript", function(cm) {\n
+    cm.blockComment(Pos(1, 2), Pos(1, 13), {fullLines: false});\n
+  }, simpleProg, "function foo() {\\n  /*return bar;*/\\n}");\n
+\n
+  test("indented", "javascript", function(cm) {\n
+    cm.lineComment(Pos(1, 0), Pos(2), {indent: true});\n
+  }, simpleProg, "function foo() {\\n  // return bar;\\n  // }");\n
+\n
+  test("singleEmptyLine", "javascript", function(cm) {\n
+    cm.setCursor(1);\n
+    cm.execCommand("toggleComment");\n
+  }, "a;\\n\\nb;", "a;\\n// \\nb;");\n
+\n
+  test("dontMessWithStrings", "javascript", function(cm) {\n
+    cm.execCommand("toggleComment");\n
+  }, "console.log(\\"/*string*/\\");", "// console.log(\\"/*string*/\\");");\n
+\n
+  test("dontMessWithStrings2", "javascript", function(cm) {\n
+    cm.execCommand("toggleComment");\n
+  }, "console.log(\\"// string\\");", "// console.log(\\"// string\\");");\n
+\n
+  test("dontMessWithStrings3", "javascript", function(cm) {\n
+    cm.execCommand("toggleComment");\n
+  }, "// console.log(\\"// string\\");", "console.log(\\"// string\\");");\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2320</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

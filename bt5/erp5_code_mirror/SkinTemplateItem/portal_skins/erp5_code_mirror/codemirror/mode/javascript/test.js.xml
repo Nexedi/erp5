@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403101.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "javascript");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  MT("locals",\n
+     "[keyword function] [variable foo]([def a], [def b]) { [keyword var] [def c] [operator =] [number 10]; [keyword return] [variable-2 a] [operator +] [variable-2 c] [operator +] [variable d]; }");\n
+\n
+  MT("comma-and-binop",\n
+     "[keyword function](){ [keyword var] [def x] [operator =] [number 1] [operator +] [number 2], [def y]; }");\n
+\n
+  MT("destructuring",\n
+     "([keyword function]([def a], [[[def b], [def c] ]]) {",\n
+     "  [keyword let] {[def d], [property foo]: [def c][operator =][number 10], [def x]} [operator =] [variable foo]([variable-2 a]);",\n
+     "  [[[variable-2 c], [variable y] ]] [operator =] [variable-2 c];",\n
+     "})();");\n
+\n
+  MT("class",\n
+     "[keyword class] [variable Point] [keyword extends] [variable SuperThing] {",\n
+     "  [[ [string-2 /expr/] ]]: [number 24],",\n
+     "  [property constructor]([def x], [def y]) {",\n
+     "    [keyword super]([string \'something\']);",\n
+     "    [keyword this].[property x] [operator =] [variable-2 x];",\n
+     "  }",\n
+     "}");\n
+\n
+  MT("module",\n
+     "[keyword module] [string \'foo\'] {",\n
+     "  [keyword export] [keyword let] [def x] [operator =] [number 42];",\n
+     "  [keyword export] [keyword *] [keyword from] [string \'somewhere\'];",\n
+     "}");\n
+\n
+  MT("import",\n
+     "[keyword function] [variable foo]() {",\n
+     "  [keyword import] [def $] [keyword from] [string \'jquery\'];",\n
+     "  [keyword module] [def crypto] [keyword from] [string \'crypto\'];",\n
+     "  [keyword import] { [def encrypt], [def decrypt] } [keyword from] [string \'crypto\'];",\n
+     "}");\n
+\n
+  MT("const",\n
+     "[keyword function] [variable f]() {",\n
+     "  [keyword const] [[ [def a], [def b] ]] [operator =] [[ [number 1], [number 2] ]];",\n
+     "}");\n
+\n
+  MT("for/of",\n
+     "[keyword for]([keyword let] [variable of] [keyword of] [variable something]) {}");\n
+\n
+  MT("generator",\n
+     "[keyword function*] [variable repeat]([def n]) {",\n
+     "  [keyword for]([keyword var] [def i] [operator =] [number 0]; [variable-2 i] [operator <] [variable-2 n]; [operator ++][variable-2 i])",\n
+     "    [keyword yield] [variable-2 i];",\n
+     "}");\n
+\n
+  MT("fatArrow",\n
+     "[variable array].[property filter]([def a] [operator =>] [variable-2 a] [operator +] [number 1]);",\n
+     "[variable a];", // No longer in scope\n
+     "[keyword let] [variable f] [operator =] ([[ [def a], [def b] ]], [def c]) [operator =>] [variable-2 a] [operator +] [variable-2 c];",\n
+     "[variable c];");\n
+\n
+  MT("spread",\n
+     "[keyword function] [variable f]([def a], [meta ...][def b]) {",\n
+     "  [variable something]([variable-2 a], [meta ...][variable-2 b]);",\n
+     "}");\n
+\n
+  MT("comprehension",\n
+     "[keyword function] [variable f]() {",\n
+     "  [[([variable x] [operator +] [number 1]) [keyword for] ([keyword var] [def x] [keyword in] [variable y]) [keyword if] [variable pred]([variable-2 x]) ]];",\n
+     "  ([variable u] [keyword for] ([keyword var] [def u] [keyword of] [variable generateValues]()) [keyword if] ([variable-2 u].[property color] [operator ===] [string \'blue\']));",\n
+     "}");\n
+\n
+  MT("quasi",\n
+     "[variable re][string-2 `fofdlakj${][variable x] [operator +] ([variable re][string-2 `foo`]) [operator +] [number 1][string-2 }fdsa`] [operator +] [number 2]");\n
+\n
+  MT("indent_statement",\n
+     "[keyword var] [variable x] [operator =] [number 10]",\n
+     "[variable x] [operator +=] [variable y] [operator +]",\n
+     "  [atom Infinity]",\n
+     "[keyword debugger];");\n
+\n
+  MT("indent_if",\n
+     "[keyword if] ([number 1])",\n
+     "  [keyword break];",\n
+     "[keyword else] [keyword if] ([number 2])",\n
+     "  [keyword continue];",\n
+     "[keyword else]",\n
+     "  [number 10];",\n
+     "[keyword if] ([number 1]) {",\n
+     "  [keyword break];",\n
+     "} [keyword else] [keyword if] ([number 2]) {",\n
+     "  [keyword continue];",\n
+     "} [keyword else] {",\n
+     "  [number 10];",\n
+     "}");\n
+\n
+  MT("indent_for",\n
+     "[keyword for] ([keyword var] [variable i] [operator =] [number 0];",\n
+     "     [variable i] [operator <] [number 100];",\n
+     "     [variable i][operator ++])",\n
+     "  [variable doSomething]([variable i]);",\n
+     "[keyword debugger];");\n
+\n
+  MT("indent_c_style",\n
+     "[keyword function] [variable foo]()",\n
+     "{",\n
+     "  [keyword debugger];",\n
+     "}");\n
+\n
+  MT("multilinestring",\n
+     "[keyword var] [variable x] [operator =] [string \'foo\\\\]",\n
+     "[string bar\'];");\n
+\n
+  MT("scary_regexp",\n
+     "[string-2 /foo[[/]]bar/];");\n
+\n
+  var jsonld_mode = CodeMirror.getMode(\n
+    {indentUnit: 2},\n
+    {name: "javascript", jsonld: true}\n
+  );\n
+  function LD(name) {\n
+    test.mode(name, jsonld_mode, Array.prototype.slice.call(arguments, 1));\n
+  }\n
+\n
+  LD("json_ld_keywords",\n
+    \'{\',\n
+    \'  [meta "@context"]: {\',\n
+    \'    [meta "@base"]: [string "http://example.com"],\',\n
+    \'    [meta "@vocab"]: [string "http://xmlns.com/foaf/0.1/"],\',\n
+    \'    [property "likesFlavor"]: {\',\n
+    \'      [meta "@container"]: [meta "@list"]\',\n
+    \'      [meta "@reverse"]: [string "@beFavoriteOf"]\',\n
+    \'    },\',\n
+    \'    [property "nick"]: { [meta "@container"]: [meta "@set"] },\',\n
+    \'    [property "nick"]: { [meta "@container"]: [meta "@index"] }\',\n
+    \'  },\',\n
+    \'  [meta "@graph"]: [[ {\',\n
+    \'    [meta "@id"]: [string "http://dbpedia.org/resource/John_Lennon"],\',\n
+    \'    [property "name"]: [string "John Lennon"],\',\n
+    \'    [property "modified"]: {\',\n
+    \'      [meta "@value"]: [string "2010-05-29T14:17:39+02:00"],\',\n
+    \'      [meta "@type"]: [string "http://www.w3.org/2001/XMLSchema#dateTime"]\',\n
+    \'    }\',\n
+    \'  } ]]\',\n
+    \'}\');\n
+\n
+  LD("json_ld_fake",\n
+    \'{\',\n
+    \'  [property "@fake"]: [string "@fake"],\',\n
+    \'  [property "@contextual"]: [string "@identifier"],\',\n
+    \'  [property "user@domain.com"]: [string "@graphical"],\',\n
+    \'  [property "@ID"]: [string "@@ID"]\',\n
+    \'}\');\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5874</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

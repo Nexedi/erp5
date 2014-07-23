@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403101.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>coffeescript.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Link to the project\'s GitHub page:\n
+ * https://github.com/pickhardt/coffeescript-codemirror-mode\n
+ */\n
+CodeMirror.defineMode("coffeescript", function(conf) {\n
+  var ERRORCLASS = "error";\n
+\n
+  function wordRegexp(words) {\n
+    return new RegExp("^((" + words.join(")|(") + "))\\\\b");\n
+  }\n
+\n
+  var operators = /^(?:->|=>|\\+[+=]?|-[\\-=]?|\\*[\\*=]?|\\/[\\/=]?|[=!]=|<[><]?=?|>>?=?|%=?|&=?|\\|=?|\\^=?|\\~|!|\\?)/;\n
+  var delimiters = /^(?:[()\\[\\]{},:`=;]|\\.\\.?\\.?)/;\n
+  var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;\n
+  var properties = /^(@|this\\.)[_A-Za-z$][_A-Za-z$0-9]*/;\n
+\n
+  var wordOperators = wordRegexp(["and", "or", "not",\n
+                                  "is", "isnt", "in",\n
+                                  "instanceof", "typeof"]);\n
+  var indentKeywords = ["for", "while", "loop", "if", "unless", "else",\n
+                        "switch", "try", "catch", "finally", "class"];\n
+  var commonKeywords = ["break", "by", "continue", "debugger", "delete",\n
+                        "do", "in", "of", "new", "return", "then",\n
+                        "this", "throw", "when", "until"];\n
+\n
+  var keywords = wordRegexp(indentKeywords.concat(commonKeywords));\n
+\n
+  indentKeywords = wordRegexp(indentKeywords);\n
+\n
+\n
+  var stringPrefixes = /^(\'{3}|\\"{3}|[\'\\"])/;\n
+  var regexPrefixes = /^(\\/{3}|\\/)/;\n
+  var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no"];\n
+  var constants = wordRegexp(commonConstants);\n
+\n
+  // Tokenizers\n
+  function tokenBase(stream, state) {\n
+    // Handle scope changes\n
+    if (stream.sol()) {\n
+      if (state.scope.align === null) state.scope.align = false;\n
+      var scopeOffset = state.scope.offset;\n
+      if (stream.eatSpace()) {\n
+        var lineOffset = stream.indentation();\n
+        if (lineOffset > scopeOffset && state.scope.type == "coffee") {\n
+          return "indent";\n
+        } else if (lineOffset < scopeOffset) {\n
+          return "dedent";\n
+        }\n
+        return null;\n
+      } else {\n
+        if (scopeOffset > 0) {\n
+          dedent(stream, state);\n
+        }\n
+      }\n
+    }\n
+    if (stream.eatSpace()) {\n
+      return null;\n
+    }\n
+\n
+    var ch = stream.peek();\n
+\n
+    // Handle docco title comment (single line)\n
+    if (stream.match("####")) {\n
+      stream.skipToEnd();\n
+      return "comment";\n
+    }\n
+\n
+    // Handle multi line comments\n
+    if (stream.match("###")) {\n
+      state.tokenize = longComment;\n
+      return state.tokenize(stream, state);\n
+    }\n
+\n
+    // Single line comment\n
+    if (ch === "#") {\n
+      stream.skipToEnd();\n
+      return "comment";\n
+    }\n
+\n
+    // Handle number literals\n
+    if (stream.match(/^-?[0-9\\.]/, false)) {\n
+      var floatLiteral = false;\n
+      // Floats\n
+      if (stream.match(/^-?\\d*\\.\\d+(e[\\+\\-]?\\d+)?/i)) {\n
+        floatLiteral = true;\n
+      }\n
+      if (stream.match(/^-?\\d+\\.\\d*/)) {\n
+        floatLiteral = true;\n
+      }\n
+      if (stream.match(/^-?\\.\\d+/)) {\n
+        floatLiteral = true;\n
+      }\n
+\n
+      if (floatLiteral) {\n
+        // prevent from getting extra . on 1..\n
+        if (stream.peek() == "."){\n
+          stream.backUp(1);\n
+        }\n
+        return "number";\n
+      }\n
+      // Integers\n
+      var intLiteral = false;\n
+      // Hex\n
+      if (stream.match(/^-?0x[0-9a-f]+/i)) {\n
+        intLiteral = true;\n
+      }\n
+      // Decimal\n
+      if (stream.match(/^-?[1-9]\\d*(e[\\+\\-]?\\d+)?/)) {\n
+        intLiteral = true;\n
+      }\n
+      // Zero by itself with no other piece of number.\n
+      if (stream.match(/^-?0(?![\\dx])/i)) {\n
+        intLiteral = true;\n
+      }\n
+      if (intLiteral) {\n
+        return "number";\n
+      }\n
+    }\n
+\n
+    // Handle strings\n
+    if (stream.match(stringPrefixes)) {\n
+      state.tokenize = tokenFactory(stream.current(), false, "string");\n
+      return state.tokenize(stream, state);\n
+    }\n
+    // Handle regex literals\n
+    if (stream.match(regexPrefixes)) {\n
+      if (stream.current() != "/" || stream.match(/^.*\\//, false)) { // prevent highlight of division\n
+        state.tokenize = tokenFactory(stream.current(), true, "string-2");\n
+        return state.tokenize(stream, state);\n
+      } else {\n
+        stream.backUp(1);\n
+      }\n
+    }\n
+\n
+    // Handle operators and delimiters\n
+    if (stream.match(operators) || stream.match(wordOperators)) {\n
+      return "operator";\n
+    }\n
+    if (stream.match(delimiters)) {\n
+      return "punctuation";\n
+    }\n
+\n
+    if (stream.match(constants)) {\n
+      return "atom";\n
+    }\n
+\n
+    if (stream.match(keywords)) {\n
+      return "keyword";\n
+    }\n
+\n
+    if (stream.match(identifiers)) {\n
+      return "variable";\n
+    }\n
+\n
+    if (stream.match(properties)) {\n
+      return "property";\n
+    }\n
+\n
+    // Handle non-detected items\n
+    stream.next();\n
+    return ERRORCLASS;\n
+  }\n
+\n
+  function tokenFactory(delimiter, singleline, outclass) {\n
+    return function(stream, state) {\n
+      while (!stream.eol()) {\n
+        stream.eatWhile(/[^\'"\\/\\\\]/);\n
+        if (stream.eat("\\\\")) {\n
+          stream.next();\n
+          if (singleline && stream.eol()) {\n
+            return outclass;\n
+          }\n
+        } else if (stream.match(delimiter)) {\n
+          state.tokenize = tokenBase;\n
+          return outclass;\n
+        } else {\n
+          stream.eat(/[\'"\\/]/);\n
+        }\n
+      }\n
+      if (singleline) {\n
+        if (conf.mode.singleLineStringErrors) {\n
+          outclass = ERRORCLASS;\n
+        } else {\n
+          state.tokenize = tokenBase;\n
+        }\n
+      }\n
+      return outclass;\n
+    };\n
+  }\n
+\n
+  function longComment(stream, state) {\n
+    while (!stream.eol()) {\n
+      stream.eatWhile(/[^#]/);\n
+      if (stream.match("###")) {\n
+        state.tokenize = tokenBase;\n
+        break;\n
+      }\n
+      stream.eatWhile("#");\n
+    }\n
+    return "comment";\n
+  }\n
+\n
+  function indent(stream, state, type) {\n
+    type = type || "coffee";\n
+    var offset = 0, align = false, alignOffset = null;\n
+    for (var scope = state.scope; scope; scope = scope.prev) {\n
+      if (scope.type === "coffee") {\n
+        offset = scope.offset + conf.indentUnit;\n
+        break;\n
+      }\n
+    }\n
+    if (type !== "coffee") {\n
+      align = null;\n
+      alignOffset = stream.column() + stream.current().length;\n
+    } else if (state.scope.align) {\n
+      state.scope.align = false;\n
+    }\n
+    state.scope = {\n
+      offset: offset,\n
+      type: type,\n
+      prev: state.scope,\n
+      align: align,\n
+      alignOffset: alignOffset\n
+    };\n
+  }\n
+\n
+  function dedent(stream, state) {\n
+    if (!state.scope.prev) return;\n
+    if (state.scope.type === "coffee") {\n
+      var _indent = stream.indentation();\n
+      var matched = false;\n
+      for (var scope = state.scope; scope; scope = scope.prev) {\n
+        if (_indent === scope.offset) {\n
+          matched = true;\n
+          break;\n
+        }\n
+      }\n
+      if (!matched) {\n
+        return true;\n
+      }\n
+      while (state.scope.prev && state.scope.offset !== _indent) {\n
+        state.scope = state.scope.prev;\n
+      }\n
+      return false;\n
+    } else {\n
+      state.scope = state.scope.prev;\n
+      return false;\n
+    }\n
+  }\n
+\n
+  function tokenLexer(stream, state) {\n
+    var style = state.tokenize(stream, state);\n
+    var current = stream.current();\n
+\n
+    // Handle "." connected identifiers\n
+    if (current === ".") {\n
+      style = state.tokenize(stream, state);\n
+      current = stream.current();\n
+      if (/^\\.[\\w$]+$/.test(current)) {\n
+        return "variable";\n
+      } else {\n
+        return ERRORCLASS;\n
+      }\n
+    }\n
+\n
+    // Handle scope changes.\n
+    if (current === "return") {\n
+      state.dedent += 1;\n
+    }\n
+    if (((current === "->" || current === "=>") &&\n
+         !state.lambda &&\n
+         !stream.peek())\n
+        || style === "indent") {\n
+      indent(stream, state);\n
+    }\n
+    var delimiter_index = "[({".indexOf(current);\n
+    if (delimiter_index !== -1) {\n
+      indent(stream, state, "])}".slice(delimiter_index, delimiter_index+1));\n
+    }\n
+    if (indentKeywords.exec(current)){\n
+      indent(stream, state);\n
+    }\n
+    if (current == "then"){\n
+      dedent(stream, state);\n
+    }\n
+\n
+\n
+    if (style === "dedent") {\n
+      if (dedent(stream, state)) {\n
+        return ERRORCLASS;\n
+      }\n
+    }\n
+    delimiter_index = "])}".indexOf(current);\n
+    if (delimiter_index !== -1) {\n
+      while (state.scope.type == "coffee" && state.scope.prev)\n
+        state.scope = state.scope.prev;\n
+      if (state.scope.type == current)\n
+        state.scope = state.scope.prev;\n
+    }\n
+    if (state.dedent > 0 && stream.eol() && state.scope.type == "coffee") {\n
+      if (state.scope.prev) state.scope = state.scope.prev;\n
+      state.dedent -= 1;\n
+    }\n
+\n
+    return style;\n
+  }\n
+\n
+  var external = {\n
+    startState: function(basecolumn) {\n
+      return {\n
+        tokenize: tokenBase,\n
+        scope: {offset:basecolumn || 0, type:"coffee", prev: null, align: false},\n
+        lastToken: null,\n
+        lambda: false,\n
+        dedent: 0\n
+      };\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      var fillAlign = state.scope.align === null && state.scope;\n
+      if (fillAlign && stream.sol()) fillAlign.align = false;\n
+\n
+      var style = tokenLexer(stream, state);\n
+      if (fillAlign && style && style != "comment") fillAlign.align = true;\n
+\n
+      state.lastToken = {style:style, content: stream.current()};\n
+\n
+      if (stream.eol() && stream.lambda) {\n
+        state.lambda = false;\n
+      }\n
+\n
+      return style;\n
+    },\n
+\n
+    indent: function(state, text) {\n
+      if (state.tokenize != tokenBase) return 0;\n
+      var scope = state.scope;\n
+      var closer = text && "])}".indexOf(text.charAt(0)) > -1;\n
+      if (closer) while (scope.type == "coffee" && scope.prev) scope = scope.prev;\n
+      var closes = closer && scope.type === text.charAt(0);\n
+      if (scope.align)\n
+        return scope.alignOffset - (closes ? 1 : 0);\n
+      else\n
+        return (closes ? scope.prev : scope).offset;\n
+    },\n
+\n
+    lineComment: "#",\n
+    fold: "indent"\n
+  };\n
+  return external;\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-coffeescript", "coffeescript");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9647</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

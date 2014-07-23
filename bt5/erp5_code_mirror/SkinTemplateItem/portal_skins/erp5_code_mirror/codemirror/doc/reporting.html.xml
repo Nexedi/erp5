@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Reporting Bugs</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Reporting bugs</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2>Reporting bugs effectively</h2>\n
+\n
+<div class="left">\n
+\n
+<p>So you found a problem in CodeMirror. By all means, report it! Bug\n
+reports from users are the main drive behind improvements to\n
+CodeMirror. But first, please read over these points:</p>\n
+\n
+<ol>\n
+  <li>CodeMirror is maintained by volunteers. They don\'t owe you\n
+  anything, so be polite. Reports with an indignant or belligerent\n
+  tone tend to be moved to the bottom of the pile.</li>\n
+\n
+  <li>Include information about <strong>the browser in which the\n
+  problem occurred</strong>. Even if you tested several browsers, and\n
+  the problem occurred in all of them, mention this fact in the bug\n
+  report. Also include browser version numbers and the operating\n
+  system that you\'re on.</li>\n
+\n
+  <li>Mention which release of CodeMirror you\'re using. Preferably,\n
+  try also with the current development snapshot, to ensure the\n
+  problem has not already been fixed.</li>\n
+\n
+  <li>Mention very precisely what went wrong. "X is broken" is not a\n
+  good bug report. What did you expect to happen? What happened\n
+  instead? Describe the exact steps a maintainer has to take to make\n
+  the problem occur. We can not fix something that we can not\n
+  observe.</li>\n
+\n
+  <li>If the problem can not be reproduced in any of the demos\n
+  included in the CodeMirror distribution, please provide an HTML\n
+  document that demonstrates the problem. The best way to do this is\n
+  to go to <a href="http://jsbin.com/ihunin/edit">jsbin.com</a>, enter\n
+  it there, press save, and include the resulting link in your bug\n
+  report.</li>\n
+</ol>\n
+\n
+</div>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>reporting.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93404951.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>closebrackets.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var DEFAULT_BRACKETS = "()[]{}\'\'\\"\\"";\n
+  var DEFAULT_EXPLODE_ON_ENTER = "[]{}";\n
+  var SPACE_CHAR_REGEX = /\\s/;\n
+\n
+  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {\n
+    if (old != CodeMirror.Init && old)\n
+      cm.removeKeyMap("autoCloseBrackets");\n
+    if (!val) return;\n
+    var pairs = DEFAULT_BRACKETS, explode = DEFAULT_EXPLODE_ON_ENTER;\n
+    if (typeof val == "string") pairs = val;\n
+    else if (typeof val == "object") {\n
+      if (val.pairs != null) pairs = val.pairs;\n
+      if (val.explode != null) explode = val.explode;\n
+    }\n
+    var map = buildKeymap(pairs);\n
+    if (explode) map.Enter = buildExplodeHandler(explode);\n
+    cm.addKeyMap(map);\n
+  });\n
+\n
+  function charsAround(cm, pos) {\n
+    var str = cm.getRange(CodeMirror.Pos(pos.line, pos.ch - 1),\n
+                          CodeMirror.Pos(pos.line, pos.ch + 1));\n
+    return str.length == 2 ? str : null;\n
+  }\n
+\n
+  function buildKeymap(pairs) {\n
+    var map = {\n
+      name : "autoCloseBrackets",\n
+      Backspace: function(cm) {\n
+        if (cm.somethingSelected() || cm.getOption("disableInput")) return CodeMirror.Pass;\n
+        var cur = cm.getCursor(), around = charsAround(cm, cur);\n
+        if (around && pairs.indexOf(around) % 2 == 0)\n
+          cm.replaceRange("", CodeMirror.Pos(cur.line, cur.ch - 1), CodeMirror.Pos(cur.line, cur.ch + 1));\n
+        else\n
+          return CodeMirror.Pass;\n
+      }\n
+    };\n
+    var closingBrackets = "";\n
+    for (var i = 0; i < pairs.length; i += 2) (function(left, right) {\n
+      if (left != right) closingBrackets += right;\n
+      function surround(cm) {\n
+        var selection = cm.getSelection();\n
+        cm.replaceSelection(left + selection + right);\n
+      }\n
+      function maybeOverwrite(cm) {\n
+        var cur = cm.getCursor(), ahead = cm.getRange(cur, CodeMirror.Pos(cur.line, cur.ch + 1));\n
+        if (ahead != right || cm.somethingSelected()) return CodeMirror.Pass;\n
+        else cm.execCommand("goCharRight");\n
+      }\n
+      map["\'" + left + "\'"] = function(cm) {\n
+        if (left == "\'" && cm.getTokenAt(cm.getCursor()).type == "comment" ||\n
+            cm.getOption("disableInput"))\n
+          return CodeMirror.Pass;\n
+        if (cm.somethingSelected()) return surround(cm);\n
+        if (left == right && maybeOverwrite(cm) != CodeMirror.Pass) return;\n
+        var cur = cm.getCursor(), ahead = CodeMirror.Pos(cur.line, cur.ch + 1);\n
+        var line = cm.getLine(cur.line), nextChar = line.charAt(cur.ch), curChar = cur.ch > 0 ? line.charAt(cur.ch - 1) : "";\n
+        if (left == right && CodeMirror.isWordChar(curChar))\n
+          return CodeMirror.Pass;\n
+        if (line.length == cur.ch || closingBrackets.indexOf(nextChar) >= 0 || SPACE_CHAR_REGEX.test(nextChar))\n
+          cm.replaceSelection(left + right, {head: ahead, anchor: ahead});\n
+        else\n
+          return CodeMirror.Pass;\n
+      };\n
+      if (left != right) map["\'" + right + "\'"] = maybeOverwrite;\n
+    })(pairs.charAt(i), pairs.charAt(i + 1));\n
+    return map;\n
+  }\n
+\n
+  function buildExplodeHandler(pairs) {\n
+    return function(cm) {\n
+      var cur = cm.getCursor(), around = charsAround(cm, cur);\n
+      if (!around || pairs.indexOf(around) % 2 != 0 || cm.getOption("disableInput"))\n
+        return CodeMirror.Pass;\n
+      cm.operation(function() {\n
+        var newPos = CodeMirror.Pos(cur.line + 1, 0);\n
+        cm.replaceSelection("\\n\\n", {anchor: newPos, head: newPos}, "+input");\n
+        cm.indentLine(cur.line + 1, null, true);\n
+        cm.indentLine(cur.line + 2, null, true);\n
+      });\n
+    };\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3497</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

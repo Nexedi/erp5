@@ -1,0 +1,391 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403099.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>less.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+  LESS mode - http://www.lesscss.org/\n
+  Ported to CodeMirror by Peter Kroon <plakroon@gmail.com>\n
+  Report bugs/issues here: https://github.com/marijnh/CodeMirror/issues\n
+  GitHub: @peterkroon\n
+*/\n
+\n
+CodeMirror.defineMode("less", function(config) {\n
+  var indentUnit = config.indentUnit, type;\n
+  function ret(style, tp) {type = tp; return style;}\n
+\n
+  var selectors = /(^\\:root$|^\\:nth\\-child$|^\\:nth\\-last\\-child$|^\\:nth\\-of\\-type$|^\\:nth\\-last\\-of\\-type$|^\\:first\\-child$|^\\:last\\-child$|^\\:first\\-of\\-type$|^\\:last\\-of\\-type$|^\\:only\\-child$|^\\:only\\-of\\-type$|^\\:empty$|^\\:link|^\\:visited$|^\\:active$|^\\:hover$|^\\:focus$|^\\:target$|^\\:lang$|^\\:enabled^\\:disabled$|^\\:checked$|^\\:first\\-line$|^\\:first\\-letter$|^\\:before$|^\\:after$|^\\:not$|^\\:required$|^\\:invalid$)/;\n
+\n
+  function tokenBase(stream, state) {\n
+    var ch = stream.next();\n
+\n
+    if (ch == "@") {stream.eatWhile(/[\\w\\-]/); return ret("meta", stream.current());}\n
+    else if (ch == "/" && stream.eat("*")) {\n
+      state.tokenize = tokenCComment;\n
+      return tokenCComment(stream, state);\n
+    } else if (ch == "<" && stream.eat("!")) {\n
+      state.tokenize = tokenSGMLComment;\n
+      return tokenSGMLComment(stream, state);\n
+    } else if (ch == "=") ret(null, "compare");\n
+    else if (ch == "|" && stream.eat("=")) return ret(null, "compare");\n
+    else if (ch == "\\"" || ch == "\'") {\n
+      state.tokenize = tokenString(ch);\n
+      return state.tokenize(stream, state);\n
+    } else if (ch == "/") { // e.g.: .png will not be parsed as a class\n
+      if(stream.eat("/")){\n
+        state.tokenize = tokenSComment;\n
+        return tokenSComment(stream, state);\n
+      } else {\n
+        if(type == "string" || type == "(") return ret("string", "string");\n
+        if(state.stack[state.stack.length-1] !== undefined) return ret(null, ch);\n
+        stream.eatWhile(/[\\a-zA-Z0-9\\-_.\\s]/);\n
+        if( /\\/|\\)|#/.test(stream.peek() || (stream.eatSpace() && stream.peek() === ")"))  || stream.eol() )return ret("string", "string"); // let url(/images/logo.png) without quotes return as string\n
+      }\n
+    } else if (ch == "!") {\n
+      stream.match(/^\\s*\\w*/);\n
+      return ret("keyword", "important");\n
+    } else if (/\\d/.test(ch)) {\n
+      stream.eatWhile(/[\\w.%]/);\n
+      return ret("number", "unit");\n
+    } else if (/[,+<>*\\/]/.test(ch)) {\n
+      if(stream.peek() == "=" || type == "a")return ret("string", "string");\n
+      if(ch === ",")return ret(null, ch);\n
+      return ret(null, "select-op");\n
+    } else if (/[;{}:\\[\\]()~\\|]/.test(ch)) {\n
+      if(ch == ":"){\n
+        stream.eatWhile(/[a-z\\\\\\-]/);\n
+        if( selectors.test(stream.current()) ){\n
+          return ret("tag", "tag");\n
+        } else if(stream.peek() == ":"){//::-webkit-search-decoration\n
+          stream.next();\n
+          stream.eatWhile(/[a-z\\\\\\-]/);\n
+          if(stream.current().match(/\\:\\:\\-(o|ms|moz|webkit)\\-/))return ret("string", "string");\n
+          if( selectors.test(stream.current().substring(1)) )return ret("tag", "tag");\n
+          return ret(null, ch);\n
+        } else {\n
+          return ret(null, ch);\n
+        }\n
+      } else if(ch == "~"){\n
+        if(type == "r")return ret("string", "string");\n
+      } else {\n
+        return ret(null, ch);\n
+      }\n
+    } else if (ch == ".") {\n
+      if(type == "(")return ret("string", "string"); // allow url(../image.png)\n
+      stream.eatWhile(/[\\a-zA-Z0-9\\-_]/);\n
+      if(stream.peek() === " ")stream.eatSpace();\n
+      if(stream.peek() === ")" || type === ":")return ret("number", "unit");//rgba(0,0,0,.25);\n
+      else if(stream.current().length >1){\n
+        if(state.stack[state.stack.length-1] === "rule" && !stream.match(/^[{,+(]/, false)) return ret("number", "unit");\n
+      }\n
+      return ret("tag", "tag");\n
+    } else if (ch == "#") {\n
+      //we don\'t eat white-space, we want the hex color and or id only\n
+      stream.eatWhile(/[A-Za-z0-9]/);\n
+      //check if there is a proper hex color length e.g. #eee || #eeeEEE\n
+      if(stream.current().length == 4 || stream.current().length == 7){\n
+        if(stream.current().match(/[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}/,false) != null){//is there a valid hex color value present in the current stream\n
+          //when not a valid hex value, parse as id\n
+          if(stream.current().substring(1) != stream.current().match(/[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}/,false))return ret("atom", "tag");\n
+          //eat white-space\n
+          stream.eatSpace();\n
+          //when hex value declaration doesn\'t end with [;,] but is does with a slash/cc comment treat it as an id, just like the other hex values that don\'t end with[;,]\n
+          if( /[\\/<>.(){!$%^&*_\\-\\\\?=+\\|#\'~`]/.test(stream.peek()) ){\n
+            if(type === "select-op")return ret("number", "unit"); else return ret("atom", "tag");\n
+          }\n
+          //#time { color: #aaa }\n
+          else if(stream.peek() == "}" )return ret("number", "unit");\n
+          //we have a valid hex color value, parse as id whenever an element/class is defined after the hex(id) value e.g. #eee aaa || #eee .aaa\n
+          else if( /[a-zA-Z\\\\]/.test(stream.peek()) )return ret("atom", "tag");\n
+          //when a hex value is on the end of a line, parse as id\n
+          else if(stream.eol())return ret("atom", "tag");\n
+          //default\n
+          else return ret("number", "unit");\n
+        } else {//when not a valid hexvalue in the current stream e.g. #footer\n
+          stream.eatWhile(/[\\w\\\\\\-]/);\n
+          return ret("atom", stream.current());\n
+        }\n
+      } else {//when not a valid hexvalue length\n
+        stream.eatWhile(/[\\w\\\\\\-]/);\n
+        if(state.stack[state.stack.length-1] === "rule")return ret("atom", stream.current());return ret("atom", stream.current());\n
+        return ret("atom", "tag");\n
+      }\n
+    } else if (ch == "&") {\n
+      stream.eatWhile(/[\\w\\-]/);\n
+      return ret(null, ch);\n
+    } else {\n
+      stream.eatWhile(/[\\w\\\\\\-_%.{]/);\n
+      if(stream.current().match(/\\\\/) !== null){\n
+        if(stream.current().charAt(stream.current().length-1) === "\\\\"){\n
+          stream.eat(/\\\'|\\"|\\)|\\(/);\n
+          while(stream.eatWhile(/[\\w\\\\\\-_%.{]/)){\n
+            stream.eat(/\\\'|\\"|\\)|\\(/);\n
+          }\n
+          return ret("string", stream.current());\n
+        }\n
+      } //else if(type === "tag")return ret("tag", "tag");\n
+        else if(type == "string"){\n
+        if(state.stack[state.stack.length-1] === "{" && stream.peek() === ":")return ret("variable", "variable");\n
+        if(stream.peek() === "/")stream.eatWhile(/[\\w\\\\\\-_%.{:\\/]/);\n
+        return ret(type, stream.current());\n
+      } else if(stream.current().match(/(^http$|^https$)/) != null){\n
+        stream.eatWhile(/[\\w\\\\\\-_%.{:\\/]/);\n
+        if(stream.peek() === "/")stream.eatWhile(/[\\w\\\\\\-_%.{:\\/]/);\n
+        return ret("string", "string");\n
+      } else if(stream.peek() == "<" || stream.peek() == ">" || stream.peek() == "+"){\n
+        if(type === "(" && (stream.current() === "n" || stream.current() === "-n"))return ret("string", stream.current());\n
+        return ret("tag", "tag");\n
+      } else if( /\\(/.test(stream.peek()) ){\n
+        if(stream.current() === "when")return ret("variable","variable");\n
+        else if(state.stack[state.stack.length-1] === "@media" && stream.current() === "and")return ret("variable",stream.current());\n
+        return ret(null, ch);\n
+      } else if (stream.peek() == "/" && state.stack[state.stack.length-1] !== undefined){ // url(dir/center/image.png)\n
+        if(stream.peek() === "/")stream.eatWhile(/[\\w\\\\\\-_%.{:\\/]/);\n
+        return ret("string", stream.current());\n
+      } else if( stream.current().match(/\\-\\d|\\-.\\d/) ){ // match e.g.: -5px -0.4 etc... only colorize the minus sign\n
+        //commment out these 2 comment if you want the minus sign to be parsed as null -500px\n
+        //stream.backUp(stream.current().length-1);\n
+        //return ret(null, ch);\n
+        return ret("number", "unit");\n
+      } else if( /\\/|[\\s\\)]/.test(stream.peek() || stream.eol() || (stream.eatSpace() && stream.peek() == "/")) && stream.current().indexOf(".") !== -1){\n
+        if(stream.current().substring(stream.current().length-1,stream.current().length) == "{"){\n
+          stream.backUp(1);\n
+          return ret("tag", "tag");\n
+        }//end if\n
+        stream.eatSpace();\n
+        if( /[{<>.a-zA-Z\\/]/.test(stream.peek())  || stream.eol() )return ret("tag", "tag"); // e.g. button.icon-plus\n
+        return ret("string", "string"); // let url(/images/logo.png) without quotes return as string\n
+      } else if( stream.eol() || stream.peek() == "[" || stream.peek() == "#" || type == "tag" ){\n
+\n
+        if(stream.current().substring(stream.current().length-1,stream.current().length) == "{")stream.backUp(1);\n
+        else if(state.stack[state.stack.length-1] === "border-color" || state.stack[state.stack.length-1] === "background-position" || state.stack[state.stack.length-1] === "font-family")return ret(null, stream.current());\n
+        else if(type === "tag")return ret("tag", "tag");\n
+        else if((type === ":" || type === "unit") && state.stack[state.stack.length-1] === "rule")return ret(null, stream.current());\n
+        else if(state.stack[state.stack.length-1] === "rule" && type === "tag")return ret("string", stream.current());\n
+        else if(state.stack[state.stack.length-1] === ";" && type === ":")return ret(null, stream.current());\n
+        //else if(state.stack[state.stack.length-1] === ";" || type === "")return ret("variable", stream.current());\n
+        else if(stream.peek() === "#" && type !== undefined && type.match(/\\+|,|tag|select\\-op|}|{|;/g) === null)return ret("string", stream.current());\n
+        else if(type === "variable")return ret(null, stream.current());\n
+        else if(state.stack[state.stack.length-1] === "{" && type === "comment")return ret("variable", stream.current());\n
+        else if(state.stack.length === 0 && (type === ";" || type === "comment"))return ret("tag", stream.current());\n
+        else if((state.stack[state.stack.length-1] === "{" || type === ";") && state.stack[state.stack.length-1] !== "@media{")return ret("variable", stream.current());\n
+        else if(state.stack[state.stack.length-2] === "{" && state.stack[state.stack.length-1] === ";")return ret("variable", stream.current());\n
+\n
+        return ret("tag", "tag");\n
+      } else if(type == "compare" || type == "a" || type == "("){\n
+        return ret("string", "string");\n
+      } else if(type == "|" || stream.current() == "-" || type == "["){\n
+        if (type == "|" && stream.match(/^[\\]=~]/, false)) return ret("number", stream.current());\n
+        else if(type == "|" )return ret("tag", "tag");\n
+        else if(type == "["){\n
+          stream.eatWhile(/\\w\\-/);\n
+          return ret("number", stream.current());\n
+        }\n
+        return ret(null, ch);\n
+      } else if((stream.peek() == ":") || ( stream.eatSpace() && stream.peek() == ":")) {\n
+        stream.next();\n
+        var t_v = stream.peek() == ":" ? true : false;\n
+        if(!t_v){\n
+          var old_pos = stream.pos;\n
+          var sc = stream.current().length;\n
+          stream.eatWhile(/[a-z\\\\\\-]/);\n
+          var new_pos = stream.pos;\n
+          if(stream.current().substring(sc-1).match(selectors) != null){\n
+            stream.backUp(new_pos-(old_pos-1));\n
+            return ret("tag", "tag");\n
+          } else stream.backUp(new_pos-(old_pos-1));\n
+        } else {\n
+          stream.backUp(1);\n
+        }\n
+        if(t_v)return ret("tag", "tag"); else return ret("variable", "variable");\n
+      } else if(state.stack[state.stack.length-1]  === "font-family" || state.stack[state.stack.length-1]  === "background-position" || state.stack[state.stack.length-1]  === "border-color"){\n
+        return ret(null, null);\n
+      } else {\n
+\n
+        if(state.stack[state.stack.length-1] === null && type === ":")return ret(null, stream.current());\n
+\n
+        //else if((type === ")" && state.stack[state.stack.length-1] === "rule") || (state.stack[state.stack.length-2] === "{" && state.stack[state.stack.length-1] === "rule" && type === "variable"))return ret(null, stream.current());\n
+\n
+        else if (/\\^|\\$/.test(stream.current()) && stream.match(/^[~=]/, false)) return ret("string", "string");//att^=val\n
+\n
+        else if(type === "unit" && state.stack[state.stack.length-1] === "rule")return ret(null, "unit");\n
+        else if(type === "unit" && state.stack[state.stack.length-1] === ";")return ret(null, "unit");\n
+        else if(type === ")" && state.stack[state.stack.length-1] === "rule")return ret(null, "unit");\n
+        else if(type && type.match("@") !== null  && state.stack[state.stack.length-1] === "rule")return ret(null, "unit");\n
+        //else if(type === "unit" && state.stack[state.stack.length-1] === "rule")return ret(null, stream.current());\n
+\n
+        else if((type === ";" || type === "}" || type === ",") && state.stack[state.stack.length-1] === ";")return ret("tag", stream.current());\n
+        else if((type === ";" && stream.peek() !== undefined && !stream.match(/^[{\\.]/, false)) ||\n
+                (type === ";" && stream.eatSpace() && !stream.match(/^[{\\.]/))) return ret("variable", stream.current());\n
+        else if((type === "@media" && state.stack[state.stack.length-1] === "@media") || type === "@namespace")return ret("tag", stream.current());\n
+\n
+        else if(type === "{"  && state.stack[state.stack.length-1] === ";" && stream.peek() === "{")return ret("tag", "tag");\n
+        else if((type === "{" || type === ":") && state.stack[state.stack.length-1] === ";")return ret(null, stream.current());\n
+        else if((state.stack[state.stack.length-1] === "{" && stream.eatSpace() && !stream.match(/^[\\.#]/)) || type === "select-op"  || (state.stack[state.stack.length-1] === "rule" && type === ",") )return ret("tag", "tag");\n
+        else if(type === "variable" && state.stack[state.stack.length-1] === "rule")return ret("tag", "tag");\n
+        else if((stream.eatSpace() && stream.peek() === "{") || stream.eol() || stream.peek() === "{")return ret("tag", "tag");\n
+        //this one messes up indentation\n
+        //else if((type === "}" && stream.peek() !== ":") || (type === "}" && stream.eatSpace() && stream.peek() !== ":"))return(type, "tag");\n
+\n
+        else if(type === ")" && (stream.current() == "and" || stream.current() == "and "))return ret("variable", "variable");\n
+        else if(type === ")" && (stream.current() == "when" || stream.current() == "when "))return ret("variable", "variable");\n
+        else if(type === ")" || type === "comment" || type === "{")return ret("tag", "tag");\n
+        else if(stream.sol())return ret("tag", "tag");\n
+        else if((stream.eatSpace() && stream.peek() === "#") || stream.peek() === "#")return ret("tag", "tag");\n
+        else if(state.stack.length === 0)return ret("tag", "tag");\n
+        else if(type === ";" && stream.peek() !== undefined && stream.match(/^[\\.|#]/g)) return ret("tag", "tag");\n
+\n
+        else if(type === ":"){stream.eatSpace();return ret(null, stream.current());}\n
+\n
+        else if(stream.current() === "and " || stream.current() === "and")return ret("variable", stream.current());\n
+        else if(type === ";" && state.stack[state.stack.length-1] === "{")return ret("variable", stream.current());\n
+\n
+        else if(state.stack[state.stack.length-1] === "rule")return ret(null, stream.current());\n
+\n
+        return ret("tag", stream.current());\n
+      }\n
+    }\n
+  }\n
+\n
+  function tokenSComment(stream, state) { // SComment = Slash comment\n
+    stream.skipToEnd();\n
+    state.tokenize = tokenBase;\n
+    return ret("comment", "comment");\n
+  }\n
+\n
+  function tokenCComment(stream, state) {\n
+    var maybeEnd = false, ch;\n
+    while ((ch = stream.next()) != null) {\n
+      if (maybeEnd && ch == "/") {\n
+        state.tokenize = tokenBase;\n
+        break;\n
+      }\n
+      maybeEnd = (ch == "*");\n
+    }\n
+    return ret("comment", "comment");\n
+  }\n
+\n
+  function tokenSGMLComment(stream, state) {\n
+    var dashes = 0, ch;\n
+    while ((ch = stream.next()) != null) {\n
+      if (dashes >= 2 && ch == ">") {\n
+        state.tokenize = tokenBase;\n
+        break;\n
+      }\n
+      dashes = (ch == "-") ? dashes + 1 : 0;\n
+    }\n
+    return ret("comment", "comment");\n
+  }\n
+\n
+  function tokenString(quote) {\n
+    return function(stream, state) {\n
+      var escaped = false, ch;\n
+      while ((ch = stream.next()) != null) {\n
+        if (ch == quote && !escaped)\n
+          break;\n
+        escaped = !escaped && ch == "\\\\";\n
+      }\n
+      if (!escaped) state.tokenize = tokenBase;\n
+      return ret("string", "string");\n
+    };\n
+  }\n
+\n
+  return {\n
+    startState: function(base) {\n
+      return {tokenize: tokenBase,\n
+              baseIndent: base || 0,\n
+              stack: []};\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      if (stream.eatSpace()) return null;\n
+      var style = state.tokenize(stream, state);\n
+\n
+      var context = state.stack[state.stack.length-1];\n
+      if (type == "hash" && context == "rule") style = "atom";\n
+      else if (style == "variable") {\n
+        if (context == "rule") style = null; //"tag"\n
+        else if (!context || context == "@media{") {\n
+          style = stream.current() == "when"  ? "variable" :\n
+          /[\\s,|\\s\\)|\\s]/.test(stream.peek()) ? "tag"      : type;\n
+        }\n
+      }\n
+\n
+      if (context == "rule" && /^[\\{\\};]$/.test(type))\n
+        state.stack.pop();\n
+      if (type == "{") {\n
+        if (context == "@media") state.stack[state.stack.length-1] = "@media{";\n
+        else state.stack.push("{");\n
+      }\n
+      else if (type == "}") state.stack.pop();\n
+      else if (type == "@media") state.stack.push("@media");\n
+      else if (stream.current() === "font-family") state.stack[state.stack.length-1] = "font-family";\n
+      else if (stream.current() === "background-position") state.stack[state.stack.length-1] = "background-position";\n
+      else if (stream.current() === "border-color") state.stack[state.stack.length-1] = "border-color";\n
+      else if (context == "{" && type != "comment" && type !== "tag") state.stack.push("rule");\n
+      else if (stream.peek() === ":" && stream.current().match(/@|#/) === null) style = type;\n
+      if(type === ";" && (state.stack[state.stack.length-1] == "font-family" || state.stack[state.stack.length-1] == "background-position" || state.stack[state.stack.length-1] == "border-color"))state.stack[state.stack.length-1] = stream.current();\n
+      else if(type === "tag" && stream.peek() === ")" && stream.current().match(/\\:/) === null){type = null; style = null;}\n
+      // ????\n
+      else if((type === "variable" && stream.peek() === ")") || (type === "variable" && stream.eatSpace() && stream.peek() === ")"))return ret(null,stream.current());\n
+      return style;\n
+    },\n
+\n
+    indent: function(state, textAfter) {\n
+      var n = state.stack.length;\n
+      if (/^\\}/.test(textAfter))\n
+        n -= state.stack[state.stack.length-1] === "rule" ? 2 : 1;\n
+      else if (state.stack[state.stack.length-2] === "{")\n
+        n -= state.stack[state.stack.length-1] === "rule" ? 1 : 0;\n
+      return state.baseIndent + n * indentUnit;\n
+    },\n
+\n
+    electricChars: "}",\n
+    blockCommentStart: "/*",\n
+    blockCommentEnd: "*/",\n
+    lineComment: "//"\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-less", "less");\n
+if (!CodeMirror.mimeModes.hasOwnProperty("text/css"))\n
+  CodeMirror.defineMIME("text/css", "less");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18994</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

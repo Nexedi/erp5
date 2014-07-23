@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403087.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xquery.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("xquery", function() {\n
+\n
+  // The keywords object is set to the result of this self executing\n
+  // function. Each keyword is a property of the keywords object whose\n
+  // value is {type: atype, style: astyle}\n
+  var keywords = function(){\n
+    // conveinence functions used to build keywords object\n
+    function kw(type) {return {type: type, style: "keyword"};}\n
+    var A = kw("keyword a")\n
+      , B = kw("keyword b")\n
+      , C = kw("keyword c")\n
+      , operator = kw("operator")\n
+      , atom = {type: "atom", style: "atom"}\n
+      , punctuation = {type: "punctuation", style: null}\n
+      , qualifier = {type: "axis_specifier", style: "qualifier"};\n
+\n
+    // kwObj is what is return from this function at the end\n
+    var kwObj = {\n
+      \'if\': A, \'switch\': A, \'while\': A, \'for\': A,\n
+      \'else\': B, \'then\': B, \'try\': B, \'finally\': B, \'catch\': B,\n
+      \'element\': C, \'attribute\': C, \'let\': C, \'implements\': C, \'import\': C, \'module\': C, \'namespace\': C,\n
+      \'return\': C, \'super\': C, \'this\': C, \'throws\': C, \'where\': C, \'private\': C,\n
+      \',\': punctuation,\n
+      \'null\': atom, \'fn:false()\': atom, \'fn:true()\': atom\n
+    };\n
+\n
+    // a list of \'basic\' keywords. For each add a property to kwObj with the value of\n
+    // {type: basic[i], style: "keyword"} e.g. \'after\' --> {type: "after", style: "keyword"}\n
+    var basic = [\'after\',\'ancestor\',\'ancestor-or-self\',\'and\',\'as\',\'ascending\',\'assert\',\'attribute\',\'before\',\n
+    \'by\',\'case\',\'cast\',\'child\',\'comment\',\'declare\',\'default\',\'define\',\'descendant\',\'descendant-or-self\',\n
+    \'descending\',\'document\',\'document-node\',\'element\',\'else\',\'eq\',\'every\',\'except\',\'external\',\'following\',\n
+    \'following-sibling\',\'follows\',\'for\',\'function\',\'if\',\'import\',\'in\',\'instance\',\'intersect\',\'item\',\n
+    \'let\',\'module\',\'namespace\',\'node\',\'node\',\'of\',\'only\',\'or\',\'order\',\'parent\',\'precedes\',\'preceding\',\n
+    \'preceding-sibling\',\'processing-instruction\',\'ref\',\'return\',\'returns\',\'satisfies\',\'schema\',\'schema-element\',\n
+    \'self\',\'some\',\'sortby\',\'stable\',\'text\',\'then\',\'to\',\'treat\',\'typeswitch\',\'union\',\'variable\',\'version\',\'where\',\n
+    \'xquery\', \'empty-sequence\'];\n
+    for(var i=0, l=basic.length; i < l; i++) { kwObj[basic[i]] = kw(basic[i]);};\n
+\n
+    // a list of types. For each add a property to kwObj with the value of\n
+    // {type: "atom", style: "atom"}\n
+    var types = [\'xs:string\', \'xs:float\', \'xs:decimal\', \'xs:double\', \'xs:integer\', \'xs:boolean\', \'xs:date\', \'xs:dateTime\',\n
+    \'xs:time\', \'xs:duration\', \'xs:dayTimeDuration\', \'xs:time\', \'xs:yearMonthDuration\', \'numeric\', \'xs:hexBinary\',\n
+    \'xs:base64Binary\', \'xs:anyURI\', \'xs:QName\', \'xs:byte\',\'xs:boolean\',\'xs:anyURI\',\'xf:yearMonthDuration\'];\n
+    for(var i=0, l=types.length; i < l; i++) { kwObj[types[i]] = atom;};\n
+\n
+    // each operator will add a property to kwObj with value of {type: "operator", style: "keyword"}\n
+    var operators = [\'eq\', \'ne\', \'lt\', \'le\', \'gt\', \'ge\', \':=\', \'=\', \'>\', \'>=\', \'<\', \'<=\', \'.\', \'|\', \'?\', \'and\', \'or\', \'div\', \'idiv\', \'mod\', \'*\', \'/\', \'+\', \'-\'];\n
+    for(var i=0, l=operators.length; i < l; i++) { kwObj[operators[i]] = operator;};\n
+\n
+    // each axis_specifiers will add a property to kwObj with value of {type: "axis_specifier", style: "qualifier"}\n
+    var axis_specifiers = ["self::", "attribute::", "child::", "descendant::", "descendant-or-self::", "parent::",\n
+    "ancestor::", "ancestor-or-self::", "following::", "preceding::", "following-sibling::", "preceding-sibling::"];\n
+    for(var i=0, l=axis_specifiers.length; i < l; i++) { kwObj[axis_specifiers[i]] = qualifier; };\n
+\n
+    return kwObj;\n
+  }();\n
+\n
+  // Used as scratch variables to communicate multiple values without\n
+  // consing up tons of objects.\n
+  var type, content;\n
+\n
+  function ret(tp, style, cont) {\n
+    type = tp; content = cont;\n
+    return style;\n
+  }\n
+\n
+  function chain(stream, state, f) {\n
+    state.tokenize = f;\n
+    return f(stream, state);\n
+  }\n
+\n
+  // the primary mode tokenizer\n
+  function tokenBase(stream, state) {\n
+    var ch = stream.next(),\n
+        mightBeFunction = false,\n
+        isEQName = isEQNameAhead(stream);\n
+\n
+    // an XML tag (if not in some sub, chained tokenizer)\n
+    if (ch == "<") {\n
+      if(stream.match("!--", true))\n
+        return chain(stream, state, tokenXMLComment);\n
+\n
+      if(stream.match("![CDATA", false)) {\n
+        state.tokenize = tokenCDATA;\n
+        return ret("tag", "tag");\n
+      }\n
+\n
+      if(stream.match("?", false)) {\n
+        return chain(stream, state, tokenPreProcessing);\n
+      }\n
+\n
+      var isclose = stream.eat("/");\n
+      stream.eatSpace();\n
+      var tagName = "", c;\n
+      while ((c = stream.eat(/[^\\s\\u00a0=<>\\"\\\'\\/?]/))) tagName += c;\n
+\n
+      return chain(stream, state, tokenTag(tagName, isclose));\n
+    }\n
+    // start code block\n
+    else if(ch == "{") {\n
+      pushStateStack(state,{ type: "codeblock"});\n
+      return ret("", null);\n
+    }\n
+    // end code block\n
+    else if(ch == "}") {\n
+      popStateStack(state);\n
+      return ret("", null);\n
+    }\n
+    // if we\'re in an XML block\n
+    else if(isInXmlBlock(state)) {\n
+      if(ch == ">")\n
+        return ret("tag", "tag");\n
+      else if(ch == "/" && stream.eat(">")) {\n
+        popStateStack(state);\n
+        return ret("tag", "tag");\n
+      }\n
+      else\n
+        return ret("word", "variable");\n
+    }\n
+    // if a number\n
+    else if (/\\d/.test(ch)) {\n
+      stream.match(/^\\d*(?:\\.\\d*)?(?:E[+\\-]?\\d+)?/);\n
+      return ret("number", "atom");\n
+    }\n
+    // comment start\n
+    else if (ch === "(" && stream.eat(":")) {\n
+      pushStateStack(state, { type: "comment"});\n
+      return chain(stream, state, tokenComment);\n
+    }\n
+    // quoted string\n
+    else if (  !isEQName && (ch === \'"\' || ch === "\'"))\n
+      return chain(stream, state, tokenString(ch));\n
+    // variable\n
+    else if(ch === "$") {\n
+      return chain(stream, state, tokenVariable);\n
+    }\n
+    // assignment\n
+    else if(ch ===":" && stream.eat("=")) {\n
+      return ret("operator", "keyword");\n
+    }\n
+    // open paren\n
+    else if(ch === "(") {\n
+      pushStateStack(state, { type: "paren"});\n
+      return ret("", null);\n
+    }\n
+    // close paren\n
+    else if(ch === ")") {\n
+      popStateStack(state);\n
+      return ret("", null);\n
+    }\n
+    // open paren\n
+    else if(ch === "[") {\n
+      pushStateStack(state, { type: "bracket"});\n
+      return ret("", null);\n
+    }\n
+    // close paren\n
+    else if(ch === "]") {\n
+      popStateStack(state);\n
+      return ret("", null);\n
+    }\n
+    else {\n
+      var known = keywords.propertyIsEnumerable(ch) && keywords[ch];\n
+\n
+      // if there\'s a EQName ahead, consume the rest of the string portion, it\'s likely a function\n
+      if(isEQName && ch === \'\\"\') while(stream.next() !== \'"\'){}\n
+      if(isEQName && ch === \'\\\'\') while(stream.next() !== \'\\\'\'){}\n
+\n
+      // gobble up a word if the character is not known\n
+      if(!known) stream.eatWhile(/[\\w\\$_-]/);\n
+\n
+      // gobble a colon in the case that is a lib func type call fn:doc\n
+      var foundColon = stream.eat(":");\n
+\n
+      // if there\'s not a second colon, gobble another word. Otherwise, it\'s probably an axis specifier\n
+      // which should get matched as a keyword\n
+      if(!stream.eat(":") && foundColon) {\n
+        stream.eatWhile(/[\\w\\$_-]/);\n
+      }\n
+      // if the next non whitespace character is an open paren, this is probably a function (if not a keyword of other sort)\n
+      if(stream.match(/^[ \\t]*\\(/, false)) {\n
+        mightBeFunction = true;\n
+      }\n
+      // is the word a keyword?\n
+      var word = stream.current();\n
+      known = keywords.propertyIsEnumerable(word) && keywords[word];\n
+\n
+      // if we think it\'s a function call but not yet known,\n
+      // set style to variable for now for lack of something better\n
+      if(mightBeFunction && !known) known = {type: "function_call", style: "variable def"};\n
+\n
+      // if the previous word was element, attribute, axis specifier, this word should be the name of that\n
+      if(isInXmlConstructor(state)) {\n
+        popStateStack(state);\n
+        return ret("word", "variable", word);\n
+      }\n
+      // as previously checked, if the word is element,attribute, axis specifier, call it an "xmlconstructor" and\n
+      // push the stack so we know to look for it on the next word\n
+      if(word == "element" || word == "attribute" || known.type == "axis_specifier") pushStateStack(state, {type: "xmlconstructor"});\n
+\n
+      // if the word is known, return the details of that else just call this a generic \'word\'\n
+      return known ? ret(known.type, known.style, word) :\n
+                     ret("word", "variable", word);\n
+    }\n
+  }\n
+\n
+  // handle comments, including nested\n
+  function tokenComment(stream, state) {\n
+    var maybeEnd = false, maybeNested = false, nestedCount = 0, ch;\n
+    while (ch = stream.next()) {\n
+      if (ch == ")" && maybeEnd) {\n
+        if(nestedCount > 0)\n
+          nestedCount--;\n
+        else {\n
+          popStateStack(state);\n
+          break;\n
+        }\n
+      }\n
+      else if(ch == ":" && maybeNested) {\n
+        nestedCount++;\n
+      }\n
+      maybeEnd = (ch == ":");\n
+      maybeNested = (ch == "(");\n
+    }\n
+\n
+    return ret("comment", "comment");\n
+  }\n
+\n
+  // tokenizer for string literals\n
+  // optionally pass a tokenizer function to set state.tokenize back to when finished\n
+  function tokenString(quote, f) {\n
+    return function(stream, state) {\n
+      var ch;\n
+\n
+      if(isInString(state) && stream.current() == quote) {\n
+        popStateStack(state);\n
+        if(f) state.tokenize = f;\n
+        return ret("string", "string");\n
+      }\n
+\n
+      pushStateStack(state, { type: "string", name: quote, tokenize: tokenString(quote, f) });\n
+\n
+      // if we\'re in a string and in an XML block, allow an embedded code block\n
+      if(stream.match("{", false) && isInXmlAttributeBlock(state)) {\n
+        state.tokenize = tokenBase;\n
+        return ret("string", "string");\n
+      }\n
+\n
+\n
+      while (ch = stream.next()) {\n
+        if (ch ==  quote) {\n
+          popStateStack(state);\n
+          if(f) state.tokenize = f;\n
+          break;\n
+        }\n
+        else {\n
+          // if we\'re in a string and in an XML block, allow an embedded code block in an attribute\n
+          if(stream.match("{", false) && isInXmlAttributeBlock(state)) {\n
+            state.tokenize = tokenBase;\n
+            return ret("string", "string");\n
+          }\n
+\n
+        }\n
+      }\n
+\n
+      return ret("string", "string");\n
+    };\n
+  }\n
+\n
+  // tokenizer for variables\n
+  function tokenVariable(stream, state) {\n
+    var isVariableChar = /[\\w\\$_-]/;\n
+\n
+    // a variable may start with a quoted EQName so if the next character is quote, consume to the next quote\n
+    if(stream.eat("\\"")) {\n
+      while(stream.next() !== \'\\"\'){};\n
+      stream.eat(":");\n
+    } else {\n
+      stream.eatWhile(isVariableChar);\n
+      if(!stream.match(":=", false)) stream.eat(":");\n
+    }\n
+    stream.eatWhile(isVariableChar);\n
+    state.tokenize = tokenBase;\n
+    return ret("variable", "variable");\n
+  }\n
+\n
+  // tokenizer for XML tags\n
+  function tokenTag(name, isclose) {\n
+    return function(stream, state) {\n
+      stream.eatSpace();\n
+      if(isclose && stream.eat(">")) {\n
+        popStateStack(state);\n
+        state.tokenize = tokenBase;\n
+        return ret("tag", "tag");\n
+      }\n
+      // self closing tag without attributes?\n
+      if(!stream.eat("/"))\n
+        pushStateStack(state, { type: "tag", name: name, tokenize: tokenBase});\n
+      if(!stream.eat(">")) {\n
+        state.tokenize = tokenAttribute;\n
+        return ret("tag", "tag");\n
+      }\n
+      else {\n
+        state.tokenize = tokenBase;\n
+      }\n
+      return ret("tag", "tag");\n
+    };\n
+  }\n
+\n
+  // tokenizer for XML attributes\n
+  function tokenAttribute(stream, state) {\n
+    var ch = stream.next();\n
+\n
+    if(ch == "/" && stream.eat(">")) {\n
+      if(isInXmlAttributeBlock(state)) popStateStack(state);\n
+      if(isInXmlBlock(state)) popStateStack(state);\n
+      return ret("tag", "tag");\n
+    }\n
+    if(ch == ">") {\n
+      if(isInXmlAttributeBlock(state)) popStateStack(state);\n
+      return ret("tag", "tag");\n
+    }\n
+    if(ch == "=")\n
+      return ret("", null);\n
+    // quoted string\n
+    if (ch == \'"\' || ch == "\'")\n
+      return chain(stream, state, tokenString(ch, tokenAttribute));\n
+\n
+    if(!isInXmlAttributeBlock(state))\n
+      pushStateStack(state, { type: "attribute", tokenize: tokenAttribute});\n
+\n
+    stream.eat(/[a-zA-Z_:]/);\n
+    stream.eatWhile(/[-a-zA-Z0-9_:.]/);\n
+    stream.eatSpace();\n
+\n
+    // the case where the attribute has not value and the tag was closed\n
+    if(stream.match(">", false) || stream.match("/", false)) {\n
+      popStateStack(state);\n
+      state.tokenize = tokenBase;\n
+    }\n
+\n
+    return ret("attribute", "attribute");\n
+  }\n
+\n
+  // handle comments, including nested\n
+  function tokenXMLComment(stream, state) {\n
+    var ch;\n
+    while (ch = stream.next()) {\n
+      if (ch == "-" && stream.match("->", true)) {\n
+        state.tokenize = tokenBase;\n
+        return ret("comment", "comment");\n
+      }\n
+    }\n
+  }\n
+\n
+\n
+  // handle CDATA\n
+  function tokenCDATA(stream, state) {\n
+    var ch;\n
+    while (ch = stream.next()) {\n
+      if (ch == "]" && stream.match("]", true)) {\n
+        state.tokenize = tokenBase;\n
+        return ret("comment", "comment");\n
+      }\n
+    }\n
+  }\n
+\n
+  // handle preprocessing instructions\n
+  function tokenPreProcessing(stream, state) {\n
+    var ch;\n
+    while (ch = stream.next()) {\n
+      if (ch == "?" && stream.match(">", true)) {\n
+        state.tokenize = tokenBase;\n
+        return ret("comment", "comment meta");\n
+      }\n
+    }\n
+  }\n
+\n
+\n
+  // functions to test the current context of the state\n
+  function isInXmlBlock(state) { return isIn(state, "tag"); }\n
+  function isInXmlAttributeBlock(state) { return isIn(state, "attribute"); }\n
+  function isInXmlConstructor(state) { return isIn(state, "xmlconstructor"); }\n
+  function isInString(state) { return isIn(state, "string"); }\n
+\n
+  function isEQNameAhead(stream) {\n
+    // assume we\'ve already eaten a quote (")\n
+    if(stream.current() === \'"\')\n
+      return stream.match(/^[^\\"]+\\"\\:/, false);\n
+    else if(stream.current() === \'\\\'\')\n
+      return stream.match(/^[^\\"]+\\\'\\:/, false);\n
+    else\n
+      return false;\n
+  }\n
+\n
+  function isIn(state, type) {\n
+    return (state.stack.length && state.stack[state.stack.length - 1].type == type);\n
+  }\n
+\n
+  function pushStateStack(state, newState) {\n
+    state.stack.push(newState);\n
+  }\n
+\n
+  function popStateStack(state) {\n
+    state.stack.pop();\n
+    var reinstateTokenize = state.stack.length && state.stack[state.stack.length-1].tokenize;\n
+    state.tokenize = reinstateTokenize || tokenBase;\n
+  }\n
+\n
+  // the interface for the mode API\n
+  return {\n
+    startState: function() {\n
+      return {\n
+        tokenize: tokenBase,\n
+        cc: [],\n
+        stack: []\n
+      };\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      if (stream.eatSpace()) return null;\n
+      var style = state.tokenize(stream, state);\n
+      return style;\n
+    },\n
+\n
+    blockCommentStart: "(:",\n
+    blockCommentEnd: ":)"\n
+\n
+  };\n
+\n
+});\n
+\n
+CodeMirror.defineMIME("application/xquery", "xquery");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14667</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

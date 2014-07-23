@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>livescript.ls</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Link to the project\'s GitHub page:\n
+ * https://github.com/duralog/CodeMirror\n
+ */\n
+CodeMirror.defineMode \'livescript\', (conf) ->\n
+  tokenBase = (stream, state) ->\n
+    #indent =\n
+    if next_rule = state.next or \\start\n
+      state.next = state.next\n
+      if Array.isArray nr = Rules[next_rule]\n
+        for r in nr\n
+          if r.regex and m = stream.match r.regex\n
+            state.next = r.next\n
+            return r.token\n
+        stream.next!\n
+        return \\error\n
+      if stream.match r = Rules[next_rule]\n
+        if r.regex and stream.match r.regex\n
+          state.next = r.next\n
+          return r.token\n
+        else\n
+          stream.next!\n
+          return \\error\n
+    stream.next!\n
+    return \'error\'\n
+  external = {\n
+    startState: (basecolumn) ->\n
+      {\n
+        next: \\start\n
+        lastToken: null\n
+      }\n
+    token: (stream, state) ->\n
+      style = tokenBase stream, state #tokenLexer stream, state\n
+      state.lastToken = {\n
+        style: style\n
+        indent: stream.indentation!\n
+        content: stream.current!\n
+      }\n
+      style.replace /\\./g, \' \'\n
+    indent: (state, textAfter) ->\n
+      # XXX this won\'t work with backcalls\n
+      indentation = state.lastToken.indent\n
+      if state.lastToken.content.match indenter then indentation += 2\n
+      return indentation\n
+  }\n
+  external\n
+\n
+### Highlight Rules\n
+# taken from mode-ls.ls\n
+\n
+indenter = // (?\n
+    : [({[=:]\n
+    | [-~]>\n
+    | \\b (?: e(?:lse|xport) | d(?:o|efault) | t(?:ry|hen) | finally |\n
+             import (?:\\s* all)? | const | var |\n
+             let | new | catch (?:\\s* #identifier)? )\n
+  ) \\s* $ //\n
+\n
+identifier = /(?![\\d\\s])[$\\w\\xAA-\\uFFDC](?:(?!\\s)[$\\w\\xAA-\\uFFDC]|-[A-Za-z])*/$\n
+keywordend = /(?![$\\w]|-[A-Za-z]|\\s*:(?![:=]))/$\n
+stringfill = token: \\string, regex: \'.+\'\n
+\n
+Rules =\n
+  start:\n
+    * token: \\comment.doc\n
+      regex: \'/\\\\*\'\n
+      next : \\comment\n
+\n
+    * token: \\comment\n
+      regex: \'#.*\'\n
+\n
+    * token: \\keyword\n
+      regex: //(?\n
+        :t(?:h(?:is|row|en)|ry|ypeof!?)\n
+        |c(?:on(?:tinue|st)|a(?:se|tch)|lass)\n
+        |i(?:n(?:stanceof)?|mp(?:ort(?:\\s+all)?|lements)|[fs])\n
+        |d(?:e(?:fault|lete|bugger)|o)\n
+        |f(?:or(?:\\s+own)?|inally|unction)\n
+        |s(?:uper|witch)\n
+        |e(?:lse|x(?:tends|port)|val)\n
+        |a(?:nd|rguments)\n
+        |n(?:ew|ot)\n
+        |un(?:less|til)\n
+        |w(?:hile|ith)\n
+        |o[fr]|return|break|let|var|loop\n
+      )//$ + keywordend\n
+\n
+    * token: \\constant.language\n
+      regex: \'(?:true|false|yes|no|on|off|null|void|undefined)\' + keywordend\n
+\n
+    * token: \\invalid.illegal\n
+      regex: \'(?\n
+        :p(?:ackage|r(?:ivate|otected)|ublic)\n
+        |i(?:mplements|nterface)\n
+        |enum|static|yield\n
+      )\' + keywordend\n
+\n
+    * token: \\language.support.class\n
+      regex: \'(?\n
+        :R(?:e(?:gExp|ferenceError)|angeError)\n
+        |S(?:tring|yntaxError)\n
+        |E(?:rror|valError)\n
+        |Array|Boolean|Date|Function|Number|Object|TypeError|URIError\n
+      )\' + keywordend\n
+\n
+    * token: \\language.support.function\n
+      regex: \'(?\n
+        :is(?:NaN|Finite)\n
+        |parse(?:Int|Float)\n
+        |Math|JSON\n
+        |(?:en|de)codeURI(?:Component)?\n
+      )\' + keywordend\n
+\n
+    * token: \\variable.language\n
+      regex: \'(?:t(?:hat|il|o)|f(?:rom|allthrough)|it|by|e)\' + keywordend\n
+\n
+    * token: \\identifier\n
+      regex: identifier + /\\s*:(?![:=])/$\n
+\n
+    * token: \\variable\n
+      regex: identifier\n
+\n
+    * token: \\keyword.operator\n
+      regex: /(?:\\.{3}|\\s+\\?)/$\n
+\n
+    * token: \\keyword.variable\n
+      regex: /(?:@+|::|\\.\\.)/$\n
+      next : \\key\n
+\n
+    * token: \\keyword.operator\n
+      regex: /\\.\\s*/$\n
+      next : \\key\n
+\n
+    * token: \\string\n
+      regex: /\\\\\\S[^\\s,;)}\\]]*/$\n
+\n
+    * token: \\string.doc\n
+      regex: \\\'\'\'\n
+      next : \\qdoc\n
+\n
+    * token: \\string.doc\n
+      regex: \\"""\n
+      next : \\qqdoc\n
+\n
+    * token: \\string\n
+      regex: \\\'\n
+      next : \\qstring\n
+\n
+    * token: \\string\n
+      regex: \\"\n
+      next : \\qqstring\n
+\n
+    * token: \\string\n
+      regex: \\`\n
+      next : \\js\n
+\n
+    * token: \\string\n
+      regex: \'<\\\\[\'\n
+      next : \\words\n
+\n
+    * token: \\string.regex\n
+      regex: \\//\n
+      next : \\heregex\n
+\n
+    * token: \\string.regex\n
+      regex: //\n
+        /(?: [^ [ / \\n \\\\ ]*\n
+          (?: (?: \\\\.\n
+                | \\[ [^\\]\\n\\\\]* (?:\\\\.[^\\]\\n\\\\]*)* \\]\n
+              ) [^ [ / \\n \\\\ ]*\n
+          )*\n
+        )/ [gimy$]{0,4}\n
+      //$\n
+      next : \\key\n
+\n
+    * token: \\constant.numeric\n
+      regex: \'(?:0x[\\\\da-fA-F][\\\\da-fA-F_]*\n
+                |(?:[2-9]|[12]\\\\d|3[0-6])r[\\\\da-zA-Z][\\\\da-zA-Z_]*\n
+                |(?:\\\\d[\\\\d_]*(?:\\\\.\\\\d[\\\\d_]*)?|\\\\.\\\\d[\\\\d_]*)\n
+                 (?:e[+-]?\\\\d[\\\\d_]*)?[\\\\w$]*)\'\n
+\n
+    * token: \\lparen\n
+      regex: \'[({[]\'\n
+\n
+    * token: \\rparen\n
+      regex: \'[)}\\\\]]\'\n
+      next : \\key\n
+\n
+    * token: \\keyword.operator\n
+      regex: \\\\\\S+\n
+\n
+    * token: \\text\n
+      regex: \\\\\\s+\n
+\n
+  heregex:\n
+    * token: \\string.regex\n
+      regex: \'.*?//[gimy$?]{0,4}\'\n
+      next : \\start\n
+    * token: \\string.regex\n
+      regex: \'\\\\s*#{\'\n
+    * token: \\comment.regex\n
+      regex: \'\\\\s+(?:#.*)?\'\n
+    * token: \\string.regex\n
+      regex: \'\\\\S+\'\n
+\n
+  key:\n
+    * token: \\keyword.operator\n
+      regex: \'[.?@!]+\'\n
+    * token: \\identifier\n
+      regex: identifier\n
+      next : \\start\n
+    * token: \\text\n
+      regex: \'.\'\n
+      next : \\start\n
+\n
+  comment:\n
+    * token: \\comment.doc\n
+      regex: \'.*?\\\\*/\'\n
+      next : \\start\n
+    * token: \\comment.doc\n
+      regex: \'.+\'\n
+\n
+  qdoc:\n
+    token: \\string\n
+    regex: ".*?\'\'\'"\n
+    next : \\key\n
+    stringfill\n
+\n
+  qqdoc:\n
+    token: \\string\n
+    regex: \'.*?"""\'\n
+    next : \\key\n
+    stringfill\n
+\n
+  qstring:\n
+    token: \\string\n
+    regex: /[^\\\\\']*(?:\\\\.[^\\\\\']*)*\'/$\n
+    next : \\key\n
+    stringfill\n
+\n
+  qqstring:\n
+    token: \\string\n
+    regex: /[^\\\\"]*(?:\\\\.[^\\\\"]*)*"/$\n
+    next : \\key\n
+    stringfill\n
+\n
+  js:\n
+    token: \\string\n
+    regex: /[^\\\\`]*(?:\\\\.[^\\\\`]*)*`/$\n
+    next : \\key\n
+    stringfill\n
+\n
+  words:\n
+    token: \\string\n
+    regex: \'.*?\\\\]>\'\n
+    next : \\key\n
+    stringfill\n
+\n
+# for optimization, precompile the regexps\n
+for idx, r of Rules\n
+  if Array.isArray r\n
+    for rr, i in r\n
+      if rr.regex then Rules[idx][i].regex = new RegExp \'^\'+rr.regex\n
+  else if r.regex then Rules[idx].regex = new RegExp \'^\'+r.regex\n
+\n
+CodeMirror.defineMIME \'text/x-livescript\', \'livescript\'\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

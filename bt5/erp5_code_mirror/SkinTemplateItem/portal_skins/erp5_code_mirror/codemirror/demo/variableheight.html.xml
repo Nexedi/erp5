@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Variable Height Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/markdown/markdown.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid silver; border-width: 1px 2px; }\n
+      .cm-header { font-family: arial; }\n
+      .cm-header-1 { font-size: 150%; }\n
+      .cm-header-2 { font-size: 130%; }\n
+      .cm-header-3 { font-size: 120%; }\n
+      .cm-header-4 { font-size: 110%; }\n
+      .cm-header-5 { font-size: 100%; }\n
+      .cm-header-6 { font-size: 90%; }\n
+      .cm-strong { font-size: 140%; }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Variable Height</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Variable Height Demo</h2>\n
+<form><textarea id="code" name="code"># A First Level Header\n
+\n
+**Bold** text in a normal-size paragraph.\n
+\n
+And a very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long, wrapped line with a piece of **big** text inside of it.\n
+\n
+## A Second Level Header\n
+\n
+Now is the time for all good men to come to\n
+the aid of their country. This is just a\n
+regular paragraph.\n
+\n
+The quick brown fox jumped over the lazy\n
+dog\'s back.\n
+\n
+### Header 3\n
+\n
+> This is a blockquote.\n
+> \n
+> This is the second paragraph in the blockquote.\n
+>\n
+> ## This is an H2 in a blockquote       \n
+</textarea></form>\n
+    <script id="script">\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        lineWrapping: true,\n
+        mode: "markdown"\n
+      });\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>variableheight.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

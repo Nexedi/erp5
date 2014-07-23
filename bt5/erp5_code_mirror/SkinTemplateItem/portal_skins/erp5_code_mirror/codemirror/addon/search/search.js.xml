@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403072.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>search.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Define search commands. Depends on dialog.js or another\n
+// implementation of the openDialog method.\n
+\n
+// Replace works a little oddly -- it will do the replace on the next\n
+// Ctrl-G (or whatever is bound to findNext) press. You prevent a\n
+// replace by making sure the match is no longer selected when hitting\n
+// Ctrl-G.\n
+\n
+(function() {\n
+  function searchOverlay(query, caseInsensitive) {\n
+    var startChar;\n
+    if (typeof query == "string") {\n
+      startChar = query.charAt(0);\n
+      query = new RegExp("^" + query.replace(/[\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|]/g, "\\\\$&"),\n
+                         caseInsensitive ? "i" : "");\n
+    } else {\n
+      query = new RegExp("^(?:" + query.source + ")", query.ignoreCase ? "i" : "");\n
+    }\n
+    if (typeof query == "string") return {token: function(stream) {\n
+      if (stream.match(query)) return "searching";\n
+      stream.next();\n
+      stream.skipTo(query.charAt(0)) || stream.skipToEnd();\n
+    }};\n
+    return {token: function(stream) {\n
+      if (stream.match(query)) return "searching";\n
+      while (!stream.eol()) {\n
+        stream.next();\n
+        if (startChar)\n
+          stream.skipTo(startChar) || stream.skipToEnd();\n
+        if (stream.match(query, false)) break;\n
+      }\n
+    }};\n
+  }\n
+\n
+  function SearchState() {\n
+    this.posFrom = this.posTo = this.query = null;\n
+    this.overlay = null;\n
+  }\n
+  function getSearchState(cm) {\n
+    return cm.state.search || (cm.state.search = new SearchState());\n
+  }\n
+  function queryCaseInsensitive(query) {\n
+    return typeof query == "string" && query == query.toLowerCase();\n
+  }\n
+  function getSearchCursor(cm, query, pos) {\n
+    // Heuristic: if the query string is all lowercase, do a case insensitive search.\n
+    return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));\n
+  }\n
+  function dialog(cm, text, shortText, deflt, f) {\n
+    if (cm.openDialog) cm.openDialog(text, f, {value: deflt});\n
+    else f(prompt(shortText, deflt));\n
+  }\n
+  function confirmDialog(cm, text, shortText, fs) {\n
+    if (cm.openConfirm) cm.openConfirm(text, fs);\n
+    else if (confirm(shortText)) fs[0]();\n
+  }\n
+  function parseQuery(query) {\n
+    var isRE = query.match(/^\\/(.*)\\/([a-z]*)$/);\n
+    if (isRE) {\n
+      query = new RegExp(isRE[1], isRE[2].indexOf("i") == -1 ? "" : "i");\n
+      if (query.test("")) query = /x^/;\n
+    } else if (query == "") {\n
+      query = /x^/;\n
+    }\n
+    return query;\n
+  }\n
+  var queryDialog =\n
+    \'Search: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>\';\n
+  function doSearch(cm, rev) {\n
+    var state = getSearchState(cm);\n
+    if (state.query) return findNext(cm, rev);\n
+    dialog(cm, queryDialog, "Search for:", cm.getSelection(), function(query) {\n
+      cm.operation(function() {\n
+        if (!query || state.query) return;\n
+        state.query = parseQuery(query);\n
+        cm.removeOverlay(state.overlay, queryCaseInsensitive(state.query));\n
+        state.overlay = searchOverlay(state.query);\n
+        cm.addOverlay(state.overlay);\n
+        state.posFrom = state.posTo = cm.getCursor();\n
+        findNext(cm, rev);\n
+      });\n
+    });\n
+  }\n
+  function findNext(cm, rev) {cm.operation(function() {\n
+    var state = getSearchState(cm);\n
+    var cursor = getSearchCursor(cm, state.query, rev ? state.posFrom : state.posTo);\n
+    if (!cursor.find(rev)) {\n
+      cursor = getSearchCursor(cm, state.query, rev ? CodeMirror.Pos(cm.lastLine()) : CodeMirror.Pos(cm.firstLine(), 0));\n
+      if (!cursor.find(rev)) return;\n
+    }\n
+    cm.setSelection(cursor.from(), cursor.to());\n
+    cm.scrollIntoView({from: cursor.from(), to: cursor.to()});\n
+    state.posFrom = cursor.from(); state.posTo = cursor.to();\n
+  });}\n
+  function clearSearch(cm) {cm.operation(function() {\n
+    var state = getSearchState(cm);\n
+    if (!state.query) return;\n
+    state.query = null;\n
+    cm.removeOverlay(state.overlay);\n
+  });}\n
+\n
+  var replaceQueryDialog =\n
+    \'Replace: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>\';\n
+  var replacementQueryDialog = \'With: <input type="text" style="width: 10em"/>\';\n
+  var doReplaceConfirm = "Replace? <button>Yes</button> <button>No</button> <button>Stop</button>";\n
+  function replace(cm, all) {\n
+    dialog(cm, replaceQueryDialog, "Replace:", cm.getSelection(), function(query) {\n
+      if (!query) return;\n
+      query = parseQuery(query);\n
+      dialog(cm, replacementQueryDialog, "Replace with:", "", function(text) {\n
+        if (all) {\n
+          cm.operation(function() {\n
+            for (var cursor = getSearchCursor(cm, query); cursor.findNext();) {\n
+              if (typeof query != "string") {\n
+                var match = cm.getRange(cursor.from(), cursor.to()).match(query);\n
+                cursor.replace(text.replace(/\\$(\\d)/g, function(_, i) {return match[i];}));\n
+              } else cursor.replace(text);\n
+            }\n
+          });\n
+        } else {\n
+          clearSearch(cm);\n
+          var cursor = getSearchCursor(cm, query, cm.getCursor());\n
+          var advance = function() {\n
+            var start = cursor.from(), match;\n
+            if (!(match = cursor.findNext())) {\n
+              cursor = getSearchCursor(cm, query);\n
+              if (!(match = cursor.findNext()) ||\n
+                  (start && cursor.from().line == start.line && cursor.from().ch == start.ch)) return;\n
+            }\n
+            cm.setSelection(cursor.from(), cursor.to());\n
+            cm.scrollIntoView({from: cursor.from(), to: cursor.to()});\n
+            confirmDialog(cm, doReplaceConfirm, "Replace?",\n
+                          [function() {doReplace(match);}, advance]);\n
+          };\n
+          var doReplace = function(match) {\n
+            cursor.replace(typeof query == "string" ? text :\n
+                           text.replace(/\\$(\\d)/g, function(_, i) {return match[i];}));\n
+            advance();\n
+          };\n
+          advance();\n
+        }\n
+      });\n
+    });\n
+  }\n
+\n
+  CodeMirror.commands.find = function(cm) {clearSearch(cm); doSearch(cm);};\n
+  CodeMirror.commands.findNext = doSearch;\n
+  CodeMirror.commands.findPrev = function(cm) {doSearch(cm, true);};\n
+  CodeMirror.commands.clearSearch = clearSearch;\n
+  CodeMirror.commands.replace = replace;\n
+  CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6199</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

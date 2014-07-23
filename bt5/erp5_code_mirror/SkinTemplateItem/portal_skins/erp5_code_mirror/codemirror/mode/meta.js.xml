@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403098.55</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>meta.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>CodeMirror.modeInfo = [\n
+  {name: \'APL\', mime: \'text/apl\', mode: \'apl\'},\n
+  {name: \'Asterisk\', mime: \'text/x-asterisk\', mode: \'asterisk\'},\n
+  {name: \'C\', mime: \'text/x-csrc\', mode: \'clike\'},\n
+  {name: \'C++\', mime: \'text/x-c++src\', mode: \'clike\'},\n
+  {name: \'Cobol\', mime: \'text/x-cobol\', mode: \'cobol\'},\n
+  {name: \'Java\', mime: \'text/x-java\', mode: \'clike\'},\n
+  {name: \'C#\', mime: \'text/x-csharp\', mode: \'clike\'},\n
+  {name: \'Scala\', mime: \'text/x-scala\', mode: \'clike\'},\n
+  {name: \'Clojure\', mime: \'text/x-clojure\', mode: \'clojure\'},\n
+  {name: \'CoffeeScript\', mime: \'text/x-coffeescript\', mode: \'coffeescript\'},\n
+  {name: \'Common Lisp\', mime: \'text/x-common-lisp\', mode: \'commonlisp\'},\n
+  {name: \'CSS\', mime: \'text/css\', mode: \'css\'},\n
+  {name: \'D\', mime: \'text/x-d\', mode: \'d\'},\n
+  {name: \'diff\', mime: \'text/x-diff\', mode: \'diff\'},\n
+  {name: \'DTD\', mime: \'application/xml-dtd\', mode: \'dtd\'},\n
+  {name: \'ECL\', mime: \'text/x-ecl\', mode: \'ecl\'},\n
+  {name: \'Eiffel\', mime: \'text/x-eiffel\', mode: \'eiffel\'},\n
+  {name: \'Erlang\', mime: \'text/x-erlang\', mode: \'erlang\'},\n
+  {name: \'Fortran\', mime: \'text/x-fortran\', mode: \'fortran\'},\n
+  {name: \'F#\', mime: \'text/x-fsharp\', mode: \'mllike\'},\n
+  {name: \'Gas\', mime: \'text/x-gas\', mode: \'gas\'},\n
+  {name: \'Gherkin\', mime: \'text/x-feature\', mode: \'gherkin\'},\n
+  {name: \'GitHub Flavored Markdown\', mime: \'text/x-gfm\', mode: \'gfm\'},\n
+  {name: \'Go\', mime: \'text/x-go\', mode: \'go\'},\n
+  {name: \'Groovy\', mime: \'text/x-groovy\', mode: \'groovy\'},\n
+  {name: \'HAML\', mime: \'text/x-haml\', mode: \'haml\'},\n
+  {name: \'Haskell\', mime: \'text/x-haskell\', mode: \'haskell\'},\n
+  {name: \'Haxe\', mime: \'text/x-haxe\', mode: \'haxe\'},\n
+  {name: \'ASP.NET\', mime: \'application/x-aspx\', mode: \'htmlembedded\'},\n
+  {name: \'Embedded Javascript\', mime: \'application/x-ejs\', mode: \'htmlembedded\'},\n
+  {name: \'JavaServer Pages\', mime: \'application/x-jsp\', mode: \'htmlembedded\'},\n
+  {name: \'HTML\', mime: \'text/html\', mode: \'htmlmixed\'},\n
+  {name: \'HTTP\', mime: \'message/http\', mode: \'http\'},\n
+  {name: \'Jade\', mime: \'text/x-jade\', mode: \'jade\'},\n
+  {name: \'JavaScript\', mime: \'text/javascript\', mode: \'javascript\'},\n
+  {name: \'JSON\', mime: \'application/x-json\', mode: \'javascript\'},\n
+  {name: \'JSON\', mime: \'application/json\', mode: \'javascript\'},\n
+  {name: \'JSON-LD\', mime: \'application/ld+json\', mode: \'javascript\'},\n
+  {name: \'TypeScript\', mime: \'application/typescript\', mode: \'javascript\'},\n
+  {name: \'Jinja2\', mime: null, mode: \'jinja2\'},\n
+  {name: \'Julia\', mime: \'text/x-julia\', mode: \'julia\'},\n
+  {name: \'LESS\', mime: \'text/x-less\', mode: \'less\'},\n
+  {name: \'LiveScript\', mime: \'text/x-livescript\', mode: \'livescript\'},\n
+  {name: \'Lua\', mime: \'text/x-lua\', mode: \'lua\'},\n
+  {name: \'Markdown (GitHub-flavour)\', mime: \'text/x-markdown\', mode: \'markdown\'},\n
+  {name: \'mIRC\', mime: \'text/mirc\', mode: \'mirc\'},\n
+  {name: \'Nginx\', mime: \'text/x-nginx-conf\', mode: \'nginx\'},\n
+  {name: \'NTriples\', mime: \'text/n-triples\', mode: \'ntriples\'},\n
+  {name: \'OCaml\', mime: \'text/x-ocaml\', mode: \'mllike\'},\n
+  {name: \'Octave\', mime: \'text/x-octave\', mode: \'octave\'},\n
+  {name: \'Pascal\', mime: \'text/x-pascal\', mode: \'pascal\'},\n
+  {name: \'PEG.js\', mime: null, mode: \'pegjs\'},\n
+  {name: \'Perl\', mime: \'text/x-perl\', mode: \'perl\'},\n
+  {name: \'PHP\', mime: \'text/x-php\', mode: \'php\'},\n
+  {name: \'PHP(HTML)\', mime: \'application/x-httpd-php\', mode: \'php\'},\n
+  {name: \'Pig\', mime: \'text/x-pig\', mode: \'pig\'},\n
+  {name: \'Plain Text\', mime: \'text/plain\', mode: \'null\'},\n
+  {name: \'Properties files\', mime: \'text/x-properties\', mode: \'properties\'},\n
+  {name: \'Python\', mime: \'text/x-python\', mode: \'python\'},\n
+  {name: \'Puppet\', mime: \'text/x-puppet\', mode: \'puppet\'},\n
+  {name: \'Cython\', mime: \'text/x-cython\', mode: \'python\'},\n
+  {name: \'R\', mime: \'text/x-rsrc\', mode: \'r\'},\n
+  {name: \'reStructuredText\', mime: \'text/x-rst\', mode: \'rst\'},\n
+  {name: \'Ruby\', mime: \'text/x-ruby\', mode: \'ruby\'},\n
+  {name: \'Rust\', mime: \'text/x-rustsrc\', mode: \'rust\'},\n
+  {name: \'Sass\', mime: \'text/x-sass\', mode: \'sass\'},\n
+  {name: \'Scheme\', mime: \'text/x-scheme\', mode: \'scheme\'},\n
+  {name: \'SCSS\', mime: \'text/x-scss\', mode: \'css\'},\n
+  {name: \'Shell\', mime: \'text/x-sh\', mode: \'shell\'},\n
+  {name: \'Sieve\', mime: \'application/sieve\', mode: \'sieve\'},\n
+  {name: \'Smalltalk\', mime: \'text/x-stsrc\', mode: \'smalltalk\'},\n
+  {name: \'Smarty\', mime: \'text/x-smarty\', mode: \'smarty\'},\n
+  {name: \'SmartyMixed\', mime: \'text/x-smarty\', mode: \'smartymixed\'},\n
+  {name: \'Solr\', mime: \'text/x-solr\', mode: \'solr\'},\n
+  {name: \'SPARQL\', mime: \'application/x-sparql-query\', mode: \'sparql\'},\n
+  {name: \'SQL\', mime: \'text/x-sql\', mode: \'sql\'},\n
+  {name: \'MariaDB\', mime: \'text/x-mariadb\', mode: \'sql\'},\n
+  {name: \'sTeX\', mime: \'text/x-stex\', mode: \'stex\'},\n
+  {name: \'LaTeX\', mime: \'text/x-latex\', mode: \'stex\'},\n
+  {name: \'Tcl\', mime: \'text/x-tcl\', mode: \'tcl\'},\n
+  {name: \'TiddlyWiki \', mime: \'text/x-tiddlywiki\', mode: \'tiddlywiki\'},\n
+  {name: \'Tiki wiki\', mime: \'text/tiki\', mode: \'tiki\'},\n
+  {name: \'TOML\', mime: \'text/x-toml\', mode: \'toml\'},\n
+  {name: \'Turtle\', mime: \'text/turtle\', mode: \'turtle\'},\n
+  {name: \'VB.NET\', mime: \'text/x-vb\', mode: \'vb\'},\n
+  {name: \'VBScript\', mime: \'text/vbscript\', mode: \'vbscript\'},\n
+  {name: \'Velocity\', mime: \'text/velocity\', mode: \'velocity\'},\n
+  {name: \'Verilog\', mime: \'text/x-verilog\', mode: \'verilog\'},\n
+  {name: \'XML\', mime: \'application/xml\', mode: \'xml\'},\n
+  {name: \'HTML\', mime: \'text/html\', mode: \'xml\'},\n
+  {name: \'XQuery\', mime: \'application/xquery\', mode: \'xquery\'},\n
+  {name: \'YAML\', mime: \'text/x-yaml\', mode: \'yaml\'},\n
+  {name: \'Z80\', mime: \'text/x-z80\', mode: \'z80\'}\n
+];\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5484</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

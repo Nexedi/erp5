@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Tern Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/dialog/dialog.css">\n
+<link rel="stylesheet" href="../addon/hint/show-hint.css">\n
+<link rel="stylesheet" href="../addon/tern/tern.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../addon/dialog/dialog.js"></script>\n
+<script src="../addon/hint/show-hint.js"></script>\n
+<script src="../addon/tern/tern.js"></script>\n
+<script src="http://marijnhaverbeke.nl/acorn/acorn.js"></script>\n
+<script src="http://marijnhaverbeke.nl/acorn/acorn_loose.js"></script>\n
+<script src="http://marijnhaverbeke.nl/acorn/util/walk.js"></script>\n
+<script src="http://ternjs.net/doc/demo/polyfill.js"></script>\n
+<script src="http://ternjs.net/lib/signal.js"></script>\n
+<script src="http://ternjs.net/lib/tern.js"></script>\n
+<script src="http://ternjs.net/lib/def.js"></script>\n
+<script src="http://ternjs.net/lib/comment.js"></script>\n
+<script src="http://ternjs.net/lib/infer.js"></script>\n
+<script src="http://ternjs.net/plugin/doc_comment.js"></script>\n
+<style>\n
+      .CodeMirror {border: 1px solid #ddd;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Tern</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Tern Demo</h2>\n
+<form><textarea id="code" name="code">// Use ctrl-space to complete something\n
+// Put the cursor in or after an expression, press ctrl-i to\n
+// find its type\n
+\n
+var foo = ["array", "of", "strings"];\n
+var bar = foo.slice(0, 2).join("").split("a")[0];\n
+\n
+// Works for locally defined types too.\n
+\n
+function CTor() { this.size = 10; }\n
+CTor.prototype.hallo = "hallo";\n
+\n
+var baz = new CTor;\n
+baz.\n
+\n
+// You can press ctrl-q when the cursor is on a variable name to\n
+// rename it. Try it with CTor...\n
+\n
+// When the cursor is in an argument list, the arguments are\n
+// shown below the editor.\n
+\n
+[1].reduce(  );\n
+\n
+// And a little more advanced code...\n
+\n
+(function(exports) {\n
+  exports.randomElt = function(arr) {\n
+    return arr[Math.floor(arr.length * Math.random())];\n
+  };\n
+  exports.strList = "foo".split("");\n
+  exports.intList = exports.strList.map(function(s) { return s.charCodeAt(0); });\n
+})(window.myMod = {});\n
+\n
+var randomStr = myMod.randomElt(myMod.strList);\n
+var randomInt = myMod.randomElt(myMod.intList);\n
+</textarea></p>\n
+\n
+<p>Demonstrates integration of <a href="http://ternjs.net/">Tern</a>\n
+and CodeMirror. The following keys are bound:</p>\n
+\n
+<dl>\n
+  <dt>Ctrl-Space</dt><dd>Autocomplete</dd>\n
+  <dt>Ctrl-I</dt><dd>Find type at cursor</dd>\n
+  <dt>Alt-.</dt><dd>Jump to definition (Alt-, to jump back)</dd>\n
+  <dt>Ctrl-Q</dt><dd>Rename variable</dd>\n
+</dl>\n
+\n
+<p>Documentation is sparse for now. See the top of\n
+the <a href="../addon/tern/tern.js">script</a> for a rough API\n
+overview.</p>\n
+\n
+<script>\n
+  function getURL(url, c) {\n
+    var xhr = new XMLHttpRequest();\n
+    xhr.open("get", url, true);\n
+    xhr.send();\n
+    xhr.onreadystatechange = function() {\n
+      if (xhr.readyState != 4) return;\n
+      if (xhr.status < 400) return c(null, xhr.responseText);\n
+      var e = new Error(xhr.responseText || "No response");\n
+      e.status = xhr.status;\n
+      c(e);\n
+    };\n
+  }\n
+\n
+  var server;\n
+  getURL("http://ternjs.net/defs/ecma5.json", function(err, code) {\n
+    if (err) throw new Error("Request for ecma5.json: " + err);\n
+    server = new CodeMirror.TernServer({defs: [JSON.parse(code)]});\n
+    editor.setOption("extraKeys", {\n
+      "Ctrl-Space": function(cm) { server.complete(cm); },\n
+      "Ctrl-I": function(cm) { server.showType(cm); },\n
+      "Alt-.": function(cm) { server.jumpToDef(cm); },\n
+      "Alt-,": function(cm) { server.jumpBack(cm); },\n
+      "Ctrl-Q": function(cm) { server.rename(cm); },\n
+    })\n
+    editor.on("cursorActivity", function(cm) { server.updateArgHints(cm); });\n
+  });\n
+\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    mode: "javascript"\n
+  });\n
+</script>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>tern.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

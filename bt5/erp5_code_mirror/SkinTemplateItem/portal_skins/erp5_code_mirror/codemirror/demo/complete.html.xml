@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Autocomplete Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/hint/show-hint.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/hint/show-hint.js"></script>\n
+<script src="../addon/hint/javascript-hint.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Autocomplete</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Autocomplete Demo</h2>\n
+<form><textarea id="code" name="code">\n
+function getCompletions(token, context) {\n
+  var found = [], start = token.string;\n
+  function maybeAdd(str) {\n
+    if (str.indexOf(start) == 0) found.push(str);\n
+  }\n
+  function gatherCompletions(obj) {\n
+    if (typeof obj == "string") forEach(stringProps, maybeAdd);\n
+    else if (obj instanceof Array) forEach(arrayProps, maybeAdd);\n
+    else if (obj instanceof Function) forEach(funcProps, maybeAdd);\n
+    for (var name in obj) maybeAdd(name);\n
+  }\n
+\n
+  if (context) {\n
+    // If this is a property, see if it belongs to some object we can\n
+    // find in the current environment.\n
+    var obj = context.pop(), base;\n
+    if (obj.className == "js-variable")\n
+      base = window[obj.string];\n
+    else if (obj.className == "js-string")\n
+      base = "";\n
+    else if (obj.className == "js-atom")\n
+      base = 1;\n
+    while (base != null && context.length)\n
+      base = base[context.pop().string];\n
+    if (base != null) gatherCompletions(base);\n
+  }\n
+  else {\n
+    // If not, just look in the window object and any local scope\n
+    // (reading into JS mode internals to get at the local variables)\n
+    for (var v = token.state.localVars; v; v = v.next) maybeAdd(v.name);\n
+    gatherCompletions(window);\n
+    forEach(keywords, maybeAdd);\n
+  }\n
+  return found;\n
+}\n
+</textarea></form>\n
+\n
+<p>Press <strong>ctrl-space</strong> to activate autocompletion. Built\n
+on top of the <a href="../doc/manual.html#addon_show-hint"><code>show-hint</code></a>\n
+and <a href="../doc/manual.html#addon_javascript-hint"><code>javascript-hint</code></a>\n
+addons.</p>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        extraKeys: {"Ctrl-Space": "autocomplete"}\n
+      });\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>complete.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

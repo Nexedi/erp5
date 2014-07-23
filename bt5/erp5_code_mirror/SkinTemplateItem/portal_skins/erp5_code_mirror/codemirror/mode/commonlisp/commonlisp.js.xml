@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403090.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>commonlisp.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("commonlisp", function (config) {\n
+  var assumeBody = /^with|^def|^do|^prog|case$|^cond$|bind$|when$|unless$/;\n
+  var numLiteral = /^(?:[+\\-]?(?:\\d+|\\d*\\.\\d+)(?:[efd][+\\-]?\\d+)?|[+\\-]?\\d+(?:\\/[+\\-]?\\d+)?|#b[+\\-]?[01]+|#o[+\\-]?[0-7]+|#x[+\\-]?[\\da-f]+)/;\n
+  var symbol = /[^\\s\'`,@()\\[\\]";]/;\n
+  var type;\n
+\n
+  function readSym(stream) {\n
+    var ch;\n
+    while (ch = stream.next()) {\n
+      if (ch == "\\\\") stream.next();\n
+      else if (!symbol.test(ch)) { stream.backUp(1); break; }\n
+    }\n
+    return stream.current();\n
+  }\n
+\n
+  function base(stream, state) {\n
+    if (stream.eatSpace()) {type = "ws"; return null;}\n
+    if (stream.match(numLiteral)) return "number";\n
+    var ch = stream.next();\n
+    if (ch == "\\\\") ch = stream.next();\n
+\n
+    if (ch == \'"\') return (state.tokenize = inString)(stream, state);\n
+    else if (ch == "(") { type = "open"; return "bracket"; }\n
+    else if (ch == ")" || ch == "]") { type = "close"; return "bracket"; }\n
+    else if (ch == ";") { stream.skipToEnd(); type = "ws"; return "comment"; }\n
+    else if (/[\'`,@]/.test(ch)) return null;\n
+    else if (ch == "|") {\n
+      if (stream.skipTo("|")) { stream.next(); return "symbol"; }\n
+      else { stream.skipToEnd(); return "error"; }\n
+    } else if (ch == "#") {\n
+      var ch = stream.next();\n
+      if (ch == "[") { type = "open"; return "bracket"; }\n
+      else if (/[+\\-=\\.\']/.test(ch)) return null;\n
+      else if (/\\d/.test(ch) && stream.match(/^\\d*#/)) return null;\n
+      else if (ch == "|") return (state.tokenize = inComment)(stream, state);\n
+      else if (ch == ":") { readSym(stream); return "meta"; }\n
+      else return "error";\n
+    } else {\n
+      var name = readSym(stream);\n
+      if (name == ".") return null;\n
+      type = "symbol";\n
+      if (name == "nil" || name == "t") return "atom";\n
+      if (name.charAt(0) == ":") return "keyword";\n
+      if (name.charAt(0) == "&") return "variable-2";\n
+      return "variable";\n
+    }\n
+  }\n
+\n
+  function inString(stream, state) {\n
+    var escaped = false, next;\n
+    while (next = stream.next()) {\n
+      if (next == \'"\' && !escaped) { state.tokenize = base; break; }\n
+      escaped = !escaped && next == "\\\\";\n
+    }\n
+    return "string";\n
+  }\n
+\n
+  function inComment(stream, state) {\n
+    var next, last;\n
+    while (next = stream.next()) {\n
+      if (next == "#" && last == "|") { state.tokenize = base; break; }\n
+      last = next;\n
+    }\n
+    type = "ws";\n
+    return "comment";\n
+  }\n
+\n
+  return {\n
+    startState: function () {\n
+      return {ctx: {prev: null, start: 0, indentTo: 0}, tokenize: base};\n
+    },\n
+\n
+    token: function (stream, state) {\n
+      if (stream.sol() && typeof state.ctx.indentTo != "number")\n
+        state.ctx.indentTo = state.ctx.start + 1;\n
+\n
+      type = null;\n
+      var style = state.tokenize(stream, state);\n
+      if (type != "ws") {\n
+        if (state.ctx.indentTo == null) {\n
+          if (type == "symbol" && assumeBody.test(stream.current()))\n
+            state.ctx.indentTo = state.ctx.start + config.indentUnit;\n
+          else\n
+            state.ctx.indentTo = "next";\n
+        } else if (state.ctx.indentTo == "next") {\n
+          state.ctx.indentTo = stream.column();\n
+        }\n
+      }\n
+      if (type == "open") state.ctx = {prev: state.ctx, start: stream.column(), indentTo: null};\n
+      else if (type == "close") state.ctx = state.ctx.prev || state.ctx;\n
+      return style;\n
+    },\n
+\n
+    indent: function (state, _textAfter) {\n
+      var i = state.ctx.indentTo;\n
+      return typeof i == "number" ? i : state.ctx.start + 1;\n
+    },\n
+\n
+    lineComment: ";;",\n
+    blockCommentStart: "#|",\n
+    blockCommentEnd: "|#"\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-common-lisp", "commonlisp");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3614</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

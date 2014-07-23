@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Overlay Parser Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/mode/overlay.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid black;}\n
+      .cm-mustache {color: #0ca;}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Overlay Parser</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Overlay Parser Demo</h2>\n
+<form><textarea id="code" name="code">\n
+<html>\n
+  <body>\n
+    <h1>{{title}}</h1>\n
+    <p>These are links to {{things}}:</p>\n
+    <ul>{{#links}}\n
+      <li><a href="{{url}}">{{text}}</a></li>\n
+    {{/links}}</ul>\n
+  </body>\n
+</html>\n
+</textarea></form>\n
+\n
+    <script>\n
+CodeMirror.defineMode("mustache", function(config, parserConfig) {\n
+  var mustacheOverlay = {\n
+    token: function(stream, state) {\n
+      var ch;\n
+      if (stream.match("{{")) {\n
+        while ((ch = stream.next()) != null)\n
+          if (ch == "}" && stream.next() == "}") break;\n
+        stream.eat("}");\n
+        return "mustache";\n
+      }\n
+      while (stream.next() != null && !stream.match("{{", false)) {}\n
+      return null;\n
+    }\n
+  };\n
+  return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);\n
+});\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {mode: "mustache"});\n
+</script>\n
+\n
+    <p>Demonstration of a mode that parses HTML, highlighting\n
+    the <a href="http://mustache.github.com/">Mustache</a> templating\n
+    directives inside of it by using the code\n
+    in <a href="../addon/mode/overlay.js"><code>overlay.js</code></a>. View\n
+    source to see the 15 lines of code needed to accomplish this.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>mustache.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

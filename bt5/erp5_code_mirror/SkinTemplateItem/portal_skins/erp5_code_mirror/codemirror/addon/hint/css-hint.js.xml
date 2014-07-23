@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403074.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>css-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function () {\n
+  "use strict";\n
+\n
+  var pseudoClasses = {link: 1, visited: 1, active: 1, hover: 1, focus: 1,\n
+                       "first-letter": 1, "first-line": 1, "first-child": 1,\n
+                       before: 1, after: 1, lang: 1};\n
+\n
+  CodeMirror.registerHelper("hint", "css", function(cm) {\n
+    var cur = cm.getCursor(), token = cm.getTokenAt(cur);\n
+    var inner = CodeMirror.innerMode(cm.getMode(), token.state);\n
+    if (inner.mode.name != "css") return;\n
+\n
+    var word = token.string, start = token.start, end = token.end;\n
+    if (/[^\\w$_-]/.test(word)) {\n
+      word = ""; start = end = cur.ch;\n
+    }\n
+\n
+    var spec = CodeMirror.resolveMode("text/css");\n
+\n
+    var result = [];\n
+    function add(keywords) {\n
+      for (var name in keywords)\n
+        if (!word || name.lastIndexOf(word, 0) == 0)\n
+          result.push(name);\n
+    }\n
+\n
+    var st = token.state.state;\n
+    if (st == "pseudo" || token.type == "variable-3") {\n
+      add(pseudoClasses);\n
+    } else if (st == "block" || st == "maybeprop") {\n
+      add(spec.propertyKeywords);\n
+    } else if (st == "prop" || st == "parens" || st == "at" || st == "params") {\n
+      add(spec.valueKeywords);\n
+      add(spec.colorKeywords);\n
+    } else if (st == "media" || st == "media_parens") {\n
+      add(spec.mediaTypes);\n
+      add(spec.mediaFeatures);\n
+    }\n
+\n
+    if (result.length) return {\n
+      list: result,\n
+      from: CodeMirror.Pos(cur.line, start),\n
+      to: CodeMirror.Pos(cur.line, end)\n
+    };\n
+  });\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1455</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93404951.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>matchbrackets.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var ie_lt8 = /MSIE \\d/.test(navigator.userAgent) &&\n
+    (document.documentMode == null || document.documentMode < 8);\n
+\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  var matching = {"(": ")>", ")": "(<", "[": "]>", "]": "[<", "{": "}>", "}": "{<"};\n
+  function findMatchingBracket(cm, where, strict) {\n
+    var state = cm.state.matchBrackets;\n
+    var maxScanLen = (state && state.maxScanLineLength) || 10000;\n
+    var maxScanLines = (state && state.maxScanLines) || 100;\n
+\n
+    var cur = where || cm.getCursor(), line = cm.getLineHandle(cur.line), pos = cur.ch - 1;\n
+    var match = (pos >= 0 && matching[line.text.charAt(pos)]) || matching[line.text.charAt(++pos)];\n
+    if (!match) return null;\n
+    var forward = match.charAt(1) == ">", d = forward ? 1 : -1;\n
+    if (strict && forward != (pos == cur.ch)) return null;\n
+    var style = cm.getTokenTypeAt(Pos(cur.line, pos + 1));\n
+\n
+    var stack = [line.text.charAt(pos)], re = /[(){}[\\]]/;\n
+    function scan(line, lineNo, start) {\n
+      if (!line.text) return;\n
+      var pos = forward ? 0 : line.text.length - 1, end = forward ? line.text.length : -1;\n
+      if (line.text.length > maxScanLen) return null;\n
+      if (start != null) pos = start + d;\n
+      for (; pos != end; pos += d) {\n
+        var ch = line.text.charAt(pos);\n
+        if (re.test(ch) && cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style) {\n
+          var match = matching[ch];\n
+          if (match.charAt(1) == ">" == forward) stack.push(ch);\n
+          else if (stack.pop() != match.charAt(0)) return {pos: pos, match: false};\n
+          else if (!stack.length) return {pos: pos, match: true};\n
+        }\n
+      }\n
+    }\n
+    for (var i = cur.line, found, e = forward ? Math.min(i + maxScanLines, cm.lineCount()) : Math.max(-1, i - maxScanLines); i != e; i+=d) {\n
+      if (i == cur.line) found = scan(line, i, pos);\n
+      else found = scan(cm.getLineHandle(i), i);\n
+      if (found) break;\n
+    }\n
+    return {from: Pos(cur.line, pos), to: found && Pos(i, found.pos),\n
+            match: found && found.match, forward: forward};\n
+  }\n
+\n
+  function matchBrackets(cm, autoclear) {\n
+    // Disable brace matching in long lines, since it\'ll cause hugely slow updates\n
+    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;\n
+    var found = findMatchingBracket(cm);\n
+    if (!found || cm.getLine(found.from.line).length > maxHighlightLen ||\n
+       found.to && cm.getLine(found.to.line).length > maxHighlightLen)\n
+      return;\n
+\n
+    var style = found.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";\n
+    var one = cm.markText(found.from, Pos(found.from.line, found.from.ch + 1), {className: style});\n
+    var two = found.to && cm.markText(found.to, Pos(found.to.line, found.to.ch + 1), {className: style});\n
+    // Kludge to work around the IE bug from issue #1193, where text\n
+    // input stops going to the textarea whenever this fires.\n
+    if (ie_lt8 && cm.state.focused) cm.display.input.focus();\n
+    var clear = function() {\n
+      cm.operation(function() { one.clear(); two && two.clear(); });\n
+    };\n
+    if (autoclear) setTimeout(clear, 800);\n
+    else return clear;\n
+  }\n
+\n
+  var currentlyHighlighted = null;\n
+  function doMatchBrackets(cm) {\n
+    cm.operation(function() {\n
+      if (currentlyHighlighted) {currentlyHighlighted(); currentlyHighlighted = null;}\n
+      if (!cm.somethingSelected()) currentlyHighlighted = matchBrackets(cm, false);\n
+    });\n
+  }\n
+\n
+  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {\n
+    if (old && old != CodeMirror.Init)\n
+      cm.off("cursorActivity", doMatchBrackets);\n
+    if (val) {\n
+      cm.state.matchBrackets = typeof val == "object" ? val : {};\n
+      cm.on("cursorActivity", doMatchBrackets);\n
+    }\n
+  });\n
+\n
+  CodeMirror.defineExtension("matchBrackets", function() {matchBrackets(this, true);});\n
+  CodeMirror.defineExtension("findMatchingBracket", function(pos, strict){\n
+    return findMatchingBracket(this, pos, strict);\n
+  });\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3918</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

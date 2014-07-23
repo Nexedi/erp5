@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Bi-directional Text Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Bi-directional Text</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Bi-directional Text Demo</h2>\n
+<form><textarea id="code" name="code"><!-- Piece of the CodeMirror manual, \'translated\' into Arabic by\n
+     Google Translate -->\n
+\n
+<dl>\n
+  <dt id=option_value><code>value (string or Doc)</code></dt>\n
+  <dd>ÙÙÙØ© Ø§ÙØšØ¯Ø§ÙØ© Ø§ÙÙØ­Ø±Ø±. ÙÙÙÙ Ø£Ù ØªÙÙÙ Ø³ÙØ³ÙØ©Ø Ø£Ù. ÙØ§ØŠÙ ÙØ³ØªÙØ¯.</dd>\n
+  <dt id=option_mode><code>mode (string or object)</code></dt>\n
+  <dd>ÙØ¶Ø¹ Ø§ÙØ§Ø³ØªØ®Ø¯Ø§Ù. Ø¹ÙØ¯ÙØ§ ÙØ§ ØªØ¹Ø·ÙØ ÙÙØ°Ø§ Ø§ÙØ§ÙØªØ±Ø§Ø¶Ù Ø¥ÙÙ Ø§ÙØ·Ø±ÙÙØ© Ø§ÙØ§ÙÙÙ\n
+  Ø§ÙØªÙ ØªÙ ØªØ­ÙÙÙÙØ§. ÙØ¯ ÙÙÙÙ ÙÙ Ø³ÙØ³ÙØ©Ø ÙØ§ÙØªÙ Ø¥ÙØ§ Ø£Ø³ÙØ§Ø¡ Ø£Ù ØšØšØ³Ø§Ø·Ø© ÙÙ ÙØ¶Ø¹\n
+  MIME ÙÙØ¹ Ø§ÙÙØ±ØªØšØ·Ø© Ø§Ø³Ø·Ø©. ØšØ¯ÙØ§ ÙÙ Ø°ÙÙØ ÙØ¯ ÙÙÙÙ ÙÙ ÙØ§ØŠÙ ÙØ­ØªÙÙ Ø¹ÙÙ\n
+  Ø®ÙØ§Ø±Ø§Øª Ø§ÙØªÙÙÙÙ ÙÙØ§Ø³Ø·Ø©Ø ÙØ¹ <code>name</code> Ø§ÙØ®Ø§ØµÙØ© Ø§ÙØªÙ ÙØ¶Ø¹ Ø£Ø³ÙØ§Ø¡\n
+  (Ø¹ÙÙ Ø³ØšÙÙ Ø§ÙÙØ«Ø§Ù <code>{name: "javascript", json: true}</code>).\n
+  ØµÙØ­Ø§Øª Ø§ÙØªØ¬Ø±ÙØšÙ ÙÙÙ ÙØ¶Ø¹ ØªØ­ØªÙÙ Ø¹ÙÙ ÙØ¹ÙÙÙØ§Øª Ø­ÙÙ ÙØ§ ÙØ¹ÙÙØ§Øª ØªÙÙÙÙ ÙØ¶Ø¹\n
+  ÙØ¯Ø¹ÙÙØ§. ÙÙÙÙÙ Ø£Ù ØªØ·ÙØš CodeMirror Ø§ÙØªÙ ØªÙ ØªØ¹Ø±ÙÙÙØ§ Ø·Ø±Ù ÙØ£ÙÙØ§Ø¹ MIME\n
+  Ø§ÙÙØŽÙ Ø¹ÙÙ <code>CodeMirror.modes</code>\n
+  Ù <code>CodeMirror.mimeModes</code> Ø§ÙÙØ§ØŠÙØ§Øª. ÙØ¶Ø¹ Ø®Ø±Ø§ØŠØ· Ø§ÙØ£Ø³ÙØ§Ø¡\n
+  Ø§ÙØ£ÙÙÙ ÙÙÙØŽØŠØ§Øª Ø§ÙØ®Ø§ØµØ© ØšÙÙØ ÙØ®Ø±Ø§ØŠØ· ÙØ£ÙÙØ§Ø¹ MIME 2 Ø§ÙÙÙØ§ØµÙØ§Øª\n
+  ÙØ§Ø³Ø·Ø©.</dd>\n
+  <dt id=option_theme><code>theme (string)</code></dt>\n
+  <dd>ÙÙØ¶ÙØ¹ ÙÙÙØ· Ø§ÙÙØ­Ø±Ø± ÙØ¹. ÙØ¬Øš Ø¹ÙÙÙ Ø§ÙØªØ£ÙØ¯ ÙÙ Ø§ÙÙÙÙ CSS ØªØ­Ø¯ÙØ¯\n
+  Ø§ÙÙÙØ§ØšÙØ© <code>.cm-s-[name]</code> ÙØªÙ ØªØ­ÙÙÙ Ø£ÙÙØ§Ø· (Ø§ÙØžØ±\n
+  <a href=../theme/><code>theme</code></a> Ø§ÙØ¯ÙÙÙ ÙÙ Ø§ÙØªÙØ²ÙØ¹).\n
+  Ø§ÙØ§ÙØªØ±Ø§Ø¶Ù ÙÙ <code>"default"</code> Ø ÙØ§ÙØªÙ ØªÙ ØªØ¶ÙÙÙÙØ§ ÙÙ\n
+  Ø§ÙØ£ÙÙØ§Ù <code>codemirror.css</code>. ÙÙÙ Ø§ÙÙÙÙÙ Ø§Ø³ØªØ®Ø¯Ø§Ù ÙØŠØ§Øª ÙØªØ¹Ø¯Ø¯Ø©\n
+  ÙÙ ØªØ·ØšÙÙ Ø§ÙØ³ÙØ§Øª ÙØ±Ø© ÙØ§Ø­Ø¯Ø© Ø¹ÙÙ Ø³ØšÙÙ Ø§ÙÙØ«Ø§Ù <code>"foo bar"</code>\n
+  Ø³ÙØªÙ ØªØ¹ÙÙÙ ÙÙ ÙÙ <code>cm-s-foo</code> Ù <code>cm-s-bar</code>\n
+  Ø§ÙØ·ØšÙØ§Øª Ø¥ÙÙ Ø§ÙÙØ­Ø±Ø±.</dd>\n
+</dl>\n
+</textarea></form>\n
+\n
+    <script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  mode: "text/html",\n
+  lineNumbers: true\n
+});\n
+</script>\n
+\n
+  <p>Demonstration of bi-directional text support. See\n
+  the <a href="http://marijnhaverbeke.nl/blog/cursor-in-bidi-text.html">related\n
+  blog post</a> for more background.</p>\n
+\n
+  <p><strong>Note:</strong> There is\n
+  a <a href="https://github.com/marijnh/CodeMirror/issues/1757">known\n
+  bug</a> with cursor motion and mouse clicks in bi-directional lines\n
+  that are line wrapped.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>bidi.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

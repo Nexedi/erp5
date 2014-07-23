@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403103.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jade.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("jade", function () {\n
+  var symbol_regex1 = /^(?:~|!|%|\\^|\\*|\\+|=|\\\\|:|;|,|\\/|\\?|&|<|>|\\|)/;\n
+  var open_paren_regex = /^(\\(|\\[)/;\n
+  var close_paren_regex = /^(\\)|\\])/;\n
+  var keyword_regex1 = /^(if|else|return|var|function|include|doctype|each)/;\n
+  var keyword_regex2 = /^(#|{|}|\\.)/;\n
+  var keyword_regex3 = /^(in)/;\n
+  var html_regex1 = /^(html|head|title|meta|link|script|body|br|div|input|span|a|img)/;\n
+  var html_regex2 = /^(h1|h2|h3|h4|h5|p|strong|em)/;\n
+  return {\n
+    startState: function () {\n
+      return {\n
+        inString: false,\n
+        stringType: "",\n
+        beforeTag: true,\n
+        justMatchedKeyword: false,\n
+        afterParen: false\n
+      };\n
+    },\n
+    token: function (stream, state) {\n
+      //check for state changes\n
+      if (!state.inString && ((stream.peek() == \'"\') || (stream.peek() == "\'"))) {\n
+        state.stringType = stream.peek();\n
+        stream.next(); // Skip quote\n
+        state.inString = true; // Update state\n
+      }\n
+\n
+      //return state\n
+      if (state.inString) {\n
+        if (stream.skipTo(state.stringType)) { // Quote found on this line\n
+          stream.next(); // Skip quote\n
+          state.inString = false; // Clear flag\n
+        } else {\n
+          stream.skipToEnd(); // Rest of line is string\n
+        }\n
+        state.justMatchedKeyword = false;\n
+        return "string"; // Token style\n
+      } else if (stream.sol() && stream.eatSpace()) {\n
+        if (stream.match(keyword_regex1)) {\n
+          state.justMatchedKeyword = true;\n
+          stream.eatSpace();\n
+          return "keyword";\n
+        }\n
+        if (stream.match(html_regex1) || stream.match(html_regex2)) {\n
+          state.justMatchedKeyword = true;\n
+          return "variable";\n
+        }\n
+      } else if (stream.sol() && stream.match(keyword_regex1)) {\n
+        state.justMatchedKeyword = true;\n
+        stream.eatSpace();\n
+        return "keyword";\n
+      } else if (stream.sol() && (stream.match(html_regex1) || stream.match(html_regex2))) {\n
+        state.justMatchedKeyword = true;\n
+        return "variable";\n
+      } else if (stream.eatSpace()) {\n
+        state.justMatchedKeyword = false;\n
+        if (stream.match(keyword_regex3) && stream.eatSpace()) {\n
+          state.justMatchedKeyword = true;\n
+          return "keyword";\n
+        }\n
+      } else if (stream.match(symbol_regex1)) {\n
+        state.justMatchedKeyword = false;\n
+        return "atom";\n
+      } else if (stream.match(open_paren_regex)) {\n
+        state.afterParen = true;\n
+        state.justMatchedKeyword = true;\n
+        return "def";\n
+      } else if (stream.match(close_paren_regex)) {\n
+        state.afterParen = false;\n
+        state.justMatchedKeyword = true;\n
+        return "def";\n
+      } else if (stream.match(keyword_regex2)) {\n
+        state.justMatchedKeyword = true;\n
+        return "keyword";\n
+      } else if (stream.eatSpace()) {\n
+        state.justMatchedKeyword = false;\n
+      } else {\n
+        stream.next();\n
+        if (state.justMatchedKeyword) {\n
+          return "property";\n
+        } else if (state.afterParen) {\n
+          return "property";\n
+        }\n
+      }\n
+      return null;\n
+    }\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME(\'text/x-jade\', \'jade\');\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3135</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

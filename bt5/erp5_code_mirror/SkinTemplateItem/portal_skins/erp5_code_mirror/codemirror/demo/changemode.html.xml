@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Mode-Changing Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/scheme/scheme.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid black;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Mode-Changing</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Mode-Changing Demo</h2>\n
+<form><textarea id="code" name="code">\n
+;; If there is Scheme code in here, the editor will be in Scheme mode.\n
+;; If you put in JS instead, it\'ll switch to JS mode.\n
+\n
+(define (double x)\n
+  (* x x))\n
+</textarea></form>\n
+\n
+<p>On changes to the content of the above editor, a (crude) script\n
+tries to auto-detect the language used, and switches the editor to\n
+either JavaScript or Scheme mode based on that.</p>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    mode: "scheme",\n
+    lineNumbers: true\n
+  });\n
+  var pending;\n
+  editor.on("change", function() {\n
+    clearTimeout(pending);\n
+    pending = setTimeout(update, 400);\n
+  });\n
+  function looksLikeScheme(code) {\n
+    return !/^\\s*\\(\\s*function\\b/.test(code) && /^\\s*[;\\(]/.test(code);\n
+  }\n
+  function update() {\n
+    editor.setOption("mode", looksLikeScheme(editor.getValue()) ? "scheme" : "javascript");\n
+  }\n
+</script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>changemode.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

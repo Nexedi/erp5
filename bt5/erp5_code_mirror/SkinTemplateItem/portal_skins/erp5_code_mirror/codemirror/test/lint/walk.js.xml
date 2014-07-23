@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403105.09</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>walk.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// AST walker module for Mozilla Parser API compatible trees\n
+\n
+(function(exports) {\n
+  "use strict";\n
+\n
+  // A simple walk is one where you simply specify callbacks to be\n
+  // called on specific nodes. The last two arguments are optional. A\n
+  // simple use would be\n
+  //\n
+  //     walk.simple(myTree, {\n
+  //         Expression: function(node) { ... }\n
+  //     });\n
+  //\n
+  // to do something with all expressions. All Parser API node types\n
+  // can be used to identify node types, as well as Expression,\n
+  // Statement, and ScopeBody, which denote categories of nodes.\n
+  //\n
+  // The base argument can be used to pass a custom (recursive)\n
+  // walker, and state can be used to give this walked an initial\n
+  // state.\n
+  exports.simple = function(node, visitors, base, state) {\n
+    if (!base) base = exports;\n
+    function c(node, st, override) {\n
+      var type = override || node.type, found = visitors[type];\n
+      if (found) found(node, st);\n
+      base[type](node, st, c);\n
+    }\n
+    c(node, state);\n
+  };\n
+\n
+  // A recursive walk is one where your functions override the default\n
+  // walkers. They can modify and replace the state parameter that\'s\n
+  // threaded through the walk, and can opt how and whether to walk\n
+  // their child nodes (by calling their third argument on these\n
+  // nodes).\n
+  exports.recursive = function(node, state, funcs, base) {\n
+    var visitor = exports.make(funcs, base);\n
+    function c(node, st, override) {\n
+      visitor[override || node.type](node, st, c);\n
+    }\n
+    c(node, state);\n
+  };\n
+\n
+  // Used to create a custom walker. Will fill in all missing node\n
+  // type properties with the defaults.\n
+  exports.make = function(funcs, base) {\n
+    if (!base) base = exports;\n
+    var visitor = {};\n
+    for (var type in base)\n
+      visitor[type] = funcs.hasOwnProperty(type) ? funcs[type] : base[type];\n
+    return visitor;\n
+  };\n
+\n
+  function skipThrough(node, st, c) { c(node, st); }\n
+  function ignore(node, st, c) {}\n
+\n
+  // Node walkers.\n
+\n
+  exports.Program = exports.BlockStatement = function(node, st, c) {\n
+    for (var i = 0; i < node.body.length; ++i)\n
+      c(node.body[i], st, "Statement");\n
+  };\n
+  exports.Statement = skipThrough;\n
+  exports.EmptyStatement = ignore;\n
+  exports.ExpressionStatement = function(node, st, c) {\n
+    c(node.expression, st, "Expression");\n
+  };\n
+  exports.IfStatement = function(node, st, c) {\n
+    c(node.test, st, "Expression");\n
+    c(node.consequent, st, "Statement");\n
+    if (node.alternate) c(node.alternate, st, "Statement");\n
+  };\n
+  exports.LabeledStatement = function(node, st, c) {\n
+    c(node.body, st, "Statement");\n
+  };\n
+  exports.BreakStatement = exports.ContinueStatement = ignore;\n
+  exports.WithStatement = function(node, st, c) {\n
+    c(node.object, st, "Expression");\n
+    c(node.body, st, "Statement");\n
+  };\n
+  exports.SwitchStatement = function(node, st, c) {\n
+    c(node.discriminant, st, "Expression");\n
+    for (var i = 0; i < node.cases.length; ++i) {\n
+      var cs = node.cases[i];\n
+      if (cs.test) c(cs.test, st, "Expression");\n
+      for (var j = 0; j < cs.consequent.length; ++j)\n
+        c(cs.consequent[j], st, "Statement");\n
+    }\n
+  };\n
+  exports.ReturnStatement = function(node, st, c) {\n
+    if (node.argument) c(node.argument, st, "Expression");\n
+  };\n
+  exports.ThrowStatement = function(node, st, c) {\n
+    c(node.argument, st, "Expression");\n
+  };\n
+  exports.TryStatement = function(node, st, c) {\n
+    c(node.block, st, "Statement");\n
+    for (var i = 0; i < node.handlers.length; ++i)\n
+      c(node.handlers[i].body, st, "ScopeBody");\n
+    if (node.finalizer) c(node.finalizer, st, "Statement");\n
+  };\n
+  exports.WhileStatement = function(node, st, c) {\n
+    c(node.test, st, "Expression");\n
+    c(node.body, st, "Statement");\n
+  };\n
+  exports.DoWhileStatement = exports.WhileStatement;\n
+  exports.ForStatement = function(node, st, c) {\n
+    if (node.init) c(node.init, st, "ForInit");\n
+    if (node.test) c(node.test, st, "Expression");\n
+    if (node.update) c(node.update, st, "Expression");\n
+    c(node.body, st, "Statement");\n
+  };\n
+  exports.ForInStatement = function(node, st, c) {\n
+    c(node.left, st, "ForInit");\n
+    c(node.right, st, "Expression");\n
+    c(node.body, st, "Statement");\n
+  };\n
+  exports.ForInit = function(node, st, c) {\n
+    if (node.type == "VariableDeclaration") c(node, st);\n
+    else c(node, st, "Expression");\n
+  };\n
+  exports.DebuggerStatement = ignore;\n
+\n
+  exports.FunctionDeclaration = function(node, st, c) {\n
+    c(node, st, "Function");\n
+  };\n
+  exports.VariableDeclaration = function(node, st, c) {\n
+    for (var i = 0; i < node.declarations.length; ++i) {\n
+      var decl = node.declarations[i];\n
+      if (decl.init) c(decl.init, st, "Expression");\n
+    }\n
+  };\n
+\n
+  exports.Function = function(node, st, c) {\n
+    c(node.body, st, "ScopeBody");\n
+  };\n
+  exports.ScopeBody = function(node, st, c) {\n
+    c(node, st, "Statement");\n
+  };\n
+\n
+  exports.Expression = skipThrough;\n
+  exports.ThisExpression = ignore;\n
+  exports.ArrayExpression = function(node, st, c) {\n
+    for (var i = 0; i < node.elements.length; ++i) {\n
+      var elt = node.elements[i];\n
+      if (elt) c(elt, st, "Expression");\n
+    }\n
+  };\n
+  exports.ObjectExpression = function(node, st, c) {\n
+    for (var i = 0; i < node.properties.length; ++i)\n
+      c(node.properties[i].value, st, "Expression");\n
+  };\n
+  exports.FunctionExpression = exports.FunctionDeclaration;\n
+  exports.SequenceExpression = function(node, st, c) {\n
+    for (var i = 0; i < node.expressions.length; ++i)\n
+      c(node.expressions[i], st, "Expression");\n
+  };\n
+  exports.UnaryExpression = exports.UpdateExpression = function(node, st, c) {\n
+    c(node.argument, st, "Expression");\n
+  };\n
+  exports.BinaryExpression = exports.AssignmentExpression = exports.LogicalExpression = function(node, st, c) {\n
+    c(node.left, st, "Expression");\n
+    c(node.right, st, "Expression");\n
+  };\n
+  exports.ConditionalExpression = function(node, st, c) {\n
+    c(node.test, st, "Expression");\n
+    c(node.consequent, st, "Expression");\n
+    c(node.alternate, st, "Expression");\n
+  };\n
+  exports.NewExpression = exports.CallExpression = function(node, st, c) {\n
+    c(node.callee, st, "Expression");\n
+    if (node.arguments) for (var i = 0; i < node.arguments.length; ++i)\n
+      c(node.arguments[i], st, "Expression");\n
+  };\n
+  exports.MemberExpression = function(node, st, c) {\n
+    c(node.object, st, "Expression");\n
+    if (node.computed) c(node.property, st, "Expression");\n
+  };\n
+  exports.Identifier = exports.Literal = ignore;\n
+\n
+  // A custom walker that keeps track of the scope chain and the\n
+  // variables defined in it.\n
+  function makeScope(prev) {\n
+    return {vars: Object.create(null), prev: prev};\n
+  }\n
+  exports.scopeVisitor = exports.make({\n
+    Function: function(node, scope, c) {\n
+      var inner = makeScope(scope);\n
+      for (var i = 0; i < node.params.length; ++i)\n
+        inner.vars[node.params[i].name] = {type: "argument", node: node.params[i]};\n
+      if (node.id) {\n
+        var decl = node.type == "FunctionDeclaration";\n
+        (decl ? scope : inner).vars[node.id.name] =\n
+          {type: decl ? "function" : "function name", node: node.id};\n
+      }\n
+      c(node.body, inner, "ScopeBody");\n
+    },\n
+    TryStatement: function(node, scope, c) {\n
+      c(node.block, scope, "Statement");\n
+      for (var i = 0; i < node.handlers.length; ++i) {\n
+        var handler = node.handlers[i], inner = makeScope(scope);\n
+        inner.vars[handler.param.name] = {type: "catch clause", node: handler.param};\n
+        c(handler.body, inner, "ScopeBody");\n
+      }\n
+      if (node.finalizer) c(node.finalizer, scope, "Statement");\n
+    },\n
+    VariableDeclaration: function(node, scope, c) {\n
+      for (var i = 0; i < node.declarations.length; ++i) {\n
+        var decl = node.declarations[i];\n
+        scope.vars[decl.id.name] = {type: "var", node: decl.id};\n
+        if (decl.init) c(decl.init, scope, "Expression");\n
+      }\n
+    }\n
+  });\n
+\n
+})(typeof exports == "undefined" ? acorn.walk = {} : exports);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7837</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403074.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sql-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function () {\n
+  "use strict";\n
+\n
+  var tables;\n
+  var keywords;\n
+  var CONS = {\n
+    QUERY_DIV: ";",\n
+    ALIAS_KEYWORD: "AS"\n
+  };\n
+\n
+  function getKeywords(editor) {\n
+    var mode = editor.doc.modeOption;\n
+    if(mode === "sql") mode = "text/x-sql";\n
+    return CodeMirror.resolveMode(mode).keywords;\n
+  }\n
+\n
+  function match(string, word) {\n
+    var len = string.length;\n
+    var sub = word.substr(0, len);\n
+    return string.toUpperCase() === sub.toUpperCase();\n
+  }\n
+\n
+  function addMatches(result, search, wordlist, formatter) {\n
+    for(var word in wordlist) {\n
+      if(!wordlist.hasOwnProperty(word)) continue;\n
+      if(Array.isArray(wordlist)) {\n
+        word = wordlist[word];\n
+      }\n
+      if(match(search, word)) {\n
+        result.push(formatter(word));\n
+      }\n
+    }\n
+  }\n
+\n
+  function columnCompletion(result, editor) {\n
+    var cur = editor.getCursor();\n
+    var token = editor.getTokenAt(cur);\n
+    var string = token.string.substr(1);\n
+    var prevCur = CodeMirror.Pos(cur.line, token.start);\n
+    var table = editor.getTokenAt(prevCur).string;\n
+    if( !tables.hasOwnProperty( table ) ){\n
+      table = findTableByAlias(table, editor);\n
+    }\n
+    var columns = tables[table];\n
+    if(!columns) {\n
+      return;\n
+    }\n
+    addMatches(result, string, columns,\n
+        function(w) {return "." + w;});\n
+  }\n
+\n
+  function eachWord(lineText, f) {\n
+    if( !lineText ){return;}\n
+    var excepted = /[,;]/g;\n
+    var words = lineText.split( " " );\n
+    for( var i = 0; i < words.length; i++ ){\n
+      f( words[i]?words[i].replace( excepted, \'\' ) : \'\' );\n
+    }\n
+  }\n
+\n
+  function convertCurToNumber( cur ){\n
+    // max characters of a line is 999,999.\n
+    return cur.line + cur.ch / Math.pow( 10, 6 );\n
+  }\n
+\n
+  function convertNumberToCur( num ){\n
+    return CodeMirror.Pos(Math.floor( num ), +num.toString().split( \'.\' ).pop());\n
+  }\n
+\n
+  function findTableByAlias(alias, editor) {\n
+    var doc = editor.doc;\n
+    var fullQuery = doc.getValue();\n
+    var aliasUpperCase = alias.toUpperCase();\n
+    var previousWord = "";\n
+    var table = "";\n
+    var separator = [];\n
+    var validRange = {\n
+      start: CodeMirror.Pos( 0, 0 ),\n
+      end: CodeMirror.Pos( editor.lastLine(), editor.getLineHandle( editor.lastLine() ).length )\n
+    };\n
+\n
+    //add separator\n
+    var indexOfSeparator = fullQuery.indexOf( CONS.QUERY_DIV );\n
+    while( indexOfSeparator != -1 ){\n
+      separator.push( doc.posFromIndex(indexOfSeparator));\n
+      indexOfSeparator = fullQuery.indexOf( CONS.QUERY_DIV, indexOfSeparator+1);\n
+    }\n
+    separator.unshift( CodeMirror.Pos( 0, 0 ) );\n
+    separator.push( CodeMirror.Pos( editor.lastLine(), editor.getLineHandle( editor.lastLine() ).text.length ) );\n
+\n
+    //find valieRange\n
+    var prevItem = 0;\n
+    var current = convertCurToNumber( editor.getCursor() );\n
+    for( var i=0; i< separator.length; i++){\n
+      var _v = convertCurToNumber( separator[i] );\n
+      if( current > prevItem && current <= _v ){\n
+        validRange = { start: convertNumberToCur( prevItem ), end: convertNumberToCur( _v ) };\n
+        break;\n
+      }\n
+      prevItem = _v;\n
+    }\n
+\n
+    var query = doc.getRange(validRange.start, validRange.end, false);\n
+\n
+    for(var i=0; i < query.length; i++){\n
+      var lineText = query[i];\n
+      eachWord( lineText, function( word ){\n
+        var wordUpperCase = word.toUpperCase();\n
+        if( wordUpperCase === aliasUpperCase && tables.hasOwnProperty( previousWord ) ){\n
+            table = previousWord;\n
+        }\n
+        if( wordUpperCase !== CONS.ALIAS_KEYWORD ){\n
+          previousWord = word;\n
+        }\n
+      });\n
+      if( table ){ break; }\n
+    }\n
+    return table;\n
+  }\n
+\n
+  function sqlHint(editor, options) {\n
+    tables = (options && options.tables) || {};\n
+    keywords = keywords || getKeywords(editor);\n
+    var cur = editor.getCursor();\n
+    var token = editor.getTokenAt(cur);\n
+    var result = [];\n
+    var search = token.string.trim();\n
+\n
+    addMatches(result, search, keywords,\n
+        function(w) {return w.toUpperCase();});\n
+\n
+    addMatches(result, search, tables,\n
+        function(w) {return w;});\n
+\n
+    if(search.lastIndexOf(\'.\') === 0) {\n
+      columnCompletion(result, editor);\n
+    }\n
+\n
+    return {\n
+      list: result,\n
+        from: CodeMirror.Pos(cur.line, token.start),\n
+        to: CodeMirror.Pos(cur.line, token.end)\n
+    };\n
+  }\n
+  CodeMirror.registerHelper("hint", "sql", sqlHint);\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4259</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

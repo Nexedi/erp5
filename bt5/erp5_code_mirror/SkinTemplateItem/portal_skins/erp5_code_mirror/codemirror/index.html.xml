@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror</title>\n
+<meta charset="utf-8"/>\n
+\n
+<link rel=stylesheet href="lib/codemirror.css">\n
+<link rel=stylesheet href="doc/docs.css">\n
+<script src="lib/codemirror.js"></script>\n
+<script src="mode/xml/xml.js"></script>\n
+<script src="mode/javascript/javascript.js"></script>\n
+<script src="mode/css/css.js"></script>\n
+<script src="mode/htmlmixed/htmlmixed.js"></script>\n
+<script src="addon/edit/matchbrackets.js"></script>\n
+\n
+<script src="doc/activebookmark.js"></script>\n
+\n
+<style>\n
+  .CodeMirror { height: auto; border: 1px solid #ddd; }\n
+  .CodeMirror-scroll { max-height: 200px; }\n
+  .CodeMirror pre { padding-left: 7px; line-height: 1.25; }\n
+</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a class=active data-default="true" href="#description">Home</a>\n
+    <li><a href="doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="#features">Features</a>\n
+    <li><a href="#community">Community</a>\n
+    <li><a href="#browsersupport">Browser support</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<section id=description class=first>\n
+  <p><strong>CodeMirror</strong> is a versatile text editor\n
+  implemented in JavaScript for the browser. It is specialized for\n
+  editing code, and comes with a number of language modes and addons\n
+  that implement more advanced editing functionality.</p>\n
+\n
+  <p>A rich <a href="doc/manual.html#api">programming API</a> and a\n
+  CSS <a href="doc/manual.html#styling">theming</a> system are\n
+  available for customizing CodeMirror to fit your application, and\n
+  extending it with new functionality.</p>\n
+</section>\n
+\n
+<section id=demo>\n
+  <h2>This is CodeMirror</h2>\n
+  <form style="position: relative; margin-top: .5em;"><textarea id=demotext>\n
+<!-- Create a simple CodeMirror instance -->\n
+<link rel="stylesheet" href="lib/codemirror.css">\n
+<script src="lib/codemirror.js"></script>\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(myTextarea, {\n
+    mode: "text/html"\n
+  });\n
+</script></textarea>\n
+  <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">\n
+    <option value="#">Other demos...</option>\n
+    <option value="demo/complete.html">Autocompletion</option>\n
+    <option value="demo/folding.html">Code folding</option>\n
+    <option value="demo/theme.html">Themes</option>\n
+    <option value="mode/htmlmixed/index.html">Mixed language modes</option>\n
+    <option value="demo/bidi.html">Bi-directional text</option>\n
+    <option value="demo/variableheight.html">Variable font sizes</option>\n
+    <option value="demo/search.html">Search interface</option>\n
+    <option value="demo/vim.html">Vim bindings</option>\n
+    <option value="demo/emacs.html">Emacs bindings</option>\n
+    <option value="demo/tern.html">Tern integration</option>\n
+    <option value="demo/merge.html">Merge/diff interface</option>\n
+    <option value="demo/fullscreen.html">Full-screen editor</option>\n
+  </select></form>\n
+  <script>\n
+    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {\n
+      lineNumbers: true,\n
+      mode: "text/html",\n
+      matchBrackets: true\n
+    });\n
+  </script>\n
+  <div style="position: relative; margin: 1em 0;">\n
+    <a class="bigbutton left" href="http://codemirror.net/codemirror.zip">DOWNLOAD LATEST RELEASE</a>\n
+    <div><strong>version 3.22</strong> (<a href="doc/releases.html">Release notes</a>)</div>\n
+    <div>or use the <a href="doc/compress.html">minification helper</a></div>\n
+    <div style="position: absolute; top: 0; right: 0; text-align: right">\n
+      <span class="bigbutton right" onclick="document.getElementById(\'paypal\').submit();">DONATE WITH PAYPAL</span>\n
+      <div style="position: relative">\n
+        or <span onclick="document.getElementById(\'bankinfo\').style.display = \'block\';" class=quasilink>Bank</span>,\n
+        <a href="https://www.gittip.com/marijnh">Gittip</a>,\n
+        <a href="https://flattr.com/profile/marijnh">Flattr</a><br>\n
+        <div id=bankinfo>\n
+          <span id=bankinfo_close onclick="document.getElementById(\'bankinfo\').style.display = \'\';">Ã</span>\n
+          Bank: <i>Rabobank</i><br/>\n
+          Country: <i>Netherlands</i><br/>\n
+          SWIFT: <i>RABONL2U</i><br/>\n
+          Account: <i>147850770</i><br/>\n
+          Name: <i>Marijn Haverbeke</i><br/>\n
+          IBAN: <i>NL26 RABO 0147 8507 70</i>\n
+        </div>\n
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal">\n
+          <input type="hidden" name="cmd" value="_s-xclick"/>\n
+          <input type="hidden" name="hosted_button_id" value="3FVHS5FGUY7CC"/>\n
+        </form>\n
+      </div>\n
+      <div>\n
+        Purchase <a href="http://codemirror.com">commercial support</a>\n
+      </div>\n
+    </div>\n
+  </div>\n
+</section>\n
+\n
+<section id=features>\n
+  <h2>Features</h2>\n
+  <ul>\n
+    <li>Support for <a href="mode/index.html">over 60 languages</a> out of the box\n
+    <li>A powerful, <a href="mode/htmlmixed/index.html">composable</a> language mode <a href="doc/manual.html#modeapi">system</a>\n
+    <li><a href="doc/manual.html#addon_show-hint">Autocompletion</a> (<a href="demo/xmlcomplete.html">XML</a>)\n
+    <li><a href="doc/manual.html#addon_foldcode">Code folding</a>\n
+    <li><a href="doc/manual.html#option_extraKeys">Configurable</a> keybindings\n
+    <li><a href="demo/vim.html">Vim</a> and <a href="demo/emacs.html">Emacs</a> bindings\n
+    <li><a href="doc/manual.html#addon_search">Search and replace</a> interface\n
+    <li><a href="doc/manual.html#addon_matchbrackets">Bracket</a> and <a href="doc/manual.html#addon_matchtags">tag</a> matching\n
+    <li>Support for <a href="demo/buffers.html">split views</a>\n
+    <li><a href="doc/manual.html#addon_lint">Linter integration</a>\n
+    <li><a href="demo/variableheight.html">Mixing font sizes and styles</a>\n
+    <li><a href="demo/theme.html">Various themes</a>\n
+    <li>Able to <a href="demo/resize.html">resize to fit content</a>\n
+    <li><a href="doc/manual.html#mark_replacedWith">Inline</a> and <a href="doc/manual.html#addLineWidget">block</a> widgets\n
+    <li>Programmable <a href="demo/marker.html">gutters</a>\n
+    <li>Making ranges of text <a href="doc/manual.html#markText">styled, read-only, or atomic</a>\n
+    <li><a href="demo/bidi.html">Bi-directional text</a> support\n
+    <li>Many other <a href="doc/manual.html#api">methods</a> and <a href="doc/manual.html#addons">addons</a>...\n
+  </ul>\n
+</section>\n
+\n
+<section id=community>\n
+  <h2>Community</h2>\n
+\n
+  <p>CodeMirror is an open-source project shared under\n
+  an <a href="LICENSE">MIT license</a>. It is the editor used in the\n
+  dev tools for\n
+  both <a href="https://hacks.mozilla.org/2013/11/firefox-developer-tools-episode-27-edit-as-html-codemirror-more/">Firefox</a>\n
+  and <a href="https://developers.google.com/chrome-developer-tools/">Chrome</a>, <a href="http://www.lighttable.com/">Light\n
+  Table</a>, <a href="http://brackets.io/">Adobe\n
+  Brackets</a>, <a href="http://blog.bitbucket.org/2013/05/14/edit-your-code-in-the-cloud-with-bitbucket/">Bitbucket</a>,\n
+  and <a href="doc/realworld.html">many other projects</a>.</p>\n
+\n
+  <p>Development and bug tracking happens\n
+  on <a href="https://github.com/marijnh/CodeMirror/">github</a>\n
+  (<a href="http://marijnhaverbeke.nl/git/codemirror">alternate git\n
+  repository</a>).\n
+  Please <a href="http://codemirror.net/doc/reporting.html">read these\n
+  pointers</a> before submitting a bug. Use pull requests to submit\n
+  patches. All contributions must be released under the same MIT\n
+  license that CodeMirror uses.</p>\n
+\n
+  <p>Discussion around the project is done on\n
+  a <a href="http://groups.google.com/group/codemirror">mailing list</a>.\n
+  There is also\n
+  the <a href="http://groups.google.com/group/codemirror-announce">codemirror-announce</a>\n
+  list, which is only used for major announcements (such as new\n
+  versions). If needed, you can\n
+  contact <a href="mailto:marijnh@gmail.com">the maintainer</a>\n
+  directly.</p>\n
+\n
+  <p>A list of CodeMirror-related software that is not part of the\n
+  main distribution is maintained\n
+  on <a href="https://github.com/marijnh/CodeMirror/wiki/CodeMirror-addons">our\n
+  wiki</a>. Feel free to add your project.</p>\n
+</section>\n
+\n
+<section id=browsersupport>\n
+  <h2>Browser support</h2>\n
+  <p>The <em>desktop</em> versions of the following browsers,\n
+  in <em>standards mode</em> (HTML5 <code>&lt;!doctype html></code>\n
+  recommended) are supported:</p>\n
+  <table style="margin-bottom: 1em">\n
+    <tr><th>Firefox</th><td>version 3 and up</td></tr>\n
+    <tr><th>Chrome</th><td>any version</td></tr>\n
+    <tr><th>Safari</th><td>version 5.2 and up</td></tr>\n
+    <tr><th style="padding-right: 1em;">Internet Explorer</th><td>version 8 and up</td></tr>\n
+    <tr><th>Opera</th><td>version 9 and up</td></tr>\n
+  </table>\n
+  <p>Modern mobile browsers tend to partly work. Bug reports and\n
+  patches for mobile support are welcome, but the maintainer does not\n
+  have the time or budget to actually work on it himself.</p>\n
+</section>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

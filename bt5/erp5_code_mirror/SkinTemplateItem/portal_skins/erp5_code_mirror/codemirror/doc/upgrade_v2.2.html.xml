@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Version 2.2 upgrade guide</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">2.2 upgrade guide</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2>Upgrading to v2.2</h2>\n
+\n
+<p>There are a few things in the 2.2 release that require some care\n
+when upgrading.</p>\n
+\n
+<h3>No more default.css</h3>\n
+\n
+<p>The default theme is now included\n
+in <a href="../lib/codemirror.css"><code>codemirror.css</code></a>, so\n
+you do not have to included it separately anymore. (It was tiny, so\n
+even if you\'re not using it, the extra data overhead is negligible.)\n
+\n
+<h3>Different key customization</h3>\n
+\n
+<p>CodeMirror has moved to a system\n
+where <a href="manual.html#option_keyMap">keymaps</a> are used to\n
+bind behavior to keys. This means <a href="../demo/emacs.html">custom\n
+bindings</a> are now possible.</p>\n
+\n
+<p>Three options that influenced key\n
+behavior, <code>tabMode</code>, <code>enterMode</code>,\n
+and <code>smartHome</code>, are no longer supported. Instead, you can\n
+provide custom bindings to influence the way these keys act. This is\n
+done through the\n
+new <a href="manual.html#option_extraKeys"><code>extraKeys</code></a>\n
+option, which can hold an object mapping key names to functionality. A\n
+simple example would be:</p>\n
+\n
+<pre>  extraKeys: {\n
+    "Ctrl-S": function(instance) { saveText(instance.getValue()); },\n
+    "Ctrl-/": "undo"\n
+  }</pre>\n
+\n
+<p>Keys can be mapped either to functions, which will be given the\n
+editor instance as argument, or to strings, which are mapped through\n
+functions through the <code>CodeMirror.commands</code> table, which\n
+contains all the built-in editing commands, and can be inspected and\n
+extended by external code.</p>\n
+\n
+<p>By default, the <code>Home</code> key is bound to\n
+the <code>"goLineStartSmart"</code> command, which moves the cursor to\n
+the first non-whitespace character on the line. You can set do this to\n
+make it always go to the very start instead:</p>\n
+\n
+<pre>  extraKeys: {"Home": "goLineStart"}</pre>\n
+\n
+<p>Similarly, <code>Enter</code> is bound\n
+to <code>"newlineAndIndent"</code> by default. You can bind it to\n
+something else to get different behavior. To disable special handling\n
+completely and only get a newline character inserted, you can bind it\n
+to <code>false</code>:</p>\n
+\n
+<pre>  extraKeys: {"Enter": false}</pre>\n
+\n
+<p>The same works for <code>Tab</code>. If you don\'t want CodeMirror\n
+to handle it, bind it to <code>false</code>. The default behaviour is\n
+to indent the current line more (<code>"indentMore"</code> command),\n
+and indent it less when shift is held (<code>"indentLess"</code>).\n
+There are also <code>"indentAuto"</code> (smart indent)\n
+and <code>"insertTab"</code> commands provided for alternate\n
+behaviors. Or you can write your own handler function to do something\n
+different altogether.</p>\n
+\n
+<h3>Tabs</h3>\n
+\n
+<p>Handling of tabs changed completely. The display width of tabs can\n
+now be set with the <code>tabSize</code> option, and tabs can\n
+be <a href="../demo/visibletabs.html">styled</a> by setting CSS rules\n
+for the <code>cm-tab</code> class.</p>\n
+\n
+<p>The default width for tabs is now 4, as opposed to the 8 that is\n
+hard-wired into browsers. If you are relying on 8-space tabs, make\n
+sure you explicitly set <code>tabSize: 8</code> in your options.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>upgrade_v2.2.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

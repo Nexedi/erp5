@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403076.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xml-fold.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var Pos = CodeMirror.Pos;\n
+  function cmp(a, b) { return a.line - b.line || a.ch - b.ch; }\n
+\n
+  var nameStartChar = "A-Z_a-z\\\\u00C0-\\\\u00D6\\\\u00D8-\\\\u00F6\\\\u00F8-\\\\u02FF\\\\u0370-\\\\u037D\\\\u037F-\\\\u1FFF\\\\u200C-\\\\u200D\\\\u2070-\\\\u218F\\\\u2C00-\\\\u2FEF\\\\u3001-\\\\uD7FF\\\\uF900-\\\\uFDCF\\\\uFDF0-\\\\uFFFD";\n
+  var nameChar = nameStartChar + "\\-\\:\\.0-9\\\\u00B7\\\\u0300-\\\\u036F\\\\u203F-\\\\u2040";\n
+  var xmlTagStart = new RegExp("<(/?)([" + nameStartChar + "][" + nameChar + "]*)", "g");\n
+\n
+  function Iter(cm, line, ch, range) {\n
+    this.line = line; this.ch = ch;\n
+    this.cm = cm; this.text = cm.getLine(line);\n
+    this.min = range ? range.from : cm.firstLine();\n
+    this.max = range ? range.to - 1 : cm.lastLine();\n
+  }\n
+\n
+  function tagAt(iter, ch) {\n
+    var type = iter.cm.getTokenTypeAt(Pos(iter.line, ch));\n
+    return type && /\\btag\\b/.test(type);\n
+  }\n
+\n
+  function nextLine(iter) {\n
+    if (iter.line >= iter.max) return;\n
+    iter.ch = 0;\n
+    iter.text = iter.cm.getLine(++iter.line);\n
+    return true;\n
+  }\n
+  function prevLine(iter) {\n
+    if (iter.line <= iter.min) return;\n
+    iter.text = iter.cm.getLine(--iter.line);\n
+    iter.ch = iter.text.length;\n
+    return true;\n
+  }\n
+\n
+  function toTagEnd(iter) {\n
+    for (;;) {\n
+      var gt = iter.text.indexOf(">", iter.ch);\n
+      if (gt == -1) { if (nextLine(iter)) continue; else return; }\n
+      if (!tagAt(iter, gt + 1)) { iter.ch = gt + 1; continue; }\n
+      var lastSlash = iter.text.lastIndexOf("/", gt);\n
+      var selfClose = lastSlash > -1 && !/\\S/.test(iter.text.slice(lastSlash + 1, gt));\n
+      iter.ch = gt + 1;\n
+      return selfClose ? "selfClose" : "regular";\n
+    }\n
+  }\n
+  function toTagStart(iter) {\n
+    for (;;) {\n
+      var lt = iter.ch ? iter.text.lastIndexOf("<", iter.ch - 1) : -1;\n
+      if (lt == -1) { if (prevLine(iter)) continue; else return; }\n
+      if (!tagAt(iter, lt + 1)) { iter.ch = lt; continue; }\n
+      xmlTagStart.lastIndex = lt;\n
+      iter.ch = lt;\n
+      var match = xmlTagStart.exec(iter.text);\n
+      if (match && match.index == lt) return match;\n
+    }\n
+  }\n
+\n
+  function toNextTag(iter) {\n
+    for (;;) {\n
+      xmlTagStart.lastIndex = iter.ch;\n
+      var found = xmlTagStart.exec(iter.text);\n
+      if (!found) { if (nextLine(iter)) continue; else return; }\n
+      if (!tagAt(iter, found.index + 1)) { iter.ch = found.index + 1; continue; }\n
+      iter.ch = found.index + found[0].length;\n
+      return found;\n
+    }\n
+  }\n
+  function toPrevTag(iter) {\n
+    for (;;) {\n
+      var gt = iter.ch ? iter.text.lastIndexOf(">", iter.ch - 1) : -1;\n
+      if (gt == -1) { if (prevLine(iter)) continue; else return; }\n
+      if (!tagAt(iter, gt + 1)) { iter.ch = gt; continue; }\n
+      var lastSlash = iter.text.lastIndexOf("/", gt);\n
+      var selfClose = lastSlash > -1 && !/\\S/.test(iter.text.slice(lastSlash + 1, gt));\n
+      iter.ch = gt + 1;\n
+      return selfClose ? "selfClose" : "regular";\n
+    }\n
+  }\n
+\n
+  function findMatchingClose(iter, tag) {\n
+    var stack = [];\n
+    for (;;) {\n
+      var next = toNextTag(iter), end, startLine = iter.line, startCh = iter.ch - (next ? next[0].length : 0);\n
+      if (!next || !(end = toTagEnd(iter))) return;\n
+      if (end == "selfClose") continue;\n
+      if (next[1]) { // closing tag\n
+        for (var i = stack.length - 1; i >= 0; --i) if (stack[i] == next[2]) {\n
+          stack.length = i;\n
+          break;\n
+        }\n
+        if (i < 0 && (!tag || tag == next[2])) return {\n
+          tag: next[2],\n
+          from: Pos(startLine, startCh),\n
+          to: Pos(iter.line, iter.ch)\n
+        };\n
+      } else { // opening tag\n
+        stack.push(next[2]);\n
+      }\n
+    }\n
+  }\n
+  function findMatchingOpen(iter, tag) {\n
+    var stack = [];\n
+    for (;;) {\n
+      var prev = toPrevTag(iter);\n
+      if (!prev) return;\n
+      if (prev == "selfClose") { toTagStart(iter); continue; }\n
+      var endLine = iter.line, endCh = iter.ch;\n
+      var start = toTagStart(iter);\n
+      if (!start) return;\n
+      if (start[1]) { // closing tag\n
+        stack.push(start[2]);\n
+      } else { // opening tag\n
+        for (var i = stack.length - 1; i >= 0; --i) if (stack[i] == start[2]) {\n
+          stack.length = i;\n
+          break;\n
+        }\n
+        if (i < 0 && (!tag || tag == start[2])) return {\n
+          tag: start[2],\n
+          from: Pos(iter.line, iter.ch),\n
+          to: Pos(endLine, endCh)\n
+        };\n
+      }\n
+    }\n
+  }\n
+\n
+  CodeMirror.registerHelper("fold", "xml", function(cm, start) {\n
+    var iter = new Iter(cm, start.line, 0);\n
+    for (;;) {\n
+      var openTag = toNextTag(iter), end;\n
+      if (!openTag || iter.line != start.line || !(end = toTagEnd(iter))) return;\n
+      if (!openTag[1] && end != "selfClose") {\n
+        var start = Pos(iter.line, iter.ch);\n
+        var close = findMatchingClose(iter, openTag[2]);\n
+        return close && {from: start, to: close.from};\n
+      }\n
+    }\n
+  });\n
+  CodeMirror.tagRangeFinder = CodeMirror.fold.xml; // deprecated\n
+\n
+  CodeMirror.findMatchingTag = function(cm, pos, range) {\n
+    var iter = new Iter(cm, pos.line, pos.ch, range);\n
+    if (iter.text.indexOf(">") == -1 && iter.text.indexOf("<") == -1) return;\n
+    var end = toTagEnd(iter), to = end && Pos(iter.line, iter.ch);\n
+    var start = end && toTagStart(iter);\n
+    if (!end || end == "selfClose" || !start || cmp(iter, pos) > 0) return;\n
+    var here = {from: Pos(iter.line, iter.ch), to: to, tag: start[2]};\n
+\n
+    if (start[1]) { // closing tag\n
+      return {open: findMatchingOpen(iter, start[2]), close: here, at: "close"};\n
+    } else { // opening tag\n
+      iter = new Iter(cm, to.line, to.ch, range);\n
+      return {open: here, close: findMatchingClose(iter, start[2]), at: "open"};\n
+    }\n
+  };\n
+\n
+  CodeMirror.findEnclosingTag = function(cm, pos, range) {\n
+    var iter = new Iter(cm, pos.line, pos.ch, range);\n
+    for (;;) {\n
+      var open = findMatchingOpen(iter);\n
+      if (!open) break;\n
+      var forward = new Iter(cm, pos.line, pos.ch, range);\n
+      var close = findMatchingClose(forward, open.tag);\n
+      if (close) return {open: open, close: close};\n
+    }\n
+  };\n
+\n
+  // Used by addon/edit/closetag.js\n
+  CodeMirror.scanForClosingTag = function(cm, pos, name, end) {\n
+    var iter = new Iter(cm, pos.line, pos.ch, end ? {from: 0, to: end} : null);\n
+    return !!findMatchingClose(iter, name);\n
+  };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6161</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

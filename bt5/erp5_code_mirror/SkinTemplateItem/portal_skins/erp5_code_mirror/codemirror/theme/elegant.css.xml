@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>elegant.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-elegant span.cm-number, .cm-s-elegant span.cm-string, .cm-s-elegant span.cm-atom {color: #762;}\n
+.cm-s-elegant span.cm-comment {color: #262; font-style: italic; line-height: 1em;}\n
+.cm-s-elegant span.cm-meta {color: #555; font-style: italic; line-height: 1em;}\n
+.cm-s-elegant span.cm-variable {color: black;}\n
+.cm-s-elegant span.cm-variable-2 {color: #b11;}\n
+.cm-s-elegant span.cm-qualifier {color: #555;}\n
+.cm-s-elegant span.cm-keyword {color: #730;}\n
+.cm-s-elegant span.cm-builtin {color: #30a;}\n
+.cm-s-elegant span.cm-link {color: #762;}\n
+.cm-s-elegant span.cm-error {background-color: #fdd;}\n
+\n
+.cm-s-elegant .CodeMirror-activeline-background {background: #e8f2ff !important;}\n
+.cm-s-elegant .CodeMirror-matchingbracket {outline:1px solid grey; color:black !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

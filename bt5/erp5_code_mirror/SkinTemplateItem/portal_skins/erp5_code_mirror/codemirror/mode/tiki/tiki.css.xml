@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tiki.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-tw-syntaxerror {\n
+\tcolor: #FFF;\n
+\tbackground-color: #900;\n
+}\n
+\n
+.cm-tw-deleted {\n
+\ttext-decoration: line-through;\n
+}\n
+\n
+.cm-tw-header5 {\n
+\tfont-weight: bold;\n
+}\n
+.cm-tw-listitem:first-child { /*Added first child to fix duplicate padding when highlighting*/\n
+\tpadding-left: 10px;\n
+}\n
+\n
+.cm-tw-box {\n
+\tborder-top-width: 0px ! important;\n
+\tborder-style: solid;\n
+\tborder-width: 1px;\n
+\tborder-color: inherit;\n
+}\n
+\n
+.cm-tw-underline {\n
+\ttext-decoration: underline;\n
+}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

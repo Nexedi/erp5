@@ -1,0 +1,480 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403093.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>rust.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("rust", function() {\n
+  var indentUnit = 4, altIndentUnit = 2;\n
+  var valKeywords = {\n
+    "if": "if-style", "while": "if-style", "else": "else-style",\n
+    "do": "else-style", "ret": "else-style", "fail": "else-style",\n
+    "break": "atom", "cont": "atom", "const": "let", "resource": "fn",\n
+    "let": "let", "fn": "fn", "for": "for", "alt": "alt", "iface": "iface",\n
+    "impl": "impl", "type": "type", "enum": "enum", "mod": "mod",\n
+    "as": "op", "true": "atom", "false": "atom", "assert": "op", "check": "op",\n
+    "claim": "op", "native": "ignore", "unsafe": "ignore", "import": "else-style",\n
+    "export": "else-style", "copy": "op", "log": "op", "log_err": "op",\n
+    "use": "op", "bind": "op", "self": "atom"\n
+  };\n
+  var typeKeywords = function() {\n
+    var keywords = {"fn": "fn", "block": "fn", "obj": "obj"};\n
+    var atoms = "bool uint int i8 i16 i32 i64 u8 u16 u32 u64 float f32 f64 str char".split(" ");\n
+    for (var i = 0, e = atoms.length; i < e; ++i) keywords[atoms[i]] = "atom";\n
+    return keywords;\n
+  }();\n
+  var operatorChar = /[+\\-*&%=<>!?|\\.@]/;\n
+\n
+  // Tokenizer\n
+\n
+  // Used as scratch variable to communicate multiple values without\n
+  // consing up tons of objects.\n
+  var tcat, content;\n
+  function r(tc, style) {\n
+    tcat = tc;\n
+    return style;\n
+  }\n
+\n
+  function tokenBase(stream, state) {\n
+    var ch = stream.next();\n
+    if (ch == \'"\') {\n
+      state.tokenize = tokenString;\n
+      return state.tokenize(stream, state);\n
+    }\n
+    if (ch == "\'") {\n
+      tcat = "atom";\n
+      if (stream.eat("\\\\")) {\n
+        if (stream.skipTo("\'")) { stream.next(); return "string"; }\n
+        else { return "error"; }\n
+      } else {\n
+        stream.next();\n
+        return stream.eat("\'") ? "string" : "error";\n
+      }\n
+    }\n
+    if (ch == "/") {\n
+      if (stream.eat("/")) { stream.skipToEnd(); return "comment"; }\n
+      if (stream.eat("*")) {\n
+        state.tokenize = tokenComment(1);\n
+        return state.tokenize(stream, state);\n
+      }\n
+    }\n
+    if (ch == "#") {\n
+      if (stream.eat("[")) { tcat = "open-attr"; return null; }\n
+      stream.eatWhile(/\\w/);\n
+      return r("macro", "meta");\n
+    }\n
+    if (ch == ":" && stream.match(":<")) {\n
+      return r("op", null);\n
+    }\n
+    if (ch.match(/\\d/) || (ch == "." && stream.eat(/\\d/))) {\n
+      var flp = false;\n
+      if (!stream.match(/^x[\\da-f]+/i) && !stream.match(/^b[01]+/)) {\n
+        stream.eatWhile(/\\d/);\n
+        if (stream.eat(".")) { flp = true; stream.eatWhile(/\\d/); }\n
+        if (stream.match(/^e[+\\-]?\\d+/i)) { flp = true; }\n
+      }\n
+      if (flp) stream.match(/^f(?:32|64)/);\n
+      else stream.match(/^[ui](?:8|16|32|64)/);\n
+      return r("atom", "number");\n
+    }\n
+    if (ch.match(/[()\\[\\]{}:;,]/)) return r(ch, null);\n
+    if (ch == "-" && stream.eat(">")) return r("->", null);\n
+    if (ch.match(operatorChar)) {\n
+      stream.eatWhile(operatorChar);\n
+      return r("op", null);\n
+    }\n
+    stream.eatWhile(/\\w/);\n
+    content = stream.current();\n
+    if (stream.match(/^::\\w/)) {\n
+      stream.backUp(1);\n
+      return r("prefix", "variable-2");\n
+    }\n
+    if (state.keywords.propertyIsEnumerable(content))\n
+      return r(state.keywords[content], content.match(/true|false/) ? "atom" : "keyword");\n
+    return r("name", "variable");\n
+  }\n
+\n
+  function tokenString(stream, state) {\n
+    var ch, escaped = false;\n
+    while (ch = stream.next()) {\n
+      if (ch == \'"\' && !escaped) {\n
+        state.tokenize = tokenBase;\n
+        return r("atom", "string");\n
+      }\n
+      escaped = !escaped && ch == "\\\\";\n
+    }\n
+    // Hack to not confuse the parser when a string is split in\n
+    // pieces.\n
+    return r("op", "string");\n
+  }\n
+\n
+  function tokenComment(depth) {\n
+    return function(stream, state) {\n
+      var lastCh = null, ch;\n
+      while (ch = stream.next()) {\n
+        if (ch == "/" && lastCh == "*") {\n
+          if (depth == 1) {\n
+            state.tokenize = tokenBase;\n
+            break;\n
+          } else {\n
+            state.tokenize = tokenComment(depth - 1);\n
+            return state.tokenize(stream, state);\n
+          }\n
+        }\n
+        if (ch == "*" && lastCh == "/") {\n
+          state.tokenize = tokenComment(depth + 1);\n
+          return state.tokenize(stream, state);\n
+        }\n
+        lastCh = ch;\n
+      }\n
+      return "comment";\n
+    };\n
+  }\n
+\n
+  // Parser\n
+\n
+  var cx = {state: null, stream: null, marked: null, cc: null};\n
+  function pass() {\n
+    for (var i = arguments.length - 1; i >= 0; i--) cx.cc.push(arguments[i]);\n
+  }\n
+  function cont() {\n
+    pass.apply(null, arguments);\n
+    return true;\n
+  }\n
+\n
+  function pushlex(type, info) {\n
+    var result = function() {\n
+      var state = cx.state;\n
+      state.lexical = {indented: state.indented, column: cx.stream.column(),\n
+                       type: type, prev: state.lexical, info: info};\n
+    };\n
+    result.lex = true;\n
+    return result;\n
+  }\n
+  function poplex() {\n
+    var state = cx.state;\n
+    if (state.lexical.prev) {\n
+      if (state.lexical.type == ")")\n
+        state.indented = state.lexical.indented;\n
+      state.lexical = state.lexical.prev;\n
+    }\n
+  }\n
+  function typecx() { cx.state.keywords = typeKeywords; }\n
+  function valcx() { cx.state.keywords = valKeywords; }\n
+  poplex.lex = typecx.lex = valcx.lex = true;\n
+\n
+  function commasep(comb, end) {\n
+    function more(type) {\n
+      if (type == ",") return cont(comb, more);\n
+      if (type == end) return cont();\n
+      return cont(more);\n
+    }\n
+    return function(type) {\n
+      if (type == end) return cont();\n
+      return pass(comb, more);\n
+    };\n
+  }\n
+\n
+  function stat_of(comb, tag) {\n
+    return cont(pushlex("stat", tag), comb, poplex, block);\n
+  }\n
+  function block(type) {\n
+    if (type == "}") return cont();\n
+    if (type == "let") return stat_of(letdef1, "let");\n
+    if (type == "fn") return stat_of(fndef);\n
+    if (type == "type") return cont(pushlex("stat"), tydef, endstatement, poplex, block);\n
+    if (type == "enum") return stat_of(enumdef);\n
+    if (type == "mod") return stat_of(mod);\n
+    if (type == "iface") return stat_of(iface);\n
+    if (type == "impl") return stat_of(impl);\n
+    if (type == "open-attr") return cont(pushlex("]"), commasep(expression, "]"), poplex);\n
+    if (type == "ignore" || type.match(/[\\]\\);,]/)) return cont(block);\n
+    return pass(pushlex("stat"), expression, poplex, endstatement, block);\n
+  }\n
+  function endstatement(type) {\n
+    if (type == ";") return cont();\n
+    return pass();\n
+  }\n
+  function expression(type) {\n
+    if (type == "atom" || type == "name") return cont(maybeop);\n
+    if (type == "{") return cont(pushlex("}"), exprbrace, poplex);\n
+    if (type.match(/[\\[\\(]/)) return matchBrackets(type, expression);\n
+    if (type.match(/[\\]\\)\\};,]/)) return pass();\n
+    if (type == "if-style") return cont(expression, expression);\n
+    if (type == "else-style" || type == "op") return cont(expression);\n
+    if (type == "for") return cont(pattern, maybetype, inop, expression, expression);\n
+    if (type == "alt") return cont(expression, altbody);\n
+    if (type == "fn") return cont(fndef);\n
+    if (type == "macro") return cont(macro);\n
+    return cont();\n
+  }\n
+  function maybeop(type) {\n
+    if (content == ".") return cont(maybeprop);\n
+    if (content == "::<"){return cont(typarams, maybeop);}\n
+    if (type == "op" || content == ":") return cont(expression);\n
+    if (type == "(" || type == "[") return matchBrackets(type, expression);\n
+    return pass();\n
+  }\n
+  function maybeprop() {\n
+    if (content.match(/^\\w+$/)) {cx.marked = "variable"; return cont(maybeop);}\n
+    return pass(expression);\n
+  }\n
+  function exprbrace(type) {\n
+    if (type == "op") {\n
+      if (content == "|") return cont(blockvars, poplex, pushlex("}", "block"), block);\n
+      if (content == "||") return cont(poplex, pushlex("}", "block"), block);\n
+    }\n
+    if (content == "mutable" || (content.match(/^\\w+$/) && cx.stream.peek() == ":"\n
+                                 && !cx.stream.match("::", false)))\n
+      return pass(record_of(expression));\n
+    return pass(block);\n
+  }\n
+  function record_of(comb) {\n
+    function ro(type) {\n
+      if (content == "mutable" || content == "with") {cx.marked = "keyword"; return cont(ro);}\n
+      if (content.match(/^\\w*$/)) {cx.marked = "variable"; return cont(ro);}\n
+      if (type == ":") return cont(comb, ro);\n
+      if (type == "}") return cont();\n
+      return cont(ro);\n
+    }\n
+    return ro;\n
+  }\n
+  function blockvars(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(blockvars);}\n
+    if (type == "op" && content == "|") return cont();\n
+    return cont(blockvars);\n
+  }\n
+\n
+  function letdef1(type) {\n
+    if (type.match(/[\\]\\)\\};]/)) return cont();\n
+    if (content == "=") return cont(expression, letdef2);\n
+    if (type == ",") return cont(letdef1);\n
+    return pass(pattern, maybetype, letdef1);\n
+  }\n
+  function letdef2(type) {\n
+    if (type.match(/[\\]\\)\\};,]/)) return pass(letdef1);\n
+    else return pass(expression, letdef2);\n
+  }\n
+  function maybetype(type) {\n
+    if (type == ":") return cont(typecx, rtype, valcx);\n
+    return pass();\n
+  }\n
+  function inop(type) {\n
+    if (type == "name" && content == "in") {cx.marked = "keyword"; return cont();}\n
+    return pass();\n
+  }\n
+  function fndef(type) {\n
+    if (content == "@" || content == "~") {cx.marked = "keyword"; return cont(fndef);}\n
+    if (type == "name") {cx.marked = "def"; return cont(fndef);}\n
+    if (content == "<") return cont(typarams, fndef);\n
+    if (type == "{") return pass(expression);\n
+    if (type == "(") return cont(pushlex(")"), commasep(argdef, ")"), poplex, fndef);\n
+    if (type == "->") return cont(typecx, rtype, valcx, fndef);\n
+    if (type == ";") return cont();\n
+    return cont(fndef);\n
+  }\n
+  function tydef(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(tydef);}\n
+    if (content == "<") return cont(typarams, tydef);\n
+    if (content == "=") return cont(typecx, rtype, valcx);\n
+    return cont(tydef);\n
+  }\n
+  function enumdef(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(enumdef);}\n
+    if (content == "<") return cont(typarams, enumdef);\n
+    if (content == "=") return cont(typecx, rtype, valcx, endstatement);\n
+    if (type == "{") return cont(pushlex("}"), typecx, enumblock, valcx, poplex);\n
+    return cont(enumdef);\n
+  }\n
+  function enumblock(type) {\n
+    if (type == "}") return cont();\n
+    if (type == "(") return cont(pushlex(")"), commasep(rtype, ")"), poplex, enumblock);\n
+    if (content.match(/^\\w+$/)) cx.marked = "def";\n
+    return cont(enumblock);\n
+  }\n
+  function mod(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(mod);}\n
+    if (type == "{") return cont(pushlex("}"), block, poplex);\n
+    return pass();\n
+  }\n
+  function iface(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(iface);}\n
+    if (content == "<") return cont(typarams, iface);\n
+    if (type == "{") return cont(pushlex("}"), block, poplex);\n
+    return pass();\n
+  }\n
+  function impl(type) {\n
+    if (content == "<") return cont(typarams, impl);\n
+    if (content == "of" || content == "for") {cx.marked = "keyword"; return cont(rtype, impl);}\n
+    if (type == "name") {cx.marked = "def"; return cont(impl);}\n
+    if (type == "{") return cont(pushlex("}"), block, poplex);\n
+    return pass();\n
+  }\n
+  function typarams() {\n
+    if (content == ">") return cont();\n
+    if (content == ",") return cont(typarams);\n
+    if (content == ":") return cont(rtype, typarams);\n
+    return pass(rtype, typarams);\n
+  }\n
+  function argdef(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(argdef);}\n
+    if (type == ":") return cont(typecx, rtype, valcx);\n
+    return pass();\n
+  }\n
+  function rtype(type) {\n
+    if (type == "name") {cx.marked = "variable-3"; return cont(rtypemaybeparam); }\n
+    if (content == "mutable") {cx.marked = "keyword"; return cont(rtype);}\n
+    if (type == "atom") return cont(rtypemaybeparam);\n
+    if (type == "op" || type == "obj") return cont(rtype);\n
+    if (type == "fn") return cont(fntype);\n
+    if (type == "{") return cont(pushlex("{"), record_of(rtype), poplex);\n
+    return matchBrackets(type, rtype);\n
+  }\n
+  function rtypemaybeparam() {\n
+    if (content == "<") return cont(typarams);\n
+    return pass();\n
+  }\n
+  function fntype(type) {\n
+    if (type == "(") return cont(pushlex("("), commasep(rtype, ")"), poplex, fntype);\n
+    if (type == "->") return cont(rtype);\n
+    return pass();\n
+  }\n
+  function pattern(type) {\n
+    if (type == "name") {cx.marked = "def"; return cont(patternmaybeop);}\n
+    if (type == "atom") return cont(patternmaybeop);\n
+    if (type == "op") return cont(pattern);\n
+    if (type.match(/[\\]\\)\\};,]/)) return pass();\n
+    return matchBrackets(type, pattern);\n
+  }\n
+  function patternmaybeop(type) {\n
+    if (type == "op" && content == ".") return cont();\n
+    if (content == "to") {cx.marked = "keyword"; return cont(pattern);}\n
+    else return pass();\n
+  }\n
+  function altbody(type) {\n
+    if (type == "{") return cont(pushlex("}", "alt"), altblock1, poplex);\n
+    return pass();\n
+  }\n
+  function altblock1(type) {\n
+    if (type == "}") return cont();\n
+    if (type == "|") return cont(altblock1);\n
+    if (content == "when") {cx.marked = "keyword"; return cont(expression, altblock2);}\n
+    if (type.match(/[\\]\\);,]/)) return cont(altblock1);\n
+    return pass(pattern, altblock2);\n
+  }\n
+  function altblock2(type) {\n
+    if (type == "{") return cont(pushlex("}", "alt"), block, poplex, altblock1);\n
+    else return pass(altblock1);\n
+  }\n
+\n
+  function macro(type) {\n
+    if (type.match(/[\\[\\(\\{]/)) return matchBrackets(type, expression);\n
+    return pass();\n
+  }\n
+  function matchBrackets(type, comb) {\n
+    if (type == "[") return cont(pushlex("]"), commasep(comb, "]"), poplex);\n
+    if (type == "(") return cont(pushlex(")"), commasep(comb, ")"), poplex);\n
+    if (type == "{") return cont(pushlex("}"), commasep(comb, "}"), poplex);\n
+    return cont();\n
+  }\n
+\n
+  function parse(state, stream, style) {\n
+    var cc = state.cc;\n
+    // Communicate our context to the combinators.\n
+    // (Less wasteful than consing up a hundred closures on every call.)\n
+    cx.state = state; cx.stream = stream; cx.marked = null, cx.cc = cc;\n
+\n
+    while (true) {\n
+      var combinator = cc.length ? cc.pop() : block;\n
+      if (combinator(tcat)) {\n
+        while(cc.length && cc[cc.length - 1].lex)\n
+          cc.pop()();\n
+        return cx.marked || style;\n
+      }\n
+    }\n
+  }\n
+\n
+  return {\n
+    startState: function() {\n
+      return {\n
+        tokenize: tokenBase,\n
+        cc: [],\n
+        lexical: {indented: -indentUnit, column: 0, type: "top", align: false},\n
+        keywords: valKeywords,\n
+        indented: 0\n
+      };\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      if (stream.sol()) {\n
+        if (!state.lexical.hasOwnProperty("align"))\n
+          state.lexical.align = false;\n
+        state.indented = stream.indentation();\n
+      }\n
+      if (stream.eatSpace()) return null;\n
+      tcat = content = null;\n
+      var style = state.tokenize(stream, state);\n
+      if (style == "comment") return style;\n
+      if (!state.lexical.hasOwnProperty("align"))\n
+        state.lexical.align = true;\n
+      if (tcat == "prefix") return style;\n
+      if (!content) content = stream.current();\n
+      return parse(state, stream, style);\n
+    },\n
+\n
+    indent: function(state, textAfter) {\n
+      if (state.tokenize != tokenBase) return 0;\n
+      var firstChar = textAfter && textAfter.charAt(0), lexical = state.lexical,\n
+          type = lexical.type, closing = firstChar == type;\n
+      if (type == "stat") return lexical.indented + indentUnit;\n
+      if (lexical.align) return lexical.column + (closing ? 0 : 1);\n
+      return lexical.indented + (closing ? 0 : (lexical.info == "alt" ? altIndentUnit : indentUnit));\n
+    },\n
+\n
+    electricChars: "{}",\n
+    blockCommentStart: "/*",\n
+    blockCommentEnd: "*/",\n
+    lineComment: "//",\n
+    fold: "brace"\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-rustsrc", "rust");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15543</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

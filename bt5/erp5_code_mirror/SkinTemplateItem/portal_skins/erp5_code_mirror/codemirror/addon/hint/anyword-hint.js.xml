@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403075.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>anyword-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var WORD = /[\\w$]+/, RANGE = 500;\n
+\n
+  CodeMirror.registerHelper("hint", "anyword", function(editor, options) {\n
+    var word = options && options.word || WORD;\n
+    var range = options && options.range || RANGE;\n
+    var cur = editor.getCursor(), curLine = editor.getLine(cur.line);\n
+    var start = cur.ch, end = start;\n
+    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;\n
+    while (start && word.test(curLine.charAt(start - 1))) --start;\n
+    var curWord = start != end && curLine.slice(start, end);\n
+\n
+    var list = [], seen = {};\n
+    var re = new RegExp(word.source, "g");\n
+    for (var dir = -1; dir <= 1; dir += 2) {\n
+      var line = cur.line, endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;\n
+      for (; line != endLine; line += dir) {\n
+        var text = editor.getLine(line), m;\n
+        while (m = re.exec(text)) {\n
+          if (line == cur.line && m[0] === curWord) continue;\n
+          if ((!curWord || m[0].lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, m[0])) {\n
+            seen[m[0]] = true;\n
+            list.push(m[0]);\n
+          }\n
+        }\n
+      }\n
+    }\n
+    return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};\n
+  });\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1304</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

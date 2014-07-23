@@ -1,0 +1,355 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>AUTHORS</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>List of CodeMirror contributors. Updated before every release.\n
+\n
+4r2r\n
+Aaron Brooks\n
+Abe Fettig\n
+Adam King\n
+adanlobato\n
+Adán Lobato\n
+aeroson\n
+Ahmad Amireh\n
+Ahmad M. Zawawi\n
+ahoward\n
+Akeksandr Motsjonov\n
+Alberto Pose\n
+Albert Xing\n
+Alexander Pavlov\n
+Alexander Schepanovski\n
+Alexander Solovyov\n
+alexey-k\n
+Alex Piggott\n
+Amsul\n
+Amy\n
+Ananya Sen\n
+anaran\n
+AndersMad\n
+Anderson Mesquita\n
+Andre von Houck\n
+Andrey Lushnikov\n
+Andy Joslin\n
+Andy Kimball\n
+Andy Li\n
+angelozerr\n
+angelo.zerr@gmail.com\n
+Ankit Ahuja\n
+Ansel Santosa\n
+Anthony Grimes\n
+Anton Kovalyov\n
+areos\n
+AtomicPages LLC\n
+Atul Bhouraskar\n
+Aurelian Oancea\n
+Bastian Müller\n
+benbro\n
+Beni Cherniavsky-Paskin\n
+Benjamin DeCoste\n
+Ben Keen\n
+Bernhard Sirlinger\n
+Billy Moon\n
+Blaine G\n
+boomyjee\n
+borawjm\n
+Brandon Frohs\n
+Brandon Wamboldt\n
+Brett Zamir\n
+Brian Sletten\n
+Bruce Mitchener\n
+Chandra Sekhar Pydi\n
+Charles Skelton\n
+Chris Coyier\n
+Chris Granger\n
+Chris Houseknecht\n
+Chris Morgan\n
+Christopher Brown\n
+ciaranj\n
+CodeAnimal\n
+ComFreek\n
+Curtis Gagliardi\n
+dagsta\n
+Dan Heberden\n
+Daniel, Dao Quang Minh\n
+Daniel Faust\n
+Daniel Huigens\n
+Daniel KJ\n
+Daniel Neel\n
+Daniel Parnell\n
+Danny Yoo\n
+Darius Roberts\n
+David Mignot\n
+David Pathakjee\n
+deebugger\n
+Deep Thought\n
+domagoj412\n
+Dominator008\n
+Domizio Demichelis\n
+Drew Bratcher\n
+Drew Hintz\n
+Drew Khoury\n
+Dror BG\n
+duralog\n
+eborden\n
+edsharp\n
+ekhaled\n
+Enam Mijbah Noor\n
+Eric Allam\n
+eustas\n
+Fabien O\'Carroll\n
+Fabio Zendhi Nagao\n
+Fauntleroy\n
+fbuchinger\n
+feizhang365\n
+Felipe Lalanne\n
+Felix Raab\n
+Filip Noetzel\n
+flack\n
+ForbesLindesay\n
+Forbes Lindesay\n
+Ford_Lawnmower\n
+Frank Wiegand\n
+Gabriel Nahmias\n
+galambalazs\n
+Gautam Mehta\n
+Glenn Jorde\n
+Glenn Ruehle\n
+Golevka\n
+Gordon Smith\n
+Grant Skinner\n
+greengiant\n
+Guillaume Massé\n
+Guillaume Massé\n
+Hans Engel\n
+Hardest\n
+Hasan Karahan\n
+hitsthings\n
+Hocdoc\n
+Ian Beck\n
+Ian Dickinson\n
+Ian Wehrman\n
+Ian Wetherbee\n
+Ice White\n
+ICHIKAWA, Yuji\n
+ilvalle\n
+Ingo Richter\n
+Irakli Gozalishvili\n
+Ivan Kurnosov\n
+Jacob Lee\n
+Jakob Miland\n
+Jakub Vrana\n
+James Campos\n
+James Thorne\n
+Jamie Hill\n
+Jan Jongboom\n
+jankeromnes\n
+Jan Keromnes\n
+Jan Odvarko\n
+Jan T. Sott\n
+Jason\n
+Jason Grout\n
+Jason Johnston\n
+Jason San Jose\n
+Jason Siefken\n
+Jean Boussier\n
+jeffkenton\n
+Jeff Pickhardt\n
+jem (graphite)\n
+Jochen Berger\n
+Johan Ask\n
+John Connor\n
+John Lees-Miller\n
+John Snelson\n
+John Van Der Loo\n
+Jonathan Malmaud\n
+jongalloway\n
+Jon Malmaud\n
+Joost-Wim Boekesteijn\n
+Joseph Pecoraro\n
+Joshua Newman\n
+jots\n
+jsoojeon\n
+Juan Benavides Romero\n
+Jucovschi Constantin\n
+Juho Vuori\n
+jwallers@gmail.com\n
+kaniga\n
+Ken Newman\n
+Ken Rockot\n
+Kevin Sawicki\n
+Klaus Silveira\n
+Koh Zi Han, Cliff\n
+komakino\n
+Konstantin Lopuhin\n
+koops\n
+ks-ifware\n
+kubelsmieci\n
+Lanny\n
+Laszlo Vidacs\n
+leaf corcoran\n
+Leonya Khachaturov\n
+Liam Newman\n
+LM\n
+Lorenzo Stoakes\n
+Luciano Longo\n
+lynschinzer\n
+Maksim Lin\n
+Maksym Taran\n
+Manuel Rego Casasnovas\n
+Marat Dreizin\n
+Marco Aurélio\n
+Marco Munizaga\n
+Marijn Haverbeke\n
+Mario Pietsch\n
+Mark Lentczner\n
+Marko Bonaci\n
+Martin Balek\n
+Martín Gaitán\n
+Martin Hasoň\n
+Mason Malone\n
+Mateusz Paprocki\n
+mats cronqvist\n
+Matthew Beale\n
+Matthias BUSSONNIER\n
+Matt McDonald\n
+Matt Pass\n
+Matt Sacks\n
+Maximilian Hils\n
+Maxim Kraev\n
+Max Kirsch\n
+mbarkhau\n
+Metatheos\n
+Micah Dubinko\n
+Michael Lehenbauer\n
+Michael Zhou\n
+Mighty Guava\n
+Miguel Castillo\n
+Mike\n
+Mike Brevoort\n
+Mike Diaz\n
+Mike Ivanov\n
+Mike Kadin\n
+MinRK\n
+Miraculix87\n
+misfo\n
+mloginov\n
+mps\n
+mtaran-google\n
+Narciso Jaramillo\n
+Nathan Williams\n
+ndr\n
+nerbert\n
+nextrevision\n
+nguillaumin\n
+Nicholas Bollweg\n
+Niels van Groningen\n
+Nikita Beloglazov\n
+Nikita Vasilyev\n
+Nikolay Kostov\n
+nlwillia\n
+pablo\n
+Page\n
+Patrick Strawderman\n
+Paul Garvin\n
+Paul Ivanov\n
+Pavel Feldman\n
+Pavel Strashkin\n
+Paweł Bartkiewicz\n
+peteguhl\n
+peterkroon\n
+Peter Kroon\n
+prasanthj\n
+Prasanth J\n
+Rahul\n
+Randy Edmunds\n
+Rasmus Erik Voel Jensen\n
+Richard Z.H. Wang\n
+robertop23\n
+Robert Plummer\n
+Ruslan Osmanov\n
+Ryan Prior\n
+sabaca\n
+Samuel Ainsworth\n
+sandeepshetty\n
+santec\n
+Sascha Peilicke\n
+satchmorun\n
+sathyamoorthi\n
+SCLINIC\\jdecker\n
+Sebastian Zaha\n
+shaund\n
+shaun gilchrist\n
+Shawn A\n
+sheopory\n
+Shiv Deepak\n
+Shmuel Englard\n
+soliton4\n
+sonson\n
+spastorelli\n
+Stanislav Oaserele\n
+Stas Kobzar\n
+Stefan Borsje\n
+Steffen Beyer\n
+Steve O\'Hara\n
+stoskov\n
+Taha Jahangir\n
+Tarmil\n
+tfjgeorge\n
+Thaddee Tyl\n
+think\n
+Thomas Dvornik\n
+Thomas Schmid\n
+Tim Baumann\n
+Timothy Farrell\n
+Timothy Hatcher\n
+TobiasBg\n
+Tomas-A\n
+Tomas Varaneckas\n
+Tom Erik Støwer\n
+Tom MacWright\n
+Tony Jian\n
+Travis Heppe\n
+Triangle717\n
+Vestimir Markov\n
+vf\n
+Volker Mische\n
+wenli\n
+Wesley Wiser\n
+William Jamieson\n
+Wojtek Ptak\n
+Xavier Mendez\n
+YNH Webdev\n
+Yunchi Luo\n
+Yuvi Panda\n
+Zachary Dremann\n
+zziuni\n
+魏鹏刚\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

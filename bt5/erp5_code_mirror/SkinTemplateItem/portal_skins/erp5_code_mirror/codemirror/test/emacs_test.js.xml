@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403104.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>emacs_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var Pos = CodeMirror.Pos;\n
+  namespace = "emacs_";\n
+\n
+  var eventCache = {};\n
+  function fakeEvent(keyName) {\n
+    var event = eventCache[key];\n
+    if (event) return event;\n
+\n
+    var ctrl, shift, alt;\n
+    var key = keyName.replace(/\\w+-/g, function(type) {\n
+      if (type == "Ctrl-") ctrl = true;\n
+      else if (type == "Alt-") alt = true;\n
+      else if (type == "Shift-") shift = true;\n
+      return "";\n
+    });\n
+    var code;\n
+    for (var c in CodeMirror.keyNames)\n
+      if (CodeMirror.keyNames[c] == key) { code = c; break; }\n
+    if (c == null) throw new Error("Unknown key: " + key);\n
+\n
+    return eventCache[keyName] = {\n
+      type: "keydown", keyCode: code, ctrlKey: ctrl, shiftKey: shift, altKey: alt,\n
+      preventDefault: function(){}, stopPropagation: function(){}\n
+    };\n
+  }\n
+\n
+  function sim(name, start /*, actions... */) {\n
+    var keys = Array.prototype.slice.call(arguments, 2);\n
+    testCM(name, function(cm) {\n
+      for (var i = 0; i < keys.length; ++i) {\n
+        var cur = keys[i];\n
+        if (cur instanceof Pos) cm.setCursor(cur);\n
+        else if (cur.call) cur(cm);\n
+        else cm.triggerOnKeyDown(fakeEvent(cur));\n
+      }\n
+    }, {keyMap: "emacs", value: start, mode: "javascript"});\n
+  }\n
+\n
+  function at(line, ch) { return function(cm) { eqPos(cm.getCursor(), Pos(line, ch)); }; }\n
+  function txt(str) { return function(cm) { eq(cm.getValue(), str); }; }\n
+\n
+  sim("motionHSimple", "abc", "Ctrl-F", "Ctrl-F", "Ctrl-B", at(0, 1));\n
+  sim("motionHMulti", "abcde",\n
+      "Ctrl-4", "Ctrl-F", at(0, 4), "Ctrl--", "Ctrl-2", "Ctrl-F", at(0, 2),\n
+      "Ctrl-5", "Ctrl-B", at(0, 0));\n
+\n
+  sim("motionHWord", "abc. def ghi",\n
+      "Alt-F", at(0, 3), "Alt-F", at(0, 8),\n
+      "Ctrl-B", "Alt-B", at(0, 5), "Alt-B", at(0, 0));\n
+  sim("motionHWordMulti", "abc. def ghi ",\n
+      "Ctrl-3", "Alt-F", at(0, 12), "Ctrl-2", "Alt-B", at(0, 5),\n
+      "Ctrl--", "Alt-B", at(0, 8));\n
+\n
+  sim("motionVSimple", "a\\nb\\nc\\n", "Ctrl-N", "Ctrl-N", "Ctrl-P", at(1, 0));\n
+  sim("motionVMulti", "a\\nb\\nc\\nd\\ne\\n",\n
+      "Ctrl-2", "Ctrl-N", at(2, 0), "Ctrl-F", "Ctrl--", "Ctrl-N", at(1, 1),\n
+      "Ctrl--", "Ctrl-3", "Ctrl-P", at(4, 1));\n
+\n
+  sim("killYank", "abc\\ndef\\nghi",\n
+      "Ctrl-F", "Ctrl-Space", "Ctrl-N", "Ctrl-N", "Ctrl-W", "Ctrl-E", "Ctrl-Y",\n
+      txt("ahibc\\ndef\\ng"));\n
+  sim("killRing", "abcdef",\n
+      "Ctrl-Space", "Ctrl-F", "Ctrl-W", "Ctrl-Space", "Ctrl-F", "Ctrl-W",\n
+      "Ctrl-Y", "Alt-Y",\n
+      txt("acdef"));\n
+  sim("copyYank", "abcd",\n
+      "Ctrl-Space", "Ctrl-E", "Alt-W", "Ctrl-Y",\n
+      txt("abcdabcd"));\n
+\n
+  sim("killLineSimple", "foo\\nbar", "Ctrl-F", "Ctrl-K", txt("f\\nbar"));\n
+  sim("killLineEmptyLine", "foo\\n  \\nbar", "Ctrl-N", "Ctrl-K", txt("foo\\nbar"));\n
+  sim("killLineMulti", "foo\\nbar\\nbaz",\n
+      "Ctrl-F", "Ctrl-F", "Ctrl-K", "Ctrl-K", "Ctrl-K", "Ctrl-A", "Ctrl-Y",\n
+      txt("o\\nbarfo\\nbaz"));\n
+\n
+  sim("moveByParagraph", "abc\\ndef\\n\\n\\nhij\\nklm\\n\\n",\n
+      "Ctrl-F", "Ctrl-Down", at(2, 0), "Ctrl-Down", at(6, 0),\n
+      "Ctrl-N", "Ctrl-Up", at(3, 0), "Ctrl-Up", at(0, 0),\n
+      Pos(1, 2), "Ctrl-Down", at(2, 0), Pos(4, 2), "Ctrl-Up", at(3, 0));\n
+  sim("moveByParagraphMulti", "abc\\n\\ndef\\n\\nhij\\n\\nklm",\n
+      "Ctrl-U", "2", "Ctrl-Down", at(3, 0),\n
+      "Shift-Alt-.", "Ctrl-3", "Ctrl-Up", at(1, 0));\n
+\n
+  sim("moveBySentence", "sentence one! sentence\\ntwo\\n\\nparagraph two",\n
+      "Alt-E", at(0, 13), "Alt-E", at(1, 3), "Ctrl-F", "Alt-A", at(0, 13));\n
+\n
+  sim("moveByExpr", "function foo(a, b) {}",\n
+      "Ctrl-Alt-F", at(0, 8), "Ctrl-Alt-F", at(0, 12), "Ctrl-Alt-F", at(0, 18),\n
+      "Ctrl-Alt-B", at(0, 12), "Ctrl-Alt-B", at(0, 9));\n
+  sim("moveByExprMulti", "foo bar baz bug",\n
+      "Ctrl-2", "Ctrl-Alt-F", at(0, 7),\n
+      "Ctrl--", "Ctrl-Alt-F", at(0, 4),\n
+      "Ctrl--", "Ctrl-2", "Ctrl-Alt-B", at(0, 11));\n
+  sim("delExpr", "var x = [\\n  a,\\n  b\\n  c\\n];",\n
+      Pos(0, 8), "Ctrl-Alt-K", txt("var x = ;"), "Ctrl-/",\n
+      Pos(4, 1), "Ctrl-Alt-Backspace", txt("var x = ;"));\n
+  sim("delExprMulti", "foo bar baz",\n
+      "Ctrl-2", "Ctrl-Alt-K", txt(" baz"),\n
+      "Ctrl-/", "Ctrl-E", "Ctrl-2", "Ctrl-Alt-Backspace", txt("foo "));\n
+\n
+  sim("justOneSpace", "hi      bye  ",\n
+      Pos(0, 4), "Alt-Space", txt("hi bye  "),\n
+      Pos(0, 4), "Alt-Space", txt("hi b ye  "),\n
+      "Ctrl-A", "Alt-Space", "Ctrl-E", "Alt-Space", txt(" hi b ye "));\n
+\n
+  sim("openLine", "foo bar", "Alt-F", "Ctrl-O", txt("foo\\n bar"))\n
+\n
+  sim("transposeChar", "abcd\\n\\ne",\n
+      "Ctrl-F", "Ctrl-T", "Ctrl-T", txt("bcad\\n\\ne"), at(0, 3),\n
+      "Ctrl-F", "Ctrl-T", "Ctrl-T", "Ctrl-T", txt("bcda\\n\\ne"), at(0, 4),\n
+      "Ctrl-F", "Ctrl-T", txt("bcd\\na\\ne"), at(1, 1));\n
+\n
+  sim("manipWordCase", "foo BAR bAZ",\n
+      "Alt-C", "Alt-L", "Alt-U", txt("Foo bar BAZ"),\n
+      "Ctrl-A", "Alt-U", "Alt-L", "Alt-C", txt("FOO bar Baz"));\n
+  sim("manipWordCaseMulti", "foo Bar bAz",\n
+      "Ctrl-2", "Alt-U", txt("FOO BAR bAz"),\n
+      "Ctrl-A", "Ctrl-3", "Alt-C", txt("Foo Bar Baz"));\n
+\n
+  sim("upExpr", "foo {\\n  bar[];\\n  baz(blah);\\n}",\n
+      Pos(2, 7), "Ctrl-Alt-U", at(2, 5), "Ctrl-Alt-U", at(0, 4));\n
+  sim("transposeExpr", "do foo[bar] dah",\n
+      Pos(0, 6), "Ctrl-Alt-T", txt("do [bar]foo dah"));\n
+\n
+  sim("clearMark", "abcde", Pos(0, 2), "Ctrl-Space", "Ctrl-F", "Ctrl-F",\n
+      "Ctrl-G", "Ctrl-W", txt("abcde"));\n
+\n
+  testCM("save", function(cm) {\n
+    var saved = false;\n
+    CodeMirror.commands.save = function(cm) { saved = cm.getValue(); };\n
+    cm.triggerOnKeyDown(fakeEvent("Ctrl-X"));\n
+    cm.triggerOnKeyDown(fakeEvent("Ctrl-S"));\n
+    is(saved, "hi");\n
+  }, {value: "hi", keyMap: "emacs"});\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5475</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

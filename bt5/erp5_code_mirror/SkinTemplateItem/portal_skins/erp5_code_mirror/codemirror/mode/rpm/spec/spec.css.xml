@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-default span.cm-preamble {color: #b26818; font-weight: bold;}\n
+.cm-s-default span.cm-macro {color: #b218b2;}\n
+.cm-s-default span.cm-section {color: green; font-weight: bold;}\n
+.cm-s-default span.cm-script {color: red;}\n
+.cm-s-default span.cm-issue {color: yellow;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

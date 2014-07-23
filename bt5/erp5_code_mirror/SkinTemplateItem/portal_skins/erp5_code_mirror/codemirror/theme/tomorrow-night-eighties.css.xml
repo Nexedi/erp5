@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tomorrow-night-eighties.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\n
+\n
+    Name:       Tomorrow Night - Eighties\n
+    Author:     Chris Kempson\n
+\n
+    CodeMirror template by Jan T. Sott (https://github.com/idleberg/base16-codemirror)\n
+    Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)\n
+\n
+*/\n
+\n
+.cm-s-tomorrow-night-eighties.CodeMirror {background: #000000; color: #CCCCCC;}\n
+.cm-s-tomorrow-night-eighties div.CodeMirror-selected {background: #2D2D2D !important;}\n
+.cm-s-tomorrow-night-eighties .CodeMirror-gutters {background: #000000; border-right: 0px;}\n
+.cm-s-tomorrow-night-eighties .CodeMirror-linenumber {color: #515151;}\n
+.cm-s-tomorrow-night-eighties .CodeMirror-cursor {border-left: 1px solid #6A6A6A !important;}\n
+\n
+.cm-s-tomorrow-night-eighties span.cm-comment {color: #d27b53;}\n
+.cm-s-tomorrow-night-eighties span.cm-atom {color: #a16a94;}\n
+.cm-s-tomorrow-night-eighties span.cm-number {color: #a16a94;}\n
+\n
+.cm-s-tomorrow-night-eighties span.cm-property, .cm-s-tomorrow-night-eighties span.cm-attribute {color: #99cc99;}\n
+.cm-s-tomorrow-night-eighties span.cm-keyword {color: #f2777a;}\n
+.cm-s-tomorrow-night-eighties span.cm-string {color: #ffcc66;}\n
+\n
+.cm-s-tomorrow-night-eighties span.cm-variable {color: #99cc99;}\n
+.cm-s-tomorrow-night-eighties span.cm-variable-2 {color: #6699cc;}\n
+.cm-s-tomorrow-night-eighties span.cm-def {color: #f99157;}\n
+.cm-s-tomorrow-night-eighties span.cm-bracket {color: #CCCCCC;}\n
+.cm-s-tomorrow-night-eighties span.cm-tag {color: #f2777a;}\n
+.cm-s-tomorrow-night-eighties span.cm-link {color: #a16a94;}\n
+.cm-s-tomorrow-night-eighties span.cm-error {background: #f2777a; color: #6A6A6A;}\n
+\n
+.cm-s-tomorrow-night-eighties .CodeMirror-activeline-background {background: #343600 !important;}\n
+.cm-s-tomorrow-night-eighties .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

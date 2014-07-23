@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403084.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>logo.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n
+<!-- Created with Inkscape (http://www.inkscape.org/) -->\n
+\n
+<svg\n
+   xmlns:dc="http://purl.org/dc/elements/1.1/"\n
+   xmlns:cc="http://creativecommons.org/ns#"\n
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n
+   xmlns:svg="http://www.w3.org/2000/svg"\n
+   xmlns="http://www.w3.org/2000/svg"\n
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n
+   width="744.09448819"\n
+   height="1052.3622047"\n
+   id="svg2"\n
+   version="1.1"\n
+   inkscape:version="0.48.4 r9939"\n
+   inkscape:export-filename="/home/marijn/src/js/codemirror/doc/logo.png"\n
+   inkscape:export-xdpi="27.450405"\n
+   inkscape:export-ydpi="27.450405"\n
+   sodipodi:docname="logo.svg">\n
+  <defs\n
+     id="defs4">\n
+    <clipPath\n
+       clipPathUnits="userSpaceOnUse"\n
+       id="clipPath4138">\n
+      <path\n
+         transform="matrix(1.05,0,0,1,-290.76164,27.927128)"\n
+         d="m 705.08647,231.61324 a 70.710678,104.55079 0 1 1 -141.42135,0 70.710678,104.55079 0 1 1 141.42135,0 z"\n
+         sodipodi:ry="104.55079"\n
+         sodipodi:rx="70.710678"\n
+         sodipodi:cy="231.61324"\n
+         sodipodi:cx="634.37579"\n
+         id="path4140"\n
+         style="fill:#ffffff;fill-opacity:1;stroke:none"\n
+         sodipodi:type="arc" />\n
+    </clipPath>\n
+  </defs>\n
+  <sodipodi:namedview\n
+     id="base"\n
+     pagecolor="#ffffff"\n
+     bordercolor="#666666"\n
+     borderopacity="1.0"\n
+     inkscape:pageopacity="0.0"\n
+     inkscape:pageshadow="2"\n
+     inkscape:zoom="1.4"\n
+     inkscape:cx="291.72812"\n
+     inkscape:cy="789.2497"\n
+     inkscape:document-units="px"\n
+     inkscape:current-layer="layer1"\n
+     showgrid="false"\n
+     inkscape:window-width="1600"\n
+     inkscape:window-height="875"\n
+     inkscape:window-x="0"\n
+     inkscape:window-y="25"\n
+     inkscape:window-maximized="0" />\n
+  <metadata\n
+     id="metadata7">\n
+    <rdf:RDF>\n
+      <cc:Work\n
+         rdf:about="">\n
+        <dc:format>image/svg+xml</dc:format>\n
+        <dc:type\n
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />\n
+        <dc:title></dc:title>\n
+      </cc:Work>\n
+    </rdf:RDF>\n
+  </metadata>\n
+  <g\n
+     inkscape:label="Layer 1"\n
+     inkscape:groupmode="layer"\n
+     id="layer1">\n
+    <text\n
+       xml:space="preserve"\n
+       style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#a21313;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"\n
+       x="247.48738"\n
+       y="163.42795"\n
+       id="text4006"\n
+       sodipodi:linespacing="125%"\n
+       clip-path="url(#clipPath4138)"\n
+       transform="translate(0.50507287,0.50507595)"><tspan\n
+         sodipodi:role="line"\n
+         id="tspan4008"\n
+         x="247.48738"\n
+         y="163.42795">    if (unit == &quot;char&quot;) moveOnce();</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="182.17795"\n
+         id="tspan4010">    else if (unit == &quot;column&quot;) moveOnce(true);</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="200.92795"\n
+         id="tspan4012">    else if (unit == &quot;word&quot; || unit == &quot;group&quot;) {</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="219.67795"\n
+         id="tspan4014">      var sawType = null, group = unit == &quot;group&quot;;</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="238.42795"\n
+         id="tspan4016">      for (var first = true;; first = false) {</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="257.17795"\n
+         id="tspan4018">        if (dir &lt; 0 &amp;&amp; !moveOnce(!first)) break;</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="275.92795"\n
+         id="tspan4020">        var cur = lineObj.text.charAt(ch) || &quot;\\n&quot;;</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="294.67795"\n
+         id="tspan4022">        var type = isWordChar(cur) ? &quot;w&quot;</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="313.42795"\n
+         id="tspan4024">          : !group ? null</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="332.17795"\n
+         id="tspan4026">          : /\\s/.test(cur) ? null</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="350.92795"\n
+         id="tspan4028">          : &quot;p&quot;; // punctuation</tspan><tspan\n
+         sodipodi:role="line"\n
+         x="247.48738"\n
+         y="369.67795"\n
+         id="tspan4046">        if (sawType &amp;&amp; sawType</tspan></text>\n
+    <path\n
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"\n
+       d="M 374.84375 136.8125 C 371.96854 136.71001 368.64305 137.97919 365.15625 142.03125 C 361.97051 140.84608 359.22347 140.35622 356.84375 140.375 C 346.53162 140.4564 343.3125 149.71875 343.3125 149.71875 C 326.2234 146.67934 325.625 162.59375 325.625 162.59375 C 309.43195 163.37101 312.4375 177.375 312.4375 177.375 C 295.67899 180.15651 301.1875 194 301.1875 194 C 284.10838 199.04575 293.4375 212.46875 293.4375 212.46875 C 293.4375 212.46875 277.68174 220.31271 288.1875 232.25 C 288.1875 232.25 273.81776 243.63282 285.90625 253.34375 C 285.90625 253.34375 271.57897 263.97487 286.40625 275.03125 C 286.40625 275.03125 273.84147 285.48036 289.96875 295.3125 C 289.96875 295.3125 278.92374 306.07108 295.59375 314.65625 C 295.59375 314.65625 287.70844 329.01862 305.96875 335.125 C 305.96875 335.125 300.47495 348.88874 319.09375 351.46875 C 319.09375 351.46875 315.90162 357.19564 321.59375 361.15625 C 321.59375 361.15625 310.04416 364.78661 312.5625 374.40625 C 313.83361 379.26171 316.82684 380.49158 323.53125 380.1875 C 323.53125 380.1875 329.096 395.54812 350.46875 398.96875 L 353.125 402.59375 C 353.125 402.59375 342.80592 409.64088 359.125 421.5 C 359.125 421.5 354.16126 425.74314 363.28125 433.34375 C 363.28125 433.34375 357.54117 438.3362 365.75 442.625 C 365.75 442.625 361.35822 445.96166 366.09375 448.125 C 366.09375 448.125 370.88293 490.18262 355.40625 534.4375 C 355.40625 534.4375 341.28721 542.04782 350.1875 556.96875 C 350.1875 556.96875 331.59675 562.24093 345.09375 575.53125 C 345.09375 575.53125 342.0547 585.56155 349.375 585.78125 C 349.375 585.78125 346.16048 592.54552 354.4375 594.5625 C 354.4375 594.5625 353.17883 603.88113 364.09375 602.1875 C 369.44813 608.40994 378.92733 608.70518 385.21875 602.34375 C 396.13361 604.03738 394.875 594.71875 394.875 594.71875 C 403.15197 592.70177 399.9375 585.9375 399.9375 585.9375 C 407.25781 585.7178 404.21875 575.6875 404.21875 575.6875 C 417.71573 562.39718 399.125 557.09375 399.125 557.09375 C 408.0253 542.17282 393.90625 534.5625 393.90625 534.5625 C 378.42953 490.30762 383.21875 448.28125 383.21875 448.28125 C 387.95421 446.11791 383.5625 442.78125 383.5625 442.78125 C 391.77129 438.49245 386.03125 433.5 386.03125 433.5 C 395.15125 425.89939 390.1875 421.65625 390.1875 421.65625 C 406.5066 409.79713 396.1875 402.75 396.1875 402.75 L 398.84375 399.125 C 420.21649 395.70437 425.78125 380.34375 425.78125 380.34375 C 432.48566 380.64783 435.47889 379.41796 436.75 374.5625 C 439.26834 364.94286 427.75 361.3125 427.75 361.3125 C 433.44213 357.35188 430.21875 351.59375 430.21875 351.59375 C 448.83755 349.01373 443.34375 335.28125 443.34375 335.28125 C 461.60406 329.17487 453.71875 314.78125 453.71875 314.78125 C 470.38876 306.19608 459.34375 295.46875 459.34375 295.46875 C 475.47103 285.63661 462.90625 275.1875 462.90625 275.1875 C 477.73353 264.13112 463.40625 253.5 463.40625 253.5 C 475.49474 243.78907 461.15625 232.375 461.15625 232.375 C 471.66201 220.43771 455.875 212.625 455.875 212.625 C 455.875 212.625 465.20411 199.202 448.125 194.15625 C 448.125 194.15625 453.66476 180.31276 436.90625 177.53125 C 436.90625 177.53125 439.88054 163.52726 423.6875 162.75 C 423.6875 162.75 423.0891 146.8356 406 149.875 C 406 149.875 401.14687 135.83532 384.15625 142.15625 C 384.15625 142.15625 380.33279 137.00815 374.84375 136.8125 z M 375.34375 155 C 416.3488 155 449.59375 201.78944 449.59375 259.53125 C 449.59375 317.27306 416.3488 364.09375 375.34375 364.09375 C 334.3387 364.09375 301.09375 317.27306 301.09375 259.53125 C 301.09375 201.78944 334.3387 155 375.34375 155 z "\n
+       id="rect3058" />\n
+    <text\n
+       sodipodi:linespacing="125%"\n
+       id="text4207"\n
+       y="491.91403"\n
+       x="149.69542"\n
+       style="font-size:95px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#a21313;fill-opacity:1;stroke:none;font-family:Source Sans;-inkscape-font-specification:Source Sans"\n
+       xml:space="preserve"\n
+       inkscape:export-xdpi="90"\n
+       inkscape:export-ydpi="90"><tspan\n
+         y="491.91403"\n
+         x="149.69542"\n
+         id="tspan4209"\n
+         sodipodi:role="line">Code  Mirror</tspan></text>\n
+  </g>\n
+</svg>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9055</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

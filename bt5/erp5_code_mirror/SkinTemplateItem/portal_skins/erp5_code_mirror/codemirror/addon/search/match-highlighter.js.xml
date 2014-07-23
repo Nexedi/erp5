@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403072.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>match-highlighter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Highlighting text that matches the selection\n
+//\n
+// Defines an option highlightSelectionMatches, which, when enabled,\n
+// will style strings that match the selection throughout the\n
+// document.\n
+//\n
+// The option can be set to true to simply enable it, or to a\n
+// {minChars, style, showToken} object to explicitly configure it.\n
+// minChars is the minimum amount of characters that should be\n
+// selected for the behavior to occur, and style is the token style to\n
+// apply to the matches. This will be prefixed by "cm-" to create an\n
+// actual CSS class name. showToken, when enabled, will cause the\n
+// current token to be highlighted when nothing is selected.\n
+\n
+(function() {\n
+  var DEFAULT_MIN_CHARS = 2;\n
+  var DEFAULT_TOKEN_STYLE = "matchhighlight";\n
+  var DEFAULT_DELAY = 100;\n
+\n
+  function State(options) {\n
+    if (typeof options == "object") {\n
+      this.minChars = options.minChars;\n
+      this.style = options.style;\n
+      this.showToken = options.showToken;\n
+      this.delay = options.delay;\n
+    }\n
+    if (this.style == null) this.style = DEFAULT_TOKEN_STYLE;\n
+    if (this.minChars == null) this.minChars = DEFAULT_MIN_CHARS;\n
+    if (this.delay == null) this.delay = DEFAULT_DELAY;\n
+    this.overlay = this.timeout = null;\n
+  }\n
+\n
+  CodeMirror.defineOption("highlightSelectionMatches", false, function(cm, val, old) {\n
+    if (old && old != CodeMirror.Init) {\n
+      var over = cm.state.matchHighlighter.overlay;\n
+      if (over) cm.removeOverlay(over);\n
+      clearTimeout(cm.state.matchHighlighter.timeout);\n
+      cm.state.matchHighlighter = null;\n
+      cm.off("cursorActivity", cursorActivity);\n
+    }\n
+    if (val) {\n
+      cm.state.matchHighlighter = new State(val);\n
+      highlightMatches(cm);\n
+      cm.on("cursorActivity", cursorActivity);\n
+    }\n
+  });\n
+\n
+  function cursorActivity(cm) {\n
+    var state = cm.state.matchHighlighter;\n
+    clearTimeout(state.timeout);\n
+    state.timeout = setTimeout(function() {highlightMatches(cm);}, state.delay);\n
+  }\n
+\n
+  function highlightMatches(cm) {\n
+    cm.operation(function() {\n
+      var state = cm.state.matchHighlighter;\n
+      if (state.overlay) {\n
+        cm.removeOverlay(state.overlay);\n
+        state.overlay = null;\n
+      }\n
+      if (!cm.somethingSelected() && state.showToken) {\n
+        var re = state.showToken === true ? /[\\w$]/ : state.showToken;\n
+        var cur = cm.getCursor(), line = cm.getLine(cur.line), start = cur.ch, end = start;\n
+        while (start && re.test(line.charAt(start - 1))) --start;\n
+        while (end < line.length && re.test(line.charAt(end))) ++end;\n
+        if (start < end)\n
+          cm.addOverlay(state.overlay = makeOverlay(line.slice(start, end), re, state.style));\n
+        return;\n
+      }\n
+      if (cm.getCursor("head").line != cm.getCursor("anchor").line) return;\n
+      var selection = cm.getSelection().replace(/^\\s+|\\s+$/g, "");\n
+      if (selection.length >= state.minChars)\n
+        cm.addOverlay(state.overlay = makeOverlay(selection, false, state.style));\n
+    });\n
+  }\n
+\n
+  function boundariesAround(stream, re) {\n
+    return (!stream.start || !re.test(stream.string.charAt(stream.start - 1))) &&\n
+      (stream.pos == stream.string.length || !re.test(stream.string.charAt(stream.pos)));\n
+  }\n
+\n
+  function makeOverlay(query, hasBoundary, style) {\n
+    return {token: function(stream) {\n
+      if (stream.match(query) &&\n
+          (!hasBoundary || boundariesAround(stream, hasBoundary)))\n
+        return style;\n
+      stream.next();\n
+      stream.skipTo(query.charAt(0)) || stream.skipToEnd();\n
+    }};\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3471</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

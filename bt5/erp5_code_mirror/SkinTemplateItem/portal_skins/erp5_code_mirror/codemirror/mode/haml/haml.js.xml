@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403091.51</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>haml.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  // full haml mode. This handled embeded ruby and html fragments too\n
+  CodeMirror.defineMode("haml", function(config) {\n
+    var htmlMode = CodeMirror.getMode(config, {name: "htmlmixed"});\n
+    var rubyMode = CodeMirror.getMode(config, "ruby");\n
+\n
+    function rubyInQuote(endQuote) {\n
+      return function(stream, state) {\n
+        var ch = stream.peek();\n
+        if (ch == endQuote && state.rubyState.tokenize.length == 1) {\n
+          // step out of ruby context as it seems to complete processing all the braces\n
+          stream.next();\n
+          state.tokenize = html;\n
+          return "closeAttributeTag";\n
+        } else {\n
+          return ruby(stream, state);\n
+        }\n
+      };\n
+    }\n
+\n
+    function ruby(stream, state) {\n
+      if (stream.match("-#")) {\n
+        stream.skipToEnd();\n
+        return "comment";\n
+      }\n
+      return rubyMode.token(stream, state.rubyState);\n
+    }\n
+\n
+    function html(stream, state) {\n
+      var ch = stream.peek();\n
+\n
+      // handle haml declarations. All declarations that cant be handled here\n
+      // will be passed to html mode\n
+      if (state.previousToken.style == "comment" ) {\n
+        if (state.indented > state.previousToken.indented) {\n
+          stream.skipToEnd();\n
+          return "commentLine";\n
+        }\n
+      }\n
+\n
+      if (state.startOfLine) {\n
+        if (ch == "!" && stream.match("!!")) {\n
+          stream.skipToEnd();\n
+          return "tag";\n
+        } else if (stream.match(/^%[\\w:#\\.]+=/)) {\n
+          state.tokenize = ruby;\n
+          return "hamlTag";\n
+        } else if (stream.match(/^%[\\w:]+/)) {\n
+          return "hamlTag";\n
+        } else if (ch == "/" ) {\n
+          stream.skipToEnd();\n
+          return "comment";\n
+        }\n
+      }\n
+\n
+      if (state.startOfLine || state.previousToken.style == "hamlTag") {\n
+        if ( ch == "#" || ch == ".") {\n
+          stream.match(/[\\w-#\\.]*/);\n
+          return "hamlAttribute";\n
+        }\n
+      }\n
+\n
+      // donot handle --> as valid ruby, make it HTML close comment instead\n
+      if (state.startOfLine && !stream.match("-->", false) && (ch == "=" || ch == "-" )) {\n
+        state.tokenize = ruby;\n
+        return null;\n
+      }\n
+\n
+      if (state.previousToken.style == "hamlTag" ||\n
+          state.previousToken.style == "closeAttributeTag" ||\n
+          state.previousToken.style == "hamlAttribute") {\n
+        if (ch == "(") {\n
+          state.tokenize = rubyInQuote(")");\n
+          return null;\n
+        } else if (ch == "{") {\n
+          state.tokenize = rubyInQuote("}");\n
+          return null;\n
+        }\n
+      }\n
+\n
+      return htmlMode.token(stream, state.htmlState);\n
+    }\n
+\n
+    return {\n
+      // default to html mode\n
+      startState: function() {\n
+        var htmlState = htmlMode.startState();\n
+        var rubyState = rubyMode.startState();\n
+        return {\n
+          htmlState: htmlState,\n
+          rubyState: rubyState,\n
+          indented: 0,\n
+          previousToken: { style: null, indented: 0},\n
+          tokenize: html\n
+        };\n
+      },\n
+\n
+      copyState: function(state) {\n
+        return {\n
+          htmlState : CodeMirror.copyState(htmlMode, state.htmlState),\n
+          rubyState: CodeMirror.copyState(rubyMode, state.rubyState),\n
+          indented: state.indented,\n
+          previousToken: state.previousToken,\n
+          tokenize: state.tokenize\n
+        };\n
+      },\n
+\n
+      token: function(stream, state) {\n
+        if (stream.sol()) {\n
+          state.indented = stream.indentation();\n
+          state.startOfLine = true;\n
+        }\n
+        if (stream.eatSpace()) return null;\n
+        var style = state.tokenize(stream, state);\n
+        state.startOfLine = false;\n
+        // dont record comment line as we only want to measure comment line with\n
+        // the opening comment block\n
+        if (style && style != "commentLine") {\n
+          state.previousToken = { style: style, indented: state.indented };\n
+        }\n
+        // if current state is ruby and the previous token is not `,` reset the\n
+        // tokenize to html\n
+        if (stream.eol() && state.tokenize == ruby) {\n
+          stream.backUp(1);\n
+          var ch = stream.peek();\n
+          stream.next();\n
+          if (ch && ch != ",") {\n
+            state.tokenize = html;\n
+          }\n
+        }\n
+        // reprocess some of the specific style tag when finish setting previousToken\n
+        if (style == "hamlTag") {\n
+          style = "tag";\n
+        } else if (style == "commentLine") {\n
+          style = "comment";\n
+        } else if (style == "hamlAttribute") {\n
+          style = "attribute";\n
+        } else if (style == "closeAttributeTag") {\n
+          style = null;\n
+        }\n
+        return style;\n
+      }\n
+    };\n
+  }, "htmlmixed", "ruby");\n
+\n
+  CodeMirror.defineMIME("text/x-haml", "haml");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4675</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xq-dark.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (C) 2011 by MarkLogic Corporation\n
+Author: Mike Brevoort <mike@brevoort.com>\n
+\n
+Permission is hereby granted, free of charge, to any person obtaining a copy\n
+of this software and associated documentation files (the "Software"), to deal\n
+in the Software without restriction, including without limitation the rights\n
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n
+copies of the Software, and to permit persons to whom the Software is\n
+furnished to do so, subject to the following conditions:\n
+\n
+The above copyright notice and this permission notice shall be included in\n
+all copies or substantial portions of the Software.\n
+\n
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n
+THE SOFTWARE.\n
+*/\n
+.cm-s-xq-dark.CodeMirror { background: #0a001f; color: #f8f8f8; }\n
+.cm-s-xq-dark .CodeMirror-selected { background: #27007A !important; }\n
+.cm-s-xq-dark .CodeMirror-gutters { background: #0a001f; border-right: 1px solid #aaa; }\n
+.cm-s-xq-dark .CodeMirror-linenumber { color: #f8f8f8; }\n
+.cm-s-xq-dark .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+\n
+.cm-s-xq-dark span.cm-keyword {color: #FFBD40;}\n
+.cm-s-xq-dark span.cm-atom {color: #6C8CD5;}\n
+.cm-s-xq-dark span.cm-number {color: #164;}\n
+.cm-s-xq-dark span.cm-def {color: #FFF; text-decoration:underline;}\n
+.cm-s-xq-dark span.cm-variable {color: #FFF;}\n
+.cm-s-xq-dark span.cm-variable-2 {color: #EEE;}\n
+.cm-s-xq-dark span.cm-variable-3 {color: #DDD;}\n
+.cm-s-xq-dark span.cm-property {}\n
+.cm-s-xq-dark span.cm-operator {}\n
+.cm-s-xq-dark span.cm-comment {color: gray;}\n
+.cm-s-xq-dark span.cm-string {color: #9FEE00;}\n
+.cm-s-xq-dark span.cm-meta {color: yellow;}\n
+.cm-s-xq-dark span.cm-qualifier {color: #FFF700;}\n
+.cm-s-xq-dark span.cm-builtin {color: #30a;}\n
+.cm-s-xq-dark span.cm-bracket {color: #cc7;}\n
+.cm-s-xq-dark span.cm-tag {color: #FFBD40;}\n
+.cm-s-xq-dark span.cm-attribute {color: #FFF700;}\n
+.cm-s-xq-dark span.cm-error {color: #f00;}\n
+\n
+.cm-s-xq-dark .CodeMirror-activeline-background {background: #27282E !important;}\n
+.cm-s-xq-dark .CodeMirror-matchingbracket {outline:1px solid grey; color:white !important;}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

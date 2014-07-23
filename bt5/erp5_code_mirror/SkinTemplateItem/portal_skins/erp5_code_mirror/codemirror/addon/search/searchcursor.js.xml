@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403072.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>searchcursor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  function SearchCursor(doc, query, pos, caseFold) {\n
+    this.atOccurrence = false; this.doc = doc;\n
+    if (caseFold == null && typeof query == "string") caseFold = false;\n
+\n
+    pos = pos ? doc.clipPos(pos) : Pos(0, 0);\n
+    this.pos = {from: pos, to: pos};\n
+\n
+    // The matches method is filled in based on the type of query.\n
+    // It takes a position and a direction, and returns an object\n
+    // describing the next occurrence of the query, or null if no\n
+    // more matches were found.\n
+    if (typeof query != "string") { // Regexp match\n
+      if (!query.global) query = new RegExp(query.source, query.ignoreCase ? "ig" : "g");\n
+      this.matches = function(reverse, pos) {\n
+        if (reverse) {\n
+          query.lastIndex = 0;\n
+          var line = doc.getLine(pos.line).slice(0, pos.ch), cutOff = 0, match, start;\n
+          for (;;) {\n
+            query.lastIndex = cutOff;\n
+            var newMatch = query.exec(line);\n
+            if (!newMatch) break;\n
+            match = newMatch;\n
+            start = match.index;\n
+            cutOff = match.index + (match[0].length || 1);\n
+            if (cutOff == line.length) break;\n
+          }\n
+          var matchLen = (match && match[0].length) || 0;\n
+          if (!matchLen) {\n
+            if (start == 0 && line.length == 0) {match = undefined;}\n
+            else if (start != doc.getLine(pos.line).length) {\n
+              matchLen++;\n
+            }\n
+          }\n
+        } else {\n
+          query.lastIndex = pos.ch;\n
+          var line = doc.getLine(pos.line), match = query.exec(line);\n
+          var matchLen = (match && match[0].length) || 0;\n
+          var start = match && match.index;\n
+          if (start + matchLen != line.length && !matchLen) matchLen = 1;\n
+        }\n
+        if (match && matchLen)\n
+          return {from: Pos(pos.line, start),\n
+                  to: Pos(pos.line, start + matchLen),\n
+                  match: match};\n
+      };\n
+    } else { // String query\n
+      var origQuery = query;\n
+      if (caseFold) query = query.toLowerCase();\n
+      var fold = caseFold ? function(str){return str.toLowerCase();} : function(str){return str;};\n
+      var target = query.split("\\n");\n
+      // Different methods for single-line and multi-line queries\n
+      if (target.length == 1) {\n
+        if (!query.length) {\n
+          // Empty string would match anything and never progress, so\n
+          // we define it to match nothing instead.\n
+          this.matches = function() {};\n
+        } else {\n
+          this.matches = function(reverse, pos) {\n
+            if (reverse) {\n
+              var orig = doc.getLine(pos.line).slice(0, pos.ch), line = fold(orig);\n
+              var match = line.lastIndexOf(query);\n
+              if (match > -1) {\n
+                match = adjustPos(orig, line, match);\n
+                return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};\n
+              }\n
+             } else {\n
+               var orig = doc.getLine(pos.line).slice(pos.ch), line = fold(orig);\n
+               var match = line.indexOf(query);\n
+               if (match > -1) {\n
+                 match = adjustPos(orig, line, match) + pos.ch;\n
+                 return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};\n
+               }\n
+            }\n
+          };\n
+        }\n
+      } else {\n
+        var origTarget = origQuery.split("\\n");\n
+        this.matches = function(reverse, pos) {\n
+          var last = target.length - 1;\n
+          if (reverse) {\n
+            if (pos.line - (target.length - 1) < doc.firstLine()) return;\n
+            if (fold(doc.getLine(pos.line).slice(0, origTarget[last].length)) != target[target.length - 1]) return;\n
+            var to = Pos(pos.line, origTarget[last].length);\n
+            for (var ln = pos.line - 1, i = last - 1; i >= 1; --i, --ln)\n
+              if (target[i] != fold(doc.getLine(ln))) return;\n
+            var line = doc.getLine(ln), cut = line.length - origTarget[0].length;\n
+            if (fold(line.slice(cut)) != target[0]) return;\n
+            return {from: Pos(ln, cut), to: to};\n
+          } else {\n
+            if (pos.line + (target.length - 1) > doc.lastLine()) return;\n
+            var line = doc.getLine(pos.line), cut = line.length - origTarget[0].length;\n
+            if (fold(line.slice(cut)) != target[0]) return;\n
+            var from = Pos(pos.line, cut);\n
+            for (var ln = pos.line + 1, i = 1; i < last; ++i, ++ln)\n
+              if (target[i] != fold(doc.getLine(ln))) return;\n
+            if (doc.getLine(ln).slice(0, origTarget[last].length) != target[last]) return;\n
+            return {from: from, to: Pos(ln, origTarget[last].length)};\n
+          }\n
+        };\n
+      }\n
+    }\n
+  }\n
+\n
+  SearchCursor.prototype = {\n
+    findNext: function() {return this.find(false);},\n
+    findPrevious: function() {return this.find(true);},\n
+\n
+    find: function(reverse) {\n
+      var self = this, pos = this.doc.clipPos(reverse ? this.pos.from : this.pos.to);\n
+      function savePosAndFail(line) {\n
+        var pos = Pos(line, 0);\n
+        self.pos = {from: pos, to: pos};\n
+        self.atOccurrence = false;\n
+        return false;\n
+      }\n
+\n
+      for (;;) {\n
+        if (this.pos = this.matches(reverse, pos)) {\n
+          this.atOccurrence = true;\n
+          return this.pos.match || true;\n
+        }\n
+        if (reverse) {\n
+          if (!pos.line) return savePosAndFail(0);\n
+          pos = Pos(pos.line-1, this.doc.getLine(pos.line-1).length);\n
+        }\n
+        else {\n
+          var maxLine = this.doc.lineCount();\n
+          if (pos.line == maxLine - 1) return savePosAndFail(maxLine);\n
+          pos = Pos(pos.line + 1, 0);\n
+        }\n
+      }\n
+    },\n
+\n
+    from: function() {if (this.atOccurrence) return this.pos.from;},\n
+    to: function() {if (this.atOccurrence) return this.pos.to;},\n
+\n
+    replace: function(newText) {\n
+      if (!this.atOccurrence) return;\n
+      var lines = CodeMirror.splitLines(newText);\n
+      this.doc.replaceRange(lines, this.pos.from, this.pos.to);\n
+      this.pos.to = Pos(this.pos.from.line + lines.length - 1,\n
+                        lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0));\n
+    }\n
+  };\n
+\n
+  // Maps a position in a case-folded line back to a position in the original line\n
+  // (compensating for codepoints increasing in number during folding)\n
+  function adjustPos(orig, folded, pos) {\n
+    if (orig.length == folded.length) return pos;\n
+    for (var pos1 = Math.min(pos, orig.length);;) {\n
+      var len1 = orig.slice(0, pos1).toLowerCase().length;\n
+      if (len1 < pos) ++pos1;\n
+      else if (len1 > pos) --pos1;\n
+      else return pos1;\n
+    }\n
+  }\n
+\n
+  CodeMirror.defineExtension("getSearchCursor", function(query, pos, caseFold) {\n
+    return new SearchCursor(this.doc, query, pos, caseFold);\n
+  });\n
+  CodeMirror.defineDocExtension("getSearchCursor", function(query, pos, caseFold) {\n
+    return new SearchCursor(this, query, pos, caseFold);\n
+  });\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6856</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

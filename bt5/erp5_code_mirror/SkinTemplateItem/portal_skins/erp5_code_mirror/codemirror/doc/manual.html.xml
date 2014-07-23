@@ -1,0 +1,2676 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: User Manual</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+<script src="activebookmark.js"></script>\n
+\n
+<script src="../lib/codemirror.js"></script>\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../addon/runmode/runmode.js"></script>\n
+<script src="../addon/runmode/colorize.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../mode/css/css.js"></script>\n
+<script src="../mode/htmlmixed/htmlmixed.js"></script>\n
+<style>\n
+  dt { text-indent: -2em; padding-left: 2em; margin-top: 1em; }\n
+  dd { margin-left: 1.5em; margin-bottom: 1em; }\n
+  dt {margin-top: 1em;}\n
+  dd dl, dd dt, dd dd, dd ul { margin-top: 0; margin-bottom: 0; }\n
+</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+  <ul>\n
+    <li><a href="../index.html">Home</a></li>\n
+    <li><a href="#overview" class=active data-default="true">Manual</a></li>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a></li>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="#usage">Basic Usage</a></li>\n
+    <li><a href="#config">Configuration</a></li>\n
+    <li><a href="#events">Events</a></li>\n
+    <li><a href="#keymaps">Keymaps</a></li>\n
+    <li><a href="#styling">Customized Styling</a></li>\n
+    <li><a href="#api">Programming API</a>\n
+      <ul>\n
+        <li><a href="#api_constructor">Constructor</a></li>\n
+        <li><a href="#api_content">Content manipulation</a></li>\n
+        <li><a href="#api_selection">Selection</a></li>\n
+        <li><a href="#api_configuration">Configuration</a></li>\n
+        <li><a href="#api_doc">Document management</a></li>\n
+        <li><a href="#api_history">History</a></li>\n
+        <li><a href="#api_marker">Text-marking</a></li>\n
+        <li><a href="#api_decoration">Widget, gutter, and decoration</a></li>\n
+        <li><a href="#api_sizing">Sizing, scrolling, and positioning</a></li>\n
+        <li><a href="#api_mode">Mode, state, and tokens</a></li>\n
+        <li><a href="#api_misc">Miscellaneous methods</a></li>\n
+        <li><a href="#api_static">Static properties</a></li>\n
+      </ul>\n
+    </li>\n
+    <li><a href="#addons">Addons</a></li>\n
+    <li><a href="#modeapi">Writing CodeMirror Modes</a></li>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<section class=first id=overview>\n
+    <h2>User manual and reference guide</h2>\n
+\n
+    <p>CodeMirror is a code-editor component that can be embedded in\n
+    Web pages. The core library provides <em>only</em> the editor\n
+    component, no accompanying buttons, auto-completion, or other IDE\n
+    functionality. It does provide a rich API on top of which such\n
+    functionality can be straightforwardly implemented. See\n
+    the <a href="#addons">addons</a> included in the distribution,\n
+    and the <a href="https://github.com/marijnh/CodeMirror/wiki/CodeMirror-addons">list\n
+    of externally hosted addons</a>, for reusable\n
+    implementations of extra features.</p>\n
+\n
+    <p>CodeMirror works with language-specific modes. Modes are\n
+    JavaScript programs that help color (and optionally indent) text\n
+    written in a given language. The distribution comes with a number\n
+    of modes (see the <a href="../mode/"><code>mode/</code></a>\n
+    directory), and it isn\'t hard to <a href="#modeapi">write new\n
+    ones</a> for other languages.</p>\n
+</section>\n
+\n
+<section id=usage>\n
+    <h2>Basic Usage</h2>\n
+\n
+    <p>The easiest way to use CodeMirror is to simply load the script\n
+    and style sheet found under <code>lib/</code> in the distribution,\n
+    plus a mode script from one of the <code>mode/</code> directories.\n
+    (See <a href="compress.html">the compression helper</a> for an\n
+    easy way to combine scripts.) For example:</p>\n
+\n
+    <pre data-lang="text/html">&lt;script src="lib/codemirror.js">&lt;/script>\n
+&lt;link rel="stylesheet" href="../lib/codemirror.css">\n
+&lt;script src="mode/javascript/javascript.js">&lt;/script></pre>\n
+\n
+    <p>Having done this, an editor instance can be created like\n
+    this:</p>\n
+\n
+    <pre data-lang="javascript">var myCodeMirror = CodeMirror(document.body);</pre>\n
+\n
+    <p>The editor will be appended to the document body, will start\n
+    empty, and will use the mode that we loaded. To have more control\n
+    over the new editor, a configuration object can be passed\n
+    to <a href="#CodeMirror"><code>CodeMirror</code></a> as a second\n
+    argument:</p>\n
+\n
+    <pre data-lang="javascript">var myCodeMirror = CodeMirror(document.body, {\n
+  value: "function myScript(){return 100;}\\n",\n
+  mode:  "javascript"\n
+});</pre>\n
+\n
+    <p>This will initialize the editor with a piece of code already in\n
+    it, and explicitly tell it to use the JavaScript mode (which is\n
+    useful when multiple modes are loaded).\n
+    See <a href="#config">below</a> for a full discussion of the\n
+    configuration options that CodeMirror accepts.</p>\n
+\n
+    <p>In cases where you don\'t want to append the editor to an\n
+    element, and need more control over the way it is inserted, the\n
+    first argument to the <code>CodeMirror</code> function can also\n
+    be a function that, when given a DOM element, inserts it into the\n
+    document somewhere. This could be used to, for example, replace a\n
+    textarea with a real editor:</p>\n
+\n
+    <pre data-lang="javascript">var myCodeMirror = CodeMirror(function(elt) {\n
+  myTextArea.parentNode.replaceChild(elt, myTextArea);\n
+}, {value: myTextArea.value});</pre>\n
+\n
+    <p>However, for this use case, which is a common way to use\n
+    CodeMirror, the library provides a much more powerful\n
+    shortcut:</p>\n
+\n
+    <pre data-lang="javascript">var myCodeMirror = CodeMirror.fromTextArea(myTextArea);</pre>\n
+\n
+    <p>This will, among other things, ensure that the textarea\'s value\n
+    is updated with the editor\'s contents when the form (if it is part\n
+    of a form) is submitted. See the <a href="#fromTextArea">API\n
+    reference</a> for a full description of this method.</p>\n
+\n
+</section>\n
+<section id=config>\n
+    <h2>Configuration</h2>\n
+\n
+    <p>Both the <a href="#CodeMirror"><code>CodeMirror</code></a>\n
+    function and its <code>fromTextArea</code> method take as second\n
+    (optional) argument an object containing configuration options.\n
+    Any option not supplied like this will be taken\n
+    from <a href="#defaults"><code>CodeMirror.defaults</code></a>, an\n
+    object containing the default options. You can update this object\n
+    to change the defaults on your page.</p>\n
+\n
+    <p>Options are not checked in any way, so setting bogus option\n
+    values is bound to lead to odd errors.</p>\n
+\n
+    <p>These are the supported options:</p>\n
+\n
+    <dl>\n
+      <dt id="option_value"><code><strong>value</strong>: string|CodeMirror.Doc</code></dt>\n
+      <dd>The starting value of the editor. Can be a string, or\n
+      a <a href="#api_doc">document object</a>.</dd>\n
+\n
+      <dt id="option_mode"><code><strong>mode</strong>: string|object</code></dt>\n
+      <dd>The mode to use. When not given, this will default to the\n
+      first mode that was loaded. It may be a string, which either\n
+      simply names the mode or is\n
+      a <a href="http://en.wikipedia.org/wiki/MIME">MIME</a> type\n
+      associated with the mode. Alternatively, it may be an object\n
+      containing configuration options for the mode, with\n
+      a <code>name</code> property that names the mode (for\n
+      example <code>{name: "javascript", json: true}</code>). The demo\n
+      pages for each mode contain information about what configuration\n
+      parameters the mode supports. You can ask CodeMirror which modes\n
+      and MIME types have been defined by inspecting\n
+      the <code>CodeMirror.modes</code>\n
+      and <code>CodeMirror.mimeModes</code> objects. The first maps\n
+      mode names to their constructors, and the second maps MIME types\n
+      to mode specs.</dd>\n
+\n
+      <dt id="option_theme"><code><strong>theme</strong>: string</code></dt>\n
+      <dd>The theme to style the editor with. You must make sure the\n
+      CSS file defining the corresponding <code>.cm-s-[name]</code>\n
+      styles is loaded (see\n
+      the <a href="../theme/"><code>theme</code></a> directory in the\n
+      distribution). The default is <code>"default"</code>, for which\n
+      colors are included in <code>codemirror.css</code>. It is\n
+      possible to use multiple theming classes at onceâfor\n
+      example <code>"foo bar"</code> will assign both\n
+      the <code>cm-s-foo</code> and the <code>cm-s-bar</code> classes\n
+      to the editor.</dd>\n
+\n
+      <dt id="option_indentUnit"><code><strong>indentUnit</strong>: integer</code></dt>\n
+      <dd>How many spaces a block (whatever that means in the edited\n
+      language) should be indented. The default is 2.</dd>\n
+\n
+      <dt id="option_smartIndent"><code><strong>smartIndent</strong>: boolean</code></dt>\n
+      <dd>Whether to use the context-sensitive indentation that the\n
+      mode provides (or just indent the same as the line before).\n
+      Defaults to true.</dd>\n
+\n
+      <dt id="option_tabSize"><code><strong>tabSize</strong>: integer</code></dt>\n
+      <dd>The width of a tab character. Defaults to 4.</dd>\n
+\n
+      <dt id="option_indentWithTabs"><code><strong>indentWithTabs</strong>: boolean</code></dt>\n
+      <dd>Whether, when indenting, the first N*<code>tabSize</code>\n
+      spaces should be replaced by N tabs. Default is false.</dd>\n
+\n
+      <dt id="option_electricChars"><code><strong>electricChars</strong>: boolean</code></dt>\n
+      <dd>Configures whether the editor should re-indent the current\n
+      line when a character is typed that might change its proper\n
+      indentation (only works if the mode supports indentation).\n
+      Default is true.</dd>\n
+\n
+      <dt id="option_specialChars"><code><strong>specialChars</strong>: RegExp</code></dt>\n
+      <dd>A regular expression used to determine which characters\n
+      should be replaced by a\n
+      special <a href="#option_specialCharPlaceholder">placeholder</a>.\n
+      Mostly useful for non-printing special characters. The default\n
+      is <code>/[\\u0000-\\u0019\\u00ad\\u200b\\u2028\\u2029\\ufeff]/</code>.</dd>\n
+      <dt id="option_specialCharPlaceholder"><code><strong>specialCharPlaceholder</strong>: function(char)Â âÂ Element</code></dt>\n
+      <dd>A function that, given a special character identified by\n
+      the <a href="#option_specialChars"><code>specialChars</code></a>\n
+      option, produces a DOM node that is used to represent the\n
+      character. By default, a red dot (<span style="color: red">â¢</span>)\n
+      is shown, with a title tooltip to indicate the character code.</dd>\n
+\n
+      <dt id="option_rtlMoveVisually"><code><strong>rtlMoveVisually</strong>: boolean</code></dt>\n
+      <dd>Determines whether horizontal cursor movement through\n
+      right-to-left (Arabic, Hebrew) text is visual (pressing the left\n
+      arrow moves the cursor left) or logical (pressing the left arrow\n
+      moves to the next lower index in the string, which is visually\n
+      right in right-to-left text). The default is <code>false</code>\n
+      on Windows, and <code>true</code> on other platforms.</dd>\n
+\n
+      <dt id="option_keyMap"><code><strong>keyMap</strong>: string</code></dt>\n
+      <dd>Configures the keymap to use. The default\n
+      is <code>"default"</code>, which is the only keymap defined\n
+      in <code>codemirror.js</code> itself. Extra keymaps are found in\n
+      the <a href="../keymap/"><code>keymap</code></a> directory. See\n
+      the <a href="#keymaps">section on keymaps</a> for more\n
+      information.</dd>\n
+\n
+      <dt id="option_extraKeys"><code><strong>extraKeys</strong>: object</code></dt>\n
+      <dd>Can be used to specify extra keybindings for the editor,\n
+      alongside the ones defined\n
+      by <a href="#option_keyMap"><code>keyMap</code></a>. Should be\n
+      either null, or a valid <a href="#keymaps">keymap</a> value.</dd>\n
+\n
+      <dt id="option_lineWrapping"><code><strong>lineWrapping</strong>: boolean</code></dt>\n
+      <dd>Whether CodeMirror should scroll or wrap for long lines.\n
+      Defaults to <code>false</code> (scroll).</dd>\n
+\n
+      <dt id="option_lineNumbers"><code><strong>lineNumbers</strong>: boolean</code></dt>\n
+      <dd>Whether to show line numbers to the left of the editor.</dd>\n
+\n
+      <dt id="option_firstLineNumber"><code><strong>firstLineNumber</strong>: integer</code></dt>\n
+      <dd>At which number to start counting lines. Default is 1.</dd>\n
+\n
+      <dt id="option_lineNumberFormatter"><code><strong>lineNumberFormatter</strong>: function(line: integer) â string</code></dt>\n
+      <dd>A function used to format line numbers. The function is\n
+      passed the line number, and should return a string that will be\n
+      shown in the gutter.</dd>\n
+\n
+      <dt id="option_gutters"><code><strong>gutters</strong>: array&lt;string&gt;</code></dt>\n
+      <dd>Can be used to add extra gutters (beyond or instead of the\n
+      line number gutter). Should be an array of CSS class names, each\n
+      of which defines a <code>width</code> (and optionally a\n
+      background), and which will be used to draw the background of\n
+      the gutters. <em>May</em> include\n
+      the <code>CodeMirror-linenumbers</code> class, in order to\n
+      explicitly set the position of the line number gutter (it will\n
+      default to be to the right of all other gutters). These class\n
+      names are the keys passed\n
+      to <a href="#setGutterMarker"><code>setGutterMarker</code></a>.</dd>\n
+\n
+      <dt id="option_fixedGutter"><code><strong>fixedGutter</strong>: boolean</code></dt>\n
+      <dd>Determines whether the gutter scrolls along with the content\n
+      horizontally (false) or whether it stays fixed during horizontal\n
+      scrolling (true, the default).</dd>\n
+\n
+      <dt id="option_coverGutterNextToScrollbar"><code><strong>coverGutterNextToScrollbar</strong>: boolean</code></dt>\n
+      <dd>When <a href="#option_fixedGutter"><code>fixedGutter</code></a>\n
+      is on, and there is a horizontal scrollbar, by default the\n
+      gutter will be visible to the left of this scrollbar. If this\n
+      option is set to true, it will be covered by an element with\n
+      class <code>CodeMirror-gutter-filler</code>.</dd>\n
+\n
+      <dt id="option_readOnly"><code><strong>readOnly</strong>: boolean|string</code></dt>\n
+      <dd>This disables editing of the editor content by the user. If\n
+      the special value <code>"nocursor"</code> is given (instead of\n
+      simply <code>true</code>), focusing of the editor is also\n
+      disallowed.</dd>\n
+\n
+      <dt id="option_showCursorWhenSelecting"><code><strong>showCursorWhenSelecting</strong>: boolean</code></dt>\n
+      <dd>Whether the cursor should be drawn when a selection is\n
+      active. Defaults to false.</dd>\n
+\n
+      <dt id="option_undoDepth"><code><strong>undoDepth</strong>: integer</code></dt>\n
+      <dd>The maximum number of undo levels that the editor stores.\n
+      Defaults to 40.</dd>\n
+\n
+      <dt id="option_historyEventDelay"><code><strong>historyEventDelay</strong>: integer</code></dt>\n
+      <dd>The period of inactivity (in milliseconds) that will cause a\n
+      new history event to be started when typing or deleting.\n
+      Defaults to 500.</dd>\n
+\n
+      <dt id="option_tabindex"><code><strong>tabindex</strong>: integer</code></dt>\n
+      <dd>The <a href="http://www.w3.org/TR/html401/interact/forms.html#adef-tabindex">tab\n
+      index</a> to assign to the editor. If not given, no tab index\n
+      will be assigned.</dd>\n
+\n
+      <dt id="option_autofocus"><code><strong>autofocus</strong>: boolean</code></dt>\n
+      <dd>Can be used to make CodeMirror focus itself on\n
+      initialization. Defaults to off.\n
+      When <a href="#fromTextArea"><code>fromTextArea</code></a> is\n
+      used, and no explicit value is given for this option, it will be\n
+      set to true when either the source textarea is focused, or it\n
+      has an <code>autofocus</code> attribute and no other element is\n
+      focused.</dd>\n
+    </dl>\n
+\n
+    <p>Below this a few more specialized, low-level options are\n
+    listed. These are only useful in very specific situations, you\n
+    might want to skip them the first time you read this manual.</p>\n
+\n
+    <dl>\n
+      <dt id="option_dragDrop"><code><strong>dragDrop</strong>: boolean</code></dt>\n
+      <dd>Controls whether drag-and-drop is enabled. On by default.</dd>\n
+\n
+      <dt id="option_onDragEvent"><code><strong>onDragEvent</strong>: function(instance: CodeMirror, event: Event) â boolean</code></dt>\n
+      <dd><em>Deprecated! See <a href="#event_dom">these</a> event\n
+      handlers for the current recommended approach.</em><br>When given,\n
+      this will be called when the editor is handling\n
+      a <code>dragenter</code>, <code>dragover</code>,\n
+      or <code>drop</code> event. It will be passed the editor\n
+      instance and the event object as arguments. The callback can\n
+      choose to handle the event itself, in which case it should\n
+      return <code>true</code> to indicate that CodeMirror should not\n
+      do anything further.</dd>\n
+\n
+      <dt id="option_onKeyEvent"><code><strong>onKeyEvent</strong>: function(instance: CodeMirror, event: Event) â boolean</code></dt>\n
+      <dd><em>Deprecated! See <a href="#event_dom">these</a> event\n
+      handlers for the current recommended approach.</em><br>This\n
+      provides a rather low-level hook into CodeMirror\'s key handling.\n
+      If provided, this function will be called on\n
+      every <code>keydown</code>, <code>keyup</code>,\n
+      and <code>keypress</code> event that CodeMirror captures. It\n
+      will be passed two arguments, the editor instance and the key\n
+      event. This key event is pretty much the raw key event, except\n
+      that a <code>stop()</code> method is always added to it. You\n
+      could feed it to, for example, <code>jQuery.Event</code> to\n
+      further normalize it.<br>This function can inspect the key\n
+      event, and handle it if it wants to. It may return true to tell\n
+      CodeMirror to ignore the event. Be wary that, on some browsers,\n
+      stopping a <code>keydown</code> does not stop\n
+      the <code>keypress</code> from firing, whereas on others it\n
+      does. If you respond to an event, you should probably inspect\n
+      its <code>type</code> property and only do something when it\n
+      is <code>keydown</code> (or <code>keypress</code> for actions\n
+      that need character data).</dd>\n
+\n
+      <dt id="option_cursorBlinkRate"><code><strong>cursorBlinkRate</strong>: number</code></dt>\n
+      <dd>Half-period in milliseconds used for cursor blinking. The default blink\n
+      rate is 530ms. By setting this to zero, blinking can be disabled.</dd>\n
+\n
+      <dt id="option_cursorScrollMargin"><code><strong>cursorScrollMargin</strong>: number</code></dt>\n
+      <dd>How much extra space to always keep above and below the\n
+      cursor when approaching the top or bottom of the visible view in\n
+      a scrollable document. Default is 0.</dd>\n
+\n
+      <dt id="option_cursorHeight"><code><strong>cursorHeight</strong>: number</code></dt>\n
+      <dd>Determines the height of the cursor. Default is 1, meaning\n
+      it spans the whole height of the line. For some fonts (and by\n
+      some tastes) a smaller height (for example <code>0.85</code>),\n
+      which causes the cursor to not reach all the way to the bottom\n
+      of the line, looks better</dd>\n
+\n
+      <dt id="option_resetSelectionOnContextMenu"><code><strong>resetSelectionOnContextMenu</strong>: boolean</code></dt>\n
+      <dd>Controls whether, when the context menu is opened with a\n
+      click outside of the current selection, the cursor is moved to\n
+      the point of the click. Defaults to <code>true</code>.</dd>\n
+\n
+      <dt id="option_workTime"><code><strong>workTime</strong>, <strong>workDelay</strong>: number</code></dt>\n
+      <dd>Highlighting is done by a pseudo background-thread that will\n
+      work for <code>workTime</code> milliseconds, and then use\n
+      timeout to sleep for <code>workDelay</code> milliseconds. The\n
+      defaults are 200 and 300, you can change these options to make\n
+      the highlighting more or less aggressive.</dd>\n
+\n
+      <dt id="option_workDelay"><code><strong>workDelay</strong>: number</code></dt>\n
+      <dd>See <a href="#option_workTime"><code>workTime</code></a>.</dd>\n
+\n
+      <dt id="option_pollInterval"><code><strong>pollInterval</strong>: number</code></dt>\n
+      <dd>Indicates how quickly CodeMirror should poll its input\n
+      textarea for changes (when focused). Most input is captured by\n
+      events, but some things, like IME input on some browsers, don\'t\n
+      generate events that allow CodeMirror to properly detect it.\n
+      Thus, it polls. Default is 100 milliseconds.</dd>\n
+\n
+      <dt id="option_flattenSpans"><code><strong>flattenSpans</strong>: boolean</code></dt>\n
+      <dd>By default, CodeMirror will combine adjacent tokens into a\n
+      single span if they have the same class. This will result in a\n
+      simpler DOM tree, and thus perform better. With some kinds of\n
+      styling (such as rounded corners), this will change the way the\n
+      document looks. You can set this option to false to disable this\n
+      behavior.</dd>\n
+\n
+      <dt id="option_addModeClass"><code><strong>addModeClass</strong>: boolean</code></dt>\n
+      <dd>When enabled (off by default), an extra CSS class will be\n
+      added to each token, indicating the\n
+      (<a href="#innerMode">inner</a>) mode that produced it, prefixed\n
+      with <code>"cm-m-"</code>. For example, tokens from the XML mode\n
+      will get the <code>cm-m-xml</code> class.</dd>\n
+\n
+      <dt id="option_maxHighlightLength"><code><strong>maxHighlightLength</strong>: number</code></dt>\n
+      <dd>When highlighting long lines, in order to stay responsive,\n
+      the editor will give up and simply style the rest of the line as\n
+      plain text when it reaches a certain position. The default is\n
+      10 000. You can set this to <code>Infinity</code> to turn off\n
+      this behavior.</dd>\n
+\n
+      <dt id="option_crudeMeasuringFrom"><code><strong>crudeMeasuringFrom</strong>: number</code></dt>\n
+      <dd>When measuring the character positions in long lines, any\n
+      line longer than this number (default is 10 000),\n
+      when <a href="#option_lineWrapping">line wrapping</a>\n
+      is <strong>off</strong>, will simply be assumed to consist of\n
+      same-sized characters. This means that, on the one hand,\n
+      measuring will be inaccurate when characters of varying size,\n
+      right-to-left text, markers, or other irregular elements are\n
+      present. On the other hand, it means that having such a line\n
+      won\'t freeze the user interface because of the expensiveness of\n
+      the measurements.</dd>\n
+\n
+      <dt id="option_viewportMargin"><code><strong>viewportMargin</strong>: integer</code></dt>\n
+      <dd>Specifies the amount of lines that are rendered above and\n
+      below the part of the document that\'s currently scrolled into\n
+      view. This affects the amount of updates needed when scrolling,\n
+      and the amount of work that such an update does. You should\n
+      usually leave it at its default, 10. Can be set\n
+      to <code>Infinity</code> to make sure the whole document is\n
+      always rendered, and thus the browser\'s text search works on it.\n
+      This <em>will</em> have bad effects on performance of big\n
+      documents.</dd>\n
+    </dl>\n
+</section>\n
+\n
+<section id=events>\n
+    <h2>Events</h2>\n
+\n
+    <p>Various CodeMirror-related objects emit events, which allow\n
+    client code to react to various situations. Handlers for such\n
+    events can be registered with the <a href="#on"><code>on</code></a>\n
+    and <a href="#off"><code>off</code></a> methods on the objects\n
+    that the event fires on. To fire your own events,\n
+    use <code>CodeMirror.signal(target, name, args...)</code>,\n
+    where <code>target</code> is a non-DOM-node object.</p>\n
+\n
+    <p>An editor instance fires the following events.\n
+    The <code>instance</code> argument always refers to the editor\n
+    itself.</p>\n
+\n
+    <dl>\n
+      <dt id="event_change"><code><strong>"change"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
+      <dd>Fires every time the content of the editor is changed.\n
+      The <code>changeObj</code> is a <code>{from, to, text, removed,\n
+      next}</code> object containing information about the changes\n
+      that occurred as second argument. <code>from</code>\n
+      and <code>to</code> are the positions (in the pre-change\n
+      coordinate system) where the change started and ended (for\n
+      example, it might be <code>{ch:0, line:18}</code> if the\n
+      position is at the beginning of line #19). <code>text</code> is\n
+      an array of strings representing the text that replaced the\n
+      changed range (split by line). <code>removed</code> is the text\n
+      that used to be between <code>from</code> and <code>to</code>,\n
+      which is overwritten by this change. If multiple changes\n
+      happened during a single operation, the object will have\n
+      a <code>next</code> property pointing to another change object\n
+      (which may point to another, etc).</dd>\n
+\n
+      <dt id="event_beforeChange"><code><strong>"beforeChange"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
+      <dd>This event is fired before a change is applied, and its\n
+      handler may choose to modify or cancel the change.\n
+      The <code>changeObj</code> object\n
+      has <code>from</code>, <code>to</code>, and <code>text</code>\n
+      properties, as with\n
+      the <a href="#event_change"><code>"change"</code></a> event, but\n
+      never a <code>next</code> property, since this is fired for each\n
+      individual change, and not batched per operation. It also has\n
+      a <code>cancel()</code> method, which can be called to cancel\n
+      the change, and, <strong>if</strong> the change isn\'t coming\n
+      from an undo or redo event, an <code>update(from, to,\n
+      text)</code> method, which may be used to modify the change.\n
+      Undo or redo changes can\'t be modified, because they hold some\n
+      metainformation for restoring old marked ranges that is only\n
+      valid for that specific change. All three arguments\n
+      to <code>update</code> are optional, and can be left off to\n
+      leave the existing value for that field\n
+      intact. <strong>Note:</strong> you may not do anything from\n
+      a <code>"beforeChange"</code> handler that would cause changes\n
+      to the document or its visualization. Doing so will, since this\n
+      handler is called directly from the bowels of the CodeMirror\n
+      implementation, probably cause the editor to become\n
+      corrupted.</dd>\n
+\n
+      <dt id="event_cursorActivity"><code><strong>"cursorActivity"</strong> (instance: CodeMirror)</code></dt>\n
+      <dd>Will be fired when the cursor or selection moves, or any\n
+      change is made to the editor content.</dd>\n
+\n
+      <dt id="event_keyHandled"><code><strong>"keyHandled"</strong> (instance: CodeMirror, name: string, event: Event)</code></dt>\n
+      <dd>Fired after a key is handled through a\n
+      keymap. <code>name</code> is the name of the handled key (for\n
+      example <code>"Ctrl-X"</code> or <code>"\'q\'"</code>),\n
+      and <code>event</code> is the DOM <code>keydown</code>\n
+      or <code>keypress</code> event.</dd>\n
+\n
+      <dt id="event_inputRead"><code><strong>"inputRead"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
+      <dd>Fired whenever new input is read from the hidden textarea\n
+      (typed or pasted by the user).</dd>\n
+\n
+      <dt id="event_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (instance: CodeMirror, selection: {head, anchor})</code></dt>\n
+      <dd>This event is fired before the selection is moved. Its\n
+      handler may modify the resulting selection head and anchor.\n
+      The <code>selection</code> parameter is an object\n
+      with <code>head</code> and <code>anchor</code> properties\n
+      holding <code>{line, ch}</code> objects, which the handler can\n
+      read and update. Handlers for this event have the same\n
+      restriction\n
+      as <a href="#event_beforeChange"><code>"beforeChange"</code></a>\n
+      handlers â they should not do anything to directly update the\n
+      state of the editor.</dd>\n
+\n
+      <dt id="event_viewportChange"><code><strong>"viewportChange"</strong> (instance: CodeMirror, from: number, to: number)</code></dt>\n
+      <dd>Fires whenever the <a href="#getViewport">view port</a> of\n
+      the editor changes (due to scrolling, editing, or any other\n
+      factor). The <code>from</code> and <code>to</code> arguments\n
+      give the new start and end of the viewport.</dd>\n
+\n
+      <dt id="event_swapDoc"><code><strong>"swapDoc"</strong> (instance: CodeMirror, oldDoc: Doc)</code></dt>\n
+      <dd>This is signalled when the editor\'s document is replaced\n
+      using the <a href="#swapDoc"><code>swapDoc</code></a>\n
+      method.</dd>\n
+\n
+      <dt id="event_gutterClick"><code><strong>"gutterClick"</strong> (instance: CodeMirror, line: integer, gutter: string, clickEvent: Event)</code></dt>\n
+      <dd>Fires when the editor gutter (the line-number area) is\n
+      clicked. Will pass the editor instance as first argument, the\n
+      (zero-based) number of the line that was clicked as second\n
+      argument, the CSS class of the gutter that was clicked as third\n
+      argument, and the raw <code>mousedown</code> event object as\n
+      fourth argument.</dd>\n
+\n
+      <dt id="event_gutterContextMenu"><code><strong>"gutterContextMenu"</strong> (instance: CodeMirror, line: integer, gutter: string, contextMenu: Event: Event)</code></dt>\n
+      <dd>Fires when the editor gutter (the line-number area)\n
+      receives a <code>contextmenu</code> event. Will pass the editor\n
+      instance as first argument, the (zero-based) number of the line\n
+      that was clicked as second argument, the CSS class of the\n
+      gutter that was clicked as third argument, and the raw\n
+      <code>contextmenu</code> mouse event object as fourth argument.\n
+      You can <code>preventDefault</code> the event, to signal that\n
+      CodeMirror should do no further handling.</dd>\n
+\n
+      <dt id="event_focus"><code><strong>"focus"</strong> (instance: CodeMirror)</code></dt>\n
+      <dd>Fires whenever the editor is focused.</dd>\n
+\n
+      <dt id="event_blur"><code><strong>"blur"</strong> (instance: CodeMirror)</code></dt>\n
+      <dd>Fires whenever the editor is unfocused.</dd>\n
+\n
+      <dt id="event_scroll"><code><strong>"scroll"</strong> (instance: CodeMirror)</code></dt>\n
+      <dd>Fires when the editor is scrolled.</dd>\n
+\n
+      <dt id="event_update"><code><strong>"update"</strong> (instance: CodeMirror)</code></dt>\n
+      <dd>Will be fired whenever CodeMirror updates its DOM display.</dd>\n
+\n
+      <dt id="event_renderLine"><code><strong>"renderLine"</strong> (instance: CodeMirror, line: LineHandle, element: Element)</code></dt>\n
+      <dd>Fired whenever a line is (re-)rendered to the DOM. Fired\n
+      right after the DOM element is built, <em>before</em> it is\n
+      added to the document. The handler may mess with the style of\n
+      the resulting element, or add event handlers, but\n
+      should <em>not</em> try to change the state of the editor.</dd>\n
+\n
+      <dt id="event_dom"><code><strong>"mousedown"</strong>,\n
+      <strong>"dblclick"</strong>, <strong>"contextmenu"</strong>, <strong>"keydown"</strong>, <strong>"keypress"</strong>,\n
+      <strong>"keyup"</strong>, <strong>"dragstart"</strong>, <strong>"dragenter"</strong>,\n
+      <strong>"dragover"</strong>, <strong>"drop"</strong>\n
+      (instance: CodeMirror, event: Event)</code></dt>\n
+      <dd>Fired when CodeMirror is handling a DOM event of this type.\n
+      You can <code>preventDefault</code> the event, or give it a\n
+      truthy <code>codemirrorIgnore</code> property, to signal that\n
+      CodeMirror should do no further handling.</dd>\n
+    </dl>\n
+\n
+    <p>Document objects (instances\n
+    of <a href="#Doc"><code>CodeMirror.Doc</code></a>) emit the\n
+    following events:</p>\n
+\n
+    <dl>\n
+      <dt id="event_doc_change"><code><strong>"change"</strong> (doc: CodeMirror.Doc, changeObj: object)</code></dt>\n
+      <dd>Fired whenever a change occurs to the\n
+      document. <code>changeObj</code> has a similar type as the\n
+      object passed to the\n
+      editor\'s <a href="#event_change"><code>"change"</code></a>\n
+      event, but it never has a <code>next</code> property, because\n
+      document change events are not batched (whereas editor change\n
+      events are).</dd>\n
+\n
+      <dt id="event_doc_beforeChange"><code><strong>"beforeChange"</strong> (doc: CodeMirror.Doc, change: object)</code></dt>\n
+      <dd>See the <a href="#event_beforeChange">description of the\n
+      same event</a> on editor instances.</dd>\n
+\n
+      <dt id="event_doc_cursorActivity"><code><strong>"cursorActivity"</strong> (doc: CodeMirror.Doc)</code></dt>\n
+      <dd>Fired whenever the cursor or selection in this document\n
+      changes.</dd>\n
+\n
+      <dt id="event_doc_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (doc: CodeMirror.Doc, selection: {head, anchor})</code></dt>\n
+      <dd>Equivalent to\n
+      the <a href="#event_beforeSelectionChange">event by the same\n
+      name</a> as fired on editor instances.</dd>\n
+    </dl>\n
+\n
+    <p>Line handles (as returned by, for\n
+    example, <a href="#getLineHandle"><code>getLineHandle</code></a>)\n
+    support these events:</p>\n
+\n
+    <dl>\n
+      <dt id="event_delete"><code><strong>"delete"</strong> ()</code></dt>\n
+      <dd>Will be fired when the line object is deleted. A line object\n
+      is associated with the <em>start</em> of the line. Mostly useful\n
+      when you need to find out when your <a href="#setGutterMarker">gutter\n
+      markers</a> on a given line are removed.</dd>\n
+      <dt id="event_line_change"><code><strong>"change"</strong> (line: LineHandle, changeObj: object)</code></dt>\n
+      <dd>Fires when the line\'s text content is changed in any way\n
+      (but the line is not deleted outright). The <code>change</code>\n
+      object is similar to the one passed\n
+      to <a href="#event_change">change event</a> on the editor\n
+      object.</dd>\n
+    </dl>\n
+\n
+    <p>Marked range handles (<code>CodeMirror.TextMarker</code>), as returned\n
+    by <a href="#markText"><code>markText</code></a>\n
+    and <a href="#setBookmark"><code>setBookmark</code></a>, emit the\n
+    following events:</p>\n
+\n
+    <dl>\n
+      <dt id="event_beforeCursorEnter"><code><strong>"beforeCursorEnter"</strong> ()</code></dt>\n
+      <dd>Fired when the cursor enters the marked range. From this\n
+      event handler, the editor state may be inspected\n
+      but <em>not</em> modified, with the exception that the range on\n
+      which the event fires may be cleared.</dd>\n
+      <dt id="event_clear"><code><strong>"clear"</strong> (from: {line, ch}, to: {line, ch})</code></dt>\n
+      <dd>Fired when the range is cleared, either through cursor\n
+      movement in combination\n
+      with <a href="#mark_clearOnEnter"><code>clearOnEnter</code></a>\n
+      or through a call to its <code>clear()</code> method. Will only\n
+      be fired once per handle. Note that deleting the range through\n
+      text editing does not fire this event, because an undo action\n
+      might bring the range back into existence. <code>from</code>\n
+      and <code>to</code> give the part of the document that the range\n
+      spanned when it was cleared.</dd>\n
+      <dt id="event_hide"><code><strong>"hide"</strong> ()</code></dt>\n
+      <dd>Fired when the last part of the marker is removed from the\n
+      document by editing operations.</dd>\n
+      <dt id="event_unhide"><code><strong>"unhide"</strong> ()</code></dt>\n
+      <dd>Fired when, after the marker was removed by editing, a undo\n
+      operation brought the marker back.</dd>\n
+    </dl>\n
+\n
+    <p>Line widgets (<code>CodeMirror.LineWidget</code>), returned\n
+    by <a href="#addLineWidget"><code>addLineWidget</code></a>, fire\n
+    these events:</p>\n
+\n
+    <dl>\n
+      <dt id="event_redraw"><code><strong>"redraw"</strong> ()</code></dt>\n
+      <dd>Fired whenever the editor re-adds the widget to the DOM.\n
+      This will happen once right after the widget is added (if it is\n
+      scrolled into view), and then again whenever it is scrolled out\n
+      of view and back in again, or when changes to the editor options\n
+      or the line the widget is on require the widget to be\n
+      redrawn.</dd>\n
+    </dl>\n
+</section>\n
+\n
+<section id=keymaps>\n
+    <h2>Keymaps</h2>\n
+\n
+    <p>Keymaps are ways to associate keys with functionality. A keymap\n
+    is an object mapping strings that identify the keys to functions\n
+    that implement their functionality.</p>\n
+\n
+    <p>Keys are identified either by name or by character.\n
+    The <code>CodeMirror.keyNames</code> object defines names for\n
+    common keys and associates them with their key codes. Examples of\n
+    names defined here are <code>Enter</code>, <code>F5</code>,\n
+    and <code>Q</code>. These can be prefixed\n
+    with <code>Shift-</code>, <code>Cmd-</code>, <code>Ctrl-</code>,\n
+    and <code>Alt-</code> (in that order!) to specify a modifier. So\n
+    for example, <code>Shift-Ctrl-Space</code> would be a valid key\n
+    identifier.</p>\n
+\n
+    <p>Common example: map the Tab key to insert spaces instead of a tab\n
+    character.</p>\n
+\n
+    <pre data-lang="javascript">\n
+{\n
+  Tab: function(cm) {\n
+    var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");\n
+    cm.replaceSelection(spaces, "end", "+input");\n
+  }\n
+}</pre>\n
+\n
+    <p>Alternatively, a character can be specified directly by\n
+    surrounding it in single quotes, for example <code>\'$\'</code>\n
+    or <code>\'q\'</code>. Due to limitations in the way browsers fire\n
+    key events, these may not be prefixed with modifiers.</p>\n
+\n
+    <p>The <code>CodeMirror.keyMap</code> object associates keymaps\n
+    with names. User code and keymap definitions can assign extra\n
+    properties to this object. Anywhere where a keymap is expected, a\n
+    string can be given, which will be looked up in this object. It\n
+    also contains the <code>"default"</code> keymap holding the\n
+    default bindings.</p>\n
+\n
+    <p id="commands">The values of properties in keymaps can be either functions of\n
+    a single argument (the CodeMirror instance), strings, or\n
+    <code>false</code>. Such strings refer to properties of the\n
+    <code>CodeMirror.commands</code> object, which defines a number of\n
+    common commands that are used by the default keybindings, and maps\n
+    them to functions. If the property is set to <code>false</code>,\n
+    CodeMirror leaves handling of the key up to the browser. A key\n
+    handler function may return <code>CodeMirror.Pass</code> to indicate\n
+    that it has decided not to handle the key, and other handlers (or\n
+    the default behavior) should be given a turn.</p>\n
+\n
+    <p>Keys mapped to command names that start with the\n
+    characters <code>"go"</code> (which should be used for\n
+    cursor-movement actions) will be fired even when an\n
+    extra <code>Shift</code> modifier is present (i.e. <code>"Up":\n
+    "goLineUp"</code> matches both up and shift-up). This is used to\n
+    easily implement shift-selection.</p>\n
+\n
+    <p>Keymaps can defer to each other by defining\n
+    a <code>fallthrough</code> property. This indicates that when a\n
+    key is not found in the map itself, one or more other maps should\n
+    be searched. It can hold either a single keymap or an array of\n
+    keymaps.</p>\n
+\n
+    <p>When a keymap contains a <code>nofallthrough</code> property\n
+    set to <code>true</code>, keys matched against that map will be\n
+    ignored if they don\'t match any of the bindings in the map (no\n
+    further child maps will be tried). When\n
+    the <code>disableInput</code> property is set\n
+    to <code>true</code>, the default effect of inserting a character\n
+    will be suppressed when the keymap is active as the top-level\n
+    map.</p>\n
+</section>\n
+\n
+<section id=styling>\n
+    <h2>Customized Styling</h2>\n
+\n
+    <p>Up to a certain extent, CodeMirror\'s look can be changed by\n
+    modifying style sheet files. The style sheets supplied by modes\n
+    simply provide the colors for that mode, and can be adapted in a\n
+    very straightforward way. To style the editor itself, it is\n
+    possible to alter or override the styles defined\n
+    in <a href="../lib/codemirror.css"><code>codemirror.css</code></a>.</p>\n
+\n
+    <p>Some care must be taken there, since a lot of the rules in this\n
+    file are necessary to have CodeMirror function properly. Adjusting\n
+    colors should be safe, of course, and with some care a lot of\n
+    other things can be changed as well. The CSS classes defined in\n
+    this file serve the following roles:</p>\n
+\n
+    <dl>\n
+      <dt id="class_CodeMirror"><code><strong>CodeMirror</strong></code></dt>\n
+      <dd>The outer element of the editor. This should be used for the\n
+      editor width, height, borders and positioning. Can also be used\n
+      to set styles that should hold for everything inside the editor\n
+      (such as font and font size), or to set a background.</dd>\n
+\n
+      <dt id="class_CodeMirror_scroll"><code><strong>CodeMirror-scroll</strong></code></dt>\n
+      <dd>Whether the editor scrolls (<code>overflow: auto</code> +\n
+      fixed height). By default, it does. Setting\n
+      the <code>CodeMirror</code> class to have <code>height:\n
+      auto</code> and giving this class <code>overflow-x: auto;\n
+      overflow-y: hidden;</code> will cause the editor\n
+      to <a href="../demo/resize.html">resize to fit its\n
+      content</a>.</dd>\n
+\n
+      <dt id="class_CodeMirror_focused"><code><strong>CodeMirror-focused</strong></code></dt>\n
+      <dd>Whenever the editor is focused, the top element gets this\n
+      class. This is used to hide the cursor and give the selection a\n
+      different color when the editor is not focused.</dd>\n
+\n
+      <dt id="class_CodeMirror_gutters"><code><strong>CodeMirror-gutters</strong></code></dt>\n
+      <dd>This is the backdrop for all gutters. Use it to set the\n
+      default gutter background color, and optionally add a border on\n
+      the right of the gutters.</dd>\n
+\n
+      <dt id="class_CodeMirror_linenumbers"><code><strong>CodeMirror-linenumbers</strong></code></dt>\n
+      <dd>Use this for giving a background or width to the line number\n
+      gutter.</dd>\n
+\n
+      <dt id="class_CodeMirror_linenumber"><code><strong>CodeMirror-linenumber</strong></code></dt>\n
+      <dd>Used to style the actual individual line numbers. These\n
+      won\'t be children of the <code>CodeMirror-linenumbers</code>\n
+      (plural) element, but rather will be absolutely positioned to\n
+      overlay it. Use this to set alignment and text properties for\n
+      the line numbers.</dd>\n
+\n
+      <dt id="class_CodeMirror_lines"><code><strong>CodeMirror-lines</strong></code></dt>\n
+      <dd>The visible lines. This is where you specify vertical\n
+      padding for the editor content.</dd>\n
+\n
+      <dt id="class_CodeMirror_cursor"><code><strong>CodeMirror-cursor</strong></code></dt>\n
+      <dd>The cursor is a block element that is absolutely positioned.\n
+      You can make it look whichever way you want.</dd>\n
+\n
+      <dt id="class_CodeMirror_selected"><code><strong>CodeMirror-selected</strong></code></dt>\n
+      <dd>The selection is represented by <code>span</code> elements\n
+      with this class.</dd>\n
+\n
+      <dt id="class_CodeMirror_matchingbracket"><code><strong>CodeMirror-matchingbracket</strong></code>,\n
+        <code><strong>CodeMirror-nonmatchingbracket</strong></code></dt>\n
+      <dd>These are used to style matched (or unmatched) brackets.</dd>\n
+    </dl>\n
+\n
+    <p>If your page\'s style sheets do funky things to\n
+    all <code>div</code> or <code>pre</code> elements (you probably\n
+    shouldn\'t do that), you\'ll have to define rules to cancel these\n
+    effects out again for elements under the <code>CodeMirror</code>\n
+    class.</p>\n
+\n
+    <p>Themes are also simply CSS files, which define colors for\n
+    various syntactic elements. See the files in\n
+    the <a href="../theme/"><code>theme</code></a> directory.</p>\n
+</section>\n
+\n
+<section id=api>\n
+    <h2>Programming API</h2>\n
+\n
+    <p>A lot of CodeMirror features are only available through its\n
+    API. Thus, you need to write code (or\n
+    use <a href="#addons">addons</a>) if you want to expose them to\n
+    your users.</p>\n
+\n
+    <p>Whenever points in the document are represented, the API uses\n
+    objects with <code>line</code> and <code>ch</code> properties.\n
+    Both are zero-based. CodeMirror makes sure to \'clip\' any positions\n
+    passed by client code so that they fit inside the document, so you\n
+    shouldn\'t worry too much about sanitizing your coordinates. If you\n
+    give <code>ch</code> a value of <code>null</code>, or don\'t\n
+    specify it, it will be replaced with the length of the specified\n
+    line.</p>\n
+\n
+    <p>Methods prefixed with <code>doc.</code> can, unless otherwise\n
+    specified, be called both on <code>CodeMirror</code> (editor)\n
+    instances and <code>CodeMirror.Doc</code> instances. Methods\n
+    prefixed with <code>cm.</code> are <em>only</em> available\n
+    on <code>CodeMirror</code> instances.</p>\n
+\n
+    <h3 id="api_constructor">Constructor</h3>\n
+\n
+    <p id="CodeMirror">Constructing an editor instance is done with\n
+    the <code><strong>CodeMirror</strong>(place: Element|fn(Element),\n
+    ?option: object)</code> constructor. If the <code>place</code>\n
+    argument is a DOM element, the editor will be appended to it. If\n
+    it is a function, it will be called, and is expected to place the\n
+    editor into the document. <code>options</code> may be an element\n
+    mapping <a href="#config">option names</a> to values. The options\n
+    that it doesn\'t explicitly specify (or all options, if it is not\n
+    passed) will be taken\n
+    from <a href="#defaults"><code>CodeMirror.defaults</code></a>.</p>\n
+\n
+    <p>Note that the options object passed to the constructor will be\n
+    mutated when the instance\'s options\n
+    are <a href="#setOption">changed</a>, so you shouldn\'t share such\n
+    objects between instances.</p>\n
+\n
+    <p>See <a href="#fromTextArea"><code>CodeMirror.fromTextArea</code></a>\n
+    for another way to construct an editor instance.</p>\n
+\n
+    <h3 id="api_content">Content manipulation methods</h3>\n
+\n
+    <dl>\n
+      <dt id="getValue"><code><strong>doc.getValue</strong>(?separator: string) â string</code></dt>\n
+      <dd>Get the current editor content. You can pass it an optional\n
+      argument to specify the string to be used to separate lines\n
+      (defaults to <code>"\\n"</code>).</dd>\n
+      <dt id="setValue"><code><strong>doc.setValue</strong>(content: string)</code></dt>\n
+      <dd>Set the editor content.</dd>\n
+\n
+      <dt id="getRange"><code><strong>doc.getRange</strong>(from: {line, ch}, to: {line, ch}, ?separator: string) â string</code></dt>\n
+      <dd>Get the text between the given points in the editor, which\n
+      should be <code>{line, ch}</code> objects. An optional third\n
+      argument can be given to indicate the line separator string to\n
+      use (defaults to <code>"\\n"</code>).</dd>\n
+      <dt id="replaceRange"><code><strong>doc.replaceRange</strong>(replacement: string, from: {line, ch}, to: {line, ch})</code></dt>\n
+      <dd>Replace the part of the document between <code>from</code>\n
+      and <code>to</code> with the given string. <code>from</code>\n
+      and <code>to</code> must be <code>{line, ch}</code>\n
+      objects. <code>to</code> can be left off to simply insert the\n
+      string at position <code>from</code>.</dd>\n
+\n
+      <dt id="getLine"><code><strong>doc.getLine</strong>(n: integer) â string</code></dt>\n
+      <dd>Get the content of line <code>n</code>.</dd>\n
+      <dt id="setLine"><code><strong>doc.setLine</strong>(n: integer, text: string)</code></dt>\n
+      <dd>Set the content of line <code>n</code>.</dd>\n
+      <dt id="removeLine"><code><strong>doc.removeLine</strong>(n: integer)</code></dt>\n
+      <dd>Remove the given line from the document.</dd>\n
+\n
+      <dt id="lineCount"><code><strong>doc.lineCount</strong>() â integer</code></dt>\n
+      <dd>Get the number of lines in the editor.</dd>\n
+      <dt id="firstLine"><code><strong>doc.firstLine</strong>() â integer</code></dt>\n
+      <dd>Get the first line of the editor. This will\n
+      usually be zero but for <a href="#linkedDoc_from">linked sub-views</a>,\n
+      or <a href="#api_doc">documents</a> instantiated with a non-zero\n
+      first line, it might return other values.</dd>\n
+      <dt id="lastLine"><code><strong>doc.lastLine</strong>() â integer</code></dt>\n
+      <dd>Get the last line of the editor. This will\n
+      usually be <code>doc.lineCount() - 1</code>,\n
+      but for <a href="#linkedDoc_from">linked sub-views</a>,\n
+      it might return other values.</dd>\n
+\n
+      <dt id="getLineHandle"><code><strong>doc.getLineHandle</strong>(num: integer) â LineHandle</code></dt>\n
+      <dd>Fetches the line handle for the given line number.</dd>\n
+      <dt id="getLineNumber"><code><strong>doc.getLineNumber</strong>(handle: LineHandle) â integer</code></dt>\n
+      <dd>Given a line handle, returns the current position of that\n
+      line (or <code>null</code> when it is no longer in the\n
+      document).</dd>\n
+      <dt id="eachLine"><code><strong>doc.eachLine</strong>(f: (line: LineHandle))</code></dt>\n
+      <dt><code><strong>doc.eachLine</strong>(start: integer, end: integer, f: (line: LineHandle))</code></dt>\n
+      <dd>Iterate over the whole document, or if <code>start</code>\n
+      and <code>end</code> line numbers are given, the range\n
+      from <code>start</code> up to (not including) <code>end</code>,\n
+      and call <code>f</code> for each line, passing the line handle.\n
+      This is a faster way to visit a range of line handlers than\n
+      calling <a href="#getLineHandle"><code>getLineHandle</code></a>\n
+      for each of them. Note that line handles have\n
+      a <code>text</code> property containing the line\'s content (as a\n
+      string).</dd>\n
+\n
+      <dt id="markClean"><code><strong>doc.markClean</strong>()</code></dt>\n
+      <dd>Set the editor content as \'clean\', a flag that it will\n
+      retain until it is edited, and which will be set again when such\n
+      an edit is undone again. Useful to track whether the content\n
+      needs to be saved. This function is deprecated in favor\n
+      of <a href="#changeGeneration"><code>changeGeneration</code></a>,\n
+      which allows multiple subsystems to track different notions of\n
+      cleanness without interfering.</dd>\n
+      <dt id="changeGeneration"><code><strong>doc.changeGeneration</strong>(?closeEvent: boolean) â integer</code></dt>\n
+      <dd>Returns a number that can later be passed\n
+      to <a href="#isClean"><code>isClean</code></a> to test whether\n
+      any edits were made (and not undone) in the meantime.\n
+      If <code>closeEvent</code> is true, the current history event\n
+      will be âclosedâ, meaning it can\'t be combined with further\n
+      changes (rapid typing or deleting events are typically\n
+      combined).</dd>\n
+      <dt id="isClean"><code><strong>doc.isClean</strong>(?generation: integer) â boolean</code></dt>\n
+      <dd>Returns whether the document is currently clean â not\n
+      modified since initialization or the last call\n
+      to <a href="#markClean"><code>markClean</code></a> if no\n
+      argument is passed, or since the matching call\n
+      to <a href="#changeGeneration"><code>changeGeneration</code></a>\n
+      if a generation value is given.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_selection">Cursor and selection methods</h3>\n
+\n
+    <dl>\n
+      <dt id="getSelection"><code><strong>doc.getSelection</strong>() â string</code></dt>\n
+      <dd>Get the currently selected code.</dd>\n
+      <dt id="replaceSelection"><code><strong>doc.replaceSelection</strong>(replacement: string, ?collapse: string)</code></dt>\n
+      <dd>Replace the selection with the given string. By default, the\n
+      new selection will span the inserted text. The\n
+      optional <code>collapse</code> argument can be used to change\n
+      thisâpassing <code>"start"</code> or <code>"end"</code> will\n
+      collapse the selection to the start or end of the inserted\n
+      text.</dd>\n
+\n
+      <dt id="getCursor"><code><strong>doc.getCursor</strong>(?start: string) â {line, ch}</code></dt>\n
+      <dd><code>start</code> is a an optional string indicating which\n
+      end of the selection to return. It may\n
+      be <code>"start"</code>, <code>"end"</code>, <code>"head"</code>\n
+      (the side of the selection that moves when you press\n
+      shift+arrow), or <code>"anchor"</code> (the fixed side of the\n
+      selection). Omitting the argument is the same as\n
+      passing <code>"head"</code>. A <code>{line, ch}</code> object\n
+      will be returned.</dd>\n
+      <dt id="somethingSelected"><code><strong>doc.somethingSelected</strong>() â boolean</code></dt>\n
+      <dd>Return true if any text is selected.</dd>\n
+      <dt id="setCursor"><code><strong>doc.setCursor</strong>(pos: {line, ch})</code></dt>\n
+      <dd>Set the cursor position. You can either pass a\n
+      single <code>{line, ch}</code> object, or the line and the\n
+      character as two separate parameters.</dd>\n
+      <dt id="setSelection"><code><strong>doc.setSelection</strong>(anchor: {line, ch}, ?head: {line, ch})</code></dt>\n
+      <dd>Set the selection range. <code>anchor</code>\n
+      and <code>head</code> should be <code>{line, ch}</code>\n
+      objects. <code>head</code> defaults to <code>anchor</code> when\n
+      not given.</dd>\n
+      <dt id="extendSelection"><code><strong>doc.extendSelection</strong>(from: {line, ch}, ?to: {line, ch})</code></dt>\n
+      <dd>Similar\n
+      to <a href="#setSelection"><code>setSelection</code></a>, but\n
+      will, if shift is held or\n
+      the <a href="#setExtending">extending</a> flag is set, move the\n
+      head of the selection while leaving the anchor at its current\n
+      place. <code>to</code> is optional, and can be passed to\n
+      ensure a region (for example a word or paragraph) will end up\n
+      selected (in addition to whatever lies between that region and\n
+      the current anchor).</dd>\n
+      <dt id="setExtending"><code><strong>doc.setExtending</strong>(value: boolean)</code></dt>\n
+      <dd>Sets or clears the \'extending\' flag, which acts similar to\n
+      the shift key, in that it will cause cursor movement and calls\n
+      to <a href="#extendSelection"><code>extendSelection</code></a>\n
+      to leave the selection anchor in place.</dd>\n
+\n
+      <dt id="hasFocus"><code><strong>cm.hasFocus</strong>() â boolean</code></dt>\n
+      <dd>Tells you whether the editor currently has focus.</dd>\n
+\n
+      <dt id="findPosH"><code><strong>cm.findPosH</strong>(start: {line, ch}, amount: integer, unit: string, visually: boolean) â {line, ch, ?hitSide: boolean}</code></dt>\n
+      <dd>Used to find the target position for horizontal cursor\n
+      motion. <code>start</code> is a <code>{line, ch}</code>\n
+      object, <code>amount</code> an integer (may be negative),\n
+      and <code>unit</code> one of the\n
+      string <code>"char"</code>, <code>"column"</code>,\n
+      or <code>"word"</code>. Will return a position that is produced\n
+      by moving <code>amount</code> times the distance specified\n
+      by <code>unit</code>. When <code>visually</code> is true, motion\n
+      in right-to-left text will be visual rather than logical. When\n
+      the motion was clipped by hitting the end or start of the\n
+      document, the returned value will have a <code>hitSide</code>\n
+      property set to true.</dd>\n
+      <dt id="findPosV"><code><strong>cm.findPosV</strong>(start: {line, ch}, amount: integer, unit: string) â {line, ch, ?hitSide: boolean}</code></dt>\n
+      <dd>Similar to <a href="#findPosH"><code>findPosH</code></a>,\n
+      but used for vertical motion. <code>unit</code> may\n
+      be <code>"line"</code> or <code>"page"</code>. The other\n
+      arguments and the returned value have the same interpretation as\n
+      they have in <code>findPosH</code>.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_configuration">Configuration methods</h3>\n
+\n
+    <dl>\n
+      <dt id="setOption"><code><strong>cm.setOption</strong>(option: string, value: any)</code></dt>\n
+      <dd>Change the configuration of the editor. <code>option</code>\n
+      should the name of an <a href="#config">option</a>,\n
+      and <code>value</code> should be a valid value for that\n
+      option.</dd>\n
+      <dt id="getOption"><code><strong>cm.getOption</strong>(option: string) â any</code></dt>\n
+      <dd>Retrieves the current value of the given option for this\n
+      editor instance.</dd>\n
+\n
+      <dt id="addKeyMap"><code><strong>cm.addKeyMap</strong>(map: object, bottom: boolean)</code></dt>\n
+      <dd>Attach an additional <a href="#keymaps">keymap</a> to the\n
+      editor. This is mostly useful for addons that need to register\n
+      some key handlers without trampling on\n
+      the <a href="#option_extraKeys"><code>extraKeys</code></a>\n
+      option. Maps added in this way have a higher precedence than\n
+      the <code>extraKeys</code>\n
+      and <a href="#option_keyMap"><code>keyMap</code></a> options,\n
+      and between them, the maps added earlier have a lower precedence\n
+      than those added later, unless the <code>bottom</code> argument\n
+      was passed, in which case they end up below other keymaps added\n
+      with this method.</dd>\n
+      <dt id="removeKeyMap"><code><strong>cm.removeKeyMap</strong>(map: object)</code></dt>\n
+      <dd>Disable a keymap added\n
+      with <a href="#addKeyMap"><code>addKeyMap</code></a>. Either\n
+      pass in the keymap object itself, or a string, which will be\n
+      compared against the <code>name</code> property of the active\n
+      keymaps.</dd>\n
+\n
+      <dt id="addOverlay"><code><strong>cm.addOverlay</strong>(mode: string|object, ?options: object)</code></dt>\n
+      <dd>Enable a highlighting overlay. This is a stateless mini-mode\n
+      that can be used to add extra highlighting. For example,\n
+      the <a href="../demo/search.html">search addon</a> uses it to\n
+      highlight the term that\'s currently being\n
+      searched. <code>mode</code> can be a <a href="#option_mode">mode\n
+      spec</a> or a mode object (an object with\n
+      a <a href="#token"><code>token</code></a> method).\n
+      The <code>options</code> parameter is optional. If given, it\n
+      should be an object. Currently, only the <code>opaque</code>\n
+      option is recognized. This defaults to off, but can be given to\n
+      allow the overlay styling, when not <code>null</code>, to\n
+      override the styling of the base mode entirely, instead of the\n
+      two being applied together.</dd>\n
+      <dt id="removeOverlay"><code><strong>cm.removeOverlay</strong>(mode: string|object)</code></dt>\n
+      <dd>Pass this the exact value passed for the <code>mode</code>\n
+      parameter to <a href="#addOverlay"><code>addOverlay</code></a>,\n
+      or a string that corresponds to the <code>name</code> propery of\n
+      that value, to remove an overlay again.</dd>\n
+\n
+      <dt id="on"><code><strong>cm.on</strong>(type: string, func: (...args))</code></dt>\n
+      <dd>Register an event handler for the given event type (a\n
+      string) on the editor instance. There is also\n
+      a <code>CodeMirror.on(object, type, func)</code> version\n
+      that allows registering of events on any object.</dd>\n
+      <dt id="off"><code><strong>cm.off</strong>(type: string, func: (...args))</code></dt>\n
+      <dd>Remove an event handler on the editor instance. An\n
+      equivalent <code>CodeMirror.off(object, type,\n
+      func)</code> also exists.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_doc">Document management methods</h3>\n
+\n
+    <p id="Doc">Each editor is associated with an instance\n
+    of <code>CodeMirror.Doc</code>, its document. A document\n
+    represents the editor content, plus a selection, an undo history,\n
+    and a <a href="#option_mode">mode</a>. A document can only be\n
+    associated with a single editor at a time. You can create new\n
+    documents by calling the <code>CodeMirror.Doc(text, mode,\n
+    firstLineNumber)</code> constructor. The last two arguments are\n
+    optional and can be used to set a mode for the document and make\n
+    it start at a line number other than 0, respectively.</p>\n
+\n
+    <dl>\n
+      <dt id="getDoc"><code><strong>cm.getDoc</strong>() â Doc</code></dt>\n
+      <dd>Retrieve the currently active document from an editor.</dd>\n
+      <dt id="getEditor"><code><strong>doc.getEditor</strong>() â CodeMirror</code></dt>\n
+      <dd>Retrieve the editor associated with a document. May\n
+      return <code>null</code>.</dd>\n
+\n
+      <dt id="swapDoc"><code><strong>cm.swapDoc</strong>(doc: CodeMirror.Doc) â Doc</code></dt>\n
+      <dd>Attach a new document to the editor. Returns the old\n
+      document, which is now no longer associated with an editor.</dd>\n
+\n
+      <dt id="copy"><code><strong>doc.copy</strong>(copyHistory: boolean) â Doc</code></dt>\n
+      <dd>Create an identical copy of the given doc.\n
+      When <code>copyHistory</code> is true, the history will also be\n
+      copied. Can not be called directly on an editor.</dd>\n
+\n
+      <dt id="linkedDoc"><code><strong>doc.linkedDoc</strong>(options: object) â Doc</code></dt>\n
+      <dd>Create a new document that\'s linked to the target document.\n
+      Linked documents will stay in sync (changes to one are also\n
+      applied to the other) until <a href="#unlinkDoc">unlinked</a>.\n
+      These are the options that are supported:\n
+        <dl>\n
+          <dt id="linkedDoc_sharedHist"><code><strong>sharedHist</strong>: boolean</code></dt>\n
+          <dd>When turned on, the linked copy will share an undo\n
+          history with the original. Thus, something done in one of\n
+          the two can be undone in the other, and vice versa.</dd>\n
+          <dt id="linkedDoc_from"><code><strong>from</strong>: integer</code></dt>\n
+          <dt id="linkedDoc_to"><code><strong>to</strong>: integer</code></dt>\n
+          <dd>Can be given to make the new document a subview of the\n
+          original. Subviews only show a given range of lines. Note\n
+          that line coordinates inside the subview will be consistent\n
+          with those of the parent, so that for example a subview\n
+          starting at line 10 will refer to its first line as line 10,\n
+          not 0.</dd>\n
+          <dt id="linkedDoc_mode"><code><strong>mode</strong>: string|object</code></dt>\n
+          <dd>By default, the new document inherits the mode of the\n
+          parent. This option can be set to\n
+          a <a href="#option_mode">mode spec</a> to give it a\n
+          different mode.</dd>\n
+        </dl></dd>\n
+      <dt id="unlinkDoc"><code><strong>doc.unlinkDoc</strong>(doc: CodeMirror.Doc)</code></dt>\n
+      <dd>Break the link between two documents. After calling this,\n
+      changes will no longer propagate between the documents, and, if\n
+      they had a shared history, the history will become\n
+      separate.</dd>\n
+      <dt id="iterLinkedDocs"><code><strong>doc.iterLinkedDocs</strong>(function: (doc: CodeMirror.Doc, sharedHist: boolean))</code></dt>\n
+      <dd>Will call the given function for all documents linked to the\n
+      target document. It will be passed two arguments, the linked document\n
+      and a boolean indicating whether that document shares history\n
+      with the target.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_history">History-related methods</h3>\n
+\n
+    <dl>\n
+      <dt id="undo"><code><strong>doc.undo</strong>()</code></dt>\n
+      <dd>Undo one edit (if any undo events are stored).</dd>\n
+      <dt id="redo"><code><strong>doc.redo</strong>()</code></dt>\n
+      <dd>Redo one undone edit.</dd>\n
+\n
+      <dt id="historySize"><code><strong>doc.historySize</strong>() â {undo: integer, redo: integer}</code></dt>\n
+      <dd>Returns an object with <code>{undo, redo}</code> properties,\n
+      both of which hold integers, indicating the amount of stored\n
+      undo and redo operations.</dd>\n
+      <dt id="clearHistory"><code><strong>doc.clearHistory</strong>()</code></dt>\n
+      <dd>Clears the editor\'s undo history.</dd>\n
+      <dt id="getHistory"><code><strong>doc.getHistory</strong>() â object</code></dt>\n
+      <dd>Get a (JSON-serializeable) representation of the undo history.</dd>\n
+      <dt id="setHistory"><code><strong>doc.setHistory</strong>(history: object)</code></dt>\n
+      <dd>Replace the editor\'s undo history with the one provided,\n
+      which must be a value as returned\n
+      by <a href="#getHistory"><code>getHistory</code></a>. Note that\n
+      this will have entirely undefined results if the editor content\n
+      isn\'t also the same as it was when <code>getHistory</code> was\n
+      called.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_marker">Text-marking methods</h3>\n
+\n
+    <dl>\n
+      <dt id="markText"><code><strong>doc.markText</strong>(from: {line, ch}, to: {line, ch}, ?options: object) â TextMarker</code></dt>\n
+      <dd>Can be used to mark a range of text with a specific CSS\n
+      class name. <code>from</code> and <code>to</code> should\n
+      be <code>{line, ch}</code> objects. The <code>options</code>\n
+      parameter is optional. When given, it should be an object that\n
+      may contain the following configuration options:\n
+      <dl>\n
+        <dt id="mark_className"><code><strong>className</strong>: string</code></dt>\n
+        <dd>Assigns a CSS class to the marked stretch of text.</dd>\n
+        <dt id="mark_inclusiveLeft"><code><strong>inclusiveLeft</strong>: boolean</code></dt>\n
+        <dd>Determines whether\n
+        text inserted on the left of the marker will end up inside\n
+        or outside of it.</dd>\n
+        <dt id="mark_inclusiveRight"><code><strong>inclusiveRight</strong>: boolean</code></dt>\n
+        <dd>Like <code>inclusiveLeft</code>,\n
+        but for the right side.</dd>\n
+        <dt id="mark_atomic"><code><strong>atomic</strong>: boolean</code></dt>\n
+        <dd>Atomic ranges act as a single unit when cursor movement is\n
+        concernedâi.e. it is impossible to place the cursor inside of\n
+        them. In atomic ranges, <code>inclusiveLeft</code>\n
+        and <code>inclusiveRight</code> have a different meaningâthey\n
+        will prevent the cursor from being placed respectively\n
+        directly before and directly after the range.</dd>\n
+        <dt id="mark_collapsed"><code><strong>collapsed</strong>: boolean</code></dt>\n
+        <dd>Collapsed ranges do not show up in the display. Setting a\n
+        range to be collapsed will automatically make it atomic.</dd>\n
+        <dt id="mark_clearOnEnter"><code><strong>clearOnEnter</strong>: boolean</code></dt>\n
+        <dd>When enabled, will cause the mark to clear itself whenever\n
+        the cursor enters its range. This is mostly useful for\n
+        text-replacement widgets that need to \'snap open\' when the\n
+        user tries to edit them. The\n
+        <a href="#event_clear"><code>"clear"</code></a> event\n
+        fired on the range handle can be used to be notified when this\n
+        happens.</dd>\n
+        <dt id="mark_clearWhenEmpty"><code><strong>clearWhenEmpty</strong>: boolean</code></dt>\n
+        <dd>Determines whether the mark is automatically cleared when\n
+        it becomes empty. Default is true.</dd>\n
+        <dt id="mark_replacedWith"><code><strong>replacedWith</strong>: Element</code></dt>\n
+        <dd>Use a given node to display this range. Implies both\n
+        collapsed and atomic. The given DOM node <em>must</em> be an\n
+        inline element (as opposed to a block element).</dd>\n
+        <dt><code><strong>handleMouseEvents</strong>: boolean</code></dt>\n
+        <dd>When <code>replacedWith</code> is given, this determines\n
+        whether the editor will capture mouse and drag events\n
+        occurring in this widget. Default is falseâthe events will be\n
+        left alone for the default browser handler, or specific\n
+        handlers on the widget, to capture.</dd>\n
+        <dt id="mark_readOnly"><code><strong>readOnly</strong>: boolean</code></dt>\n
+        <dd>A read-only span can, as long as it is not cleared, not be\n
+        modified except by\n
+        calling <a href="#setValue"><code>setValue</code></a> to reset\n
+        the whole document. <em>Note:</em> adding a read-only span\n
+        currently clears the undo history of the editor, because\n
+        existing undo events being partially nullified by read-only\n
+        spans would corrupt the history (in the current\n
+        implementation).</dd>\n
+        <dt id="mark_addToHistory"><code><strong>addToHistory</strong>: boolean</code></dt>\n
+        <dd>When set to true (default is false), adding this marker\n
+        will create an event in the undo history that can be\n
+        individually undone (clearing the marker).</dd>\n
+        <dt id="mark_startStyle"><code><strong>startStyle</strong>: string</code></dt><dd>Can be used to specify\n
+        an extra CSS class to be applied to the leftmost span that\n
+        is part of the marker.</dd>\n
+        <dt id="mark_endStyle"><code><strong>endStyle</strong>: string</code></dt><dd>Equivalent\n
+        to <code>startStyle</code>, but for the rightmost span.</dd>\n
+        <dt id="mark_title"><code><strong>title</strong>:\n
+        string</code></dt><dd>When given, will give the nodes created\n
+        for this span a HTML <code>title</code> attribute with the\n
+        given value.</dd>\n
+        <dt id="mark_shared"><code><strong>shared</strong>: boolean</code></dt><dd>When the\n
+        target document is <a href="#linkedDoc">linked</a> to other\n
+        documents, you can set <code>shared</code> to true to make the\n
+        marker appear in all documents. By default, a marker appears\n
+        only in its target document.</dd>\n
+      </dl>\n
+      The method will return an object that represents the marker\n
+      (with constructor <code>CodeMirror.TextMarker</code>), which\n
+      exposes three methods:\n
+      <code><strong>clear</strong>()</code>, to remove the mark,\n
+      <code><strong>find</strong>()</code>, which returns\n
+      a <code>{from, to}</code> object (both holding document\n
+      positions), indicating the current position of the marked range,\n
+      or <code>undefined</code> if the marker is no longer in the\n
+      document, and finally <code><strong>changed</strong>()</code>,\n
+      which you can call if you\'ve done something that might change\n
+      the size of the marker (for example changing the content of\n
+      a <a href="#mark_replacedWith"><code>replacedWith</code></a>\n
+      node), and want to cheaply update the display.</dd>\n
+\n
+      <dt id="setBookmark"><code><strong>doc.setBookmark</strong>(pos: {line, ch}, ?options: object) â TextMarker</code></dt>\n
+      <dd>Inserts a bookmark, a handle that follows the text around it\n
+      as it is being edited, at the given position. A bookmark has two\n
+      methods <code>find()</code> and <code>clear()</code>. The first\n
+      returns the current position of the bookmark, if it is still in\n
+      the document, and the second explicitly removes the bookmark.\n
+      The options argument is optional. If given, the following\n
+      properties are recognized:\n
+      <dl>\n
+        <dt><code><strong>widget</strong>: Element</code></dt><dd>Can be used to display a DOM\n
+        node at the current location of the bookmark (analogous to\n
+        the <a href="#mark_replacedWith"><code>replacedWith</code></a>\n
+        option to <a href="#markText"><code>markText</code></a>).</dd>\n
+        <dt><code><strong>insertLeft</strong>: boolean</code></dt><dd>By default, text typed\n
+        when the cursor is on top of the bookmark will end up to the\n
+        right of the bookmark. Set this option to true to make it go\n
+        to the left instead.</dd>\n
+      </dl></dd>\n
+\n
+      <dt id="findMarks"><code><strong>doc.findMarks</strong>(from: {line, ch}, to: {line, ch}) â array&lt;TextMarker&gt;</code></dt>\n
+      <dd>Returns an array of all the bookmarks and marked ranges\n
+      found between the given positions.</dd>\n
+      <dt id="findMarksAt"><code><strong>doc.findMarksAt</strong>(pos: {line, ch}) â array&lt;TextMarker&gt;</code></dt>\n
+      <dd>Returns an array of all the bookmarks and marked ranges\n
+      present at the given position.</dd>\n
+      <dt id="getAllMarks"><code><strong>doc.getAllMarks</strong>() â array&lt;TextMarker&gt;</code></dt>\n
+      <dd>Returns an array containing all marked ranges in the document.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_decoration">Widget, gutter, and decoration methods</h3>\n
+\n
+    <dl>\n
+      <dt id="setGutterMarker"><code><strong>cm.setGutterMarker</strong>(line: integer|LineHandle, gutterID: string, value: Element) â LineHandle</code></dt>\n
+      <dd>Sets the gutter marker for the given gutter (identified by\n
+      its CSS class, see\n
+      the <a href="#option_gutters"><code>gutters</code></a> option)\n
+      to the given value. Value can be either <code>null</code>, to\n
+      clear the marker, or a DOM element, to set it. The DOM element\n
+      will be shown in the specified gutter next to the specified\n
+      line.</dd>\n
+\n
+      <dt id="clearGutter"><code><strong>cm.clearGutter</strong>(gutterID: string)</code></dt>\n
+      <dd>Remove all gutter markers in\n
+      the <a href="#option_gutters">gutter</a> with the given ID.</dd>\n
+\n
+      <dt id="addLineClass"><code><strong>cm.addLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
+      <dd>Set a CSS class name for the given line. <code>line</code>\n
+      can be a number or a line handle. <code>where</code> determines\n
+      to which element this class should be applied, can can be one\n
+      of <code>"text"</code> (the text element, which lies in front of\n
+      the selection), <code>"background"</code> (a background element\n
+      that will be behind the selection), or <code>"wrap"</code> (the\n
+      wrapper node that wraps all of the line\'s elements, including\n
+      gutter elements). <code>class</code> should be the name of the\n
+      class to apply.</dd>\n
+\n
+      <dt id="removeLineClass"><code><strong>cm.removeLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
+      <dd>Remove a CSS class from a line. <code>line</code> can be a\n
+      line handle or number. <code>where</code> should be one\n
+      of <code>"text"</code>, <code>"background"</code>,\n
+      or <code>"wrap"</code>\n
+      (see <a href="#addLineClass"><code>addLineClass</code></a>). <code>class</code>\n
+      can be left off to remove all classes for the specified node, or\n
+      be a string to remove only a specific class.</dd>\n
+\n
+      <dt id="lineInfo"><code><strong>cm.lineInfo</strong>(line: integer|LineHandle) â object</code></dt>\n
+      <dd>Returns the line number, text content, and marker status of\n
+      the given line, which can be either a number or a line handle.\n
+      The returned object has the structure <code>{line, handle, text,\n
+      gutterMarkers, textClass, bgClass, wrapClass, widgets}</code>,\n
+      where <code>gutterMarkers</code> is an object mapping gutter IDs\n
+      to marker elements, and <code>widgets</code> is an array\n
+      of <a href="#addLineWidget">line widgets</a> attached to this\n
+      line, and the various class properties refer to classes added\n
+      with <a href="#addLineClass"><code>addLineClass</code></a>.</dd>\n
+\n
+      <dt id="addWidget"><code><strong>cm.addWidget</strong>(pos: {line, ch}, node: Element, scrollIntoView: boolean)</code></dt>\n
+      <dd>Puts <code>node</code>, which should be an absolutely\n
+      positioned DOM node, into the editor, positioned right below the\n
+      given <code>{line, ch}</code> position.\n
+      When <code>scrollIntoView</code> is true, the editor will ensure\n
+      that the entire node is visible (if possible). To remove the\n
+      widget again, simply use DOM methods (move it somewhere else, or\n
+      call <code>removeChild</code> on its parent).</dd>\n
+\n
+      <dt id="addLineWidget"><code><strong>cm.addLineWidget</strong>(line: integer|LineHandle, node: Element, ?options: object) â LineWidget</code></dt>\n
+      <dd>Adds a line widget, an element shown below a line, spanning\n
+      the whole of the editor\'s width, and moving the lines below it\n
+      downwards. <code>line</code> should be either an integer or a\n
+      line handle, and <code>node</code> should be a DOM node, which\n
+      will be displayed below the given line. <code>options</code>,\n
+      when given, should be an object that configures the behavior of\n
+      the widget. The following options are supported (all default to\n
+      false):\n
+        <dl>\n
+          <dt><code><strong>coverGutter</strong>: boolean</code></dt>\n
+          <dd>Whether the widget should cover the gutter.</dd>\n
+          <dt><code><strong>noHScroll</strong>: boolean</code></dt>\n
+          <dd>Whether the widget should stay fixed in the face of\n
+          horizontal scrolling.</dd>\n
+          <dt><code><strong>above</strong>: boolean</code></dt>\n
+          <dd>Causes the widget to be placed above instead of below\n
+          the text of the line.</dd>\n
+          <dt><code><strong>showIfHidden</strong>: boolean</code></dt>\n
+          <dd>When true, will cause the widget to be rendered even if\n
+          the line it is associated with is hidden.</dd>\n
+          <dt><code><strong>handleMouseEvents</strong>: boolean</code></dt>\n
+          <dd>Determines whether the editor will capture mouse and\n
+          drag events occurring in this widget. Default is falseâthe\n
+          events will be left alone for the default browser handler,\n
+          or specific handlers on the widget, to capture.</dd>\n
+          <dt><code><strong>insertAt</strong>: integer</code></dt>\n
+          <dd>By default, the widget is added below other widgets for\n
+          the line. This option can be used to place it at a different\n
+          position (zero for the top, N to put it after the Nth other\n
+          widget). Note that this only has effect once, when the\n
+          widget is created.\n
+        </dl>\n
+      Note that the widget node will become a descendant of nodes with\n
+      CodeMirror-specific CSS classes, and those classes might in some\n
+      cases affect it. This method returns an object that represents\n
+      the widget placement. It\'ll have a <code>line</code> property\n
+      pointing at the line handle that it is associated with, and the following methods:\n
+        <dl>\n
+          <dt id="widget_clear"><code><strong>clear</strong>()</code></dt><dd>Removes the widget.</dd>\n
+          <dt id="widget_changed"><code><strong>changed</strong>()</code></dt><dd>Call\n
+          this if you made some change to the widget\'s DOM node that\n
+          might affect its height. It\'ll force CodeMirror to update\n
+          the height of the line that contains the widget.</dd>\n
+        </dl>\n
+      </dd>\n
+    </dl>\n
+\n
+    <h3 id="api_sizing">Sizing, scrolling and positioning methods</h3>\n
+\n
+    <dl>\n
+      <dt id="setSize"><code><strong>cm.setSize</strong>(width: number|string, height: number|string)</code></dt>\n
+      <dd>Programatically set the size of the editor (overriding the\n
+      applicable <a href="#css-resize">CSS\n
+      rules</a>). <code>width</code> and <code>height</code>\n
+      can be either numbers (interpreted as pixels) or CSS units\n
+      (<code>"100%"</code>, for example). You can\n
+      pass <code>null</code> for either of them to indicate that that\n
+      dimension should not be changed.</dd>\n
+\n
+      <dt id="scrollTo"><code><strong>cm.scrollTo</strong>(x: number, y: number)</code></dt>\n
+      <dd>Scroll the editor to a given (pixel) position. Both\n
+      arguments may be left as <code>null</code>\n
+      or <code>undefined</code> to have no effect.</dd>\n
+      <dt id="getScrollInfo"><code><strong>cm.getScrollInfo</strong>() â {left, top, width, height, clientWidth, clientHeight}</code></dt>\n
+      <dd>Get an <code>{left, top, width, height, clientWidth,\n
+      clientHeight}</code> object that represents the current scroll\n
+      position, the size of the scrollable area, and the size of the\n
+      visible area (minus scrollbars).</dd>\n
+      <dt id="scrollIntoView"><code><strong>cm.scrollIntoView</strong>(what: {line, ch}|{left, top, right, bottom}|{from, to}|null, ?margin: number)</code></dt>\n
+      <dd>Scrolls the given position into view. <code>what</code> may\n
+      be <code>null</code> to scroll the cursor into view,\n
+      a <code>{line, ch}</code> position to scroll a character into\n
+      view, a <code>{left, top, right, bottom}</code> pixel range (in\n
+      editor-local coordinates), or a range <code>{from, to}</code>\n
+      containing either two character positions or two pixel squares.\n
+      The <code>margin</code> parameter is optional. When given, it\n
+      indicates the amount of vertical pixels around the given area\n
+      that should be made visible as well.</dd>\n
+\n
+      <dt id="cursorCoords"><code><strong>cm.cursorCoords</strong>(where: boolean|{line, ch}, mode: string) â {left, top, bottom}</code></dt>\n
+      <dd>Returns an <code>{left, top, bottom}</code> object\n
+      containing the coordinates of the cursor position.\n
+      If <code>mode</code> is <code>"local"</code>, they will be\n
+      relative to the top-left corner of the editable document. If it\n
+      is <code>"page"</code> or not given, they are relative to the\n
+      top-left corner of the page. <code>where</code> can be a boolean\n
+      indicating whether you want the start (<code>true</code>) or the\n
+      end (<code>false</code>) of the selection, or, if a <code>{line,\n
+      ch}</code> object is given, it specifies the precise position at\n
+      which you want to measure.</dd>\n
+      <dt id="charCoords"><code><strong>cm.charCoords</strong>(pos: {line, ch}, ?mode: string) â {left, right, top, bottom}</code></dt>\n
+      <dd>Returns the position and dimensions of an arbitrary\n
+      character. <code>pos</code> should be a <code>{line, ch}</code>\n
+      object. This differs from <code>cursorCoords</code> in that\n
+      it\'ll give the size of the whole character, rather than just the\n
+      position that the cursor would have when it would sit at that\n
+      position.</dd>\n
+      <dt id="coordsChar"><code><strong>cm.coordsChar</strong>(object: {left, top}, ?mode: string) â {line, ch}</code></dt>\n
+      <dd>Given an <code>{left, top}</code> object, returns\n
+      the <code>{line, ch}</code> position that corresponds to it. The\n
+      optional <code>mode</code> parameter determines relative to what\n
+      the coordinates are interpreted. It may\n
+      be <code>"window"</code>, <code>"page"</code> (the default),\n
+      or <code>"local"</code>.</dd>\n
+      <dt id="lineAtHeight"><code><strong>cm.lineAtHeight</strong>(height: number, ?mode: string) â number</code></dt>\n
+      <dd>Computes the line at the given pixel\n
+      height. <code>mode</code> can be one of the same strings\n
+      that <a href="#coordsChar"><code>coordsChar</code></a>\n
+      accepts.</dd>\n
+      <dt id="heightAtLine"><code><strong>cm.heightAtLine</strong>(line: number, ?mode: string) â number</code></dt>\n
+      <dd>Computes the height of the top of a line, in the coordinate\n
+      system specified by <code>mode</code>\n
+      (see <a href="#coordsChar"><code>coordsChar</code></a>), which\n
+      defaults to <code>"page"</code>. When a line below the bottom of\n
+      the document is specified, the returned value is the bottom of\n
+      the last line in the document.</dd>\n
+      <dt id="defaultTextHeight"><code><strong>cm.defaultTextHeight</strong>() â number</code></dt>\n
+      <dd>Returns the line height of the default font for the editor.</dd>\n
+      <dt id="defaultCharWidth"><code><strong>cm.defaultCharWidth</strong>() â number</code></dt>\n
+      <dd>Returns the pixel width of an \'x\' in the default font for\n
+      the editor. (Note that for non-monospace fonts, this is mostly\n
+      useless, and even for monospace fonts, non-ascii characters\n
+      might have a different width).</dd>\n
+\n
+      <dt id="getViewport"><code><strong>cm.getViewport</strong>() â {from: number, to: number}</code></dt>\n
+      <dd>Returns a <code>{from, to}</code> object indicating the\n
+      start (inclusive) and end (exclusive) of the currently rendered\n
+      part of the document. In big documents, when most content is\n
+      scrolled out of view, CodeMirror will only render the visible\n
+      part, and a margin around it. See also\n
+      the <a href="#event_viewportChange"><code>viewportChange</code></a>\n
+      event.</dd>\n
+\n
+      <dt id="refresh"><code><strong>cm.refresh</strong>()</code></dt>\n
+      <dd>If your code does something to change the size of the editor\n
+      element (window resizes are already listened for), or unhides\n
+      it, you should probably follow up by calling this method to\n
+      ensure CodeMirror is still looking as intended.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_mode">Mode, state, and token-related methods</h3>\n
+\n
+    <p>When writing language-aware functionality, it can often be\n
+    useful to hook into the knowledge that the CodeMirror language\n
+    mode has. See <a href="#modeapi">the section on modes</a> for a\n
+    more detailed description of how these work.</p>\n
+\n
+    <dl>\n
+      <dt id="getMode"><code><strong>doc.getMode</strong>() â object</code></dt>\n
+      <dd>Gets the (outer) mode object for the editor. Note that this\n
+      is distinct from <code>getOption("mode")</code>, which gives you\n
+      the mode specification, rather than the resolved, instantiated\n
+      <a href="#defineMode">mode object</a>.</dd>\n
+\n
+      <dt id="getModeAt"><code><strong>doc.getModeAt</strong>(pos: {line, ch}) â object</code></dt>\n
+      <dd>Gets the inner mode at a given position. This will return\n
+      the same as <a href="#getMode"><code>getMode</code></a> for\n
+      simple modes, but will return an inner mode for nesting modes\n
+      (such as <code>htmlmixed</code>).</dd>\n
+\n
+      <dt id="getTokenAt"><code><strong>cm.getTokenAt</strong>(pos: {line, ch}, ?precise: boolean) â object</code></dt>\n
+      <dd>Retrieves information about the token the current mode found\n
+      before the given position (a <code>{line, ch}</code> object). The\n
+      returned object has the following properties:\n
+      <dl>\n
+        <dt><code><strong>start</strong></code></dt><dd>The character (on the given line) at which the token starts.</dd>\n
+        <dt><code><strong>end</strong></code></dt><dd>The character at which the token ends.</dd>\n
+        <dt><code><strong>string</strong></code></dt><dd>The token\'s string.</dd>\n
+        <dt><code><strong>type</strong></code></dt><dd>The token type the mode assigned\n
+        to the token, such as <code>"keyword"</code>\n
+        or <code>"comment"</code> (may also be null).</dd>\n
+        <dt><code><strong>state</strong></code></dt><dd>The mode\'s state at the end of this token.</dd>\n
+      </dl>\n
+      If <code>precise</code> is true, the token will be guaranteed to be accurate based on recent edits. If false or\n
+      not specified, the token will use cached state information, which will be faster but might not be accurate if\n
+      edits were recently made and highlighting has not yet completed.\n
+      </dd>\n
+\n
+      <dt id="getTokenTypeAt"><code><strong>cm.getTokenTypeAt</strong>(pos: {line, ch}) â string</code></dt>\n
+      <dd>This is a (much) cheaper version\n
+      of <a href="#getTokenAt"><code>getTokenAt</code></a> useful for\n
+      when you just need the type of the token at a given position,\n
+      and no other information. Will return <code>null</code> for\n
+      unstyled tokens, and a string, potentially containing multiple\n
+      space-separated style names, otherwise.</dd>\n
+\n
+      <dt id="getHelpers"><code><strong>cm.getHelpers</strong>(pos: {line, ch}, type: string) â array&lt;helper&gt;</code></dt>\n
+      <dd>Fetch the set of applicable helper values for the given\n
+      position. Helpers provide a way to look up functionality\n
+      appropriate for a mode. The <code>type</code> argument provides\n
+      the helper namespace (see\n
+      <a href="#registerHelper"><code>registerHelper</code></a>), in\n
+      which the values will be looked up. When the mode itself has a\n
+      property that corresponds to the <code>type</code>, that\n
+      directly determines the keys that are used to look up the helper\n
+      values (it may be either a single string, or an array of\n
+      strings). Failing that, the mode\'s <code>helperType</code>\n
+      property and finally the mode\'s name are used.</dd>\n
+      <dd>For example, the JavaScript mode has a\n
+      property <code>fold</code> containing <code>"brace"</code>. When\n
+      the <code>brace-fold</code> addon is loaded, that defines a\n
+      helper named <code>brace</code> in the <code>fold</code>\n
+      namespace. This is then used by\n
+      the <a href="#addon_foldcode"><code>foldcode</code></a> addon to\n
+      figure out that it can use that folding function to fold\n
+      JavaScript code.</dd>\n
+      <dd>When any <a href="#registerGlobalHelper">\'global\'</a>\n
+      helpers are defined for the given namespace, their predicates\n
+      are called on the current mode and editor, and all those that\n
+      declare they are applicable will also be added to the array that\n
+      is returned.</dd>\n
+\n
+      <dt id="getHelper"><code><strong>cm.getHelper</strong>(pos: {line, ch}, type: string) â helper</code></dt>\n
+      <dd>Returns the first applicable helper value.\n
+      See <a href="#getHelpers"><code>getHelpers</code></a>.</dd>\n
+\n
+      <dt id="getStateAfter"><code><strong>cm.getStateAfter</strong>(?line: integer, ?precise: boolean) â object</code></dt>\n
+      <dd>Returns the mode\'s parser state, if any, at the end of the\n
+      given line number. If no line number is given, the state at the\n
+      end of the document is returned. This can be useful for storing\n
+      parsing errors in the state, or getting other kinds of\n
+      contextual information for a line. <code>precise</code> is defined\n
+      as in <code>getTokenAt()</code>.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_misc">Miscellaneous methods</h3>\n
+\n
+    <dl>\n
+      <dt id="operation"><code><strong>cm.operation</strong>(func: () â any) â any</code></dt>\n
+      <dd>CodeMirror internally buffers changes and only updates its\n
+      DOM structure after it has finished performing some operation.\n
+      If you need to perform a lot of operations on a CodeMirror\n
+      instance, you can call this method with a function argument. It\n
+      will call the function, buffering up all changes, and only doing\n
+      the expensive update after the function returns. This can be a\n
+      lot faster. The return value from this method will be the return\n
+      value of your function.</dd>\n
+\n
+      <dt id="indentLine"><code><strong>cm.indentLine</strong>(line: integer, ?dir: string|integer)</code></dt>\n
+      <dd>Adjust the indentation of the given line. The second\n
+      argument (which defaults to <code>"smart"</code>) may be one of:\n
+        <dl>\n
+          <dt><code><strong>"prev"</strong></code></dt>\n
+          <dd>Base indentation on the indentation of the previous line.</dd>\n
+          <dt><code><strong>"smart"</strong></code></dt>\n
+          <dd>Use the mode\'s smart indentation if available, behave\n
+          like <code>"prev"</code> otherwise.</dd>\n
+          <dt><code><strong>"add"</strong></code></dt>\n
+          <dd>Increase the indentation of the line by\n
+          one <a href="#option_indentUnit">indent unit</a>.</dd>\n
+          <dt><code><strong>"subtract"</strong></code></dt>\n
+          <dd>Reduce the indentation of the line.</dd>\n
+          <dt><code><strong>&lt;integer></strong></code></dt>\n
+          <dd>Add (positive number) or reduce (negative number) the\n
+          indentation by the given amount of spaces.</dd>\n
+        </dl></dd>\n
+\n
+      <dt id="toggleOverwrite"><code><strong>cm.toggleOverwrite</strong>(?value: bool)</code></dt>\n
+      <dd>Switches between overwrite and normal insert mode (when not\n
+      given an argument), or sets the overwrite mode to a specific\n
+      state (when given an argument).</dd>\n
+\n
+      <dt id="execCommand"><code><strong>cm.execCommand</strong>(name: string)</code></dt>\n
+      <dd>Runs the <a href="#commands">command</a> with the given name on the editor.</dd>\n
+\n
+      <dt id="posFromIndex"><code><strong>doc.posFromIndex</strong>(index: integer) â {line, ch}</code></dt>\n
+      <dd>Calculates and returns a <code>{line, ch}</code> object for a\n
+      zero-based <code>index</code> who\'s value is relative to the start of the\n
+      editor\'s text. If the <code>index</code> is out of range of the text then\n
+      the returned object is clipped to start or end of the text\n
+      respectively.</dd>\n
+      <dt id="indexFromPos"><code><strong>doc.indexFromPos</strong>(object: {line, ch}) â integer</code></dt>\n
+      <dd>The reverse of <a href="#posFromIndex"><code>posFromIndex</code></a>.</dd>\n
+\n
+      <dt id="focus"><code><strong>cm.focus</strong>()</code></dt>\n
+      <dd>Give the editor focus.</dd>\n
+\n
+      <dt id="getInputField"><code><strong>cm.getInputField</strong>() â TextAreaElement</code></dt>\n
+      <dd>Returns the hidden textarea used to read input.</dd>\n
+      <dt id="getWrapperElement"><code><strong>cm.getWrapperElement</strong>() â Element</code></dt>\n
+      <dd>Returns the DOM node that represents the editor, and\n
+      controls its size. Remove this from your tree to delete an\n
+      editor instance.</dd>\n
+      <dt id="getScrollerElement"><code><strong>cm.getScrollerElement</strong>() â Element</code></dt>\n
+      <dd>Returns the DOM node that is responsible for the scrolling\n
+      of the editor.</dd>\n
+      <dt id="getGutterElement"><code><strong>cm.getGutterElement</strong>() â Element</code></dt>\n
+      <dd>Fetches the DOM node that contains the editor gutters.</dd>\n
+    </dl>\n
+\n
+    <h3 id="api_static">Static properties</h3>\n
+    <p>The <code>CodeMirror</code> object itself provides\n
+    several useful properties.</p>\n
+\n
+    <dl>\n
+      <dt id="version"><code><strong>CodeMirror.version</strong>: string</code></dt>\n
+      <dd>It contains a string that indicates the version of the\n
+      library. This is a triple of\n
+      integers <code>"major.minor.patch"</code>,\n
+      where <code>patch</code> is zero for releases, and something\n
+      else (usually one) for dev snapshots.</dd>\n
+\n
+      <dt id="fromTextArea"><code><strong>CodeMirror.fromTextArea</strong>(textArea: TextAreaElement, ?config: object)</code></dt>\n
+      <dd>\n
+        The method provides another way to initialize an editor. It\n
+        takes a textarea DOM node as first argument and an optional\n
+        configuration object as second. It will replace the textarea\n
+        with a CodeMirror instance, and wire up the form of that\n
+        textarea (if any) to make sure the editor contents are put\n
+        into the textarea when the form is submitted. The text in the\n
+        textarea will provide the content for the editor. A CodeMirror\n
+        instance created this way has three additional methods:\n
+        <dl>\n
+          <dt id="save"><code><strong>cm.save</strong>()</code></dt>\n
+          <dd>Copy the content of the editor into the textarea.</dd>\n
+\n
+          <dt id="toTextArea"><code><strong>cm.toTextArea</strong>()</code></dt>\n
+          <dd>Remove the editor, and restore the original textarea (with\n
+          the editor\'s current content).</dd>\n
+\n
+          <dt id="getTextArea"><code><strong>cm.getTextArea</strong>() â TextAreaElement</code></dt>\n
+          <dd>Returns the textarea that the instance was based on.</dd>\n
+        </dl>\n
+      </dd>\n
+\n
+      <dt id="defaults"><code><strong>CodeMirror.defaults</strong>: object</code></dt>\n
+      <dd>An object containing default values for\n
+      all <a href="#config">options</a>. You can assign to its\n
+      properties to modify defaults (though this won\'t affect editors\n
+      that have already been created).</dd>\n
+\n
+      <dt id="defineExtension"><code><strong>CodeMirror.defineExtension</strong>(name: string, value: any)</code></dt>\n
+      <dd>If you want to define extra methods in terms of the\n
+      CodeMirror API, it is possible to\n
+      use <code>defineExtension</code>. This will cause the given\n
+      value (usually a method) to be added to all CodeMirror instances\n
+      created from then on.</dd>\n
+\n
+      <dt id="defineDocExtension"><code><strong>CodeMirror.defineDocExtension</strong>(name: string, value: any)</code></dt>\n
+      <dd>Like <a href="#defineExtenstion"><code>defineExtension</code></a>,\n
+      but the method will be added to the interface\n
+      for <a href="#Doc"><code>Doc</code></a> objects instead.</dd>\n
+\n
+      <dt id="defineOption"><code><strong>CodeMirror.defineOption</strong>(name: string,\n
+      default: any, updateFunc: function)</code></dt>\n
+      <dd>Similarly, <code>defineOption</code> can be used to define new options for\n
+      CodeMirror. The <code>updateFunc</code> will be called with the\n
+      editor instance and the new value when an editor is initialized,\n
+      and whenever the option is modified\n
+      through <a href="#setOption"><code>setOption</code></a>.</dd>\n
+\n
+      <dt id="defineInitHook"><code><strong>CodeMirror.defineInitHook</strong>(func: function)</code></dt>\n
+      <dd>If your extention just needs to run some\n
+      code whenever a CodeMirror instance is initialized,\n
+      use <code>CodeMirror.defineInitHook</code>. Give it a function as\n
+      its only argument, and from then on, that function will be called\n
+      (with the instance as argument) whenever a new CodeMirror instance\n
+      is initialized.</dd>\n
+\n
+      <dt id="registerHelper"><code><strong>CodeMirror.registerHelper</strong>(type:Â string, name:Â string, value:Â helper)</code></dt>\n
+      <dd>Registers a helper value with the given <code>name</code> in\n
+      the given namespace (<code>type</code>). This is used to define\n
+      functionality that may be looked up by mode. Will create (if it\n
+      doesn\'t already exist) a property on the <code>CodeMirror</code>\n
+      object for the given <code>type</code>, pointing to an object\n
+      that maps names to values. I.e. after\n
+      doing <code>CodeMirror.registerHelper("hint", "foo",\n
+      myFoo)</code>, the value <code>CodeMirror.hint.foo</code> will\n
+      point to <code>myFoo</code>.</dd>\n
+\n
+      <dt id="registerGlobalHelper"><code><strong>CodeMirror.registerGlobalHelper</strong>(type:Â string, name:Â string, predicate:Â fn(mode,Â CodeMirror), value:Â helper)</code></dt>\n
+      <dd>Acts\n
+      like <a href="#registerHelper"><code>registerHelper</code></a>,\n
+      but also registers this helper as \'global\', meaning that it will\n
+      be included by <a href="#getHelpers"><code>getHelpers</code></a>\n
+      whenever the given <code>predicate</code> returns true when\n
+      called with the local mode and editor.</dd>\n
+\n
+      <dt id="Pos"><code><strong>CodeMirror.Pos</strong>(line: integer, ?ch: integer)</code></dt>\n
+      <dd>A constructor for the <code>{line, ch}</code> objects that\n
+      are used to represent positions in editor documents.</dd>\n
+\n
+      <dt id="changeEnd"><code><strong>CodeMirror.changeEnd</strong>(change: object) â {line, ch}</code></dt>\n
+      <dd>Utility function that computes an end position from a change\n
+      (an object with <code>from</code>, <code>to</code>,\n
+      and <code>text</code> properties, as passed to\n
+      various <a href="#event_change">event handlers</a>). The\n
+      returned position will be the end of the changed\n
+      range, <em>after</em> the change is applied.</dd>\n
+    </dl>\n
+</section>\n
+\n
+<section id=addons>\n
+    <h2>Addons</h2>\n
+\n
+    <p>The <code>addon</code> directory in the distribution contains a\n
+    number of reusable components that implement extra editor\n
+    functionality (on top of extension functions\n
+    like <a href="#defineOption"><code>defineOption</code></a>, <a href="#defineExtension"><code>defineExtension</code></a>,\n
+    and <a href="#registerHelper"><code>registerHelper</code></a>). In\n
+    brief, they are:</p>\n
+\n
+    <dl>\n
+      <dt id="addon_dialog"><a href="../addon/dialog/dialog.js"><code>dialog/dialog.js</code></a></dt>\n
+      <dd>Provides a very simple way to query users for text input.\n
+      Adds an <strong><code>openDialog</code></strong> method to\n
+      CodeMirror instances, which can be called with an HTML fragment\n
+      or a detached DOM node that provides the prompt (should include\n
+      an <code>input</code> tag), and a callback function that is called\n
+      when text has been entered. Also adds\n
+      an <strong><code>openNotification</code></strong> function that\n
+      simply shows an HTML fragment as a notification. Depends\n
+      on <code>addon/dialog/dialog.css</code>.</dd>\n
+\n
+      <dt id="addon_searchcursor"><a href="../addon/search/searchcursor.js"><code>search/searchcursor.js</code></a></dt>\n
+      <dd>Adds the <code>getSearchCursor(query, start, caseFold) â\n
+      cursor</code> method to CodeMirror instances, which can be used\n
+      to implement search/replace functionality. <code>query</code>\n
+      can be a regular expression or a string (only strings will match\n
+      across linesâif they contain newlines). <code>start</code>\n
+      provides the starting position of the search. It can be\n
+      a <code>{line, ch}</code> object, or can be left off to default\n
+      to the start of the document. <code>caseFold</code> is only\n
+      relevant when matching a string. It will cause the search to be\n
+      case-insensitive. A search cursor has the following methods:\n
+        <dl>\n
+          <dt><code><strong>findNext</strong>() â boolean</code></dt>\n
+          <dt><code><strong>findPrevious</strong>() â boolean</code></dt>\n
+          <dd>Search forward or backward from the current position.\n
+          The return value indicates whether a match was found. If\n
+          matching a regular expression, the return value will be the\n
+          array returned by the <code>match</code> method, in case you\n
+          want to extract matched groups.</dd>\n
+          <dt><code><strong>from</strong>() â {line, ch}</code></dt>\n
+          <dt><code><strong>to</strong>() â {line, ch}</code></dt>\n
+          <dd>These are only valid when the last call\n
+          to <code>findNext</code> or <code>findPrevious</code> did\n
+          not return false. They will return <code>{line, ch}</code>\n
+          objects pointing at the start and end of the match.</dd>\n
+          <dt><code><strong>replace</strong>(text: string)</code></dt>\n
+          <dd>Replaces the currently found match with the given text\n
+          and adjusts the cursor position to reflect the\n
+          replacement.</dd>\n
+        </dl></dd>\n
+\n
+      <dt id="addon_search"><a href="../addon/search/search.js"><code>search/search.js</code></a></dt>\n
+      <dd>Implements the search commands. CodeMirror has keys bound to\n
+      these by default, but will not do anything with them unless an\n
+      implementation is provided. Depends\n
+      on <code>searchcursor.js</code>, and will make use\n
+      of <a href="#addon_dialog"><code>openDialog</code></a> when\n
+      available to make prompting for search queries less ugly.</dd>\n
+\n
+      <dt id="addon_matchbrackets"><a href="../addon/edit/matchbrackets.js"><code>edit/matchbrackets.js</code></a></dt>\n
+      <dd>Defines an option <code>matchBrackets</code> which, when set\n
+      to true, causes matching brackets to be highlighted whenever the\n
+      cursor is next to them. It also adds a\n
+      method <code>matchBrackets</code> that forces this to happen\n
+      once, and a method <code>findMatchingBracket</code> that can be\n
+      used to run the bracket-finding algorithm that this uses\n
+      internally.</dd>\n
+\n
+      <dt id="addon_closebrackets"><a href="../addon/edit/closebrackets.js"><code>edit/closebrackets.js</code></a></dt>\n
+      <dd>Defines an option <code>autoCloseBrackets</code> that will\n
+      auto-close brackets and quotes when typed. By default, it\'ll\n
+      auto-close <code>()[]{}\'\'""</code>, but you can pass it a string\n
+      similar to that (containing pairs of matching characters), or an\n
+      object with <code>pairs</code> and\n
+      optionally <code>explode</code> properties to customize\n
+      it. <code>explode</code> should be a similar string that gives\n
+      the pairs of characters that, when enter is pressed between\n
+      them, should have the second character also moved to its own\n
+      line. <a href="../demo/closebrackets.html">Demo here</a>.</dd>\n
+\n
+      <dt id="addon_matchtags"><a href="../addon/edit/matchtags.js"><code>edit/matchtags.js</code></a></dt>\n
+      <dd>Defines an option <code>matchTags</code> that, when enabled,\n
+      will cause the tags around the cursor to be highlighted (using\n
+      the <code>CodeMirror-matchingtag</code> class). Also\n
+      defines\n
+      a <a href="#commands">command</a> <code>toMatchingTag</code>,\n
+      which you can bind a key to in order to jump to the tag mathing\n
+      the one under the cursor. Depends on\n
+      the <code>addon/fold/xml-fold.js</code>\n
+      addon. <a href="../demo/matchtags.html">Demo here.</a></dd>\n
+\n
+      <dt id="addon_trailingspace"><a href="../addon/edit/trailingspace.js"><code>edit/trailingspace.js</code></a></dt>\n
+      <dd>Adds an option <code>showTrailingSpace</code> which, when\n
+      enabled, adds the CSS class <code>cm-trailingspace</code> to\n
+      stretches of whitespace at the end of lines.\n
+      The <a href="../demo/trailingspace.html">demo</a> has a nice\n
+      squiggly underline style for this class.</dd>\n
+\n
+      <dt id="addon_closetag"><a href="../addon/edit/closetag.js"><code>edit/closetag.js</code></a></dt>\n
+      <dd>Provides utility functions for adding automatic tag closing\n
+      to XML modes. See\n
+      the <a href="../demo/closetag.html">demo</a>.</dd>\n
+\n
+      <dt id="addon_continuelist"><a href="../addon/edit/continuelist.js"><code>edit/continuelist.js</code></a></dt>\n
+      <dd>Markdown specific. Defines\n
+      a <code>"newlineAndIndentContinueMarkdownList"</code> <a href="#commands">command</a>\n
+      command that can be bound to <code>enter</code> to automatically\n
+      insert the leading characters for continuing a list. See\n
+      the <a href="../mode/markdown/index.html">Markdown mode\n
+      demo</a>.</dd>\n
+\n
+      <dt id="addon_comment"><a href="../addon/comment/comment.js"><code>comment/comment.js</code></a></dt>\n
+      <dd>Addon for commenting and uncommenting code. Adds three\n
+      methods to CodeMirror instances:\n
+      <dl>\n
+        <dt id="lineComment"><code><strong>lineComment</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
+        <dd>Set the lines in the given range to be line comments. Will\n
+        fall back to <code>blockComment</code> when no line comment\n
+        style is defined for the mode.</dd>\n
+        <dt id="blockComment"><code><strong>blockComment</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
+        <dd>Wrap the code in the given range in a block comment. Will\n
+        fall back to <code>lineComment</code> when no block comment\n
+        style is defined for the mode.</dd>\n
+        <dt id="uncomment"><code><strong>uncomment</strong>(from: {line, ch}, to: {line, ch}, ?options: object) â boolean</code></dt>\n
+        <dd>Try to uncomment the given range.\n
+          Returns <code>true</code> if a comment range was found and\n
+          removed, <code>false</code> otherwise.</dd>\n
+      </dl>\n
+      The <code>options</code> object accepted by these methods may\n
+      have the following properties:\n
+      <dl>\n
+        <dt><code>blockCommentStart, blockCommentEnd, blockCommentLead, lineComment: string</code></dt>\n
+        <dd>Override the <a href="#mode_comment">comment string\n
+        properties</a> of the mode with custom comment strings.</dd>\n
+        <dt><code><strong>padding</strong>: string</code></dt>\n
+        <dd>A string that will be inserted after opening and before\n
+        closing comment markers. Defaults to a single space.</dd>\n
+        <dt><code><strong>commentBlankLines</strong>: boolean</code></dt>\n
+        <dd>Whether, when adding line comments, to also comment lines\n
+        that contain only whitespace.</dd>\n
+        <dt><code><strong>indent</strong>: boolean</code></dt>\n
+        <dd>When adding line comments and this is turned on, it will\n
+        align the comment block to the current indentation of the\n
+        first line of the block.</dd>\n
+        <dt><code><strong>fullLines</strong>: boolean</code></dt>\n
+        <dd>When block commenting, this controls whether the whole\n
+        lines are indented, or only the precise range that is given.\n
+        Defaults to <code>true</code>.</dd>\n
+      </dl>\n
+      The addon also defines\n
+      a <code>toggleComment</code> <a href="#commands">command</a>,\n
+      which will try to uncomment the current selection, and if that\n
+      fails, line-comments it.</dd>\n
+\n
+      <dt id="addon_foldcode"><a href="../addon/fold/foldcode.js"><code>fold/foldcode.js</code></a></dt>\n
+      <dd>Helps with code folding. Adds a <code>foldCode</code> method\n
+      to editor instances, which will try to do a code fold starting\n
+      at the given line, or unfold the fold that is already present.\n
+      The method takes as first argument the position that should be\n
+      folded (may be a line number or\n
+      a <a href="#Pos"><code>Pos</code></a>), and as second optional\n
+      argument either a range-finder function, or an options object,\n
+      supporting the following properties:\n
+      <dl>\n
+        <dt><code><strong>rangeFinder</strong>: fn(CodeMirror, Pos)</code></dt>\n
+        <dd id="helper_fold_auto">The function that is used to find\n
+        foldable ranges. If this is not directly passed, it will\n
+        default to <code>CodeMirror.fold.auto</code>, which\n
+        uses <a href="#getHelpers"><code>getHelpers</code></a> with\n
+        a <code>"fold"</code> type to find folding functions\n
+        appropriate for the local mode. There are files in\n
+        the <a href="../addon/fold/"><code>addon/fold/</code></a>\n
+        directory providing <code>CodeMirror.fold.brace</code>, which\n
+        finds blocks in brace languages (JavaScript, C, Java,\n
+        etc), <code>CodeMirror.fold.indent</code>, for languages where\n
+        indentation determines block structure (Python, Haskell),\n
+        and <code>CodeMirror.fold.xml</code>, for XML-style languages,\n
+        and <code>CodeMirror.fold.comment</code>, for folding comment\n
+        blocks.</dd>\n
+        <dt><code><strong>widget</strong>: string|Element</code></dt>\n
+        <dd>The widget to show for folded ranges. Can be either a\n
+        string, in which case it\'ll become a span with\n
+        class <code>CodeMirror-foldmarker</code>, or a DOM node.</dd>\n
+        <dt><code><strong>scanUp</strong>: boolean</code></dt>\n
+        <dd>When true (default is false), the addon will try to find\n
+        foldable ranges on the lines above the current one if there\n
+        isn\'t an eligible one on the given line.</dd>\n
+        <dt><code><strong>minFoldSize</strong>: integer</code></dt>\n
+        <dd>The minimum amount of lines that a fold should span to be\n
+        accepted. Defaults to 0, which also allows single-line\n
+        folds.</dd>\n
+      </dl>\n
+      See <a href="../demo/folding.html">the demo</a> for an\n
+      example.</dd>\n
+\n
+      <dt id="addon_foldgutter"><a href="../addon/fold/foldgutter.js"><code>fold/foldgutter.js</code></a></dt>\n
+      <dd>Provides an option <code>foldGutter</code>, which can be\n
+      used to create a gutter with markers indicating the blocks that\n
+      can be folded. Create a gutter using\n
+      the <a href="#option_gutters"><code>gutters</code></a> option,\n
+      giving it the class <code>CodeMirror-foldgutter</code> or\n
+      something else if you configure the addon to use a different\n
+      class, and this addon will show markers next to folded and\n
+      foldable blocks, and handle clicks in this gutter. Note that\n
+      CSS styles should be applied to make the gutter, and the fold\n
+      markers within it, visible. A default set of CSS styles are\n
+      available in:\n
+      <a href="../addon/fold/foldgutter.css">\n
+        <code>addon/fold/foldgutter.css</code>\n
+      </a>.\n
+      The option\n
+      can be either set to <code>true</code>, or an object containing\n
+      the following optional option fields:\n
+      <dl>\n
+        <dt><code><strong>gutter</strong>: string</code></dt>\n
+        <dd>The CSS class of the gutter. Defaults\n
+        to <code>"CodeMirror-foldgutter"</code>. You will have to\n
+        style this yourself to give it a width (and possibly a\n
+        background). See the default gutter style rules above.</dd>\n
+        <dt><code><strong>indicatorOpen</strong>: string | Element</code></dt>\n
+        <dd>A CSS class or DOM element to be used as the marker for\n
+        open, foldable blocks. Defaults\n
+        to <code>"CodeMirror-foldgutter-open"</code>.</dd>\n
+        <dt><code><strong>indicatorFolded</strong>: string | Element</code></dt>\n
+        <dd>A CSS class or DOM element to be used as the marker for\n
+        folded blocks. Defaults to <code>"CodeMirror-foldgutter-folded"</code>.</dd>\n
+        <dt><code><strong>rangeFinder</strong>: fn(CodeMirror, Pos)</code></dt>\n
+        <dd>The range-finder function to use when determining whether\n
+        something can be folded. When not\n
+        given, <a href="#helper_fold_auto"><code>CodeMirror.fold.auto</code></a>\n
+        will be used as default.</dd>\n
+      </dl>\n
+      Demo <a href="../demo/folding.html">here</a>.</dd>\n
+\n
+      <dt id="addon_runmode"><a href="../addon/runmode/runmode.js"><code>runmode/runmode.js</code></a></dt>\n
+      <dd>Can be used to run a CodeMirror mode over text without\n
+      actually opening an editor instance.\n
+      See <a href="../demo/runmode.html">the demo</a> for an example.\n
+      There are alternate versions of the file avaible for\n
+      running <a href="../addon/runmode/runmode-standalone.js">stand-alone</a>\n
+      (without including all of CodeMirror) and\n
+      for <a href="../addon/runmode/runmode.node.js">running under\n
+      node.js</a>.</dd>\n
+\n
+      <dt id="addon_colorize"><a href="../addon/runmode/colorize.js"><code>runmode/colorize.js</code></a></dt>\n
+      <dd>Provides a convenient way to syntax-highlight code snippets\n
+      in a webpage. Depends on\n
+      the <a href="#addon_runmode"><code>runmode</code></a> addon (or\n
+      its standalone variant). Provides\n
+      a <code>CodeMirror.colorize</code> function that can be called\n
+      with an array (or other array-ish collection) of DOM nodes that\n
+      represent the code snippets. By default, it\'ll get\n
+      all <code>pre</code> tags. Will read the <code>data-lang</code>\n
+      attribute of these nodes to figure out their language, and\n
+      syntax-color their content using the relevant CodeMirror mode\n
+      (you\'ll have to load the scripts for the relevant modes\n
+      yourself). A second argument may be provided to give a default\n
+      mode, used when no language attribute is found for a node. Used\n
+      in this manual to highlight example code.</dd>\n
+\n
+      <dt id="addon_overlay"><a href="../addon/mode/overlay.js"><code>mode/overlay.js</code></a></dt>\n
+      <dd>Mode combinator that can be used to extend a mode with an\n
+      \'overlay\' â a secondary mode is run over the stream, along with\n
+      the base mode, and can color specific pieces of text without\n
+      interfering with the base mode.\n
+      Defines <code>CodeMirror.overlayMode</code>, which is used to\n
+      create such a mode. See <a href="../demo/mustache.html">this\n
+      demo</a> for a detailed example.</dd>\n
+\n
+      <dt id="addon_multiplex"><a href="../addon/mode/multiplex.js"><code>mode/multiplex.js</code></a></dt>\n
+      <dd>Mode combinator that can be used to easily \'multiplex\'\n
+      between several modes.\n
+      Defines <code>CodeMirror.multiplexingMode</code> which, when\n
+      given as first argument a mode object, and as other arguments\n
+      any number of <code>{open, close, mode [, delimStyle, innerStyle]}</code>\n
+      objects, will return a mode object that starts parsing using the\n
+      mode passed as first argument, but will switch to another mode\n
+      as soon as it encounters a string that occurs in one of\n
+      the <code>open</code> fields of the passed objects. When in a\n
+      sub-mode, it will go back to the top mode again when\n
+      the <code>close</code> string is encountered.\n
+      Pass <code>"\\n"</code> for <code>open</code> or <code>close</code>\n
+      if you want to switch on a blank line.\n
+      <ul><li>When <code>delimStyle</code> is specified, it will be the token\n
+      style returned for the delimiter tokens.</li>\n
+      <li>When <code>innerStyle</code> is specified, it will be the token\n
+      style added for each inner mode token.</li></ul>\n
+      The outer mode will not see the content between the delimiters.\n
+      See <a href="../demo/multiplex.html">this demo</a> for an\n
+      example.</dd>\n
+\n
+      <dt id="addon_show-hint"><a href="../addon/hint/show-hint.js"><code>hint/show-hint.js</code></a></dt>\n
+      <dd>Provides a framework for showing autocompletion hints.\n
+      Defines <code>CodeMirror.showHint</code>, which takes a\n
+      CodeMirror instance, a hinting function, and optionally an\n
+      options object, and pops up a widget that allows the user to\n
+      select a completion. Hinting functions are function that take an\n
+      editor instance and an optional options object, and return\n
+      a <code>{list, from, to}</code> object, where <code>list</code>\n
+      is an array of strings or objects (the completions),\n
+      and <code>from</code> and <code>to</code> give the start and end\n
+      of the token that is being completed as <code>{line, ch}</code>\n
+      objects.</dd>\n
+      <dd>If no hinting function is given, the addon will\n
+      use <code>CodeMirror.hint.auto</code>, with\n
+      calls <a href="#getHelpers"><code>getHelpers</code></a> with\n
+      the <code>"hint"</code> type to find applicable hinting\n
+      functions, and tries them one by one. If that fails, it looks\n
+      for a <code>"hintWords"</code> helper to fetch a list of\n
+      completable words for the mode, and\n
+      uses <code>CodeMirror.hint.fromList</code> to complete from\n
+      those.</dd>\n
+      <dd>When completions\n
+      aren\'t simple strings, they should be objects with the following\n
+      properties:\n
+      <dl>\n
+        <dt><code><strong>text</strong>: string</code></dt>\n
+        <dd>The completion text. This is the only required\n
+        property.</dd>\n
+        <dt><code><strong>displayText</strong>: string</code></dt>\n
+        <dd>The text that should be displayed in the menu.</dd>\n
+        <dt><code><strong>className</strong>: string</code></dt>\n
+        <dd>A CSS class name to apply to the completion\'s line in the\n
+        menu.</dd>\n
+        <dt><code><strong>render</strong>: fn(Element, self, data)</code></dt>\n
+        <dd>A method used to create the DOM structure for showing the\n
+        completion by appending it to its first argument.</dd>\n
+        <dt><code><strong>hint</strong>: fn(CodeMirror, self, data)</code></dt>\n
+        <dd>A method used to actually apply the completion, instead of\n
+        the default behavior.</dd>\n
+        <dt><code><strong>from</strong>: {line, ch}</code></dt>\n
+        <dd>Optional <code>from</code> position that will be used by <code>pick()</code> instead\n
+        of the global one passed with the full list of completions.</dd>\n
+        <dt><code><strong>to</strong>: {line, ch}</code></dt>\n
+        <dd>Optional <code>to</code> position that will be used by <code>pick()</code> instead\n
+        of the global one passed with the full list of completions.</dd>\n
+      </dl>\n
+      The plugin understands the following options (the options object\n
+      will also be passed along to the hinting function, which may\n
+      understand additional options):\n
+      <dl>\n
+        <dt><code><strong>async</strong>: boolean</code></dt>\n
+        <dd>When set to true, the hinting function\'s signature should\n
+        be <code>(cm, callback, ?options)</code>, and the completion\n
+        interface will only be popped up when the hinting function\n
+        calls the callback, passing it the object holding the\n
+        completions.</dd>\n
+        <dt><code><strong>completeSingle</strong>: boolean</code></dt>\n
+        <dd>Determines whether, when only a single completion is\n
+        available, it is completed without showing the dialog.\n
+        Defaults to true.</dd>\n
+        <dt><code><strong>alignWithWord</strong>: boolean</code></dt>\n
+        <dd>Whether the pop-up should be horizontally aligned with the\n
+        start of the word (true, default), or with the cursor (false).</dd>\n
+        <dt><code><strong>closeOnUnfocus</strong>: boolean</code></dt>\n
+        <dd>When enabled (which is the default), the pop-up will close\n
+        when the editor is unfocused.</dd>\n
+        <dt><code><strong>customKeys</strong>: keymap</code></dt>\n
+        <dd>Allows you to provide a custom keymap of keys to be active\n
+        when the pop-up is active. The handlers will be called with an\n
+        extra argument, a handle to the completion menu, which\n
+        has <code>moveFocus(n)</code>, <code>setFocus(n)</code>, <code>pick()</code>,\n
+        and <code>close()</code> methods (see the source for details),\n
+        that can be used to change the focused element, pick the\n
+        current element or close the menu. Additionnaly <code>menuSize()</code>\n
+        can give you access to the size of the current dropdown menu,\n
+        <code>length</code> give you the number of availlable completions, and\n
+        <code>data</code> give you full access to the completion returned by the\n
+        hinting function.</dd>\n
+        <dt><code><strong>extraKeys</strong>: keymap</code></dt>\n
+        <dd>Like <code>customKeys</code> above, but the bindings will\n
+        be added to the set of default bindings, instead of replacing\n
+        them.</dd>\n
+      </dl>\n
+      The following events will be fired on the completions object\n
+      during completion:\n
+      <dl>\n
+        <dt><code><strong>"shown"</strong> ()</code></dt>\n
+        <dd>Fired when the pop-up is shown.</dd>\n
+        <dt><code><strong>"select"</strong> (completion, Element)</code></dt>\n
+        <dd>Fired when a completion is selected. Passed the completion\n
+        value (string or object) and the DOM node that represents it\n
+        in the menu.</dd>\n
+        <dt><code><strong>"close"</strong> ()</code></dt>\n
+        <dd>Fired when the completion is finished.</dd>\n
+      </dl>\n
+      This addon depends styles\n
+      from <code>addon/hint/show-hint.css</code>. Check\n
+      out <a href="../demo/complete.html">the demo</a> for an\n
+      example.</dd>\n
+\n
+      <dt id="addon_javascript-hint"><a href="../addon/hint/javascript-hint.js"><code>hint/javascript-hint.js</code></a></dt>\n
+      <dd>Defines a simple hinting function for JavaScript\n
+      (<code>CodeMirror.hint.javascript</code>) and CoffeeScript\n
+      (<code>CodeMirror.hint.coffeescript</code>) code. This will\n
+      simply use the JavaScript environment that the editor runs in as\n
+      a source of information about objects and their properties.</dd>\n
+\n
+      <dt id="addon_xml-hint"><a href="../addon/hint/xml-hint.js"><code>hint/xml-hint.js</code></a></dt>\n
+      <dd>Defines <code>CodeMirror.hint.xml</code>, which produces\n
+      hints for XML tagnames, attribute names, and attribute values,\n
+      guided by a <code>schemaInfo</code> option (a property of the\n
+      second argument passed to the hinting function, or the third\n
+      argument passed to <code>CodeMirror.showHint</code>).<br>The\n
+      schema info should be an object mapping tag names to information\n
+      about these tags, with optionally a <code>"!top"</code> property\n
+      containing a list of the names of valid top-level tags. The\n
+      values of the properties should be objects with optional\n
+      properties <code>children</code> (an array of valid child\n
+      element names, omit to simply allow all tags to appear)\n
+      and <code>attrs</code> (an object mapping attribute names\n
+      to <code>null</code> for free-form attributes, and an array of\n
+      valid values for restricted\n
+      attributes). <a href="../demo/xmlcomplete.html">Demo\n
+      here.</a></dd>\n
+\n
+      <dt id="addon_html-hint"><a href="../addon/hint/html-hint.js"><code>hint/html-hint.js</code></a></dt>\n
+      <dd>Provides schema info to\n
+      the <a href="#addon_xml-hint">xml-hint</a> addon for HTML\n
+      documents. Defines a schema\n
+      object <code>CodeMirror.htmlSchema</code> that you can pass to\n
+      as a <code>schemaInfo</code> option, and\n
+      a <code>CodeMirror.hint.html</code> hinting function that\n
+      automatically calls <code>CodeMirror.hint.xml</code> with this\n
+      schema data. See\n
+      the <a href="../demo/html5complete.html">demo</a>.</dd>\n
+\n
+      <dt id="addon_css-hint"><a href="../addon/hint/css-hint.js"><code>hint/css-hint.js</code></a></dt>\n
+      <dd>A hinting function for CSS, SCSS, or LESS code.\n
+      Defines <code>CodeMirror.hint.css</code>.</dd>\n
+\n
+      <dt id="addon_python-hint"><a href="../addon/hint/python-hint.js"><code>hint/python-hint.js</code></a></dt>\n
+      <dd>A very simple hinting function for Python code.\n
+      Defines <code>CodeMirror.hint.python</code>.</dd>\n
+\n
+      <dt id="addon_anyword-hint"><a href="../addon/hint/anyword-hint.js"><code>hint/anyword-hint.js</code></a></dt>\n
+      <dd>A very simple hinting function\n
+      (<code>CodeMirror.hint.anyword</code>) that simply looks for\n
+      words in the nearby code and completes to those. Takes two\n
+      optional options, <code>word</code>, a regular expression that\n
+      matches words (sequences of one or more character),\n
+      and <code>range</code>, which defines how many lines the addon\n
+      should scan when completing (defaults to 500).</dd>\n
+\n
+      <dt id="addon_sql-hint"><a href="../addon/hint/sql-hint.js"><code>hint/sql-hint.js</code></a></dt>\n
+      <dd>A simple SQL hinter. Defines <code>CodeMirror.hint.sql</code>.</dd>\n
+\n
+      <dt id="addon_pig-hint"><a href="../addon/hint/pig-hint.js"><code>hint/pig-hint.js</code></a></dt>\n
+      <dd>A simple hinter for <a href="../mode/pig/index.html">Pig Latin</a>. Defines <code>CodeMirror.hint.pig</code>.</dd>\n
+\n
+      <dt id="addon_match-highlighter"><a href="../addon/search/match-highlighter.js"><code>search/match-highlighter.js</code></a></dt>\n
+      <dd>Adds a <code>highlightSelectionMatches</code> option that\n
+      can be enabled to highlight all instances of a currently\n
+      selected word. Can be set either to true or to an object\n
+      containing the following options: <code>minChars</code>, for the\n
+      minimum amount of selected characters that triggers a highlight\n
+      (default 2), <code>style</code>, for the style to be used to\n
+      highlight the matches (default <code>"matchhighlight"</code>,\n
+      which will correspond to CSS\n
+      class <code>cm-matchhighlight</code>),\n
+      and <code>showToken</code> which can be set to <code>true</code>\n
+      or to a regexp matching the characters that make up a word. When\n
+      enabled, it causes the current word to be highlighted when\n
+      nothing is selected (defaults to off).\n
+      Demo <a href="../demo/matchhighlighter.html">here</a>.</dd>\n
+\n
+      <dt id="addon_lint"><a href="../addon/lint/lint.js"><code>lint/lint.js</code></a></dt>\n
+      <dd>Defines an interface component for showing linting warnings,\n
+      with pluggable warning sources\n
+      (see <a href="../addon/lint/json-lint.js"><code>json-lint.js</code></a>,\n
+      <a href="../addon/lint/javascript-lint.js"><code>javascript-lint.js</code></a>,\n
+      and <a href="../addon/lint/css-lint.js"><code>css-lint.js</code></a>\n
+      in the same directory). Defines a <code>lint</code> option that\n
+      can be set to a warning source (for\n
+      example <code>CodeMirror.lint.javascript</code>), or\n
+      to <code>true</code>, in which\n
+      case <a href="#getHelper"><code>getHelper</code></a> with\n
+      type <code>"lint"</code> is used to determined a validator\n
+      function. Depends on <code>addon/lint/lint.css</code>. A demo\n
+      can be found <a href="../demo/lint.html">here</a>.</dd>\n
+\n
+      <dt id="addon_mark-selection"><a href="../addon/selection/mark-selection.js"><code>selection/mark-selection.js</code></a></dt>\n
+      <dd>Causes the selected text to be marked with the CSS class\n
+      <code>CodeMirror-selectedtext</code> when the <code>styleSelectedText</code> option\n
+      is enabled. Useful to change the colour of the selection (in addition to the background),\n
+      like in <a href="../demo/markselection.html">this demo</a>.</dd>\n
+\n
+      <dt id="addon_active-line"><a href="../addon/selection/active-line.js"><code>selection/active-line.js</code></a></dt>\n
+      <dd>Defines a <code>styleActiveLine</code> option that, when enabled,\n
+      gives the wrapper of the active line the class <code>CodeMirror-activeline</code>,\n
+      and adds a background with the class <code>CodeMirror-activeline-background</code>.\n
+      is enabled. See the <a href="../demo/activeline.html">demo</a>.</dd>\n
+\n
+      <dt id="addon_loadmode"><a href="../addon/mode/loadmode.js"><code>mode/loadmode.js</code></a></dt>\n
+      <dd>Defines a <code>CodeMirror.requireMode(modename,\n
+      callback)</code> function that will try to load a given mode and\n
+      call the callback when it succeeded. You\'ll have to\n
+      set <code>CodeMirror.modeURL</code> to a string that mode paths\n
+      can be constructed from, for\n
+      example <code>"mode/%N/%N.js"</code>âthe <code>%N</code>\'s will\n
+      be replaced with the mode name. Also\n
+      defines <code>CodeMirror.autoLoadMode(instance, mode)</code>,\n
+      which will ensure the given mode is loaded and cause the given\n
+      editor instance to refresh its mode when the loading\n
+      succeeded. See the <a href="../demo/loadmode.html">demo</a>.</dd>\n
+\n
+      <dt id="addon_continuecomment"><a href="../addon/comment/continuecomment.js"><code>comment/continuecomment.js</code></a></dt>\n
+      <dd>Adds a <code>continueComments</code> option, which sets whether the\n
+      editor will make the next line continue a comment when you press Enter\n
+      inside a comment block. Can be set to a boolean to enable/disable this\n
+      functionality. Set to a string, it will continue comments using a custom\n
+      shortcut. Set to an object, it will use the <code>key</code> property for\n
+      a custom shortcut and the boolean <code>continueLineComment</code>\n
+      property to determine whether single-line comments should be continued\n
+      (defaulting to <code>true</code>).</dd>\n
+\n
+      <dt id="addon_placeholder"><a href="../addon/display/placeholder.js"><code>display/placeholder.js</code></a></dt>\n
+      <dd>Adds a <code>placeholder</code> option that can be used to\n
+      make text appear in the editor when it is empty and not focused.\n
+      Also gives the editor a <code>CodeMirror-empty</code> CSS class\n
+      whenever it doesn\'t contain any text.\n
+      See <a href="../demo/placeholder.html">the demo</a>.</dd>\n
+\n
+      <dt id="addon_fullscreen"><a href="../addon/display/fullscreen.js"><code>display/fullscreen.js</code></a></dt>\n
+      <dd>Defines an option <code>fullScreen</code> that, when set\n
+      to <code>true</code>, will make the editor full-screen (as in,\n
+      taking up the whole browser window). Depends\n
+      on <a href="../addon/display/fullscreen.css"><code>fullscreen.css</code></a>. <a href="../demo/fullscreen.html">Demo\n
+      here</a>.</dd>\n
+\n
+      <dt id="addon_rulers"><a href="../addon/display/rulers.js"><code>display/rulers.js</code></a></dt>\n
+      <dd>Adds a <code>rulers</code> option, which can be used to show\n
+      one or more vertical rulers in the editor. The option, if\n
+      defined, should be given an array of <code>{column,\n
+      className}</code> objects or numbers. The ruler will be\n
+      displayed at the column indicated by the number or\n
+      the <code>column</code> property. The <code>className</code>\n
+      property can be used to assign a custom style to a\n
+      ruler. <a href="../demo/rulers.html">Demo here</a>.</dd>\n
+\n
+      <dt id="addon_hardwrap"><a href="../addon/wrap/hardwrap.js"><code>wrap/hardwrap.js</code></a></dt>\n
+      <dd>Addon to perform hard line wrapping/breaking for paragraphs\n
+      of text. Adds these methods to editor instances:\n
+        <dl>\n
+          <dt><code><strong>wrapParagraph</strong>(?pos: {line, ch}, ?options: object)</code></dt>\n
+          <dd>Wraps the paragraph at the given position.\n
+          If <code>pos</code> is not given, it defaults to the cursor\n
+          position.</dd>\n
+          <dt><code><strong>wrapRange</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
+          <dd>Wraps the given range as one big paragraph.</dd>\n
+          <dt><code><strong>wrapParagraphsInRange</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
+          <dd>Wrapps the paragraphs in (and overlapping with) the\n
+          given range individually.</dd>\n
+        </dl>\n
+        The following options are recognized:\n
+        <dl>\n
+          <dt><code><strong>paragraphStart</strong>, <strong>paragraphEnd</strong>: RegExp</code></dt>\n
+          <dd>Blank lines are always considered paragraph boundaries.\n
+          These options can be used to specify a pattern that causes\n
+          lines to be considered the start or end of a paragraph.</dd>\n
+          <dt><code><strong>column</strong>: number</code></dt>\n
+          <dd>The column to wrap at. Defaults to 80.</dd>\n
+          <dt><code><strong>wrapOn</strong>: RegExp</code></dt>\n
+          <dd>A regular expression that matches only those\n
+          two-character strings that allow wrapping. By default, the\n
+          addon wraps on whitespace and after dash characters.</dd>\n
+          <dt><code><strong>killTrailingSpace</strong>: boolean</code></dt>\n
+          <dd>Whether trailing space caused by wrapping should be\n
+          preserved, or deleted. Defaults to true.</dd>\n
+        </dl>\n
+        A demo of the addon is available <a href="../demo/hardwrap.html">here</a>.\n
+      </dd>\n
+\n
+      <dt id="addon_merge"><a href="../addon/merge/merge.js"><code>merge/merge.js</code></a></dt>\n
+      <dd>Implements an interface for merging changes, using either a\n
+      2-way or a 3-way view. The <code>CodeMirror.MergeView</code>\n
+      constructor takes arguments similar to\n
+      the <a href="#CodeMirror"><code>CodeMirror</code></a>\n
+      constructor, first a node to append the interface to, and then\n
+      an options object. Two extra optional options are\n
+      recognized, <code>origLeft</code> and <code>origRight</code>,\n
+      which may be strings that provide original versions of the\n
+      document, which will be shown to the left and right of the\n
+      editor in non-editable CodeMirror instances. The merge interface\n
+      will highlight changes between the editable document and the\n
+      original(s) (<a href="../demo/merge.html">demo</a>).</dd>\n
+\n
+      <dt id="addon_tern"><a href="../addon/tern/tern.js"><code>tern/tern.js</code></a></dt>\n
+      <dd>Provides integration with\n
+      the <a href="http://ternjs.net">Tern</a> JavaScript analysis\n
+      engine, for completion, definition finding, and minor\n
+      refactoring help. See the <a href="../demo/tern.html">demo</a>\n
+      for a very simple integration. For more involved scenarios, see\n
+      the comments at the top of\n
+      the <a href="../addon/tern/tern.js">addon</a> and the\n
+      implementation of the\n
+      (multi-file) <a href="http://ternjs.net/doc/demo.html">demonstration\n
+      on the Tern website</a>.</dd>\n
+    </dl>\n
+</section>\n
+\n
+<section id=modeapi>\n
+    <h2>Writing CodeMirror Modes</h2>\n
+\n
+    <p>Modes typically consist of a single JavaScript file. This file\n
+    defines, in the simplest case, a lexer (tokenizer) for your\n
+    languageâa function that takes a character stream as input,\n
+    advances it past a token, and returns a style for that token. More\n
+    advanced modes can also handle indentation for the language.</p>\n
+\n
+    <p id="defineMode">The mode script should\n
+    call <code><strong>CodeMirror.defineMode</strong></code> to\n
+    register itself with CodeMirror. This function takes two\n
+    arguments. The first should be the name of the mode, for which you\n
+    should use a lowercase string, preferably one that is also the\n
+    name of the files that define the mode (i.e. <code>"xml"</code> is\n
+    defined in <code>xml.js</code>). The second argument should be a\n
+    function that, given a CodeMirror configuration object (the thing\n
+    passed to the <code>CodeMirror</code> function) and an optional\n
+    mode configuration object (as in\n
+    the <a href="#option_mode"><code>mode</code></a> option), returns\n
+    a mode object.</p>\n
+\n
+    <p>Typically, you should use this second argument\n
+    to <code>defineMode</code> as your module scope function (modes\n
+    should not leak anything into the global scope!), i.e. write your\n
+    whole mode inside this function.</p>\n
+\n
+    <p>The main responsibility of a mode script is <em>parsing</em>\n
+    the content of the editor. Depending on the language and the\n
+    amount of functionality desired, this can be done in really easy\n
+    or extremely complicated ways. Some parsers can be stateless,\n
+    meaning that they look at one element (<em>token</em>) of the code\n
+    at a time, with no memory of what came before. Most, however, will\n
+    need to remember something. This is done by using a <em>state\n
+    object</em>, which is an object that is always passed when\n
+    reading a token, and which can be mutated by the tokenizer.</p>\n
+\n
+    <p id="startState">Modes that use a state must define\n
+    a <code><strong>startState</strong></code> method on their mode\n
+    object. This is a function of no arguments that produces a state\n
+    object to be used at the start of a document.</p>\n
+\n
+    <p id="token">The most important part of a mode object is\n
+    its <code><strong>token</strong>(stream, state)</code> method. All\n
+    modes must define this method. It should read one token from the\n
+    stream it is given as an argument, optionally update its state,\n
+    and return a style string, or <code>null</code> for tokens that do\n
+    not have to be styled. For your styles, you are encouraged to use\n
+    the \'standard\' names defined in the themes (without\n
+    the <code>cm-</code> prefix). If that fails, it is also possible\n
+    to come up with your own and write your own CSS theme file.<p>\n
+\n
+    <p id="token_style_line">A typical token string would\n
+    be <code>"variable"</code> or <code>"comment"</code>. Multiple\n
+    styles can be returned (separated by spaces), for\n
+    example <code>"string error"</code> for a thing that looks like a\n
+    string but is invalid somehow (say, missing its closing quote).\n
+    When a style is prefixed by <code>"line-"</code>\n
+    or <code>"line-background-"</code>, the style will be applied to\n
+    the whole line, analogous to what\n
+    the <a href="#addLineClass"><code>addLineClass</code></a> method\n
+    doesâstyling the <code>"text"</code> in the simple case, and\n
+    the <code>"background"</code> element\n
+    when <code>"line-background-"</code> is prefixed.</p>\n
+\n
+    <p id="StringStream">The stream object that\'s passed\n
+    to <code>token</code> encapsulates a line of code (tokens may\n
+    never span lines) and our current position in that line. It has\n
+    the following API:</p>\n
+\n
+    <dl>\n
+      <dt><code><strong>eol</strong>() â boolean</code></dt>\n
+      <dd>Returns true only if the stream is at the end of the\n
+      line.</dd>\n
+      <dt><code><strong>sol</strong>() â boolean</code></dt>\n
+      <dd>Returns true only if the stream is at the start of the\n
+      line.</dd>\n
+\n
+      <dt><code><strong>peek</strong>() â string</code></dt>\n
+      <dd>Returns the next character in the stream without advancing\n
+      it. Will return an <code>null</code> at the end of the\n
+      line.</dd>\n
+      <dt><code><strong>next</strong>() â string</code></dt>\n
+      <dd>Returns the next character in the stream and advances it.\n
+      Also returns <code>null</code> when no more characters are\n
+      available.</dd>\n
+\n
+      <dt><code><strong>eat</strong>(match: string|regexp|function(char: string) â boolean) â string</code></dt>\n
+      <dd><code>match</code> can be a character, a regular expression,\n
+      or a function that takes a character and returns a boolean. If\n
+      the next character in the stream \'matches\' the given argument,\n
+      it is consumed and returned. Otherwise, <code>undefined</code>\n
+      is returned.</dd>\n
+      <dt><code><strong>eatWhile</strong>(match: string|regexp|function(char: string) â boolean) â boolean</code></dt>\n
+      <dd>Repeatedly calls <code>eat</code> with the given argument,\n
+      until it fails. Returns true if any characters were eaten.</dd>\n
+      <dt><code><strong>eatSpace</strong>() â boolean</code></dt>\n
+      <dd>Shortcut for <code>eatWhile</code> when matching\n
+      white-space.</dd>\n
+      <dt><code><strong>skipToEnd</strong>()</code></dt>\n
+      <dd>Moves the position to the end of the line.</dd>\n
+      <dt><code><strong>skipTo</strong>(ch: string) â boolean</code></dt>\n
+      <dd>Skips to the next occurrence of the given character, if\n
+      found on the current line (doesn\'t advance the stream if the\n
+      character does not occur on the line). Returns true if the\n
+      character was found.</dd>\n
+      <dt><code><strong>match</strong>(pattern: string, ?consume: boolean, ?caseFold: boolean) â boolean</code></dt>\n
+      <dt><code><strong>match</strong>(pattern: regexp, ?consume: boolean) â array&lt;string&gt;</code></dt>\n
+      <dd>Act like a\n
+      multi-character <code>eat</code>âif <code>consume</code> is true\n
+      or not givenâor a look-ahead that doesn\'t update the stream\n
+      positionâif it is false. <code>pattern</code> can be either a\n
+      string or a regular expression starting with <code>^</code>.\n
+      When it is a string, <code>caseFold</code> can be set to true to\n
+      make the match case-insensitive. When successfully matching a\n
+      regular expression, the returned value will be the array\n
+      returned by <code>match</code>, in case you need to extract\n
+      matched groups.</dd>\n
+\n
+      <dt><code><strong>backUp</strong>(n: integer)</code></dt>\n
+      <dd>Backs up the stream <code>n</code> characters. Backing it up\n
+      further than the start of the current token will cause things to\n
+      break, so be careful.</dd>\n
+      <dt><code><strong>column</strong>() â integer</code></dt>\n
+      <dd>Returns the column (taking into account tabs) at which the\n
+      current token starts.</dd>\n
+      <dt><code><strong>indentation</strong>() â integer</code></dt>\n
+      <dd>Tells you how far the current line has been indented, in\n
+      spaces. Corrects for tab characters.</dd>\n
+\n
+      <dt><code><strong>current</strong>() â string</code></dt>\n
+      <dd>Get the string between the start of the current token and\n
+      the current stream position.</dd>\n
+    </dl>\n
+\n
+    <p id="blankLine">By default, blank lines are simply skipped when\n
+    tokenizing a document. For languages that have significant blank\n
+    lines, you can define\n
+    a <code><strong>blankLine</strong>(state)</code> method on your\n
+    mode that will get called whenever a blank line is passed over, so\n
+    that it can update the parser state.</p>\n
+\n
+    <p id="copyState">Because state object are mutated, and CodeMirror\n
+    needs to keep valid versions of a state around so that it can\n
+    restart a parse at any line, copies must be made of state objects.\n
+    The default algorithm used is that a new state object is created,\n
+    which gets all the properties of the old object. Any properties\n
+    which hold arrays get a copy of these arrays (since arrays tend to\n
+    be used as mutable stacks). When this is not correct, for example\n
+    because a mode mutates non-array properties of its state object, a\n
+    mode object should define\n
+    a <code><strong>copyState</strong></code> method, which is given a\n
+    state and should return a safe copy of that state.</p>\n
+\n
+    <p id="indent">If you want your mode to provide smart indentation\n
+    (through the <a href="#indentLine"><code>indentLine</code></a>\n
+    method and the <code>indentAuto</code>\n
+    and <code>newlineAndIndent</code> commands, to which keys can be\n
+    <a href="#option_extraKeys">bound</a>), you must define\n
+    an <code><strong>indent</strong>(state, textAfter)</code> method\n
+    on your mode object.</p>\n
+\n
+    <p>The indentation method should inspect the given state object,\n
+    and optionally the <code>textAfter</code> string, which contains\n
+    the text on the line that is being indented, and return an\n
+    integer, the amount of spaces to indent. It should usually take\n
+    the <a href="#option_indentUnit"><code>indentUnit</code></a>\n
+    option into account. An indentation method may\n
+    return <code>CodeMirror.Pass</code> to indicate that it\n
+    could not come up with a precise indentation.</p>\n
+\n
+    <p id="mode_comment">To work well with\n
+    the <a href="#addon_comment">commenting addon</a>, a mode may\n
+    define <code><strong>lineComment</strong></code> (string that\n
+    starts a line\n
+    comment), <code><strong>blockCommentStart</strong></code>, <code><strong>blockCommentEnd</strong></code>\n
+    (strings that start and end block comments),\n
+    and <code>blockCommentLead</code> (a string to put at the start of\n
+    continued lines in a block comment). All of these are\n
+    optional.</p>\n
+\n
+    <p id="electricChars">Finally, a mode may define\n
+    an <code>electricChars</code> property, which should hold a string\n
+    containing all the characters that should trigger the behaviour\n
+    described for\n
+    the <a href="#option_electricChars"><code>electricChars</code></a>\n
+    option.</p>\n
+\n
+    <p>So, to summarize, a mode <em>must</em> provide\n
+    a <code>token</code> method, and it <em>may</em>\n
+    provide <code>startState</code>, <code>copyState</code>,\n
+    and <code>indent</code> methods. For an example of a trivial mode,\n
+    see the <a href="../mode/diff/diff.js">diff mode</a>, for a more\n
+    involved example, see the <a href="../mode/clike/clike.js">C-like\n
+    mode</a>.</p>\n
+\n
+    <p>Sometimes, it is useful for modes to <em>nest</em>âto have one\n
+    mode delegate work to another mode. An example of this kind of\n
+    mode is the <a href="../mode/htmlmixed/htmlmixed.js">mixed-mode HTML\n
+    mode</a>. To implement such nesting, it is usually necessary to\n
+    create mode objects and copy states yourself. To create a mode\n
+    object, there are <code>CodeMirror.getMode(options,\n
+    parserConfig)</code>, where the first argument is a configuration\n
+    object as passed to the mode constructor function, and the second\n
+    argument is a mode specification as in\n
+    the <a href="#option_mode"><code>mode</code></a> option. To copy a\n
+    state object, call <code>CodeMirror.copyState(mode, state)</code>,\n
+    where <code>mode</code> is the mode that created the given\n
+    state.</p>\n
+\n
+    <p id="innerMode">In a nested mode, it is recommended to add an\n
+    extra method, <code><strong>innerMode</strong></code> which, given\n
+    a state object, returns a <code>{state, mode}</code> object with\n
+    the inner mode and its state for the current position. These are\n
+    used by utility scripts such as the <a href="#addon_closetag">tag\n
+    closer</a> to get context information. Use\n
+    the <code>CodeMirror.innerMode</code> helper function to, starting\n
+    from a mode and a state, recursively walk down to the innermost\n
+    mode and state.</p>\n
+\n
+    <p>To make indentation work properly in a nested parser, it is\n
+    advisable to give the <code>startState</code> method of modes that\n
+    are intended to be nested an optional argument that provides the\n
+    base indentation for the block of code. The JavaScript and CSS\n
+    parser do this, for example, to allow JavaScript and CSS code\n
+    inside the mixed-mode HTML mode to be properly indented.</p>\n
+\n
+    <p id="defineMIME">It is possible, and encouraged, to associate\n
+    your mode, or a certain configuration of your mode, with\n
+    a <a href="http://en.wikipedia.org/wiki/MIME">MIME</a> type. For\n
+    example, the JavaScript mode associates itself\n
+    with <code>text/javascript</code>, and its JSON variant\n
+    with <code>application/json</code>. To do this,\n
+    call <code><strong>CodeMirror.defineMIME</strong>(mime,\n
+    modeSpec)</code>, where <code>modeSpec</code> can be a string or\n
+    object specifying a mode, as in\n
+    the <a href="#option_mode"><code>mode</code></a> option.</p>\n
+\n
+    <p>If a mode specification wants to add some properties to the\n
+    resulting mode object, typically for use\n
+    with <a href="#getHelpers"><code>getHelpers</code></a>, it may\n
+    contain a <code>modeProps</code> property, which holds an object.\n
+    This object\'s properties will be copied to the actual mode\n
+    object.</p>\n
+\n
+    <p id="extendMode">Sometimes, it is useful to add or override mode\n
+    object properties from external code.\n
+    The <code><strong>CodeMirror.extendMode</strong></code> function\n
+    can be used to add properties to mode objects produced for a\n
+    specific mode. Its first argument is the name of the mode, its\n
+    second an object that specifies the properties that should be\n
+    added. This is mostly useful to add utilities that can later be\n
+    looked up through <a href="#getMode"><code>getMode</code></a>.</p>\n
+</section>\n
+\n
+</article>\n
+\n
+<script>setTimeout(function(){CodeMirror.colorize();}, 20);</script>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>manual.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>show-hint.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.CodeMirror-hints {\n
+  position: absolute;\n
+  z-index: 10;\n
+  overflow: hidden;\n
+  list-style: none;\n
+\n
+  margin: 0;\n
+  padding: 2px;\n
+\n
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+  border-radius: 3px;\n
+  border: 1px solid silver;\n
+\n
+  background: white;\n
+  font-size: 90%;\n
+  font-family: monospace;\n
+\n
+  max-height: 20em;\n
+  overflow-y: auto;\n
+}\n
+\n
+.CodeMirror-hint {\n
+  margin: 0;\n
+  padding: 0 4px;\n
+  border-radius: 2px;\n
+  max-width: 19em;\n
+  overflow: hidden;\n
+  white-space: pre;\n
+  color: black;\n
+  cursor: pointer;\n
+}\n
+\n
+.CodeMirror-hint-active {\n
+  background: #08f;\n
+  color: white;\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
