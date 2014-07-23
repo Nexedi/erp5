@@ -1138,6 +1138,268 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       obj.manage_afterClone(obj)
       return obj
 
+class ERP5TypeFieldTestCase(object):
+  def testDeadProxyFields(self):
+    """
+    Copy/paste from testXHTML.TestXHTML.test_deadProxyFields
+
+    TODO-ERP5: TestXHTML should be improved to allow testing fields on
+               specific projects (mixin?)
+    """
+    # check that all proxy fields defined in business templates have a valid
+    # target
+    skin_tool = self.portal.portal_skins
+    skin_error_dict = {}
+
+    for skin_name, skin_folder_string in skin_tool.getSkinPaths():
+      skin_folder_id_list = skin_folder_string.split(',')
+      self.changeSkin(skin_name)
+
+      for skin_folder_id in skin_folder_id_list:
+        for field_path, field in skin_tool[skin_folder_id].ZopeFind(
+                  skin_tool[skin_folder_id], 
+                  obj_metatypes=['ProxyField'], search_sub=1):
+          template_field = field.getTemplateField(cache=False)
+          if template_field is None:
+            # Base_viewRelatedObjectList (used for proxy listbox ids on
+            # relation fields) is an exception, the proxy field has no target
+            # by default.
+            if field_path != 'Base_viewRelatedObjectList/listbox':
+              # TODO-ERP5: Replaced skin_name by skin_folder_id as skin_name
+              #            is meaningless?
+              error_set = skin_error_dict.setdefault(skin_folder_id, set())
+              error_set.add((field_path, field.get_value('form_id'),
+                             field.get_value('field_id')))
+
+    if skin_error_dict:
+      from pprint import pformat
+      message = '\nDead proxy fields:\n%s\n' % pformat(skin_error_dict)
+      self.fail(message)
+
+  def testRelationStringFieldCategoryExist(self): 
+    """
+    Check that RelationStringField, MultiRelationStringField and ProxyFields
+    for Relations properly set base_category:
+    """
+    # Get Base Categories and Categories because a field might look like
+    # my_"BASE_CATEGORY"_CATEGORY
+    field_category_set = set()
+    for result_obj in self.portal.portal_catalog(portal_type=('Category', 'Base Category')):
+      field_category = result_obj.getObject().getRelativeUrl().replace('/', '_')
+      field_category_set.add(field_category)
+
+    field_meta_type_tuple = ('MultiRelationStringField',
+                             'RelationStringField',
+                             'ProxyField')
+
+    skin_tool = self.portal.portal_skins
+    skin_error_dict = {}
+    for skin_name, skin_folder_string in skin_tool.getSkinPaths():
+      skin_folder_id_list = skin_folder_string.split(',')
+      self.changeSkin(skin_name)
+
+      for skin_folder_id in skin_folder_id_list:
+        if (not skin_folder_id.startswith('kgc_') and
+            not skin_folder_id.startswith('kb_')):
+          continue
+
+        skin_obj = skin_tool[skin_folder_id]
+
+        field_path_list = skin_obj.ZopeFind(skin_obj,
+                                            obj_metatypes=field_meta_type_tuple,
+                                            search_sub=1)
+
+        for field_path, field in field_path_list:
+          try:
+            field_value = field.get_value('base_category')
+          except KeyError:
+            # Relevant for ProxyFields
+            continue
+
+          # erp5_calendar is not installed and this is not used on KGC anyway
+          if field_value == 'calendar':
+            continue
+
+          found = False
+          form_id = field.getParentNode().getId()
+          # Exclude ProxyFields in Library and ProxyFields which are not
+          # RelationField
+          if (FIELD_LIBRARY_RE.match(form_id) or
+              (field_value is None and isinstance(field, ProxyField))):
+            continue
+          else:
+            # TODO-ERP5: fix capitalize'd category names?
+            field_value = field_value.lower()
+
+            # Check first if this is a Base Category or Base Category and a
+            # Category
+            if field_value in field_category_set:
+              found = True
+            # Otherwise, fallback on trying to find the accessor on the Portal
+            # Type based on the Form ID (Person_viewXXXX => Person)
+            else:
+              import erp5.portal_type
+              guessed_portal_type = form_id.split('_')[0]
+              accessor_name = convertToUpperCase(field_value)
+
+              try:
+                getattr(getattr(erp5.portal_type, guessed_portal_type),
+                        'get' + accessor_name)
+              except AttributeError:
+                pass
+              else:
+                found = True
+
+          if not found:
+            error_set = skin_error_dict.setdefault(skin_folder_id, set())
+            error_set.add((field_path, field_value))
+            
+    if skin_error_dict:
+      from pprint import pformat
+      message = '\nCannot find these categories:\n%s\n' % pformat(skin_error_dict)
+      self.fail(message)
+
+  def testAllListBoxFieldWithinHiddenGroup(self, fix=False):
+    """
+    Check that all listbox_XXX fields of listbox are put into hidden group
+
+    TODO-ERP5: Add to TestXHTML?
+    """
+    skin_tool = self.portal.portal_skins
+    skin_error_dict = {}
+    for skin_name, skin_folder_string in skin_tool.getSkinPaths():
+      skin_folder_id_list = skin_folder_string.split(',')
+      self.changeSkin(skin_name)
+
+      for skin_folder_id in skin_folder_id_list:
+        if (not skin_folder_id.startswith('kgc_') and
+            not skin_folder_id.startswith('kb_')):
+          continue
+
+        skin_obj = skin_tool[skin_folder_id]
+
+        form_path_list = skin_obj.ZopeFind(skin_obj,
+                                           obj_metatypes=('ERP5 Form'),
+                                           search_sub=1)
+
+        for form_path, form in form_path_list:
+          if FIELD_LIBRARY_RE.match(form.id):
+            continue
+
+          hidden_field_list = form.groups.get('hidden', [])
+          for field in form.objectValues():
+            if ('listbox_' in field.id and 
+                not (isinstance(field, ListBox) or
+                     (isinstance(field, ProxyField) and
+                      isinstance(field.getRecursiveTemplateField(), ListBox))) and
+                field.id not in hidden_field_list):
+              error_set = skin_error_dict.setdefault(skin_folder_id, set())
+              error_set.add(form_path + '/' + field.id)
+
+    if fix:
+      for skin_id, field_path_list in skin_error_dict.iteritems():
+        if not skin_id.startswith('kb_') and not skin_id.startswith('kgc_'):
+          continue
+
+        for field_path in field_path_list:
+          field = self.portal.portal_skins.unrestrictedTraverse(skin_id + '/' +
+                                                                field_path)
+          form = field.getParentNode()
+
+          field_id = field.id
+          for group, l in form.groups.iteritems():
+            try:
+              l.remove(field_id)
+            except ValueError:
+              continue
+
+          form.add_group('hidden')
+          form.groups['hidden'].append(field.id)
+          form._p_changed = True
+
+      import transaction
+      transaction.commit()
+
+    if skin_error_dict:
+      from pprint import pformat
+      message = '\nListBox Fields not in hidden group:\n%s\n' % \
+          pformat(skin_error_dict)
+
+      self.fail(message)
+
+  def testListBoxDateTimeFieldExist(self):
+    """
+
+    TODO-ERP5: Add to TestXHTML?
+    """
+    skin_tool = self.portal.portal_skins
+    skin_error_undefined_dict = {}
+    skin_error_invalid_dict = {}
+    for skin_name, skin_folder_string in skin_tool.getSkinPaths():
+      skin_folder_id_list = skin_folder_string.split(',')
+      self.changeSkin(skin_name)
+
+      for skin_folder_id in skin_folder_id_list:
+        if (not skin_folder_id.startswith('kgc_') and
+            not skin_folder_id.startswith('kb_')):
+          continue
+
+        skin_obj = skin_tool[skin_folder_id]
+
+        field_path_list = skin_obj.ZopeFind(skin_obj,
+                                            obj_metatypes=('ListBox',
+                                                           'ProxyField'),
+                                            search_sub=1)
+
+        for field_path, field in field_path_list:
+          form = field.getParentNode()
+          if (FIELD_LIBRARY_RE.match(form.id) or 
+              (isinstance(field, ProxyField) and
+               not isinstance(field.getRecursiveTemplateField(), ListBox))):
+            continue
+
+          form_field_set = set(form.objectIds())
+          for column_name, _ in (field.get_value('columns') +
+                                 field.get_value('all_columns')):
+            if not column_name.endswith('_date'):
+              continue
+
+            expected_field_name = 'listbox_' + column_name.replace('.', '_')
+            if expected_field_name not in form_field_set:
+              error_set = skin_error_undefined_dict.setdefault(
+                skin_folder_id, set())
+
+              error_set.add(form.id + '/' + expected_field_name)
+            else:
+              field = form[expected_field_name]
+              if (isinstance(field, DateTimeField) or
+                  (isinstance(field, ProxyField) and
+                   isinstance(field.getRecursiveTemplateField(), DateTimeField))):
+                if (column_name.endswith('creation_date') or
+                    column_name.endswith('modification_date')):
+                  if not field.get_value('date_only'):
+                    continue
+                elif field.get_value('date_only'):
+                  continue
+
+              error_set = skin_error_invalid_dict.setdefault(
+                skin_folder_id, set())
+
+              error_set.add(form.id + '/' + expected_field_name)
+
+    from pprint import pformat
+    message = ''
+    if skin_error_undefined_dict:
+      message = '\nListBox with undefined DateTime fields:\n%s\n' % \
+          pformat(skin_error_undefined_dict)
+
+    if skin_error_invalid_dict:
+      message += '\nListBox with invalid DateTime fields:\n%s\n' % \
+          pformat(skin_error_invalid_dict)
+
+    if message:
+      self.fail(message)
+
 class ERP5TypeTestCase(ERP5TypeCommandLineTestCase):
     """TestCase for ERP5 based tests.
 
