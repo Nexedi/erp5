@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>width</string>
                 <string>title</string>
               </list>
             </value>
@@ -87,10 +86,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Private Key</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
