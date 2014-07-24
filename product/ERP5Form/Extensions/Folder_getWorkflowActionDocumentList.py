@@ -34,8 +34,8 @@ from hashlib import md5
 # not proposed.
 skipped_workflow_id_list = ['delivery_causality_workflow',]
 
-def generateUid(workflow_id, workflow_state):
-  return 'new_' + md5('%s/%s' % (workflow_id, workflow_state)).hexdigest()
+def generateUid(portal_type, workflow_id, workflow_state):
+  return 'new_' + md5('%s/%s/%s' % (portal_type, workflow_id, workflow_state)).hexdigest()
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
@@ -96,7 +96,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
             workflow_id = workflow.getId()
             current_workflow_state = doc.getProperty(state_var)
             document_list.append(doc.asContext(
-                            uid=generateUid(workflow_id, current_workflow_state),
+                            uid=generateUid(doc.getPortalType(), workflow_id, current_workflow_state),
                             getListItemUrl=UrlGetter(doc, state_var),
                             workflow_title=Base_translateString(workflow.title_or_id()),
                             translated_workflow_state_title=
@@ -137,7 +137,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
       workflow_id = workflow.getId()
       current_workflow_state = doc.getProperty(state_var)
       document_list.append(doc.asContext(
-                uid=generateUid(workflow_id, current_workflow_state),
+                uid=generateUid(ptype, workflow_id, current_workflow_state),
                 getListItemUrl=UrlGetter(doc, state_var),
                 workflow_title=Base_translateString(workflow.title_or_id()),
                 translated_workflow_state_title=
