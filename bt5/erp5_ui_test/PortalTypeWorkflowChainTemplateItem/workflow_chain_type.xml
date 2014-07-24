@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Bar</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, foo_workflow</workflow>
  </chain>
  <chain>
   <type>Foo</type>
