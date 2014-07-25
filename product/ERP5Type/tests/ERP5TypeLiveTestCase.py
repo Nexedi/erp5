@@ -65,6 +65,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     - An eplicit list of exceptions to live tests remains to be
       defined. 
     """
+    initial_transaction_hash = None
+    activity_tool_subscribed = None
+    portal = None
 
     def getPortalName(self):
       """ Return the default ERP5 site id.
