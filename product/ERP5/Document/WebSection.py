@@ -37,7 +37,7 @@ from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.utils import _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
@@ -234,7 +234,13 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
           if document is None:
             document = self
           result = getattr(document, custom_render_method_id)()
-          _setCacheHeaders(_ViewEmulator().__of__(self), {})
+          view = _ViewEmulator().__of__(self)
+          # If we have a conditional get, set status 304 and return
+          # no content
+          if _checkConditionalGET(view, extra_context={}):
+            return ''
+          # call caching policy manager.
+          _setCacheHeaders(view, {})
           return result
         elif document is not None:
           return document()

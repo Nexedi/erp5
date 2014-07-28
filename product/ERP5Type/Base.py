@@ -51,7 +51,7 @@ from ZopePatch import ERP5PropertyManager
 
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
@@ -2415,8 +2415,13 @@ class Base( CopyContainer,
   def view(self):
     """Returns the default view even if index_html is overridden"""
     result = self._renderDefaultView('view')
+    view = _ViewEmulator().__of__(self)
+    # If we have a conditional get, set status 304 and return
+    # no content
+    if _checkConditionalGET(view, extra_context={}):
+      return ''
     # call caching policy manager.
-    _setCacheHeaders(_ViewEmulator().__of__(self), {})
+    _setCacheHeaders(view, {})
     return result
 
   # Default views - the default security in CMFCore

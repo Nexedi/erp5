@@ -36,7 +36,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
 from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
 from warnings import warn
 import sys
@@ -213,7 +213,13 @@ class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
                     'format': EMBEDDED_FORMAT}
     try:
       self._convert(format='html')
-      _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
+      view = _ViewEmulator().__of__(self)
+      # If we have a conditional get, set status 304 and return
+      # no content
+      if _checkConditionalGET(view, web_cache_kw):
+        return ''
+      # call caching policy manager.
+      _setCacheHeaders(view, web_cache_kw)
       mime, data = self.getConversion(format=EMBEDDED_FORMAT, filename=name)
       document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):

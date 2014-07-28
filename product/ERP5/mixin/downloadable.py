@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import fill_args_from_request
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
+from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders,\
     _ViewEmulator
 import warnings
 from zExceptions import Forbidden
@@ -78,7 +78,13 @@ class DownloadableMixin:
     web_cache_kw = kw.copy()
     if format:
       web_cache_kw['format'] = format
-    _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
+    view = _ViewEmulator().__of__(self)
+    # If we have a conditional get, set status 304 and return
+    # no content
+    if _checkConditionalGET(view, web_cache_kw):
+      return ''
+    # call caching policy manager.
+    _setCacheHeaders(view, web_cache_kw)
 
     if not self.checkConversionFormatPermission(format, **kw):
       raise Forbidden('You are not allowed to get this document in this ' \
