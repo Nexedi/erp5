@@ -22,6 +22,10 @@ class ERP5TypeTestSuite(TestSuite):
     if self.instance:
       args = ('--instance_home=unit_test.%u' % self.instance,) + args
     instance_number = self.instance or 1
+    for i, mysql_db in enumerate(self.mysql_db_list):
+      if 'kr_' not in mysql_db:
+        self.mysql_db_list[i] = mysql_db.replace('testdb', 'kr_testdb').replace('testuser', 'kr_testuser')
+
     mysql_db_list = self.mysql_db_list[
              (instance_number-1) * self.mysql_db_count:
              (instance_number) * self.mysql_db_count]
