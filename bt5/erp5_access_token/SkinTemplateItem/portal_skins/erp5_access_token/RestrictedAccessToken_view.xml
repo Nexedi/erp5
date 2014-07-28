@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -74,9 +74,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -94,13 +92,19 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_url_string</string>
+                        <string>my_url_method</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -108,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccessTokenModule_viewAccessTokenList</string> </value>
+            <value> <string>RestrictedAccessToken_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccessTokenModule_viewAccessTokenList</string> </value>
+            <value> <string>AccessToken_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -132,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Access Tokens</string> </value>
+            <value> <string>Access Token</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

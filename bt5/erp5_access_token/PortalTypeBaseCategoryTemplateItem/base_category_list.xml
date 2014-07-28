@@ -5,4 +5,7 @@
  <portal_type id="One Time Restricted Access Token">
   <item>agent</item>
  </portal_type>
+ <portal_type id="Restricted Access Token">
+  <item>agent</item>
+ </portal_type>
 </base_category_list>
