@@ -3,4 +3,8 @@
   <type>One Time Restricted Access Token</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
+ <chain>
+  <type>Restricted Access Token</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
 </workflow_chain>
