@@ -158,7 +158,17 @@ for section in section_list:\n
                               precision=section_currency_precision,\n
                               portal_type=portal.getPortalAccountingMovementTypeList(),\n
                               at_date=at_date.latestTime(),)\n
-                              \n
+  \n
+  # Calculate the sum of profit and loss accounts balances for that period.\n
+  # This must match the difference between assets, liability and equity accounts.\n
+  profit_and_loss_accounts_balance = portal.portal_simulation.getInventoryAssetPrice(\n
+    from_date=context.getStartDate(),\n
+    node_category=profit_and_loss_node_category_list,\n
+    **inventory_param_dict)\n
+  selected_profit_and_loss_account_balance = portal.portal_simulation.getInventoryAssetPrice(\n
+    node=profit_and_loss_account,\n
+    **inventory_param_dict)\n
+  \n
   section_currency_uid = context.getParentValue().getPriceCurrencyUid()\n
 \n
   profit_and_loss_quantity = 0\n
@@ -300,8 +310,26 @@ for section in section_list:\n
 \n
   if balance_transaction is None:\n
     # we did not have any transaction for this section\n
+    \n
+    # One possible corner case is that we have only transactions that brings\n
+    # the balance of all balance sheets accounts to 0. In this case we want to\n
+    # create a balance transaction that notes that the current balance of profit\n
+    # and loss account is 0, so that the delta gets indexed. \n
+    if profit_and_loss_accounts_balance:\n
+      balance_transaction = createBalanceTransaction(section)\n
+      balance_transaction.newContent(\n
+            activate_kw=activate_kw,\n
+            portal_type=\'Balance Transaction Line\',\n
+            destination=profit_and_loss_account,\n
+            quantity=0)\n
+      balance_transaction.stop()\n
+      balance_transaction.deliver()\n
     continue\n
 \n
+  assert roundCurrency(profit_and_loss_accounts_balance, section_currency) == (\n
+       - roundCurrency(selected_profit_and_loss_account_balance, section_currency)\n
+       - roundCurrency(profit_and_loss_quantity, section_currency))\n
+  \n
   # add a final line for p&l\n
   balance_transaction.newContent(\n
             id=\'%03d\' % (line_count + 1),\n

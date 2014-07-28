@@ -1854,6 +1854,62 @@ class TestClosingPeriod(AccountingTestCase):
     balance_transaction.reindexObject()
     self.tic()
 
+  def test_BalanceTransactionWhenProfitAndLossBalanceIsZero(self):
+    # The case of a balance transaction after all accounts have a 0 balance.
+    period1 = self.section.newContent(portal_type='Accounting Period')
+    period1.setStartDate(DateTime(2006, 1, 1))
+    period1.setStopDate(DateTime(2006, 12, 31))
+    period2 = self.section.newContent(portal_type='Accounting Period')
+    period2.setStartDate(DateTime(2007, 1, 1))
+    period2.setStopDate(DateTime(2007, 12, 31))
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        destination_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_debit=100),
+               dict(source_value=self.account_module.goods_sales,
+                    source_credit=100)))
+    self.tic()
+
+    period1.AccountingPeriod_createBalanceTransaction(
+                             profit_and_loss_account=pl.getRelativeUrl())
+    year_1_accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(2, len(year_1_accounting_transaction_list))
+    self.tic()
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2007, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        destination_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.receivable,
+                    source_debit=-100),
+               dict(source_value=self.account_module.goods_sales,
+                    source_credit=-100)))
+    self.tic()
+
+    period2.AccountingPeriod_createBalanceTransaction(
+                             profit_and_loss_account=pl.getRelativeUrl())
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(4, len(accounting_transaction_list))
+    self.tic()
+
+    balance_transaction, = [t for t in accounting_transaction_list if t not in
+        year_1_accounting_transaction_list and t != transaction2]
+    # Maybe we want to add line for each account in that case ?
+    line, = balance_transaction.contentValues()
+
+    self.assertEquals(line.getDestinationValue(), pl)
+    self.assertEquals(line.getQuantity(), 0)
+    self.assertEquals(line.getDestinationTotalAssetPrice(), None)
+
+
   def test_InventoryIndexingNodeAndMirrorSection(self):
     # Balance Transactions are indexed as Inventories.
     transaction1 = self._makeOne(
