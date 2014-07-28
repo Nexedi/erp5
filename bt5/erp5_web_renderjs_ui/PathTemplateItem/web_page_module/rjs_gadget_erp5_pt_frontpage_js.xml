@@ -150,7 +150,6 @@
           var result_list = [],\n
             i;\n
           for (i = 0; i < result.data.rows.length; i += 1) {\n
-            console.log(result.data.rows[i]);\n
             result_list.push(RSVP.all([\n
               gadget.whoWantToDisplayThis(result.data.rows[i].id),\n
               result.data.rows[i].value.title || result.data.rows[i].id\n
