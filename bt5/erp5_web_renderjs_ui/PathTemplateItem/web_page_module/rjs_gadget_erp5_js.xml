@@ -99,7 +99,7 @@
 
 /*global rJS, RSVP, jQuery, URI, console */\n
 /*jslint nomen: true */\n
-(function (rJS, $, RSVP, URI) {\n
+(function (rJS, RSVP, URI) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -309,12 +309,12 @@
         .push(undefined, function (error) {\n
           console.error(error);\n
           console.error(error.stack);\n
-          $.mobile.loading(\'hide\');\n
+          // $.mobile.loading(\'hide\');\n
           throw error;\n
         });\n
     });\n
 \n
-}(rJS, jQuery, RSVP, URI));
+}(rJS, RSVP, URI));
 
 ]]></string> </value>
         </item>

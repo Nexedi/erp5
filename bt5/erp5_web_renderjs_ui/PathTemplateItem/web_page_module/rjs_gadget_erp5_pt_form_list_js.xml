@@ -100,7 +100,7 @@
 /*jslint nomen: true */\n
 /*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
 /*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP, $) {\n
+(function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -116,7 +116,7 @@
 \n
     });\n
 \n
-}(window, rJS, RSVP, jQuery));</string> </value>
+}(window, rJS, RSVP));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
