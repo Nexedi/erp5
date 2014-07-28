@@ -51,6 +51,17 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Public?
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="checkbox" name="public" value="1"<dtml-if 
+     public> checked="checked"</dtml-if> />
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Cache anonymous <br />connections only?
     </div>
     </td>
