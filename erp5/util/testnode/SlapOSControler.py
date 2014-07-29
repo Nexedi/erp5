@@ -273,8 +273,8 @@ class SlapOSControler(object):
       slapproxy_log_fp = open(slapproxy_log, 'w')
       kwargs['stdout'] = slapproxy_log_fp
       kwargs['stderr'] = slapproxy_log_fp
-    proxy = subprocess.Popen([config['slapproxy_binary'],
-      self.slapos_config], **kwargs)
+    proxy = subprocess.Popen([config['slapos_binary'], 
+      'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
@@ -340,9 +340,10 @@ class SlapOSControler(object):
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
     for runs in range(0, MAX_SR_RETRIES):
-      status_dict = self.spawn(config['slapgrid_software_binary'],
-                 '-v', '-c', '--all',
-                 self.slapos_config, raise_error_if_fail=False,
+      status_dict = self.spawn(config['slapos_binary'],
+                 'node', 'software', '--all', 
+                 '--pidfile', '%s/software.pid' % self.software_root,
+                 '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
       if status_dict['status_code'] == 0:
         break
@@ -384,8 +385,9 @@ class SlapOSControler(object):
     # may "expand"
     sleep_time = 0
     for runs in range(0, MAX_PARTIONS):
-      status_dict = self.spawn(config['slapgrid_partition_binary'], '-v', '-c',
-                 self.slapos_config, raise_error_if_fail=False,
+      status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 
+                 '--pidfile', '%s/instance.pid' % self.software_root,
+                 '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
       self.log('slapgrid_cp status_dict : %r' % (status_dict,))
       if status_dict['status_code'] in (0,):
