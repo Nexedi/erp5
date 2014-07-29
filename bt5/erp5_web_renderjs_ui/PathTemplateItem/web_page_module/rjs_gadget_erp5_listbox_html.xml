@@ -119,11 +119,12 @@
 \n
   </head>\n
   <body>\n
-    <table>\n
-      <thead>\n
-      </thead>\n
-    </table>\n
-\n
+    <section class="document_table">\n
+      <table class="document-table ui-table-inset">\n
+        <thead>\n
+        </thead>\n
+      </table>\n
+    </section>\n
   </body>\n
 </html>
 

@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This gadget starts a development environment to develop new gadget.</string> </value>
+            <value> <string>Starting Point</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -134,9 +134,9 @@
   <div data-role="panel" id="leftpanel" data-display="overlay"></div>\n
 \n
   <header data-role="header">\n
-    <a href="#leftpanel">Open panel</a>\n
+    <a href="#leftpanel" class="responsive ui-btn ui-icon-bars ui-btn-icon-left">Menu</a>\n
     <h1>ERP5</h1>\n
-    <a href="#">Home</a>\n
+    <a href="#" class="responsive ui-btn ui-icon-home ui-btn-icon-left">Home</a>\n
   </header>\n
 \n
   <article></article>\n
