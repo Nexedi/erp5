@@ -1,6 +1,20 @@
 Changes
 =======
 
+0.4.39 (2014-07-30)
+-------------------
+
+  * erp5.util.testnode
+
+    - update SlapOSControler cmd calls [Rafael Monnerat]
+
+0.4.38 (2014-04-16)
+-------------------
+
+ * erp5.util.testnode:
+
+   - cleanup after the merge of scalability code [Cedric de Saint Martin]
+
 0.4.37 (2014-01-21)
 -------------------
 
