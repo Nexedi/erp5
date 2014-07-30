@@ -164,7 +164,7 @@
                 if (rendered_form.hasOwnProperty(field[0])) {\n
                   // Field is enabled in this context\n
                   var field_queue = new RSVP.Queue(),\n
-                    field_url = \'gadget_erp5_stringfield.html\',\n
+                    field_url = \'gadget_erp5_readonlyfield.html\',\n
                     field_element = document.createElement("div"),\n
                     gadget_element = document.createElement("div"),\n
                     label_element = document.createElement("label"),\n
@@ -187,6 +187,8 @@
                       (renderered_field.type === \'ParallelListField\') ||\n
                       (renderered_field.type === \'MultiListField\')) {\n
                     field_url = \'gadget_erp5_listfield.html\';\n
+                  } else if (renderered_field.type === \'StringField\') {\n
+                    field_url = \'gadget_erp5_stringfield.html\';\n
                   } else if (renderered_field.type === \'ListBox\') {\n
                     field_url = \'gadget_erp5_listbox.html\';\n
                   } else if (renderered_field.type === \'EditorField\') {\n
