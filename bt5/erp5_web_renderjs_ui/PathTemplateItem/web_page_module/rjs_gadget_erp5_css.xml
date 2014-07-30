@@ -131,6 +131,11 @@ html form {\n
   overflow: hidden;\n
 }\n
 \n
+/* readonly */\n
+.custom-readonly {\n
+  opacity: 1;\n
+}\n
+\n
 /* ------------------------------ Global Font  ---------------------------- */\n
 /* NOTE: family/size should only be set here! */\n
 body, input, select, textarea, button, p, h1, h2, h3, h4, h5, h6,\n

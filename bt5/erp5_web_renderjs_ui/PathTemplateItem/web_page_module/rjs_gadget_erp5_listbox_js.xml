@@ -124,6 +124,7 @@
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -155,7 +156,10 @@
         begin_from = gadget.props.begin_from,\n
         table = gadget.props.element.querySelector(\'table\'),\n
         tbody = document.createElement("tbody"),\n
+        lines = field_json.lines,\n
         select_list = [],\n
+        dataset,\n
+        counter,\n
         i;\n
 \n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
@@ -164,12 +168,13 @@
 \n
       return gadget.jio_allDocs({\n
         "query": new URI(field_json.query).query(true).query,\n
-        "limit": [begin_from, begin_from + field_json.lines + 1],\n
+        "limit": [begin_from, begin_from + lines + 1],\n
         "select_list": select_list\n
       }).push(function (result) {\n
         var promise_list = [result];\n
+        counter = Math.min(result.data.total_rows, lines);\n
 \n
-        for (i = 0; i < (result.data.rows.length - 1); i += 1) {\n
+        for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
             gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
           );\n
@@ -181,13 +186,11 @@
           tr,\n
           th,\n
           a,\n
-          result = result_list[0],\n
-          url_param = {},\n
+          result = dataset = result_list[0],\n
           tmp_url;\n
 \n
-        for (i = 0; i < (result.data.rows.length - 1); i += 1) {\n
+        for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
-// tmp_url = "#/f/" + encodeURIComponent(result.data.rows[i].id) + "/view";\n
           tmp_url = result_list[i + 1];\n
 \n
           for (j = 0; j < field_json.column_list.length; j += 1) {\n
@@ -202,28 +205,77 @@
           tbody.appendChild(tr);\n
         }\n
 \n
-        if (result.data.rows.length > field_json.lines) {\n
-          url_param.begin_from = begin_from + field_json.lines;\n
-        }\n
-//         return gadget.acquire("generateMyUrlXXX", url_param);\n
-        return RSVP.all([\n
-          gadget.aq_pleasePublishMyState({}),\n
-          gadget.aq_pleasePublishMyState(url_param)\n
-        ]);\n
-//         return gadget.acquire("generateMyUrlXXX", url_param);\n
-//                               [{jio_key: param_list[0]}]);\n
       }).push(function () {\n
-//         if (begin_from !== 0) {\n
-//           tmp_element_1.innerHTML += "<a href=\'" + lala[0] +\n
-//                                      "\'>Start</a> ";\n
-//         }\n
-//         tmp_element_1.innerHTML += "<a href=\'" + lala[1] +\n
-//                                    "\'>Next page!</a>";\n
-        table.appendChild(tbody);\n
-// if (result.data.rows.length > field_json.lines) {\n
-//   tmp_element_1.innerHTML += "<a href=\'#begin_from=56\'>Next page!</a>";\n
-//         window.location = "http://www.free.fr";\n
-// }\n
+        var prev_param = {},\n
+          next_param = {};\n
+\n
+        function setNext() {\n
+          if (dataset.data.rows.length > lines) {\n
+            next_param.begin_from = begin_from + lines;\n
+          }\n
+        }\n
+\n
+        if (begin_from === 0) {\n
+          setNext();\n
+        } else {\n
+          prev_param.begin_from = begin_from - lines;\n
+          setNext();\n
+        }\n
+\n
+        return RSVP.all([\n
+          gadget.pleasePublishMyState(prev_param),\n
+          gadget.pleasePublishMyState(next_param)\n
+        ]);\n
+\n
+      }).push(function (url_list) {\n
+        var fragment = document.createDocumentFragment(),\n
+          tfoot = document.createElement("tfoot"),\n
+          tr = document.createElement("tr"),\n
+          th = document.createElement("th"),\n
+          paging_prev = document.createElement("a"),\n
+          paging_next = document.createElement("a"),\n
+          paging_info = document.createElement("span"),\n
+          paging_menu = document.createElement("div"),\n
+          paging_wrap = document.createElement("div"),\n
+          len;\n
+\n
+        th.colspan = lines;\n
+\n
+        paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all";\n
+        paging_wrap.className = "ui-controlgroup-controls";\n
+\n
+        paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left ui-first-child";\n
+        paging_prev.textContent = "Previous";\n
+        paging_prev.href = url_list[0];\n
+        paging_info.className = "ui-btn ui-disabled custom-readonly";\n
+        paging_info.textContent = "Page " + ((begin_from + lines)/lines);\n
+        paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right ui-last-child";\n
+        paging_next.textContent = "Next";\n
+        paging_next.href = url_list[1];\n
+\n
+        if (begin_from === 0) {\n
+          paging_prev.className += " ui-disabled";\n
+        }\n
+        if (dataset.data.rows.length <= lines) {\n
+          paging_next.className += " ui-disabled";\n
+        }\n
+\n
+        paging_wrap.appendChild(paging_prev);\n
+        paging_wrap.appendChild(paging_info);\n
+        paging_wrap.appendChild(paging_next);\n
+        paging_menu.appendChild(paging_wrap);\n
+        th.appendChild(paging_menu);\n
+        tr.appendChild(th);\n
+        tfoot.appendChild(tr);\n
+        fragment.appendChild(tbody);\n
+        fragment.appendChild(tfoot);\n
+\n
+        for (len = table.children.length; len > 0; len -= 1) {\n
+          table.removeChild(table.lastChild);\n
+        }\n
+\n
+        table.appendChild(fragment);\n
+\n
       });\n
     });\n
 \n
