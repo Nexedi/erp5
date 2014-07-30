@@ -1,6 +1,14 @@
 Changes
 =======
 
+
+0.4.40 (2014-07-30)
+-------------------
+
+  * erp5.util.testnode
+
+    - Bugfix for erp5/util/testnode/__init__.py [Rafael Monnerat]
+
 0.4.39 (2014-07-30)
 -------------------
 
