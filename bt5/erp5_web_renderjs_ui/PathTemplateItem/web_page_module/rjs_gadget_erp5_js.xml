@@ -306,6 +306,10 @@
         }\n
         queue = renderJioDocument(gadget, options);\n
       }\n
+      gadget.state_parameter_dict = {\n
+        jio_key: options.jio_key,\n
+        view: options.view\n
+      };\n
 \n
       return queue\n
         .push(function (all_response) {\n
