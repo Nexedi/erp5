@@ -111,7 +111,6 @@
     <!-- renderjs -->\n
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="URI.js" type="text/javascript"></script>\n
     <!-- custom script -->\n
     <script src="gadget_erp5_stringfield.js" type="text/javascript"></script>\n
 \n
