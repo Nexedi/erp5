@@ -145,9 +145,8 @@
       delete options.erp5_document;\n
       delete options.form_definition;\n
 \n
-\n
-      options = options.form_gadget || {};\n
-      form_gadget.state_parameter_dict = options;\n
+//       options = options.form_gadget || {};\n
+      form_gadget.state_parameter_dict = options.form_gadget || {};\n
 \n
       form_gadget.props.gadget_list = [];\n
       form_gadget.props.id = erp5_document._id;\n

@@ -109,9 +109,15 @@
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
 \n
+      var form_options = options.erp5_form || {};\n
+\n
+      form_options.erp5_document = options.erp5_document;\n
+      form_options.form_definition = options.form_definition;\n
+      form_options.view = options.view;\n
+\n
       return this.getDeclaredGadget("erp5_form")\n
         .push(function (erp5_form) {\n
-          return erp5_form.render(options);\n
+          return erp5_form.render(form_options);\n
         });\n
 \n
     });\n

@@ -145,9 +145,19 @@
           ]);\n
         })\n
         .push(function (all_gadget) {\n
+          var form_options = options.erp5_form || {},\n
+            tab_options = options.erp5_tag || {};\n
+\n
+          form_options.erp5_document = options.erp5_document;\n
+          form_options.form_definition = options.form_definition;\n
+          form_options.view = options.view;\n
+          tab_options.erp5_document = options.erp5_document;\n
+          tab_options.form_definition = options.form_definition;\n
+          tab_options.view = options.view;\n
+\n
           return RSVP.all([\n
-            all_gadget[1].render(options),\n
-            all_gadget[0].render(options),\n
+            all_gadget[1].render(form_options),\n
+            all_gadget[0].render(tab_options),\n
           ]);\n
         });\n
 \n
