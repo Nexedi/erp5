@@ -113,10 +113,19 @@
   /////////////////////////////////////////////////////////////////\n
   // Some functions\n
   /////////////////////////////////////////////////////////////////\n
+  function createJio(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "erp5",\n
+          url: gadget.props.hateoas_url\n
+        });\n
+      });\n
+  }\n
   function renderFrontpage(gadget, options) {\n
     document.querySelector("h1").textContent = "ERP5";\n
 \n
-    return gadget.declareGadget("gadget_erp5_pt_frontpage.html", {\n
+    return gadget.declareGadget(gadget.props.frontpage_gadget, {\n
       scope: "frontpage_gadget"\n
     })\n
     .push(function (sub_gadget) {\n
@@ -190,19 +199,18 @@
     /////////////////////////////////////////////////////////////////\n
     // Init local properties\n
     .ready(function (g) {\n
-      g.props = {};\n
+      g.props = {\n
+         frontpage_gadget: "gadget_erp5_pt_frontpage.html",\n
+         hateoas_url: "https://softinst51669.host.vifib.net/erp5/web_site_module/hateoas/",\n
+         action_view: "action_object_view",\n
+         default_view_reference: "view",\n
+      };\n
     })\n
 \n
     // Configure jIO to use localstorage\n
     // And load configuration from server\n
     .ready(function (g) {\n
-      return g.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.createJio({\n
-            type: "erp5",\n
-            url: "https://softinst51669.host.vifib.net/erp5/web_site_module/hateoas/"\n
-          });\n
-        });\n
+      return createJio(g);\n
     })\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -271,6 +279,17 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    // Render the page\n
+    .declareMethod(\'configure\', function (options) {\n
+      var key;\n
+      for (key in options) {\n
+        if (options.hasOwnProperty(key)) {\n
+          this.props[key] = options[key];\n
+        }\n
+      }\n
+      return createJio(this);\n
+    })\n
+\n
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
