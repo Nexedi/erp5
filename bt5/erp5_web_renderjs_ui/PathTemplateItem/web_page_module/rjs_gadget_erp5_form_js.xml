@@ -170,6 +170,10 @@
                     label_element = document.createElement("label"),\n
                     renderered_field = rendered_form[field[0]];\n
 \n
+                  if (renderered_field.hidden === 1) {\n
+                    // Hide field\n
+                    field_element.setAttribute("class", "ui-screen-hidden");\n
+                  }\n
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
