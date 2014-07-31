@@ -57,6 +57,7 @@ from AccessControl import getSecurityManager\n
 from ZTUtils import make_query\n
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery\n
 import json\n
+from DateTime import DateTime\n
 if REQUEST is None:\n
   REQUEST = context.REQUEST\n
   # raise Unauthorized\n
@@ -514,6 +515,12 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
   # XXX Custom slapos code\n
   ##############\n
   if is_site_root:\n
+\n
+    # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
+    response.setHeader("Cache-Control", "public, max-age=1800")\n
+    response.setHeader("Vary", "Cookie")\n
+    response.setHeader("Last-Modified", DateTime().rfc822())\n
+\n
     # Global action users for the jIO plugin\n
     # XXX Would be better to not hardcode them but put them as portal type\n
     # "actions" (search could be on portal_catalog document, traverse on all\n
@@ -698,6 +705,10 @@ elif mode == \'form\':\n
   if REQUEST.other[\'method\'] != "GET":\n
     response.setStatus(405)\n
     return ""\n
+\n
+  # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
+  response.setHeader("Cache-Control", "public, max-age=1800")\n
+  response.setHeader("Vary", "Cookie")\n
 \n
   renderForm(form, result_dict)\n
 \n
