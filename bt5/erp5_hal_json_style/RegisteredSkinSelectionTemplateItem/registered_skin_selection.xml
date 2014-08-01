@@ -1,10 +1,14 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_hal_json_restricted_style</skin_folder>
+  <skin_selection>HalRestricted</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_hal_json_style</skin_folder>
-  <skin_selection>Hal</skin_selection>
+  <skin_selection>HalRestricted,Hal</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_xhtml_style</skin_folder>
-  <skin_selection>Hal</skin_selection>
+  <skin_selection>HalRestricted,Hal</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>
