@@ -97,7 +97,6 @@
             <key> <string>text_content</string> </key>
             <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
   promiseEventListener, console */\n
-/*jslint nomen: true */\n
 /*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
 /*jslint maxlen:200, nomen: true */\n
 (function (window, rJS, RSVP) {\n
@@ -108,16 +107,31 @@
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-\n
+      var gadget = this;\n
       var form_options = options.erp5_form || {};\n
+      var search_options = {};\n
 \n
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
+      // XXX not generic, fix later\n
+      if (options.erp5_searchfield) {\n
+        form_options.form_definition.extended_search =  options.erp5_searchfield.extended_search;\n
+        search_options.extended_search = options.erp5_searchfield.extended_search;\n
+      }\n
       form_options.view = options.view;\n
 \n
-      return this.getDeclaredGadget("erp5_form")\n
-        .push(function (erp5_form) {\n
-          return erp5_form.render(form_options);\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            gadget.getDeclaredGadget("erp5_searchfield"),\n
+            gadget.getDeclaredGadget("erp5_form")\n
+          ]);\n
+        })\n
+        .push(function (all_gadget) {\n
+          return RSVP.all([\n
+            all_gadget[0].render(search_options),\n
+            all_gadget[1].render(form_options)\n
+          ]);\n
         });\n
 \n
     });\n

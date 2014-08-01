@@ -138,6 +138,7 @@
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.begin_from = parseInt(options.begin_from, 10) || 0;\n
+      gadget.props.extended_search = options.extended_search;\n
 \n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         th = document.createElement("th");\n
@@ -152,22 +153,34 @@
     //////////////////////////////////////////////\n
     .declareService(function () {\n
       var gadget = this,\n
-        field_json = gadget.props.field_json,\n
-        begin_from = gadget.props.begin_from,\n
-        table = gadget.props.element.querySelector(\'table\'),\n
+        props = gadget.props,\n
+        field_json = props.field_json,\n
+        begin_from = props.begin_from,\n
+        table = props.element.querySelector(\'table\'),\n
         tbody = document.createElement("tbody"),\n
+        url_query =  props.extended_search,\n
+        query_string = "",\n
         lines = field_json.lines,\n
         select_list = [],\n
         dataset,\n
         counter,\n
         i;\n
 \n
+     // function buildQueryString(previous, next) {\n
+     //   return previous + next[0] + \':= "\' + url_query + \'" OR \';\n
+     // }\n
+\n
+      if (url_query) {\n
+        //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
+        query_string = \' AND \' + url_query;\n
+      }\n
+\n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         select_list.push(field_json.column_list[i][0]);\n
       }\n
 \n
       return gadget.jio_allDocs({\n
-        "query": new URI(field_json.query).query(true).query,\n
+        "query": new URI(field_json.query).query(true).query + query_string,\n
         "limit": [begin_from, begin_from + lines + 1],\n
         "select_list": select_list\n
       }).push(function (result) {\n
@@ -239,7 +252,7 @@
           paging_wrap = document.createElement("div"),\n
           len;\n
 \n
-        th.colspan = lines;\n
+        th.setAttribute("colspan", field_json.column_list.length);\n
 \n
         paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all";\n
         paging_wrap.className = "ui-controlgroup-controls";\n

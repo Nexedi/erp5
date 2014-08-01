@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,12 +66,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_form_list.html</string> </value>
+            <value> <string>gadget_erp5_searchfield.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_form_list_html</string> </value>
+            <value> <string>rjs_gadget_erp5_searchfield_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +85,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,41 +95,83 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 PT Form List</title>\n
+            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, console */\n
+/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+/*jslint maxlen:200, nomen: true */\n
+(function (window, rJS, RSVP, $) {\n
+  "use strict";\n
 \n
-    <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5_pt_form_list.js" type="text/javascript"></script>\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
 \n
-  </head>\n
-  <body>\n
-       <div data-gadget-url="gadget_erp5_searchfield.html"\n
-              data-gadget-scope="erp5_searchfield"\n
-              data-gadget-sandbox="public"></div>\n
-    \n
-      <div data-gadget-url="gadget_erp5_form.html"\n
-              data-gadget-scope="erp5_form"\n
-              data-gadget-sandbox="public"></div>\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+       this.props.element.querySelector("input").value = options.extended_search || "";\n
+    })\n
 \n
-  </body>\n
-</html>
-
-]]></string> </value>
+    .declareMethod(\'getContent\', function () {\n
+      var input = this.__element.querySelector(\'input\'),\n
+        result = {};\n
+\n
+      result[input.getAttribute(\'name\')] = input.value;\n
+      return result;\n
+    })\n
+\n
+    .declareService(function () {\n
+      var search_form = this;\n
+\n
+      function formSubmit() {\n
+        var form_data;\n
+\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return search_form.getContent();\n
+          })\n
+          .push(function (data) {\n
+            console.log(data);\n
+            return search_form.pleasePublishMyState({\n
+              "extended_search": data.search\n
+            });\n
+          })\n
+          .push(function (url) {\n
+            console.log(url);\n
+            return search_form.pleaseRedirectMyHash(url);\n
+          });\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        search_form.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
+    });\n
+\n
+}(window, rJS, RSVP, jQuery));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Form List</string> </value>
+            <value> <string>Gadget ERP5 Search Field JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

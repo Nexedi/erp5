@@ -140,6 +140,7 @@
         group_list = form_definition.group_list,\n
         queue = new RSVP.Queue(),\n
         form_gadget = this,\n
+        suboption_dict = {},\n
         parent_element = document.createElement("div");\n
 \n
       delete options.erp5_document;\n
@@ -147,6 +148,10 @@
 \n
 //       options = options.form_gadget || {};\n
       form_gadget.state_parameter_dict = options.form_gadget || {};\n
+      // XXX Hardcoded for searchfield - remove later!\n
+      if (form_definition.extended_search) {\n
+         suboption_dict.extended_search = form_definition.extended_search;\n
+      }\n
 \n
       form_gadget.props.gadget_list = [];\n
       form_gadget.props.id = erp5_document._id;\n
@@ -203,7 +208,7 @@
                     })\n
                     .push(function (field_gadget) {\n
                       form_gadget.props.gadget_list.push(field_gadget);\n
-                      var suboptions = options[renderered_field.key] || {};\n
+                      var suboptions = options[renderered_field.key] || suboption_dict;\n
                       suboptions.field_json = renderered_field;\n
                       return field_gadget.render(suboptions);\n
                     });\n
