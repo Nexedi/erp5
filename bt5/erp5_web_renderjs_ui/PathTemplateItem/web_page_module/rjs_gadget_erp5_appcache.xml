@@ -96,8 +96,13 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 18 Jul 2014 12:16:29 +0000\n
+# generated on Fri, 01 Aug 2014 13:03:34 +0000\n
 CACHE:\n
+images/ajax-loader.gif\n
+gadget_erp5_pt_form_view.js\n
+gadget_erp5_pt_form_view.html\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
 gadget_erp5_listbox.js\n
 URI.js\n
 gadget_jio.html\n
@@ -122,6 +127,8 @@ gadget_bin.css\n
 codemirror_mode_clike.js\n
 jquerymobile.js\n
 renderjs.js\n
+gadget_erp5_tab_list.html\n
+gadget_erp5_tab_list.js\n
 codemirror_mode_javascript.js\n
 gadget_erp5_listfield.html\n
 gadget_erp5_stringfield.js\n
@@ -129,6 +136,7 @@ gadget_erp5_stringfield.html\n
 gadget_erp5_listbox.html\n
 handlebars.js\n
 gadget_jio.js\n
+codemirror.js\n
 jquery.js\n
 gadget_bin.html\n
 gadget_global.js\n
@@ -143,6 +151,14 @@ codemirror_addon_display_fullscreen.js\n
 codemirror_addon_display_fullscreen.css\n
 codemirror_addon_dialog.js\n
 gadget_codemirror.css\n
+gadget_erp5_pt_frontpage.html\n
+gadget_erp5_pt_frontpage.js\n
+gadget_erp5_readonlyfield.html\n
+gadget_erp5_readonlyfield.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_pt_loginform.js\n
+gadget_erp5_pt_loginform.html\n
+gadget_erp5_searchfield.js\n
 NETWORK:\n
 *</string> </value>
         </item>
