@@ -344,7 +344,7 @@ sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) or context.isWebMode()\n
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
-  site_root = context.getWebSiteValue()\n
+  site_root = context.REQUEST.get(\'current_web_section\', context.getWebSiteValue())\n
 else:\n
   site_root = portal\n
 \n
@@ -386,8 +386,10 @@ result_dict = {\n
   }\n
 }\n
 \n
+if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):\n
+  response.setStatus(401)\n
 \n
-if mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
+elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
   response.setStatus(406)\n
   return ""\n
 \n
@@ -735,7 +737,7 @@ return json.dumps(result_dict, indent=2)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None, restricted=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
