@@ -313,7 +313,6 @@
       var gadget = this,\n
         queue;\n
 \n
-//       $.mobile.loading(\'show\');\n
       if (options.jio_key === undefined) {\n
         if (options.page === "login") {\n
           queue =  renderLoginForm(gadget, options);\n
@@ -335,6 +334,7 @@
         view: options.view\n
       };\n
 \n
+      $.mobile.loading(\'show\');\n
       return queue\n
         .push(function (all_response) {\n
           var page_element = all_response[1],\n
@@ -351,9 +351,11 @@
           }\n
           element.appendChild(page_element);\n
 \n
+          $.mobile.loading(\'hide\');\n
           return $(element).trigger("create");\n
         })\n
         .push(undefined, function (error) {\n
+          $.mobile.loading(\'hide\');\n
           if (error.status === 401) {\n
             // Redirect to the login view\n
             return gadget.aq_pleasePublishMyState({page: "login"})\n
@@ -361,7 +363,6 @@
           }\n
           console.error(error);\n
           console.error(error.stack);\n
-          // $.mobile.loading(\'hide\');\n
           throw error;\n
         });\n
     });\n
