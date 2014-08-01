@@ -115,6 +115,11 @@
       );\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
+      if (field_json.editable !== 1) {\n
+        input.setAttribute(\'readonly\', \'readonly\');\n
+        input.setAttribute(\'disabled\', \'disabled\');\n
+\n
+      }\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
