@@ -477,7 +477,6 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
     # instead of form, unexpected action TALES expression). Happy debugging.\n
     # renderer_form_relative_url = view_action[\'url\'][len(portal.absolute_url()):]\n
     form_id = embedded_url.split(\'?\', 1)[0].split("/")[-1]\n
-    # XXX Drop (or do something else...) all query parameters (?reset:int=1)\n
     # renderer_form = traversed_document.restrictedTraverse(form_id, None)\n
     # XXX Proxy field are not correctly handled in traversed_document of web site\n
     renderer_form = getattr(traversed_document, form_id)\n
@@ -490,6 +489,13 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
           }\n
         }\n
       }\n
+      # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display\n
+      query_split = embedded_url.split(\'?\', 1)\n
+      if len(query_split) == 2:\n
+        for query_parameter in query_split[1].split("&"):\n
+          query_key, query_value = query_parameter.split("=")\n
+          REQUEST.set(query_key, query_value)\n
+\n
       renderForm(renderer_form, embedded_dict)\n
       result_dict[\'_embedded\'] = {\n
         \'_view\': embedded_dict\n
