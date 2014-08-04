@@ -55,7 +55,11 @@ class FTPConnector(XMLObject):
         password=self.getPassword(),
         url=self.getUrlString(),
         transport=self.getUrlProtocol(),
-        transport_kw={"private_key":self.getDescription(),},)
+        transport_kw={
+          'private_key':self.getDescription(),
+          'bind_address': self.getBindAddress(),
+        },
+      )
     else:
       # XXX Must manage in the future ftp and ftps protocol
       raise NotImplementedError("Protocol %s is not yet implemented" %(self.getUrlProtocol(),))
