@@ -115,10 +115,17 @@
     <!-- renderjs -->\n
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_global.js" type="text/javascript"></script>\n
     <script src="gadget_erp5_pt_form_view.js" type="text/javascript"></script>\n
+\n
+    <script id="workflow-template" type="text/x-handlebars-template">\n
+        {{#each actionlist}}\n
+          <a class="{{class}}" href="{{link}}">{{title}}</a>\n
+        {{/each}}\n
+    </script>\n
 \n
   </head>\n
   <body>\n
@@ -130,6 +137,12 @@
     <form class="save_form">\n
       <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
         ui-icon-edit ui-btn-icon-right">Save</button>\n
+\n
+      <div class="action_list ui-controlgroup ui-controlgroup-horizontal ui-corner-all">\n
+        <div class="ui-controlgroup-controls">\n
+        </div>\n
+      </div>\n
+\n
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
               data-gadget-sandbox="public">\n

@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, Handlebars,\n
   promiseEventListener, console */\n
 /*jslint nomen: true */\n
 /*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
@@ -111,9 +113,21 @@
   // Handlebars\n
   /////////////////////////////////////////////////////////////////\n
   // Precompile the templates while loading the first gadget instance\n
-  var gadget_klass = rJS(window);\n
+  var gadget_klass = rJS(window),\n
+    workflow_template = Handlebars.compile(\n
+      gadget_klass.__template_element\n
+                         .getElementById("workflow-template")\n
+                         .innerHTML\n
+    );\n
 \n
   gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
@@ -131,12 +145,22 @@
     })\n
 \n
    .declareAcquiredMethod("aq_put", "jio_put")\n
+   .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
       var erp5_document = options.erp5_document,\n
-        form_gadget = this;\n
+        action_list = erp5_document._links.action_workflow || [],\n
+        form_gadget = this,\n
+        i,\n
+        promise_list = [];\n
+\n
+      for (i = 0; i < action_list.length; i += 1) {\n
+        promise_list.push(this.whoWantToDisplayThisPage({\n
+          name: action_list[i].name\n
+        }));\n
+      }\n
 \n
       form_gadget.props.id = erp5_document._id;\n
       form_gadget.props.view = options.view;\n
@@ -145,19 +169,47 @@
         .push(function () {\n
           return RSVP.all([\n
             form_gadget.getDeclaredGadget("erp5_form"),\n
-            form_gadget.getDeclaredGadget("erp5_tab")\n
+            form_gadget.getDeclaredGadget("erp5_tab"),\n
+            RSVP.all(promise_list)\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           var form_options = options.erp5_form || {},\n
-            tab_options = options.erp5_tag || {};\n
+            tab_options = options.erp5_tag || {},\n
+            all_result = all_gadget[2],\n
+            actionlist = [],\n
+            class_list,\n
+            i;\n
 \n
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
+\n
           tab_options.erp5_document = options.erp5_document;\n
           tab_options.form_definition = options.form_definition;\n
           tab_options.view = options.view;\n
+\n
+          for (i = 0; i < all_result.length; i += 1) {\n
+            switch (i) {\n
+              case 0:\n
+                class_list = "ui-btn ui-first-child";\n
+                break;\n
+              case (all_result.length - 1):\n
+                class_list = "ui-btn ui-last-child";\n
+                break;\n
+              default:\n
+                class_list = "ui-btn";\n
+                break;\n
+            }\n
+            actionlist.push({\n
+              class: class_list,\n
+              title: action_list[i].title,\n
+              link: all_result[i],\n
+            });\n
+          }\n
+          form_gadget.__element.querySelector("div.ui-controlgroup-controls")\n
+            .innerHTML = workflow_template({actionlist: actionlist});\n
+\n
 \n
           return RSVP.all([\n
             all_gadget[1].render(form_options),\n
@@ -191,7 +243,9 @@
       );\n
   });\n
 \n
-}(window, rJS, RSVP));</string> </value>
+}(window, rJS, RSVP));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
