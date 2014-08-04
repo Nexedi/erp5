@@ -74,7 +74,7 @@ class SFTPConnection:
             # XXX: Expects bind address to be of same family as hostname.
             # May not be easy if name resolution is involved.
             # Try to reconciliate them ?
-            sock.bind((self.bind_addres, 0))
+            sock.bind((self.bind_address, 0))
           retry_on_signal(lambda: sock.connect((hostname, port)))
           break
       else:
