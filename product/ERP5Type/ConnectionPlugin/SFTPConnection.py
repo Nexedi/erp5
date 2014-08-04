@@ -104,14 +104,14 @@ class SFTPConnection:
       raise SFTPError(str(msg) + ' while changing to dir -%r-' % (schema.path,))
     return self
 
-  def writeFile(self, path, filename, data):
+  def writeFile(self, path, filename, data, confirm=True):
     """
     Write data in provided filepath
     """
     filepath = os.path.join(path, filename)
     serialized_data = Binary(str(data))
     try:
-      self.conn.putfo(StringIO(str(serialized_data)), filepath)
+      self.conn.putfo(StringIO(str(serialized_data)), filepath, confirm=confirm)
     except error, msg:
       raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path, self.url))
 

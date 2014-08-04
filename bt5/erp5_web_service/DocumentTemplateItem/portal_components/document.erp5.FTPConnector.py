@@ -99,16 +99,16 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
-  def putFile(self, filename, data, remotepath='.'):
+  def putFile(self, filename, data, remotepath='.', confirm=True):
     """ Send file to the remote server """
     conn = self.getConnection()
     try:
       if self.isUseTemporaryFileOnWrite():
         # Simulation transaction system
-        conn.writeFile(remotepath, '%s.tmp' % filename, data)
+        conn.writeFile(remotepath, '%s.tmp' % filename, data, confirm=confirm)
         self.activate(activity='SQLQueue').renameFile('%s/%s.tmp' % (remotepath, filename),
                                                       '%s/%s' % (remotepath, filename))
       else:
-        conn.writeFile(remotepath, '%s' % filename, data)
+        conn.writeFile(remotepath, '%s' % filename, data, confirm=confirm)
     finally:
       conn.logout()
