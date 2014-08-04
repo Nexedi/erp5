@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_pt_form_dialog.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_pt_form_dialog_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, console */\n
+/*jslint nomen: true */\n
+/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+/*jslint maxlen:200, nomen: true */\n
+(function (window, rJS, RSVP) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window);\n
+\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // acquisition\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_ajax", "jio_ajax")\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var erp5_document = options.erp5_document,\n
+        form_gadget = this;\n
+\n
+      form_gadget.props.id = erp5_document._id;\n
+      form_gadget.props.view = options.view;\n
+      form_gadget.props.action = erp5_document._embedded._view._actions.put;\n
+      form_gadget.props.form_id = erp5_document._embedded._view.form_id;\n
+\n
+\n
+      return form_gadget.getDeclaredGadget("erp5_form")\n
+\n
+        .push(function (erp5_form) {\n
+          var form_options = options.erp5_form || {},\n
+            title,\n
+            i,\n
+            view_list = erp5_document._links.action_workflow || [];\n
+\n
+          for (i = 0; i < view_list.length; i += 1) {\n
+            if (view_list[i].name === options.view) {\n
+              title = view_list[i].title;\n
+            }\n
+          }\n
+          form_gadget.__element.querySelector("button").textContent = title;\n
+\n
+          form_options.erp5_document = options.erp5_document;\n
+          form_options.form_definition = options.form_definition;\n
+          form_options.view = options.view;\n
+\n
+          return erp5_form.render(form_options);\n
+        });\n
+    })\n
+\n
+\n
+    .declareService(function () {\n
+      var form_gadget = this;\n
+\n
+      function formSubmit() {\n
+        return form_gadget.getDeclaredGadget("erp5_form")\n
+          .push(function (erp5_form) {\n
+            return erp5_form.getContent();\n
+          })\n
+          .push(function (content_dict) {\n
+            var data = new FormData(),\n
+            key;\n
+\n
+            data.append(form_gadget.props.form_id.key,\n
+                                    form_gadget.props.form_id[\'default\']);\n
+            // XXX Hardcoded\n
+            data.append("dialog_id",\n
+                                    form_gadget.props.form_id[\'default\']);\n
+            for (key in content_dict) {\n
+              if (content_dict.hasOwnProperty(key)) {\n
+                data.append(key, content_dict[key]);\n
+              }\n
+            }\n
+\n
+            return jIO.util.ajax({\n
+              "type": form_gadget.props.action.method,\n
+              "url": form_gadget.props.action.href,\n
+              "data": data,\n
+              "xhrFields": {\n
+                withCredentials: true\n
+              }\n
+            });\n
+          })\n
+          .push(function (data) {\n
+            return form_gadget.whoWantToDisplayThisPage({name: "view"});\n
+          })\n
+          .push(function (url) {\n
+            return form_gadget.pleaseRedirectMyHash(url);\n
+          });\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        form_gadget.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
+  });\n
+\n
+}(window, rJS, RSVP));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Form Dialog JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
