@@ -111,7 +111,7 @@ class SFTPConnection:
     filepath = os.path.join(path, filename)
     serialized_data = Binary(str(data))
     try:
-      self.conn.putfo(StringIO(str(serialized_data)), filepath, 0, None, True)
+      self.conn.putfo(StringIO(str(serialized_data)), filepath)
     except error, msg:
       raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path, self.url))
 
