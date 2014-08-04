@@ -29,10 +29,11 @@
 
 import os, socket
 from urlparse import urlparse
-from socket import error
+from socket import error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
 from xmlrpclib import Binary
 from cStringIO import StringIO
 from paramiko import Transport, RSAKey, SFTPClient
+from paramiko.util import retry_on_signal
 
 class SFTPError(Exception):
   """
@@ -45,20 +46,40 @@ class SFTPConnection:
   Handle a SFTP (SSH over FTP) Connection
   """
 
-  def __init__(self, url, user_name, password=None, private_key=None):
+  def __init__(self, url, user_name, password=None, private_key=None,
+      bind_address=None):
     self.url = url
     self.user_name = user_name
     if password and private_key:
       raise SFTPError("Password and private_key cannot be defined simultaneously")
     self.password = password
     self.private_key = private_key
+    self.bind_address = bind_address
 
   def connect(self):
     """ Get a handle to a remote connection """
     # Check URL
     schema = urlparse(self.url)
     if schema.scheme == 'sftp':
-      self.transport = Transport((schema.hostname, int(schema.port)))
+      hostname = schema.hostname
+      port = int(schema.port)
+      # Socket creation code inspired from paramiko.Transport.__init__
+      # with added bind support.
+      for family, socktype, _, _, _ in getaddrinfo(
+            hostname, port, AF_UNSPEC, SOCK_STREAM,
+          ):
+        if socktype == SOCK_STREAM:
+          sock = socket(family, SOCK_STREAM)
+          if self.bind_address:
+            # XXX: Expects bind address to be of same family as hostname.
+            # May not be easy if name resolution is involved.
+            # Try to reconciliate them ?
+            sock.bind((self.bind_addres, 0))
+          retry_on_signal(lambda: sock.connect((hostname, port)))
+          break
+      else:
+        raise SFTPError('No suitable socket family found')
+      self.transport = Transport(sock)
     else:
       raise SFTPError('Not a valid sftp url %s, type is %s' %(self.url, schema.scheme))
     # Add authentication to transport
