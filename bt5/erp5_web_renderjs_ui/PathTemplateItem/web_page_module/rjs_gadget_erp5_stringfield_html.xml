@@ -120,7 +120,7 @@
 \n
   </head>\n
   <body>\n
-    <input type=\'text\' data-mini="true" />\n
+    <input type=\'text\'  />\n
   </body>\n
 </html>
 
