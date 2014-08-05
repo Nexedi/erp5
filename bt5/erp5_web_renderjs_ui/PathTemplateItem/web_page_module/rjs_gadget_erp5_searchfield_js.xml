@@ -151,13 +151,11 @@
             return search_form.getContent();\n
           })\n
           .push(function (data) {\n
-            console.log(data);\n
             return search_form.pleasePublishMyState({\n
               "extended_search": data.search\n
             });\n
           })\n
           .push(function (url) {\n
-            console.log(url);\n
             return search_form.pleaseRedirectMyHash(url);\n
           });\n
       }\n
