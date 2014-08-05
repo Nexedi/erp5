@@ -206,7 +206,7 @@ def renderForm(form, response_dict):\n
   response_dict[\'_actions\'] = {\n
     \'put\': {\n
       "href": url_template_dict["form_action"] % {\n
-        "traversed_document_url": traversed_document.absolute_url(),\n
+        "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),\n
         "action_id": form.action\n
       },\n
       "method": form.method,\n
@@ -344,7 +344,7 @@ sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) or context.isWebMode()\n
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
-  site_root = context.REQUEST.get(\'current_web_section\', context.getWebSiteValue())\n
+  site_root = context.getWebSectionValue()\n
 else:\n
   site_root = portal\n
 \n
