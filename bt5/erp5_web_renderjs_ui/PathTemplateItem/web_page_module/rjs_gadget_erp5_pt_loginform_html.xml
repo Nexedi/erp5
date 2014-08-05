@@ -126,18 +126,14 @@
   <fieldset class="center">\n
     <form class="login_form">\n
          <div class="ui-card ui-body-inherit ui-corner-all ui-shadow ui-content ui-responsive">\n
-           <label class="ui-input-wrap">\n
-             <span class="ui-input-wrap-label">Login:</span>\n
+             <label>Login:</label>\n
              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
                <input type="text" required="required" data-enhanced="true" name="login" value="" />\n
              </div>\n
-           </label>\n
-           <label class="ui-input-wrap">  \n
-             <span class="ui-input-wrap-label">Password:</span>\n
+             <label>Password:</label>\n
              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
                <input type="password" required="required" name="password" value="" data-enhanced="true" />\n
              </div>\n
-           </label>\n
            <div class="ui-grid-a ui-responsive">\n
              <div class="ui-block-a">\n
                <!-- <a href="#" class="ui-disabled ui-link">Forgot password</a> -->\n
