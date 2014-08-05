@@ -104,7 +104,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /* -------------------------- ERP5 specific CSS --------------------------- */\n
-/* Romain\'s */\n
+/* Romain */\n
 iframe {\n
   width: 95%;\n
   height: 500px;\n
@@ -119,6 +119,16 @@ html form {\n
   overflow-x: hidden;\n
   padding: 1em;\n
 }\n
+html fieldset form,\n
+html fieldset section.document_table {\n
+  padding: 0;\n
+}\n
+\n
+@media (max-width: 40em) {\n
+  html fieldset section.document_table {\n
+    width: 80%;\n
+  }\n
+}\n
 \n
 /* ui-content + listview|table|form */\n
 .document-listview,\n
@@ -130,6 +140,10 @@ html form {\n
   margin: 1em 0;\n
 }\n
 \n
+/* action menu */\n
+.action_list {\n
+  display: inline-block;\n
+}\n
 /* override default page wrapping */\n
 .ui-mobile .ui-page-active {\n
   overflow: hidden;\n
@@ -142,17 +156,16 @@ html form {\n
 \n
 /* ------------------------------ Global Font  ---------------------------- */\n
 /* NOTE: family/size should only be set here! */\n
-body, input, select, textarea, button, p, h1, h2, h3, h4, h5, h6,\n
-html.ui-mobile label, html.ui-mobile legend, .ui-btn, .ui-li-static {\n
+input, select, textarea, button, p, h1, h2, h3, h4, h5, h6, table,\n
+.ui-header h1.ui-title,\n
+html.ui-mobile legend, .ui-btn, .ui-li-static, html.ui-mobile body form label {\n
   font-family: Helvetica, Arial, sans-serif;\n
-  font-size: 95%;\n
+  font-size: 90%;\n
 }\n
-@media (max-width: 40em) {\n
-  body, input, select, textarea, button, p, h1, h2, h3, h4, h5, h6,\n
-  html.ui-mobile label, html.ui-mobile legend, .ui-btn, .ui-li-static {\n
-    font-size: 90%;\n
-  }\n
+html body .ui-header .ui-btn {\n
+  font-size: 85%\n
 }\n
+\n
 \n
 /* ========================== Overrides Themes ============================ */\n
 /* JQM custom themes */\n
@@ -344,7 +357,7 @@ html body .ui-header .ui-group-theme-a a:visited,\n
   color: rgba(0, 0, 0, 0.55);\n
   text-shadow: none;\n
   font-weight: normal;\n
-  line-height: 3.25em; /* IE cannot take 325% */\n
+  line-height: 3em; /* IE cannot take 300% */\n
 }\n
 /* Button special handling: panel listitems */\n
 .ui-page-theme-a .ui-panel-inner li .ui-btn,\n
@@ -929,7 +942,8 @@ html .ui-btn, label.ui-btn {\n
 .ui.btn-icon-bottom:after,\n
 .ui-btn-icon-right:after,\n
 .ui-listview > li > .ui-btn[class*="ui-icon-"]:after {\n
-    margin-top: -10px;\n
+    margin-top: -11px;\n
+    top: 50%;\n
 }\n
 \n
 /* fix text-indent when trying to use custom icons on iconpos-notext buttons */\n
@@ -1039,7 +1053,6 @@ html .document-table tbody th:hover a {\n
 \n
 /* override JQM default format */\n
 html .document-table {\n
-  width: 100.15%;\n
   border: 1px solid;\n
 }\n
 /* alignment */\n
@@ -1168,27 +1181,37 @@ html .left textarea, html .right textarea {\n
   display: inline-block;\n
   vertical-align: midle;\n
 }\n
+/* override border-radius for all inputs to match buttons */\n
+html form .ui-input-text.ui-corner-all {\n
+  -webkit-border-radius: .325em;\n
+  border-radius: .325em;\n
+}\n
+\n
+/* set line height on forms*/\n
+html.ui-mobile body form label {\n
+  line-height: 1em;\n
+}\n
 \n
 /* fix relation of label/legend to input to display side-by-side */\n
-fieldset label:not(.ui-btn),\n
-fieldset div.ui-controlgroup-label {\n
+.field_container fieldset label:not(.ui-btn),\n
+.field_container fieldset div.ui-controlgroup-label {\n
     max-width: 30%;\n
     min-width: 30%;\n
 }\n
-.left label:not(.ui-btn) ~ *,\n
-.left div.ui-controlgroup-label ~ *,\n
-.right label:not(.ui-btn) ~ * ,\n
-.right div.ui-controlgroup-label ~ * {\n
+.field_container .left label:not(.ui-btn) ~ *,\n
+.field_container .left div.ui-controlgroup-label ~ *,\n
+.field_container .right label:not(.ui-btn) ~ * ,\n
+.field_container .right div.ui-controlgroup-label ~ * {\n
   width: 70%;\n
 }\n
-.center label:not(.ui-btn) ~ *,\n
-.center div.ui-controlgroup-label ~ * {\n
+.field_container .center label:not(.ui-btn) ~ *,\n
+.field_container .center div.ui-controlgroup-label ~ * {\n
   width: 68%;\n
 }\n
 \n
 @media (max-width: 40em) {\n
   html form {\n
-    max-width: 80%; /* allow scrolling! */\n
+    max-width: 80%;\n
     margin: auto;\n
   }\n
   html .left, html .right, html .center, html .bottom {\n
@@ -1196,41 +1219,56 @@ fieldset div.ui-controlgroup-label {\n
     display: block;\n
     padding: .25em 0;\n
   }\n
+\n
   html .left textarea,\n
   html .right textarea,\n
-  html.ui-mobile body fieldset.left div label,\n
-  html.ui-mobile body fieldset.left div label ~ *,\n
-  html.ui-mobile body fieldset.right div label,\n
-  html.ui-mobile body fieldset.right div label ~ *,\n
-  html.ui-mobile body fieldset.center div label,\n
-  html.ui-mobile body fieldset.center div label ~ * {\n
+  html.ui-mobile body .field_container fieldset.left div label,\n
+  html.ui-mobile body .field_container fieldset.left div label ~ *,\n
+  html.ui-mobile body .field_container fieldset.right div label,\n
+  html.ui-mobile body .field_container fieldset.right div label ~ *,\n
+  html.ui-mobile body .field_container fieldset.center div label,\n
+  html.ui-mobile body .field_container fieldset.center div label ~ * {\n
     width: auto;\n
   }\n
-  html.ui-mobile body fieldset.left div label,\n
-  html.ui-mobile body fieldset.right div label,\n
-  html.ui-mobile body fieldset.center div label {\n
+  html.ui-mobile body .field_container fieldset.left div label,\n
+  html.ui-mobile body .field_container fieldset.right div label,\n
+  html.ui-mobile body .field_container fieldset.center div label {\n
     min-width: none;\n
     max-width: none;\n
-    margin-bottom: -.5em; /* nono! */\n
+    margin-bottom: -.5em;\n
   }\n
 }\n
 /* --------------------------- FORM INPUTS -------------------------------- */\n
 \n
 /* set field and input side by side */\n
-fieldset label:not(.ui-btn),\n
-fieldset div.ui-controlgroup-label,\n
-fieldset label:not(.ui-btn) ~ *,\n
-fieldset div.ui-controlgroup-label ~ * {\n
+.field_container fieldset label:not(.ui-btn),\n
+.field_container fieldset div.ui-controlgroup-label,\n
+.field_container fieldset label:not(.ui-btn) ~ *,\n
+.field_container fieldset div.ui-controlgroup-label ~ * {\n
     display: inline-block;\n
     vertical-align: middle;\n
 }\n
 @media (max-width: 40em) {\n
-  fieldset label:not(.ui-btn),\n
-  fieldset div.ui-controlgroup-label,\n
-  fieldset label:not(.ui-btn) ~ *,\n
-  fieldset div.ui-controlgroup-label ~ * {\n
+  .field_container fieldset label:not(.ui-btn),\n
+  .field_container fieldset div.ui-controlgroup-label,\n
+  .field_container fieldset label:not(.ui-btn) ~ *,\n
+  .field_container fieldset div.ui-controlgroup-label ~ * {\n
       display: block;\n
       vertical-align: top;\n
+  }\n
+}\n
+/* --------------------------- CARD -------------------------------- */\n
+html .ui-card {\n
+  border: 1px solid;\n
+  max-width: 35%;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+  margin-top: 10%;\n
+}\n
+@media (max-width: 40em) {\n
+  html .ui-card {\n
+    max-width: none;\n
+    margin-top: 40%;\n
   }\n
 }
 
