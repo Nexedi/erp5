@@ -116,6 +116,7 @@
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="handlebars.js" type="text/javascript"></script>\n
+\n
     <!-- custom script -->\n
     <script src="gadget_erp5_tab_list.js" type="text/javascript"></script>\n
 \n
@@ -130,7 +131,7 @@
   </head>\n
   <body>\n
 \n
-    <div class="nav_container"></div>\n
+    <div class="grid-container"></div>\n
 \n
   </body>\n
 </html>
@@ -256,7 +257,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -270,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.24412.61314.46199</string> </value>
+                <value> <string>936.46254.12819.56183</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406030804.16</float>
+                        <float>1407329213.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -1082,53 +1082,79 @@ html .document-table tbody tr:nth-child(odd) th {\n
   background-color: rgba(0,0,0,.04);\n
 }\n
 \n
-/* --------------------------- TABS --------------------------------------- */\n
+/* ------------------------ TABS/GRID ------------------------------------ */\n
 /* thx: Lea Verou - http://bit.ly/1rAhqzm */\n
-.nav_container li a {\n
+.grid-container li a {\n
   border-top: 0px;\n
 }\n
-.nav_container li.ui-block-a,\n
-.nav_container li.ui-block-b {\n
+.grid-container li.ui-block-a,\n
+.grid-container li.ui-block-b {\n
   clear: none;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(1) {\n
+.grid-container ul li:first-child:nth-last-child(1),\n
+div.grid-container.line-1 ul.ui-grid li {\n
   width: 100%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(2),\n
-.nav_container ul li:first-child:nth-last-child(2) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(2),\n
+.grid-container ul li:first-child:nth-last-child(2) ~ li,\n
+div.grid-container.line-2 ul.ui-grid li,\n
+div.grid-container.line-2 ul.ui-grid li ~ li {\n
   width: 50%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(3),\n
-.nav_container ul li:first-child:nth-last-child(3) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(3),\n
+.grid-container ul li:first-child:nth-last-child(3) ~ li,\n
+div.grid-container.line-3 ul.ui-grid li,\n
+div.grid-container.line-3 ul.ui-grid li ~ li {\n
   width: 33.3333%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(4),\n
-.nav_container ul li:first-child:nth-last-child(4) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(4),\n
+.grid-container ul li:first-child:nth-last-child(4) ~ li,\n
+div.grid-container.line-4 ul.ui-grid li,\n
+div.grid-container.line-4 ul.ui-grid li ~ li {\n
   width: 25%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(5),\n
-.nav_container ul li:first-child:nth-last-child(5) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(5),\n
+.grid-container ul li:first-child:nth-last-child(5) ~ li,\n
+div.grid-container.line-5 ul.ui-grid li,\n
+div.grid-container.line-5 ul.ui-grid li ~ li {\n
   width: 20%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(6),\n
-.nav_container ul li:first-child:nth-last-child(6) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(6),\n
+.grid-container ul li:first-child:nth-last-child(6) ~ li,\n
+div.grid-container.line-6 ul.ui-grid li,\n
+div.grid-container.line-6 ul.ui-grid li ~ li {\n
   width: 16.667%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(7),\n
-.nav_container ul li:first-child:nth-last-child(7) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(7),\n
+.grid-container ul li:first-child:nth-last-child(7) ~ li,\n
+div.grid-container.line-7 ul.ui-grid li,\n
+div.grid-container.line-7 ul.ui-grid li ~ li {\n
   width: 14,285714286%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(8),\n
-.nav_container ul li:first-child:nth-last-child(8) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(8),\n
+.grid-container ul li:first-child:nth-last-child(8) ~ li,\n
+div.grid-container.line-8 ul.ui-grid li,\n
+div.grid-container.line-8 ul.ui-grid li ~ li {\n
   width: 12.5%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(9),\n
-.nav_container ul li:first-child:nth-last-child(9) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(9),\n
+.grid-container ul li:first-child:nth-last-child(9) ~ li,\n
+div.grid-container.line-9 ul.ui-grid li,\n
+div.grid-container.line-9 ul.ui-grid li ~ li {\n
   width: 11.112%;\n
 }\n
-.nav_container ul li:first-child:nth-last-child(10),\n
-.nav_container ul li:first-child:nth-last-child(10) ~ li {\n
+.grid-container ul li:first-child:nth-last-child(10),\n
+.grid-container ul li:first-child:nth-last-child(10) ~ li,\n
+div.grid-container.line-10 ul.ui-grid li,\n
+div.grid-container.line-10 ul.ui-grid li ~ li {\n
   width: 10%;\n
+}\n
+\n
+@media (max-width: 40em) {\n
+  div.grid-container.ui-responsive ul.ui-grid li,\n
+  div.grid-container.ui-responsive ul.ui-grid li ~ li {\n
+    width: 100%;\n
+  }\n
 }\n
 /* ----------------------------- FORM LAYOUT ------------------------------ */\n
 html .left, html .right, html .center, html .bottom {\n
@@ -1414,7 +1440,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46087.64931.62208</string> </value>
+                <value> <string>936.46294.38547.13499</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1432,7 +1458,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407318319.6</float>
+                        <float>1407330793.38</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
