@@ -1270,7 +1270,30 @@ html .ui-card {\n
     max-width: none;\n
     margin-top: 40%;\n
   }\n
-}
+}\n
+/* --------------------- CUSTOM GRAPH ----------------------- */\n
+   /* \n
+   .custom-graph {\n
+      width: 100%;\n
+      min-width: 1px;\n
+      height: 10vw;\n
+      max-height: 100%;\n
+      min-height: 100%;\n
+    }\n
+   */\n
+   .custom-graph-wrap { \n
+      position: relative; \n
+      width: 100%;\n
+   } \n
+   .custom-graph-wrap:before { \n
+       content: ""; \n
+       display: block; \n
+       padding-top: 100%; / initial ratio of 1:1*/ \n
+   } \n
+   .custom-graph { \n
+     position: absolute; top: 0; left: 0; bottom: 0; right: 0; \n
+   }\n
+
 
 ]]></string> </value>
         </item>
@@ -1407,7 +1430,7 @@ html .ui-card {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.43562.28610.64546</string> </value>
+                <value> <string>936.45990.31586.6963</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1425,7 +1448,7 @@ html .ui-card {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407168172.17</float>
+                        <float>1407312414.38</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
