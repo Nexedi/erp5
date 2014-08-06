@@ -151,7 +151,7 @@
         erp5_document = options.erp5_document,\n
         view_list = erp5_document._links.action_object_view,\n
         i,\n
-        nav_html = \'<nav data-role="navbar"><ul class="ui-grid">\',\n
+        nav_html = \'<nav data-role="navbar"><ul class="grid-items">\',\n
         promise_list = []\n
 \n
       for (i = 0; i < view_list.length; i += 1) {\n
@@ -323,7 +323,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46280.20106.51694</string> </value>
+                <value> <string>936.46363.37694.56064</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -341,7 +341,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407330147.68</float>
+                        <float>1407334850.3</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
