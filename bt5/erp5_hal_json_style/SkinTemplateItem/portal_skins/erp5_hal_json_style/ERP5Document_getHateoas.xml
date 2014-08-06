@@ -417,6 +417,20 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
       },\n
       "name": traversed_document.getPortalType(),\n
     }\n
+    \n
+  # Return info about container\n
+  if not is_portal:\n
+    container = traversed_document.getParentValue()\n
+    if container != portal:\n
+      # Jio does not support fetching the root document for now\n
+      result_dict[\'_links\'][\'parent\'] = {\n
+        "href": default_document_uri_template % {\n
+          "root_url": site_root.absolute_url(),\n
+          "relative_url": container.getRelativeUrl(), \n
+          "script_id": script.id\n
+        },\n
+        "name": container.getTitle(),\n
+      }\n
 \n
   # XXX Loop on form rendering\n
   erp5_action_dict = portal.Base_filterDuplicateActions(\n
@@ -454,15 +468,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
 #       \'name\': view_action[\'name\']\n
 #     })\n
 \n
-#   # XXX Check that traversed_document is not the portal\n
-#   if (traversed_document.getRelativeUrl() != portal.getRelativeUrl()) and (traversed_document.getRelativeUrl() != site_root.getRelativeUrl()):\n
-#     parent = traversed_document.getParentValue()\n
-#     if (is_web_mode and (parent.getRelativeUrl() != portal.getRelativeUrl())):\n
-#       result_dict[\'_links\'][\'parent\'] = {\n
-#         \'href\': \'%s\' % parent.absolute_url(),\n
-#         \'name\': parent.getTitle()\n
-#       }\n
-# \n
+\n
 #   if (renderer_form is not None):\n
 #     traversed_document_property_dict, renderer_form_json = traversed_document.Base_renderFormAsSomething(renderer_form)\n
 #     result_dict[\'_embedded\'] = {\n
