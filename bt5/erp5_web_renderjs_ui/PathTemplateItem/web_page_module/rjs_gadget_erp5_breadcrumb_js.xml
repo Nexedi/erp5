@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.js</string> </value>
+            <value> <string>gadget_erp5_breadcrumb.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_js</string> </value>
+            <value> <string>rjs_gadget_erp5_breadcrumb_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,292 +99,76 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global rJS, RSVP, jQuery, URI, console */\n
+            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, console */\n
 /*jslint nomen: true */\n
-(function (rJS, RSVP, URI) {\n
+/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+/*jslint maxlen:200, nomen: true */\n
+(function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
-  // Desactivate jQuery Mobile URL management\n
+  // Handlebars\n
   /////////////////////////////////////////////////////////////////\n
-  $.mobile.ajaxEnabled = false;\n
-  $.mobile.linkBindingEnabled = false;\n
-  $.mobile.hashListeningEnabled = false;\n
-  $.mobile.pushStateEnabled = false;\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window);\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // Some functions\n
-  /////////////////////////////////////////////////////////////////\n
-  function createJio(gadget) {\n
-    return gadget.getDeclaredGadget("jio_gadget")\n
-      .push(function (jio_gadget) {\n
-        return jio_gadget.createJio({\n
-          type: "erp5",\n
-          url: gadget.props.hateoas_url\n
-        });\n
-      });\n
-  }\n
-  function renderFrontpage(gadget, options) {\n
-\n
-    return gadget.props.breadcrumb_gadget.render({title: "ERP5"})\n
-    .push(function () {\n
-      return gadget.declareGadget(gadget.props.frontpage_gadget, {\n
-        scope: "frontpage_gadget"\n
-      })\n
-    })\n
-    .push(function (sub_gadget) {\n
-        return RSVP.all([\n
-          sub_gadget.render(),\n
-          sub_gadget.getElement()\n
-        ]);\n
-    });\n
-  }\n
-\n
-  function renderLoginForm(gadget, options) {\n
-    \n
-    return gadget.props.breadcrumb_gadget.render({title: "Login"})\n
-    .push(function () {\n
-      return gadget.declareGadget("gadget_erp5_pt_loginform.html", {\n
-        scope: "login_gadget"\n
-      })\n
-    })\n
-    .push(function (sub_gadget) {\n
-        return RSVP.all([\n
-          sub_gadget.render(),\n
-          sub_gadget.getElement()\n
-        ]);\n
-    });\n
-  }\n
-\n
-  function renderJioDocument(gadget, options) {\n
-    var sub_options,\n
-      breadcrumb_options = {};\n
-    return gadget.getDeclaredGadget("jio_gadget")\n
-      .push(function (jio_gadget) {\n
-        var jio_key = options.jio_key,\n
-          view = options.view;\n
-\n
-        gadget.props.jio_key = jio_key;\n
-        ///////////////////////////////////////////////\n
-        // Display erp5 document view\n
-        ///////////////////////////////////////////////\n
-        return jio_gadget.get({"_id": jio_key}, {"_view": view});\n
-      })\n
-      .push(function (result) {\n
-        breadcrumb_options.title = result.data.title || result.data.reference || options.jio_key;\n
-        breadcrumb_options.parent_link = result.data._links.parent;\n
-        var uri = new URI(\n
-          result.data._embedded._view._links.form_definition.href\n
-        );\n
-//           if ((uri.scheme() === "urn") &&\n
-//               (uri.segment(0) === "jio") &&\n
-//               (uri.segment(1) === "get")) {\n
-//           }\n
-        return RSVP.all([\n
-          result,\n
-          gadget.getDeclaredGadget("jio_gadget")\n
-            .push(function (jio_gadget) {\n
-              return jio_gadget.get(\n
-                {"_id": uri.segment(2)},\n
-                {"_view": "view"}\n
-              );\n
-            })\n
-        ]);\n
-      })\n
-      .push(function (result) {\n
-        sub_options = options.form_gadget || {};\n
-        sub_options.erp5_document = result[0].data;\n
-        sub_options.form_definition = result[1].data;\n
-        sub_options.view = options.view;\n
-\n
-        return gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
-          scope: "form_gadget"\n
-        });\n
-      })\n
-\n
-      .push(function (form_gadget) {\n
-        return RSVP.all([\n
-          form_gadget.render(sub_options),\n
-          form_gadget.getElement(),\n
-          gadget.props.breadcrumb_gadget.render(breadcrumb_options)\n
-        ]);\n
-      })\n
-  }\n
-\n
-\n
-  /////////////////////////////////////////////////////////////////\n
-  // Gadget behaviour\n
-  /////////////////////////////////////////////////////////////////\n
-\n
-  rJS(window)\n
+  gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
     // Init local properties\n
     .ready(function (g) {\n
-      g.props = {\n
-         frontpage_gadget: "gadget_erp5_pt_frontpage.html",\n
-         hateoas_url: "hateoas/",\n
-         action_view: "action_object_view",\n
-         default_view_reference: "view",\n
-      };\n
-      return g.getDeclaredGadget("breadcrumb")\n
-      .push(function (sub_gadget) {\n
-        g.props.breadcrumb_gadget = sub_gadget;\n
-      });\n
+      g.props = {};\n
     })\n
 \n
-    // Configure jIO to use localstorage\n
-    // And load configuration from server\n
+    // Assign the element to a variable\n
     .ready(function (g) {\n
-      return createJio(g);\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // handle acquisition\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
-    // Bridge to jio gadget\n
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_ajax", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.ajax.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_post", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.post.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_put", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.put.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_remove", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.remove.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_get", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.get.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.putAttachment.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
         });\n
     })\n
 \n
-    .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
-      // Hey, I want to display some URL\n
-      return this.aq_pleasePublishMyState({jio_key: param_list[0]});\n
-    })\n
-    .allowPublicAcquisition("whoWantToDisplayThisPage", function (param_list) {\n
-      // Hey, I want to display some URL\n
-      return this.aq_pleasePublishMyState({jio_key: this.props.jio_key, view: param_list[0].name});\n
-    })\n
-\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    // Render the page\n
-    .declareMethod(\'configure\', function (options) {\n
-      var key;\n
-      for (key in options) {\n
-        if (options.hasOwnProperty(key)) {\n
-          this.props[key] = options[key];\n
-        }\n
-      }\n
-      return createJio(this);\n
-    })\n
-\n
-    // Render the page\n
     .declareMethod(\'render\', function (options) {\n
-      var gadget = this,\n
-        queue;\n
 \n
-      if (options.jio_key === undefined) {\n
-        if (options.page === "login") {\n
-          queue =  renderLoginForm(gadget, options);\n
-        } else if (options.page === undefined) {\n
-          queue = renderFrontpage(gadget, options);\n
-        } else {\n
-          throw new Error("Unknown page: " + options.page);\n
-        }\n
-      } else {\n
-        if (options.view === undefined) {\n
-          // Redirect to the default view\n
-          return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: "view"})\n
-            .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-        }\n
-        queue = renderJioDocument(gadget, options);\n
+      var h1_element = this.props.element.querySelector("h1"),\n
+        parent_element = this.props.element.querySelector(".breadcrumb_container"),\n
+        title = options.title || "ERP5",\n
+        parent_link = options.parent_link,\n
+        gadget = this,\n
+        uri,\n
+        link_element;\n
+\n
+      h1_element.textContent = title;\n
+      // Clear the previous rendering\n
+      while (parent_element.firstChild) {\n
+        parent_element.removeChild(parent_element.firstChild);\n
       }\n
-      gadget.state_parameter_dict = {\n
-        jio_key: options.jio_key,\n
-        view: options.view\n
-      };\n
+      if (parent_link !== undefined) {\n
+        uri = new URI(parent_link.href);\n
+        return gadget.whoWantToDisplayThis(uri.segment(2))\n
+          .push(function (parent_href) {\n
+            link_element = document.createElement("a");\n
+            link_element.href = parent_href;\n
+            link_element.setAttribute("class", "responsive ui-btn ui-icon-carat-u ui-btn-icon-left");\n
+            link_element.setAttribute("data-role", "button");\n
+            link_element.setAttribute("role", "button");\n
+            link_element.textContent = parent_link.name;\n
+            parent_element.appendChild(link_element);\n
+          });\n
+      }\n
+  });\n
 \n
-      $.mobile.loading(\'show\');\n
-      return queue\n
-        .push(function (all_response) {\n
-          var page_element = all_response[1],\n
-            element = document.querySelector("article");\n
-          // XXX JQuery mobile\n
-// //           $.mobile.loading(\'hide\');\n
-\n
-\n
-          // Append in the DOM at the end to reduce flickering and reduce DOM\n
-          // modifications\n
-          // Clear the previous rendering\n
-          while (element.firstChild) {\n
-            element.removeChild(element.firstChild);\n
-          }\n
-          element.appendChild(page_element);\n
-\n
-          $.mobile.loading(\'hide\');\n
-          return $(element).trigger("create");\n
-        })\n
-        .push(undefined, function (error) {\n
-          $.mobile.loading(\'hide\');\n
-          if (error.status === 401) {\n
-            // Redirect to the login view\n
-            return gadget.aq_pleasePublishMyState({page: "login"})\n
-              .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-          }\n
-          console.error(error);\n
-          console.error(error.stack);\n
-          throw error;\n
-        });\n
-    });\n
-\n
-}(rJS, RSVP, URI));
-
-]]></string> </value>
+}(window, rJS, RSVP));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 JS</string> </value>
+            <value> <string>Gadget ERP5 Breadcrumb JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -470,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.68</float>
+                        <float>1407255095.32</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -501,7 +285,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -515,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.45060.38036.50312</string> </value>
+                <value> <string>936.46052.59584.21316</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -533,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407311956.87</float>
+                        <float>1407318113.56</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -590,7 +374,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405426548.84</float>
+                        <float>1407246316.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
