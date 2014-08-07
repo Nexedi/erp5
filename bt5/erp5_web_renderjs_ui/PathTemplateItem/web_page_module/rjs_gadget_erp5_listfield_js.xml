@@ -147,6 +147,13 @@
         });\n
       }\n
       select.innerHTML += tmp;\n
+    })\n
+\n
+    .declareMethod(\'getContent\', function () {\n
+      var input = this.element.querySelector(\'select\'),\n
+        result = {};\n
+      result[input.getAttribute(\'name\')] = input.options[input.selectedIndex].value;\n
+      return result;\n
     });\n
 \n
 }(window, rJS, Handlebars));
@@ -272,7 +279,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -286,7 +293,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.14639.62230.24012</string> </value>
+                <value> <string>936.46470.28243.51404</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -304,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933454.78</float>
+                        <float>1407343147.92</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
