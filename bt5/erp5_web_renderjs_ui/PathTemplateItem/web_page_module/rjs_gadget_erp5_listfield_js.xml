@@ -116,7 +116,7 @@
                       .innerHTML,\n
     option_template = Handlebars.compile(option_source),\n
     selected_option_source = gadget_klass.__template_element\n
-                               .getElementById("option-template")\n
+                               .getElementById("selected-option-template")\n
                                .innerHTML,\n
     selected_option_template = Handlebars.compile(selected_option_source);\n
 \n
@@ -135,8 +135,7 @@
         tmp = \'\';\n
       select.setAttribute(\'name\', field_json.key);\n
       for (i = 0; i < field_json.items.length; i += 1) {\n
-\n
-        if (field_json.items[i][1] === field_json.default[0]) {\n
+        if (field_json.items[i][1] === field_json.default) {\n
           template = selected_option_template;\n
         } else {\n
           template = option_template;\n
@@ -293,7 +292,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46470.28243.51404</string> </value>
+                <value> <string>936.47463.9384.63232</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407343147.92</float>
+                        <float>1407400855.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
