@@ -39,17 +39,17 @@
             <key> <string>constraint_property</string> </key>
             <value>
               <tuple>
-                <string>start_date</string>
+                <string>stop_date</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Start Date must be defined</string> </value>
+            <value> <string>Stop Date must be defined</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>start_date_constraint</string> </value>
+            <value> <string>stop_date_constraint</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -89,7 +89,11 @@
         </item>
         <item>
             <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: context.portal_type in portal.getPortalSaleTypeList()</string> </value>
+            <value> <string>python: context.portal_type in portal.getPortalPurchaseTypeList()</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>stop_date</string> </value>
         </item>
       </dictionary>
     </pickle>
