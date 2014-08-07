@@ -1099,6 +1099,12 @@ ul.grid-items, ul.grid-items li {\n
 ul.grid-items {\n
     overflow: hidden;\n
 }\n
+ul.grid-items li {\n
+  float: left;\n
+}\n
+.grid-container ul li:first-child {\n
+  clear: left;\n
+}\n
 /*\n
  * Width:\n
  * default all in one line (as for tabs)\n
@@ -1115,62 +1121,62 @@ ul.grid-items {\n
   clear: none;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(1),\n
-div.grid-container.line-1 ul.grid-items li,\n
-div.grid-container.line-1 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-1 li,\n
+div.grid-container ul.grid-items.line-1 li ~ li {\n
   width: 100%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(2),\n
 .grid-container ul li:first-child:nth-last-child(2) ~ li,\n
-div.grid-container.line-2 ul.grid-items li,\n
-div.grid-container.line-2 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-2 li,\n
+div.grid-container ul.grid-items.line-2 li ~ li {\n
   width: 50%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(3),\n
 .grid-container ul li:first-child:nth-last-child(3) ~ li,\n
-div.grid-container.line-3 ul.grid-items li,\n
-div.grid-container.line-3 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-3 li,\n
+div.grid-container ul.grid-items.line-3 li ~ li {\n
   width: 33.3333%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(4),\n
 .grid-container ul li:first-child:nth-last-child(4) ~ li,\n
-div.grid-container.line-4 ul.grid-items li,\n
-div.grid-container.line-4 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-4 li,\n
+div.grid-container ul.grid-items.line-4 li ~ li {\n
   width: 25%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(5),\n
 .grid-container ul li:first-child:nth-last-child(5) ~ li,\n
-div.grid-container.line-5 ul.grid-items li,\n
-div.grid-container.line-5 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-5 li,\n
+div.grid-container ul.grid-items.line-5 li ~ li {\n
   width: 20%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(6),\n
 .grid-container ul li:first-child:nth-last-child(6) ~ li,\n
-div.grid-container.line-6 ul.grid-items li,\n
-div.grid-container.line-6 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-6 li,\n
+div.grid-container ul.grid-items.line-6 li ~ li {\n
   width: 16.667%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(7),\n
 .grid-container ul li:first-child:nth-last-child(7) ~ li,\n
-div.grid-container.line-7 ul.grid-items li,\n
-div.grid-container.line-7 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-7 li,\n
+div.grid-container ul.grid-items.line-7 li ~ li {\n
   width: 14,285714286%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(8),\n
 .grid-container ul li:first-child:nth-last-child(8) ~ li,\n
-div.grid-container.line-8 ul.grid-items li,\n
-div.grid-container.line-8 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-8 li,\n
+div.grid-container ul.grid-items.line-8 li ~ li {\n
   width: 12.5%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(9),\n
 .grid-container ul li:first-child:nth-last-child(9) ~ li,\n
-div.grid-container.line-9 ul.grid-items li,\n
-div.grid-container.line-9 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-9 li,\n
+div.grid-container ul.grid-items.line-9 li ~ li {\n
   width: 11.112%;\n
 }\n
 .grid-container ul li:first-child:nth-last-child(10),\n
 .grid-container ul li:first-child:nth-last-child(10) ~ li,\n
-div.grid-container.line-10 ul.grid-items li,\n
-div.grid-container.line-10 ul.grid-items li ~ li {\n
+div.grid-container ul.grid-items.line-10 li,\n
+div.grid-container ul.grid-items.line-10 li ~ li {\n
   width: 10%;\n
 }\n
 \n
@@ -1466,7 +1472,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.47424.46819.23074</string> </value>
+                <value> <string>936.47512.62506.52599</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1484,7 +1490,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407398552.06</float>
+                        <float>1407405071.66</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
