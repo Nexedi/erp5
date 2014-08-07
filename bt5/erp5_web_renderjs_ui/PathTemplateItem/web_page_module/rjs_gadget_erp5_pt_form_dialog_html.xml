@@ -115,6 +115,7 @@
     <!-- renderjs -->\n
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="URI.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_global.js" type="text/javascript"></script>\n
@@ -270,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.43174.43766.55927</string> </value>
+                <value> <string>936.43469.1612.61132</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407143862.28</float>
+                        <float>1407333743.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
