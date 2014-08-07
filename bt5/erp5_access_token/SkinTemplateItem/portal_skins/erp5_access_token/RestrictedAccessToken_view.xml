@@ -80,7 +80,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_reference</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -112,7 +114,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OneTimeRestrictedAccessToken_view</string> </value>
+            <value> <string>RestrictedAccessToken_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
