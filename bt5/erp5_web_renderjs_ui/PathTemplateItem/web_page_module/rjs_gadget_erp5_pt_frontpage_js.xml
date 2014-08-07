@@ -147,7 +147,7 @@
       var gadget = this;\n
 \n
       return gadget.jio_allDocs({\n
-        "query": \'meta_type:"ERP5 Folder"\',\n
+        "query": \'meta_type:"ERP5 Folder" AND id:"%_module"\',\n
         "select_list": ["title"]\n
       })\n
         .push(function (result) {\n
@@ -326,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.26131.50108.63982</string> </value>
+                <value> <string>936.39090.50399.1467</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406129317.97</float>
+                        <float>1407400113.3</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
