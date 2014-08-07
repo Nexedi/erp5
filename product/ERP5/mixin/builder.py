@@ -429,6 +429,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         delivery = delivery_to_update_list[0]
 
       if delivery is None:
+        if not self.isDeliveryCreatable():
+          raise SelectMethodError('No updatable delivery found with %s' \
+                  % (self.getPath(),))
+
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
                                         activate_kw)
