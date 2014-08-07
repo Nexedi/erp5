@@ -205,10 +205,29 @@
       })\n
 \n
       .push(function (form_gadget) {\n
+\n
+        var new_content_action = sub_options.erp5_document._links.action_object_new_content_action,\n
+          plus_queue;\n
+        if (new_content_action === undefined) {\n
+            var new_element = gadget.__element.querySelector(".ui-icon-plus");\n
+            new_element.href = "";\n
+            if (!new_element.classList.contains("ui-disabled")) {\n
+              new_element.classList.add("ui-disabled");\n
+            }\n
+        } else {\n
+          // XXX copied from whoWantToDisplayThisPage\n
+          plus_queue =  gadget.aq_pleasePublishMyState({jio_key: gadget.props.jio_key, view: new_content_action.name})\n
+            .push(function (hash) {\n
+              var new_element = gadget.__element.querySelector(".ui-icon-plus");\n
+              new_element.href = hash;\n
+              new_element.classList.remove("ui-disabled");\n
+            });\n
+        }\n
         return RSVP.all([\n
           form_gadget.render(sub_options),\n
           form_gadget.getElement(),\n
-          gadget.props.breadcrumb_gadget.render(breadcrumb_options)\n
+          gadget.props.breadcrumb_gadget.render(breadcrumb_options),\n
+          plus_queue\n
         ]);\n
       })\n
   }\n
@@ -325,6 +344,13 @@
         queue;\n
 \n
       if (options.jio_key === undefined) {\n
+\n
+        var new_element = gadget.__element.querySelector(".ui-icon-plus");\n
+        new_element.href = "";\n
+        if (!new_element.classList.contains("ui-disabled")) {\n
+          new_element.classList.add("ui-disabled");\n
+        }\n
+\n
         if (options.page === "login") {\n
           queue =  renderLoginForm(gadget, options);\n
         } else if (options.page === undefined) {\n
@@ -515,7 +541,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.45060.38036.50312</string> </value>
+                <value> <string>936.47421.11609.45107</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -533,7 +559,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407311956.87</float>
+                        <float>1407398340.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

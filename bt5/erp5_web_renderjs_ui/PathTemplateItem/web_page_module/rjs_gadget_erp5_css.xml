@@ -162,8 +162,14 @@ html.ui-mobile legend, .ui-btn, .ui-li-static, html.ui-mobile body form label {\
   font-family: Helvetica, Arial, sans-serif;\n
   font-size: 90%;\n
 }\n
-html body .ui-header .ui-btn {\n
-  font-size: 85%\n
+html body .ui-controlgroup.ui-btn-right,\n
+html body .ui-header > .ui-btn {\n
+  font-size: 90%;\n
+}\n
+/* fix font-size on notext buttons, so icons don\'t zoom, JQMs-px font-size */\n
+html body .ui-header .ui-controlgroup .ui-btn,\n
+html body .ui-footer .ui-controlgroup .ui-btn {\n
+  font-size: 100%;\n
 }\n
 \n
 \n
@@ -865,6 +871,11 @@ html head + body .ui-body-b.ui-focus{\n
 .ui-header .ui-btn-right {\n
   right: 0;\n
 }\n
+/* fix controlgroups in header font-size */\n
+.ui-header .ui-controlgroup.ui-btn-left, \n
+.ui-header .ui-controlgroup.ui-btn-right {\n
+  font-size: auto;\n
+}\n
 /* double borders */\n
 html .ui-header .ui-btn-left.ui-btn,\n
 html .ui-header .ui-btn-left .ui-btn {\n
@@ -952,11 +963,6 @@ html .ui-btn, label.ui-btn {\n
 }\n
 .ui-btn-icon-notext:after {\n
   text-indent: 0;\n
-}\n
-/* fix font-size on notext buttons, so icons don\'t zoom, JQMs-px font-size */\n
-.ui-header .ui-btn-icon-notext,\n
-.ui-footer .ui-btn-icon-notext {\n
-  font-size: 12.5px;\n
 }\n
 \n
 /* ---------------------------- TABLE  ------------------------------------ */\n
@@ -1460,7 +1466,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46336.62391.44851</string> </value>
+                <value> <string>936.47424.46819.23074</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1478,7 +1484,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407335558.98</float>
+                        <float>1407398552.06</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

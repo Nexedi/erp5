@@ -142,7 +142,13 @@
           data-gadget-sandbox="public"></div>\n
       </div>\n
 \n
-    <a href="#" class="responsive ui-btn ui-icon-home ui-btn-icon-left">Home</a>\n
+    <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+      <div class="ui-controlgroup-controls">\n
+        <a class="responsive ui-btn ui-icon-plus ui-btn-icon-left ui-disabled" role="button" data-role="button">New</a>\n
+        <a role="button" data-role="button" href="#" class="responsive ui-btn ui-icon-home ui-btn-icon-left">Home</a>\n
+      </div>\n
+    </div>\n
+\n
   </header>\n
 \n
   <article></article>\n
@@ -276,7 +282,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -290,7 +296,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46013.38940.47974</string> </value>
+                <value> <string>936.47410.50555.22340</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407314211.01</float>
+                        <float>1407397647.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
