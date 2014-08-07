@@ -111,13 +111,6 @@ class TestNode(object):
     if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
 
-  def _dealShebang(self,run_test_suite_path):
-    line = open(run_test_suite_path, 'r').readline()
-    invocation_list = []
-    if line[:2] == '#!':
-      invocation_list = line[2:].split()
-    return invocation_list
-
   def constructProfile(self, node_test_suite, test_type, use_relative_path=False):
     config = self.config
     profile_content = ''

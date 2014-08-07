@@ -20,3 +20,10 @@ def deunicodeData(data):
   else:
     new_data = data
   return new_data
+
+def dealShebang(run_test_suite_path):
+  line = open(run_test_suite_path, 'r').readline()
+  invocation_list = []
+  if line[:2] == '#!':
+    invocation_list = line[2:].split()
+  return invocation_list

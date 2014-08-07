@@ -41,6 +41,7 @@ from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from NodeTestSuite import SlapOSInstance
 from Updater import Updater
+from Utils import dealShebang
 from erp5.util import taskdistribution
 
 class UnitTestRunner():
@@ -130,7 +131,7 @@ class UnitTestRunner():
     run_test_suite_path = run_test_suite_path_list[0]
     run_test_suite_revision = node_test_suite.revision
     # Deal with Shebang size limitation
-    invocation_list = self.testnode._dealShebang(run_test_suite_path)
+    invocation_list = dealShebang(run_test_suite_path)
     invocation_list.extend([run_test_suite_path,
                            '--test_suite', node_test_suite.test_suite,
                            '--revision', node_test_suite.revision,
