@@ -46,10 +46,16 @@ from erp5.util import taskdistribution
 class UnitTestRunner():
   def __init__(self, testnode):
     self.testnode = testnode
-    self.slapos_controler = SlapOSControler.SlapOSControler(
-                                  self.testnode.working_directory,
-                                  self.testnode.config,
-                                  self.testnode.log)
+
+  def _getSlapOSControler(self, working_directory):
+    """
+    Create a SlapOSControler
+    """
+    return SlapOSControler.SlapOSControler(
+               working_directory,
+               self.testnode.config,
+               self.testnode.log)
+ 
 
   def _prepareSlapOS(self, working_directory, slapos_instance, log,
           create_partition=1, software_path_list=None, **kw):
@@ -64,16 +70,21 @@ class UnitTestRunner():
       slapos_instance.retry_software_count = 0
     log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
-    self.slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
+
+    # XXX Create a new controler because working_directory can be
+    #     Diferent depending of the preparation
+    slapos_controler = self._getSlapOSControler(working_directory)
+
+    slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
        process_manager=self.testnode.process_manager, reset_software=reset_software,
        software_path_list=software_path_list)
     self.testnode.process_manager.supervisord_pid_file = os.path.join(\
-         self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
+         slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
     if create_partition:
       method_list.append("runComputerPartition")
     for method_name in method_list:
-      slapos_method = getattr(self.slapos_controler, method_name)
+      slapos_method = getattr(slapos_controler, method_name)
       log("Before status_dict = slapos_method(...)")
       status_dict = slapos_method(self.testnode.config,
                                   environment=self.testnode.config['environment'],
@@ -111,8 +122,9 @@ class UnitTestRunner():
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.testnode.config
     parameter_list = []
+    slapos_controler = self._getSlapOSControler(self.testnode.working_directory)
     run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
-        self.slapos_controler.instance_root)
+        slapos_controler.instance_root)
     if not len(run_test_suite_path_list):
       raise ValueError('No runTestSuite provided in installed partitions.')
     run_test_suite_path = run_test_suite_path_list[0]

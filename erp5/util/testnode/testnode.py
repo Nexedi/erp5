@@ -100,6 +100,11 @@ class TestNode(object):
     if node_test_suite is None:
       node_test_suite = NodeTestSuite(reference)
       self.node_test_suite_dict[reference] = node_test_suite
+
+    node_test_suite.edit(
+               log=self.log,
+               config=self.config, 
+               process_manager=self.process_manager)
     return node_test_suite
 
   def delNodeTestSuite(self, reference):
@@ -354,7 +359,7 @@ from the distributor.")
           else:
             log("testnode, Runner type not implemented.", my_test_type)
             raise NotImplementedError
-          log("Type of current test is %s" %(my_test_type,))
+          log("Type of current test is %s" % (my_test_type,))
           # master testnode gets test_suites, slaves get nothing
           runner.prepareSlapOSForTestNode(test_node_slapos)
           # Clean-up test suites
@@ -363,10 +368,20 @@ from the distributor.")
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
                test_suite["test_suite_reference"])
+
             node_test_suite.edit(
                working_directory=self.config['working_directory'],
                log_directory=self.config['log_directory'])
+
             node_test_suite.edit(**test_suite)
+            if my_test_type == 'UnitTest':
+              runner = UnitTestRunner(node_test_suite)
+            elif my_test_type == 'ScalabilityTest':
+              runner = ScalabilityTestRunner(node_test_suite)
+            else:
+              log("testnode, Runner type not implemented.", my_test_type)
+              raise NotImplementedError
+
             # XXX: temporary hack to prevent empty test_suite
             if not hasattr(node_test_suite, 'test_suite'):
               node_test_suite.edit(test_suite='')
