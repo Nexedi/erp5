@@ -83,6 +83,7 @@ getPreferredSectionItemList = CachingMethod(getPreferredSectionItemList,\n
 section_item_list = getPreferredSectionItemList(portal_type, validation_state)\n
 \n
 if base_category:\n
+  section_item_list = section_item_list[::] # make a copy not to modify the cache value\n
   current_category = context.getProperty(base_category)\n
   if current_category and current_category not in zip(*section_item_list)[1]:\n
     section_item_list.append(\n
