@@ -198,6 +198,7 @@
         sub_options.erp5_document = result[0].data;\n
         sub_options.form_definition = result[1].data;\n
         sub_options.view = options.view;\n
+        sub_options.action_view = gadget.props.action_view;\n
 \n
         return gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
           scope: "form_gadget"\n
@@ -361,7 +362,7 @@
       } else {\n
         if (options.view === undefined) {\n
           // Redirect to the default view\n
-          return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: "view"})\n
+          return gadget.aq_pleasePublishMyState({jio_key: options.jio_key, view: gadget.props.default_view_reference})\n
             .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
         }\n
         queue = renderJioDocument(gadget, options);\n
@@ -541,7 +542,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.47421.11609.45107</string> </value>
+                <value> <string>936.48944.48108.750</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -559,7 +560,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407398340.29</float>
+                        <float>1407492633.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
