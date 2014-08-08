@@ -96,6 +96,7 @@ class ERP5Report(ERP5Form):
         - Make sure that multiple reports can be run in parallel without losing
           consistency (ie. concurrent update of the selection)
     """
+    portal_type = 'ERP5 Report'
     meta_type = "ERP5 Report"
     icon = "www/Form.png"
 
