@@ -63,13 +63,13 @@ if access_token_document.getValidationState() == \'validated\':\n
   if (request["REQUEST_METHOD"] == access_token_document.getUrlMethod()) and \\\n
     (request["ACTUAL_URL"] == access_token_document.getUrlString()):\n
 \n
-    reference = REQUEST.getHeader("X-REFERENCE", None)\n
+    reference = request.getHeader("X-ACCESS-TOKEN-SECRET", None)\n
     if reference is None:\n
-      reference = request.form.get("reference", "INVALID_REFERERENCE")\n
-\n
+      reference = request.form.get("access_token_secret", "INVALID_REFERERENCE")\n
+  \n
     if access_token_document.getReference() != reference:\n
       return None\n
-\n
+    \n
     agent_document = access_token_document.getAgentValue()\n
     if agent_document is not None:\n
       result = agent_document.getReference(None)\n
