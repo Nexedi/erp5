@@ -71,36 +71,26 @@ def File_viewAsWeb(self):
   RESPONSE = self.REQUEST.RESPONSE
   RESPONSE.setHeader('Content-Type', self.getContentType())
   RESPONSE.setHeader('Content-Length', self.getSize())
+  RESPONSE.setHeader('Cache-Control', 'public,max-age=31556926')
   RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
-  #  If the file is not a Pdata, we should return the data directly.
+  # Shortcut if the file is not a Pdata.
   data=self.data
   if isinstance(data, str):
-    RESPONSE.setBase(None)
-    return data
+    # Do this way instead of 'return data'
+    # to bypass default caching policy manager.
+    RESPONSE.write(data)
+    return
 
-  # Once the object is PData type,
-  # we must iterate and send chunk by chunk.
-  while data is not None:
-    # Break!! If the channel is closed.
-    # if the client side stops the connection brutally
-    # the server side should stop.
-    if RESPONSE.stdout._channel.closed:
-      break
+  # For Pdata type, we must iterate and send chunk by chunk.
+  # And no need to continue if the client closed the connection.
+  while data and not RESPONSE.stdout._channel.closed:
     # Send data to the client.
     RESPONSE.write(data.data)
-
-    # Load next object.
-    next_data = data.next
-
-    # Desactivate the object, make sure that this object content
-    # is not loaded in RAM memory.
-    data._p_deactivate()
-
-    # Set the new data.
-    data=next_data
-
-  return ''
+    # Load next object without keeping previous chunks in memory.
+    deactivate = data._p_deactivate
+    data = data.next
+    deactivate()
 
 def WebSite_viewAsWebPost(self, *args, **kwargs):
   portal = self.getPortalObject()
