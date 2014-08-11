@@ -586,21 +586,22 @@ class Predicate(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asPredicate')
-  def asPredicate(self, script_id=None):
+  def asPredicate(self):
     """
       This method tries to convert the current Document into a predicate
       looking up methods named Class_asPredicate, MetaType_asPredicate, PortalType_asPredicate
     """
     cache = getTransactionalVariable()
-    key = 'asPredicate', self, script_id
+    key = 'asPredicate', self
     try:
       return cache[key]
     except KeyError:
-      script = self._getTypeBasedMethod('asPredicate', script_id)
-      if script is not None:
-        self = script()
+      self = self._getTypeBasedMethod("asPredicate", "_asPredicate")()
       cache[key] = self
       return self
+
+  def _asPredicate(self):
+    return self
 
   def searchPredicate(self, **kw):
     """
