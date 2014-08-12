@@ -169,14 +169,12 @@
         .push(function () {\n
           return RSVP.all([\n
             form_gadget.getDeclaredGadget("erp5_form"),\n
-            form_gadget.getDeclaredGadget("erp5_tab"),\n
             RSVP.all(promise_list)\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           var form_options = options.erp5_form || {},\n
-            tab_options = options.erp5_tag || {},\n
-            all_result = all_gadget[2],\n
+            all_result = all_gadget[1],\n
             actionlist = [],\n
             class_list,\n
             i;\n
@@ -184,11 +182,6 @@
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
-\n
-          tab_options.erp5_document = options.erp5_document;\n
-          tab_options.form_definition = options.form_definition;\n
-          tab_options.view = options.view;\n
-          tab_options.action_view = options.action_view;\n
 \n
           for (i = 0; i < all_result.length; i += 1) {\n
             switch (i) {\n
@@ -213,7 +206,6 @@
 \n
 \n
           return RSVP.all([\n
-            all_gadget[1].render(tab_options),\n
             all_gadget[0].render(form_options),\n
           ]);\n
         });\n
@@ -367,7 +359,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -381,7 +373,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.48947.19194.26931</string> </value>
+                <value> <string>936.54729.48588.29371</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -399,7 +391,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407492656.27</float>
+                        <float>1407836873.52</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

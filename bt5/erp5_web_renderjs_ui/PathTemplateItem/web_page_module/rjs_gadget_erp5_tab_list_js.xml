@@ -150,16 +150,20 @@
       var nav_element = this.props.element.querySelector(".grid-container"),\n
         erp5_document = options.erp5_document,\n
         view_list = erp5_document._links[options.action_view],\n
-        i,\n
         nav_html = \'<nav data-role="navbar"><ul class="grid-items">\',\n
-        promise_list = [];\n
+        promise_list = [],\n
+        i;\n
+\n
+      // no views\n
+      if (view_list === undefined) {\n
+        return;\n
+      }\n
 \n
       if (view_list.constructor !== Array) {\n
         view_list = [view_list];\n
       }\n
 \n
       for (i = 0; i < view_list.length; i += 1) {\n
-\n
         promise_list.push(this.whoWantToDisplayThisPage({\n
           name: view_list[i].name\n
         }));     \n
@@ -313,7 +317,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -327,7 +331,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.48950.45876.44202</string> </value>
+                <value> <string>936.54744.40513.43571</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +349,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407492676.55</float>
+                        <float>1407838655.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
