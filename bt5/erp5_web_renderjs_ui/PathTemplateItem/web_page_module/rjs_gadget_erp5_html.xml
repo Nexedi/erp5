@@ -153,11 +153,10 @@
 \n
   <article></article>\n
 \n
-      <section data-gadget-url="gadget_jio.html"\n
-               data-gadget-scope="jio_gadget"\n
-               data-gadget-sandbox="public"></section>\n
-    <aside>\n
-    </aside>\n
+  <section data-gadget-url="gadget_jio.html"\n
+    data-gadget-scope="jio_gadget"\n
+    data-gadget-sandbox="public"></section>\n
+    <!-- <aside></aside> -->\n
   </body>\n
 </html>
 
@@ -282,7 +281,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -296,7 +295,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.47410.50555.22340</string> </value>
+                <value> <string>936.49302.26306.5341</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -314,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407397647.36</float>
+                        <float>1407832402.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
