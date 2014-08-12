@@ -338,7 +338,10 @@ destination_decision = context.getDestinationDecisionValue()\n
 if destination_decision is None:\n
   destination_decision = EmptyOrganisation()\n
 \n
+report_title = context.getSimulationState() == "draft" and "Draft Order" or "Order"\n
+\n
 data_dict = {\n
+  \'report_title\' : report_title,\n
   \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
                             source_section.getTitle(),\n
   \'source_section_image_path\': source_section.getDefaultImagePath() or \'\',\n
