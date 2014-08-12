@@ -85,9 +85,7 @@
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -1326,7 +1324,7 @@ html .ui-card {\n
 @media (max-width: 40em) {\n
   html .ui-card {\n
     max-width: none;\n
-    margin-top: 40%;\n
+    margin-top: 30%;\n
   }\n
 }\n
 /* -------------------- BREADCRUMB ----------------------------- */\n
@@ -1472,7 +1470,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.47512.62506.52599</string> </value>
+                <value> <string>936.53191.39806.58658</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1490,7 +1488,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407405071.66</float>
+                        <float>1407749721.95</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
