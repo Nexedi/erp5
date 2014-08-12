@@ -6,6 +6,10 @@ import transaction
 class TestERP5AccessTokenSkins(ERP5TypeTestCase):
   
   test_token_extraction_id = 'test_erp5_access_token_extraction'
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_access_token')
   
   def generateNewId(self):
     return str(self.portal.portal_ids.generateNewId(

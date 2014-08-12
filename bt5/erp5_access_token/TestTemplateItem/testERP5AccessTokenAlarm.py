@@ -4,6 +4,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestERP5AccessTokenAlarm(ERP5TypeTestCase):
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_access_token')
+
   def test_alarm_old_validated_restricted_access_token(self):
     access_token = self.portal.access_token_module.newContent(
       portal_type="One Time Restricted Access Token",
