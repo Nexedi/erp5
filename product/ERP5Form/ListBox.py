@@ -1306,25 +1306,17 @@ class ListBoxRenderer:
     """Get an editable field for column, using column alias.
     Return None if a field for this column does not exist.
     """
-    form = self.getForm()
-    editable_field_id = '%s_%s' % (self.getUnprefixedId(), alias)
     field = self.field
-    while form is not None:
-      #Search the editable field in the form
-      if form.has_field(editable_field_id, include_disabled=1):
-        return form.get_field(editable_field_id, include_disabled=1)
-      elif field.meta_type == 'ProxyField':
+    while True:
+      try:
+        return field.aq_parent.get_field("%s_%s" % (field.id, alias),
+                                         include_disabled=1)
+      except AttributeError:
+        if field is None or field.meta_type != 'ProxyField':
+          break
         # if we are rendering a proxy field, also look for editable 
         # fields from the template field's form.
-        field = field.getTemplateField()
-        if field is None:
-          form = None
-        else:
-          form = aq_inner(field).aq_parent
-      else:
-        form = None
-    
-    return None
+        field = aq_inner(field.getTemplateField())
 
   def getListMethod(self):
     """Return the list method object.
