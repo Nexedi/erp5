@@ -190,13 +190,14 @@
                   }\n
                   field_element.appendChild(gadget_element);\n
                   fieldset_element.appendChild(field_element);\n
-\n
                   if ((renderered_field.type === \'ListField\') ||\n
                       (renderered_field.type === \'ParallelListField\') ||\n
                       (renderered_field.type === \'MultiListField\')) {\n
                     field_url = \'gadget_erp5_listfield.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
                     field_url = \'gadget_erp5_stringfield.html\';\n
+                  } else if (renderered_field.type === \'TextAreaField\') {\n
+                    field_url = \'gadget_erp5_textareafield.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
                     field_url = \'gadget_erp5_floatfield.html\';\n
                   } else if (renderered_field.type === \'ListBox\') {\n
@@ -408,7 +409,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -422,7 +423,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.48874.13879.32921</string> </value>
+                <value> <string>936.56175.55013.14626</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -440,7 +441,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407485559.48</float>
+                        <float>1407924093.61</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
