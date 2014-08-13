@@ -161,7 +161,8 @@ html.ui-mobile legend, .ui-btn, .ui-li-static, html.ui-mobile body form label {\
   font-size: 90%;\n
 }\n
 html body .ui-controlgroup.ui-btn-right,\n
-html body .ui-header > .ui-btn {\n
+html body .ui-header .ui-btn,\n
+html body .ui-navbar li .ui-btn {\n
   font-size: 90%;\n
 }\n
 /* fix font-size on notext buttons, so icons don\'t zoom, JQMs-px font-size */\n
@@ -938,7 +939,17 @@ html body .ui-header .ui-controlgroup div.ui-select .ui-btn {\n
   padding-bottom: 0;\n
   padding-top: 0;\n
 }\n
-\n
+/* =============================== SELECT ================================= */\n
+/* align with height of inputs */\n
+html body div.ui-select div {\n
+    height: 22px;\n
+    line-height: 1.7em;\n
+    padding-bottom: 5px;\n
+    padding-top: 5px;\n
+}\n
+html body div.ui-select div span {\n
+   color: #000;\n
+}\n
 /* =============================== BUTTON ================================= */\n
 /* unbold */\n
 html .ui-btn, label.ui-btn {\n
@@ -1184,40 +1195,6 @@ div.grid-container ul.grid-items.line-10 li ~ li {\n
     width: 100%;\n
   }\n
 }\n
-\n
-\n
-/* ----------------------------- FORM LAYOUT ------------------------------ */\n
-html .left, html .right, html .center, html .bottom {\n
-  vertical-align: top;\n
-  padding: 2% 2% 0 2%;\n
-}\n
-html .center, html .bottom {\n
-  display: block;\n
-  width: 96%\n
-}\n
-html .left, html .right {\n
-  display: inline-block;\n
-  width: 45%;\n
-}\n
-html .left textarea, html .right textarea {\n
-  width: 57.7%;\n
-  display: inline-block;\n
-  vertical-align: midle;\n
-}\n
-@media (max-width: 40em) {\n
-  html form {\n
-    max-width: 80%; /* allow scrolling! */\n
-    margin: auto;\n
-  }\n
-  html .left, html .right, html .center, html .bottom {\n
-    width: auto;\n
-    display: block;\n
-    padding: .25em 0;\n
-  }\n
-  html .left textarea, html .right textarea {\n
-    width: 100%;\n
-  }\n
-}\n
 /* ----------------------------- FORM LAYOUT ------------------------------ */\n
 /* padding and overall width */\n
 html .left, html .right, html .center, html .bottom {\n
@@ -1233,9 +1210,23 @@ html .left, html .right {\n
   width: 45%;\n
 }\n
 html .left textarea, html .right textarea {\n
-  width: 57.7%;\n
+  width: /* 57.7% */ 100%;\n
   display: inline-block;\n
   vertical-align: midle;\n
+}\n
+@media (max-width: 40em) {\n
+  html form {\n
+    max-width: 80%; /* allow scrolling! */\n
+    margin: auto;\n
+  }\n
+  html .left, html .right, html .center, html .bottom {\n
+    width: auto;\n
+    display: block;\n
+    padding: .25em 0;\n
+  }\n
+  html body .left textarea, html body .right textarea {\n
+    width: 100%;\n
+  }\n
 }\n
 /* override border-radius for all inputs to match buttons */\n
 html form .ui-input-text.ui-corner-all {\n
@@ -1470,7 +1461,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.53191.39806.58658</string> </value>
+                <value> <string>936.56164.10800.43997</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1488,7 +1479,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407749721.95</float>
+                        <float>1407922930.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
