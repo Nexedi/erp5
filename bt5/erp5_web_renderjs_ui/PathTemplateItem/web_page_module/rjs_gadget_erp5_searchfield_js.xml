@@ -99,76 +99,74 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
+            <value> <string>/*global rJS, RSVP, jQuery, Handlebars, promiseEventListener, console */\n
 /*jslint maxlen:200, nomen: true */\n
 (function (window, rJS, RSVP, $) {\n
   "use strict";\n
 \n
-  rJS(window)\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
+rJS(window)\n
+  /////////////////////////////////////////////////////////////////\n
+  // ready\n
+  /////////////////////////////////////////////////////////////////\n
+  // Init local properties\n
+  .ready(function (g) {\n
+    g.props = {};\n
+  })\n
 \n
-    // Assign the element to a variable\n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared methods\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareMethod(\'render\', function (options) {\n
-       this.props.element.querySelector("input").value = options.extended_search || "";\n
-    })\n
-\n
-    .declareMethod(\'getContent\', function () {\n
-      var input = this.__element.querySelector(\'input\'),\n
-        result = {};\n
-\n
-      result[input.getAttribute(\'name\')] = input.value;\n
-      return result;\n
-    })\n
-\n
-    .declareService(function () {\n
-      var search_form = this;\n
-\n
-      function formSubmit() {\n
-        var form_data;\n
-\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return search_form.getContent();\n
-          })\n
-          .push(function (data) {\n
-            return search_form.pleasePublishMyState({\n
-              "extended_search": data.search\n
-            });\n
-          })\n
-          .push(function (url) {\n
-            return search_form.pleaseRedirectMyHash(url);\n
-          });\n
-      }\n
-\n
-      // Listen to form submit\n
-      return loopEventListener(\n
-        search_form.props.element.querySelector(\'form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
+  // Assign the element to a variable\n
+  .ready(function (g) {\n
+    return g.getElement()\n
+      .push(function (element) {\n
+        g.props.element = element;\n
     });\n
+  })\n
 \n
+  .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+  .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+  /////////////////////////////////////////////////////////////////\n
+  // declared methods\n
+  /////////////////////////////////////////////////////////////////\n
+  .declareMethod(\'render\', function (options) {\n
+    this.props.element.querySelector("input").value = options.extended_search || "";\n
+  })\n
+\n
+  .declareMethod(\'getContent\', function () {\n
+    var input = this.__element.querySelector(\'input\'),\n
+      result = {};\n
+\n
+    result[input.getAttribute(\'name\')] = input.value;\n
+    return result;\n
+  })\n
+\n
+  .declareService(function () {\n
+    var search_form = this;\n
+\n
+    function formSubmit() {\n
+      var form_data;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return search_form.getContent();\n
+        })\n
+        .push(function (data) {\n
+          return search_form.pleasePublishMyState({\n
+            "extended_search": data.search\n
+          });\n
+        })\n
+        .push(function (url) {\n
+          return search_form.pleaseRedirectMyHash(url);\n
+        });\n
+    }\n
+ \n
+    // Listen to form submit\n
+    return loopEventListener(\n
+      search_form.props.element.querySelector(\'form\'),\n
+      \'submit\',\n
+      false,\n
+      formSubmit\n
+    );\n
+  });\n
+ \n
 }(window, rJS, RSVP, jQuery));</string> </value>
         </item>
         <item>
@@ -304,7 +302,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.39090.50399.1467</string> </value>
+                <value> <string>936.57651.42687.62225</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -322,7 +320,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407167613.11</float>
+                        <float>1408012236.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

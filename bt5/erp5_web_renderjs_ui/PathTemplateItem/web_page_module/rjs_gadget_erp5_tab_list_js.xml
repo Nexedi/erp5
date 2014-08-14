@@ -154,7 +154,7 @@
         promise_list = [],\n
         i;\n
 \n
-      // no views\n
+      // XXX return if no views - do this on the parent gadget\n
       if (view_list === undefined) {\n
         return;\n
       }\n
@@ -331,7 +331,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.54744.40513.43571</string> </value>
+                <value> <string>936.54906.24658.1911</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -349,7 +349,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407838655.15</float>
+                        <float>1407848815.35</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -2371,7 +2371,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.35985.17906.36317</string> </value>
+                <value> <string>936.57662.10223.7219</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -2389,7 +2389,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406712314.74</float>
+                        <float>1408020541.67</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
