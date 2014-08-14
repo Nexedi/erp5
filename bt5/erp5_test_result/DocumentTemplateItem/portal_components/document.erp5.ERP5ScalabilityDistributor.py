@@ -26,18 +26,11 @@
 ##############################################################################
 
 from Products.ERP5.Document.ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
-import string
-import erp5.util.taskdistribution
-from Products.ERP5Type.Log import log
-
+from zLOG import LOG,ERROR
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 import json
-import random 
-
-from Products.ERP5.Tool.TaskDistributionTool import TaskDistributionTool
-
 
 class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
   security = ClassSecurityInfo()
@@ -50,7 +43,6 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     """
 
     # Get modules
-    portal = self.getPortalObject()
     test_node_module = self._getTestNodeModule()
     test_suite_module = self._getTestSuiteModule()
 
@@ -126,7 +118,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
         if test_node.getValidationState() != 'validated':
            try:
              test_node.validate()
-           except e:
+           except Exception, e:
              LOG('Test Node Validate',ERROR,'%s' %e)
       return test_node
     return None
@@ -159,13 +151,9 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     """
     startTestSuite : subscribe node + return testsuite list to the master
     """
-    config_list = []
     super(ERP5ScalabilityDistributor,
                         self).subscribeNode(title=title, computer_guid=computer_guid, batch_mode=batch_mode)
-    test_node = self.getTestNode(title,batch_mode)
-    test_suite_module =  self._getTestSuiteModule()
     test_node_module =  self._getTestNodeModule()
-    portal = self.getPortalObject()
 
     # If the testnode wich request testsuites is not the master
     # he does not have to receive any testsuites
