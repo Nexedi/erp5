@@ -80,7 +80,12 @@ class DeliveryRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
 class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getPortalDeliveryMovementTypeList(self):
-    return self._rule.getPortalObject().getPortalDeliveryMovementTypeList()
+    """
+    Allow to override to use only some particular types of delivery lines
+
+    # This is bad XXX-JPS - use use
+    """
+    return None
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     """Input movement list comes from delivery"""
@@ -89,8 +94,11 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
       return []
     else:
       result = []
-      for movement in delivery.getMovementList(
-        portal_type=self._getPortalDeliveryMovementTypeList()):
+      movement_kw = {}
+      movement_type_list = self._getPortalDeliveryMovementTypeList()
+      if movement_type_list:
+        movement_kw["portal_type"] = movement_type_list
+      for movement in delivery.getMovementList(**movement_kw):
         simulation_movement_list = movement.getDeliveryRelatedValueList()
         if not simulation_movement_list or self._applied_rule in (
             simulation_movement.getParentValue()

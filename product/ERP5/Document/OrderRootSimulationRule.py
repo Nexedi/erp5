@@ -95,5 +95,4 @@ class OrderRuleMovementGenerator(MovementGeneratorMixin):
     if order is None:
       return []
     else:
-      return order.getMovementList(
-        portal_type=order.getPortalOrderMovementTypeList())
+      return order.getMovementList()
