@@ -15,7 +15,6 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
-from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Message import translateString
 from ComputedAttribute import ComputedAttribute
 
@@ -41,6 +40,7 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
         ComputedAttributeGetItemCompatibleMixin.__getitem__
 
   # ComputedAttribute compatibility for __getitem__
+  # pylint: disable=E0102
   def __getitem__(self, name):
     item = self.__super__getitem__(name)
     if isinstance(item, ComputedAttribute):
@@ -91,7 +91,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
     try:
       return uid_cache[uid]
     except KeyError:
-      result_list = self.portal_catalog(uid=uid, limit=1,
+      result_list = self.portal_catalog.unrestrictedSearchResults(uid=uid, limit=1,
         select_dict=dict(title=None, relative_url=None))
       result = None
       if result_list:
