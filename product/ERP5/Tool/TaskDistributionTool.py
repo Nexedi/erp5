@@ -273,7 +273,7 @@ class TaskDistributionTool(BaseTool):
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
 
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
   def getMemcachedDict(self):
     """ Return a dictionary used for non persistent data related to distribution
     """

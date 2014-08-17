@@ -114,7 +114,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getExceptionValueList')
+                            'getCalendarPeriodExceptionValueList')
   def getCalendarPeriodExceptionValueList(self):
     """
     Return a list of objects that allows te define exception to the
