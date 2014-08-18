@@ -60,7 +60,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>qsjd</string>
                 <string>economical_class</string>
               </tuple>
             </value>

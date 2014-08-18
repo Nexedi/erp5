@@ -28,7 +28,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_date/Order</string>
                 <string>trade_date/order</string>
               </tuple>
             </value>
