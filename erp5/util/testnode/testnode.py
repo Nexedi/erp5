@@ -350,7 +350,7 @@ from the distributor.")
           elif my_test_type == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
           else:
-            log("testnode, Runner type not implemented.", my_test_type)
+            log("testnode, Runner type %s not implemented.", my_test_type)
             raise NotImplementedError
           log("Type of current test is %s" % (my_test_type,))
           # master testnode gets test_suites, slaves get nothing
@@ -372,7 +372,7 @@ from the distributor.")
             elif my_test_type == 'ScalabilityTest':
               runner = ScalabilityTestRunner(node_test_suite)
             else:
-              log("testnode, Runner type not implemented.", my_test_type)
+              log("testnode, Runner type %s not implemented.", my_test_type)
               raise NotImplementedError
 
             # XXX: temporary hack to prevent empty test_suite
