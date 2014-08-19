@@ -39,6 +39,7 @@
 <tal:block tal:define=\'site_root python: here.getWebSiteValue() or here.getPortalObject();\n
                        portal_url python: site_root.absolute_url();\n
                        div_id string:${id}_ace;\n
+                       mode python: here.Base_getAceEditorMode();\n
                        container_div_id string:${div_id}_container;\n
                        \'>\n
   <style type="text/css">\n
@@ -173,7 +174,7 @@
   <script type="text/javascript"\n
           tal:attributes="src string:${portal_url}/ace/ace.js"></script>\n
   <script type="text/javascript"\n
-          tal:attributes="src string:${portal_url}/ace/mode-python.js"></script>\n
+          tal:attributes="src string:${portal_url}/ace/mode-${mode}.js"></script>\n
   <script type="text/javascript"\n
           tal:attributes="src string:${portal_url}/ace/ext-settings_menu.js"></script>\n
   <script type="text/javascript"\n
@@ -185,6 +186,7 @@
           tal:content="structure string:\n
   ace_editor_container_div = null;\n
   ace_editor = null;\n
+  var mode = \'${mode}\';\n
 \n
   function maximizeFullscreenRemoveSaveMessage() {\n
     $(\'.ace_editor_maximize_fullscreen_message\').remove();\n
@@ -385,7 +387,7 @@
     $.ajax({type: \'GET\',\n
             async: false,\n
             url: \'Component_getErrorWarningMessageDictAsJson\',\n
-            success: getErrorWarningMessageDictHandler});\n
+            success: getErrorWarningMessageDictHandler})\n
   }\n
 \n
   window.onload = function() {\n
@@ -410,8 +412,8 @@
     \n
     ace_editor.resize(true);\n
 \n
-    var PythonMode = require(\'ace/mode/python\').Mode;\n
-    ace_editor.getSession().setMode(new PythonMode());\n
+    var Mode = require(\'ace/mode/\' + mode).Mode;\n
+    ace_editor.getSession().setMode(new Mode());\n
     ace_editor.getSession().setUseSoftTabs(true);\n
     ace_editor.getSession().setTabSize(2);\n
 \n
@@ -441,13 +443,17 @@
       }, 500);\n
     }\n
 \n
-    checkPythonSourceCode();\n
+    if (mode === \'python\') {\n
+      checkPythonSourceCode();\n
+    }\n
 \n
     var textarea = $(\'#${id}\');\n
     ace_editor.getSession().on(\'change\', function() {\n
       changed = true; // This is the dirty flag for onbeforeunload warning in erp5.js\n
       textarea.val(ace_editor.getSession().getValue());\n
-      checkPythonSourceCode();\n
+      if (mode === \'python\') {\n
+        checkPythonSourceCode();\n
+      }\n
     });\n
 \n
     /* Only display the source code saving button if the main save button is\n
