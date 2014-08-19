@@ -46,6 +46,7 @@ from subprocess import CalledProcessError
 from Updater import Updater
 from NodeTestSuite import NodeTestSuite, SlapOSInstance
 from ScalabilityTestRunner import ScalabilityTestRunner
+from DREAMSimulationRunner import DREAMSimulationRunner
 from UnitTestRunner import UnitTestRunner
 from erp5.util import taskdistribution
 
@@ -137,7 +138,6 @@ class TestNode(object):
                                     node_test_suite.reference)
           software_config_path = os.path.relpath(software_config_path, from_path)
 
-
         profile_content_list.append("""
 [buildout]
 extends = %(software_config_path)s
@@ -188,6 +188,10 @@ branch = %(branch)s
     sys.path.append(repository_path)
 
   def getAndUpdateFullRevisionList(self, node_test_suite):
+    if 0: # already checkout
+        self.log("no getAndUpdateFullRevisionList ...")
+        node_test_suite.revision = 0, 0
+        return []
     full_revision_list = []
     config = self.config
     log = self.log
@@ -224,6 +228,9 @@ branch = %(branch)s
     return self.suite_log
 
   def _initializeSuiteLog(self, suite_log_path):
+    logger = logging.getLogger('testsuite')
+    self.suite_log = logger.info
+    return
     # remove previous handlers
     logger = logging.getLogger('testsuite')
     if self.file_handler is not None:
@@ -239,6 +246,9 @@ branch = %(branch)s
     self.suite_log = logger.info
 
   def checkRevision(self, test_result, node_test_suite):
+    self.log("skipping checkRevision")
+    return # no check revision
+
     config = self.config
     log = self.log
     if log is None:
@@ -349,6 +359,8 @@ from the distributor.")
             runner = UnitTestRunner(self)
           elif my_test_type == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
+          elif my_test_type == 'DREAMSimulation':
+            runner = DREAMSimulationRunner(self)
           else:
             log("testnode, Runner type %s not implemented.", my_test_type)
             raise NotImplementedError
@@ -371,6 +383,8 @@ from the distributor.")
               runner = UnitTestRunner(node_test_suite)
             elif my_test_type == 'ScalabilityTest':
               runner = ScalabilityTestRunner(node_test_suite)
+            elif my_test_type == 'DREAMSimulation':
+              runner = DREAMSimulationRunner(node_test_suite)
             else:
               log("testnode, Runner type %s not implemented.", my_test_type)
               raise NotImplementedError
@@ -401,7 +415,7 @@ from the distributor.")
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
-              time.sleep(20)
+              time.sleep(1)
               if my_test_type == 'UnitTest':
                 runner.runTestSuite(node_test_suite, portal_url)
               elif my_test_type == 'ScalabilityTest':
@@ -422,9 +436,11 @@ from the distributor.")
                   )
                   self.log(error_message)
                   raise ValueError(error_message)
+              elif my_test_type == 'DREAMSimulation':
+                runner.runSimulationScenario(node_test_suite, portal_url,
+                    test_result)
               else:
                 raise NotImplementedError
-                  
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
@@ -457,6 +473,7 @@ from the distributor.")
         self.cleanUp(test_result)
         if (now-begin) < 120:
           sleep_time = 120 - (now-begin)
+          sleep_time = .1
           log("End of processing, going to sleep %s" % sleep_time)
           time.sleep(sleep_time)
     except:

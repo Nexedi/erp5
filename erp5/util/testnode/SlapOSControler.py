@@ -350,7 +350,7 @@ class SlapOSControler(object):
     # so be tolerant and run it a few times before giving up
     for runs in range(0, MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
-                 'node', 'software', '--all', 
+                 'node', 'software', '--all',
                  '--pidfile', '%s/software.pid' % self.software_root,
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
@@ -359,25 +359,29 @@ class SlapOSControler(object):
     return status_dict
 
   def runComputerPartition(self, config, environment,
-                           stdout=None, stderr=None):
+                           stdout=None, stderr=None,
+                           implicit_erp5_config=True):
     self.log("SlapOSControler.runComputerPartition")
-    # cloudooo-json is required but this is a hack which should be removed
-    config['instance_dict']['cloudooo-json'] = "{}"
-    # report-url, report-project and suite-url are required to seleniumrunner
-    # instance. This is a hack which must be removed.
-    config['instance_dict']['report-url'] = config.get("report-url", "")
-    config['instance_dict']['report-project'] = config.get("report-project", "")
-    config['instance_dict']['suite-url'] = config.get("suite-url", "")
-    # XXX: Hack to minimize writes to storage holding MySQL databases.
-    #      Note this is something we want for all test suites, so it would
-    #      not be better to define this parameter on each test suite.
-    # XXX: Also move here the number of test db to create, so that software
-    #      release stop create ones by default.
-    config['instance_dict']['_'] = json.dumps({"mariadb": {
-      "relaxed-writes": True,
-      "mariadb-relaxed-writes": True, # BBB
-      "test-database-amount": 30,
-      }})
+    # XXX implicit_erp5_config should not be here but passed by classes
+    # depending on it
+    if implicit_erp5_config:
+      # cloudooo-json is required but this is a hack which should be removed
+      config['instance_dict']['cloudooo-json'] = "{}"
+      # report-url, report-project and suite-url are required to seleniumrunner
+      # instance. This is a hack which must be removed.
+      config['instance_dict']['report-url'] = config.get("report-url", "")
+      config['instance_dict']['report-project'] = config.get("report-project", "")
+      config['instance_dict']['suite-url'] = config.get("suite-url", "")
+      # XXX: Hack to minimize writes to storage holding MySQL databases.
+      #      Note this is something we want for all test suites, so it would
+      #      not be better to define this parameter on each test suite.
+      # XXX: Also move here the number of test db to create, so that software
+      #      release stop create ones by default.
+      config['instance_dict']['_'] = json.dumps({"mariadb": {
+        "relaxed-writes": True,
+        "mariadb-relaxed-writes": True, # BBB
+        "test-database-amount": 30,
+        }})
     for path in self.software_path_list:
       try:
         self.slap.registerOpenOrder().request(path,
