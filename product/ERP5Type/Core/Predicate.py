@@ -45,6 +45,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.Expression import Expression
 
 class Predicate(XMLObject):
@@ -596,7 +597,7 @@ class Predicate(XMLObject):
     try:
       return cache[key]
     except KeyError:
-      self = self._getTypeBasedMethod("asPredicate", "_asPredicate")()
+      self = unrestricted_apply(self._getTypeBasedMethod("asPredicate", "_asPredicate"))
       cache[key] = self
       return self
 
