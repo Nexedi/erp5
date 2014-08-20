@@ -84,7 +84,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
             else:
               category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())
       category_list.append(category_dict)
-  
+
   return category_list
 
 
@@ -103,3 +103,7 @@ def getSecurityCategoryFromAssignmentParentFunction(self, base_category_list,
   return getSecurityCategoryFromAssignment(self, base_category_list,
                                        user_name, object, portal_type, child_category_list=('function',))
 
+def getSecurityCategoryFromAssignmentParentFunctionParentGroup(self, base_category_list,
+                                       user_name, object, portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list,
+                                       user_name, object, portal_type, child_category_list=('function', 'group'))
