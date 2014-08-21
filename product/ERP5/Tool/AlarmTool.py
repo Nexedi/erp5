@@ -190,6 +190,10 @@ class AlarmTool(TimerServiceMixin, BaseTool):
     else:
       self.alarmNode = None
 
+  security.declarePublic('getNodeList')
+  def getNodeList(self):
+    return self.getPortalObject().portal_activities.getNodeList()
+
   security.declareProtected(Permissions.ManageProperties, 'manage_setAlarmNode')
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
       """ set the alarm node """   

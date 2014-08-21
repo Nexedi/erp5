@@ -31,7 +31,6 @@ import urllib
 import threading
 import sys
 from types import StringType
-import re
 from collections import defaultdict
 from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
@@ -57,6 +56,7 @@ from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
 import transaction
+from App.config import getConfiguration
 
 import Products.Localizer.patches
 localizer_lock = Products.Localizer.patches._requests_lock
@@ -68,7 +68,7 @@ from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING, ERROR
-from warnings import warn
+import warnings
 from time import time
 
 try:
@@ -78,9 +78,6 @@ except ImportError:
     pass
 
 from traceback import format_list, extract_stack
-
-# minimal IP:Port regexp
-NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 
 # Using a RAM property (not a property of an instance) allows
 # to prevent from storing a state in the ZODB (and allows to restart...)
@@ -790,9 +787,22 @@ class ActivityTool (Folder, UniqueObject):
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
        
     def getCurrentNode(self):
-        """ Return current node in form ip:port """
+        """ Return current node identifier """
         global currentNode
         if currentNode is None:
+          currentNode = getattr(
+            getConfiguration(),
+            'product_config',
+            {},
+          ).get('cmfactivity', {}).get('node-id')
+        if currentNode is None:
+          warnings.warn('Node name auto-generation is deprecated, please add a'
+            '\n'
+            '<product-config CMFAcvtivity>\n'
+            '  node-id = ...\n'
+            '</product-config>\n'
+            'section in your zope.conf, replacing "..." with a cluster-unique '
+            'node identifier.', DeprecationWarning)
           ip = port = ''
           from asyncore import socket_map
           for k, v in socket_map.items():
@@ -855,7 +865,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def _isValidNodeName(self, node_name) :
       """Check we have been provided a good node name"""
-      return isinstance(node_name, str) and NODE_RE.match(node_name)
+      return isinstance(node_name, str)
       
     security.declarePublic('manage_setDistributingNode')
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):

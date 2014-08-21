@@ -34,9 +34,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   To provide high performance, alarms should start a script wich only start
   some activities. Like this, the activity tool will be in charge to distribute
   the work on many nodes.
-
-  The format to adress a node in this configuration is therfore
-  <code>IP-Address</code>:<code>Port-Number</code>.
 </p>
 
 <p class="form-help">
@@ -62,11 +59,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </tr>
   <tr>
     <td>
-      <div class="form-label">IP:Port</div>
+      <div class="form-label">Node identifier</div>
     </td>
     <td align="left">
       <div class="form-item">
-        <input type="text" name="alarmNode" value="&dtml-getAlarmNode;" size="19" />
+        <select name="alarmNode">
+          <option value="">(disabled)</option>
+          <dtml-in getNodeList prefix="node">
+            <dtml-if expr="node_item == getAlarmNode()">
+              <option selected="selected" value="<dtml-var sequence-item>">
+                <dtml-var sequence-item>
+              </option>
+            <dtml-else>
+              <option value="<dtml-var sequence-item>">
+                <dtml-var sequence-item>
+              </option>
+            </dtml-if>
+          </dtml-in>
+        </select>
       </div>
     </td>
   </tr>
