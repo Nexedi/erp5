@@ -99,6 +99,13 @@ if source:\n
   a((\'source\', \'Account\'))\n
 else:\n
   a((\'destination\', \'Account\'))\n
+\n
+if context.AccountingTransactionLine_getFunctionItemList(source=source):\n
+  if source:\n
+    a((\'source_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
+  else:\n
+    a((\'destination_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
+  \n
 if multiple_sections:\n
   if source:\n
     a((\'getDestinationSectionTitle\', \'Third Party\'))\n
@@ -131,7 +138,7 @@ if len(project_set) > 2:\n
     a((\'getSourceProjectTitle\', \'Project\'))\n
   else:\n
     a((\'getDestinationProjectTitle\', \'Project\'))\n
-    \n
+\n
 if source:\n
   a((\'source_debit\', \'Debit\'))\n
   a((\'source_credit\', \'Credit\'))\n
@@ -139,7 +146,6 @@ else:\n
   a((\'destination_debit\', \'Debit\'))\n
   a((\'destination_credit\', \'Credit\'))\n
 \n
-context.log(project_set, column_item_list)\n
 return column_item_list\n
 
 

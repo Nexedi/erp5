@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -111,6 +111,7 @@
                         <string>listbox_destination_asset_debit</string>
                         <string>listbox_source_asset_credit</string>
                         <string>listbox_source_asset_debit</string>
+                        <string>listbox_function</string>
                       </list>
                     </value>
                 </item>

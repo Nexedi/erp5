@@ -171,6 +171,10 @@
                           <string>destination</string>
                           <string>Account</string>
                         </tuple>
+                        <tuple>
+                          <string>destination_function</string>
+                          <string>Function</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
