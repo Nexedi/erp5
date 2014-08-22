@@ -172,7 +172,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getDestinationValue(portal_type = \'Account\') is not None and here.getSourceValue(portal_type = \'Account\').isMemberOf(\'account_type/asset/cash\') and context.Base_checkPermission(\'payment_transaction_group_module\', \'View\')</string> </value>
+            <value> <string>python:here.getDestinationValue(portal_type = \'Account\') is not None and here.getDestinationValue(portal_type = \'Account\').isMemberOf(\'account_type/asset/cash\') and context.Base_checkPermission(\'payment_transaction_group_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
