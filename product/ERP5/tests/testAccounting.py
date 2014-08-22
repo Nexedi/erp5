@@ -244,12 +244,10 @@ class TestAccounts(AccountingTestCase):
   """Tests Accounts.
   """
   def test_AccountValidation(self):
-    # Accounts need a gap category and an account_type category to be valid
+    # Accounts need an account_type category to be valid
     account = self.portal.account_module.newContent(portal_type='Account')
-    self.assertEqual(2, len(account.checkConsistency()))
-    account.setAccountType('equity')
     self.assertEqual(1, len(account.checkConsistency()))
-    account.setGap('my_country/my_accounting_standards/1')
+    account.setAccountType('equity')
     self.assertEqual(0, len(account.checkConsistency()))
     
   def test_AccountWorkflow(self):
