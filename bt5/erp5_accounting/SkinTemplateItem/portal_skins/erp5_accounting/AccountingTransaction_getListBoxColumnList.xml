@@ -61,6 +61,7 @@ The same for apply for most line categories.\n
 section_set = set((None,))\n
 payment_set = set((None,))\n
 payment_request_set = set((None,))\n
+project_set = set((None,))\n
 resource_set = set((context.getResource(),))\n
 movement_type_list = context.getPortalAccountingMovementTypeList()\n
 \n
@@ -70,10 +71,12 @@ for line in context.getMovementList(portal_type=movement_type_list):\n
     section_set.add(line.getDestinationSection())\n
     payment_set.add(line.getSourcePayment())\n
     payment_request_set.add(line.getSourcePaymentRequest())\n
+    project_set.add(line.getSourceProject())\n
   else:\n
     section_set.add(line.getSourceSection())\n
     payment_set.add(line.getDestinationPayment())\n
     payment_request_set.add(line.getDestinationPaymentRequest())\n
+    project_set.add(line.getDestinationProject())\n
 \n
 if context.getSourcePayment() or context.getDestinationSection():\n
   min_payment_count = 2\n
@@ -122,6 +125,13 @@ if len(payment_request_set) > 1:\n
     a((\'getSourcePaymentRequestTitle\', \'Payment Request\'))\n
   else:\n
     a((\'getDestinationPaymentRequestTitle\', \'Payment Request\'))\n
+\n
+if len(project_set) > 2:\n
+  if source:\n
+    a((\'getSourceProjectTitle\', \'Project\'))\n
+  else:\n
+    a((\'getDestinationProjectTitle\', \'Project\'))\n
+    \n
 if source:\n
   a((\'source_debit\', \'Debit\'))\n
   a((\'source_credit\', \'Credit\'))\n
@@ -129,6 +139,7 @@ else:\n
   a((\'destination_debit\', \'Debit\'))\n
   a((\'destination_credit\', \'Credit\'))\n
 \n
+context.log(project_set, column_item_list)\n
 return column_item_list\n
 
 
