@@ -798,7 +798,7 @@ class ActivityTool (Folder, UniqueObject):
         if currentNode is None:
           warnings.warn('Node name auto-generation is deprecated, please add a'
             '\n'
-            '<product-config CMFAcvtivity>\n'
+            '<product-config CMFActivity>\n'
             '  node-id = ...\n'
             '</product-config>\n'
             'section in your zope.conf, replacing "..." with a cluster-unique '
