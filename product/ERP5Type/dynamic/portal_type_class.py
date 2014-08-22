@@ -382,15 +382,15 @@ def synchronizeDynamicModules(context, force=False):
       import traceback; traceback.print_exc()
       raise
 
-  # It's okay for classes to keep references to old methods - maybe.
-  # but we absolutely positively need to clear the workflow chains
-  # stored in WorkflowMethod objects: our generation of workflow
-  # methods adds/registers/wraps existing methods, but does not
-  # remove old chains. Do it now.
-  resetRegisteredWorkflowMethod()
+    # It's okay for classes to keep references to old methods - maybe.
+    # but we absolutely positively need to clear the workflow chains
+    # stored in WorkflowMethod objects: our generation of workflow
+    # methods adds/registers/wraps existing methods, but does not
+    # remove old chains. Do it now.
+    resetRegisteredWorkflowMethod()
 
-  # Some method generations are based on portal methods, and portal
-  # methods cache results. So it is safer to invalidate the cache.
-  cache_tool = getattr(portal, 'portal_caches', None)
-  if cache_tool is not None:
-    cache_tool.clearCache()
+    # Some method generations are based on portal methods, and portal
+    # methods cache results. So it is safer to invalidate the cache.
+    cache_tool = getattr(portal, 'portal_caches', None)
+    if cache_tool is not None:
+      cache_tool.clearCache()
