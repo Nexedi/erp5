@@ -2592,6 +2592,12 @@ class Base( CopyContainer,
         if not isinstance(reference_list, (list, tuple)):
           reference_list = [reference_list]
         constraints = filter(lambda x:x.getProperty('reference') in reference_list, constraints)
+      if 'ignore_reference' in filt:
+        ignore_reference_list = filt.get('ignore_reference', None)
+        if not isinstance(ignore_reference_list, (list, tuple)):
+          ignore_reference_list = [ignore_reference_list]
+        constraints = filter(lambda x:x.getProperty('reference') not in ignore_reference_list, constraints)
+
     return constraints
 
   # Context related methods
