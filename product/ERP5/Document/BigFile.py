@@ -77,7 +77,11 @@ class BigFile(File):
 
   def _read_data(self, file, data=None):
 
-    n=1 << 20
+    # We might need to make this value configurable. It is important to
+    # consider the max quantity of object used in the cache. With a default
+    # cache of 5000 objects, and with n = 64KB, this makes using about 330 MB
+    # of memory.
+    n=1 << 16
 
     if isinstance(file, str):
       # Big string: cut it into smaller chunks
