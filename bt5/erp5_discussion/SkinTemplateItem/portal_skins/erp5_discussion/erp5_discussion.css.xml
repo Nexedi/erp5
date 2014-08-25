@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts74061029.5</string> </value>
+            <value> <string>ts08963575.91</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,6 +27,13 @@
             <value> <string>/*\n
  ERP5 discussion forum.\n
 */\n
+.discussion-post-body-container blockquote {\n
+    background: none repeat scroll 0 0 #fafafa;\n
+    border-left: 6px solid #e7e9ec;\n
+    font-style: italic;\n
+    padding: 5px 5px 5px 16px;\n
+}\n
+\n
 .attachment {\n
   width:100%;\n
   float:left;\n
@@ -100,7 +107,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1008</int> </value>
+            <value> <int>1195</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
