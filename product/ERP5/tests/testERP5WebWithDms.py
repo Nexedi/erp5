@@ -40,12 +40,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5.Document.Document import ConversionError
 
-try:
-  from PIL import Image
-except ImportError:
-  # When the PIL eggs is developed it seems to use an different
-  # way to import it.
-  import Image
+from PIL import Image
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 800
