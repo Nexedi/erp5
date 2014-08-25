@@ -154,11 +154,15 @@
         return gadget.whoWantToDisplayThis(uri.segment(2))\n
           .push(function (parent_href) {\n
             link_element = document.createElement("a");\n
+            // XXX Romain: please allow to "go home" via breadcrumb\n
+            if (parent_href === "#erp5_gadget.jio_key=undefined") {\n
+              parent_href = "#";\n
+            }\n
+            link_element.textContent = parent_link.name || "Home";\n
             link_element.href = parent_href;\n
             link_element.setAttribute("class", "responsive ui-btn ui-icon-carat-u ui-btn-icon-left");\n
             link_element.setAttribute("data-role", "button");\n
             link_element.setAttribute("role", "button");\n
-            link_element.textContent = parent_link.name;\n
             parent_element.appendChild(link_element);\n
           });\n
       }\n
@@ -299,7 +303,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46052.59584.21316</string> </value>
+                <value> <string>937.8179.20788.60245</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -317,7 +321,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407318113.56</float>
+                        <float>1408976172.25</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
