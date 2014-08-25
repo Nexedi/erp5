@@ -1221,7 +1221,7 @@ class Base( CopyContainer,
                 local_properties=True, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
-  def getPropertyList(self, key, d=None):
+  def getPropertyList(self, key, d=_MARKER):
     """Same as getProperty, but for list properties.
     """
     return self.getProperty('%s_list' % key, d=d)
