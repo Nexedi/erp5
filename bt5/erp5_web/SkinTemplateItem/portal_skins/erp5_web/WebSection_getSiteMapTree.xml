@@ -136,7 +136,8 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
                       })\n
 \n
   if section.isSiteMapSectionParent() and level == 1 and include_site_default_page:\n
-    result.insert(0, {\'url\': context.getWebSiteValue().absolute_url(), \'level\': level, \'section\': None, \'document\': section.getDefaultDocumentValue(), \'subsection\': None})\n
+    site = context.getWebSiteValue()\n
+    result.insert(0, {\'url\': site.absolute_url(), \'level\': level, \'section\': site, \'document\': section.getDefaultDocumentValue(), \'subsection\': None})\n
   if property_mapping:\n
     return map(mapObject, result)\n
   return result\n
