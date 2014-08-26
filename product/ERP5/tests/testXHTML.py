@@ -127,7 +127,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'Base Type'):
       if portal_type.getId().endswith('Module'):
         for k, v in portal_type.getPropertyTranslationDomainDict().items():
-          if v.getDomainName() != 'erp5_ui':
+          if k in ('title', 'short_title') and v.getDomainName() != 'erp5_ui':
             error_list.append('"%s" should use erp5_ui for %s' % \
                 (portal_type.getId(), k))
     if error_list:
