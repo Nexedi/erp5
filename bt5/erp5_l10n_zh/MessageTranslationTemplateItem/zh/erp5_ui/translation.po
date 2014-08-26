@@ -2137,7 +2137,7 @@ msgid "Building State"
 msgstr "创建状态"
 
 msgid "Building [state in delivery_causality_workflow]"
-msgstr "创建中 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Building is a causality state which will be displayed when ERP5 is creating a document from a related one. For example, when comfirm a sale order, a \"confirmed\" sale packing list will be built. During this process, the packing list's causality state is \"Building\", before turns to \"Calculating\" when ERP5 calculates if the packing list is convergent or divergent from its original sale order."
 msgstr "“创建中”是一个“因果整合状态”，用来表示ERP5系统正在创建关联文档。\r\n例如，当销售订单确定后，系统会创建一个销售装箱单。这个过程中,装箱单的“英国整合状态”就是“创建中”，然后才会变成“计算中”，表示ERP5系统开始计算该装箱单和原销售订单一致还是存在差异。"
@@ -2302,7 +2302,7 @@ msgid "Calculating"
 msgstr "计算中"
 
 msgid "Calculating [state in delivery_causality_workflow]"
-msgstr "计算中 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Calculation Order"
 msgstr "计算订单"
@@ -5059,10 +5059,10 @@ msgid "Distributed Ram Cache Plugin"
 msgstr ""
 
 msgid "Diverged"
-msgstr ""
+msgstr "互异"
 
 msgid "Diverged [state in delivery_causality_workflow]"
-msgstr "互异 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Divergence"
 msgstr ""
@@ -5350,7 +5350,7 @@ msgid "Draft [state in component_validation_workflow]"
 msgstr ""
 
 msgid "Draft [state in delivery_causality_workflow]"
-msgstr "草拟 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Draft [state in document_ingestion_workflow]"
 msgstr ""
@@ -9139,7 +9139,7 @@ msgid "Ordered Quantity"
 msgstr "订购数量"
 
 msgid "Ordered [state in task_workflow]"
-msgstr "已订购 [state in task_workflow]"
+msgstr ""
 
 msgid "Orders"
 msgstr "订单"
@@ -12661,7 +12661,7 @@ msgid "Solved"
 msgstr "已解决"
 
 msgid "Solved [state in delivery_causality_workflow]"
-msgstr "已解决 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Solved [state in solver_process_workflow]"
 msgstr ""
@@ -12697,7 +12697,7 @@ msgid "Solving"
 msgstr "解决中"
 
 msgid "Solving [state in delivery_causality_workflow]"
-msgstr "解决中 [state in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Solving [state in solver_process_workflow]"
 msgstr ""
@@ -13000,7 +13000,7 @@ msgid "Start Building"
 msgstr "开始创建"
 
 msgid "Start Building [transition in delivery_causality_workflow]"
-msgstr "开始创建 [transition in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Start Career Step"
 msgstr "开始事业阶段"
