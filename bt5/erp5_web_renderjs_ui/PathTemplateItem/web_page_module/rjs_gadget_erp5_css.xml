@@ -117,6 +117,9 @@ html form {\n
   overflow-x: hidden;\n
   padding: 1em;\n
 }\n
+section.document_table thead tr th {\n
+  height: 2.25em;\n
+}\n
 html fieldset form,\n
 html fieldset section.document_table {\n
   padding: 0;\n
@@ -125,6 +128,8 @@ html fieldset section.document_table {\n
 @media (max-width: 40em) {\n
   html fieldset section.document_table {\n
     width: 80%;\n
+    margin-left: auto;\n
+    margin-right: auto;\n
   }\n
 }\n
 \n
@@ -207,7 +212,8 @@ html .ui-page-theme-a .document-table thead tr th {\n
   color: rgba(0, 0, 0, 0.55);\n
   text-shadow: #FFFFFF 0px 1px 0px;\n
 }\n
-html body .ui-page-theme-a table.document-table {\n
+html body .ui-page-theme-a table.document-table,\n
+html .document-table thead tr th {\n
   background-color: #fff;\n
   border-color: #aaa;\n
 }\n
@@ -871,7 +877,7 @@ html head + body .ui-body-b.ui-focus{\n
   right: 0;\n
 }\n
 /* fix controlgroups in header font-size */\n
-.ui-header .ui-controlgroup.ui-btn-left, \n
+.ui-header .ui-controlgroup.ui-btn-left,\n
 .ui-header .ui-controlgroup.ui-btn-right {\n
   font-size: auto;\n
 }\n
@@ -1007,6 +1013,13 @@ html .ui-btn, label.ui-btn {\n
 .ui-table-inset {\n
   -webkit-border-radius: .3125em;\n
   border-radius: .3125em;\n
+}\n
+.ui-table-inset thead,\n
+.ui-table-inset thead tr:first-child {\n
+  -webkit-border-top-left-radius: inherit;\n
+  border-top-left-radius: inherit;\n
+  -webkit-border-top-right-radius: inherit;\n
+  border-top-right-radius: inherit;\n
 }\n
 .ui-table-inset thead tr:first-child td:first-child,\n
 .ui-table-inset thead tr:first-child th:first-child{\n
@@ -1219,7 +1232,7 @@ html .left textarea, html .right textarea {\n
     max-width: 80%; /* allow scrolling! */\n
     margin: auto;\n
   }\n
-  html .left, html .right, html .center, html .bottom {\n
+  html .left, html .right, html .center {\n
     width: auto;\n
     display: block;\n
     padding: .25em 0;\n
@@ -1461,7 +1474,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.56164.10800.43997</string> </value>
+                <value> <string>937.9572.33591.50397</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1479,7 +1492,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407922930.54</float>
+                        <float>1409060113.41</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
