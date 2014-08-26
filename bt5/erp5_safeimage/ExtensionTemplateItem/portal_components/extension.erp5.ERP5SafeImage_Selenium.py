@@ -1,4 +1,4 @@
-import Image as PIL_Image
+import PIL.Image as PIL_Image
 import os
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

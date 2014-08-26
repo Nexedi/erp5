@@ -17,14 +17,13 @@
 ##############################################################################
 
 import os, sys, shutil, tempfile
-import Image
 from cStringIO import StringIO
 from zLOG import LOG,ERROR,INFO,WARNING
 from OFS.Image import File, Image
 import os, transaction
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from Globals import package_home
-import Image as PIL_Image
+import PIL.Image as PIL_Image
 import thread
 import random
 import base64
