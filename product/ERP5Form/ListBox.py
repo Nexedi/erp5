@@ -2527,7 +2527,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is None:
           html = cell_html + error_message
         else:
-          if editable:
+          if editable and listbox_defines_column_as_editable:
             html = u'%s' % cell_html
           else:
             html = u'<a href="%s">%s</a>' % (url, cell_html)
