@@ -90,6 +90,7 @@
                         <string>my_source_payment</string>
                         <string>my_payment_mode</string>
                         <string>my_aggregate_title</string>
+                        <string>your_analytic_category_list</string>
                       </list>
                     </value>
                 </item>
