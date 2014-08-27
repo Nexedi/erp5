@@ -1307,16 +1307,18 @@ class ListBoxRenderer:
     Return None if a field for this column does not exist.
     """
     field = self.field
+    original_field_id = field.id
     while True:
-      try:
-        return field.aq_parent.get_field("%s_%s" % (field.id, alias),
-                                         include_disabled=1)
-      except AttributeError:
-        if field is None or field.meta_type != 'ProxyField':
-          break
-        # if we are rendering a proxy field, also look for editable 
-        # fields from the template field's form.
-        field = aq_inner(field.getTemplateField())
+      for field_id in set((original_field_id, field.id)):
+        if field.aq_parent.has_field("%s_%s" % (field_id, alias), include_disabled=1):
+          return field.aq_parent.get_field("%s_%s" % (field_id, alias),
+                                           include_disabled=1)
+      if field.meta_type != 'ProxyField':
+        return None
+      # if we are rendering a proxy field, also look for editable fields from
+      # the template field's form. This editable field can be prefixed either
+      # by the template field listbox id or by the proxy field listbox id.
+      field = aq_inner(field.getTemplateField())
 
   def getListMethod(self):
     """Return the list method object.
