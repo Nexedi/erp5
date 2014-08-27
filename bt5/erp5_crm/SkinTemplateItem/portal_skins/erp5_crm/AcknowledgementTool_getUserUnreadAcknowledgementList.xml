@@ -59,7 +59,7 @@ down as less a possible the user interface\n
 """\n
 from DateTime import DateTime\n
 \n
-user_name = context.portal_membership.getAuthenticatedMember()\n
+user_name = str(context.portal_membership.getAuthenticatedMember())\n
 \n
 def getUnreadAcknowledgementListForUser(user_name=None):\n
   # We give the portal type "Mass Notification" for now, we can\n
