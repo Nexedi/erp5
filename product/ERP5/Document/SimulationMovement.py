@@ -48,6 +48,8 @@ parent_to_movement_simulation_state = {
   'auto_planned'     : 'auto_planned',
   'planned'          : 'planned',
   'ordered'          : 'planned',
+  'offered'          : 'planned',
+  'submitted'        : 'planned',
   'confirmed'        : 'planned',
   'getting_ready'    : 'planned',
   'ready'            : 'planned',
