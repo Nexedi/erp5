@@ -201,12 +201,8 @@ class BigFile(File):
           if isinstance(data, str):
             RESPONSE.write(data[start:end])
             return True
-          iterator = data.iterate(start, end-start)
-          try:
-            while 1:
-              RESPONSE.write(iterator.next())
-          except StopIteration:
-            pass
+          for chunk in data.iterate(start, end-start):
+            RESPONSE.write(chunk)
           return True
 
         else:
@@ -251,12 +247,8 @@ class BigFile(File):
               RESPONSE.write(data[start:end])
 
             else:
-              iterator = data.iterate(start, end-start)
-              try:
-                while 1:
-                  RESPONSE.write(iterator.next())
-              except StopIteration:
-                pass
+              for chunk in data.iterate(start, end-start):
+                RESPONSE.write(chunk)
 
           RESPONSE.write('\r\n--%s--\r\n' % boundary)
           return True
@@ -301,12 +293,8 @@ class BigFile(File):
 
     if data is None:
       return ''
-    iterator = data.iterate()
-    try:
-      while 1:
-        RESPONSE.write(iterator.next())
-    except StopIteration:
-      pass
+    for chunk in data.iterate():
+      RESPONSE.write(chunk)
     return ''
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
