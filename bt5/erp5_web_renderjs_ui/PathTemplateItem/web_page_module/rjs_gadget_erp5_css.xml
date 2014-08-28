@@ -101,62 +101,6 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/* -------------------------- ERP5 specific CSS --------------------------- */\n
-/* Romain */\n
-iframe {\n
-  width: 95%;\n
-  height: 500px;\n
-}\n
-\n
-/* mimic ui-content */\n
-section.document_list,\n
-section.document_table,\n
-html form {\n
-  border-width: 0;\n
-  overflow: visible;\n
-  overflow-x: hidden;\n
-  padding: 1em;\n
-}\n
-section.document_table thead tr th {\n
-  height: 2.25em;\n
-}\n
-html fieldset form,\n
-html fieldset section.document_table {\n
-  padding: 0;\n
-}\n
-\n
-@media (max-width: 40em) {\n
-  html fieldset section.document_table {\n
-    width: 80%;\n
-    margin-left: auto;\n
-    margin-right: auto;\n
-  }\n
-}\n
-\n
-/* ui-content + listview|table|form */\n
-.document-listview,\n
-.document-table {\n
-  margin: -1em;\n
-}\n
-.document-listview.ui-listview-inset,\n
-.document-table.ui-table-inset {\n
-  margin: 1em 0;\n
-}\n
-\n
-/* action menu */\n
-.action_list {\n
-  display: inline-block;\n
-}\n
-/* override default page wrapping */\n
-.ui-mobile .ui-page-active {\n
-  overflow: hidden;\n
-}\n
-\n
-/* readonly */\n
-.custom-readonly {\n
-  opacity: 1;\n
-}\n
-\n
 /* ------------------------------ Global Font  ---------------------------- */\n
 /* NOTE: family/size should only be set here! */\n
 input, select, textarea, button, p, h1, h2, h3, h4, h5, h6, table,\n
@@ -1209,37 +1153,68 @@ div.grid-container ul.grid-items.line-10 li ~ li {\n
   }\n
 }\n
 /* ----------------------------- FORM LAYOUT ------------------------------ */\n
+/* Romain */\n
+iframe {\n
+  width: 95%;\n
+  height: 500px;\n
+}\n
+\n
+/* XXX still terrilble */\n
+/* mimic ui-content */\n
+section.document_list,\n
+section.document_table,\n
+form.save_form {\n
+  border-width: 0;\n
+  overflow: visible;\n
+  overflow-x: hidden;\n
+  padding: 1em;\n
+}\n
+form.save_form section.document_table {\n
+  padding: 0;\n
+}\n
+section.document_table thead tr th {\n
+  height: 2.25em;\n
+}\n
+/* inset + listview|table|form */\n
+.document-listview,\n
+.document-table {\n
+  margin: -1em;\n
+}\n
+.document-listview.ui-listview-inset,\n
+.document-table.ui-table-inset {\n
+  margin: 1em 0;\n
+}\n
+\n
+/* action menu */\n
+.action_list {\n
+  display: inline-block;\n
+}\n
+/* override default page wrapping */\n
+.ui-mobile .ui-page-active {\n
+  overflow: hidden;\n
+}\n
+\n
+/* readonly */\n
+.custom-readonly {\n
+  opacity: 1;\n
+}\n
 /* padding and overall width */\n
 html .left, html .right, html .center, html .bottom {\n
   vertical-align: top;\n
-  padding: 2% 2% 0 2%;\n
+  padding: 0 2%;\n
 }\n
 html .center, html .bottom {\n
   display: block;\n
-  width: 96%\n
+  width: 96%;\n
 }\n
 html .left, html .right {\n
   display: inline-block;\n
   width: 45%;\n
 }\n
 html .left textarea, html .right textarea {\n
-  width: /* 57.7% */ 100%;\n
+  width: 100%;\n
   display: inline-block;\n
   vertical-align: midle;\n
-}\n
-@media (max-width: 40em) {\n
-  html form {\n
-    max-width: 80%; /* allow scrolling! */\n
-    margin: auto;\n
-  }\n
-  html .left, html .right, html .center {\n
-    width: auto;\n
-    display: block;\n
-    padding: .25em 0;\n
-  }\n
-  html body .left textarea, html body .right textarea {\n
-    width: 100%;\n
-  }\n
 }\n
 /* override border-radius for all inputs to match buttons */\n
 html form .ui-input-text.ui-corner-all {\n
@@ -1270,14 +1245,9 @@ html.ui-mobile body form label {\n
 }\n
 \n
 @media (max-width: 40em) {\n
-  html form {\n
-    max-width: 80%;\n
-    margin: auto;\n
-  }\n
-  html .left, html .right, html .center, html .bottom {\n
+  html .center, html .bottom, html .left, html .right {\n
     width: auto;\n
     display: block;\n
-    padding: .25em 0;\n
   }\n
 \n
   html .left textarea,\n
@@ -1296,6 +1266,10 @@ html.ui-mobile body form label {\n
     min-width: none;\n
     max-width: none;\n
     margin-bottom: -.5em;\n
+  }\n
+  html .left textarea,\n
+  html .right textarea {\n
+    min-width: 100%;\n
   }\n
 }\n
 /* --------------------------- FORM INPUTS -------------------------------- */\n
@@ -1474,7 +1448,7 @@ html.ui-mobile body nav.ui-title {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.9572.33591.50397</string> </value>
+                <value> <string>937.12512.34382.32494</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1492,7 +1466,7 @@ html.ui-mobile body nav.ui-title {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409060113.41</float>
+                        <float>1409236074.18</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
