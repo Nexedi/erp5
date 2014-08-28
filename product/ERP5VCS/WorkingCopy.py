@@ -32,7 +32,6 @@
 import errno, json, os, re, shutil
 from base64 import b64encode, b64decode
 from tempfile import gettempdir
-import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base, Implicit
