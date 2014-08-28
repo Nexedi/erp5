@@ -267,7 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getParentValue().getReference()</string> </value>
+            <value> <string>python: cell.portal_type == \'Test Result\' and cell.getReference() or cell.getParentValue().getReference()</string> </value>
         </item>
       </dictionary>
     </pickle>

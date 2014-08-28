@@ -71,22 +71,33 @@ query_params = {\'creation_date\' : dict(query=context.getCreationDate(), range=
 result_list = []\n
 expected_id = context.getId()\n
 expected_title = context.getTitle()\n
+\n
 for tr in context.portal_catalog(**query_params):\n
+  line_found = False\n
   tr = tr.getObject()\n
+  \n
   # Optimisation: the test result line probably have the same id in the previous\n
   # test result.\n
   line = getattr(tr, expected_id, None)\n
   if line is not None and line.getTitle() == expected_title \\\n
       and line.getSimulationState() in (\'stopped\', \'public_stopped\', \'failed\'):\n
     result_list.append(line)\n
+    line_found = True\n
   else:\n
     for line in tr.contentValues(portal_type=\'Test Result Line\'):\n
       if line.getTitle() == context.getTitle() \\\n
          and line.getSimulationState() in (\'stopped\', \'public_stopped\', \'failed\'):\n
         result_list.append(line)\n
+        line_found = True\n
         # next time, the test result line will likely have the same id as this one.\n
         expected_id = line.getId()\n
 \n
+  # This test result line was not executed in this test. We had a line "Not executed",\n
+  # mainly because we have a count method that counts test results, so we need to\n
+  # return as many test result line as the count method returns.\n
+  if not line_found:\n
+    result_list.append(tr.asContext(string_index=\'NOT_EXECUTED\'))\n
+    \n
 return result_list\n
 </string> </value>
         </item>
