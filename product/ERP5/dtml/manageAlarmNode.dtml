@@ -65,6 +65,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <div class="form-item">
         <select name="alarmNode">
           <option value="">(disabled)</option>
+          <dtml-if expr="getAlarmNode() not in getNodeList()">
+            <option selected="selected" value="<dtml-var getAlarmNode>">(???) <dtml-var getAlarmNode></option>
+          </dtml-if>
           <dtml-in getNodeList prefix="node">
             <dtml-if expr="node_item == getAlarmNode()">
               <option selected="selected" value="<dtml-var sequence-item>">
