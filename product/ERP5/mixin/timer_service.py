@@ -80,5 +80,7 @@ class TimerServiceMixin(object):
 
   security.declarePublic('getCurrentNode')
   getCurrentNode = ActivityTool.getCurrentNode.im_func
+  security.declarePublic('getServerAddress')
+  getServerAddress = ActivityTool.getServerAddress.im_func
 
   _isValidNodeName = ActivityTool._isValidNodeName.im_func

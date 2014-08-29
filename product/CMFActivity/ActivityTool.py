@@ -88,6 +88,7 @@ tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent ti
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
 is_running_lock = threading.Lock()
 currentNode = None
+_server_address = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
 
@@ -785,7 +786,27 @@ class ActivityTool (Folder, UniqueObject):
     def manage_afterAdd(self, item, container):
         self.subscribe()
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
-       
+
+    def getServerAddress(self):
+        """
+        Backward-compatibility code only.
+        """
+        global _server_address
+        if _server_address is None:
+            ip = port = ''
+            from asyncore import socket_map
+            for k, v in socket_map.items():
+                if hasattr(v, 'addr'):
+                    # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+                    type = str(getattr(v, '__class__', 'unknown'))
+                    if type == 'ZServer.HTTPServer.zhttp_server':
+                        ip, port = v.addr
+                        break
+            if ip == '0.0.0.0':
+                ip = socket.gethostbyname(socket.gethostname())
+            _server_address = '%s:%s' %(ip, port)
+        return _server_address
+
     def getCurrentNode(self):
         """ Return current node identifier """
         global currentNode
@@ -803,18 +824,7 @@ class ActivityTool (Folder, UniqueObject):
             '</product-config>\n'
             'section in your zope.conf, replacing "..." with a cluster-unique '
             'node identifier.', DeprecationWarning)
-          ip = port = ''
-          from asyncore import socket_map
-          for k, v in socket_map.items():
-              if hasattr(v, 'addr'):
-                  # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                  type = str(getattr(v, '__class__', 'unknown'))
-                  if type == 'ZServer.HTTPServer.zhttp_server':
-                      ip, port = v.addr
-                      break
-          if ip == '0.0.0.0':
-            ip = socket.gethostbyname(socket.gethostname())
-          currentNode = '%s:%s' %(ip, port)
+          currentNode = self.getServerAddress()
         return currentNode
         
     security.declarePublic('getDistributingNode')
@@ -841,14 +851,19 @@ class ActivityTool (Folder, UniqueObject):
 
     def registerNode(self, node):
       node_dict = self.getNodeDict()
-      if not node_dict.has_key(node):
-        if len(node_dict) == 0: # If we are registering the first node, make
-                                # it both the distributing node and a processing
-                                # node.
+      if node not in node_dict:
+        if node_dict:
+          # BBB: check if our node was known by address (processing and/or
+          # distribution), and migrate it.
+          server_address = self.getServerAddress()
+          role = node_dict.pop(server_address, ROLE_IDLE)
+          if self.distributingNode == server_address:
+            self.distributingNode = node
+        else:
+          # We are registering the first node, make
+          # it both the distributing node and a processing node.
           role = ROLE_PROCESSING
           self.distributingNode = node
-        else:
-          role = ROLE_IDLE
         self.updateNode(node, role)
 
     def updateNode(self, node, role):

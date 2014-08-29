@@ -43,6 +43,7 @@ import urllib
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()
+_check_upgrade = True
 
 class AlarmTool(TimerServiceMixin, BaseTool):
   """
@@ -170,6 +171,12 @@ class AlarmTool(TimerServiceMixin, BaseTool):
         if now - last_tic >= self.interval:
           self.tic()
           last_tic = now
+      elif _check_upgrade and self.getServerAddress() == alarmNode:
+        # BBB: check (once per run) if our node was alarm_node by address, and
+        # migrate it.
+        global _check_upgrade
+        _check_upgrade = False
+        self.setAlarmNode(current_node)
     finally:
       last_tic_lock.release()
 
