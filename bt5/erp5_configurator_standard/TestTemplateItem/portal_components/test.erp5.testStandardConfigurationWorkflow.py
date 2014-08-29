@@ -934,6 +934,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     portal = self.getPortal()
     module = portal.sale_order_module
     business_configuration = sequence.get('business_configuration')
+
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    self.assertNotEquals(len(organisation_list), 0)
+    organisation = organisation_list[0]
+    self.assertEqual('validated', organisation.getValidationState())
+
     sale_trade_condition = \
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                      'Sale Trade Condition')[0]
@@ -954,6 +960,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                 quantity_unit='unit/piece',
                                 individual_variation_base_category='variation',
                                 base_contribution='base_amount/taxable')
+    client = portal.organisation_module.newContent(
+        portal_type='Organisation')
+    client.validate()
+
     self.tic()
     resource.validate()
     self.tic()
@@ -962,6 +972,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     order = module.newContent(
        portal_type='Sale Order',
        specialise=(sale_trade_condition.getRelativeUrl(),),
+       destination_value=client,
+       destination_section_value=client,
+       source_value=organisation,
+       source_section_value=organisation,
        destination_decision=destination_decision.getRelativeUrl(),
        destination_administration=destination_administration.getRelativeUrl(),
        start_date=start_date,
