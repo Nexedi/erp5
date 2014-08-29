@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>workflow_state_list</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>string:validated</string> </value>
         </item>
         <item>
             <key> <string>workflow_variable</string> </key>
