@@ -809,6 +809,8 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(currency.getRelativeUrl(),
                       sale_trade_condition.getPriceCurrency())
 
+    self.assertEqual([], sale_trade_condition.checkConsistency())
+
   def stepCheckPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """
       Check if Purchase Trade Condition object has been created.
@@ -977,17 +979,18 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     # stepPlanSaleOrders
     self.assertEqual(order.getSimulationState(), 'draft')
-    order.plan()
+    self._loginAsUser(self.sales_manager_reference)
+    self.portal.portal_workflow.doActionFor(order, 'plan_action')
     self.tic()
     self.assertEqual(order.getSimulationState(), 'planned')
 
     # stepOrderSaleOrders
-    order.order()
+    self.portal.portal_workflow.doActionFor(order, 'order_action')
     self.tic()
     self.assertEqual(order.getSimulationState(), 'ordered')
 
     # stepConfirmSaleOrders
-    order.confirm()
+    self.portal.portal_workflow.doActionFor(order, 'confirm_action')
     self.tic()
     self.assertEqual(order.getSimulationState(), 'confirmed')
 
@@ -1156,6 +1159,9 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
     # set preference group
     self.preference_group = 'group/my_group'
+
+    # login as manager
+    self.login()
 
   def beforeTearDown(self):
     os.remove(self.categories_file_path)
