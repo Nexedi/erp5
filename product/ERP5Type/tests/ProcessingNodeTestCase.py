@@ -9,6 +9,7 @@ from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
+from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import createZServer
 
 
@@ -256,6 +257,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
     self.startZServer()
+    # Make sure to still have possibilities to edit components
+    addUserToDeveloperRole('ERP5TypeTestCase')
     from Zope2.custom_zodb import cluster
     self._registerNode(distributing=not cluster, processing=1)
     self.commit()
