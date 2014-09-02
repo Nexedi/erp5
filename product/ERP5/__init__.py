@@ -117,3 +117,13 @@ def initialize( context ):
 # backward compatibility names
 XML = None
 UI = None
+
+
+try:
+  import pyPdf
+except ImportError:
+  class pyPdfGeneric:
+    NameObject = type('NameObject', (str, ), {'__module__': 'pyPdf.Generic'})
+
+  sys.modules['pyPdf.Generic'] = pyPdfGeneric
+  sys.modules['pyPdf'] = pyPdfGeneric
