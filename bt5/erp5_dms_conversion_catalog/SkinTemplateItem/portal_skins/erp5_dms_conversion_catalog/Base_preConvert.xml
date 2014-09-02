@@ -57,8 +57,11 @@ portal = context.getPortalObject()\n
 \n
 format_kw = {\'format\': format,\n
             \'quality\': quality}\n
+            \n
 for display in display_list:\n
   format_kw[\'display\'] = display\n
+  if display is None:\n
+    format_kw.pop(\'display\')\n
   context.convert(**format_kw)\n
 </string> </value>
         </item>
