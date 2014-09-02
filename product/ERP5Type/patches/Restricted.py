@@ -23,6 +23,8 @@ RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
 
 from Acquisition import aq_acquire
 from AccessControl import getSecurityManager
+from AccessControl import allow_module, allow_class, allow_type
+from AccessControl import ModuleSecurityInfo
 from AccessControl.ZopeGuards import (safe_builtins, _marker, Unauthorized,
     aq_validate, guard, guarded_getattr, guarded_iter, SafeIter, NullIter,
     ContainerAssertions, GuardedDictType, _dict_white_list)
@@ -113,34 +115,51 @@ def get_set_pop(s, name):
         return v
     return guarded_pop
 
-_set_white_get = {
-    'add': 1, 'clear': 1, 'copy': 1, 'difference': 1, 'difference_update': 1,
-    'discard': 1, 'intersection': 1, 'intersection_update': 1, 'isdisjoint': 1,
-    'issubset': 1, 'issuperset': 1, 'pop': get_set_pop, 'remove': 1,
-    'symmetric_difference': 1, 'symmetric_difference_update': 1, 'union': 1,
-    'update': 1}.get
-
-def _check_set_access(name, value):
-    # Check whether value is a set method
+def _check_access_wrapper(expected_type, white_list_dict):
+  def _check_access(name, value):
+    # Check whether value is a method of expected type
     self = getattr(value, '__self__', None)
     if self is None: # item
         return 1
     # Disallow spoofing
-    if type(self) is not set:
+    if type(self) is not expected_type:
         return 0
     if getattr(value, '__name__', None) != name:
         return 0
-    return _set_white_get(name, 0)
+    return white_list_dict.get(name, 0)
 
-ContainerAssertions[set] = _check_set_access
+  return _check_access
+
+_set_white_dict = {
+    'add': 1, 'clear': 1, 'copy': 1, 'difference': 1, 'difference_update': 1,
+    'discard': 1, 'intersection': 1, 'intersection_update': 1, 'isdisjoint': 1,
+    'issubset': 1, 'issuperset': 1, 'pop': get_set_pop, 'remove': 1,
+    'symmetric_difference': 1, 'symmetric_difference_update': 1, 'union': 1,
+    'update': 1}
+
+ContainerAssertions[set] = _check_access_wrapper(set, _set_white_dict)
 
 ContainerAssertions[frozenset] = 1
 
 from collections import OrderedDict
-OrderedDict.__allow_access_to_unprotected_subobjects__ = 1
+ModuleSecurityInfo('collections').declarePublic('OrderedDict')
 
-from AccessControl import allow_module, allow_class, allow_type
-from AccessControl import ModuleSecurityInfo
+from collections import defaultdict
+ModuleSecurityInfo('collections').declarePublic('defaultdict')
+
+from AccessControl.ZopeGuards import _dict_white_list
+
+# Attributes cannot be set on defaultdict, thus modify 'safetype' dict
+# (closure) directly to ignore defaultdict like dict/list
+from RestrictedPython.Guards import full_write_guard
+ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
+full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+
+# In contrary to builtins such as dict/defaultdict, it is possible to set
+# attributes on OrderedDict instances, so only allow setitem/delitem
+ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
+OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
 
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')
