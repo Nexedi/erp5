@@ -67,7 +67,7 @@ class CashDelivery(BankingOperation):
     """
     script = self._getTypeBasedMethod('getBaobabSource')
     if script is not None:
-      return script(self,**kw)      
+      return script(self,**kw)
     return self.getSource(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabDestination')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 ##
 # WARNING: This program as such is intended to be used by professional
@@ -38,7 +38,7 @@ class TestOoodResponse(ERP5TypeTestCase):
   manager_username = 'rie'
   manager_password = 'rie'
   quiet = 1
-  run_all_test = 1  
+  run_all_test = 1
 
   def getTitle(self):
     return "TestOOoBatchMode"
@@ -91,7 +91,7 @@ class TestOoodResponse(ERP5TypeTestCase):
         request.RESPONSE.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="ERP5Site_viewNothingAsOdt.odt"',
         request.RESPONSE.getHeader('content-disposition'))
-    
+
   def test_02_noExcNoFormatBatchMode(self):
     request = self.portal.REQUEST
     request.RESPONSE.setHeader('content-type', 'text/html')
@@ -99,7 +99,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt(batch_mode=1)
     self.assertEqual('text/html',
         request.RESPONSE.getHeader('content-type').split(';')[0])
-    
+
   def test_03_excPdfFormatNoBatchMode(self):
     request = self.portal.REQUEST
     request.RESPONSE.setHeader('content-type', 'text/html')

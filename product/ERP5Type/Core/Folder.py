@@ -329,7 +329,7 @@ class FolderMixIn(ExtensionClass.Base):
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'): 
+      if kw['selection_report'].has_key('parent'):
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -361,7 +361,7 @@ class FolderMixIn(ExtensionClass.Base):
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'): 
+      if kw['selection_report'].has_key('parent'):
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -560,24 +560,24 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   # Per default we use BTree folder
   _folder_handler = BTREE_HANDLER
-  
+
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
   def __init__(self, id):
     self.id = id
-      
+
   security.declarePublic('newContent')
   def newContent(self, *args, **kw):
     """ Create a new content """
     # Create data structure if none present
     return FolderMixIn.newContent(self, *args, **kw)
-      
+
   def isBTree(self):
     """
     Tell if we are a BTree
     """
     return self._folder_handler == BTREE_HANDLER
-  
+
   def isHBTree(self):
     """
     Tell if we are a HBTree
@@ -591,11 +591,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     It will first call setId on all folder objects to have right id
     to be used with an hbtreefolder.
     Then it will migrate foder from btree to hbtree.
-    """    
+    """
     BUNDLE_COUNT = 10
 
     # if folder is already migrated or migration process is in progress
-    # do not do anything beside logging    
+    # do not do anything beside logging
     if getattr(self, migration_process_lock, None) is not None \
        or self.isHBTree():
       LOG('migrateToHBTree', WARNING,
@@ -603,14 +603,14 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       return
     # lock folder migration early
     setattr(self, migration_process_lock, 1)
-    
+
     # we may want to change all objects ids before migrating to new folder type
     # set new id generator here so that object created while migration
     # got a right id
     if new_generate_id_method is not None:
       self.setIdGenerator(new_generate_id_method)
     if migration_generate_id_method not in (None, ''):
-      tag = "%s/%s/migrate" %(self.getId(),migration_generate_id_method) 
+      tag = "%s/%s/migrate" %(self.getId(),migration_generate_id_method)
       id_list  = list(self.objectIds())
       # set new id by bundle
       for x in xrange(len(self) / BUNDLE_COUNT):
@@ -629,7 +629,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       tag = 'nothing'
     # copy from btree to hbtree
     self.activate(activity="SQLQueue", after_tag=tag)._launchCopyObjectToHBTree(tag)
-    
+
     if REQUEST is not None:
       psm = translateString('Migration to HBTree is running.')
       ret_url = '%s/%s?portal_status_message=%s' % \
@@ -652,7 +652,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     """
     Launch activity per bundle to move object
     from a btree to an hbtree
-    """    
+    """
     # migrate folder from btree to hbtree
     id_list = list(self.objectIds())
     self._folder_handler = HBTREE_HANDLER
@@ -661,15 +661,15 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     BUNDLE_COUNT = 100
     for x in xrange(len(id_list) / BUNDLE_COUNT):
       self.activate(activity="SQLQueue", tag=tag)._copyObjectToHBTree(
-        id_list=id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],)        
-    
+        id_list=id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],)
+
     remaining_id_count = len(id_list) % BUNDLE_COUNT
     if remaining_id_count:
       self.activate(activity="SQLQueue", tag=tag)._copyObjectToHBTree(
         id_list=id_list[-remaining_id_count:],)
     # remove uneeded attribute
     self.activate(activity="SQLQueue", after_tag=tag)._finishCopyObjectToHBTree()
-    
+
   def _copyObjectToHBTree(self, id_list=None,):
     """
     Move object from a btree container to
@@ -693,7 +693,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   def hashId(self, id):
     """Return a hash of id
-    """    
+    """
     if self._folder_handler == HBTREE_HANDLER:
       return CMFHBTreeFolder.hashId(self, id)
     else:
@@ -763,7 +763,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     else:
       if self._tree is None:
         return 1
-      else:        
+      else:
         return CMFBTreeFolder._cleanup(self)
 
   def _getOb(self, id, *args, **kw):
@@ -850,7 +850,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return 0
       return CMFBTreeFolder.objectCount(self)
-    
+
   def has_key(self, id):
     """Indicates whether the folder has an item by ID.
     """
@@ -901,7 +901,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if self._folder_handler == HBTREE_HANDLER:
       return CMFHBTreeFolder._treeObjectValues(self, base_id)
     else:
-      return CMFBTreeFolder._treeObjectValues(self, base_id)    
+      return CMFBTreeFolder._treeObjectValues(self, base_id)
 
   def _treeObjectIds(self, base_id=None):
     """ return object ids for a given btree
@@ -909,7 +909,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if self._folder_handler == HBTREE_HANDLER:
       return CMFHBTreeFolder._treeObjectIds(self, base_id)
     else:
-      return CMFBTreeFolder._treeObjectIds(self, base_id)      
+      return CMFBTreeFolder._treeObjectIds(self, base_id)
 
   def _isNotBTree(self, obj):
     """ test object is not a btree
@@ -992,7 +992,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   def generateId(self, prefix='item', suffix='', rand_ceiling=999999999):
     """Returns an ID not used yet by this folder.
-    
+
     The ID is unlikely to collide with other threads and clients.
     The IDs are sequential to optimize access to objects
     that are likely to have some relation.
@@ -1009,7 +1009,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         raise AttributeError, name
       return CMFBTreeFolder.__getattr__(self, name)
-    
+
   def __len__(self):
     if self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
@@ -1029,7 +1029,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return []
       return CMFBTreeFolder.keys(self, *args, **kw)
-    
+
   def values(self, *args, **kw):
     if self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
@@ -1039,7 +1039,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return []
       return CMFBTreeFolder.values(self, *args, **kw)
-  
+
   def items(self, *args, **kw):
     if self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
@@ -1085,7 +1085,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   # Implementation
   hasContent = hasObject
-    
+
   security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
   def exportAll(self,dir=None):
     """
@@ -1199,7 +1199,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
       from_class and to_class can be classes (o.__class___) or strings like:
         'Products.ERP5Type.Document.Folder.Folder'
-    
+
     XXX Some comments by Seb:
     - it is not designed to work for modules with thousands of objects,
       so it totally unusable when you have millions of objects
@@ -1213,7 +1213,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       something like the "fix point" after doing a synchronization. Such
       checking should even be done before doing commit (like it might
       be possible to export objects in the xml format used for exports
-      before and after, and run a diff). 
+      before and after, and run a diff).
 
     """
     #LOG("upgradeObjectClass: folder ", 0, self.id)
@@ -1690,7 +1690,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
           raise AccessControl_Unauthorized
       # so far, everything OK
       return
-    
+
     # if we haven't been able to validate, pass through to parent class
     Folder.inheritedAttribute(
           '_verifyObjectPaste')(self, object, validate_src)
@@ -1721,7 +1721,7 @@ class NotImplementedClass(object):
 
   def __call__(self, *args, **kw):
     raise NotImplementedError, str(self.__name__)
-  
+
 for source_klass, destination_klass in \
         (
          # Check method on HBTree but not on BTree

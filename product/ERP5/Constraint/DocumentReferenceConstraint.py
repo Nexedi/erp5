@@ -44,7 +44,7 @@ class DocumentReferenceConstraint(Constraint):
   _message_id_list = [ 'message_property_not_defined',
                        'message_another_document_exists',
                        'message_multiple_documents_exists' ]
-  
+
   message_property_not_defined = translateString(
       'Property ${property_id} was not defined')
   message_another_document_exists = translateString(

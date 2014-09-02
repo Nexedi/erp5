@@ -70,7 +70,7 @@ class EditorWidget(Widget.TextAreaWidget):
                                    required=1,
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
-                                          ('FCK Editor', 'fck_editor'), 
+                                          ('FCK Editor', 'fck_editor'),
                                           ('Bespin Editor', 'bespin'),
                                           ('Xinha Editor', 'xinha'),
                                           ('SVG Editor', 'svg_editor'),
@@ -85,7 +85,7 @@ class EditorWidget(Widget.TextAreaWidget):
     text_editor = field.get_value('text_editor')
     if text_editor == 'bespin':
       # XXX The usage of bespin editor depends of erp5_bespin bt5
-      # installed and still experimental. If erp5_bespin is not installed, it 
+      # installed and still experimental. If erp5_bespin is not installed, it
       # render standard an standard editor field.
       bespin_support = getattr(here, 'bespin_support',None)
       if bespin_support is not None:
@@ -127,7 +127,7 @@ class EditorWidget(Widget.TextAreaWidget):
     return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
-    """ 
+    """
       Render form in view only mode.
     """
     if value is None:

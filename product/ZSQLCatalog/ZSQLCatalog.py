@@ -191,7 +191,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   hot_reindexing_state = None
   default_sql_catalog_id = None
   archive_path = None
-  
+
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
   manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
   manage_catalogView = DTMLFile('dtml/catalogView',globals())
@@ -436,7 +436,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                  The feature is still provided, but you'll be on your own if
                  you try it.
 
-      destination_sql_catalog_id 
+      destination_sql_catalog_id
         Id of the SQLCatalog object to use as the new catalog.
 
       source_sql_connection_id_list
@@ -752,7 +752,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     # Construct list of object to catalogged
     for obj in object_list:
       if hot_reindexing:
-        try: 
+        try:
           url = obj.getPhysicalPath
         except AttributeError:
           raise CatalogError(
@@ -761,7 +761,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             )
         url = '/'.join(url())
         url_list.append(url)
-        
+
       # either we are doing archiving, either we have used archive without a catalog specified
       if archive_enabled:
         goto_current_catalog = 0
@@ -826,7 +826,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             for obj in d['obj']:
               obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
                                  {'priority': d['priority']}, disable_archive=1, **kw)
-    
+
     if catalog is not None:
       if wrapped_object_list:
         catalog.catalogObjectList(wrapped_object_list, **kw)
@@ -869,7 +869,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             self.activate(activity="SQLQueue", round_robin_scheduling=1,
                           priority=archive.getPriority()).uncatalog_object(uid=uid,path=path,
                                                                            sql_catalog_id=catalog_id)
-          
+
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.uncatalogObject(uid=uid,path=path)
@@ -1209,11 +1209,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     script=REQUEST.script
     if string.find(path, script) != 0:
       path='%s/%s' % (script, path)
-    try: 
+    try:
       return REQUEST.resolve_url(path)
-    except ConflictError: 
+    except ConflictError:
       raise
-    except: 
+    except:
       pass
 
   def resolve_path(self, path):
@@ -1222,11 +1222,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     # namespace. The url may be absolute or a catalog path
     # style url. If no object is found, None is returned.
     # No exceptions are raised.
-    try: 
+    try:
       return self.unrestrictedTraverse(path)
     except ConflictError:
       raise
-    except: 
+    except:
       pass
 
   def manage_normalize_paths(self, REQUEST, sql_catalog_id=None):

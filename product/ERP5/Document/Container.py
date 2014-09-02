@@ -42,9 +42,9 @@ class Container(Movement, XMLObject):
       Container may eventually usa optional property sheet to store
       parcel No information (we use Item property sheet for that). Some
       acquisition may be required...
-      
+
       A Container which does not point to an Item can act itself as an Item
-      for traceability. 
+      for traceability.
 
       Container Line / Container Cell is used to store quantities (never
       accounted)
@@ -120,8 +120,8 @@ class Container(Movement, XMLObject):
           container_cell_list = list(container_line.objectValues())
           container_cell_list.sort(key=lambda x: x.getVariationText())
           for container_cell in container_cell_list:
-            result += "%s %s %s\n" % (container_cell.getResource(), 
-                                      container_cell.getQuantity(), 
+            result += "%s %s %s\n" % (container_cell.getResource(),
+                                      container_cell.getQuantity(),
                                       '|'.join(container_cell.getVariationText().split('\n')))
         else:
           result += "%s %s\n" % (container_line.getResource(), container_line.getQuantity())
@@ -133,7 +133,7 @@ class Container(Movement, XMLObject):
       result = result + '\n'.join(map(lambda x: " %s" % x, more_result.split('\n')))
       return result
 
-    # Used for optimization - requires reindexing using container_uid 
+    # Used for optimization - requires reindexing using container_uid
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getContainerUid')
     def getContainerUid(self):
@@ -165,7 +165,7 @@ class Container(Movement, XMLObject):
                     {'portal_type': self.getPortalContainerTypeList()}):
           result += o.getContainedTotalQuantity()
       return result
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getContainedTotalPrice')
     def getContainedTotalPrice(self, recursive = 0):
@@ -181,7 +181,7 @@ class Container(Movement, XMLObject):
                     {'portal_type': self.getPortalContainerTypeList()}):
           result += o.getContainedTotalPrice()
       return result
-      
+
     # Item Access
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTrackedItemUidList')

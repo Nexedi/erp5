@@ -223,7 +223,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'id': 'types_tool'},
                            {'id': 'property_sheet_tool',
                             'title': 'Configure Property Sheets'},
-                           {'id': 'portal_alarms_action', 
+                           {'id': 'portal_alarms_action',
                             'title': 'Configure Alarms'},
                            {'title': 'Undo', 'id': 'undo'}],
                 'object': [],

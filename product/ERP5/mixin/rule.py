@@ -54,7 +54,7 @@ class MovementGeneratorMixin:
 
   TODO:
     - _getInputMovementList is still not well defined. Should input
-      be an amount (_getInputAmountList) or a movement? This 
+      be an amount (_getInputAmountList) or a movement? This
       requires careful thiking.
   """
   # Default values
@@ -221,7 +221,7 @@ class RuleMixin(Predicate):
     """
     return not movement.getDelivery()
 
-  # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for 
+  # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')
   def isDivergent(self, movement, ignore_list=[]):
@@ -338,9 +338,9 @@ class RuleMixin(Predicate):
     are part of the matching group and updates movement_collection_diff
     accordingly
 
-    NOTE: this method API implicitely considers that each group of matching 
+    NOTE: this method API implicitely considers that each group of matching
     movements has 1 prevision_movement (aggregated) for N decision_movement
-    It implies that prevision_movement are "more" aggregated than 
+    It implies that prevision_movement are "more" aggregated than
     decision_movement.
 
     TODO:

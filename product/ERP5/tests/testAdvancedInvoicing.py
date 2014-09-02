@@ -74,7 +74,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   stepTic
   stepCheckPackingListIsPacked
   """
-  
+
   INVOICE_DEFAULT_SEQUENCE = PACKING_LIST_DEFAULT_SEQUENCE + \
   """
   stepStartPackingList
@@ -131,7 +131,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   invoice_cell_portal_type = 'Invoice Cell'
   invoice_module_name = 'sale_invoice_module'
   invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
-  
+
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_pdm',
         'erp5_simulation', 'erp5_trade', 'erp5_accounting', 'erp5_invoicing',
@@ -256,21 +256,21 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   def stepAdoptPrevisionOnInvoice(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue()
- 
+
     divergence_list = invoice.getDivergenceList()
     builder_list = invoice.getBuilderList()
     self.assertEqual(1, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_adopt_list=divergence_list)
-               
+
   def test_CreatingAccountingTransactionThroughInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
     """test creating simple invoice and accounting transaction"""
     if not run: return
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString(self.INVOICE_DEFAULT_SEQUENCE)
     sequence_list.play(self, quiet=quiet)
-    
+
     packing_list = sequence.get('packing_list')
     self.assertEqual('solved', packing_list.getCausalityState())
     invoice = packing_list.getCausalityRelatedValue()
@@ -281,7 +281,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     invoice_transaction  = invoice.getCausalityRelatedValue()
     self.assertNotEquals(invoice_transaction, None)
     self.assertEqual('solved', invoice_transaction.getCausalityState())
-    
+
   def test_AcceptQuantityDivergenceOnInvoiceWithStoppedPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """Accept divergence with stopped packing list"""
     if not run: return
@@ -445,7 +445,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           invoice_transaction_line_list = invoice_transaction.contentValues(
             portal_type=self.invoice_transaction_line_portal_type)
           self.assertEqual(3, len(invoice_transaction_line_list))
-          
+
           for line_id, line_source, line_dest, line_ratio in \
                   self.transaction_line_definition_list:
             for line in invoice_transaction.contentValues(
@@ -482,7 +482,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           )
         user = uf.getUserById('test_invoice_user').__of__(uf)
         newSecurityManager(None, user)
-                                                                            
+
   def test_01_TwoInvoicesFromTwoPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     This test was created for the following bug:
@@ -829,7 +829,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepCheckInvoiceIsNotDivergent
     stepCheckInvoiceIsSolved
     stepCheckInvoiceSplitted
-   
+
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
 
@@ -1066,7 +1066,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       stepAdoptPrevisionOnPackingList
       stepTic
       """)
-    
+
     sequence_list.play(self, quiet=quiet)
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
@@ -1090,7 +1090,7 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
   invoice_module_name = 'sale_invoice_module'
 
   login = TestAdvancedInvoice.login
-  
+
   PACKING_LIST_DEFAULT_SEQUENCE = \
   """
   stepCreateEntities

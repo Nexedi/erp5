@@ -105,11 +105,11 @@ def HTML(src,
          initial_header_level = initial_header_level,
          warnings = None,
          settings = {}):
-    """ render HTML from a reStructuredText string 
+    """ render HTML from a reStructuredText string
 
         - 'src'  -- string containing a valid reST document
 
-        - 'writer' -- docutils writer 
+        - 'writer' -- docutils writer
 
         - 'report_level' - verbosity of reST parser
 
@@ -118,15 +118,15 @@ def HTML(src,
         - 'input_encoding' - encoding of the reST input string
 
         - 'output_encoding' - encoding of the rendered HTML output
-        
+
         - 'report_level' - verbosity of reST parser
 
         - 'language_code' - docutils language
-        
+
         - 'initial_header_level' - level of the first header tag
-        
+
         - 'warnings' - will be overwritten with a string containing the warnings
-        
+
         - 'settings' - dict of settings to pass in to Docutils, with priority
 
     """

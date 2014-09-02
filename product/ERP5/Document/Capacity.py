@@ -38,7 +38,7 @@ class Capacity(XMLObject):
         Mix-in
     """
     meta_type = 'ERP5 Capacity'
-    
+
     isCapacity = ConstantGetter('isCapacity', value=True)
 
     # Declarative security

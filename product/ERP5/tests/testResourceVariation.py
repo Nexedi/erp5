@@ -207,32 +207,32 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_pdm')
-  
+
   def _testResourceDefaultConfig(self,resource):
     """
     Check variation API when creating a default resource.
     This should use what is defined in preferences.
     """
     # XXX Check default config
-    self.assertSameSet(['required_size', 
-                        'option_colour', 
+    self.assertSameSet(['required_size',
+                        'option_colour',
                         'individual_aspect'],
                         resource.getVariationBaseCategoryList())
-                        
+
     self.assertSameSet(['required_size/l',
-                        'required_size/m', 
-                        'required_size/s', 
-                        'required_size/xl', 
-                        'required_size/xxl', 
-                        'individual_aspect/a1', 
-                        'individual_aspect/a2', 
-                        'option_colour/blue', 
-                        'option_colour/green', 
-                        'option_colour/red'], 
+                        'required_size/m',
+                        'required_size/s',
+                        'required_size/xl',
+                        'required_size/xxl',
+                        'individual_aspect/a1',
+                        'individual_aspect/a2',
+                        'option_colour/blue',
+                        'option_colour/green',
+                        'option_colour/red'],
                         resource.getVariationRangeCategoryList())
-                        
+
     self.assertSameSet([], resource.getVariationCategoryList())
-    
+
   def _testResourceWithoutVariation(self,resource):
     """
     Check variation API when creating a resource and removing its variation
@@ -702,7 +702,7 @@ class TestResourceVariation(ResourceVariationTestCase):
               optional_variation_base_category='option_colour',
               individual_variation_base_category='individual_aspect')
     self._testResourceVariation(component)
-              
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestResourceVariation))

@@ -172,36 +172,36 @@ class ERP5UserManager(BasePlugin):
                                     password=credentials.get('password'),
                                     path=self.getPhysicalPath(),
                                     ignore_password=ignore_password)
-                           
+
         except _AuthenticationFailure:
           authentication_result = None
-       
+
         if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
-          # stop here, no authentication policy enabled 
+          # stop here, no authentication policy enabled
           # so just return authentication check result
           return authentication_result
-        
+
         # authentication policy enabled, we need person object anyway
         user_list = self.getUserByLogin(credentials.get('login'))
         if not user_list:
           # not an ERP5 Person object
           return None
         user = user_list[0]
-        
+
         if authentication_result is None:
           # file a failed authentication attempt
           user.notifyLoginFailure()
           return None
-        
+
         # check if password is expired
         if user.isPasswordExpired():
           user.notifyPasswordExpire()
           return None
-        
+
         # check if user account is blocked
         if user.isLoginBlocked():
           return None
-        
+
         return authentication_result
 
     #

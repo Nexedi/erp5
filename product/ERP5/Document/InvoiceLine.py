@@ -61,7 +61,7 @@ class InvoiceLine(DeliveryLine):
                       , PropertySheet.Price
                       , PropertySheet.VariationRange
                       )
-    
+
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent,
                                'newCellContent' )

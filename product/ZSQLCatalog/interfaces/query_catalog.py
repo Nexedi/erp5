@@ -215,7 +215,7 @@ class ISearchKeyCatalog(Interface):
          Search Key associated to each Query node
          in the Query tree registers the columns
          which are used (ex. to search) or provided
-         (ex. MATCH value for full text search, 
+         (ex. MATCH value for full text search,
          interleave expression or parameter in a
          UNION Query)
 

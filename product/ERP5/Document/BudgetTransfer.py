@@ -46,7 +46,7 @@ class BudgetTransfer(Supply):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
       )
-    
+
     # CMF Type Definition
     meta_type='ERP5 Budget Transfer'
     portal_type='Budget Transfer'

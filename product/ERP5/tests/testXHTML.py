@@ -83,7 +83,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
       for skin_folder_id in skin_folder_id_list:
         for field_path, field in skins_tool[skin_folder_id].ZopeFind(
-                  skins_tool[skin_folder_id], 
+                  skins_tool[skin_folder_id],
                   obj_metatypes=['ProxyField'], search_sub=1):
           template_field = field.getTemplateField(cache=False)
           if template_field is None:

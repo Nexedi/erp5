@@ -117,7 +117,7 @@ class CategoryBudgetVariation(BudgetVariation):
       context = budget_cell.getParentValue().getParentValue()
     elif self.isMemberOf('budget_variation/budget_line'):
       context = budget_cell.getParentValue()
-    
+
     uid_based_axis = False
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
@@ -194,7 +194,7 @@ class CategoryBudgetVariation(BudgetVariation):
     if found:
       return query_dict
     return dict()
-  
+
   def getBudgetVariationRangeCategoryList(self, context):
     """Returns the Variation Range Category List that can be applied to this
     budget.
@@ -207,14 +207,14 @@ class CategoryBudgetVariation(BudgetVariation):
     item_list_method = portal.portal_preferences.getPreference(
                           'preferred_category_child_item_list_method_id',
                           'getCategoryChildCompactLogicalPathItemList')
-    
+
     return getattr(portal.portal_categories._getOb(base_category),
                         item_list_method)(
                                 base=1,
                                 local_sort_id=('int_index',
                                                'translated_title'),
                                 checked_permission='View')
-    
+
 
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
     """Returns the Variation Range Category List that can be applied to this
@@ -228,7 +228,7 @@ class CategoryBudgetVariation(BudgetVariation):
     item_list_method = portal.portal_preferences.getPreference(
                           'preferred_category_child_item_list_method_id',
                           'getCategoryChildCompactLogicalPathItemList')
-    
+
     item_list_method_parameter_dict = dict(
           base=1,
           local_sort_id=('int_index', 'translated_title'),
@@ -242,7 +242,7 @@ class CategoryBudgetVariation(BudgetVariation):
           base_category = budget_variation_category
           item_list_method_parameter_dict['is_self_excluded'] = False
           break
-      
+
     return getattr(portal.portal_categories.unrestrictedTraverse(base_category),
                         item_list_method)(**item_list_method_parameter_dict)
 

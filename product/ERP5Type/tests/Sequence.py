@@ -54,7 +54,7 @@ def special_extract_tb(tb, limit = None):
         line = linecache.getline(filename, lineno)
         if line: line = line.strip()
         else: line = None
-        
+
         # display where we failed in the sequence
         if co == Sequence.play.func_code:
           if line is None:

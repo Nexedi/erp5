@@ -66,7 +66,7 @@ class SupplyChain(Path, XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getLastLink')
   def getLastLink(self):
     """
-      Return the SupplyLink representing the last ridge of the 
+      Return the SupplyLink representing the last ridge of the
       SupplyChain (if this one is correctly defined...).
     """
     # Result value
@@ -121,7 +121,7 @@ class SupplyChain(Path, XMLObject):
     """
     next_supply_link_list = self.getNextSupplyLinkList(current_supply_link)
     return [x for x in next_supply_link_list if x.isProductionSupplyLink()]
-    
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getNextProductionIndustrialPhaseList')
   def getNextProductionIndustrialPhaseList(self, current_supply_link):
@@ -167,7 +167,7 @@ class SupplyChain(Path, XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousProductionSupplyLinkList')
-  def getPreviousProductionSupplyLinkList(self, current_supply_link, 
+  def getPreviousProductionSupplyLinkList(self, current_supply_link,
                                           recursive=False, all=False,
                                           checked_link_list=None):
     """
@@ -180,7 +180,7 @@ class SupplyChain(Path, XMLObject):
     # Initialize checked_link_list parameter...
     if checked_link_list is None:
       checked_link_list = []
-    # Checked if we already tested this link 
+    # Checked if we already tested this link
     # to prevent infinite loop
     if current_supply_link in checked_link_list:
       raise SupplyChainError,\
@@ -213,7 +213,7 @@ class SupplyChain(Path, XMLObject):
       # Browse the previous link
       transformation_link_list.extend(
         self.getPreviousProductionSupplyLinkList(
-                                     previous_link, 
+                                     previous_link,
                                      recursive=recursive, all=all,
                                      checked_link_list=checked_link_list))
     # Return result
@@ -221,7 +221,7 @@ class SupplyChain(Path, XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousPackingListSupplyLinkList')
-  def getPreviousPackingListSupplyLinkList(self, current_supply_link, 
+  def getPreviousPackingListSupplyLinkList(self, current_supply_link,
                                            recursive=False, all=False,
                                            checked_link_list=None,
                                            movement=None):
@@ -235,7 +235,7 @@ class SupplyChain(Path, XMLObject):
     # Initialize checked_link_list parameter...
     if checked_link_list is None:
       checked_link_list = []
-    # Checked if we already tested this link 
+    # Checked if we already tested this link
     # to prevent infinite loop
     if current_supply_link in checked_link_list:
       raise SupplyChainError,\
@@ -291,7 +291,7 @@ class SupplyChain(Path, XMLObject):
   def getPreviousProductionIndustrialPhaseList(self, current_supply_link,
                                                all=False):
     """
-      Return recursively all previous industrial phase representing 
+      Return recursively all previous industrial phase representing
       a production.
     """
     return self.getPreviousIndustrialPhaseList(
@@ -303,7 +303,7 @@ class SupplyChain(Path, XMLObject):
                             'getPreviousPackingListIndustrialPhaseList')
   def getPreviousPackingListIndustrialPhaseList(self, current_supply_link):
     """
-      Return recursively all previous industrial phase representing 
+      Return recursively all previous industrial phase representing
       a packing list.
     """
     return self.getPreviousIndustrialPhaseList(
@@ -315,7 +315,7 @@ class SupplyChain(Path, XMLObject):
                             'test')
   def test(self, current_supply_link, movement):
     """
-      Test if the resource on the movement can be delivered by 
+      Test if the resource on the movement can be delivered by
       the previous supply link of the current one.
     """
     result = 0

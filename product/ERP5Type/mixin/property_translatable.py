@@ -75,7 +75,7 @@ class PropertyTranslatableBuiltInDictMixIn:
     return self._getTranslationDict()[(property_id, language)][0]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'isPropertyTranslated')  
+                          'isPropertyTranslated')
   def isPropertyTranslated(self, property_id, language):
     try:
       self._getTranslationDict()[(property_id, language)]

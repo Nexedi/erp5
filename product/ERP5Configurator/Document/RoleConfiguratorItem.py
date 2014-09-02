@@ -65,7 +65,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       portal_type_dict = {}
       # we may pass some override dynamic values from outside
-      # Example:we post 'group_id' and in column we have it then 
+      # Example:we post 'group_id' and in column we have it then
       # it will be replaced with value if not configuration file matters
       dynamic_values = dict(group_id = getattr(aq_base(self), 'group_id', None),
                             function_id = getattr(aq_base(self), 'function_id', None),

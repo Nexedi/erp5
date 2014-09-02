@@ -156,7 +156,7 @@ class Checker(URLOpener):
     except IOError, (errno, strerror):
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
-   
+
   def raise_error(self, error_key, field):
     raise IOError(error_key, field)
 

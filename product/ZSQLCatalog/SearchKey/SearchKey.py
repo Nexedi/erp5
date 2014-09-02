@@ -145,7 +145,7 @@ class SearchKey(object):
       without that operator.
 
       value (string)
-      
+
       Returns: 2-tuple of strings
         First element is the operator. None if there was no operator in value.
         Second element is the value without the operator.
@@ -181,7 +181,7 @@ class SearchKey(object):
                           comparison_operator):
     """
       Change search_value into a list of values, one or more logical operators,
-      and a comparison operator. If no default_logical_operator is given, 
+      and a comparison operator. If no default_logical_operator is given,
       'or' is used.
 
       search_value

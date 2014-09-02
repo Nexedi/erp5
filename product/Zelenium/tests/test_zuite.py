@@ -565,7 +565,7 @@ class ZuiteTests( unittest.TestCase ):
 
         top_level = []
         for test_id in _TEST_IDS:
-            filename = '%s.html' % test_id 
+            filename = '%s.html' % test_id
             expected.append( filename )
             top_level.append( filename )
 

@@ -145,7 +145,7 @@ class ActiveProcess(Base):
   security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
   def hasErrorActivity(self, **kw):
     """
-      Tells if some attached activities are in a error 
+      Tells if some attached activities are in a error
     """
     return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
 

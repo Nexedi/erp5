@@ -66,12 +66,12 @@ class SubversionError(Exception):
   """The base exception class for the Subversion interface.
   """
   pass
-  
+
 class SubversionInstallationError(SubversionError):
   """Raised when an installation is broken.
   """
   pass
-  
+
 class SubversionTimeoutError(SubversionError):
   """Raised when a Subversion transaction is too long.
   """
@@ -97,29 +97,29 @@ class SubversionSSLTrustError(SubversionError):
   """
   # Declarative Security
   security = ClassSecurityInfo()
-  
+
   def __init__(self, trust_dict = None):
     self._trust_dict = trust_dict
-    
+
   security.declarePublic('getTrustDict')
   def getTrustDict(self):
     return self._trust_dict
-  
+
 InitializeClass(SubversionSSLTrustError)
 ModuleSecurityInfo(__name__).declarePublic('SubversionSSLTrustError')
 
 try:
   import pysvn
-  
+
   class Callback:
     """The base class for callback functions.
     """
     def __init__(self, client):
       self.client = client
-  
+
     def __call__(self, *args):
       pass
-  
+
   class CancelCallback(Callback):
     def __call__(self):
       current_time = time.time()
@@ -127,14 +127,14 @@ try:
         raise SubversionTimeoutError, 'too long transaction'
         #return True
       return False
-  
+
   class GetLogMessageCallback(Callback):
     def __call__(self):
       message = self.client.getLogMessage()
       if message:
         return True, message
       return False, ''
-  
+
   class GetLoginCallback(Callback):
     def __call__(self, realm, username, may_save):
       user, password = self.client.getLogin(realm)
@@ -147,12 +147,12 @@ try:
       if isinstance(password, unicode):
         password = password.encode('utf-8')
       return True, user, password, False
-  
+
   class NotifyCallback(Callback):
     def __call__(self, event_dict):
       # FIXME: should accumulate information for the user
       pass
-  
+
   class SSLServerTrustPromptCallback(Callback):
     def __call__(self, trust_dict):
       if not self.client.trustSSLServer(trust_dict):
@@ -161,15 +161,15 @@ try:
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
       return True, 0x8, False
-    
+
   class SSLServerPromptCallback(Callback):
     def __call__(self):
       return
-    
+
   class SSLClientCertPromptCallback(Callback):
     def __call__(self):
       return
-    
+
   class SSLClientCertPasswordPromptCallback(Callback):
     def __call__(self):
       return
@@ -179,7 +179,7 @@ try:
   class Getter(Method):
     def __init__(self, key):
       self._key = key
-  
+
     def __call__(self, instance):
       value = getattr(instance._obj, self._key)
       if type(value) == type(u''):
@@ -203,10 +203,10 @@ try:
 
   class ObjectWrapper(Implicit):
     attribute_list = ()
-    
+
     def __init__(self, obj):
       self._obj = obj
-  
+
   class Status(ObjectWrapper):
     # XXX Big Hack to fix a bug
     __allow_access_to_unprotected_subobjects__ = 1
@@ -214,7 +214,7 @@ try:
     'is_copied', 'is_switched', 'prop_status', 'text_status', \
     'repos_prop_status', 'repos_text_status')
   initializeAccessors(Status)
-  
+
   class Entry(ObjectWrapper):
     attribute_list = ('checksum', 'commit_author', 'commit_revision', \
     'commit_time', 'conflict_new', 'conflict_old', 'conflict_work', \
@@ -227,13 +227,13 @@ try:
     attribute_list = ('kind', 'date', 'number')
   initializeAccessors(Revision)
 
-  
+
   class SubversionClient(Implicit):
     """This class wraps pysvn's Client class.
     """
     log_message = None
     timeout = 60 * 5
-    
+
     def __init__(self, container, **kw):
       self.client = pysvn.Client()
       self.client.set_auth_cache(0)
@@ -254,13 +254,13 @@ try:
 
     def getLogMessage(self):
       return self.log_message
-    
+
     def getLogin(self, realm):
       return self.aq_parent._getLogin(realm)
 
     def getTimeout(self):
       return self.timeout
-        
+
     def trustSSLServer(self, trust_dict):
       return self.aq_parent._trustSSLServer(trust_dict)
 
@@ -269,7 +269,7 @@ try:
 
     def getException(self):
       return self.exception
-    
+
     def checkin(self, path, log_message, recurse):
       try:
         return Revision(self.client.checkin(path,
@@ -281,7 +281,7 @@ try:
           raise excep
         else:
           raise error
-        
+
     def update(self, path):
       try:
         return [Revision(x) for x in self.client.update(path)]
@@ -291,9 +291,9 @@ try:
           raise excep
         else:
           raise error
-        
+
     def status(self, path, **kw):
-      # Since plain Python classes are not convenient in 
+      # Since plain Python classes are not convenient in
       # Zope, convert the objects.
       try:
         status_list = [Status(x) for x in self.client.status(path=path, **kw)]
@@ -303,11 +303,11 @@ try:
           raise excep
         else:
           raise error
-      # XXX: seems that pysvn return a list that is 
+      # XXX: seems that pysvn return a list that is
       # upside-down, we reverse it...
       status_list.reverse()
       return status_list
-    
+
     def diff(self, path, revision1=None, revision2=None):
       tmp_path = getTransactionalDirectory('SubversionClient.diff:tmp_dir')
       if revision1 and revision2:
@@ -316,10 +316,10 @@ try:
           revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
       else:
         return self.client.diff(tmp_path, url_or_path=path, recurse=False)
-    
+
     def revert(self, path, recurse=False):
       return self.client.revert(path, recurse)
-    
+
     def switch(self, path, url):
       return self.client.switch(path=path, url=url)
 
@@ -350,13 +350,13 @@ try:
         rev_log_dict['date'] = DateTime(rev_dict['date'])
         revision_log_list.append(rev_log_dict)
       return revision_log_list
-        
+
     def add(self, path):
       self.client.add(path=path, force=True)
 
     def resolved(self, path):
       return self.client.resolved(path=path)
-    
+
     def info(self, path):
       if not os.path.exists(path):
         raise ValueError, "Repository %s does not exist" % path
@@ -382,7 +382,7 @@ try:
       entry_dict['commit_revision'] = entry_dict['commit_revision'].number
       entry_dict['commit_time'] = DateTime(entry_dict['commit_time'])
       return entry_dict
-      
+
     def ls(self, path):
       try:
         dict_list = self.client.ls(url_or_path=path, recurse=False)
@@ -411,7 +411,7 @@ try:
 
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
-    
+
 except ImportError:
   from zLOG import LOG, WARNING
   LOG('Subversion', WARNING,

@@ -74,7 +74,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         Create an object in self.folder and return it.
       """
       return self.folder.newContent(portal_type='Folder')
-    
+
     def test_01_folderType(self):
       """
         Test if the present Folder class is the ERP5 version of Folder, not
@@ -95,7 +95,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(obj.getId(), '1')
       obj = self.newContent()
       self.assertEqual(obj.getId(), '2')
-    
+
     def test_03_customGenerateNewId(self):
       """
         Test that id_generator property is honored.
@@ -152,7 +152,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                     'Add portal content', roles=[], acquire=0)
       self._assertAllowedContentTypes(self.other_folder, [])
       self._assertAllowedContentTypes(self.folder, type_list)
-    
+
     def test_NewContentAndAllowedContentTypes(self):
       self._setAllowedContentTypesForFolderType(('Folder', ))
       self.assertRaises(ValueError, self.folder.newContent,
@@ -173,7 +173,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                      "test_upgradeObject", 'x',
                      'return [1]')
       return self.getPortal().portal_skins.custom.test_upgradeObject
-      
+
 
     def test_upgradeObjectClass(self):
       """ Test if it changes Object Class """
@@ -183,7 +183,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       from_class = obj.__class__
       to_class = self.folder.__class__
       test_script = self._createUpgradeObjectClassPythonScript()
-      result = self.folder.upgradeObjectClass(test_script, from_class, 
+      result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
       self.commit()
       self.assertEqual(self.folder[obj.getId()].__class__, to_class)

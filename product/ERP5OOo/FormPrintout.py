@@ -238,7 +238,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     strategy = self._createStrategy(content_type).__of__(self)
     printout = strategy.render(extra_context=extra_context)
     return self._oooConvertByFormat(printout, content_type,
-                                    extra_context, REQUEST, 
+                                    extra_context, REQUEST,
                                     format, batch_mode)
 
   security.declareProtected('View', '__call__')
@@ -969,7 +969,7 @@ class ODTStrategy(ODFStrategy):
 
   def _replaceNodeViaVariable(self, element_tree, field, iteration_index=0):
     """Replace text node via an ODF variable name.
-    <text:variable-set text:name="my_title" 
+    <text:variable-set text:name="my_title"
                     office:value-type="string">Title</text:variable-set>
     """
     field_id = field.id

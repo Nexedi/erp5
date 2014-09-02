@@ -116,10 +116,10 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     OOoDocument, PDFDocument, etc. to implement specific conversion methods.
 
   * TextDocument for text based documents. TextDocument has subclasses such
-    as Wiki to implement specific methods. 
+    as Wiki to implement specific methods.
     TextDocument itself has a subclass (XSLTDocument) which provides
     XSLT based analysis and transformation of XML content based on XSLT
-    templates. 
+    templates.
 
   Conversion should be achieved through the convert method and other methods
   of the conversion API (convertToBaseFormat, etc.).
@@ -149,7 +149,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   content    -   data which might be derived from document content
 
   If a certain property is defined in more than one source, it is set according to
-  preference order returned by a script 
+  preference order returned by a script
      Document_getPreferredDocumentMetadataDiscoveryOrderList
      (or any type-based version since discovery is type dependent)
 
@@ -185,7 +185,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   document.getSearchableReferenceList() returns
     [
      {'reference':' INV-12367'},
-     {'reference': 'INV-1112', 'version':'012}', 
+     {'reference': 'INV-1112', 'version':'012}',
      {'reference': 'AB-CC-DRK', 'version':'011', 'language': 'en'}
     ]
 
@@ -225,7 +225,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   such as ODF documents.
 
   Consistency checking:
-    Default implementation uses DocumentReferenceConstraint to check if the 
+    Default implementation uses DocumentReferenceConstraint to check if the
     reference/language/version triplet is unique. Additional constraints
     can be added if necessary.
 
@@ -247,10 +247,10 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   TODO:
     - move all implementation bits to MixIn classes
     - in the end, Document class should have zero code
-      and only serve as a quick and easy way to create 
-      new types of documents (one could even consider 
+      and only serve as a quick and easy way to create
+      new types of documents (one could even consider
       that this class should be trashed)
-    - 
+    -
   """
 
   meta_type = 'ERP5 Document'
@@ -332,7 +332,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
   def _getSearchableReferenceList(self, text):
     """
-      Extract all reference alike strings from text using for that a 
+      Extract all reference alike strings from text using for that a
       regular expression defined at system level preferences.
     """
     regexp = self.portal_preferences.getPreferredDocumentReferenceRegularExpression()
@@ -352,7 +352,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       tmp[key] = None
     for group, group_item_tuple in tmp.keys():
       result.append((group, dict(group_item_tuple)))
-    return result    
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):

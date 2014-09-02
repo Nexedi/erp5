@@ -1506,13 +1506,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   def test_15_CheckBuilderCanBeCalledTwiceSafely(self):
     """
-    Builder design should allows to call the build method as many times as we 
-    want. Make sure that we will not have duplicated packing list if build is 
+    Builder design should allows to call the build method as many times as we
+    want. Make sure that we will not have duplicated packing list if build is
     called several times.
     """
     delivery_builder = getattr(self.getPortalObject().portal_deliveries,
                                self.delivery_builder_id)
- 
+
     def doNothing(self, *args, **kw):
       pass
     original_delivery_builder_build =  delivery_builder.__class__.build

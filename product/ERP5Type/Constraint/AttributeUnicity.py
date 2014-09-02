@@ -53,7 +53,7 @@ class AttributeUnicity(PropertyExistence):
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
-      We will make sure that each non None constraint_definition is 
+      We will make sure that each non None constraint_definition is
       satisfied (unicity)
       This Constraint use portal_catalog
     """

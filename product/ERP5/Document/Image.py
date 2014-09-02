@@ -290,9 +290,9 @@ class Image(TextConvertableMixin, File, OFSImage):
     try:
       mime, image_data = self.getConversion(**kw)
     except KeyError:
-      # we need to convert string representation (i.e. display=small) to a 
+      # we need to convert string representation (i.e. display=small) to a
       # pixel (number of it = 128x128)
-      kw['image_size'] = image_size    
+      kw['image_size'] = image_size
       display = kw.pop('display', None)
       mime, image = self._makeDisplayPhoto(**kw)
       image_data = image.data
@@ -375,7 +375,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     width, height = image_size
     base, ext = splitext(self.id)
     id = '%s_%s_%s.%s'% (base, width, height, ext,)
-    image = OFSImage(id, self.getTitle(), 
+    image = OFSImage(id, self.getTitle(),
                      self._getDisplayData(format, quality, resolution,
                                                             frame, image_size))
     return image.content_type, aq_base(image)

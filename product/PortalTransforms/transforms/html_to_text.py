@@ -23,7 +23,7 @@ def register():
                        ('<script [^>]>.*</script>(?im)', ' '),
                        ('<style [^>]>.*</style>(?im)', ' '),
                        ('<head [^>]>.*</head>(?im)', ' '),
-                       
+
                        # added for ERP5, we want to transform <br/> in newlines
                        ('<br\s*/?>(?im)', '\n'),
 

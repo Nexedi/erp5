@@ -400,7 +400,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {column: '2008/02/02 10:10:10 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='is', date=None), operator='and'),
                  {column: None}, check_search_text=False)
-        
+
   def test_DateTimeKey(self):
     # Try multiple timezones
     self._testDateTimeKey('date', 'UTC')
@@ -494,7 +494,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%"a" OR "b"%'), operator='and'),
                  {'keyword': '"\\"a\\" OR \\"b\\""'})
     # This example introduces impossible-to-merge search text criterion, which
-    # is allowed as long as 
+    # is allowed as long as
     reference_query = ReferenceQuery(
         ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
         ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'),

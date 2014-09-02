@@ -282,7 +282,7 @@ class Category(Folder):
                               are not included.
                               DEPRECATED, use filter_node=1 if you don't want
                               to display categories having childs.
-          
+
           is_self_excluded  - if set to 1, exclude this category from the list
 
           sort_on, sort_order - the same semantics as ZSQLCatalog
@@ -408,7 +408,7 @@ class Category(Folder):
       given list of base categories. Uses getTitleOrId as default method
       """
       return self.getCategoryChildItemList(recursive = recursive, display_id='title_or_id', base=base, **kw)
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                        'getCategoryChildTitleAndIdItemList')
     def getCategoryChildTitleAndIdItemList(self, recursive=1, base=0, **kw):
@@ -429,7 +429,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                            display_id='compact_title',
                                            base=base, **kw)
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                         'getCategoryChildTranslatedCompactTitleItemList')
     def getCategoryChildTranslatedCompactTitleItemList(self, recursive=1, base=0, **kw):
@@ -451,7 +451,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                            display_id='logical_path',
                                            base=base, **kw)
-    
+
     def getCategoryChildTranslatedLogicalPathItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -485,7 +485,7 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive=recursive,
                                            display_id='compact_logical_path',
                                            base=base, **kw)
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                      'getCategoryChildIndentedTitleItemList')
     def getCategoryChildIndentedTitleItemList(self,
@@ -583,13 +583,13 @@ class Category(Folder):
       if not cache:
         return _renderCategoryChildItemList(
                       recursive=recursive, base=base, **kw)
-      
+
       # If checked_permission is specified, we include the username in the
       # cache key
       username = None
       if 'checked_permission' in kw:
         username = str(getSecurityManager().getUser())
-        
+
       # Some methods are language dependent so we include the language in the
       # key
       localizer = getToolByName(self, 'Localizer')
@@ -672,7 +672,7 @@ class Category(Folder):
       if strict_membership:
         sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
                    'AND %s.category_strict_membership = 1)' % \
-                                 (table, self.getUid(), table, 
+                                 (table, self.getUid(), table,
                                   base_category.getBaseCategoryUid(), table)
       else:
         sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
@@ -684,7 +684,7 @@ class Category(Folder):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
     asSqlExpression = asSQLExpression
-  
+
     # A Category's categories is self
 
 
@@ -701,11 +701,11 @@ class Category(Folder):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
-        Keywords parameters : 
+        Keywords parameters :
          - strict_membership:  if we want strict membership checking
-         - strict : alias for strict_membership (deprecated but still here for 
+         - strict : alias for strict_membership (deprecated but still here for
                     skins backward compatibility. )
-         
+
       """
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       if strict_membership:
@@ -821,7 +821,7 @@ class BaseCategory(Category):
       #  sql_text += ' OR %s' % o.asSQLExpression()
       return sql_text
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategoryId')
     def getBaseCategoryId(self):
       """
@@ -831,7 +831,7 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().id
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategoryUid')
     def getBaseCategoryUid(self):
       """
@@ -841,7 +841,7 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().getUid()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategoryValue')
     def getBaseCategoryValue(self):
       """
@@ -879,13 +879,13 @@ class BaseCategory(Category):
 
           local_sort_method - When using the default preorder traversal, use
                               this function to sort objects of the same depth.
-          
+
           local_sort_id     - When using the default preorder traversal, sort
                               objects of the same depth by comparing their
                               'local_sort_id' property. local_sort_id can be a
                               list, in this case properties are compared in the
                               same order than this list.
-          
+
           Renderer parameters are also supported here.
 
       """
@@ -911,7 +911,7 @@ class BaseCategory(Category):
         # sort objects at the current level
         child_value_list = list(child_value_list)
         child_value_list.sort(local_sort_method)
-      
+
       if recursive:
         for c in child_value_list:
           value_list.extend(c.getCategoryChildValueList(recursive=1,

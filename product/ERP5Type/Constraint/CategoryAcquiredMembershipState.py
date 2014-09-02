@@ -34,7 +34,7 @@ class CategoryAcquiredMembershipState(Constraint):
   """
     This method check the acquired category membership is in a
     valid workflow state.
-    For example we can check if every Order has 
+    For example we can check if every Order has
     a source validated.
     Configuration exemple:
     { 'id'            : 'source',

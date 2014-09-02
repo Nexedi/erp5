@@ -45,7 +45,7 @@ class CategoryMembershipStateConstraint(ConstraintMixin):
 
   _message_id_tuple = ('message_different_state',)
 
-  def _getObjectCategoryMembershipList(self, obj, base_category, 
+  def _getObjectCategoryMembershipList(self, obj, base_category,
                                        portal_type_list):
     """
     Calculate the object category membership list.

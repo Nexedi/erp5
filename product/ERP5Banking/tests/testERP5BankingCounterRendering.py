@@ -194,9 +194,9 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     # Counter rendering has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
 
     self.counter_rendering = self.counter_rendering_module.newContent(
-                                    id='counter_rendering_1', 
-                                    portal_type='Counter Rendering', 
-                                    source_value=self.counter_vault, 
+                                    id='counter_rendering_1',
+                                    portal_type='Counter Rendering',
+                                    source_value=self.counter_vault,
                                     description='test',
                                     source_total_asset_price=52400.0)
     # execute tic
@@ -468,7 +468,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetInventory(self, 
+  def stepResetInventory(self,
                sequence=None, sequence_list=None, **kwd):
     node = self.counter_vault
     line_list = self.line_list

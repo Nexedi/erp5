@@ -60,7 +60,7 @@ class VariatedMixin:
   isRADContent = 1 # for 'property_sheets'
   property_sheets = (PropertySheet.VariationRange, )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, omit_optional_variation=0,
       omit_option_base_category=None, omit_individual_variation=0):
@@ -84,13 +84,13 @@ class VariatedMixin:
       vbcl = [x for x in vbcl if x not in option_base_category_list]
     else:
       vbcl.extend(self.getOptionalVariationBaseCategoryList())
-      
+
     if omit_individual_variation == 0:
       vbcl.extend(self.getIndividualVariationBaseCategoryList())
-      
+
     return vbcl
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             '_getVariationCategoryList')
   def _getVariationCategoryList(self, base_category_list = ()):
     if base_category_list is ():
@@ -98,7 +98,7 @@ class VariatedMixin:
 #       base_category_list = self.getVariationRangeBaseCategoryList()
     return self.getAcquiredCategoryMembershipList(base_category_list, base=1)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryList')
   def getVariationCategoryList(self, base_category_list=(),
       omit_optional_variation=0, omit_option_base_category=None):
@@ -114,7 +114,7 @@ class VariatedMixin:
     return self._getVariationCategoryList(
                                   base_category_list=base_category_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryItemList')
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
       display_id='logical_path', display_base_category=1,
@@ -143,7 +143,7 @@ class VariatedMixin:
     for base_category in base_category_list:
       variation_category_list = self._getVariationCategoryList(
                                        base_category_list=[base_category])
-      
+
       category_list = []
       object_list = []
       for variation_category_path in variation_category_list:
@@ -175,29 +175,29 @@ class VariatedMixin:
                              display_id='title', **kw).\
                                                render(object_list))
     return variation_category_item_list
-  
+
   # XXX Is it used ?
-#   def getVariationCategoryTitleOrIdItemList(self, base_category_list=(), 
+#   def getVariationCategoryTitleOrIdItemList(self, base_category_list=(),
 #                                             base=1, **kw):
 #     """
 #     Returns a list of tuples by parsing recursively all categories in a
 #     given list of base categories. Uses getTitleOrId as method
 #     """
 #     return self.getVariationCategoryItemList(
-#                    display_id='title_or_id', 
+#                    display_id='title_or_id',
 #                    base_category_list=base_category_list, base=base, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             '_setVariationCategoryList')
   def _setVariationCategoryList(self, node_list, base_category_list=()):
     if base_category_list is ():
       base_category_list = self.getVariationBaseCategoryList()
     self._setCategoryMembership(base_category_list,node_list,base=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'setVariationCategoryList')
   def setVariationCategoryList(self, node_list, base_category_list=()):
-    self._setVariationCategoryList(node_list, 
+    self._setVariationCategoryList(node_list,
                                    base_category_list=base_category_list)
     self.reindexObject()
 
@@ -208,14 +208,14 @@ class VariatedMixin:
       """
       Returns possible variation base_category ids.
       """
-      # Get a portal method which defines a list of 
+      # Get a portal method which defines a list of
       # variation base category
       return self.getPortalVariationBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, base=1, 
-                                            display_id='getTitle', 
+  def getVariationRangeBaseCategoryItemList(self, base=1,
+                                            display_id='getTitle',
                                             current_category=None):
       """
         Returns possible variations of the resource
@@ -249,7 +249,7 @@ class VariatedMixin:
       result = []
       for base_category in variation_base_category_list:
         bc = self.portal_categories.resolveCategory(base_category)
-        result.extend(Renderer(display_base_category=0, 
+        result.extend(Renderer(display_base_category=0,
                                display_none_category=0, base=1,
                                display_id=display_id).render([bc]))
       return result
@@ -329,7 +329,7 @@ class VariatedMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeCategoryItemList')
-  def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
+  def getVariationRangeCategoryItemList(self, base_category_list=(), base=1,
                                         root=1,
                                         display_method_id='getCategoryChildLogicalPathItemList',
                                         display_base_category=1,

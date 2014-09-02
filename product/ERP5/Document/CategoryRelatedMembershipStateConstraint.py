@@ -40,12 +40,12 @@ class CategoryRelatedMembershipStateConstraint(CategoryMembershipStateConstraint
   meta_type = 'ERP5 Category Related Membership State Constraint'
   portal_type = 'Category Related Membership State Constraint'
 
-  def _getObjectCategoryMembershipList(self, obj, base_category, 
+  def _getObjectCategoryMembershipList(self, obj, base_category,
                                        portal_type_list):
     """
     Calculate the object category membership list.
     This method was created to allow CategoryAcquiredMembershipStateConstraint
     class to simply surcharge it.
     """
-    return obj._getRelatedValueList(base_category, 
+    return obj._getRelatedValueList(base_category,
                                     portal_type=portal_type_list)

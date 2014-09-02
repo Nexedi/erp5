@@ -57,13 +57,13 @@ class StringAttributeMatch(PropertyExistence):
       for attribute_name, regular_expression in\
                       self.constraint_definition.items():
         error_message = None
-        # If property does not exist, error will be raised by 
+        # If property does not exist, error will be raised by
         # PropertyExistence Constraint.
         current_value = object.getProperty(attribute_name)
         regexp = re.compile(regular_expression)
         if (current_value is not None) and \
             (regexp.match(current_value) is None):
-    
+
           # Generate error
           error_list.append(self._generateError(object,
             self._getMessage('message_attribute_does_not_match'),

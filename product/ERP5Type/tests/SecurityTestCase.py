@@ -56,7 +56,7 @@ class AssertPermissionMethod(object):
   """
   def __init__(self, permission_name):
     self._permission_name = permission_name
-  
+
   def __get__(self, instance, cls=None):
     self._instance = instance
     return self
@@ -91,7 +91,7 @@ class AssertNoPermissionMethod(object):
   """
   def __init__(self, permission_name):
     self._permission_name = permission_name
-  
+
   def __get__(self, instance, cls=None):
     self._instance = instance
     return self
@@ -119,7 +119,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     self.login()
     self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
-  
+
   def tearDown(self):
     """Clean up for next test.
     """
@@ -138,7 +138,7 @@ class SecurityTestCase(ERP5TypeTestCase):
       user = uf.getUserById(username)
       self.assertNotEquals(user, None, 'No user %s' % username)
       newSecurityManager(None, user.__of__(uf))
-  
+
   # Permission methods
   failIfUserCanViewDocument = AssertNoPermissionMethod(
                                      Permissions.View)
@@ -270,6 +270,6 @@ class SecurityTestCase(ERP5TypeTestCase):
                   user.getRolesInContext(document)))
     finally:
       setSecurityManager(sm)
-  
+
   assertUserHaveRoleOnDocument = failUnlessUserHaveRoleOnDocument
 

@@ -75,7 +75,7 @@ class Getter(Accessor):
   Returns a constant value, either by method call
   or through type cast (ex. boolean, int, float).
   This method can be useful to turn existing constant
-  properties of classes into methods, yet retaining 
+  properties of classes into methods, yet retaining
   compatibility.
   """
   _need__name__ = 1

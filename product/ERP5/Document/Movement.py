@@ -177,7 +177,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       synchronized
 
     TODO:
-    - consider creating a class GeneratedMovement 
+    - consider creating a class GeneratedMovement
       and move some superfluous code to it
   """
   meta_type = 'ERP5 Movement'
@@ -247,7 +247,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       base_unit_price = operand_dict.get('base_unit_price', None)
       return base_unit_price
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
           'getPriceCalculationOperandDict')
   def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
     """Return a dict object which contains operands used for price
@@ -255,14 +255,14 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     because this will invoke a custom script at the end. The only
     assumption is that the dict must contain a key 'price'
     which represents the final result of the price calculation.
-    
+
     The purpose is to obtain descriptive information to notify the user
     of how a price is calculated in details, in particular, for invoices
     and quotations. So a script which is eventually called should provide
     all values required for generating such reports (e.g. a price,
     a price without a discount, and a discount).
     """
-    # First, try a type-based method, and if not present, use 
+    # First, try a type-based method, and if not present, use
     # the good-old-days way (which only returns a final result).
     if context is None:
       context = self
@@ -276,7 +276,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       operand_dict = unrestricted_apply(method, kw=kw)
       if operand_dict is None:
         return default
-      assert 'price' in operand_dict 
+      assert 'price' in operand_dict
       return operand_dict
     return {'price': context.Movement_lookupPrice()}
 
@@ -333,7 +333,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       LOG('ERP5', WARNING, msg)
       context = default
       default = None
-    
+
     tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
     result = self._getTotalPrice(default=default, context=tmp_context, fast=fast, **kw)
     method = self._getTypeBasedMethod('convertTotalPrice')
@@ -390,7 +390,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       if source_asset_price :
         return source_asset_price * - quantity
     return None
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceInventoriatedTotalAssetDebit')
   def getSourceInventoriatedTotalAssetDebit(self) :
@@ -498,7 +498,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
   def getDivergenceList(self):
     """
-    Return a list of messages that contains the divergences 
+    Return a list of messages that contains the divergences
     """
     divergence_list = []
     for simulation_movement in self.getDeliveryRelatedValueList():
@@ -536,7 +536,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       return self.getRootDeliveryValue()
     except AttributeError:
       return None
- 
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationTitle')
   def getExplanationTitle(self, default=''):
@@ -568,7 +568,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       causality has already a causality
     """
     return self.getExplanationValue().getRootCausalityValueList()
-    
+
 
   # Simulation
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -745,7 +745,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetDebit' )
   def getDestinationAssetDebit(self):
@@ -783,7 +783,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
-  
+
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setSourceAssetDebit' )
   def setSourceAssetDebit(self, source_debit):
@@ -933,13 +933,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     Placeholder method called when indexing a movement.
 
-    It can be overloaded to generate multiple movements 
+    It can be overloaded to generate multiple movements
     from a single one.
-    It is used for cataloging a movement multiple time in 
+    It is used for cataloging a movement multiple time in
     the movement/stock tables.
 
     Ex: a movement have multiple destinations.
-    asMovementList returns a list a movement context with different 
+    asMovementList returns a list a movement context with different
     single destination.
     """
     return (self, )

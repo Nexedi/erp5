@@ -103,7 +103,7 @@ class BadTransformWildcardOutput(BaseTransform):
     implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
-    
+
 class TestEngine(ATSiteTestCase):
 
     def afterSetUp(self):
@@ -165,9 +165,9 @@ class TestEngine(ATSiteTestCase):
         self.engine.registerTransform(HtmlToTextWithEncoding())
         data = self.engine.convertTo('text/plain', self.data, mimetype="text/html")
         self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
-        # HtmlToTextWithEncoding. Now None is the right 
+        # HtmlToTextWithEncoding. Now None is the right
         #self.assertEqual(data.getMetadata()['encoding'], 'ascii')
-        # XXX the new algorithm is choosing html_to_text instead of 
+        # XXX the new algorithm is choosing html_to_text instead of
         self.assertEqual(data.getMetadata()['encoding'], None)
         self.assertEqual(data.name(), "text/plain")
 
@@ -185,7 +185,7 @@ class TestEngine(ATSiteTestCase):
     def testPolicy(self):
         mt = 'text/x-html-safe'
         data = '<script>this_is_unsafe();</script><p>this is safe</p>'
-        
+
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
         self.assertEqual(cache.getData(), '<p>this is safe</p>')
 

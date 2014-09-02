@@ -106,10 +106,10 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     self.failIfDifferentSet(checkbook_object_list, [])
     # check the inventory of the bank account
     self.assertEqual(self.simulation_tool.getCurrentInventory(
-                   payment=self.bank_account_1.getRelativeUrl(), 
+                   payment=self.bank_account_1.getRelativeUrl(),
                    resource=self.currency_1.getRelativeUrl()), 67500)
     self.assertEqual(self.simulation_tool.getFutureInventory(
-                   payment=self.bank_account_1.getRelativeUrl(), 
+                   payment=self.bank_account_1.getRelativeUrl(),
                    resource=self.currency_1.getRelativeUrl()), 67500)
 
   def stepCreateTravelerCheckPurchase(self, sequence=None, sequence_list=None, **kwd):
@@ -159,15 +159,15 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     state = self.traveler_check_purchase.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.traveler_check_purchase, 
-                                   'deliver_action', 
+    self.workflow_tool.doActionFor(self.traveler_check_purchase,
+                                   'deliver_action',
                                    wf_id='traveler_check_purchase_workflow')
     # get state of cash sorting
     state = self.traveler_check_purchase.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_purchase, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_purchase,
                             name='history', wf_id='traveler_check_purchase_workflow')
     self.assertEqual(len(workflow_history), 3)
     self.assertEqual(self.traveler_check_purchase.movement.getQuantity(), 32500)

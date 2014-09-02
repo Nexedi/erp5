@@ -45,7 +45,7 @@ class DomainTool(BaseTool):
         predicate trees
     """
     id = 'portal_domains'
-    meta_type = 'ERP5 Domain Tool'    
+    meta_type = 'ERP5 Domain Tool'
     portal_type     = 'Domain Tool'
     allowed_types   = ('ERP5 Domain', )
 
@@ -55,7 +55,7 @@ class DomainTool(BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'manage_overview')
     manage_overview = DTMLFile('explainDomainTool', _dtmldir)
 
-    # XXX FIXME method should not be public 
+    # XXX FIXME method should not be public
     # (some users are not able to see resource's price)
     security.declarePublic('searchPredicateList')
     def searchPredicateList(self, *args, **kw):
@@ -72,7 +72,7 @@ class DomainTool(BaseTool):
       # It is not a correct name, as pointed out by Jerome. But instead of
       # searching for another name, it would be much better to just remove it.
       """
-      Search all predicates which corresponds to this particular 
+      Search all predicates which corresponds to this particular
       context.
 
       - sort_method parameter should not be used, if possible, because
@@ -83,11 +83,11 @@ class DomainTool(BaseTool):
         important predicate is the first one in the list.
 
       - ignored_category_list:  this is the list of category that we do
-        not want to test. For example, we might want to not test the 
+        not want to test. For example, we might want to not test the
         destination or the source of a predicate.
 
       - tested_base_category_list:  this is the list of category that we do
-        want to test. For example, we might want to test only the 
+        want to test. For example, we might want to test only the
         destination or the source of a predicate.
 
       - the acquired parameter allows to define if we want to use
@@ -265,18 +265,18 @@ class DomainTool(BaseTool):
           result_list.sort(cmp=sort_method)
       return result_list
 
-    # XXX FIXME method should not be public 
+    # XXX FIXME method should not be public
     # (some users are not able to see resource's price)
     security.declarePublic('generateMappedValue')
     def generateMappedValue(self, context, test=1, predicate_list=None, **kw):
       """
-      We will generate a mapped value with the list of all predicates 
-      found. 
+      We will generate a mapped value with the list of all predicates
+      found.
       Let's say we have 3 predicates (in the order we want) like this:
       Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
       Predicate 2   [ base_price2, quantity2 ,   ,   ,    ,    , ]
       Predicate 3   [ base_price3, quantity3 ,   ,   ,    ,    , ]
-      Our generated MappedValue will have the base_price of the 
+      Our generated MappedValue will have the base_price of the
       predicate1, and the quantity of the Predicate2, because Predicate
       1 is the first one which defines a base_price and the Predicate2
       is the first one wich defines a quantity.
@@ -293,13 +293,13 @@ class DomainTool(BaseTool):
         mapped_value = newTempSupplyCell(self.getPortalObject(),
                                            'new_mapped_value')
         mapped_value_property_dict = {}
-        # Look for each property the first predicate which defines the 
+        # Look for each property the first predicate which defines the
         # property
         for predicate in predicate_list:
           getMappedValuePropertyList = getattr(predicate,
             'getMappedValuePropertyList', None)
           # searchPredicateList returns a list of any kind of predicate, which
-          # includes predicates not containing any mapped value (for exemple, 
+          # includes predicates not containing any mapped value (for exemple,
           # domains). In such case, it has no meaning to handle them here.
           # A better way would be to tell catalog not to provide us with those
           # extra object, but there is no simple way (many portal types inherit
@@ -315,14 +315,14 @@ class DomainTool(BaseTool):
         mapped_value.edit(**mapped_value_property_dict)
       return mapped_value
 
-    # XXX FIXME method should not be public 
+    # XXX FIXME method should not be public
     # (some users are not able to see resource's price)
     security.declarePublic('generateMultivaluedMappedValue')
     def generateMultivaluedMappedValue(self, context, test=1,
         predicate_list=None, explanation_only=0, **kw):
       """
-      We will generate a mapped value with the list of all predicates 
-      found. 
+      We will generate a mapped value with the list of all predicates
+      found.
       Let's say we have 3 predicates (in the order we want) like this:
       Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
       Predicate 2   [ base_price2, additional_price2 ,   ,   ,    ,    , ]
@@ -392,5 +392,5 @@ class DomainTool(BaseTool):
           if domain is _MARKER: return default
           raise KeyError, subdomain
       return domain
-  
+
 InitializeClass(DomainTool)

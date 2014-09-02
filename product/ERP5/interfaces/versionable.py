@@ -41,8 +41,8 @@ class IVersionable(Interface):
     """
     Returns the the latest version with the latest revision
     of the current document which the current user is
-    allows to view. If the current document implements 
-    ITranslatable, the latest version in the original 
+    allows to view. If the current document implements
+    ITranslatable, the latest version in the original
     language is returned, unless the document also exists
     with the same version in the user preferred language.
 
@@ -56,7 +56,7 @@ class IVersionable(Interface):
     Returns the list of documents with same reference, same portal_type
     but different version or language.
 
-    language -- optional parameter to specify a language 
+    language -- optional parameter to specify a language
                 for documents which also implement ITranslatable
 
     version -- optional parameter to specify a version for

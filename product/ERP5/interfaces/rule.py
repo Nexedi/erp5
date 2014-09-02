@@ -33,7 +33,7 @@ from Products.ERP5.interfaces.movement_collection_updater import IMovementCollec
 
 class IRule(IMovementCollectionUpdater):
   """Rule interface specification
-  
+
   Documents which implement IRule can be used to
   expand applied rules in ERP5 simulation.
   """

@@ -42,17 +42,17 @@ class ICategoryAccessProvider(Interface):
     """
     Returns the membership for this category, with acquired membership.
 
-      spec -- 
+      spec --
 
       filter --
 
-      base -- 
+      base --
 
-      keep_default -- 
-  
+      keep_default --
+
       checked_permission --
- 
-      kw -- 
+
+      kw --
     """
 
   def _getCategoryMembershipList(category, spec=(), filter=None, portal_type=(), base=0,

@@ -88,7 +88,7 @@ class Predicate(XMLObject):
   zope.interface.implements( interfaces.IPredicate, )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
-  def test(self, context, tested_base_category_list=None, 
+  def test(self, context, tested_base_category_list=None,
            strict_membership=0, isMemberOf=None, **kw):
     """
       A Predicate can be tested on a given context.

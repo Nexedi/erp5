@@ -60,8 +60,8 @@ IMMOBILISATION_FACULTATIVE_PROPERTY_LIST = [
               ("extra_cost_price",    "extra_cost_price", "Extra Costs Price"),
               ("durability", "durability", "Durability"),
              ]
-                                       
-                                       
+
+
 
 class ImmobilisationMovement(Movement, XMLObject):
   """
@@ -92,7 +92,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                       , PropertySheet.Amortisation
                       )
 
-                      
+
   def _checkImmobilisationConsistency(self, fixit=0, mapped_value_property_list=(), to_translate=1):
     """
     If to_translate is set, the method may return a dictionary {'msg':'...', 'mapping':{} }
@@ -113,7 +113,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                 )
                      )
       return errors
-    
+
     def checkValue(variable,
                    forbidden_value_list=None,
                    authorized_value_list=None,
@@ -129,7 +129,7 @@ class ImmobilisationMovement(Movement, XMLObject):
         if variable not in authorized_value_list:
           return [ tuple([relative_url] + error_message) ]
       return []
-      
+
     errors = []
     # Check absolutely needed values
     method = self.getAmortisationMethod() or NO_CHANGE_METHOD
@@ -167,14 +167,14 @@ class ImmobilisationMovement(Movement, XMLObject):
       return errors
 
     item_list = self.getAggregateValueList()
-    
+
     if len(item_list) == 0:
       # No item aggregated, so the movement is considered as valid
       #errors.append([self.getRelativeUrl(),
       #               "Property value inconsistency", 0,
       #               "No item aggregated"])
       return errors
-    
+
     # Check values needed if the amortisation method is not continuous
     check_uncontinuous = 0
     if self.getStopDate() is not None:
@@ -214,7 +214,7 @@ class ImmobilisationMovement(Movement, XMLObject):
       errors.extend(checkValuesAreNotNone(IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST))
       property_list = self.getUncontinuousNeededSpecificParameterListForItem(None)
       errors.extend(checkValuesAreNotNone(property_list))
-      
+
     # Do not check facultative properties (of course)
 
     # Check owner change for each aggregated item
@@ -223,8 +223,8 @@ class ImmobilisationMovement(Movement, XMLObject):
     # It is not compatible with a validity workflow approach since the causalities are too numerous
     # The actual check is done in ImmobilisableItem.getImmobilisationPeriodList()
     return errors
-      
-      
+
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkImmobilisationConsistency')
   def checkImmobilisationConsistency(self, *args, **kw):
@@ -296,7 +296,7 @@ class ImmobilisationMovement(Movement, XMLObject):
       parameter_dict = new_parameter_dict
     return parameter_dict
 
-      
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getActualAmortisationMethodForItem')
   def getActualAmortisationMethodForItem(self, item, **kw):
@@ -307,7 +307,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     method = self.getAmortisationMethod()
     if method not in (None, "", NO_CHANGE_METHOD):
       return method
-    
+
     stop_date = self.getStopDate()
     if stop_date is None or item is None:
       return None
@@ -333,8 +333,8 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       split_char = '|',
                                                       split_qty = 3,
                                                       **kw)["needed_specific_parameter_list"]
-                                                      
-  
+
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getUncontinuousNeededSpecificParameterListForItem')
   def getUncontinuousNeededSpecificParameterListForItem(self, item, **kw):
@@ -348,8 +348,8 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       split_char = '|',
                                                       split_qty = 3,
                                                       **kw)["uncontinuous_needed_specific_parameter_list"]
-                                                      
-                                                          
+
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getFacultativeSpecificParameterListForItem')
   def getFacultativeSpecificParameterListForItem(self, item, **kw):
@@ -363,7 +363,7 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       split_qty = 3,
                                                       **kw)["facultative_specific_parameter_list"]
 
-                                                                                                            
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isUsingAmortisationMethod')
   def isUsingAmortisationMethod(self, method):

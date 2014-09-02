@@ -69,7 +69,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         reference='my_ref',
         use='sale',
     )
-    
+
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -115,7 +115,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    
+
     individual_variation_dict_list = [
         {'variation_base_category': 'ball_size', 'title': 's4', },
         {'variation_base_category': 'ball_size', 'title': 's5', },
@@ -159,7 +159,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    
+
     product.setVariationBaseCategoryList(['ball_size', 'colour'])
     product.setVariationCategoryList(
         ['ball_size/x4', 'ball_size/x5', 'colour/black', 'colour/white'],
@@ -217,7 +217,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    
+
     product.setVariationBaseCategoryList(['colour'])
     product.setVariationCategoryList(['colour/black', 'colour/white'])
     individual_variation_dict_list = [
@@ -372,7 +372,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         reference='0123456789',
         use='sale',
     )
-    
+
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -403,7 +403,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2000.4,
         purchase_supply_line_base_price=1000.4,
     )
-    
+
     product.setVariationBaseCategoryList(['ball_size', 'colour'])
     product.setVariationCategoryList(
         ['ball_size/x4', 'ball_size/x5', 'colour/black', 'colour/white'],

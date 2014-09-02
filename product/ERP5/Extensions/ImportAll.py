@@ -22,7 +22,7 @@ def PortalRoot_importAll(self, REQUEST=None):
       if base_id not in folder_list and base_id not in portal_list:
         folder_list.append(base_id)
     elif file_name.find('.zexp')>0:
-      short_name = file_name[:-len('.zexp')] 
+      short_name = file_name[:-len('.zexp')]
       if short_name in allowed_portal:
         portal_list.append(short_name)
 

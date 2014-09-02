@@ -46,11 +46,11 @@ class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
   to describe business processes in the area of trade, payroll
   and production. Processes consists of a collection of Business Link
-  which define an arrow between a 'predecessor' trade_state and a 
+  which define an arrow between a 'predecessor' trade_state and a
   'successor' trade_state, for a given trade_phase_list.
 
   Core concepts in BusinessProcess are the notions of "explanation".
-  Explanation represents the subtree of a simulation tree of all 
+  Explanation represents the subtree of a simulation tree of all
   simulation movements related to an applied rule, a delivery line,
   a delivery, etc.
 
@@ -65,9 +65,9 @@ class BusinessProcess(Path, XMLObject):
       portal_simulation/2/sm1
 
   Business Process completion, dates, etc. are calculated
-  always in the context of an explanation. Sometimes, 
+  always in the context of an explanation. Sometimes,
   it is necessary to ignore certain business link to evaluate
-  completion or completion dates. This is very true for Union 
+  completion or completion dates. This is very true for Union
   Business Processes. This is the concept of Business Link closure,
   ie. filtering out all Business Link which are not used in an explanation.
 
@@ -78,7 +78,7 @@ class BusinessProcess(Path, XMLObject):
   - handle all properties of PaymentCondition in date calculation
   - review getRemainingTradePhaseList
   - optimize performance so that the completion dates are calculated
-    only once in a transaction thanks to caching (which could be 
+    only once in a transaction thanks to caching (which could be
     handled in coordination with ExplanationCache infinite loop
     detection)
   - fine a better way to narrow down paremeters to copy without
@@ -91,7 +91,7 @@ class BusinessProcess(Path, XMLObject):
     are provided by the rule or by business link / trade model path. This is an extension
     of the idea that root applied rules provide date information.
   - use explanation cache more to optimize speed
-  - DateTime must be extended in ERP5 to support  +infinite and -infinite 
+  - DateTime must be extended in ERP5 to support  +infinite and -infinite
     like floating points do
   - support conversions in trade model path
 
@@ -182,7 +182,7 @@ class BusinessProcess(Path, XMLObject):
     explanation_cache = _getExplanationCache(explanation)
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
-    # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)    
+    # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)
     start_date = reference_date + trade_model_path.getPaymentTerm(0.0) # XXX-JPS Until better naming
     if delay_mode == 'min':
       delay = trade_model_path.getMinDelay(0.0)
@@ -191,7 +191,7 @@ class BusinessProcess(Path, XMLObject):
     else:
       delay = (trade_model_path.getMaxDelay(0.0) + trade_model_path.getMinDelay(0.0)) / 2.0
     stop_date = start_date + delay
-        
+
     return start_date, stop_date
 
   # IBusinessLinkProcess implementation
@@ -263,15 +263,15 @@ class BusinessProcess(Path, XMLObject):
       # so no need to do any recursion
       return True
     if self.isTradeStateCompleted(explanation, predecessor_state):
-      # If predecessor state is globally completed for the 
+      # If predecessor state is globally completed for the
       # given explanation, return True
       # Please note that this is a specific case for a Business Process
       # built using asUnionBusinessProcess. In such business process
       # a business link may be completed even if its predecessor state
       # is not
       return True
-    # Build the closure business process which only includes those business 
-    # links wich are directly related to the current business link but DO NOT 
+    # Build the closure business process which only includes those business
+    # links wich are directly related to the current business link but DO NOT
     # narrow down the explanation else we might narrow down so much that
     # it becomes an empty set
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
@@ -296,19 +296,19 @@ class BusinessProcess(Path, XMLObject):
       # so no need to do any recursion
       return True
     if self.isTradeStatePartiallyCompleted(explanation, predecessor_state):
-      # If predecessor state is globally partially completed for the 
+      # If predecessor state is globally partially completed for the
       # given explanation, return True
       # Please note that this is a specific case for a Business Process
       # built using asUnionBusinessProcess. In such business process
       # a business link may be partially completed even if its predecessor
       # state is not
       return True
-    # Build the closure business process which only includes those business 
-    # links wich are directly related to the current business link but DO NOT 
+    # Build the closure business process which only includes those business
+    # links wich are directly related to the current business link but DO NOT
     # narrow down the explanation else we might narrow down so much that
     # it becomes an empty set
     closure_process = _getBusinessLinkClosure(explanation, business_link)
-    return closure_process.isTradeStatePartiallyCompleted(explanation, 
+    return closure_process.isTradeStatePartiallyCompleted(explanation,
                                                            predecessor_state)
 
   # IBuildableBusinessLinkProcess implementation
@@ -414,7 +414,7 @@ class BusinessProcess(Path, XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSuccessorTradeStateList')
   def getSuccessorTradeStateList(self, explanation, trade_state):
-    """Returns the list of successor states in the 
+    """Returns the list of successor states in the
     context of given explanation. This list is built by looking
     at all successor of business link involved in given explanation
     and which predecessor is the given trade_phase.
@@ -432,7 +432,7 @@ class BusinessProcess(Path, XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPredecessorTradeStateList')
   def getPredecessorTradeStateList(self, explanation, trade_state):
-    """Returns the list of predecessor states in the 
+    """Returns the list of predecessor states in the
     context of given explanation. This list is built by looking
     at all predecessor of business link involved in given explanation
     and which sucessor is the given trade_phase.
@@ -460,7 +460,7 @@ class BusinessProcess(Path, XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradeStateList')
   def getPartiallyCompletedTradeStateList(self, explanation):
-    """Returns the list of Trade States which are partially 
+    """Returns the list of Trade States which are partially
     completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -471,7 +471,7 @@ class BusinessProcess(Path, XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getLatestCompletedTradeStateList')
   def getLatestCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
-    states are completed and for which no successor state 
+    states are completed and for which no successor state
     is completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -487,7 +487,7 @@ class BusinessProcess(Path, XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getLatestPartiallyCompletedTradeStateList')
   def getLatestPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
-    states are completed and for which no successor state 
+    states are completed and for which no successor state
     is partially completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -513,7 +513,7 @@ class BusinessProcess(Path, XMLObject):
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
       if not self.isBusinessLinkCompleted(explanation, business_link):
         return False
-    return True      
+    return True
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStatePartiallyCompleted')
   def isTradeStatePartiallyCompleted(self, explanation, trade_state):
@@ -529,7 +529,7 @@ class BusinessProcess(Path, XMLObject):
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
       if not self.isBusinessLinkPartiallyCompleted(explanation, business_link):
         return False
-    return True      
+    return True
 
   # ITradePhaseProcess implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseList')
@@ -551,11 +551,11 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     return filter(lambda x:self.isTradePhaseCompleted(explanation, x), self.getTradePhaseList())
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradePhaseList')
   def getPartiallyCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are partially completed
-    in the context of given explanation. 
+    in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
@@ -597,7 +597,7 @@ class BusinessProcess(Path, XMLObject):
                             'getRemainingTradePhaseList')
   def getRemainingTradePhaseList(self, business_link):
     """Returns the list of remaining trade phases which to be achieved
-    as part of a business process. This list is calculated by analysing 
+    as part of a business process. This list is calculated by analysing
     the graph of business link and trade states, starting from a given
     business link. The result if filtered by a list of trade phases. This
     method is useful mostly for production and MRP to manage a distributed
@@ -660,7 +660,7 @@ class BusinessProcess(Path, XMLObject):
     based on the Business Link definitions, provided 'amount' and optional
     trade phases. If no trade_phase is provided, the trade_phase defined
     on the Amount is used instead.
-    
+
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
@@ -670,8 +670,8 @@ class BusinessProcess(Path, XMLObject):
 
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
-                  
-    update_property_method -- 
+
+    update_property_method --
     """
     if not trade_phase:
       trade_phase = amount.getTradePhaseList()
@@ -727,7 +727,7 @@ class BusinessProcess(Path, XMLObject):
       stripped_result.append(movement)
       quantity = movement.getQuantity()
       current_quantity += quantity
-      if current_quantity > total_quantity: 
+      if current_quantity > total_quantity:
         # As soon as the current_quantity is greater than total_quantity
         # strip the result
         break
@@ -747,7 +747,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
 
     amount -- an IAmount instance or an IMovement instance
- 
+
     trade_model_path -- an ITradeModelPath instance
 
     delay_mode -- optional value to specify calculation mode ('min', 'max')
@@ -817,7 +817,7 @@ class BusinessProcess(Path, XMLObject):
       if not self.isTradeStateCompleted(explanation, state):
         return False
     return True
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'isBuildable')
   def isBuildable(self, explanation):
     """Returns True is one Business Link of this Business Process

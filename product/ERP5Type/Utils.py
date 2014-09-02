@@ -1659,7 +1659,7 @@ def legacyNormalizeUrl(url, base_url=None):
   url = urlparse.urlunsplit((url_sheme, url_netloc, url_path,
                              url_params, url_query,))
   # Uppercase escaped characters
-  # http://www.example.com/a%c2%b1b -> http://www.example.com/a%C2%B1b 
+  # http://www.example.com/a%c2%b1b -> http://www.example.com/a%C2%B1b
   re_cleanup_escaped_url.sub(uppercaseLetter, url)
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/

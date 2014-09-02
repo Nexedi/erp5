@@ -53,9 +53,9 @@ class CodingStyleTestCase(ERP5TypeTestCase):
 
   def getTestedBusinessTemplateList(self):
     """
-    Return the list of business templates to be 
+    Return the list of business templates to be
     checked for consistency. By default, return
-    the last business template of the 
+    the last business template of the
     list of installed business templates.
     """
     return self.getBusinessTemplateList()[-1:]
@@ -90,7 +90,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
       for document in skin.objectValues():
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
            message_list.extend(document.checkConsistency())
-    
+
     # Return results
     if len(message_list):
       raise self.failureException('\n'.join(map(lambda x: repr(x), message_list)))

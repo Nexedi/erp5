@@ -93,7 +93,7 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     """
     script = self._getTypeBasedMethod('getBaobabSourceVariationText')
     if script is not None:
-      return script(self)      
+      return script(self)
     return self.getVariationText()
 
   security.declareProtected(Permissions.View, 'getBaobabDestinationVariationText')

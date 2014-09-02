@@ -16,7 +16,7 @@ class DummyFieldFactory:
         return DummyField(name)
 
 fields = DummyFieldFactory()
-    
+
 class DummyField:
     def __init__(self, desired_meta_class):
         self.desired_meta_class = desired_meta_class
@@ -28,11 +28,11 @@ class DummyField:
 
     def get_value(self, name):
         return self.kw.get(name, "")
-          
+
     def get_real_field(self):
         """Get an actual field for this property.
         """
         return apply(FieldRegistry.get_field_class(self.desired_meta_class),
                      (self.id,), self.kw)
 
-                                                  
+

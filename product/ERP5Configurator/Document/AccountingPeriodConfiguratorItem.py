@@ -34,7 +34,7 @@ from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMi
 
 class AccountingPeriodConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup an Accounting Period. """
-  
+
   meta_type = 'ERP5 Accounting Period Configurator Item'
   portal_type = 'Accounting Period Configurator Item'
   add_permission = Permissions.AddPortalContent

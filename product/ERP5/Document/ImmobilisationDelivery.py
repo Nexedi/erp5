@@ -84,7 +84,7 @@ class ImmobilisationDelivery(XMLObject):
       """
       return self.getMovementList(self.getPortalMovementTypeList() +
                  ('Immobilisation Line', 'Immobilisation Cell'), **kw)
-      
+
     security.declareProtected(Permissions.AccessContentsInformation, 'checkImmobilisationConsistency')
     def checkImmobilisationConsistency(self, *args, **kw):
       """
@@ -133,4 +133,4 @@ class ImmobilisationDelivery(XMLObject):
                    next_movement.getStopDate() != self.getStopDate():
                   returned_list.append(next_movement)
       return returned_list
-      
+

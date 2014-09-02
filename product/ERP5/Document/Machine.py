@@ -34,7 +34,7 @@ from Products.ERP5.Document.ImmobilisableItem import ImmobilisableItem
 
 class Machine(ImmobilisableItem):
     """
-    Machine represents 
+    Machine represents
     """
 
     meta_type = 'ERP5 Machine'

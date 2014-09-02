@@ -66,8 +66,8 @@ class Wiki( Document ):
     item_list_expr = re.compile(r"^(\s+)\*(.*)")
     preformatted_text_expr = re.compile(r"^{{{$")
     empty_line_expr = re.compile(r"^\s*$")
-    
-    line_expr_map = { 
+
+    line_expr_map = {
       'table' : table_expr,
       'heading' : heading_expr,
       'horizontal_line' : horizontal_line_expr,
@@ -76,7 +76,7 @@ class Wiki( Document ):
       'preformatted_text' : preformatted_text_expr,
       'empty_line' : empty_line_expr,
     }
-    
+
     wiki_name_expr = re.compile(r"!?([A-Z][a-z]+){2,}(/([A-Z][a-z]+){2,})*")
     underscore_expr = re.compile(r"__([^_]+)__")
     bold_expr = re.compile(r"'''([^']+)'''")
@@ -85,7 +85,7 @@ class Wiki( Document ):
     url_expr = re.compile(r"(!?[a-z]+://[^ ]+)")
     link_expr = re.compile(r"(?<!\[)\[([^\] ]+) ([^\]]+)\](?!\])")
     tales_expr = re.compile(r"\[\[([^\]]+)\]\]")
-    
+
     text_expr_map = {
       'wiki_name' : wiki_name_expr,
       'underscore': underscore_expr,
@@ -96,20 +96,20 @@ class Wiki( Document ):
       'link' : link_expr,
       'tales' : tales_expr,
     }
-    
+
     def _getTopLevelUrl(self):
       o = self.getParentValue()
       while o.meta_type == 'ERP5 Wiki':
         o = o.getParentValue()
       return o.absolute_url()
-      
+
     def _render_text(self, text):
       """
         Render a piece of text.
-      """      
+      """
       text_list = []
       append = text_list.append
-      
+
       while text:
         min_start = len(text)
         match = None
@@ -122,7 +122,7 @@ class Wiki( Document ):
               min_start = start
               min_key = key
               match = m
-              
+
         if match is None:
           # Nothing special.
           append(cgi.escape(text))
@@ -130,7 +130,7 @@ class Wiki( Document ):
         else:
           if min_start > 0:
             append(text[:min_start])
-            
+
           if min_key == 'wiki_name':
             name = match.string[match.start(0):match.end(0)]
             if name.startswith('!'):
@@ -172,19 +172,19 @@ class Wiki( Document ):
               append('<b>%s</b>' % word)
             elif min_key == 'strike':
               append('<del>%s</del>' % word)
-            
+
           text = text[match.end(0):]
-          
+
       return ''.join(text_list)
-      
+
     def _render_tales(self, expr):
       """
         Evaluate the expression.
-        
+
         FIXME
       """
       return ''
-      
+
     def _render_table_row(self, text):
       """
         Render a row of a table.
@@ -197,26 +197,26 @@ class Wiki( Document ):
         append('</td>')
       append('</tr>')
       return ''.join(text_list)
-      
+
     security.declareProtected(Permissions.View, 'render')
     def render(self, content=None, format=None):
       """
         Render the contents and generate HTML.
-        
+
         FIXME: Very dirty. Better to rewrite this with a state machine.
       """
       if content is None:
         content = self.getTextContent()
         if content is None:
           content = ''
-          
+
       preformatted = False
       in_table = False
       in_paragraph = False
       list_stack = []
       line_list = []
       append = line_list.append
-      
+
       for line in content.split('\n'): # Used to be \r\n
         if preformatted:
           if line == '}}}':
@@ -225,7 +225,7 @@ class Wiki( Document ):
           else:
             append(cgi.escape(line))
           continue
-          
+
         if in_table:
           m = self.table_expr.search(line)
           if m is not None:
@@ -233,7 +233,7 @@ class Wiki( Document ):
             continue
           else:
             append('</table>')
-            
+
         if list_stack:
           for key, expr in (('enumerated_list', self.enumerated_list_expr), ('item_list', self.item_list_expr)):
             m = expr.search(line)
@@ -246,14 +246,14 @@ class Wiki( Document ):
             level = 0
           else:
             level = m.end(1) - m.start(1)
-                    
+
           while list_stack and list_stack[-1][1] > level:
             prev_key, prev_level = list_stack.pop()
             if prev_key == 'enumerated_list':
               append('</ol>')
             else:
               append('</ul>')
-              
+
           if list_stack and list_stack[-1][1] == level:
             if key == list_stack[-1][0]:
               append('<li>')
@@ -265,7 +265,7 @@ class Wiki( Document ):
                 append('</ol>')
               else:
                 append('</ul>')
-                
+
           if key is not None:
             list_stack.append((key, level))
             if key == 'enumerated_list':
@@ -275,18 +275,18 @@ class Wiki( Document ):
               append('<ul><li>')
               append(self._render_text(m.string[m.start(2):m.end(2)]))
             continue
-            
+
         for key, expr in self.line_expr_map.items():
           m = expr.search(line)
           if m is not None:
             break
         else:
           key = None
-      
+
         if in_paragraph and key is not None:
           in_paragraph = False
           append('</p>')
-            
+
         if key == 'preformatted_text':
           preformatted = True
           append('<pre>')
@@ -316,21 +316,21 @@ class Wiki( Document ):
             in_paragraph = True
             append('<p>')
           append(self._render_text(line))
-          
+
       while list_stack:
         key, level = list_stack.pop()
         if key == 'enumerated_list':
           append('</ol>')
         else:
           append('</ul>')
-          
+
       if in_paragraph:
         append('</p>')
-        
-      if in_table: 
+
+      if in_table:
         append('</table>')
-        
+
       if preformatted:
         append('</pre>')
-        
+
       return '\n'.join(line_list)

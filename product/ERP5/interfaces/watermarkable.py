@@ -33,13 +33,13 @@ class IWatermarkable(Interface):
   """
   Watermarkable interface specification
 
-  Documents which implement IWatermarkable can be 
+  Documents which implement IWatermarkable can be
   added a watermark before conversion and download.
   """
 
   def getWatermarkedData(**kw):
     """
-    Adds a watermark to the original data of this document 
+    Adds a watermark to the original data of this document
     (or to base data if IBaseConvertable is implemented) and
     return the resulting watermarked data.
 

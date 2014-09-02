@@ -33,7 +33,7 @@ from zope.interface import Interface
 
 class IMovementCollectionUpdater(Interface):
   """Movement Collection Updater interface specification
-  
+
   Documents which implement IMovementCollectionUpdater
   usually invoke an IMovementGenerator to generate
   an IMovementList and compare it to another IMovementList
@@ -50,19 +50,19 @@ class IMovementCollectionUpdater(Interface):
                an IMovementList or an IMovement
 
     movement_generator -- an optional IMovementGenerator
-                          (if not specified, a context implicit 
+                          (if not specified, a context implicit
                           IMovementGenerator will be used)
     """
 
   def updateMovementCollection(context, rounding=False, movement_generator=None):
     """
-    Invoke getMovementCollectionDiff and update context with 
+    Invoke getMovementCollectionDiff and update context with
     the resulting IMovementCollectionDiff.
 
     context -- an IMovementCollection usually, possibly
                an IMovementList or an IMovement
 
     movement_generator -- an optional IMovementGenerator
-                          (if not specified, a context implicit 
+                          (if not specified, a context implicit
                           IMovementGenerator will be used)
     """

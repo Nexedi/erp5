@@ -47,9 +47,9 @@ class PropertyGroupingMovementGroup(MovementGroup):
   def _separate(self, movement_list):
     if not movement_list:
       return []
-    
+
     movement_dict = {}
-    tested_property_list = self.getTestedPropertyList() 
+    tested_property_list = self.getTestedPropertyList()
     for movement in movement_list:
       key_value_list = []
       getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)

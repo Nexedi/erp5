@@ -36,8 +36,8 @@ from Products.ERP5Type import Permissions
 class LogMixin:
   """
     The idea of this mixin is to try to share all the code related
-    to log file access, caching, log filtering and filtering 
-    optimisation. 
+    to log file access, caching, log filtering and filtering
+    optimisation.
 
     The model chosen here is simplistic:
     - one tool per service
@@ -45,7 +45,7 @@ class LogMixin:
     - log_name parameter is used to select the log
 
     I prefer this way for now so that the code for log access in
-    Tools is reduced to the minimum and we do not need to 
+    Tools is reduced to the minimum and we do not need to
     add so many portal types.
   """
   security = ClassSecurityInfo()
@@ -61,13 +61,13 @@ class LogMixin:
   security.declareProtected(Permissions.ManagePortal,
                             'getLogFileNameList')
   def getLogFileNameList(self, log_name, account=None,
-                        domain=None, user_name=None, 
+                        domain=None, user_name=None,
                         from_line=None, to_line=None,
                         from_date=None, to_date=None ):
     """
-      Returns the list of file names for all log files. This 
+      Returns the list of file names for all log files. This
       is iseful if we use logrotate for example. It is also
-      useful to provide some filtering parameters here 
+      useful to provide some filtering parameters here
       (ex. to reduce the number of files to parse)
     """
     raise NotImplementedError

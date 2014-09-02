@@ -56,7 +56,7 @@ class InterpolationTool (UniqueObject):
     this could be done another way.
 
     Try to mimic: ???? (Reports ?)...
-    
+
     Status : OK
     """
     id = 'portal_interactions'

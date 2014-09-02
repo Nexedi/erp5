@@ -44,7 +44,7 @@ from zLOG import LOG
 class ZPyChartWidget(Widget.Widget):
   """
     A widget to generate pychart charts in multiple formats
-    
+
     Chart definition is defined in a script. Some parameters
     are defined through Web UI. Web UI parameters are intended
     to be specialised through Proxy fields.
@@ -137,7 +137,7 @@ class ZPyChart(ZMIField, PythonScript):
         - implement XML I/O of script
         - make tabs nicer
     """
-    
+
     meta_type = "ZPyChart"
 
     manage_options = ZMIField.manage_options + PythonScript.manage_options
@@ -165,20 +165,20 @@ class ZPyChart(ZMIField, PythonScript):
         # If selection is None, create a new one
         if selection is None:
           selection = Selection(selection_name)
-        
+
         # Get the data method if defined
         if data_method is not None:
           here = REQUEST.get('here', self)
           data_method = getattr(here, data_method, None)
-        
+
         # This is the default data, this is just in the case there is not method given
         if data_method is None:
           data = selection()
         else:
           data = selection(data_method=data_method)
-    
+
         # Now call the script - XXX implement bindings properly here
         output = self._exec(here=self, pychart=pychart, data=data)
-    
+
         # And return result
         return output

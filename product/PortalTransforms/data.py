@@ -53,14 +53,14 @@ class datastream:
         """return a dict-like object with any optional metadata from
         the transform"""
         return self._metadata
-    
+
     def isCacheable(self):
         """Return a bool which indicates wether the result should be cached
-        
+
         Default is true
         """
         return self._cacheable
-    
+
     def setCacheable(self, value):
         """Set cacheable flag to yes or no
         """

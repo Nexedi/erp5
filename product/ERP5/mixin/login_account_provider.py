@@ -65,7 +65,7 @@ class LoginAccountProviderMixin:
     method = self._getTypeBasedMethod('isLoginBlocked')
     if method is not None:
       return method(**kw)
-    return False      
+    return False
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordExpired')
   def isPasswordExpired(self, **kw):
@@ -75,7 +75,7 @@ class LoginAccountProviderMixin:
     method = self._getTypeBasedMethod('isPasswordExpired')
     if method is not None:
       return method(**kw)
-    return False      
+    return False
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordValid')
   def isPasswordValid(self, password, **kw):
@@ -86,16 +86,16 @@ class LoginAccountProviderMixin:
     if not len(result_code_list):
       return True
     return False
-    
+
   def analyzePassword(self, password, **kw):
     """
     Analyze password validity.
     Return status code indicating if password is acceptable and if not status code
-    for reason for not being a valid one (i.e. too short, not complex, etc ...)    
+    for reason for not being a valid one (i.e. too short, not complex, etc ...)
     """
     method = self._getTypeBasedMethod('analyzePassword')
     return method(password, **kw)
-    
+
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordAlreadyUsed')
   def isPasswordAlreadyUsed(self, password):
     """
@@ -106,11 +106,10 @@ class LoginAccountProviderMixin:
                                                    portal_type = "Password Event",
                                                    default_destination_uid = self.getUid(),
                                                    sort_on = (('creation_date', 'DESC',),),
-                                                   validation_state = 'confirmed',                                                   
+                                                   validation_state = 'confirmed',
                                                    limit = preferred_number_of_last_password_to_check)
-    password_list = [x.getPassword() for x in password_event_list]                                                                
+    password_list = [x.getPassword() for x in password_event_list]
     for encoded_password in password_list:
       if pw_validate(encoded_password, password):
         return True
     return False
-    

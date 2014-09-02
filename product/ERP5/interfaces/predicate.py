@@ -50,7 +50,7 @@ class IPredicate(Interface):
     """
     A Predicate can be tested on a given context. Parameters can
     passed in order to ignore some conditions:
-    
+
     tested_base_category_list -- a list of category that we do
         want to test. For example, we might want to test only the
         destination or the source of a predicate.
@@ -64,7 +64,7 @@ class IPredicate(Interface):
     can be useful to create reporting trees based on the
     ZSQLCatalog. This SQL expression is however partial since
     python scripts which are used by the test method of the predicate
-    can be converted to SQL. If a python script is defined to 
+    can be converted to SQL. If a python script is defined to
     implement test, results obtained through asSQLExpression
     must be additionnaly tested by invoking test().
     """

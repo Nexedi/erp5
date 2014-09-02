@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Courteaud Romain <romain@nexedi.com>
-#                    
+#
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -34,7 +34,7 @@ from Products.ERP5.Document.PresencePeriod import PresencePeriod
 
 class LeavePeriod(PresencePeriod):
   """
-  Leave Period is used to remove available time of the user in a 
+  Leave Period is used to remove available time of the user in a
   period of Time
   """
 

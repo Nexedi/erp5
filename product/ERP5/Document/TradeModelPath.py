@@ -215,7 +215,7 @@ class TradeModelPath(Path):
       method = getattr(self, method_id)
       return method(context)
     return []
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getExpectedQuantity')
   def getExpectedQuantity(self, amount):

@@ -41,7 +41,7 @@ class KeywordKey(SearchKey):
   """
   default_comparison_operator = 'like'
   get_operator_from_value = True
- 
+
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
 

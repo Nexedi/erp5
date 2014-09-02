@@ -57,7 +57,7 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
             'erp5_base',
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
-            'erp5_web', 
+            'erp5_web',
             'erp5_dms',
             'erp5_odt_style')
 
@@ -66,7 +66,7 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
     self.login()
     self.getPortal().Localizer = DummyLocalizer()
     v12schema_url = os.path.join(os.path.dirname(__file__),
-                                 'OpenDocument-v1.2-os-schema.rng') 
+                                 'OpenDocument-v1.2-os-schema.rng')
     self.validator = Validator(schema_url=v12schema_url)
     en_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
@@ -109,13 +109,13 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     addOOoTemplate(id='Dynamic_viewAsOdt', title='')
     Dynamic_viewAsOdt = self.getPortal().Dynamic_viewAsOdt
     # The stylesheet file 'Test_getODTStyleSheet' is not exist in this site.
-    # So, the 'Base_getODTStyleSheet', a python script creates dynamically 
-    # exsited stylesheet file name. 
+    # So, the 'Base_getODTStyleSheet', a python script creates dynamically
+    # exsited stylesheet file name.
     self.assertFalse(self.getPortal().hasObject('Test_getODTStyleSheet'))
     self.assertTrue(self.getPortal().hasObject('Test_getODTStyleSheet_ja'))
     self.assertTrue(self.getPortal().hasObject('Test_getODTStyleSheet_en'))
     Dynamic_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
-                                 ooo_stylesheet='Test_getODTStyleSheet', 
+                                 ooo_stylesheet='Test_getODTStyleSheet',
                                  script_name='Base_getODTStyleSheetByLanguage')
     Dynamic_viewAsOdt.pt_edit(self.content, content_type='application/vnd.oasis.opendocument.text')
 
@@ -126,39 +126,39 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Dynamic_viewAsOdt.odt"',
                      response.getHeader('content-disposition'))
-    self._validate(response.getBody()) 
+    self._validate(response.getBody())
     self.assertEqual(200, response.getStatus())
 
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(len(styles_xml_body) > 0)
-    # 'Style sheet ja' text is in the odt document header, 
+    # 'Style sheet ja' text is in the odt document header,
     # and the header is in the 'styles.xml'.
     self.assertTrue(styles_xml_body.find('Style sheet ja') > 0)
 
-    # 2. test a normal case, change the language to 'en', 
+    # 2. test a normal case, change the language to 'en',
     #    so that the stylesheet changes dynamically.
     self.getPortal().Localizer = DummyLocalizer()
     self.getPortal().Localizer.changeLanguage('en')
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
-    self._validate(response.getBody()) 
+    self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(styles_xml_body.find('Style sheet en') > 0)
 
     # 3. test a fail case, reset a not existed stylesheet
     Dynamic_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
-                                 ooo_stylesheet='NotFound_getODTStyleSheet', 
+                                 ooo_stylesheet='NotFound_getODTStyleSheet',
                                  script_name='Base_getODTStyleSheet')
     self.assertFalse(self.getPortal().hasObject('NotFound_getODTStyleSheet'))
     self.assertFalse(self.getPortal().hasObject('NotFound_getODTStyleSheet_ja'))
     self.assertFalse(self.getPortal().hasObject('NotFound_getODTStyleSheet_en'))
     self.getPortal().Localizer.changeLanguage('en')
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
-    # then, it is not a zip stream 
+    # then, it is not a zip stream
     self.assertFalse(response.getBody().startswith('PK'))
     self.assertEqual(500, response.getStatus())
-   
+
 
   def test_02_static(self):
     """
@@ -181,7 +181,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Static_viewAsOdt.odt"',
                      response.getHeader('content-disposition'))
-    self._validate(response.getBody()) 
+    self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(len(styles_xml_body) > 0)
@@ -193,7 +193,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                                 ooo_stylesheet='Test_getODTStyleSheet_en', script_name='')
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
     self.assertEqual(200, response.getStatus())
-    self._validate(response.getBody()) 
+    self._validate(response.getBody())
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(len(styles_xml_body) > 0)

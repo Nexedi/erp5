@@ -122,7 +122,7 @@ class GeneratorCall(UserDict):
     """ Dump object to a xmlrpccall. """
     for binary_key in self._binary_keys:
       if isinstance(self[binary_key], list):
-        ## we have list of values 
+        ## we have list of values
         self.convert_data[binary_key] = []
         for item in self[binary_key]:
           self.convert_data[binary_key].append(self._encodeData(item))
@@ -269,7 +269,7 @@ class WizardTool(BaseTool):
       simple_opener_director.add_handler(handler())
   # add cookie support
   simple_opener_director.add_handler(urllib2.HTTPCookieProcessor(cookiejar))
- 
+
   security.declareProtected(Permissions.View, 'proxy')
   def proxy(self, **kw):
     """Proxy a request to a server."""
@@ -451,7 +451,7 @@ class WizardTool(BaseTool):
     ## handle file upload
     self._updateParameterDictWithFileUpload(parameter_dict)
     message = None
-    ## call remote method 
+    ## call remote method
     try:
       method = getattr(witch_tool, distant_method)
       html = method(parameter_dict)
@@ -957,7 +957,7 @@ class WizardTool(BaseTool):
   security.declarePublic('isSingleSignOnEnabled')
   def isSingleSignOnEnabled(self):
     """
-      Check that a ERP5 Remote User manager is 
+      Check that a ERP5 Remote User manager is
       present as authentication plugin
     """
     acl_users = getattr(self.getPortalObject(), 'acl_users')
@@ -967,7 +967,7 @@ class WizardTool(BaseTool):
       for plugin_name, plugin_value in plugin_list:
         # Try to find an ERP5RemoteUserManager
         if isinstance(plugin_value, ERP5RemoteUserManager):
-          # ERP5RemoteUserManager was found but remains verify if 
+          # ERP5RemoteUserManager was found but remains verify if
           # the plugin is enabled or not.
           return True
     return False

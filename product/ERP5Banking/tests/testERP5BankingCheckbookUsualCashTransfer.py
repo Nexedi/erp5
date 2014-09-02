@@ -50,7 +50,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     """
     self.checkbook_vault_transfer = self.getCheckbookVaultTransferModule().newContent(
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
-                     source_value=self.vault_transfer_source_site, 
+                     source_value=self.vault_transfer_source_site,
                      destination_value=self.vault_transfer_destination_site,
                      start_date=(self.date-3))
     # Add a line for check and checkbook
@@ -66,14 +66,14 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                                  destination_trade_value=self.bank_account_2,
                                  aggregate_value=self.check_1,
                                  )
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action',
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action',
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action',
                                    wf_id='checkbook_vault_transfer_workflow')
 
-  def createCheckbookVaultTransferWithTravelerCheck(self, sequence=None, 
+  def createCheckbookVaultTransferWithTravelerCheck(self, sequence=None,
                                  sequence_list=None, **kwd):
     """
     Create a checkbook Reception
@@ -81,7 +81,7 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
     """
     self.checkbook_vault_transfer = self.getCheckbookVaultTransferModule().newContent(
                      id='checkbook_vault_transfer', portal_type='Checkbook Vault Transfer',
-                     source_value=self.vault_transfer_source_site, 
+                     source_value=self.vault_transfer_source_site,
                      destination_value=self.vault_transfer_destination_site,
                      description='test',
                      start_date=(self.date-3))
@@ -92,11 +92,11 @@ class TestERP5BankingCheckbookUsualCashTransferMixin(
                              aggregate_value=self.traveler_check,
                              price_currency_value=self.currency_2
                              )
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'order_action',
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action',
                                    wf_id='checkbook_vault_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'deliver_action',
                                    wf_id='checkbook_vault_transfer_workflow')
 
 class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCashTransferMixin):
@@ -223,10 +223,10 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     # check its portal type
     self.assertEqual(self.checkbook_usual_cash_transfer.getPortalType(), 'Checkbook Usual Cash Transfer')
     # check source
-    self.assertEqual(self.checkbook_usual_cash_transfer.getBaobabSource(), 
+    self.assertEqual(self.checkbook_usual_cash_transfer.getBaobabSource(),
                'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
     # check destination
-    self.assertEqual(self.checkbook_usual_cash_transfer.getBaobabDestination(), 
+    self.assertEqual(self.checkbook_usual_cash_transfer.getBaobabDestination(),
                'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
 
 
@@ -258,8 +258,8 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     confirm the checkbook usual cash transfer
     """
     state = self.checkbook_usual_cash_transfer.getSimulationState()
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
-                      self.checkbook_usual_cash_transfer, 'confirm_action', 
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor,
+                      self.checkbook_usual_cash_transfer, 'confirm_action',
                       wf_id='checkbook_usual_cash_transfer_workflow')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, name='history', wf_id='checkbook_usual_cash_transfer_workflow')
 
@@ -272,8 +272,8 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     self.workflow_tool.doActionFor(self.checkbook_usual_cash_transfer, 'confirm_action', wf_id='checkbook_usual_cash_transfer_workflow')
     self.assertEqual(self.checkbook_usual_cash_transfer.getSimulationState(), 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.checkbook_usual_cash_transfer, name='history', wf_id='checkbook_usual_cash_transfer_workflow')
- 
-  def stepChangeCheckbookUsualCashTransferStartDate(self, 
+
+  def stepChangeCheckbookUsualCashTransferStartDate(self,
                sequence=None, sequence_list=None, **kw):
     """
     Set a correct date
@@ -305,8 +305,8 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     state = self.checkbook_usual_cash_transfer.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'confirmed')
-    self.workflow_tool.doActionFor(self.checkbook_usual_cash_transfer, 
-                                   'confirm_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_usual_cash_transfer,
+                                   'confirm_to_deliver_action',
                                    wf_id='checkbook_usual_cash_transfer_workflow')
     # get state of cash sorting
     state = self.checkbook_usual_cash_transfer.getSimulationState()
@@ -343,7 +343,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
                 node=self.destination_vault.getRelativeUrl(),
                 at_date=self.date)), 2)
 
-  def stepChangePreviousDeliveryDate(self, 
+  def stepChangePreviousDeliveryDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

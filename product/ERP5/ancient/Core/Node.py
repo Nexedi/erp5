@@ -28,5 +28,5 @@
 
 class Node:
   """
-    People, machines, 
+    People, machines,
   """

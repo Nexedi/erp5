@@ -1299,7 +1299,7 @@ class TemplateTool (BaseTool):
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
       # possible to reuse by external callers
-      
+
       operation_log = []
       resolved_template_list = self.resolveBusinessTemplateListDependency(
                    template_list)

@@ -137,7 +137,7 @@ class EGOVGroupManager(ERP5GroupManager):
             portal = self.getPortalObject()
 
             # this permit to get the module of the application
-            # the goal is to work with anonymous applications, even if 
+            # the goal is to work with anonymous applications, even if
             # they are not reindexed
 
             module_id = self.REQUEST.get('anonymous_module', None)

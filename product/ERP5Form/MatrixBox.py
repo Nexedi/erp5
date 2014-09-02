@@ -44,7 +44,7 @@ class MatrixBoxWidget(Widget.Widget):
     An UI widget which displays a matrix
 
     Don't forget that you can use tales expressions for every field, so this
-    is really usefull if you want to use fonctions 
+    is really usefull if you want to use fonctions
     instead of predefined variables.
 
     A function is provided to
@@ -268,7 +268,7 @@ class MatrixBoxWidget(Widget.Widget):
 
         # result for the list render
         list_result = []
-            
+
         url = REQUEST.URL
 
         list_html = ''
@@ -293,10 +293,10 @@ class MatrixBoxWidget(Widget.Widget):
             if (tab_id is not None) and \
                (not isinstance(tab_id, (list, tuple))):
               tab_id = [tab_id]
-            
+
             if render_format == 'list':
               list_result_tab = [[tab[1]]]
-            
+
             # Create the header of the table - this should probably become DTML
             first_tab = tab[1] or ''
             header = """\
@@ -305,7 +305,7 @@ class MatrixBoxWidget(Widget.Widget):
     <div class="MatrixContent">
      <table cellpadding="0" cellspacing="0" border="0">
     """ % (first_tab+extra_dimension_label)
-            
+
             # Create the footer. This should be replaced by DTML
             # And work as some kind of parameter
             footer = """\
@@ -317,36 +317,36 @@ class MatrixBoxWidget(Widget.Widget):
       </table>
      </div>
     """ % len(columns)
-            
+
             list_header = """\
     <tr class="matrixbox_label_line"><td class=\"Data\"></td>
     """
-              
+
             for cname in columns:
               first_column = cname[1] or ''
               list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
                                              first_column)
               if render_format == 'list':
                 list_result_tab[0].append(cname[1])
-            
+
             list_header = list_header + "</tr>"
-            
+
             # Build Lines
             i = 0
             j = 0
             list_body = ''
             for l in lines:
-              
+
               if not i % 2:
                 td_css = 'DataA'
               else:
                 td_css = 'DataB'
               list_body = list_body + '\n<tr class=\"%s\"><td class=\"matrixbox_label_column\">%s</td>' % (td_css, str(l[1]))
               j = 0
-              
+
               if render_format == 'list':
                 list_result_lines = [ str(l[1]) ]
-              
+
               for c in columns:
                 has_error = False
                 column_id = c[0]
@@ -362,7 +362,7 @@ class MatrixBoxWidget(Widget.Widget):
                 cell = cell_getter_method(*kw, **kwd)
                 REQUEST['cell'] = cell
                 REQUEST['cell_index'] = kw
-                
+
                 cell_body = ''
                 cell_url = None
 
@@ -393,7 +393,7 @@ class MatrixBoxWidget(Widget.Widget):
                     if cell is not None:
                       attribute_value = my_field.get_value('default',
                              cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
-                         
+
                       if render_format=='html':
                         display_value = attribute_value
                         if field_errors:
@@ -422,11 +422,11 @@ class MatrixBoxWidget(Widget.Widget):
                         else:
                           cell_body += '<span class="input">%s</span>' % (
                                           cell_html )
-                        
+
                       elif render_format == 'list':
                         if not my_field.get_value('hidden'):
                           list_result_lines.append(attribute_value)
-                      
+
                     else:
                       attribute_value = my_field.get_value('default', cell=None,
                           cell_index=kw, cell_position=((i,j,k)+extra_dimension_position))
@@ -455,27 +455,27 @@ class MatrixBoxWidget(Widget.Widget):
                                               key=key)
                       elif render_format == 'list':
                         list_result_lines.append(None)
-                        
+
                 css = td_css
                 if has_error:
                   css = 'error'
                 list_body = list_body + \
                       ('<td class=\"%s\">%s</td>' % (css, cell_body))
                 j += 1
-                
+
               list_body = list_body + '</tr>'
               i += 1
-              
+
               if render_format == 'list':
                 list_result_tab.append(list_result_lines)
-                
+
             list_html += header + list_header + \
                     list_body + footer
             k += 1
-            
+
             if render_format == 'list':
               list_result.append(list_result_tab)
-          
+
         if render_format == 'list':
           return list_result
 
@@ -570,7 +570,7 @@ class MatrixBoxValidator(Validator.Validator):
             if (tab_id is not None) and \
                (not isinstance(tab_id, (list, tuple))):
               tab_id = [tab_id]
-            
+
             i = 0
             j = 0
             for l in line_ids:
@@ -584,9 +584,9 @@ class MatrixBoxValidator(Validator.Validator):
                   kw = [l, c] + tab_id + extra_dimension_category_list
                 kw = tuple(kw)
                 cell = cell_getter_method(*kw, **kwd)
-                
+
                 for attribute_id in editable_attribute_ids:
-                
+
                   my_field_id = '%s_%s' % (field.id, attribute_id)
                   if form.has_field(my_field_id):
                     my_field = form.get_field(my_field_id)
@@ -601,7 +601,7 @@ class MatrixBoxValidator(Validator.Validator):
                       except ValidationError, err :
                         err.field_id = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
                         error_list.append(err)
-                        
+
                       if (attribute_value != value or \
                           attribute_value not in ('',None,(),[])) \
                           and not my_field.get_value('hidden'):

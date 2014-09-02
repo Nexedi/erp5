@@ -65,7 +65,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -146,7 +146,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
       Test property existence
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
     sequence_string = '\
               CreateEntity \
@@ -167,7 +167,7 @@ return '%s\\n%s %s COUNTRY' % \\
        (context.getStreetAddress(),
         context.getZipCode(), context.getCity())
 """)
-  
+
   def stepCheckAddressAsTextScript(self, sequence=None,
                                    sequence_list=None, **kw):
     """
@@ -185,7 +185,7 @@ return '%s\\n%s %s COUNTRY' % \\
       Test property existence
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
     sequence_string = '\
               CreateEntity \

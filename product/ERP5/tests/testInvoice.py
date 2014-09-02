@@ -1864,9 +1864,9 @@ class TestInvoice(TestInvoiceMixin):
     self.assertTrue('size/Child/32' in
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
-  
-  
-  
+
+
+
   def test_invoice_created_from_packing_list_with_no_order(self):
     # if the order has cells and an aggregate, the invoice built
     #from that order must have
@@ -1960,7 +1960,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertTrue('size/Child/32' in
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
-    
+
   def test_invoice_building_with_cells_and_aggregate(self):
     # if the order has cells and an aggregate, the invoice built
     #from that order must have
@@ -2056,8 +2056,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertTrue('size/Child/32' in
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
-    
-   
+
+
   def test_description_copied_on_lines(self):
     # if the order lines have different descriptions, description must be
     # copied in the simulation and on created movements
@@ -2109,7 +2109,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
     self.assertNotEquals(related_packing_list, None)
-    
+
     movement_list = related_packing_list.getMovementList()
     self.assertEqual(2, len(movement_list))
     self.assertEqual(['The first line'],
@@ -2158,9 +2158,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
   def test_delivery_mode_and_incoterm_on_invoice(self):
     """
-    test that categories delivery_mode and incoterm are copied on 
+    test that categories delivery_mode and incoterm are copied on
     the invoice by the delivery builder
-    """ 
+    """
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
@@ -2217,14 +2217,14 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                          order.getDeliveryMode())
     self.assertEqual(related_invoice.getIncoterm(),
                          order.getIncoterm())
-                         
-                         
+
+
   def test_01_quantity_unit_copied(self):
     """
     tests that when a resource uses different quantity unit that the
     quantity units are copied on the packing list line and then the invoice
     line using the delivery builers
-    """           
+    """
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
@@ -2262,7 +2262,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                              quantity_unit = self.unit_piece_quantity_unit,
                                   quantity=5,
                                   price=3)
-    second_order_line = order.newContent( 
+    second_order_line = order.newContent(
                           portal_type=self.order_line_portal_type,
                                   resource_value=resource,
                              quantity_unit=self.mass_quantity_unit,
@@ -2309,7 +2309,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                       self.unit_piece_quantity_unit)
     self.assertEqual(movement_list[1].getQuantity(), 5)
 
- 
+
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
     print invoice, divergence_list
@@ -2324,7 +2324,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     packing_list = sequence.get('packing_list')
     packing_list_line = packing_list.getMovementList()[0]
     previous_quantity = packing_list_line.getQuantity()
-    
+
     packing_list.setReady()
     packing_list.start()
     packing_list.stop()
@@ -2342,7 +2342,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
-    
+
     self.tic()
 
     self.assertTrue(invoice.isDivergent())
@@ -2366,7 +2366,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     self.assertEqual([], packing_list.getDivergenceList())
     self.assertEqual('solved', packing_list.getCausalityState())
- 
+
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
     print invoice, divergence_list
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
@@ -2383,7 +2383,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     previous_quantity = packing_list_line.getQuantity()
     previous_resource = packing_list_line.getResource()
     previous_price = packing_list_line.getPrice()
-    
+
     packing_list.setReady()
     packing_list.start()
     packing_list.stop()
@@ -2401,7 +2401,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
-    
+
     self.tic()
 
     self.assertTrue(invoice.isDivergent())
@@ -2432,7 +2432,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     self.assertEqual([], packing_list.getDivergenceList())
     self.assertEqual('solved', packing_list.getCausalityState())
- 
+
   def test_subcontent_reindexing(self):
     """Tests, that modification on Order are propagated to lines and cells
     during reindxation"""
@@ -3475,7 +3475,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list_line = packing_list.getMovementList()[0]
     previous_quantity = packing_list_line.getQuantity()
-    
+
     packing_list.setReady()
     packing_list.start()
     self.assertEqual('started', packing_list.getSimulationState())
@@ -3492,7 +3492,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
-    
+
     self.tic()
 
     self.assertTrue(invoice.isDivergent())

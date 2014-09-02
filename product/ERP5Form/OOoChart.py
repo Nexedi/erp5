@@ -298,7 +298,7 @@ class OOoChartWidget(Widget.Widget):
                               size=1)
   property_names.append('symbol_type')
 
-  #lines-used="0" 
+  #lines-used="0"
   lines_used = fields.ListField('lines_used',
                               title='Lines Used',
                               description=(''),

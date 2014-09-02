@@ -66,13 +66,13 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
                                  reference_range_min='0000051',
                                  reference_range_max='0000051',
                                  )
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action',
                                    wf_id='checkbook_reception_workflow')
     self.tic()
 
-  def createCheckbookReceptionWithTravelerCheck(self, sequence=None, 
+  def createCheckbookReceptionWithTravelerCheck(self, sequence=None,
                                   sequence_list=None, **kwd):
     """
     Create a checkbook Reception
@@ -94,18 +94,18 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
                              reference_range_max="abcd123456",
                              price_currency_value=self.currency_2
                              )
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action',
                                    wf_id='checkbook_reception_workflow')
 
-  def checkItemsCreatedWithTravelerCheck(self, sequence=None, 
+  def checkItemsCreatedWithTravelerCheck(self, sequence=None,
                                          sequence_list=None, **kwd):
     self.checkItemsCreated(sequence=sequence,
                            sequence_list=sequence_list,
                            traveler_check=1, **kwd)
 
-  def checkItemsCreated(self, sequence=None, sequence_list=None, 
+  def checkItemsCreated(self, sequence=None, sequence_list=None,
                         traveler_check=0, **kwd):
     """
     Create the checkbook
@@ -131,7 +131,7 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
     else:
       self.assertNotEquals(traveler_check, None)
 
-  def stepPutBackPreviousDeliveryDate(self, 
+  def stepPutBackPreviousDeliveryDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Put back right inventory
@@ -253,10 +253,10 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     # check its portal type
     self.assertEqual(self.checkbook_vault_transfer.getPortalType(), 'Checkbook Vault Transfer')
     # check source
-    self.assertEqual(self.checkbook_vault_transfer.getBaobabSource(), 
+    self.assertEqual(self.checkbook_vault_transfer.getBaobabSource(),
                'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
     # check destination
-    self.assertEqual(self.checkbook_vault_transfer.getBaobabDestination(), 
+    self.assertEqual(self.checkbook_vault_transfer.getBaobabDestination(),
                'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
 
 
@@ -290,7 +290,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     """
     state = self.checkbook_vault_transfer.getSimulationState()
     self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer,
                'order_action', wf_id='checkbook_vault_transfer_workflow')
     self.assertEqual(self.checkbook_vault_transfer.getSimulationState(), 'ordered')
 
@@ -321,8 +321,8 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     state = self.checkbook_vault_transfer.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'confirmed')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 
-                                   'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer,
+                                   'deliver_action',
                                    wf_id='checkbook_vault_transfer_workflow')
     state = self.checkbook_vault_transfer.getSimulationState()
     self.assertEqual(state, 'delivered')
@@ -341,7 +341,7 @@ class TestERP5BankingCheckbookVaultTransfer(TestERP5BankingCheckbookVaultTransfe
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(
                 node=self.destination_vault.getRelativeUrl())), 2)
 
-  def stepChangePreviousDeliveryDate(self, 
+  def stepChangePreviousDeliveryDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

@@ -54,7 +54,7 @@ from Products.ERP5Type.Errors import ImmobilisationCalculationError
 
 class ImmobilisableItem(Item, Amount):
     """
-      An Immobilisable Item is an Item which can be immobilised 
+      An Immobilisable Item is an Item which can be immobilised
       and amortised in accounting
     """
 
@@ -79,7 +79,7 @@ class ImmobilisableItem(Item, Amount):
                       )
 
     zope.interface.implements(interfaces.IImmobilisationItem)
- 
+
     # IExpandableItem interface implementation
     def getSimulationMovementSimulationState(self, simulation_movement):
       """Returns the simulation state for this simulation movement.
@@ -95,7 +95,7 @@ class ImmobilisableItem(Item, Amount):
         if movement.getSimulationState() not in draft_state_list:
           return 'planned'
       return 'draft'
- 
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getImmobilisationRelatedMovementList')
     def getImmobilisationRelatedMovementList(self,
@@ -110,7 +110,7 @@ class ImmobilisableItem(Item, Amount):
       Returns a dictionary of lists containing movements related to amortisation
       system from_date is included, to_date is excluded filter_valid eliminates
       all invalid immobilisation movements in immobilisation movement list.
-      Also, only movements in current_inventory state are returned 
+      Also, only movements in current_inventory state are returned
       if filter_valid is set.
       If filter_valid is set and some movements are in state 'calculating',
       a ImmobilisationValidityError is launch.
@@ -329,9 +329,9 @@ class ImmobilisableItem(Item, Amount):
         kw_key_list.remove('immo_cache_dict')
       immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
       kw['immo_cache_dict'] = immo_cache_dict
-      if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) + 
+      if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) +
             tuple([(key,kw[key]) for key in kw_key_list])) :
-        return immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) + 
+        return immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) +
             tuple( [(key,kw[key]) for key in kw_key_list]) ]
       def setPreviousPeriodParameters(period_list,
                                       current_period,
@@ -428,7 +428,7 @@ class ImmobilisableItem(Item, Amount):
             previous_period = None
           if current_immo_period not in ({},None) or (
               previous_period is not None and
-              previous_period.get('stop_date', None) is not None and 
+              previous_period.get('stop_date', None) is not None and
               previous_period['stop_date'] == section_movement.getStopDate()
             ):
             open_new_period = 1
@@ -794,9 +794,9 @@ class ImmobilisableItem(Item, Amount):
       immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
       kw['immo_cache_dict'] = immo_cache_dict
 
-      if immo_cache_dict['price'].has_key( (self.getRelativeUrl(), at_date) + 
+      if immo_cache_dict['price'].has_key( (self.getRelativeUrl(), at_date) +
             tuple([(key,kw[key]) for key in kw_key_list]) ) :
-        returned_price = immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) + 
+        returned_price = immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) +
             tuple( [(key,kw[key]) for key in kw_key_list]) ]
         if with_currency:
           return '%0.2f %s' % (returned_price, currency)
@@ -1020,11 +1020,11 @@ class ImmobilisableItem(Item, Amount):
       if returned_price is None:
         return None
       returned_price += disposal_price
-      immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) + 
+      immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) +
             tuple([(key,kw[key]) for key in kw_key_list]) ] = returned_price
       if with_currency:
         return '%0.2f %s' % (returned_price, currency)
-      return returned_price 
+      return returned_price
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentAmortisationPrice')

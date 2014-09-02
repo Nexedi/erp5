@@ -203,7 +203,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
 
   security.declareProtected(Permissions.ManageProperties, 'manage_setAlarmNode')
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
-      """ set the alarm node """   
+      """ set the alarm node """
       if not alarmNode or self._isValidNodeName(alarmNode):
         self.setAlarmNode(alarmNode)
         if REQUEST is not None:

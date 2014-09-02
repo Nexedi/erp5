@@ -77,7 +77,7 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       organisation.edit(**org_dict)
 
       business_configuration = self.getBusinessConfigurationValue()
-      # store globally organization_id 
+      # store globally organization_id
       business_configuration.setGlobalConfigurationAttr(organisation_id=organisation.getId())
 
       if self.portal_workflow.isTransitionPossible(organisation, 'validate'):

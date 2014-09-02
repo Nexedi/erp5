@@ -140,8 +140,8 @@ class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
       do not index it for searching etc).  Default implementation returns
       False.
     """
-    if content is None: 
-      # this means that we are called directly, and external source 
+    if content is None:
+      # this means that we are called directly, and external source
       # is an index by definition
       return True
     method = self._getTypeBasedMethod('isIndexContent')

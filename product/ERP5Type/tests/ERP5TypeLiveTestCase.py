@@ -45,7 +45,7 @@ import transaction
 
 from zLOG import LOG, DEBUG, INFO
 
-# Disable patching of activity tool, 
+# Disable patching of activity tool,
 # Tic doesn't need help as TimerService is running
 from Products.ERP5Type.tests import ProcessingNodeTestCase as\
                                     ProcessingNodeTestCaseModule
@@ -58,13 +58,13 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     be run through the web. Command line based tests may be helpful
     sometimes but should remain an exception because they hinder
     productivity by adding an extra time to build the
-    environment (which is already built in live instances). 
+    environment (which is already built in live instances).
 
     All other test classes should derive from ERP5TypeLiveTestCase.
 
-    TODO: 
+    TODO:
     - An eplicit list of exceptions to live tests remains to be
-      defined. 
+      defined.
     """
     portal = None
 
@@ -255,7 +255,7 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
         return DebugTestResult(result)
     TestRunner = DebugTextTestRunner
   run_only = kw.get('run_only', ())
-  filter_test_list = [re.compile(x).search 
+  filter_test_list = [re.compile(x).search
                       for x in run_only]
   loader = ERP5TypeTestReLoader(filter_test_list)
   suite = loader.loadTestsFromNames(test_list)

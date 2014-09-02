@@ -70,10 +70,10 @@ class TestTradeReports(ERP5ReportTestCase):
     self.sale_order_module = self.portal.sale_order_module
     self.product_module = self.portal.product_module
     self.portal_categories = self.portal.portal_categories
- 
+
     # Create site category
     for site_id in ('demo_site_A', 'demo_site_B',):
-      if not self.portal_categories['site'].has_key(site_id): 
+      if not self.portal_categories['site'].has_key(site_id):
         self.portal_categories.site.newContent(
                                   portal_type='Category',
                                   title=site_id,
@@ -81,7 +81,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   id=site_id)
     # Colour categories
     for colour_id in ('colour1', 'colour2',):
-      if not self.portal_categories['colour'].has_key(colour_id): 
+      if not self.portal_categories['colour'].has_key(colour_id):
         self.portal_categories.colour.newContent(
                                   portal_type='Category',
                                   title=colour_id,
@@ -97,7 +97,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   reference=group_id,
                                   id=group_id)
     # create organisations (with no organisation member of g3)
-    if not self.organisation_module.has_key('Organisation_1'): 
+    if not self.organisation_module.has_key('Organisation_1'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
@@ -105,7 +105,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_1',
                               group='g1',
                               site='demo_site_A')
-    if not self.organisation_module.has_key('Organisation_2'): 
+    if not self.organisation_module.has_key('Organisation_2'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
@@ -123,16 +123,16 @@ class TestTradeReports(ERP5ReportTestCase):
 
     # create unit categories
     for unit_id in ('kg', 'g',):
-      if not self.portal_categories['quantity_unit'].has_key(unit_id): 
+      if not self.portal_categories['quantity_unit'].has_key(unit_id):
         self.portal_categories.quantity_unit.newContent(
                                   portal_type='Category',
                                   title=unit_id.title(),
                                   reference=unit_id,
                                   id=unit_id)
-      
+
     # Create resources
     module = self.portal.product_module
-    if not module.has_key('product_B'): 
+    if not module.has_key('product_B'):
       product = module.newContent(
           portal_type='Product',
           id='product_B',
@@ -140,7 +140,7 @@ class TestTradeReports(ERP5ReportTestCase):
           reference='ref 1',
           quantity_unit='kg'
           )
-    if not module.has_key('product_A'): 
+    if not module.has_key('product_A'):
       product = module.newContent(
           portal_type='Product',
           id='product_A',
@@ -148,7 +148,7 @@ class TestTradeReports(ERP5ReportTestCase):
           reference='ref 2',
           quantity_unit='g'
           )
-    if not module.has_key('product_C'): 
+    if not module.has_key('product_C'):
       product = module.newContent(
           portal_type='Product',
           id='product_C',
@@ -186,11 +186,11 @@ class TestTradeReports(ERP5ReportTestCase):
                       list(self.inventory_module.objectIds()))
     self.sale_order_module.manage_delObjects(
                       list(self.sale_order_module.objectIds()))
-                      
+
     self.tic()
 
-  @reindex  
-  def _makeOneInventory(self, simulation_state='draft', 
+  @reindex
+  def _makeOneInventory(self, simulation_state='draft',
                         resource=None, quantity=None, **kw):
     """Creates an inventory.
     """
@@ -201,7 +201,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     if simulation_state == 'delivered':
       inventory.deliver()
-    
+
     # sanity check
     self.assertEqual(simulation_state, inventory.getSimulationState())
     return inventory
@@ -217,14 +217,14 @@ class TestTradeReports(ERP5ReportTestCase):
                                               resource=product,
                                               quantity=values["quantity"],
                                               price=values["price"])
-      
+
     self.assertEqual(sale_order.getSimulationState(), 'draft')
     if cancel:
       sale_order.cancel()
       self.assertEqual(sale_order.getSimulationState(), 'cancelled')
-      
+
     return sale_order
-      
+
   def testSaleOrderReport(self):
     """
     Sale order report.
@@ -327,7 +327,7 @@ class TestTradeReports(ERP5ReportTestCase):
                     'Quantity Unit 2006',
                     'total amount',
                     'total quantity'])
-    
+
     # First Organisation
     d =  {'Amount 2005': 0,
                  'Amount 2006': 75.0,
@@ -353,7 +353,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 33.0,
                  'total quantity': 11.0}
     self.checkLineProperties(data_line_list[1],**d)
-                             
+
     # Product two for first organisation
     d = {'Amount 2005': 0,
                  'Amount 2006': 42.0,
@@ -366,7 +366,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 42.0,
                  'total quantity': 7.0}
     self.checkLineProperties(data_line_list[2],**d)
-                             
+
     # Second organisation
     d = {'Amount 2005': 0,
                  'Amount 2006': 21.0,
@@ -379,7 +379,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 21.0,
                  'total quantity': None}
     self.checkLineProperties(data_line_list[3],**d)
-                             
+
     # Product one for second organisation
     d = {'Amount 2005': 0,
                  'Amount 2006': 15.0,
@@ -392,7 +392,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 15.0,
                  'total quantity': 5.0}
     self.checkLineProperties(data_line_list[4],**d)
-                             
+
     # Product two for second organisation
     d = {'Amount 2005': 0,
                  'Amount 2006': 6.0,
@@ -405,7 +405,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 6.0,
                  'total quantity': 1.0}
     self.checkLineProperties(data_line_list[5],**d)
-                             
+
     # stat line
     d = {'Amount 2005': None,
                  'Amount 2006': 96.0,
@@ -418,8 +418,8 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 96.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
-                             
-    
+
+
     #
     # Year 2006 + 2007, only draft documents and one group
     #
@@ -436,7 +436,7 @@ class TestTradeReports(ERP5ReportTestCase):
     stat_line_list = [l for l in line_list if l.isStatLine()]
     self.assertEqual(3, len(data_line_list))
     self.assertEqual(1, len(stat_line_list))
-    # First organisation    
+    # First organisation
     d = {'Amount 2006': 75.0,
                  'Amount 2007': 9.0,
                  'Quantity 2006': None,
@@ -484,7 +484,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 84.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
-  
+
     # weekly aggregation level
     request['from_date'] = DateTime(2006, 2, 1)
     request['at_date'] = DateTime(2006, 2, 28)
@@ -543,7 +543,7 @@ class TestTradeReports(ERP5ReportTestCase):
     stat_line_list = [l for l in line_list if l.isStatLine()]
     self.assertEqual(3, len(data_line_list))
     self.assertEqual(1, len(stat_line_list))
-    # First organisation    
+    # First organisation
     d = {'Amount 2006': 75.0,
                  'Amount 2007': 9.0,
                  'Quantity 2006': None,
@@ -591,7 +591,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 84.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
-  
+
     # section category set, with no matching organisations
     request['simulation_state'] = ['draft',]
     request['aggregation_level'] = "year"
@@ -618,7 +618,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': None,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
-  
+
   def testStockReport(self):
     """
     Stock report.
@@ -676,7 +676,7 @@ class TestTradeReports(ERP5ReportTestCase):
     cell_key_list = list(fifth_line.getCellKeyList(base_id=base_id))
     for cell_key in cell_key_list:
       cell = fifth_line.newCell(base_id=base_id,
-                                portal_type='Inventory Cell', 
+                                portal_type='Inventory Cell',
                                 *cell_key)
       cell.edit(mapped_value_property_list=['inventory'],
                 inventory=66,
@@ -702,7 +702,7 @@ class TestTradeReports(ERP5ReportTestCase):
     ################################
     request.form['at_date'] = DateTime(2005, 1, 1)
     request.form['node_category'] = 'site/demo_site_A'
-    
+
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
                   render_format='list', REQUEST=request)
@@ -714,14 +714,14 @@ class TestTradeReports(ERP5ReportTestCase):
     ################################
     request.form['at_date'] = DateTime(2006, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
-    
+
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(1, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list, ['resource_title',
@@ -742,14 +742,14 @@ class TestTradeReports(ERP5ReportTestCase):
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
-    
+
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(4, len(data_line_list))
-    
+
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_B',
@@ -778,7 +778,7 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
-                    
+
   def testStockReportWithPositiveOrNegativeOrZeroStock(self):
     """
     Stock report.
@@ -835,7 +835,7 @@ class TestTradeReports(ERP5ReportTestCase):
     cell_key_list = list(fifth_line.getCellKeyList(base_id=base_id))
     for cell_key in cell_key_list:
       cell = fifth_line.newCell(base_id=base_id,
-                                portal_type='Inventory Cell', 
+                                portal_type='Inventory Cell',
                                 *cell_key)
       cell.edit(mapped_value_property_list=['inventory'],
                 inventory=66,
@@ -868,9 +868,9 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(2, len(data_line_list))
-    
+
     self.checkLineProperties(
                    data_line_list[0],
                    resource_title='product_B',
@@ -892,14 +892,14 @@ class TestTradeReports(ERP5ReportTestCase):
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
     request.form['negative_stock'] = 1
-    
+
     line_list = \
       self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
@@ -936,7 +936,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(3, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
@@ -959,8 +959,8 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
-    
-                   
+
+
     ################################
     # Don't Display Positive Stock
     # And Negative Stock
@@ -976,7 +976,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
@@ -999,7 +999,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
@@ -1022,7 +1022,7 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(
                    data_line_list[0],
@@ -1052,10 +1052,10 @@ class TestTradeReports(ERP5ReportTestCase):
                   render_format='list', REQUEST=self.portal.REQUEST)
 
     data_line_list = [l for l in line_list if l.isDataLine()]
-  
+
     self.assertEqual(0, len(data_line_list))
 
-    
+
   def test_Folder_generateWorkflowReport(self):
     # Create sales orders
     first = self._makeOneSaleOrder(
@@ -1094,7 +1094,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                'product_module/product_B':{"quantity":13, "price":6},},
               cancel=True
               )
-    
+
     # call the report first, it will set selection
     report_html = \
         self.portal.sale_order_module.Folder_generateWorkflowReport()

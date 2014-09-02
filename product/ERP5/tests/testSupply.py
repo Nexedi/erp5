@@ -199,7 +199,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       Check that moving timeframe of supply
       and then setting movement into that timeframe works.
     """
-    
+
     # movement is in middle of timeframe...
     movement = self._makeMovement(start_date='2009/01/15')
 
@@ -276,7 +276,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     # set new date on supply...
     supply.edit(start_date_range_min=new_date)
     self.tic()
-    
+
     # ...and check supply line
     result = self.catalog_tool(**kw)
     self.assertEqual(1, len(result) )
@@ -297,7 +297,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply_line = self._makeSupplyLine(supply)
     self.tic()
 
-    # create Sale Order and check Supply Line settings when 
+    # create Sale Order and check Supply Line settings when
     # a Resource is set on Sale Order Line
     product = portal.product_module.newContent(portal_type="Product",
                                                title = "Product 1")

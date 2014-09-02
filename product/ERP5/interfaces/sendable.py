@@ -35,12 +35,12 @@ from zope.interface import Interface
 class ISendable(Interface):
   """
     Common Interface for all documents which can be sent.
-    The notion of sending a document is independent of the 
-    kind of transport. A document can be sent by email, 
+    The notion of sending a document is independent of the
+    kind of transport. A document can be sent by email,
     by fax, by chat, by printing it out, etc. The recipients are
     defined by the 'send' method, which can usually be overloaded
     through type based methods in order to implement all
-    kinds of policies (ex. cc any sent invoice to a given 
+    kinds of policies (ex. cc any sent invoice to a given
     mailing list, selected based on some predicate information
     stored on email addresses of the Person or Organisation).
 
@@ -68,7 +68,7 @@ class ISendable(Interface):
                   email address
 
       to_url   -- the recipients of this email. If not provided
-                 we will use destination category to 
+                 we will use destination category to
                  find a list of valid email addresses
 
       cc_url   -- the Cc recipients of this email (optional)
@@ -76,7 +76,7 @@ class ISendable(Interface):
       bcc_url  -- the Bcc recipients of this email (optional)
 
       reply_url -- the email address to reply to. If nothing
-                   is provided, use the email defined in 
+                   is provided, use the email defined in
                    preferences. (XXX)
 
       subject  -- a custom title. If not provided, we will use
@@ -86,7 +86,7 @@ class ISendable(Interface):
                   use the text representation of the event
                   as body (UTF-8)
 
-      body_encoding   -- the text encoding for the message body. 
+      body_encoding   -- the text encoding for the message body.
                          this is required to send emails in countries
                          such as Japan where UTF-8 is not favoured
 
@@ -113,14 +113,14 @@ class ISendable(Interface):
   def asMIMEMultipart(from_url, to_url,
                       cc_url=None, bcc_url=None,
                       reply_url=None, subject=None,
-                      body=None, body_encoding=None, 
+                      body=None, body_encoding=None,
                       attachment_list=None,
                       attachment_format=None,
-                      extra_header_dict=None, 
+                      extra_header_dict=None,
                       additional_header_dict=None,
                       **kw):
     """
-      Low-level interface. Build a MIMEMultipart instance based on 
+      Low-level interface. Build a MIMEMultipart instance based on
       the parameters and on the document content. Recipients
       must be provided explicitely. Actual MIMEMultipart generation
       uses mailtemplates.

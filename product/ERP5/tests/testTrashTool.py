@@ -41,7 +41,7 @@ class TestTrashTool(ERP5TypeTestCase):
   """
   run_all_test = 1
   quiet = 1
-  
+
   def getTitle(self):
     return "Trash Tool"
 
@@ -240,7 +240,7 @@ class TestTrashTool(ERP5TypeTestCase):
     f = f_objects_list[0]
     self.assertEqual(f.getId(), 'file')
     self.assertTrue(f.getPortalType(), "Trash Folder")
-    
+
 
   def stepBackupObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
     """
@@ -322,7 +322,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_path = subcat_path.split('/')[2:-1]
     # check backup
     trash.backupObject(trashbin, bc_path, bc_id, save=1)
-    
+
   def stepAddSubCategories(self, sequence=None, sequence_list=None, **kw):
     # Add subcategories
     category_id_list = sequence.get('category_id_list')
@@ -337,7 +337,7 @@ class TestTrashTool(ERP5TypeTestCase):
     subcat = cat.newContent(portal_type='Category')
     self.assertTrue(subcat is not None)
     sequence.edit(subcat_path=subcat.getPath())
-    
+
   # tests
   def test_01_checkTrashBinCreation(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -353,7 +353,7 @@ class TestTrashTool(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_02_checkBackupWithoutSave(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:

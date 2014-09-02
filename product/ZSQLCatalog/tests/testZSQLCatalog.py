@@ -78,11 +78,11 @@ class TestSQLCatalog(unittest.TestCase):
     expression = self._catalog.getExpressionInstance('z_dummy_method')
     self._catalog.setFilterExpression('z_dummy_method', 'python: 2')
     self.assertEqual('python: 2', self._catalog.getExpression('z_dummy_method'))
-    self.assertNotEquals(expression, 
+    self.assertNotEquals(expression,
                          self._catalog.getExpressionInstance('z_dummy_method'))
     self._catalog.setFilterExpression('z_dummy_method', 'python: 1')
     self.assertEqual('python: 1', self._catalog.getExpression('z_dummy_method'))
-    self.assertRaises(KeyError, self._catalog.setFilterExpression, 
+    self.assertRaises(KeyError, self._catalog.setFilterExpression,
                                 'not_exists', "python:1")
     self.assertEqual('', self._catalog.getExpression('not_exists'))
 
@@ -93,7 +93,7 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertEqual(self._catalog.filter_dict.keys(), filter_dict.keys())
     self.assertTrue(isinstance(filter_dict, type({})))
     self.assertTrue(isinstance(filter_dict['z_dummy_method'], type({})))
-    self.assertEqual(self._catalog.getExpression('z_dummy_method'), 
+    self.assertEqual(self._catalog.getExpression('z_dummy_method'),
                       filter_dict['z_dummy_method']['expression'])
 
   def test_getFilterExpressionInstance(self):

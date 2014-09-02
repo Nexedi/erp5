@@ -50,7 +50,7 @@ class IHtmlConvertable(Interface):
     """
     Converts the current document to HTML, only keeping
     keeping the content enclosed by <BODY></BODY> tags
- 
+
     kw -- optional parameters which can be passed to the
           conversion engine
     """

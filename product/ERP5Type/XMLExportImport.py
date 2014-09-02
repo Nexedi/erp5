@@ -63,7 +63,7 @@ class OrderedPickler(Pickler):
 
     dispatch[DictionaryType] = save_dict
     if not PyStringMap is None:
-        dispatch[PyStringMap] = save_dict        
+        dispatch[PyStringMap] = save_dict
 
 # ERP5 specific pickle function - produces ordered pickles
 def dumps(obj, protocol=None):

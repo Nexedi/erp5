@@ -81,7 +81,7 @@ class TestRamCache(ERP5TypeTestCase):
       ## should exists no scopes in cache
       self.assertEqual([], cache_plugin.getScopeList())
 
-      ## set some sample values 
+      ## set some sample values
       for scope in test_scopes:
         cache_id = '%s_cache_id' %scope
         cache_plugin.set(cache_id, scope, scope*10)
@@ -97,15 +97,15 @@ class TestRamCache(ERP5TypeTestCase):
       self.assertEqual(test_scopes, scopes_from_cache)
 
       ## remove scope one by one
-      count = 1 
+      count = 1
       for scope in test_scopes:
         cache_plugin.clearCacheForScope(scope)
-        ## .. and check that  we should have 1 less cache scope 
+        ## .. and check that  we should have 1 less cache scope
         scopes_from_cache = cache_plugin.getScopeList()
         self.assertEqual(iterations - count, len(scopes_from_cache))
         count = count + 1
 
-      ## .. we shouldn't have any cache scopes 
+      ## .. we shouldn't have any cache scopes
       scopes_from_cache = cache_plugin.getScopeList()
       self.assertEqual([], scopes_from_cache)
 
@@ -140,7 +140,7 @@ class TestRamCache(ERP5TypeTestCase):
       ## sleep for timeout +1
       time.sleep(cache_timeout + 1)
 
-      ## should remove from cache expired cache entries 
+      ## should remove from cache expired cache entries
       cache_plugin.expireOldCacheEntries(forceCheck=True)
 
       ##  check it, we MUST NOT have this key any more in cache

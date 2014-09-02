@@ -62,14 +62,14 @@ class RelationStringFieldWidget(
 
     if REQUEST.get(
         'read_only_%s' % REQUEST.get(
-           'field__proxyfield_%s_%s_default' % (field.id, field._p_oid), 
+           'field__proxyfield_%s_%s_default' % (field.id, field._p_oid),
            field).getId()[3:], 0):
       return []
     else:
       relation_field_id = field.generate_subfield_key(SUB_FIELD_ID, key=key)
       relation_item_key = field.generate_subfield_key(ITEM_ID, key=key)
       relation_item_list = REQUEST.get(relation_item_key, [])
-      return [(Widget.TextWidgetInstance, relation_field_id, 
+      return [(Widget.TextWidgetInstance, relation_field_id,
                relation_item_list, value, None)]
 
 class RelationEditor(MultiRelationField.MultiRelationEditor):
@@ -105,7 +105,7 @@ class RelationStringFieldValidator(
       _v_message_name_list.append(message_name)
       _v_dict[message_name] = 1
   message_names = _v_message_name_list
-  
+
   _v_dict = {}
   _v_property_name_list = []
   for property_name in property_names:
@@ -134,7 +134,7 @@ class RelationStringFieldValidator(
     value = self.default_validator_instance.validate(field, key, REQUEST)
     return [(relation_item_id, relation_uid_list, value)]
 
-  def _generateFieldValueList(self, field, key, 
+  def _generateFieldValueList(self, field, key,
                               value_list, current_value_list):
     """
     Generate list of value, item_key
@@ -163,7 +163,7 @@ class RelationStringField(ZMIField):
     """
     Get value for id; don't do any override calculation.
     """
-    if id == 'is_relation_field': 
+    if id == 'is_relation_field':
       result = 1
     elif id == 'is_multi_relation_field':
       result = 0

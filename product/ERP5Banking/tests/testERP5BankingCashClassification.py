@@ -211,11 +211,11 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin):
     """
     # Cash sorting has encaisse_paris for source, encaisse_aux_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_sorting = self.cash_sorting_module.newContent(
-                               id='cash_sorting_1', 
-                               portal_type='Cash Sorting', 
-                               source_value=self.encaisse_tri, 
+                               id='cash_sorting_1',
+                               portal_type='Cash Sorting',
+                               source_value=self.encaisse_tri,
                                description='test',
-                               destination_value=None, 
+                               destination_value=None,
                                source_total_asset_price=52400.0)
     # execute tic
     self.tic()
@@ -676,7 +676,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)    
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 12 coins of 200
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_aux_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)

@@ -66,7 +66,7 @@ class TestICal(ERP5TypeTestCase):
       self.portal.person_module.manage_delObjects(['one'])
     one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
     self.tic()
-    
+
   def parseICalFeed(self,  feed_string):
     """
       Parse the feed.
@@ -75,7 +75,7 @@ class TestICal(ERP5TypeTestCase):
     """
     feed = feed_string.split('\n')
     # split once, because link like 'URL:http://myhost...' can exist in feed_string
-    feed = [s.split(':',  1) for s in feed if s] 
+    feed = [s.split(':',  1) for s in feed if s]
     feed_dict = {}
     for line in feed:
       if line[0] == 'BEGIN' or line[0] == 'END':
@@ -90,20 +90,20 @@ class TestICal(ERP5TypeTestCase):
     """
     self.request.set('portal_skin', 'iCal');
     self.portal.portal_skins.changeSkin('iCal');
-    
+
     feed_string = module.Folder_viewContentListAsICal()
     return self.parseICalFeed(feed_string)
-    
+
   def test_01_renderEvent(self, quiet=0, run=run_all_test):
     """
       Events (like phone call) are rendered as events (not surprisingly).
       Here we check if the dates, categories and other properties are rendered correctly.
     """
-    if not run: return    
+    if not run: return
     module = self.portal.event_module
     event = module.newContent(id='one', title='Event One', portal_type='Phone Call')
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
     self.assertTrue('END:VCALENDAR' in feed_dict)
@@ -122,13 +122,13 @@ class TestICal(ERP5TypeTestCase):
     self.assertFalse('DESCRIPTION' in feed_dict)
     # current workflow state - draft
     self.assertEqual(feed_dict['STATUS'], 'TENTATIVE')
-    
+
     # set start date, description and change workflow state - new
     event.plan()
     event.setStartDate('2007/08/15 08:30 UTC')
     event.setDescription('Event One description')
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     # DSTART and DTEND are the date in UTC
     self.assertEqual(feed_dict['DTSTART'], '20070815T083000Z')
@@ -136,31 +136,31 @@ class TestICal(ERP5TypeTestCase):
     self.assertEqual(feed_dict['DTEND'], '20070815T083000Z')
     self.assertEqual(feed_dict['STATUS'], 'TENTATIVE')
     self.assertEqual(feed_dict['DESCRIPTION'],  'Event One description')
-    
+
     # check categorization
     sale_op = self.portal.sale_opportunity_module.newContent(portal_type='Sale Opportunity', title='New Opportunity', reference='NEWSALEOP')
     event.setFollowUp(sale_op.getRelativeUrl())
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertTrue(feed_dict['CATEGORIES'] in ('NEWSALEOP', 'New Opportunity')) # forward compatibility
-    
+
     # set stop date and change workflow state - assigned
     event.confirm()
     event.start()
     event.setStopDate('2007/08/15 13:30 UTC')
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['DTEND'], '20070815T133000Z')
     self.assertEqual(feed_dict['STATUS'], 'CONFIRMED')
-    
+
     # cancel event but first remove previously created
     module.manage_delObjects([event.getId()])
     event2 = module.newContent(title='Event Two', portal_type='Phone Call')
     event2.cancel()
     self.tic()
-     
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['STATUS'], 'CANCELLED')
 
@@ -169,13 +169,13 @@ class TestICal(ERP5TypeTestCase):
       Task - is rendered as "todo".
       Additionally, it has "status" and "percent-complete" fields which change
       when the task moves along task_workflow.
-      Dates work the same way, so we don't have to repeat it 
+      Dates work the same way, so we don't have to repeat it
     """
-    if not run: return    
+    if not run: return
     module = self.portal.task_module
     task = module.newContent(id='one', title='Task One', start_date='2007/08/15')
     self.tic()
-   
+
    # current workflow state - draft
     feed_dict = self.getICalFeed(module)
     self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
@@ -186,80 +186,80 @@ class TestICal(ERP5TypeTestCase):
     self.assertEqual(feed_dict['STATUS'], 'NEEDS-ACTION')
     self.assertEqual(feed_dict.get('PERCENT-COMPLETE', '0'), '0') # when it is zero it doesn't have to be there
     # now we check categorization (while we can edit the object)
-    project = self.portal.project_module.newContent(portal_type='Project', 
-                                                                          title='New Project', 
+    project = self.portal.project_module.newContent(portal_type='Project',
+                                                                          title='New Project',
                                                                           reference='NEWPROJ')
     task.setSourceProjectValue(project)
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['CATEGORIES'], 'NEWPROJ')
-    
+
     # change workflow state - planned
     task.plan()
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['STATUS'], 'NEEDS-ACTION')
     self.assertEqual(feed_dict['PERCENT-COMPLETE'], '33')
-    
+
     # change workflow state - ordered
     task.order()
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['STATUS'], 'IN-PROCESS')
     self.assertEqual(feed_dict['PERCENT-COMPLETE'], '66')
-    
+
     # change workflow state - confirmed
     task.confirm()
     self.tic()
-    
+
     feed_dict = self.getICalFeed(module)
     self.assertEqual(feed_dict['STATUS'], 'COMPLETED')
     self.assertEqual(feed_dict['PERCENT-COMPLETE'], '100')
-    
+
   def test_03_renderJournal(self, quiet=0, run=run_all_test):
     """
     Everyting which is not event and task is rendered as journal.
     Here we render person module as iCal.
     In this case pt for render current form('Test_view') is default page template(form_view)
     """
-    if not run: return    
+    if not run: return
     self.request.set('portal_skin', 'iCal');
     self.portal.portal_skins.changeSkin('iCal');
-  
+
     self.portal._setObject('Test_view',
                         ERP5Form('Test_view', 'View'))
     self.portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
-  
+
     listbox=self.portal.Test_view.listbox
-    self.assertNotEquals(listbox, None)  
-  
+    self.assertNotEquals(listbox, None)
+
     listbox.manage_edit_xmlrpc(
           dict(columns=[('title', 'Title'),
                         ('creation_date', 'Creation date'),
                         ('description','Description'),
                         ('Base_getICalComponent',  'Component')],
-               sort=[('creation_date | descending')], 
+               sort=[('creation_date | descending')],
                list_action='list',
                list_method='searchFolder',
                count_method='countFolder',
                selection_name='ical_folder_selection'))
-    
+
     module = self.portal.person_module
     one = self.portal.person_module.one
     feed_string = self.portal.person_module.Test_view()
     feed_dict = self.parseICalFeed(feed_string)
-  
+
     self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
     self.assertTrue('END:VCALENDAR' in feed_dict)
     self.assertTrue('BEGIN:VJOURNAL' in feed_dict)
     self.assertTrue('END:VJOURNAL' in feed_dict)
     self.assertEqual(feed_dict['SUMMARY'], 'One')
     self.assertEqual(feed_dict['DESCRIPTION'], 'Person One')
-    self.assertEqual(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))  
-    
+    self.assertEqual(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestICal))

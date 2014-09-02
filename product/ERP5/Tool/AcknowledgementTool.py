@@ -40,24 +40,24 @@ from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 class AcknowledgementTool(BaseTool):
   """
     Provide an entry point to track reception of events
-    
+
     someone who can not view the ticket or the event
     must be able to acknowledge reception of email
     or of site message sent by CRM.
 
-    This tools take into account that for some kind of document, 
-    acknowledgements are not created in advance. For Site Message, 
+    This tools take into account that for some kind of document,
+    acknowledgements are not created in advance. For Site Message,
     acknowledgements will be created every time the user confirm that he has
     read the information.
 
     In the case of internal emails, acknowledgements are created in advance.
-  
+
     Use Case: who read the emails I sent ?
     Use Case: who said OK to Site Message ?
   """
   id = 'portal_acknowledgements'
   meta_type = 'ERP5 Acknowledgement Tool'
-  portal_type = 'Acknowledgement Tool'   
+  portal_type = 'Acknowledgement Tool'
   allowed_types = ('ERP5 Acknowledgement',)
   # Declarative Security
   security = ClassSecurityInfo()
@@ -71,7 +71,7 @@ class AcknowledgementTool(BaseTool):
     return len(self.getUnreadAcknowledgementList(*args, **kw))
 
   security.declarePublic('getUnreadAcknowledgementList')
-  def getUnreadAcknowledgementList(self, portal_type=None, user_name=None, 
+  def getUnreadAcknowledgementList(self, portal_type=None, user_name=None,
                                    url_list=None):
     """
       returns acknowledgements pending
@@ -82,7 +82,7 @@ class AcknowledgementTool(BaseTool):
     portal = self.getPortalObject()
     return_list = []
     if url_list is None:
-      url_list = self.getUnreadDocumentUrlList(portal_type=portal_type, 
+      url_list = self.getUnreadDocumentUrlList(portal_type=portal_type,
                                                user_name=user_name)
     for url in url_list:
       document = portal.restrictedTraverse(url)
@@ -106,7 +106,7 @@ class AcknowledgementTool(BaseTool):
   security.declarePublic('getUnreadDocumentUrlList')
   def getUnreadDocumentUrlList(self, portal_type=None, user_name=None, **kw):
     """
-      returns document that needs to be acknowledged : 
+      returns document that needs to be acknowledged :
       - Acknowledgement (internal email)
       - Site Message
 
@@ -153,7 +153,7 @@ class AcknowledgementTool(BaseTool):
       - a ticket
       - an event
       - an acknowledgement
-      
+
       This methods needs to check if there is already ongoing ackowledgement
       for the document of for this user. We will have to use activities with
       tag and probably a serialization.
@@ -168,6 +168,6 @@ class AcknowledgementTool(BaseTool):
     if document is None:
       raise ValueError("Ticket does not exist or you don't have access to it")
     return document.acknowledge(user_name=user_name, **kw)
- 
+
 
 InitializeClass(AcknowledgementTool)

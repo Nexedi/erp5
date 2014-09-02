@@ -53,7 +53,7 @@ class PredicateMatrix(XMLMatrix):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
-  
+
   def _getMatchingCell(self, movement):
     """
       Browse all cells and test them until match found
@@ -62,12 +62,12 @@ class PredicateMatrix(XMLMatrix):
                         base_id=self.predicate_matrix_base_id) :
       if cell.test(movement):
         return cell
-    return None          
-  
+    return None
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getMatchingCell' )
   getMatchingCell = _getMatchingCell
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
   def updateMatrix(self) :
     """
@@ -77,7 +77,7 @@ class PredicateMatrix(XMLMatrix):
     base_id = self.predicate_matrix_base_id
     kwd = {'base_id': base_id}
     self._updateCellRange(base_id) # calls PT dependant script.
-    
+
     cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
     if cell_range_key_list != [[None, None]] :
       for k in cell_range_key_list :
@@ -95,4 +95,4 @@ class PredicateMatrix(XMLMatrix):
       for k in cell_range_id_list :
         if self.get(k) is not None :
           self.deleteContent(k)
-    
+

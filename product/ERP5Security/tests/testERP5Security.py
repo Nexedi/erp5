@@ -581,12 +581,12 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Assigning a role with local roles group id.
     """
     self.portal.portal_categories.local_role_group.newContent(
-      portal_type='Category', 
+      portal_type='Category',
       reference = 'Alternate',
       id = 'Alternate')
     self._getTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignor',
-      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),      
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),
       role_category=self.defined_category)
 
     self.loginAsUser(self.username)

@@ -29,7 +29,7 @@
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator import StandardFields 
+from Products.Formulator import StandardFields
 from Products.Formulator.DummyField import fields
 from Products.PythonScripts.Utility import allow_class
 
@@ -49,20 +49,20 @@ class ParallelListWidget(Widget.MultiListWidget,
       ParallelListWidget display a list of (Multi)ListField.
       Each can be required.
 
-      Separation of items list is made with a Hash Script, which take 
+      Separation of items list is made with a Hash Script, which take
       the items list in input, and return a list of dictionnaries.
 
       Each dictionnary describes a (Multi)ListField.
       The keys are:
-        - key: 
+        - key:
             default: default
-        - required: {1, 0}  
+        - required: {1, 0}
             default: 0
         - field_type: {ListField, MultiListField}
             default: MultiListField
         - item_list: [(display, value), ...]
             default: []
-        - value: 
+        - value:
             default: []
         - is_right_display: {1, 0}
             default: 0
@@ -224,7 +224,7 @@ class ParallelListField(ZMIField):
   meta_type = "ParallelListField"
 
   widget = ParallelListWidgetInstance
-  validator = ParallelListFieldValidatorInstance 
+  validator = ParallelListFieldValidatorInstance
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, REQUEST=None, **kw):
@@ -262,7 +262,7 @@ def generateSubForm(self, value, REQUEST):
             default_sub_field_property_dict=empty_sub_field_property_dict,
             is_right_display=0)
   else:
-    # No hash_script founded, generate a little hash_script 
+    # No hash_script founded, generate a little hash_script
     # to display only a MultiListField
     empty_sub_field_property_dict['item_list'] = item_list
     empty_sub_field_property_dict['value'] = value_list
@@ -280,7 +280,7 @@ def paralellListFieldGetValue(field, id, REQUEST=None, **kw):
 # Register get_value
 from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
 registerOriginalGetValueClassAndArgument(
-    ParallelListField, 
+    ParallelListField,
     ('title', 'required', 'size', 'default', 'first_item', 'items'),
     paralellListFieldGetValue)
 

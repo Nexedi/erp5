@@ -32,7 +32,7 @@ from zope.schema.interfaces import ISequence
 
 class IAmountList(ISequence):
   """Amount list interface specification
-  
+
    A sequence of objects implementing IAmount interface.
   """
 

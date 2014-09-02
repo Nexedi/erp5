@@ -111,7 +111,7 @@ class ColumnMap(object):
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
     assert ' as ' not in raw_column.lower()
     # Sanitize input: extract column from raw column (might contain COUNT, ...).
-    # XXX This is not enough to parse something like: 
+    # XXX This is not enough to parse something like:
     # GROUP_CONCAT(DISTINCT foo ORDER BY bar)
     if '(' in raw_column:
       function, column = raw_column.split('(')
@@ -521,7 +521,7 @@ class ColumnMap(object):
     if column in self.left_join_list:
       raise RuntimeError('Left Join requested for column: %r, but rendered '
                          'join query is not compatible and would result in an '
-                         'Implicit Inner Join:\n%s' % 
+                         'Implicit Inner Join:\n%s' %
                          (column, query,))
     self.join_query_list.append(query)
 
@@ -532,7 +532,7 @@ class ColumnMap(object):
       return itertools.chain(self.join_query_list,
                              self.table_definition.getJoinConditionQueryList())
     return []
-    
+
 
   def _addJoinTableForColumn(self, table_name, column, group=DEFAULT_GROUP_ID):
     """
@@ -568,18 +568,18 @@ class ColumnMap(object):
       return table_name
     # XXX move the cleanup of table alias overrides to EntireQuery
     # class or ZSQLCatalog, so we don't need SQL syntax knowledge in
-    # ColumnMap. 
+    # ColumnMap.
     #
     # Normalise the AS sql keyword to remove the last
     # aliasing in the string if present. E.g.:
-    # 
-    # '(SELECT sub_catalog.* 
+    #
+    # '(SELECT sub_catalog.*
     #   FROM catalog AS sub_catalog
     #   WHERE sub_catalog.parent_uid=183) AS catalog'
     #
     # becomes:
     #
-    # '(SELECT sub_catalog.* 
+    # '(SELECT sub_catalog.*
     #   FROM catalog AS sub_catalog
     #   WHERE sub_catalog.parent_uid=183)'
     table_override, removed = re_sql_as.subn('', table_override_w_alias)
@@ -635,7 +635,7 @@ class ColumnMap(object):
     # XXX: to fix TestERP5Catalog.test_52_QueryAndTableAlias, create
     # here a list of joins and try to merge each new entry into one of
     # the pre-existing entries by comparing their right-sides.
-    # 
+    #
     # XXX 2: This is the place were we could do ordering of inner and left
     # joins so as to get better performance. For instance, a quick win is to
     # add all inner-joins first, and all left-joins later. We could also decide

@@ -35,7 +35,7 @@ class TransactionQuantityValueValidity(Constraint):
 
     def _checkConsistency(self, object, fixit=0):
       """
-      Check if the quantity of the transaction is greater than the 
+      Check if the quantity of the transaction is greater than the
       balance of the source.
       """
       errors = []

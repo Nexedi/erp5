@@ -638,7 +638,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         spec               --    a list or a tuple of portal types
 
-        checked_permission        --    a string which defined the permission 
+        checked_permission        --    a string which defined the permission
                                         to filter the object on
 
       """
@@ -724,7 +724,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         spec               --    a list or a tuple of portal types
 
-        checked_permission        --    a string which defined the permission 
+        checked_permission        --    a string which defined the permission
                                         to filter the object on
 
       """
@@ -748,7 +748,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getSingleCategoryMembershipList')
     def getSingleCategoryMembershipList(self, context, base_category, base=0,
-                                         spec=(), filter=None, 
+                                         spec=(), filter=None,
                                          checked_permission=None, **kw):
       """
         Returns the local membership of the context for a single base category
@@ -763,12 +763,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
 
-        checked_permission        --    a string which defined the permission 
+        checked_permission        --    a string which defined the permission
                                         to filter the object on
       """
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
-      if spec is (): 
+      if spec is ():
         spec = kw.get('portal_type', ())
 
       # Build the ckecked_permission filter
@@ -903,7 +903,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
 
-        checked_permission        --    a string which defined the permission 
+        checked_permission        --    a string which defined the permission
                                         to filter the object on
 
         alt_base_category         --    an alternative base category if the first one fails
@@ -1038,7 +1038,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #if hasattr(my_acquisition_object, '_categories'): # This would be a bug since we have category acquisition
                 #LOG('my_acquisition_object',0, str(getattr(my_acquisition_object, '_categories', ())))
                 #LOG('my_acquisition_object',0, str(base_category))
-                
+
                 # We should only consider objects which define that category
                 if base_category in getattr(my_acquisition_object, '_categories', ()) or base_category_value.getFallbackBaseCategoryList():
                   if (not acquired_portal_type) or my_acquisition_object.portal_type in acquired_portal_type:
@@ -1523,7 +1523,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if result == '':
         result = []
       return result
-    
+
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildAdvancedSQLSelector')
     def buildAdvancedSQLSelector(self, category_list, query_table='category',
@@ -1699,11 +1699,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # for example, with source/sale_order_module/1/1/1, because
         # we do not want to acquire a Sale Order when a Line or a Cell is
         # not present.
-        # 
+        #
         # I describe my own idea about the categorisation system in ERP5
         # here, because I think it is important to understand why
         # resolveCategory is implemented in this way.
-        # 
+        #
         # The goal of resolveCategory is to provide either a conceptual
         # element or a concrete element from a certain viewpoint. There
         # are 5 different actors in this system:
@@ -1713,24 +1713,24 @@ class CategoryTool( UniqueObject, Folder, Base ):
         #   - Certain view (= Category)
         #   - Classification of documents (= Module or Tool)
         #   - Document (= Document)
-        # 
+        #
         # Categories are conceptually a tree structure with the root
         # of Category Tool. The next level is always Base Categories,
         # to represent abstract concepts. The deeper going down in a tree,
         # the more concrete a viewpoint is.
-        # 
+        #
         # Base Categories may contain other Base Categories, because an
         # abstract concept can be a part of another abstract concept,
         # simply representing a multi-level concept. Base Categories may
         # contain Categories, because an abstract concept gets more concrete.
         # This is the same for Modules and Tools.
-        # 
+        #
         # Categories may contain Categories only in a way that views
         # are more concrete downwards. Thus a category may not acquire
         # a Base Category or a upper-level category. Also, Categories
         # may not contain Modules or Tools, because they don't narrow
         # views.
-        # 
+        #
         # In a sense, Modules and Tools are similar to Categories,
         # as they do narrow things down, but they are fundamentally
         # different from Categories, because their purpose is to
@@ -1739,10 +1739,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # procedures by more abstract viewpoints. The difference between
         # Modules and Tools are about whether procedures are business
         # oriented or system oriented.
-        # 
+        #
         # Documents may contain Documents, but only to a downward direction.
         # Otherwise, things get more abstract in a tree.
-        # 
+        #
         # According to those ideas, the current implementation may not
         # always behave correctly, because you can resolve a category
         # which violates the rules. For example, you can resolve
@@ -1805,7 +1805,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             obj = restrictedGetOb(obj, key, default)
 
         if obj is None:
-          LOG('CMFCategory', WARNING, 
+          LOG('CMFCategory', WARNING,
               'Could not access object %s' % relative_url)
 
         if cache is not None:

@@ -240,7 +240,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
 
   def _getConversionFromProxyServer(self, format):
     """
-      Communicates with server to convert a file 
+      Communicates with server to convert a file
     """
     if not self.hasBaseData():
       # XXX please pass a meaningful description of error as argument

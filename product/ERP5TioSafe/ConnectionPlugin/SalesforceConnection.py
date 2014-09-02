@@ -80,7 +80,7 @@ class MethodWrapper(object):
         </soapenv:Header>
         <soapenv:Body>
           <urn:create>
-            <urn:sObjects xsi:type="ns3:Contact" 
+            <urn:sObjects xsi:type="ns3:Contact"
                           xmlns:ns3="urn:sobject.enterprise.soap.sforce.com">
               <ns3:Name><b>Kirk Hammett</b></ns3:Name>
               <ns3:FirstName><b>Kirk</b></ns3:FirstName>

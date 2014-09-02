@@ -314,7 +314,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     if only_currency:
       return
-    
+
     # second, create exchange lines
     for currency_id, title, base_price, cell_price, price_currency in currency_list:
       currency = self.getCurrencyModule()[currency_id]
@@ -335,7 +335,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       exchange_line.confirm()
       exchange_line.validate()
 
-      
+
 
   def _createBanknotesAndCoins(self):
     """
@@ -642,7 +642,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self._maybeNewContent(serre, 'transit')
     self._maybeNewContent(serre, 'retire')
     salle_tri = self._maybeNewContent(surface_vault_type, 'salle_tri')
-      
+
     if not no_site:
       destination_site_list = [x.getId() for x in created_site_list]
       for c in created_site_list: #self.testsite.getCategoryChildValueList():
@@ -722,7 +722,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     return created_site_list
 
-  def _openDate(self, date=None, site=None, id=None, open=True, container=None, 
+  def _openDate(self, date=None, site=None, id=None, open=True, container=None,
                 portal_type=None, force_check=0):
     if date is None:
       date = DateTime().Date()
@@ -734,7 +734,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                        site_value = site, start_date = date)
     if open:
       if force_check and date_object.getPortalType() == 'Counter Date':
-        self.workflow_tool.doActionFor(date_object, 'open_action', 
+        self.workflow_tool.doActionFor(date_object, 'open_action',
                                      wf_id='counter_date_workflow',
                                      your_check_date_is_today=0)
       else:
@@ -754,8 +754,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     open a couter date for the given date
     by default use the current date
     """
-    self._openDate(date=date, site=site, id=id, open=open, 
-                   container=self.getCounterDateModule(), 
+    self._openDate(date=date, site=site, id=id, open=open,
+                   container=self.getCounterDateModule(),
                    portal_type='Counter Date',
                    force_check=force_check)
 
@@ -902,7 +902,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       bank_account.edit(reference='ref_%s%s%s%s%s' % (kw['bank_country_code'],
         kw['bank_code'], kw['branch'], kw['bank_account_number'],
         kw['bank_account_key']))
-      
+
     # validate this bank account for payment
     bank_account.validate()
     if amount:
@@ -1251,11 +1251,11 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # check years  of billet_200
     self.assertEqual(self.billet_200.getVariationList(), ['1992', '2003'])
 
-  def resetInventory(self, 
-               sequence=None, line_list=None, sequence_list=None, extra_id=None, 
+  def resetInventory(self,
+               sequence=None, line_list=None, sequence_list=None, extra_id=None,
                destination=None, currency=None, start_date=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     if extra_id is not None:
@@ -1269,11 +1269,11 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
   def stepDeleteResetInventory(self, sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     inventory_module = self.getPortal().cash_inventory_module
-    to_delete_id_list = [x for x in inventory_module.objectIds() 
+    to_delete_id_list = [x for x in inventory_module.objectIds()
                          if x.find('reset')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
 

@@ -34,13 +34,13 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from DateTime import DateTime
-from Products.ERP5Type.Errors import UnsupportedWorkflowMethod 
+from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class ReturnedSalePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test returned sale packing lists.
   """
-  
+
   returned_packing_list_portal_type = 'Returned Sale Packing List'
   returned_packing_list_line_portal_type = 'Returned Sale Packing List Line'
   returned_packing_list_cell_portal_type = 'Returned Sale Packing List Cell'
@@ -57,7 +57,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                       stepCreateCurrency \
                       stepCreateNotVariatedResource \
                       stepTic '
-    
+
 
   def beforeTearDown(self):
     self.abort()
@@ -84,7 +84,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     uf._doAddUser('member', '', ['Member', 'Assignor'], [])
     user = uf.getUserById('member').__of__(uf)
     newSecurityManager(None, user)
-    
+
   def afterSetUp(self, quiet=1, run=1):
     self.loginAsManager()
     portal = self.getPortal()
@@ -93,7 +93,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     self.setUpPreferences()
     # test with not a manager
     self.loginAsMember()
-    
+
   def stepCreateReturnedPackingList(self, sequence=None, sequence_list=None, **kw):
     """
       Adds a Returned Packing List
@@ -101,11 +101,11 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list = self.getPortal().getDefaultModule(
         self.returned_packing_list_portal_type).newContent(
             portal_type=self.returned_packing_list_portal_type)
-            
-    
+
+
     organisation = sequence.get('organisation1')
     organisation3 = sequence.get('organisation3')
-    
+
     start_date = DateTime(self.shipping_date_string)
     returned_packing_list.edit(
       title = "RPL%s" % returned_packing_list.getId(),
@@ -122,14 +122,14 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                  source_administration_value=organisation3,
                  destination_administration_value=organisation,
                  )
-    
+
     returned_packing_list_line = returned_packing_list.newContent(
         portal_type=self.returned_packing_list_line_portal_type)
     resource = sequence.get('resource')
     returned_packing_list_line.setResourceValue(resource)
     returned_packing_list_line.edit(quantity=200)
     sequence.edit(returned_packing_list=returned_packing_list)
-    
+
   def stepCheckReturnedPackingListCreating(self, sequence=None, sequence_list=None, **kw):
     """
       Check that returned packing list creating
@@ -137,7 +137,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list = sequence.get('returned_packing_list')
     organisation = sequence.get('organisation1')
     organisation3 = sequence.get('organisation3')
-    
+
     self.assertEqual(organisation3, returned_packing_list.getSourceValue())
     self.assertEqual(organisation3, returned_packing_list.getSourceSectionValue())
     self.assertEqual(organisation, returned_packing_list.getDestinationValue())
@@ -149,17 +149,17 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
 
     returned_packing_list_line_list = returned_packing_list.objectValues(
                         portal_type=self.returned_packing_list_line_portal_type)
-                        
+
     self.assertEqual(1, len(returned_packing_list_line_list))
     returned_packing_list_line = returned_packing_list_line_list[0]
     self.assertEqual(self.returned_packing_list_line_portal_type,
                       returned_packing_list_line.getPortalType())
-    resource = sequence.get('resource')    
+    resource = sequence.get('resource')
     created_resource = returned_packing_list_line.getResourceValue()
     self.assertEqual(resource, created_resource)
     self.assertEqual(200, returned_packing_list_line.getQuantity())
-  
-  def stepCheckReturnedPackingListDeleting(self, sequence=None, 
+
+  def stepCheckReturnedPackingListDeleting(self, sequence=None,
                                            sequence_list=None, **kw):
     """
      Check that returned packing list deleting
@@ -173,20 +173,20 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list.manage_delObjects([returned_packing_list_line.getId()])
 
     portal_catalog = self.getCatalogTool()
-    returned_packing_list_uid = returned_packing_list.getUid()    
+    returned_packing_list_uid = returned_packing_list.getUid()
     found_rpl = portal_catalog(uid=returned_packing_list_uid)
-    self.assertEqual(1, len(found_rpl))    
+    self.assertEqual(1, len(found_rpl))
     rpl = found_rpl[0].getObject()
     self.assertEqual(0, len(rpl.objectValues(
         portal_type=self.returned_packing_list_line_portal_type)))
-        
+
     # delete a delivery
     self.portal.returned_sale_packing_list_module.manage_delObjects(
         [returned_packing_list.getId(),])
-    
+
     found_rpl =  portal_catalog(uid=returned_packing_list_uid)
     self.assertEqual(0, len(found_rpl))
-    
+
   def stepConfirmReturnedPackingList(self, sequence=None, sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     returned_packing_list.confirm()
@@ -194,11 +194,11 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
   def stepShipReturnedPackingList(self,sequence=None, sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     returned_packing_list.start()
-    
+
   def stepReceiveReturnedPackingList(self,sequence=None, sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     returned_packing_list.stop()
- 
+
   def stepDeliverReturnedPackingList(self,sequence=None, sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     returned_packing_list.deliver()
@@ -207,30 +207,30 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                                             sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     self.assertEqual('confirmed', returned_packing_list.getSimulationState())
-    
+
   def stepCheckShippedReturnedPackingList(self, sequence=None,
                                           sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     self.assertEqual('started', returned_packing_list.getSimulationState())
-    
+
   def stepCheckReceivedReturnedPackingList(self, sequence=None,
                                            sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     self.assertEqual('stopped', returned_packing_list.getSimulationState())
-    
-  
+
+
   def stepCheckDeliveredReturnedPackingList(self, sequence=None,
                                             sequence_list=None, **kw):
     returned_packing_list = sequence.get('returned_packing_list')
     self.assertEqual('delivered', returned_packing_list.getSimulationState())
 
-  
+
   def _getInventoryModule(self):
     return getattr(self.getPortal(), 'inventory_module',None)
 
   def stepCreateInitialInventory(self, sequence=None, **kw):
     """
-    create a inventory 
+    create a inventory
     """
     portal = self.getPortal()
     organisation =  sequence.get('organisation1')
@@ -245,10 +245,10 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
-    
+
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kw):
     """
-     Check that creating inventory and its resource 
+     Check that creating inventory and its resource
     """
     node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
@@ -258,13 +258,13 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                                                      resource=resource_url,
                                                      to_date=first_date)
     self.assertEqual(2000, quantity)
-    
+
     view_date = DateTime(self.view_stock_date)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
-                        to_date=view_date)  
+                        to_date=view_date)
     self.assertEqual(2000, quantity)
-    
+
   def stepCheckReturnedInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Check that returned sale packing list with inventory
@@ -278,16 +278,16 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     date = DateTime(self.view_stock_date)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
-                        to_date=date) 
+                        to_date=date)
     self.assertEqual(2200, quantity)
 
-    shipping_date = DateTime(self.shipping_date_string) 
+    shipping_date = DateTime(self.shipping_date_string)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
-                                                     to_date=shipping_date) 
+                                                     to_date=shipping_date)
     self.assertEqual(2000, quantity)
-    
-    
+
+
   def stepCheckReturnedPackingLineEmptyCell(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
@@ -296,8 +296,8 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     order_line = sequence.get('returned_packing_list')
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     self.failIfDifferentSet( cell_list , [] )
-    
-        
+
+
   def stepCreateReturnedPackingListWithCell(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -306,10 +306,10 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list = self.getPortal().getDefaultModule(
         self.returned_packing_list_portal_type).newContent(
             portal_type=self.returned_packing_list_portal_type)
-    
+
     organisation = sequence.get('organisation1')
     organisation3 = sequence.get('organisation3')
-    
+
     start_date = DateTime(self.shipping_date_string)
     returned_packing_list.edit(
       title = "RPL%s" % returned_packing_list.getId(),
@@ -326,7 +326,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                  source_administration_value=organisation3,
                  destination_administration_value=organisation,
                  )
-    
+
     returned_packing_list_line = returned_packing_list.newContent(
         portal_type=self.returned_packing_list_line_portal_type)
     size_list = ['Baby','Child', 'Man', 'Woman']
@@ -336,10 +336,10 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
       size_list=size_list,
       variation_base_category_list=['size']
     )
-    
+
     returned_packing_list_line.setResourceValue(resource)
     variation_category_list = ['size/Baby', 'size/Child']
-    
+
     resource_vbcl = resource.getVariationBaseCategoryList()
     line_vcl = []
     for vbc in resource_vbcl:
@@ -347,16 +347,16 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                                   base_category_list=[vbc],
                                   omit_individual_variation=0))
       resource_vcl.sort()
-      line_vcl.extend(self.splitList(resource_vcl)[0]) 
-    
-    returned_packing_list_line.setVariationCategoryList(line_vcl)   
+      line_vcl.extend(self.splitList(resource_vcl)[0])
+
+    returned_packing_list_line.setVariationCategoryList(line_vcl)
     base_id = 'variation'
-    returned_packing_list_line.setCellRange(line_vcl, base_id=base_id) 
+    returned_packing_list_line.setCellRange(line_vcl, base_id=base_id)
     self.tic()
-   
+
     self.assertEqual(2, len(variation_category_list))
     cell_key_list = list(returned_packing_list_line.getCellKeyList(base_id=base_id))
-    
+
     self.assertNotEquals(0, len(cell_key_list))
     for cell_key in cell_key_list:
       cell = returned_packing_list_line.newCell(base_id=base_id,
@@ -371,26 +371,26 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
         portal_type=self.returned_packing_list_cell_portal_type)
     self.assertEqual(2, len(cell_list))
     sequence.edit(returned_packing_list_with_cell=returned_packing_list)
-    
+
 
   def stepCheckReturnedPackingListWithCell(self, sequence=None,
                                            sequence_list=None, **kw):
     """
-      Check that returned sale packing list with variation 
+      Check that returned sale packing list with variation
     """
     rplwc = sequence.get('returned_packing_list_with_cell')
     rplwc_line_list = rplwc.objectValues(
                 portal_type=self.returned_packing_list_line_portal_type)
     self.assertEqual(1, len(rplwc_line_list))
     rplwc_line = rplwc_line_list[0]
-    
+
     vcl = rplwc_line.getVariationCategoryList(omit_optional_variation=1)
     self.assertEqual(2, len(vcl))
     cell_list = rplwc_line.objectValues(
         portal_type=self.returned_packing_list_cell_portal_type)
     self.assertEqual(2, len(cell_list))
-    
- 
+
+
   def stepCheckReturnedPackingListWithCellDeleting(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -401,7 +401,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                 portal_type=self.returned_packing_list_line_portal_type)
     self.assertEqual(1, len(rplwc_line_list))
     rplwc_line = rplwc_line_list[0]
-    
+
     vcl = rplwc_line.getVariationCategoryList(omit_optional_variation=1)
     self.assertEqual(2, len(vcl))
     cell_list = rplwc_line.objectValues(
@@ -410,11 +410,11 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     # delete cells
     rplwc_line.deleteContent(map(lambda x: x.getId(), cell_list))
     self.commit()
-    
+
     cell_list = rplwc_line.objectValues(
     ortal_type=self.returned_packing_list_cell_portal_type)
     self.assertEqual(0, len(cell_list))
-    
+
   def stepCheckReturnedPackingListIsNotDivergent(self, sequence=None,
                                          sequence_list=None, **kw):
     """
@@ -422,10 +422,10 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     """
     packing_list = sequence.get('returned_packing_list')
     self.assertFalse(packing_list.isDivergent())
-    
+
 class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase):
   """Tests for returned sale packing list.
-  """    
+  """
   run_all_test = 1
   quiet = 0
 
@@ -436,9 +436,9 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
       Test that returned sale packing list with its inventory
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
-    
+
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateInitialInventory \
@@ -464,9 +464,9 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
       Test that returned sale packing list workflow
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
-    
+
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingList \
@@ -485,8 +485,8 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
-    
+
+
   @newSimulationExpectedFailure
   def test_03_ReturnedSalePackingListWorkflowFail(self, quiet=quiet,
                                                    run=run_all_test):
@@ -494,9 +494,9 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
       Test that can not change workflow when delivered
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
-    
+
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingList \
@@ -521,16 +521,16 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
       sequence_list.play(self, quiet=quiet)
     except UnsupportedWorkflowMethod, e:
       self.assertTrue(True)
-    
+
   def test_04_ReturnedSalePackingListCreating(self, quiet=quiet,
                                               run=run_all_test):
     """
       Test that returned sale packing List creating
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
-    
+
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingList \
@@ -539,7 +539,7 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_05_ReturnedSalePackingListDeleting(self, quiet=quiet,
                                               run=run_all_test):
     """
@@ -547,7 +547,7 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
     """
     if not run: return
 
-    sequence_list = SequenceList()    
+    sequence_list = SequenceList()
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingList \
@@ -556,13 +556,13 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_06_ReturnedSalePackingListWithCell(self, quiet=quit,
                                               run=run_all_test):
     """
       Test that returned sale packing list with variations
     """
-    sequence_list = SequenceList()    
+    sequence_list = SequenceList()
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingListWithCell \
@@ -570,13 +570,13 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
   def test_07_ReturnedSalePackingListWithCellDeleting(self, quiet=quit,
                                               run=run_all_test):
     """
       Test that deleting variations in returned sale packing list
     """
-    sequence_list = SequenceList()    
+    sequence_list = SequenceList()
     sequence_string = self.default_sequence + '\
                       stepTic \
                       stepCreateReturnedPackingListWithCell \
@@ -584,7 +584,7 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestReturnedSalePackingList))

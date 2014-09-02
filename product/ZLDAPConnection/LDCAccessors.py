@@ -75,7 +75,7 @@ class LDAPConnectionAccessors:
 
     shouldBeOpen = getOpenConnection
 
-    
+
     def getBrowsable(self):
         """ if true, connection object is set to be browsable through the
         management interface """
@@ -101,6 +101,6 @@ class LDAPConnectionAccessors:
         # always committing.
         if not transactional:
             self._isCommitting = 1
-        
+
 import App.class_init
 App.class_init.default__class_init__(LDAPConnectionAccessors)

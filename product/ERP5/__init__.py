@@ -103,7 +103,7 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-  
+
   # Allow some usefull classes and fonctions in TTW code
   ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
   ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(

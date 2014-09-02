@@ -68,8 +68,8 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
 
     # Declarative interfaces
     zope.interface.implements(interfaces.IDivergenceController,)
-    
-    # MatrixBox methods      
+
+    # MatrixBox methods
     security.declareProtected( Permissions.AccessContentsInformation,
                                'hasCellContent' )
     def hasCellContent(self, base_id='movement'):

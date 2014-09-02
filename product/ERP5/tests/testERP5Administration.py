@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #
@@ -80,17 +80,17 @@ class TestERP5Administration(InventoryAPITestCase):
     alarm = self.portal.portal_alarms.check_consistency
     person = self.portal.person_module.newContent(portal_type='Person')
     # this document will be non consistent, for PropertyTypeValidity
-    person.title = 3 
+    person.title = 3
     # tic right now to make sure the person is indexed, indeed the alarm
     # could use catalog to retrieve objects to check
     self.tic()
-    
+
     alarm.activeSense()
     self.tic()
-    
+
     # some errors were detected
     self.assertTrue(alarm.sense())
-    
+
     # this alarm has a custom report
     alarm.Alarm_viewConsistencyCheckReport()
     # which has a listbox showing all problem reported by constraints and

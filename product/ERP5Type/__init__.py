@@ -122,37 +122,37 @@ def initialize( context ):
   Products.ERP5Type.Workflow.registerAllWorkflowFactories(context)
   # We should register local constraints at some point
   from Products.ERP5Type.Utils import initializeLocalConstraintRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeLocalConstraintRegistry')
   initializeLocalConstraintRegistry()
   # We should register local property sheets at some point
   from Products.ERP5Type.Utils import initializeLocalPropertySheetRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeLocalPropertySheetRegistry')
   initializeLocalPropertySheetRegistry()
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeProductDocumentRegistry')
   initializeProductDocumentRegistry()
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeLocalDocumentRegistry')
   initializeLocalDocumentRegistry()
   # We can now setup global interactors
   from Products.ERP5Type.InitGenerator import initializeProductInteractorRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeProductInteractorRegistry')
   initializeProductInteractorRegistry()
   # And local interactors
   from Products.ERP5Type.Utils import initializeLocalInteractorRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeLocalInteractorRegistry')
   initializeLocalInteractorRegistry()
   # We can now install all interactors
   from Products.ERP5Type.InitGenerator import installInteractorClassRegistry
-  if DISPLAY_BOOT_PROCESS: 
+  if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'installInteractorClassRegistry')
   installInteractorClassRegistry()
 

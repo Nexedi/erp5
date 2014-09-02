@@ -42,7 +42,7 @@ from hashlib import md5
 import time
 from zope.interface import Interface
 from zope.interface import implements
-  
+
 class ICaptchaProvider(Interface):
   """The CaptchaProvider interface provides a captcha generator."""
 
@@ -64,15 +64,15 @@ class CaptchasDotNetProvider(object):
     captchas_client = field.get_value("captcha_dot_net_client") or "demo"
     captchas_secret = field.get_value("captcha_dot_net_secret") or "secret"
     captchas_use_ssl = field.get_value("captcha_dot_net_use_ssl") or False
-    return CaptchasDotNet.CaptchasDotNet(client = captchas_client, 
-                                        secret = captchas_secret, 
+    return CaptchasDotNet.CaptchasDotNet(client = captchas_client,
+                                        secret = captchas_secret,
                                         use_ssl = captchas_use_ssl)
-  
+
   def generate(self, field):
     image_generator = self.getImageGenerator(field)
     captcha_key = image_generator.random_string()
     return (captcha_key, image_generator.get_answer(captcha_key))
-  
+
   def getHTML(self, field, captcha_key):
     image_generator = self.getImageGenerator(field)
     return image_generator.image(captcha_key, "__captcha_" + md5(captcha_key).hexdigest())
@@ -93,26 +93,26 @@ class CaptchasDotNetProvider(object):
                             dict(id='captcha_dot_net_use_ssl',
                                  title='Captchas.net ssl connection',
                                  description='Use secured connection with the service',
-                                 default=0,                                 
+                                 default=0,
                                  required=0)]
 
   def getExtraPropertyList(self):
     return [fields.StringField(**self._dynamic_property_list[0]),
             fields.PasswordField(**self._dynamic_property_list[1]),
-            fields.CheckBoxField(**self._dynamic_property_list[2])]    
+            fields.CheckBoxField(**self._dynamic_property_list[2])]
 
   def getExtraTalesPropertyList(self):
     return [TALESField(**self._dynamic_property_list[0]),
             TALESField(**self._dynamic_property_list[1]),
-            TALESField(**self._dynamic_property_list[2])]                          
+            TALESField(**self._dynamic_property_list[2])]
 
 class NumericCaptchaProvider(object):
 
   implements(ICaptchaProvider)
-  
+
   # No division because it would create decimal numbers
   operator_set = {"+": "plus", "-": "minus", "*": "times"}
-  
+
   def generate(self, field):
     # First step : generate the calculus. It is really simple.
     terms = [str(random.randint(1, 20)), random.choice(self.operator_set.keys())]
@@ -123,15 +123,15 @@ class NumericCaptchaProvider(object):
     # Second step : generate a text for it, and compute it
     calculus_text = " ".join(terms)
     result = eval(calculus_text)
-    
+
     return (calculus_text, result)
-  
+
   def getHTML(self, field, captcha_key):
     # Make the text harder to parse for a computer
     calculus_text = captcha_key
     for (operator, replacement) in self.operator_set.items():
       calculus_text = calculus_text.replace(operator, replacement)
-    
+
     return "<span class=\"%s\">%s</span>" % (field.get_value('css_class'), calculus_text)
 
   def getExtraPropertyList(self):
@@ -152,7 +152,7 @@ class CaptchaProviderFactory(object):
   @staticmethod
   def getProviderList():
     return [('Mathematics', 'numeric'), ('Text recognition (using captchas.net)', 'text')]
-  
+
   @staticmethod
   def getDefaultProvider():
     return "numeric"
@@ -167,8 +167,8 @@ class CaptchaWidget(Widget.TextWidget):
     if session.has_key(key):
       return False
     session[key] = value
-    return True    
-    
+    return True
+
   def validate_answer(self, portal_sessions, key, value):
     session = portal_sessions[key]
     if not(session.has_key(key)):
@@ -177,7 +177,7 @@ class CaptchaWidget(Widget.TextWidget):
     # Forbid several use of the same captcha.
     del(session[key])
     return result
-    
+
   property_names = Widget.Widget.property_names + ['captcha_type']
 
   captcha_type = fields.ListField('captcha_type',
@@ -197,11 +197,11 @@ class CaptchaWidget(Widget.TextWidget):
     captcha_type = field.get_value("captcha_type")
     provider = CaptchaProviderFactory.getProvider(captcha_type)
     (captcha_key, captcha_answer) = provider.generate(field)
-    portal_sessions = field.getPortalObject().portal_sessions  
+    portal_sessions = field.getPortalObject().portal_sessions
     while not self.add_captcha(portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
       (captcha_key, captcha_answer) = provider.generate(field)
     captcha_field = provider.getHTML(field, captcha_key)
-    
+
     key_field = Widget.render_element("input",
                                       type="hidden",
                                       name="__captcha_" + key + "__",
@@ -215,9 +215,9 @@ class CaptchaWidget(Widget.TextWidget):
     # HTML page having a captcha field should never be cached.
     REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=0')
     return captcha_field + key_field + splitter + answer
-    
+
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
-    """ 
+    """
       Render form in view only mode.
     """
     return None
@@ -228,7 +228,7 @@ class CaptchaValidator(Validator.Validator):
   message_names = Validator.Validator.message_names + ['wrong_captcha']
 
   wrong_captcha = 'You did not enter the right answer.'
-  
+
   def validate(self, field, key, REQUEST):
     value = REQUEST.get(key, None)
     cache_key = REQUEST.get("__captcha_" + key + "__")
@@ -245,7 +245,7 @@ class CaptchaField(ZMIField):
 
   widget = CaptchaWidgetInstance
   validator = CaptchaValidatorInstance
-  
+
   # methods screen
   security.declareProtected('View management screens',
                             'manage_main')
@@ -270,7 +270,7 @@ class CaptchaField(ZMIField):
                                   manage_tabs_message=message)
         else:
           raise
-    
+
     # Edit standards attributes
     # XXX It is not possible to call ZMIField.manage_edit because
     # it returns at the end...
@@ -286,20 +286,20 @@ class CaptchaField(ZMIField):
                                 manage_tabs_message=message)
       else:
         raise
-    
+
     self.values.update(result)
-    
+
     # finally notify field of all changed values if necessary
     for key in result:
       method_name = "on_value_%s_changed" % key
       if hasattr(self, method_name):
         getattr(self, method_name)(result[key])
-        
+
     if REQUEST:
       message="Content changed."
       return self.manage_main(self, REQUEST,
                               manage_tabs_message=message)
-                              
+
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     if id in self.getCaptchaCustomPropertyList():
@@ -336,7 +336,7 @@ class CaptchaField(ZMIField):
                                   manage_tabs_message=message)
         else:
           raise
-      
+
     # standard tales form fields
     try:
       # validate the form and get results
@@ -355,10 +355,10 @@ class CaptchaField(ZMIField):
       message="Content changed."
       return self.manage_talesForm(self, REQUEST,
                                    manage_tabs_message=message)
-                                     
+
   def getCaptchaCustomTalesPropertyList(self):
     captcha_type = ZMIField.get_value(self, "captcha_type")
     captcha_provider = CaptchaProviderFactory.getProvider(captcha_type)
     extraPropertyList = captcha_provider.getExtraTalesPropertyList()
-    return extraPropertyList                                     
-  
+    return extraPropertyList
+

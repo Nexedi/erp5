@@ -54,7 +54,7 @@ class ComplexQuery(Query):
         Logical operator.
         Default: 'and'
 
-      Deprecated 
+      Deprecated
         operator ('and', 'or', 'not')
           See logical_operator.
           logical_operator takes precedence if given.
@@ -205,7 +205,7 @@ class ComplexQuery(Query):
       This function is here for backward compatibility.
       This can only be used when there is one and only one subquery which
       defines a setTableAliasList method.
-      
+
       See RelatedQuery.
     """
     assert len(self.query_list) == 1

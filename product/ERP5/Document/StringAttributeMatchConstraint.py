@@ -39,7 +39,7 @@ class StringAttributeMatchConstraint(PropertyExistenceConstraint):
     regular expression.
   """
   property_sheets = PropertyExistenceConstraint.property_sheets + \
-      (PropertySheet.StringAttributeMatchConstraint,) 
+      (PropertySheet.StringAttributeMatchConstraint,)
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -51,15 +51,15 @@ class StringAttributeMatchConstraint(PropertyExistenceConstraint):
       regular_expression = self.getRegularExpression()
       regexp = re.compile(regular_expression)
       for property_id in self.getConstraintPropertyList():
-        # If property does not exist, error will be raised by 
+        # If property does not exist, error will be raised by
         # PropertyExistence Constraint.
         current_value = obj.getProperty(property_id)
         if (current_value is not None) and \
             (regexp.match(current_value) is None):
-    
+
           # Generate error
           error_list.append(self._generateError(
-                       obj, 
+                       obj,
                        self._getMessage("message_attribute_not_match"),
             mapping=dict(attribute_name=property_id,
                          attribute_value=repr(current_value),

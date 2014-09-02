@@ -102,7 +102,7 @@ def updateBalanceTransactionClass(self):
       changeObjectClass(newobj, subobj.getId(), BalanceTransactionLine)
       reverseSourceAndDestination(subobj)
       #print '   subupdating', subobj, 'with class', BalanceTransactionLine
-    
+
     # XXX 'something' activates some unindexObject calls, so activate our
     # reindexing after ...
     newobj.activate(after_method_id='unindexObject').recursiveReindexObject()

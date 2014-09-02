@@ -693,10 +693,10 @@ class TestCMFCategory(ERP5TypeTestCase):
     c11 = c1.newContent(portal_type='Category', id='1.1')
     c111 = c11.newContent(portal_type='Category', id='1.1.1')
     c2 = bc.newContent(portal_type='Category', id='2')
-    
+
     self.assertSameSet(bc.getCategoryChildValueList(), (c1, c11, c111, c2))
     self.assertSameSet(c1.getCategoryChildValueList(), (c11, c111,))
-    
+
     # recursive
     self.assertSameSet(bc.getCategoryChildValueList(recursive=0), (c1, c2))
     self.assertSameSet(c1.getCategoryChildValueList(recursive=0), (c11, ))
@@ -723,12 +723,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     c12 = c1.newContent(portal_type='Category', id='1.2', int_index=3, title='Z')
     c2 = bc.newContent(portal_type='Category', id='2', int_index=30, title='B')
     c3 = bc.newContent(portal_type='Category', id='3', int_index=20, title='A')
-    
+
     # the default ordering is preorder:
     self.assertEqual(list(bc.getCategoryChildValueList()),
                       [c1, c11, c111, c12, c2, c3])
     self.assertEqual(list(c1.getCategoryChildValueList()), [c11, c111, c12])
-    
+
     # but this order can be controlled for categories of the same depth, ie. we
     # can sort each level independantly (this is different from sort_on /
     # sort_order which sort the whole list regardless of the original
@@ -771,12 +771,12 @@ class TestCMFCategory(ERP5TypeTestCase):
                           local_sort_id=['int_index', 'title'])),
                       [c2, c1, c12, c11, c111, c3])
 
-  
+
   def test_25_getCategoryChildItemList_base_parameter(self):
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='foo')
     c1 = bc.newContent(portal_type='Category', id='1', title='C')
-    
+
     self.assertEqual([['', ''], ['C', '1']],
                       bc.getCategoryChildTitleItemList())
     self.assertEqual([['', ''], ['C', '1']],
@@ -786,7 +786,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual([['', ''], ['C', 'bar/foo/1']],
                       bc.getCategoryChildTitleItemList(base='bar'))
 
-    
+
   def test_getSingleCategoryAcquiredMembershipList(self):
     pc = self.getCategoriesTool()
     obj = self.portal.person_module.newContent(portal_type='Person')
@@ -863,7 +863,7 @@ class TestCMFCategory(ERP5TypeTestCase):
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='Manage portal',
                                 portal_type='Person Module'))
-  
+
   def test_28_getCategoryChildItemList_checked_permission(self):
     pc = self.getCategoriesTool()
 
@@ -874,7 +874,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     b1 = b.newContent(portal_type='Category', id='21', title='B1')
 
     checked_permission = 'View'
-    
+
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(cache=0))
@@ -884,21 +884,21 @@ class TestCMFCategory(ERP5TypeTestCase):
                                        cache=0))
 
     b.manage_permission(checked_permission, roles=[], acquire=0)
-    
+
     self.assertEqual(
       3, len(bc.getCategoryChildValueList(cache=0)))
     self.assertEqual(
       1,
       len(bc.getCategoryChildValueList(checked_permission=checked_permission,
                                        cache=0)))
-    
+
     self.assertEqual(
       ['%s/1' % bc_id, '%s/2' % bc_id, '%s/2/21' % bc_id],
       bc.getCategoryChildRelativeUrlList())
     self.assertEqual(
       ['%s/1' % bc_id],
       bc.getCategoryChildRelativeUrlList(checked_permission=checked_permission))
-    
+
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(cache=0))
@@ -908,7 +908,7 @@ class TestCMFCategory(ERP5TypeTestCase):
                                        cache=0))
 
   def test_28b_getCategoryChildItemList_checked_permission_cache(self):
-    # getCategoryChildTitleItemList take into account user 
+    # getCategoryChildTitleItemList take into account user
     pc = self.getCategoriesTool()
 
     bc_id = 'barfoo'
@@ -923,13 +923,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     login = PortalTestCase.login
 
     checked_permission = 'View'
-    
+
     b.manage_permission(checked_permission, roles=['Assignor'], acquire=0)
     login(self, 'alice')
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
-    
+
     login(self, 'bob')
     self.assertEqual(
       [['', ''], ['A', '1']],
@@ -1057,7 +1057,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(person.getRegion(), 'europe/west')
     self.assertEqual(person.getRegionList(), ['europe/west'])
 
-    # Let's continue with resource because its ID conflict with 
+    # Let's continue with resource because its ID conflict with
     # "traversing namespaces" names
     resource_value = portal_categories.resource.newContent(portal_type='Category', id='id1')
     organisation.setResource('resource/id1')

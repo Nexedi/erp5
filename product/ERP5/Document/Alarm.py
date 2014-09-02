@@ -48,8 +48,8 @@ class Alarm(XMLObject, PeriodicityMixin):
 
   An Alarm is capable of displaying the last result of the check
   process which was run in background. The result can be provided
-  either as a boolean value (alarm was raised or not) or 
-  in the form of an HTML report which is intended to be 
+  either as a boolean value (alarm was raised or not) or
+  in the form of an HTML report which is intended to be
   displayed in a control center. Moreover, user may be notified
   automatically of alarm failures.
 
@@ -83,7 +83,7 @@ class Alarm(XMLObject, PeriodicityMixin):
   security.declareProtected(Permissions.AccessContentsInformation, 'isActive')
   def isActive(self):
     """
-    This method returns only True or False. 
+    This method returns only True or False.
     It simply tells if this alarm is currently
     active or not. An Alarm is said to be active whenever
     some calculation is undergoing either as part
@@ -179,7 +179,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     Complex alarms should use activity based calculations through
     the activeSense method.
 
-    The process parameter can be used to retrive sense values for 
+    The process parameter can be used to retrive sense values for
     past processes.
     If it is None, it will return the status of last completed active result.
     """
@@ -259,7 +259,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     within the sensing process. Problem resolution is
     implemented by an external script.
 
-    If no external script is dehfined, activeSense is invoked 
+    If no external script is dehfined, activeSense is invoked
     with fixit=1
     """
     method_id = self.getSolveMethodId()
@@ -273,7 +273,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     This method is called to notify people that some alarm has
     been sensed. Notification consists of sending an email
-    to the system address if nothing was defined or to 
+    to the system address if nothing was defined or to
     notify all agents defined on the alarm if specified.
     """
     notification_mode = self.getAlarmNotificationMode()
@@ -321,7 +321,7 @@ class Alarm(XMLObject, PeriodicityMixin):
                               'content': rendered_alarm_result,
                               'mime_type': 'text/plain'})
 
-    notification_tool.sendMessage(recipient=candidate_list, 
+    notification_tool.sendMessage(recipient=candidate_list,
                 subject='[%s][%s] Alarm Notification: %s' %
                   (prefix, self.getPortalObject().getTitle(), self.getTitle()),
                 message="""
@@ -356,7 +356,7 @@ Alarm Tool Node: %s
       process = active_process_list[-1].getObject()
     return process
 
-  security.declareProtected(Permissions.ManagePortal, 
+  security.declareProtected(Permissions.ManagePortal,
                             'newActiveProcess')
   def newActiveProcess(self, **kw):
     """
@@ -383,14 +383,14 @@ Alarm Tool Node: %s
         # This is useful to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
-      alarm_date = self.getNextPeriodicalDate(current_date, 
+      alarm_date = self.getNextPeriodicalDate(current_date,
                                               next_start_date=alarm_date)
     self.Alarm_zUpdateAlarmDate(uid=self.getUid(), alarm_date=alarm_date)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAlarmDate')
   def getAlarmDate(self):
     """Obtain the next alarm date.
-    
+
     Return a DateTime object which specifies when this alarm should
     be invoked at next time. The return value can be None when it should
     not be invoked automatically.

@@ -97,7 +97,7 @@ class ArchiveTool(BaseTool):
     #     getArchiveList = CachingMethod(_getArchiveList,
     #                                    id='getArchiveList',
     #                                    cache_factory='erp5_content_short')
-    
+
     return _getArchiveList()
 
 
@@ -153,7 +153,7 @@ class ArchiveTool(BaseTool):
     archive_sql_catalog_id = archive.getCatalogId()
     archive_connection_id = archive.getConnectionId()
     archive_deferred_connection_id = archive.getDeferredConnectionId()
-    
+
     # Check we don't use same connection id for source and destination
     if destination_sql_catalog_id == source_catalog_id:
       raise ValueError, "Destination and source catalog can't be the same"
@@ -175,7 +175,7 @@ class ArchiveTool(BaseTool):
       raise ValueError, "Archive and destination connection can't be the same"
     if archive_deferred_connection_id == destination_deferred_connection_id:
       raise ValueError, "Archive and destination deferred connection can't be the same"
-        
+
     # Update connection id in destination and archive catalog if asked
     destination_sql_catalog = getattr(portal_catalog, destination_sql_catalog_id)
     if update_destination_sql_catalog:
@@ -187,7 +187,7 @@ class ArchiveTool(BaseTool):
     archive_sql_catalog = getattr(portal_catalog, archive_sql_catalog_id)
     if update_archive_sql_catalog:
       sql_connection_id_dict = {source_connection_id : archive_connection_id,
-                                source_deferred_connection_id : archive_deferred_connection_id}                
+                                source_deferred_connection_id : archive_deferred_connection_id}
       portal_catalog.changeSQLConnectionIds(archive_sql_catalog,
                                   sql_connection_id_dict)
 
@@ -219,7 +219,7 @@ class ArchiveTool(BaseTool):
                                                  destination_sql_catalog_id,
                                                  inventory_date
                                                  )
-    
+
 
     self.activate(after_method_id=('runInventoryMethod'),
                   after_tag="runInventoryMethod",
@@ -244,6 +244,6 @@ class ArchiveTool(BaseTool):
     if inventory_method is not None:
       inventory_method(source_connection_id, destination_sql_catalog_id,
                        inventory_date, tag='runInventoryMethod')
-    
+
 
 InitializeClass(ArchiveTool)

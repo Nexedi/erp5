@@ -76,14 +76,14 @@ class Constraint:
       if message_id in self.message_id_dict:
         return self.message_id_dict[message_id]
       return getattr(self, message_id)
-      
+
     def _generateError(self, obj, error_message, mapping={}):
       """Generic method used to generate error in checkConsistency.
       """
       if error_message is not None:
-        msg = ConsistencyMessage(self, 
+        msg = ConsistencyMessage(self,
                                  object_relative_url=obj.getRelativeUrl(),
-                                 message=error_message, 
+                                 message=error_message,
                                  mapping=mapping)
         return msg
 

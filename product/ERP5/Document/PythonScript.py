@@ -75,7 +75,7 @@ class PythonScript(XMLObject, ZopePythonScript):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-    
+
     #View content list, Force /view, Standart option in python scripts
     manage_options = ( XMLObject.manage_options[0],
                        {'icon':'', 'label':'View','action':'view'}) \
@@ -96,7 +96,7 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       XMLObject.__init__(self, *args, **kw)
       ZopePythonScript.__init__(self, *args, **kw)
-    
+
     def _setBody(self, value):
       """
       override to call ZopePythonScript methods to initialize code

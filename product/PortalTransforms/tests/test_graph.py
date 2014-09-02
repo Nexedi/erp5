@@ -21,7 +21,7 @@ class TestGraph(ATSiteTestCase):
         """
         The dummy map used for this test corresponds to a graph
         depicted in ASCII art below :
-        
+
         +---+
         |   |
         |   v
@@ -41,7 +41,7 @@ class TestGraph(ATSiteTestCase):
                 self._name = name
             def name(self):
                 return self._name
-        
+
         dummyMap1 = {
             '1': { '1': [DT('transform1-1')],
                    '2': [DT('transform1-2')],
@@ -96,7 +96,7 @@ class TestGraph(ATSiteTestCase):
         dummyMap = {'1': {'2': []}}
         self.engine._mtmap = dummyMap
         self.engine._findPath('1','2')
-    
+
     def testIdentity(self):
         orig = 'Some text'
         converted = self.engine.convertTo(

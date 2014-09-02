@@ -228,4 +228,4 @@ class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
     if user is not None:
       setSecurityManager(old_manager)
     return document
- 
+

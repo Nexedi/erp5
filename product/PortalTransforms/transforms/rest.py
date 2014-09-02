@@ -55,17 +55,17 @@ class rest:
         encoding        = kwargs.get('encoding', 'utf-8')
         input_encoding  = kwargs.get('input_encoding', encoding)
         output_encoding = kwargs.get('output_encoding', encoding)
-        language        = kwargs.get('language', 'en') 
-        warnings        = kwargs.get('warnings', None) 
+        language        = kwargs.get('language', 'en')
+        warnings        = kwargs.get('warnings', None)
         settings = {'documentclass': '',
                     'traceback': 1,
                }
-        html = HTML(orig, 
+        html = HTML(orig,
                     report_level=2,
-                    input_encoding=input_encoding, 
-                    output_encoding=output_encoding, 
-                    language_code=language, 
-                    warnings=warnings, 
+                    input_encoding=input_encoding,
+                    output_encoding=output_encoding,
+                    language_code=language,
+                    warnings=warnings,
                     settings=settings)
         html = html.replace(' class="document"', '', 1)
         data.setData(html)

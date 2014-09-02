@@ -72,13 +72,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       Return the title of the test
     """
     return "ERP5BankingCashBalanceRegulation"
-  
+
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
     """
     self.initDefaultVariable()
-    # Set some variables : 
+    # Set some variables :
     self.cash_balance_regulation_module = self.getCashBalanceRegulationModule()
 
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
@@ -88,14 +88,14 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 
     """
     Windows to create the BANKNOTES of 10 000 and 5000, coins 5000.
-    It s same to click to the fast input button.  
+    It s same to click to the fast input button.
     """
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
-    
+
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.piece_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
@@ -108,7 +108,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
                              'variation_value': ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_5000}
 
-    
+
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
     """
     self.encaisse_tri= self.paris.surface.salle_de_tri.encaisse_des_billets_et_monnaies
@@ -118,13 +118,13 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     """
     self.guichet_1 = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_1, destination=self.guichet_1, currency=self.currency_1, line_list=line_list)
-    
+
     self.guichet_caveau = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_caveau, destination=self.guichet_caveau, currency=self.currency_1, line_list=line_list)
-    
+
     self.guichet_salletri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_salletri, destination=self.guichet_salletri, currency=self.currency_1, line_list=line_list)
-        
+
     self.guichet_surface = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=self.guichet_surface, destination=self.guichet_surface, currency=self.currency_1, line_list=line_list)
     self.externes = self.paris.caveau.auxiliaire.encaisse_des_externes
@@ -266,7 +266,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
   def stepCreateCashBalanceRegulationCaveau(self, sequence=None, sequence_list=None, **kwd):
     self.createCashBalanceRegulation(source_value=self.guichet_caveau,
                source='site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
-  
+
   def stepCreateCashBalanceRegulationSalleTri(self, sequence=None, sequence_list=None, **kwd):
     self.createCashBalanceRegulation(source_value=self.guichet_salletri,
                source='site/testsite/paris/surface/salle_tri/encaisse_des_billets_et_monnaies')
@@ -277,9 +277,9 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 
   def createCashBalanceRegulation(self, source_value=None, source=None):
     self.cash_balance_regulation = self.cash_balance_regulation_module.newContent(
-        id='cash_balance_regulation_1', 
-        portal_type='Cash Balance Regulation', 
-        source_value=source_value, 
+        id='cash_balance_regulation_1',
+        portal_type='Cash Balance Regulation',
+        source_value=source_value,
         resource_value=self.currency_1,
         destination_value=None, source_total_asset_price=50000.0)
     self.tic()
@@ -404,7 +404,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
       current_emission_letter = emission_letter
     # create the line
     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_1', 'Outgoing Cash Balance Regulation Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter,
               'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_5000)
     # execute tic
@@ -442,7 +442,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 #     if emission_letter is not None:
 #       current_emission_letter = emission_letter
 #     self.addCashLineToDelivery(self.cash_balance_regulation, 'valid_outgoing_line_2', 'Outgoing Cash Balance Regulation Line', self.piece_100,
-#             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter, 
+#             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/%s' % current_emission_letter,
 #               'cash_status/valid') + self.variation_list,
 #             self.outgoing_quantity_100)
 #     # execute tic
@@ -506,7 +506,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 
   def stepCheckConfirmedInventoryCaveau(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver 
+    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_caveau.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -529,7 +529,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 
   def stepCheckConfirmedInventorySalleTri(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver 
+    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_salletri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -550,7 +550,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 
   def stepCheckConfirmedInventorySurface(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver 
+    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -568,10 +568,10 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     # check we will have 12 coins of 200 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.guichet_surface.getRelativeUrl(), resource = self.piece_100.getRelativeUrl()), 24.0)
 
-  
+
   def stepCheckConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver 
+    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.guichet_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)

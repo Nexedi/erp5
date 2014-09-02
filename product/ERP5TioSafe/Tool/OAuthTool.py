@@ -111,7 +111,7 @@ class OAuthConsumer(object):
 class OAuthToken(object):
     """OAuthToken is a data type that represents an End User via either an access
     or request token.
-    
+
     key -- the token
     secret -- the token secret
 
@@ -159,7 +159,7 @@ class OAuthToken(object):
         if self.callback_confirmed is not None:
             data['oauth_callback_confirmed'] = self.callback_confirmed
         return urllib.urlencode(data)
- 
+
     def from_string(s):
         """ Returns a token from something like:
         oauth_token_secret=xxx&oauth_token=xxx
@@ -182,11 +182,11 @@ class OAuthRequest(object):
     """OAuthRequest represents the request and can be serialized.
 
     OAuth parameters:
-        - oauth_consumer_key 
+        - oauth_consumer_key
         - oauth_token
         - oauth_signature_method
-        - oauth_signature 
-        - oauth_timestamp 
+        - oauth_signature
+        - oauth_timestamp
         - oauth_nonce
         - oauth_version
         - oauth_verifier
@@ -474,7 +474,7 @@ class OAuthTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainOAuthTool', _dtmldir )
   signature_methods = {}
-  
+
   def __init__(self, *args, **kw):
     self.signature_methods = PersistentMapping()
     self.add_signature_method(OAuthSignatureMethod_PLAINTEXT())
@@ -638,7 +638,7 @@ class OAuthTool(BaseTool):
       built = signature_method.build_signature(oauth_request, consumer, token)
 
   def _check_timestamp(self, timestamp):
-      """Verify that timestamp is recentish.""" 
+      """Verify that timestamp is recentish."""
       timestamp = int(timestamp)
       now = int(time.time())
       lapsed = abs(now - timestamp)
@@ -653,7 +653,7 @@ class OAuthTool(BaseTool):
              (token.key == self.my_request_token.key or token.key == self.my_access_token.key) \
              and nonce == self.nonce:
         raise OAuthError('Nonce already used: %s' % str(nonce))
-  
+
   def send_oauth_error(self, err, REQUEST):
     """ return error """
     print err
@@ -662,14 +662,14 @@ class OAuthTool(BaseTool):
 
   def call(self, REQUEST=None, **kw):
     """ this method handle all the call on the portal """
-    
+
     path = REQUEST.getURL()
     headers = REQUEST._auth
     command = REQUEST['REQUEST_METHOD']
     parameters = REQUEST.form
     postdata = None
     LOG("-------call--------", 300, "\npath %s\nheader %s\ncommand %s\nparameters %s\n\nXXXXXXXXXXXXXXX" %(path, headers, command, parameters))
-    # if command == "POST": 
+    # if command == "POST":
     #   import pdb
     #   pdb.set_trace()
 
@@ -765,6 +765,6 @@ class OAuthTool(BaseTool):
   access_token = call
   photos = call
   authorizationVerified = call
-    
+
 
 InitializeClass(OAuthTool)

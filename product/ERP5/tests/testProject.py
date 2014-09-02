@@ -33,7 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
 class TestProject(ERP5TypeTestCase):
-  """ Test for Project API and scripts and forms 
+  """ Test for Project API and scripts and forms
       used for Project Document.
   """
   business_process = 'business_process_module/erp5_default_business_process'
@@ -133,13 +133,13 @@ class TestProject(ERP5TypeTestCase):
 
     self.tic()
     task.plan()
-    
+
     self.tic()
     # Script Used for Task Tab
     task_line_list = project.Project_getSourceProjectRelatedTaskList()
     self.assertEqual(1, len(task_line_list))
     self.assertEqual(task_line_list[0], task.default_task_line)
- 
+
     # Script Used for Task Report Tab
     # It shows planned tasks also.
     task_line_list = project.Project_getSourceProjectRelatedTaskReportList()
@@ -153,13 +153,13 @@ class TestProject(ERP5TypeTestCase):
     task_line_list = project.Project_getSourceProjectRelatedTaskList()
     self.assertEqual(1, len(task_line_list))
     self.assertEqual(task_line_list[0], task.default_task_line)
- 
+
     # Script Used for Task Report Tab
     # It shows planned tasks also.
     task_line_list = project.Project_getSourceProjectRelatedTaskReportList()
     self.assertEqual(1, len(task_line_list))
     self.assertNotEquals(task_line_list[0], task.default_task_line)
-    self.assertNotEquals(task_line_list[0].getCausalityRelatedValue(), 
+    self.assertNotEquals(task_line_list[0].getCausalityRelatedValue(),
                            task.default_task_line)
 
 def test_suite():

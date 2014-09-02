@@ -42,11 +42,11 @@ class TestAmount(ERP5TypeTestCase):
   # It is important to use property which are not defined on amount.
   variation_property_list = ['composition', 'margin_ratio']
   variation_property_dict = {
-    'composition': 'azertyuio', 
+    'composition': 'azertyuio',
     'margin_ratio': 2.4
   }
   failed_variation_property_dict = {
-    'composition': 'azertyuio', 
+    'composition': 'azertyuio',
     'margin_ratio': 2.4,
     'sfdvdfbdgbfgbfgbfgbfg': None,
   }
@@ -67,7 +67,7 @@ class TestAmount(ERP5TypeTestCase):
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -89,7 +89,7 @@ class TestAmount(ERP5TypeTestCase):
     portal = self.getPortal()
     module = portal.getDefaultModule(self.resource_portal_type)
     resource = module.newContent(portal_type=self.resource_portal_type)
-    # As the current resource as no variation property, 
+    # As the current resource as no variation property,
     # we will create some for the test.
     resource.setVariationPropertyList(self.variation_property_list)
     sequence.edit(
@@ -122,7 +122,7 @@ class TestAmount(ERP5TypeTestCase):
            dict([(x, None) for x in self.variation_property_dict])
     )
 
-  def stepCheckEmptyGetVariationPropertyDict(self, sequence=None, 
+  def stepCheckEmptyGetVariationPropertyDict(self, sequence=None,
                                              sequence_list=None, **kw):
     """
       Test the method GetVariationPropertyDict.
@@ -131,7 +131,7 @@ class TestAmount(ERP5TypeTestCase):
     vpd = amount.getVariationPropertyDict()
     self.assertEqual(vpd, {})
 
-  def stepCheckEmptySetVariationPropertyDict(self, sequence=None, 
+  def stepCheckEmptySetVariationPropertyDict(self, sequence=None,
                                              sequence_list=None, **kw):
     """
       Test the method GetVariationPropertyDict.
@@ -140,7 +140,7 @@ class TestAmount(ERP5TypeTestCase):
     self.assertRaises(KeyError, amount.setVariationPropertyDict,
                       self.variation_property_dict)
 
-  def stepSetVariationPropertyDict(self, sequence=None, 
+  def stepSetVariationPropertyDict(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Test the method GetVariationPropertyDict.
@@ -151,19 +151,19 @@ class TestAmount(ERP5TypeTestCase):
        variation_property_dict=self.variation_property_dict
     )
 
-  def stepCheckGetVariationPropertyDict(self, sequence=None, 
+  def stepCheckGetVariationPropertyDict(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Test the method GetVariationPropertyDict.
     """
     amount = sequence.get('amount')
     vpd = amount.getVariationPropertyDict()
-    self.failIfDifferentSet(vpd.keys(), 
+    self.failIfDifferentSet(vpd.keys(),
                             sequence.get('variation_property_dict').keys())
     for key in vpd.keys():
       self.assertEqual(vpd[key], sequence.get('variation_property_dict')[key])
 
-  def stepSetWrongVariationPropertyDict(self, sequence=None, 
+  def stepSetWrongVariationPropertyDict(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Test the method GetVariationPropertyDict.
@@ -267,7 +267,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(0, mvt.getTotalPrice())
     mvt.edit(quantity=20)
     self.assertEqual(20, mvt.getQuantity())
-  
+
   def testPrice(self):
     mvt = self._makeOne()
     self.assertEqual(None, mvt.getPrice())
@@ -276,7 +276,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(0, mvt.getTotalPrice())
     mvt.setQuantity(1)
     self.assertEqual(10, mvt.getTotalPrice())
-    
+
   def testSourceDebit(self):
     mvt = self._makeOne()
     mvt.setSourceDebit(10)
@@ -288,7 +288,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(20, mvt.getSourceDebit())
     self.assertEqual(0, mvt.getSourceCredit())
     self.assertEqual(-20, mvt.getQuantity())
-  
+
   def testSourceCredit(self):
     mvt = self._makeOne()
     mvt.setSourceCredit(10)
@@ -300,7 +300,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(0, mvt.getSourceDebit())
     self.assertEqual(20, mvt.getSourceCredit())
     self.assertEqual(20, mvt.getQuantity())
-  
+
   def testSourceDebitCredit(self):
     mvt = self._makeOne()
     mvt.setSourceCredit(10)
@@ -320,7 +320,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(20, mvt.getDestinationDebit())
     self.assertEqual(0, mvt.getDestinationCredit())
     self.assertEqual(20, mvt.getQuantity())
-  
+
   def testDestinationCredit(self):
     mvt = self._makeOne()
     mvt.setDestinationCredit(10)
@@ -332,7 +332,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(0, mvt.getDestinationDebit())
     self.assertEqual(20, mvt.getDestinationCredit())
     self.assertEqual(-20, mvt.getQuantity())
-  
+
   def testDestinationDebitCredit(self):
     mvt = self._makeOne()
     mvt.setDestinationCredit(10)
@@ -340,7 +340,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(10, mvt.getDestinationDebit())
     self.assertEqual(0, mvt.getDestinationCredit())
     self.assertEqual(10, mvt.getQuantity())
-  
+
   def testSourceAssetCredit(self):
     mvt = self._makeOne()
     mvt.edit(source_asset_credit=100)
@@ -403,7 +403,7 @@ class TestMovement(ERP5TypeTestCase):
     mvt.edit(destination_asset_debit=None, destination_debit=200)
     self.assertEqual(0.0, mvt.getDestinationAssetDebit())
     self.assertEqual(200, mvt.getDestinationDebit())
-  
+
   def testEditDestinationAssetDebitAndCredit(self):
     mvt = self._makeOne()
     mvt.edit(destination_asset_debit=100, destination_asset_credit=None)
@@ -549,12 +549,12 @@ class TestAccountingTransactionLine(TestMovement):
     # price is always 1 for accounting transactions lines
     mvt = self._makeOne()
     self.assertEqual(1, mvt.getPrice())
-  
+
   def testQuantity(self):
     mvt = self._makeOne()
     mvt.setQuantity(10)
     self.assertEqual(10, mvt.getQuantity())
-    # self.assertEqual(None, mvt.getTotalPrice()) 
+    # self.assertEqual(None, mvt.getTotalPrice())
     # ... not with Accounting Transaction Lines, because price is 1
     mvt.edit(quantity=20)
     self.assertEqual(20, mvt.getQuantity())
@@ -569,7 +569,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEqual(None, mvt.getDestinationTotalAssetPrice())
     self.assertEqual(0.0, mvt.getSourceAssetDebit())
     self.assertEqual(0.0, mvt.getSourceAssetCredit())
-    
+
   def testDefautSourceTotalAssetCredit(self):
     mvt = self._makeOne()
     mvt.edit(source_credit=100)
@@ -580,7 +580,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEqual(None, mvt.getDestinationTotalAssetPrice())
     self.assertEqual(0.0, mvt.getSourceAssetDebit())
     self.assertEqual(0.0, mvt.getSourceAssetCredit())
- 
+
   def testDefautDestinationTotalAssetDebit(self):
     mvt = self._makeOne()
     mvt.edit(destination_debit=100)
@@ -591,7 +591,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEqual(None, mvt.getDestinationTotalAssetPrice())
     self.assertEqual(0.0, mvt.getDestinationAssetDebit())
     self.assertEqual(0.0, mvt.getDestinationAssetCredit())
-    
+
   def testDefautDestinationTotalAssetCredit(self):
     mvt = self._makeOne()
     mvt.edit(destination_credit=100)
@@ -602,7 +602,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEqual(None, mvt.getDestinationTotalAssetPrice())
     self.assertEqual(0.0, mvt.getDestinationAssetDebit())
     self.assertEqual(0.0, mvt.getDestinationAssetCredit())
-  
+
   def testSourceAssetCredit(self):
     mvt = self._makeOne()
     mvt.edit(source_asset_credit=100)

@@ -386,7 +386,7 @@ def addPolicy( self
                    , pre_check
                    , post_check
                    )
-    if REQUEST is not None: 
+    if REQUEST is not None:
         REQUEST[ 'RESPONSE' ].redirect( self.absolute_url()
                                       + '/manage_cachingPolicies'
                                       + '?manage_tabs_message='

@@ -21,13 +21,13 @@ def cookId(filename):
                         filename.rfind('\\'),
                         filename.rfind(':'),
                         )+1:]
-    
+
 class MTMultipart(MIMEMultipart):
 
     security = ClassSecurityInfo()
-    
+
     security.setDefaultAccess('allow')
-    
+
     def __init__(self,mt,mfrom,mto,_subtype='mixed',boundary=None):
         MIMEMultipart.__init__(self,_subtype,boundary)
         self.mfrom = mfrom
@@ -73,7 +73,7 @@ class MTMultipart(MIMEMultipart):
                     content_type, enc=guess_content_type(filename, data)
         else:
             raise TypeError('Unknown object type found: %r' % theFile)
-        
+
         msg = MIMEBase(*content_type.split('/'))
         msg.set_payload(data)
         Encoders.encode_base64(msg)
@@ -82,5 +82,5 @@ class MTMultipart(MIMEMultipart):
         msg.add_header('Content-Disposition', 'attachment',
                        filename=filename)
         self.attach(msg)
-        
+
 InitializeClass(MTMultipart)

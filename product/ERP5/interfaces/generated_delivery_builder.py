@@ -32,18 +32,18 @@ Products.ERP5.interfaces.builder
 
 from zope.interface import Interface
 
- 
+
 class IGeneratedDeliveryBuilder(Interface):
   """
   """
-  
+
   def build(input_movement_list, explanation=None, existing_delivery_list=None):
     """
-    input_movement_list -- 
-    
+    input_movement_list --
+
     explanation --
 
-    existing_delivery_list -- 
+    existing_delivery_list --
     """
-    
-    
+
+

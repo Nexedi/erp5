@@ -77,7 +77,7 @@ class IntegrationSite(Folder):
     if not category:
       LOG("getCategoryFromMapping", ERROR, "empty category provided")
       raise ValueError, "Empty category provided"
-    
+
     # Split the category to have the base and the variation category
     base_category, variation_category = category.split('/', 1)
 

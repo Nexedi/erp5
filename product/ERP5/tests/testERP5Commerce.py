@@ -351,10 +351,10 @@ class TestCommerce(ERP5TypeTestCase):
     order_line.setResource(shipping_list[0].getRelativeUrl())
     order_line.setQuantity(1)
     self.tic()
-    
+
   def doFakePayment(self):
     """Simulate a payment"""
-    
+
     #Set the shopping cart payed
     self.website.SaleOrder_setShoppingCartBuyer()
 
@@ -605,10 +605,10 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.assertEqual(2, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.assertEqual(0, len(self.portal.sale_order_module.contentValues()))
-  
+
     #Simulate payment
     self.doFakePayment()
-    
+
     self.website.SaleOrder_finalizeShopping()
     self.tic()
 
@@ -918,7 +918,7 @@ class TestCommerce(ERP5TypeTestCase):
     product = self.getDefaultProduct()
     self.assertEqual(product.Resource_getShopUrl(),
                  '%s/%s' % (product.absolute_url(), 'Resource_viewAsShop'))
-  
+
   def test_28_finalizeShoppingWithComment(self):
     """
       Testing if the comment added during the checkout will be set on the sale
@@ -929,7 +929,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)
 
-    self.website.SaleOrder_paymentRedirect(field_my_comment=comment)    
+    self.website.SaleOrder_paymentRedirect(field_my_comment=comment)
     self.doFakePayment()
     self.website.SaleOrder_finalizeShopping()
     self.tic()

@@ -58,13 +58,13 @@ class AggregatedAmountList(list):
     """
       Return total duration
     """
-    result = sum(filter(lambda y: y is not None, 
+    result = sum(filter(lambda y: y is not None,
                         map(lambda x: x.getDuration(), self)))
     return result
 
   def multiplyQuantity(self,context=None):
     """
-      Take into account the quantity of the 
+      Take into account the quantity of the
       context. Change the quantity of each element.
     """
     quantity = None

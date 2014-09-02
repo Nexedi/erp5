@@ -50,7 +50,7 @@ class ListTextAreaField(ZMIField):
 
     widget = ListTextAreaWidgetInstance
     validator = ListLinesValidatorInstance
-    
+
 
 
 

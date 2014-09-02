@@ -39,7 +39,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 
 class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
-  
+
 
 
   # pseudo constants
@@ -61,7 +61,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
       Method called before the launch of the test to initialize some data
     """
     self.initDefaultVariable()
-    # Set some variables : 
+    # Set some variables :
     self.money_deposit_module = self.getMoneyDepositModule()
 
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
@@ -71,7 +71,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
 
     """
     Windows to create the BANKNOTES of 10 000 and 5000, coins 200.
-    It s same to click to the fast input button.  
+    It s same to click to the fast input button.
     """
 
     # Before the test, we need to input the inventory
@@ -94,13 +94,13 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
                              'quantity': self.quantity_5000}
 
 
-    
-    
+
+
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    
+
     self.money_deposit_counter = self.paris.surface.banque_interne
     self.money_deposit_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
-    
+
     self.createCashInventory(source=None, destination=self.money_deposit_counter_vault, currency=self.currency_1,
                              line_list=line_list)
 
@@ -156,7 +156,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     self.simulation_tool = self.getSimulationTool()
     # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
     self.assertEqual(self.simulation_tool.getCurrentInventory(
-                     node=self.money_deposit_counter_vault.getRelativeUrl(), 
+                     node=self.money_deposit_counter_vault.getRelativeUrl(),
                      resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.money_deposit_counter_vault.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200 in encaisse_billets_et_monnaies
@@ -177,7 +177,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
     self.money_deposit = self.money_deposit_module.newContent(
-                            id='money_deposit', 
+                            id='money_deposit',
                             portal_type='Money Deposit',
                             destination_payment_value = self.bank_account_1,
                             resource_value = self.currency_1,
@@ -190,10 +190,10 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     # check source reference
     self.assertNotEqual(self.money_deposit.getSourceReference(), '')
     self.assertNotEqual(self.money_deposit.getSourceReference(), None)
-    
+
     self.money_deposit._setDestination(self.money_deposit_counter.getRelativeUrl())
     self.assertNotEqual(self.money_deposit, None)
-    
+
     # check we have only one cash sorting
     self.assertEqual(len(self.money_deposit_module.objectValues()), 1)
     # get the cash sorting document
@@ -269,7 +269,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
                      self.money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
     self.workflow_tool.doActionFor(self.money_deposit, 'deliver_action', wf_id='money_deposit_workflow')
     self.assertEqual(self.money_deposit.getSimulationState(), 'delivered')
-    
+
     self.assertEqual(self.money_deposit.getSourceTotalAssetPrice(), 20000.0)
     self.assertEqual(20000.0, self.money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
 

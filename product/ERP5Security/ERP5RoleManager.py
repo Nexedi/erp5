@@ -41,7 +41,7 @@ def addERP5RoleManager( dispatcher, id, title=None, REQUEST=None ):
                                 '?manage_tabs_message='
                                 'ERP5RoleManager+added.'
                             % dispatcher.absolute_url())
- 
+
 class ERP5RoleManager( BasePlugin ):
 
     """ PAS plugin to add 'Member' as default

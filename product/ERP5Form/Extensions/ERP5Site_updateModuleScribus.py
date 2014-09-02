@@ -36,7 +36,7 @@ def ERP5Site_updateModuleScribus(self,
                                  selection_index=None,
                                  selection_name=None,
                                  **kw):
-  """ Update the ERP5Form, scribus, PDFForm, css and background picture created 
+  """ Update the ERP5Form, scribus, PDFForm, css and background picture created
       from scribus and PDFForm file"""
   context = self
 
@@ -86,9 +86,9 @@ def ERP5Site_updateModuleScribus(self,
                   'obj_ids': ['%s_view' % temp_portal_type,],
                   'search_sub': 1
                  }
-  result = portal.portal_skins.PrincipiaFind( portal.portal_skins, 
+  result = portal.portal_skins.PrincipiaFind( portal.portal_skins,
                                               **search_param)
-  
+
   # keep only the object in the "good" skinFolder
   good_result = {}
   for path, ob in result:
@@ -120,11 +120,11 @@ def ERP5Site_updateModuleScribus(self,
   if not portal_skins_folder in portal.portal_skins.objectIds():
     # the skin folder should exists
     raise ValueError, "Error: portal_skins %s not found" % \
-        portal_skins_folder 
+        portal_skins_folder
   skin_folder = ManageModule.setSkinFolder(portal,
                                            portal_skins_folder)
 
-  # all object created using ERP5Site_createModuleScribus in the skin_folder 
+  # all object created using ERP5Site_createModuleScribus in the skin_folder
   # should be re-generated to be updated
   # except the module form view (because it don't change)
   object_id_list = []
@@ -140,7 +140,7 @@ def ERP5Site_updateModuleScribus(self,
 
   # move the old objects in portal_trash
   trash = getToolByName(self.getPortalObject(), 'portal_trash', None)
-  if trash is None: 
+  if trash is None:
     raise AttributeError, 'Trash Tool is not installed'
 
   trashbin = trash.newTrashBin(bt_title='scribus_skin_folder_%s' % \
@@ -180,7 +180,7 @@ def ERP5Site_updateModuleScribus(self,
   # take the input ScribusFile and read the content
   xml_string = ScribusParser.getContentFile(import_scribus_file)
   if xml_string == None:
-    LOG('ERP5Site_updateModuleScribus', WARNING, 
+    LOG('ERP5Site_updateModuleScribus', WARNING,
         'no field was defined in the Scribus file')
     pass
   else:
@@ -189,7 +189,7 @@ def ERP5Site_updateModuleScribus(self,
     # get string from ScribusFile content
     output_string = str(xml_string)
 
-    LOG('ERP5Site_updateModuleScribus', INFO, 
+    LOG('ERP5Site_updateModuleScribus', INFO,
         'createmodule > ScribusParser.getXmlObjectPropertiesDict')
     # building a tree from the output string elaborated from the
     # original Scribus file.
@@ -202,11 +202,11 @@ def ERP5Site_updateModuleScribus(self,
     #pdb.set_trace()
     (text_field_list, keep_page, page_gap) = \
         ScribusParser.getXmlObjectsPropertiesDict(xml_string)
-    LOG('ERP5Site_updateModuleScribus', INFO, 
+    LOG('ERP5Site_updateModuleScribus', INFO,
         'createmodule < ScribusParser.getXmlObjectPropertiesDict')
 
 
-    LOG('ERP5Site_updateModuleScribus', INFO, 
+    LOG('ERP5Site_updateModuleScribus', INFO,
         'createmodule > ScribusParser.getPropertiesConversionDict')
     # parsing text_field_list created from the getXmlObjectsPropertiesDict
     # to extract all the usefull properties and organize elements. Then check
@@ -215,13 +215,13 @@ def ERP5Site_updateModuleScribus(self,
     widget_properties = \
         ScribusParser.getPropertiesConversionDict(text_field_list, option_html)
 
-    LOG('ERP5Site_updateModuleScribus', INFO, 
+    LOG('ERP5Site_updateModuleScribus', INFO,
         'createmodule < ScribusParser.getPropertiesConversionDict')
 
 
     # testing if final rendering is PDF-like
     if option_html == 1:
-      LOG('ERP5Site_updateModuleScribus', INFO, 
+      LOG('ERP5Site_updateModuleScribus', INFO,
           'createmodule > generating background')
       ## BACKGROUND GENERATOR
       # extract background pictures from the PDF document, convert them in the right
@@ -238,7 +238,7 @@ def ERP5Site_updateModuleScribus(self,
           '   height = %s' % str(new_height))
       LOG('ERP5Site_updateModuleScribus', INFO,
           '   width = %s' % str(new_width))
-      LOG('ERP5Site_updateModuleScribus', INFO, 
+      LOG('ERP5Site_updateModuleScribus', INFO,
           'createmodule < background generated')
 
     # add field from OrderedWidgetProperties in ERP5 Module created
@@ -257,7 +257,7 @@ def ERP5Site_updateModuleScribus(self,
     properties_css_dict = ManageCSS.setInit()
 
     # BEGINING DATA INTERPRETATION
-    LOG('ERP5Site_updateModuleScribus', INFO, 
+    LOG('ERP5Site_updateModuleScribus', INFO,
         'createmodule > begining data interpretation')
     #iterating pages
     #print "   %s" % int(global_properties['page'])
@@ -358,13 +358,13 @@ def ERP5Site_updateModuleScribus(self,
                                      option_html
                                      )
 
-  LOG('ERP5Site_updateModuleScribus', INFO, 
+  LOG('ERP5Site_updateModuleScribus', INFO,
       'createmodule < fields created in ERP5 Form')
 
 
 
   # PDF IMPORTATION AND TALES GENERATION
-  LOG('ERP5Site_updateModuleScribus', INFO, 
+  LOG('ERP5Site_updateModuleScribus', INFO,
       'createmodule > managing PDF settings')
   # read all the content of the PDF document and save it in the skin_folder
   # as a PDFForm. then iterate the fields to get the corresponding TALES
@@ -376,14 +376,14 @@ def ERP5Site_updateModuleScribus(self,
                          import_pdf_file,
                          global_properties
                          )
-  LOG('ERP5Site_updateModuleScribus', INFO, 
+  LOG('ERP5Site_updateModuleScribus', INFO,
       'createmodule < PDF settings managed')
 
 
 
   # PROPERTYSHEET AND DOCUMENT CREATION
 
-  LOG('ERP5Site_updateModuleScribus', INFO, 
+  LOG('ERP5Site_updateModuleScribus', INFO,
       'createmodule > PropertySheet and Document creation')
   # recover personal properties and save them in a PropertySheet
   # then create the Document related to the object
@@ -398,7 +398,7 @@ def ERP5Site_updateModuleScribus(self,
   initializeLocalPropertySheetRegistry()
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
-  LOG('ERP5Site_updateModuleScribus', INFO, 
+  LOG('ERP5Site_updateModuleScribus', INFO,
       'createmodule < PropertySheet and Document imported')
 
 

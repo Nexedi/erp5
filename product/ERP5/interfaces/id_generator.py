@@ -45,7 +45,7 @@ class IIdGenerator(Interface):
 
     default (string or int or float, depending on the generator)
        Default value of the sequence (optional).
-       The first time an id is generated for that sequence, this 
+       The first time an id is generated for that sequence, this
        default will be returned.
 
        If the default value is incompatible with the generator,
@@ -64,7 +64,7 @@ class IIdGenerator(Interface):
 
     default (string or int or float, depending on the generator)
        Default value of the sequence (optional).
-       The first time an id is generated for that sequence, this 
+       The first time an id is generated for that sequence, this
        default will be returned.
 
        If the default value is incompatible with the generator,
@@ -114,7 +114,7 @@ class IIdGenerator(Interface):
 
     id_dict (dict)
       A dictionnary in the form { group_id : last_id }
-    
+
     clear(bool)
       A boolean to clear the generator before import the data
 

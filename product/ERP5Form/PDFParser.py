@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #                     Mayoro DIAGNE <mayoro@nexedi.com>
-#                     
+#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -54,7 +54,7 @@ class PDFParser:
 
     if pdf_file_descriptor is None:
       raise ValueError, "No PDF file provided, please choose a pdf form "
-      
+
 
     if type(pdf_file_descriptor) == 'str':
       self.data = pdf_file_descriptor
@@ -62,10 +62,10 @@ class PDFParser:
       pdf_file_descriptor.seek(0)
       self.data = pdf_file_descriptor.read()
       pdf_file_descriptor.close()
-    else: 
+    else:
       source = open(pdf_file_descriptor, "rb")
       source.seek(0)
-      self.data = source.read() 
+      self.data = source.read()
       source.close()
 
     # opening new file on HDD to save PDF content
@@ -76,13 +76,13 @@ class PDFParser:
     temp_pdf = open(temp_pdf_name,'w')
     # saving content
     temp_pdf.write(self.data)
-    temp_pdf.close()    
+    temp_pdf.close()
     command_output = commands.getstatusoutput('pdfinfo %s' % \
         temp_pdf_name)
     if command_output[0] != 0:
         raise ValueError, 'Error: convert command failed with the following'\
                           'error message : \n%s' % command_output[1]
-    
+
     # get the pdf page size
     rawstr = r'''
         Page\ssize:        #begining of the instersting line
@@ -140,25 +140,25 @@ class PDFParser:
     the pdf file
     width, height: attributes in pixel (px)
     format: jpg, png, etc...
-    resolution: resolution of produced image for exemple 600  
+    resolution: resolution of produced image for exemple 600
     quality: quality of produced image for exemple 200 raisonable quality
-    more hight is quality more time it takes to be gererated   
+    more hight is quality more time it takes to be gererated
     """
     from Products.ERP5Type.Document import newTempPDFDocument
-    from Products.ERP5Type.Document import newTempImage 
+    from Products.ERP5Type.Document import newTempImage
     temp_pdf_document_name = "tmp%s.pdf" %  str(random.random()).split('.')[-1]
     temp_pdf_document = newTempPDFDocument(self, temp_pdf_document_name)
     temp_pdf_document.setData(self.getData())
-    display = 'xlarge' 
-    mime, image_data = temp_pdf_document.convert(format = format, 
-                                                 frame = page, 
+    display = 'xlarge'
+    mime, image_data = temp_pdf_document.convert(format = format,
+                                                 frame = page,
                                                  resolution = resolution,
                                                  quality = quality,
                                                  display = display)
     page_image = None
     if image_data is not None:
       page_image = newTempImage(self, "page_%s" % page)
-      page_image.setData(page_image)    
+      page_image.setData(page_image)
     return page_image
 
 
@@ -171,7 +171,7 @@ class PDFParser:
     temp_input_name = temp_input_file.name
     temp_input = open(temp_input_name,'w')
     temp_input.write(self.getData())
-    temp_input.close()    
+    temp_input.close()
     temp_output_file = NamedTemporaryFile(mode= "w+b")
     temp_output_name = temp_output_file.name
     command_output = commands.getstatusoutput('pdftk %s output %s flatten'\
@@ -182,7 +182,7 @@ class PDFParser:
     temp_output = open(temp_output_name,'rb')
     temp_output.seek(0)
     datas = temp_output.read()
-    temp_output.close()      
+    temp_output.close()
     return datas
 
 

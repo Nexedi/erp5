@@ -108,7 +108,7 @@ class LocalRoleAssignorMixIn(object):
             for role in role_list:
               # Feed local_roles_group_id_group_id with local roles assigned to a group
               local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, role),))
-  
+
       ## Update role assignments to groups
       # Save the owner
       for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
@@ -341,7 +341,7 @@ class ERP5TypeInformation(XMLObject,
     # security is declared by superclass
     def queryMethodID(self, alias, default=None, context=None):
         """ Query method ID by alias.
-        
+
         In ERP5 we don't do aliases.
         """
         return default

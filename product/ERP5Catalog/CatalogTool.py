@@ -177,7 +177,7 @@ class IndexableObjectWrapper(object):
                 if (user, role) not in optimized_role_set:
                   # add only if not already added to optimized_role_set to avoid polluting indexation table
                   group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
- 
+
         # sort `allowed` principals
         sorted_allowed_by_local_roles_group_id = {}
         for local_roles_group_id, allowed in \

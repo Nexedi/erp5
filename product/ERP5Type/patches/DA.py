@@ -145,10 +145,10 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     #if c is not None:
       #LOG("DA", 300, "connection %s provided to %s" %(c, self.id))
     # patch: dynamic brain configuration
-    zsql_brain = kw.pop('zsql_brain', None) 
+    zsql_brain = kw.pop('zsql_brain', None)
     # patch end
-    
-      
+
+
     if REQUEST is None:
         if kw: REQUEST=kw
         else:

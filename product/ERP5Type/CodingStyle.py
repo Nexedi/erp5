@@ -114,7 +114,7 @@ def checkConsistency(self, fixit=0, source_code=None):
         message_list.append(
           ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
                         message='Source code of %s contains legacy call to %s' % (document_id, legacy_string)))
-  
+
   return message_list
 
 # Add checkConsistency to Python Scripts

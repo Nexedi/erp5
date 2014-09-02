@@ -334,7 +334,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     tel.setTelephoneCountry(33)
     tel.setTelephoneNumber(123456789)
     self.assertEqual('tel:+33123456789', tel.asURL())
-    
+
     tel.setTelephoneCountry(None)
     tel.setTelephoneNumber(123456789)
     self.assertEqual('tel:0123456789', tel.asURL())
@@ -367,7 +367,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     link = person.newContent(portal_type='Link',
                              url_string='www.nexedi.com')
     self.assertEqual(link.asURL(), 'http://www.nexedi.com')
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Coordinate))

@@ -35,9 +35,9 @@ from Products.ERP5.interfaces.arrow_base import IArrowBase
 class IAssetMovement(IAmount):
   """Asset Movement private interface specification
 
-  Asset movements are use to represent the asset 
-  value of a movement of resources leaving a 
-  source and reach a destination. 
+  Asset movements are use to represent the asset
+  value of a movement of resources leaving a
+  source and reach a destination.
   """
   # We must a find a way to use property sheets in or as interfaces
   # property_sheets = (PropertySheet.Price, )
@@ -117,7 +117,7 @@ class IProductionMovement(IAmount):
       production_quantity = quantity
 
     if quantity < 0
-      consumption_quantity = - quantity 
+      consumption_quantity = - quantity
       production_quantity = 0
   """
   def getConsumptionQuantity():
@@ -216,7 +216,7 @@ class IAccountingMovement(IAssetMovement):
     based on the destination_total_asset price property
     """
 
-  # The following is really unclear - 
+  # The following is really unclear -
   #   It uses getSourceInventoriatedTotalAssetPrice instead of
   #   of getSourceInventoriatedTotalAssetPrice instead of getSourceTotalAssetPrice
   #   I can only see one purpose: presentation of reports in predictive accounting
@@ -245,9 +245,9 @@ class IAccountingMovement(IAssetMovement):
 class IMovement(IProductionMovement, IArrowBase):
   """Movement interface specification
 
-  A movement represents an amount of resources which 
+  A movement represents an amount of resources which
   is moved along an Arrow (source and destination)
-  from a source A to a destination B. 
+  from a source A to a destination B.
   """
   def isMovement():
     """

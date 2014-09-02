@@ -157,7 +157,7 @@ def ERP5Site_createModuleScribus(self,
     # get string from ScribusFile content
     output_string = str(xml_string)
 
-    LOG('ERP5Site_createModuleScribus', INFO, 
+    LOG('ERP5Site_createModuleScribus', INFO,
         'createmodule > ScribusParser.getXmlObjectPropertiesDict')
     # building a tree from the output string elaborated from the
     # original Scribus file.
@@ -344,7 +344,7 @@ def ERP5Site_createModuleScribus(self,
                          import_pdf_file,
                          global_properties
                          )
-  LOG('ERP5Site_createModuleScribus', INFO, 
+  LOG('ERP5Site_createModuleScribus', INFO,
       'createmodule < PDF settings managed')
 
 

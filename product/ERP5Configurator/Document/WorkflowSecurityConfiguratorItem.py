@@ -108,7 +108,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
             permission_dict[permission].append(role.capitalize())
         for permission, roles in permission_dict.items():
           state.setPermission(permission, 0, roles)
-        # XXX To be deleted  
+        # XXX To be deleted
         #       for permission in permission_list:
         #         module.manage_permission(permission, ['Manager'], 0)
 

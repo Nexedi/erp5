@@ -148,11 +148,11 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin):
     """
     # Cash transfer has cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.destruction_survey = self.destruction_survey_module.newContent(
-                                    id='destruction_survey_1', 
-                                    portal_type='Destruction Survey', 
-                                    source_value=self.cash, 
+                                    id='destruction_survey_1',
+                                    portal_type='Destruction Survey',
+                                    source_value=self.cash,
                                     description='test',
-                                    destination_value=self.counter, 
+                                    destination_value=self.counter,
                                     source_total_asset_price=52400.0,)
     # execute tic
     self.tic()
@@ -394,10 +394,10 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     node = self.cash

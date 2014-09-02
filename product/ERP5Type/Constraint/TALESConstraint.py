@@ -44,7 +44,7 @@ class TALESConstraint(Constraint):
   """This constraint uses an arbitrary TALES expression on the context of the
   object; if this expression is evaluated as False, the object will be
   considered in an inconsistent state.
-    
+
     Configuration example:
     { 'id'            : 'tales_constraint',
       'description'   : 'Title should not be equals to foo',
@@ -55,7 +55,7 @@ class TALESConstraint(Constraint):
   For readability, please don't abuse this constraint to evaluate complex
   things. If necessary, write your own constraint class.
   """
-  
+
   _message_id_list = [ 'message_expression_false',
                        'message_expression_error' ]
 

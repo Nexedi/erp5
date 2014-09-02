@@ -467,7 +467,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetInventory(self, 
+  def stepResetInventory(self,
                sequence=None, sequence_list=None, **kwd):
     node = self.gros_versement
     line_list = self.line_list

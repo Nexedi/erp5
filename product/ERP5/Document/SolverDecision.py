@@ -70,7 +70,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
                     , PropertySheet.SolverSelection
                     , PropertySheet.Configurable
                     )
-  # XXX-JPS missing property sheet or categories to specify 
+  # XXX-JPS missing property sheet or categories to specify
   #   (default)delivery or solver_application or order -> the object of application of resolution
   #         ie. a specified delivery, a specified delivery line, etc.
   #         (delivery should be enough)

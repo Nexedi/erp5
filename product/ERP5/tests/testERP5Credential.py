@@ -679,7 +679,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Update")
     sequence["credential_update"] = credential_update
 
-  def stepCheckCredentialRecoveryCreation(self, sequence=None, 
+  def stepCheckCredentialRecoveryCreation(self, sequence=None,
       sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
     result_list = self.portal.portal_catalog(
@@ -1048,12 +1048,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
-    self._createCredentialRequest(first_name="Vifib", 
+    self._createCredentialRequest(first_name="Vifib",
                                  last_name="Test",
                                  reference="vifibtest")
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
-        portal_type="Credential Request", reference="vifibtest", 
+        portal_type="Credential Request", reference="vifibtest",
         first_name="Vifib", last_name="Test")
     mail_message = portal_catalog.getResultValue(
         portal_type="Mail Message",
@@ -1289,7 +1289,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._enablePreference()
     # reset the cache in order to have this preference working
     self.portal.portal_caches.clearAllCache()
-    
+
     self.contract = self.portal.web_page_module.newContent(
       portal_type='Web Page',
       reference=self.contract_reference,

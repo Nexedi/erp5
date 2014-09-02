@@ -36,13 +36,13 @@ from Products.ERP5Type.mixin.cache_provider import CacheProviderMixIn
 
 class RamCache(CacheProviderMixIn, XMLObject):
   """
-  RamCache is a Zope (persistent) representation of 
+  RamCache is a Zope (persistent) representation of
   the RAM based real cache plugin object.
   """
   meta_type = 'ERP5 Ram Cache'
   portal_type = 'Ram Cache'
   allowed_types = ()
-    
+
   security = ClassSecurityInfo()
   security.declareProtected(Permissions.ManagePortal,
                             'manage_editProperties',

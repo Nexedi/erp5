@@ -61,7 +61,7 @@ class BudgetVariation(Predicate):
 
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line.
-  
+
     Called when a new budget line is created.
     """
 
@@ -112,7 +112,7 @@ class BudgetVariation(Predicate):
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return None
-    
+
     if not budget_line.getVariationCategoryList(
                           base_category_list=(base_category,)):
       return None

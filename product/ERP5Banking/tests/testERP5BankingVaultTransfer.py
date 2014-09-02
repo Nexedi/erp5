@@ -718,7 +718,7 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.salle_tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.salle_tri.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

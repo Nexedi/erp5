@@ -135,7 +135,7 @@ if 1:
                              , icon=self.getIconExpression()
                              )
 
-    ActionInformation_getMapping = ActionInformation.getMapping 
+    ActionInformation_getMapping = ActionInformation.getMapping
     def getMapping(self):
         """ Get a mapping of this object's data.
         """

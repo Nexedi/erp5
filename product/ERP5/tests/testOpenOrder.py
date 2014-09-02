@@ -178,7 +178,7 @@ class TestOpenOrder(ERP5TypeTestCase):
       specialise_list=(useless_trade_condition.getRelativeUrl(),
                        main_trade_condition.getRelativeUrl())
       )
-     
+
     self.portal._run_after_setup = True
     self.tic()
 

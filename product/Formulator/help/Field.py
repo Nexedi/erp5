@@ -36,14 +36,14 @@ class Field:
         """
 
     def get_value(id, **kw):
-        """    
+        """
         Get property value for an id. Call override if override is
         defined, otherwise use property value. Alternatively the
         dictionary interface can also be used ('__getitem__()').
 
         Keywords arguments can optionally be passed, which will end up
         in the namespace of any TALES expression that gets called.
-        
+
         Permission -- 'Access contents information'
         """
 
@@ -64,7 +64,7 @@ class Field:
 
         Permission -- 'Access contents information'
         """
-        
+
     def get_override(id):
         """
         Get the override method for an id, or empty string
@@ -72,7 +72,7 @@ class Field:
 
         Permission -- 'Access contents information'
         """
-        
+
     def is_required():
         """
         A utility method that returns true if this field is required.
@@ -114,7 +114,7 @@ class Field:
 
         Permission -- 'View'
         """
-        
+
     def render_from_request(REQUEST):
         """
         A convenience method to render the field widget using
@@ -141,7 +141,7 @@ class Field:
 
         Permission -- 'View'
         """
-        
+
     def validate(REQUEST):
         """
         Validate this field using the raw unvalidated data found
@@ -152,13 +152,13 @@ class Field:
 
         Permission -- 'View'
         """
-        
+
     def validate_sub_field(id, REQUEST):
         """
         Validate a sub field of this field using the raw unvalidated
         data found in 'REQUEST'. This is used by composite fields
         composed of multiple sub fields such as 'DateTimeField'.
-        
+
         Returns the validated and processed value, or raises a
         ValidationError.
 

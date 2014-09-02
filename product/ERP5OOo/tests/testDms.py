@@ -100,14 +100,14 @@ def getFileSize(name):
   return file_size
 
 class TestDocumentMixin(ERP5TypeTestCase):
-  
+
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_jquery',
                             'erp5_full_text_myisam_catalog',
                             'erp5_base',
-                            'erp5_ingestion_mysql_innodb_catalog', 
+                            'erp5_ingestion_mysql_innodb_catalog',
                             'erp5_ingestion',
-                            'erp5_web', 
+                            'erp5_web',
                             'erp5_dms']
 
   def setUpOnce(self):
@@ -207,7 +207,7 @@ class TestDocument(TestDocumentMixin):
 
   ## setup
 
-  
+
   ## helper methods
 
   def createTestDocument(self, filename=None, portal_type='Text', reference='TEST', version='002', language='en'):
@@ -840,7 +840,7 @@ class TestDocument(TestDocumentMixin):
     # full text search with whole title of a document
     self.assertSameSet([document_3], \
       getAdvancedSearchTextResultList(document_3.getTitle(), ('Presentation',)))
-    # full text search with reference part of searchable_text 
+    # full text search with reference part of searchable_text
     # (i.e. not specified with 'reference:' - simply part of search text)
     self.assertSameSet([document_3], \
       getAdvancedSearchTextResultList(document_3.getReference(), ('Presentation',)))
@@ -868,7 +868,7 @@ class TestDocument(TestDocumentMixin):
                        getAdvancedSearchTextResultList('Great', web_page.getPortalType()))
     self.assertSameSet([person], \
                        getAdvancedSearchTextResultList('Great', person.getPortalType()))
-    
+
     # full text search with portal_type & reference
     self.assertSameSet([person], \
       getAdvancedSearchTextResultList('reference:%s portal_type:%s' \
@@ -913,7 +913,7 @@ class TestDocument(TestDocumentMixin):
     portal = self.portal
     assemble = portal.Base_assembleSearchString
     parse = portal.Base_parseSearchString
-    
+
     # directly pasing searchable string
     self.assertEqual('searchable text',
                       assemble(**{'searchabletext': 'searchable text'}))
@@ -926,7 +926,7 @@ class TestDocument(TestDocumentMixin):
     parsed_string = parse(search_string)
     self.assertEqual(['searchabletext'], parsed_string.keys())
 
-    
+
     # search "with all of the words"
     kw["searchabletext_all"] = "searchabletext_all1 searchabletext_all2"
     search_string = assemble(**kw)
@@ -934,15 +934,15 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     parsed_string = parse(search_string)
     self.assertEqual(['searchabletext'], parsed_string.keys())
-    
-    # search without these words 
+
+    # search without these words
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
     search_string = assemble(**kw)
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
     self.assertEqual(['searchabletext'], parsed_string.keys())
-    
+
     # search limited to a certain date range
     kw['created_within'] = '1w'
     search_string = assemble(**kw)
@@ -950,7 +950,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     parsed_string = parse(search_string)
     self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
-    
+
     # search with portal_type
     kw['search_portal_type'] = 'Document'
     search_string = assemble(**kw)
@@ -960,7 +960,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
                         parsed_string.keys())
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
-    
+
     # search by reference
     kw['reference'] = 'Nxd-test'
     search_string = assemble(**kw)
@@ -971,7 +971,7 @@ class TestDocument(TestDocumentMixin):
                         parsed_string.keys())
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
-    
+
     # search by version
     kw['version'] = '001'
     search_string = assemble(**kw)
@@ -983,7 +983,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
-    
+
     # search by language
     kw['language'] = 'en'
     search_string = assemble(**kw)
@@ -997,7 +997,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
     self.assertEqual(kw['language'], parsed_string['language'])
-    
+
     # contributor title search
     kw['contributor_title'] = 'John'
     search_string = assemble(**kw)
@@ -1011,7 +1011,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
     self.assertEqual(kw['language'], parsed_string['language'])
-    
+
     # only my docs
     kw['mine'] = 'yes'
     search_string = assemble(**kw)
@@ -1026,8 +1026,8 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(kw['version'], parsed_string['version'])
     self.assertEqual(kw['language'], parsed_string['language'])
     self.assertEqual(kw['mine'], parsed_string['mine'])
-    
-    # only newest versions 
+
+    # only newest versions
     kw['newest'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
@@ -1042,8 +1042,8 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(kw['language'], parsed_string['language'])
     self.assertEqual(kw['mine'], parsed_string['mine'])
     self.assertEqual(kw['newest'], parsed_string['newest'])
-    
-    # search mode 
+
+    # search mode
     kw['search_mode'] = 'in_boolean_mode'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
@@ -1153,7 +1153,7 @@ class TestDocument(TestDocumentMixin):
     # search arbitrary word
     kw = {'searchabletext_any': 'software'}
     self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
-    
+
     # exact word search
     kw = {'searchabletext_any': '*',
           'searchabletext_phrase': 'linux python'}
@@ -1164,17 +1164,17 @@ class TestDocument(TestDocumentMixin):
     kw = {'searchabletext_any': '*',
           'searchabletext_phrase': 'python linux knowledge system'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    
+
     # search "with all of the words" - each word prefixed by "+"
     kw = {'searchabletext_any': 'standalone',
           'searchabletext_all': 'python'}
     self.assertSameSet([document_1, document_2], getAdvancedSearchStringResultList(**kw))
-    
+
     # search without these words - every word prefixed by "-"
     kw = {'searchabletext_any': 'standalone',
           'searchabletext_without': 'python'}
     self.assertSameSet([web_page_1], getAdvancedSearchStringResultList(**kw))
-   
+
     # only given portal_types - add "type:Type" or type:(Type1,Type2...)
     kw = {'searchabletext_any': 'python',
           'search_portal_type': 'Presentation'}
@@ -1185,7 +1185,7 @@ class TestDocument(TestDocumentMixin):
     kw = {'searchabletext_any': 'management',
           'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
-   
+
     # search by reference
     kw = {'reference': document_2.getReference()}
     self.assertSameSet([document_2, document_3], getAdvancedSearchStringResultList(**kw))
@@ -1196,7 +1196,7 @@ class TestDocument(TestDocumentMixin):
           'reference': document_2.getReference(),
           'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
-  
+
     # search by version
     kw = {'reference': document_2.getReference(),
           'version': document_2.getVersion()}
@@ -1205,7 +1205,7 @@ class TestDocument(TestDocumentMixin):
           'version': document_2.getVersion(),
           'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
-   
+
     # search by language
     kw = {'reference': document_2.getReference(),
           'language': document_2.getLanguage()}
@@ -1217,7 +1217,7 @@ class TestDocument(TestDocumentMixin):
           'language': document_3.getLanguage(),
           'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
-  
+
     # only my docs
     super(TestDocument, self).login('user1')
     kw = {'searchabletext_any': 'owner'}
@@ -1228,7 +1228,7 @@ class TestDocument(TestDocumentMixin):
     # should return ONLY our own documents matching a word
     self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
     self.login()
-    
+
     # only newest versions
     # should return ALL documents for a reference
     kw = {'reference': web_page_1.getReference()}
@@ -1302,13 +1302,13 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('REF', document.getReference())
 
     # contribute file which will be merged to current document in synchronous mode
-    # and check content_type recalculated 
+    # and check content_type recalculated
     upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf', as_name='REF-en-001.pdf')
     contributed_document = self.portal.Base_contribute(file=upload_file, \
                                                        synchronous_metadata_discovery=True)
     self.tic()
     content_information = contributed_document.getContentInformation()
-    
+
     # we should have same data, respectively same PDF pages
     self.assertEqual(contributed_document.getSize(), document.getSize())
     self.assertEqual(contributed_document.getContentInformation()['Pages'], \
@@ -1321,7 +1321,7 @@ class TestDocument(TestDocumentMixin):
     document.setFile(upload_file)
     self.tic()
     content_information = document.getContentInformation()
-    self.assertEqual('1', content_information['Pages'])    
+    self.assertEqual('1', content_information['Pages'])
 
   def test_empty_PDF_content_information(self):
     document = self.portal.document_module.newContent(portal_type='PDF')
@@ -1474,13 +1474,13 @@ class TestDocument(TestDocumentMixin):
 
     # Delete base_data
     document.edit(base_data=None)
-    
+
     # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
     self.assertEqual('This document is not converted yet.',
                       document.Base_showFoundText())
-    
+
     # upload again good content
     upload_file = makeFileUpload('TEST-en-002.odt')
     document.edit(file=upload_file)
@@ -1672,11 +1672,11 @@ class TestDocument(TestDocumentMixin):
 
     # login as first one
     super(TestDocument, self).login('contributor1')
-    doc = document_module.newContent(portal_type='File', 
+    doc = document_module.newContent(portal_type='File',
                                      title='Test1')
     self.tic()
     self.login()
-    self.assertSameSet([person1], 
+    self.assertSameSet([person1],
                        doc.getContributorValueList())
 
     # login as second one
@@ -1684,14 +1684,14 @@ class TestDocument(TestDocumentMixin):
     doc.edit(title='Test2')
     self.tic()
     self.login()
-    self.assertSameSet([person1, person2], 
+    self.assertSameSet([person1, person2],
                        doc.getContributorValueList())
 
     # editing with non ERP5 Person object, nothing added to contributor
     self.login()
     doc.edit(title='Test3')
     self.tic()
-    self.assertSameSet([person1, person2], 
+    self.assertSameSet([person1, person2],
                        doc.getContributorValueList())
 
   def test_safeHTML_conversion(self):
@@ -1731,7 +1731,7 @@ class TestDocument(TestDocumentMixin):
     """.decode('utf-8').encode('iso-8859-1')
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
-    # (Ingestion, or FileField), not from user interface 
+    # (Ingestion, or FileField), not from user interface
     # which is always utf-8.
     # Edit web_page with a file to force conversion to base_format
     # as it is done in reality
@@ -2119,7 +2119,7 @@ return 1
 
     upload_file = makeFileUpload('TEST.Large.Document.pdf')
     pdf = module.newContent(portal_type=portal_type, file=upload_file)
-    
+
     self.assertTrue('html' in pdf.getTargetFormatList())
     self.assertTrue('png' in pdf.getTargetFormatList())
     self.assertTrue('txt' in pdf.getTargetFormatList())
@@ -2132,11 +2132,11 @@ return 1
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
     self.assertTrue(image.getTargetFormatList())
-    
+
     # test Not converted (i.e. empty) OOoDocument instances
     presentation=self.portal.document_module.newContent(portal_type='Presentation')
     self.assertSameSet([], presentation.getTargetFormatList())
-    
+
     # test uploading some data
     upload_file = makeFileUpload('Foo_001.odg')
     presentation.edit(file=upload_file)
@@ -2144,22 +2144,22 @@ return 1
     self.assertTrue('odg' in presentation.getTargetFormatList())
     self.assertTrue('jpg' in presentation.getTargetFormatList())
     self.assertTrue('png' in presentation.getTargetFormatList())
-  
+
   def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
     """
     Test Web Page conversion to image using embedded Images into its HTML body.
     Test various dumb ways to include an image (relative to instance or external ones).
     """
     display= 'thumbnail'
-    convert_kw = {'display':display, 
-                  'format':'jpeg', 
+    convert_kw = {'display':display,
+                  'format':'jpeg',
                   'quality':100}
-    preffered_size_for_display = self.getPreferences(display)    
+    preffered_size_for_display = self.getPreferences(display)
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
     # use ERP5's favourite.png"
     web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
     self.tic()
-    
+
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
@@ -2219,18 +2219,18 @@ return 1
     image_document = self.portal.image_module.newContent(portal_type='Image')
     upload_file = makeFileUpload('TEST-en-002.png')
     image_document.edit(file=upload_file)
-    
+
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
     web_page_document.setTextContent('<b> test </b> $website_url $website_url')
     # a Web Page can generate dynamic text so test is as well
-    web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')    
+    web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')
     self.tic()
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
     image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
-   
+
     for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
       max_tollerance_px = 1
       preffered_size_for_display = self.getPreferences(display)
@@ -2238,7 +2238,7 @@ return 1
         convert_kw = {'display':display, \
                       'format':format, \
                       'quality':100}
-        # Note: due to some image interpolations it's possssible that we have a difference of max_tollerance_px 
+        # Note: due to some image interpolations it's possssible that we have a difference of max_tollerance_px
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
@@ -2252,11 +2252,11 @@ return 1
         # Image
         image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
-        
+
         # Web Page
         web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= max_tollerance_px)
-        
+
 
     # test changing image quality will decrease its file size
     for url in (image_document_url, pdf_document_url, ooo_document_url, web_page_document_url):
@@ -2276,7 +2276,7 @@ return 1
                       "%s should be more then %s and %s should be more them %s" % \
                        (image_document_file_size_100p,
                         image_document_file_size_no_quality,
-                        image_document_file_size_no_quality, 
+                        image_document_file_size_no_quality,
                         image_document_file_size_5p)
                       )
       # no matter of quality image sizes whould be the same
@@ -2291,7 +2291,7 @@ return 1
 
   def test_getOriginalContentOnTraversal(self):
     """
-      Return original content on traversal.  
+      Return original content on traversal.
     """
     def getURL(uri, **kw):
       # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
@@ -2319,19 +2319,19 @@ return 1
     response = getURL(image_document.absolute_url(), **{'format':''})
     self.assertTrue('Content-Type: image/png\r\n'  in response.info().headers)
     self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png') in response.info().headers)
-   
+
     response = getURL(ooo_document.absolute_url(), **{'format':''})
     self.assertTrue('Content-Type: application/vnd.oasis.opendocument.presentation\r\n'  in response.info().headers)
     self.assertTrue('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n' in response.info().headers)
     self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp') in response.info().headers)
 
-    response = getURL(pdf_document.absolute_url(), **{'format':''})  
+    response = getURL(pdf_document.absolute_url(), **{'format':''})
     self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
     self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
 
     response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
     self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
-    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)   
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
 
     response = getURL(web_page_document.absolute_url(), **{'format':''})
     self.assertTrue('Content-Type: text/html; charset=utf-8\r\n'  in response.info().headers)
@@ -2354,7 +2354,7 @@ return 1
     upload_file = makeFileUpload('TEST-en-002.jpg')
     image = module.newContent(portal_type=portal_type, file=upload_file)
     self.assertRaises(Unauthorized, image.convert, format='svg')
- 
+
   def test_preConversionOnly(self):
     """
       Test usage of pre_converted_only argument - i.e. return a conversion only form cache otherwise
@@ -2362,32 +2362,32 @@ return 1
     """
     doc = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')
-    doc.edit(file=upload_file)    
+    doc.edit(file=upload_file)
     doc.publish()
     self.tic()
-    
+
     default_conversion_failure_image_size, default_conversion_failure_image_file_size = \
                             self.getURLSizeList('%s/default_conversion_failure_image' %self.portal.absolute_url())
-    
+
     doc_url = '%s/%s' %(self.portal.absolute_url(), doc.getPath())
     converted_image_size_70, converted_file_size_70 = self.getURLSizeList(doc_url, \
                                                              **{'format':'png', 'quality':70.0})
-    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 70.0}))                                                             
+    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 70.0}))
 
-    # try with new quality and pre_converted_only now a default image 
+    # try with new quality and pre_converted_only now a default image
     # with content "No image available" should be returned
     failure_image_size, failure_file_size = self.getURLSizeList(doc_url, \
                                                    **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
     self.assertSameSet(failure_image_size, default_conversion_failure_image_size)
-    
+
 
     converted_image_size_80, converted_file_size_80 = self.getURLSizeList(doc_url, \
                                                              **{'format':'png', 'quality':80.0})
-    self.assertSameSet(converted_image_size_80, converted_image_size_70)    
+    self.assertSameSet(converted_image_size_80, converted_image_size_70)
     self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 80.0}))
-    
+
     # as conversion is cached we should get it
-    converted_image_size_80n, converted_file_size_80n = self.getURLSizeList(doc_url, 
+    converted_image_size_80n, converted_file_size_80n = self.getURLSizeList(doc_url,
                                                                **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
     self.assertSameSet(converted_image_size_80n, converted_image_size_70)
 
@@ -2446,7 +2446,7 @@ return 1
                         [document2])
     self.assertSameSet([x.getObject() for x in document2.Document_getOtherVersionDocumentList()], \
                         [document1])
-    
+
     # limit by portal type works
     self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList(**{'portal_type':'Presentation'})], \
                         [])
@@ -2517,7 +2517,7 @@ return 1
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
     self.tic()
-   
+
     upload_file = makeFileUpload('TEST-en-003.odp', 'TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document = self.portal.Base_contribute(**kw)
@@ -2541,7 +2541,7 @@ return 1
     self.assertTrue('subject2' in full_text_result[0]['searchabletext'])
     self.assertTrue('subject1' in full_text_result[0]['searchabletext'])
     self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
-    
+
     # subject indexation
     for subject_list in (['subject1',], ['subject2',],
                          ['subject1', 'subject2',],):
@@ -2756,14 +2756,14 @@ return 1
     instance is made "visible" except when they have a future effective date.
     """
     portal = self.portal
-    
+
     upload_file = makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document_002 = self.portal.Base_contribute(**kw)
     document_002.publish()
     self.tic()
 
-    document_003 = document_002.Base_createCloneDocument(batch_mode=1) 
+    document_003 = document_002.Base_createCloneDocument(batch_mode=1)
     document_003.setEffectiveDate(DateTime() - 1)
     document_003.publish()
     document_future_003 = document_002.Base_createCloneDocument(batch_mode=1)
@@ -2774,7 +2774,7 @@ return 1
     self.assertEqual('archived', document_002.getValidationState())
     self.assertEqual('published', document_future_003.getValidationState())
 
-    # check if in any case document doesn't archive itself 
+    # check if in any case document doesn't archive itself
     # (i.e. shared_alive -> published or any other similar chain)
     document_004 = document_002.Base_createCloneDocument(batch_mode=1)
     document_004.shareAlive()
@@ -2805,7 +2805,7 @@ return 1
     document_nolang_006 = document_nolang_005.Base_createCloneDocument(batch_mode=1)
     document_nolang_006.shareAlive()
     self.tic()
-    
+
     self.assertEqual('archived', document_nolang_005.getValidationState())
     self.assertEqual('shared_alive', document_nolang_006.getValidationState())
 
@@ -2899,12 +2899,12 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     default_thumbnail_image_width = \
        preference_tool.default_site_preference.getPreferredThumbnailImageWidth()
     self.assertTrue(default_thumbnail_image_height > 0)
-    self.assertTrue(default_thumbnail_image_width > 0)    
+    self.assertTrue(default_thumbnail_image_width > 0)
     self.assertEqual(default_thumbnail_image_height,
                      preference_tool.getPreferredThumbnailImageHeight())
     self.assertEqual(default_thumbnail_image_width,
                      preference_tool.getPreferredThumbnailImageWidth())
-    #create new user preference and set new sizes for image thumbnail display 
+    #create new user preference and set new sizes for image thumbnail display
     user_pref = preference_tool.newContent(
                           portal_type='Preference',
                           priority=Priority.USER)
@@ -2922,7 +2922,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                      preference_tool.getPreferredThumbnailImageWidth())
     self.assertEqual(default_thumbnail_image_width + 10,
                      preference_tool.getPreferredThumbnailImageWidth(0))
-    #Now lets check that when we try to view an image as thumbnail, 
+    #Now lets check that when we try to view an image as thumbnail,
     #the sizes of that image are the ones defined in user preference
     image_portal_type = 'Image'
     image_module = self.portal.getDefaultModule(image_portal_type)
@@ -2946,7 +2946,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     before = time.time()
     # converting any OOoDocument -> PDF -> Image
     # make sure that this can happen in less tan XXX seconds i.e. code doing convert
-    # uses only first PDF frame (not entire PDF) to make an image - i.e.optimized enough to not kill 
+    # uses only first PDF frame (not entire PDF) to make an image - i.e.optimized enough to not kill
     # entire system performance by doing extensive calculations over entire PDF (see r37102-37103)
     ooo_document.convert(format='png')
     after = time.time()
@@ -2954,7 +2954,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     # we should have image converted in less than Xs
     # the 100s value is estimated one, it's equal to time for cloudood conversion (around 52s) +
     # time for gs conversion. As normally test are executed in parallel some tollerance is needed.
-    self.assertTrue(req_time < 100.0, 
+    self.assertTrue(req_time < 100.0,
       "Conversion took %s seconds and it is not less them 100.0 seconds" % \
         req_time)
 

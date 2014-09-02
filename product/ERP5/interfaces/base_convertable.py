@@ -53,7 +53,7 @@ class IBaseConvertable(Interface):
     conversion occurs.
 
     kw -- optional parameters which must be passed to the workflow
-          method and which will eventually end up in the 
+          method and which will eventually end up in the
           workflow history as a way to inform the user of
           the results of the conversion process.
 
@@ -64,7 +64,7 @@ class IBaseConvertable(Interface):
   def convertToBaseFormat():
     """
     Converts the original document to a base format
-    which is later used by the conversion engine to 
+    which is later used by the conversion engine to
     generate the target format requested by the user.
     """
 

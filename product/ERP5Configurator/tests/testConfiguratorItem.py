@@ -54,11 +54,11 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             'erp5_configurator_standard_trade_template')
 
   def createConfigurationSave(self):
-    """ Create a Business Configuration and a Configuration Save 
+    """ Create a Business Configuration and a Configuration Save
     """
     bc = self.portal.business_configuration_module.newContent()
     return bc.newContent(portal_type="Configuration Save")
-    
+
 
   def newUniqueUID(self):
     """ Return a unique number id"""
@@ -84,7 +84,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
          }
 
 
-    item = configuration_save.addConfigurationItem(  
+    item = configuration_save.addConfigurationItem(
       "Organisation Configurator Item",
       group=group_id, site='main', **kw)
 
@@ -93,11 +93,11 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     organisation = self.portal.portal_catalog.getResultValue(
-                       portal_type="Organisation", 
+                       portal_type="Organisation",
                        title = title)
 
     self.assertNotEquals(organisation, None)
-    
+
     self.assertEqual(group_id, organisation.getGroup())
     self.assertEqual(kw['title'], organisation.getTitle())
     self.assertEqual(kw['corporate_name'], organisation.getCorporateName())
@@ -123,7 +123,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     """ Test Category Configurator Item """
     configuration_save = self.createConfigurationSave()
     bc = configuration_save.getParentValue()
-    
+
     category_id_0 = "test_category_%s" % self.newUniqueUID()
     item0 = configuration_save.addConfigurationItem(
                                         "Category Configurator Item",
@@ -167,7 +167,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item2.fixConsistency()
     self.tic()
 
-    category_1 = getattr(self.portal.portal_categories.group, 
+    category_1 = getattr(self.portal.portal_categories.group,
                          category_id_1, None)
     self.assertNotEquals(category_1, None)
     self.assertEqual(category_1.getTitle(), "new_title_%s" % category_id_1)
@@ -398,15 +398,15 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     role_list = [i for i in person_type.objectValues(
-                 portal_type="Role Information") 
+                 portal_type="Role Information")
                 if i.getTitle() == "TestRole_Person"]
 
     self.assertEqual(len(role_list), 1)
 
-    self.assertEqual(role_list[0].getDescription(), 
+    self.assertEqual(role_list[0].getDescription(),
                       "Configured by ERP5 Configurator")
 
-    self.assertEqual(role_list[0].getRoleNameList(), 
+    self.assertEqual(role_list[0].getRoleNameList(),
                       ['Auditor', 'Author', 'Assignee'])
 
     self.assertEqual(role_list[0].getRoleCategoryList(),
@@ -452,12 +452,12 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item.fixConsistency()
     self.tic()
 
-    base_category_list = ["group", "site", "business_application", 
+    base_category_list = ["group", "site", "business_application",
                           "function", "region"]
 
     for base_category_id in base_category_list:
       # Check first Level
-      base_category = getattr(category_tool, base_category_id)    
+      base_category = getattr(category_tool, base_category_id)
       my_test = getattr(base_category, "my_test", None)
       self.assertNotEquals(my_test, None)
       self.assertEqual(my_test.getTitle(), "TEST")

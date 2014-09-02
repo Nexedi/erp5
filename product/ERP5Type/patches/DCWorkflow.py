@@ -118,7 +118,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     if not self.worklists:
       return None  # Optimization
     _getPortalTypeListForWorkflow = CachingMethod(self.getPortalTypeListForWorkflow,
-                                                  id=('_getPortalTypeListForWorkflow', self.id), 
+                                                  id=('_getPortalTypeListForWorkflow', self.id),
                                                   cache_factory = 'erp5_ui_long')
     portal_type_list = _getPortalTypeListForWorkflow()
     if not portal_type_list:
@@ -482,7 +482,7 @@ from Products.DCWorkflow.utils import modifyRolesForPermission
 
 def _executeMetaTransition(self, ob, new_state_id):
   """
-  Allow jumping from state to another without triggering any hooks. 
+  Allow jumping from state to another without triggering any hooks.
   Must be used only under certain conditions.
   """
   sci = None

@@ -1,4 +1,4 @@
-""" 
+"""
    An LDAP connection product.  Depends on David Leonard's ldapmodule.
    $Id: ZLDAP.py,v 1.11 2000/12/18 22:17:50 jeffrey Exp $
    Started by Anthony Baxter, <anthony@interlink.com.au>
@@ -196,13 +196,13 @@ class ZLDAPConnection(
             if o.dn in getattr(self,'_v_add',{}).keys():
                 del self._v_add[o.dn]
         self.GetConnection().destroy_cache()
-        
+
     def _abort(self):
         oko=self._v_okobjects
         for o in oko:
             self.abort(o)
         self.GetConnection().destroy_cache()
-            
+
     def tpc_vote(self, *ignored):
         pass
 
@@ -282,7 +282,7 @@ class ZLDAPConnection(
 
     def getSubEntries(self, dn, o=None):
         Entry = self._EntryFactory()
-        
+
         r=[]
         se=self.getRawSubEntries(dn)
 
@@ -302,7 +302,7 @@ class ZLDAPConnection(
             #outside of a commit.  We're not going to allow that!
         c=self._connection()
         c.modify_s(dn, modlist)
-        
+
     ### deleting entries
     def _registerDelete(self, dn):
         " register DN for deletion "
@@ -345,7 +345,7 @@ class ZLDAPConnection(
             raise AccessError, 'Cannot add unless in a commit'
         c=self._connection()
         c.add_s(dn, attrs)
-        
+
     ### other stuff
     def title_and_id(self):
         "title and id, with conn state"
@@ -406,7 +406,7 @@ class ZLDAPConnection(
             self._v_conn.simple_bind_s(self.bind_as, self.pw)
         except ldap.NO_SUCH_OBJECT:
             return """
-   Error: LDAP Server returned `no such object' for %s. Possibly 
+   Error: LDAP Server returned `no such object' for %s. Possibly
    the bind string or password are incorrect"""%(self.bind_as)
         self._v_openc = 1
 
@@ -488,7 +488,7 @@ class ZLDAPConnection(
 
     def _isAnLDAPConnection(self):
         return 1
-    
+
 def splitHostPort(hostport):
     import string
     l = string.split(hostport,':')

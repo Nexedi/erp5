@@ -35,13 +35,13 @@ from zope.interface import Interface
 class IExplainable(Interface):
   """Explainable interface specification
 
-  IExplainable defines the notion of Explanation in  ERP5 simulation. 
-  Explanation was initially introduced  to provide better indexing of 
+  IExplainable defines the notion of Explanation in  ERP5 simulation.
+  Explanation was initially introduced  to provide better indexing of
   movements in stock and movement tables. Thanks to explanation, it is
   possible to relate unbuilt simulation movements (ex. planned sourcing)
   to a root explanation (ex. a production order). This is used
   in the inventory browser user interface to provide an explanation
-  for each simulated movement which is not yet built. Explanation of 
+  for each simulated movement which is not yet built. Explanation of
   simulation movements are sometimes used to calculate efficiently aggregated
   quantities and prices of all simulation movements which are part of the
   same simulation tree.
@@ -49,7 +49,7 @@ class IExplainable(Interface):
   IExplainable is implemented by all simulation movements.
 
   Explanations in ERP5 are also used in another meaning, as a way to calculate
-  efficiently aggregated quantities and prices of movements in a Delivery. 
+  efficiently aggregated quantities and prices of movements in a Delivery.
   The current interface is unrelated to this meaning.
   """
   def getExplanationValueList():

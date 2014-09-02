@@ -35,7 +35,7 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-ROUNDING_OPTION_DICT = dict((name, value) 
+ROUNDING_OPTION_DICT = dict((name, value)
                             for name, value in decimal.__dict__.items()
                             if name.startswith('ROUND_'))
 
@@ -178,9 +178,9 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     result = decimal.Decimal(str(value)).quantize(exponent,
                                                   rounding=rounding_option)
     # XXX everything in ERP5 is in float and, in Python 2.6, Decimals
-    # and floats don't compare numerically, ex: 
+    # and floats don't compare numerically, ex:
     #   Decimal(1) < 2. is False
-    # 
+    #
     # So we downcast the return value to float here. If ERP5 is
     # converted to Decimals everywhere, then the float() call should
     # go away

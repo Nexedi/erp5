@@ -15,10 +15,10 @@ class ZMIForm:
         'fieldname' to this ZMIForm. 'REQUEST' is optional.  Note that
         it's better to use BasicForm and 'add_field' if you want to
         use Formulator Forms outside the Zope Management Interface.
-        
+
         Permission -- 'Change Formulator Forms'
         """
 
-        
-        
-    
+
+
+

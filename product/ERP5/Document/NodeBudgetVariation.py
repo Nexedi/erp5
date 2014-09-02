@@ -153,12 +153,12 @@ class NodeBudgetVariation(BudgetVariation):
       context = budget_line.getParentValue()
     elif self.isMemberOf('budget_variation/budget_line'):
       context = budget_line
-    
+
     if axis == 'movement':
       axis = 'default_%s' % base_category
     if axis == 'movement_strict_membership':
       axis = 'default_strict_%s' % base_category
-    
+
     uid_based_axis = False
     if axis in ('node', 'section', 'payment', 'function', 'project',
                 'mirror_section', 'mirror_node', 'funding' ):
@@ -292,14 +292,14 @@ class NodeBudgetVariation(BudgetVariation):
           query_dict[axis] = Query(**{axis: None})
       return query_dict
     return dict()
-  
+
   def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
                                          cell_key_cache=None):
     """Compute key from inventory brain, with support for virtual nodes.
     """
     cell_key_cache[None] = '%s/budget_special_node/none'\
                                  % self.getProperty('variation_base_category')
-    
+
     key = BudgetVariation._getCellKeyFromInventoryListBrain(
                    self, brain, budget_line, cell_key_cache=cell_key_cache)
     if self.getProperty('include_virtual_other_node'):

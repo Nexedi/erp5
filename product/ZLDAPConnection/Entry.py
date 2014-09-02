@@ -112,7 +112,7 @@ class GenericEntry(Acquisition.Implicit):
         if self._data.has_key(attr):
             return self._data[attr]
         else:
-            raise AttributeError, attr    
+            raise AttributeError, attr
 
     def set(self, key, value):
         """ Sets individual items """
@@ -168,7 +168,7 @@ class GenericEntry(Acquisition.Implicit):
 
     #### Get the ZLDAPConnection object.
     def _connection(self):
-        if self.__connection is None: 
+        if self.__connection is None:
             raise ConnectionError, 'Cannot Get Connection'
         else:
             return self.__connection
@@ -186,7 +186,7 @@ class GenericEntry(Acquisition.Implicit):
             for subentry in se:
                 r[subentry.id] = subentry
             self.__subentries = r
-            
+
         return self.__subentries
 
     def _clearSubentries(self):
@@ -260,8 +260,8 @@ class GenericEntry(Acquisition.Implicit):
             self._delete_dn(entry)      # Delete by the RDN ('cn=...')
         else:
             self._delete(entry)         # Delete by Entry object itself
-        
-        
+
+
 class TransactionalEntry(GenericEntry): #Acquisition.Implicit
     """\
     The TransactionalEntry class holds all the LDAP-Entry specific information,
@@ -276,7 +276,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         ('Create New Entry Objects',
          ('addSubentry',),),
         )
-    
+
     _registered=None            #denotes if we've registered with the
                                 #transaction manager
 
@@ -310,11 +310,11 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         Set attributes in self._data and register ourselves with the
         transaction machinery.  Data is not committed to LDAP when this
         is called.
-        """ 
+        """
         if not self._registered:
             get_transaction().register(self)
             self._registered=1
-            
+
         kwdict.update(kw)
         data = self._data
         for attr, value in kwdict.items():
@@ -384,14 +384,14 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
 ##        c=self._connection()
 ##        c._unregisterDelete(self.dn)
         self._isDeleted=0
-        
+
     def addSubentry(self, rdn, attrs={}, **kw):
         ''' create a new subentry of myself '''
         c=self._connection()
         nkw = {}
         nkw.update(attrs); nkw.update(kw)
         attrs = nkw
-        
+
         #create the new full DN for new subentry and check its existance
         dn='%s,%s' % (string.strip(rdn), self.dn)
         if c.hasEntry(dn):
@@ -412,9 +412,9 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         entry = Entry(dn,attrs,c,isNew=1).__of__(self)
         c._registerAdd(entry)           # Register new Entry (added by TM)
         self._setSubentry(entry.id, entry)
-        
+
         return entry
-        
+
 
 
 class ZopeEntry(OFS.SimpleItem.Item):
@@ -425,7 +425,7 @@ class ZopeEntry(OFS.SimpleItem.Item):
     manage_options=(
         {'label':'Attributes','action':'manage_attributes'},
         )
-    
+
     __ac_permissions__=(
         ('Access contents information', ('manage_attributes',),
          ('Manager','Anonymous',),),
@@ -437,11 +437,11 @@ class ZopeEntry(OFS.SimpleItem.Item):
          ('manage_newEntry', 'manage_newEntryWithAttributes'),
          ('Manager',),),
         )
-    
+
     manage_attributes=HTMLFile("attributes",globals())
     manage_main=manage_attributes
     isPrincipiaFolderish=1
-    
+
 
     #### Entry & Attribute Access Machinery #####################
 
@@ -465,7 +465,7 @@ class ZopeEntry(OFS.SimpleItem.Item):
     def tpURL(self):
         """Return string to be used as URL relative to parent."""
         return urllib.quote(self.id)
-    
+
     ### Object Manager-ish Machinery
     def objectValues(self):
         return self._subentries().values()
@@ -543,7 +543,7 @@ class ZopeEntry(OFS.SimpleItem.Item):
             for name, value in kw.items():
                 if name in datakeys:
                     self.set(name, value)
-    
+
         if REQUEST is not None:
             return MessageDialog(
                 title  ='Success!',

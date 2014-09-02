@@ -155,7 +155,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
       previous_value = previous_value.encode('utf-8')
     if isinstance(new_value, unicode):
       new_value = new_value.encode('utf-8')
-      
+
     # check if it'a work on product or on categories
     if tag.split('[')[0] == 'category':
       # call the method which allows to work on a specific part, the update of
@@ -235,7 +235,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
         # previous value different from current value
         self._generateConflict(document.getPhysicalPath(),
                                tag,
-                               xml, 
+                               xml,
                                previous_value,
                                current_value,
                                kw["signature"])

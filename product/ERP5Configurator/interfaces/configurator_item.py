@@ -29,7 +29,7 @@
 from zope.interface import Interface
 
 class IConfiguratorItem(Interface):
-  """ 
+  """
    Configurator Item interface specification.
 
    Documents which implement the IConfiguratorItem interface
@@ -37,7 +37,7 @@ class IConfiguratorItem(Interface):
   """
 
   def _build(business_configuration):
-    """ 
+    """
     Build new ERP5 Documents based on stored parameters during
     the configuraton process.
 

@@ -31,5 +31,5 @@ class Movement:
     Movement of a quantity of resource in a given variation
     from a source to a destination. Discrete variation
     is stored as category. Continuous variation is stored
-    as attribute. 
+    as attribute.
   """

@@ -78,7 +78,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
       task_report_line.edit(quantity=quantity)
     sequence.edit(last_delta = sequence.get('last_delta', 0.0) - 1.0)
 
-  def stepChangeTaskReportDestination(self, sequence=None, 
+  def stepChangeTaskReportDestination(self, sequence=None,
                                                    sequence_list=None, **kw):
     """
       Set diffrent destination organisation on task report.
@@ -87,7 +87,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     task_report = sequence.get('task_report')
     task_report.edit(destination_value = organisation3)
 
-  def stepChangeTaskReportStartDate(self, sequence=None, 
+  def stepChangeTaskReportStartDate(self, sequence=None,
                                                     sequence_list=None, **kw):
     """
       Change the start_date of the task_report.
@@ -133,7 +133,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     """
     task_report = sequence.get('task_report')
     self.assertEqual('foo', task_report.getComment())
-  
+
   def stepCloneTaskReportAndDoWfTransitions(self, sequence=None, **kw):
     """
     Create a second task report  by cloning the existing one.
@@ -163,7 +163,7 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -316,7 +316,7 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
   @expectedFailure
   def test_04_TaskReportChangeStartDate(self, quiet=quiet, run=run_all_test):
     """
-    Check that it is possible to solve date's divergence on the task report 
+    Check that it is possible to solve date's divergence on the task report
     line level.
     """
     if not run: return

@@ -44,7 +44,7 @@ def bin_search(binary):
             if os.access(pathbin, mode) == 1:
                 return pathbin
 
-    raise MissingBinary('Unable to find binary "%s" in %s' % 
+    raise MissingBinary('Unable to find binary "%s" in %s' %
                         (binary, os.pathsep.join(bin_search_path)))
 
 def getShortPathName(binary):
@@ -207,7 +207,7 @@ class StrippingParser( SGMLParser ):
 
             self.result = "%s</%s>" % (self.result, tag)
             remTag = '</%s>' % tag
-    
+
     def parse_declaration(self, i):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """

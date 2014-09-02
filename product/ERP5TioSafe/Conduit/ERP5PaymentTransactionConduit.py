@@ -61,31 +61,31 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
     """
     site = self.getIntegrationSite(kw.get('domain'))
     default_stc = site.getSourceTrade()
-    
+
     stc_title = "%s %s" % (site.getReference(), object.getTitle())
 
     #if the stc already exist, invalidate it
-    stc_list = [x.getObject() for x in 
-		object.getPortalObject().sale_trade_condition_module.searchFolder(title=stc_title, 
+    stc_list = [x.getObject() for x in
+		object.getPortalObject().sale_trade_condition_module.searchFolder(title=stc_title,
 		       								 validation_state='validated')]
     for sale_trade_cond in stc_list:
       #Get the related objet and invalidate related payment transaction
       for payment_transaction in sale_trade_cond.Base_getRelatedObjectList(portal_type="Payment Transaction",
                                                  			   simulation_state="confirmed"):
-	  
+
         transaction = payment_transaction.getObject()
 	transaction.cancel()
       #Invalidate the STC
       sale_trade_cond.invalidate()
 
     # Create the STC
-    stc = object.getPortalObject().sale_trade_condition_module.newContent(title=stc_title, 
-		    specialise=default_stc, 
+    stc = object.getPortalObject().sale_trade_condition_module.newContent(title=stc_title,
+		    specialise=default_stc,
 		    version=001)
     stc.validate()
-    
+
     return stc
-  
+
   def _deleteSaleTradeCondition(self, object, **kw):
     """ Unvalidate sale trade condition so that
         we can filter payment transaction based on the plugin they came from
@@ -182,7 +182,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
     """ Confirm the payment transaction and, add the grants on this one. """
     if object.getPortalType() in ['Payment Transaction',]:
       ## first delete default generated accounting transaction line: bank,
-      ## receivable and payable to have "No diff" on XML diff between pub and sub 
+      ## receivable and payable to have "No diff" on XML diff between pub and sub
       removable_id_list = ["bank", "receivable", "payable"]
       object.manage_delObjects(removable_id_list)
       object.confirm()
@@ -191,9 +191,9 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
 
   def visitArrow(self, document=None, xml=None, **kw):
     """ Manage the addition of sources and destination in the payment transaction. """
-    
+
     return
-    
+
   def visitMovement(self, document=None, xml=None, **kw):
     """ Manage the addition of the Sale Order Line. """
 

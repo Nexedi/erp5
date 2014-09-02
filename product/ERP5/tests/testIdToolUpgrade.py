@@ -131,7 +131,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     # Delete new zsql methods which are used by new code
     skin_folder = self.getPortal().portal_skins.erp5_core
     custom_skin_folder = self.getPortal().portal_skins.custom
-    script_id_list = [x for x in skin_folder.objectIds() 
+    script_id_list = [x for x in skin_folder.objectIds()
                       if x.startswith('IdTool')]
     self.assertTrue(len(script_id_list)>0)
     cp_data = skin_folder.manage_cutObjects(ids=script_id_list)

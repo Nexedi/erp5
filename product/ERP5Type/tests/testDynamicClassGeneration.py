@@ -1526,7 +1526,7 @@ class _TestZodbComponent(SecurityTestCase):
     """
     Check whether checkConsistency has been properly implemented for checking
     Component version field, e.g. no reserved keywords can be used.
-    
+
     Also, check resets which should be performed when the Component is
     validated but not when an error was encountered (implemented in
     dynamic_class_generation_interaction_workflow)
@@ -1609,7 +1609,7 @@ class _TestZodbComponent(SecurityTestCase):
     """
     Check whether checkConsistency has been properly implemented for checking
     Component source code field.
-    
+
     Also, check resets which should be performed when the Component is
     validated but not when an error was encountered (implemented in
     dynamic_class_generation_interaction_workflow)

@@ -56,7 +56,7 @@ class TransformationSourcingCopyToTarget(CopyToTarget):
       value_dict['aggregate_list'] = aggregate_list
     return value_dict
 
-  def _getParentParameters(self, simulation_movement, 
+  def _getParentParameters(self, simulation_movement,
                            **value_delta_dict):
     """
       Get parent movement, and its value delta dict.
@@ -65,6 +65,6 @@ class TransformationSourcingCopyToTarget(CopyToTarget):
     rule = applied_rule.getSpecialiseValue()
     if rule.getPortalType() != "Transformation Sourcing Rule":
       value_delta_dict.pop('aggregate_list', None)
-    return CopyToTarget._getParentParameters(self, simulation_movement, 
+    return CopyToTarget._getParentParameters(self, simulation_movement,
                                              **value_delta_dict)
 

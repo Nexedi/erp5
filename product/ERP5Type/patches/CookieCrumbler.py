@@ -42,7 +42,7 @@ class PatchedCookieCrumbler(CookieCrumbler):
     This class is only for backward compatibility.
   """
   pass
-    
+
 def getLoginURL(self):
     '''
     Redirects to the login page.
@@ -72,7 +72,7 @@ CookieCrumbler.getLoginURL = getLoginURL
 
 def modifyRequest(self, req, resp):
   """Copies cookie-supplied credentials to the basic auth fields.
-  
+
   Returns a flag indicating what the user is trying to do with
   cookies: ATTEMPT_NONE, ATTEMPT_LOGIN, or ATTEMPT_RESUME.  If
   cookie login is disabled for this request, raises
@@ -135,7 +135,7 @@ def modifyRequest(self, req, resp):
             'twiddleAuthCookie', None)
           if method is not None:
             method(resp, self.auth_cookie, quote(ac))
-              
+
   req._cookie_auth = attempt
   return attempt
 

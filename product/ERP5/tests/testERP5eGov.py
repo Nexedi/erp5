@@ -124,7 +124,7 @@ class TestEgov(ERP5TypeTestCase):
     return ('group/client','group/client/dgid/di', 'group/client/dgid/bf',
             'function/impots/taxes_indirectes', 'function/impots/section/chef',
             'role/citoyen', 'role/citoyen/national', 'role/citoyen/etranger', 'role/gouvernement',
-            'role/entreprise', 'role/entreprise/agence', 'role/entreprise/siege', 'role/entreprise/succursale', 
+            'role/entreprise', 'role/entreprise/agence', 'role/entreprise/siege', 'role/entreprise/succursale',
             'function/entreprise/mandataire')
 
   def afterSetUp(self):
@@ -166,7 +166,7 @@ class TestEgov(ERP5TypeTestCase):
     if vat_portal_type is not None and vat_module_portal_type is not None:
       vat_module = self.portal.getDefaultModule('Vat Declaration')
       self.portal.portal_types.manage_delObjects([vat_portal_type.getId(), vat_module_portal_type.getId()])
-      self.portal.manage_delObjects([vat_module.getId(),]) 
+      self.portal.manage_delObjects([vat_module.getId(),])
     self.portal.portal_caches.clearAllCache()
     self.tic()
 
@@ -180,16 +180,16 @@ class TestEgov(ERP5TypeTestCase):
 
   def createNewProcedure(self):
     """
-     This function create a new EGov Type   
+     This function create a new EGov Type
     """
     return self.portal.portal_types.newContent(portal_type='EGov Type')
 
 
   def fillProcedureForm(self, procedure=None, procedure_title='fooo'):
     """
-     This function fill the form of a given procedure. Filled field allow to 
+     This function fill the form of a given procedure. Filled field allow to
      generate portal_type and portal_type module of this procedure, it also allow
-     configuring securities of the new module and renaming actions   
+     configuring securities of the new module and renaming actions
     """
     # initialize values for new procedure
     # use accessors to verify if they are dynamically generated
@@ -256,9 +256,9 @@ class TestEgov(ERP5TypeTestCase):
     self.tic()
 
   def test_01_new_procedure_creation(self):
-    """ 
+    """
     this test create one procedure, initialize it by some datas, validate it
-    to generate the module and portal_types and verify some properties  
+    to generate the module and portal_types and verify some properties
     """
     procedure = self.createNewProcedure()
     self.fillProcedureForm(procedure, 'vat declaration')
@@ -290,7 +290,7 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
     # test form generation
     # change to EGov skin which is defined in erp5_egov
-    self.changeSkin('EGov') 
+    self.changeSkin('EGov')
     vat_declaration.view()
     vat_declaration.PDFType_viewAsPdf()
     application_dict = vat_declaration.PDFDocument_getApplicationIncomeDict()
@@ -302,7 +302,7 @@ class TestEgov(ERP5TypeTestCase):
   def test_03_submit_application(self):
     """
     This test create an application fill it, join required
-    attachments and submit it 
+    attachments and submit it
     """
     procedure = self.createNewProcedure()
     self.fillProcedureForm(procedure, 'vat declaration')
@@ -315,10 +315,10 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
     # test form generation
     # change to EGov skin which is defined in erp5_egov
-    self.changeSkin('EGov') 
+    self.changeSkin('EGov')
     self.assertEqual('draft', vat_declaration.getValidationState())
     missing_file = vat_declaration.PDFDocument_getRequirementCount()
-    self.assertEqual(missing_file, 1)  
+    self.assertEqual(missing_file, 1)
     type_allowed_content_type_list = vat_declaration.getTypeInfo().getTypeAllowedContentTypeList()
     type_allowed_content_type_list.append('PDF')
     vat_declaration.getTypeInfo().setTypeAllowedContentTypeList(type_allowed_content_type_list)
@@ -334,7 +334,7 @@ class TestEgov(ERP5TypeTestCase):
   def test_05_process_application(self):
     """
     This test process a submitted application and verify allowed transition
-    according to steps define in the procedure 
+    according to steps define in the procedure
     """
     procedure = self.createNewProcedure()
     self.fillProcedureForm(procedure, 'vat declaration')
@@ -347,7 +347,7 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
     # test form generation
     # change to EGov skin which is defined in erp5_egov
-    self.changeSkin('EGov') 
+    self.changeSkin('EGov')
     self.portal.portal_workflow.doActionFor(vat_declaration, 'submit_draft_action')
     self.assertEqual('submitted', vat_declaration.getValidationState())
     self.createAgentUser()

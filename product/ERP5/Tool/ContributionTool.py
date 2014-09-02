@@ -66,15 +66,15 @@ class ContributionTool(BaseTool):
     of documents into an ERP5 Site.
 
     ContributionTool needs to be configured in portal_types (allowed contents) so
-    that it can store Text, Spreadsheet, PDF, etc. 
+    that it can store Text, Spreadsheet, PDF, etc.
 
     The main method of ContributionTool is newContent. This method can
     be provided various parameters from which the portal type and document
-    metadata can be derived. 
+    metadata can be derived.
 
     Configuration Scripts:
 
-      - ContributionTool_getPropertyDictFromFilename: receives file name and a 
+      - ContributionTool_getPropertyDictFromFilename: receives file name and a
         dict derived from filename by regular expression, and does any necesary
         operations (e.g. mapping document type id onto a real portal_type).
 
@@ -89,7 +89,7 @@ class ContributionTool(BaseTool):
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
 
-  
+
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -225,7 +225,7 @@ class ContributionTool(BaseTool):
       if discover_metadata:
         document.activate(after_path_and_method_id=(document.getPath(),
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat')))\
-              .discoverMetadata(filename=filename, 
+              .discoverMetadata(filename=filename,
                                 user_login=user_login,
                                 input_parameter_dict=input_parameter_dict)
       if REQUEST is not None:
@@ -442,7 +442,7 @@ class ContributionTool(BaseTool):
     # Try first to return the real object inside
     # This is much safer than trying to access objects displayed by listDAVObjects
     # because the behaviour of catalog is unpredicatble if a string is passed
-    # for a UID. For example 
+    # for a UID. For example
     #   select path from catalog where uid = "001193.html";
     # will return the same as
     #   select path from catalog where uid = 1193;

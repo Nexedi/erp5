@@ -32,10 +32,10 @@ translateString = lambda msg: msg  # just to extract messages
 class AccountingTransactionBalance(Constraint):
   """Check that accounting transaction total debit and total credit are equals.
   """
-  
+
   _message_id_list = [ 'message_transaction_not_balanced_for_source',
                        'message_transaction_not_balanced_for_destination' ]
-  
+
   message_transaction_not_balanced_for_source = translateString(
        'Transaction is not balanced for ${section_title}')
   message_transaction_not_balanced_for_destination = translateString(
@@ -57,7 +57,7 @@ class AccountingTransactionBalance(Constraint):
         section = line.getDestinationSectionValue()
         destination_sum[section] = destination_sum.get(section, 0) + \
           (line.getDestinationInventoriatedTotalAssetPrice() or 0)
-    
+
     for section, total in source_sum.items():
       precision = 2
       if section is not None and\
@@ -70,7 +70,7 @@ class AccountingTransactionBalance(Constraint):
                 'message_transaction_not_balanced_for_source'),
                 mapping=dict(section_title=section.getTranslatedTitle())))
           break
-    
+
     for section, total in destination_sum.items():
       precision = 2
       if section is not None and\

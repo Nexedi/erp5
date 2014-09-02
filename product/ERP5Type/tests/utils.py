@@ -148,7 +148,7 @@ class DummyLocalizer:
 
   def get_selected_language(self):
     return self.lang
-  
+
   def get_languages_map(self):
     return [{'selected': True, 'id': 'en', 'title': 'English'},
             {'selected': False, 'id': 'pl', 'title': 'Polish'},
@@ -177,7 +177,7 @@ class DummyLocalizer:
       from string import Template
       return Template(msg).substitute(mapping)
     return msg
-  
+
   def __call__(self, request, context):
     # the before traverse hook
     pass
@@ -202,7 +202,7 @@ def createZODBPythonScript(container, script_id, script_params,
                            script_content):
   """Creates a Python script `script_id` in the given `container`, with
   `script_params` and `script_content`.
-  
+
   If the container already contains an object with id `script_id`, this
   object is removed first.
   """
@@ -390,12 +390,12 @@ class LogInterceptor:
     On CMF 1, LogInterceptor would bail if a log record with too high
     severity would pass through, and it would monkey-patch zLOG.log_write to do
     its job, meaning it would take on all Zope messages.
-    
+
     The CMF 2 LogInterceptor plugs itself as a filter on the requested logger
     (the root logger, by default), which meant it would only be called on
     log records at that exact subsystem (not lower subsystems), and it no
     longer raises AssertionError on messages with high severity.
-    
+
     This replacement restore the original semantics while keeping close to the
     new implementation, so it can act on both "zLOG" and "logging" calls.
     '''
@@ -431,7 +431,7 @@ class LogInterceptor:
 
     def filter(self, record):
         if record.levelno > self.level:
-            raise AssertionError("%s(%s): %s" % 
+            raise AssertionError("%s(%s): %s" %
                                  (record.name,
                                   record.levelname,
                                   record.getMessage()))
@@ -543,7 +543,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
             result.append((index, category))
     result.sort()
     return [category for index, category in result]
-    
+
   for cell_dict in cell_dict_list:
     base_id = cell_dict['base_id']
     if callable(cell_range_method):

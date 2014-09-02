@@ -41,6 +41,6 @@ class GadgetTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-  
+
 
 

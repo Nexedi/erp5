@@ -200,7 +200,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def stepCheckImportedPersonListFreeText(self, sequence=None, sequence_list=None, **kw):
     num = 10
-    person_list = self.getPortal().person_module.objectValues() 
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -216,7 +216,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def stepCheckImportedPersonListAccentuated(self, sequence=None, sequence_list=None, **kw):
     num = 10
-    person_list = self.getPortal().person_module.objectValues() 
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe é %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -237,7 +237,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def stepCheckImportedPersonListWithDates(self, sequence=None, sequence_list=None, **kw):
     num = 10
-    person_list = self.getPortal().person_module.objectValues() 
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -708,7 +708,7 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual('A Country', france.getDescription())
     self.assertEqual('FR', france.getCodification())
     self.assertEqual(1, france.getIntIndex())
-  
+
   def test_CategoryTool_importCategoryFile_PathStars(self):
     # tests CategoryTool_importCategoryFile with * in the paths columns
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -724,7 +724,7 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual('A Country', france.getDescription())
     self.assertEqual('FR', france.getCodification())
     self.assertEqual(1, france.getIntIndex())
-    
+
   def test_CategoryTool_importCategoryFile_PathStars_noID(self):
     # tests CategoryTool_importCategoryFile with * in the paths columns, and no
     # ID column, and non ascii titles
@@ -802,7 +802,7 @@ class TestOOoImport(TestOOoImportMixin):
       self.assertTrue('france' in str(error), str(error))
     else:
       self.fail('ValueError not raised')
-    
+
     # Base_getCategoriesSpreadSheetMapping performs checks on the spreadsheet,
     # an "invalid spreadsheet" error handler can be provided, to report errors
     # nicely.
@@ -814,7 +814,7 @@ class TestOOoImport(TestOOoImportMixin):
         'import_region_category_duplicate_ids_same_level.sxc')
     self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(import_file,
          invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
-    
+
     self.assertEqual(1, len(message_list))
     self.assertTrue('france' in str(message_list[0]))
 

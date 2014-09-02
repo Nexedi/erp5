@@ -39,8 +39,8 @@ from Products.ERP5Type.tests.utils import to_utf8
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
     The goal of this test is to cover the different application cases
-    of EditorField in ERP5 CRM, ERP5 Web, etc. and make sure that 
-    proxy fields are designed in a consistent way. This test has 
+    of EditorField in ERP5 CRM, ERP5 Web, etc. and make sure that
+    proxy fields are designed in a consistent way. This test has
     been created after some changes in erp5_core had impact
     on other business templates.
 
@@ -49,7 +49,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
   manager_username = 'zope'
   manager_password = 'zope'
-  
+
   def getTitle(self):
     return "EditorField"
 
@@ -96,7 +96,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def _testPreferredDocumentEditor(self, event, preferred_editor, editor, form_id, field_id):
     """
       Common code to test if current document (event)
-      is using appropriate editor (editor) as defined 
+      is using appropriate editor (editor) as defined
       in preferences
     """
     self.getDefaultSitePreference().setPreferredTextEditor(preferred_editor)
@@ -169,7 +169,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       html_text -- the HTML string to analyze
 
-      document -- the document which content is displayed in 
+      document -- the document which content is displayed in
                   read only mode
     """
     html_text = to_utf8(html_text)
@@ -189,7 +189,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditSimpleEmailEventFCKEditorHTML(self):
     """
       Create an event, make sure portal preferences are set as
-      FCKEditor and make sure FCKEditor is displayed in the 
+      FCKEditor and make sure FCKEditor is displayed in the
       default view of a CRM event
 
       In this case we use HTML content for the test.
@@ -199,7 +199,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
     event.setContentType('text/html')
     event.setTextContent(text_content)
-   
+
     # Set FCKEditor as preferred editor and make sure it is taken into account
     self._testPreferredDocumentEditor(event, 'fck_editor', 'fck_editor', 'Event_view', 'my_text_content')
 
@@ -219,7 +219,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditSimpleEmailEventFCKEditorText(self):
     """
       Create an event, make sure portal preferences are set as
-      FCKEditor and make sure FCKEditor is displayed in the 
+      FCKEditor and make sure FCKEditor is displayed in the
       default view of a CRM event
 
       In this case we use Text content for the test.
@@ -229,7 +229,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
     event.setContentType('text/plain')
     event.setTextContent(text_content)
-   
+
     # Set FCKEditor as preferred editor and make sure text_area is used since
     # we are not doing HTML
     self._testPreferredDocumentEditor(event, 'fck_editor', 'text_area', 'Event_view', 'my_text_content')
@@ -250,7 +250,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditSimpleEmailEventTextAreaHTML(self):
     """
       Create an event, make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       default view of a CRM event
 
       In this case we use HTML content for the test.
@@ -260,7 +260,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
     event.setContentType('text/html')
     event.setTextContent(text_content)
-   
+
     # Set TextArea as preferred editor and make sure it is taken into account
     self._testPreferredDocumentEditor(event, 'text_area', 'text_area', 'Event_view', 'my_text_content')
 
@@ -281,7 +281,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditSimpleEmailEventTextAreaText(self):
     """
       Create an event, make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       default view of a CRM event
 
       In this case we use Text content for the test.
@@ -291,7 +291,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
     event.setContentType('text/plain')
     event.setTextContent(text_content)
-   
+
     # Set TextArea as preferred editor and make sure it is taken into account
     self._testPreferredDocumentEditor(event, 'text_area', 'text_area', 'Event_view', 'my_text_content')
 
@@ -309,7 +309,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditWebPageFCKEditorHTML(self):
     """
       Create a web page. Make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       editor view of a Web Page.
 
       In this case we use HTML content for the test.
@@ -331,7 +331,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditWebPageFCKEditorText(self):
     """
       Create a web page. Make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       editor view of a Web Page.
 
       In this case we use Text content for the test.
@@ -353,7 +353,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditWebPageTextAreaHTML(self):
     """
       Create a web page. Make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       editor view of a Web Page.
 
       In this case we use HTML content for the test.
@@ -375,7 +375,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_EditWebPageTextAreaText(self):
     """
       Create a web page. Make sure portal preferences are set as
-      TextArea and make sure TextArea is displayed in the 
+      TextArea and make sure TextArea is displayed in the
       editor view of a Web Page.
 
       In this case we use Text content for the test.

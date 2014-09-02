@@ -44,7 +44,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
   """
   Unit test class for the check deposit module
   """
-  
+
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
@@ -138,7 +138,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
 
     self.openCounterDate(site=self.testsite.paris)
     self.openAccountingDate(site=self.testsite.paris)
-    
+
 
   def stepLogout(self, sequence=None, sequence_list=None, **kwd):
     self.logout()
@@ -254,7 +254,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     Set amount for the two lines
     """
     self.check_deposit.edit(source_total_asset_price=52000)
-    
+
 
   def stepModifyCheckOperationLineAmount(self, sequence=None, sequence_list=None, **kwd):
     """

@@ -37,7 +37,7 @@ class PropertyRecordableMixin:
   """
   This class provides a generic implementation of IPropertyRecordable.
 
-  IPropertyRecordable provides methods to record 
+  IPropertyRecordable provides methods to record
   existing properties of a document and later retrieve
   them. It is used by simulation to record forced
   properties on simulation movements, but could be used

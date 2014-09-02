@@ -125,7 +125,7 @@ class TestDataProtection(ERP5TypeTestCase):
     portal = self.getPortal()
     document = portal.restrictedTraverse(sequence.get('document_relative_url'))
     for property_id in self.document_edit_kw.keys():
-      # Properties are now deleted, so check that None 
+      # Properties are now deleted, so check that None
       # or default value is returned.
       self.assertFalse(document.getProperty(property_id))
     # View History permission is now granted only for Manager

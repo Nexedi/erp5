@@ -193,10 +193,10 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin):
     """
     # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.usual_cash_transfer = self.usual_cash_transfer_module.newContent(
-                                     id='usual_cash_transfer_1', 
-                                     portal_type='Usual Cash Transfer', 
-                                     source_value=self.usual_cash, 
-                                     destination_value=self.counter_vault, 
+                                     id='usual_cash_transfer_1',
+                                     portal_type='Usual Cash Transfer',
+                                     source_value=self.usual_cash,
+                                     destination_value=self.counter_vault,
                                      description='test',
                                      source_total_asset_price=52400.0)
     # execute tic
@@ -462,7 +462,7 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter_final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter_final_vault.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

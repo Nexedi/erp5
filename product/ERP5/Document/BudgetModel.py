@@ -56,7 +56,7 @@ class BudgetModel(Predicate):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
     """Return the cell range to use for the budget.
     """
@@ -131,7 +131,7 @@ class BudgetModel(Predicate):
             query_dict['select_list'])
 
       query_dict.update(variation_query_dict)
- 
+
     # include dates from the budget
     budget = budget_line.getParentValue()
     query_dict.setdefault('from_date', budget.getStartDateRangeMin())
@@ -154,7 +154,7 @@ class BudgetModel(Predicate):
       if key:
         cell_key += (key,)
     return cell_key
-    
+
   def asBudgetPredicate(self):
     " "
     # XXX predicate for line / cell ?

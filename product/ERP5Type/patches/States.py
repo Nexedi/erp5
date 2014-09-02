@@ -30,7 +30,7 @@ def getAvailableTypeList(self):
           'transit_inventory',
           'current_inventory',
           )
-  
+
 def setProperties(self, title='', transitions=(), REQUEST=None, description='', type_list=()):
     '''
     '''

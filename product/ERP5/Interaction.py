@@ -196,7 +196,7 @@ class InteractionDefinition (SimpleItem):
             for key in ve.keys():
                 ret.append((key,self.getVarExprText(key)))
             return ret
-    
+
     def getWorkflowVariables(self):
         ''' get all variables that are available form
             workflow and not handled yet.
@@ -216,15 +216,15 @@ class InteractionDefinition (SimpleItem):
         '''
         if self.var_exprs is None:
             self.var_exprs = PersistentMapping()
-        
+
         expr = None
         if text:
           expr = Expression(str(text))
         self.var_exprs[id] = expr
-        
+
         if REQUEST is not None:
             return self.manage_variables(REQUEST, 'Variable added.')
-    
+
     def deleteVariables(self,ids=[],REQUEST=None):
         ''' delete a WorkflowVariable from State
         '''
@@ -232,7 +232,7 @@ class InteractionDefinition (SimpleItem):
         for id in ids:
             if ve.has_key(id):
                 del ve[id]
-                
+
         if REQUEST is not None:
             return self.manage_variables(REQUEST, 'Variables deleted.')
 
@@ -241,9 +241,9 @@ class InteractionDefinition (SimpleItem):
         '''
         if self.var_exprs is None:
             self.var_exprs = PersistentMapping()
- 
+
         ve = self.var_exprs
- 
+
         if REQUEST is not None:
             for id in ve.keys():
                 fname = 'varexpr_%s' % id

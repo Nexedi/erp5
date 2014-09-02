@@ -11,7 +11,7 @@ class document(commandtransform):
     def __init__(self, name, data):
         """ Initialization: create tmp work directory and copy the
         document into a file"""
- 
+
         commandtransform.__init__(self, name)
         name = self.name()
         self.tmpdir, self.fullname = self.initialize_tmpdir(data, filename=name)

@@ -50,8 +50,8 @@ if os.name == 'nt':
     DOT_EXE = 'dot.exe'
 
     # patch from Joachim Bauch bauch@struktur.de
-    # on Windows, the path to the ATT Graphviz installation 
-    # is read from the registry. 
+    # on Windows, the path to the ATT Graphviz installation
+    # is read from the registry.
     try:
         import win32api, win32con
         # make sure that "key" is defined in our except block

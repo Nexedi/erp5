@@ -32,7 +32,7 @@ from testOrder import TestOrder
 
 class TestPurchaseOrder(TestOrder):
   """
-    Test business template erp5_trade 
+    Test business template erp5_trade
   """
   run_all_test = 1
   order_portal_type = 'Purchase Order'
@@ -53,7 +53,7 @@ class TestPurchaseOrder(TestOrder):
     """
     pass
 
-  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0, 
+  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0,
                                                          run=run_all_test):
     """
     Surcharge this test, because hierarchical lines are not enable in purchase

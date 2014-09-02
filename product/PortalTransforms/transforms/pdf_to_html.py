@@ -12,7 +12,7 @@ import os
 
 class popen_pdf_to_html(popentransform):
     implements(ITransform)
-    
+
     __version__ = '2004-07-02.01'
 
     __name__ = "pdf_to_html"

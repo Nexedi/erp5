@@ -39,7 +39,7 @@ class IDivergenceMessage(Interface):
     XXX-JPS - REFACTOR NEEDED
 
     Issue 1:
-      This is wrong since multiple builders can be used to 
+      This is wrong since multiple builders can be used to
       build a single Delivery. Moreover, what is used for grouping
       and what is used to set properties can be different.
 

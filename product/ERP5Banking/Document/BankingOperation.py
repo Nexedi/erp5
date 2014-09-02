@@ -64,13 +64,13 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Amount
                     )
-  
+
   def manage_beforeDelete(self, item, container):
     """
     The right of deleting must be define by workflows
     """
-    Delivery.manage_beforeDelete(self, item, container) 
-    
+    Delivery.manage_beforeDelete(self, item, container)
+
   security.declareProtected(Permissions.View, 'getDestinationPaymentInternalBankAccountNumber')
   def getDestinationPaymentInternalBankAccountNumber(self, default=None):
     """
@@ -92,11 +92,11 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
       return default
     else:
       return src.getInternalBankAccountNumber(default)
-   
+
   security.declareProtected(Permissions.View, 'setPosted')
   def setPosted(self, value):
     """
-    Custom method that's automatically sets the reference 
+    Custom method that's automatically sets the reference
     of the account transfer
     """
     if self.getPortalType()=="Account Transfer":

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-""" 
+"""
 Base Cache plugin.
 """
 from time import time
@@ -62,7 +62,7 @@ class CacheEntry(object):
     return self.expires_at is None or 0 < self.expires_at <= time()
 
   def getValue(self):
-    """ return cached value """ 
+    """ return cached value """
     return self.value
 
   def __len__(self):

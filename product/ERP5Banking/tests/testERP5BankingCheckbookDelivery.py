@@ -58,7 +58,7 @@ class TestERP5BankingCheckbookDeliveryMixin(TestERP5BankingMixin):
                                  destination_trade_value=self.bank_account_2,
                                  aggregate_value=self.check_1,
                                  )
-    self.workflow_tool.doActionFor(self.checkbook_delivery, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_delivery, 'deliver_action',
                                    wf_id='checkbook_delivery_workflow')
 
   def afterSetUp(self):
@@ -190,7 +190,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     # check its portal type
     self.assertEqual(self.checkbook_delivery.getPortalType(), 'Checkbook Delivery')
     # check source
-    self.assertEqual(self.checkbook_delivery.getBaobabSource(), 
+    self.assertEqual(self.checkbook_delivery.getBaobabSource(),
                'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
     # check destination
     self.assertEqual(self.checkbook_delivery.getBaobabDestination(), None)
@@ -221,8 +221,8 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     state = self.checkbook_delivery.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'empty')
-    self.workflow_tool.doActionFor(self.checkbook_delivery, 
-                                   'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_delivery,
+                                   'deliver_action',
                                    wf_id='checkbook_delivery_workflow')
     # get state of cash sorting
     state = self.checkbook_delivery.getSimulationState()
@@ -251,7 +251,7 @@ class TestERP5BankingCheckbookDelivery(TestERP5BankingCheckbookDeliveryMixin,
     checkbook_object_list = [x.getObject() for x in checkbook_list]
     self.failIfDifferentSet(checkbook_object_list, [self.check_1])
 
-  def stepChangePreviousDeliveryDate(self, 
+  def stepChangePreviousDeliveryDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

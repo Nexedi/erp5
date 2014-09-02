@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.Core.Predicate import Predicate
 
-# Just for compatibility    
+# Just for compatibility
 class PredicateGroup(Predicate):
   """
   aaaa

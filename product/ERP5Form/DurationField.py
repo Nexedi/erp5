@@ -28,7 +28,7 @@
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator import StandardFields 
+from Products.Formulator import StandardFields
 from Products.Formulator.DummyField import fields
 from Products.PythonScripts.Utility import allow_class
 
@@ -46,7 +46,7 @@ class DurationWidget(Widget.IntegerWidget):
   It may be used in movement of Labour (in Task, Calendat Period, ...).
 
   Time duration in ERP5 are saved ALWAYS IN SECOND.
-  
+
   The field purpose is to display second quantity in hour, minute and second,
   in order to make it more readable.
 
@@ -71,7 +71,7 @@ class DurationWidget(Widget.IntegerWidget):
         sub_value = ''
       else:
         sub_value, value = divmod(value, convertion)
-      
+
       sub_field_render_list.append(self.render_sub_field_view(
                                      field, sub_value, REQUEST=REQUEST))
     # Render second
@@ -123,7 +123,7 @@ class DurationValidator(Validator.IntegerValidator):
       )
     return second_value
 
-  def _validate_sub_field(self, field, key, REQUEST, sub_key, 
+  def _validate_sub_field(self, field, key, REQUEST, sub_key,
                           convertion, second_value):
     """
     Validates a subfield (as part of field validation).
@@ -131,7 +131,7 @@ class DurationValidator(Validator.IntegerValidator):
     sub_field_value = Validator.IntegerValidatorInstance.validate(
                               field,
                               field.generate_subfield_key(
-                                sub_key, 
+                                sub_key,
                                 validation=1, key=key),
                               REQUEST
                               )

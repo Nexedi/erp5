@@ -43,7 +43,7 @@ class CacheFactory(XMLObject):
   meta_type = 'ERP5 Cache Factory'
   portal_type = 'Cache Factory'
 
-  allowed_types = ('ERP5 Ram Cache', 
+  allowed_types = ('ERP5 Ram Cache',
                    'ERP5 Distributed Ram Cache',
                   )
 

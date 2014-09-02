@@ -18,7 +18,7 @@ class pdf_to_text(subprocesstransform):
     inputs   = ('application/pdf',)
     output  = 'text/plain'
     output_encoding = 'utf-8'
-    
+
     __version__ = '2004-07-02.01'
 
     binaryName = "pdftotext"

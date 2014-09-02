@@ -18,7 +18,7 @@ class HtmlToWebIntelligentPlainText:
             }
         if name:
             self.__name__ = name
-            
+
     def name(self):
         return self.__name__
 
@@ -28,7 +28,7 @@ class HtmlToWebIntelligentPlainText:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
-        text = convertHtmlToWebIntelligentPlainText(orig)            
+        text = convertHtmlToWebIntelligentPlainText(orig)
         data.setData(text)
         return data
 

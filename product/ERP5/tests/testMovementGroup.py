@@ -51,7 +51,7 @@ class MovementGroupTestCase(ERP5TypeTestCase):
       )
     self.folder = self.portal.portal_simulation.newContent(
                               portal_type='Applied Rule')
-    
+
 class TestPropertyMovementGroup(MovementGroupTestCase):
   def test_property_movement_group_grouping(self):
     movement_list = ( self.folder.newContent(

@@ -35,7 +35,7 @@ class Accessor(Method):
     """
       Generic Accessor - placehold for common methods
     """
-    
+
 
     def __getinitargs__(self):
       init = getattr(self, '__init__', None)

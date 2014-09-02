@@ -68,7 +68,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
       Return the skinnable object (access to SkinsTool through cache).
     """
     return self.getPortal()
- 
+
   def getSkinsTool(self):
     """
       Return the SkinsTool (access to SkinsSool without cache).

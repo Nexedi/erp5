@@ -132,7 +132,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         Convert text using portal_transforms or oood
       """
       # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
-      # web_page that have neither content_type nor text_format. Migration 
+      # web_page that have neither content_type nor text_format. Migration
       # should be done to make all web page having content_type property
       src_mimetype = self.getContentType() or DEFAULT_CONTENT_TYPE
       if not format and src_mimetype == 'text/html':
@@ -166,7 +166,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
             if result is None:
               raise ConversionError('TextDocument conversion error. '
                                     'portal_transforms failed to convert '
-                                    'from %r to %s: %r' % 
+                                    'from %r to %s: %r' %
                                     (src_mimetype, mime_type, self))
           else:
             result = text_content
@@ -184,7 +184,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         else:
           mime_type, result = self.getConversion(**kw)
         if substitute and format in VALID_TEXT_FORMAT_LIST:
-          # only textual content can be sustituted 
+          # only textual content can be sustituted
           if substitution_method_parameter_dict is None:
             substitution_method_parameter_dict = {}
           result = self._substituteTextContent(result, safe_substitute=safe_substitute,

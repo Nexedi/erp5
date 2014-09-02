@@ -51,7 +51,7 @@ class Session(UserDict):
       Please be AWARE that there's no security checks applied. """
 
   # we have our own security policy and do not want Zope's
-  _guarded_writes = 1 
+  _guarded_writes = 1
   __allow_access_to_unprotected_subobjects__ = 1
 
   # XXX (dirty hack): we shouldn't need to explicitly set uid here
@@ -61,7 +61,7 @@ class Session(UserDict):
   session_duration = None
 
   def _updatecontext(self, aq_context):
-    """ Update current aquisition context. 
+    """ Update current aquisition context.
          This makes only sense for local RAM Session."""
     pass
 
@@ -115,7 +115,7 @@ class DistributedSession(Session):
     storage_plugin.set(self.session_id, \
                        SESSION_SCOPE, \
                        value = self, \
-                       cache_duration = getattr(self, 'session_duration', DEFAULT_SESSION_DURATION)) 
+                       cache_duration = getattr(self, 'session_duration', DEFAULT_SESSION_DURATION))
 
   # need to override methods that change session so changes are transparently sent to backend storage
   def __setitem__(self, key, item):
@@ -134,7 +134,7 @@ class DistributedSession(Session):
     Session.update(self, dict, **kwargs)
     self._updateStorage()
 
-  def setdefault(self, key, failobj=None): 
+  def setdefault(self, key, failobj=None):
     Session.setdefault(self, key, failobj)
     self._updateStorage()
 
@@ -148,13 +148,13 @@ class DistributedSession(Session):
 
 
 class SessionTool(BaseTool):
-  """ Using this tool you can get a Session object by providing 
-      your own generated session_id. 
+  """ Using this tool you can get a Session object by providing
+      your own generated session_id.
 
-      This session object can be used anywhere in Zope / ERP5 environment. 
-      It can be local RAM based or Distributed (memcached). 
+      This session object can be used anywhere in Zope / ERP5 environment.
+      It can be local RAM based or Distributed (memcached).
       Its type depends on the type of cache plugin used under Cache Factory defined
-      as string in SESSION_CACHE_FACTORY and its first (and only) Cache Plugin. 
+      as string in SESSION_CACHE_FACTORY and its first (and only) Cache Plugin.
       You do not need to initialize it as this tool will initialize it as a plain dictionary for you.
 
       Example:
@@ -171,12 +171,12 @@ class SessionTool(BaseTool):
       shopping_cart = session['shopping_cart']
 
       Please note that:
-       - developer is responsible for handling an unique sessiond_id (using cookies for example). 
-       - it's not recommended to store in portal_sessions ZODB persistent objects because in order 
-       to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get" 
-       request they'll be returend wrapped. 
+       - developer is responsible for handling an unique sessiond_id (using cookies for example).
+       - it's not recommended to store in portal_sessions ZODB persistent objects because in order
+       to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
+       request they'll be returend wrapped.
        - developer can store temporary RAM based objects like 'TempOrder' but ONLY
-       when using Local RAM type of sessions. In a distributed environment one can use only 
+       when using Local RAM type of sessions. In a distributed environment one can use only
        pickable types ue to the nature of memcached server.
       """
 
@@ -214,7 +214,7 @@ class SessionTool(BaseTool):
     else:
       # cache plugin returns wrapper (CacheEntry instance)
       session = session.getValue()
-    return session 
+    return session
 
   def newContent(self, id, **kw):
     """ Create new session object. """
@@ -231,7 +231,7 @@ class SessionTool(BaseTool):
       ids = [ids]
     for session_id in ids:
       storage_plugin.delete(session_id, SESSION_SCOPE)
- 
+
   def _getStoragePlugin(self):
     """ Get cache storage plugin."""
     global storage_plugin

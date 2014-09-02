@@ -18,7 +18,7 @@ class WebIntelligentPlainTextToHtml:
             }
         if name:
             self.__name__ = name
-        
+
     def name(self):
         return self.__name__
 

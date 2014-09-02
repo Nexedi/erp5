@@ -5,7 +5,7 @@ class Form:
         """
         Move the field with 'field_id' up in the group with name 'group'.
         Returns 1 if move succeeded, 0 if it failed.
-        
+
         Permission -- 'Change Formulator Forms'
         """
 
@@ -13,7 +13,7 @@ class Form:
         """
         Move the field with 'field_id' down in the group with name 'group'.
         Returns 1 if move succeeded, 0 if it failed.
-        
+
         Permission -- 'Change Formulator Forms'
         """
 
@@ -31,7 +31,7 @@ class Form:
         Add a new group with the name 'group'. The new group must have
         a unique name in this form and will be added to the bottom of the
         list of groups.
-        
+
         Returns 1 if the new group could be added, 0 if it failed.
 
         Permission -- 'Change Formulator Forms'
@@ -75,7 +75,7 @@ class Form:
 
         Permission -- 'Change Formulator Forms'
         """
-        
+
     def get_fields():
         """
         Returns a list of all fields in the form (in all groups). The
@@ -137,7 +137,7 @@ class Form:
 
         Permission -- 'View'
         """
-        
+
     def validate(REQUEST):
         """
         Validate all the fields in this form, looking in REQUEST for
@@ -155,7 +155,7 @@ class Form:
              myform.validate(REQUEST)
           except ValidationError, e:
              print 'error' # handle error 'e'
-          
+
         Permission -- 'View'
         """
 
@@ -204,7 +204,7 @@ class Form:
 
         Permission -- 'View'
         """
-        
+
     def validate_all_to_request(REQUEST):
         """
         Validate all the fields in this form, looking in REQUEST for
@@ -247,7 +247,7 @@ class Form:
 
         Permission -- 'View'
         """
-        
+
     def header():
         """
         Get the HTML code for the start of a form. This produces a

@@ -71,7 +71,7 @@ def getSearchDialog(self, REQUEST=None):
         dict(
             default=TALESMethod(
               'here/portal_selections/%s/%s_relative_url | '
-              'here/portal_selections/%s/strict_%s_relative_url | nothing' 
+              'here/portal_selections/%s/strict_%s_relative_url | nothing'
                                     % (selection_name, request_key,
                                        selection_name, request_key)),
             items=TALESMethod('python: getattr(here.portal_categories["%s"],'
@@ -94,7 +94,7 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/strict_%s_relative_url | nothing' 
+              'here/portal_selections/%s/strict_%s_relative_url | nothing'
                                     % (selection_name, request_key,))),
         ['title', 'default'])
 
@@ -111,7 +111,7 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_edit(dict(title=field_title), ['title'])
     field._surcharged_tales(
         dict(default=TALESMethod(
-            'here/portal_selections/%s/%s_value_ | nothing' 
+            'here/portal_selections/%s/%s_value_ | nothing'
                 % (selection_name, request_key))), ['title', 'default'])
     field_id = 'your_%s_usage_' % request_key
     if field_id not in temp_form.objectIds():
@@ -130,12 +130,12 @@ def getSearchDialog(self, REQUEST=None):
              (translateString('Not Greater Than'), 'ngt'),
              (translateString('Not Less Than'), 'nlt'),
              ]),
-                                
+
                            ['title', 'items'])
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/%s_usage_ | nothing' 
+              'here/portal_selections/%s/%s_usage_ | nothing'
                   % (selection_name, request_key))),
             ['title', 'items', 'default'])
 
@@ -151,7 +151,7 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_edit(dict(title=field_title), ['title'])
     field._surcharged_tales(
         dict(default=TALESMethod(
-            'here/portal_selections/%s/%s_value_ | nothing' 
+            'here/portal_selections/%s/%s_value_ | nothing'
                 % (selection_name, request_key))), ['title', 'default'])
     field_id = 'your_%s_usage_' % request_key
     if field_id not in temp_form.objectIds():
@@ -167,15 +167,15 @@ def getSearchDialog(self, REQUEST=None):
                                        (translateString('Not Greater Than'), 'ngt'),
                                        (translateString('Not Less Than'), 'nlt'),
                                        ]),
-                                
+
                            ['title', 'items'])
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/%s_usage_ | nothing' 
+              'here/portal_selections/%s/%s_usage_ | nothing'
                   % (selection_name, request_key))),
             ['title', 'items', 'default'])
-    
+
 
   def addStringField(field_id, field_title):
     request_key = field_id
@@ -191,7 +191,7 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_tales(
         dict(default=TALESMethod(
           'here/portal_selections/%s/%s/query |'
-          'here/portal_selections/%s/%s | string:' 
+          'here/portal_selections/%s/%s | string:'
        % (selection_name, request_key, selection_name, request_key))),
         ['title', 'description', 'default'])
 
@@ -218,12 +218,12 @@ def getSearchDialog(self, REQUEST=None):
                                        (translateString('Exact Match'), 'ExactMatch' ),
                                        (translateString('Keyword'), 'Keyword'),
                                        ]),
-                                
+
                            ['title', 'items'])
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/%s_search_key | nothing' 
+              'here/portal_selections/%s/%s_search_key | nothing'
                       % (selection_name, request_key))),
             ['title', 'items', 'default'])
 
@@ -335,7 +335,7 @@ def getSearchDialog(self, REQUEST=None):
                 'here/portal_selections/%s/%s | python:[]'
                         % (selection_name, state_var))),
               ['title', 'items', 'size', 'default'])
-      
+
 
   # if more than 1 allowed content types -> list possible content types
   if len(allowed_content_types) > 1:
@@ -349,12 +349,12 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_edit(
             dict(title=translateString('Type'),
                  items=[(translateString(x), x) for x in allowed_content_types]),
-            
+
             ['title', 'items'])
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/portal_type | nothing' 
+              'here/portal_selections/%s/portal_type | nothing'
                                     % selection_name)),
             ['title', 'items', 'default'])
 

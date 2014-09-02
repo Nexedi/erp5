@@ -4,7 +4,7 @@ class BasicForm:
     Use BasicForm to construct and use Formulator forms from
     Python code.
     """
-    
+
     __extends__ = ('Formulator.Form.Form',)
 
     def add_field(field, group=None):
@@ -35,5 +35,5 @@ class BasicForm:
         """
 
 
-    
+
 

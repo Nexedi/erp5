@@ -11,8 +11,8 @@
 #
 ##############################################################################
 """
-  Monkey-patch to fix OFS.Image, which is not capable to detect the SVG 
-  Content Type format. 
+  Monkey-patch to fix OFS.Image, which is not capable to detect the SVG
+  Content Type format.
 
   Monkey patch uses 2.12.3 original code.
 """

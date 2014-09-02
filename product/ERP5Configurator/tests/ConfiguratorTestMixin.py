@@ -252,7 +252,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     sequence.edit(next_dict=next_dict)
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
+    """
       Check if multiple Person Configuration Item of the Business
       Configuration have been created successfully.
     """
@@ -280,7 +280,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     """ Check the accounting form configuration. """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
-      self.assertEqual('show', response_dict['command']) 
+      self.assertEqual('show', response_dict['command'])
     self.assertEqual('Previous', response_dict['previous'])
     self.assertEqual('Configure accounting', response_dict['next'])
     self.assertCurrentStep('Accounting', response_dict)
@@ -335,7 +335,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual(self.preference_group,
            preference_buisiness_configurator_item.getProperty(
               'preferred_accounting_transaction_section_category'))
-    
+
     # 3. some pre-configured accounts
     account_business_configuration_item =\
           accounting_business_configuration_save['2']
@@ -361,7 +361,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # this ['14'] will break when we'll add more accounts
     self.assertEqual('Accounting Period Configurator Item',
         accounting_period_configuration_item.getPortalType())
-    
+
     self.assertEqual(DateTime(2008, 1, 1),
         accounting_period_configuration_item.getStartDate())
     self.assertEqual(DateTime(2008, 12, 31),
@@ -422,7 +422,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # this created a currency
     preferences_business_configuration_save = business_configuration.\
                       contentValues(portal_types='Configuration Save')[-1]
- 
+
     currency_business_configuration_item =\
           preferences_business_configuration_save['1']
     self.assertEqual('Currency Configurator Item',
@@ -491,7 +491,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     bt5_title_list = self.portal.portal_templates.getInstalledBusinessTemplateTitleList()
     expected_list = self.expected_bt5_list + bt5_tuple
     self.assertEqual([i for i in expected_list if i not in bt5_title_list], [])
-    
+
     self.assertFalse(bc_id in bt5_title_list)
 
     bt = business_configuration.getSpecialiseValue(portal_type="Business Template")
@@ -1617,17 +1617,17 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                     portal_type='Accounting Transaction',
                                     start_date=DateTime(2010, 06, 01),
                                     stop_date=DateTime(2010, 06, 01))
-  
+
     accounting_transaction_b = self.portal.accounting_module.newContent(
                                     portal_type='Accounting Transaction',
                                     start_date=DateTime(2010, 06, 01),
                                     stop_date=DateTime(2010, 06, 01))
-  
+
     accounting_transaction_c = self.portal.accounting_module.newContent(
                                    portal_type='Accounting Transaction',
                                    start_date=DateTime(2010, 06, 01),
                                    stop_date=DateTime(2010, 06, 01))
-    
+
     accounting_transaction_x_related_to_a.setCausalityValue(\
                                                    accounting_transaction_a)
 
@@ -1638,12 +1638,12 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     accounting_transaction_a.setCausalityValueList([accounting_transaction_b,
                                                     accounting_transaction_c])
     self.tic()
-  
+
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
-    
+
     self.assertEqual(5, len(accounting_transaction_list))
-  
+
     self.assertTrue(accounting_transaction_a in accounting_transaction_list)
     self.assertTrue(accounting_transaction_b in accounting_transaction_list)
     self.assertTrue(accounting_transaction_c in accounting_transaction_list)
@@ -1651,16 +1651,16 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                                 accounting_transaction_list)
     self.assertTrue(accounting_transaction_y_related_to_a in \
                                                 accounting_transaction_list)
-  
+
     accounting_transaction_x_related_to_a.delete()
     accounting_transaction_y_related_to_a.cancel()
     self.tic()
- 
+
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
-  
+
     self.assertEqual(3, len(accounting_transaction_list))
-  
+
     self.assertFalse(accounting_transaction_x_related_to_a in \
                                                 accounting_transaction_list)
     self.assertFalse(accounting_transaction_y_related_to_a in \

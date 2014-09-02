@@ -37,7 +37,7 @@ class AccountTypeConstraint(ConstraintMixin):
   category is consistent with the gap category.
   This is an abstract class, subclasses have to define a mapping as a class
   attribute, like this one:
-  
+
   _account_type_map = (
     ('gap/fr/pcg/4/40', ('liability/payable',),
     ('gap/fr/pcg/4', ('asset/receivable', 'liability/payable'),
@@ -51,7 +51,7 @@ class AccountTypeConstraint(ConstraintMixin):
 
   This constraints supports fixing consistency.
   """
-  
+
   property_sheets = ConstraintMixin.property_sheets + \
                     (PropertySheet.AccountTypeConstraint,)
 

@@ -35,7 +35,7 @@ from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.utils import updateCellList
 
 class TestBudget(ERP5TypeTestCase):
-  
+
   def afterSetUp(self):
     self.validateRules()
     product_line = self.portal.portal_categories.product_line
@@ -117,12 +117,12 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(
         ['source/account_module/goods_purchase'],
         budget_line.getVariationCategoryList())
-  
+
     # This was a budget cell variation, so no criterion is set on budget line
     self.assertEqual(budget_line.getMembershipCriterionCategoryList(), [])
     self.assertEqual(
         budget_line.getMembershipCriterionBaseCategoryList(), [])
-    
+
 
     # simuate a request and call Base_edit, which does all the work of creating
     # cell and setting cell properties.
@@ -202,7 +202,7 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertTrue(['', ''] in variation_range_category_list)
     self.assertTrue(['Demo Group', 'group/demo_group'] in variation_range_category_list)
-    
+
     budget_line.edit(variation_category_list=['group/demo_group'])
     self.assertEqual(['group'],
         budget_line.getMembershipCriterionBaseCategoryList())
@@ -233,7 +233,7 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEqual(['group', 'account_type'],
                       budget_line.getVariationBaseCategoryList())
-    
+
     budget_line.edit(variation_category_list=['group/demo_group',
                                               'account_type/expense'])
     self.assertEqual(['group'],
@@ -446,7 +446,7 @@ class TestBudget(ERP5TypeTestCase):
       {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
-      
+
     # we can view the forms without error
     budget_line.BudgetLine_viewEngagedBudget()
     budget_line.BudgetLine_viewConsumedBudget()
@@ -568,7 +568,7 @@ class TestBudget(ERP5TypeTestCase):
       {('source/budget_special_node/all_other', 'account_type/asset'): 102.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
         budget_line.getAvailableBudgetDict())
-   
+
   def test_none_virtual_node(self):
     # tests consumptions, by using "none" virtual node on a node budget
     # variation
@@ -664,7 +664,7 @@ class TestBudget(ERP5TypeTestCase):
                   source_value=self.portal.account_module.goods_purchase,
                   source_credit=300)
     atransaction.stop()
-    
+
     self.tic()
 
     self.assertEqual(
@@ -676,7 +676,7 @@ class TestBudget(ERP5TypeTestCase):
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/none',): -300.0
        }, budget_line.getEngagedBudgetDict())
-   
+
   def test_only_none_virtual_node(self):
     # tests consumptions, by using only "none" virtual node on a node budget
     # variation
@@ -772,7 +772,7 @@ class TestBudget(ERP5TypeTestCase):
                   source_value=self.portal.account_module.goods_purchase,
                   source_credit=300)
     atransaction.stop()
-    
+
     self.tic()
 
     self.assertEqual(
@@ -876,7 +876,7 @@ class TestBudget(ERP5TypeTestCase):
                   # this will count for none
                   source_credit=120)
     atransaction.stop()
-    
+
     self.tic()
 
     self.assertEqual(
@@ -1369,7 +1369,7 @@ class TestBudget(ERP5TypeTestCase):
           'group/demo_group',
           'group/demo_group/sub1',
           ))
-    
+
     form = budget_line.BudgetLine_view
     self.portal.REQUEST.other.update(
         dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
@@ -1458,12 +1458,12 @@ class TestBudget(ERP5TypeTestCase):
 
     budget_line = budget.newContent(portal_type='Budget Line',)
 
-    # we don't set 
+    # we don't set
     budget_line.edit(
         variation_category_list=(
           'group/demo_group/sub1',
           ))
-    
+
     form = budget_line.BudgetLine_view
     self.portal.REQUEST.other.update(
         dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
@@ -1544,12 +1544,12 @@ class TestBudget(ERP5TypeTestCase):
 
     budget_line = budget.newContent(portal_type='Budget Line',)
 
-    # we don't set 
+    # we don't set
     budget_line.edit(
         variation_category_list=(
           'source/account_module/goods_purchase',
           ))
-    
+
     form = budget_line.BudgetLine_view
     self.portal.REQUEST.other.update(
         dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
@@ -1670,7 +1670,7 @@ class TestBudget(ERP5TypeTestCase):
       budget_line.BudgetLine_getInventoryQueryDictForCellIndex(
         cell_index=('account_type/expense')))
 
-  
+
   # Report
   def test_budget_consumption_report(self):
     budget_model = self.portal.budget_model_module.newContent(
@@ -1752,7 +1752,7 @@ class TestBudget(ERP5TypeTestCase):
     atransaction.stop()
 
     self.tic()
-   
+
     # Budget_getBudgetConsumptionReportData returns all the data for the report
     line_list, line_count = budget.Budget_getBudgetConsumptionReportData()
     # the number of lines, which will be used in the report to set the print
@@ -1761,11 +1761,11 @@ class TestBudget(ERP5TypeTestCase):
     # number of line can be different from the length of the line list, because
     # line list is a recursive structure.
     self.assertEqual(4, len(line_list))
-    
+
     # first line is for the title of the budget
     self.assertEqual('Budget Title', line_list[0]['title'])
     self.assertTrue(line_list[0]['is_budget'])
-    
+
     # then we have a first level for budget lines
     self.assertEqual('Budget Line Title', line_list[1]['title'])
     self.assertTrue(line_list[1]['is_level_1'])
@@ -1775,7 +1775,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(100, line_list[2]['consumed_budget'])
     self.assertEqual(100, line_list[2]['engaged_budget'])
     self.assertEqual(.5, line_list[2]['consumed_ratio'])
-    
+
     # the dimensions are reversed in the budget report, so on level 2 we have
     # the last dimension from cell range, here "account type"
     self.assertEqual('Asset', line_list[2]['title'])
@@ -1872,7 +1872,7 @@ class TestBudget(ERP5TypeTestCase):
         form.membership_criterion_base_category_list.get_value('default'),
              field_mapped_value_property_list=
         form.mapped_value_property_list.get_value('default'),
-            
+
              # group/demo_group
              field_matrixbox_quantity_cell_0_0_0="",
              field_matrixbox_membership_criterion_category_list_cell_0_0_0=[],
@@ -2001,7 +2001,7 @@ class TestBudget(ERP5TypeTestCase):
                               'product_line/1',
                               'source/account_module/goods_purchase',
                               'group/demo_group/sub2',).getQuantity())
-    
+
     # change a cell quantity and call again
     budget_cell = budget_line.getCell(
         'product_line/1/1.2',
@@ -2031,7 +2031,7 @@ class TestBudget(ERP5TypeTestCase):
                               'source/account_module/goods_purchase',
                               'group/demo_group',).getQuantity())
 
-    
+
   def test_update_summary_cell_non_strict_and_second_summary(self):
     # test the action to create or update quantity on summary cells, variation
     # which are strict are not updated, and multiple level summary does not
@@ -2078,7 +2078,7 @@ class TestBudget(ERP5TypeTestCase):
           'source/account_module/goods_purchase',
           'product_line/1',
           'product_line/1/1.1', ))
-    
+
     form = budget_line.BudgetLine_view
     self.portal.REQUEST.other.update(
         dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
@@ -2262,7 +2262,7 @@ class TestBudget(ERP5TypeTestCase):
 
   # test virtual all others when cloning an existing budget
 
-  # predicates 
+  # predicates
 
 
 def test_suite():

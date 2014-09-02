@@ -118,10 +118,10 @@ class OOOdCommandTransform(commandtransform):
         # <img src="REF.TO.IMAGE" ... /> become <draw:image xlink:href="../REF.TO.IMAGE" ... />
         # So remove "../" added by OOo
         path = CLEAN_RELATIVE_PATH.sub('', path)
-        # in some cases like Web Page content "/../" can be contained in image URL which will break 
+        # in some cases like Web Page content "/../" can be contained in image URL which will break
         # restrictedTraverse calls, our best guess is to remove it
         path = path.replace('/../', '')
-        # remove occurencies of '//' or '///' in path (happens with web pages) and leave 
+        # remove occurencies of '//' or '///' in path (happens with web pages) and leave
         # a traversable relative URL
         path = '/'.join([x for x in path.split('/') if x.strip()!=''])
         # retrieve http parameters and use them to convert image

@@ -43,7 +43,7 @@ class PropertyAssignmentMovementGroup(MovementGroup):
   """
   meta_type = 'ERP5 Property Assignment Movement Group'
   portal_type = 'Property Assignment Movement Group'
-  
+
   property_sheets = (
       PropertySheet.PropertyAssignmentMovementGroup, )
 
@@ -54,7 +54,7 @@ class PropertyAssignmentMovementGroup(MovementGroup):
   def _separate(self, movement_list):
     if not movement_list:
       return []
-    
+
     property_dict = {}
 
     for prop in self.getTestedPropertyList():

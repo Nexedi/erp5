@@ -123,9 +123,9 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin):
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.monetary_reception = self.monetary_reception_module.newContent(
-                                    id='monetary_reception', 
+                                    id='monetary_reception',
                                     portal_type='Monetary Reception',
-                                    source_value=None, 
+                                    source_value=None,
                                     destination_value=self.reception,
                                     description='test',
                                     resource_value=self.currency_1)

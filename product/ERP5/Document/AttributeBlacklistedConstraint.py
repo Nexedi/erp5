@@ -34,18 +34,18 @@ from Products.ERP5Type.Core.PropertyExistenceConstraint import \
 
 class AttributeBlacklistedConstraint(PropertyExistenceConstraint):
   """
-  This constraint class allows to check attribute non equality to a 
+  This constraint class allows to check attribute non equality to a
   list of blacklisted value
   """
 
   property_sheets = PropertyExistenceConstraint.property_sheets + \
-                               (PropertySheet.AttributeBlacklistedConstraint,) 
+                               (PropertySheet.AttributeBlacklistedConstraint,)
 
   _message_id_tuple = ('message_invalid_attribute_blacklisted',)
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
-      We will make sure that each non None constraint_definition is 
+      We will make sure that each non None constraint_definition is
       satisfied
     """
     error_list = PropertyExistenceConstraint._checkConsistency(
@@ -61,7 +61,7 @@ class AttributeBlacklistedConstraint(PropertyExistenceConstraint):
       if value in blacklisted_list:
         mapping = dict(attribute_name=property_id)
         # Generate error
-        error_list.append(self._generateError(obj, 
+        error_list.append(self._generateError(obj,
                                               self._getMessage(message_id),
                                               mapping=mapping)
                          )

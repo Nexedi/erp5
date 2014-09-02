@@ -287,7 +287,7 @@ class PDFForm(File):
   )
   download_url = ()
   business_template_include_content = 1
-  
+
   # Constructors
   constructors =   (manage_addPDFForm, addPDFForm)
 
@@ -451,7 +451,7 @@ class PDFForm(File):
       self.setCellTALES(k, REQUEST.get(str(k), v))
     self.__format_method__ = REQUEST.get("__format_method__")
     self.__page_range__ = REQUEST.get("__page_range__")
-    
+
     if RESPONSE:
       return self.manage_cells(manage_tabs_message="Saved changes.")
 

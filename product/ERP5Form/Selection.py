@@ -189,7 +189,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def __call__(self, method=None, context=None, REQUEST=None, params=None):
         """
         Calls the selection and return the list of selected documents
-        or objects. Seledction method, context and parameters may be 
+        or objects. Seledction method, context and parameters may be
         overriden in a non persistent way.
 
         method -- optional method (callable) or method path (string)
@@ -197,7 +197,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
         context -- optional context to call the selection method on
 
-        REQUEST -- optional REQUEST parameters (not used, only to 
+        REQUEST -- optional REQUEST parameters (not used, only to
                    provide API compatibility)
 
         params -- optional parameters which can be used to override
@@ -534,7 +534,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     domain_item_dict = {}
     portal = self.getPortalObject()
     for k, d in self.domain_dict.iteritems():
-      domain_item_dict[k] = self._getDomainObject(portal,d) 
+      domain_item_dict[k] = self._getDomainObject(portal,d)
     return domain_item_dict
 
   security.declarePublic('updateDomain')

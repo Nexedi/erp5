@@ -40,10 +40,10 @@ class IMimeSender(Interface):
 
   def send(message):
     """
-      Send a MIMEMultipart. 
+      Send a MIMEMultipart.
     """
     pass
-    
+
   def logMIMEMultipart(message, document):
     """
       Log a MIMEMultipart message for a given document

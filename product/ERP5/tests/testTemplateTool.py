@@ -423,7 +423,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = template_tool.newContent(portal_type='Business Template',
                              title=bt_id, revision='4', id=bt_id)
       bt.install()
-    
+
     bt5_id_list = ['baz']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
     self.assertEqual([(repository, 'foo.bt5'),
@@ -681,7 +681,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],
-            'Expected positions for %r: %r, got %r' % (bt[1], 
+            'Expected positions for %r: %r, got %r' % (bt[1],
                                                   expected_position_dict[bt[1]],
                                                   ordered_list.index(bt)))
 

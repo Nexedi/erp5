@@ -226,7 +226,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(user_preference.objectIds()), 1)
     self.assertEqual(user_preference.objectValues()[0].getDescription(),
                      'First document')
-    
+
     other_document = self.portal.foo_module.newContent(
                                     portal_type='Foo',
                                     title='template',
@@ -291,7 +291,7 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(len(preference.objectIds()), 1)
 
-  # Reason for test failure: 
+  # Reason for test failure:
   #
   # Base_makeTemplateFromDocument uses portal_preference.getActivePreference(),
   # and if the user has no preference, it creates a new preference to attach it

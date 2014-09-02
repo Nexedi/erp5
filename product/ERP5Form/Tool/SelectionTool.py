@@ -241,11 +241,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       return self.getSelectionNameList(context, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
-    def callSelectionFor(self, selection_name, method=None, context=None, 
+    def callSelectionFor(self, selection_name, method=None, context=None,
                                                REQUEST=None, params=None):
       """
       Calls the selection and return the list of selected documents
-      or objects. Seledction method, context and parameters may be 
+      or objects. Seledction method, context and parameters may be
       overriden in a non persistent way.
 
       selection_name -- the name of the selectoin (string)
@@ -255,7 +255,7 @@ class SelectionTool( BaseTool, SimpleItem ):
 
       context -- optional context to call the selection method on
 
-      REQUEST -- optional REQUEST parameters (not used, only to 
+      REQUEST -- optional REQUEST parameters (not used, only to
                  provide API compatibility)
 
       params -- optional parameters which can be used to override
@@ -571,7 +571,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_name = form[selection_name_key]
         elif selection_name is None:
             selection_name = form['selection_name']
-          
+
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         if forced_sort_order is not None:
@@ -867,13 +867,13 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lane_path = request.form.get('lane_path', None)
         if lane_path is None:
-          # If lane_path is not defined try to 
+          # If lane_path is not defined try to
           # use the last one from params
           lane_path = params.get('lane_path',1)
         bound_start = request.form.get('bound_start', None)
         if bound_start is not None:
           params['bound_start'] = bound_start
-        params['lane_path'] = lane_path     
+        params['lane_path'] = lane_path
         params['zoom_variation'] = 0
         selection.edit(params=params)
       if REQUEST is not None:
@@ -947,11 +947,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-     
+
       unfoldDomain = REQUEST.form.get('unfoldDomain', None)
       domain_url, domain_depth = unfoldDomain.split('.', 2)
-      domain_depth = int(domain_depth)      
-      
+      domain_depth = int(domain_depth)
+
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
       if isinstance(domain_url, str):
@@ -968,11 +968,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      
+
       foldDomain = REQUEST.form.get('foldDomain', None)
       domain_url, domain_depth = foldDomain.split('.', 2)
       domain_depth = int(domain_depth)
-      
+
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
       selection.edit(domain_list=[x for x in domain_list if x != domain_url])

@@ -56,7 +56,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
 
   # CMF Type Definition
   meta_type='ERP5 Budget Line'
-  portal_type='Budget Line'    
+  portal_type='Budget Line'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -92,7 +92,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     """
     budget_dict =  dict([(k, v * -1) for (k,v) in
                          self.getEngagedBudgetDict(**kw).items()])
-    
+
     cell_key_list = self.getCellKeyList()
     for cell_key in cell_key_list:
       cell_key = tuple(cell_key)

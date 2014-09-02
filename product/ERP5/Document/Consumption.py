@@ -57,7 +57,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
                       , PropertySheet.VariationRange
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               '_setVariationCategoryList')
     def _setVariationCategoryList(self,value):
       """
@@ -66,13 +66,13 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
       """
       self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),
                                   value, base=1)
-      # XXX Must use in futur this method, but it failed today 
+      # XXX Must use in futur this method, but it failed today
       #VariatedMixin._setVariationCategoryList(self, value)
       # XXX FIXME: Use a interaction workflow instead
       # Kept for compatibility.
       self.updateCellRange(base_id='quantity')
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               'setVariationCategoryList')
     def setVariationCategoryList(self,value):
       """
@@ -82,7 +82,7 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
       self._setVariationCategoryList(value)
       self.reindexObject()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self):
       """
@@ -92,17 +92,17 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
       # XXX get TitleOrId
       return map( lambda x: (x,x)  , self.getVariationRangeBaseCategoryList() )
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               'getQuantityRatio')
-    def getQuantityRatio(self, variation_category_line, 
+    def getQuantityRatio(self, variation_category_line,
                          variation_category_column):
       """
         Return quantity ratio for a virtual cell.
         Return None if not result can be return.
       """
       cell_quantity_ratio_list = []
-      
-      for variation_category in (variation_category_line, 
+
+      for variation_category in (variation_category_line,
                                  variation_category_column):
         cell = self.getCell(variation_category, base_id='quantity')
         if cell is None:

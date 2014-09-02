@@ -982,7 +982,7 @@ return lambda *args, **kw: 1""")
                       portal_type=self.packing_list_portal_type)
     self.assertNotEquals(packing_list, None)
     self.assertEqual(1000, packing_list.getTotalPrice())
-    
+
     packing_list.start()
     packing_list.stop()
     packing_list.deliver()
@@ -995,7 +995,7 @@ return lambda *args, **kw: 1""")
     self.assertEqual(2, len(invoice.getMovementList()))
     self.assertEqual(1150, invoice.getTotalPrice())
     self.assertEqual([], invoice.getDivergenceList())
-    
+
     invoice.start()
     self.tic()
 

@@ -94,7 +94,7 @@ class Queue(object):
     if not getattr(m, 'is_deleted', 0):
       # We try not to delete twice
       # However this can not be garanteed in the case of messages loaded from SQL
-      activity_tool.deferredDeleteMessage(self, m)  
+      activity_tool.deferredDeleteMessage(self, m)
     m.is_deleted = 1
 
   def dequeueMessage(self, activity_tool, processing_node):
@@ -199,7 +199,7 @@ class Queue(object):
   def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
     return 0
 
-  def flush(self, activity_tool, object, **kw):    
+  def flush(self, activity_tool, object, **kw):
     pass
 
   def getOrderValidationText(self, message):

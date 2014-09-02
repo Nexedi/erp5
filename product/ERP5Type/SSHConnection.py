@@ -35,7 +35,7 @@ try:
   import paramiko
   from paramiko.ssh_exception import SSHException
 except ImportError:
-  LOG(WARNING, 0, 'The SSHConnection can not be used because Paramiko ' 
+  LOG(WARNING, 0, 'The SSHConnection can not be used because Paramiko '
                   'is not installed!')
 import os
 

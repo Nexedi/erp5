@@ -198,7 +198,7 @@ class TestIdTool(ERP5TypeTestCase):
 
   def test_02b_generateNewIdWithSQLGeneratorWithoutStorageZODB(self):
     """
-      Check the generateNewId, the update of the database and 
+      Check the generateNewId, the update of the database and
       that the zodb dictionary is empty
     """
     self.checkGenerateNewIdWithSQL(store=False)
@@ -347,17 +347,17 @@ class TestIdTool(ERP5TypeTestCase):
     sql_generator.setStoredInZodb(True)
     sql_generator.setStoreInterval(2)
     #sql_generator.setStoreInterval(2)
-    self.assertEqual(0, self.id_tool.generateNewId(id_generator=id_generator, 
+    self.assertEqual(0, self.id_tool.generateNewId(id_generator=id_generator,
                                                     id_group='07'))
     self.assertEqual(sql_generator.last_max_id_dict['07'].value, 0)
-    self.assertEqual(1, self.id_tool.generateNewId(id_generator=id_generator, 
+    self.assertEqual(1, self.id_tool.generateNewId(id_generator=id_generator,
                                                     id_group='07'))
     # last_id isn't stored because 1 < last_id (0) + store_interval
     self.assertEqual(sql_generator.last_max_id_dict['07'].value, 0)
     self.assertEqual(2, self.id_tool.generateNewId(id_generator=id_generator,
                                                     id_group='07'))
     self.assertEqual(sql_generator.last_max_id_dict['07'].value, 2)
-    
+
     self.getLastGenerator(id_generator).\
                  importGeneratorIdDict(id_dict = {'07':5})
     self.assertEqual(6, self.id_tool.generateNewId(id_generator=id_generator,

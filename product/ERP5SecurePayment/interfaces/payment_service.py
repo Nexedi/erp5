@@ -36,13 +36,13 @@ class IPaymentService(Interface):
   """Payment Service interface specification
 
   IPaymentService defines the minimal method required to define a payment service
-  wich can be used by the payment tool  
+  wich can be used by the payment tool
   """
-  
+
   def initialize(self, REQUEST=None, **kw):
     """Initialize the service to be ready to start the transaction
     """
-    
+
   def navigate(self, REQUEST=None, **kw):
     """Redirects User to the payment page.
 
@@ -50,18 +50,18 @@ class IPaymentService(Interface):
     correct HTTP response to browser which will lead to external payment page
     with all required parameters.
     """
-    
+
   def reportPaymentStatus(self, REQUEST=None):
     """Server side notification of payment status"""
-  
+
   def notifySuccess(self, REQUEST=None, **kw):
     """Fallback method when transaction is a success
     """
-    
+
   def notifyFail(self, REQUEST=None, **kw):
     """Fallback method when transaction fails
     """
-    
+
   def notifyCancel(self, REQUEST=None, **kw):
     """Fallback method when transaction is cancelled
     """

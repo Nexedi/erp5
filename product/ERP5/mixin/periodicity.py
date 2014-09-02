@@ -47,10 +47,10 @@ class PeriodicityMixin:
     periodicity_minute_list = self.getPeriodicityMinuteList()
     if (periodicity_minute_frequency is None) and \
        (periodicity_minute_list in ([], None, ())):
-      # in this case, we may want to have an periodicity every hour 
+      # in this case, we may want to have an periodicity every hour
       # based on the start date
-      # without defining anything about minutes periodicity, 
-      # so we compare with minutes with the one defined 
+      # without defining anything about minutes periodicity,
+      # so we compare with minutes with the one defined
       # in the previous alarm date
       return (date.minute() == previous_date.minute())
     if periodicity_minute_frequency not in ('', None):
@@ -184,7 +184,7 @@ class PeriodicityMixin:
     - if the periodicity start date is in the past but we already
       have started the periodic event, then see
 
-    XXX Better API is needed. It may defined which minimal time duration has to 
+    XXX Better API is needed. It may defined which minimal time duration has to
     be added in order to calculate next date.
     Ex: here, we use minute as smaller duration.
     On CalendarPeriod, day is the smaller duration.

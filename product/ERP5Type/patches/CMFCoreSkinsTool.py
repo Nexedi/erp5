@@ -68,7 +68,7 @@ def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
         else:
           existing_folder_index = this_folder_index - 1
         if existing_folder_index < this_folder_index:
-          skin_location_list[selection_name][object_id] = container_id    
+          skin_location_list[selection_name][object_id] = container_id
 
 SkinsTool.manage_skinLayers = CMFCoreSkinsTool_manage_skinLayers
 SkinsTool._updateCacheEntry = CMFCoreSkinsTool__updateCacheEntry

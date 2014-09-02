@@ -95,7 +95,7 @@ class CachedConvertableMixin:
   def _getCacheKey(self, **kw):
     """
     Returns the key to use for the cache entries. For now,
-    use the object uid. 
+    use the object uid.
 
     TODO: XXX-JPS use instance in the future
     http://pypi.python.org/pypi/uuid/ to generate

@@ -243,7 +243,7 @@ class TestIngestion(ERP5TypeTestCase):
   def newEmptyDocument(self, portal_type):
     """
       Create an empty document of given portal type
-      and given ID. 
+      and given ID.
 
     """
     document_module = self.portal.getDefaultModule(portal_type)
@@ -314,7 +314,7 @@ class TestIngestion(ERP5TypeTestCase):
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.%s' %extension
       file = makeFileUpload(filename)
-      # if we change portal type we must change version because 
+      # if we change portal type we must change version because
       # mergeRevision would fail
       if portal_type != old_portal_type:
         counter += 1
@@ -363,9 +363,9 @@ class TestIngestion(ERP5TypeTestCase):
       Sets input parameters and on the document ID document_id
       and discover metadata. For reindexing
     """
-    input_parameter_dict = dict(reference='INPUT', 
+    input_parameter_dict = dict(reference='INPUT',
                                 language='in',
-                                version='004', 
+                                version='004',
                                 short_title='from_input',
                                 contributor='person_module/james')
     # pass to discovery filename and user_login
@@ -513,12 +513,12 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload(filename)
     document.edit(file=f)
     self.assert_(document.hasFile())
-    self.assertEqual(document.getFilename(), filename) 
+    self.assertEqual(document.getFilename(), filename)
     # Revision is 1 after upload (revisions are strings)
     self.assertEqual(document.getRevision(), '2')
     document.reindexObject()
     self.commit()
-    
+
   def stepUploadFromViewForm(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file from view form and make sure this increases the revision
@@ -530,7 +530,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
     document.reindexObject()
     self.commit()
-    
+
   def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
       Upload a file from contribution.
@@ -844,7 +844,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     input_dict = dict(reference='INPUT',
                  language='in',
-                 version='004', 
+                 version='004',
                  short_title='from_input',
                  contributor='person_module/james')
     self.newPythonScript('Text_getPropertyDictFromInput',
@@ -861,7 +861,7 @@ class TestIngestion(ERP5TypeTestCase):
                                         sequence_list=None, **kw):
     """
      This is the default
-    """  
+    """
     expected_metadata = dict(reference='TEST', language='en', version='002',
                              short_title='from_input',
                              contributor='person_module/james')
@@ -921,7 +921,7 @@ class TestIngestion(ERP5TypeTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.discoverMetadata(document)
     self.checkMetadataOrder(document, expected_metadata)
-   
+
   def stepReceiveEmail(self, sequence=None, sequence_list=None, **kw):
     """
       Email was sent in by someone to ERP5.
@@ -945,7 +945,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
     self.assertEqual('1', ingested_document.getRevision())
-    
+
   def stepVerifyEmailedMultipleDocumentsMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
       Verify contributed for initial time multiple document per email.
@@ -986,9 +986,9 @@ class TestIngestion(ERP5TypeTestCase):
     # Second, check attachments to ingested message
     attachment_list = ingestion_message.getAggregateValueList()
     self.assertEqual(len(attachment_list), 5)
-    extension_reference_portal_type_map = {'DOC': 'Text', 
+    extension_reference_portal_type_map = {'DOC': 'Text',
                                            'JPG': 'Image',
-                                           'ODT': 'Text', 
+                                           'ODT': 'Text',
                                            'PDF': 'PDF',
                                            'PPT': 'Presentation'}
     for sub_reference, portal_type in extension_reference_portal_type_map.items():
@@ -1253,7 +1253,7 @@ class TestIngestion(ERP5TypeTestCase):
   def test_09_Contribute(self):
     """
       Create content through portal_contributions
-      - use newContent to ingest various types 
+      - use newContent to ingest various types
         also to test content_type_registry setup
       - verify that
         - appropriate portal_types were created
@@ -1276,7 +1276,7 @@ class TestIngestion(ERP5TypeTestCase):
       check that the right ones are there
       change preference order, check again
     """
-    step_list = [ 'stepCleanUp' 
+    step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
                  ,'stepCheckConvertingState'
@@ -1461,7 +1461,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
-    document.discoverMetadata(document.getFilename(), 'contributor1') 
+    document.discoverMetadata(document.getFilename(), 'contributor1')
     self.tic()
     self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
     self.assertEqual('musician/wind/saxophone', document.getFunction())
@@ -1888,7 +1888,7 @@ return result
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase7(self):
     """How to reingest a published document, by a user action ?
-    If after a while the user decide to change the portal_type of a 
+    If after a while the user decide to change the portal_type of a
     published document , File => Text ?
     """
     module = self.portal.document_module
@@ -1979,7 +1979,7 @@ return result
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
-    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm() 
+    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
     password_mgr.add_password(realm=None, uri=uri, user='ERP5TypeTestCase',
                               passwd='')
     opener = urllib2.build_opener(urllib2.HTTPDigestAuthHandler(password_mgr),

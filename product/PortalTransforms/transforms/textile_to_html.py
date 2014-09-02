@@ -21,10 +21,10 @@ try:
 except ImportError:
     HAS_TEXTILE = False
     log('textile_to_html: Could not import textile.')
-    
+
 else:
     HAS_TEXTILE = True
-    
+
 
 class textile:
     implements(ITransform)

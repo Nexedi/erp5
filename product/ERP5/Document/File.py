@@ -172,7 +172,7 @@ class File(Document, CMFFile):
     """
     size = None
     # update_data use len(data) when size is None, which breaks this method.
-    # define size = 0 will prevent len be use and keep the consistency of 
+    # define size = 0 will prevent len be use and keep the consistency of
     # getData() and setData()
     if data is None:
       size = 0
@@ -242,7 +242,7 @@ class File(Document, CMFFile):
     return (mime_type, content)
 
   def _convert(self, format, **kw):
-    """File is only convertable if it is an image. 
+    """File is only convertable if it is an image.
     Only Image conversion, original format and text formats are allowed.
     However this document can migrate to another portal_type which support
     others conversions.

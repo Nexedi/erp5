@@ -122,7 +122,7 @@ class TestMRPMixin(TestBPMMixin):
     #     but by setSpecialise() is ok, Why?
     order_line.setSpecialiseValue(transformation)
     return order
-    
+
   @reindex
   def createDefaultTransformation(self):
     resource1 = self.createProduct(id='1', quantity_unit_list=['weight/kg'])

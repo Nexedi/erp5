@@ -33,7 +33,7 @@ class ILegacyExtensibleTraversable(Interface):
   """
   Extensible Traversable legacy interface specification
   """
-  
+
   def _getExtensibleContent(request, name):
     """
     Return extensible subcontent of context document during traversal.
@@ -43,7 +43,7 @@ class IExtensibleTraversable(ILegacyExtensibleTraversable):
   """
   Extensible Traversable interface specification
 
-  IExtensibleTraversable provides methods so a document may become a container for extensible content 
+  IExtensibleTraversable provides methods so a document may become a container for extensible content
   during traversal.
   """
 

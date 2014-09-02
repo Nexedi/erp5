@@ -26,7 +26,7 @@ class tiff_to_text(commandtransform):
 
     def convert(self, data, cache, **kwargs):
       kwargs['filename'] = 'input.tiff'
-      tmp_dir, input_file = self.initialize_tmpdir(data, 
+      tmp_dir, input_file = self.initialize_tmpdir(data,
                                    filename='input.tiff')
 
       text = None

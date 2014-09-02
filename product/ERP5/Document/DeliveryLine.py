@@ -193,7 +193,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
       # the contrary...
       cell_range = XMLMatrix.getCellRange(self, base_id=base_id)
       return (cell_range is not None and len(cell_range) > 0)
-      # DeliveryLine can be a movement when it does not content any cell and 
+      # DeliveryLine can be a movement when it does not content any cell and
       # matrix cell range is not empty.
       # Better implementation is needed.
       # We want to define a line without cell, defining a variated resource.
@@ -265,7 +265,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
 #         Check the constitency of transformation elements
 #       """
 #       error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
-# 
+#
 #       # First quantity
 #       # We build an attribute equality and look at all cells
 #       q_constraint = Constraint.AttributeEquality(
@@ -291,7 +291,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
 #               c.setVariationCategoryList(predicate_value)
 #               error_message += " (Fixed)"
 #             error_list += [(c.getRelativeUrl(), 'VariationCategoryList inconsistency', 100, error_message)]
-# 
+#
 #       return error_list
 
     security.declareProtected(Permissions.AccessContentsInformation,

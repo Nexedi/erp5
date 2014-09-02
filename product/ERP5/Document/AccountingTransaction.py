@@ -60,7 +60,7 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Comment
                       , PropertySheet.PaymentCondition
                       )
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'hasSourceSectionAccounting')
     def hasSourceSectionAccounting(self):

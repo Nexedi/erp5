@@ -51,22 +51,22 @@ class IBusinessLink(Interface):
     """
 
   def getMovementCompletionDate(movement):
-    """Returns the date of completion of the movemnet 
+    """Returns the date of completion of the movemnet
     based on parameters of the business link. This completion date can be
     the start date, the stop date, the date of a given workflow transition
     on the explaining delivery, etc.
 
     movement -- a Simulation Movement
     """
-  
+
   def getCompletionDate(explanation):
     """Returns the date of completion of business link in the
-    context of the explanation. The completion date of the Business 
+    context of the explanation. The completion date of the Business
     Path is the max date of all simulation movements which are
     related to the Business Link and which are part of the explanation.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
 
@@ -80,7 +80,7 @@ class IBusinessLink(Interface):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
 
     NOTE: simulation movements can be completed (ex. in 'started' state) but
@@ -97,7 +97,7 @@ class IBusinessLink(Interface):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
 
@@ -111,7 +111,7 @@ class IBusinessLink(Interface):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
 
     NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
@@ -124,7 +124,7 @@ class IBusinessLink(Interface):
     and related to a delivery through the 'delivery' category.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
 
@@ -133,6 +133,6 @@ class IBusinessLink(Interface):
     defined on the Business Link
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """

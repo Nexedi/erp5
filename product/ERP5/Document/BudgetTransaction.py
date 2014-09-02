@@ -50,7 +50,7 @@ class BudgetTransaction(DeliveryLine):
                       )
     # CMF Type Definition
     meta_type='ERP5 Budget Transaction'
-    portal_type='Budget Transaction'    
+    portal_type='Budget Transaction'
     add_permission = Permissions.AddPortalContent
 
     # Declarative security
@@ -58,7 +58,7 @@ class BudgetTransaction(DeliveryLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
       """

@@ -37,7 +37,7 @@ class FormTestCase(unittest.TestCase):
     def tearDown(self):
         transaction.abort()
         self.connection.close()
-        
+
 
     def test_has_field(self):
         """ test if has_field works, if one asks for a non-field attribute.
@@ -53,7 +53,7 @@ class FormTestCase(unittest.TestCase):
         has lead to a item text of 'o' and a display value of 'k'
         (as the this is actually a sequence of length 2 ...)
          See http://sourceforge.net/mailarchive/forum.php?thread_id=1359918&forum_id=1702
-         
+
         Actually the original problem still does not work,
         as passing a list of int's is not yet supported.
         If it should, please uncomment the second part of the test.
@@ -75,7 +75,7 @@ class FormTestCase(unittest.TestCase):
         self.form.override_test.write("return ['ok', 'no']\n")
         # ps._makeFunction()
 
-        
+
         list_field = getattr(self.form, 'list_field')
         list_field.values['items'] = [ ('ok', 'ok'), ('no', 'no') ]
 
@@ -91,9 +91,9 @@ class FormTestCase(unittest.TestCase):
         del list_field.tales['items']
         list_field.overrides['items'] = Method('override_test')
         items2 = list_field.render()
-        
+
         self.assertEqual(items1, items2)
-        
+
         # test if TALES returns a list of e.g. int
         #list_field.values['items'] = [ ('42', '42'), ('88', '88') ]
         #
@@ -124,13 +124,13 @@ class FormTestCase(unittest.TestCase):
         self.form.manage_addProduct['Formulator']\
                  .manage_addField('date_time','Test Field','DateTimeField')
         field = self.form.date_time
-        
+
         css_matcher = re.compile('class="([^"]*)"')
 
         # initially no css class is set
         self.assertEqual(0, len(css_matcher.findall(field.render())))
 
-        # edit the field, bypassing validation ... 
+        # edit the field, bypassing validation ...
         field._edit({'css_class':'some_class'})
 
         # now we should have five matches for the five subfields ...
@@ -145,7 +145,7 @@ class FormTestCase(unittest.TestCase):
         current_style = field['input_style']
         other_style = {'list':'text', 'text':'list'} [current_style]
         field._edit({'input_style':other_style})
-        
+
         # still the css classes should remain the same
         css_matches = css_matcher.findall(field.render())
         self.assertEqual(5, len(css_matches))
@@ -157,7 +157,7 @@ class FormTestCase(unittest.TestCase):
         css_matches = css_matcher.findall(field.render())
         self.assertEqual(5, len(css_matches))
         for m in css_matches:
-            self.assertEqual('other_class',m)           
+            self.assertEqual('other_class',m)
 
         # and clear the css_class field:
         field._edit({'css_class':''})

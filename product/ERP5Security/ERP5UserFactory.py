@@ -74,7 +74,7 @@ class ERP5User(PropertiedUser):
         for principal_id in principal_ids:
           for role in dict.get( principal_id, [] ):
             local[ role ] = 1
-                  
+
       # patch by Klaus for LocalRole blocking
       if getattr(object, '_getAcquireLocalRoles', None) is not None:
         if not object._getAcquireLocalRoles():
@@ -92,7 +92,7 @@ class ERP5User(PropertiedUser):
         object = aq_inner( new )
         continue
       break
-    
+
     # Patched: Developer role should not never be available as local role
     local.pop('Developer', None)
     return list( self.getRoles() ) + local.keys()
@@ -173,7 +173,7 @@ class ERP5User(PropertiedUser):
                 if self._check_context( object ):
                   return 1
                 return 0
-                    
+
         # patch by Klaus for LocalRole blocking
         if getattr(inner_obj, '_getAcquireLocalRoles', None) is not None:
           if not inner_obj._getAcquireLocalRoles():

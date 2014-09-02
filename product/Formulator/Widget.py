@@ -162,7 +162,7 @@ class Widget:
     render_htmlgrid returns a list of tuple (title, html render)
     """
     # XXX Calling _render_helper on the field is not optimized
-    return ((field.get_value('title'), 
+    return ((field.get_value('title'),
             field._render_helper(key, value, REQUEST, render_prefix=render_prefix)),)
   def render_css(self, field, REQUEST):
     """
@@ -733,13 +733,13 @@ class FileWidget(TextWidget):
 
     def render_view(self, field, value, REQUEST=None, render_prefix=None):
         return "[File]"
-    
+
 FileWidgetInstance = FileWidget()
 
 class ItemsWidget(Widget):
     """A widget that has a number of items in it.
     """
-    
+
     items = fields.ListTextAreaField('items',
                                      title='Items',
                                      description=(
@@ -1083,7 +1083,7 @@ class MultiItemsWidget(ItemsWidget):
     result = []
     for e in value:
       result.append(d.get(e, '??? (%s)' % e))
-      
+
     value = '\n'.join(result)
 
     if attr_dict is None:
@@ -1117,8 +1117,8 @@ class ListWidget(SingleItemsWidget):
 
     def render(self, field, key, value, REQUEST, render_prefix=None):
       rendered_items = self.render_items(field, key, value, REQUEST)
-      input_hidden = render_element('input', type='hidden', 
-                                    name="default_%s:int" % (key, ), value="0") 
+      input_hidden = render_element('input', type='hidden',
+                                    name="default_%s:int" % (key, ), value="0")
       list_widget = render_element(
                     'select',
                     name=key,
@@ -1144,7 +1144,7 @@ class MultiListWidget(MultiItemsWidget):
     """
     property_names = Widget.property_names +\
                      ['items', 'size', 'view_separator', 'extra', 'extra_item']
-    
+
     size = fields.IntegerField('size',
                                title='Size',
                                description=(
@@ -1175,7 +1175,7 @@ class MultiListWidget(MultiItemsWidget):
     def render_selected_item(self, text, value, key, css_class, extra_item):
         return self.render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
-    
+
 MultiListWidgetInstance = MultiListWidget()
 
 class RadioWidget(SingleItemsWidget):
@@ -1183,7 +1183,7 @@ class RadioWidget(SingleItemsWidget):
   """
   property_names = Widget.property_names +\
                     ['first_item', 'items', 'orientation', 'extra_item']
-  
+
   orientation = fields.ListField('orientation',
                                   title='Orientation',
                                   description=(
@@ -1194,7 +1194,7 @@ class RadioWidget(SingleItemsWidget):
                                   size=1,
                                   items=[('Vertical', 'vertical'),
                                         ('Horizontal', 'horizontal')])
-                                  
+
   def render(self, field, key, value, REQUEST, render_prefix=None):
     input_hidden = render_element('input', type='hidden',
                                   name="default_%s" % (key, ), value="")
@@ -1258,7 +1258,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
                               name=key,
                               value=value,
                               extra=extra_item) + text
-    
+
     def render_selected_item(self, text, value, key, css_class, extra_item):
         return self.render_element('input',
                               type="checkbox",
@@ -1421,11 +1421,11 @@ class DateTimeWidget(Widget):
     if not hasattr(field, 'sub_form'):
       from StandardFields import create_datetime_text_sub_form
       field.sub_form = create_datetime_text_sub_form()
-        
+
     # Is it still usefull to test the None value,
     # as DateTimeField should be considerer as the other field
     # and get an empty string as default value?
-    # XXX hasattr(REQUEST, 'form') seems useless, 
+    # XXX hasattr(REQUEST, 'form') seems useless,
     # because REQUEST always has a form property
     if (value in (None, '')) and (field.get_value('default_now')) and \
         ((REQUEST is None) or (not hasattr(REQUEST, 'form')) or \
@@ -1746,7 +1746,7 @@ class IntegerWidget(TextWidget) :
       # convert into string
       value = '%s' % value
     return TextWidget.render_odt_view(self, field, value, as_string,
-                                      ooo_builder, REQUEST, render_prefix, 
+                                      ooo_builder, REQUEST, render_prefix,
                                       attr_dict, local_name)
 
   def render_odt_variable(self, field, value, as_string, ooo_builder, REQUEST,
@@ -1783,7 +1783,7 @@ class IntegerWidget(TextWidget) :
       # convert into string
       value = str(value)
     return TextWidget.render_odg_view(self, field, value, as_string,
-                                      ooo_builder, REQUEST, render_prefix, 
+                                      ooo_builder, REQUEST, render_prefix,
                                       attr_dict, local_name)
 
 IntegerWidgetInstance = IntegerWidget()

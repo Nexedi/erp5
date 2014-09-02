@@ -44,14 +44,14 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
 
   def getTitle(self):
     return "ERP5 Accounting l10n M9"
-  
+
   def getInvoiceTransmissionSheetModule(self):
     """Returns the module for purchase invoice transmission sheets.
     """
     return getattr( self.portal,
                     'invoice_transmission_sheet_module',
                     None )
-  
+
   def getAccountingModule(self):
     """Returns the accounting module."""
     return getattr( self.portal, 'accounting_module', None)
@@ -85,7 +85,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.category_tool = portal.portal_categories
     self.section = self._createOrganisation()
     self.mirror_section = self._createOrganisation()
-  
+
   @reindex
   def _createOrganisation(self, **kw):
     """Create an organisation and index it.
@@ -104,7 +104,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
       account = account_module.newContent(id=account_id)
     account.edit(**kw)
     return account
-  
+
   @reindex
   def _createPurchaseInvoice(self, amount=100, **kw):
     """Create a purchase invoice and index it.
@@ -126,11 +126,11 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                        quantity=-amount)
     invoice.edit(**kw)
     return invoice
-  
+
   def test_TransmissionSheetModule(self):
     """Checks the invoice transmission sheet module is installed."""
     self.assertNotEquals(None, self.getInvoiceTransmissionSheetModule())
-  
+
   def test_AccountingPlanInstallation(self):
     """Tests that the accounting plan is well installed."""
     self.assertTrue('m9' in self.category_tool.gap.fr.objectIds())
@@ -175,7 +175,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/6/60/602/6022/60225',
                                account_type='expense')
     self.assertEqual([], account.checkConsistency())
-  
+
   def test_AccountTypeConstaintFixForExpense(self):
     account = self._getAccount('account',
                                gap='fr/m9/6/60/602/6022/60225',
@@ -188,7 +188,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/4/40',
                                account_type='liability/payable')
     self.assertEqual([], account.checkConsistency())
-  
+
   def test_AccountTypeConstaintFixForPayable(self):
     account = self._getAccount('payable_account',
                                gap='fr/m9/4/40',
@@ -202,10 +202,10 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/4/44',
                                account_type='liability/payable')
     self.assertEqual([], account.checkConsistency())
-    
+
     account.edit(account_type='asset/receivable')
     self.assertEqual([], account.checkConsistency())
-    
+
   def test_AccountTypeConstaintFixForClass4(self):
     # members of class 4 can be payable or receivable
     account = self._getAccount('class4_account',
@@ -222,7 +222,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/4/47/471/4718', )
     self.checkAccountTypeConsistency(account)
     self.assertEqual('liability/payable', account.getAccountType())
-  
+
   def test_AccountTypeConstaintFixFor4721(self):
     account = self._getAccount('4721',
                                gap='fr/m9/4/47/472/4721', )
@@ -240,7 +240,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
                                gap='fr/m9/4/47/473/4735', )
     self.checkAccountTypeConsistency(account)
     self.assertEqual('liability/payable', account.getAccountType())
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting_l10n_M9))

@@ -128,7 +128,7 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isAccountable')
   def isAccountable(self):
-    """Events are accountable 
+    """Events are accountable
     """
     return 1
 
@@ -156,7 +156,7 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
       so that special kinds of events can use a different gateway
       to send messages. This is useful for example to send
       faxes through fax server or to send letters by printing
-      them to the printer or to send SMS through a custom 
+      them to the printer or to send SMS through a custom
       gateway. In the most usual case, sending will only consist
       in changing the destination.
     """

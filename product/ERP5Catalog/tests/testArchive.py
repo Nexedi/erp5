@@ -60,7 +60,7 @@ class TestArchive(InventoryAPITestCase):
     self.login()
     InventoryAPITestCase.afterSetUp(self)
     # make sure there is no message any more
-    
+
 
   def beforeTearDown(self):
     for module in [ self.getPersonModule(),
@@ -155,7 +155,7 @@ class TestArchive(InventoryAPITestCase):
 
     # Create an inventory object
     self.inventory = self._makeInventory(date=DateTime("2006/06/15"))
-    self.assertEqual(len(inventory_module.searchFolder(portal_type="Inventory")), 1)    
+    self.assertEqual(len(inventory_module.searchFolder(portal_type="Inventory")), 1)
 
     # Flush message queue
     self.tic()
@@ -165,7 +165,7 @@ class TestArchive(InventoryAPITestCase):
     self.original_deferred_connection_id = 'erp5_sql_deferred_connection'
     path_list = [self.organisation.getRelativeUrl(), self.inventory.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
-    
+
     # Create new connectors for destination
     addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
       .manage_addZMySQLConnection
@@ -295,7 +295,7 @@ class TestArchive(InventoryAPITestCase):
                                               preferred_archive=archive.getRelativeUrl())
     self.tic()
     self.getPreferenceTool().recursiveReindexObject()
-    
+
     self.portal.portal_workflow.doActionFor(self.pref,
                                             'enable_action',
                                             wf_id='preference_workflow')
@@ -308,7 +308,7 @@ class TestArchive(InventoryAPITestCase):
 
     self.assertEqual(portal_catalog.getPreferredSQLCatalogId(), archive.getCatalogId())
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
-    
+
     # As we only have first movement in archive, inventory must be 100
     self.assertEqual(100, getInventory(node=self.node.getRelativeUrl()))
 
@@ -316,7 +316,7 @@ class TestArchive(InventoryAPITestCase):
     self.pref.edit(preferred_archive=None)
     self.tic()
 
-    # unindex and reindex an older movement and check it's well reindexed    
+    # unindex and reindex an older movement and check it's well reindexed
     self.inventory.unindexObject()
     self.tic()
     path_list = [self.inventory.getRelativeUrl()]
@@ -342,7 +342,7 @@ class TestArchive(InventoryAPITestCase):
     # check the current archive
     self.assertEqual(portal_archive.getCurrentArchive(), dest)
 
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestArchive))

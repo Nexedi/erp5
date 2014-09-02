@@ -329,7 +329,7 @@ class TestERP5Base(ERP5TypeTestCase):
   def stepSetOrganisationCategories(self, sequence=None,
                                     sequence_list=None, **kw):
     """
-      Set & Check default organisation categories 
+      Set & Check default organisation categories
       (function, activity, site, group...).
     """
     organisation = sequence.get('organisation')
@@ -432,12 +432,12 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual( organisation.getDefaultAddressStreetAddress()
                      , default_address.getStreetAddress()
                      )
-    
+
     # Organisation's region is acquired from the Address object
     self.assertEqual( organisation.getRegion()
                      , default_address.getRegion()
                      )
-    
+
     self.assertTrue('default_telephone' in organisation.contentIds())
     default_telephone = organisation.default_telephone
     self.assertEqual(default_telephone.getPortalType(), 'Telephone')
@@ -484,11 +484,11 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     person = sequence.get('person')
     organisation = sequence.get('organisation')
-    
+
     # Set subordination
     person.setCareerSubordinationValue(organisation)
     self.assertEqual(person.getCareerSubordinationValue(), organisation)
-    
+
     # Set & Check simple properties with 'Career' prefix
     person.setCareerTitle('A brand new career step')
     person.setCareerDescription(
@@ -520,7 +520,7 @@ class TestERP5Base(ERP5TypeTestCase):
                                  'skill')
     self._checkCategoryAccessorList(person, tested_base_category_list)
 
-    # skill must be acquired on person 
+    # skill must be acquired on person
     self.tic()
     category_dict_list = self.getCategoryDictList('skill')
     skill_object_list = []
@@ -570,7 +570,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual(person.getCareerGrade()     , default_career.getGrade())
     self.assertEqual(person.getCareerGradeTitle(), default_career.getGradeTitle())
     self.assertEqual(person.getCareerGradeValue(), default_career.getGradeValue())
-    
+
     self.assertEqual(person.getCareerActivity(),
                       default_career.getActivity())
     self.assertEqual(person.getCareerActivityTitle(),
@@ -589,7 +589,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual(person.getCareerSubordination(), default_career.getSubordination())
     # Person's subordination is acquired from default career
     self.assertEqual(person.getSubordination(), default_career.getSubordination())
-    
+
   def stepAddCareerStepInAnotherOrganisation(self, sequence=None, **kw) :
     """Adds another career step on the person."""
     person = sequence.get('person')
@@ -603,7 +603,7 @@ class TestERP5Base(ERP5TypeTestCase):
           len(person.contentValues(filter={'portal_type':'Career'})))
     person.setCareerSubordination(other_organisation.getRelativeUrl())
     person.setCareerTitle(new_career_title)
-    
+
     # Get the new and the old career, as Person_shiftDefaultCareer changes
     # objects id, this may be the only safe way ...
     old_career_step = None
@@ -615,14 +615,14 @@ class TestERP5Base(ERP5TypeTestCase):
         old_career_step = career
     self.assertNotEquals(new_career_step, None)
     self.assertNotEquals(old_career_step, None)
-    
+
     sequence.edit( old_career_step = old_career_step,
                    new_career_step = new_career_step,
                    new_organisation = other_organisation,
                    old_organisation = sequence.get('organisation') )
 
   def stepCheckCareerSubordination (self, sequence=None, **kw) :
-    """checks that setting subordination on a career does not conflict 
+    """checks that setting subordination on a career does not conflict
         with acquisition."""
     person = sequence.get('person')
     old_career_step = sequence.get('old_career_step')
@@ -631,7 +631,7 @@ class TestERP5Base(ERP5TypeTestCase):
     old_organisation = sequence.get('old_organisation')
     new_organisation_title = new_organisation.getTitle()
     old_organisation_title = old_organisation.getTitle()
-    
+
     self.assert_( "subordination/%s" % old_organisation.getRelativeUrl() in
                     old_career_step.getCategoryList(),
                 '%s not in %s' % (old_organisation.getRelativeUrl(),
@@ -640,7 +640,7 @@ class TestERP5Base(ERP5TypeTestCase):
                        old_organisation.getRelativeUrl() )
     self.assertEqual( old_career_step.getSubordinationTitle(),
                        old_organisation_title )
-  
+
     self.assert_( "subordination/%s" % new_organisation.getRelativeUrl() in
                     new_career_step.getCategoryList(),
                 '%s not in %s' % (new_organisation.getRelativeUrl(),
@@ -820,12 +820,12 @@ class TestERP5Base(ERP5TypeTestCase):
     pers.edit(birthday = birthday)
     self.assertEqual(birthday, pers.getBirthday())
     self.assertEqual(birthday, pers.getStartDate())
-    
+
     for slot in ['year', 'month', 'day', 'hour', 'minute']:
       self.assertEqual(getattr(now, slot)(),
                         getattr(pers.getCreationDate(), slot)(),
                         'Wrong creation date %s' % pers.getCreationDate())
-  
+
   def test_DatesOnOrganisation(self):
     """Tests dates on Organisation objects.
     """
@@ -834,7 +834,7 @@ class TestERP5Base(ERP5TypeTestCase):
     now = DateTime()
     org.edit(start_date = start_date)
     self.assertEqual(start_date, org.getStartDate())
-    
+
     for slot in ['year', 'month', 'day', 'hour', 'minute']:
       self.assertEqual(getattr(now, slot)(),
                         getattr(org.getCreationDate(), slot)(),
@@ -854,7 +854,7 @@ class TestERP5Base(ERP5TypeTestCase):
     pers.setDefaultEmailText('nobody@example.com')
     email = pers.getDefaultEmailValue()
     self.assertEqual('Default Email', str(email.getTranslatedId()))
-    
+
   def test_SubordinationAcquisitionAndFunction(self):
     # function is acquired from the subordination, organisation function are
     # usually only nodes, and persons functions are leaves.
@@ -871,7 +871,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # on Organisation_view, the user usually select node for functions:
     self.assertEqual([['', ''], ['Function Node', 'function_node']],
       organisation.Organisation_view.my_function.get_value('items'))
-    
+
     # on Person_view, the user select leaves for functions:
     field = person.Person_view.my_career_function
     self.assertTrue('function_node' not in [x[1] for x in

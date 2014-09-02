@@ -51,7 +51,7 @@ class ConfiguratorItemMixin(Base):
     """ Add object to customer customization template. """
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj is None:
-      LOG('ConfiguratorItem', INFO, 
+      LOG('ConfiguratorItem', INFO,
           'Unable to find related business template to %s' % \
             business_configuration.getRelativeUrl())
       return

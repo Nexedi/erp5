@@ -36,7 +36,7 @@
       <dtml-ldifvar x attr=objectClass type=nb optional>
 
     if the value of 'x' is::
-      
+
       inetOrgPerson
 
     then the text inserted is:
@@ -156,7 +156,7 @@ class LDIFLine:
         t=args['type']
         if not valid_type(t):
             raise ParseError, ('invalid type, %s' % t, 'dtvar')
-        
+
         if not args.has_key('attr'):
             raise ParseError, ('the attr attribute is required', 'ldifattr')
         a=args['attr']

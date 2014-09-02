@@ -53,7 +53,7 @@ class ActiveObject(ExtensionClass.Base):
 
   >>> obj.activate().aMethod()
 
-  This will defer the call to obj.aMethod() 
+  This will defer the call to obj.aMethod()
   """
 
   security = ClassSecurityInfo()

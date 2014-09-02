@@ -196,12 +196,12 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
     self.cash_exchange = self.cash_exchange_module.newContent(
-                                  id='cash_exchange_1', 
-                                  portal_type='Cash Exchange', 
-                                  source_value=self.guichet, 
-                                  destination_value=None, 
+                                  id='cash_exchange_1',
+                                  portal_type='Cash Exchange',
+                                  source_value=self.guichet,
+                                  destination_value=None,
                                   description='test',
-                                  resource_value = self.currency_1, 
+                                  resource_value = self.currency_1,
                                   source_total_asset_price=52400.0)
     # execute tic
     self.tic()
@@ -469,7 +469,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
     """
     self.cash_exchange_module.deleteContent('cash_exchange_1')
 
-  def stepResetInventory(self, 
+  def stepResetInventory(self,
                sequence=None, sequence_list=None, **kwd):
     node = self.guichet_2
     line_list = self.line_list_guichet_2

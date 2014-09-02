@@ -51,11 +51,11 @@ class AttributeUnicityConstraint(PropertyExistenceConstraint):
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
-      We will make sure that each non None constraint_definition is 
+      We will make sure that each non None constraint_definition is
       satisfied (unicity)
       This Constraint use portal_catalog
     """
-    error_list = PropertyExistenceConstraint._checkConsistency(self, obj, 
+    error_list = PropertyExistenceConstraint._checkConsistency(self, obj,
                                                            fixit=fixit)
     attribute_name = self.getConstraintProperty()
     expression_criterion_dict = self.getFilterParameter()

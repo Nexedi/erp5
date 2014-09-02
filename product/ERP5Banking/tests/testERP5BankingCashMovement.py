@@ -130,7 +130,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
 
     self.createCashInventory(source=None, destination=self.vault_source, currency=self.currency_1,
                              line_list=line_list)
-    self.createCashInventory(source=None, destination=self.currency_handover_vault_source, 
+    self.createCashInventory(source=None, destination=self.currency_handover_vault_source,
                              currency=self.currency_1,
                              line_list=line_list)
     # Create an Organisation that will be used for users assignment
@@ -199,7 +199,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
-  def stepCreateCashMovement(self, sequence=None, sequence_list=None, 
+  def stepCreateCashMovement(self, sequence=None, sequence_list=None,
                              none_destination=0, **kwd):
     """
     Create a vault transfer document and check it
@@ -209,9 +209,9 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
 
     self.cash_movement = self.cash_movement_module.newContent(
                                 id='cash_movement_1',
-                                portal_type='Cash Movement', 
+                                portal_type='Cash Movement',
                                 source=self.vault_source.getRelativeUrl(),
-                                destination=self.vault_destination.getRelativeUrl(), 
+                                destination=self.vault_destination.getRelativeUrl(),
                                 description='test',
                                 start_date=self.date,
                                 source_total_asset_price=52400.0)
@@ -358,8 +358,8 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
     self.cash_movement.setSourceTotalAssetPrice('172400.0')
     # try to do the workflow action "stop_action', cath the exception ValidationFailed raised by workflow transition
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
-                  self.cash_movement, 'stop_action', 
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor,
+                  self.cash_movement, 'stop_action',
                   wf_id='cash_movement_workflow', your_stop_date=self.date)
     # execute tic
     self.tic()
@@ -595,7 +595,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

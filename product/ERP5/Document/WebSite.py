@@ -161,7 +161,7 @@ class WebSite(WebSection):
         """
           Returns the current web site (ie. self) though containment acquisition
         """
-       
+
         return self
 
     # Static Language Selection support
@@ -239,7 +239,7 @@ class WebSite(WebSection):
 
       web_section_uid_list = _getWebSectionUidList(self)
       if web_section_uid_list:
-        section_list = self.portal_domains.searchPredicateList(document, 
+        section_list = self.portal_domains.searchPredicateList(document,
                           portal_type='Web Section',
                           uid=web_section_uid_list)
 

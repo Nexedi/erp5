@@ -13,7 +13,7 @@ def diff_recursive(object_a, object_b):
   object_a_id_list = object_a.objectIds()
   object_b_id_list = object_b.objectIds()
   in_a_not_in_b = []
-  
+
   for id in object_a_id_list:
     try:
       index_in_b = object_b_id_list.index(id)

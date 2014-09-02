@@ -277,7 +277,7 @@ class TestERP5Category(ERP5TypeTestCase):
     om['1'].setAbcValue(om['2'])
     self.commitAndTic()
     self.assertEqual(len(om['2'].getRelatedValueList('abc')), 1)
-    self.assertEqual(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)    
+    self.assertEqual(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
     self.assertEqual(om['1'].getAbc(),om['2'].getRelativeUrl())
     original_uid = om['2'].getUid()
     om.edit(id='new_id')
@@ -314,7 +314,7 @@ class TestERP5Category(ERP5TypeTestCase):
     # acquisition portal type
     self.assertEqual(['Organisation', 'Telephone'],
                       test_aq_category.getAcquisitionPortalTypeList())
-    
+
     # associate the base category with our portal types
     ttool = self.getTypesTool()
     ttool['Organisation']._setTypeBaseCategoryList(['test_aq_category'])
@@ -327,12 +327,12 @@ class TestERP5Category(ERP5TypeTestCase):
     doc.setCategoryList(['test_aq_category/1'])
     self.assertEqual(['test_aq_category/1'], ctool.getAcquiredCategoryList(doc))
     self.assertEqual(['test_aq_category/1'], doc.getAcquiredCategoryList())
-    
+
     # Telephone subdocument acquire categories, because 'test_aq_category' has
     # 'parent' in its acquisition_base_category_list
     self.assertEqual([], subdoc.getCategoryList())
     self.assertEqual(['test_aq_category/1'], subdoc.getAcquiredCategoryList())
-    
+
     doc.setCategoryList([])
     self.assertEqual([], ctool.getAcquiredCategoryList(doc))
 

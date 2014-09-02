@@ -39,7 +39,7 @@ from zLOG import LOG
 
 class ConversionTool(BaseTool):
   """
-    The ConversionTool class will provide in the future an 
+    The ConversionTool class will provide in the future an
     API to unify file conversion and metadata handling in ERP5.
 
     The first version consists of a tool which acts both as central
@@ -57,7 +57,7 @@ class ConversionTool(BaseTool):
     The tool reuses the portal_web_services to connect through
     XML-RPC to the conversion server.
 
-    ARCHITECTURE PHASE 1: all Converter classes are stored 
+    ARCHITECTURE PHASE 1: all Converter classes are stored
     in the Converter directory part of ERP5 Product. The tool
     serves both as caller and recipient, and calls itself
     through XML-RPC.
@@ -101,9 +101,9 @@ class ConversionTool(BaseTool):
   def convert(self, file, source_format, destination_format, zip=False):
     """
       Returns the converted file in the given format
-  
+
       zip parameter can be specified to return the result of conversion
-      in the form of a zip archive (which may contain multiple parts). 
+      in the form of a zip archive (which may contain multiple parts).
       This can be useful to convert a single ODF file to HMTL
       and png images.
     """
@@ -133,7 +133,7 @@ class ConversionTool(BaseTool):
 
   def updateMetadata(self, file, source_format, **kw):
     """
-      Updates the file in the given source_format 
+      Updates the file in the given source_format
       with provided metadata and return the resulting new file
     """
     # Just call XML-RPC
@@ -157,7 +157,7 @@ class ConversionTool(BaseTool):
 
   def getFileMetadataItemList(self, file, source_format):
     """
-      Returns a list key, value pairs representing the 
+      Returns a list key, value pairs representing the
       metadata values for the document. The structure of this
       list is "unpredictable" and follows the convention of each file.
     """
@@ -167,7 +167,7 @@ class ConversionTool(BaseTool):
 
   def updateFileMetadata(self, file, source_format, **kw):
     """
-      Updates the file in the given source_format 
+      Updates the file in the given source_format
       with provided metadata and return the resulting new file
     """
     converter = self._findConverter(source_format, destination_format)

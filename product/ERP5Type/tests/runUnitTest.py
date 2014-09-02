@@ -95,7 +95,7 @@ Options:
   --update_only=STRING       Specify the list of business template to update if
                              you don't want to update them all. You can give a list
                              delimited with commas (e.g. erp5_core,erp5_xhtml_style).
-                             This can be regular expressions. 
+                             This can be regular expressions.
   --enable_full_indexing=STRING
                              By default, unit test do not reindex everything
                              for performance reasons. Provide list of documents
@@ -287,7 +287,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     And, also to load ZODB Test Component before passing it to unittest
     TestLoader().
     """
-    # backward compatibility 
+    # backward compatibility
     if name.endswith('.py'):
       name = name[:-3]
 
@@ -758,11 +758,11 @@ def main(argument_list=None):
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
-        "conversion_server_port=", 
+        "conversion_server_port=",
         "conversion_server_hostname=",
-        "volatile_memcached_server_port=", 
+        "volatile_memcached_server_port=",
         "volatile_memcached_server_hostname=",
-        "persistent_memcached_server_port=", 
+        "persistent_memcached_server_port=",
         "persistent_memcached_server_hostname=",
         "erp5_catalog_storage=",
         "save",

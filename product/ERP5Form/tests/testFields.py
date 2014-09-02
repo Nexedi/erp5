@@ -144,7 +144,7 @@ class TestFloatField(ERP5TypeTestCase):
     self.assertEqual('7.2', self.widget.format_value(self.field, 7.2))
     self.assertEqual('0.009999', self.widget.format_value(self.field, 0.009999))
     self.assertEqual('1000.0', self.widget.format_value(self.field, 1000))
-  
+
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'
     self.field.values['precision'] = 2
@@ -164,7 +164,7 @@ class TestFloatField(ERP5TypeTestCase):
                            format='0.0000',
                            type='float'),
                       self.field.render_dict(0.12345))
-  
+
   def test_render_string_value(self):
     self.field.values['precision'] = 2
     self.field.values['editable'] = 0
@@ -189,7 +189,7 @@ class TestFloatField(ERP5TypeTestCase):
     self.portal.REQUEST.set('field_test_field', '1 000.0')
     self.assertEqual(1000,
         self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
-  
+
   def test_validate_thousand_separator_coma(self):
     self.field.values['input_style'] = '-1 234,5'
     self.portal.REQUEST.set('field_test_field', '1 000,0')
@@ -429,7 +429,7 @@ class TestTextAreaField(ERP5TypeTestCase):
 
   def test_render_odt(self):
     self.field.values['default'] = 'My first Line\nMy Second Line\tfoo'
-    self.assertEqual('text:line-break', 
+    self.assertEqual('text:line-break',
         self.field.render_odt(as_string=False)[0].xpath('name()'))
     self.assertEqual('text:tab',
         self.field.render_odt(as_string=False)[1].xpath('name()'))
@@ -773,7 +773,7 @@ class TestProxyField(ERP5TypeTestCase):
     proxy_field.render()
     # and validate
     self.container.Base_view.validate_all_to_request(self.portal.REQUEST)
-    
+
   def test_manage_edit_surcharged_xmlrpc(self):
     # manage_edit_surcharged_xmlrpc is a method to edit proxyfields
     # programmatically
@@ -863,7 +863,7 @@ class TestProxyField(ERP5TypeTestCase):
       self.assertTrue('title' not in field.delegated_list)
       self.assertTrue('title' not in field.values)
       self.assertTrue('title' not in field.tales)
-    
+
     surcharge_edit()
     delegate_edit()
     surcharge_edit()
@@ -991,7 +991,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def test_datetime_field(self):
     field_value_cache.clear()
-    
+
     # make sure that boundmethod must not be cached.
     year_field = self.root.form.datetime_field.sub_form.get_field('year', include_disabled=1)
     self.assertEqual(True, type(year_field.overrides['items']) is BoundMethod)

@@ -531,7 +531,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.auxiliaire.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

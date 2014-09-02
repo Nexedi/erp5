@@ -44,23 +44,23 @@ class CrmTestCase(ERP5ReportTestCase):
 
   All documents created appart from this configuration will be deleted in
   teardown. So users of this test case are encouraged to create new documents
-  rather than modifying default documents. 
+  rather than modifying default documents.
   """
-  
+
   username = 'username'
 
-  
+
   def _doWorkflowAction(self, ob, action,**kw):
-    self.portal.portal_workflow.doActionFor(ob, action, 
+    self.portal.portal_workflow.doActionFor(ob, action,
                                             comment = 'for unit test',**kw)
-                           
-  @reindex  
-  def _makeOneTicket(self, portal_type='Campaign', 
+
+  @reindex
+  def _makeOneTicket(self, portal_type='Campaign',
                      start_date=None,
                      stop_date=None,
                      simulation_state='draft', **kw):
     """Creates an ticket, and edit it with kw.
-    
+
     The default settings is for self.section.
     You can pass a list of mapping as lines, then lines will be created
     using this information.
@@ -88,19 +88,19 @@ class CrmTestCase(ERP5ReportTestCase):
     else:
       if simulation_state == 'validated':
         tk.validate()
-    
+
     # sanity check
     self.assertEqual(simulation_state, tk.getSimulationState())
     return tk
 
-  def _makeOneEvent(self, portal_type='Fax Message', 
+  def _makeOneEvent(self, portal_type='Fax Message',
                      start_date=DateTime(),
-                     simulation_state='draft', 
+                     simulation_state='draft',
                      follow_up_ticket_title = "",
                      follow_up_ticket_type = "Campaign",
                      **kw):
     """Creates an event, and edit it with kw.
-    
+
     The default settings is for self.section.
     You can pass a list of mapping as lines, then lines will be created
     using this information.
@@ -177,46 +177,46 @@ class CrmTestCase(ERP5ReportTestCase):
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
     self.portal_categories = self.portal.portal_categories
- 
+
     # create group category
-    if not self.portal_categories['group'].has_key('demo_group'): 
+    if not self.portal_categories['group'].has_key('demo_group'):
       group=self.portal_categories.group
       subgroup = group.newContent(portal_type='Category',
                                 title='demo_group',
                                 reference='demo_group',
                                 id='demo_group')
     # create users and organisations
-    if not self.person_module.has_key('Person_1'): 
+    if not self.person_module.has_key('Person_1'):
       user = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
-    if not self.person_module.has_key('Person_2'): 
+    if not self.person_module.has_key('Person_2'):
       user = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
                               title='Person_2',
                               id='Person_2')
-    if not self.person_module.has_key('Person_3'): 
+    if not self.person_module.has_key('Person_3'):
       user = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_3',
                               title='Person_3',
                               id='Person_3')
-    if not self.organisation_module.has_key('Organisation_1'): 
+    if not self.organisation_module.has_key('Organisation_1'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
-    if not self.organisation_module.has_key('Organisation_2'): 
+    if not self.organisation_module.has_key('Organisation_2'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
                               id='Organisation_2')
-    if not self.organisation_module.has_key('My_organisation'): 
+    if not self.organisation_module.has_key('My_organisation'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='My_organisation',
@@ -256,7 +256,7 @@ class CrmTestCase(ERP5ReportTestCase):
 
 class TestCrmReports(CrmTestCase):
   """Test Crm reports
-  
+
   Test basic cases of gathering data to render reports, the purpose of those
   tests is to exercise basic reporting features to make sure no regression
   happen. Input data used for tests usually contain edge cases, for example:
@@ -270,7 +270,7 @@ class TestCrmReports(CrmTestCase):
 
   def testCampaignStatus(self):
     # Campaign Status report.
-    
+
     # First campaign
     first = self._makeOneTicket(
               portal_type='Campaign',
@@ -300,7 +300,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -341,7 +341,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -349,7 +349,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventInt1=self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -360,31 +360,31 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=eventOut1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                                self.portal.campaign_module,
                                'CampaignModule_viewCampaignStatusReport')
     self.assertEqual(1, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 campaigns
     self.assertEqual(2, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source', 'start_date', 'stop_date','validation_state','outgoing',
          'incoming','progression','efficiency'])
-    
+
     # First campaign
     self.checkLineProperties(data_line_list[0],
                    title='First One',
@@ -398,7 +398,7 @@ class TestCrmReports(CrmTestCase):
                    outgoing = 3,
                    incoming = 1,
                    progression = 66.00/100,
-                   efficiency = 33.00/100)    
+                   efficiency = 33.00/100)
     # Second campaign
     self.checkLineProperties(data_line_list[1],
                    title='Second One',
@@ -413,10 +413,10 @@ class TestCrmReports(CrmTestCase):
                    incoming = 1,
                    progression = 100.00/100,
                    efficiency = 50.00/100)
-                  
+
   def testCampaignDetailedReport(self):
     # Campaign Detailed report.
-    
+
     # First campaign
     first = self._makeOneTicket(
               portal_type='Campaign',
@@ -446,7 +446,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     first_event_out2 = self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -487,7 +487,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_out2 = self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -495,7 +495,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_inc1 = self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -506,25 +506,25 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=second_event_out1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                                self.portal.campaign_module,
                                'CampaignModule_viewCampaignDetailedReport')
     self.assertEqual(2, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
     self.assertEqual(7, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
@@ -579,7 +579,7 @@ class TestCrmReports(CrmTestCase):
 
   def testMeetingStatus(self):
     # Meeting Status report.
-    
+
     # First Meeting
     first = self._makeOneTicket(
               portal_type='Meeting',
@@ -609,7 +609,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -650,7 +650,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -658,7 +658,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventInt1=self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -669,32 +669,32 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=eventOut1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                                self.portal.meeting_module,
                                'MeetingModule_viewMeetingStatusReport')
     self.assertEqual(1, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 meetings
     self.assertEqual(2, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'destination_title','source', 'start_date', 'stop_date',
          'validation_state','outgoing','incoming'])
- 
+
     # First meeting
     self.checkLineProperties(data_line_list[0],
                    title='First One',
@@ -721,10 +721,10 @@ class TestCrmReports(CrmTestCase):
                    validation_state = 'Open',
                    outgoing = 2,
                    incoming = 1)
-                  
+
   def testMeetingDetailedReport(self):
     # Meeting Detailed report.
-    
+
     # First Meeting
     first = self._makeOneTicket(
               portal_type='Meeting',
@@ -754,7 +754,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     first_event_out2 = self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -795,7 +795,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_out2 = self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -803,7 +803,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_inc1 = self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -814,25 +814,25 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=second_event_out1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                                self.portal.meeting_module,
                                'MeetingModule_viewMeetingDetailedReport')
     self.assertEqual(2, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
     self.assertEqual(7, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
@@ -884,10 +884,10 @@ class TestCrmReports(CrmTestCase):
                    start_date = event.getStartDate(),
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
-                  
+
   def testSupportRequestStatus(self):
     # Support Request Status report.
-    
+
     # First Support Request
     first = self._makeOneTicket(
               portal_type='Support Request',
@@ -917,7 +917,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     first_event_inc2 = self._makeOneEvent(
               portal_type='Letter',
               title='Inc 2 of First',
@@ -958,7 +958,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_inc2 = self._makeOneEvent(
               portal_type='Fax Message',
               title='Inc 2 of Second',
@@ -966,7 +966,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_out1 = self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Inc 1 of Second',
@@ -977,32 +977,32 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=second_event_inc1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                         self.portal.support_request_module,
                         'SupportRequestModule_viewSupportRequestStatusReport')
     self.assertEqual(1, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 Support Request
     self.assertEqual(2, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source', 'source_decision', 'start_date', 'stop_date',
          'validation_state','incoming','outgoing'])
- 
+
     # First Support Request
     self.checkLineProperties(data_line_list[0],
                    title='First One',
@@ -1029,10 +1029,10 @@ class TestCrmReports(CrmTestCase):
                    validation_state = 'Open',
                    outgoing = 1,
                    incoming = 2)
-                                    
+
   def testSupportRequestDetailedReport(self):
     # Support Request Detailed report.
-    
+
     # First Support Request
     first = self._makeOneTicket(
               portal_type='Support Request',
@@ -1062,7 +1062,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     first_event_inc2 = self._makeOneEvent(
               portal_type='Letter',
               title='Inc 2 of First',
@@ -1103,7 +1103,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_inc2 = self._makeOneEvent(
               portal_type='Fax Message',
               title='Inc 2 of Second',
@@ -1111,7 +1111,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.organisation_module.My_organisation,
               source_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_out1 = self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Inc 1 of Second',
@@ -1122,25 +1122,25 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=second_event_inc1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['validation_state'] = ['validated',]
-    
+
     report_section_list = self.getReportSectionList(
                       self.portal.support_request_module,
                       'SupportRequestModule_viewSupportRequestDetailedReport')
     self.assertEqual(2, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
     self.assertEqual(7, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
@@ -1192,10 +1192,10 @@ class TestCrmReports(CrmTestCase):
                    start_date = event.getStartDate(),
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
-                  
+
   def testSaleOpportunityStatus(self):
     # Sale Opportunity Status report.
-    
+
     # First Sale Opportunity
     first = self._makeOneTicket(
               portal_type='Sale Opportunity',
@@ -1225,7 +1225,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -1266,7 +1266,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventOut2=self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -1274,7 +1274,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     eventInt1=self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -1285,32 +1285,32 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=eventOut1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['sale_opportunity_state'] = ['contacted','offered']
-    
+
     report_section_list = self.getReportSectionList(
                       self.portal.sale_opportunity_module,
                       'SaleOpportunityModule_viewSaleOpportunityStatusReport')
     self.assertEqual(1, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 2 Sale Opportunity
     self.assertEqual(2, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
         ['title', 'ticket_type', 'destination_section', 'destination_decision',
          'source','source_decision','start_date', 'stop_date',
          'validation_state','outgoing','incoming'])
- 
+
     # First Sale Opportunity
     self.checkLineProperties(data_line_list[0],
                    title='First One',
@@ -1337,10 +1337,10 @@ class TestCrmReports(CrmTestCase):
                    validation_state = 'Offered',
                    outgoing = 2,
                    incoming = 1)
-                  
+
   def testSaleOpportunityDetailedReport(self):
     # Sale Opportunity Detailed report.
-    
+
     # First Sale Opportunity
     first = self._makeOneTicket(
               portal_type='Sale Opportunity',
@@ -1370,7 +1370,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=first.getRelativeUrl())              
+              follow_up=first.getRelativeUrl())
     first_event_out2 = self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
@@ -1411,7 +1411,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_out2 = self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
@@ -1419,7 +1419,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
-              follow_up=second.getRelativeUrl())              
+              follow_up=second.getRelativeUrl())
     second_event_inc1 = self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
@@ -1430,25 +1430,25 @@ class TestCrmReports(CrmTestCase):
               #create a follow-up and causality ralationship to test that
               #only count one time by follow-up
               causality=second_event_out1.getRelativeUrl(),
-              follow_up=second.getRelativeUrl())              
-              
+              follow_up=second.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
     request_form['section_category'] = 'group/demo_group'
     request_form['sale_opportunity_state'] = ['contacted','offered']
-    
+
     report_section_list = self.getReportSectionList(
                      self.portal.sale_opportunity_module,
                     'SaleOpportunityModule_viewSaleOpportunityDetailedReport')
     self.assertEqual(2, len(report_section_list))
-        
+
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 7 events
     self.assertEqual(7, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
@@ -1503,7 +1503,7 @@ class TestCrmReports(CrmTestCase):
 
   def testEventActivity(self):
     # Event Activity report.
-    
+
     # creating one ticket of every type
     sale_opportunity = self._makeOneTicket(
               portal_type='Sale Opportunity',
@@ -1546,7 +1546,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=sale_opportunity.getRelativeUrl())              
+              follow_up=sale_opportunity.getRelativeUrl())
     event2 = self._makeOneEvent(
               portal_type='Letter',
               title='Event 2',
@@ -1642,7 +1642,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=sale_opportunity.getRelativeUrl())              
+              follow_up=sale_opportunity.getRelativeUrl())
     event = self._makeOneEvent(
               portal_type='Letter',
               title='Event deleted 2',
@@ -1660,7 +1660,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              causality=event9.getRelativeUrl())              
+              causality=event9.getRelativeUrl())
     event = self._makeOneEvent(
               portal_type='Letter',
               title='Event causality 2',
@@ -1688,29 +1688,29 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               causality=event6.getRelativeUrl(),
-              follow_up=campaign.getRelativeUrl()) 
-              
+              follow_up=campaign.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
-    
+
     report_section_list = self.getReportSectionList(
                                     self.portal.event_module,
                                     'EventModule_viewEventActivityReport')
     #Obtain 2 listbox with outgoing and incoming events
     self.assertEqual(2, len(report_section_list))
-    
+
     #Outgoing
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 6 states
     self.assertEqual(6, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
-        ['validation_state','Campaign', 'Meeting', 
+        ['validation_state','Campaign', 'Meeting',
          'SaleOpportunity','SupportRequest', 'unassigned','total'])
     for i in range(len(data_line_list)):
       if i==0:
@@ -1785,11 +1785,11 @@ class TestCrmReports(CrmTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 4 states
     self.assertEqual(4, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
-        ['validation_state','Campaign', 'Meeting', 
+        ['validation_state','Campaign', 'Meeting',
          'SaleOpportunity','SupportRequest', 'unassigned','total'])
     for i in range(len(data_line_list)):
       if i==0:
@@ -1842,10 +1842,10 @@ class TestCrmReports(CrmTestCase):
     self.assertEqual(1, stat_line.getColumnProperty('SupportRequest'))
     self.assertEqual(1, stat_line.getColumnProperty('unassigned'))
     self.assertEqual(5, stat_line.getColumnProperty('total'))
-                  
+
   def testEventDetailedReport(self):
     # Event Detailed Report report.
-    
+
     # creating one ticket of every type
     sale_opportunity = self._makeOneTicket(
               portal_type='Sale Opportunity',
@@ -1888,7 +1888,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=sale_opportunity.getRelativeUrl())              
+              follow_up=sale_opportunity.getRelativeUrl())
     event2 = self._makeOneEvent(
               portal_type='Letter',
               title='Event 2',
@@ -1984,7 +1984,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              follow_up=sale_opportunity.getRelativeUrl())              
+              follow_up=sale_opportunity.getRelativeUrl())
     event = self._makeOneEvent(
               portal_type='Letter',
               title='Event deleted 2',
@@ -2002,7 +2002,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
-              causality=event9.getRelativeUrl())              
+              causality=event9.getRelativeUrl())
     event = self._makeOneEvent(
               portal_type='Letter',
               title='Event causality 2',
@@ -2030,30 +2030,30 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               causality=event6.getRelativeUrl(),
-              follow_up=campaign.getRelativeUrl()) 
-              
+              follow_up=campaign.getRelativeUrl())
+
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
-    
+
     report_section_list = self.getReportSectionList(
                                     self.portal.event_module,
                                     'EventModule_viewEventDetailedReport')
     #Obtain 1 listbox with outgoing and incoming events
     self.assertEqual(1, len(report_section_list))
-    
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     # we have 5 lines
     self.assertEqual(5, len(data_line_list))
-    
+
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
-        ['ticket_title','ticket_type', 'resource', 
-         'delivered', 'ordered', 'acknowledged', 'assigned', 
-         'started', 'draft', 'planned', 'cancelled', 'new', 
+        ['ticket_title','ticket_type', 'resource',
+         'delivered', 'ordered', 'acknowledged', 'assigned',
+         'started', 'draft', 'planned', 'cancelled', 'new',
          'expired', 'responded','total'])
     for i in range(len(data_line_list)):
       if i==0:

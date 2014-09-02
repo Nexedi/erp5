@@ -125,12 +125,12 @@ class DistributedRamCache(BaseCache):
   def expireOldCacheEntries(self, forceCheck = False):
     """ Memcache has its own built in expire policy """
     ## we can not use one connection to memcached server for time being of DistributedRamCache
-    ## because if memcached is restarted for any reason our connection object will have its socket 
+    ## because if memcached is restarted for any reason our connection object will have its socket
     ## to memcached server closed.
     ## The workaround of this problem is to create a new connection for every cache access
-    ## but that's too much overhead or create a new connection when cache is to be expired. 
-    ## This way we can catch memcached server failures. BTW: This hack is forced by the lack functionality in python-memcached 
-    #self._cache = memcache.Client(self._servers.split('\n'), debug=self._debug_level) 
+    ## but that's too much overhead or create a new connection when cache is to be expired.
+    ## This way we can catch memcached server failures. BTW: This hack is forced by the lack functionality in python-memcached
+    #self._cache = memcache.Client(self._servers.split('\n'), debug=self._debug_level)
     pass
 
   def delete(self, cache_id, scope):
@@ -151,11 +151,11 @@ class DistributedRamCache(BaseCache):
     return to_return
 
   def getScopeList(self):
-    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 
+    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list
     return []
 
   def getScopeKeyList(self, scope):
-    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 
+    ## memcached doesn't support namespaces (cache scopes) neither getting cached key list
     return []
 
   def clearCache(self):
@@ -168,7 +168,7 @@ class DistributedRamCache(BaseCache):
 
   def clearCacheForScope(self, scope):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list.
-    ## Becasue we've explicitly called this function instead of clearing specific cache 
+    ## Becasue we've explicitly called this function instead of clearing specific cache
     ## scope we have no choice but clear whole cache.
     self.clearCache()
 

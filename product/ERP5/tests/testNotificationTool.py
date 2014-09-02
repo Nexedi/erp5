@@ -57,7 +57,7 @@ def decode_email(file):
     new_value = unicode_value.__unicode__().encode('utf-8')
     theMail['headers'][key.lower()] = new_value
   # Filter mail addresses
-  for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender', 
+  for header in ('resent-to', 'resent-from', 'resent-cc', 'resent-sender',
                  'to', 'from', 'cc', 'sender', 'reply-to'):
     header_field = theMail['headers'].get(header)
     if header_field:
@@ -84,7 +84,7 @@ def decode_email(file):
         payload = unicode(payload, charset).encode('utf-8')
       if body_found:
         # Keep the content type
-        theMail['attachment_list'].append((file_name, 
+        theMail['attachment_list'].append((file_name,
                                            content_type, payload))
       else:
         theMail['body'] = payload
@@ -92,7 +92,7 @@ def decode_email(file):
     else:
       payload = part.get_payload(decode=True)
       # Keep the content type
-      theMail['attachment_list'].append((file_name, content_type, 
+      theMail['attachment_list'].append((file_name, content_type,
                                          payload))
   return theMail
 
@@ -184,7 +184,7 @@ class TestNotificationTool(ERP5TypeTestCase):
       self.portal.portal_notifications,
     )
 
-  def stepCheckNotificationWithoutSender(self, sequence=None, 
+  def stepCheckNotificationWithoutSender(self, sequence=None,
                                          sequence_list=None, **kw):
     """
     Check that notification works without sender
@@ -207,7 +207,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckNotificationFailsWithoutSubject(self, sequence=None, 
+  def stepCheckNotificationFailsWithoutSubject(self, sequence=None,
                                                sequence_list=None, **kw):
     """
     Check that notification fails when no subject is given
@@ -237,7 +237,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['site@example.invalid'], mto)
 
-  def stepCheckNotificationWithoutMessage(self, sequence=None, 
+  def stepCheckNotificationWithoutMessage(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Check that notification is send when no message is passed
@@ -260,7 +260,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckSimpleNotification(self, sequence=None, 
+  def stepCheckSimpleNotification(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that notification is send in standard use case
@@ -288,7 +288,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckNotificationWithAttachment(self, sequence=None, 
+  def stepCheckNotificationWithAttachment(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Check attachment
@@ -319,7 +319,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertEqual(mail_dict['headers']['subject'], 'Subject')
     self.assertEqual(mail_dict['body'], 'Message')
     self.assertSameSet([('Attachment 1', 'text/plain', 'Text 1'),
-                        ('Attachment 2', 'application/octet-stream', 'Text 2')], 
+                        ('Attachment 2', 'application/octet-stream', 'Text 2')],
                        mail_dict['attachment_list'])
 
   def test_07_AttachmentMessage(self):
@@ -332,7 +332,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckMultiRecipientNotification(self, sequence=None, 
+  def stepCheckMultiRecipientNotification(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Check that notification can be send to multiple recipient
@@ -363,7 +363,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckPersonWithoutEmail(self, sequence=None, 
+  def stepCheckPersonWithoutEmail(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that notification fails when the destination hasn't a email adress
@@ -391,7 +391,7 @@ class TestNotificationTool(ERP5TypeTestCase):
       recipient='UnknowUser', subject='Subject', message='Message'
     )
 
-  def stepCheckPersonNotification(self, sequence=None, 
+  def stepCheckPersonNotification(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that notification is send when recipient is a Person
@@ -420,7 +420,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckNotificationPlainTextFormat(self, sequence=None, 
+  def stepCheckNotificationPlainTextFormat(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that if notification format is plain text.
@@ -454,14 +454,14 @@ Yes, I will go."""
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckNotificationHtmlFormat(self, sequence=None, 
+  def stepCheckNotificationHtmlFormat(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that if notification format is html.
     """
 
     message = """<a href="http://www.erp5.com/">Click Here!!</a>"""
-    
+
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject',
         message_text_format='text/html', message=message)
@@ -519,11 +519,11 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     mail_dict = decode_email(messageText)
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
-    
+
     # check that an event has been created
     event_list = self.portal.event_module.contentValues()
     self.assertEqual(1, len(event_list))
-    
+
     event = event_list[0]
     self.assertEqual(mail_dict['headers']['message-id'],
                       event.getSourceReference())

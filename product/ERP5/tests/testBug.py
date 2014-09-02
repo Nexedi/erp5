@@ -43,7 +43,7 @@ class TestBug(ERP5TypeTestCase):
   # pseudo constants
   RUN_ALL_TEST = 1
   QUIET = 1
-  person_portal_type = "Person" 
+  person_portal_type = "Person"
   assignment_portal_type = "Assignment"
   project_portal_type = "Project"
   bug_portal_type = "Bug"
@@ -73,7 +73,7 @@ class TestBug(ERP5TypeTestCase):
     """
     self.login()
     self.setDefaultSitePreference()
-    self.datetime = DateTime() 
+    self.datetime = DateTime()
     self.workflow_tool = self.portal.portal_workflow
     # Use a dummy mailhost to not send mail notification to the guy how run unit test
     if 'MailHost' in self.portal.objectIds():
@@ -117,7 +117,7 @@ class TestBug(ERP5TypeTestCase):
                                         reference='dummy')
       portal.portal_categories.group.newContent(id='dummy',
                                                 codification='DUMMY')
-      
+
       person.setEmailText('loggedperson@localhost')
       assignment = person.newContent(title='dummy', group='dummy',
                                      portal_type='Assignment',
@@ -163,7 +163,7 @@ class TestBug(ERP5TypeTestCase):
     project = module.newContent(
         portal_type=project_portal_type,
         title = 'Project')
-    sequence.edit(project=project) 
+    sequence.edit(project=project)
 
   def createPerson(self):
     """
@@ -289,7 +289,7 @@ class TestBug(ERP5TypeTestCase):
       check if the message is delivered the bug.
     """
     bug_message = sequence.get('bug_message')
-    self.assertEqual(bug_message.getSimulationState(), 'delivered') 
+    self.assertEqual(bug_message.getSimulationState(), 'delivered')
 
   def stepCheckBugMessage(self, sequence=None, sequence_list=None, **kw):
     """
@@ -598,7 +598,7 @@ class TestBug(ERP5TypeTestCase):
     self.tic()
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEqual(bug.getSimulationState(), 'stopped')
- 
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBug))

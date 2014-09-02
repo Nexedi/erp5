@@ -56,7 +56,7 @@ except (ImportError, AttributeError):
 # "Persistence" module remains there for ancient backward compatibility.
 # let's try using the new 'persistence' implementation only and see how far we
 # can get. This might not be enough for content in old ZODBs, though...
-from Persistence import Persistent, PersistentMapping 
+from Persistence import Persistent, PersistentMapping
 from App.special_dtml import HTML, HTMLFile, DTMLFile
 from App.Common import package_home
 from App.Dialogs import MessageDialog

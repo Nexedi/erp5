@@ -113,7 +113,7 @@ class BaobabMixin(ExtensionClass.Base):
                             "getTitle")
   def getTitle(self, default=''):
     return getattr(aq_base(self), 'title', default)
-    
+
 for category in ('source', 'destination',
                  'source_section', 'destination_section',
                  'source_payment', 'destination_payment',

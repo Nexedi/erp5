@@ -286,7 +286,7 @@ class CachingMethod:
     return value
 
   def delete(self, *args, **kwd):
-    """ Delete cache key. 
+    """ Delete cache key.
     accept same arguments as __call__ to clear
     the cache entry with the same cache_id
     """

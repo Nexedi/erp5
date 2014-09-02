@@ -153,10 +153,10 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     """
     # Cash sorting has encaisse_paris for source, encaisse_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_sorting = self.cash_sorting_module.newContent(
-                               id='cash_sorting_1', 
-                               portal_type='Cash Sorting', 
-                               source_value=self.encaisse_tri, 
-                               destination_value=None, 
+                               id='cash_sorting_1',
+                               portal_type='Cash Sorting',
+                               source_value=self.encaisse_tri,
+                               destination_value=None,
                                description='test',
                                source_total_asset_price=52400.0)
     # execute tic
@@ -506,7 +506,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
       self.assertEqual(self.simulation_tool.getCurrentInventory(node=node, resource=resource), quantity)
       self.assertEqual(self.simulation_tool.getFutureInventory(node=node, resource=resource), quantity)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

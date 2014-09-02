@@ -368,7 +368,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     # skin is setup during __before_publishing_traverse__, which
     # doesn't happen when the object is being deleted from the management
     # interface, but we need it to be set for portal_activities when we're
-    # being deleted. 
+    # being deleted.
     self.setupCurrentSkin(self.REQUEST)
     return ERP5Site.inheritedAttribute('manage_beforeDelete')(self,
                                                               item,

@@ -89,7 +89,7 @@ class IAmountCore(Interface):
 
   def getBaseContributionList():
     """
-    The list of bases this amount contributes to. 
+    The list of bases this amount contributes to.
 
     XXX: explain better
     """
@@ -114,7 +114,7 @@ class IAmountConversion(Interface):
     """
     Take into account efficiency in quantity. This is
     only useful in Path which define a loss ratio, such
-    as Transformation. 
+    as Transformation.
 
     Formula:
       net_quantity = quantity / efficiency
@@ -148,7 +148,7 @@ class IAmountPrice(Interface):
   """Amount Price private interface specification
 
   IAmountPrice defines methods to compute total price
-  and unit price of a resource, taking into account 
+  and unit price of a resource, taking into account
   contributions and roundings.
   """
   def getPrice():
@@ -160,15 +160,15 @@ class IAmountPrice(Interface):
 
   def getUnitPrice(base_contribution=None, rounding=False):
     """
-    Returns the unit price of the resource, taking into 
+    Returns the unit price of the resource, taking into
     account rounding and contributions (ex. taxes).
 
     base_contribution -- optional base_contribution.
                 If defined, a complex process is launched
                 to add or remove to the price various amounts
-                calculated from applicable trade models if 
+                calculated from applicable trade models if
                 any.
-                
+
     rounding -- optional rounding parameter. If set to True,
                 find and applies appropriate rounding model.
     """
@@ -176,15 +176,15 @@ class IAmountPrice(Interface):
   def getTotalPrice(base_contribution=None, rounding=False):
     """
     Returns total price ie. the unit price of the resource
-    multiplied by the quantity, taking into 
+    multiplied by the quantity, taking into
     account rounding and contributions (ex. taxes).
 
     base_contribution -- optional base_contribution.
                 If defined, a complex process is launched
                 to add or remove to the price various amounts
-                calculated from applicable trade models if 
+                calculated from applicable trade models if
                 any.
-                
+
     rounding -- optional rounding parameter. If set to True,
                 find and applies appropriate rounding model.
     """
@@ -194,7 +194,7 @@ class IAmountArithmetic(Interface):
 
   IAmountArithmetic defines methods to add, substract,
   multiply or device amounts of resources. No rounding
-  should happen. All amounts should be converted to 
+  should happen. All amounts should be converted to
   the default management unit using getNetConvertedQuantity.
   """
   def __add__(value):

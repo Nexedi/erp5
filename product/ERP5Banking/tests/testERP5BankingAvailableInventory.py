@@ -85,8 +85,8 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     self.money_deposit_counter = self.paris.surface.banque_interne
     self.money_deposit_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
 
-    self.createCashInventory(source=None, 
-                             destination=self.money_deposit_counter_vault, 
+    self.createCashInventory(source=None,
+                             destination=self.money_deposit_counter_vault,
                              currency=self.currency_1,
                              line_list=self.line_list)
 
@@ -96,15 +96,15 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.usd_billet_20,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/not_defined', 
+                             'variation_value': ('emission_letter/not_defined',
                                    'cash_status/not_defined') + self.usd_variation_list,
                              'variation_list': self.usd_variation_list,
                              'quantity': self.quantity_usd_20}
 
     self.foreign_line_list = [inventory_dict_line_1]
-    
 
-    # Set some variables : 
+
+    # Set some variables :
     self.money_deposit_module = self.getMoneyDepositModule()
 
     # Add a preference
@@ -148,10 +148,10 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     msg = workflow_history[-1]['error_message']
     self.assertTrue('there is already a counter date opened' in "%s" % (msg, ))
 
-  def stepCheckRemainingOperations(self, 
+  def stepCheckRemainingOperations(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     site = self.counter_date_2.getSiteValue()
@@ -159,19 +159,19 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                      self.getPortal().Baobab_checkRemainingOperation,
                      site=site)
 
-  def stepCheckNoRemainingOperations(self, 
+  def stepCheckNoRemainingOperations(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     site = self.counter_date_1.getSiteValue()
     self.getPortal().Baobab_checkRemainingOperation(site=site)
 
-  def stepCheckBadStockBeforeClosingDate(self, 
+  def stepCheckBadStockBeforeClosingDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     site = self.counter_date_1.getSiteValue()
@@ -179,10 +179,10 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                      self.getPortal().Baobab_checkStockBeforeClosingDate,
                      site=site)
 
-  def stepResetInventory(self, 
+  def stepResetInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     bi_counter = self.paris.surface.banque_interne
@@ -197,10 +197,10 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                              line_list=line_list, extra_id='_reset_out',
                              start_date=start_date)
 
-  def stepCheckRightStockBeforeClosingDate(self, 
+  def stepCheckRightStockBeforeClosingDate(self,
                sequence=None, sequence_list=None, **kwd):
     """
-    Make sure we can not close the counter date 
+    Make sure we can not close the counter date
     when there is still some operations remaining
     """
     site = self.counter_date_2.getSiteValue()
@@ -241,20 +241,20 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     put some banknotes into the vault used for sorting
     """
     destination = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
-    self.createCashInventory(source=None, 
-                             destination=destination, 
+    self.createCashInventory(source=None,
+                             destination=destination,
                              currency=self.currency_1,
                              line_list=self.line_list,
                              extra_id='_sort_vault')
 
-  def stepSetInventoryInVaultForeignCurrency(self, sequence=None, 
+  def stepSetInventoryInVaultForeignCurrency(self, sequence=None,
             sequence_list=None, **kwd):
     """
     put some banknotes into the vault used for sorting
     """
     destination = self.paris.surface.caisse_courante.encaisse_des_devises.usd
-    self.createCashInventory(source=None, 
-                             destination=destination, 
+    self.createCashInventory(source=None,
+                             destination=destination,
                              currency=self.currency_2,
                              line_list=self.foreign_line_list,
                              extra_id='_vault_foreign_currency_vault')
@@ -264,17 +264,17 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     reset the inventory
     """
     inventory_module = self.getPortal().cash_inventory_module
-    to_delete_id_list = [x for x in inventory_module.objectIds() 
+    to_delete_id_list = [x for x in inventory_module.objectIds()
                          if x.find('_sort_vault')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
 
-  def stepResetInventoryInVaultForeignCurrency(self, sequence=None, 
+  def stepResetInventoryInVaultForeignCurrency(self, sequence=None,
           sequence_list=None, **kwd):
     """
     reset the inventory
     """
     inventory_module = self.getPortal().cash_inventory_module
-    to_delete_id_list = [x for x in inventory_module.objectIds() 
+    to_delete_id_list = [x for x in inventory_module.objectIds()
                          if x.find('_vault_foreign_currency_vault')>=0]
     inventory_module.manage_delObjects(ids=to_delete_id_list)
 
@@ -318,7 +318,7 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'ResetInventoryInVaultForeignCurrency Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
                       'Tic ' \
-                      'CheckOpenCounterDateTwiceWithOtherDateFail Tic ' 
+                      'CheckOpenCounterDateTwiceWithOtherDateFail Tic '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)

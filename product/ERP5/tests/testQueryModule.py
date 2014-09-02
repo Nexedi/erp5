@@ -116,10 +116,10 @@ class TestQueryModule(ERP5TypeTestCase):
     newSecurityManager(None, question_user)
     doc.Base_postQuery(description='question ?')
     query = self.portal.query_module.contentValues()[0]
-    
+
     # owner user has an Assignee local role on this query
     self.assertTrue('Assignee' in owner_user.getRolesInContext(query))
- 
+
     newSecurityManager(None, owner_user)
     self.portal.portal_workflow.doActionFor(query, 'answer_action')
     self.assertEqual('answered', query.getValidationState())

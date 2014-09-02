@@ -59,7 +59,7 @@ def parse_declaration(self, i):
             j = HTMLParser.parse_declaration(self, i)
         except HTMLParseError:
             j = len(self.rawdata)
-    return j  
+    return j
 safe_html.StrippingParser.parse_declaration = parse_declaration
 
 if getattr(safe_html, 'safeToInt', None) is None:

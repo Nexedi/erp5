@@ -69,7 +69,7 @@ class TaxLine(DeliveryLine):
       so making tax lines accountable would duplicate the accounting.
       """
       delivery = self.getParentValue()
-      if delivery.isAccountable(): 
+      if delivery.isAccountable():
         portal = delivery.getPortalObject()
         type_list = portal.getPortalAccountingTransactionTypeList()
         return delivery.getPortalType() not in type_list

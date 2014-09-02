@@ -55,9 +55,9 @@ class IUploadable(Interface):
     Checks if the current user can upload into the current
     document a file with the specified source format.
     This method can be used to restrict the list of possible
-    formats which can be uploaded into a document to a certain group of 
+    formats which can be uploaded into a document to a certain group of
     users (ex. users which are known to use
-    OpenOffice in a company are only allowed to upload ODT files, 
+    OpenOffice in a company are only allowed to upload ODT files,
     as a way to prevent the use of illegal copies of other applications).
 
     format -- the source conversion format specified either as an
@@ -71,26 +71,26 @@ class IUploadable(Interface):
     in the form of tuples which can be used for example for
     listfield in ERP5Form. Each tuple in the list has the form
     (title, format) where format is an extension (ex. 'png')
-    which can be passed to IConvertable.convert or to 
-    IDownloadable.index_html and title is a string which 
+    which can be passed to IConvertable.convert or to
+    IDownloadable.index_html and title is a string which
     can be translated and displayed to the user.
- 
-    Example of result:    
-        [('ODF Drawing', 'odg'), ('ODF Drawing Template', 'otg'), 
+
+    Example of result:
+        [('ODF Drawing', 'odg'), ('ODF Drawing Template', 'otg'),
         ('OpenOffice.org 1.0 Drawing', 'sxd')]
     """
 
   def getSourceFormatTitleList():
     """
-    Returns the list of titles of acceptable formats for upload 
-    as a list of strings which can be translated and displayed 
+    Returns the list of titles of acceptable formats for upload
+    as a list of strings which can be translated and displayed
     to the user.
     """
 
   def getSourceFormatList():
     """
     Returns the list of acceptable formats for upload
-    where format is an extension (ex. 'png') which can be 
+    where format is an extension (ex. 'png') which can be
     passed to IConvertable.convert or to IDownloadable.index_html
     """
 
@@ -99,12 +99,12 @@ class IUploadable(Interface):
     """
     Download and update content of this document from the specified URL.
     If no url is specified, Document which support the IUrlGetter
-    interface use the Url of the document itself. 
+    interface use the Url of the document itself.
 
     url -- optional URL to download the updated content from.
            required whenever document does not implement IUrlGetter
 
-    crawling_depth -- optional crawling depth for documents which 
+    crawling_depth -- optional crawling depth for documents which
                       implement ICrawlable
 
     repeat -- optional max number of retries for download

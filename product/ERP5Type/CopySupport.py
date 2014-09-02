@@ -43,7 +43,7 @@ from zLOG import LOG
 class CopyContainer:
   """This class redefines the copy/paste methods  which are required in ERP5 in
   relation with the ZSQLCatalog and CMFCategory. Class using class should also
-  inherit from ERP5Type.Base 
+  inherit from ERP5Type.Base
 
     It is used as a mix-in to patch the default Zope behaviour
 
@@ -55,7 +55,7 @@ class CopyContainer:
 
   # Declarative security
   security = ClassSecurityInfo()
-  
+
   # Copy / Paste support
   security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' )
   def manage_copyObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
@@ -373,7 +373,7 @@ class CopyContainer:
           catalog.beforeUnindexObject(None,path=path,uid=uid)
           # Then start activity in order to remove lines in catalog,
           # sql wich generate locks
-          # - serialization_tag is used in order to prevent unindexation to 
+          # - serialization_tag is used in order to prevent unindexation to
           # happen before/in parallel with reindexations of the same object.
           catalog.activate(activity='SQLQueue',
                            tag='%s' % uid,
@@ -413,7 +413,7 @@ class CopyContainer:
 
   def _setId(self, id):
     # Called to set the new id of a copied object.
-    # XXX It is bad to use volatile attribute, because we may have naming 
+    # XXX It is bad to use volatile attribute, because we may have naming
     # conflict later.
     # Currently, it is required to use this volatile attribute
     # when we do a copy/paste, in order to change the relation in _postCopy.
@@ -427,7 +427,7 @@ class CopyContainer:
     # The op var is 0 for a copy, 1 for a move.
     if op == 1:
       # In our case, we want to notify the category system that our path
-      # changed, so that it updates related objects. 
+      # changed, so that it updates related objects.
       old_url = getattr(self, '_v_category_url_before_move', None)
       if old_url is not None:
           self.activate(after_method_id='unindexObject').updateRelatedContent(
@@ -438,9 +438,9 @@ class CopyContainer:
       # Update related subcontent
       previous_path = self.getRelativeUrl().split('/')
       previous_path[-1] = self._v_previous_id
-      
-      self._updateInternalRelatedContent(object=self, 
-                                         path_item_list=previous_path, 
+
+      self._updateInternalRelatedContent(object=self,
+                                         path_item_list=previous_path,
                                          new_id=self.id)
 
   def _duplicate(self, cp):

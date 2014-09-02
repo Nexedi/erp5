@@ -37,14 +37,14 @@ class IMovementGroup(Interface):
   """
   def test(document, property_dict, **kw):
     """Returns a tuple of 2 values.
-    First one is True if document contains identical values than some 
+    First one is True if document contains identical values than some
     contained property_dict.
     Second one is a modified version of property_dict.
 
     TODO:
       - take into account the possibility to use Divergence Testers
         to build movement groups
-      - how does separate method relate to matching provided by 
+      - how does separate method relate to matching provided by
         Divergence Testers
       - consider an interface for property groups. Is it the same or
         different ?

@@ -41,7 +41,7 @@ class TestZeleniumKM(ERP5TypeFunctionalTestCase):
         """
           Return the list of business templates.
         """
-        # XXX This is a rough list, we should drop as much as we can, and 
+        # XXX This is a rough list, we should drop as much as we can, and
         # keep only minimal
         return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',

@@ -61,7 +61,7 @@ class TestDocumentWithPreConversion(TestDocument):
     self.assertTrue(image.hasConversion(**{'format':'jpeg', 'display':'large', 'quality':75}))
     self.assertTrue(image.hasConversion(**{'format':'png', 'display':'large', 'quality':75}))
     self.assertSameSet(['Embedded-XXX?format=png&display=large&quality=75', \
-                        'Embedded-XXX?format=jpeg&display=large&quality=75'], 
+                        'Embedded-XXX?format=jpeg&display=large&quality=75'],
                         web_page.Base_extractImageUrlList())
 
   def test_Base_isConvertible(self):
@@ -74,7 +74,7 @@ class TestDocumentWithPreConversion(TestDocument):
                                                language='en')
     # empty image is not convertible
     self.assertEqual(False, image.Base_isConvertible())
-    
+
     # image with data is convertible
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image.edit(file=upload_file)
@@ -87,4 +87,4 @@ def test_suite():
   return suite
 
 
-# vim: syntax=python shiftwidth=2 
+# vim: syntax=python shiftwidth=2

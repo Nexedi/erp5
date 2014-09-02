@@ -33,16 +33,16 @@ from zope.interface import Interface
 
 class IMovementCollectionDiff(Interface):
   """Movement Collection Diff interface specification
-  
-  Documents which implement IMovementCollectionDiff 
+
+  Documents which implement IMovementCollectionDiff
   are used to represent the movements which should be
   added, updated or deleted in an IMovementCollection.
-  They are usually generated and used by 
+  They are usually generated and used by
   IMovementCollectionUpdater.
   """
   def getDeletableMovementList():
     """
-    Returns the list of movements which need 
+    Returns the list of movements which need
     to be deleted.
     """
 
@@ -71,5 +71,5 @@ class IMovementCollectionDiff(Interface):
     """
     Add an updatable movement to the diff definition
 
-    property_dict -- properties to update     
+    property_dict -- properties to update
     """

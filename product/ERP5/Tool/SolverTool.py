@@ -88,7 +88,7 @@ class SolverTool(TypeProvider):
     This method is useful to find applicable solver processes
     for a delivery.
 
-    delivery_or_movement -- a movement, a delivery, 
+    delivery_or_movement -- a movement, a delivery,
                             or a list thereof
 
     validation_state -- a state of a list of states
@@ -100,7 +100,7 @@ class SolverTool(TypeProvider):
     Returns the list of solver decisions which apply
     to a given movement.
 
-    delivery_or_movement -- a movement, a simulation movement, a delivery, 
+    delivery_or_movement -- a movement, a simulation movement, a delivery,
                             or a list thereof
 
     validation_state -- a state of a list of states
@@ -137,7 +137,7 @@ class SolverTool(TypeProvider):
     return self.SolverTool_getSolverDecisionApplicationValueList(movement, divergence_tester)
 
     # Alternate short Term Implementation Approach
-    return divergence_tester.getTypeBasedMethod('getSolverDecisionApplicationValueList')( 
+    return divergence_tester.getTypeBasedMethod('getSolverDecisionApplicationValueList')(
                                                 movement, divergence_tester)
 
     # Mid-term implementation (we suppose movement is a delivery)

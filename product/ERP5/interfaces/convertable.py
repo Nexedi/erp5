@@ -52,7 +52,7 @@ class IFormatConvertable(Interface):
     Checks if the current user can convert the current
     document to the specified target format.
     This method can be used to restrict the list of possible
-    formats to deliver a document to a certain group of 
+    formats to deliver a document to a certain group of
     users (ex. read-only PDF only for anonymous users)
 
     format -- the target conversion format specified either as an
@@ -66,26 +66,26 @@ class IFormatConvertable(Interface):
     in the form of tuples which can be used for example for
     listfield in ERP5Form. Each tuple in the list has the form
     (title, format) where format is an extension (ex. 'png')
-    which can be passed to IConvertable.convert or to 
-    IDownloadable.index_html and title is a string which 
+    which can be passed to IConvertable.convert or to
+    IDownloadable.index_html and title is a string which
     can be translated and displayed to the user.
- 
-    Example of result:    
-        [('ODF Drawing', 'odg'), ('ODF Drawing Template', 'otg'), 
+
+    Example of result:
+        [('ODF Drawing', 'odg'), ('ODF Drawing Template', 'otg'),
         ('OpenOffice.org 1.0 Drawing', 'sxd')]
     """
 
   def getTargetFormatTitleList():
     """
-    Returns the list of titles of acceptable formats for conversion 
-    as a list of strings which can be translated and displayed 
+    Returns the list of titles of acceptable formats for conversion
+    as a list of strings which can be translated and displayed
     to the user.
     """
 
   def getTargetFormatList():
     """
     Returns the list of acceptable formats for conversion
-    where format is an extension (ex. 'png') which can be 
+    where format is an extension (ex. 'png') which can be
     passed to IConvertable.convert or to IDownloadable.index_html
     """
 
@@ -103,7 +103,7 @@ class IConvertable(IFormatConvertable):
     taking into account optional parameters. This method
     returns a tuple of two values: a mime type string and
     the converted data.
-    
+
     This methods raises a ConversionError if the target format
     is not allowed, or an Unauthorized error if the target format
     is not permitted.

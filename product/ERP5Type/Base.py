@@ -2608,7 +2608,7 @@ class Base( CopyContainer,
   security.declarePublic('asContext')
   def asContext(self, context=None, REQUEST=None, **kw):
     """
-    The purpose of asContext is to allow users overloading easily the properties and categories of 
+    The purpose of asContext is to allow users overloading easily the properties and categories of
     an existing persistent object. (Use the same data and create a different portal type instance)
 
     Pay attention, to use asContext to create a temp object is wrong usage.
@@ -2629,7 +2629,7 @@ class Base( CopyContainer,
               notify_workflow=False,
               is_indexable=False)
 
-      # Pass all internal data to new instance. Do not copy, but 
+      # Pass all internal data to new instance. Do not copy, but
       # pass the same data. This is on purpose.
       context.__dict__.update(self.__dict__)
 
@@ -3013,7 +3013,7 @@ class Base( CopyContainer,
         portal_type = self.portal_types.getTypeInfo('Base Type')
       searchable_text_method_id_list = []
 
-      # generated from properties methods and add explicitly defined method_ids as well 
+      # generated from properties methods and add explicitly defined method_ids as well
       for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
         if self.hasProperty(searchable_text_property_id):
           method_id = convertToUpperCase(searchable_text_property_id)

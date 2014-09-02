@@ -11,7 +11,7 @@ class MethodWidget(Widget.TextWidget):
                                  title='Default',
                                  default="",
                                  required=0)
-    
+
     def render(self, field, key, value, REQUEST, render_prefix=None):
         if value == None:
             method_name = field.get_value('default')
@@ -29,7 +29,7 @@ class Method(Persistent, Acquisition.Implicit):
     """
     def __init__(self, method_name):
         self.method_name = method_name
-        
+
     def __call__(self, *arg, **kw):
         # get method from acquisition path
         method = getattr(self, self.method_name)
@@ -46,11 +46,11 @@ class BoundMethod(Method):
     def __init__(self, object, method_name):
         BoundMethod.inheritedAttribute('__init__')(self, method_name)
         self.object = object
-          
+
     def __call__(self, *arg, **kw):
         method = getattr(self.object, self.method_name)
         return apply(method, arg, kw)
-    
+
 class MethodValidator(Validator.StringBaseValidator):
 
     def validate(self, field, key, REQUEST):
@@ -61,7 +61,7 @@ class MethodValidator(Validator.StringBaseValidator):
             return value
 
         return Method(value)
-    
+
 MethodValidatorInstance = MethodValidator()
 
 class MethodField(ZMIField):
@@ -71,5 +71,5 @@ class MethodField(ZMIField):
 
     widget = MethodWidgetInstance
     validator = MethodValidatorInstance
-    
-    
+
+

@@ -59,7 +59,7 @@ class BudgetCell(Predicate, MetaNode, Movement):
 
     # CMF Type Definition
     meta_type='ERP5 Budget Cell'
-    portal_type='Budget Cell'    
+    portal_type='Budget Cell'
     add_permission = Permissions.AddPortalContent
 
     # Declarative security

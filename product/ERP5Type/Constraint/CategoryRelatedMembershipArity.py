@@ -39,7 +39,7 @@ class CategoryRelatedMembershipArity(CategoryMembershipArity):
 
     For example we can check if every Order has at
     most one Order Applied Rule.
-    Configuration example: 
+    Configuration example:
     { 'id'            : 'applied_rule',
       'description'   : 'There must at most one Applied Rule using this order',
       'type'          : 'CategoryRelatedMembershipArity',

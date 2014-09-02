@@ -1,14 +1,14 @@
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-# 
+#
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
 # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
 # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
-# 
+#
 ##############################################################################
 
 def manage_addZCatalog(id, title, vocab_id=None):
@@ -58,7 +58,7 @@ class ZCatalog:
     ZCatalog does not store references to the objects themselves, but
     rather to a unique identifier that defines how to get to the
     object.  In Zope, this unique identifier is the object's relative
-    path to the ZCatalog (since two Zope objects cannot have the same 
+    path to the ZCatalog (since two Zope objects cannot have the same
     URL, this is an excellent unique qualifier in Zope).
 
     """
@@ -88,18 +88,18 @@ class ZCatalog:
 
     def getpath(rid):
         """
-        
+
         Return the path to a cataloged object given a
         'data_record_id_'
-        
+
         """
 
 
     def getobject(rid, REQUEST=None):
         """
-        
+
         Return a cataloged object given a 'data_record_id_'
-        
+
         """
 
     def schema():
@@ -126,7 +126,7 @@ class ZCatalog:
 
     def searchResults(REQUEST=None, **kw):
         """
-        
+
         Search the catalog.  Search terms can be passed in the REQUEST
         or as keyword arguments.
 
@@ -192,7 +192,7 @@ class ZCatalog:
         documented in The Zope Book.
 
         """
-    
+
     def __call__(REQUEST=None, **kw):
         """
         Search the catalog, the same way as 'searchResults'.

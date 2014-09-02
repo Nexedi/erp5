@@ -177,7 +177,7 @@ class TALESValue(StaticValue):
     if REQUEST is not None:
       # Proxyfield stores the "real" field in the request. Look if the
       # corresponding field exists in request, and use it as field in the
-      # TALES context 
+      # TALES context
       field = REQUEST.get(
         'field__proxyfield_%s_%s_%s' % (field.id, field._p_oid, id),
         field)
@@ -580,7 +580,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     manage_options = (ZMIForm.manage_options[:5] +
                       ({'label':'Proxify', 'action':'formProxify'},
                        {'label':'UnProxify', 'action':'formUnProxify'},
-                       {'label':'RelatedProxy', 
+                       {'label':'RelatedProxy',
                          'action':'formShowRelatedProxyFields'},
                        {'label': 'Cache',
                         'action': 'ZCacheable_manage',
@@ -614,7 +614,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     # Related Proxy Fields
     security.declareProtected('View management screens',
         'formShowRelatedProxyFields')
-    formShowRelatedProxyFields = DTMLFile('dtml/formShowRelatedProxyFields', 
+    formShowRelatedProxyFields = DTMLFile('dtml/formShowRelatedProxyFields',
         globals())
 
     # Default Attributes
@@ -759,7 +759,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     errors.append(err)
                 except KeyError, err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
-                
+
         if len(errors) > 0:
             raise FormValidationError(errors, result)
         return result
@@ -824,7 +824,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             for i in obj.objectValues():
                 if (i.meta_type=='ERP5 Form' and
                     i.id.startswith('Base_view') and
-                    i.id.endswith('FieldLibrary') and 
+                    i.id.endswith('FieldLibrary') and
                     '_view' in i.getId()):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)

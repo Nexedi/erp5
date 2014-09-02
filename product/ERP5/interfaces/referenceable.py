@@ -45,8 +45,8 @@ class IReferenceable(Interface):
 
     Example of result:
       [('P-ERP5-Trade.Design-001-en',
-            {'version': '001', 
-             'reference': 'P-ERP5-Trade.Design', 
+            {'version': '001',
+             'reference': 'P-ERP5-Trade.Design',
              'language': 'en'})
       ]
     """
@@ -54,7 +54,7 @@ class IReferenceable(Interface):
   def getImplicitSuccessorValueList():
     """
     Returns all documents which the current document is referencing
-    by analysing the document content and finding all references, 
+    by analysing the document content and finding all references,
     for instance by calling getSearchableReferenceList.
     """
 

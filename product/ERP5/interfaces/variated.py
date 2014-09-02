@@ -73,7 +73,7 @@ class IVariated(Interface):
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    omit_optional_variation -- 
+    omit_optional_variation --
 
     omit_individual_variation --
     """
@@ -82,14 +82,14 @@ class IVariated(Interface):
         omit_optional_variation=0, omit_individual_variation=0):
     """
     returns a list of (base_category.id, base_category.display_id())
-    which can be displayed in an ERP5 Form and define 
+    which can be displayed in an ERP5 Form and define
     to define discrete variation dimensions for this instance
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    display_id -- 
+    display_id --
 
-    omit_optional_variation -- 
+    omit_optional_variation --
 
     omit_individual_variation --
     """
@@ -105,7 +105,7 @@ class IVariated(Interface):
 
     base_category_list --
 
-    omit_optional_variation -- 
+    omit_optional_variation --
 
     omit_individual_variation --
     """
@@ -147,7 +147,7 @@ class IVariated(Interface):
 
     omit_individual_variation --
 
-    **kw -- 
+    **kw --
     """
 
   # Discrete Variation Range Accessors
@@ -159,13 +159,13 @@ class IVariated(Interface):
     Used in: Resource, Delivery Line, Delivery Cell
     """
 
-  def getVariationRangeBaseCategoryItemList(base=1, 
+  def getVariationRangeBaseCategoryItemList(base=1,
                                             display_id='getTitle'):
     """
     returns a list of (base_category.id, base_category.display_id())
     which are acceptable as discrete variation dimensions of
     the variated instance and are easy to display in an ERP5Form
-    
+
     Used in: Resource, Delivery Line, Delivery Cell
 
     display_id --
@@ -179,38 +179,38 @@ class IVariated(Interface):
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    base_category_list -- 
+    base_category_list --
 
-    base -- 
+    base --
 
-    root -- 
+    root --
 
-    current_category -- 
+    current_category --
 
-    omit_individual_variation -- 
+    omit_individual_variation --
     """
 
-  def getVariationRangeCategoryItemList(base_category_list=(), base=1, 
+  def getVariationRangeCategoryItemList(base_category_list=(), base=1,
         root=1, display_method_id='getCategoryChildLogicalPathItemList',
         display_base_category=1, current_category=None, **kw):
     """
     returns a list of (category.id, category.display_id()) which are acceptable
-    as discrete variation values. This is mostly useful in ERP5Form 
+    as discrete variation values. This is mostly useful in ERP5Form
     instances to generate selection menus.
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    base_category_list -- 
+    base_category_list --
 
-    base -- 
+    base --
 
-    root -- 
+    root --
 
-    display_method_id -- 
+    display_method_id --
 
-    display_base_category -- 
+    display_base_category --
 
-    current_category -- 
+    current_category --
 
     **kw --
     """
@@ -224,7 +224,7 @@ class IVariated(Interface):
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    variated -- 
+    variated --
     """
 
   def compareVariated(variated):
@@ -234,7 +234,7 @@ class IVariated(Interface):
 
     Used in: Resource, Delivery Line, Delivery Cell
 
-    variated --     
+    variated --
     """
 
   # Serialization API

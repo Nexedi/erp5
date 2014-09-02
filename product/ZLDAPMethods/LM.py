@@ -156,7 +156,7 @@ def LDAPConnectionIDs(self):
 
 manage_addZLDAPMethodForm = HTMLFile('add', globals())
 
-def manage_addZLDAPMethod(self, id, title, connection_id, scope, basedn, 
+def manage_addZLDAPMethod(self, id, title, connection_id, scope, basedn,
                           filters, arguments, getfromconnection=0,
                           REQUEST=None, submit=None):
     """Add an LDAP Method """

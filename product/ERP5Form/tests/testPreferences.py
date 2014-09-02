@@ -390,14 +390,14 @@ class TestPreferences(PropertySheetTestCase):
     # enable this preference
     portal_workflow.doActionFor(
        user_b, 'enable_action', wf_id='preference_workflow')
-  
+
     self.login('ERP5TypeTestCase')
     script = createZODBPythonScript(
      self.portal.portal_skins.custom,
      'PreferenceTool_testPreferencesProxyRole', '',
      'return context.getPreferredAccountingTransactionSimulationStateList()')
     script.manage_proxy(['Manager'])
-    
+
     self.login('user_a')
     self.assertEqual(['user_a'],
         portal_preferences.PreferenceTool_testPreferencesProxyRole())
@@ -476,7 +476,7 @@ class TestPreferences(PropertySheetTestCase):
     # Globally enabled preferences can be viewed by Members
     self.assertTrue(member.has_permission('View', site_pref))
 
-    # Member does not have Manage properties on their own preferences, 
+    # Member does not have Manage properties on their own preferences,
     # otherwise the "Metadata" tab is shown
     self.assertFalse(member.has_permission(
                          'Manage properties', user_pref))
@@ -591,7 +591,7 @@ class TestPreferences(PropertySheetTestCase):
     obj = self.portal.portal_preferences.newContent(portal_type='Preference')
     obj.enable()
     self.tic()
-    
+
     self.assertTrue(guarded_hasattr(obj, 'setPreferredToto'))
     obj.setPreferredToto("A TEST")
     self.assertTrue(guarded_hasattr(obj, 'getPreferredToto'))

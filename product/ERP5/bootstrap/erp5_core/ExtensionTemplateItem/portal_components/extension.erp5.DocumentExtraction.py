@@ -36,7 +36,7 @@ class Done(Exception):
 class Word(str):pass
 
 class FoundWord(str):
-  
+
   def __str__(self):
     return self.tags[0]+self+self.tags[1]
 
@@ -126,4 +126,4 @@ if __name__=='__main__':
     print p
 
 
-# vim: filetype=python syntax=python shiftwidth=2 
+# vim: filetype=python syntax=python shiftwidth=2

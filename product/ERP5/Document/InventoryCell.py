@@ -62,7 +62,7 @@ class InventoryCell(DeliveryCell):
                       , PropertySheet.MappedValue
                       , PropertySheet.ItemAggregation
                       )
-    
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
     def getTotalInventory(self):
       """
@@ -86,7 +86,7 @@ class InventoryCell(DeliveryCell):
         return self.getInventory()
       else:
         return None
-      
+
     # Inventory cataloging
     security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
     def getConvertedInventory(self):

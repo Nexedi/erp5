@@ -40,7 +40,7 @@ class w3m_dump(subprocesstransform):
   __name__ = "w3m_dump"
   inputs   = ('text/html',)
   output  = 'text/plain'
-  
+
   __version__ = '2008.07.11-1'
 
   binaryName = "w3m"

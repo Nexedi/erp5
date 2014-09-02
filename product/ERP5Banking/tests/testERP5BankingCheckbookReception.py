@@ -129,7 +129,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 0)
 
 
-  def stepCreateCheckbookReception(self, sequence=None, sequence_list=None, 
+  def stepCreateCheckbookReception(self, sequence=None, sequence_list=None,
                                    id='checkbook_reception', imported=0, **kwd):
     """
     Create a checkbook reception document and check it
@@ -140,7 +140,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
                      source_value=None, destination_value=self.destination_site,
                      resource_value=self.currency_1,
                      description='test',
-                     start_date=self.date, 
+                     start_date=self.date,
                      imported=imported)
     setattr(self, id, checkbook_reception)
     # get the checkbook reception document
@@ -153,7 +153,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     if imported:
       self.assertEqual(self.checkbook_reception.getBaobabDestination(), None)
     else:
-      self.assertEqual(self.checkbook_reception.getBaobabDestination(), 
+      self.assertEqual(self.checkbook_reception.getBaobabDestination(),
                      'site/testsite/paris/caveau/auxiliaire/encaisse_des_billets_et_monnaies')
     return self.checkbook_reception
 
@@ -246,7 +246,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
                                  reference_range_min='0000200',
                                  reference_range_max='0000249',
                                  )
- 
+
 
   def stepCreateCheckAndCheckbookLineList(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -313,7 +313,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception2, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception2, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception2.getSimulationState(), 'confirmed')
 
@@ -321,7 +321,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception3, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception3, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception3.getSimulationState(), 'confirmed')
 
@@ -329,7 +329,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception4, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception4, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception4.getSimulationState(), 'confirmed')
 
@@ -337,7 +337,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception5, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception5, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception5.getSimulationState(), 'confirmed')
 
@@ -345,7 +345,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception6, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception6, 'confirm_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception6.getSimulationState(), 'confirmed')
 
@@ -353,8 +353,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    msg = self.assertWorkflowTransitionFails(self.checkbook_reception2, 
-        'checkbook_reception_workflow', 'deliver_action') 
+    msg = self.assertWorkflowTransitionFails(self.checkbook_reception2,
+        'checkbook_reception_workflow', 'deliver_action')
     self.assertTrue(msg.find('The following references are already allocated')
                     >=0)
     self.assertTrue(msg.find('50')>=0)
@@ -363,7 +363,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception3, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception3, 'deliver_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception3.getSimulationState(), 'delivered')
 
@@ -371,8 +371,8 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    msg = self.assertWorkflowTransitionFails(self.checkbook_reception4, 
-        'checkbook_reception_workflow', 'deliver_action') 
+    msg = self.assertWorkflowTransitionFails(self.checkbook_reception4,
+        'checkbook_reception_workflow', 'deliver_action')
     self.assertTrue(msg.find('The following references are already allocated')
                     >=0)
     self.assertTrue(msg.find('150')>=0)
@@ -381,7 +381,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception5, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception5, 'deliver_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception5.getSimulationState(), 'delivered')
 
@@ -389,7 +389,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     """
     confirm the monetary reception
     """
-    self.workflow_tool.doActionFor(self.checkbook_reception6, 'deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_reception6, 'deliver_action',
                                    wf_id='checkbook_reception_workflow')
     self.assertEqual(self.checkbook_reception6.getSimulationState(), 'delivered')
 
@@ -484,7 +484,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
                     + 'CreateCheckAndCheckbookLineList5 Tic ' \
                     + 'ConfirmCheckbookReception5 Tic ' \
                     + 'DeliverCheckbookReception5 Tic ' \
-                    + 'CheckConfirmedCheckbookForImport Tic ' 
+                    + 'CheckConfirmedCheckbookForImport Tic '
     sequence_list.addSequenceString(sequence_string)
 
     # Check that it is possible to have 2 receptions on the same range for 2 different checkbook models

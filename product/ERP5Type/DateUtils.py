@@ -141,7 +141,7 @@ def addToDate(date, to_add=None, **kw):
   return_date += day_to_add
   return return_date
 
-def getClosestDate(date=None, target_date=None, 
+def getClosestDate(date=None, target_date=None,
                    precision='month', before=1, strict=1):
   """
   Return the closest date from target_date, at the given precision.
@@ -182,7 +182,7 @@ def getClosestDate(date=None, target_date=None,
 
   return return_date
 
-def getIntervalBetweenDates(from_date=None, to_date=None, 
+def getIntervalBetweenDates(from_date=None, to_date=None,
                             keys={'year':1, 'month':1, 'day':1}):
   """
   Return the number of entire years, months and days (if each is equal to 1 in keys)
@@ -284,7 +284,7 @@ def getMonthAndDaysBetween(from_date=None, to_date=None):
   return getIntervalBetweenDates(from_date=from_date, to_date=to_date, keys={'month':1, 'day':1} )
 
 
-def getCompletedMonthBetween(from_date=None, to_date=None, 
+def getCompletedMonthBetween(from_date=None, to_date=None,
                              reference_date=DateTime('2000/01/01')):
   """
   Return the number of months between the both given dates.
@@ -437,7 +437,7 @@ def convertDateToHour(date=None):
   """
   if date is None:
     date = DateTime()
-  # The Zope DateTime object passed as parameter must be transformed into 
+  # The Zope DateTime object passed as parameter must be transformed into
   # python datetime object, to use toordinal method in conversion to hours
   creation_date_dict = {}
   for key in ('year', 'month', 'day'):
@@ -513,7 +513,7 @@ def atTheEndOfPeriod(date, period):
   2000/01/18, week => 2000/01/24
   2000/01/20, day => 2000/01/21
   If timezone is Universal, strftime('%Z') return empty string
-  and TimeZone is replaced by local zone, 
+  and TimeZone is replaced by local zone,
   so date formating is manualy rendered.
   """
   if period == 'year':

@@ -223,7 +223,7 @@ class Renderer(Filter):
         base_category_display_method_id = 'getTitleOrId'
         # If we are asked a translated version, display translated title of the
         # base category
-        if self.translate_display or (self.display_id and 
+        if self.translate_display or (self.display_id and
                                       'translated' in self.display_id.lower()):
           base_category_display_method_id = 'getTranslatedTitleOrId'
         if self.base_category:

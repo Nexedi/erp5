@@ -124,7 +124,7 @@ class Url(Coordinate, UrlMixin):
     * extra_headers is a dictionnary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     """
-    LOG('ERP5/Document/Url.send',0, 
+    LOG('ERP5/Document/Url.send',0,
      'DEPRECATED Url.send should not be used, use portal_notifications instead.')
 
     if from_url is None:

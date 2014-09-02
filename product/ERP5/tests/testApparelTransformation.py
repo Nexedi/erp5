@@ -73,8 +73,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       { 'name':'zip', 'quantity': 100., 'prices':[10.] },
       { 'name':'tissu', 'quantity': 50., 'prices':[4.5, 7.] },
       { 'name':'bouton', 'quantity': 1000., 'prices':[150.] }, ]
-    
-    component_dict = {} 
+
+    component_dict = {}
     for component_info in components:
       component_name = component_info['name']
       component = component_module.newContent(title=component_name)
@@ -89,11 +89,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
 
       # Commit and catalog
       self.tic()
-      
+
       component.setVariationBaseCategoryList(['variation'])
       component.setPVariationBaseCategoryList(['variation'])
       # Variation are automatically acquired if they are individual variation.
-#       component.setCategoryList( 
+#       component.setCategoryList(
 #                     ['variation/' + x.getRelativeUrl() for x in variations] )
       # Set the price
       supply_line = component.newContent(portal_type='Supply Line')
@@ -111,7 +111,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         for i in range(2):
           supply_cell = supply_line.newCell(
                    'variation/apparel_component_module/%s/%d' % \
-                                      (component.getId(),(i+1)), 
+                                      (component.getId(),(i+1)),
                    portal_type='Supply Cell',
                    base_id='path')
           supply_cell.edit(
@@ -121,8 +121,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
             mapped_value_property_list = ['base_price'],
             resource = supply_line.getResource() )
     sequence.edit(component_dict=component_dict)
-  
-      
+
+
   def stepCreateOperationDict(self, sequence=None, sequence_list=None, **kw):
     """
       Create a number of operations
@@ -134,8 +134,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         quantity_unit='time/min')
       operation_dict[operation_name] = operation
     sequence.edit(operation_dict=operation_dict)
-    
-    
+
+
   def stepCreateTransformation(self, sequence=None, sequence_list=None, \
                                  **kw):
     """
@@ -143,14 +143,14 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     """
     portal = self.getPortal()
     resource = sequence.get('resource')
-    
+
     transformation_module = portal.getDefaultModule(self.transformation_portal_type)
     transformation = transformation_module.newContent(portal_type=self.transformation_portal_type)
     sequence.edit(transformation=transformation)
     transformation.setResourceValue(resource)
     transformation.setVariationBaseCategoryList(('size','colour', 'morphology'))
 
-    
+
   def stepCreateIncludedTransformation(self, sequence=None, sequence_list=None, **kw):
     """
       Create a transformation to be included into the other
@@ -163,7 +163,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformation.setResourceValue(resource)
     transformation.setVariationBaseCategoryList(('size',))
 
-    
+
   def stepCreateTransformationLine(self, sequence=None, sequence_list=None, **kw):
     """
       Create transformed resources and operations for transformation
@@ -214,32 +214,32 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     # Transformed Resource 3 : 3 variation axis
     line_list = [ ('size/Baby', 'ColourVariation1', 'MorphologyVariation1', '2', 3.),
                   ('size/Baby', 'ColourVariation1', 'MorphologyVariation2', '1', 3.5),
-                  ('size/Baby', 'ColourVariation2', 'MorphologyVariation1', '1', 3.),                 
+                  ('size/Baby', 'ColourVariation2', 'MorphologyVariation1', '1', 3.),
                   ('size/Baby', 'ColourVariation2', 'MorphologyVariation2', '2', 3.5),
                   ('size/Baby', 'ColourVariation3', 'MorphologyVariation1', '1', 3.5),
                   ('size/Baby', 'ColourVariation3', 'MorphologyVariation2', '1', 3.5),
-                  
+
                   ('size/Child/32', 'ColourVariation1', 'MorphologyVariation1', '1', 6.),
                   ('size/Child/32', 'ColourVariation1', 'MorphologyVariation2', '1', 6.5),
                   ('size/Child/32', 'ColourVariation2', 'MorphologyVariation1', '1', 6.),
                   ('size/Child/32', 'ColourVariation2', 'MorphologyVariation2', '2', 6.5),
                   ('size/Child/32', 'ColourVariation3', 'MorphologyVariation1', '2', 6.),
                   ('size/Child/32', 'ColourVariation3', 'MorphologyVariation2', '1', 6.5),
-                  
+
                   ('size/Child/34', 'ColourVariation1', 'MorphologyVariation1', '1', 9.),
                   ('size/Child/34', 'ColourVariation1', 'MorphologyVariation2', '2', 9.5),
                   ('size/Child/34', 'ColourVariation2', 'MorphologyVariation1', '2', 9.),
                   ('size/Child/34', 'ColourVariation2', 'MorphologyVariation2', '1', 9.5),
                   ('size/Child/34', 'ColourVariation3', 'MorphologyVariation1', '2', 9.),
                   ('size/Child/34', 'ColourVariation3', 'MorphologyVariation2', '2', 9.5),
-                  
+
                   ('size/Man', 'ColourVariation1', 'MorphologyVariation1', '2', 12.),
                   ('size/Man', 'ColourVariation1', 'MorphologyVariation2', '2', 12.5),
                   ('size/Man', 'ColourVariation2', 'MorphologyVariation1', '2', 12.),
                   ('size/Man', 'ColourVariation2', 'MorphologyVariation2', '1', 12.5),
                   ('size/Man', 'ColourVariation3', 'MorphologyVariation1', '1', 12.),
                   ('size/Man', 'ColourVariation3', 'MorphologyVariation2', '2', 12.5),
-                  
+
                   ('size/Woman', 'ColourVariation1', 'MorphologyVariation1', '2', 15.),
                   ('size/Woman', 'ColourVariation1', 'MorphologyVariation2', '1', 15.5),
                   ('size/Woman', 'ColourVariation2', 'MorphologyVariation1', '1', 15.),
@@ -254,8 +254,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                     'MorphologyVariation2': 'morphology/apparel_model_module/1/5',
                     '1': 'apparel_component_module/2/1',
                     '2': 'apparel_component_module/2/2' }
-                    
-               
+
+
     tr_resource_name = 'tissu'
     transformed_resource = transformation.newContent(portal_type=self.transformed_resource_portal_type)
     transformed_resource.edit(
@@ -267,12 +267,12 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource.setVariationBaseCategoryList(base_category_list)
     variation_range_list_list = []
     for base_category in base_category_list:
-      variation_range_category_list = transformation.getVariationRangeCategoryList(base_category_list=[base_category]) 
+      variation_range_category_list = transformation.getVariationRangeCategoryList(base_category_list=[base_category])
       variation_range_list_list.append(variation_range_category_list)
 
     transformed_resource.setCellRange(base_id='variation', *variation_range_list_list)
     transformed_resource.setCellRange(base_id='quantity', *variation_range_list_list)
-    
+
     # Define the cells
     for line in line_list:
       size, colour, morphology, variation, quantity = line
@@ -289,10 +289,10 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         membership_criterion_base_category = base_category_list,
         membership_criterion_category = [size, colour, morphology],
         quantity = quantity,
-        mapped_value_property_list = ['quantity'] ) 
+        mapped_value_property_list = ['quantity'] )
     self.tic()
 
-    
+
   def stepCreateIncludedTransformationLine(self, sequence=None, sequence_list=None, **kw):
     """
       Create transformed resources and operations for transformation
@@ -337,7 +337,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         quantity = quantity,
         mapped_value_property_list = ['quantity'])
     self.tic()
-    
+
   # Transformed Resource : 1 variation axis
     line_list =  [ ('size/Baby',     1.),
                    ('size/Child/32', 1.5),
@@ -366,14 +366,14 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         quantity = quantity,
         mapped_value_property_list = ['quantity'])
     self.tic()
-    
-    
+
+
   def stepIncludeTransformation(self, sequence=None, sequence_list=None, **kw):
     transformation = sequence.get('transformation')
     included_transformation = sequence.get('included_transformation')
     transformation.edit(specialise_value = included_transformation)
-    
-    
+
+
   def stepVerifyTransformationAggregatedAmountList(self, sequence=None, sequence_list=None, **kw):
     """
       Verify the return of getAggregatedAmountList
@@ -391,7 +391,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,.315], 'total':.715, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Baby', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,.315], 'total':.715, 'duration':[None,None,None], 'total_duration':None},
-      
+
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,.54], 'total':.94, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -404,7 +404,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,.84], 'total':1.24, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,.585], 'total':.985, 'duration':[None,None,None], 'total_duration':None},
-      
+
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,.81], 'total':1.21, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -417,7 +417,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,1.26], 'total':1.66, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,1.33], 'total':1.73, 'duration':[None,None,None], 'total_duration':None},
-         
+
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,1.68], 'total':2.08, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -430,7 +430,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,1.08], 'total':1.48, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Man', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,1.75], 'total':2.15, 'duration':[None,None,None], 'total_duration':None},
-         
+
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,2.1], 'total':2.5, 'duration':[None,None,None], 'total_duration':None},
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -446,8 +446,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
        ]
     transformation = sequence.get('transformation')
     self.verifyAggregatedAmountList(transformation, expected_list)
-        
-          
+
+
   def stepVerifyIncludedTransformationAggregatedAmountList(self, sequence=None, sequence_list=None, **kw):
     """
       Verify the return of getAggregatedAmountList
@@ -465,7 +465,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[None,None,.09], 'total':.09, 'duration':[10.,2.,None], 'total_duration':12.},
       {'id':('size/Baby', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[None,None,.09], 'total':.09, 'duration':[10.,2.,None], 'total_duration':12.},
-      
+
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[None,None,.135], 'total':.135, 'duration':[10.,2.5,None], 'total_duration':12.5},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -478,7 +478,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[None,None,.135], 'total':.135, 'duration':[10.,2.5,None], 'total_duration':12.5},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[None,None,.135], 'total':.135, 'duration':[10.,2.5,None], 'total_duration':12.5},
-      
+
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[None,None,.18], 'total':.18, 'duration':[10.,3.,None], 'total_duration':13.},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -491,7 +491,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[None,None,.18], 'total':.18, 'duration':[10.,3.,None], 'total_duration':13.},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[None,None,.18], 'total':.18, 'duration':[10.,3.,None], 'total_duration':13.},
-         
+
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[None,None,.27], 'total':.27, 'duration':[10.,3.5,None], 'total_duration':13.5},
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -504,7 +504,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[None,None,.27], 'total':.27, 'duration':[10.,3.5,None], 'total_duration':13.5},
       {'id':('size/Man', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[None,None,.27], 'total':.27, 'duration':[10.,3.5,None], 'total_duration':13.5},
-         
+
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[None,None,.225], 'total':.225, 'duration':[10.,4.,None], 'total_duration':14.},
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -517,11 +517,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[None,None,.225], 'total':.225, 'duration':[10.,4.,None], 'total_duration':14.},
       {'id':('size/Woman', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[None,None,.225], 'total':.225, 'duration':[10.,4.,None], 'total_duration':14.},
-       ]     
+       ]
     transformation = sequence.get('included_transformation')
     self.verifyAggregatedAmountList(transformation, expected_list)
-    
-  
+
+
   def stepVerifySpecialisedTransformationAggregatedAmountList(self, sequence=None, sequence_list=None, **kw):
     """
       Verify the return of AggregatedAmountList for a transformation which includes another one
@@ -539,7 +539,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,.315,None,None,.09], 'total':.805, 'duration':[None,None,None,10.,2.,None], 'total_duration':12.},
       {'id':('size/Baby', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,.315,None,None,.09], 'total':.805, 'duration':[None,None,None,10.,2.,None], 'total_duration':12.},
-         
+
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,.54,None,None,.135], 'total':1.075, 'duration':[None,None,None,10.,2.5,None], 'total_duration':12.5},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -552,7 +552,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,.84,None,None,.135], 'total':1.375, 'duration':[None,None,None,10.,2.5,None], 'total_duration':12.5},
       {'id':('size/Child/32', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,.585,None,None,.135], 'total':1.12, 'duration':[None,None,None,10.,2.5,None], 'total_duration':12.5},
-          
+
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,.81,None,None,.18], 'total':1.39, 'duration':[None,None,None,10.,3.,None], 'total_duration':13.},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -565,7 +565,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,1.26,None,None,.18], 'total':1.84, 'duration':[None,None,None,10.,3.,None], 'total_duration':13.},
       {'id':('size/Child/34', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,1.33,None,None,.18], 'total':1.91, 'duration':[None,None,None,10.,3.,None], 'total_duration':13.},
-         
+
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,1.68,None,None,.27], 'total':2.35, 'duration':[None,None,None,10.,3.5,None], 'total_duration':13.5},
       {'id':('size/Man', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -578,7 +578,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
          'amount':[.3,.1,1.08,None,None,.27], 'total':1.75, 'duration':[None,None,None,10.,3.5,None], 'total_duration':13.5},
       {'id':('size/Man', 'colour/apparel_model_module/1/3', 'morphology/apparel_model_module/1/5'),
          'amount':[.3,.1,1.75,None,None,.27], 'total':2.42, 'duration':[None,None,None,10.,3.5,None], 'total_duration':13.5},
-         
+
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
          'amount':[.3,.1,2.1,None,None,.225], 'total':2.725, 'duration':[None,None,None,10.,4.,None], 'total_duration':14.},
       {'id':('size/Woman', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/5'),
@@ -594,8 +594,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
        ]
     transformation = sequence.get('transformation')
     self.verifyAggregatedAmountList(transformation, expected_list)
-    
-    
+
+
   def verifyAggregatedAmountList(self, transformation, expected_list):
     """
       Verify aggregated data according to an expected structure
@@ -615,7 +615,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       )
       aggregated_amount_list = context.getAggregatedAmountList()
       expected_amount_list = expected['amount']
-      
+
       expected_amount_list_len = len(expected_amount_list)
       actual_amount_list_len = len(aggregated_amount_list)
       error_msg = 'number of Amount differs between expected (%d) and ' \
@@ -625,7 +625,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       # Check the number of aggregated components
       self.assertEqual(actual_amount_list_len, expected_amount_list_len,
                         error_msg)
-        
+
       # Check quantity for each component
       for i in range(len(aggregated_amount_list)):
         a_amount = aggregated_amount_list[i]
@@ -645,7 +645,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                     (e_price, a_price, a_amount.getResource(),
                      expected['id'], a_amount.getCategoryList())
         self.assertFalse(error, error_msg)
-          
+
       # Check duration for each component
         a_duration = a_amount.getDuration()
         e_duration = expected['duration'][i]
@@ -664,7 +664,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                      a_amount.getResource(), expected['id'],
                      a_amount.getCategoryList())
         self.assertFalse(error, error_msg)
-            
+
       # Check global quantity
       total_price = aggregated_amount_list.getTotalPrice()
       error_msg = 'Total price for AggregatedAmountList differs between ' \
@@ -672,7 +672,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                   (total_price, expected['total'], expected['id'])
       self.assertEqual(round(total_price, 10), round(expected['total'], 10),
                         error_msg)
-        
+
       # Check global duration
       total_duration = aggregated_amount_list.getTotalDuration()
       expected_duration = expected['total_duration']
@@ -692,8 +692,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       # XXX Is it alright to exit this test with an error without raising
       # anything?
       # self.assertFalse(error, error_msg)
-       
-               
+
+
   def test_01_getAggregatedAmountList(self):
     """
       Test the method getAggregatedAmountList

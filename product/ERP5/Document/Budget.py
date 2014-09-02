@@ -57,7 +57,7 @@ class Budget(Predicate, VariatedMixin):
 
     # CMF Type Definition
     meta_type='ERP5 Budget'
-    portal_type='Budget'    
+    portal_type='Budget'
     add_permission = Permissions.AddPortalContent
 
     # Declarative security

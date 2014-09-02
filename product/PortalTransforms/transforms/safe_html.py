@@ -302,7 +302,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
                              raise_error=raise_error,
                              default_encoding=default_encoding)
     # HTMLParser is affected by a known bug referenced
-    # by http://bugs.python.org/issue3932 
+    # by http://bugs.python.org/issue3932
     # As suggested by python developpers:
     # "Python 3.0 implicitly rejects non-unicode strings"
     # We try to decode strings against provided codec first

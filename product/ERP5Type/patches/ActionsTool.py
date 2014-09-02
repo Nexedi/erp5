@@ -44,13 +44,13 @@ def listFilteredActionsFor(self, object=None):
 
     This patch removes inclusion of actions from the object itself.
     It was never used and now, it breaks objects inside Types Tool.
-    
+
     It also checks for a new ERP5-only actions API (getActionListFor), but
     this API should be moved to listActionInfos() of each tool so as not to
     create duplicate code paths that are sources of bugs.
-    
+
     Finally, this patch detects tools that are no longer action providers and
-    invokes the migration of their actions to portal_actions 
+    invokes the migration of their actions to portal_actions
     """
     actions = []
 

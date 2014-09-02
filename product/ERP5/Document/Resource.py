@@ -120,7 +120,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         individual_variation_list = [x.getObject() for x in
             individual_variation_list]
         other_base_category_dict = dict([(i,1) for i in base_category_list])
- 
+
         if not omit_individual_variation:
           for variation in individual_variation_list:
             for base_category in variation.getVariationBaseCategoryList():
@@ -130,7 +130,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                 # XXX now, call Renderer a lot of time.
                 # Better implementation needed
                 result.extend(Renderer(
-                    base_category=base_category, 
+                    base_category=base_category,
                     display_base_category=display_base_category,
                     display_none_category=0, base=base,
                     current_category=current_category,
@@ -148,7 +148,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
-    def getVariationCategoryItemList(self, base_category_list=(), 
+    def getVariationCategoryItemList(self, base_category_list=(),
                                      omit_optional_variation=0,
                                      omit_individual_variation=1, base=1,
                                      current_category=None,
@@ -156,13 +156,13 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                                      display_id='title', **kw):
       """
         Returns variations of the resource.
-        If omit_individual_variation==1, does not return individual 
+        If omit_individual_variation==1, does not return individual
         variation.
         Else, returns them.
         Display is on left.
             => [(display, value)]
 
-        *old parameters: base=1, current_category=None, 
+        *old parameters: base=1, current_category=None,
                          display_id='title' (default value title)
       """
       base_category_list = base_category_list or \
@@ -216,7 +216,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                                  omit_individual_variation=1, **kw):
       """
         Returns variations of the resource.
-        If omit_individual_variation==1, does not return individual 
+        If omit_individual_variation==1, does not return individual
         variation.
         Else, returns them.
 
@@ -540,7 +540,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       return portal_simulation.getInventoryHistoryChart(**kw)
 
     # XXX FIXME
-    # Method getCurrentMovementHistoryList, 
+    # Method getCurrentMovementHistoryList,
     # getAvailableMovementHistoryList, getFutureMovementHistoryList
     # can be added
     security.declareProtected(Permissions.AccessContentsInformation,

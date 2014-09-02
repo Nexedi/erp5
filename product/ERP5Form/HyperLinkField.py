@@ -30,7 +30,7 @@ class HyperLinkField(ZMIField):
     """ Hyperlink field
     """
     meta_type = "HyperLinkField"
-    
+
     widget = HyperLinkWidgetInstance
     validator = Validator.SuppressValidatorInstance
 

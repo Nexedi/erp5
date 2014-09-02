@@ -76,4 +76,4 @@ class Immobilisation(Delivery, XMLObject):
     An Immobilisation must not be indexed in stock table, so it is not a Movement
     """
     return 0
-    
+

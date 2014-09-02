@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2002, 2004, 2006 Nexedi SARL and Contributors.
 #                                All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
@@ -50,7 +50,7 @@ ITEM_ID = 'item'
 NO_VALUE = '??? (No Value)'
 
 class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
-                                     Widget.TextWidget, 
+                                     Widget.TextWidget,
                                      Widget.ListWidget):
   """
   RelationStringField widget
@@ -196,7 +196,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
 
   # delete double in order to keep a usable ZMI...
   # XXX need to keep order !
-  #property_names = dict([(i,0) for i in property_names]).keys() 
+  #property_names = dict([(i,0) for i in property_names]).keys()
   _v_dict = {}
   _v_property_name_list = []
   for property_name in property_names:
@@ -275,7 +275,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     html_string_list = []
     for widget_instance, relation_field_id, relation_item_list, \
                             value_instance, sub_index in render_parameter_list:
-      sub_html_string = widget_instance.render(field, key, 
+      sub_html_string = widget_instance.render(field, key,
                                                value_instance, REQUEST)
 
       here = self._getContextValue(field, REQUEST)
@@ -325,7 +325,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     ####################################
     # Update relation field index
     ####################################
-    REQUEST.set('_v_relation_field_index', relation_field_index + 1) 
+    REQUEST.set('_v_relation_field_index', relation_field_index + 1)
     return html_string
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -510,7 +510,7 @@ class MultiRelationEditor:
                 new_object = portal_module_object.newContent(**kw)
                 relation_object_list.append(new_object)
               else:
-                raise 
+                raise
             else:
               relation_object_list.append(portal.portal_catalog.getObject(uid))
 
@@ -542,7 +542,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       Validation includes lookup of relared instances
   """
   message_names = Validator.LinesValidator.message_names +\
-                  ['relation_result_too_long', 'relation_result_ambiguous', 
+                  ['relation_result_too_long', 'relation_result_ambiguous',
                    'relation_result_empty',]
 
   relation_result_too_long = "Too many documents were found."
@@ -567,7 +567,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       result_list.append((relation_item_id, relation_uid, None))
     return result_list
 
-  def _generateFieldValueList(self, field, key, 
+  def _generateFieldValueList(self, field, key,
                               value_list, current_value_list):
     """
     Generate list of value, item_key
@@ -632,7 +632,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
           # Catch the error raised when the uid is a string
           if relation_uid.startswith(NEW_CONTENT_PREFIX):
             ##############################
-            # New content was selected, but the 
+            # New content was selected, but the
             # form is not validated
             ##############################
             portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
@@ -657,7 +657,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
         if value is None:
           value = display_text
         # Storing display_text as value is needed in this case
-        relation_editor_list.append((value, 
+        relation_editor_list.append((value,
                                      relation_uid, display_text,
                                      None, relation_item_id))
 #                                      str(relation_uid), display_text,
@@ -669,7 +669,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       ####################################
       # Check the default field
       ####################################
-      value_list = self.default_validator_instance.validate(field, 
+      value_list = self.default_validator_instance.validate(field,
                                                        key, REQUEST)
       # If the value is the same as the current field value, do nothing
       current_value_list = field.get_value('default')
@@ -692,14 +692,14 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 if subdict.has_key(relation_field_id):
                   subdict.pop(relation_field_id)
             display_text = 'Delete the relation'
-            relation_editor_list.append((value, None, 
+            relation_editor_list.append((value, None,
                                      display_text, None, None))
             # XXX RelationField implementation
 #         # We must be able to erase the relation
 #         display_text = 'Delete the relation'
-#         # Will be interpreted by Base_edit as "delete relation" 
+#         # Will be interpreted by Base_edit as "delete relation"
 #         # (with no uid and value = '')
-#         relation_editor_list = [(value, None, 
+#         relation_editor_list = [(value, None,
 #                                      display_text, None, None)]
           else:
             relation_uid = REQUEST.get(relation_field_id, None)
@@ -722,12 +722,12 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
 #                 found = 1
               else:
                 ##############################
-                # New content was selected, but the 
+                # New content was selected, but the
                 # form is not validated
                 ##############################
                 if relation_uid.startswith(NEW_CONTENT_PREFIX):
                   ##############################
-                  # New content was selected, but the 
+                  # New content was selected, but the
                   # form is not validated
                   ##############################
                   portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
@@ -747,11 +747,11 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
 #               else:
 #                 # Check
 #                 REQUEST.set(relation_item_id, ((display_text, relation_uid),))
-#                 relation_editor_list.append((value, str(relation_uid), 
+#                 relation_editor_list.append((value, str(relation_uid),
 #                                             display_text, relation_field_id,
 #                                             relation_item_id))
               REQUEST.set(relation_item_id, ((display_text, relation_uid),))
-              relation_editor_list.append((value, str(relation_uid), 
+              relation_editor_list.append((value, str(relation_uid),
                                           display_text, relation_field_id,
                                           relation_item_id))
 #             if need_to_revalidate == 1:
@@ -784,18 +784,18 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 related_object = relation_list[0].getObject()
                 if related_object is not None:
                   display_text = str(related_object.getProperty(catalog_index))
-                  # Modify the value, in order to let the user 
+                  # Modify the value, in order to let the user
                   # modify it later...
                   value = display_text
                 else:
                   display_text = 'Object has been deleted'
                 # XXX XXX XXX
-                REQUEST.set(relation_item_id, ((display_text, 
+                REQUEST.set(relation_item_id, ((display_text,
                                                 relation_uid),))
-                relation_editor_list.append((value, relation_uid, 
+                relation_editor_list.append((value, relation_uid,
                                              display_text, None,
                                              relation_item_id))
-#                 relation_editor_list.append((0, value, relation_uid, 
+#                 relation_editor_list.append((0, value, relation_uid,
 #                                              display_text, None, None))
               elif len(relation_list) == 0:
                 # Add blank line
@@ -815,8 +815,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                         translated_portal_type = translateString(portal_type)
                         message = translateString('Add ${portal_type}',
                                                   mapping={'portal_type':translated_portal_type})
-                        menu_item_list.append((message, 
-                                               '%s%s' % (NEW_CONTENT_PREFIX, 
+                        menu_item_list.append((message,
+                                               '%s%s' % (NEW_CONTENT_PREFIX,
                                                          portal_type)))
                 REQUEST.set(relation_item_id, menu_item_list)
                 raising_error_needed = 1
@@ -833,7 +833,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 raising_error_needed = 1
                 raising_error_value = 'relation_result_ambiguous'
 
-    ##################################### 
+    #####################################
     # Validate MultiRelation field
     #####################################
     if raising_error_needed:
@@ -846,10 +846,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       portal_type_item = field.get_value('portal_type')
       relation_setter_id = field.get_value('relation_setter_id')
       context_getter_id = field.get_value('context_getter_id')
-      return self.editor(field.id, 
+      return self.editor(field.id,
                          base_category,
-                         portal_type_list, 
-                         portal_type_item, catalog_index, 
+                         portal_type_list,
+                         portal_type_item, catalog_index,
                          relation_setter_id, relation_editor_list,
                          context_getter_id)
 

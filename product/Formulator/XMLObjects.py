@@ -12,14 +12,14 @@ class XMLObject:
         self.first = Object()
         self.attributes = {}
         self.text = ''
-        
+
     def getElementNames(self):
         return [element for element in dir(self.elements)
                 if not element.startswith('__')]
 
     def getAttributes(self):
         return self.attributes
-    
+
 def elementToObject(parent, node):
     # create an object to represent element node
     object = XMLObject()
@@ -34,7 +34,7 @@ def elementToObject(parent, node):
     l = getattr(parent.elements, name, [])
     l.append(object)
     setattr(parent.elements, name, l)
-    
+
 def attributeToObject(parent, node):
     # should never be called
     pass
@@ -42,7 +42,7 @@ def attributeToObject(parent, node):
 def textToObject(parent, node):
     # add this text to parents text content
     parent.text += unescape(node.data)
-    
+
 def processingInstructionToObject(parent, node):
     # don't do anything with these
     pass
@@ -62,7 +62,7 @@ _map = {
     Node.ELEMENT_NODE: elementToObject,
     Node.ATTRIBUTE_NODE: attributeToObject,
     Node.TEXT_NODE: textToObject,
- #   Node.CDATA_SECTION_NODE: 
+ #   Node.CDATA_SECTION_NODE:
  #   Node.ENTITY_NODE:
     Node.PROCESSING_INSTRUCTION_NODE: processingInstructionToObject,
     Node.COMMENT_NODE: commentToObject,
@@ -82,7 +82,7 @@ def simplify_single_entries(object):
         # now do the same for rest
         for element in l:
             simplify_single_entries(element)
-  
+
 def XMLToObjectsFromFile(path):
     return XMLToObjects(parse(path))
 

@@ -39,7 +39,7 @@ class CopyToTarget(TargetSolver):
     XXX: This solver's name is not good, and it tries too many things.
     Once the new isDivergent engine is implemented, this solver can be
     splitted in smaller ones (one for profit and loss, one for backtracking)
-    
+
     Backtracking alone is not enough to solve completely, it must be used with
     another solver (profit and loss, or creating a compensation branch ...)
   """
@@ -81,7 +81,7 @@ class CopyToTarget(TargetSolver):
     # Modify recursively simulation movement
     self._recursivelySolve(simulation_movement, **value_dict)
 
-  def _generateValueDict(self, simulation_movement, quantity_ratio=1, 
+  def _generateValueDict(self, simulation_movement, quantity_ratio=1,
                          start_date_delta=0, stop_date_delta=0,
                          **value_delta_dict):
     """
@@ -98,7 +98,7 @@ class CopyToTarget(TargetSolver):
     value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
     return value_dict
 
-  def _getParentParameters(self, simulation_movement, 
+  def _getParentParameters(self, simulation_movement,
                            **value_delta_dict):
     """
       Get parent movement, and its value delta dict.
@@ -117,7 +117,7 @@ class CopyToTarget(TargetSolver):
         if abs(value_delta_dict[date_delta]) <= \
             applied_rule.getProperty('max_allowed_delta', max_allowed_delta):
           value_delta_dict.pop(date_delta)
-        
+
     return parent_movement, value_delta_dict
 
   def _recursivelySolve(self, simulation_movement, is_last_movement=1, **value_delta_dict):
@@ -129,7 +129,7 @@ class CopyToTarget(TargetSolver):
 
     parent_movement, parent_value_delta_dict = \
                 self._getParentParameters(simulation_movement, **value_delta_dict)
-    
+
     #if parent is not None and parent_movement.isFrozen():
       # If backtraxcking is not possible, we have to make sure that the
       # divergence is solved locally by using profit and loss
@@ -145,17 +145,17 @@ class CopyToTarget(TargetSolver):
         delivery_ratio = simulation_movement.getDeliveryRatio()
         simulation_movement.setDeliveryError(delivery_quantity * delivery_ratio -
             value_dict['quantity'])
-    
+
     delivery = simulation_movement.getDeliveryValue()
-    
-    # XXX Hardcoded Set 
+
+    # XXX Hardcoded Set
     simulation_movement.setDestination(delivery.getDestination())
     simulation_movement.setSource(delivery.getSource())
     simulation_movement.setDestinationSection(delivery.getDestinationSection())
     simulation_movement.setSourceSection(delivery.getSourceSection())
 
     simulation_movement.edit(**value_dict)
-      
+
     if parent_movement is not None and not parent_movement.isFrozen():
         # backtrack to the parent movement only if it is not frozen
         self._recursivelySolve(parent_movement, is_last_movement=0,

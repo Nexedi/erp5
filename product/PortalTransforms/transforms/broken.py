@@ -9,7 +9,7 @@ class BrokenTransform:
     __name__ = "broken transform"
     inputs  = ("BROKEN",)
     output = "BROKEN"
-    
+
     def __init__(self, id, module, error):
         self.id = id
         self.module = module

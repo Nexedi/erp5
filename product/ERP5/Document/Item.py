@@ -84,7 +84,7 @@ class Item(XMLObject, Amount):
         if resource is not None:
           local_price = resource.getPrice(self.asContext( context=context, **kw))
       return local_price
-  
+
     security.declareProtected(Permissions.ModifyPortalContent, 'getRemainingQuantity')
     def getRemainingQuantity(self):
         """

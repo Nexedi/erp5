@@ -177,7 +177,7 @@ type_definition = {
                            },
                            # Object are properties of any type
                            # and are considered as simple properties
-    'object'             : { 'cast'    : identity, 
+    'object'             : { 'cast'    : identity,
                              'null'    : ('', 'None', None,),
                              'default' : None,
                              'isList'  : 0,

@@ -41,7 +41,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
 
-  def createCheckbookUsualCashTransferWithTravelerCheck(self, sequence=None, 
+  def createCheckbookUsualCashTransferWithTravelerCheck(self, sequence=None,
                                  sequence_list=None, **kwd):
     """
     Create a checkbook Reception
@@ -49,7 +49,7 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     """
     self.checkbook_vault_transfer = self.getCheckbookUsualCashTransferModule().newContent(
                      id='checkbook_usual_cash_transfer', portal_type='Checkbook Usual Cash Transfer',
-                     source_value=self.source_vault, 
+                     source_value=self.source_vault,
                      description='test',
                      destination_value=self.destination_vault,
                      start_date=(self.date-1))
@@ -59,9 +59,9 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
                              check_amount_value=self.traveler_check_model.variant_1,
                              aggregate_value=self.traveler_check,
                              )
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_action',
                                    wf_id='checkbook_usual_cash_transfer_workflow')
-    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action', 
+    self.workflow_tool.doActionFor(self.checkbook_vault_transfer, 'confirm_to_deliver_action',
                                    wf_id='checkbook_usual_cash_transfer_workflow')
 
 
@@ -79,7 +79,7 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     # check its portal type
     self.assertEqual(self.traveler_check_sale.getPortalType(), 'Traveler Check Sale')
     # check source
-    self.assertEqual(self.traveler_check_sale.getBaobabSource(), 
+    self.assertEqual(self.traveler_check_sale.getBaobabSource(),
                'site/testsite/paris/surface/banque_interne/guichet_1/encaisse_des_billets_et_monnaies')
     # check destination
     self.assertEqual(self.traveler_check_sale.getBaobabDestination(), None)
@@ -108,7 +108,7 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     self.reception_destination_site = self.paris
     self.destination_site = self.paris.surface.banque_interne.guichet_1
     self.source_vault = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
-             
+
     self.destination_vault = self.paris.surface.banque_interne.guichet_1
     self.traveler_check_source = self.destination_vault['encaisse_des_billets_et_monnaies']
     self.checkUserFolderType()
@@ -172,15 +172,15 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     state = self.traveler_check_sale.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.traveler_check_sale, 
-                                   'deliver_action', 
+    self.workflow_tool.doActionFor(self.traveler_check_sale,
+                                   'deliver_action',
                                    wf_id='traveler_check_sale_workflow')
     # get state of cash sorting
     state = self.traveler_check_sale.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_sale, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.traveler_check_sale,
                             name='history', wf_id='traveler_check_sale_workflow')
     self.assertEqual(len(workflow_history), 3)
 

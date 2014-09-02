@@ -232,7 +232,7 @@ class WorkingCopy(Implicit):
 
   def _treeToXML(self, item, output, relative_path=''):
     """
-     Private function to convert recursively tree 
+     Private function to convert recursively tree
      in memory to XML
     """
     # Choosing a color coresponding to the status

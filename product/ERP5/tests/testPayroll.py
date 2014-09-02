@@ -1441,7 +1441,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     self.assertEqual(model_reference_dict[model_company_alt_url],
         ['social_insurance'])
     self.assertNotEquals(model_reference_dict.has_key(model_country_url), True)
-    
+
     # check the object list :
     object_list = paysheet.getInheritedObjectValueList(portal_type_list=\
         ('Annotation Line',))
@@ -1529,7 +1529,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           'base_amount/payroll/report/salary/gross'],
         price=0.01,
         quantity=10000.0)
-    
+
     # create the paysheet
     paysheet = self.createPaysheet()
     paysheet.edit(specialise_value=model_without_ref,
@@ -1543,7 +1543,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
 
     # if no reference, we don't care about dates
     sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
-    
+
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
@@ -1640,7 +1640,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 1, 1),
         expiration_date=DateTime(2009, 06, 30))
-    
+
     model_2 = self.getPortalObject().paysheet_model_module.newContent( \
         specialise_value=sequence.get('business_process'),
         portal_type='Pay Sheet Model',
@@ -1690,7 +1690,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     # XXX-Aurel Why it is one as the model should not apply since date are not in the range ??
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 1)
-    # check values on the paysheet, if it's model_2, the total_price 
+    # check values on the paysheet, if it's model_2, the total_price
     # should be 30000.
     # self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
 
@@ -2124,7 +2124,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_updateAddMovements(self):
     '''
-      Calculate the paySheet using a model, add a model line in the model 
+      Calculate the paySheet using a model, add a model line in the model
       and check that updateAggregatedAmount add the movements corresponding
       to this model_line
     '''
@@ -2152,7 +2152,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_updateRemoveMovements(self):
     '''
-      Calculate the paySheet using a model, delete a model line in the model 
+      Calculate the paySheet using a model, delete a model line in the model
       and check that updateAggregatedAmount remove the movements corresponding
       to this model_line
     '''
@@ -2302,7 +2302,7 @@ class TestPayroll(TestPayrollMixin):
       Check predicates can be used on model lines to select a line or not.
       1 - employee have married marital status so Sickness Insurance tax
           should be applied, and Old age insurance should not be
-      2 - employee marital status is changed to single. So after re-apply 
+      2 - employee marital status is changed to single. So after re-apply
           the transformation, Sickness Insurance tax sould not be
           applied (and it's movements should be removed) but Old age insurance
           should be applied (and two movements should be created).
@@ -2977,7 +2977,7 @@ class TestPayroll(TestPayrollMixin):
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
 
-  def createPayrollBusinesProcess(self): 
+  def createPayrollBusinesProcess(self):
     currency_module = self.getCurrencyModule()
     if not hasattr(currency_module, 'EUR'):
       currency_module.newContent(
@@ -3245,7 +3245,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_modelWithoutReferenceValidity(self):
     ''' Check that if no REFERENCE are defined on a model, the behavior is
-    that this model is always valid. So check a Pay Sheet Transaction Line 
+    that this model is always valid. So check a Pay Sheet Transaction Line
     is created after calling the calculation script
     '''
     sequence_list = SequenceList()
@@ -3263,7 +3263,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_modelWithoutDateValidity(self):
-    """ Check that if no DATE are defined on a model, the behavior is that 
+    """ Check that if no DATE are defined on a model, the behavior is that
     this model is always valid. (XXX check if it's what we want)
     So check that a line is created after calling calculation script, even if
     there is no start_date or stop_date
@@ -3302,7 +3302,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_modelVersioning(self):
     '''check that latest version is used in case of more thant one model is
-    matching using dates 
+    matching using dates
     '''
     sequence_list = SequenceList()
     sequence_string = """

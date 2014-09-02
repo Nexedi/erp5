@@ -8,7 +8,7 @@ class Converter:
     ARCHITECTURE: because most document processing
     software, and potentially libraries, are unstable,
     do not always support multithreading and may lead
-    to memory leaks, the recommend approach to create 
+    to memory leaks, the recommend approach to create
     a Converter is to simply execute a command with
     popenX in a separate process and return the result.
   """

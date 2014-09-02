@@ -216,7 +216,7 @@ class ManageModule:
       for page_iterator in range(global_properties['page']):
         page_number = 'page_%s' % str(page_iterator)
         default_groups.append(page_number)
-        
+
     # default_groups list completed, need to update the form_groups
     # rename the first group because it can't be removed
     if len(form.group_list):
@@ -348,7 +348,7 @@ class ManageModule:
           # field_nb is already used by another field. this can appen
           # when there are several pages in the document. In such case
           # the script find automatically the closest available value.
-          LOG('ManageModule', ERROR, 
+          LOG('ManageModule', ERROR,
               'can not add %s to dict : %s already used by %s ' % \
               (field_id, field_nb, field_nb_dict[field_nb]))
           field_nb = field_nb + 1
@@ -391,7 +391,7 @@ class ManageModule:
 
 
   security.declarePublic('setModulePortalType')
-  def setModulePortalType(self, 
+  def setModulePortalType(self,
                           portal_types,
                           object_portal_type_id,
                           module_portal_type,
@@ -466,7 +466,7 @@ class ManageModule:
                        portal_type = str(module_portal_type),
                        title       = module_title)
 
-   
+
 class ManageFiles:
   """
   Manages PDF file, by importing the PDF document and then getting
@@ -619,7 +619,7 @@ class ManageFiles:
     # saving content
     temp_pdf.write(pdf_file.read())
     temp_pdf.seek(0)
-     
+
     def makeImageList():
       background_image_list = []
       # convert add a '-N' string a the end of the file name if there is more
@@ -656,7 +656,7 @@ class ManageFiles:
                           'error message : \n%s' % result[1]
     finally:
       temp_pdf.close()
-    
+
     background_image_list = makeImageList()
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
@@ -668,13 +668,13 @@ class ManageFiles:
     # this could be usefull if the user only defined one dimention :
     # convert command has calculate the other using proportionnality
     rawstr = r'''
-        PDF\s        # The line begin with PDF 
+        PDF\s        # The line begin with PDF
         (\d+)x(\d+)  # old file size
         =>           # Separator between old and new size
         (\d+)x(\d+)  # The matching pattern : width and height'''
     compile_obj = re.compile(rawstr, re.MULTILINE | re.VERBOSE)
     match_obj_list = re.findall(compile_obj, result[1])
-    
+
     # old size is not use now, and depends of the density convert parameter
     #old_size_x = match_obj_list[0][0]
     #old_size_y = match_obj_list[0][1]
@@ -700,9 +700,9 @@ class ManageFiles:
 
     size_x = int(real_size_x)
     size_y = int(real_size_y)
-    LOG('ScribusUtils.setBackgroundPictures :', INFO, 
+    LOG('ScribusUtils.setBackgroundPictures :', INFO,
         'return size : x=%s, y=%s' % (size_x, size_y))
-   
+
     return (size_x, size_y)
 
   security.declarePublic('getPageAttributes')
@@ -727,9 +727,9 @@ class ManageFiles:
     pdf_file.seek(0)
     # saving content
     temp_pdf.write(pdf_file.read())
-    temp_pdf.close()    
+    temp_pdf.close()
 
-    
+
     command_output = commands.getstatusoutput('pdfinfo %s' % \
         ScribusUtilsOriginaltempsPDFName)
 
@@ -738,7 +738,7 @@ class ManageFiles:
             'failed with the following error message : \n%s' % command_output[1])
         raise ValueError, 'Error: convert command failed with the following'\
                           'error message : \n%s' % command_output[1]
-    
+
     # get the pdf page size
     rawstr = r'''
         Page\ssize:        #begining of the instersting line
@@ -801,8 +801,8 @@ class ManageFiles:
           personal_properties_list.append(personal_properties)
       # the following lines create the PropertySheet and the Document for the
       # new object. Must be uncoted when such files are needed, in such case
-      # you must also specify Document type to comply with class declared in 
-      # the Document. For that see 'setObjectPortalType' method 
+      # you must also specify Document type to comply with class declared in
+      # the Document. For that see 'setObjectPortalType' method
       ## generate PropertySheet
       generator.generateLocalPropertySheet(name_file, personal_properties_list)
       ## generate Document
@@ -874,7 +874,7 @@ class ManageCSS:
       #properties_css_background['margin-top'] = \
       #   str((y_pos -10))+ 'px'
       #properties_css_background['margin-left']= \
-      #   str((x_pos- 5))+   'px' 
+      #   str((x_pos- 5))+   'px'
     else:
       properties_css_page['margin-top'] = "%spx" % (40)
 
@@ -883,7 +883,7 @@ class ManageCSS:
     properties_css_page['height'] = str (new_height) + 'px'
 
     properties_page['actual_width'] = old_width
-    properties_page['actual_height'] = old_height 
+    properties_page['actual_height'] = old_height
     properties_css_background['height'] = str(new_height) + 'px'
     properties_css_background['width'] = str (new_width) + 'px'
     # adding properties dict to global dicts
@@ -912,7 +912,7 @@ class ManageCSS:
     and save this information in the output dict
     """
     (field_name, properties_field) = field
-    LOG('ManageCSS', INFO, 
+    LOG('ManageCSS', INFO,
         '   => %s : %s' % (field_name, properties_field['rendering']))
 
     # updating field properties if necessary
@@ -1069,21 +1069,21 @@ class ManageCSS:
           # 1 > hour
           # 1 > minutes
           width_part = int(float(properties_field['size_x']) / 6.1)
-        else: 
+        else:
           LOG('ManageCSS', INFO, '   Option : Date Only')
           field_nb = 3
           # same as before but without hours and minutes
           width_part = int((float(properties_field['size_x']) / 4))
 
 
-        LOG('ManageCSS', INFO, 
+        LOG('ManageCSS', INFO,
             '  input_order=%s' % properties_field['input_order'])
         # defining global field rendering (for Date), ignoring for the moment
         # the whole part about the time
 
-        # this following field refere to no existing field, it's use only 
-        # when editable property is unchecked (there is only one field 
-        # without _class_N but just _class, so, the 3 existing CSS selector 
+        # this following field refere to no existing field, it's use only
+        # when editable property is unchecked (there is only one field
+        # without _class_N but just _class, so, the 3 existing CSS selector
         # can't be applied, that the reason for this new one)
         field_dict[0] = {}
         field_dict[0]['width'] = \
@@ -1149,9 +1149,9 @@ class ManageCSS:
         # rendering time if necessary
         if properties_field['date_only'] == '0':
           # date is specified
-          LOG('ManageCSS', INFO, 
+          LOG('ManageCSS', INFO,
               '   position_x=%s' % properties_field['position_x'])
-          LOG('ManageCSS', INFO, 
+          LOG('ManageCSS', INFO,
               '   size_x=%s' % properties_field['size_x'])
           field_dict[4] = {}
           field_dict[4]['width'] = str(width_part) + 'px'
@@ -1239,7 +1239,7 @@ class ManageCSS:
     return a string containing the whole content of the CSS output
     from properties_css_dict
     """
-    LOG('ManageCSS', INFO, 
+    LOG('ManageCSS', INFO,
         ' createmodule > printing output from css_class_generator')
     form_css_content =  "/*-- special css form generated through ScribusUtils"\
         "module     --*/\n"
@@ -1252,7 +1252,7 @@ class ManageCSS:
       class_properties = properties_css_dict['head'][class_name]
       # joining exerything
       output_string = "." + str(class_name) + " {" \
-                      + "; ".join(["%s:%s" % (id, val) for id, 
+                      + "; ".join(["%s:%s" % (id, val) for id,
                         val in class_properties.items()]) \
                       + "}"
       # adding current line to css_content_object
@@ -1262,7 +1262,7 @@ class ManageCSS:
     for class_name in properties_css_dict['standard'].keys():
       class_properties = properties_css_dict['standard'][class_name]
       output_string = "." + str(class_name) + " {" \
-                      + "; ".join(["%s:%s" % (id, val) for id, 
+                      + "; ".join(["%s:%s" % (id, val) for id,
                         val in class_properties.items()]) \
                       + "}"
       form_css_content += output_string + "\n"
@@ -1307,14 +1307,14 @@ class ScribusParser:
   security = ClassSecurityInfo()
 
   security.declarePublic('getObjectTooltipProperty')
-  def getObjectTooltipProperty(self, check_key, default_value, object_name, 
+  def getObjectTooltipProperty(self, check_key, default_value, object_name,
       object_dict):
     """
     check if 'check_key' exists in 'object_dict' and has a value
-    if true, then returns this value, else returns 'default_value' and 
+    if true, then returns this value, else returns 'default_value' and
     log 'object_name'
 
-    This function is used to get attributes'values in an object_dict and 
+    This function is used to get attributes'values in an object_dict and
     to be sure a compatible value is returned (for that use default value)
     """
     if object_dict.has_key(check_key):
@@ -1371,10 +1371,10 @@ class ScribusParser:
       # no version propery is contained in the document
       # the content does not comply with the Scribus document
       # specification
-      LOG('ScribusParser', INFO, 
+      LOG('ScribusParser', INFO,
           " Bad Scribus document format : no 'Version' property ")
       return (None, keep_page, 0)
-    else:  
+    else:
 
       version = dom_root.attributes["Version"].value
       if version[:3] == "1.2" :
@@ -1407,7 +1407,7 @@ class ScribusParser:
           # for each PAGEOBJECT, building dict with atributes
           for page_object in page_object_list:
 
-            # initialising 
+            # initialising
             returned_page_object = {}
             field_name = ''
 
@@ -1427,24 +1427,24 @@ class ScribusParser:
               #if 'PAGEOBJECT' has a valid name, then adding it to the global
               #dictionary containing all the 'PAGEOBJECT' of the 'PAGE'
               returned_page_object_list.append(returned_page_object)
-              LOG('ScribusParser', INFO, 
+              LOG('ScribusParser', INFO,
                   '    > PAGEOBJECT = ' + str(field_name))
 
           # after having scanned all 'PAGEOBJECT' from a 'PAGE', adding the
-          # relative information to the list of 'PAGE' before going to 
+          # relative information to the list of 'PAGE' before going to
           # the next one
           # in case the page is not empty
-          if len(returned_page_object_list) != 0: 
+          if len(returned_page_object_list) != 0:
             returned_page_dict[page_number] = returned_page_object_list
 
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             '=> end ScribusParser.getXmlObjectPropertiesDict')
         return (returned_page_dict, keep_page, 0)
 
         # end parsing document version 1.2.*
 
       else:
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             ' found Scribus Doucment format 1.3 or higher')
         # assuming version is compliant with 1.3.* specifications
 
@@ -1460,8 +1460,8 @@ class ScribusParser:
         scribus_page_width = \
             int(float(document_list[0].attributes["PAGEWIDTH"].value))
         scribus_page_height = \
-           int(float(document_list[0].attributes["PAGEHEIGHT"].value)) 
-        LOG('ScribusParser', INFO, 
+           int(float(document_list[0].attributes["PAGEHEIGHT"].value))
+        LOG('ScribusParser', INFO,
             ' DOCUMENT > scratch_left = %s      scratch_top = %s' % \
             (scratch_left, scratch_top))
         #page_list = dom_root.getElementsByTagName("PAGE")
@@ -1471,7 +1471,7 @@ class ScribusParser:
         #for page in page_list:
         #  page_number = page
 
-        # iterating 'PAGEOBJECT' to check compatibility (need a 'ANNAME' 
+        # iterating 'PAGEOBJECT' to check compatibility (need a 'ANNAME'
         # property) and recover the related 'PAGE'
         returned_page_dict = {}
         for page_object in page_object_list:
@@ -1490,13 +1490,13 @@ class ScribusParser:
             elif node_name == 'OwnPage':
               field_OwnPage = node_value
             elif node_name == 'XPOS':
-              LOG('ScribusParser', INFO, 
+              LOG('ScribusParser', INFO,
                   '   > updating Xpos : %s - %s = %s' % \
-                  (scratch_left+int(float(node_value)), scratch_left, 
+                  (scratch_left+int(float(node_value)), scratch_left,
                       node_value))
               node_value = str(int(float(node_value)) - scratch_left)
             elif node_name == 'YPOS':
-              LOG('ScribusParser', INFO, 
+              LOG('ScribusParser', INFO,
                   '   > updating Ypos : %s - %s = %s' % \
                   (scratch_top+int(float(node_value)), scratch_top,
                     node_value))
@@ -1505,13 +1505,13 @@ class ScribusParser:
             returned_page_object[node_name] = node_value
 
           if field_name != '':
-            LOG('ScribusParser', INFO, 
+            LOG('ScribusParser', INFO,
                 ' > field has the name : %s' % field_name)
             # field seems to be ok, just need to check if the related page
             # already exists in the 'returned_page_dict'
             if not field_OwnPage in returned_page_dict.keys():
               # page does not exists, need to create it before adding the field
-              LOG('ScribusParser', INFO, 
+              LOG('ScribusParser', INFO,
                   '  > adding new page')
               returned_page_dict[field_OwnPage] = []
             returned_page_dict[field_OwnPage].append(returned_page_object)
@@ -1579,7 +1579,7 @@ class ScribusParser:
         LOG('ScribusParser', INFO, '  => PAGEOBJECT = " + str(object_name)')
         # recovering other attributes list (string format) from 'ANTOOLTIP'
         text_tooltipfield_properties = \
-           sp.getObjectTooltipProperty('ANTOOLTIP', '', object_name, 
+           sp.getObjectTooltipProperty('ANTOOLTIP', '', object_name,
                object_content)
         #recovering the page attributes
 
@@ -1589,7 +1589,7 @@ class ScribusParser:
         tooltipfield_properties_list =  \
                     text_tooltipfield_properties.split('#')
 
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             '      ' + str(tooltipfield_properties_list))
 
         # test if first argument is nb according to previous
@@ -1626,7 +1626,7 @@ class ScribusParser:
         # getting usefull attributes from scribus 'PAGEOBJECT
         #and 'ANTOOLTIP'
         #
-        object_properties = {} 
+        object_properties = {}
         page_properties = {}
         # getting object position and size
         object_properties['position_x'] = sp.getObjectTooltipProperty(\
@@ -1757,7 +1757,7 @@ class ScribusParser:
                                             '0',
                                             object_name,
                                             object_content)
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             '      => MaxInput = %s' % object_properties['maximum_input'])
 
         # getting object type :
@@ -1771,7 +1771,7 @@ class ScribusParser:
           # the field is a CheckBoxField
           object_properties['type'] = 'CheckBoxField'
         # if no user-specified type has been found, trying to
-        # find scribus-type  
+        # find scribus-type
         elif object_content.has_key('ANTYPE'):
           # from scribus type (selected in the scribus PDF-form properties)
           object_type = str(object_content['ANTYPE'])
@@ -1815,10 +1815,10 @@ class ScribusParser:
           LOG("WARNING : " + str(object_name),
               WARNING,
               "no 'type' found, please check your document properties")
-          LOG('ScribusParser', WARNING, 
-              '      => no type specified :  default = StringField') 
+          LOG('ScribusParser', WARNING,
+              '      => no type specified :  default = StringField')
           object_properties['type'] = 'StringField'
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             '      type = ' + str(object_properties['type']))
 
 
@@ -1862,8 +1862,8 @@ class ScribusParser:
                                             '0',
                                             object_name,
                                             tooltipfield_properties_dict)
-          LOG('ScribusParser', INFO, 
-              '      group = ' + str(object_properties['group']))  
+          LOG('ScribusParser', INFO,
+              '      group = ' + str(object_properties['group']))
         # object is listbox, and listbox have several possible values
         # WARNING listbox have not been tested in graphic rendering for
         # the moment. is there any use for listbox in PDF-like rendering ?
@@ -1957,14 +1957,14 @@ class ScribusParser:
           # object has a nb properties containing its creation position
           # adding the object in the ordered list
           nb_value = int(tooltipfield_properties_dict['nb'])
-          LOG('ScribusParser', INFO, 
+          LOG('ScribusParser', INFO,
               "      =>'nb' property specified : using it")
-          LOG('ScribusParser', INFO, 
+          LOG('ScribusParser', INFO,
               '         > len(list)=%s' % len(nb_property_nbkey_list))
           # iterating through existing list to find right position
           # before inserting value
           if len(nb_property_nbkey_list) == 0:
-            LOG('ScribusParser', WARNING, 
+            LOG('ScribusParser', WARNING,
                 "    => 'nb' list empty : adding without sorting")
             # list is empty : adding value without sort
             nb_property_nbkey_list.insert(0, (nb_value,object_name))
@@ -1974,32 +1974,32 @@ class ScribusParser:
             # last element is smaller than new element : adding at the end
             nb_property_nbkey_list.append((nb_value, object_name))
           else:
-            LOG('ScribusParser', INFO, 
+            LOG('ScribusParser', INFO,
                 '    => checking for place to add the element')
             # searching where to insert the element in the ordered list
             for temp_key in range(len(nb_property_nbkey_list)):
               temp_value = nb_property_nbkey_list[temp_key][0]
               temp_content = nb_property_nbkey_list[temp_key][1]
-              LOG('ScribusParser', INFO, 
+              LOG('ScribusParser', INFO,
                   "      @" + str(temp_key) + " temp=" + \
                   str(temp_value) + "/" + str(nb_value))
               if nb_value < temp_value:
                 #first position where actual 'nb' is smaller than temp 'nb'
                 # inserting new couple (nb_value,object_name) here
-                LOG('ScribusParser', INFO, 
+                LOG('ScribusParser', INFO,
                     '      inserting here : ' + str(temp_value) + \
                     "/" + str(nb_value))
-                nb_property_nbkey_list.insert(temp_key, (nb_value, 
+                nb_property_nbkey_list.insert(temp_key, (nb_value,
                   object_name))
-                # element has been insered , 
+                # element has been insered ,
                 # no need to continue the search => breaking
                 break
         else:
           # object has no nb property. logging and adding it to the list of
           # nb-less objects. Script will automatically find a 'nb' value for this element
-          LOG("WARNING : " + str(object_name), WARNING, 
+          LOG("WARNING : " + str(object_name), WARNING,
               "no 'nb' defined : finding a free slot")
-          LOG('ScribusParser', WARNING, 
+          LOG('ScribusParser', WARNING,
               "      => no 'nb' property specified : post-processing "\
               "will try to define one")
           nb_property_nonbkey_list.append(object_name)
@@ -2014,15 +2014,15 @@ class ScribusParser:
       for object_name in nb_property_nonbkey_list:
         # listing all objects with no 'nb' declared
         # defining final position in output list : absolute pos + relative pos
-        object_position = len(nb_property_nbkey_list) + 1 
+        object_position = len(nb_property_nbkey_list) + 1
         # and addind it to the end of the final nb-list
         # to give them a 'nb' property
         nb_property_nbkey_list.append((object_position,object_name))
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             "    => 'nb' found for %s : %s" % (object_name, object_position))
 
       # now all page_object are referenced in the list, we just need to sort
-      # the elements in the good order. for that a new list of objects 
+      # the elements in the good order. for that a new list of objects
       #is needed
       returned_object_list = []
       for nb_ind in range(len(nb_property_nbkey_list)):
@@ -2039,7 +2039,7 @@ class ScribusParser:
       returned_page_dict[page_number] = returned_object_list
 
     # returning final dict containing all the modified data
-    LOG('ScribusParser', INFO, 
+    LOG('ScribusParser', INFO,
         '  => end ScribusParser.getPropertiesConversion')
     return (returned_page_dict)
 
@@ -2080,8 +2080,8 @@ class ScribusParser:
     # getting usefull properties for field generation
     object_dict['title'] = str(properties_field['title'])
     object_dict['erp_type'] = str(properties_field['type']) # XXX why erp_type ?
-    # it's probably better to use something like 
-    # object_dict['meta_type'] = field.getRecursiveTemplateField().meta_type 
+    # it's probably better to use something like
+    # object_dict['meta_type'] = field.getRecursiveTemplateField().meta_type
     # this should also work for ProxyFields
 
     object_dict['data_type'] = str(properties_field['data_type'])
@@ -2123,7 +2123,7 @@ class ScribusParser:
       elif properties_field['input_order'] in ['year/month/day','ymd', 'Ymd']:
         object_dict['attributes']['input_order'] = 'ymd'
       else:
-        LOG('ScribusParser', INFO, 
+        LOG('ScribusParser', INFO,
             "   found incompatible 'input_order', assuming default ymd")
         object_dict['attributes']['input_order'] = 'ymd'
       # checking if date only or date + time
@@ -2170,9 +2170,9 @@ class ScribusParser:
   def getFileOpen(self, file_descriptor):
     """ Get file content """
     return file_descriptor.open('r')
-  
+
 InitializeClass(ScribusParser)
-allow_class(ScribusParser)  
+allow_class(ScribusParser)
 
 InitializeClass(ManageCSS)
 allow_class(ManageCSS)

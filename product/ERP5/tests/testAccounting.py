@@ -70,18 +70,18 @@ class AccountingTestCase(ERP5TypeTestCase):
 
   Regions:
     * region/europe/west/france
-    
+
   Group:
     * group/demo_group
     * group/demo_group/sub1
     * group/demo_group/sub2
     * group/client
     * group/vendor'
-    
+
   Payment Mode:
     * payment_mode/cash
     * payment_mode/check
-  
+
   Organisations:
     * `self.section` an organisation using EUR as default currency, without any
     openned accounting period by default. This organisation is member of
@@ -91,7 +91,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     group/demo_group. Both self.main_section and self.section are in the same
     company from accounting point of view.
     * self.client_1, self.client_2 & self.supplier, some other organisations
-  
+
   Accounts:
       All accounts are associated to a virtual GAP category named "My Accounting
     Standards":
@@ -105,15 +105,15 @@ class AccountingTestCase(ERP5TypeTestCase):
     * receivable
     * refundable_vat
     * stocks
-  
+
   Tests starts with a preference activated for self.my_organisation, logged in
   as a user with Assignee, Assignor and Author role.
 
   All documents created appart from this configuration will be deleted in
   teardown. So users of this test case are encouraged to create new documents
-  rather than modifying default documents. 
+  rather than modifying default documents.
   """
-  
+
   username = 'username'
   business_process = 'business_process_module/erp5_default_business_process'
 
@@ -121,7 +121,7 @@ class AccountingTestCase(ERP5TypeTestCase):
   def _makeOne(self, portal_type='Accounting Transaction', lines=None,
                simulation_state='draft', **kw):
     """Creates an accounting transaction, and edit it with kw.
-    
+
     The default settings is for self.section.
     You can pass a list of mapping as lines, then lines will be created
     using this information.
@@ -170,7 +170,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     self.currency_module = self.portal.currency_module
     self.section = getattr(self.organisation_module, 'my_organisation', None)
     self.main_section = getattr(self.organisation_module, 'main_organisation', None)
-    
+
     # make sure documents are validated
     for module in (self.account_module, self.organisation_module,
                    self.person_module):
@@ -185,7 +185,7 @@ class AccountingTestCase(ERP5TypeTestCase):
       pref.manage_addLocalRoles(self.username, ('Auditor', ))
       if pref.getPreferenceState() != 'enabled':
         pref.enable()
-    
+
     self.validateRules()
 
     self.createUserAndlogin(self.username)
@@ -202,7 +202,7 @@ class AccountingTestCase(ERP5TypeTestCase):
                       list(self.accounting_module.objectIds()))
     organisation_list = ('my_organisation', 'main_organisation',
                          'client_1', 'client_2', 'supplier')
-    self.organisation_module.manage_delObjects([x for x in 
+    self.organisation_module.manage_delObjects([x for x in
           self.accounting_module.objectIds() if x not in organisation_list])
     for organisation_id in organisation_list:
       organisation = self.organisation_module._getOb(organisation_id, None)
@@ -210,9 +210,9 @@ class AccountingTestCase(ERP5TypeTestCase):
         organisation.manage_delObjects([x.getId() for x in
                 organisation.objectValues(
                   portal_type=('Accounting Period', 'Bank Account'))])
-    self.person_module.manage_delObjects([x for x in 
+    self.person_module.manage_delObjects([x for x in
           self.person_module.objectIds() if x not in ('john_smith',)])
-    self.account_module.manage_delObjects([x for x in 
+    self.account_module.manage_delObjects([x for x in
           self.account_module.objectIds() if x not in ('bank', 'collected_vat',
             'equity', 'fixed_assets', 'goods_purchase', 'goods_sales',
             'payable', 'receivable', 'refundable_vat', 'stocks',)])
@@ -249,7 +249,7 @@ class TestAccounts(AccountingTestCase):
     self.assertEqual(1, len(account.checkConsistency()))
     account.setAccountType('equity')
     self.assertEqual(0, len(account.checkConsistency()))
-    
+
   def test_AccountWorkflow(self):
     account = self.portal.account_module.newContent(portal_type='Account')
     self.assertEqual('draft', account.getValidationState())
@@ -269,7 +269,7 @@ class TestAccounts(AccountingTestCase):
     account.is_credit_account = True
     self.assertTrue(account.isCreditAccount())
     self.assertTrue(account.getProperty('credit_account'))
-    
+
     account.setCreditAccount(False)
     self.assertFalse(account.isCreditAccount())
 
@@ -320,7 +320,7 @@ class TestTransactionValidation(AccountingTestCase):
     # in 2007, it's OK
     accounting_transaction.setStartDate(DateTime("2007/03/03"))
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
-  
+
   def test_PurchaseInvoiceTransactionValidationDate(self):
     # Accounting Period Date matters for Purchase Invoice Transaction
     accounting_transaction = self._makeOne(
@@ -421,7 +421,7 @@ class TestTransactionValidation(AccountingTestCase):
         accounting_transaction, 'stop_action')
     accounting_transaction.setStartDate(DateTime("2007/01/01"))
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
-  
+
   def test_AccountingTransactionValidationBeforePeriod(self):
     # Check we cannot validate before the period
     accounting_transaction = self._makeOne(
@@ -437,7 +437,7 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
         accounting_transaction, 'stop_action')
-  
+
   def test_AccountingTransactionValidationAfterPeriod(self):
     # Check we cannot validate after the period
     accounting_transaction = self._makeOne(
@@ -453,7 +453,7 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
         accounting_transaction, 'stop_action')
-  
+
   def test_AccountingTransactionValidationRecursivePeriod(self):
     # Check we can/cannot validate when secondary period exists
 
@@ -488,7 +488,7 @@ class TestTransactionValidation(AccountingTestCase):
     # in 2007-02, it's OK
     accounting_transaction.setStartDate(DateTime("2007/02/02"))
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
-  
+
 
   def test_PaymentTransactionWithEmployee(self):
     # we have to set bank account if we use an asset/cash/bank account, but not
@@ -706,7 +706,7 @@ class TestTransactionValidation(AccountingTestCase):
 
     accounting_transaction.setDestinationSectionValue(self.organisation_module.client_1)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
-    
+
   def test_AccountingWorkflow(self):
     accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
@@ -718,12 +718,12 @@ class TestTransactionValidation(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            destination_value=self.account_module.payable,
                            source_credit=500)))
-    
+
     doActionFor = self.portal.portal_workflow.doActionFor
     self.assertEqual('draft', accounting_transaction.getSimulationState())
     self.assertTrue(_checkPermission('Modify portal content',
       accounting_transaction))
-                    
+
     doActionFor(accounting_transaction, 'plan_action')
     self.assertEqual('planned', accounting_transaction.getSimulationState())
     self.assertTrue(_checkPermission('Modify portal content',
@@ -743,7 +743,7 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEqual('stopped', accounting_transaction.getSimulationState())
     self.assertFalse(_checkPermission('Modify portal content',
       accounting_transaction))
-    
+
     doActionFor(accounting_transaction, 'restart_action')
     self.assertEqual('started', accounting_transaction.getSimulationState())
     self.assertTrue(_checkPermission('Modify portal content',
@@ -892,7 +892,7 @@ class TestClosingPeriod(AccountingTestCase):
     # this should create a balance with 3 lines,
     #   equity = 500 D
     #   stocks =     400 C
-    #   pl     =     100 C 
+    #   pl     =     100 C
     self.assertEqual(self.section,
                       balance_transaction.getDestinationSectionValue())
     self.assertEqual(None,
@@ -1065,7 +1065,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_debit=100),
                dict(source_value=self.account_module.bank,
                     source_credit=100)))
-    
+
     # we are destination on this one
     transaction2 = self._makeOne(
         stop_date=DateTime(2006, 1, 2),
@@ -1107,7 +1107,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual('delivered', balance_transaction.getSimulationState())
     movement_list = balance_transaction.getMovementList()
     self.assertEqual(4, len(movement_list))
-    
+
     receivable_movement_list = [m for m in movement_list
         if m.getDestinationValue() == self.account_module.receivable]
     self.assertEqual(1, len(receivable_movement_list))
@@ -1226,7 +1226,7 @@ class TestClosingPeriod(AccountingTestCase):
     #   pl                 = 3.3 D     ( resource acquired )
     #   receivable/client1 =     1.1 C ( resource yen ) qty=100
     #   receivable/client2 =     2.2 C ( resource usd ) qyt=200
-    
+
     accounting_currency_precision = \
         self.portal.currency_module.euro.getQuantityPrecision()
     self.assertEqual(accounting_currency_precision, 2)
@@ -1284,7 +1284,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertAlmostEquals(3.3,
                   pl_movement.getDestinationDebit(),
                   accounting_currency_precision)
-    
+
     self.tic()
 
     # now check content of stock table
@@ -1384,7 +1384,7 @@ class TestClosingPeriod(AccountingTestCase):
     #   pl                 = 3.3 D     ( resource acquired )
     #   receivable/client1 =     1.1 C ( resource yen ) qty=100
     #   receivable/client1 =     2.2 C ( resource usd ) qyt=200
-    
+
     accounting_currency_precision = \
         self.portal.currency_module.euro.getQuantityPrecision()
     self.assertEqual(accounting_currency_precision, 2)
@@ -1504,12 +1504,12 @@ class TestClosingPeriod(AccountingTestCase):
             profit_and_loss_account=pl_account.getRelativeUrl())
     self.assertEqual('stopped', period.getSimulationState())
     self.tic()
-    
+
     self.portal.portal_workflow.doActionFor(period, 'deliver_action',)
 
     self.tic()
     self.assertEqual('delivered', period.getSimulationState())
-    
+
     # this created a balance transaction
     balance_transaction_list = self.accounting_module.contentValues(
                                   portal_type='Balance Transaction')
@@ -1526,7 +1526,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
     period.start()
-    
+
     transaction_main = self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
@@ -1563,10 +1563,10 @@ class TestClosingPeriod(AccountingTestCase):
               account_type='equity')
     self.portal.portal_workflow.doActionFor(period, 'stop_action',
               profit_and_loss_account=pl.getRelativeUrl())
-    
+
 
     self.tic()
-    
+
     created_balance_transaction_list = self.portal.accounting_module.contentValues(
                                     portal_type='Balance Transaction')
     self.assertEqual(2, len(created_balance_transaction_list))
@@ -1588,14 +1588,14 @@ class TestClosingPeriod(AccountingTestCase):
     main_section_balance_transaction.reindexObject()
     section_balance_transaction.reindexObject()
     self.tic()
-  
+
   def test_MultipleSectionIndependant(self):
     stool = self.portal.portal_simulation
     period_main_section = self.main_section.newContent(portal_type='Accounting Period')
     period_main_section.setStartDate(DateTime(2006, 1, 1))
     period_main_section.setStopDate(DateTime(2006, 12, 31))
     period_main_section.start()
-    
+
     period_section = self.section.newContent(portal_type='Accounting Period')
     period_section.setStartDate(DateTime(2006, 1, 1))
     period_section.setStopDate(DateTime(2006, 12, 31))
@@ -1631,9 +1631,9 @@ class TestClosingPeriod(AccountingTestCase):
               account_type='equity')
     self.portal.portal_workflow.doActionFor(period_main_section, 'stop_action',
               profit_and_loss_account=pl.getRelativeUrl())
-    
+
     self.tic()
-    
+
     created_balance_transaction_list = self.portal.accounting_module.contentValues(
                                     portal_type='Balance Transaction')
     self.assertEqual(1, len(created_balance_transaction_list))
@@ -1656,13 +1656,13 @@ class TestClosingPeriod(AccountingTestCase):
     # Close section's period
     self.portal.portal_workflow.doActionFor(period_section, 'stop_action',
               profit_and_loss_account=pl.getRelativeUrl())
-    
+
     self.tic()
-    
+
     created_balance_transaction_list = self.portal.accounting_module.contentValues(
                                     portal_type='Balance Transaction')
     self.assertEqual(2, len(created_balance_transaction_list))
-    
+
     # section is now impacted
     self.assertEqual(20, stool.getInventory(
                               section_uid=self.section.getUid(),
@@ -1670,7 +1670,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(-20, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=self.portal.account_module.payable.getUid()))
-    
+
     self.assertEqual(30, stool.getInventory(
                               section_uid=self.main_section.getUid(),
                               node_uid=pl.getUid()))
@@ -1683,7 +1683,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
     period.start()
-    
+
     transaction_main = self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
@@ -1694,7 +1694,7 @@ class TestClosingPeriod(AccountingTestCase):
                     destination_debit=30),
                dict(destination_value=self.account_module.payable,
                     destination_credit=30)))
-    
+
     pl = self.portal.account_module.newContent(
               portal_type='Account',
               account_type='equity')
@@ -1702,7 +1702,7 @@ class TestClosingPeriod(AccountingTestCase):
               profit_and_loss_account=pl.getRelativeUrl())
 
     self.tic()
-    
+
     created_balance_transaction_list = self.portal.accounting_module.contentValues(
                                     portal_type='Balance Transaction')
     self.assertEqual(1, len(created_balance_transaction_list))
@@ -1715,7 +1715,7 @@ class TestClosingPeriod(AccountingTestCase):
     period1.setStartDate(DateTime(2006, 1, 1))
     period1.setStopDate(DateTime(2006, 12, 31))
     period1.start()
-    
+
     transaction1 = self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
@@ -1740,7 +1740,7 @@ class TestClosingPeriod(AccountingTestCase):
                                   portal_type='Balance Transaction')
     self.assertEqual(1, len(balance_transaction_list))
     balance_transaction1 = balance_transaction_list[0]
-    
+
     period2 = self.section.newContent(portal_type='Accounting Period')
     period2.setStartDate(DateTime(2007, 1, 1))
     period2.setStopDate(DateTime(2007, 12, 31))
@@ -1766,19 +1766,19 @@ class TestClosingPeriod(AccountingTestCase):
 
     period2.AccountingPeriod_createBalanceTransaction(
                 profit_and_loss_account=pl_account.getRelativeUrl())
-    balance_transaction_list = [tr for tr in 
+    balance_transaction_list = [tr for tr in
                           self.accounting_module.contentValues(
                               portal_type='Balance Transaction')
                           if tr != balance_transaction1]
     self.assertEqual(1, len(balance_transaction_list))
     balance_transaction2 = balance_transaction_list[0]
-    
+
     self.assertEqual(DateTime(2008, 1, 1),
                       balance_transaction2.getStartDate())
     # this should create a balance with 3 lines,
     #   equity          = 100 D
     #   payable/client1 =       100 + 300 C
-    #   pl              = 300 D    
+    #   pl              = 300 D
     movement_list = balance_transaction2.getMovementList()
     self.assertEqual(3, len(movement_list))
 
@@ -1787,13 +1787,13 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(1, len(equity_movement_list))
     equity_movement = equity_movement_list[0]
     self.assertEqual(100., equity_movement.getDestinationDebit())
-    
+
     payable_movement_list = [m for m in movement_list
           if m.getDestinationValue() == self.account_module.payable]
     self.assertEqual(1, len(payable_movement_list))
     payable_movement = payable_movement_list[0]
     self.assertEqual(400., payable_movement.getDestinationCredit())
-    
+
     pl_movement_list = [m for m in movement_list
           if m.getDestinationValue() == pl_account]
     self.assertEqual(1, len(pl_movement_list))
@@ -1829,7 +1829,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     period.AccountingPeriod_createBalanceTransaction(
                   profit_and_loss_account=pl_account.getRelativeUrl())
-    
+
     balance_transaction_list = self.accounting_module.contentValues(
                               portal_type='Balance Transaction')
     self.assertEqual(1, len(balance_transaction_list))
@@ -1842,7 +1842,7 @@ class TestClosingPeriod(AccountingTestCase):
                       if m.getDestinationValue() == pl_account]
     self.assertEqual(1, len(pl_movement_list))
     self.assertEqual(500, pl_movement_list[0].getDestinationDebit())
-    
+
     stock_movement_list = [m for m in movement_list
           if m.getDestinationValue() == self.account_module.stocks]
     self.assertEqual(1, len(stock_movement_list))
@@ -1958,7 +1958,7 @@ class TestClosingPeriod(AccountingTestCase):
                     node_uid=node_uid)
     self.assertEqual(1, len(movement_history_list))
     self.assertEqual([100], [x.total_price  for x in movement_history_list])
-    
+
     # the account 'goods_sales' has a balance of -100
     node_uid = self.account_module.goods_sales.getUid()
     self.assertEqual(-100, stool.getInventory(
@@ -2040,7 +2040,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=90,)
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 150
     node_uid = self.account_module.receivable.getUid()
@@ -2081,7 +2081,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 150 + 30
     node_uid = self.account_module.receivable.getUid()
@@ -2101,7 +2101,7 @@ class TestClosingPeriod(AccountingTestCase):
     # we can reindex again
     balance.reindexObject()
     self.tic()
-    
+
   def test_BalanceTransactionLineBrainGetObject(self):
     # Balance Transaction Line can be retrieved using Brain.getObject
     existing_transaction = self._makeOne(
@@ -2132,7 +2132,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=100,)
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 100
     node_uid = self.account_module.receivable.getUid()
@@ -2190,7 +2190,7 @@ class TestClosingPeriod(AccountingTestCase):
                           destination_section_value=self.section,
                           start_date=DateTime(2006, 12, 31),
                           resource_value=self.currency_module.euro,)
-    
+
     balance_line = balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.receivable,
@@ -2202,7 +2202,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=100,)
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 100 + 30
     node_uid = self.account_module.receivable.getUid()
@@ -2289,7 +2289,7 @@ class TestClosingPeriod(AccountingTestCase):
     # let's try to reindex and check if values are still OK
     balance.reindexObject()
     self.tic()
-    
+
     self.assertEqual(-150, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
@@ -2315,7 +2315,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_debit=100,)
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 100 after 2006/12/31
     node_uid = self.account_module.receivable.getUid()
@@ -2352,7 +2352,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_debit=100,)
     balance.stop()
     self.tic()
-    
+
     stool = self.portal.portal_simulation
     # the account 'receivable' has a balance of 100
     node_uid = self.account_module.receivable.getUid()
@@ -2456,7 +2456,7 @@ class TestTransactions(AccountingTestCase):
   def _resetIdGenerator(self):
     # clear all existing ids in portal ids
       self.portal.portal_ids.clearGenerator(all=True)
-  
+
   def test_SourceDestinationReference(self):
     # Check that source reference and destination reference are filled
     # automatically.
@@ -2579,7 +2579,7 @@ class TestTransactions(AccountingTestCase):
                                 start_date=DateTime('2007/01/01'),
                                 stop_date=DateTime('2007/12/31'),)
     accounting_period_2007.start()
-    
+
     accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
           frequency='monthly', open_periods=1)
     sub_period_list = sorted(accounting_period_2007.contentValues(),
@@ -2621,7 +2621,7 @@ class TestTransactions(AccountingTestCase):
     self.assertEqual(client,
         client.Organisation_getMappingRelatedOrganisation())
 
-  
+
   # tests for Invoice_createRelatedPaymentTransaction
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
     """Check payment of a Sale Invoice.
@@ -2677,14 +2677,14 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=40,
                            grouping_reference='A'),))
-    
+
     payment = invoice.Invoice_createRelatedPaymentTransaction(
                                   node=self.account_module.bank.getRelativeUrl(),
                                   payment=payment_node.getRelativeUrl(),
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
-  
+
   def test_Invoice_createRelatedPaymentTransactionDifferentSection(self):
     # Simple creating a related payment transaction when we have two line for
     # 2 different destination sections.
@@ -2698,14 +2698,14 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=40,
                            destination_section_value=self.organisation_module.client_2),))
-    
+
     payment = invoice.Invoice_createRelatedPaymentTransaction(
                                   node=self.account_module.bank.getRelativeUrl(),
                                   payment=payment_node.getRelativeUrl(),
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 60)
- 
+
   def test_Invoice_createRelatedPaymentTransactionRelatedInvoice(self):
     # Simple creating a related payment transaction when we have related
     # transactions.
@@ -2729,14 +2729,14 @@ class TestTransactions(AccountingTestCase):
                                            'stop_action')
     self.assertEqual('stopped', accounting_transaction.getSimulationState())
     self.tic()
-    
+
     payment = invoice.Invoice_createRelatedPaymentTransaction(
                                   node=self.account_module.bank.getRelativeUrl(),
                                   payment=payment_node.getRelativeUrl(),
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
-    
+
   def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDifferentSide(self):
     # Simple creating a related payment transaction when we have related
     # transactions with different side
@@ -2766,7 +2766,7 @@ class TestTransactions(AccountingTestCase):
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 80)
- 
+
   def test_Invoice_createRelatedPaymentTransactionRelatedInvoiceDraft(self):
     # Simple creating a related payment transaction when we have related
     # transactions in draft/cancelled state (they are ignored)
@@ -2814,7 +2814,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=100,
                            source_asset_credit=150),))
-    
+
     payment = invoice.Invoice_createRelatedPaymentTransaction(
                                   node=self.account_module.bank.getRelativeUrl(),
                                   payment=payment_node.getRelativeUrl(),
@@ -2833,7 +2833,7 @@ class TestTransactions(AccountingTestCase):
         self.assertEqual(self.account_module.bank, line.getSourceValue())
         self.assertEqual(100, line.getSourceCredit())
         self.assertEqual(None, line.getSourceTotalAssetPrice())
-      
+
   # tests for Invoice_getRemainingTotalPayablePrice
   def test_Invoice_getRemainingTotalPayablePriceDeletedPayment(self):
     """Checks in case of deleted Payments related to invoice"""
@@ -2901,7 +2901,7 @@ class TestTransactions(AccountingTestCase):
                            grouping_date=DateTime(),
                            grouping_reference='A'),))
     other_account_line = other_account_invoice.line_with_grouping_reference
-    
+
     other_section_invoice = self._makeOne(
                title='Other Section Invoice',
                destination_section_value=self.organisation_module.client_2,
@@ -2940,7 +2940,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
     payment_line = payment.line_with_grouping_reference
-    
+
     # reset from the payment line, the invoice line from the same group will be
     # ungrouped
     payment_line.AccountingTransactionLine_resetGroupingReference()
@@ -3048,15 +3048,15 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
     payment_line = payment.line_for_grouping_reference
-    
+
     self.assertFalse(invoice_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingReference())
-    
+
     # lines match, they are automatically grouped
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
-  
+
     # when restarting, grouping is removed
     invoice.restart()
     self.tic()
@@ -3092,10 +3092,10 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
     payment_line = payment.line_for_grouping_reference
-    
+
     self.assertFalse(invoice_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingReference())
-    
+
     invoice.stop()
     self.assertFalse(invoice_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingReference())
@@ -3125,10 +3125,10 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
     payment_line = payment.line_for_grouping_reference
-    
+
     self.assertFalse(invoice_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingReference())
-    
+
     # different sections, no grouping
     invoice.stop()
     self.assertFalse(invoice_line.getGroupingReference())
@@ -3193,7 +3193,7 @@ class TestTransactions(AccountingTestCase):
     for line in invoice.contentValues():
       self.assertTrue(line.getGroupingReference())
 
- 
+
   def test_AccountingTransaction_getTotalDebitCredit(self):
     # source view
     accounting_transaction = self._makeOne(
@@ -3277,7 +3277,7 @@ class TestTransactions(AccountingTestCase):
     self.assertTrue(accounting_transaction.AccountingTransaction_isSourceView())
     self.assertEqual(500, accounting_transaction.AccountingTransaction_getTotalDebit())
     self.assertEqual(400, accounting_transaction.AccountingTransaction_getTotalCredit())
-    
+
     # destination view, with conversion on other side
     accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
@@ -3332,7 +3332,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-  
+
   account_portal_type           = 'Account'
   accounting_period_portal_type = 'Accounting Period'
   accounting_transaction_portal_type = 'Accounting Transaction'
@@ -3392,7 +3392,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         folder.manage_delObjects([entity.getId()])
 
     self.tic()
-  
+
   def createCategories(self):
     """Create the categories for our test. """
     # create categories
@@ -3406,13 +3406,13 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
             id=cat,)
         else:
           path = path[cat]
-          
+
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
-                
+
   def getNeededCategoryList(self):
     """Returns a list of categories that should be created."""
     return ('group/client', 'group/vendor/sub1', 'group/vendor/sub2',
@@ -3440,7 +3440,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       entity.setRegion(self.default_region)
       self.getWorkflowTool().doActionFor(entity, 'validate_action')
     self.tic()
-    
+
   def stepCreateEntities(self, sequence, **kw) :
     """Create entities. """
     # TODO: remove this method
@@ -3448,7 +3448,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                    vendor=self.vendor,
                    other_vendor=self.other_vendor,
                    organisation=self.vendor )
-  
+
   def stepCreateAccountingPeriod(self, sequence, **kw):
     """Creates an Accounting Period for the Organisation."""
     organisation = sequence.get('organisation')
@@ -3460,15 +3460,15 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     sequence.edit( accounting_period = accounting_period,
                    valid_date_list = [ start_date, start_date+1, stop_date],
                    invalid_date_list = [start_date-1, stop_date+1] )
-    
+
   def stepUseValidDates(self, sequence, **kw):
     """Puts some valid dates in sequence."""
     sequence.edit(date_list = sequence.get('valid_date_list'))
-    
+
   def stepUseInvalidDates(self, sequence, **kw):
     """Puts some invalid dates in sequence."""
     sequence.edit(date_list = sequence.get('invalid_date_list'))
-  
+
   def stepOpenAccountingPeriod(self, sequence, **kw):
     """Opens the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
@@ -3477,7 +3477,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                         'start_action' )
     self.assertEqual(accounting_period.getSimulationState(),
                       'started')
-                      
+
   def stepStopAccountingPeriod(self, sequence, **kw):
     """Stops the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
@@ -3503,13 +3503,13 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
            accounting_period, 'deliver_action', )
     self.assertEqual(accounting_period.getSimulationState(),
                       'delivered')
-    
+
   def stepCheckAccountingPeriodDelivered(self, sequence, **kw):
     """Check the Accounting Period is delivered."""
     accounting_period = sequence.get('accounting_period')
     self.assertEqual(accounting_period.getSimulationState(),
                       'delivered')
-    
+
   def createCurrencies(self):
     """Create some currencies.
     This script will reuse existing currencies, because we want currency ids to
@@ -3535,7 +3535,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
   def stepCreateCurrencies(self, sequence, **kw) :
     """Create some currencies. """
     sequence.edit(EUR=self.EUR, USD=self.USD, YEN=self.YEN)
-  
+
   def createAccounts(self):
     """Create some accounts.
     """
@@ -3568,7 +3568,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           title = 'bank',
           portal_type = self.account_portal_type,
           account_type = 'asset/cash/bank')
-    
+
     # set mirror accounts.
     receivable.setDestinationValue(payable)
     payable.setDestinationValue(receivable)
@@ -3577,7 +3577,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     collected_vat.setDestinationValue(refundable_vat)
     refundable_vat.setDestinationValue(collected_vat)
     bank.setDestinationValue(bank)
-    
+
     self.account_list = [ receivable,
                           payable,
                           expense,
@@ -3602,10 +3602,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                    refundable_vat_account=self.refundable_vat_account,
                    bank_account=self.bank_account,
                    account_list=self.account_list )
-  
-    
+
+
   def getInvoicePropertyList(self):
-    """Returns the list of properties for invoices, stored as 
+    """Returns the list of properties for invoices, stored as
       a list of dictionnaries. """
     # source currency is EUR
     # destination currency is USD
@@ -3615,18 +3615,18 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         'collected_vat' : -40,       'source_converted_collected_vat' : -36,
         'receivable' : 240,          'source_converted_receivable' : 216,
         'currency' : 'currency_module/USD' },
-      
+
       # in currency of source, converted for destination
       { 'income' : -100,        'destination_converted_expense' : -200,
         'collected_vat' : 10,   'destination_converted_refundable_vat' : 100,
         'receivable' : 90,      'destination_converted_payable' : 100,
         'currency' : 'currency_module/EUR' },
-      
+
       { 'income' : -100,        'destination_converted_expense' : -200,
         'collected_vat' : 10,   'destination_converted_refundable_vat' : 100,
         'receivable' : 90,      'destination_converted_payable' : 100,
         'currency' : 'currency_module/EUR' },
-      
+
       # in an external currency, converted for both source and dest.
       { 'income' : -300,
                     'source_converted_income' : -200,
@@ -3638,15 +3638,15 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                     'source_converted_receivable' : 164,
                     'destination_converted_payable': 350,
         'currency' : 'currency_module/YEN' },
-      
+
       # currency of source, not converted for destination -> 0
       { 'income' : -100,
         'collected_vat' : -20,
         'receivable' : 120,
         'currency' : 'currency_module/EUR' },
-      
+
     ]
-  
+
   def stepCreateInvoices(self, sequence, **kw) :
     """Create invoices with properties from getInvoicePropertyList. """
     invoice_prop_list = self.getInvoicePropertyList()
@@ -3667,7 +3667,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           start_date = date, stop_date = date,
           created_by_builder = 0,
       )
-      
+
       for line_type in ['income', 'receivable', 'collected_vat'] :
         source_account = sequence.get('%s_account' % line_type)
         line = invoice.newContent(
@@ -3679,7 +3679,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                           'source_converted_%s' % line_type, None)
         if source_converted is not None :
           line.setSourceTotalAssetPrice(source_converted)
-        
+
         destination_account = source_account.getDestinationValue(
                                                 portal_type = 'Account' )
         destination_converted = invoice_prop.get(
@@ -3687,10 +3687,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                           destination_account.getAccountTypeId(), None)
         if destination_converted is not None :
           line.setDestinationTotalAssetPrice(destination_converted)
- 
+
       invoice_list.append(invoice)
     sequence.edit( invoice_list = invoice_list )
-  
+
   def stepCreateOtherSectionInvoices(self, sequence, **kw):
     """Create invoice for other sections."""
     other_source = self.getOrganisationModule().newContent(
@@ -3708,7 +3708,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         stop_date = self.start_date,
         created_by_builder = 0,
     )
-    
+
     line = invoice.newContent(
         portal_type = self.sale_invoice_transaction_line_portal_type,
         quantity = 100, source_value = sequence.get('account_list')[0])
@@ -3716,14 +3716,14 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         portal_type = self.sale_invoice_transaction_line_portal_type,
         quantity = -100, source_value = sequence.get('account_list')[1])
     sequence.edit(invoice_list = [invoice])
-  
+
   def stepStopInvoices(self, sequence, **kw) :
     """Validates invoices."""
     invoice_list = sequence.get('invoice_list')
     for invoice in invoice_list:
       self.getPortal().portal_workflow.doActionFor(
           invoice, 'stop_action')
-  
+
   def stepCheckStopInvoicesRefused(self, sequence, **kw) :
     """Checks that invoices cannot be validated."""
     invoice_list = sequence.get('invoice_list')
@@ -3743,7 +3743,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     invoice_list = sequence.get('invoice_list')
     for invoice in invoice_list:
       self.assertEqual(invoice.getSimulationState(), 'stopped')
-      
+
   def checkAccountBalanceInCurrency(self, section, currency,
                                           sequence, **kw) :
     """ Checks accounts balances in a given currency."""
@@ -3766,26 +3766,26 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
             section == line.getDestinationSectionValue() :
             calculated_balance += (
                     line.getDestinationDebit() - line.getDestinationCredit())
-      
+
       self.assertEqual(calculated_balance,
           self.getPortal().portal_simulation.getInventory(
             node_uid = account.getUid(),
             section_uid = section.getUid(),
             resource_uid = currency.getUid(),
           ))
-  
+
   def stepCheckAccountBalanceLocalCurrency(self, sequence, **kw) :
     """ Checks accounts balances in the organisation default currency."""
     for section in (sequence.get('vendor'), sequence.get('client')) :
       currency = section.getPriceCurrencyValue()
       self.checkAccountBalanceInCurrency(section, currency, sequence)
-  
+
   def stepCheckAccountBalanceExternalCurrency(self, sequence, **kw) :
     """ Checks accounts balances in external currencies ."""
     for section in (sequence.get('vendor'), sequence.get('client')) :
       for currency in (sequence.get('USD'), sequence.get('YEN')) :
         self.checkAccountBalanceInCurrency(section, currency, sequence)
-    
+
   def checkAccountBalanceInConvertedCurrency(self, section, sequence, **kw) :
     """ Checks accounts balances converted in section default currency."""
     invoice_list = sequence.get('invoice_list')
@@ -3807,13 +3807,13 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
             node_uid = account.getUid(),
             section_uid = section.getUid(),
           ))
-  
+
   def stepCheckAccountBalanceConvertedCurrency(self, sequence, **kw):
     """Checks accounts balances converted in the organisation default
     currency."""
     for section in (sequence.get('vendor'), sequence.get('client')) :
       self.checkAccountBalanceInConvertedCurrency(section, sequence)
-  
+
   def stepCheckAcquisition(self, sequence, **kw):
     """Checks acquisition and portal types configuration. """
     resource_value = sequence.get('EUR')
@@ -3829,7 +3829,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         title = destination_section_title,
         group = "group/vendor",
         price_currency = "currency_module/EUR")
-    
+
     portal = self.getPortal()
     accounting_module = portal.accounting_module
     self.assertTrue('Site Error' not in accounting_module.view())
@@ -3878,7 +3878,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                           (portal.getPortalAccountingMovementTypeList(),
                             accounting_transaction.getPortalType(),
                             allowed_content_types ))
-  
+
   def createAccountingTransaction(self,
                         portal_type=accounting_transaction_portal_type,
                         line_portal_type=accounting_transaction_line_portal_type,
@@ -3933,7 +3933,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                                               self.expense_account), )
     self.assertTrue(income.getSource() != None)
     self.assertTrue(income.getDestination() != None)
-    
+
     receivable = accounting_transaction.newContent(
                   id='receivable',
                   portal_type=line_portal_type,
@@ -3960,7 +3960,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     self.assertEqual(self.client, accounting_transaction.getDestinationSectionValue())
     self.assertEqual(self.EUR, accounting_transaction.getResourceValue())
     self.assertTrue(accounting_transaction.AccountingTransaction_isSourceView())
-    
+
     self.workflow_tool.doActionFor(accounting_transaction, 'stop_action')
     self.assertEqual('stopped', accounting_transaction.getSimulationState())
     self.assertEqual([] , accounting_transaction.checkConsistency())
@@ -3982,10 +3982,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       income = accounting_transaction.income,
       receivable = accounting_transaction.receivable
     )
-    
+
   def stepValidateNoDate(self, sequence, sequence_list=None, **kw) :
     """When no date is defined, validation should be impossible.
-    
+
     Actually, we could say that if we have source_section, we need start_date,
     and if we have destination section, we need stop_date only, but we decided
     to update a date (of start_date / stop_date) using the other one if one is
@@ -4007,11 +4007,11 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     accounting_transaction.setStopDate(old_stop_date)
     self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
     self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-  
+
   def stepValidateNoSection(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to section & mirror_section.
     When no source section is defined, we are in one of the following
-    cases : 
+    cases :
       o if we use payable or receivable account, the validation should
         be refused.
       o if we do not use any payable or receivable accounts and we have
@@ -4042,7 +4042,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
-    
+
     # if we do not use any payable / receivable account, then we can
     # validate the transaction without setting the mirror section.
     for side in (SOURCE, ): # DESTINATION) :
@@ -4064,7 +4064,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
         self.assert_(0, "Validation failed : %s" % err.msg)
-        
+
   def stepValidateNoCurrency(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to currency.
     """
@@ -4083,7 +4083,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
   def stepValidateClosedAccount(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to closed accounts.
     If an account is blocked, then it's impossible to validate a
@@ -4100,7 +4100,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     # reopen the account for other tests
     account.validate()
     self.assertEqual(account.getValidationState(), 'validated')
-    
+
   def stepValidateNoAccounts(self, sequence, sequence_list=None, **kw) :
     """Simple check that the validation is refused when we do not have
     accounts correctly defined on lines.
@@ -4114,7 +4114,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     # only one line without account and with a quantity is also refused
     accounting_transaction = self.createAccountingTransaction()
     accounting_transaction.getMovementList()[0].setSource(None)
@@ -4123,7 +4123,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     # but if we have a line with 0 quantity on both sides, we can
     # validate the transaction and delete this line.
     accounting_transaction = self.createAccountingTransaction()
@@ -4133,7 +4133,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
     self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     self.assertEqual(line_count, len(accounting_transaction.getMovementList()))
-    
+
     # 0 quantity, but a destination asset price => do not delete the
     # line
     accounting_transaction = self.createAccountingTransaction()
@@ -4155,7 +4155,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
-  
+
   def stepValidateNotBalanced(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour when transaction is not balanced.
     """
@@ -4165,7 +4165,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     # asset price have priority (ie. if asset price is not balanced,
     # refuses validation even if quantity is balanced)
     accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
@@ -4176,7 +4176,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
     line_list = accounting_transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(10)
@@ -4185,7 +4185,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     # only asset price needs to be balanced
     accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
     line_list = accounting_transaction.getMovementList()
@@ -4200,7 +4200,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
-  
+
   def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to payment & mirror_payment.
     If we use an account of type asset/cash/bank, we must use set a Bank
@@ -4229,7 +4229,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor,
         accounting_transaction,
         'stop_action')
-    
+
     source_section_value = accounting_transaction.getSourceSectionValue()
     destination_section_value = accounting_transaction.getDestinationSectionValue()
     for ptype in self.getPortal().getPortalPaymentNodeTypeList() :
@@ -4262,7 +4262,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
         self.fail("Validation failed : %s" % err.msg)
-    
+
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
     """Check validating a transaction remove empty lines. """
     accounting_transaction = sequence.get('transaction')
@@ -4275,11 +4275,11 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     if empty_lines_count == 0:
       accounting_transaction.newContent(
             portal_type=self.accounting_transaction_line_portal_type)
-    
+
     self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
     self.assertEqual(len(accounting_transaction.getMovementList()),
                       lines_count - empty_lines_count)
-    
+
     # we don't remove empty lines if there is only empty lines
     another_accounting_transaction = self.portal.accounting_module.newContent(
                       portal_type=self.accounting_transaction_portal_type,
@@ -4294,11 +4294,11 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     lines_count = len(another_accounting_transaction.getMovementList())
     self.getWorkflowTool().doActionFor(another_accounting_transaction, 'stop_action')
     self.assertEqual(len(another_accounting_transaction.getMovementList()), lines_count)
-    
+
   ############################################################################
   ## Test Methods ############################################################
   ############################################################################
-  
+
   def test_MultiCurrencyInvoice(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """Basic test for multi currency accounting"""
     if not run : return
@@ -4531,7 +4531,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
                               portal_type='Accounting Transaction')
     document.edit(title='My Accounting Transaction')
     document.Base_makeTemplateFromDocument(form_id=None)
-    
+
     template = preference.objectValues()[0]
     ret = self.accounting_module.Base_doAction(
         select_action='template %s' % template.getRelativeUrl(),

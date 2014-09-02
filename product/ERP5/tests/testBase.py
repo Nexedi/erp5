@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -70,7 +70,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   defined_property_value = "a_wonderful_title"
   not_related_to_temp_object_property_id = "string_index"
   not_related_to_temp_object_property_value = "a_great_index"
-  
+
   username = 'rc'
 
   def getTitle(self):
@@ -110,8 +110,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     del Organisation.recursiveImmediateReindexObject
 
   def createCategories(self):
-    """ 
-      Light install create only base categories, so we create 
+    """
+      Light install create only base categories, so we create
       some categories for testing them
     """
     category_list = ['testGroup1', 'testGroup2']
@@ -129,7 +129,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       default_pref.enable()
     return default_pref
 
-  def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, 
+  def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None,
                                  **kw):
     """
       Remove workflow related to the portal type
@@ -144,7 +144,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
 
-  def stepAssociateWorkflowsExcludingEdit(self, sequence=None, 
+  def stepAssociateWorkflowsExcludingEdit(self, sequence=None,
                                           sequence_list=None, **kw):
     """
       Associate workflow to the portal type
@@ -173,7 +173,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     current_title = sequence.get('current_title')
     self.assertEqual(object_instance.getTitle(), current_title)
 
-  def stepSetDifferentTitleValueWithEdit(self, sequence=None, 
+  def stepSetDifferentTitleValueWithEdit(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Set a different title value
@@ -200,10 +200,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(len(message_list) > 0)
     self.assertTrue(len(message_list) < 3)
     for method_id in method_id_list:
-      self.assertTrue(method_id in ["immediateReindexObject", 
+      self.assertTrue(method_id in ["immediateReindexObject",
                                     "recursiveImmediateReindexObject"])
 
-  def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None, 
+  def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):
     """
       Set a different title value
@@ -211,7 +211,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_instance = sequence.get('object_instance')
     object_instance.edit(title=object_instance.getTitle())
 
-  def stepCheckIfMessageQueueIsEmpty(self, sequence=None, 
+  def stepCheckIfMessageQueueIsEmpty(self, sequence=None,
                                      sequence_list=None, **kw):
     """
       Check if there is no activity in activity queue.
@@ -223,7 +223,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=quiet,
                                                       run=run_all_test):
     """
-      Test if setter does not call a activity if the attribute 
+      Test if setter does not call a activity if the attribute
       value is not changed.
     """
     if not run: return
@@ -303,7 +303,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     current_group_value = sequence.get('current_group_value')
     self.assertEqual(object_instance.getGroupValue(), current_group_value)
 
-  def stepSetDifferentGroupValueWithEdit(self, sequence=None, 
+  def stepSetDifferentGroupValueWithEdit(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Set a different title value
@@ -325,7 +325,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         current_group_value=new_group_value
     )
 
-  def stepSetSameGroupValueWithEdit(self, sequence=None, sequence_list=None, 
+  def stepSetSameGroupValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):
     """
       Set a different title value
@@ -337,7 +337,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_02_areActivitiesWellLaunchedByCategoryEdit(self, quiet=quiet,
                                                       run=run_all_test):
     """
-      Test if setter does not call a activity if the attribute 
+      Test if setter does not call a activity if the attribute
       value is not changed.
     """
     if not run: return
@@ -407,7 +407,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepSetDifferentTitleValueWithSetter(self, sequence=None, 
+  def stepSetDifferentTitleValueWithSetter(self, sequence=None,
                                            sequence_list=None, **kw):
     """
       Set a different title value
@@ -420,7 +420,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         current_title=new_title_value
     )
 
-  def stepSetSameTitleValueWithSetter(self, sequence=None, 
+  def stepSetSameTitleValueWithSetter(self, sequence=None,
                                       sequence_list=None, **kw):
     """
       Set a different title value
@@ -431,7 +431,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_03_areActivitiesWellLaunchedByPropertySetter(self, quiet=quiet,
                                                         run=run_all_test):
     """
-      Test if setter does not call a activity if the attribute 
+      Test if setter does not call a activity if the attribute
       value is not changed.
     """
     if not run: return
@@ -484,7 +484,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepSetDifferentGroupValueWithSetter(self, sequence=None, 
+  def stepSetDifferentGroupValueWithSetter(self, sequence=None,
                                            sequence_list=None, **kw):
     """
       Set a different title value
@@ -506,7 +506,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         current_group_value=new_group_value
     )
 
-  def stepSetSameGroupValueWithSetter(self, sequence=None, 
+  def stepSetSameGroupValueWithSetter(self, sequence=None,
                                       sequence_list=None, **kw):
     """
       Set a different title value
@@ -517,7 +517,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_04_areActivitiesWellLaunchedByCategorySetter(self, quiet=quiet,
                                                         run=run_all_test):
     """
-      Test if setter does not call a activity if the attribute 
+      Test if setter does not call a activity if the attribute
       value is not changed.
     """
     if not run: return
@@ -570,7 +570,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepSetObjectNotDefinedProperty(self, sequence=None, 
+  def stepSetObjectNotDefinedProperty(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Set a not defined property on the object_instance.
@@ -579,7 +579,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_instance.setProperty(self.not_defined_property_id,
                        self.not_defined_property_value)
 
-  def stepCheckNotDefinedPropertySaved(self, sequence=None, 
+  def stepCheckNotDefinedPropertySaved(self, sequence=None,
                                        sequence_list=None, **kw):
     """
     Check if a not defined property is stored on the object_instance.
@@ -588,7 +588,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(self.not_defined_property_value,
                       getattr(object_instance, self.not_defined_property_id))
 
-  def stepCheckGetNotDefinedProperty(self, sequence=None, 
+  def stepCheckGetNotDefinedProperty(self, sequence=None,
                                      sequence_list=None, **kw):
     """
     Check getProperty with a not defined property.
@@ -597,7 +597,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(self.not_defined_property_value,
                     object_instance.getProperty(self.not_defined_property_id))
 
-  def stepCheckObjectPortalType(self, sequence=None, 
+  def stepCheckObjectPortalType(self, sequence=None,
                                 sequence_list=None, **kw):
     """
     Check the portal type of the object_instance.
@@ -658,7 +658,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         current_group_value=None
     )
 
-  def stepCheckTempClassPortalType(self, sequence=None, 
+  def stepCheckTempClassPortalType(self, sequence=None,
                                    sequence_list=None, **kw):
     """
     Check the portal type of the object_instance.
@@ -668,7 +668,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(self.temp_class,
                       object_instance.getPortalType())
 
-  def stepSetObjectDefinedProperty(self, sequence=None, 
+  def stepSetObjectDefinedProperty(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Set a defined property on the object_instance.
@@ -677,7 +677,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_instance.setProperty(self.defined_property_id,
                        self.defined_property_value)
 
-  def stepCheckDefinedPropertySaved(self, sequence=None, 
+  def stepCheckDefinedPropertySaved(self, sequence=None,
                                        sequence_list=None, **kw):
     """
     Check if a defined property is stored on the object_instance.
@@ -686,7 +686,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(self.defined_property_value,
                       getattr(object_instance, self.defined_property_id))
 
-  def stepCheckGetDefinedProperty(self, sequence=None, 
+  def stepCheckGetDefinedProperty(self, sequence=None,
                                      sequence_list=None, **kw):
     """
     Check getProperty with a defined property.
@@ -695,7 +695,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(self.defined_property_value,
                     object_instance.getProperty(self.defined_property_id))
 
-  def stepSetObjectNotRelatedProperty(self, sequence=None, 
+  def stepSetObjectNotRelatedProperty(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Set a defined property on the object_instance.
@@ -705,17 +705,17 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                        self.not_related_to_temp_object_property_id,
                        self.not_related_to_temp_object_property_value)
 
-  def stepCheckNotRelatedPropertySaved(self, sequence=None, 
+  def stepCheckNotRelatedPropertySaved(self, sequence=None,
                                        sequence_list=None, **kw):
     """
     Check if a defined property is stored on the object_instance.
     """
     object_instance = sequence.get('object_instance')
     self.assertEqual(self.not_related_to_temp_object_property_value,
-                      getattr(object_instance, 
+                      getattr(object_instance,
                               self.not_related_to_temp_object_property_id))
 
-  def stepCheckGetNotRelatedProperty(self, sequence=None, 
+  def stepCheckGetNotRelatedProperty(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check getProperty with a defined property.
@@ -727,7 +727,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_06_getPropertyOnTempClass(self, quiet=quiet, run=1):
     """
-    Test if set/getProperty work in temp object without 
+    Test if set/getProperty work in temp object without
     a portal type with the same name.
     """
     if not run: return
@@ -749,7 +749,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def stepCheckEditMethod(self, sequence=None, 
+  def stepCheckEditMethod(self, sequence=None,
                           sequence_list=None, **kw):
     """
     Check if edit method works.
@@ -760,7 +760,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_instance.edit(title='tutu')
     self.assertEqual(object_instance.getTitle(),'tutu')
 
-  def stepSetEditProperty(self, sequence=None, 
+  def stepSetEditProperty(self, sequence=None,
                           sequence_list=None, **kw):
     """
     Check if edit method works.
@@ -824,7 +824,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(object_instance.getAcquisitionPortalTypeList(evaluate=0),
                       tales_expression)
 
-  def stepSetGoodTalesExpression(self, sequence=None, 
+  def stepSetGoodTalesExpression(self, sequence=None,
                                  sequence_list=None, **kw):
     """
     Set a wrong tales expression
@@ -851,7 +851,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-  
+
   def test_08_emptyObjectAcquiresTitle(self, quiet=quiet, run=run_all_test):
     """
     Test that an empty object has no title, and that getTitle on it acquires a
@@ -902,7 +902,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(obj.getProperty(property_name), property_value)
     obj.edit(**{property_name: property_value})
     self.assertEqual(obj.getProperty(property_name), property_value)
-  
+
   def test_11_setPropertyPropertyDefinedOnInstance(self,
                                         quiet=quiet, run=run_all_test):
     """Test for setProperty on Base, when the property is defined on the
@@ -913,7 +913,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal_type = "Organisation"
     module = portal.getDefaultModule(portal_type=portal_type)
     obj = module.newContent(portal_type=portal_type)
-    
+
     property_value = 'Property value'
     property_name = 'a_dummy_object_property'
     setattr(obj, property_name, property_value)
@@ -922,7 +922,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     self.assertRaises(BadRequest, obj.setProperty,
                      'workflow_history', property_value)
-  
+
   def test_12_editTempObject(self, quiet=quiet, run=run_all_test):
     """Simple t
     est to edit a temp object.
@@ -1024,7 +1024,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       obj = module.newContent(portal_type=portal_type)
       #No role is defined by default on workflow
       for permission in permission_list:
-        self.assertTrue(user.has_permission(permission, module)) 
+        self.assertTrue(user.has_permission(permission, module))
       #then check permission is acquired
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
@@ -1149,7 +1149,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(pers._getTypeBasedMethod('fooMethod'), base_script)
     self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
     self.assertEqual(org._getTypeBasedMethod('dummyFoo2Method'), None)
-    
+
     # Call the scripts to make sure the context are appropriated.
     self.assertEqual(org._getTypeBasedMethod('dummyMethod')(), org.getId())
     self.assertEqual(pers._getTypeBasedMethod('dummyMethod')(), pers.getId())
@@ -1179,7 +1179,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     pers.activate().Person_getDummyTypeBaseMethodByActivity()
     self.tic()
-    
+
   def test_translate_table(self):
     """check if Person portal type that is installed in erp5_base is
     well indexed in translate table or not.

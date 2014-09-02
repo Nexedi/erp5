@@ -150,7 +150,7 @@ class SetSetter(Base.Setter):
           if list_value:
             default_value = list_value[0]
             if default_value in value:
-              # If we change the set, 
+              # If we change the set,
               # the default value must be in the new set
               value.remove(default_value)
               value = (default_value,) + tuple(value)

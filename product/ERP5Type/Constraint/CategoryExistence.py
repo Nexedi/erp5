@@ -30,7 +30,7 @@
 from Constraint import Constraint
 
 class CategoryExistence(Constraint):
-  """This constraint checks if an object respects the existence of 
+  """This constraint checks if an object respects the existence of
     a category, without acquisition.
 
     Configuration example:
@@ -72,7 +72,7 @@ class CategoryExistence(Constraint):
         error_message = 'message_category_not_set'
       else:
         error_message = None
-      
+
       # Raise error
       if error_message:
         error_list.append(self._generateError(obj,

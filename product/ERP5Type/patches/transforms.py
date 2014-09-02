@@ -28,17 +28,17 @@
 """
   The followed transforms classes moved to PortalTransforms product.
 
-  To keep the backward compatibility with the persistent objects which 
+  To keep the backward compatibility with the persistent objects which
   were not updated yet, it was added the followed imports.
 
   Without this patch the persistent objects becomes broken and not
   accessible or updatable by Subversion.
 
   XXX Please remove this path once portal_transforms is not used or
-  once all objects are already moved to latest versions of ERP5. 
+  once all objects are already moved to latest versions of ERP5.
   (at least revision 30051)
 
- 
+
 """
 
 import sys
@@ -50,9 +50,9 @@ try:
 
   sys.modules['Products.ERP5Type.patches.transforms.png_to_text'] = png_to_text
   sys.modules['Products.ERP5Type.patches.transforms.w3m_dump'] = w3m_dump
-  sys.modules['Products.ERP5Type.patches.transforms.html_to_text'] = html_to_text 
+  sys.modules['Products.ERP5Type.patches.transforms.html_to_text'] = html_to_text
 
 except ImportError:
   from zLOG import LOG, WARNING
-  LOG('ERP5Type.patches.transforms', WARNING, 
+  LOG('ERP5Type.patches.transforms', WARNING,
       'Count not import transforms introduced for backward compatibility')

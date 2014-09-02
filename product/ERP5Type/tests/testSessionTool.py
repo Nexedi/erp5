@@ -165,7 +165,7 @@ class TestSessionTool(ERP5TypeTestCase):
     portal_sessions =  self.getPortal().portal_sessions
     session = portal_sessions.newContent(self.session_id, \
                                          **primitives_kw)
-    # delete it 
+    # delete it
     portal_sessions.manage_delObjects(self.session_id)
     session = portal_sessions[self.session_id]
     self.assert_({} == session)
@@ -182,7 +182,7 @@ class TestSessionTool(ERP5TypeTestCase):
   def stepTestSessionDictInterface(self, sequence=None, \
                                    sequence_list=None, **kw):
     session = self.portal.portal_sessions[self.session_id]
-    session.clear()    
+    session.clear()
     session['foo'] = 'Bar'
     self.assertTrue('foo' in session)
     self.assertEqual('Bar', session['foo'])
@@ -216,7 +216,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     self.assertEqual(kw, session)
 
-    # test big session 
+    # test big session
     session.clear()
     for key, item in kw.items():
       kw[key] = ''.join([choice(LETTERS) for x in range(1000)])
@@ -244,7 +244,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
     session['key'] = 'value'
-    
+
     self.getPortal().person_module.newContent(portal_type='Person',
                                         default_address_city='test',
                                         default_address_region='test',

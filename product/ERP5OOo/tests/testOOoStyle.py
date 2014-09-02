@@ -103,7 +103,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     error_list = self.validator.validate(odf_file_data)
     if error_list:
       self.fail(''.join(error_list))
-  
+
   def _assertFieldInGroup(self, field_type, form_id, group):
     for f in getattr(self.portal, form_id).get_fields_in_group(group):
       if f.meta_type == 'ProxyField':

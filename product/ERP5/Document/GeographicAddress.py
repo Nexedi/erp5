@@ -99,7 +99,7 @@ class GeographicAddress(Coordinate):
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
   def fromText(self, coordinate_text):
-    """Save given data then continue parsing 
+    """Save given data then continue parsing
     (deprecated because computed values are stored)
     """
     self._setCoordinateText(coordinate_text)

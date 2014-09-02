@@ -395,7 +395,7 @@ Named Parameters: %r
 
       is_executed can be one of MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED and
       MESSAGE_NOT_EXECUTABLE (variables defined above).
-      
+
       exc_info must be - if given - similar to sys.exc_info() return value.
 
       log must be - if given - True or False. If True, a log line will be
@@ -579,10 +579,10 @@ class ActivityTool (Folder, UniqueObject):
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manage_overview' )
     manage_overview = DTMLFile( 'dtml/explainActivityTool', globals() )
-    
+
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageLoadBalancing' )
     manageLoadBalancing = DTMLFile( 'dtml/manageLoadBalancing', globals() )
-    
+
     distributingNode = ''
     _nodes = ()
     activity_creation_trace = False
@@ -643,7 +643,7 @@ class ActivityTool (Folder, UniqueObject):
         if not service:
             LOG('ActivityTool', INFO, 'TimerService not available')
             return False
-        
+
         path = '/'.join(self.getPhysicalPath())
         if path in service.lisSubscriptions():
             return True
@@ -782,7 +782,7 @@ class ActivityTool (Folder, UniqueObject):
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
         Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
-    
+
     def manage_afterAdd(self, item, container):
         self.subscribe()
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
@@ -826,7 +826,7 @@ class ActivityTool (Folder, UniqueObject):
             'node identifier.', DeprecationWarning)
           currentNode = self.getServerAddress()
         return currentNode
-        
+
     security.declarePublic('getDistributingNode')
     def getDistributingNode(self):
         """ Return the distributingNode """
@@ -881,10 +881,10 @@ class ActivityTool (Folder, UniqueObject):
     def _isValidNodeName(self, node_name) :
       """Check we have been provided a good node name"""
       return isinstance(node_name, str)
-      
+
     security.declarePublic('manage_setDistributingNode')
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):
-        """ set the distributing node """   
+        """ set the distributing node """
         if not distributingNode or self._isValidNodeName(distributingNode):
           self.distributingNode = distributingNode
           if REQUEST is not None:
@@ -1212,7 +1212,7 @@ class ActivityTool (Folder, UniqueObject):
         # XXX: PATH_INFO might not be set when runing unit tests.
         if request.environ.get('PATH_INFO') is None:
           request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
-        
+
         # restore request information
         new_request = request.clone()
         request_info = message.request_info

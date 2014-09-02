@@ -32,7 +32,7 @@ from testPurchaseOrder import TestPurchaseOrder
 
 class TestInternalOrder(TestPurchaseOrder):
   """
-    Test business template erp5_trade 
+    Test business template erp5_trade
   """
   run_all_test = 1
   order_portal_type = 'Internal Order'

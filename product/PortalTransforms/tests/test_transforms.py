@@ -197,7 +197,7 @@ if HAS_TEXTILE:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.textile_to_html',
          "input.textile", "textile.html", None, 0
-        ), 
+        ),
        )
 
 def initialise(transform, normalize, pattern):

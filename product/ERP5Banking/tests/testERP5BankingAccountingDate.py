@@ -109,7 +109,7 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin):
     accounting_date_module = self.getPortal().accounting_date_module
     object_id_list = [x for x in accounting_date_module.objectIds()]
     accounting_date_module.manage_delObjects(ids=object_id_list)
- 
+
   def stepCreateTodayAccountingDate(self, sequence=None, sequence_list=None,
                                     **kwd):
     self.openAccountingDate(date=self.now, site=self.accounting_date_site)
@@ -117,7 +117,7 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin):
   def stepCreatePastDayAccountingDate(self, sequence=None, sequence_list=None,
                                       **kwd):
     self.openAccountingDate(date=self.past_day, site=self.accounting_date_site)
-    
+
   def test_AccountingDate(self, quiet=QUIET, run=RUN_ALL_TEST):
     if not run:
       return

@@ -165,7 +165,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
       elif major == 'audio':
         part = MIMEAudio(attachment['content'], _subtype=minor)
       else:
-        #  encode non-plaintext attachment in base64      
+        #  encode non-plaintext attachment in base64
         part = MIMEBase(major, minor)
         part.set_payload(attachment['content'])
         encoders.encode_base64(part)
@@ -415,7 +415,7 @@ class NotificationTool(BaseTool):
       # make attachment_list polymorphic in order to be able
       # to provide different kinds of attachments can be provided
       # Either document references or binary data.
-      event.build(sender=sender, recipient=recipient, subject=subject, 
+      event.build(sender=sender, recipient=recipient, subject=subject,
                   message=message, attachment_list=attachment_list,) # Rename here and add whatever
                                                                      # parameter makes sense such
                                                                      # as text format

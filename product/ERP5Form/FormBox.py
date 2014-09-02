@@ -155,7 +155,7 @@ class FormBoxEditor:
   def edit(self, context):
     context.edit(**self.result[0])
     for encapsulated_editor in self.result[1]:
-      encapsulated_editor.edit(context)  
+      encapsulated_editor.edit(context)
 
   def as_dict(self):
     """

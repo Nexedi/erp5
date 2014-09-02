@@ -144,7 +144,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
       Inherit from delivery or parent (using a conversion table to make orders
       planned when parent is confirmed).
-      
+
       In the case of simulation coming from an item, the simulation state is
       delegated to the item.
 

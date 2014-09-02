@@ -33,9 +33,9 @@ class ISimilarityProvider(Interface):
   """
   Similar Provider interface specification
 
-  Documents which implement ISimilarityProvider can be implicitely or 
+  Documents which implement ISimilarityProvider can be implicitely or
   explicitely related to other similar documents. The ISimilarityProvider
-  interface provides methods to find implicit similarities as 
+  interface provides methods to find implicit similarities as
   well as transitive closure of explicit similarities.
   """
 

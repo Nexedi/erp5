@@ -245,12 +245,12 @@ class HBTreeFolder2Base (Persistent):
                 if isinstance(ob, OOBTree):
                   hCheck(ob)
           return 1
-        
+
         from BTrees.check import check
         path = '/'.join(self.getPhysicalPath())
         try:
             return hCheck(self._htree)
-        except AssertionError:            
+        except AssertionError:
             LOG('HBTreeFolder2', WARNING,
                 'Detected damage to %s. Fixing now.' % path,
                 error=sys.exc_info())
@@ -273,7 +273,7 @@ class HBTreeFolder2Base (Persistent):
           return tuple(id_list)
         else:
           return [id,]
-    
+
 #         try:                             # We then try int hashing
 #           id_int = int(id)
 #         except ValueError:
@@ -325,12 +325,12 @@ class HBTreeFolder2Base (Persistent):
               tree_id = H_SEPARATOR.join(id_list[:idx+1])
             # Index newly created level
             self._tree_list[tree_id] = None
-            
+
           htree = htree[sub_id]
 
         if len(id_list) == 1 and not htree.has_key(None):
             self._tree_list[None] = None
-        # set object in subtree            
+        # set object in subtree
         ob_id = id_list[-1]
         if htree.has_key(id):
             raise KeyError('There is already an item named "%s".' % id)
@@ -480,7 +480,7 @@ class HBTreeFolder2Base (Persistent):
         """
         htree = self._htree
         id_list = self.hashId(base_id)
-        for sub_id in id_list:            
+        for sub_id in id_list:
           if not isinstance(htree, OOBTree):
             return None
           if not htree.has_key(sub_id):
@@ -502,7 +502,7 @@ class HBTreeFolder2Base (Persistent):
             btree_list.extend(["%s-%s"%(obj_id, x) for x in self._getTreeIdList(htree=obj)])
             btree_list.append(obj_id)
 
-        return btree_list 
+        return btree_list
 
     security.declareProtected(access_contents_information,
                               'getTreeIdList')
@@ -512,7 +512,7 @@ class HBTreeFolder2Base (Persistent):
         if self._tree_list is None or len(self._tree_list.keys()) == 0:
             tree_list = self._getTreeIdList(htree=htree)
             self._tree_list = PersistentMapping()
-            for tree in tree_list:                
+            for tree in tree_list:
                 self._tree_list[tree] = None
         return sorted(self._tree_list.keys())
 
@@ -523,7 +523,7 @@ class HBTreeFolder2Base (Persistent):
         if base_id is not None:
             obj_id = "%s%s%s" %(base_id, H_SEPARATOR, obj_id)
         return not self._tree_list.has_key(obj_id)
-        
+
     security.declareProtected(access_contents_information,
                               'objectValues')
     def objectValues(self, base_id=_marker):
@@ -662,7 +662,7 @@ class HBTreeFolder2 (HBTreeFolder2Base, Folder):
     def _checkId(self, id, allow_dup=0):
         Folder._checkId(self, id, allow_dup)
         HBTreeFolder2Base._checkId(self, id, allow_dup)
-    
+
 
 InitializeClass(HBTreeFolder2)
 

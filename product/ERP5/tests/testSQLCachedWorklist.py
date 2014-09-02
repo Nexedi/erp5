@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. 
+# Copyright (c) 2007 Nexedi SA and Contributors.
 # All Rights Reserved.
 #          Vincent Pelletier <vincent@nexedi.com>
 #

@@ -41,7 +41,7 @@ class ITranslatable(Interface):
     """
     Returns a list of languages which this document is available in
     for the current user.
-       
+
     version -- an optional version for documents which also
                implement IVersionable
     """

@@ -203,7 +203,7 @@ class CacheTool(BaseTool):
     """ Calculate total size of memory used for cache.
 
         Note: this method will calculate RAM memory usage for 'local'
-        (RamCache) cache plugins and will not include 
+        (RamCache) cache plugins and will not include
         'shared' (DistributedRamCache) cache plugins."""
     stats = {}
     total_size = 0

@@ -52,14 +52,14 @@ class AttributeEquality(PropertyExistence):
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
-      We will make sure that each non None constraint_definition is 
+      We will make sure that each non None constraint_definition is
       satisfied (equality)
     """
     errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expected_value in self.constraint_definition.items():
       message_id = None
       mapping = dict()
-      # If property does not exist, error will be raised by 
+      # If property does not exist, error will be raised by
       # PropertyExistence Constraint.
       if obj.hasProperty(attribute_name):
         identical = 1

@@ -101,7 +101,7 @@ class TestCacheTool(ERP5TypeTestCase):
     memcached_plugin_id = 'flare'
     if getattr(portal_memcached, memcached_plugin_id, None) is None:
       connection_dict = _getPersistentMemcachedServerDict()
-      url_string = '%(hostname)s:%(port)s' % connection_dict 
+      url_string = '%(hostname)s:%(port)s' % connection_dict
       portal_memcached.newContent(portal_type='Memcached Plugin',
                                   id=memcached_plugin_id,
                                   url_string=url_string,
@@ -114,7 +114,7 @@ class TestCacheTool(ERP5TypeTestCase):
     portal_caches = portal.portal_caches
 
     # Cache plugins are organised into 'Cache factories' so we create
-    # factories first ram_cache_factory (to test Ram Cache Plugin) 
+    # factories first ram_cache_factory (to test Ram Cache Plugin)
     if getattr(portal_caches, 'ram_cache_factory', None) is None:
       ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                             id='ram_cache_factory',
@@ -132,7 +132,7 @@ class TestCacheTool(ERP5TypeTestCase):
       cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'distributed_ram_cache_factory', None) is None:
-      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
+      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin)
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                             id='distributed_ram_cache_factory',
                                             container=portal_caches,
@@ -143,7 +143,7 @@ class TestCacheTool(ERP5TypeTestCase):
       dram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'distributed_persistent_cache_factory', None) is None:
-      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
+      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin)
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                       id='distributed_persistent_cache_factory',
                                       container=portal_caches,
@@ -192,7 +192,7 @@ return result
                                                 id=self.python_script_id)
     py_script_obj = getattr(portal, self.python_script_id)
     py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
-    return 
+    return
 
   def test_01_CacheFactoryOnePlugin(self):
     """ Test cache factory containing only one cache plugin. """
@@ -241,7 +241,7 @@ return result
 
   def _cacheFactoryInstanceTest(self, my_cache, cf_name, clear_allowed):
     portal = self.getPortal()
-    print 
+    print
     print "="*40
     print "TESTING:", cf_name
 

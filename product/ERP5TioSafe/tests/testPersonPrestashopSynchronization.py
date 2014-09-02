@@ -67,7 +67,7 @@ class TestPersonPrestashopSynchronization(testPrestashopMixin):
         default_email_text='john@doe.com',
         career_role_list = ['client'],
     )
-    
+
     self.tic()
 
     # Run the sync of persons and check person's data after sync
@@ -99,7 +99,7 @@ class TestPersonPrestashopSynchronization(testPrestashopMixin):
     person.setDefaultAddressZipCode('75000')
     person.setDefaultAddressCity('Paris')
     person.setDefaultAddressRegion('france')
-    
+
     self.tic()
 
     # Run the sync of persons and check person's data after sync
@@ -154,7 +154,7 @@ class TestPersonPrestashopSynchronization(testPrestashopMixin):
         int_index=3,
     )
     self.tic()
-    
+
     # Run the sync of persons and check person's data after sync
     self.assertEqual(len(self.prestashop.person_module()), 0)
     self.loadSync([self.prestashop.person_module, ])
@@ -178,7 +178,7 @@ class TestPersonPrestashopSynchronization(testPrestashopMixin):
         default_email_text='john@doe.com',
         career_role_list = ['client'],
     )
-    
+
     self.tic()
 
     # Run the sync of persons
@@ -207,7 +207,7 @@ class TestPersonPrestashopSynchronization(testPrestashopMixin):
         default_address_region='france',
         career_role_list = ['client'],
     )
-    
+
     self.tic()
 
     # Run the sync of persons and check person's data after sync

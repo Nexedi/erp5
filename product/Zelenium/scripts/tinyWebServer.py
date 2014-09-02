@@ -13,7 +13,7 @@
 #  limitations under the License.
 #
 
-# minimal web server.  
+# minimal web server.
 # serves files relative to the current directory.
 # cgi-bin directory serves Python CGIs.
 
@@ -29,13 +29,13 @@ class HTTPHandler(CGIHTTPServer.CGIHTTPRequestHandler):
     """
     Simple Web Server that can handle query strings in a request URL and
     can be stopped with a request
-    
+
     """
-    
+
     quitRequestReceived = False
-    
+
     def do_GET(self):
-        # SimpleHTTPServer doesn't know how to handle query strings in 
+        # SimpleHTTPServer doesn't know how to handle query strings in
         # 'GET' requests, so we're processing them here:
         if self.path.find('?') != -1:
             self.path, self.query_string = self.path.split('?', 1)
@@ -45,14 +45,14 @@ class HTTPHandler(CGIHTTPServer.CGIHTTPRequestHandler):
         # Add a delay before serving up the slow-loading test page
         if self.path.find('test_slowloading_page') != -1:
             time.sleep(0.3)
-              
+
         # Carry on with the rest of the processing...
-        CGIHTTPServer.CGIHTTPRequestHandler.do_GET(self)  
+        CGIHTTPServer.CGIHTTPRequestHandler.do_GET(self)
 
     def do_QUIT(self):
         self.send_response(200)
         self.end_headers()
-        HTTPHandler.quitRequestReceived = True 
+        HTTPHandler.quitRequestReceived = True
 
 if __name__ == '__main__':
     port = PORT

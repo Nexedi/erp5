@@ -29,9 +29,9 @@
 class MetaNode:
   """
     A metanode aggregates a collection of real nodes.
-    It is used for planning and budgeting. 
+    It is used for planning and budgeting.
     One application of a metanode is to create accounting rules....
-      
+
     Ex. accounting
 
       source/coramy/accounting/4003

@@ -212,7 +212,7 @@ class ProxyField(ZMIField):
           raise
 
       self._surcharged_edit(result, surcharge_list)
-    
+
     # Edit standards attributes
     # XXX It is not possible to call ZMIField.manage_edit because
     # it returns at the end...
@@ -230,7 +230,7 @@ class ProxyField(ZMIField):
         raise
 
     self._edit(result)
-        
+
     if REQUEST:
       message="Content changed."
       return self.manage_main(self, REQUEST,
@@ -252,7 +252,7 @@ class ProxyField(ZMIField):
 
 
   def _surcharged_edit(self, result, surcharge_list):
-    # first check for any changes  
+    # first check for any changes
     values = self.values
     # if we are in unicode mode, convert result to unicode
     # acquire get_unicode_mode and get_stored_encoding from form..
@@ -337,14 +337,14 @@ class ProxyField(ZMIField):
 
     self._edit_tales(result)
 
-    
+
     if REQUEST:
       message="Content changed."
       return self.manage_talesForm(self, REQUEST,
                                             manage_tabs_message=message)
 
   def _surcharged_tales(self, result, surcharge_list):
-    # first check for any changes  
+    # first check for any changes
     tales = self.tales
 
     changed = []
@@ -393,23 +393,23 @@ class ProxyField(ZMIField):
       return self.manage_messagesForm(self,REQUEST,
                                       manage_tabs_message=message)
 
-  security.declareProtected('View management screens', 'get_error_message') 
-  def get_error_message(self, name): 
+  security.declareProtected('View management screens', 'get_error_message')
+  def get_error_message(self, name):
     if not self.is_message_delegated(name):
-      try: 
-        return self.message_values[name] 
-      except KeyError: 
-        if name in self.validator.message_names: 
-          return getattr(self.validator, name) 
-        else: 
-          return "Unknown error: %s" % name 
+      try:
+        return self.message_values[name]
+      except KeyError:
+        if name in self.validator.message_names:
+          return getattr(self.validator, name)
+        else:
+          return "Unknown error: %s" % name
     else:
       return self.getTemplateField().get_error_message(name)
 
-  security.declareProtected('View management screens', 'get_error_names') 
-  def get_error_names(self): 
-    """Get error messages. 
-    """ 
+  security.declareProtected('View management screens', 'get_error_names')
+  def get_error_names(self):
+    """Get error messages.
+    """
     return self.getTemplateField().get_error_names()
 
   def getTemplateField(self, cache=True):
@@ -471,7 +471,7 @@ class ProxyField(ZMIField):
                     break
 
     if proxy_field is None:
-      LOG('ProxyField', WARNING, 
+      LOG('ProxyField', WARNING,
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
     if cache is True:
@@ -503,7 +503,7 @@ class ProxyField(ZMIField):
       return self.getTemplateField().sub_form
     return None
 
-  security.declareProtected('Access contents information', 
+  security.declareProtected('Access contents information',
                             'is_delegated')
   def is_delegated(self, id):
     """
@@ -512,7 +512,7 @@ class ProxyField(ZMIField):
     """
     return id not in self.delegated_list
 
-  security.declareProtected('Access contents information', 
+  security.declareProtected('Access contents information',
                             'is_message_delegated')
   def is_message_delegated(self, id):
     """
@@ -521,7 +521,7 @@ class ProxyField(ZMIField):
     """
     return id not in self.delegated_message_list
 
-  security.declareProtected('Access contents information', 
+  security.declareProtected('Access contents information',
                             'get_recursive_orig_value')
   def get_recursive_orig_value(self, id, include=1):
     """
@@ -556,7 +556,7 @@ class ProxyField(ZMIField):
         return proxied_field.get_recursive_tales(id)
       else:
         return proxied_field.get_tales(id)
-    
+
   # XXX Not implemented
   security.declareProtected('View management screens', 'get_recursive_override')
   def get_recursive_override(self, id):
@@ -567,15 +567,15 @@ class ProxyField(ZMIField):
 
   security.declareProtected('Edit target', 'manage_edit_target')
   def manage_edit_target(self, REQUEST):
-    """ 
+    """
     Edit target field of this proxy
     """
     proxy_field = self.getTemplateField()
     if proxy_field:
-      url = "%s/manage_main" % proxy_field.absolute_url() 
+      url = "%s/manage_main" % proxy_field.absolute_url()
       REQUEST.RESPONSE.redirect(url)
     else:
-      # FIXME: should show some error message 
+      # FIXME: should show some error message
       # ("form_id and field_id don't define a valid template")
       pass
 
@@ -804,7 +804,7 @@ def checkOriginalGetValue(instance, argument_name):
 
   if argument_name_list is None:
     return False
-  
+
   if len(argument_name_list)==1 and argument_name_list[0]=='*':
     return True
 

@@ -138,7 +138,7 @@ class Amount(Base, VariatedMixin):
                                                render(object_list))
     return variation_category_item_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             '_setVariationCategoryList')
   def _setVariationCategoryList(self, value):
     result = []
@@ -148,7 +148,7 @@ class Amount(Base, VariatedMixin):
       if len(variation_list) > 0:
         self._setCategoryMembership(variation_list, value, base = 1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'setVariationCategoryList')
   def setVariationCategoryList(self, value):
     self._setVariationCategoryList(value)
@@ -185,7 +185,7 @@ class Amount(Base, VariatedMixin):
     """
     pass
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryItemList')
   def getVariationBaseCategoryItemList(self,display_id='getTitleOrId',**kw):
     """
@@ -195,7 +195,7 @@ class Amount(Base, VariatedMixin):
                                     self.getVariationBaseCategoryList(),
                                     display_id=display_id,**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationValue')
   def getVariationValue(self):
     """
@@ -375,14 +375,14 @@ class Amount(Base, VariatedMixin):
   def getResourcePrice(self):
     """
       Return price of the resource in the current context
-      
+
       The price is expressed in the standard unit of the resource (?)
     """
     resource = self.getResourceValue()
     if resource is not None:
       return resource.getPrice(context=self)
     return None
-      
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDuration')
   def getDuration(self):
     """
@@ -403,9 +403,9 @@ class Amount(Base, VariatedMixin):
   def getTotalPrice(self, **kw):
     """
       Return total price for the number of items
-      
-      Price is defined on 
-      
+
+      Price is defined on
+
     """
     price = self.getPrice()
     if price is None:
@@ -448,7 +448,7 @@ class Amount(Base, VariatedMixin):
       local_base_unit_price = self._getBaseUnitPrice(context=context)
     return local_base_unit_price
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPricePrecision')
   def getPricePrecision(self):
     """Return the floating point precision of a price.
@@ -691,18 +691,18 @@ class Amount(Base, VariatedMixin):
 #   def getStandardInventoriatedQuantity(self):
 #     """
 #       The inventoriated quantity converted in a default unit
-#       
+#
 #       For assortments, returns the inventoriated quantity in terms of number of items
 #       in the assortemnt.
-#       
+#
 #       For accounting, returns the quantity converted in a default unit
 #     """
 #     resource = self.getResourceValue()
 #     result = self.getInventoriatedQuantity()
 #     if resource is not None:
 #       result = resource.standardiseQuantity(result)
-#     return result  
-    
+#     return result
+
   # Profit and Loss
   security.declareProtected(Permissions.AccessContentsInformation, 'getLostQuantity')
   def getLostQuantity(self):

@@ -59,4 +59,4 @@ def test_suite():
   return suite
 
 
-# vim: syntax=python shiftwidth=2 
+# vim: syntax=python shiftwidth=2

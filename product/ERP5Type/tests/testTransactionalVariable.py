@@ -49,7 +49,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
 
     def test_01_DictInterface(self):
       """Check if a transaction variable behaves in the same way as a dict.  """
-   
+
       tv = getTransactionalVariable()
       self.assertNotEqual(tv, None)
 

@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # -*- Mode: Python; py-indent-offset: 4 -*-
-# Authors: Nik Kim <fafhrd@legco.biz> 
+# Authors: Nik Kim <fafhrd@legco.biz>
 
 from App.ImageFile import ImageFile
 from AccessControl import ModuleSecurityInfo, allow_module

@@ -60,7 +60,7 @@ class IConduit(Interface):
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    There is also one problem, when we synchronize a conflict, 
+    There is also one problem, when we synchronize a conflict,
     we are not waiting
     the response of the client, so that we are not sure if it take into account,
     we may have CONFLICT_NOT_SYNCHRONIZED AND CONFLICT_SYNCHRONIZED
@@ -134,7 +134,7 @@ class IConduit(Interface):
   def getGidFromXML(xml, namespace, gid_from_xml_list):
     """
     return the Gid composed with xml information
-    """ 
+    """
 
   def applyDiff(original_data, diff):
     """Patch original data with given diff

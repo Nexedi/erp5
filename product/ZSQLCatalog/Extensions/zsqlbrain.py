@@ -159,7 +159,7 @@ allow_class(ZSQLBrain)
 class ZSQLBrainNoObject(ZSQLBrain):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
-  
+
   def getObject(self):
     stack = ''.join(traceback.format_stack())
     LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject', WARNING,
@@ -175,7 +175,7 @@ class ZSQLBrainNoObject(ZSQLBrain):
       LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject',
           WARNING,
           "Non-existing property %r on record for %r:\n%s" % (name,
-                                                              self.getPath(), 
+                                                              self.getPath(),
                                                               stack))
       return None
     return value
@@ -186,7 +186,7 @@ class ZSQLBrainNoObject(ZSQLBrain):
     stack = ''.join(traceback.format_stack(limit=5))
     LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject', WARNING,
         "Non-existing attribute %r on record for %r:\n%s" % (name,
-                                                             self.getPath(), 
+                                                             self.getPath(),
                                                              stack))
 allow_class(ZSQLBrainNoObject)
 

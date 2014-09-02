@@ -521,7 +521,7 @@ class TestAlarm(ERP5TypeTestCase):
     skin_folder.manage_addProduct['PythonScripts']\
         .manage_addPythonScript(id=sense_method_id)
     # Make the sense method fail
-    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw',
           'context.setDescription("a")')
     del skin_folder
     alarm.setActiveSenseMethodId(sense_method_id)
@@ -557,7 +557,7 @@ class TestAlarm(ERP5TypeTestCase):
     skin_folder = self.getPortal().portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts']\
         .manage_addPythonScript(id=sense_method_id)
-    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw',
           'context.newActiveProcess()')
     # update alarm properties
     alarm.edit(alarm_notification_mode="always",
@@ -608,7 +608,7 @@ class TestAlarm(ERP5TypeTestCase):
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts']\
         .manage_addPythonScript(id=sense_method_id)
-    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw',
           'context.setProperty("bogus", str(context.showPermissions()))')
 
     # update alarm properties
@@ -620,7 +620,7 @@ class TestAlarm(ERP5TypeTestCase):
     uf = self.getPortal().acl_users
     uf._doAddUser('normal', '', ['Member', 'Auditor'], [])
     user = uf.getUserById('normal').__of__(uf)
-    
+
     # Check the pre-conditions.
     self.assertEqual(alarm.getProperty('bogus', None), None)
     self.assertEqual(alarm.getEnabled(), False)

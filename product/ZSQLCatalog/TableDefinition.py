@@ -155,7 +155,7 @@ class TableAlias(TableDefinition):
 
   def __eq__(self, other):
     return (isinstance(other, TableAlias) and
-            self.table == other.table and 
+            self.table == other.table and
             self.alias == other.alias)
 
   def getSuperSet(self, other):
@@ -171,10 +171,10 @@ class TableAlias(TableDefinition):
 
 JOIN_FORMAT = """
   (
-    %(left)s 
+    %(left)s
   %(join)s
     %(right)s
-  ON 
+  ON
     %(condition)s
   )
 """.strip()
@@ -253,7 +253,7 @@ class InnerJoin(Join):
 
 class LeftJoin(InnerJoin):
   """Definition of a left-join as a FROM expression"""
-  
+
   JOIN_TYPE = "LEFT JOIN"
 
   def _extendJoinConditionQueryList(self, query_list):

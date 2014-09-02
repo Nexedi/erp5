@@ -43,9 +43,9 @@ class TransactionQuantityValueFeasability(Constraint):
       source_cell = object.getSourceValue()
       destination_cell = object.getDestinationValue()
       # Check for source and destination
-      for node, sign, node_title in ((source_cell, 1, 'source'), 
+      for node, sign, node_title in ((source_cell, 1, 'source'),
                                      (destination_cell, -1, 'destination')):
-        # As the quantity can change a few lines letter, 
+        # As the quantity can change a few lines letter,
         # we need to get it each time.
         object_quantity = object.getQuantity()
         quantity = object_quantity * sign

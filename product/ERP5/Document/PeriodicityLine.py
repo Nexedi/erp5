@@ -99,7 +99,7 @@ class PeriodicityLine(Path, PeriodicityLineMixin):
       if next_start_date >= effective_date:
         result.append((next_start_date,
                        self.getPeriodicityTermStopDate(next_start_date)))
-      
+
       new_next_start_date = self.getNextPeriodicalDate(next_start_date)
       if new_next_start_date==next_start_date:
         # prevent infinite loop.

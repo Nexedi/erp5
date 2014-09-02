@@ -962,7 +962,7 @@ class ListBoxRenderer:
   getReportRootList = lazyMethod(getReportRootList)
 
   def getDisplayStyleList(self):
-    """Return the list of avaible display style. Make sure that the 
+    """Return the list of avaible display style. Make sure that the
     titles are in unicode"""
     display_style_list = self.field.get_value('display_style_list')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
@@ -1120,11 +1120,11 @@ class ListBoxRenderer:
     return set(self.getCheckedUidList())
 
   getCheckedUidSet = lazyMethod(getCheckedUidSet)
-  
+
   def setDisplayedColumnIdList(self, displayed_column_id_list):
     """Set the column to be displayed.
        Impact the result of getSelectedColumnList.
-       Parameter : 
+       Parameter :
        displayed_column_id_list : List of id. Exemple : ('id', 'title')
     """
     self.displayed_column_id_list = displayed_column_id_list
@@ -1295,7 +1295,7 @@ class ListBoxRenderer:
     # objects in the current ListBox configuration.
     if 'select_expression' in params:
       del params['select_expression']
-    params.setdefault('limit', 1000) 
+    params.setdefault('limit', 1000)
 
     self.getSelection().edit(params=params)
     return params
@@ -2631,7 +2631,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """
     request = self.request
     field_id = self.getId()
-    
+
     # Make it sure to store the current selection, only if a list method is defined.
     list_method = self.getListMethod()
     if list_method is not None:
@@ -2642,7 +2642,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       if selection_index is not None:
         list_url += '&selection_index=%s' % selection_index
       selection.edit(method_path = method_path, list_url = list_url)
-      
+
       # listbox search columnd are passed in format: <listbox_field_id>_<search_column>
       # this is done to allow multiple listboxes in one page with same search column names
       update_selection = False
@@ -2773,7 +2773,7 @@ class ListBoxValidator(Validator.Validator):
           alias = sql.replace('.', '_')
           editable_field_dict[alias] = ListBoxRenderer(
                                           field=field).getEditableField(alias)
-          
+
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         portal = here.getPortalObject()

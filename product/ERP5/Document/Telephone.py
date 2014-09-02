@@ -225,7 +225,7 @@ class Telephone(Coordinate):
     # + (111) 111-111/111 or + (111) 111-111/  or + (111) 111-111
     "\+(?P<spaces>[\ ]*)\((?P<country>\d+)\)\ (?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)"
   ]
-  
+
   compiled_regex_list = [re.compile(pattern) for pattern in regex_list]
 
   compiled_input_regex_without_markup = re.compile('[0-9A-Za-z]')
@@ -291,7 +291,7 @@ class Telephone(Coordinate):
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
   def fromText(self, coordinate_text):
-    """Save given data then continue parsing 
+    """Save given data then continue parsing
     (deprecated because computed values are stored)
     """
     self._setCoordinateText(coordinate_text)

@@ -63,7 +63,7 @@ if memcache is not None:
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
   from zLOG import LOG
-  
+
   MARKER = object()
   DELETE_ACTION = 0
   UPDATE_ACTION = 1
@@ -168,7 +168,7 @@ if memcache is not None:
       """
         Get an item from local cache, otherwise from memcached.
       """
-      # We need to register in this function too to be able to flush cache at 
+      # We need to register in this function too to be able to flush cache at
       # transaction end.
       self._register()
       if self.scheduled_action_dict.get(key) == DELETE_ACTION:

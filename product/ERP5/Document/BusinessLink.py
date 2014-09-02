@@ -110,7 +110,7 @@ class BusinessLink(Path, Predicate):
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getMovementCompletionDate')
   def getMovementCompletionDate(self, movement):
-    """Returns the date of completion of the movemnet 
+    """Returns the date of completion of the movemnet
     based on paremeters of the business path. This complete date can be
     the start date, the stop date, the date of a given workflow transition
     on the explaining delivery, etc.
@@ -123,12 +123,12 @@ class BusinessLink(Path, Predicate):
 
   def getCompletionDate(self, explanation):
     """Returns the date of completion of business path in the
-    context of the explanation. The completion date of the Business 
+    context of the explanation. The completion date of the Business
     Path is the max date of all simulation movements which are
     related to the Business Link and which are part of the explanation.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
     date_list = []
@@ -145,7 +145,7 @@ class BusinessLink(Path, Predicate):
         date_list.append(self.getMovementCompletionDate(movement))
 
     return max(date_list)
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
       'isCompleted')
   def isCompleted(self, explanation):
@@ -158,7 +158,7 @@ class BusinessLink(Path, Predicate):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
 
     NOTE: simulation movements can be completed (ex. in 'started' state) but
@@ -183,7 +183,7 @@ class BusinessLink(Path, Predicate):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
     acceptable_state_list = self.getCompletedStateList()
@@ -204,7 +204,7 @@ class BusinessLink(Path, Predicate):
     Use instead IBusinessLinkProcess.isBusinessLinkCompleted for this purpose.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
 
     NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
@@ -226,7 +226,7 @@ class BusinessLink(Path, Predicate):
     and related to a delivery through the 'delivery' category.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     """
     for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
@@ -240,7 +240,7 @@ class BusinessLink(Path, Predicate):
     defined on the Business Link.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
+                   implicitely defines a simulation subtree and a union
                    business process.
     kw -- optional parameters passed to build method
     """

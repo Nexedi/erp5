@@ -6,7 +6,7 @@ from zLOG import LOG
 
 class GadgetWidget(Widget.TextWidget):
   """
-  A widget that displays a renderjs gadget 
+  A widget that displays a renderjs gadget
   """
   property_names = Widget.TextWidget.property_names + \
        ['gadget_html', 'gadget_cached', 'gadget_cache_id', 'gadget_property',

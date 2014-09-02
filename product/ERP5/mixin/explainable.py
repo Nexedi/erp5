@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 
 class ExplainableMixin:
-  """A mixin which provides common implementation of 
+  """A mixin which provides common implementation of
   IExplainable to simulation movements and applied rules
 
   TODO:
@@ -44,7 +44,7 @@ class ExplainableMixin:
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IExplainable,)
-  
+
   # IExplainable implementation
   security.declareProtected(Permissions.AccessContentsInformation,'getExplanationValueList')
   def getExplanationValueList(self):
@@ -71,7 +71,7 @@ class ExplainableMixin:
         if (not root or (document.getParentValue().getParentValue().getPortalType() == "Simulation Tool"))\
            and (not immediate or still_immediate):
           # Only make an effort to find root delivery if we need
-          # to build a complete list of explanations else 
+          # to build a complete list of explanations else
           # or if we are at the root of the simulation tree (whenever applies)
           # or if we are at the immediate delivery (whenever applies)
           delivery_line = document.getDeliveryValue()
@@ -86,7 +86,7 @@ class ExplainableMixin:
         if (not root or (document.getParentValue().getPortalType() == "Simulation Tool"))\
            and (not immediate or still_immediate) and not line:
           # Only make an effort to find root delivery if we need
-          # to build a complete list of explanations else 
+          # to build a complete list of explanations else
           # or if we are at the root of the simulation tree (whenever applies)
           # or if we are at the immediate delivery (whenever applies)
           # If we collect lines, we do not care about applied rules

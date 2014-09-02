@@ -79,11 +79,11 @@ class IBusinessLinkProcess(Interface):
     + all parent simulation movement
     Applied rule is another form of explanation, which defines
     implicitely all children + all parent simulation movements
-     
+
 
   TODO:
   - find a way in getTradePhaseMovementList to narrow down
-    parameters to be copied (this used to be done through rule 
+    parameters to be copied (this used to be done through rule
     parameter in provivate method)
   - Is there a reason why trade_phase should be a list in
     getBusinessLinkValueList ? (for rules ?)
@@ -220,7 +220,7 @@ class ITradeStateProcess(Interface):
     """
 
   def getSuccessorTradeStateList(explanation, trade_state):
-    """Returns the list of successor states in the 
+    """Returns the list of successor states in the
     context of given explanation. This list is built by looking
     at all successor of business link involved in given explanation
     and which predecessor is the given trade_phase.
@@ -232,7 +232,7 @@ class ITradeStateProcess(Interface):
     """
 
   def getPredecessorTradeStateList(explanation, trade_state):
-    """Returns the list of predecessor states in the 
+    """Returns the list of predecessor states in the
     context of given explanation. This list is built by looking
     at all predecessor of business link involved in given explanation
     and which sucessor is the given trade_phase.
@@ -252,7 +252,7 @@ class ITradeStateProcess(Interface):
     """
 
   def getPartiallyCompletedTradeStateList(explanation):
-    """Returns the list of Trade States which are partially 
+    """Returns the list of Trade States which are partially
     completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -261,7 +261,7 @@ class ITradeStateProcess(Interface):
 
   def getLatestCompletedTradeStateList(explanation):
     """Returns the list of completed trade states which predecessor
-    states are completed and for which no successor state 
+    states are completed and for which no successor state
     is completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -270,7 +270,7 @@ class ITradeStateProcess(Interface):
 
   def getLatestPartiallyCompletedTradeStateList(explanation):
     """Returns the list of completed trade states which predecessor
-    states are completed and for which no successor state 
+    states are completed and for which no successor state
     is partially completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -309,7 +309,7 @@ class ITradePhaseProcess(Interface):
   business link.
 
   For example, a completed trade phase is a trade phase for which all
-  business link applicable to the given explanation are completed. 
+  business link applicable to the given explanation are completed.
   It does not matter whether the predecessor trade state of related
   business link is completed or not.
   """
@@ -329,7 +329,7 @@ class ITradePhaseProcess(Interface):
 
   def getPartiallyCompletedTradePhaseList(explanation):
     """Returns the list of Trade Phases which are partially completed
-    in the context of given explanation. 
+    in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
@@ -358,7 +358,7 @@ class ITradePhaseProcess(Interface):
 
   def getRemainingTradePhaseList(business_link):
     """Returns the list of remaining trade phases which to be achieved
-    as part of a business process. This list is calculated by analysing 
+    as part of a business process. This list is calculated by analysing
     the graph of business link and trade states, starting from a given
     business link. The result if filtered by a list of trade phases. This
     method is useful mostly for production and MRP to manage a distributed
@@ -379,7 +379,7 @@ class ITradePhaseProcess(Interface):
     based on the Business Link definitions, provided 'amount' and optional
     trade phases. If no trade_phase is provided, the trade_phase defined
     on the Amount is used instead.
-    
+
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
@@ -394,11 +394,11 @@ class ITradePhaseProcess(Interface):
 class ISimulationMovementProcess(Interface):
   """Simulation Movemnt Process interface specification
 
-  ISimulationMovementProcess provides help methods to 
+  ISimulationMovementProcess provides help methods to
   access simulation movements of an explanation and
   gather statistics about them. It is useful to find
   out min dates or max dates related to a business link,
-  to a trade phase, to a trade model path, to a 
+  to a trade phase, to a trade model path, to a
   trade_model_line, etc.
   """
 
@@ -409,7 +409,7 @@ class ISimulationMovementProcess(Interface):
     defined by explanation and which match provided parameters. This
     method can be useful for example to list all simulation movements
     related to a phase such as payment, and inspect them.
-    
+
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
@@ -431,7 +431,7 @@ class ISimulationMovementProcess(Interface):
     defined by explanation and which match provided parameters. This
     method can be useful for example to find the max date of simulation movements
     related to a phase such as payment.
-    
+
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
@@ -451,7 +451,7 @@ class IBusinessProcess(ITradeModelPathProcess, IBusinessLinkProcess, IBuildableB
   """Business Process interface specification.
 
   Business Process APIs are used to manage the completion status,
-  the completion dates, the start date and stop date, and trigger 
+  the completion dates, the start date and stop date, and trigger
   build process of a complex simulation process in ERP5.
   """
 

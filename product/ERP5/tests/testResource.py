@@ -649,7 +649,7 @@ class TestResource(ERP5TypeTestCase):
     supply_line.setSurchargeRatioQuantityStepList([])
     supply_line.getCellKeyList(base_id='path_optional_surcharge_ratio')
     cell1 = supply_line.newCell('industrial_phase/phase1',
-        base_id='path_optional_surcharge_ratio', 
+        base_id='path_optional_surcharge_ratio',
         portal_type=self.sale_supply_cell_portal_type)
     cell1.setSurchargeRatio(20)
     cell1.setMappedValuePropertyList(["surcharge_ratio"])
@@ -673,14 +673,14 @@ class TestResource(ERP5TypeTestCase):
     supply_line.setAdditionalPriceQuantityStepList([])
     supply_line.getCellKeyList(base_id='path_optional_additional_price')
     cell1 = supply_line.newCell('industrial_phase/phase1',
-        base_id='path_optional_additional_price', 
+        base_id='path_optional_additional_price',
         portal_type=self.sale_supply_cell_portal_type)
     cell1.setAdditionalPrice(2)
     cell1.setMappedValuePropertyList(["additional_price"])
     cell1.setMembershipCriterionBaseCategory('industrial_phase')
     cell1.setMembershipCriterionCategory('industrial_phase/phase1')
     cell2 = supply_line.newCell('industrial_phase/phase2',
-        base_id='path_optional_additional_price', 
+        base_id='path_optional_additional_price',
         portal_type=self.sale_supply_cell_portal_type)
     cell2.setAdditionalPrice(7)
     cell2.setMappedValuePropertyList(["additional_price"])
@@ -712,7 +712,7 @@ class TestResource(ERP5TypeTestCase):
 
   def test_11_getPriceWithDestinationSection(self, quiet=quiet, run=run_all_test):
     """
-    Test the pricing model with multiple price for 
+    Test the pricing model with multiple price for
     differents destination sections.
     """
     if not run: return
@@ -760,13 +760,13 @@ class TestResource(ERP5TypeTestCase):
       self.logMessage("Check product %s with destination section %s" % \
                       (product.getTitle(), node.getTitle()),
                       tab=1)
-      self.assertEqual(base_price, 
+      self.assertEqual(base_price,
                         product.getPrice(
                   categories=['destination_section/%s' % node.getRelativeUrl()]))
 
   def test_11b_getPriceWithCells(self, quiet=quiet, run=run_all_test):
     """
-    Test the pricing model with multiple price for 
+    Test the pricing model with multiple price for
     differents destination sections, using supply cells
     """
     if not run: return
@@ -1006,7 +1006,7 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     internal_packing_list_line.setPrice(None)
     self.assertEqual(internal_packing_list_line.getPrice(), 2.0)
-  
+
   def testGetPriceWithQuantityUnit(self):
     resource = self.portal.getDefaultModule(self.product_portal_type)\
                 .newContent(portal_type=self.product_portal_type)
@@ -1023,7 +1023,7 @@ class TestResource(ERP5TypeTestCase):
                           quantity=5)
     self.assertEqual(1000, sale_order_line.getPrice())
     self.assertEqual(5000, sale_order_line.getTotalPrice())
-    
+
     # if we give the quantity unit in grams
     sale_order_line = sale_order.newContent(
                           portal_type=self.sale_order_line_portal_type,
@@ -1059,14 +1059,14 @@ class TestResource(ERP5TypeTestCase):
                           quantity=5)
     # order and supply lines uses different currency, price does not apply
     self.assertEqual(None, sale_order_line.getPrice())
-    
+
     # set the same currency
     sale_order.setPriceCurrencyValue(currency)
 
     # price applies
     self.assertEqual(1000, sale_order_line.getPrice())
     self.assertEqual(5000, sale_order_line.getTotalPrice())
-    
+
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
     """

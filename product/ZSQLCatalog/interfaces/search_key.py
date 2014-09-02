@@ -148,7 +148,7 @@ class IRelatedKey(ISearchKey):
 
       Deprecated:
         table_alias_list (None, list of 2-tuples of strings)
-          This list must have the exact same length as the list of tables 
+          This list must have the exact same length as the list of tables
     """
 
   def buildSQLExpression(sql_catalog, column_map, only_group_columns, group):

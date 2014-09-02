@@ -59,7 +59,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
               'erp5_ingestion',
               'erp5_web',
               'erp5_dms',
-              'erp5_ui_test', 
+              'erp5_ui_test',
               'erp5_odt_style',
               'erp5_ods_style')
 
@@ -84,7 +84,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
         # create a Field OOoChart
         form.manage_addField(self.ooo_chart_id, self.ooo_chart_id, 'OOoChart')
-        
+
         # create a Field OOoChart
         form.manage_addField('your_ooochart', 'your_ooochart', 'OOoChart')
 
@@ -175,7 +175,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       value_list = doc_build.xpath(xpath)
       # Test the data presence in the file XML
       self.assertNotEquals(0, len(value_list))
-      # 2 values because there are - 10 document created by a owner 
+      # 2 values because there are - 10 document created by a owner
       #                            - 0 Reference count
       self.assertEqual(2, len(value_list))
 
@@ -268,7 +268,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       value_list = doc_build.xpath(xpath)
       # Test the data presence in the file XML
       self.assertNotEquals(0, len(value_list))
-      # 2 values because there are - 10 document created by a owner 
+      # 2 values because there are - 10 document created by a owner
       #                            - 0 Reference count
       self.assertEqual(2, len(value_list))
 

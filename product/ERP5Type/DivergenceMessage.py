@@ -59,7 +59,7 @@ class DivergenceMessage(ObjectMessage):
    * message
      User understandable message about divergence
   """
-  
+
   zope.interface.implements( interfaces.IDivergenceMessage, )
 
   def getMovementGroup(self):

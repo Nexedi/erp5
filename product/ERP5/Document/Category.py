@@ -113,7 +113,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
 
     # Inheritance
     __init__ = Predicate.__init__
- 
+
     # Experimental - virtual document access
     def _experimental_aq_dynamic(self, name):
       result = Base._aq_dynamic(self, name)

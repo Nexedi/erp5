@@ -82,7 +82,7 @@ class PackingList(Delivery):
 
     #######################################################
     # Container computation
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'isPacked')
     def isPacked(self):
       """

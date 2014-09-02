@@ -37,7 +37,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 
 
 class SupplyLine(Path, Amount, XMLMatrix):
-    """A Supply Line is a path to define price 
+    """A Supply Line is a path to define price
     """
 
     meta_type = 'ERP5 Supply Line'
@@ -198,11 +198,11 @@ class SupplyLine(Path, Amount, XMLMatrix):
       """
       quantity_step_list = self.getQuantityStepList(price_parameter=price_parameter)
       quantity_step_list.sort()
-      
+
       # remove old predicates
       for pid in self.getQuantityPredicateIdList(price_parameter):
         self.deleteContent(pid)
-      
+
       if quantity_step_list:
         quantity_step_list = [None] + quantity_step_list + [None]
         # With this script, we can change the title of the predicate

@@ -40,7 +40,7 @@ class SplitAndDefer(CopyToTarget):
     may need to be delivered later. Solver accumulates such movements
     in the solving process and creates a new delivery
 
-    This only works when some movements can not be delivered 
+    This only works when some movements can not be delivered
     (excessive qty is not covered)
   """
 

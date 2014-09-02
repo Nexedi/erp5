@@ -60,10 +60,10 @@ class SolverProcessTool(BaseTool):
   # IDivergenceController implementation
   def isDivergent(self, delivery_or_movement=None):
     """
-    Returns True if any of the movements provided 
+    Returns True if any of the movements provided
     in delivery_or_movement is divergent
 
-    delivery_or_movement -- a movement, a delivery, 
+    delivery_or_movement -- a movement, a delivery,
                             or a list thereof
     """
     if not isinstance(delivery_or_movement, (tuple, list)):
@@ -81,7 +81,7 @@ class SolverProcessTool(BaseTool):
     which are not divergence are placed in a Solver
     Decision with no Divergence Tester specified.
 
-    delivery_or_movement -- a movement, a delivery, 
+    delivery_or_movement -- a movement, a delivery,
                             or a list thereof
     """
     # Do not create a new solver process if no divergence

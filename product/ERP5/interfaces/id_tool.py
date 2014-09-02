@@ -45,7 +45,7 @@ class IIdTool(Interface):
 
     default (string or int or float, depending on the generator)
        Default value of the sequence (optional).
-       The first time an id is generated for that sequence, this 
+       The first time an id is generated for that sequence, this
        default will be returned.
 
        If the default value is incompatible with the generator,
@@ -53,7 +53,7 @@ class IIdTool(Interface):
 
     id_generator (string)
        Select an particular id generator (optional) by giving its
-       reference. This is not mandatory, a default generator will exist. 
+       reference. This is not mandatory, a default generator will exist.
        Only id generator of type application can be selected.
 
     Example :
@@ -74,7 +74,7 @@ class IIdTool(Interface):
 
     default (string or int or float, depending on the generator)
        Default value of the sequence (optional).
-       The first time an id is generated for that sequence, this 
+       The first time an id is generated for that sequence, this
        default will be returned.
 
        If the default value is incompatible with the generator,
@@ -82,7 +82,7 @@ class IIdTool(Interface):
 
     id_generator (string)
        Select an particular id generator (optional) by giving its
-       reference. This is not mandatory, a default generator will exist. 
+       reference. This is not mandatory, a default generator will exist.
        Only id generator of type application can be selected.
 
     Example :

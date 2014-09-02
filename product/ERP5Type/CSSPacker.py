@@ -37,7 +37,7 @@ def compressCSS(css):
     commment_regex =  re.compile("/\*.*?\*/")
     class_regex = re.compile(r"([^{]*?){(.*?)}")
     style = re.compile(r"([\w\s-]*):([^;]*);?")
-    css = commment_regex.sub('', white_space_regex.sub("", css)) 
+    css = commment_regex.sub('', white_space_regex.sub("", css))
     return '\n'.join(["%s{%s}" % (x[0].strip(), \
            ''.join(["%s:%s;" % (y[0].strip(), y[1].strip()) \
            for y in style.findall(x[1])])) for x in class_regex.findall(css)])

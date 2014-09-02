@@ -36,10 +36,10 @@ pos = input_file.tell()
 
 first = True
 
-while pos < end:                                                                
+while pos < end:
   next_pos = pos + n
   if next_pos > end:
-    next_pos = end                                                                  
+    next_pos = end
 
   body_content = input_file.read(next_pos-pos)
   if first:
@@ -86,7 +86,7 @@ while pos < size:
   }
   connection.request('GET', path, '', headers)
   result = connection.getresponse()
-  output_file.write(result.read())                                           
+  output_file.write(result.read())
   result.close()
 
   pos = output_file.tell()

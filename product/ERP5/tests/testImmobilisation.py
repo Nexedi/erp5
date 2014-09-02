@@ -66,7 +66,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Immobilisation"
-  
+
   def stepCommitTransaction(self, sequence=None, sequence_list=None, **kw):
     """
     For debugging
@@ -117,7 +117,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(), 'acl_users', None)
   def getWorkflowTool(self):
     return getattr(self.getPortal(), 'portal_workflow', None)
-  
+
   def createManagerAndLogin(self, quiet=0, run=run_all_test):
     """
       Create a simple user in user_folder with manager rights.
@@ -423,12 +423,12 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
              stop_date =                 property_dict['datetime'],
              destination =               property_dict['destination'],
              )
-    
+
     packing_list_list = sequence.get('packing_list_list', [])
     packing_list_list.append(pl)
     sequence.set('packing_list_list', packing_list_list)
     #LOG('createPL',0,[(ppl.getUid(),ppl.getRelativeUrl()) for ppl in pl_module.objectValues()])
-    
+
   def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list')
     if pl is None: pl = sequence.get('packing_list_list', [])[-1]
@@ -464,7 +464,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                                     # order to make multiple lines
     for item_list in item_list_list:
       pl_line = pl.newContent(portal_type = self.packing_list_line_portal_type)
-      pl_line.edit(aggregate_value_list = item_list, 
+      pl_line.edit(aggregate_value_list = item_list,
                    resource_value=resource_value, **parameter_dict)
     self.tic()
     #pl.calculateImmobilisationValidity()
@@ -514,7 +514,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.getPackingListModule().manage_delObjects([pl_id])
     if pl_in_list:
       sequence.set('packing_list_list', sequence.get('packing_list_list')[:-1])
-    
+
   def stepUseFirstPackingList(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list_list')[0]
     sequence.set('packing_list', pl)
@@ -526,23 +526,23 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
   def stepUseThirdPackingList(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list_list')[2]
     sequence.set('packing_list', pl)
-    
+
   def stepUseFourthPackingList(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list_list')[3]
     sequence.set('packing_list', pl)
-    
+
   def stepDeleteCurrentPackingListFromSequence(self, sequence=None, sequence_list=None, **kw):
     sequence.set('packing_list', None)
-    
+
   def stepDeleteAllPackingLists(self, sequence=None, sequence_list=None, **kw):
     id_list = self.getPackingListModule().contentIds()
     self.getPackingListModule().manage_delObjects(id_list)
     sequence.set('packing_list_list', [])
-    
+
   def stepDeleteAccounting(self, sequence=None, sequence_list=None, **kw):
     id_list = self.getAccountingModule().contentIds()
     self.getAccountingModule().manage_delObjects(id_list)
-    
+
   def stepValidateAccounting(self, sequence=None, sequence_list=None, **kw):
     for accounting_transaction in self.getAccountingModule().contentValues():
       accounting_transaction.stop()
@@ -1037,7 +1037,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                     ]
     self._testImmobilisationPeriods(c_period_list, e_period_list)
 
-        
+
   def stepTestLinearAmortisationImmobilisationPeriodsUncontinuous(self, sequence=None, sequence_list=None, **kw):
     """
     Test calculated immobilisation periods
@@ -1065,14 +1065,14 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                     ]
     self._testImmobilisationPeriods(c_period_list, e_period_list)
 
-            
+
   def stepTestDegressiveAmortisationImmobilisationPeriods(self, sequence=None, sequence_list=None, **kw):
     """
     Test calculated immobilisation periods
     """
     item = sequence.get('item')
     c_period_list = item.getImmobilisationPeriodList()
-    
+
     e_period_list = [ { 'start_date':DateTime('2000/01/01'), 'stop_date':DateTime('2001/01/01'),
                         'initial_date':DateTime('2000/01/01'),
                         'start_price':10000, 'owner':self.getOrganisationModule()["A"],
@@ -1093,7 +1093,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                         'initial_duration':30 },
                     ]
     self._testImmobilisationPeriods(c_period_list, e_period_list)
-      
+
 
   def stepTestDegressiveAmortisationImmobilisationPeriodsUncontinuous(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1173,7 +1173,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       #LOG('testing amortisation price at date', 0, date)
       #LOG('c_price',0,c_price)
       self.assertEqual(round(c_price,2), e_price)
-  
+
   """
   09BIS
   """
@@ -1218,8 +1218,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       self.assertEqual(round(c_price,2), e_price)
-      
-    
+
+
   def stepTestUncontinuousDegressiveAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
     """
     Test calculated prices
@@ -1240,8 +1240,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       self.assertEqual(round(c_price,2), e_price)
-      
-    
+
+
   def stepTestActualUseAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
     """
     Test calculated prices
@@ -1263,8 +1263,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       self.assertEqual(round(c_price,2), e_price)
-      
-    
+
+
   def stepTestNoAmortisationMethodPriceCalculation(self, sequence=None, sequence_list=None, **kw):
     """
     Test calculated prices
@@ -1285,12 +1285,12 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       c_price = item.getAmortisationPrice(at_date=date)
       #LOG('testing amortisation price at date', 0, date)
       self.assertEqual(round(c_price,2), e_price)
-      
-  
+
+
   def _createExpectedMovement(self, date, quantity, source=None, destination=None,
                               source_section=None, destination_section=None):
     self.id_simulation+=1
-    r_dict = {'id':self.id_simulation,'start_date':DateTime(date), 'stop_date':DateTime(date), 
+    r_dict = {'id':self.id_simulation,'start_date':DateTime(date), 'stop_date':DateTime(date),
               'quantity':quantity, 'resource':'currency_module/EUR'}
     my_account_dict = dict(self.account_dict)
     my_account_dict.update(self.monthly_dict)
@@ -1310,7 +1310,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         r_dict[name] = self.getOrganisationModule()[prop]
     return r_dict
 
-        
+
   def stepTestLinearAmortisationSimulationBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Test 09
@@ -1362,7 +1362,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-  
+
   """
   09BIS
   """
@@ -1406,7 +1406,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
+
   def stepTestUncontinuousDegressiveAmortisationSimulationBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for uncontinuous degressive amortisation
@@ -1484,15 +1484,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2010/01/01', 841.74, 'amortisation_account', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2010/01/01', -841.74, 'depreciation_account', None, 'A', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestNoAmortisationMethodSimulationBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for no amortisation method
@@ -1516,15 +1516,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/07/01', -12000, 'immobilisation_account', None, 'A', None))
     # No annuity
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForContinuousMethodWithoutOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a linear amortisation method without owner change
@@ -1561,15 +1561,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 3333.33, 'amortisation_account_extra', None, 'Aa', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/01/01', -3333.33, 'depreciation_account_extra', None, 'Aa', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForContinuousMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a linear amortisation method with owner change but no actual owner (ie group) change
@@ -1604,15 +1604,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForContinuousMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a linear amortisation method with actual owner change (ie group)
@@ -1706,15 +1706,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 1333.33, 'amortisation_account_extra', None, 'Aa', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -1333.33, 'depreciation_account_extra', None, 'Aa', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForUncontinuousMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a uncontinuous degressive amortisation method with owner change but no actual owner change
@@ -1760,15 +1760,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 1333.33, 'amortisation_account', None, 'Ab', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -1333.33, 'depreciation_account', None, 'Ab', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestSimulationBuildForUncontinuousMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a uncontinuous degressive amortisation method with actual owner change
@@ -1814,15 +1814,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 1333.33, 'amortisation_account', None, 'Ba', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -1333.33, 'depreciation_account', None, 'Ba', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-        
-  
+
+
   def stepTestSimulationBuildForNoChangeMethodWithoutOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a no change amortisation method without owner change
@@ -1851,15 +1851,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForNoChangeMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a no change amortisation method with owner change but no actual owner (ie group) change
@@ -1894,15 +1894,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-  
+
+
   def stepTestSimulationBuildForNoChangeMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test built simulation for a no change amortisation method with actual owner change (ie group)
@@ -1944,14 +1944,14 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 3333.33, 'amortisation_account', None, 'Ba', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2003/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
+
   """
   TEST 17
   """
@@ -1972,7 +1972,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           year += 1
         current_date = '%s/%s/%s' % (year, month, day)
       return return_list
-        
+
     item = sequence.get('item')
     e_simulation_movement_list = []
     # Immobilisation 2000/01/01
@@ -2087,7 +2087,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def _testSimulationBuild(self, c_simulation_movement_list, e_simulation_movement_list):
     for c_movement in c_simulation_movement_list:
-      #LOG('c_movement %s :' % c_movement, 0, 
+      #LOG('c_movement %s :' % c_movement, 0,
        #'date=%s\n, source=%s\n, source_section=%s\n, destination=%s\n, destination_section=%s\n, quantity=%s\n, resource=%s\n, profit_quantity=%s\n' % (
           #(c_movement.getStopDate(), c_movement.getSource(), c_movement.getSourceSection(),
            #c_movement.getDestination(), c_movement.getDestinationSection(), c_movement.getQuantity(),
@@ -2147,7 +2147,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def _buildExpectedTransaction(self, date, source_section, destination_section, causality_state, causality_list=[]):
     self.id_transaction+=1
-    r_dict = {'id':self.id_transaction,'start_date':DateTime(date), 'stop_date':DateTime(date), 
+    r_dict = {'id':self.id_transaction,'start_date':DateTime(date), 'stop_date':DateTime(date),
               'resource':'currency_module/EUR', 'line_list':[],
               'causality_state':causality_state}
     for name, prop in (('source_section_value', source_section), ('destination_section_value', destination_section)):
@@ -2190,17 +2190,17 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1','item2'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,5000),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-5000)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1','item2'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,5000),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-5000)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-    
-    
+
+
   def stepTestMultiItemAccountingBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2214,26 +2214,26 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1','item2','item3'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1','item2','item3'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1','item2','item3'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
-    e_transaction_list.append(transaction)                               
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1','item2','item3'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     c_transaction_list.sort(key=lambda x: x.getStopDate())
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-  
-    
+
+
   def stepTestSimpleAccountingBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2247,26 +2247,26 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                               
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     #c_transaction_list.sort(key=lambda x: x.getStopDate())
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-  
-    
+
+
   def stepTestSimulationBuildAfterFirstAccountingChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2319,15 +2319,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 2500, 'amortisation_account', None, 'B', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -2500, 'depreciation_account', None, 'B', None))
-              
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestSimulationBuildAfterSecondAccountingChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2359,7 +2359,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
-              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))              
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
     # Unimmobilisation, set to 0 due to their link to transactions
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2002/01/01', -0, 'amortisation_account', None, 'A', None))
@@ -2381,15 +2381,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 0, 'amortisation_account', None, 'B', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -0, 'depreciation_account', None, 'B', None))
-              
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestSimulationBuildAfterPackingListModification(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2408,7 +2408,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
     # Annuities
     e_simulation_movement_list.append(self._createExpectedMovement(
-              '2001/01/01', 2500, 'amortisation_account_extra', None, 'A', None))              
+              '2001/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
     # Unimmobilisation, set to 0 before
@@ -2445,16 +2445,16 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', 0, 'amortisation_account', None, 'B', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -0, 'depreciation_account', None, 'B', None))
-    
-              
+
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestAccountingBuildAfterFirstChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2503,12 +2503,12 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-  
-    
+
+
   def stepTestAccountingBuildAfterSecondChange(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2526,7 +2526,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.diverged,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500),
@@ -2535,11 +2535,11 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                 self._buildExpectedTransactionLine('immobilisation_account',None,10000),
                                 self._buildExpectedTransactionLine('output_account',None,-5000)]
     # Annuities ; these ones were not solved but are now convergent again
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                               
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
@@ -2553,17 +2553,17 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2003/01/01','B',None,self.diverged,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.diverged,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-  
-    
+
+
   def stepTestAccountingBuildAfterAdoptPrevision(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2582,7 +2582,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500),
@@ -2593,11 +2593,11 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                 self._buildExpectedTransactionLine('immobilisation_account',None,0),
                                 self._buildExpectedTransactionLine('output_account',None,-0)]
     # Annuities
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
-    e_transaction_list.append(transaction)                               
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
@@ -2615,19 +2615,19 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                 self._buildExpectedTransactionLine('depreciation_account',None,-0),
                                 self._buildExpectedTransactionLine('amortisation_account',None,0),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-0)]
-    e_transaction_list.append(transaction)                                
+    e_transaction_list.append(transaction)
     transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.solved,['item1'])
     transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-0),
                                 self._buildExpectedTransactionLine('amortisation_account',None,0),
                                 self._buildExpectedTransactionLine('depreciation_account',None,-0)]
     e_transaction_list.append(transaction)
-    
+
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
-  
-    
+
+
   def stepTestAccountingBuildAfterPackingListModification(self, sequence=None, sequence_list=None, **kw):
     """
     Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
@@ -2730,8 +2730,8 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestFirstSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
     item = sequence.get('item')
     e_simulation_movement_list = []
@@ -2774,15 +2774,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', -2500, 'amortisation_account', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', 2500, 'depreciation_account', None, 'A', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestSecondSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
     item = sequence.get('item')
     e_simulation_movement_list = []
@@ -2825,15 +2825,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2004/01/01', -2500, 'amortisation_account', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', 2500, 'depreciation_account', None, 'A', None))
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestThirdSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
     item = sequence.get('item')
     e_simulation_movement_list = []
@@ -2860,15 +2860,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
     # No more correction movement
-    
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def stepTestFourthSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
     item = sequence.get('item')
     e_simulation_movement_list = []
@@ -2911,21 +2911,21 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
               '2003/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
     e_simulation_movement_list.append(self._createExpectedMovement(
               '2004/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
-    
-    
+
+
     applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
     #LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEqual(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
     c_simulation_movement_list = applied_rule.contentValues()
     self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
-    
-    
+
+
   def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
     self.assertEqual(len(c_transaction_list), len(e_transaction_list))
     e_removed_list = []
     for c_transaction in c_transaction_list:
-      #LOG('c_transaction %s :' % c_transaction, 0, 
+      #LOG('c_transaction %s :' % c_transaction, 0,
           #'date=%s\n, source_section=%s\n, destination_section=%s\n, resource=%s\n, state=%s\n, causality_list=%s\n' % (
           #(c_transaction.getStopDate(), c_transaction.getSourceSection(),
            #c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState(),
@@ -2979,7 +2979,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       e_line_list = e_transaction['line_list']
       c_line_list = c_transaction.contentValues()
       for c_line in c_line_list:
-        #LOG('c_line %s :' % c_line, 0, 
+        #LOG('c_line %s :' % c_line, 0,
           #'source=%s\n,destination=%s\n,quantity=%s\n' % (
           #(c_line.getSource(),c_line.getDestination(),c_line.getQuantity())
           #)
@@ -3236,9 +3236,9 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestLinearAmortisationImmobilisationPeriods \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
-    
+
   def stepSetTest06SequenceData(self, sequence=None, sequence_list=None, **kw):
     sequence.edit(item = self.getItemModule()['item7'],
                   amortisation_method = self.linear_method)
@@ -3258,7 +3258,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestLinearAmortisationImmobilisationPeriodsUncontinuous \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
 
   def stepSetTest07SequenceData(self, sequence=None, sequence_list=None, **kw):
@@ -3281,9 +3281,9 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestDegressiveAmortisationImmobilisationPeriods \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
-        
-    
+    sequence_list.play(self)
+
+
   def stepSetTest08SequenceData(self, sequence=None, sequence_list=None, **kw):
     sequence.edit(item = self.getItemModule()['item9'],
                   amortisation_method = self.uncontinuous_degressive_method,
@@ -3445,9 +3445,9 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestSimulationBuildForContinuousMethodWithActualOwnerChange \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
-        
-    
+    sequence_list.play(self)
+
+
   def stepSetTest15SequenceData(self, sequence=None, sequence_list=None, **kw):
     sequence.edit(item = self.getItemModule()['item16'],
                   amortisation_method = self.uncontinuous_degressive_method,
@@ -3472,7 +3472,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestSimulationBuildForUncontinuousMethodWithActualOwnerChange \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
 
   def stepSetTest16SequenceData(self, sequence=None, sequence_list=None, **kw):
@@ -3498,7 +3498,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestSimulationBuildForNoChangeMethodWithActualOwnerChange \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
 
   def stepSetTest17SequenceData(self, sequence=None, sequence_list=None, **kw):
@@ -3518,7 +3518,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestSimulationBuildForMonthlyAmortisation \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
 
   def stepSetTest18SequenceData(self, sequence=None, sequence_list=None, **kw):
@@ -3565,7 +3565,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestMultiItemAccountingBuild \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def stepSetTest19SequenceData(self, sequence=None, sequence_list=None, **kw):
     item_list = ['item1']
@@ -3671,7 +3671,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestAccountingBuildAfterPackingListModification \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def test_19BIS_TestAccountingBuildAndOwngerChange(self, quiet=0, run=run_all_test):
     if not run: return
@@ -3700,7 +3700,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestAccountingSectionStatistics \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def stepSetTest20SequenceData(self, sequence=None, sequence_list=None, **kw):
     item_list = ['item1']
@@ -3747,7 +3747,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                        TestSimulationBuildAfterAcceptDecision \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)
 
   def stepSetTest21SequenceData(self, sequence=None, sequence_list=None, **kw):
     item_list = ['item1']

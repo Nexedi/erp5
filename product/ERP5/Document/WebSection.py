@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
-from Acquisition import aq_base, aq_inner 
+from Acquisition import aq_base, aq_inner
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
@@ -198,7 +198,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         set each time we display a default document as a section.
 
         We use REQUEST parameters so that they are reset for every
-        Web transaction and can be accessed from widgets. 
+        Web transaction and can be accessed from widgets.
       """
       # Register current web site physical path for later URL generation
       if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:

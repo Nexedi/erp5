@@ -55,14 +55,14 @@ class CurrencyExchangeTestCase(AccountingTestCase):
                 list(currency_exchange_type.objectIds()))
 
     self.tic()
- 
+
   def login(self, name=username):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
        'Author','Manager'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
-   
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates we need to run the test.
@@ -156,7 +156,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     for line in line_list:
       self.assertEqual(line.getDestinationTotalAssetPrice(),
              round(655.957*line.getQuantity()))
-                                        
+
 
   def test_CreateEmptyCurrencyExchangeLineForDestination(self):
     """
@@ -193,13 +193,13 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                           portal_type='Currency Exchange Line')
     yen_line2 = yen.newContent(
                           portal_type='Currency Exchange Line')
-                          
+
     usd = self.portal.currency_module.usd
     usd_line1 = usd.newContent(
                           portal_type='Currency Exchange Line')
     usd_line2 = usd.newContent(
                           portal_type='Currency Exchange Line')
-    
+
     euro_line = euro.newContent(
                            portal_type='Currency Exchange Line')
     euro_line.validate()
@@ -275,7 +275,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
 
   def test_NoCurrencyExchangeLineForResourceCurrency(self):
     """
-      Test that the conversion is not done when there is no currency 
+      Test that the conversion is not done when there is no currency
       exchange line defined for the date of the transaction
     """
     self.organisation_module = self.portal.organisation_module
@@ -406,7 +406,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.validate()
     self.assertEqual(x_curr_ex_line.getValidationState(),
                           'validated')
-    
+
     accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
@@ -417,7 +417,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    
+
     invoice.AccountingTransaction_convertDestinationPrice(
                            form_id='view')
     line_list = invoice.contentValues(
@@ -425,11 +425,11 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     for line in line_list:
         self.assertEqual(line.getDestinationTotalAssetPrice(),
                  None)
-  
-   
+
+
   def test_CreateCELWithNoBasePrice(self):
     """
-      Create two currency exchange lines with no base and 
+      Create two currency exchange lines with no base and
       verify that only one of the CEL will apply for the currency
     """
     self.organisation_module = self.portal.organisation_module
@@ -443,7 +443,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
-    
+
     euro_line1 = euro.newContent(
                               portal_type='Currency Exchange Line',
                        price_currency=new_currency.getRelativeUrl())
@@ -467,7 +467,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                             'Francs CFA')
     self.assertEqual(euro_line2.getBasePrice(),None)
     euro_line2.validate()
-    
+
     self.assertEqual(euro_line2.getValidationState(),
                                  'validated')
     accounting_module = self.portal.accounting_module
@@ -494,7 +494,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
                            327979)
       else:
         self.fail('line not found')
-  
+
 class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
   def afterSetUp(self):
     currency_exchange_type = \
@@ -509,7 +509,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
           id='type_b',
           title='Type B',
           int_index=2)
-    
+
   def test_CreateCurrencyExchangeCell(self):
     module = self.portal.currency_module
     euro = module.euro
@@ -526,7 +526,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
       ['resource/%s' % euro.getRelativeUrl()],
       ['price_currency/%s' % usd.getRelativeUrl()],
       ], euro_to_usd.getCellRange(base_id='path'))
-    
+
     type_a_cell = euro_to_usd.getCell(
       'currency_exchange_type/type_a',
       'resource/%s' % euro.getRelativeUrl(),
@@ -539,10 +539,10 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     # displays currency exchange line in same order than int indexes on
     # currency_exchange_type categories.
     self.assertEqual(1, type_a_cell.getIntIndex())
- 
+
     self.assertTrue('currency_exchange_type/type_a' in
         type_a_cell.getCategoryList())
-    
+
     type_a_cell_predicate = type_a_cell.asPredicate()
     self.assertEqual(sorted(('price_currency',
                               'resource',
@@ -562,7 +562,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
     euro_to_usd.setPriceCurrencyValue(usd)
     euro_to_usd.validate()
-  
+
     type_a_cell = euro_to_usd.getCell(
       'currency_exchange_type/type_a',
       'resource/%s' % euro.getRelativeUrl(),

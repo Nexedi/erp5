@@ -62,7 +62,7 @@ class TestScribusUtils(ERP5TypeTestCase):
             'data', filename), 'rb')
 
   def test_01_SimpleModuleCreation(self):
-    '''Just create a module using scribus file and pdf file with minimal 
+    '''Just create a module using scribus file and pdf file with minimal
     option'''
 
     self.portal.ERP5Site_createModuleScribus(
@@ -137,7 +137,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     self.assertEqual(form.pt, 'form_list')
     self.assertTrue(hasattr(form, 'listbox'))
     # listbox is in bottom group
-    self.assertTrue('listbox' in [field.getId() for field in 
+    self.assertTrue('listbox' in [field.getId() for field in
                                   form.get_fields_in_group('bottom')])
     # the listbox managment screen can be accessed without error
     form.listbox.manage_main()
@@ -148,7 +148,7 @@ class TestScribusUtils(ERP5TypeTestCase):
 
   def test_04_SimpleModuleUpdate(self):
     ''' Update a module created with a scribus file and pdf file.
-        Change a field name in the new scribus file, and check that after 
+        Change a field name in the new scribus file, and check that after
         update, the ERP5 StringField have the new name.'''
 
     # first module creation:
@@ -171,7 +171,7 @@ class TestScribusUtils(ERP5TypeTestCase):
                         None)
     self.assertNotEqual(self.portal.portal_types.getTypeInfo("Dummy"), None)
 
-    # check that a field with title text_1 (present in the sla file) 
+    # check that a field with title text_1 (present in the sla file)
     # has been created in the form
     self.assertNotEquals(getattr(self.portal.portal_skins.erp5_test.Dummy_view,
       'text_1', None), None)
@@ -220,7 +220,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     # define some field lists
     required_field_name_list = ['my_required_string_field',
                                 'my_required_date']
-    not_required_field_name_list = [ 'my_simple_string_field', 
+    not_required_field_name_list = [ 'my_simple_string_field',
                                      'my_simple_date']
     all_field_name_list = required_field_name_list + \
                                         not_required_field_name_list
@@ -267,7 +267,7 @@ class TestScribusUtils(ERP5TypeTestCase):
     # define some field lists
     read_only_field_name_list = ['my_read_only_string_field',
                                 'my_read_only_date']
-    not_read_only_field_name_list = [ 'my_simple_string_field', 
+    not_read_only_field_name_list = [ 'my_simple_string_field',
                                      'my_simple_date']
     all_field_name_list = read_only_field_name_list + \
                                         not_read_only_field_name_list
@@ -348,11 +348,11 @@ class TestScribusUtils(ERP5TypeTestCase):
     expr_other_date = Expression(tales_expr_other_date)
     expr_start_date = Expression(tales_expr_start_date)
     expr_stop_date = Expression(tales_expr_stop_date)
-    result_other_date = expr_other_date(getExprContext(authorisation, 
+    result_other_date = expr_other_date(getExprContext(authorisation,
                                                        authorisation))
-    result_start_date = expr_start_date(getExprContext(authorisation, 
+    result_start_date = expr_start_date(getExprContext(authorisation,
                                                        authorisation))
-    result_stop_date = expr_stop_date(getExprContext(authorisation, 
+    result_stop_date = expr_stop_date(getExprContext(authorisation,
                                                      authorisation))
     self.assertEqual(result_other_date, '')
     self.assertEqual(result_start_date, start_date.strftime('%d/%m/%Y'))

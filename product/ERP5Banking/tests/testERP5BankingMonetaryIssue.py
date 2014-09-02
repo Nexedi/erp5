@@ -179,8 +179,8 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     self.current_date = DateTime()
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.monetary_issue = self.monetary_issue_module.newContent(
-                                id='monetary_issue', 
-                                portal_type='Monetary Issue', 
+                                id='monetary_issue',
+                                portal_type='Monetary Issue',
                                 description='test',
                                 start_date=self.current_date)
     # execute tic

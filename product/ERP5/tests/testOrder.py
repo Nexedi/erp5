@@ -2820,12 +2820,12 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Résource',)
-    
+
     # TODO: once we have updated order printout to use trade model lines, test
     # the case of a trade model line with non ascii title on resource.
-    
+
     # tax = self.portal.tax_module.newContent(portal_type='Tax', title='tàx')
- 
+
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               title='Cliént',
@@ -2932,12 +2932,12 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sale_order = self.portal.sale_order_module.newContent(
                               portal_type='Sale Order')
     sale_order.newContent(portal_type='Sale Order Line')
-    
+
     # XXX: hard coding a selection_name is bad
     selection_name = 'SaleOrder_view_listbox_selection'
     self.assertEqual(selection_name,
         sale_order.SaleOrder_view.listbox.get_value('selection_name'))
-    
+
     # activate report tree
     self.portal.portal_selections.setListboxDisplayMode(
         self.portal.REQUEST, 'ReportTreeMode', selection_name)

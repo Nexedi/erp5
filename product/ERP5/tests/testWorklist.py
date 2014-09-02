@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. 
+# Copyright (c) 2007 Nexedi SA and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -104,12 +104,12 @@ class TestWorklist(ERP5TypeTestCase):
       # Create the Person.
       self.logMessage("Create user: %s" % user_login)
       person = module.newContent(
-        portal_type='Person', 
-        reference=user_login, 
+        portal_type='Person',
+        reference=user_login,
         password='hackme',
       )
       # Create the Assignment.
-      assignment = person.newContent( 
+      assignment = person.newContent(
         portal_type = 'Assignment',
         group = "%s" % user_data[0],
         function = "%s" % user_data[1],
@@ -172,17 +172,17 @@ class TestWorklist(ERP5TypeTestCase):
 
   def createWorklists(self):
     for worklist_id, actbox_name, role, expr, state, int_variable in [
-          (self.worklist_assignor_id, self.actbox_assignor_name, 
+          (self.worklist_assignor_id, self.actbox_assignor_name,
            'Assignor', None, self.checked_validation_state, None),
-          (self.worklist_owner_id, self.actbox_owner_name, 
+          (self.worklist_owner_id, self.actbox_owner_name,
            'Owner', None, self.checked_validation_state, None),
-          (self.worklist_desactivated_id, self.actbox_desactivated_by_expression, 
+          (self.worklist_desactivated_id, self.actbox_desactivated_by_expression,
            'Owner', 'python: 0', self.checked_validation_state, None),
-          (self.worklist_wrong_state_id, self.actbox_wrong_state, 
+          (self.worklist_wrong_state_id, self.actbox_wrong_state,
            'Owner', None, self.not_checked_validation_state, None),
-          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name, 
+          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name,
            'Assignor; Owner', None, self.checked_validation_state, None),
-          (self.worklist_int_variable_id, self.actbox_int_variable_name, 
+          (self.worklist_int_variable_id, self.actbox_int_variable_name,
            None, None, None, str(self.int_value)),
     ]:
       self.createWorklist(self.checked_workflow, worklist_id, actbox_name,
@@ -193,12 +193,12 @@ class TestWorklist(ERP5TypeTestCase):
 
   def removeWorklists(self):
     self.removeWorklist(self.checked_workflow, [
-          self.worklist_assignor_id, 
-          self.worklist_owner_id, 
-          self.worklist_desactivated_id, 
-          self.worklist_wrong_state_id, 
-          self.worklist_assignor_owner_id, 
-          self.worklist_int_variable_id, 
+          self.worklist_assignor_id,
+          self.worklist_owner_id,
+          self.worklist_desactivated_id,
+          self.worklist_wrong_state_id,
+          self.worklist_assignor_owner_id,
+          self.worklist_int_variable_id,
     ])
 
   def clearCache(self):
@@ -228,7 +228,7 @@ class TestWorklist(ERP5TypeTestCase):
     """
     Test the permission of the building module.
     """
-    if not run: 
+    if not run:
       return
 
     workflow_tool = self.portal.portal_workflow
@@ -409,7 +409,7 @@ class TestWorklist(ERP5TypeTestCase):
       self.checkWorklist(result, 'has_region', 2)
       self.checkWorklist(result, 'has_role', 1)
     finally:
-      self.removeWorklist(self.checked_workflow, 
+      self.removeWorklist(self.checked_workflow,
                           ['region_worklist', 'role_worklist'])
 
   def test_03_worklist_guard(self, quiet=0, run=run_all_test):
@@ -424,7 +424,7 @@ class TestWorklist(ERP5TypeTestCase):
     self.createUsers()
 
     self.logMessage("Create worklists with guard expression")
-    self.createWorklist(self.checked_workflow, 'guard_expression_worklist', 
+    self.createWorklist(self.checked_workflow, 'guard_expression_worklist',
                         'valid_guard_expression',
                         portal_type=self.checked_portal_type,
                         validation_state='validated',
@@ -454,7 +454,7 @@ class TestWorklist(ERP5TypeTestCase):
       result = workflow_tool.listActions(object=document)
       self.checkWorklist(result, 'valid_guard_expression', 0)
     finally:
-      self.removeWorklist(self.checked_workflow, 
+      self.removeWorklist(self.checked_workflow,
                           ['guard_expression_worklist'])
 
   def test_04_dynamic_variables(self):

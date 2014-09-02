@@ -110,7 +110,7 @@ class TestDomainTool(TestPredicateMixIn):
       organisation_module.deleteContent('1')
     predicate = organisation_module.newContent(id='1',portal_type='Mapped Value')
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
-    
+
     resource_module = self.getResourceModule()
     if resource_module.hasContent('1'):
       resource_module.deleteContent('1')
@@ -574,7 +574,7 @@ class TestDomainTool(TestPredicateMixIn):
       portal_type='Sale Supply Line',
       src__=1))
 
-    
+
     self.assertEqual(len(searchPredicateList(
       order_line,
       portal_type='Sale Supply Line',

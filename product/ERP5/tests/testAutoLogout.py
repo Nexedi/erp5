@@ -59,10 +59,10 @@ class TestAuoLogout(ERP5TypeTestCase):
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     self.login(self.manager_username)
-    
+
     # setup short auto-logout period
     portal.portal_preferences.default_site_preference.setPreferredMaxUserInactivityDuration(5)
-    portal.portal_preferences.default_site_preference.enable()    
+    portal.portal_preferences.default_site_preference.enable()
     self.tic()
 
   def test_01_AutoLogout(self):
@@ -71,30 +71,30 @@ class TestAuoLogout(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     request = self.app.REQUEST
-    
+
     now = DateTime()
     path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %(self.manager_username, self.manager_password)
     response = self.publish(path)
     self.assertTrue('Welcome to ERP5' in response.getBody())
-    
+
     # check '__ac' cookie has set an expire timeout
     ac_cookie = response.getCookie('__ac')
-    self.assertTrue(ac_cookie is not None)    
+    self.assertTrue(ac_cookie is not None)
     cookie_expire = ac_cookie['expires']
     one_second = 1/24.0/60.0/60.0
     self.assertTrue((now + 6*one_second)> DateTime(cookie_expire)) # give 1s tollerance
-    
+
     # if we disable auto-logout then cookie will expire at end of session
-    portal.portal_preferences.default_site_preference.disable()    
+    portal.portal_preferences.default_site_preference.disable()
     self.tic()
     portal.portal_caches.clearAllCache()
-    
+
     response = self.publish(path)
     self.assertTrue('Welcome to ERP5' in response.getBody())
-    ac_cookie = response.getCookie('__ac')    
+    ac_cookie = response.getCookie('__ac')
     self.assertTrue(ac_cookie is not None)
-    self.assertTrue(ac_cookie.get('expires', None) is None)    
-    
+    self.assertTrue(ac_cookie.get('expires', None) is None)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAuoLogout))

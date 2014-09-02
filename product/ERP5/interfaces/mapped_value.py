@@ -34,7 +34,7 @@ _MARKER = []
 class IMappedValue(IPredicate):
   """Mapped Value document interface specification
 
-  A Mapped Value provides 
+  A Mapped Value provides
   """
   def getMappedValuePropertyList():
     """

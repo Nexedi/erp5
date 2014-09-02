@@ -65,14 +65,14 @@ class Agent(Folder, Image):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'viewImage')
   viewImage = Image.index_html
-  
+
   def importSignature(self, import_file=None, form_id=None, REQUEST=None, **kw):
     """
       Imports a scan of a signature.
     """
     if REQUEST is None:
       REQUEST = getattr(self, 'REQUEST', None)
-        
+
     if (import_file is None) or (len(import_file.read()) == 0) :
       if REQUEST is not None :
         REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+empty+file+was+specified"

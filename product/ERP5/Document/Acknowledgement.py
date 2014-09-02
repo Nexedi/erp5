@@ -35,7 +35,7 @@ from Products.ERP5.Document.Event import Event
 
 class Acknowledgement(EmailDocumentProxyMixin, Event):
   """
-    goal : 
+    goal :
 
     Acts as a proxy to the message in the case of
     - private email
@@ -44,7 +44,7 @@ class Acknowledgement(EmailDocumentProxyMixin, Event):
     We need this proxy because the user might not have the right to access
     to the original message, and we don't wish to duplicate the content of
     the original message (which can use attachements).
-    
+
     Use Case:
 
       - A Site Notification is created in order to notify to all people of a

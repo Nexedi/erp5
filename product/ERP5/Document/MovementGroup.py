@@ -43,14 +43,14 @@ class MovementGroup(XMLObject):
     can be built out of multiple simulation movements through
     differen builders using different movement groups
 
-  - moreover, we need to have something to represent at which 
-    level movement properties should be stored (ex. in Task 
+  - moreover, we need to have something to represent at which
+    level movement properties should be stored (ex. in Task
     Report). PropertyGroup could be the name.
 
   - it is true that during divergence resolution, it will be useful
     to check on PropertyGroup at which level a property can be
     set (ex. cell, line, group of lines, delivery) in order to
-    show the appropriate user interface choice to the users. 
+    show the appropriate user interface choice to the users.
     This will be achieved by making a union of all PropertyGroup
     of all business path of all simulation movements involved
     in delivery movements to resolve

@@ -86,7 +86,7 @@ class AmortisationRule(RuleMixin):
 
       invalid_state_list = self.getPortalUpdatableAmortisationTransactionStateList()
       to_aggregate_movement_list = []
-                                                 
+
       def updateSimulationMovementProperties(simulation_movement, calculated_movement, set_ratio=0):
         """
         Update the properties of the given simulation movement according
@@ -106,7 +106,7 @@ class AmortisationRule(RuleMixin):
             if (previous_value is None and value is not None) or \
                (previous_value is not None and previous_value != value):
                 modified_properties.append(key)
-           
+
             if value is None and key.split('_')[-1] == 'value':
               key = '_'.join(key.split('_')[:-1])
             setter_name = 'set%s' % ''.join([capitalize(o) for o in key.split('_')])
@@ -115,7 +115,7 @@ class AmortisationRule(RuleMixin):
         simulation_movement.edit(start_date=simulation_movement.getStopDate())
         #simulation_movement.immediateReindexObject()
         return modified_properties
-     
+
       def updateSimulationMovement(aggregated_movement, calculated_movement,
                                    correction_number, aggregated_period_number,
                                    correction_movement_dict):
@@ -163,7 +163,7 @@ class AmortisationRule(RuleMixin):
             already_corrected_quantity += correction_movement['quantity']
           if len(correction_movement_list) != 0:
             del correction_movement_dict[path_tuple]
-              
+
           if same_path:
             # We only need to create a new Simulation Movement to correct the amount
             correction_quantity = calculated_movement['quantity'] - aggregated_movement['quantity']
@@ -197,11 +197,11 @@ class AmortisationRule(RuleMixin):
           if ('quantity' in modified_properties and len(modified_properties)>1) or \
               ('quantity' not in modified_properties and len(modified_properties)>0):
             to_aggregate_movement_list.append(simulation_movement)
-            simulation_movement.edit(delivery='', profit_quantity=0, 
+            simulation_movement.edit(delivery='', profit_quantity=0,
                   activate_kw={'tag':'disconnect_amortisation_transaction'})
-           
+
         return 0
-   
+
       def updateSimulationMovementToZero(aggregated_movement,
                                          correction_number,
                                          aggregated_period_number,
@@ -221,7 +221,7 @@ class AmortisationRule(RuleMixin):
                                           correction_movement_dict = correction_movement_dict)
         return 0
 
-                                          
+
       def setRemainingAggregatedMovementsToZero(aggregated_movement_dict,
                                                 correction_number,
                                                 aggregated_period_number,
@@ -239,7 +239,7 @@ class AmortisationRule(RuleMixin):
                                                                  correction_number   = correction_number,
                                                                  aggregated_period_number = aggregated_period_number,
                                                                  correction_movement_dict = correction_movement_dict)
-              correction_number += movements_created 
+              correction_number += movements_created
               method_movements_created += movements_created
         # Some correction movements may still be unused, we need to set them to 0
         unused_correction_list = []
@@ -253,16 +253,16 @@ class AmortisationRule(RuleMixin):
             movements_created = updateSimulationMovementToZero(aggregated_movement = correction_movement,
                                                                correction_number   = correction_number,
                                                                aggregated_period_number = aggregated_period_number,
-                                                               correction_movement_dict = {}) 
+                                                               correction_movement_dict = {})
             correction_number += movements_created
             method_movements_created += movements_created
 
         return method_movements_created
-            
-          
-          
+
+
+
       ### Start of expand() ###
-        
+
       to_notify_delivery_list = []
       # Get the item we come from
       my_item = applied_rule.getCausalityValue()
@@ -339,20 +339,20 @@ class AmortisationRule(RuleMixin):
         stop_date = DateTime(stop_date.Date())
         movement['stop_date'] = stop_date
         movement['start_date'] = stop_date
-        
+
         splitted_name = movement['name'].split('_')
         movement_name = '_'.join( splitted_name[:-2] )
         movement_period = int(splitted_name[-2])
         if movement['quantity'] != 0:
           self._placeMovementInStructure(calculated_period_dict, movement, movement_period, movement_name)
-        
+
       # Then, we need to make a correspondance between aggregated movements and calculated ones
       for current_dict in (aggregated_period_dict, calculated_period_dict):
         for type_dict in current_dict.values():
           for movement_list in type_dict.values():
             movement_list.sort(key=lambda x: x['stop_date'])
       matched_dict = self._matchAmortisationPeriods(calculated_period_dict, aggregated_period_dict)
-      
+
       # We can now apply the calculated movements on the applied rule
       new_period=0
       try:
@@ -468,25 +468,25 @@ class AmortisationRule(RuleMixin):
                                                                    aggregated_period_number = aggregated_period_number,
                                                                    correction_movement_dict = correction_movement_dict)
                 correction_number += movements_created
-        
+
             # We delete this movement type from aggregation, in order to determine
             # the types which have not been matched later
             try:
               del aggregated_movement_dict[mov_type]
             except KeyError:
               pass
-         
+
           movements_created = setRemainingAggregatedMovementsToZero(aggregated_movement_dict = aggregated_movement_dict,
                                                                     correction_number        = correction_number,
                                                                     aggregated_period_number = aggregated_period_number,
                                                                     correction_movement_dict = correction_movement_dict)
           correction_number += movements_created
-          
+
           # This aggregated period handling is finished. We delete it from the dictionary
           # in order to determine the non-matched aggregated periods later.
           del aggregated_period_dict[aggregated_period_number]
 
-          
+
       # The matching process is finished. Now we set to 0 each remaining aggregated movement
       for (aggregated_period_number, aggregated_movement_dict) in aggregated_period_dict.items():
         correction_data = self._getCorrectionMovementData(aggregated_movement_dict)
@@ -511,7 +511,7 @@ class AmortisationRule(RuleMixin):
             ).AmortisationTransaction_afterBuild()
         delivery_value.edit()
 
-        
+
     def _getCorrectionMovementData(self, aggregated_movement_dict):
       """
       Return a dictionary containing the first id number for a new correction movement,
@@ -541,8 +541,8 @@ class AmortisationRule(RuleMixin):
           correction_movement_dict[path_tuple] = []
         correction_movement_dict[path_tuple].append(correction_movement)
       return { 'correction_number':correction_number, 'correction_movement_dict':correction_movement_dict }
-    
-        
+
+
     def _matchAmortisationPeriods(self, calculated_period_dict, aggregated_period_dict):
       """
       Try to match each period in calculated_period_dict with a period in
@@ -564,7 +564,7 @@ class AmortisationRule(RuleMixin):
           if movement_a.get(matching_parameter) == movement_b.get(matching_parameter):
             matching['score'] = matching['score'] + 1
         return matching
-            
+
       matching_ratio_list = []
       for (calculated_period_number,calculated_dict) in calculated_period_dict.items():
         calculated_immobilisation = calculated_dict.get(self.movement_name_dict['immobilisation']['immo'], [])
@@ -587,7 +587,7 @@ class AmortisationRule(RuleMixin):
               for o in relocate_list[:]:
                 while relocate_list.count(o) > 1:
                   relocate_list.remove(o)
-                  
+
           # Then we try to effectively match some data in these two periods, by relocating in time
           # Annuities
           current_matching = {'score':0, 'max':0, 'relocate':0, 'non-annuity':{}}
@@ -605,7 +605,7 @@ class AmortisationRule(RuleMixin):
               this_matching = calculateMovementMatch(a_annuity, c_annuity)
               relocate_matching['score'] = relocate_matching['score'] + this_matching['score']
               relocate_matching['max'] = relocate_matching['max'] + this_matching['max']
-            
+
             # Compare the current relocated matching with the best relocated matching found until now
             if current_matching['max'] == 0:
               current_matching_ratio = 0
@@ -616,7 +616,7 @@ class AmortisationRule(RuleMixin):
             if relocate_matching_ratio >= current_matching_ratio:
               if relocate_matching_ratio > current_matching_ratio or abs(relocate) < abs(current_matching['relocate']):
                 current_matching = relocate_matching
-              
+
           # Immobilisation and unimmobilisation ; normally, there should only be one or
           # two movements of each type here, so we can compare each movement with all
           # of the others without losing much time
@@ -642,7 +642,7 @@ class AmortisationRule(RuleMixin):
               current_matching['score'] = current_matching['score'] + local_best_matching['score']
               current_matching['max'] = current_matching['max'] + local_best_matching['max']
               current_matching['non-annuity'].update( local_best_matching['non-annuity'] )
-          
+
           # We found a matching ratio for this aggregated-calculated periods pair, with a particular
           # relocating. We add the ratio in the list in order to be able to retrieve it later
           if current_matching['max'] == 0:
@@ -674,9 +674,9 @@ class AmortisationRule(RuleMixin):
           aggregated_to_match.remove(aggregated)
 
       return match_dict
-        
-        
-        
+
+
+
     def _placeMovementInStructure(self, structure, movement_dict, period_number, name):
       """
       Used to sort aggregated and calculated movements in a structure
@@ -700,7 +700,7 @@ class AmortisationRule(RuleMixin):
       between the two given immobilisation movements.
       """
       # These methods are used to create dictionaries containing data to return
-      def buildImmobilisationCalculatedMovementList(date, period, source_section, destination_section, 
+      def buildImmobilisationCalculatedMovementList(date, period, source_section, destination_section,
                                                     currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
                                                    currency, movement_list, 'immobilisation')
@@ -708,7 +708,7 @@ class AmortisationRule(RuleMixin):
                                                       currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
                                                    currency, movement_list, 'unimmobilisation')
-      def buildTransferCalculatedMovementList(date, period, source_section, destination_section, 
+      def buildTransferCalculatedMovementList(date, period, source_section, destination_section,
                                                     currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
                                                    currency, movement_list, 'transfer')
@@ -721,10 +721,10 @@ class AmortisationRule(RuleMixin):
                                               currency, movement_list, name):
         for movement in movement_list:
           movement['name'] = self.movement_name_dict[name][movement['name']]
-        return buildCalculatedMovementList(date, period, annuity, source_section, 
+        return buildCalculatedMovementList(date, period, annuity, source_section,
                                            destination_section, currency, movement_list)
 
-      def buildCalculatedMovementList(date, period, annuity, source_section, 
+      def buildCalculatedMovementList(date, period, annuity, source_section,
                                       destination_section, currency, movement_list = []):
         return_list = []
         for movement in movement_list:
@@ -737,7 +737,7 @@ class AmortisationRule(RuleMixin):
                   'resource_value'     : currency } )
         return return_list
 
-      returned_list = [] 
+      returned_list = []
       if item is not None:
         if immo_period is not None:
           # Get some variables
@@ -757,7 +757,7 @@ class AmortisationRule(RuleMixin):
           # XXX FIXME : do something if currency is None
             currency = self.currency_module[currency.split('/')[-1]]
           stop_date = immo_period.get('stop_date', addToDate(initial_date, month=initial_duration))
-        
+
         # Period start and previous period stop
         # Possible cases :
         # 1) Item is unimmobilised before : start immobilisation
@@ -775,7 +775,7 @@ class AmortisationRule(RuleMixin):
         # "Continuous movement" means "same method as previous period and method is continuous"
         # Note that section can change without changing owner.
         # "Actual owner changes" means "the 'group' property of both owners differ"
-        
+
         build_unimmo = 0
         build_immo = 0
         build_transfer = 0
@@ -835,7 +835,7 @@ class AmortisationRule(RuleMixin):
           previous_stop_price = item.getAmortisationPrice(at_date=previous_stop_date, **kw)
           if previous_stop_price is not None:
             previous_amortised_price = previous_initial_price - previous_stop_price
-            returned_list.extend( 
+            returned_list.extend(
                 buildUnimmobilisationCalculatedMovementList(date = previous_stop_date,
                                                             period = period_number - 1,
                                                             source_section = previous_section,
@@ -863,7 +863,7 @@ class AmortisationRule(RuleMixin):
         # Build current period immobilisation
         if build_immo:
           initial_vat = immo_period.get("initial_vat") or 0
-          returned_list.extend( 
+          returned_list.extend(
               buildImmobilisationCalculatedMovementList(date = start_date,
                                                         period = period_number,
                                                         source_section = section,
@@ -896,7 +896,7 @@ class AmortisationRule(RuleMixin):
                                                 or immo_period.get('initial_extra_cost_account'),
                             'destination'        : None }
                       ] ) )
-                        
+
         # Build accounts transfer if the owner changes
         # XXX FIXME : do something if currency != previous currency
         if build_transfer:
@@ -918,7 +918,7 @@ class AmortisationRule(RuleMixin):
                                                   destination_section = previous_owner,
                                                   currency = currency,
                                                   movement_list = transfer_line_list))
-                        
+
         # Build accounts transfer if they change
         # XXX FIXME : do something if currency != previous currency
         if build_optional_transfer:
@@ -970,7 +970,7 @@ class AmortisationRule(RuleMixin):
               if annuity_price < 0:
                 break
               if annuity_price != 0:
-                returned_list.extend( 
+                returned_list.extend(
                     buildAnnuityCalculatedMovementList(date = end_date,
                                                        period = period_number,
                                                        annuity = annuity_number,
@@ -990,13 +990,13 @@ class AmortisationRule(RuleMixin):
             current_price -= annuity_price
             end_date = addToDate(end_date, **adding_dict)
             annuity_number += 1
-  
+
           # Proceed the last annuity (maybe incomplete, from financial year end date to to_date)
           annuity_end_price = item.getAmortisationPrice(at_date=to_date, **kw)
           if annuity_end_price is not None and annuity_end_price < current_price:
             annuity_price = current_price - annuity_end_price
             if annuity_price != 0:
-              returned_list.extend( 
+              returned_list.extend(
                   buildAnnuityCalculatedMovementList(date = end_date,
                                                      period = period_number,
                                                      annuity = annuity_number,
@@ -1013,7 +1013,7 @@ class AmortisationRule(RuleMixin):
                               'source'             : amo_account,
                               'destination'        : None }
                         ] ) )
-        
+
        #######
         if immo_period is not None:
           monthly_account = immo_period.get('start_monthly_amortisation_account') \
@@ -1034,7 +1034,7 @@ class AmortisationRule(RuleMixin):
             inter_depreciation_account = monthly_account
           else:
             inter_depreciation_account = amortisation_account
-          
+
           # Build yearly annuities
           buildAnnuity(from_date=start_date,
                        to_date=stop_date,
@@ -1043,7 +1043,7 @@ class AmortisationRule(RuleMixin):
                        precision='year',
                        depr_name='depr',
                        amo_name='amo')
-        
+
           # Accumulate quantities and add them to the period dict
           if previous_period is not None:
             cumulated_price_dict = dict(previous_period.get('cumulated_price_dict',{}))

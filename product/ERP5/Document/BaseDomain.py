@@ -35,7 +35,7 @@ class BaseDomain(Domain):
   """
     Base Domain is the root of a tree of domains which can be used
     as nodes in a report tree of ListBox
-    
+
     Domain can be used as MetaNodes or MetaResources. For example,
     a Domain viewed as a MetaNode can search for all emerging movements
     and compare it with its capacity.

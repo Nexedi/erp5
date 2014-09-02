@@ -76,7 +76,7 @@ try:
     #     """ Record the results of a test run.
     #     """
     #     return self.TestTool_reportResult(REQUEST)
-    
+
     # Use BaseTool class's methods for properties instead of patched PropertyManager's
     _propertyMap = BaseTool._propertyMap
     _setProperty = BaseTool._setProperty

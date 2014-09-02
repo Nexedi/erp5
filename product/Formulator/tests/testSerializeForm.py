@@ -192,14 +192,14 @@ class SerializeTestCase(unittest.TestCase):
         """
         form = ZMIForm('test', '<EncodingTest>')
         form.manage_addField('int_field', 'int Field', 'IntegerField')
-        
+
         form2 = ZMIForm('test2', 'ValueTest')
         request = FakeRequest()
         for message_key in form.int_field.get_error_names():
            request[message_key] = 'test message for error key <%s>' % message_key
         form.int_field.manage_messages(REQUEST=request)
-        
-        
+
+
         xml = formToXML(form)
         XMLToForm(xml, form2)
         # print xml
@@ -418,16 +418,16 @@ class SerializeTestCase(unittest.TestCase):
                           form2.link_field.get_value('check_timeout'))
 
         # XXX not tested: equal form validation failure on invalid input
-        
-        
+
+
 
     def test_emptyGroup(self):
         """ test bugfix: empty groups are allowed in the XMLForm """
         form = ZMIForm('test', 'GroupTest')
         form.add_group('empty')
-        
+
         form2 = ZMIForm('test2', 'GroupTestCopy')
-        
+
         xml = formToXML(form)
         XMLToForm(xml, form2)
         # print xml
@@ -437,8 +437,8 @@ class SerializeTestCase(unittest.TestCase):
         self.assertEqual(form.render(), form2.render())
 
         self.assertEqual(form.get_groups(), form2.get_groups())
-    
-        
+
+
 def test_suite():
     suite = unittest.TestSuite()
 
@@ -450,4 +450,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
+

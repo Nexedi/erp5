@@ -146,7 +146,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                             self, delivery_movement,
                             simulation_movement, property_dict,
                             update_existing_movement=update_existing_movement,
-                            force_update=force_update, 
+                            force_update=force_update,
                             activate_kw=activate_kw)
 
     if update_existing_movement and not force_update:
@@ -407,7 +407,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
     return delivery_line
 
-  def _createDeliveryCell(self, delivery_line, movement, activate_kw, 
+  def _createDeliveryCell(self, delivery_line, movement, activate_kw,
                           base_id, cell_key):
     """
       Refer to the docstring in GeneratedDeliveryBuilder.

@@ -40,25 +40,25 @@ from Products.ERP5Type import Permissions
 class TestPerson(ERP5TypeTestCase):
 
   run_all_test = 1
- 
+
   def getTitle(self):
     return "Person Test"
-    
+
   def getBusinessTemplateList(self):
     """  """
     return ('erp5_base',)
-  
+
   def afterSetUp(self):
     self.portal = self.getPortal()
     self.login()
-  
+
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
-  
+
   def _makeOne(self, **kw):
     module = self.portal.person_module
     return module.newContent(portal_type="Person", **kw)
@@ -75,17 +75,17 @@ class TestPerson(ERP5TypeTestCase):
     person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
     person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
     person_copy_obj = person_module[person_copy_id]
-    ## because we copy/paste Person object in the same ERP5 
+    ## because we copy/paste Person object in the same ERP5
     ## instance its reference must be resetted
     self.assertEqual(person_copy_obj.getReference(), None)
-    
+
     ## set object as if installed from bt5 (simulate it)
     request = self.app.REQUEST
     request.set('is_business_template_installation', 1)
     person_copy = person_module.manage_copyObjects(ids=(person.getId(),))
     person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
     person_copy_obj = person_module[person_copy_id]
-    ## because we setup Person object from business template 
+    ## because we setup Person object from business template
     ## its reference must NOT be resetted
     self.assertEqual(person_copy_obj.getReference(), person.getReference())
 
@@ -93,7 +93,7 @@ class TestPerson(ERP5TypeTestCase):
   def testEmptyTitle(self):
     p = self._makeOne()
     self.assertEqual('', p.getTitle())
-  
+
   def testSetFirstName(self):
     p = self._makeOne()
     p.setFirstName('first')
@@ -125,7 +125,7 @@ class TestPerson(ERP5TypeTestCase):
             last_name='last',
             title='title' )
     # no infinite loop :) but there's no guarantee on the behaviour
-    
+
   def testGetTitleOrId(self):
     p = self._makeOne(id='person')
     self.assertEqual('person', p.getTitleOrId())
@@ -135,7 +135,7 @@ class TestPerson(ERP5TypeTestCase):
             last_name='last', )
     self.assertEqual('first last', p.getTitleOrId())
     self.assertEqual('first last', p.title_or_id())
-    
+
   def testHasTitle(self):
     p = self._makeOne(id='person')
     self.assertFalse(p.hasTitle())
@@ -187,7 +187,7 @@ class TestPerson(ERP5TypeTestCase):
     last_id = portal.portal_preferences.getLastId()
     last_preference = portal.portal_preferences[last_id]
     self.assertTrue("Séb" in last_preference.getTitle())
-    
+
 
 def test_suite():
   suite = unittest.TestSuite()

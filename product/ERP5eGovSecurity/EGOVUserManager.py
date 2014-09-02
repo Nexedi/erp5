@@ -128,7 +128,7 @@ class EGOVUserManager(ERP5UserManager):
                          assignment.getStopDate() < login_date:
                     continue
                   valid_assignment_list.append(assignment)
-                  
+
                 if pw_validate(user.getPassword(), password) and \
                        len(valid_assignment_list): #user.getCareerRole() == 'internal':
                   return login, login # use same for user_id and login
@@ -225,7 +225,7 @@ class EGOVUserManager(ERP5UserManager):
                     repr([r.getObject() for r in catalog_result])))
               else: # no person is linked to this user login
                 # this permit to get the module of the application
-                # the goal is to work with anonymous applications, even if 
+                # the goal is to work with anonymous applications, even if
                 # they are not reindexed
                 module_id = self.REQUEST.get('anonymous_module', None)
                 if module_id:

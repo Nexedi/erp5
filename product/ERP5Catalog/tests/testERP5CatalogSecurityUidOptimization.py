@@ -101,7 +101,7 @@ CREATE TABLE alternate_roles_and_users (
 
     # add category
     self.portal.portal_categories.local_role_group.newContent(
-      portal_type='Category', 
+      portal_type='Category',
       reference = 'Alternate',
       id = 'Alternate')
 
@@ -205,7 +205,7 @@ CREATE TABLE alternate_roles_and_users (
       self.login('user2')
       self.assertEqual([],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
-      
+
     finally:
       # restore catalog configuration
       sql_catalog.sql_search_tables = current_sql_search_tables

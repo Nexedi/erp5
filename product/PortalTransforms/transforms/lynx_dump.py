@@ -13,14 +13,14 @@ class lynx_dump(popentransform):
     __name__ = "lynx_dump"
     inputs   = ('text/html',)
     output  = 'text/plain'
-    
+
     __version__ = '2004-07-02.1'
 
     binaryName = "lynx"
     # XXX does -stdin work on windows?
     binaryArgs = "-dump -stdin -force_html"
     useStdin = True
-    
+
 class old_lynx_dump(commandtransform):
     implements(ITransform)
 

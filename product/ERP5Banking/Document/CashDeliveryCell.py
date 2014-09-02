@@ -71,7 +71,7 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     """
     script = self._getTypeBasedMethod('getBaobabSource')
     if script is not None:
-      return script(self)      
+      return script(self)
     return self.aq_parent.getBaobabSource(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabDestination')
@@ -80,7 +80,7 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     """
     script = self._getTypeBasedMethod('getBaobabDestination')
     if script is not None:
-      return script(self)      
+      return script(self)
     return self.aq_parent.getBaobabDestination(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabSourceSection')

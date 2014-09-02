@@ -39,9 +39,9 @@ class SplitQuantity(CopyToTarget):
     """
       From simulation_movement, generate new_movement containing self.quantity
       resources, of start_date self.start_date and stop_date self.stop_date.
-      
+
       movement.quantity is updated
-      
+
       XXX incomplete docstring
     """
     split_index = 0

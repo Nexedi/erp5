@@ -38,11 +38,11 @@ _workflow_factories = {}
 
 def addWorkflowFactory(factory, id, title):
     """addWorkflowFactory replacement
-    
+
     addWorkflowFactory has been removed from CMFCore 2.x.
     DCWorkflow, which now handles this job, consults the GenericSetup tool,
     at runtime, to determine all valid workflows.
-    
+
     Instead of providing xml files in GenericSetup profiles for our,
     workflows we prepare our own Zope2 style factories for registration
     in the Workflow Tool.
@@ -78,7 +78,7 @@ def _generateWorkflowConstructors(factory_info):
     return manage_addWorkflowFormDtml(None, dispatcher, REQUEST,
       workflow_factory_title=workflow_factory_title,
       form_action=constructor_action_name)
-  
+
   # The action of the form
   @postonly
   def manage_addWorkflow(dispatcher, workflow_id, REQUEST=None):

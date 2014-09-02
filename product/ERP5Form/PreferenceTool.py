@@ -270,7 +270,7 @@ class PreferenceTool(BaseTool):
 
   security.declarePublic('isAuthenticationPolicyEnabled')
   def isAuthenticationPolicyEnabled(self) :
-    """ 
+    """
     Return True if authentication policy is enabled.
     This method exists here due to bootstrap issues.
     It should work even if erp5_authentication_policy bt5 is not installed.

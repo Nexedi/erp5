@@ -41,7 +41,7 @@ class Filter(Implicit):
       filter_method - filter_method allows for extending filtering in an arbitrary way
                       filter_method must be provided with a category and should
                       return 0 (False) or 1 (True)
-      
+
     """
     #LOG('Filter __init__', 0, 'self = %s, spec = %s, filter = %s, portal_type = %s' % (str(self), str(spec), str(filter), str(portal_type)))
     if type(filter) is type({}):

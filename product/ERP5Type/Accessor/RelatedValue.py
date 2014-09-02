@@ -46,9 +46,9 @@ class DefaultGetter(BaseGetter):
   func_defaults = ()
 
   def __init__(self, id, key, warning=0):
-    """ 
+    """
     'warning' argument means that this category is deprecated in the
-    property sheet, so the generated method will also be deprecated 
+    property sheet, so the generated method will also be deprecated
     """
     self._id = id
     self.__name__ = id
@@ -90,7 +90,7 @@ class ListGetter(BaseGetter):
   def __init__(self, id, key, warning=0):
     """
     'warning' argument means that this category is deprecated in the
-    property sheet, so the generated method will also be deprecated 
+    property sheet, so the generated method will also be deprecated
     """
     self._id = id
     self.__name__ = id

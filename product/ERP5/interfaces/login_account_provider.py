@@ -31,7 +31,7 @@ from zope.interface import Interface
 
 class ILoginAccountProvider(Interface):
   """
-  Documents which implement the ILoginAccountProvider interface are considered as 
+  Documents which implement the ILoginAccountProvider interface are considered as
   providers of ERP5 login accounts.
   """
 
@@ -44,28 +44,28 @@ class ILoginAccountProvider(Interface):
     """
     Notify a password expire event.
     """
-    
+
   def isLoginBlocked(**kw):
     """
     Is this login blocked?
     """
-    
+
   def isPasswordExpired(**kw):
     """
     Is password expired?
     """
-    
+
   def isPasswordValid(password, **kw):
     """
     Is password valid?
     """
-    
+
   def analyzePassword(password, **kw):
     """
     Analyze password validity.
     Return status code indicating if password is acceptable and if not status code
     for reason for not being a valid one (i.e. too short, not complex, etc ...)
-    """    
+    """
 
   def isPasswordAlreadyUsed(self, password):
     """
@@ -73,4 +73,3 @@ class ILoginAccountProvider(Interface):
     """
 
 
-  

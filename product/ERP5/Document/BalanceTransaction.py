@@ -44,19 +44,19 @@ class InventoryKey(UserDict):
 
   def clear(self):
     raise TypeError, 'InventoryKey are immutable'
-  
+
   def pop(self, keys, *args):
     raise TypeError, 'InventoryKey are immutable'
-  
+
   def update(self, dict=None, **kwargs):
     raise TypeError, 'InventoryKey are immutable'
-  
+
   def __delitem__(self, key):
     raise TypeError, 'InventoryKey are immutable'
-  
+
   def __setitem__(self, key, item):
     raise TypeError, 'InventoryKey are immutable'
-  
+
   def setdefault(self, key, failobj=None):
     if key in self.data:
       return self.data[key]
@@ -67,14 +67,14 @@ class InventoryKey(UserDict):
 
 
 class BalanceTransaction(AccountingTransaction, Inventory):
-  """Balance Transaction 
+  """Balance Transaction
   """
 
   # CMF Type Definition
   meta_type = 'ERP5 Balance Transaction'
   portal_type = 'Balance Transaction'
   add_permission = Permissions.AddPortalContent
-    
+
   #zope.interface.implements( interfaces.Inventory, )
 
   # Declarative security
@@ -94,7 +94,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition
                     )
-  
+
 
   def _getGroupByNodeMovementList(self):
     """Returns movements that implies only grouping by node."""
@@ -177,7 +177,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    uid=movement.getUid(),
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
-    
+
     # mirror section
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
@@ -268,7 +268,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
-    
+
     # mirror section
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
@@ -292,7 +292,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
-    
+
     # payment
     for movement in self._getGroupByPaymentMovementList():
       node_uid = movement.getDestinationUid()
@@ -316,7 +316,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    quantity=movement.getQuantity(),
                    total_price=movement\
                     .getDestinationInventoriatedTotalAssetPrice(), ))
-    
+
     return new_stock
 
 
@@ -331,7 +331,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       # helper function to compute difference between two stock lists.
       if not current_stock_list:
         return new_stock_list
-      
+
       stock_diff_list = current_stock_list[::] # deep copy ?
 
       for new_stock in new_stock_list:
@@ -343,7 +343,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               break
           else:
             matching_diff = diff
-        
+
         # matching_diff are negated later
         if matching_diff:
           matching_diff['quantity'] -= round(new_stock['quantity'], precision)
@@ -353,8 +353,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
             matching_diff['total_price'] -= new_stock['total_price']
         else:
           stock_diff_list.append(new_stock)
-      
-      
+
+
       # we were doing with reversed calculation, so negate deltas again.
       # Also we remove stocks that have 0 quantity and price.
       return [negateStock(s) for s in stock_diff_list]
@@ -376,7 +376,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       else:
         delta_list.extend(
             [negateStock(s) for s in current_stock_value_list])
-    
+
     # now add every thing in new stock which was not in current stock
     for new_stock_key, new_stock_value_list in \
                                 new_stock_dict.items():
@@ -411,13 +411,13 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       doc.isMovement = types.MethodType(isMovement, doc)
 
       if relative_url:
-        
+
         def URLGetter(url):
           def getRelativeUrl():
             return url
           return getRelativeUrl
         doc.getRelativeUrl = URLGetter(relative_url)
-        
+
         def PathGetter(path):
           def getPath():
             return path
@@ -481,7 +481,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     # Catalog this transaction as a standard document
     self.portal_catalog.catalogObjectList([self])
-    
+
     # Catalog differences calculated from lines
     if stock_object_list:
       self.portal_catalog.catalogObjectList(stock_object_list[::],

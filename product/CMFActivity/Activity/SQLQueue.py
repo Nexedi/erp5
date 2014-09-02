@@ -107,9 +107,9 @@ class SQLQueue(SQLBase):
       path = [path]
     if isinstance(method_id, str):
       method_id = [method_id]
-    result = activity_tool.SQLQueue_validateMessageList(method_id=method_id, 
+    result = activity_tool.SQLQueue_validateMessageList(method_id=method_id,
                                                         path=path,
-                                                        message_uid=message_uid, 
+                                                        message_uid=message_uid,
                                                         tag=tag,
                                                         serialization_tag=None,
                                                         count=1)

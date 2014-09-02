@@ -39,16 +39,16 @@ class Domain(Predicate, MetaNode, MetaResource):
     Domain can be used as MetaNodes or MetaResources. For example,
     a Domain viewed as a MetaNode can search for all emerging movements
     and compare it with its capacity.
-        
+
     Structure is:
        - base domain (like base category)
        - sub domain (like category)
-       
+
     Allows to define ranges:
        - price between X and Y
        - portal_type in (a, b, c)
        - price between X and Y and region in (a, b, c)
-       
+
     Reports:
        - listbox allows to produce reports
          - output to html, pdf or ooffice
@@ -56,7 +56,7 @@ class Domain(Predicate, MetaNode, MetaResource):
          - definition of selection (to list)
          - ability for use to "save" favourite report (user reports)
          - library of favourite reports (global reports)
-       - matrixbox allows to produce reports       
+       - matrixbox allows to produce reports
          - output to html, pdf or ooffice
          - definition through the web (ie. which base_category or base_domain in which axis)
          - definition of selection (to map to matrix)
@@ -68,7 +68,7 @@ class Domain(Predicate, MetaNode, MetaResource):
 
     A Domain Generator uses a method (SQL, Python) to select objects
     which are then wrapped as Virtual Domains. This can be used for
-    example to provide the list the 10 best selling shops to 
+    example to provide the list the 10 best selling shops to
     a report tree.
   """
   meta_type = 'ERP5 Domain'
@@ -97,9 +97,9 @@ class Domain(Predicate, MetaNode, MetaResource):
     if content_path[0] in ('portal_categories', 'portal_domains'):
       return '/'.join(content_path[1:])
     return '/'.join(content_path)
-  
+
   # Generator API
-  
+
   # How to define a generated subdomain
   security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
   def getDomainGeneratorList(self, depth=0):

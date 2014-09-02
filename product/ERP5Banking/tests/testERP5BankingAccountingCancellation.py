@@ -129,7 +129,7 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
     Create a check payment document and check it
     """
     self.accounting_cancellation = self.accounting_cancellation_module.newContent(
-                                   id = 'accounting_cancellation', 
+                                   id = 'accounting_cancellation',
                                    portal_type = 'Accounting Cancellation',
                                    description = "test",
                                    # source_value = self.bi_counter,
@@ -146,7 +146,7 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
 
   def stepAddAccountingCancellationLine(self, sequence=None, sequence_list=None, **kw):
     """
-    Create a line on internal account transfer    
+    Create a line on internal account transfer
     """
     self.line_1 = self.accounting_cancellation.newContent(
                                     portal_type='Accounting Cancellation Line',
@@ -159,7 +159,7 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
     self.assertEqual(self.line_1.isCancellationAmount(), 1)
 
   def stepOrderAccountingCancellation(self, sequence=None, sequence_list=None, **kwd):
-    self.workflow_tool.doActionFor(self.accounting_cancellation, 
+    self.workflow_tool.doActionFor(self.accounting_cancellation,
                       'order_action', wf_id='accounting_cancellation_workflow')
     self.assertEqual(self.accounting_cancellation.getSimulationState(), 'ordered')
 
@@ -182,12 +182,12 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
 
 
   def stepConfirmAccountingCancellation(self, sequence=None, sequence_list=None, **kwd):
-    self.workflow_tool.doActionFor(self.accounting_cancellation, 
+    self.workflow_tool.doActionFor(self.accounting_cancellation,
                     'confirm_action', wf_id='accounting_cancellation_workflow')
     self.assertEqual(self.accounting_cancellation.getSimulationState(), 'confirmed')
 
   def stepDeliverAccountingCancellation(self, sequence=None, sequence_list=None, **kwd):
-    self.workflow_tool.doActionFor(self.accounting_cancellation, 
+    self.workflow_tool.doActionFor(self.accounting_cancellation,
                  'deliver_action', wf_id='accounting_cancellation_workflow')
     self.assertEqual(self.accounting_cancellation.getSimulationState(), 'delivered')
 

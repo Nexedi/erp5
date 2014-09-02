@@ -39,7 +39,7 @@ class ISolver(Interface):
   Besides ISolver static interface definition, target solvers
   must support IDeliveryGetter to access simulation movements to solve.
 
-  TODO-XXX: 
+  TODO-XXX:
     - find a way to make static interfaces inherit from
       dynamic interfaces in ERP5 (ex. solver process workflow)
     - IDeliveryGetter is not appropriate name / interface
@@ -53,9 +53,9 @@ class ISolver(Interface):
     appropriate methods of the solver_process_workflow must be invoked
     (ex. succeed, fail, abort).
 
-    NOTE: the solve method is invoked to solve divergences or to 
+    NOTE: the solve method is invoked to solve divergences or to
     optimize movements. Examples include: Adopt, Accept, Reduce,
-    Postpone, Optimize Critical Path, 
+    Postpone, Optimize Critical Path,
     """
 
   def isSolving():

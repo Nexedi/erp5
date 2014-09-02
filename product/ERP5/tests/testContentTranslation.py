@@ -218,7 +218,7 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     # check with acquisition
     self.assertEqual(person.getAddress(), None)
-    
+
     person.setDefaultAddressStreetAddress('Taito-ku Tokyo')
     self.assertEqual(person.getDefaultAddressStreetAddress(), 'Taito-ku Tokyo')
 

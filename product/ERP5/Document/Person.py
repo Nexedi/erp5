@@ -206,7 +206,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
 
     # Time management
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableTime')
     def getAvailableTime(self, *args, **kw):
       """
@@ -219,12 +219,12 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
       portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableTime(*args, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableTimeSequence')
     def getAvailableTimeSequence(self, *args, **kw):
       """
       Calculate available time for a person in a sequence
-      
+
       See SimulationTool.getAvailableTimeSequence
       """
       kw['node'] = [self.getUid()]
@@ -233,7 +233,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
       return portal_simulation.getAvailableTimeSequence(*args, **kw)
 
     # Notifiation API
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'notifyMessage')
     def notifyMessage(self, message):
       """

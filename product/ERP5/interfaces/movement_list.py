@@ -32,7 +32,7 @@ from Products.ERP5.interfaces.amount_list import IAmountList
 
 class IMovementList(IAmountList):
   """Movement list interface specification
-  
+
    A sequence of objects implementing IMovement interface.
   """
 

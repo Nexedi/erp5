@@ -126,7 +126,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   #
   #   Local file access
   #
-  def _getLocalFile(self, REQUEST, RESPONSE, file_path, 
+  def _getLocalFile(self, REQUEST, RESPONSE, file_path,
                          tmp_file_path='/tmp/', compressed=1):
     """
       It should return the local file compacted or not as tar.gz.
@@ -268,15 +268,15 @@ class IntrospectionTool(LogMixin, BaseTool):
   security.declareProtected(Permissions.ManagePortal, '_loadExternalConfig')
   def _loadExternalConfig(self):
     """
-      Load configuration from one external file, this configuration 
-      should be set for security reasons to prevent people access 
+      Load configuration from one external file, this configuration
+      should be set for security reasons to prevent people access
       forbidden areas in the system.
     """
     def cached_loadExternalConfig():
       import ConfigParser
       config = ConfigParser.ConfigParser()
       config.readfp(open('/etc/erp5.cfg'))
-      return config     
+      return config
 
     cached_loadExternalConfig = CachingMethod(cached_loadExternalConfig,
                                 id='IntrospectionTool__loadExternalConfig',
@@ -314,7 +314,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       {
          'python': '2.4.3'
        , 'pysvn': '1.2.3'
-       , 'ERP5' : "5.4.3"       
+       , 'ERP5' : "5.4.3"
       }
       NOTE: consider using autoconf / automake tools ?
     """
@@ -370,7 +370,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     if system_preference is not None:
       # Conversion Server information
-      collect_information_by_method(system_preference, 
+      collect_information_by_method(system_preference,
                          'getPreferredOoodocServerAddress')
       collect_information_by_method(system_preference,
                          'getPreferredOoodocServerPortNumber')
@@ -384,8 +384,8 @@ class IntrospectionTool(LogMixin, BaseTool):
     collect_information_by_property(self.MailHost,'smtp_port')
 
     # Collect information related to Databases. ie.: MySQL, LDap?
-    for conn in self.objectValues(["CMFActivity Database Connection", 
-                                   "Z MySQL Database Connection", 
+    for conn in self.objectValues(["CMFActivity Database Connection",
+                                   "Z MySQL Database Connection",
                                    "Z MySQL Deferred Database Connection"]):
 
       collect_information_by_property(conn,'connection_string')
@@ -398,7 +398,7 @@ class IntrospectionTool(LogMixin, BaseTool):
         'certificate_authority_path')
     return connection_dict
 
-  security.declareProtected(Permissions.ManagePortal, 
+  security.declareProtected(Permissions.ManagePortal,
       '_getBusinessTemplateRevisionDict')
   def _getBusinessTemplateRevisionDict(self):
     """ Return a Dictionary of installed business templates and their revisions
@@ -411,11 +411,11 @@ class IntrospectionTool(LogMixin, BaseTool):
   security.declareProtected(Permissions.ManagePortal,
       '_getActivityDict')
   def _getActivityDict(self):
-    """ Return a Dictionary with the snapshot with the status of activities. 
-        failures (-2 and -3) and running. 
+    """ Return a Dictionary with the snapshot with the status of activities.
+        failures (-2 and -3) and running.
     """
     activity_dict = {}
-    # XXX Maybe this is not so efficient check. Performance Optimization 
+    # XXX Maybe this is not so efficient check. Performance Optimization
     # should be consider.
     activity_dict['failure'] = len(self.portal_activities.getMessageList(processing_node=-2))
     activity_dict['total'] = len(self.portal_activities.getMessageList())
@@ -428,21 +428,21 @@ class IntrospectionTool(LogMixin, BaseTool):
     python, libraries) the instance is using. Also, what business templates are
     installed.
 
-    Such information is usefull to detect changes in the system, into upgrader, 
+    Such information is usefull to detect changes in the system, into upgrader,
     slapos and/or to build Introspection Reports.
     """
     business_template_repository_list = self.portal_templates.getRepositoryList()
     return dict(
            activity_dict=self._getActivityDict(),
-           version_dict=self._getSystemVersionDict(), 
-           external_connection_dict=self._getExternalConnectionDict(), 
-           business_template_dict=self._getBusinessTemplateRevisionDict(), 
+           version_dict=self._getSystemVersionDict(),
+           external_connection_dict=self._getExternalConnectionDict(),
+           business_template_dict=self._getBusinessTemplateRevisionDict(),
            business_template_repository_list=business_template_repository_list)
 
   security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureAsJSON')
   def getSystemSignatureAsJSON(self, REQUEST=None):
     """
-      Returns the information as JSON. 
+      Returns the information as JSON.
 
       THIS merhod could be a decorator or use a some other clever way to convert
       the getSystemSignatureDict

@@ -53,7 +53,7 @@ class ResourceBackpropagation(CopyToTarget):
 
     return value_delta_dict
 
-  def _generateValueDict(self, simulation_movement, quantity_ratio=1, 
+  def _generateValueDict(self, simulation_movement, quantity_ratio=1,
                          start_date_delta=0, stop_date_delta=0,
                          resource_list=[],
                          variation_category_list=[],

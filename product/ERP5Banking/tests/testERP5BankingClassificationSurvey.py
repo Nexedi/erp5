@@ -165,10 +165,10 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     """
     # classification surveyg has encaisse_paris for source, encaisse_externe for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.classification_survey = self.classification_survey_module.newContent(
-                                      id='classification_survey_1', 
-                                      portal_type='Classification Survey', 
-                                      source_value=self.encaisse_des_billets_ventiles_et_detruits, 
-                                      destination_value=None, 
+                                      id='classification_survey_1',
+                                      portal_type='Classification Survey',
+                                      source_value=self.encaisse_des_billets_ventiles_et_detruits,
+                                      destination_value=None,
                                       description='test',
                                       source_total_asset_price=52400.0)
     # execute tic
@@ -318,7 +318,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Classification Survey Cell')
       variation_text = cell.getBaobabDestinationVariationText()
-      cash_status = [x for x in variation_text.split('\n') 
+      cash_status = [x for x in variation_text.split('\n')
                      if x.startswith('cash_status')][0]
       self.assertEqual(cash_status, 'cash_status/retired')
       if cell.getId() == 'movement_0_0_0':
@@ -361,7 +361,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Outgoing Classification Survey Cell')
       variation_text = cell.getBaobabDestinationVariationText()
-      cash_status = [x for x in variation_text.split('\n') 
+      cash_status = [x for x in variation_text.split('\n')
                      if x.startswith('cash_status')][0]
       self.assertEqual(cash_status, 'cash_status/cancelled')
       if cell.getId() == 'movement_0_0_0':
@@ -474,7 +474,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
 
-  def stepResetSourceInventory(self, 
+  def stepResetSourceInventory(self,
                sequence=None, sequence_list=None, **kwd):
     """
     Reset a vault

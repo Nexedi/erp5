@@ -57,21 +57,21 @@ def initialize(context):
                                 'www/LinkField.gif')
     FieldRegistry.registerField(StandardFields.LabelField,
                                 'www/LabelField.gif')
-    
+
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
     FieldRegistry.registerField(HelperFields.MethodField)
     FieldRegistry.registerField(HelperFields.TALESField)
-    
+
     # obsolete field (same as helper; useable but not addable)
     FieldRegistry.registerField(StandardFields.RangedIntegerField,
                                 'www/RangedIntegerField.gif')
-    
+
     # register help for the product
     context.registerHelp()
     # register field help for all fields
     FieldRegistry.registerFieldHelp(context)
-    
+
     # register the form itself
     context.registerClass(
         Form.ZMIForm,
@@ -81,7 +81,7 @@ def initialize(context):
 
     # make Dummy Fields into real fields
     FieldRegistry.initializeFields()
-    
+
     # do initialization of Form class to make fields addable
     Form.initializeForm(FieldRegistry)
 

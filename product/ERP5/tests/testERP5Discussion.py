@@ -96,14 +96,14 @@ class TestERP5Discussion(ERP5TypeTestCase):
 
     thread = self.stepCreateThread()
     post = self.stepCreatePost(thread)
-    # post is not indexed yet 
+    # post is not indexed yet
     self.assertSameSet([], thread.DiscussionThread_getDiscussionPostList())
 
     # not indexed but its relative url is passed through REQUEST
     self.app.REQUEST.set('post_relative_url', post.getRelativeUrl())
     self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
     self.tic()
-   
+
     # indexed already
     self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
 
@@ -146,7 +146,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
     discussion_thread = [x for x in self.portal.discussion_thread_module.objectValues() \
                           if x.getReference()=='test1-new-with-attachment'][0]
     self.tic()
-    
+
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
     attachment_list = discussion_post.DiscussionPost_getAttachmentList()
     self.assertEqual(discussion_thread.getValidationState(), 'published')
@@ -162,19 +162,19 @@ class TestERP5Discussion(ERP5TypeTestCase):
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
                                                        title = 'Group 1')
     group2 = portal.portal_categories.group.newContent(portal_type='Category',
-                                                       title = 'Group 2')                                                       
+                                                       title = 'Group 2')
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
     web_section1 = web_site.newContent(portal_type='Web Section')
     web_section2 = web_site.newContent(portal_type='Web Section')
     web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
     web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
     web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
-    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])    
+    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])
     self.tic()
-    
+
     # add threads on Web Section context
     web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
-    web_section2.WebSection_createNewDiscussionThread('test2', 'test2 body')    
+    web_section2.WebSection_createNewDiscussionThread('test2', 'test2 body')
     self.tic()
     discussion_thread_object1 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test1')
@@ -182,8 +182,8 @@ class TestERP5Discussion(ERP5TypeTestCase):
                                                                     title = 'test2')
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
-    
-    # check getDocumentValue.. on Web Section context (by default forum is public 
+
+    # check getDocumentValue.. on Web Section context (by default forum is public
     # so threads should be part of document list)
     self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
     self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
@@ -207,11 +207,11 @@ class TestERP5Discussion(ERP5TypeTestCase):
     web_section1.WebSection_createNewDiscussionThread(web_section1.getId(), 'test reference using web section')
     web_section1.WebSection_createNewDiscussionThread('image_module', 'test1 body')
     self.tic()
-    self.assertNotEqual(web_section1.getId(), 
+    self.assertNotEqual(web_section1.getId(),
                         portal.portal_catalog.getResultValue(
                           portal_type = 'Discussion Thread',
                           title = web_section1.getId()).getReference())
-    self.assertNotEqual('image_module', 
+    self.assertNotEqual('image_module',
                         portal.portal_catalog.getResultValue(
                           portal_type = 'Discussion Thread',
                           title = 'image_module').getReference())

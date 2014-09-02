@@ -55,7 +55,7 @@ class ICrawlable(Interface):
   def getContentBaseURL():
     """
     Returns the content base URL based on the actual content or
-    based on any other information (ex. URL property, system 
+    based on any other information (ex. URL property, system
     preferences, etc.). This information can be used to generate
     a normalised URL.
     """
@@ -71,7 +71,7 @@ class ICrawlable(Interface):
     """
     Returns True if the content document acts as an index
     to other documents. Returns False if the content document
-    contains relevant content for the end-user. 
+    contains relevant content for the end-user.
 
     This method is used by ERP5 crawlers to make a difference between
     URLs which return an index (ex. the list of emails of a mailing
@@ -94,7 +94,7 @@ class ICrawlable(Interface):
 
   def isUpdatable(self):
     """
-    This method is used to decide if document can be updated 
+    This method is used to decide if document can be updated
     in the crawling process.
     """
 

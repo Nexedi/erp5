@@ -245,7 +245,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
       accept decision, then change the quantity again
       and see if the packing list is divergent and then
       split and defer the packing list and then see
-      if two packing lists has correct quantity and 
+      if two packing lists has correct quantity and
       they are not diverged.
     """
     if not run: return

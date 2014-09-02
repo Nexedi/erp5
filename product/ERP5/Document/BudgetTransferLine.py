@@ -47,7 +47,7 @@ class BudgetTransferLine(SupplyLine):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
     )
-    
+
     # CMF Type Definition
     meta_type='ERP5 Budget Transfer Line'
     portal_type='Budget Transfer Line'

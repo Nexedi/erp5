@@ -38,7 +38,7 @@ _NOW = None   # set only for testing
 _PINK_BACKGROUND = re.compile('bgcolor="#ffcfcf"')
 
 _EXCLUDE_NAMES = ( 'CVS', '.svn', '.objects' )
-        
+
 #winzip awaits latin1
 _DEFAULTENCODING = 'latin1'
 
@@ -165,10 +165,10 @@ class Zuite( OrderedFolder ):
 
     security.declareProtected( View, 'splash_html' )
     splash_html = PageTemplateFile( 'suiteSplash', _WWW_DIR )
- 
+
     security.declareProtected( View, 'test_prompt_html' )
     test_prompt_html = PageTemplateFile( 'testPrompt', _WWW_DIR )
- 
+
     security.declareProtected(ManageSeleniumTestCases, 'manage_zipfile')
     manage_zipfile = PageTemplateFile( 'suiteZipFile', _WWW_DIR )
 
@@ -191,7 +191,7 @@ class Zuite( OrderedFolder ):
 
         if value is not localdefault:
             return value
-       
+
         proxy = _FilesystemProxy( key
                                 , self._listSeleniumObjects()
                                 ).__of__( self )
@@ -211,7 +211,7 @@ class Zuite( OrderedFolder ):
         result = []
         self._recurseListTestCases(result, prefix, self)
         return result
-    
+
     def _recurseListTestCases( self, result, prefix, ob ):
         for tcid, test_case in ob.objectItems():
             if isinstance( test_case, self.__class__ ):

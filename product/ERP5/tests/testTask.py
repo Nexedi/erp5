@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
-#         Mikolaj Antoszkiewicz <mikolaj@erp5.pl> 
+#         Mikolaj Antoszkiewicz <mikolaj@erp5.pl>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,7 +25,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
-############################################################################## 
+##############################################################################
 
 import unittest
 
@@ -100,7 +100,7 @@ class TestTaskMixin:
                        stepConfirmTask \
                        stepTic \
                        stepSetTaskReport '
-                       
+
   default_task_report_sequence = '\
                        stepLogin \
                        stepCreateOrganisation \
@@ -135,7 +135,7 @@ class TestTaskMixin:
 #                                        reference='dummy')
 #      portal.portal_categories.group.newContent(id='dummy',
 #                                                codification='DUMMY')
-#      
+#
 #      assignment = person.newContent(title='dummy', group='dummy',
 #                                     portal_type='Assignment',
 #                                     start_date='1980-01-01',
@@ -263,7 +263,7 @@ class TestTaskMixin:
     else:
       currency = currency_module.objectValues(id='EUR')[0]
     sequence.edit(currency=currency)
- 
+
   def stepSetTaskPriceCurrency(self, sequence, **kw) :
     """Set the price currency of the task.
 
@@ -298,7 +298,7 @@ class TestTaskMixin:
     """
       Fill created task with some necessary data.
     """
-    self.stepSetTaskValues(sequence=sequence, 
+    self.stepSetTaskValues(sequence=sequence,
                            sequence_list=sequence_list, **kw)
     task = sequence.get('task')
     project = sequence.get('project')
@@ -398,7 +398,7 @@ class TestTaskMixin:
     self.assertEqual(task.getTaskLineResource(), task_report_line.getResource())
     self.assertEqual(task.getTaskLineQuantity(), task_report_line.getQuantity())
     self.assertEqual(task.getTaskLinePrice(), task_report_line.getPrice())
-    self.assertEqual(task.getTaskLineRequirement(), 
+    self.assertEqual(task.getTaskLineRequirement(),
                       task_report_line.getRequirement())
 
   def stepCreateTaskLine(self, sequence=None, sequence_list=None, **kw):
@@ -424,14 +424,14 @@ class TestTaskMixin:
         resource_value=resource1,
         quantity=self.default_quantity,
         price=self.default_price)
-  
+
   def stepVerifyGeneratedTaskReportLines(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Verify that simulation generated report is correct.
     """
     task = sequence.get('task')
-    task_report = sequence.get('task_report') 
+    task_report = sequence.get('task_report')
     task_content_list = task.contentValues()
     self.assertNotEquals(len(task_content_list), 0)
     self.assertEqual(len(task_report.contentValues()),
@@ -473,7 +473,7 @@ class TestTaskMixin:
     self.assertEqual(1, len(task_report.getMovementList()))
     task_report_line = task_report.getMovementList()[0]
     self.assertEqual(None, task_report_line.getPrice())
-      
+
   def modifyState(self, object_name, transition_name, sequence=None,
                        sequence_list=None):
     object_value = sequence.get(object_name)
@@ -482,10 +482,10 @@ class TestTaskMixin:
 
   def stepConfirmTask(self, sequence=None, sequence_list=None, **kw):
     self.modifyState('task', 'confirm', sequence=sequence)
-  
+
   def stepConfirmTaskReport(self, sequence=None, sequence_list=None, **kw):
     self.modifyState('task_report', 'confirm', sequence=sequence)
-  
+
   def stepStartTaskReport(self, sequence=None, sequence_list=None, **kw):
     self.modifyState('task_report', 'start', sequence=sequence)
 
@@ -497,7 +497,7 @@ class TestTaskMixin:
 
   def stepRestartTaskReport(self, sequence=None, sequence_list=None, **kw):
     self.modifyState('task_report', 'restart', sequence=sequence)
-  
+
   def stepSetTaskReport(self, sequence=None, sequence_list=None, **kw):
     """
       Set task report object in sequence.
@@ -531,13 +531,13 @@ class TestTaskMixin:
     self.assertEqual(task.getDescription(), task_report.getDescription())
     self.assertEqual(len(task_report.contentValues()), 2)
     for task_report_line in task_report.contentValues():
-      self.assertEqual(task.contentValues()[0].getResource(), 
+      self.assertEqual(task.contentValues()[0].getResource(),
                         task_report_line.getResource())
-      self.assertEqual(task.contentValues()[0].getQuantity(), 
+      self.assertEqual(task.contentValues()[0].getQuantity(),
                         task_report_line.getQuantity())
-      self.assertEqual(task.contentValues()[0].getPrice(), 
+      self.assertEqual(task.contentValues()[0].getPrice(),
                         task_report_line.getPrice())
-      self.assertEqual(task.contentValues()[0].getRequirement(), 
+      self.assertEqual(task.contentValues()[0].getRequirement(),
                         task_report_line.getRequirement())
 
 class TestTask(TestTaskMixin, ERP5TypeTestCase):
@@ -581,7 +581,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
- 
+
   def test_01_testTaskNoPrice(self, quiet=0, run=run_all_test):
     """
       Test creation of task and (automatic) task_report when no price is
@@ -618,7 +618,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
   def test_03_testTaskReportBasicUseCase(self, quiet=0, run=run_all_test):
     """
-      Test creation of task report and task report lines. 
+      Test creation of task report and task report lines.
     """
     if not run: return
     sequence_list = SequenceList()

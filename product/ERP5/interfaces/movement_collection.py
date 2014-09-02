@@ -33,11 +33,11 @@ from zope.interface import Interface
 
 class IMovementCollection(Interface):
   """Movement Collection interface specification
-  
+
   Documents which implement IMovementCollection provide
-  a list access to all movements which they contain. 
+  a list access to all movements which they contain.
   IMovementCollection is the abstraction of all classes
-  which contain movements. This includes Deliveries, 
+  which contain movements. This includes Deliveries,
   Applied Rules, etc.
 
   TODO:

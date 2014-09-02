@@ -43,7 +43,7 @@ class Archive(Predicate):
 
   meta_type = 'ERP5 Archive'
   portal_type = 'Archive'
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -56,4 +56,4 @@ class Archive(Predicate):
                     , PropertySheet.XMLObject
                     , PropertySheet.Archive
                     )
-  
+

@@ -35,7 +35,7 @@ from Products.ERP5Type.mixin.cache_provider import CacheProviderMixIn
 
 class DistributedRamCache(CacheProviderMixIn, XMLObject):
   """
-  DistributedRamCache is a Zope (persistent) representation of 
+  DistributedRamCache is a Zope (persistent) representation of
   the Distributed RAM Cache real cache plugin object.
   """
 

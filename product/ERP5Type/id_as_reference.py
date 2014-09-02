@@ -57,9 +57,9 @@ def IdAsReferenceMixin(suffix):
             del self.default_reference
           except ActivityPendingError:
             LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
-              " property sheet, due to pending activities" % 
+              " property sheet, due to pending activities" %
                (new_id, parent.getId()))
-            
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getIdAsReferenceSuffix')
     @staticmethod

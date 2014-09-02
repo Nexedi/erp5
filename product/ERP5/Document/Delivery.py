@@ -255,7 +255,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
             del stack[-1]
 
       return movement_list
-    
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementList')
     def getMovementList(self, portal_type=None, **kw):

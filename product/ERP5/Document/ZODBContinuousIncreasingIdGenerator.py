@@ -97,7 +97,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     """
     LOG('initialize ZODB Generator', INFO, 'Id Generator: %s' % (self,))
     if getattr(self, 'last_id_dict', None) is None:
-      self.last_id_dict = OOBTree() 
+      self.last_id_dict = OOBTree()
 
     # XXX compatiblity code below, dump the old dictionnaries
     portal_ids = getattr(self, 'portal_ids', None)

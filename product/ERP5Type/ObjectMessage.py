@@ -39,11 +39,11 @@ class ObjectMessage:
   zope.interface.implements( interfaces.IObjectMessage, )
 
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
-    
+
     self.object_relative_url = object_relative_url
     self.message = message
     self.mapping = mapping
-    
+
     self.__dict__.update(kw)
 
   def getTranslatedMessage(self):
@@ -51,15 +51,15 @@ class ObjectMessage:
     Return the message translated
     """
     from Products.ERP5Type.Message import Message
-    return Message(domain='erp5_ui', message=self.message, 
+    return Message(domain='erp5_ui', message=self.message,
                    mapping=self.mapping)
 
   getMessage = getTranslatedMessage
-                    
+
   def edit(self, **kw):
     """
     Set all parameters
-    """ 
+    """
     self.__dict__.update(kw)
 
   def getProperty(self, value, d=None):

@@ -305,7 +305,7 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
 
     document = sequence.get('invoice')
-    
+
     self.assertEqual('solved', document.getCausalityState())
     line_list = document.objectValues(
       portal_type=self.portal.getPortalInvoiceMovementTypeList())

@@ -280,9 +280,9 @@ class ConfiguratorTool(BaseTool):
   def _terminateConfigurationProcess(self, response):
     """ Terminate process and return some explanations to client why
         he can no longer continue. """
-    response.update(command="show", 
+    response.update(command="show",
                     next=None, \
-                    previous=None, 
+                    previous=None,
                     data=self.BusinessConfiguration_viewStopForm())
     return response
 
@@ -346,7 +346,7 @@ class ConfiguratorTool(BaseTool):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'startInstallation')
   def startInstallation(self, business_configuration, REQUEST):
-    """ Start installation process as an activity which will 
+    """ Start installation process as an activity which will
         download/install bt5 template files and meanwhile offer
         user a nice GUI to observe what's happening. """
 

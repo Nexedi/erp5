@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
-class StateError(Exception): 
+class StateError(Exception):
   """
   Must call only an available transition
   """

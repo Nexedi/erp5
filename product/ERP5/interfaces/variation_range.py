@@ -50,7 +50,7 @@ class IVariationRange(Interface):
 
     Used in: Resource, Delivery Line
 
-    base_category_id_list -- 
+    base_category_id_list --
     """
 
   # Matrix Handling API

@@ -22,7 +22,7 @@ class png_to_text(popentransform):
     useStdin = False
 
     def convert(self, data, cache, **kwargs):
-        # XXX Surcharge from commandtransform, as ocrocmd do not accept 
+        # XXX Surcharge from commandtransform, as ocrocmd do not accept
         # parameters but environnement variable.
         # Surcharging prevent to put the variable in the zope.conf file
         command = self.binary

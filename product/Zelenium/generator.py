@@ -129,7 +129,7 @@ class ScenarioGenerator:
                                     (default '%(LOGFILE_EXTENSION_RESP)s')
 
     -o, --output-file               Write to 'file', instead of default
-                                    (%(LOGFILE_PREFIX)s.zft). 
+                                    (%(LOGFILE_PREFIX)s.zft).
                                     Use '-' to write to stdout.
 
     -x, --exclude-pattern           Exclude requests which match 'pattern'
@@ -354,7 +354,7 @@ class ScenarioGenerator:
         exclude = self._getExcludeRegex()
         if exclude is not None and exclude.search( all_text ):
             self._log( '** matches exclude regex, skipping', 1 )
-            return 
+            return
 
         request = f.readline().rstrip()
         match = REQUEST_LINE.match( request )
@@ -422,7 +422,7 @@ class ScenarioGenerator:
             # could exclude here as well
             status = response_file.readline().rstrip()
             match = RESPONSE_LINE.match( status )
-            http_verb, code, reason = match.groups()        
+            http_verb, code, reason = match.groups()
             response_headers = mimetools.Message( response_file )
             response_file.close()
         else:
@@ -438,7 +438,7 @@ class ScenarioGenerator:
                        )
 
 
-        return 
+        return
 
     def processScenario( self ):
         """
@@ -487,7 +487,7 @@ class ScenarioGenerator:
                                 , None
                                 , parms
                                 )
-                
+
         self._print( _TEST_CASE_FOOTER )
 
 if __name__ == '__main__':

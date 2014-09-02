@@ -61,8 +61,8 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
         ( 'erp5_mrp', )
 
   def createCategories(self):
-    """ 
-      Light install create only base categories, so we create 
+    """
+      Light install create only base categories, so we create
       some categories for testing them
     """
     TestOrderMixin.createCategories(self)
@@ -73,7 +73,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
                                                portal_type='Category',
                                                id=category_id)
 
-  def stepCreateProductionOrganisation1(self, sequence=None, sequence_list=None, 
+  def stepCreateProductionOrganisation1(self, sequence=None, sequence_list=None,
                                         **kw):
     """
       Create a organisation for supply
@@ -96,7 +96,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     )
     sequence.edit(supply_chain=supply_chain)
 
-  def stepCreateProductionSC(self, sequence=None, sequence_list=None, 
+  def stepCreateProductionSC(self, sequence=None, sequence_list=None,
                              **kw):
     """
       Create a empty organisation
@@ -314,7 +314,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
       # XXX hardcoded value
       self.assertEqual('default_production_order_rule', \
                         applied_rule.getSpecialiseReference())
-      
+
       simulation_movement_list = applied_rule.objectValues()
       sequence.edit(simulation_movement_list=simulation_movement_list)
 
@@ -354,10 +354,10 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
            related_simulation_movement, (
              (order_line.getQuantity(), 'getQuantity'),
              (order_line.getResourceValue(), 'getResourceValue'),
-             (order_line.getVariationCategoryList(), 
+             (order_line.getVariationCategoryList(),
               'getVariationCategoryList'),
              (order_line.getDestinationValue(), 'getDestinationValue'),
-             (order_line.getDestinationSectionValue(), 
+             (order_line.getDestinationSectionValue(),
               'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
@@ -380,7 +380,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
-    # Test deeper simulation 
+    # Test deeper simulation
     simulation_movement_list = applied_rule.objectValues()
     self.assertEqual(2, len(simulation_movement_list))
     # Test consumed movement
@@ -414,7 +414,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
              (None, 'getSourceValue'),
              (None, 'getSourceSectionValue')))
 
-  def stepCreateSupplyOrganisation1(self, sequence=None, sequence_list=None, 
+  def stepCreateSupplyOrganisation1(self, sequence=None, sequence_list=None,
                                         **kw):
     """
       Create a organisation for supply
@@ -422,7 +422,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
                                 title='supply_organisation1', **kw)
 
-  def stepCreateSourcingSC(self, sequence=None, sequence_list=None, 
+  def stepCreateSourcingSC(self, sequence=None, sequence_list=None,
                              **kw):
     """
       Create a empty organisation
@@ -476,10 +476,10 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
            related_simulation_movement, (
              (order_line.getQuantity(), 'getQuantity'),
              (order_line.getResourceValue(), 'getResourceValue'),
-             (order_line.getVariationCategoryList(), 
+             (order_line.getVariationCategoryList(),
               'getVariationCategoryList'),
              (order_line.getDestinationValue(), 'getDestinationValue'),
-             (order_line.getDestinationSectionValue(), 
+             (order_line.getDestinationSectionValue(),
               'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
@@ -491,7 +491,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
-    # Test deeper simulation 
+    # Test deeper simulation
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
     self.assertEqual(3, len(simulation_movement_list))
@@ -567,7 +567,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
              (supply_organisation1, 'getSourceValue'),
              (supply_organisation1, 'getSourceSectionValue')))
     self.assertEqual(0, len(supply_movement.objectValues()))
-    
+
     sequence.edit(
       produced_movement = produced_movement,
       operation_movement = operation_movement,
@@ -576,7 +576,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
       produced_delivery_movement = related_simulation_movement.objectValues()[0].objectValues()[0],
     )
 
-  def stepCreateProductionOrganisation2(self, sequence=None, 
+  def stepCreateProductionOrganisation2(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Create a organisation for supply
@@ -584,7 +584,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
                                 title='production_organisation2', **kw)
 
-  def stepCreateSupplyOrganisation2(self, sequence=None, sequence_list=None, 
+  def stepCreateSupplyOrganisation2(self, sequence=None, sequence_list=None,
                                         **kw):
     """
       Create a organisation for supply
@@ -592,7 +592,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
                                 title='supply_organisation2', **kw)
 
-  def stepCreateTwoPhasesSC(self, sequence=None, sequence_list=None, 
+  def stepCreateTwoPhasesSC(self, sequence=None, sequence_list=None,
                              **kw):
     """
       Create a empty organisation
@@ -674,10 +674,10 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
            related_simulation_movement, (
              (order_line.getQuantity(), 'getQuantity'),
              (order_line.getResourceValue(), 'getResourceValue'),
-             (order_line.getVariationCategoryList(), 
+             (order_line.getVariationCategoryList(),
               'getVariationCategoryList'),
              (order_line.getDestinationValue(), 'getDestinationValue'),
-             (order_line.getDestinationSectionValue(), 
+             (order_line.getDestinationSectionValue(),
               'getDestinationSectionValue'),
              (production_organisation1, 'getSourceValue'),
              (production_organisation1, 'getSourceSectionValue')))
@@ -700,7 +700,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
-    # Test deeper simulation 
+    # Test deeper simulation
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
     self.assertEqual(4, len(simulation_movement_list))
@@ -800,7 +800,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
-    # Test deeper simulation 
+    # Test deeper simulation
     simulation_movement_list = list(applied_rule.objectValues())
     self.assertEqual(1, len(simulation_movement_list))
     # Test produced resource
@@ -827,7 +827,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
-    # Test deeper simulation 
+    # Test deeper simulation
     simulation_movement_list = list(applied_rule.objectValues())
     # FIXME
     self.assertEqual(3, len(simulation_movement_list))
@@ -924,7 +924,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
                       Tic \
                       CheckSourcingSimulation \
                       '
-    
+
 class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCase):
   """
     Test business template erp5_mrp
@@ -941,7 +941,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_string = '\
                       CreateProductionOrganisation1 \
                       CreateProductionSC \
@@ -960,14 +960,14 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     sequence_list.play(self)
 
   @newSimulationExpectedFailure
-  def test_02_testSourcingSimulationExpand(self, quiet=0, 
+  def test_02_testSourcingSimulationExpand(self, quiet=0,
                                                      run=run_all_test):
     """
       Test generation and update of order applied rule.
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_string = '\
                       CreateProductionOrganisation1 \
                       CreateSupplyOrganisation1 \
@@ -992,7 +992,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_string = '\
                       CreateProductionOrganisation1 \
                       CreateProductionOrganisation2 \
@@ -1022,7 +1022,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_string = '\
                       CreateProductionOrganisation1 \
                       CreateProductionSC \
@@ -1042,7 +1042,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     sequence_list.play(self)
 
   @newSimulationExpectedFailure
-  def test_05_testSourcingSimulationBuild(self, quiet=0, 
+  def test_05_testSourcingSimulationBuild(self, quiet=0,
                                           run=run_all_test):
     """
     Test delivery building.
@@ -1050,7 +1050,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_list.addSequenceString(self.SOURCING_ORDER_SEQUENCE)
     sequence_list.play(self)
 
@@ -1062,7 +1062,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test when order is 
+    # Test when order is
     sequence_string = '\
                       CreateProductionOrganisation1 \
                       CreateProductionOrganisation2 \
@@ -1085,7 +1085,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCopyPasteSupplyChain(self, sequence=None, sequence_list=None, 
+  def stepCopyPasteSupplyChain(self, sequence=None, sequence_list=None,
                                **kw):
     """
     Copy/Paste the supply chain
@@ -1100,7 +1100,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     pasted_sc = supply_chain_module[copied['new_id']]
     sequence.edit(pasted_sc=pasted_sc)
 
-  def stepCheckPastedSupplyChain(self, sequence=None, sequence_list=None, 
+  def stepCheckPastedSupplyChain(self, sequence=None, sequence_list=None,
                                  **kw):
     """
     Check pasted supply chain
@@ -1205,7 +1205,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
-    
+
   def test_50_testCopyPaste(self, quiet=0, run=run_all_test):
     """
     Check that relation are changed when doing a copy/paste,
@@ -1237,7 +1237,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     )
     sequence.edit(empty_supply_chain=supply_chain)
 
-  def stepCutPasteSupplyNodeInAnotherContainer(self, sequence=None, 
+  def stepCutPasteSupplyNodeInAnotherContainer(self, sequence=None,
                                                sequence_list=None, **kw):
     """
     Cut/Paste a supply node in another container
@@ -1249,7 +1249,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     cb_data = supply_chain.manage_cutObjects([supply_node.getId()])
     copied, = empty_supply_chain.manage_pasteObjects(cb_data)
 
-  def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None, 
+  def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None,
                                  **kw):
     """
     Check pasted supply node
@@ -1283,8 +1283,8 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     Bad:
 
     D1 -+- S1_1          D1 -+- S1_1   D2 -+- S2_1
-        |    |      =>       |    |      __|_/    
-        |    v               |    v     /  |     
+        |    |      =>       |    |      __|_/
+        |    v               |    v     /  |
         +- S1_2              +- S1_2<--/   +- S2_2
 
     """

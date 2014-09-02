@@ -48,7 +48,7 @@ class RangedIntegerField(ZMIField):
   # this field is not addable anymore and deprecated. For
   # backwards compatibility it's a clone of IntegerField,
   # though it may go away in the future.
-  internal_field = 1 
+  internal_field = 1
 
   widget = Widget.TextWidgetInstance
   validator = Validator.IntegerValidatorInstance

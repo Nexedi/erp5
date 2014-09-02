@@ -27,7 +27,7 @@ class TimerService(SimpleItem):
 
     security = ClassSecurityInfo()
     security.declareObjectPublic()
-    
+
     icon = 'misc_/TimerService/timer_icon.gif'
 
     max_size = 0
@@ -49,7 +49,7 @@ class TimerService(SimpleItem):
         """ """
         self._subscribers = []
         self._version = 1
-    
+
     security.declarePublic('process_shutdown')
     def process_shutdown(self, phase, time_in_phase):
         """ """
@@ -139,7 +139,7 @@ class TimerService(SimpleItem):
     def lisSubscriptions(self):
         """ """
         return self._subscribers
-    
+
     security.declareProtected(
         Permissions.view_management_screens, 'manage_removeSubscriptions')
     def manage_removeSubscriptions(self, no, REQUEST=None):

@@ -42,7 +42,7 @@ def updateSafeHtml(out, portal):
                     raise
                 else:
                     print >>out, '  ...done'
-    
+
     print >>out, '...done'
 
 

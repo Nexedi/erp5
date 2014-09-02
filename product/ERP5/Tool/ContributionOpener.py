@@ -24,7 +24,7 @@ from email.utils import formatdate
 class DirectoryFileHandler(FileHandler):
     """
     Extends the file handler to provide an HTML
-    representation of local directories. 
+    representation of local directories.
     """
 
     # Use local file or FTP depending on form of URL

@@ -36,7 +36,7 @@ import transaction
 from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
 
 # Stop validating more messages when this limit is reached
-MAX_VALIDATED_LIMIT = 1000 
+MAX_VALIDATED_LIMIT = 1000
 # Read up to this number of messages to validate.
 READ_MESSAGE_LIMIT = 1000
 
@@ -331,9 +331,9 @@ class SQLDict(SQLBase):
       path = [path]
     if isinstance(method_id, str):
       method_id = [method_id]
-    result = activity_tool.SQLDict_validateMessageList(method_id=method_id, 
+    result = activity_tool.SQLDict_validateMessageList(method_id=method_id,
                                                        path=path,
-                                                       message_uid=message_uid, 
+                                                       message_uid=message_uid,
                                                        tag=tag,
                                                        serialization_tag=None,
                                                        count=1)

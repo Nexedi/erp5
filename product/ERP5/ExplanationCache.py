@@ -40,13 +40,13 @@ class treenode(defaultdict):
 
 
 class ExplanationCache:
-  """ExplanationCache provides a central access to 
-  all parameters and values which are needed to process 
+  """ExplanationCache provides a central access to
+  all parameters and values which are needed to process
   an explanation. It is based on the idea that a value is calculated
   once and once only, as a way to accelerate performance of algorithms
   related to an explanation.
 
-  TODO: 
+  TODO:
   - implement property explanation calculation
     (with parent simulation movements, not only children)
   """
@@ -99,7 +99,7 @@ class ExplanationCache:
     return self.explanation_uid_cache
 
   def getSimulationPathPatternList(self):
-    """Return the list of root path of simulation tree which are 
+    """Return the list of root path of simulation tree which are
     involved in the context of the explanation. This will be useful later
     in order to accelerate searches in the catalog.
 
@@ -144,7 +144,7 @@ class ExplanationCache:
     in the context the our explanation.
     """
     return self.getSimulationMovementValueList(causality_uid=business_link.getUid())
-    
+
   def getBusinessLinkRelatedMovementValueList(self, business_link):
     """Returns the list of delivery movements related to a business_link
     in the context the our explanation.
@@ -204,16 +204,16 @@ class ExplanationCache:
           kw['trade_phase_relative_url'] = kw.pop('trade_phase')
         self.simulation_movement_cache[kw_tuple] = self.portal_catalog(
           portal_type="Simulation Movement", **kw)
-        
+
     return self.simulation_movement_cache[kw_tuple]
 
   def getBusinessLinkValueList(self, **kw):
-    """Find all business path which are related to the simulation 
+    """Find all business path which are related to the simulation
     trees defined by the explanation.
     """
     business_type_list = self.getPortalBusinessLinkTypeList()
     simulation_movement_list = self.getSimulationMovementValueList()
-    simulation_movement_uid_list = map(lambda x:x.uid, simulation_movement_list) 
+    simulation_movement_uid_list = map(lambda x:x.uid, simulation_movement_list)
     # We could use related keys instead of 2 queries
     business_link_list = self.portal_catalog(
                       portal_type=business_type_list,
@@ -227,8 +227,8 @@ class ExplanationCache:
     which is either a parent or a child of explanation simulations movements
     caused by 'business_link'
 
-    NOTE: Business Link Closure must be at least as "big" as composed 
-    business path. The appropriate calculation is still not clear. 
+    NOTE: Business Link Closure must be at least as "big" as composed
+    business path. The appropriate calculation is still not clear.
     Options are:
       - take all link of composed business link (even not yet expanded)
       - take all link of composed business link which phase is not yet expanded
@@ -360,8 +360,8 @@ class ExplanationCache:
                                    self.explanation, path, delay_mode=delay_mode)
 
     # Create a fake simulation movement and lookup property
-    movement = self.explanation.newContent(portal_type="Simulation Movement", 
-                                           temp_object=True, 
+    movement = self.explanation.newContent(portal_type="Simulation Movement",
+                                           temp_object=True,
                                            start_date=start_date, stop_date=stop_date,
                                            trade_phase=trade_phase, causality=path)
     method = getattr(movement, reference_date_method_id)
@@ -371,7 +371,7 @@ class ExplanationCache:
 _getExplanationCache = transactional_cached()(ExplanationCache)
 
 def _getBusinessLinkClosure(business_process, explanation, business_link):
-  """Returns a closure Business Process for given 
+  """Returns a closure Business Process for given
   business_link and explanation. This Business Process
   contains only those Business Link which are related to business_link
   in the context of explanation.

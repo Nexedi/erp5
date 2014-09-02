@@ -32,7 +32,7 @@ from Products.ERP5.Document.AccountingTransactionLine import AccountingTransacti
 
 class PaySheetTransactionLine(AccountingTransactionLine):
   """Not used and here for compatibility.
-  
+
   Pay Sheet Transaction Line portal type uses AccountingTransactionLine class
   """
 

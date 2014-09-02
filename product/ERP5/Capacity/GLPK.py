@@ -76,11 +76,11 @@ def writeModelFile(file, matrix, point):
     """
     n = shape(matrix)[0]
     d = shape(matrix)[1]
-    
+
     file.write(MODEL_HEAD)
     file.write("param n := %d;\n" % n)
     file.write("param d := %d;\n" % d)
-    
+
     file.write("param s\n:\t")
     def insertTab(x,y): return str(x)+"\t"+str(y)
     file.write(reduce(insertTab, range(1,d+1)))
@@ -90,16 +90,16 @@ def writeModelFile(file, matrix, point):
         file.write(reduce(insertTab, matrix[i], ""))
         file.write("\n")
     file.write(";\n")
-        
+
     file.write("param q := ")
     def insertComma(x,y): return str(x)+','+str(y)
     def flatten(x): return str(x[0])+' '+str(x[1])
     file.write(reduce(insertComma,
                       map(flatten, map(None, range(1,d+1), point))))
     file.write(";\n")
-    
+
     file.write(MODEL_TAIL)
-    
+
 def getOptimalValue(file):
     """
     Solve an LP problem described in MathProg language, and return
@@ -150,8 +150,8 @@ if __name__ == '__main__':
                [60,61,62,63,64,65],
                [70,71,72,73,74,75]])
     print m
-    
+
     p = ([1,2,3,4,5,6])
     print p
-    
+
     print solve(m, p)

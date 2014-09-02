@@ -295,7 +295,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
             print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
             print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-            print            
+            print
         i += 1
       # then check results
       if DO_TEST:

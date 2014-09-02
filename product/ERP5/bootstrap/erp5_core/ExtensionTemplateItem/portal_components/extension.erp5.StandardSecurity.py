@@ -35,27 +35,27 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
   the security groups which a person is member of. It extracts
   the categories from the current user assignment.
   It is useful in the following cases:
-  
+
   - associate a document (ex. an accounting transaction)
     to the division which the user was assigned to
     at the time it was created
-  
+
   - calculate security membership of a user
-  
+
   The parameters are
-  
+
     base_category_list -- list of category values we need to retrieve
     user_name          -- string obtained from getSecurityManager().getUser().getId()
     object             -- object which we want to assign roles to
     portal_type        -- portal type of object
   """
   context = self
-  
+
   category_list = []
-  
+
   person_object_list = self.portal_catalog.unrestrictedSearchResults(
     query=SimpleQuery(reference=user_name), portal_type='Person')
-  
+
   if len(person_object_list) != 1:
     if len(person_object_list) > 1:
       raise ConsistencyError, "Error: There is more than one Person with reference '%s'" % user_name
@@ -65,7 +65,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
       # creates a person_object for a new user
       return []
   person_object = person_object_list[0].getObject()
-  
+
   # We look for every valid assignments of this user
   for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
     if assignment.getValidationState() == 'open':
@@ -97,7 +97,7 @@ def getSecurityCategoryFromAssignmentParentGroup(self, base_category_list,
                                        user_name, object, portal_type):
   return getSecurityCategoryFromAssignment(self, base_category_list,
                                        user_name, object, portal_type, child_category_list=('group',))
- 
+
 def getSecurityCategoryFromAssignmentParentFunction(self, base_category_list,
                                        user_name, object, portal_type):
   return getSecurityCategoryFromAssignment(self, base_category_list,

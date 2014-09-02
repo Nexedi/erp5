@@ -99,7 +99,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
         movement=movement,
         sim_mvt=movement.getDeliveryRelatedValueList()[0])
 
-  def stepSetNewQuantity(self, sequence=None, 
+  def stepSetNewQuantity(self, sequence=None,
                          sequence_list=None, **kw):
     """
     Modify the quantity of the delivery movement
@@ -108,7 +108,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     movement.setQuantity(movement.getQuantity()+1234)
 
-  def stepSetPreviousQuantity(self, sequence=None, 
+  def stepSetPreviousQuantity(self, sequence=None,
                               sequence_list=None, **kw):
     """
     Reset the quantity of the delivery movement
@@ -117,7 +117,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     movement.setQuantity(sim_mvt.getQuantity())
 
-  def stepSetPreviousQuantityWithEpsilon(self, sequence=None, 
+  def stepSetPreviousQuantityWithEpsilon(self, sequence=None,
                                          sequence_list=None, **kw):
     sim_mvt = sequence.get('sim_mvt')
     movement = sequence.get('movement')
@@ -188,7 +188,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence = Sequence(self)
     sequence(sequence_string, quiet=self.quiet)
 
-  def stepSetNewSource(self, sequence=None, 
+  def stepSetNewSource(self, sequence=None,
                        sequence_list=None, **kw):
     """
     Modify the source of the delivery
@@ -196,7 +196,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setSource(None)
 
-  def stepSetPreviousSource(self, sequence=None, 
+  def stepSetPreviousSource(self, sequence=None,
                             sequence_list=None, **kw):
     """
     Reset the quantity of the delivery
@@ -223,7 +223,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence = Sequence(self)
     sequence(sequence_string, quiet=self.quiet)
 
-  def stepSetNewStartDate(self, sequence=None, 
+  def stepSetNewStartDate(self, sequence=None,
                        sequence_list=None, **kw):
     """
     Modify the source of the delivery
@@ -231,7 +231,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setStartDate(packing_list.getStartDate()+10)
 
-  def stepSetPreviousStartDate(self, sequence=None, 
+  def stepSetPreviousStartDate(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Reset the quantity of the delivery
@@ -257,7 +257,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence = Sequence(self)
     sequence(sequence_string, quiet=self.quiet)
 
-  def stepSetNewAggregate(self, sequence=None, 
+  def stepSetNewAggregate(self, sequence=None,
                           sequence_list=None, **kw):
     """
     Modify the aggregate of the delivery movement
@@ -267,7 +267,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     # but it should not be a problem for testing the divergence
     movement.setAggregate('a_great_module/a_random_id')
 
-  def stepSetPreviousAggregate(self, sequence=None, 
+  def stepSetPreviousAggregate(self, sequence=None,
                             sequence_list=None, **kw):
     """
     Reset the quantity of the delivery
@@ -296,7 +296,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     # XXX-Leo this test is actually just testing
     # FloatEquivalenceTester, and is incomplete. It should test also
     # with:
-    # 
+    #
     #  * divergence_test_sequence.setProperty('quantity_range_min', ...)
     #  * divergence_test_sequence.setProperty('tolerance_base', ...)
     #    * including all variants like resources, prices and precisions

@@ -290,7 +290,7 @@ class SQLExpression(object):
   def getLimitExpression(self):
     """
       Returns a string.
-      
+
       Returns a rendered "limit" expression. See getLimit.
     """
     return SQL_LIST_SEPARATOR.join(str(x) for x in self.getLimit())

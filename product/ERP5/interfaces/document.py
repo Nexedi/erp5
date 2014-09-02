@@ -59,10 +59,10 @@ class IDocument(Interface):
     OOoDocument, PDFDocument, etc. to implement specific conversion methods.
 
   * TextDocument for text based documents. TextDocument has subclasses such
-    as Wiki to implement specific methods. 
+    as Wiki to implement specific methods.
     TextDocument itself has a subclass (XSLTDocument) which provides
     XSLT based analysis and transformation of XML content based on XSLT
-    templates. 
+    templates.
 
   Conversion should be achieved through the convert method and other methods
   of the conversion API (convertToBaseFormat, etc.).
@@ -92,7 +92,7 @@ class IDocument(Interface):
   content    -   data which might be derived from document content
 
   If a certain property is defined in more than one source, it is set according to
-  preference order returned by a script 
+  preference order returned by a script
      Document_getPreferredDocumentMetadataDiscoveryOrderList
      (or any type-based version since discovery is type dependent)
 
@@ -128,7 +128,7 @@ class IDocument(Interface):
   document.getSearchableReferenceList() returns
     [
      {'reference':' INV-12367'},
-     {'reference': 'INV-1112', 'version':'012}', 
+     {'reference': 'INV-1112', 'version':'012}',
      {'reference': 'AB-CC-DRK', 'version':'011', 'language': 'en'}
     ]
 
@@ -168,7 +168,7 @@ class IDocument(Interface):
   such as ODF documents.
 
   Consistency checking:
-    Default implementation uses DocumentReferenceConstraint to check if the 
+    Default implementation uses DocumentReferenceConstraint to check if the
     reference/language/version triplet is unique. Additional constraints
     can be added if necessary.
 

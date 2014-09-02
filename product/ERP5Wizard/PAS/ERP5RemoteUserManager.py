@@ -184,7 +184,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
                         password=credentials.get('password'),
                         path=self.getPhysicalPath())
         except _AuthenticationFailure:
-          return None 
+          return None
 
 classImplements( ERP5RemoteUserManager
                , IAuthenticationPlugin

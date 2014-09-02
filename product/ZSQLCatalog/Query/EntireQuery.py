@@ -83,7 +83,7 @@ class EntireQuery(object):
   def asSQLExpression(self, sql_catalog, only_group_columns):
     column_map = self.column_map
     if column_map is None:
-      # XXX: should we provide a way to register column map as a separate 
+      # XXX: should we provide a way to register column map as a separate
       # method or do it here ?
       # Column Map was not built yet, do it.
       column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
@@ -165,7 +165,7 @@ class EntireQuery(object):
       append = sql_expression_list.append
       for join_query in column_map.iterJoinQueryList():
         append(join_query.asSQLExpression(sql_catalog,
-                                          column_map, 
+                                          column_map,
                                           only_group_columns))
       # generate join expression based on column_map.getJoinTableAliasList
       # XXX: This is now done by ColumnMap to its table_definition,

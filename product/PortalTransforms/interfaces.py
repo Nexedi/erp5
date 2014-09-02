@@ -29,13 +29,13 @@ class IDataStream(Interface):
         the transform
         You can modify the returned dictionnary to add/change metadata
         """
-        
+
     def isCacheable():
         """Return a bool which indicates wether the result should be cached
-        
+
         Default is true
         """
-        
+
     def setCachable(value):
         """Set cacheable flag to yes or no
         """
@@ -54,7 +54,7 @@ class ITransform(Interface):
 
         additional arguments given to engine's convert, convertTo or __call__ are
         passed back to the transform
-        
+
         The object on which the translation was invoked is available as context
         (default: None)
         """
@@ -89,7 +89,7 @@ class IEngine(Interface):
 
         * optional object argument is the object on which is bound the data.
         If present that object will be used by the engine to bound cached data.
-        
+
         * optional context argument is the object on which the transformation
           was called.
 

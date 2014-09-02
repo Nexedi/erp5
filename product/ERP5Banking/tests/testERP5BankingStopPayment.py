@@ -120,7 +120,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     # check its portal type
     self.assertEqual(self.stop_payment.getPortalType(), 'Stop Payment')
     # check source
-    self.assertEqual(self.stop_payment.getBaobabSource(), 
+    self.assertEqual(self.stop_payment.getBaobabSource(),
                      None)
     # check destination
     self.assertEqual(self.stop_payment.getBaobabDestination(), None)
@@ -156,15 +156,15 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'draft')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'confirm_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'confirm_action',
                                    wf_id='stop_payment_workflow')
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'confirmed')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 3)
 
@@ -175,15 +175,15 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'confirmed')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'start_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'start_action',
                                    wf_id='stop_payment_workflow')
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'started')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 5)
 
@@ -194,15 +194,15 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'started')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'stop_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'stop_action',
                                    wf_id='stop_payment_workflow')
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'stopped')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 7)
 
@@ -213,8 +213,8 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'started')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'debit_stop_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'debit_stop_action',
                                    wf_id='stop_payment_workflow',
                                    stop_date=self.stop_payment.getStartDate())
     # get state of cash sorting
@@ -222,7 +222,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     # check that state is delivered
     self.assertEqual(state, 'stopped')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 7)
 
@@ -233,15 +233,15 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'stopped')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'deliver_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'deliver_action',
                                    wf_id='stop_payment_workflow')
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 9)
 
@@ -252,15 +252,15 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     state = self.stop_payment.getSimulationState()
     # check that state is draft
     self.assertEqual(state, 'stopped')
-    self.workflow_tool.doActionFor(self.stop_payment, 
-                                   'debit_deliver_action', 
+    self.workflow_tool.doActionFor(self.stop_payment,
+                                   'debit_deliver_action',
                                    wf_id='stop_payment_workflow')
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment, 
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.stop_payment,
                             name='history', wf_id='stop_payment_workflow')
     self.assertEqual(len(workflow_history), 9)
 

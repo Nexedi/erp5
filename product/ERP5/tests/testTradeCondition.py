@@ -108,7 +108,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
-    
+
     self.assertEqual(self.vendor, self.order.getSourceSectionValue())
     self.assertEqual(self.vendor, self.order.getSourceValue())
     self.assertEqual(self.client, self.order.getDestinationSectionValue())
@@ -128,7 +128,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
-    
+
     # Applying the TC keeps values on the order
     self.assertEqual(self.vendor, self.order.getSourceSectionValue())
     self.assertEqual(self.vendor, self.order.getSourceValue())
@@ -154,7 +154,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
         (trade_condition_source, trade_condition_dest))
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
-    
+
     self.assertEqual(self.vendor, self.order.getSourceSectionValue())
     self.assertEqual(self.vendor, self.order.getSourceValue())
     self.assertEqual(self.client, self.order.getDestinationSectionValue())
@@ -195,7 +195,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
     self.tic()
-    
+
     self.assertEqual(self.vendor, self.order.getSourceSectionValue())
     self.assertEqual(self.vendor, self.order.getSourceValue())
     self.assertEqual(self.client, self.order.getDestinationSectionValue())
@@ -485,7 +485,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
 
 class TestEffectiveTradeCondition(TradeConditionTestCase):
   """Tests for getEffectiveModel
-  
+
   XXX open questions:
    - should getEffectiveModel take validation state into account ? if yes, how
      to do it in generic/customizable way ?
@@ -506,7 +506,7 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                             expiration_date='2009/12/31',
                             version='002')
     self.tic()
-    
+
     self.assertEqual(other_trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),

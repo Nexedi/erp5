@@ -82,10 +82,10 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     for skin_name, selection in ps.getSkinPaths():
       selection = selection.split(',')
       selection.append(self.skin_folder_name)
-      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name, 
+      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name,
                            add_skin=1)
 
-  def stepCreateNewBusinessTemplate(self, sequence=None, 
+  def stepCreateNewBusinessTemplate(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Create a new Business Template
@@ -97,7 +97,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
         template_skin_id_list=[self.skin_folder_name])
     sequence.edit(custom_business_template=template)
 
-  def stepCheckMissingFieldLibrary(self, sequence=None, 
+  def stepCheckMissingFieldLibrary(self, sequence=None,
                                    sequence_list=None, **kw):
     """
     Check that the dialog propose to create the field library
@@ -108,7 +108,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
     self.assertEqual('1_create_form', modifiable_field.choice[0])
-    self.assertEqual('%s/%s' % (self.skin_folder_name, self.field_library_id), 
+    self.assertEqual('%s/%s' % (self.skin_folder_name, self.field_library_id),
                       modifiable_field.object_id)
 
   def test_01_missingFieldLibrary(self):
@@ -133,7 +133,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     addERP5Form(form_id, 'View')
     return skin_folder._getOb(form_id)
 
-  def stepCreateFieldLibrary(self, sequence=None, 
+  def stepCreateFieldLibrary(self, sequence=None,
                              sequence_list=None, **kw):
     """
     Create a Field Library
@@ -141,7 +141,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     form = self.createForm(self.field_library_id)
     sequence.edit(field_library=form)
 
-  def stepCreateForm(self, sequence=None, 
+  def stepCreateForm(self, sequence=None,
                      sequence_list=None, **kw):
     """
     Create a Form
@@ -149,7 +149,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     form = self.createForm(self.form_id)
     sequence.edit(form=form)
 
-  def stepCreateNotProxifiedField(self, sequence=None, 
+  def stepCreateNotProxifiedField(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Create a not proxified field
@@ -158,7 +158,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_title', 'Title', 'StringField')
 
-  def stepCheckToProxifyField(self, sequence=None, 
+  def stepCheckToProxifyField(self, sequence=None,
                          sequence_list=None, **kw):
     """
     Check that the dialog propose to proxify the field
@@ -168,9 +168,9 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
         business_template.BusinessTemplate_getModifiableFieldList()
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEqual('0_keep_non_proxy_field', 
+    self.assertEqual('0_keep_non_proxy_field',
                       modifiable_field.choice_item_list[0][1])
-    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name,
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -193,7 +193,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateDeadProxyField(self, sequence=None, 
+  def stepCreateDeadProxyField(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Create a dead proxy field
@@ -202,7 +202,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_title', 'Title', 'ProxyField')
 
-  def stepCheckDeadFieldDetection(self, sequence=None, 
+  def stepCheckDeadFieldDetection(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Check that the dialog detects the dead proxy field
@@ -212,9 +212,9 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
         business_template.BusinessTemplate_getModifiableFieldList()
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEqual('0_keep_dead_proxy_field', 
+    self.assertEqual('0_keep_dead_proxy_field',
                       modifiable_field.choice_item_list[0][1])
-    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name,
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -237,7 +237,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateTemplateField(self, sequence=None, 
+  def stepCreateTemplateField(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Create a template field
@@ -246,7 +246,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     addField = form.manage_addProduct['Formulator'].manage_addField
     addField('my_title', 'Title', 'ProxyField')
 
-  def stepCheckUnusedTemplateFieldDetection(self, sequence=None, 
+  def stepCheckUnusedTemplateFieldDetection(self, sequence=None,
                                             sequence_list=None, **kw):
     """
     Check that the dialog detects this unused proxy field.
@@ -256,9 +256,9 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
         business_template.BusinessTemplate_getModifiableFieldList()
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEqual('0_unused_proxy_field', 
+    self.assertEqual('0_unused_proxy_field',
                       modifiable_field.choice_item_list[0][1])
-    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name,
                                           self.field_library_id),
                       modifiable_field.object_id)
 
@@ -279,7 +279,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateWronglyProxifiedField(self, sequence=None, 
+  def stepCreateWronglyProxifiedField(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Create a wrong proxy field
@@ -292,7 +292,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
             form_id='Organisation_view',
             field_id='my_title'))
 
-  def stepCheckWrongProxificationDetection(self, sequence=None, 
+  def stepCheckWrongProxificationDetection(self, sequence=None,
                                            sequence_list=None, **kw):
     """
     Check that the dialog detects the wrong proxification.
@@ -302,9 +302,9 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
         business_template.BusinessTemplate_getModifiableFieldList()
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
-    self.assertEqual('2_unproxify_field', 
+    self.assertEqual('2_unproxify_field',
                       modifiable_field.choice_item_list[0][1])
-    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name, 
+    self.assertEqual('%s/%s/my_title' % (self.skin_folder_name,
                                           self.form_id),
                       modifiable_field.object_id)
 
@@ -328,7 +328,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateWrongFieldLibrary(self, sequence=None, 
+  def stepCreateWrongFieldLibrary(self, sequence=None,
                                   sequence_list=None, **kw):
     """
     Create a Field Library with a wrong name.
@@ -336,7 +336,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     form = self.createForm(self.wrong_field_library_id)
     sequence.edit(wrong_field_library=form)
 
-  def stepCheckWrongFieldLibraryDetection(self, sequence=None, 
+  def stepCheckWrongFieldLibraryDetection(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Check that the dialog detects the wrong field library.
@@ -347,8 +347,8 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     self.assertEqual(1, len(modifiable_field_list))
     modifiable_field = modifiable_field_list[0]
     self.assertEqual('4_delete_form', modifiable_field.choice[0])
-    self.assertEqual('%s/%s' % (self.skin_folder_name, 
-                                 self.wrong_field_library_id), 
+    self.assertEqual('%s/%s' % (self.skin_folder_name,
+                                 self.wrong_field_library_id),
                       modifiable_field.object_id)
 
   def test_06_wrongFieldLibrary(self):

@@ -32,7 +32,7 @@
  from a diff file/string.
 
  This code is original form ERP5VCS and was moved to here for be used in
- general ERP5. 
+ general ERP5.
 
  XXX The organisation of DiffUtils should be reviewed and reorganised in a tool
  if a general tool want to be provided.
@@ -111,7 +111,7 @@ class DiffFile(object):
 
     if not self:
       return ''
-    
+
     html_list = []
     html_list.append('''
     <table style="text-align: left; width: 100%%; border: 0;" cellpadding="0" cellspacing="0">
@@ -217,7 +217,7 @@ class CodeBlock:
           else:
             tmp.append(line)
     self.children.append(SubCodeBlock(os.linesep.join(tmp)))
-    
+
   def getOldCodeList(self):
     """ Return code before modification
     """
@@ -225,7 +225,7 @@ class CodeBlock:
     for child in self.children:
       tmp.extend(child.getOldCodeList())
     return tmp
-    
+
   def getNewCodeList(self):
     """ Return code after modification
     """
@@ -233,7 +233,7 @@ class CodeBlock:
     for child in self.children:
       tmp.extend(child.getNewCodeList())
     return tmp
-    
+
 class SubCodeBlock:
   """ a SubCodeBlock contain 0 or 1 modification (not more)
   """
@@ -251,7 +251,7 @@ class SubCodeBlock:
       self.color = DELETED_DIFF_COLOR
     else: # addition
       self.color = ADDITION_DIFF_COLOR
-    
+
   def _getModif(self):
     """ Return type of modification :
         addition, deletion, none
@@ -270,7 +270,7 @@ class SubCodeBlock:
     if (nb_plus == 0):
       return 'deletion'
     return 'change'
-      
+
   def _getOldCodeLength(self):
     """ Private function to return old code length
     """
@@ -279,7 +279,7 @@ class SubCodeBlock:
       if not line.startswith("+"):
         nb_lines += 1
     return nb_lines
-      
+
   def _getNewCodeLength(self):
     """ Private function to return new code length
     """
@@ -288,7 +288,7 @@ class SubCodeBlock:
       if not line.startswith("-"):
         nb_lines += 1
     return nb_lines
-  
+
   def getOldCodeList(self):
     """ Return code before modification
     """
@@ -305,7 +305,7 @@ class SubCodeBlock:
     else: # deletion or addition
       old_code = [self._getOldCodeList(x) for x in self.body.splitlines()]
     return old_code
-  
+
   def _getOldCodeList(self, line):
     """ Private function to return code before modification
     """
@@ -314,7 +314,7 @@ class SubCodeBlock:
     if line.startswith('-'):
       return (' ' + line[1:], self.color)
     return (line, self.color)
-  
+
   def getNewCodeList(self):
     """ Return code after modification
     """
@@ -331,7 +331,7 @@ class SubCodeBlock:
     else: # deletion or addition
       new_code = [self._getNewCodeList(x) for x in self.body.splitlines()]
     return new_code
-  
+
   def _getNewCodeList(self, line):
     """ Private function to return code after modification
     """

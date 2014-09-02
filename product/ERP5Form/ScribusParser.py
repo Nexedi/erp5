@@ -5,7 +5,7 @@
 #                     Mayoro DIAGNE <mayoro@nexedi.com>
 #                     Guy Oswald OBAMA <guy@nexedi.com>
 #                     thomas <thomas@nexedi.com>
-#                     Mame C.Sall <mame@nexedi.com>                  
+#                     Mame C.Sall <mame@nexedi.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -41,7 +41,7 @@ class ScribusParser:
     """
     initialise self.data with scribus_file_descriptor if string's
     The __init__ function can take either a filename, an open file object
-    or the content of the file 
+    or the content of the file
     """
     if scribus_file_descriptor is None:
       raise ValueError, "No Scribus file provided, please choose a Scibus Form"
@@ -51,9 +51,9 @@ class ScribusParser:
     elif hasattr(scribus_file_descriptor, "read"):
       data = scribus_file_descriptor.read()
       scribus_file_descriptor.close()
-    else: 
+    else:
       source = open(scribus_file_descriptor, "rb")
-      data = source.read() 
+      data = source.read()
       source.close()
 
     self.parsed_data = etree.XML(data)
@@ -80,7 +80,7 @@ class ScribusParser:
     for node in root.iterdescendants():
       if node.tag == tag_name:
         tag_list.append(node)
-    return tag_list 
+    return tag_list
 
   security.declarePublic('getScribusFileVersion')
   def getScribusFileVersion(self):
@@ -89,7 +89,7 @@ class ScribusParser:
     """
     root = self.getEtreeXMLObject()
     if 'Version' in root.keys():
-      return root.attrib['Version']   
+      return root.attrib['Version']
     else:
       return None
 
@@ -156,7 +156,7 @@ class ScribusParser:
   security.declarePublic('getDocumentAttributeByName')
   def getDocumentAttributeByName(self, attribute_name):
     """
-    Generic function for page's attributes. Return the page attribute value 
+    Generic function for page's attributes. Return the page attribute value
     corresponding of attribute_name of the scribus file document
     """
     page_attribute = 0
@@ -181,7 +181,7 @@ class ScribusParser:
   security.declarePublic('getFieldIdList')
   def getFieldIdList(self):
     """
-    Return a list of field ids of the scribus document 
+    Return a list of field ids of the scribus document
     """
     page_object_list = self.getXMLObjectByTagName('PAGEOBJECT')
     filed_id_list = []
@@ -280,7 +280,7 @@ class ScribusParser:
         usable_property['size_x'] = int(float(scribus_property_dict['WIDTH']))
         usable_property['size_y'] = int(float(scribus_property_dict['HEIGHT']))
         user_property = self.getERP5AttributesFieldDict(property_id)
-        usable_property['title'] = ''   
+        usable_property['title'] = ''
         if user_property.has_key('title'):
           usable_property['title'] = user_property['title']
         temp_order = 'left'
@@ -350,7 +350,7 @@ class ScribusParser:
           usable_property['editable'] = 0
         if user_property.has_key('maximum_input'):
           usable_property['maximum_input'] = user_property['maximum_input']
-        else: 
+        else:
           usable_property['maximum_input'] = scribus_property_dict['ANMC']
         # getting object type :
         # first checking for user-specified type in 'tooltip' properties
@@ -451,10 +451,10 @@ class ScribusParser:
             usable_property['date_separator'] = ''
             usable_property['time_separator'] = ''
           else:
-            usable_property['date_separator'] = '/' 
+            usable_property['date_separator'] = '/'
             if user_property.has_key('date_separator'):
               usable_property['date_separator'] = user_property['date_separator']
-            usable_property['time_separator'] = ':' 
+            usable_property['time_separator'] = ':'
             if user_property.has_key('time_separator'):
               usable_property['time_separator'] = user_property['time_separator']
         # getting creation order from 'tooltip' properties
@@ -462,7 +462,7 @@ class ScribusParser:
         if user_property.has_key('nb') and str(user_property['nb']).isdigit():
           # object has a nb properties containing its creation position
           usable_property['nb'] = user_property['nb']
-        erp5_property_list.append((property_id, usable_property))   
+        erp5_property_list.append((property_id, usable_property))
       erp5_property_dict[page] = erp5_property_list
     return erp5_property_dict
 
@@ -484,5 +484,5 @@ class ScribusParser:
                 value = value.encode('utf-8')
             if key == "nb":
               value = int(value)
-            erp5_attribute_dict[key]=value     
+            erp5_attribute_dict[key]=value
     return erp5_attribute_dict

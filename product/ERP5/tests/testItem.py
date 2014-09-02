@@ -51,13 +51,13 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """
     return TestSaleInvoiceMixin.getBusinessTemplateList(self) + \
          ('erp5_item',) + ('erp5_trade_proxy_field_legacy',)
-  
+
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
-    
+
   def createOrganisation(self, title=None):
     organisation_portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(
@@ -84,7 +84,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
       required_aggregated_portal_type_list=['Item']
     )
     return resource
-  
+
   def createVariatedResource(self,title=None):
     resource_portal_type = 'Product'
     resource_module = self.portal.getDefaultModule(resource_portal_type)
@@ -404,12 +404,12 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                        stepRebuildAndCheckNothingIsCreated \
                        stepCheckInvoicesConsistency \
                        stepCheckInvoiceLineAggregate \
-                      ' 
+                      '
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
-  
+
+
   def test_03_CreateItemsFromPackingListLine(self):
     organisation = self.createOrganisation(title='Organisation I')
     self.tic()
@@ -421,11 +421,11 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
                                                   resource=resource)
     self.tic()
-    
+
     # make sure we can render the dialog
     packing_list_line.DeliveryLine_viewItemCreationDialog()
 
-    # create a listbox 
+    # create a listbox
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot A',
               'reference': '20_05_09_LA',
@@ -486,8 +486,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                      *('size/product_module/1/1', ))
     self.assertEqual(cell.getQuantity(), 15)
     self.assertEqual(['Lot C'], cell.getAggregateTitleList())
-    
-     
+
+
   def test_04_CreateItemsFromPackingListLineWithVariationDefined(self):
     organisation = self.createOrganisation(title='Organisation II')
     self.tic()
@@ -497,11 +497,11 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
-   
+
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
                                                   resource=resource)
     self.tic()
-    # create a listbox 
+    # create a listbox
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot A2',
               'reference': '25_05_09_LA2',
@@ -555,7 +555,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                      *('size/product_module/2/2', ))
     self.assertEqual(cell.getQuantity(), 15)
     self.assertEqual(['Lot C2'], cell.getAggregateTitleList())
- 
+
 
   def test_05_CreateItemsFromPackingListLineWithNotVariatedResource(self):
     organisation = self.createOrganisation(title='Organisation III')
@@ -564,12 +564,12 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.tic()
     packing_list = self.createPackingList(resource=resource,
                                           organisation=organisation)
-   
+
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
                                                   resource=resource)
     packing_list_line.setQuantity(32)
     self.tic()
-    # create a listbox 
+    # create a listbox
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot A3',
               'reference': '25_05_09_LA3',
@@ -601,7 +601,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                           portal_type='Item',
                                           title='Lot C3')]), 1)
     self.assertEqual(packing_list_line.getQuantity(),30.0)
-    
+
     self.assertEqual(packing_list_line.getVariationCategoryList(), [])
     self.assertEqual(packing_list_line.getAggregateTitleList(),
                       ['Lot A3', 'Lot B3', 'Lot C3'])
@@ -621,12 +621,12 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
-   
+
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
                                                   resource=resource)
     self.tic()
     packing_list_line.DeliveryLine_viewItemCreationDialog()
-    # create a listbox 
+    # create a listbox
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot A10',
               'reference': '1070110000015',
@@ -862,7 +862,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
   def test_select_item_dialog_no_variation(self):
     organisation = self.createOrganisation(title='Organisation III')
     resource = self.createNotVariatedResource()
-    
+
     # create one item that is in organisation
     packing_list = self.createPackingList(resource=resource,
                                           organisation=organisation)
@@ -879,7 +879,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list.stop()
     self.assertEqual('stopped', packing_list.getSimulationState())
     self.tic()
-    
+
 
     packing_list = self.createPackingList(resource=resource,
                                           organisation=organisation,
@@ -889,7 +889,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                               resource=resource,
                               portal_type='Internal Packing List Line')
     packing_list_line.setQuantity(32)
-    
+
     # we can view the dialog
     packing_list_line.DeliveryLine_viewSelectItemListDialog()
 
@@ -897,7 +897,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     # list
     self.assertEqual([item],
                       packing_list_line.DeliveryLine_getSelectableItemList())
-    
+
     packing_list_line.DeliveryLine_selectItemList(
               list_selection_name='select_item_fast_input_selection',
               listbox_uid=(item.getUid(),),
@@ -913,7 +913,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     resource = self.createVariatedResource()
     variation_category_list = [ 'size/%s' % variation.getRelativeUrl()
                                  for variation in resource.contentValues() ]
-    
+
     # create one item that is in organisation
     packing_list = self.createPackingList(resource=resource,
                                           organisation=organisation)
@@ -940,7 +940,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list.stop()
     self.assertEqual('stopped', packing_list.getSimulationState())
     self.tic()
-    
+
 
     packing_list = self.createPackingList(resource=resource,
                                           organisation=organisation,
@@ -950,7 +950,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                               resource=resource,
                               portal_type='Internal Packing List Line')
     packing_list_line.setQuantity(32)
-    
+
     # we can view the dialog
     packing_list_line.DeliveryLine_viewSelectItemListDialog()
 
@@ -958,7 +958,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     # list, and have matching variations
     self.assertEqual([item],
                       packing_list_line.DeliveryLine_getSelectableItemList())
-    
+
     packing_list_line.DeliveryLine_selectItemList(
               list_selection_name='select_item_fast_input_selection',
               listbox_uid=(item.getUid(),),
@@ -971,7 +971,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.assertEqual(1,
         len(packing_list_line.getCellValueList(base_id='movement')))
-    
+
     cell = packing_list_line.getCell(base_id='movement', *(variation, ))
     self.assertEqual(12, cell.getQuantity())
     self.assertEqual([item], cell.getAggregateValueList())
@@ -1022,7 +1022,7 @@ class TestItemScripts(ERP5TypeTestCase):
                               portal_type='Item',
                               title='Item')
     self.tic()
-  
+
   def beforeTearDown(self):
     self.abort()
     for module in (self.portal.organisation_module,
@@ -1146,7 +1146,7 @@ class TestItemScripts(ERP5TypeTestCase):
         self.item.Item_getVariationRangeCategoryItemList(
                           at_date=DateTime() - 2))
 
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestItem))

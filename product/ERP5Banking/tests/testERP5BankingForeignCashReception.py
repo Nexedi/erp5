@@ -117,7 +117,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     """
     Create a cash inventory document and check it
     """
-    #and a price cooreponding to the sum of banknote of 50 and 20 
+    #and a price cooreponding to the sum of banknote of 50 and 20
     #( (3) * 50 + (5) * 20 ) = 250
     self.foreign_cash_reception = self.foreign_cash_reception_module.newContent(
                     id='foreign_cash_reception', portal_type='Foreign Cash Reception',
@@ -166,7 +166,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     # now check for each variation (years 1992 and 2003)
     for variation in self.not_defined_variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/not_defined', 
+      cell = self.valid_line_1.getCell('emission_letter/not_defined',
                                  variation, 'cash_status/not_defined')
       # check portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
@@ -210,7 +210,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     # now check for each variation (years 1992 and 2003)
     for variation in self.not_defined_variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/not_defined', 
+      cell = self.valid_line_1.getCell('emission_letter/not_defined',
                                  variation, 'cash_status/not_defined')
       # check portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
@@ -243,7 +243,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have one delivery cells
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
-    # now check for variation 
+    # now check for variation
     variation = 'variation/not_defined'
     # get the delivery cell
     cell = self.valid_line_1.getCell('emission_letter/not_defined', variation, 'cash_status/not_defined')
@@ -273,7 +273,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     self.assertEqual(self.valid_line_1.getQuantityUnit(), 'unit')
     # check we have one delivery cells
     self.assertEqual(len(self.valid_line_1.objectValues()), 1)
-    # now check for variation 
+    # now check for variation
     variation = 'variation/not_defined'
     # get the delivery cell
     cell = self.valid_line_1.getCell('emission_letter/not_defined', variation, 'cash_status/not_defined')

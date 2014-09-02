@@ -85,13 +85,13 @@ class OOoBuilder(Implicit):
       else:
         # Default behaviour
         self._document.write(document.data)
-          
+
     elif hasattr(document, 'read') :
       self._document = document
     else :
       self._document = StringIO()
       self._document.write(document)
-    self._image_count = 0    
+    self._image_count = 0
     self._manifest_additions_list = []
 
   def replace(self, filename, stream):
@@ -222,7 +222,7 @@ class OOoParser(Implicit):
   """
     General purpose tools to parse and handle OpenOffice v1.x documents.
   """
-  __allow_access_to_unprotected_subobjects__ = 1 
+  __allow_access_to_unprotected_subobjects__ = 1
   def __init__(self):
     self.oo_content_dom = None
     self.oo_styles_dom  = None

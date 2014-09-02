@@ -5,7 +5,7 @@ from Persistence import Persistent
 import Acquisition
 from Field import ZMIField
 from AccessControl import getSecurityManager
-   
+
 class TALESWidget(Widget.TextWidget):
   default = fields.MethodField('default',
                                 title='Default',
@@ -43,13 +43,13 @@ class TALESNotAvailable(Exception):
 try:
     # try to import getEngine from TALES
     from Products.PageTemplates.Expressions import getEngine
-    
+
     class TALESMethod(Persistent, Acquisition.Implicit):
         """A method object; calls method name in acquisition context.
         """
         def __init__(self, text):
             self._text = text
-            
+
         def __call__(self, **kw):
             expr = getattr(self, '_v_expr', None)
             if expr is None:
@@ -61,7 +61,7 @@ try:
             # getSecurityManager().checkPermission('View', method)
 
     TALES_AVAILABLE = 1
-    
+
 except ImportError:
     # cannot import TALES, so supply dummy TALESMethod
     class TALESMethod(Persistent, Acquisition.Implicit):
@@ -73,7 +73,7 @@ except ImportError:
         def __call__(self, **kw):
             raise TALESNotAvailable
     TALES_AVAILABLE = 0
-    
+
 class TALESValidator(Validator.StringBaseValidator):
 
     def validate(self, field, key, REQUEST):
@@ -84,7 +84,7 @@ class TALESValidator(Validator.StringBaseValidator):
             return value
 
         return TALESMethod(value)
-    
+
 TALESValidatorInstance = TALESValidator()
 
 class TALESField(ZMIField):
@@ -94,5 +94,5 @@ class TALESField(ZMIField):
 
     widget = TALESWidgetInstance
     validator = TALESValidatorInstance
-    
-    
+
+

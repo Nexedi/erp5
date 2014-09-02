@@ -74,13 +74,13 @@ def _getWorkflowHistory(document, initial_datetime):
         dict_['changes'][workflow_id] = state
       history.append(dict_)
   return history
-  
+
 def _getRecordedPropertyHistory(document, size):
   recorded_property = getattr(document, '_recorded_property_dict', None)
   if recorded_property is None:
     return []
   return getChangeHistoryList(recorded_property, size=size)
-  
+
 def _getAttributeHistory(document, size, attribute_name):
   if (attribute_name is None) or (attribute_name == '_recorded_property_dict'):
     return []
@@ -88,11 +88,11 @@ def _getAttributeHistory(document, size, attribute_name):
   if attribute is None:
     return []
   return getChangeHistoryList(attribute, size=size)
-  
+
 def getChangeHistoryList(document, size=50, attribute_name=None):
   """
     Returns ZODB History
-    
+
     Keyword arguments:
     size -- How long history do you need
     attribute_name -- The attribute that you want to show additionary

@@ -69,7 +69,7 @@ class TestTimerService(ERP5TypeTestCase):
     except:
         # Do not care about any exception but unauthorized.
         pass
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTimerService))

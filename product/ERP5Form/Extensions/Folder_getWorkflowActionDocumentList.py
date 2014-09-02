@@ -40,7 +40,7 @@ def generateUid(portal_type, workflow_id, workflow_state):
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
   portal type, in the same workflow state.
-  
+
   Note that this is not in a Script Python, because this would need a Manager
   proxy role, but if we use a script with proxy roles, those roles are used
   when searching catalog.
@@ -58,7 +58,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   Base_translateString = portal.Base_translateString
   wf_tool = portal.portal_workflow
   selection_tool = portal.portal_selections
-  
+
   selection_name = request['selection_name']
 
   form = getattr(portal, form_id)
@@ -71,19 +71,19 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
 
   # If there are checked uids, only use checked uids.
   selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
-  
+
   document_list = []
-  
+
   if not selection_uid_list:
     for workflow_state in possible_state_list:
       params = \
-          selection_tool.getSelectionParamsFor(selection_name).copy() 
+          selection_tool.getSelectionParamsFor(selection_name).copy()
       params['where_expression'] = \
                        'catalog.%s is not NULL' % workflow_state
       params['group_by'] = ('catalog.portal_type',
                                       'catalog.%s' % workflow_state)
       params['select_dict'] = {'count': 'count(catalog.uid)'}
-      
+
       for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
         for workflow in wf_tool.getWorkflowsFor(doc):
@@ -107,7 +107,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                             state_var=state_var,
                             workflow_state=current_workflow_state,
                             ))
-  
+
   else:
     getObject = portal.portal_catalog.getObject
     selected_document_list = [getObject(uid) for uid in selection_uid_list]
@@ -126,8 +126,8 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                         document.getProperty(state_var))
             document_count = workflow_state_dict.get(key, [None, 0])[1]
             workflow_state_dict[key] = document, document_count + 1
-    
-    
+
+
     for (ptype, workflow_id, state), (doc, document_count) in\
                 workflow_state_dict.items():
       workflow = wf_tool.getWorkflowById(workflow_id)
@@ -148,7 +148,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                 state_var=state_var,
                 workflow_state=current_workflow_state,
                 ))
-  
+
   # Let us sort this list by translated title of workflow state and workflow
   def compareState(a, b):
     return cmp((a.workflow_title, a.translated_workflow_state_title),
@@ -181,7 +181,7 @@ def getWorkflowActionDocumentList(self, **kw):
   translate = self.Base_translateString
   for listbox_selection in listbox:
     if listbox_selection.get('workflow_action'):
-      selection_params = selection_tool.getSelectionParamsFor(selection_name).copy() 
+      selection_params = selection_tool.getSelectionParamsFor(selection_name).copy()
       selection_params.setdefault('sort_on', kw.get('sort_on'))
       selection_params[listbox_selection['state_var']] = \
                                 listbox_selection['workflow_state']

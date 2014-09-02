@@ -61,7 +61,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     self.login(self.manager_username)
-                                   
+
     # Setup auth policy
     preference = portal.portal_preferences.newContent(
                                              portal_type = 'System Preference',
@@ -85,34 +85,34 @@ class TestExternalAccount(ERP5TypeTestCase):
     career.start()
     self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
-    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
+    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())
     self.assertEqual(person.Person_getDefaultExternalEmailText(), \
                      portal.external_account_module.objectValues()[0].getUrlString())
     self.assertEqual('validated', \
                      portal.external_account_module.objectValues()[0].getValidationState())
-    
+
     # invalidate career should invalidate account
     career.stop()
     self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
-    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
+    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())
     self.assertEqual(person.Person_getDefaultExternalEmailText(), \
                      portal.external_account_module.objectValues()[0].getUrlString())
     self.assertEqual('invalidated', \
                      portal.external_account_module.objectValues()[0].getValidationState())
 
     # add a new 1 + careers then only one email account should exist
-    career = person.newContent(portal_type = 'Career', 
+    career = person.newContent(portal_type = 'Career',
                                title = 'Career 1')
     career.start()
     self.tic()
-    career = person.newContent(portal_type = 'Career', 
+    career = person.newContent(portal_type = 'Career',
                                title = 'Career 2')
     career.start()
     self.tic()
 
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
-    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
+    self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())
     self.assertEqual(person.Person_getDefaultExternalEmailText(), \
                      portal.external_account_module.objectValues()[0].getUrlString())
     self.assertEqual('validated', \
@@ -131,7 +131,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
     self.assertFalse(person in [x.getSourceValue() for x in portal.external_account_module.objectValues()])
 
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestExternalAccount))

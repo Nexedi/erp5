@@ -312,8 +312,8 @@ class TestCRM(BaseTestCRM):
     Make sure that when acknowledge event, we can create a new event.
 
     XXX This is probably meaningless in near future. event_workflow
-    will be reviewed in order to have steps closer to usual packing 
-    list workflow. For now we have a conflict name between the 
+    will be reviewed in order to have steps closer to usual packing
+    list workflow. For now we have a conflict name between the
     acknowledge method of event_workflow and Acknowledgement features
     that comes with AcknowledgementTool. So for now disable site
     message in this test.
@@ -380,7 +380,7 @@ class TestCRM(BaseTestCRM):
 
   def test_SupportRequest_referenceAutomaticallyGenerated(self):
     """
-      When you create or clone a Support Request document, it must 
+      When you create or clone a Support Request document, it must
       have the reference generated automatically.
     """
     portal_type = "Support Request"
@@ -397,7 +397,7 @@ class TestCRM(BaseTestCRM):
                                                                  batch_mode=1)
     self.assertEqual(new_support_request.getTitle(), title)
     self.assertNotEquals(None, support_request.getReference())
-    self.assertNotEquals(support_request.getReference(), 
+    self.assertNotEquals(support_request.getReference(),
                                         new_support_request.getReference())
 
 
@@ -650,7 +650,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     pc = self.portal.portal_catalog
     for header, expected_paths in expected_values:
       paths = [entity.getRelativeUrl()
-               for entity in portal.Base_getEntityListFromFromHeader(header)] 
+               for entity in portal.Base_getEntityListFromFromHeader(header)]
       self.assertEqual(paths, expected_paths,
                         '%r should return %r, but returned %r' %
                         (header, expected_paths, paths))
@@ -679,7 +679,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     # asText requires portal_transforms
     event = self._ingestMail('simple')
     self.assertEqual('Hello,\nContent of the mail.\n', str(event.asText()))
- 
+
   def test_sender(self):
     # source is found automatically, based on the From: header in the mail
     event = self._ingestMail('simple')
@@ -1148,7 +1148,7 @@ class TestCRMMailSend(BaseTestCRM):
     mfrom, mto, messageText = last_message
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
-    
+
     message = message_from_string(messageText)
 
     self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
@@ -1198,7 +1198,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # pdf
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1245,7 +1245,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # odt
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1290,7 +1290,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # zip
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1337,7 +1337,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1384,7 +1384,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # html
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1483,7 +1483,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # txt
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1540,7 +1540,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_(filename in 
+    self.assert_(filename in
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1595,17 +1595,17 @@ class TestCRMMailSend(BaseTestCRM):
                  title = 'Person %s' %i)
       destination_list.append(person)
     campaing = portal.campaign_module.newContent(
-                 portal_type='Campaign', 
+                 portal_type='Campaign',
                  reference = 'Test')
     for i in range(0,3):
       event = portal.event_module.newContent(
                 portal_type='Mail Message',
-                title = 'Mail %s' %i, 
+                title = 'Mail %s' %i,
                 follow_up = campaing.getRelativeUrl())
       event.setDestinationList([x.getRelativeUrl() for x in destination_list])
       event_list.append(event)
     self.tic()
-    
+
     # use Ticket_cloneTicketAndEventList
     campaing.Ticket_cloneTicketAndEventList()
     self.tic()

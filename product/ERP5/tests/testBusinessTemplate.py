@@ -1950,7 +1950,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_catalog_related_keys = tuple(related_key_list)
     self.assertEqual(len([key for key in related_key_list
                           if key.startswith('fake_id |')]), 2)
-    
+
   def stepCheckOnlyDuplicateRelatedKeyRemains(self, sequence):
     catalog = self.getCatalogTool().getSQLCatalog()
     related_key = sequence['related_key']
@@ -5743,7 +5743,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def test_35a_UpdatePartialWorkflowChainWithRemove(self):
     """Check that chains are correctly removed during update
-    
+
     When previous business template defined that object is associated
     with workflows A, B and that new one says that only A association
     is required check that after installing only A will be on workflow
@@ -6843,12 +6843,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
 
     file_id = 'fake_js_file'
-    file_content = """  
-   var 
- 
-        debug =  [42  
+    file_content = """
+   var
+
+        debug =  [42
  ];
- 
+
     """
 
     from Products.ERP5Type.tests.utils import createZODBFile

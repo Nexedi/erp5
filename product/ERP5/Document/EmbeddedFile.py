@@ -37,7 +37,6 @@ class EmbeddedFile(Image):
   """
     An embedded file (which can act as an image as well).
   """
-  
+
   meta_type = 'ERP5 Embedded File'
   portal_type = 'Embedded File'
-  

@@ -50,7 +50,7 @@ class TestUrl(ERP5TypeTestCase):
                                                   portal_type='URL Crawler')
 
     url_protocol_list = ['http', 'https']
-    
+
     for url_protocol in url_protocol_list:
       url_crawler.setUrlProtocol(url_protocol)
       self.tic()
@@ -60,33 +60,33 @@ class TestUrl(ERP5TypeTestCase):
       self.tic()
       self.assertEqual('%s://%s' % (url_protocol, url_without_port),
                                         url_crawler.asURL())
-  
+
       full_url_without_port = '%s://localhost/test_client' % url_protocol
       url_crawler.setUrlString(full_url_without_port)
       self.tic()
       self.assertEqual(full_url_without_port, url_crawler.asURL())
-      
+
       full_url_with_port = '%s://localhost:8191/test_client' % url_protocol
       url_crawler.setUrlString(full_url_with_port)
       self.tic()
       self.assertEqual(full_url_with_port, url_crawler.asURL())
-      
+
       url_with_port = 'localhost:8191/test_client'
       url_crawler.setUrlString(url_with_port)
       self.tic()
-      self.assertEqual('%s://%s' % (url_protocol, url_with_port), 
+      self.assertEqual('%s://%s' % (url_protocol, url_with_port),
                                                 url_crawler.asURL())
-   
+
       production_url = 'www.example.com/foo'
       url_crawler.setUrlString(production_url)
       self.tic()
-      self.assertEqual('%s://%s' % (url_protocol, production_url), 
+      self.assertEqual('%s://%s' % (url_protocol, production_url),
                                                 url_crawler.asURL())
- 
+
       production_url_with_port = 'www.example.com:8191/foo'
       url_crawler.setUrlString(production_url_with_port)
       self.tic()
-      self.assertEqual('%s://%s' % (url_protocol, production_url_with_port), 
+      self.assertEqual('%s://%s' % (url_protocol, production_url_with_port),
                                                 url_crawler.asURL())
 
       production_url_with_protocol = '%s://www.example.com/foo' % url_protocol
@@ -99,8 +99,8 @@ class TestUrl(ERP5TypeTestCase):
       self.tic()
       self.assertEqual('%s://%s' % (url_protocol, production_url),
                                                 url_crawler.asURL())
-      
-  
+
+
 
 def test_suite():
   suite = unittest.TestSuite()

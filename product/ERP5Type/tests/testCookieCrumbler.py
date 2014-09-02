@@ -48,7 +48,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
                      'pass-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww',
                      ('Son',), ())
     root._setObject(users.id, users)
-    
+
     cc = CookieCrumbler()
     cc.id = 'cookie_authentication'
     root._setObject(cc.id, cc)

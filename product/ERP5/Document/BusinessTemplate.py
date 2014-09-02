@@ -213,14 +213,14 @@ def registerSkinFolder(skin_tool, skin_folder):
   #      (like update_translation or update_catalog)
   register_skin_selection = request.get('your_register_skin_selection', 1)
   reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
-  skin_layer_list = request.get('your_skin_layer_list', 
-                                skin_tool.getSkinSelections()) 
+  skin_layer_list = request.get('your_skin_layer_list',
+                                skin_tool.getSkinSelections())
 
   skin_folder_id = skin_folder.getId()
 
   try:
     skin_selection_list = skin_folder.getProperty(
-                 'business_template_registered_skin_selections', 
+                 'business_template_registered_skin_selections',
                  skin_tool.getSkinSelections()
                  )
   except AttributeError:
@@ -241,7 +241,7 @@ def registerSkinFolder(skin_tool, skin_folder):
     if (skin_name not in skin_tool.getSkinSelections()) and \
                                           register_skin_selection:
       createSkinSelection(skin_tool, skin_name)
-      # add newly created skins to list of skins we care for 
+      # add newly created skins to list of skins we care for
       skin_layer_list.append(skin_name)
 
     selection = skin_tool.getSkinPath(skin_name) or ''
@@ -274,7 +274,7 @@ def createSkinSelection(skin_tool, skin_name):
           skin_path = '%s,%s' % (skin_path, skin_folder.getId())
         else:
           skin_path= skin_folder.getId()
-  # add newly created skins to list of skins we care for 
+  # add newly created skins to list of skins we care for
   skin_tool.addSkinSelection(skin_name, skin_path)
   skin_tool.getPortalObject().changeSkin(None)
 
@@ -591,7 +591,7 @@ class BaseTemplateItem(Implicit, Persistent):
 
   def getTemplateTypeName(self):
     """
-     Get a meaningfull class Name without 'TemplateItem'. Used to 
+     Get a meaningfull class Name without 'TemplateItem'. Used to
      present to the user.
 
      XXX: -12 used here is -len('TemplateItem')
@@ -632,7 +632,7 @@ class BaseTemplateItem(Implicit, Persistent):
         try:
           value = container[key]
         except KeyError:
-          LOG('BusinessTemplate', WARNING, 
+          LOG('BusinessTemplate', WARNING,
               'Could not access object %s' % (path,))
           if default is _MARKER:
             raise
@@ -1122,7 +1122,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # some btrees were exported in a corrupted state. They're empty but
           # their metadata-index (._mt_index) contains entries which in
           # Zope 2.12 are used for .objectIds(), .objectValues() and
-          # .objectItems(). In these cases, force the 
+          # .objectItems(). In these cases, force the
           LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
               'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
           obj._initBTrees()
@@ -1225,7 +1225,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # Keep compatibility with previous export format of
           # business_template_registered_skin_selections
           # and do not modify exported value
-          if obj.getProperty('business_template_registered_skin_selections', 
+          if obj.getProperty('business_template_registered_skin_selections',
                              None) is None:
             # Keep previous value of register skin selection for skin folder
             skin_selection_list = old_obj.getProperty(
@@ -1346,7 +1346,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         if container.meta_type == 'CMF Skins Tool':
-          # we are removing a skin folder, check and 
+          # we are removing a skin folder, check and
           # remove if registered skin selection
           unregisterSkinFolderId(container, object_id,
               container.getSkinSelections())
@@ -1594,7 +1594,7 @@ class PreferenceTemplateItem(PathTemplateItem):
                       comment="Initialized during Business Template " \
                               "installation.")
         # restore previous activities execution order
-        context.setPlacelessDefaultReindexParameters(**original_reindex_parameters) 
+        context.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
 
 class CategoryTemplateItem(ObjectTemplateItem):
 
@@ -3443,7 +3443,7 @@ class ModuleTemplateItem(BaseTemplateItem):
         try:
           if trash and trashbin is not None:
             container_path = key.split('/')
-            self.portal_trash.backupObject(trashbin, container_path, 
+            self.portal_trash.backupObject(trashbin, container_path,
                                            key, save=1, keep_subobjects=1)
           p.manage_delObjects([key])
         except NotFound:
@@ -4441,7 +4441,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
   def _importCatalogLanguage(self, localizer, catalog, lang, po):
     if catalog not in localizer.objectIds():
       dispatcher = localizer.manage_addProduct['Localizer']
-      dispatcher.manage_addMessageCatalog(id=catalog, 
+      dispatcher.manage_addMessageCatalog(id=catalog,
                                           title='Message Catalog',
                                           languages=['en'])
     mc = localizer._getOb(catalog)
@@ -5073,7 +5073,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if installed_bt == self:
         reinstall = 1
         if self.portal_templates._getOb(INSTALLED_BT_FOR_DIFF, None) is None:
-          bt2 = self.portal_templates.manage_clone(ob=installed_bt, 
+          bt2 = self.portal_templates.manage_clone(ob=installed_bt,
                                                    id=INSTALLED_BT_FOR_DIFF)
           # update portal types properties to get last modifications
           bt2.getPortalTypesProperties()
@@ -5088,7 +5088,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         installed_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           if installed_item is not None and hasattr(installed_item, '_objects'):
-            modified_object = new_item.preinstall(context=self, 
+            modified_object = new_item.preinstall(context=self,
                                                   installed_item=installed_item,
                                                   installed_bt=installed_bt)
             if len(modified_object) > 0:
@@ -5141,7 +5141,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
-            item.install(self, force=force, object_to_update=object_to_update, 
+            item.install(self, force=force, object_to_update=object_to_update,
                                trashbin=trashbin, installed_bt=installed_bt)
 
       if update_catalog:
@@ -5576,7 +5576,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         item_object = getattr(self, item_name, None)
         # this check is due to backwards compatability when there can be a
         # difference between install erp5_property_sheets (esp. BusinessTemplate
-        # property sheet) 
+        # property sheet)
         if item_object is not None:
           item_object.importFile(bta)
 
@@ -5712,7 +5712,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if installed_bt == new_bt:
           compare_to_zodb = 1
       if compare_to_zodb:
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, 
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt,
                                                  id=INSTALLED_BT_FOR_DIFF)
         # Update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
@@ -5738,7 +5738,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # XXX Bad naming
       item_list_2 = ['_site_property_item',
                      '_module_item',
-                     '_catalog_result_key_item', 
+                     '_catalog_result_key_item',
                      '_catalog_related_key_item',
                      '_catalog_result_table_item',
                      '_catalog_search_key_item',
@@ -5774,7 +5774,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         installed_object = installed_item.removeProperties(installed_object, 1)
         # XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
-        OFS.XMLExportImport.exportXML(installed_object._p_jar, 
+        OFS.XMLExportImport.exportXML(installed_object._p_jar,
                                       installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
         f1.close()

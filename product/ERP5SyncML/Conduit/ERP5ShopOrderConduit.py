@@ -378,7 +378,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         previous_owner_type = 'p'
       if org_object != None:
         previous_owner_type = 'o' # Organisation is more important than the person
-        # This is a particular case where the user put 
+        # This is a particular case where the user put
         # the name of an organisation in his own name
         if not kw.has_key('organisation'):
           kw['organisation'] = org_object.getId()
@@ -402,7 +402,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #       # ERP5 person/organisation according to the name of that person/organisation
       # Compare the current representation of the member account with the previous one
       #if previous_owner_type != owner_type: # XXX Seb: I guess it's quite strange to compare "po" to "poo"
-                                             # There is probably an error here, so I changed it but 
+                                             # There is probably an error here, so I changed it but
                                              # I'm sure I'm not really doing what it was intended for
       if previous_owner_type is None and owner_type is not None:
         # There is difference between the two (previous and current) representation of the customer
@@ -558,7 +558,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           org_object.setRole("client")
 
       # The customer is not a person or a person of an organisation, so the customer is an organisation...
-      # XXX Seb: So like it was defined, if we have a person from an organisation, then 
+      # XXX Seb: So like it was defined, if we have a person from an organisation, then
       # the organisation is not modified, so the vat is not defined!!
       # This is good to replace the person with an organisation, because vat is only
       # defined on organisation. An update would be to define when we have both organisation

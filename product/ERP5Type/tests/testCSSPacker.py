@@ -37,7 +37,7 @@ class TestCSSPacker(unittest.TestCase):
   def test_compressCSS(self):
     script = open(join(PREFIX, 'input/input_erp5.css')).read()
     result = compressCSS(script)
-    
+
     output = open(join(PREFIX, 'output/output_erp5.css')).read()
     self.assertEqual(result, output)
 

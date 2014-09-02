@@ -71,10 +71,10 @@ def addERP5Report(self, id, title="", REQUEST=None):
 
 class ERP5Report(ERP5Form):
     """
-        An ERP5Form which allows to aggregate a list of 
+        An ERP5Form which allows to aggregate a list of
         forms each of which is rendered on an object with parameters.
 
-        Application: create an accounting book from ERP5 objects 
+        Application: create an accounting book from ERP5 objects
 
         - Display the total of each account (report)
 
@@ -301,7 +301,7 @@ class ReportSection:
     REQUEST.form.update(self._REQUEST['form'])
     REQUEST.other.update(self._REQUEST['other'])
     del self._REQUEST
-    
+
   security.declarePublic('pushReport')
   def pushReport(self, context, render_prefix=None):
     self.pushRequest()

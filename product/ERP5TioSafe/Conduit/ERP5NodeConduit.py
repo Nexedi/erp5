@@ -374,7 +374,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       keyword = {'address_mapping': True, tag: new_value}
       self.editDocument(object=address, **keyword)
       return []
-    
+
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
     """

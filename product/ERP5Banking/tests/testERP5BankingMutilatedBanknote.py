@@ -222,7 +222,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     """
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
-    
+
   def stepCreateIncomingLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the incoming mutilated banknote line with banknotes of 10000 and check it has been well created
@@ -388,7 +388,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Remove all operations in module
     """
     delattr(self, 'mutilated_banknote')
-    self.mutilated_banknote_module.deleteContent('mutilated_banknote')    
+    self.mutilated_banknote_module.deleteContent('mutilated_banknote')
 
   def stepTryFinishWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
     """
@@ -471,7 +471,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.hq_mutilated_banknote.setDestinationTotalAssetPrice(4000.0)
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 4000.0)
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.hq_mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
-    
+
   def createOutgoingLine(self, mutilated_banknote):
     """
     """
@@ -546,14 +546,14 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
   #
   def stepHQLogin(self, sequence=None, sequence_list=None, **kw):
     """
-    Login as a headquarter user    
+    Login as a headquarter user
     """
     self.logout()
     self.login("hq_super_user")
 
   def stepHQLogout(self, sequence=None, sequence_list=None, **kw):
     """
-    Login as a headquarter user    
+    Login as a headquarter user
     """
     self.logout()
     self.login("super_user")
@@ -706,7 +706,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Remove all operations in module
     """
     delattr(self, 'hq_mutilated_banknote')
-    self.mutilated_banknote_module.deleteContent('hq_mutilated_banknote')    
+    self.mutilated_banknote_module.deleteContent('hq_mutilated_banknote')
 
   def stepCreateHQExchangedLine(self, sequence=None, sequence_list=None, **kw):
     """
@@ -834,7 +834,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                         + 'CheckInventoryWithIncommingMutilatedBanknotes ' \
                         + 'CancelDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBack ClearMutilatedBanknoteModule'
-    
+
     # sequence 2 : pay back, maculated banknotes
     sequence_string_2 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
@@ -863,7 +863,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                         + 'CheckHQFinalInventoryWithNoPayBack ' \
                         + 'ArchiveDocument Tic ' \
                         + 'CheckFinalInventoryWithNoPayBackAfterHQRequest ClearMutilatedBanknoteModule ClearHQMutilatedBanknoteModule'
-    
+
     # sequence 4 : ask headquarters then payback, maculated banknotes
     sequence_string_4 = 'Tic CheckObjects Tic CheckInitialInventory ' \
                         + 'CreateMutilatedBanknote SetMaculatedState Tic ' \
@@ -894,7 +894,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                         'CheckHQInventoryWithIncommingMutilatedBanknotes ' \
                         'CancelHQDocument Tic ' \
                         'CheckHQFinalInventoryWithNoPayBack ClearHQMutilatedBanknoteModule'
-    
+
     # sequence 6 : HQ, pay back, maculated banknotes
     sequence_string_6 = 'Tic CheckObjects Tic CheckHQInitialInventory ' \
                         'HQLogin ' \

@@ -39,7 +39,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 
 class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
-  
+
 
 
   # pseudo constants
@@ -51,13 +51,13 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
       Return the title of the test
     """
     return "ERP5BankingInternalMoneyDeposit"
-  
+
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
     """
     self.initDefaultVariable()
-    # Set some variables : 
+    # Set some variables :
     self.internal_money_deposit_module = self.getInternalMoneyDepositModule()
 
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
@@ -67,7 +67,7 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
 
     """
     Windows to create the BANKNOTES of 10 000 and 5000, coins 200.
-    It s same to click to the fast input button.  
+    It s same to click to the fast input button.
     """
 
     # Before the test, we need to input the inventory
@@ -90,14 +90,14 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
                              'quantity': self.quantity_5000}
 
 
-    
-    
+
+
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    
+
     self.bi_counter = self.paris.surface.banque_interne
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.entrante
     self.bi_counter = self.paris.surface.banque_interne.guichet_1
-    
+
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
                              line_list=line_list)
 
@@ -159,8 +159,8 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
     """
     # Cash sorting has encaisse_paris for source, guichet_1 for destination, and a price cooreponding to the sum of banknote of 10000 and banknotes of 200 ( (2+3) * 10000 + (2+3) * 200 )
     self.internal_money_deposit = self.internal_money_deposit_module.newContent(
-                                    id='internal_money_deposit', 
-                                    portal_type='Internal Money Deposit', 
+                                    id='internal_money_deposit',
+                                    portal_type='Internal Money Deposit',
                                     resource_value = self.currency_1,
                                     source_total_asset_price=20000.0,
                                     grouping_reference="lettering",
@@ -211,14 +211,14 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
     self.assertEqual(self.internal_money_deposit.line_2.getPrice(), 5000)
 
 
-  
+
   def stepDeliverInternalMoneyDeposit(self, sequence=None, sequence_list=None, **kwd):
 
     self.assertEqual(self.internal_money_deposit.getSourceTotalAssetPrice(),
                      self.internal_money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
     self.workflow_tool.doActionFor(self.internal_money_deposit, 'deliver_action', wf_id='internal_money_deposit_workflow')
     self.assertEqual(self.internal_money_deposit.getSimulationState(), 'delivered')
-    
+
     self.assertEqual(self.internal_money_deposit.getSourceTotalAssetPrice(), 20000.0)
     self.assertEqual(20000.0, self.internal_money_deposit.getTotalPrice(fast=0, portal_type = ['Cash Delivery Line', 'Cash Delivery Cell']))
 

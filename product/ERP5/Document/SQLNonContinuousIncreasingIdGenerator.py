@@ -133,7 +133,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         set_last_id_method(id_group=id_group,
             last_id=self.last_max_id_dict[id_group].value)
       id_group_done.append(id_group)
-   
+
     # save the last ids which not exist in sql
     for id_group in (set(self.last_max_id_dict.keys()) - set(id_group_done)):
       set_last_id_method(id_group=id_group,
@@ -233,9 +233,9 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     portal = self.getPortalObject()
     # Store last_max_id_dict in mysql
-    if self.getStoredInZodb(): 
+    if self.getStoredInZodb():
       self._updateSqlTable()
-    # Return values from sql 
+    # Return values from sql
     return dict([(line['id_group'],int(line['last_id'])) for line in
       self._getValueListFromTable()])
 
@@ -289,7 +289,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       zodb into mysql
 
       TODO : take into account the case where the value is stored every X
-             generation 
+             generation
     """
     portal = self.getPortalObject()
     portal.IdTool_zDropTable()

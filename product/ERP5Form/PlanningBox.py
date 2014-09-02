@@ -355,7 +355,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # - dict with error results
       raise FormValidationError(errors_list, {})
 
-    # the whole process is now finished, 
+    # the whole process is now finished,
     # just need to return editor for updating data
     return PlanningBoxEditor(field.id, update_dict)
 
@@ -403,7 +403,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     for block in content_list:
       if block.name == block_name:
-        return block 
+        return block
 
 
   def getDestinationGroup(self, basic, planning, block_moved, axis_groups,
@@ -499,7 +499,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     # getting list moved block names
     block_moved_name_list = [x['block_moved']['name'] for x in activity_block_moved_list]
-    
+
     new_start = None
     new_stop = None
     for activity_block in activity_block_list:
@@ -927,7 +927,7 @@ class PlanningBoxWidget(Widget.Widget):
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
     # creates and fill up self.basic, self.planning and self.build_error_list
-    basic, planning = self.render_structure(field=field, REQUEST=REQUEST, 
+    basic, planning = self.render_structure(field=field, REQUEST=REQUEST,
                                             context=context)
     # getting CSS script generator
     planning_css_method = getattr(context, 'planning_css')
@@ -954,7 +954,7 @@ class PlanningBoxWidget(Widget.Widget):
     planning = REQUEST.get('planning')
 
     # getting HTML rendering Page Template
-    planning_html_method = getattr(getContext(field, REQUEST), 
+    planning_html_method = getattr(getContext(field, REQUEST),
                                    'planning_content')
     # recovering HTML data by calling Page Template document
     HTML_data = planning_html_method(basic=basic, planning=planning)
@@ -993,7 +993,7 @@ class PlanningBoxWidget(Widget.Widget):
     ###### CALL CLASS METHODS TO BUILD BASIC STRUCTURE ######
     # creating BasicStructure instance (and initializing its internal values)
     basic = BasicStructure(context=context, form=form, field=field,
-                           REQUEST=REQUEST, selection=selection, 
+                           REQUEST=REQUEST, selection=selection,
                            params=params, selection_name=selection_name,
                            list_error=list_error)
     # call build method to generate BasicStructure
@@ -1132,8 +1132,8 @@ class BasicStructure:
 
     # get start & stop bounds
     self.lane_axis_info = self.getLaneAxisInfo(lane_tree_list)
-    
-    # the Lane domain is used for generate the Lane Axis 
+
+    # the Lane domain is used for generate the Lane Axis
     self.lane_domain_list = [i.getObject().getMembershipCriterionCategory()\
                                            for i in lane_tree_list]
 
@@ -1170,7 +1170,7 @@ class BasicStructure:
 
     # reset to original value
     self.selection.edit(report = None)
-    
+
     report_depth = self.REQUEST.get('report_depth',None)
     # update report list if report_depth was specified
     if report_depth is not None:
@@ -1249,10 +1249,10 @@ class BasicStructure:
                   sec_layer_method_name=None,show_stat=0):
     """
     report_group_list is another structure based on report_tree but
-    taking care of the object activities. 
+    taking care of the object activities.
     This returns a list of object_tree_lines composing the planning,
     whatever the current group depth, just listing all of them
-          
+
     XXX rafael report_group is a tuple, maybe create ReportGroup Class
     is more consistent.
     """
@@ -1260,7 +1260,7 @@ class BasicStructure:
     main_object_list = self.getObjectList(self.list_method)
     # Defining the Secondary Layer Object List
     secondary_object_list = self.getObjectList(self.sec_layer_list_method)
-    
+
     kw = self.params
     self.sec_layer_uid_list = []
     report_group_list = []
@@ -1300,14 +1300,14 @@ class BasicStructure:
         domain_obj = object_tree_line.getObject()
         sec_layer_object_list = []
 
-        # Use parent as report_path means that is expected that 
+        # Use parent as report_path means that is expected that
         # the block showed is the same as object_tree_line
         if self.selection_report_path == 'parent':
           object_list = [object_tree_line.getObject()]
           if sec_layer_method_name not in (None,''):
             sec_layer_object_list = getattr(domain_obj,sec_layer_method_name)()
 
-        # The object is a domain, this means that it should be filtered 
+        # The object is a domain, this means that it should be filtered
         # by base category list (getMembershipCriterionBaseCategoryList)
         if domain_obj.getPortalType() == 'Domain':
           object_list = []
@@ -1346,7 +1346,7 @@ class BasicStructure:
 
         # Store each object are from Secondary Layer
         self.sec_layer_uid_list.extend([obj.getUid() for obj in sec_layer_object_list])
-        # The order is important 
+        # The order is important
         sec_layer_object_list.extend(object_list)
         object_list = sec_layer_object_list
 
@@ -1373,7 +1373,7 @@ class BasicStructure:
               # saving information in report_group_list
               report_group_list += [(object_tree_line,object_list,info_dict)]
 
-    return report_group_list 
+    return report_group_list
 
 
   def buildLaneTreeList(self):
@@ -1387,7 +1387,7 @@ class BasicStructure:
       # get first
       default_selection_lane_path = self.lane_root_list[0][0].split('/', 1)[0]
 
-    
+
     portal_domains = getattr(self.form,'portal_domains',None)
     if (portal_domains is None or \
           portal_domains._getOb(default_selection_lane_path, None) is None):
@@ -1448,7 +1448,7 @@ class BasicStructure:
     else:
       selection_report_current = self.selection.getReportList()
 
-    
+
     # building report_tree_list
     report_tree_list = makeTreeList(here=self.context, form=self.form,
                                     root_dict=None,
@@ -1564,11 +1564,11 @@ class BasicStructure:
     self.params['bound_start'] = axis_dict['bound_start']
     self.params['bound_stop'] = axis_dict['bound_stop']
     self.params['from_date'] = axis_dict['bound_start']
-    self.params['to_date'] = axis_dict['bound_stop']    
+    self.params['to_date'] = axis_dict['bound_stop']
     self.getSelectionTool().setSelectionParamsFor(self.selection_name,
                                                   self.params,
                                                   REQUEST = self.REQUEST)
-    
+
     return axis_dict
 
 
@@ -1688,7 +1688,7 @@ class BasicStructure:
                                          lane_axis_bounds)
 
         self.basic_group_list.append(child_group)
-  
+
       return 1
 
 
@@ -1735,9 +1735,9 @@ class BasicGroup:
     """
     info = {}
     uid = activity_content.getObject().getUid()
-    for item in ['info_center' , 'info_topleft' , 'info_topright', 
+    for item in ['info_center' , 'info_topleft' , 'info_topright',
                  'info_botleft', 'info_botright', 'info_tooltip' ]:
-      # Set default value 
+      # Set default value
       info[item] = ''
 
       # Secondary layer has no info
@@ -1747,9 +1747,9 @@ class BasicGroup:
         info_method = getattr(activity_content,field_value,None)
         if callable(info_method):
           info[item]=str(info_method())
-      
+
     return info
-    
+
 
 
   def setBasicActivities(self, activity_list, list_error, lane_axis_info):
@@ -1812,7 +1812,7 @@ class BasicGroup:
           #if block_begin < lane_axis_info['bound_start']:
             # need to cut begin bound
           #  block_start = lane_axis_info['bound_start']
-          #else: 
+          #else:
           #  block_start = block_begin
 
           #if block_end > lane_axis_info['bound_stop']:
@@ -1837,7 +1837,7 @@ class BasicGroup:
             object = activity_content
             url=''
           else:
-            
+
             info = self.getInfoDict(activity_content)
 
             title = info['info_center']
@@ -1858,13 +1858,13 @@ class BasicGroup:
             stat_context = obj.asContext(**stat_result)
             stat_context.domain_url = obj.getRelativeUrl()
             object = stat_context.getObject()
-            
+
             # check if the activity_content has some special method for URL
             # This approach is also used by ListBox, but in Planning Box
             # the parameters are not important for now. In future, can be define
             # special sublinks using this implementation.
             #if getattr(activity_content, 'getListItemUrl', None):
-            #  url = activity_content.getListItemUrl(cname_id='', 
+            #  url = activity_content.getListItemUrl(cname_id='',
             #      selection_index='',
             #      selection_name=self.field.get_value('selection_name'))
             #else:
@@ -1933,7 +1933,7 @@ class BasicGroup:
           if block_begin < lane_axis_info['bound_start']:
             # need to cut begin bound
             block_start = lane_axis_info['bound_start']
-          else: 
+          else:
             block_start = block_begin
 
           if block_end > lane_axis_info['bound_stop']:
@@ -2094,7 +2094,7 @@ class PlanningStructure:
     # using relative coordinates
     for domain in basic_structure.lane_domain_list:
       axis_group = AxisGroup(name='group_lane_' + str(axis_group_number),
-                             title=domain.getProperty('title'), 
+                             title=domain.getProperty('title'),
            delimiter_type=domain.getProperty('delimiter_type'),
            link=domain.getProperty('link',None))
       axis_group.tooltip = domain.getProperty('tooltip')
@@ -2119,7 +2119,7 @@ class PlanningStructure:
       axis_group_number += 1
 
     return axis_group_list
-    
+
 
   def completeAxis(self):
     """
@@ -2428,7 +2428,7 @@ class Activity:
         # passive
         block_color = '#D1E8FF'
         block_link = ''
-      
+
       property_dict = self.property_dict
       if self.object.getUid() in sec_layer_uid_list:
         property_dict['sec_layer'] = 1
@@ -2734,7 +2734,7 @@ class AxisGroup:
                 property_dict={}):
     self.name = name
     self.title = title
-    # link to fold or unfold report in report-tree mode and also 
+    # link to fold or unfold report in report-tree mode and also
     # special link on header columns
     self.link = link
     self.info_title = Info(info=self.title, link=self.link, title=self.title)

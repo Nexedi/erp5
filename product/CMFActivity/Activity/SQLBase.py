@@ -90,7 +90,7 @@ class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
- 
+
   def getNow(self, context):
     """
       Return the current value for SQL server's NOW().

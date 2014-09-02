@@ -24,12 +24,12 @@ class PatternChecker:
     symbol_regex_dict = {NUMBERSYMBOL  : '([0-9]{%i,%s})',
                          CHARSYMBOL    : '([a-zA-Z]{%i,%s})',
                          NUMCHARSYMBOL : '([0-9a-zA-Z]{%i,%s})'}
-    
+
     def _escape(self, match_object):
         """Escape a single character.
-        """ 
+        """
         return '\\' + match_object.group(0)
-    
+
     def _escape_special_characters(self, s):
         """Escape the characters that have a special meaning in regex.
         """
@@ -53,7 +53,7 @@ class PatternChecker:
         else:
             min = length
             max = str(min)
-            
+
         return self.symbol_regex_dict[match_object.group(0)[0]] %(min, max)
 
     def make_regex_from_pattern(self, pattern):
@@ -64,7 +64,7 @@ class PatternChecker:
         for symbol in [NUMBERSYMBOL, CHARSYMBOL, NUMCHARSYMBOL]:
             regex = re.sub(symbol+'{1,}\*?', self._replace_symbol_by_regex, regex)
         return '^ *' + regex + ' *$'
-    
+
     def construct_value_from_match(self, result, pattern):
         """After we validated the string, we put it back together; this is
         good, since we can easily clean up the data this way.
@@ -87,10 +87,10 @@ class PatternChecker:
         # make out of several white spaces, one whitespace...
         value = re.sub('  *', ' ', value)
         return value
-    
+
     def validate_value(self, patterns, value):
         """Validate method that manges the entire validation process.
-        
+
         The validator goes through each pattern and
         tries to get a match to the value (second parameter). At the end, the
         first pattern of the list is taken to construct the value again; this
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     # German money
     print val.validate_value(['d*.dd DM'], '267.98 DM')
 
-    # German license plate 
+    # German license plate
     print val.validate_value(['eee ee-ddd'], 'OSL HR-683')
 
     # German phone number (international)

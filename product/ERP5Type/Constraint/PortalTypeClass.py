@@ -50,7 +50,7 @@ class PortalTypeClass(Constraint):
   _message_id_list = [ 'message_type_not_registered',
                        'message_inconsistent_meta_type',
                        'message_inconsistent_class' ]
-  
+
   message_type_not_registered = "Type Information ${type_name} not "\
                                 "registered with the TypeTool"
   message_inconsistent_meta_type = "Meta type is inconsistant with portal"\

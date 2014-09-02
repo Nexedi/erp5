@@ -36,7 +36,7 @@ class AccountTypeConstraint(Constraint):
   category is consistent with the gap category.
   This is an abstract class, subclasses have to define a mapping as a class
   attribute, like this one:
-  
+
   _account_type_map = (
     ('gap/fr/pcg/4/40', ('liability/payable',),
     ('gap/fr/pcg/4', ('asset/receivable', 'liability/payable'),
@@ -50,9 +50,9 @@ class AccountTypeConstraint(Constraint):
 
   This constraints supports fixing consistency.
   """
-  
+
   _message_id_list = ['message_inconsistent_account_type']
-  
+
   message_inconsistent_account_type = translateString(
     'Account is member'
     ' of ${category}, this should have account_type'

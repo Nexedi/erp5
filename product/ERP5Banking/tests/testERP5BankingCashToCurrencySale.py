@@ -279,7 +279,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     assertEqual(document.getTotalPrice(fast=0,
       portal_type="Outgoing Cash To Currency Sale Line"), 20 * 5.0)
 
-  def stepDeliverCashToCurrencySale(self, sequence=None, sequence_list=None, 
+  def stepDeliverCashToCurrencySale(self, sequence=None, sequence_list=None,
       **kwd):
     document = self.cash_to_currency_sale
     self.workflow_tool.doActionFor(document, 'deliver_action',

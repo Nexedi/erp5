@@ -182,7 +182,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
         return resource.absolute_url()
       elif cname_id in ('getCurrentInventory', ):
         query_kw_update = {
-          'simulation_state': 
+          'simulation_state':
             list(self.getPortalCurrentInventoryStateList() + \
             self.getPortalTransitInventoryStateList()),
           'omit_transit': 1,

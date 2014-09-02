@@ -80,4 +80,4 @@ class MailMessage(Event):
         return Event.getTextContent(self)
       else:
         return Event.getTextContent(self, default)
-        
+

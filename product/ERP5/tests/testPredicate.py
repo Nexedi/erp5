@@ -49,10 +49,10 @@ PREDICATE_FOLDER_NAME = "predicate_unit_test_folder"
 
 class TestPredicateMixIn(ERP5TypeTestCase):
   """Test Predicates. """
-  
+
   def getTitle(self):
     return "Predicates"
-  
+
   def login(self) :
     """sets the security manager"""
     uf = self.getPortal().acl_users
@@ -60,7 +60,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
                                'Auditor', 'Author', 'Manager'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
-  
+
   def afterSetUp(self) :
     self.createCategories()
     self.login()
@@ -100,11 +100,11 @@ class TestPredicateMixIn(ERP5TypeTestCase):
     """return a list of categories that should be created."""
     return ( REGION_FRANCE_PATH, REGION_GERMANY_PATH,
              GROUP_STOREVER_PATH, GROUP_OTHER_PATH )
-  
+
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', )
-  
+
   def getPredicateFolder(self):
     """Return a folder for predicates."""
     if PREDICATE_FOLDER_NAME in self.getPortal().objectIds() :
@@ -121,33 +121,33 @@ class TestPredicateMixIn(ERP5TypeTestCase):
     """Generic method to create a predicate"""
     return self.getPredicateFolder().newContent(
                         portal_type = 'Predicate', **kw)
-  
+
   def createDocument(self, **kw):
     """Creates a document."""
     return self.getOrganisationModule().newContent(
                              portal_type='Organisation', **kw)
-    
+
   def stepCreatePredicateTrueScript(self, sequence=None, **kw) :
     """Creates a script that always return true"""
     createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
                            'Predicate_true', 'predicate', """return 1""")
     sequence.edit(test_method_id = 'Predicate_true')
-  
+
   def stepCreatePredicateFalseScript(self, sequence=None, **kw) :
     """Creates a script that always return false"""
     createZODBPythonScript(self.getPortal().portal_skins.erp5_base,
                            'Predicate_false', '', """return 0""")
     sequence.edit(test_method_id = 'Predicate_false')
-    
+
   def stepCreateTestMethodIdPredicate(self, sequence=None, **kw) :
     """Creates a predicate with a test method_id"""
     sequence.edit(predicate = self.createPredicate(
         test_method_id = sequence.get('test_method_id')))
-  
+
   def stepCreateEmptyPredicate(self, sequence=None, **kw) :
     """Creates an empty predicate that is supposed to be always true"""
     sequence.edit(predicate = self.createPredicate())
-  
+
   def stepCreateAlwaysFalsePredicate(self, sequence=None, **kw) :
     """Creates a predicate that is always false (membership of an non
        existant category)"""
@@ -155,14 +155,14 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         membership_criterion_base_category_list = ['not_exist'],
         membership_criterion_category_list = ['not_exist/nothing']
       ))
-  
+
   def stepCreateRegionFrancePredicate(self, sequence=None, **kw) :
     """Creates a predicate for region france category"""
     sequence.edit(predicate = self.createPredicate(
         membership_criterion_base_category_list = ['region'],
         membership_criterion_category_list = [REGION_FRANCE_PATH]
       ))
-  
+
   def stepCreateRegionFranceTestMethodIdPredicate(
                                   self, sequence=None, **kw) :
     """Creates an region france predicate with the last test_method_id
@@ -171,15 +171,15 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         membership_criterion_base_category_list = ['region'],
         membership_criterion_category_list = [REGION_FRANCE_PATH],
         test_method_id = sequence.get('test_method_id')))
-  
-  
+
+
   def stepCreateGroupStoreverPredicate(self, sequence=None, **kw) :
     """Creates a predicate for group storever category"""
     sequence.edit(predicate = self.createPredicate(
         membership_criterion_base_category_list = ['group'],
         membership_criterion_category_list = [GROUP_STOREVER_PATH]
       ))
-  
+
   def stepCreateGroupStoreverRegionFrancePredicate(
                                       self, sequence=None, **kw) :
     """Creates a predicate for group storever and region france
@@ -189,7 +189,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         membership_criterion_category_list = [ GROUP_STOREVER_PATH,
                                                REGION_FRANCE_PATH ]
       ))
-  
+
   def stepCreateRegionFrancePredicateTruePredicate(
                                       self, sequence=None, **kw) :
     """Creates a predicate for region france and Predicate_true script.
@@ -200,7 +200,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         membership_criterion_category_list = [ REGION_FRANCE_PATH ],
         test_method_id = sequence.get('test_method_id')
       ))
-                        
+
   def stepCreateRegionFrancePredicateFalsePredicate(
                                           self, sequence=None, **kw) :
     """Creates a predicate for region france and Predicate_false script.
@@ -211,11 +211,11 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         membership_criterion_category_list = [ REGION_FRANCE_PATH ],
         test_method_id = sequence.get('test_method_id')
       ))
-  
+
   def stepSaveFirstPredicate(self, sequence=None, **kw) :
     """Save current predicate for later fusion."""
     sequence.edit(first_predicate = sequence.get('predicate'))
-    
+
   def stepMergePredicates(self, sequence=None, **kw) :
     """Merge `first predicate` with current predicate."""
     first_predicate = sequence.get('first_predicate')
@@ -224,40 +224,40 @@ class TestPredicateMixIn(ERP5TypeTestCase):
         [ first_predicate.getRelativeUrl(),
           current_predicate.getRelativeUrl() ])
     sequence.edit(predicate = first_predicate)
-    
+
   def stepCreateDocument(self, sequence=None, **kw) :
     """Creates a document."""
     doc = self.getOrganisationModule().newContent(
                                       portal_type='Organisation')
     sequence.edit(doc = doc)
-  
+
   def stepSetDocumentStoreverGroupMembership(
                                 self, sequence=None, **kw) :
     """Set group membership for the document."""
     doc = sequence.get('doc')
     doc.setGroup(GROUP_STOREVER_PATH.replace('group/', ''))
-  
+
   def stepSetDocumentOtherGroupMembership(self, sequence=None, **kw) :
     """Set group membership for the document."""
     doc = sequence.get('doc')
     doc.setGroup(GROUP_OTHER_PATH.replace('group/', ''))
-                          
+
   def stepSetDocumentGermanyRegionMembership(self, sequence=None, **kw) :
     """Set region membership for the document."""
     doc = sequence.get('doc')
     doc.setRegion(REGION_GERMANY_PATH.replace('region/', ''))
-  
+
   def stepSetDocumentFranceRegionMembership(self, sequence=None, **kw) :
     """Set region membership for the document."""
     doc = sequence.get('doc')
     doc.setRegion(REGION_FRANCE_PATH.replace('region/', ''))
-  
+
   def stepAssertPredicateTrue(self, sequence=None, **kw) :
     """Assert the predicate is true on the document."""
     doc = sequence.get('doc')
     predicate = sequence.get('predicate')
     self.assertTrue(predicate.test(doc))
-  
+
   def stepAssertPredicateFalse(self, sequence=None, **kw) :
     """Assert the predicate is false on the document."""
     doc = sequence.get('doc')
@@ -269,7 +269,7 @@ class TestPredicates(TestPredicateMixIn):
   ############################################################################
   ## Test Methods ############################################################
   ############################################################################
-  
+
   def test_Interface(self):
     """Test Predicate implements Predicate interface."""
     from Products.ERP5Type.interfaces import IPredicate
@@ -352,7 +352,7 @@ class TestPredicates(TestPredicateMixIn):
       calls.append(False)
       return False
     doc.false_method = false_method
-    
+
     # predicates can also be created with a test method id, which will be the
     # id of a method to call on the document (of course it can be a python
     # script). This method must return a boolean value.
@@ -363,7 +363,7 @@ class TestPredicates(TestPredicateMixIn):
     pred = self.createPredicate(test_method_id='false_method')
     self.assertFalse(pred.test(doc))
     self.assertEqual([True, False], calls)
-  
+
     # the use of method id can be mixed with category membership, both will
     # have to be true for the predicate to be true.
     pred = self.createPredicate(
@@ -373,7 +373,7 @@ class TestPredicates(TestPredicateMixIn):
                       ['region/europe/western_europe/france'])
     self.assertTrue(pred.test(doc))
     self.assertEqual([True, False, True], calls)
-    
+
     pred = self.createPredicate(
         test_method_id='false_method',
         membership_criterion_base_category_list=['region'],
@@ -390,7 +390,7 @@ class TestPredicates(TestPredicateMixIn):
     # Note that if the document is not member of the category, the test_method
     # is not called.
     self.assertEqual([True, False, True, False], calls)
-  
+
 
   def test_Predicate_getMembershipCriterionCategoryList(self):
     # Predicate_getMembershipCriterionCategoryList is a script used to show the
@@ -405,7 +405,7 @@ class TestPredicates(TestPredicateMixIn):
     self.assertTrue(('europe/western_europe', 'region/europe/western_europe') in
         [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
         pred.Predicate_getMembershipCriterionCategoryList(),)
-    
+
     # If this category is empty, it will show values from fallback category,
     # with the path they have when they are acquired
     pred = self.createPredicate(

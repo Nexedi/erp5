@@ -37,7 +37,7 @@ class TestJSPacker(unittest.TestCase):
   def test_compressJavaScript(self):
     script = open(join(PREFIX, 'input/input_erp5.js')).read()
     result = compressJavaScript(script)
-    
+
     output = open(join(PREFIX, 'output/output_erp5.js')).read()
     self.assertEqual(result, output)
 

@@ -62,7 +62,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory(no_site=1)
     self.currency_1 = self.currency_module['EUR']
-    # Create a person and a bank account to test 
+    # Create a person and a bank account to test
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',
                                       last_name='titi')
@@ -72,7 +72,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
                                                  amount=0,
                                                  internal_bank_account_number="343434343434")
     self.site = self.paris
-    
+
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -84,7 +84,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
       payment=self.bank_account_1.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(
       payment=self.bank_account_1.getRelativeUrl()), 0.0)
-    # for agency 
+    # for agency
     self.assertEqual(self.simulation_tool.getCurrentInventory(
       payment=self.site.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(
@@ -141,7 +141,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
     self.assertNotEqual(inventory_line, None)
 
     self.tic()
-    
+
     self.assertEqual(len(self.inventory.objectValues()), 1)
     self.inventory_line = getattr(self.inventory, 'line_1')
     self.assertEqual(self.inventory_line.getPortalType(), 'Bank Account Inventory Line')
@@ -153,7 +153,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
 
   def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check Final Inventory 
+    Check Final Inventory
     """
     self.simulation_tool = self.getSimulationTool()
     # for bank account
@@ -161,7 +161,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
       payment=self.bank_account_1.getRelativeUrl()), 50000.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(
       payment=self.bank_account_1.getRelativeUrl()), 50000.0)
-    # for agency 
+    # for agency
     self.assertEqual(self.simulation_tool.getCurrentInventory(
       payment=self.site.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(

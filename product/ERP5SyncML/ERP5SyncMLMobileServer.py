@@ -144,7 +144,7 @@ def getClientUrl(text):
   # namspace
   client_url = '%s' % document.xpath('string(//SyncHdr/Source/LocURI)')
   # client_url = '%s' % document.xpath('string(//syncml:SyncHdr/syncml:Source/syncml:LocURI)', namespaces={'syncml':'SYNCML:SYNCML1.2'})
-  return client_url 
+  return client_url
 
 def sendResponse(text, to_url, client_url):
   """
@@ -182,11 +182,11 @@ def sendResponse(text, to_url, client_url):
 
 def main():
   sock.bind((Host,Port))
-  # we just listen to one and unique connection 
+  # we just listen to one and unique connection
   sock.listen(1)
 
   text = ''
-  # the script stop here until a client connect to him 
+  # the script stop here until a client connect to him
   print 'wait for a client connection...'
   client, address = sock.accept()
   print "the host ",address," is connected."
@@ -194,7 +194,7 @@ def main():
     print('\n\nwait for message ...')
     msg = client.recv(1024) # we receive 1024 caracter max
     if not msg: # if we receive nothing
-      break 
+      break
     elif not msg.startswith('POST'):
       text = text + msg
       if text.endswith('\x01\x01'):
@@ -215,7 +215,7 @@ def main():
               "Content-Type: application/vnd.syncml+wbxml",
               ))
           message = "%s%s%s%s" % (head, CRLF, CRLF, response)
-          #here it's necessary to have 2 CRLF, for more details 
+          #here it's necessary to have 2 CRLF, for more details
           #see http://www.w3.org/Protocols/rfc2616/rfc2616.html
           client.send(message)
         text=''

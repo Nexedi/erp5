@@ -96,7 +96,7 @@ class FunctionalTestRunner:
     except getopt.GetoptError, msg:
       self.usage(sys.stderr, msg)
       sys.exit(2)
-  
+
     for opt, arg in opts:
       if opt in ("-s", "--stdout"):
         self.stdout = 1
@@ -126,12 +126,12 @@ class FunctionalTestRunner:
         self.email_subject = arg
       elif opt == "--xvfb_display":
         self.xvfb_display = arg
-  
+
     if not self.stdout:
       self.send_mail = 1
-  
+
     self.portal_url = "http://%s:%d/%s" % (self.host, self.port, self.portal_name)
-  
+
   def openUrl(self, url):
     # Send Accept-Charset headers to activate the UnicodeConflictResolver
     # (imitating firefox 3.5.9 here)
@@ -146,7 +146,7 @@ class FunctionalTestRunner:
     file_content = f.read()
     f.close()
     return file_content
-  
+
   def main(self):
     self.setUp()
     self.launchFuntionalTest()
@@ -169,15 +169,15 @@ class FunctionalTestRunner:
           os.kill(xvfb_pid, signal.SIGTERM)
         if firefox_pid:
           os.kill(firefox_pid, signal.SIGTERM)
-  
+
   def startZope(self):
     os.environ['erp5_save_data_fs'] = "1"
     os.system('%s/bin/zopectl start' % self.instance_home)
     sleep(2) # ad hoc
-  
+
   def stopZope(self):
     os.system('%s/bin/zopectl stop' % self.instance_home)
-  
+
   def runXvfb(self, xvfb_display):
     pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb',
                      '-fbdir' , '%s' % self.xvfb_fbdir  ,
@@ -236,7 +236,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     pref_file = open(os.path.join(self.profile_dir, 'prefs.js'), 'w')
     pref_file.write(prefs_js)
     pref_file.close()
-  
+
   def runFirefox(self,xvfb_display):
     prefs_js = self.getPrefJs(self.host, self.port)
     self.prepareFirefox(prefs_js)
@@ -259,7 +259,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     else:
       # Zelenium 0.8+ or later
       url_string = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s" % (self.portal_url, self.portal_url, self.user, self.password)
-  
+
     if self.run_only:
       url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % self.run_only, 1)
     pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox",
@@ -268,7 +268,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     os.environ['MOZ_NO_REMOTE'] = '0'
     print 'firefox : %d' % pid
     return pid
-  
+
   def getStatus(self):
     try:
       status = self.openUrl('%s/portal_tests/TestTool_getResults'
@@ -279,7 +279,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
       else:
         raise
     return status
-  
+
   def setPreference(self):
     conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                                 'localhost')
@@ -291,7 +291,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
                     (self.portal_url, self.user, self.password,
                       bt5_dir_list, conversion_server_hostname,
                       conversion_server_port))
-  
+
 
   def unsubscribeFromTimerService(self):
     urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
@@ -321,7 +321,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     error_titles = [re.compile('\s+').sub(' ', x).strip()
                     for x in error_title_re.findall(file_content)]
     revision = self.getSvnRevision()
-  
+
     subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
                 % (self.email_subject, revision, passes, failures)
     summary = """

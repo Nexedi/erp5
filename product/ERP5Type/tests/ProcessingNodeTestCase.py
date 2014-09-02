@@ -235,7 +235,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         message_count = len(message_list)
         # This prevents an infinite loop.
         count -= 1
-        if count == 0 or (message_count and set([x.processing_node for x in 
+        if count == 0 or (message_count and set([x.processing_node for x in
               message_list]).issubset(set([-2, -3]))):
           # We're about to raise RuntimeError, but maybe we've reached
           # the stop condition, so check just once more:

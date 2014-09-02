@@ -126,7 +126,7 @@ class EmailDocument(TextDocument):
   """
     EmailDocument is a File which stores its metadata in a form which
     is similar to a TextDocument.
-    A Text Document which stores raw HTML and can 
+    A Text Document which stores raw HTML and can
     convert it to various formats.
   """
 
@@ -222,7 +222,7 @@ class EmailDocument(TextDocument):
     """
     result = {}
     for (name, value) in self._getMessage().items():
-      try: 
+      try:
         decoded_header = decode_header(value)
       except HeaderParseError, error_message:
         decoded_header = ()
@@ -265,7 +265,7 @@ class EmailDocument(TextDocument):
         if filename:
           kw['filename'] = filename
         else:
-          content_disposition = kw.get('Content-Disposition', 
+          content_disposition = kw.get('Content-Disposition',
                                            kw.get('Content-disposition', None))
           prefix = 'part_'
           if content_disposition:
@@ -389,7 +389,7 @@ class EmailDocument(TextDocument):
       The In-Reply-To is considered here as the reference
       of the thread on the side of a former sender (destination)
 
-      This is a hack which can be acceptable since 
+      This is a hack which can be acceptable since
       the reference of an email is shared.
     """
     if not self.hasData():
@@ -415,7 +415,7 @@ class EmailDocument(TextDocument):
     subject = subject.replace('\r', '')
     subject = subject.replace('\n', '')
     return subject
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
   def getStartDate(self, default=_MARKER):
     """
@@ -474,7 +474,7 @@ class EmailDocument(TextDocument):
   def getContentType(self, default=_MARKER):
     """
     Returns the format of the email (text or html).
-    
+
     TODO: add support for legacy objects
     """
     if not self.hasFile():
@@ -521,7 +521,7 @@ class EmailDocument(TextDocument):
   security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
   def hasBaseData(self):
     """
-      Since there is no need to convert to a base format, we consider that 
+      Since there is no need to convert to a base format, we consider that
       we always have the base format data if and only is we have
       some text defined or a file.
     """

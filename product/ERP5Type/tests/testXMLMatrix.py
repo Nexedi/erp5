@@ -267,7 +267,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(catalog.hasPath(matrix.getPath()))
     self.assertTrue(catalog.hasPath(cell1_path))
     self.assertTrue(catalog.hasPath(cell2_path))
-  
+
     # now set other ranges
     cell_range = [['0', '2'], ['a', ], ['Z']]
     matrix.setCellRange(*cell_range, **kwd)
@@ -281,7 +281,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(catalog.hasPath(matrix.getPath()))
     self.assertFalse(catalog.hasPath(cell1_path))
     self.assertFalse(catalog.hasPath(cell2_path))
-    
+
     # create cells in this new range
     cell1 = matrix.newCell(*['0', 'a', 'Z'], **kwd)
     cell1_path = cell1.getPath()
@@ -311,7 +311,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
 
     cell = matrix.newCell(*['1',], **kwd)
     self.tic()
-    
+
     cell_range = [['1', ], ['a', ]]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(0, len(matrix.getCellValueList(**kwd)))
@@ -328,7 +328,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     for place in cartesianProduct(cell_range):
       matrix.newCell(*place, **kwd)
     self.tic()
-    
+
     cell_range = [['1', ]]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(0, len(matrix.getCellValueList(**kwd)))
@@ -345,7 +345,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       matrix.newCell(*place, **kwd)
     cell = matrix.getCell(*['1', 'a'], **kwd)
     self.tic()
-    
+
     cell_range = [['1', '2', ], ['a']]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
@@ -367,7 +367,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       matrix.newCell(*place, **kwd)
     cell = matrix.getCell(*['1', 'a'], **kwd)
     self.tic()
-    
+
     cell_range = [['1', ], ['a']]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
@@ -390,7 +390,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
       matrix.newCell(*place, **kwd)
     cell = matrix.getCell(*['1', 'a'], **kwd)
     self.tic()
-    
+
     cell_range = [['1', ], ['a', 'b']]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(1, len(matrix.getCellValueList(**kwd)))
@@ -412,12 +412,12 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
 
     for place in cartesianProduct(cell_range):
       matrix.newCell(*place, **kwd)
-    
+
     cell = matrix.getCell('2', 'b', **kwd)
     self.assertEqual('quantity_1_1', cell.getId())
     cell.setTitle('This one')
     self.tic()
-    
+
     cell_range = [['2', '3', ], ['b', 'c',]]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
@@ -426,13 +426,13 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell = matrix.getCell('2', 'b', **kwd)
     self.assertEqual('quantity_1_1', cell.getId())
     self.assertEqual('This one', cell.getTitle())
-  
+
     self.tic()
 
     # the cell is still in catalog
     self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
-    
+
 
 def test_suite():
   suite = unittest.TestSuite()

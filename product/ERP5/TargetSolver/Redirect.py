@@ -37,8 +37,8 @@ class Redirect(TargetSolver):
 
   def solve(self, simulation_movement, new_target):
     """
-      Updates all sources and destinations to new values defined 
-      in self by mapping 
+      Updates all sources and destinations to new values defined
+      in self by mapping
         source -> target_source
         destination -> target_destination
         source_section -> target_source_section

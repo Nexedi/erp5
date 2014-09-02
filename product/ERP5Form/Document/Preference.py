@@ -53,7 +53,7 @@ class Preference( Folder ):
   meta_type       = 'ERP5 Preference'
   portal_type     = 'Preference'
   add_permission  = Permissions.AddPortalContent
-  
+
   # Declarative properties
   property_sheets = \
                     ( PropertySheet.Base
@@ -61,7 +61,7 @@ class Preference( Folder ):
                     , PropertySheet.DublinCore
                     , PropertySheet.Preference
                     )
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

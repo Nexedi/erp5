@@ -49,9 +49,9 @@ class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController,
         quantity(DL) * delivery_ratio(SM)
   where SM is a simulation movement and DL a delivery line.
 
-  During the expand process, parent applied rules 
+  During the expand process, parent applied rules
   may define the quantity of the simulation movement,
-  but not the delivery_error. 
+  but not the delivery_error.
 
   During the build process, delivery_error can be used
   to store on the simulation movement amounts related
@@ -98,25 +98,25 @@ class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController,
 
   def isCompleted():
     """Returns True if the simulation state of this simulation movement
-    is considered as completed by the business path which this simulation 
+    is considered as completed by the business path which this simulation
     movement relates to through causality base category.
 
     NOTE: simulation movements can be completed (ex. in started state) but
     not yet frozen (ex. in delivered state). This is the case for example
-    of accounting movements which are completed as soon as they are posted 
+    of accounting movements which are completed as soon as they are posted
     (to allow next steps in the business process) but can still be modified
     are thus not yet frozen.
     """
 
   def isFrozen():
     """Returns True if the simulation state of this simulation movement
-    is considered as frozen by the business path which this simulation 
+    is considered as frozen by the business path which this simulation
     movement relates to through causality base category.
 
     Frozen means that simulation movement cannot be modified anylonger.
 
     NOTE: simulation movements can be frozen (ex. in stopped state) but
-    not yet completed (ex. in delivered state). This is the case of 
+    not yet completed (ex. in delivered state). This is the case of
     sales purchase movements which are frozen as soon they are received
     because they should not be modified any longer but are only completed
     once some extra steps bring them to delivered state, thus allowing the

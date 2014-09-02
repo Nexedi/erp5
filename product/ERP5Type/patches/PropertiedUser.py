@@ -24,7 +24,7 @@ try:
                                               _what_not_even_god_should_do
 except ImportError:
   PropertiedUser = None
-  
+
 def getRolesInContext( self, object ):
 
     """ Return the list of roles assigned to the user.
@@ -44,7 +44,7 @@ def getRolesInContext( self, object ):
     principal_ids = list( group_ids )
     principal_ids.insert( 0, user_id )
 
-    local ={} 
+    local ={}
     object = aq_inner( object )
 
     while 1:
@@ -61,7 +61,7 @@ def getRolesInContext( self, object ):
             for principal_id in principal_ids:
                 for role in dict.get( principal_id, [] ):
                     local[ role ] = 1
-                    
+
         # patch by Klaus for LocalRole blocking
         _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
         if _getAcquireLocalRoles is not None:
@@ -200,7 +200,7 @@ def allowed(self, object, object_roles=None ):
                             return 1
 
                         return 0
-                    
+
         # patch by Klaus for LocalRole blocking
         _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
         if _getAcquireLocalRoles is not None:

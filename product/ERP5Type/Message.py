@@ -41,7 +41,7 @@ if 1: # BBB
 
   class GlobalTranslationService(object):
     """ GlobalTranslationService replacement """
-    # inspired by the old Localizer GlobalTranslationService 
+    # inspired by the old Localizer GlobalTranslationService
 
     def getTranslateMethod(self, context, domain):
         """Returns either the translate() method of an appropriate Localizer
@@ -69,7 +69,7 @@ if 1: # BBB
 
     def translate(self, domain, msgid, context=None, **kw):
         translate = self.getTranslateMethod(context, domain)
-        
+
         # For zope.i18n, the 'context' of a translation request is actually the
         # an IBrowserRequest, for languate negotiation (see, for instance,
         # Products.CMFPlone.TranslationServiceTool). The new localizer

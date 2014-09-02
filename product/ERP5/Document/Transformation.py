@@ -184,7 +184,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
                         omit_individual_variation=omit_individual_variation,
                         display_base_category=display_base_category,**kw)
         else:
-          # No resource is define on transformation. 
+          # No resource is define on transformation.
           # We want to display content of base categories
           result = self.portal_categories.getCategoryChildTitleItemList(
                          base_category_list, base=1, display_none_category=0)

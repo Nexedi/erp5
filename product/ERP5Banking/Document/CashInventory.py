@@ -59,7 +59,7 @@ class CashInventory(Inventory, BankingOperation):
 
     security.declarePublic('immediateReindexObject')
     def immediateReindexObject(self, **kw):
-      """Call the Cash Inventory immediateReindexObject by 
+      """Call the Cash Inventory immediateReindexObject by
       setting another kind of temp delivery line.
       """
       from Products.ERP5Type.Document import newTempCashDeliveryLine

@@ -1211,7 +1211,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Just wait for the active object to be abandoned.
     self.flushAllActivities(silent=1, loop_size=100)
     self.assertEqual(len(activity_tool.getMessageList()), 1)
-    self.assertEqual(activity_tool.getMessageList()[0].processing_node, 
+    self.assertEqual(activity_tool.getMessageList()[0].processing_node,
                       INVOKE_ERROR_STATE)
 
     # Make sure that persistent objects are not present in the connection
@@ -1462,7 +1462,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
 
-    portal = self.getPortal()    
+    portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
     # Defined a group method
     foobar_list = []
@@ -1471,7 +1471,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       for obj, args, kw, _ in object_list:
         obj.foobar = getattr(obj.aq_base, 'foobar', 0) + kw.get('number', 1)
     from Products.ERP5Type.Core.Folder import Folder
-    Folder.setFoobar = setFoobar    
+    Folder.setFoobar = setFoobar
 
     def getFoobar(self):
       return (getattr(self,'foobar',0))
@@ -1557,7 +1557,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(0, len(messages_for_o1))
     for m in messages_for_o1:
       self.assertEqual(m.activity_kw.get('tag'), 'The Tag')
-  
+
   def test_82_LossOfVolatileAttribute(self, quiet=0, run=run_all_test):
     """
     Test that the loss of volatile attribute doesn't loose activities
@@ -1730,7 +1730,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       pass
     invoke = activity_tool.__class__.invoke
     invokeGroup = activity_tool.__class__.invokeGroup
-    try: 
+    try:
       activity_tool.__class__.invoke = modifySQLAndFail
       activity_tool.__class__.invokeGroup = modifySQLAndFail
       Organisation.dummy = dummy
@@ -1746,7 +1746,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       delattr(Organisation, 'dummy')
       activity_tool.__class__.invoke = invoke
       activity_tool.__class__.invokeGroup = invokeGroup
-  
+
   def test_87_ActivityToolInvokeFailureDoesNotCommitCMFActivitySQLConnectionSQLQueue(self, quiet=0, run=run_all_test):
     """
       Check that CMFActivity SQL connection is rollback if activity_tool.invoke raises.
@@ -1968,7 +1968,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryUserNotificationRaise('SQLQueue')
-    
+
   def test_94_ActivityToolCommitFailureDoesNotCommitCMFActivitySQLConnectionSQLDict(self, quiet=0, run=run_all_test):
     """
       Check that CMFActivity SQL connection is rollback if transaction commit raises.
@@ -2007,7 +2007,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def fake_commit(*args, **kw):
       transaction.get().__class__.commit = commit
       raise KeyError, 'always fail'
-    try: 
+    try:
       Organisation.modifySQL = modifySQL
       obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
       group_method_id = '%s/modifySQL' % (obj.getPath(), )
@@ -2023,7 +2023,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(activity_tool.countMessage(method_id='dummy_activity'), 0)
     finally:
       delattr(Organisation, 'modifySQL')
-  
+
   def test_95_ActivityToolCommitFailureDoesNotCommitCMFActivitySQLConnectionSQLQueue(self, quiet=0, run=run_all_test):
     """
       Check that CMFActivity SQL connection is rollback if activity_tool.invoke raises.
@@ -2461,7 +2461,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(o.absolute_url(),
           'http://test.erp5.org:9080/virtual_root/test_obj')
       o.activate().checkAbsoluteUrl()
-      
+
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
@@ -2588,7 +2588,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # release activity_lock            wait for activity_lock   internal wait
     # wait for activity_thread         (finish)                 internal wait
     # wait for process_shutdown_thread None                     (finish)
-    # 
+    #
     # This test only checks that:
     # - activity tool can exit between 2 processable activity batches
     # - activity tool won't process activities after process_shutdown was called
@@ -2707,7 +2707,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_active_object_hasActivity_does_not_catch_exceptions(self):
     """
     Some time ago, hasActivity was doing a silent try/except, and this was
-    a possible disaster for some projects. Here we make sure that if the 
+    a possible disaster for some projects. Here we make sure that if the
     SQL request fails, then the exception is not ignored
     """
     active_object = self.portal.organisation_module.newContent(
@@ -2751,7 +2751,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
       for i in range(10):
         o.activate(activity='SQLQueue').dummy_counter()
-        
+
       self.flushAllActivities()
       self.assertEqual(call_count, 10)
     finally:
@@ -2776,7 +2776,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         method_name = 'dummy_counter_%s' % i
         setattr(Organisation, method_name, dummy_counter)
         getattr(o.activate(activity='SQLDict'), method_name)()
-        
+
       self.flushAllActivities()
       self.assertEqual(call_count, 10)
     finally:
@@ -2887,7 +2887,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       Test behaviour of PlacelessDefaultReindexParameters.
     """
     portal = self.portal
-    
+
     # Make a new Person object to make sure that the portal type
     # is migrated to an instance of a portal type class, otherwise
     # the portal type may generate an extra active object.
@@ -2897,10 +2897,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     original_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
     if original_reindex_parameters is None:
       original_reindex_parameters = {}
-    
-    tag = 'SOME_RANDOM_TAG'      
+
+    tag = 'SOME_RANDOM_TAG'
     activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
-    activate_kw['tag'] = tag 
+    activate_kw['tag'] = tag
     portal.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, \
                                                 **original_reindex_parameters)
     current_default_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
@@ -2913,12 +2913,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(1, portal.portal_activities.countMessageWithTag(tag))
     self.tic()
     self.assertEqual(0, portal.portal_activities.countMessageWithTag(tag))
-    
+
     # restore originals ones
     portal.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
     person = portal.person_module.newContent(portal_type='Person')
     # .. now no messages with this tag should apper
-    self.assertEqual(0, portal.portal_activities.countMessageWithTag(tag))    
+    self.assertEqual(0, portal.portal_activities.countMessageWithTag(tag))
 
   def TryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
     activity_tool = self.getActivityTool()
@@ -2937,7 +2937,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self._catch_log_errors()
       obj.activate(activity=activity, priority=6).failingMethod()
       self.commit()
-      self.flushAllActivities(silent=1, loop_size=100)   
+      self.flushAllActivities(silent=1, loop_size=100)
       message, = activity_tool.getMessageList()
       self.commit()
       for log_record in self.logged:
@@ -2970,7 +2970,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       message = '\nCheck the error is saved on event log even if the mail notification is not sent (SQLQueue)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLQueue') 
+    self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLQueue')
 
   def TryUserMessageContainingNoTracebackIsStillSent(self, activity):
     portal = self.getPortalObject()
@@ -3002,7 +3002,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.manageCancel(message.object_path, message.method_id)
     finally:
       Message.notifyUser = original_notifyUser
-      delattr(Organisation, 'failingMethod')    
+      delattr(Organisation, 'failingMethod')
 
   def test_120_sendMessageWithNoTracebackWithSQLQueue(self, quiet=0, run=run_all_test):
     if not run: return
@@ -3019,7 +3019,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryUserMessageContainingNoTracebackIsStillSent('SQLDict')
-  
+
   def TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises(self, activity):
     # Make sure that no active object is installed.
     activity_tool = self.getPortal().portal_activities
@@ -3056,7 +3056,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       for log_record in self.logged:
         if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
-          type, value, trace = log_record.exc_info     
+          type, value, trace = log_record.exc_info
       self.assertTrue(activity_unit_test_error is value)
     finally:
       SiteErrorLog.raising = original_raising
@@ -3100,7 +3100,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           conn.db().invalidate({oid: tid})
         except TypeError:
           conn.db().invalidate(tid, {oid: tid})
-        
+
       activity_tool.__class__.doSomething = doSomething
       activity_tool.activate(activity='SQLQueue').doSomething()
       self.commit()

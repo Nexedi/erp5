@@ -149,7 +149,7 @@ class RamCache(BaseCache):
           pass
 
   def getCachePluginTotalMemorySize(self):
-    """ Calculate total RAM memory size of cache plugin. 
+    """ Calculate total RAM memory size of cache plugin.
         This function depends on mxBase python module:
         http://www.egenix.com/products/python/mxBase/
         """
@@ -160,4 +160,4 @@ class RamCache(BaseCache):
       value_size = calcPythonObjectMemorySize(value)
       total_size += value_size
       cache_keys_total_size[key[1]] = value_size
-    return total_size, cache_keys_total_size      
+    return total_size, cache_keys_total_size
