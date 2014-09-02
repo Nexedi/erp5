@@ -1,3 +1,8 @@
+Implicit Item Movement | edit_workflow
+Implicit Item Movement | implicit_item_movement_workflow
+Implicit Item Movement | movement_resource_interaction_workflow
+Implicit Item Movement | pricing_interaction_workflow
+Implicit Item Movement | trade_matrix_workflow
 Item | edit_workflow
 Item | item_workflow
 Service Report | edit_workflow

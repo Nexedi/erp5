@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Implicit Item Movement</type>
+  <workflow>edit_workflow, implicit_item_movement_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
   <type>Item</type>
   <workflow>edit_workflow, item_workflow</workflow>
  </chain>

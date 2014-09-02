@@ -1,3 +1,6 @@
+2014-09-02 Gabriel
+* Initial release of Implicit Item Movement. Simple movements that can be used to have a movement from nowhere to the node where this item starts to be tracked
+
 2010-07-08 tatuya
 * Fix a issue that items can not be created with more than two dimesion variations at the first input.
 
