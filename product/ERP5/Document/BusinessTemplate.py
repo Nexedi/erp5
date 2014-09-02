@@ -862,6 +862,10 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
       Backup the object in portal trash if necessery and return its subobjects
     """
+    if "portal_integrations" in container_path and "module" in object_id:
+      # XXX It is impossible to backup integration module as
+      # it will call the request and try to get remote data
+      return
     p = self.getPortalObject()
     if trashbin is None: # must return subobjects
       subobject_dict = {}
