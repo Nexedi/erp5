@@ -85,15 +85,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>quantity_unit_title</string>
+                          <string>quantity_unit_translated_title</string>
                           <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
-                          <string>product_line_title</string>
+                          <string>product_line_translated_title</string>
                           <string>Product Line</string>
                         </tuple>
                         <tuple>
-                          <string>base_contribution_title</string>
+                          <string>base_contribution_translated_title</string>
                           <string>Base Contribution</string>
                         </tuple>
                         <tuple>
@@ -109,8 +109,20 @@
                           <string>Default Sale Price</string>
                         </tuple>
                         <tuple>
-                          <string>use</string>
+                          <string>purchase_supply_line_source_account</string>
+                          <string>Client Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_source_account</string>
+                          <string>Supplier Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>use_translated_title</string>
                           <string>Use</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -245,10 +257,6 @@
                           <string>Default Sale Price</string>
                         </tuple>
                         <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -306,10 +314,6 @@
                         <tuple>
                           <string>sale_supply_line_base_price</string>
                           <string>Default Sale Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
