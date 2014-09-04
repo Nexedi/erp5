@@ -102,12 +102,13 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
-      """
+      """To avoid duplicate docstring. Please read movement interface."""
       return self.getParentValue().isAccountable() and (not self.hasCellContent())
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                      'isMovingItem')
+    def isMovingItem(self, item):
+      return self.isAccountable()
 
     def _getTotalPrice(self, default=0.0, context=None, fast=0):
       """
@@ -209,6 +210,13 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
       """
       portal_type = self.getPortalMovementTypeList()
       return len(self.contentValues(filter={'portal_type': portal_type})) == 0
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
+    def getMovedItemUidList(self):
+      """This method returns an uid list of items
+      """
+      return [item.getUid() for item in self.getAggregateValueList() \
+          if self.isMovingItem(item)]
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id='movement'):

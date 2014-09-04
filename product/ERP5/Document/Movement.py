@@ -213,6 +213,22 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   def isMovement(self):
     return 1
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  def isAccountable(self):
+    return True
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                      'isMovingItem')
+  def isMovingItem(self, item):
+    return False
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
+  def getMovedItemUidList(self):
+    """This method returns an uid list of items
+    """
+    return [item.getUid() for item in self.getAggregateValueList() \
+      if self.isMovingItem(item)]
+
   # Pricing methods
   # _getPrice is defined in the order / delivery
   # Pricing mehod

@@ -254,3 +254,16 @@ class IMovement(IProductionMovement, IArrowBase):
     Returns True if this movement should be indexed in the
     stock table of the catalog, False else.
     """
+
+  def isAccountable():
+    """
+    Returns True if this movement impacts the stock levels of source and
+    destination.
+    """
+
+  def isMovingItem(item):
+    """
+    Returns True if this movement physically move the item from a tracking
+    point of view.
+    """
+
