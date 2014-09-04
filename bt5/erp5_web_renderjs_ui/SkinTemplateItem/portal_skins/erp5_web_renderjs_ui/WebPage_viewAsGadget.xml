@@ -68,9 +68,7 @@ response.setHeader("X-Frame-Options", "SAMEORIGIN")\n
 response.setHeader("X-Content-Type-Options", "nosniff")\n
 \n
 # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget\'s code\n
-# XXX: allow openstreetmap\n
-# response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' data:; media-src \'self\'; connect-src \'self\'; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:")\n
-response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org data:; media-src \'self\'; connect-src \'self\' https://nominatim.openstreetmap.org ; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:")\n
+response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' data:; media-src \'self\'; connect-src \'self\'; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:")\n
 \n
 \n
 response.setHeader(\'Content-Type\', \'text/html\')\n
