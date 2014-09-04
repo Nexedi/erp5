@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts20671633.65</string> </value>
+            <value> <string>ts09819354.83</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -25,21 +25,21 @@
         <item>
             <key> <string>data</string> </key>
             <value> <string>$(document).ready(function(){\n
-    var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\'\n
-    var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\'\n
-    if (jQuery("*[name=\'field_your_test\']").length==0){\n
+    var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\';\n
+    var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\';\n
+    if (jQuery("*[name=\'field_your_test\']").length===0){\n
       // not in proper page no need to continue\n
       return ;\n
     }\n
 \n
-    var test = jQuery("*[name=\'field_your_test\']")[0].defaultValue\n
-    var run_only = jQuery("*[name=\'field_your_run_only\']")[0].defaultValue\n
-    var debug = 0\n
-    var verbose = 0\n
-    if (jQuery("*[name=\'field_your_debug\']")[0].checked == true) {\n
+    var test = jQuery("*[name=\'field_your_test\']")[0].defaultValue;\n
+    var run_only = jQuery("*[name=\'field_your_run_only\']")[0].defaultValue;\n
+    var debug = 0;\n
+    var verbose = 0;\n
+    if (jQuery("*[name=\'field_your_debug\']")[0].checked === true) {\n
       debug = 1;\n
     }\n
-    if (jQuery("*[name=\'field_your_verbose\']")[0].checked == true) {\n
+    if (jQuery("*[name=\'field_your_verbose\']")[0].checked === true) {\n
       verbose = 1;\n
     }\n
     jQuery("*[name=\'field_your_text_output\']")[0].defaultValue = "";\n
@@ -52,35 +52,35 @@
           verbose:verbose,\n
           }, \n
           function(data) {\n
-        continue_loop = false\n
+        continue_loop = false;\n
     });\n
     var last_call = false;\n
     var data_size = 0;\n
-    var data_textarea = undefined;\n
+    var data_textarea;\n
     get_data = function() {\n
       return $.get(my_url_read_test,\n
               {position : data_size},\n
               function(data){\n
-                if ( data.length != undefined ) {\n
+                if ( data.length !== undefined ) {\n
                   data_size = data_size + data.length;\n
                   data_textarea = jQuery("*[name=\'field_your_text_output\']")[0];\n
                   data_textarea.defaultValue += data;\n
                   data_textarea.scrollTop = data_textarea.scrollHeight;\n
                 }\n
-                if (continue_loop == true) {\n
-                  setTimeout("get_data()",1000);\n
+                if (continue_loop === true) {\n
+                  setTimeout(get_data,1000);\n
                 }\n
-                if (continue_loop == false) {\n
-                  if (last_call == false) {\n
+                if (continue_loop === false) {\n
+                  if (last_call === false) {\n
                     last_call = true;\n
-                    setTimeout("get_data()",1000);\n
+                    setTimeout(get_data,1000);\n
                   }\n
                 }\n
                 \n
               });\n
-    }\n
+    };\n
     var x=0;\n
-    get_data()\n
+    get_data();\n
 \n
 });</string> </value>
         </item>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1938</int> </value>
+            <value> <int>1934</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
