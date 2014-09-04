@@ -277,6 +277,9 @@ class Test(ERP5TypeTestCase):
     debug=boolean        Invoke debugger on errors / failures.
     verbose=boolean      Display more information when running tests
     """
+    from StringIO import StringIO
+    global global_stream
+    global_stream = StringIO()
     test_list = self._getCommaSeparatedParameterList(test_list)
     if not test_list:
       # no test to run
@@ -288,9 +291,6 @@ class Test(ERP5TypeTestCase):
     run_only = self._getCommaSeparatedParameterList(run_only)
     verbosity = verbose and 2 or 1
 
-    from StringIO import StringIO
-    global global_stream
-    global_stream = StringIO()
     from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
     try:
       result = runLiveTest(test_list,

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts09819354.83</string> </value>
+            <value> <string>ts09819502.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -80,7 +80,10 @@
               });\n
     };\n
     var x=0;\n
-    get_data();\n
+    // Not perfect, but the timeout should clearly reduce risk of getting empty result\n
+    // while the runUnitTest command had no time yet to reset global variable\n
+    // on ERP5 side\n
+    setTimeout(get_data,2000);\n
 \n
 });</string> </value>
         </item>
@@ -90,7 +93,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1934</int> </value>
+            <value> <int>2134</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
