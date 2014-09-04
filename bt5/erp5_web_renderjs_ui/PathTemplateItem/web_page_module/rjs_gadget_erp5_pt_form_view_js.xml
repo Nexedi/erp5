@@ -152,10 +152,11 @@
     .declareMethod(\'render\', function (options) {\n
       var erp5_document = options.erp5_document,\n
         action_list = erp5_document._links.action_workflow || [],\n
+        fragment = document.createDocumentFragment(),\n
         form_gadget = this,\n
-        i,\n
-        promise_list = [];\n
-\n
+        promise_list = [],\n
+        i;\n
+  \n
       for (i = 0; i < action_list.length; i += 1) {\n
         promise_list.push(this.whoWantToDisplayThisPage({\n
           name: action_list[i].name\n
@@ -168,13 +169,15 @@
       return new RSVP.Queue()\n
         .push(function () {\n
           return RSVP.all([\n
+            form_gadget.getDeclaredGadget("erp5_tab"),\n
             form_gadget.getDeclaredGadget("erp5_form"),\n
             RSVP.all(promise_list)\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           var form_options = options.erp5_form || {},\n
-            all_result = all_gadget[1],\n
+            tab_options = options.erp5_tag || {},\n
+            all_result = all_gadget[2],\n
             actionlist = [],\n
             class_list,\n
             i;\n
@@ -182,6 +185,11 @@
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
+          \n
+          tab_options.erp5_document = options.erp5_document;\n
+          tab_options.form_definition = options.form_definition;\n
+          tab_options.view = options.view;\n
+          tab_options.action_view = options.action_view;\n
 \n
           for (i = 0; i < all_result.length; i += 1) {\n
             switch (i) {\n
@@ -201,12 +209,14 @@
               link: all_result[i],\n
             });\n
           }\n
+          form_gadget.__element.appendChild(fragment);\n
           form_gadget.__element.querySelector("div.ui-controlgroup-controls")\n
             .innerHTML = workflow_template({actionlist: actionlist});\n
-\n
+          \n
 \n
           return RSVP.all([\n
-            all_gadget[0].render(form_options),\n
+            all_gadget[0].render(tab_options),\n
+            all_gadget[1].render(form_options)\n
           ]);\n
         });\n
 \n
@@ -373,7 +383,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.54729.48588.29371</string> </value>
+                <value> <string>937.22215.35138.15906</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -391,7 +401,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407836873.52</float>
+                        <float>1409818069.12</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

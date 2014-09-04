@@ -129,6 +129,11 @@
 \n
   </head>\n
   <body>\n
+  \n
+    <div data-gadget-url="gadget_erp5_tab_list.html"\n
+              data-gadget-scope="erp5_tab"\n
+               data-gadget-sandbox="public">\n
+    </div>\n
 \n
     <!-- XXX action, method, fieldset -->\n
     <form class="save_form">\n
@@ -283,7 +288,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.54726.55391.8362</string> </value>
+                <value> <string>937.22212.34746.7150</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -301,7 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407836841.44</float>
+                        <float>1409817872.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -199,7 +199,6 @@
         ]);\n
       })\n
       .push(function (result) {\n
-        var content_list = [];\n
 \n
         sub_options = options.form_gadget || {};\n
         sub_options.erp5_document = result[0].data;\n
@@ -210,15 +209,11 @@
        return RSVP.all([\n
          gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
            scope: "form_gadget"\n
-         }),\n
-         gadget.declareGadget("gadget_erp5_tab_list.html", {\n
-          scope: "erp5_tab"\n
          })\n
        ]);\n
       })\n
       .push(function (gadget_list) {\n
         var form_gadget = gadget_list[0],\n
-          tab_gadget = gadget_list[1],\n
           new_content_action = sub_options.erp5_document._links.action_object_new_content_action,\n
           plus_queue,\n
           new_element;\n
@@ -240,8 +235,6 @@
         }\n
 \n
         return RSVP.all([\n
-          tab_gadget.render(sub_options),\n
-          tab_gadget.getElement(),\n
           form_gadget.render(sub_options),\n
           form_gadget.getElement(),\n
           gadget.props.breadcrumb_gadget.render(breadcrumb_options),\n
@@ -564,7 +557,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.8167.39223.50892</string> </value>
+                <value> <string>937.22192.46889.64802</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -582,7 +575,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1408975361.84</float>
+                        <float>1409819356.02</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

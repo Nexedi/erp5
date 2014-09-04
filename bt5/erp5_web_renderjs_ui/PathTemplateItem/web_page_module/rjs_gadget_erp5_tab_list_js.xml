@@ -147,7 +147,8 @@
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-      var nav_element = this.props.element.querySelector(".grid-container"),\n
+      var tab_gadget = this, \n
+        nav_element = tab_gadget.props.element.querySelector(".grid-container"),\n
         erp5_document = options.erp5_document,\n
         view_list = erp5_document._links[options.action_view],\n
         nav_html = \'<nav data-role="navbar"><ul class="grid-items">\',\n
@@ -190,6 +191,7 @@
           nav_html += \'</ul></nav>\';\n
           nav_element.innerHTML = nav_html;\n
 \n
+          return tab_gadget;\n
         });\n
 \n
     });\n
@@ -331,7 +333,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.54906.24658.1911</string> </value>
+                <value> <string>937.690.6828.44612</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -349,7 +351,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407848815.35</float>
+                        <float>1409818434.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
