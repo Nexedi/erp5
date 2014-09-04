@@ -121,3 +121,12 @@ class AccountingTransactionLine(DeliveryLine):
     self._baseSetGroupingDate(value)
     self.reindexObject()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isMovingItem')
+  def isMovingItem(self, item):
+    """
+      We often like to aggregate items to Accounting Transaction Line
+      for traceability, but this movements does not physically move the item
+      to the destination of this account.
+    """
+    return False

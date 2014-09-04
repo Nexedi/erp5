@@ -120,7 +120,7 @@
                         </tuple>
                         <tuple>
                           <string>destination_section_title</string>
-                          <string>Delivered To</string>
+                          <string>Delivered to</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
