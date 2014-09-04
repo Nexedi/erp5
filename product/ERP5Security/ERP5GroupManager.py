@@ -177,6 +177,10 @@ class ERP5GroupManager(BasePlugin):
                   'could not get security groups from %s' %
                   generator_name,
                   error = sys.exc_info())
+      except:
+        LOG('ERP5GroupManager', WARNING,
+                  'could not get security groups mysql ?',
+                  error = sys.exc_info())
       finally:
         pass
       return tuple(security_group_list)
