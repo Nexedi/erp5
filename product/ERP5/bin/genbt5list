@@ -34,9 +34,8 @@
 import tarfile
 import os
 import sys
-import tempfile
-import shutil
 import cgi
+from cStringIO import StringIO
 
 property_list = '''
 title
@@ -47,19 +46,9 @@ license
 dependency_list
 provision_list
 copyright_list
-'''.strip().splitlines()
+'''.split()
 
 bt_title_path = os.path.join('bt', 'title')
-
-def info(message):
-  """Print a message to stdout.
-  """
-  sys.stdout.write(message)
-
-def err(message):
-  """Print a message to stderr.
-  """
-  sys.stderr.write(message)
 
 def readProperty(property_dict, property_name, property_file):
     try:
@@ -96,64 +85,56 @@ def readBusinessTemplateDirectory(dir):
 
   return property_dict
 
-def generateInformation(fd):
-  os.write(fd, '<?xml version="1.0"?>\n')
-  os.write(fd, '<repository>\n')
-
-  for file in sorted(os.listdir(os.getcwd())):
-    if file.endswith('.bt5'):
-      info('Reading %s... ' % (file,))
+def generateInformation(dir, info=id, err=None):
+  xml = StringIO()
+  xml.write('<?xml version="1.0"?>\n<repository>\n')
+  for name in sorted(os.listdir(dir)):
+    path = os.path.join(dir, name)
+    if name.endswith('.bt5'):
+      info('Reading %s... ' % name)
       try:
-        tar = tarfile.open(file, 'r:gz')
+        tar = tarfile.open(path, 'r:gz')
       except tarfile.TarError:
-        err('An error happened in %s; skipping\n' % (file,))
-        continue
+        if err:
+          err('An error happened in %s; skipping\n' % name)
+          continue
+        raise
       try:
         property_dict = readBusinessTemplate(tar)
       finally:
         tar.close()
-    elif os.path.isfile(os.path.join(file, bt_title_path)):
-      info('Reading Directory %s... ' % (file,))
-      property_dict = readBusinessTemplateDirectory(file)
+    elif os.path.isfile(os.path.join(path, bt_title_path)):
+      info('Reading Directory %s... ' % name)
+      property_dict = readBusinessTemplateDirectory(path)
     else:
       continue
-    os.write(fd, '  <template id="%s">\n' % (file,))
-    for property_id, property_value in sorted(property_dict.items()):
-      if type(property_value) is str:
-        os.write(fd, '    <%s>%s</%s>\n' % (
-              property_id, cgi.escape(property_value), property_id))
-      else:
-        for value in property_value:
-          os.write(fd, '    <%s>%s</%s>\n' % (
-                property_id, cgi.escape(value), property_id))
-    os.write(fd, '  </template>\n')
+    xml.write('  <template id="%s">\n' % name)
+    for k, v in sorted(property_dict.iteritems()):
+      for v in (v,) if type(v) is str else v:
+        xml.write('    <%s>%s</%s>\n' % (k, cgi.escape(v), k))
+    xml.write('  </template>\n')
     info('done\n')
-  os.write(fd, '</repository>\n')
+  xml.write('</repository>\n')
+  return xml
 
-def main():
-  if len(sys.argv) < 2:
-    dir_list = ['.']
-  else:
-    dir_list = sys.argv[1:]
+def main(dir_list=None, **kw):
+  if dir_list is None:
+    kw.setdefault('info', sys.stdout.write)
+    kw.setdefault('err', sys.stderr.write)
+    dir_list = sys.argv[1:] or '.'
 
-  cur_umask = os.umask(0666)
-  os.umask(cur_umask)
-  cwd = os.getcwd()
   for d in dir_list:
-    os.chdir(d)
+    bt5list = generateInformation(d, **kw).getvalue()
+    d = os.path.join(d, 'bt5list.new')
     try:
-      fd, path = tempfile.mkstemp(dir='.')
-      try:
-        generateInformation(fd)
-        os.fchmod(fd, 0666 & ~cur_umask)
-        os.rename(path, 'bt5list')
-      except:
-        os.remove(path)
-        raise
-      finally:
-        os.close(fd)
+      with open(d, 'wb') as f:
+        f.write(bt5list)
+      os.rename(d, d[:-4])
     finally:
-      os.chdir(cwd)
+      try:
+        os.remove(d)
+      except OSError:
+        pass
 
 if __name__ == "__main__":
   main()
