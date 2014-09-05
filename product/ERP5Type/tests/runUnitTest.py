@@ -156,8 +156,6 @@ When no unit test is specified, only activities are processed.
 sys.modules['Products.ERP5Type.tests.runUnitTest'] = sys.modules[__name__]
 
 
-static_dir_list = 'Constraint', 'Document', 'Extensions', 'PropertySheet'
-
 def getUnitTestFile():
   """returns the absolute path of this script.
   This is used by template tool to run unit tests."""
@@ -701,33 +699,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     coverage_process.save()
     coverage_process.html_report()
 
-  if save:
-    os.chdir(instance_home)
-    if save_mysql:
-      save_mysql(verbosity)
-    if suite.__class__ not in (ProcessingNodeTestCase, ZEOServerTestCase):
-      # Static files are modified by the node installing business templates,
-      # i.e. by the node running the unit test. There is no point saving them
-      # on a ZEO server, or on nodes that only process activities: this has to
-      # be done manually.
-      if verbosity:
-        _print('Dumping static files...\n')
-      live_instance_path = os.environ.get('live_instance_path')
-      for static_dir in static_dir_list:
-        if os.path.islink(static_dir):
-          continue
-        if live_instance_path:
-          backup_path = os.path.join(live_instance_path, static_dir)
-        else:
-          backup_path = static_dir + '.bak'
-        try:
-          shutil.rmtree(backup_path)
-        except OSError, e:
-          if e.errno != errno.ENOENT:
-            raise
-        os.rename(static_dir, backup_path)
-    elif node_pid_list is not None:
-      _print('WARNING: No static files saved. You will have to do it manually.')
+  if save and save_mysql:
+    save_mysql(verbosity)
 
   return result
 
@@ -873,14 +846,11 @@ def main(argument_list=None):
     elif opt == "--persistent_memcached_server_port":
       os.environ["persistent_memcached_server_port"] = arg
     elif opt == "--live_instance":
-      live_instance_path = arg or real_instance_home
-      # following line is only for static files
-      os.environ["live_instance_path"] = live_instance_path
       os.environ["erp5_load_data_fs"] = "1"
       os.environ["erp5_save_data_fs"] = "1"
       os.environ["erp5_dump_sql"] = "0"
       os.environ["erp5_tests_data_fs_path"] = os.path.join(
-                                      live_instance_path, 'var', 'Data.fs')
+        arg or real_instance_home, 'var', 'Data.fs')
     elif opt == "--random_activity_priority":
       os.environ["random_activity_priority"] = arg or \
         str(random.randrange(0, 1<<16))

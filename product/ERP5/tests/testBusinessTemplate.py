@@ -62,6 +62,8 @@ from Products.ERP5.Document.Organisation import Organisation
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from ZODB.broken import Broken
 
+instance_home = os.environ['INSTANCE_HOME']
+
 class MockBrokenOrganisation(Organisation, Broken):
   meta_type = 'ERP5 Mock Broken Organisation'
   portal_type = 'Mock Broken Organisation'
@@ -113,8 +115,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       content_type_registry.removePredicate('any')
       self.commit()
 
+    # Create old static dirs for migration tests
+    self.rmdir_list = []
+    for d in "Constraint", "Document", "Extensions", "PropertySheet":
+      d = os.path.join(instance_home, d)
+      try:
+        os.mkdir(d)
+      except OSError:
+        continue
+      self.rmdir_list.append(d)
+
   def beforeTearDown(self):
     """Remove objects created in tests."""
+    for d in getattr(self, "rmdir_list", ()):
+      shutil.rmtree(d)
+
     pw = self.getWorkflowTool()
 
     cbt = pw._chains_by_type

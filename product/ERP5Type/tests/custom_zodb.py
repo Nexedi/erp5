@@ -1,19 +1,12 @@
-import errno
 import os
 import subprocess
-import shutil
 import signal
-import socket
 import sys
-import glob
-import threading
 import time
-import ZODB
 from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments, instance_random
-from Products.ERP5Type.tests.runUnitTest import static_dir_list, WIN
 
 def _print(message):
   sys.stderr.write(message + "\n")
@@ -55,14 +48,6 @@ if save_mysql:
       _print('Dumping MySQL database with %s ...' % command)
     subprocess.check_call(command, shell=True)
 
-_print("Cleaning static files ... ")
-for static_dir in static_dir_list:
-  static_dir = os.path.join(instance_home, static_dir)
-  if os.path.islink(static_dir):
-    os.remove(static_dir)
-  elif os.path.exists(static_dir):
-    shutil.rmtree(static_dir)
-
 if load:
   if save_mysql:
     if os.path.exists(dump_sql_path):
@@ -73,29 +58,10 @@ if load:
       _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
-  live_instance_path = os.environ.get('live_instance_path')
-  for dir in static_dir_list:
-    full_path = os.path.join(instance_home, dir)
-    if live_instance_path:
-      backup_path = os.path.join(live_instance_path, dir)
-    else:
-      backup_path = full_path + '.bak'
-    if os.path.exists(backup_path):
-      if not save or WIN:
-        shutil.copytree(backup_path, full_path, symlinks=True)
-      else:
-        if not live_instance_path:
-          backup_path = os.path.basename(backup_path)
-        os.symlink(backup_path, full_path)
 elif save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
   _print("About to remove existing Data.fs %s (press Ctrl+C to abort)" % data_fs_path)
   time.sleep(5)
   os.remove(data_fs_path)
-
-for static_dir in static_dir_list:
-  static_dir = os.path.join(instance_home, static_dir)
-  if not os.path.exists(static_dir):
-    os.mkdir(static_dir)
 
 zeo_server_pid = None
 node_pid_list = []
