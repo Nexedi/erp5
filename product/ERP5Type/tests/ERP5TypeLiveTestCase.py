@@ -162,31 +162,10 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
-class ERP5TypeTestReLoader(ERP5TypeTestLoader):
-    """ERP5Type test re-loader supports reloading test modules before
-    running them.
+class ERP5TypeLiveTestLoader(ERP5TypeTestLoader):
     """
-
-    def __init__(self, filter_test_list=()):
-        super(ERP5TypeTestReLoader, self).__init__()
-        if len(filter_test_list):
-            # do not filter if no filter, otherwise no tests run
-            self.filter_test_list = filter_test_list
-
-    def loadTestsFromNames(self, test_list):
-        # ERP5TypeTestLoader is monkey-patched into unittest
-        # so we have to monkeypatch it in turn
-        if self.filter_test_list is not None:
-            old_filter_test_list = ERP5TypeTestLoader.filter_test_list
-            ERP5TypeTestLoader.filter_test_list = self.filter_test_list
-        try:
-            return super(ERP5TypeTestReLoader,
-                         self).loadTestsFromNames(test_list)
-        finally:
-            # and undo the monkeypatch afterwards
-            if self.filter_test_list:
-                ERP5TypeTestLoader.filter_test_list = old_filter_test_list
-
+    ERP5Type Live Test loader which allows to load ZODB Components if any
+    """
     def loadTestsFromName(self, name, module=None):
         """
         Load the test from the given name from ZODB if it can be imported,
@@ -200,33 +179,12 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
                            fromlist=['erp5.component.test'],
                            level=0)
             except ImportError:
-                pass
+                raise
             else:
                 module = erp5.component.test
 
-        return super(ERP5TypeTestReLoader, self).loadTestsFromName(name,
-                                                                   module)
-
-    def loadTestsFromModule(self, module):
-        """
-        If the module is not a ZODB Component, then reload it to consider
-        modifications on the filesystem
-        """
-        if not isinstance(getattr(module, '__loader__', None),
-                          ComponentDynamicPackage):
-            reload(module)
-        return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
-
-    def loadTestsFromTestCase(self, testCaseClass):
-        testModule = sys.modules[testCaseClass.__module__]
-        # Do not reload ERP5TypeTestCase because we patch it nor ZODB Test
-        # Component as it is reset upon modification anyway
-        if (testCaseClass is not ERP5TypeTestCase and
-            not isinstance(getattr(testModule, '__loader__', None),
-                           ComponentDynamicPackage)):
-          testModule = reload(testModule)
-        testCaseClass = getattr(testModule, testCaseClass.__name__)
-        return ERP5TypeTestLoader.loadTestsFromTestCase(self, testCaseClass)
+        return super(ERP5TypeLiveTestLoader, self).loadTestsFromName(name,
+                                                                     module)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
@@ -257,7 +215,7 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   run_only = kw.get('run_only', ())
   filter_test_list = [re.compile(x).search
                       for x in run_only]
-  loader = ERP5TypeTestReLoader(filter_test_list)
+  loader = ERP5TypeLiveTestLoader(filter_test_list)
   suite = loader.loadTestsFromNames(test_list)
   output = stream
   if stream is None:
