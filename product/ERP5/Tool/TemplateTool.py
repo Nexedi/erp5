@@ -33,7 +33,6 @@ from App.config import getConfiguration
 import os
 import shutil
 import sys
-import tarfile
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -56,7 +55,6 @@ from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
 import cPickle
-import posixpath
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
@@ -298,58 +296,6 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(StringIO(export_string), id=id)
 
-    def _importBT(self, path=None, id=id):
-      """
-        Import template from a temp file (as uploaded by the user)
-      """
-      with open(path, 'rb') as file:
-        # read magic key to determine wich kind of bt we use
-        file.seek(0)
-        magic = file.read(5)
-
-      if magic == '<?xml': # old version
-        self._importObjectFromFile(path, id=id)
-        bt = self[id]
-        bt.id = id # Make sure id is consistent
-        bt.setProperty('template_format_version', 0, type='int')
-      else: # new version
-        # XXX: should really check for a magic and offer a falback if it
-        # doens't correspond to anything handled.
-        tar = tarfile.open(path, 'r:gz')
-        dir_name = tar.members[0].name.split(posixpath.sep, 1)[0]
-        try:
-          # create bt object
-          bt = self.newContent(portal_type='Business Template', id=id)
-          prop_dict = {}
-          for prop in bt.propertyMap():
-            prop_type = prop['type']
-            pid = prop['id']
-            prop_path = posixpath.join(dir_name, 'bt', pid)
-            try:
-              info = tar.getmember(prop_path)
-              value = tar.extractfile(info).read()
-            except KeyError:
-              value = None
-            if value is 'None':
-              # At export time, we used to export non-existent properties:
-              #   str(obj.getProperty('non-existing')) == 'None'
-              # Discard them
-              continue
-            if prop_type in ('text', 'string'):
-              prop_dict[pid] = value or ''
-            elif prop_type in ('int', 'boolean'):
-              prop_dict[pid] = value or 0
-            elif prop_type in ('lines', 'tokens'):
-              prop_dict[pid[:-5]] = (value or '').splitlines()
-          prop_dict.pop('id', '')
-          bt.edit(**prop_dict)
-          # import all other files from bt
-          with open(path, 'rb') as fobj:
-            bt.importFile(file=fobj)
-        finally:
-          tar.close()
-      return bt
-
     security.declareProtected( Permissions.ManagePortal, 'manage_download' )
     def manage_download(self, url, id=None, REQUEST=None):
       """The management interface for download.
@@ -368,6 +314,7 @@ class TemplateTool (BaseTool):
     def _download_local(self, path, bt_id):
       """Download Business Template from local directory or file
       """
+      bt = self.newContent(portal_type='Business Template', id=bt_id)
       if os.path.isdir(os.path.normpath(path)):
         path = os.path.normpath(path)
         def callback(file_list, directory, files):
@@ -385,39 +332,11 @@ class TemplateTool (BaseTool):
         os.path.walk(path, callback, file_list)
         file_list.sort()
         # import bt object
-        bt = self.newContent(portal_type='Business Template', id=bt_id)
-        bt_path = os.path.join(path, 'bt')
-
-        # import properties
-        prop_dict = {}
-        for prop in bt.propertyMap():
-          prop_type = prop['type']
-          pid = prop['id']
-          prop_path = os.path.join('.', bt_path, pid)
-          if not os.path.exists(prop_path):
-            value = None
-          else:
-            with open(prop_path, 'rb') as f:
-              value = f.read()
-          if value is 'None':
-            # At export time, we used to export non-existent properties:
-            #   str(obj.getProperty('non-existing')) == 'None'
-            # Discard them
-            value = None
-          if prop_type in ('text', 'string'):
-            prop_dict[pid] = value or ''
-          elif prop_type in ('int', 'boolean'):
-            prop_dict[pid] = value or 0
-          elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = (value or '').splitlines()
-        prop_dict.pop('id', '')
-        bt.edit(**prop_dict)
-        # import all others objects
         bt.importFile(dir=True, file=file_list, root_path=path)
-        return bt
       else:
         # this should be a file
-        return self._importBT(path, bt_id)
+        bt.importFile(file=path)
+      return bt
 
     def _download_url(self, url, bt_id):
       tempid, temppath = mkstemp()

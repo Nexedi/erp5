@@ -76,7 +76,6 @@ customImporters={
 
 from zLOG import LOG, WARNING, INFO
 from warnings import warn
-from gzip import GzipFile
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
@@ -360,7 +359,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       d.setdefault(klass, []).append(f)
     self.file_list_dict = d
 
-  def importFiles(self, item, **kw):
+  def importFiles(self, item):
     """
       Import file from a local folder
     """
@@ -415,7 +414,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     return self.fobj
 
   def _initImport(self, file, **kw):
-    self.tar = tarfile.TarFile(fileobj=StringIO(GzipFile(fileobj=file).read()))
+    self.tar = tarfile.open(file, 'r:gz')
     self.item_dict = {}
     setdefault = self.item_dict.setdefault
     for info in self.tar.getmembers():
@@ -428,7 +427,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
           file_name = unquote(file_name)
         setdefault(path[1], []).append((file_name, info))
 
-  def importFiles(self, item, **kw):
+  def importFiles(self, item):
     """
       Import all file from the archive to the site
     """
@@ -535,7 +534,7 @@ class BaseTemplateItem(Implicit, Persistent):
     return self._objects.keys()
 
   def importFile(self, bta, **kw):
-    bta.importFiles(item=self)
+    bta.importFiles(self)
 
   def removeProperties(self, obj, export, keep_workflow_history=False):
     """
@@ -4704,6 +4703,13 @@ class LocalRolesTemplateItem(BaseTemplateItem):
           delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
+class bt(dict):
+  """Fake 'bt' item to read bt/* files through BusinessTemplateArchive"""
+
+  def _importFile(self, file_name, file):
+    self[file_name] = file.read()
+
+
 class BusinessTemplate(XMLObject):
     """
     A business template allows to construct ERP5 modules
@@ -5614,6 +5620,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bta = BusinessTemplateFolder(importing=1, file=file, path=root_path)
       else:
         bta = BusinessTemplateTarball(importing=1, file=file)
+
+      bt_item = bt()
+      bta.importFiles(bt_item)
+      prop_dict = {}
+      for prop in self.propertyMap():
+        pid = prop['id']
+        if pid != 'id':
+          prop_type = prop['type']
+          value = bt_item.get(pid)
+          if prop_type in ('text', 'string'):
+            prop_dict[pid] = value or ''
+          elif prop_type in ('int', 'boolean'):
+            prop_dict[pid] = value or 0
+          elif prop_type in ('lines', 'tokens'):
+            prop_dict[pid[:-5]] = (value or '').splitlines()
+      self._edit(**prop_dict)
 
       self.storeTemplateItemData()
 
