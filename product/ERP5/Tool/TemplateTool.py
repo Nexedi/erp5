@@ -314,28 +314,8 @@ class TemplateTool (BaseTool):
     def _download_local(self, path, bt_id):
       """Download Business Template from local directory or file
       """
-      bt = self.newContent(portal_type='Business Template', id=bt_id)
-      if os.path.isdir(os.path.normpath(path)):
-        path = os.path.normpath(path)
-        def callback(file_list, directory, files):
-          for excluded_directory in ('CVS', '.svn'):
-            try:
-              files.remove(excluded_directory)
-            except ValueError:
-              pass
-          for file in files:
-            absolute_path = os.path.join(directory, file)
-            if os.path.isfile(absolute_path):
-              file_list.append(absolute_path)
-
-        file_list = []
-        os.path.walk(path, callback, file_list)
-        file_list.sort()
-        # import bt object
-        bt.importFile(dir=True, file=file_list, root_path=path)
-      else:
-        # this should be a file
-        bt.importFile(file=path)
+      bt = self.newContent(bt_id, 'Business Template')
+      bt.importFile(path)
       return bt
 
     def _download_url(self, url, bt_id):

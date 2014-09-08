@@ -300,18 +300,12 @@ def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
       deleteSkinSelection(skin_tool, skin_selection)
       skin_tool.getPortalObject().changeSkin(None)
 
-class BusinessTemplateArchive:
+class BusinessTemplateArchive(object):
   """
     This is the base class for all Business Template archives
   """
-  def _initCreation(self, path, **kw):
+  def __init__(self, path, **kw):
     self.path = path
-
-  def __init__(self, creation=0, importing=0, file=None, path=None, **kw):
-    if creation:
-      self._initCreation(path=path, **kw)
-    elif importing:
-      self._initImport(file=file, path=path, **kw)
 
   def addObject(self, obj, name, path=None, ext='.xml'):
     if path:
@@ -349,39 +343,29 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     finally:
       f.close()
 
-  def _initImport(self, file, path, **kw):
-    root_path_len = len(os.path.normpath(os.path.join(path, '_'))) - 1
-    self.root_path_len = root_path_len
-    d = {}
-    for f in file:
-      f = os.path.normpath(f)
-      klass = f[root_path_len:].split(os.sep, 1)[0]
-      d.setdefault(klass, []).append(f)
-    self.file_list_dict = d
-
   def importFiles(self, item):
     """
       Import file from a local folder
     """
+    join = os.path.join
+    path = os.path.normpath(self.path)
     class_name = item.__class__.__name__
-    root_path_len = self.root_path_len
-    prefix_len = root_path_len + len(class_name) + len(os.sep)
+    root = join(path, class_name, '')
+    root_path_len = len(root)
     if CACHE_DATABASE_PATH:
       try:
         cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'cf')
       except gdbm.error:
         cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'nf')
     try:
-      for file_path in self.file_list_dict.get(class_name, ()):
-        if os.path.isfile(file_path):
-          file = open(file_path, 'rb')
-          try:
-            file_name = file_path[prefix_len:]
+      for root, dirs, files in os.walk(root):
+        for file_name in files:
+          file_name = join(root, file_name)
+          with open(file_name, 'rb') as f:
+            file_name = file_name[root_path_len:]
             if '%' in file_name:
               file_name = unquote(file_name)
-            item._importFile(file_name, file)
-          finally:
-            file.close()
+            item._importFile(file_name, f)
     finally:
       if hasattr(cache_database, 'db'):
         cache_database.db.close()
@@ -392,12 +376,21 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     Class archiving businnes template into a tarball file
   """
 
-  def _initCreation(self, **kw):
-    BusinessTemplateArchive._initCreation(self, **kw)
-    # init tarfile obj
-    self.fobj = StringIO()
-    self.tar = tarfile.open('', 'w:gz', self.fobj)
-    self.time = time.time()
+  def __init__(self, path, creation=0, importing=0, **kw):
+    super(BusinessTemplateTarball, self).__init__(path, **kw)
+    if creation:
+      self.fobj = StringIO()
+      self.tar = tarfile.open('', 'w:gz', self.fobj)
+      self.time = time.time()
+    elif importing:
+      self.tar = tarfile.open(path, 'r:gz')
+      self.item_dict = item_dict = defaultdict(list)
+      for info in self.tar.getmembers():
+        if info.isreg():
+          path = info.name.split('/')
+          if path[0] == '.':
+            del path[0]
+          item_dict[path[1]].append(('/'.join(path[2:]), info))
 
   def _writeFile(self, obj, path):
     if self.path:
@@ -413,26 +406,14 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     self.tar.close()
     return self.fobj
 
-  def _initImport(self, file, **kw):
-    self.tar = tarfile.open(file, 'r:gz')
-    self.item_dict = {}
-    setdefault = self.item_dict.setdefault
-    for info in self.tar.getmembers():
-      if info.isreg():
-        path = info.name.split('/')
-        if path[0] == '.':
-          del path[0]
-        file_name = '/'.join(path[2:])
-        if '%' in file_name:
-          file_name = unquote(file_name)
-        setdefault(path[1], []).append((file_name, info))
-
   def importFiles(self, item):
     """
       Import all file from the archive to the site
     """
     extractfile = self.tar.extractfile
     for file_name, info in self.item_dict.get(item.__class__.__name__, ()):
+      if '%' in file_name:
+        file_name = unquote(file_name)
       item._importFile(file_name, extractfile(info))
 
 class TemplateConditionError(Exception): pass
@@ -5581,12 +5562,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if bta is None:
         if local:
           # we export into a folder tree
-          bta = BusinessTemplateFolder(creation=1, path=path)
+          bta = BusinessTemplateFolder(path, creation=1)
         else:
           # We export BT into a tarball file
           if path is None:
             path = self.getTitle()
-          bta = BusinessTemplateTarball(creation=1, path=path)
+          bta = BusinessTemplateTarball(path, creation=1)
 
       # export bt
       for prop in self.propertyMap():
@@ -5612,15 +5593,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return bta.finishCreation()
 
     security.declareProtected(Permissions.ManagePortal, 'importFile')
-    def importFile(self, dir = 0, file=None, root_path=None):
+    def importFile(self, path):
       """
         Import all xml files in Business Template
       """
-      if dir:
-        bta = BusinessTemplateFolder(importing=1, file=file, path=root_path)
-      else:
-        bta = BusinessTemplateTarball(importing=1, file=file)
-
+      bta = (BusinessTemplateFolder if os.path.isdir(path) else
+             BusinessTemplateTarball)(path, importing=1)
       bt_item = bt()
       bta.importFiles(bt_item)
       prop_dict = {}
