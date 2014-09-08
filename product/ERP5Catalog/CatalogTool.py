@@ -972,12 +972,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       This method is configurable (via 'packet_size' & 'activity_count'
       parameters) so that it can work efficiently with databases of any size.
+      'select_method_id', if provided, will be called with partial catalog
+      results and returned value will be provided to the callable identified by
+      'method_id' (which will no longer be invoked in the context of a given
+      document returned by catalog) as first positional argument.
 
       'activate_kw' may specify an active process to collect results.
       """
       catalog_kw = dict(kw)
       packet_size = catalog_kw.pop('packet_size', 30)
       limit = packet_size * catalog_kw.pop('activity_count', 100)
+      select_method_id = catalog_kw.pop('select_method_id', None)
       if min_uid:
         catalog_kw['min_uid'] = SimpleQuery(uid=min_uid,
                                             comparison_operator='>')
@@ -993,12 +998,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           self.activate(activity='SQLQueue', **next_kw) \
               ._searchAndActivate(method_id,method_args, method_kw,
                                   activate_kw, r[-1].getUid(), **kw)
-        r = [x.getPath() for x in r]
-        r.sort()
-        activate = self.getPortalObject().portal_activities.activate(
-          activity='SQLQueue', **activate_kw).callMethodOnObjectList
+        portal_activities = self.getPortalObject().portal_activities
+        active_portal_activities = portal_activities.activate(
+          activity='SQLQueue', **activate_kw)
+        if select_method_id is None:
+          r = [x.getPath() for x in r]
+          r.sort()
+          activate = active_portal_activities.callMethodOnObjectList
+          method_args = (method_id, ) + method_args
+        else:
+          r = getattr(portal_activities, select_method_id)(r)
+          activate = getattr(active_portal_activities, method_id)
         for i in xrange(0, result_count, packet_size):
-          activate(r[i:i+packet_size], method_id, *method_args, **method_kw)
+          activate(r[i:i+packet_size], *method_args, **method_kw)
 
     security.declarePublic('searchAndActivate')
     def searchAndActivate(self, *args, **kw):
