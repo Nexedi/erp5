@@ -995,10 +995,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                                   activate_kw, r[-1].getUid(), **kw)
         r = [x.getPath() for x in r]
         r.sort()
-        activate = self.getPortalObject().portal_activities.activate
+        activate = self.getPortalObject().portal_activities.activate(
+          activity='SQLQueue', **activate_kw).callMethodOnObjectList
         for i in xrange(0, result_count, packet_size):
-          activate(activity='SQLQueue', **activate_kw).callMethodOnObjectList(
-            r[i:i+packet_size], method_id, *method_args, **method_kw)
+          activate(r[i:i+packet_size], method_id, *method_args, **method_kw)
 
     security.declarePublic('searchAndActivate')
     def searchAndActivate(self, *args, **kw):
