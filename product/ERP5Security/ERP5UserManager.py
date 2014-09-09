@@ -133,7 +133,6 @@ class ERP5UserManager(BasePlugin):
             if not login or not (password or ignore_password):
                 return None
 
-            login = login.strip()
             user_list = self.getUserByLogin(login)
 
             if not user_list:
