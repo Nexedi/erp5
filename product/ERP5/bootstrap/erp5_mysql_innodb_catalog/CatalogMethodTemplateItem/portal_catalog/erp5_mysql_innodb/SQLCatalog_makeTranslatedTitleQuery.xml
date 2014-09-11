@@ -60,7 +60,7 @@ if \'content_translation\' in catalog.getProperty(\'sql_search_tables\'):\n
                   Query(**{\'content_translation.property_name\': \'title\'}))\n
 \n
 # Otherwise it simply use title\n
-return SimpleQuery(title=value)\n
+return Query(title=value)\n
 </string> </value>
         </item>
         <item>
