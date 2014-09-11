@@ -2824,24 +2824,6 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     self.failUnless(base_category_obj is not None)
     self.assertEquals(len(base_category_obj.objectIds()), 0)
 
-  def stepCheckInitialRevision(self, sequence=None, **kw):
-    """ Check if revision of a new bt is an empty string
-    """
-    bt = sequence.get('current_bt')
-    self.assertEqual(bt.getRevision(), '')
-
-  def stepCheckFirstRevision(self, sequence=None, **kw):
-    """ Check if revision of the bt is 1
-    """
-    bt = sequence.get('current_bt')
-    self.assertEqual(bt.getRevision(), '1')
-
-  def stepCheckSecondRevision(self, sequence=None, **kw):
-    """ Check if revision of the bt is 2
-    """
-    bt = sequence.get('current_bt')
-    self.assertEqual(bt.getRevision(), '2')
-
   def stepCheckNoMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has no missing dependency
     """
@@ -5122,26 +5104,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        CheckSubobjectsNotIncluded \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  # test of portal types
-  def test_22_RevisionNumberIsIncremented(self):
-    """Test is revision number is incremented with the bt is built"""
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreatePortalType \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       CheckInitialRevision \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       stepCheckFirstRevision \
-                       BuildBusinessTemplate \
-                       stepCheckSecondRevision \
-                       RemoveBusinessTemplate \
-                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)

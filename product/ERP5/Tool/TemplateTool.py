@@ -44,6 +44,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
+from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
@@ -124,23 +125,19 @@ class TemplateTool (BaseTool):
       # However, that unlikely happens, and using a Z SQL Method has a
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
-      latest_bt = None
-      latest_revision = 0
-      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+      last_bt = last_time = None
+      for bt in self.objectValues(portal_type='Business Template'):
         if bt.getTitle() == title or title in bt.getProvisionList():
-          installation_state = bt.getInstallationState()
-          if installation_state == 'installed':
-            latest_bt = bt
-            break
-          elif strict is False and installation_state == 'replaced':
-            revision = bt.getRevision()
-            try:
-              revision = int(revision)
-            except ValueError:
-              continue
-            if revision > latest_revision:
-              latest_bt = bt
-      return latest_bt
+          state = bt.getInstallationState()
+          if state == 'installed':
+            return bt
+          if state == 'replaced' and not strict:
+            t = bt.workflow_history \
+              ['business_template_installation_workflow'][-1]['time']
+            if last_time < t:
+              last_bt = bt
+              last_time = t
+      return last_bt
 
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
@@ -180,20 +177,12 @@ class TemplateTool (BaseTool):
         return bt.getRevision()
       return None
 
-    def getBuiltBusinessTemplatesList(self):
-      """Deprecated.
-      """
-      DeprecationWarning('getBuiltBusinessTemplatesList is deprecated; Use getBuiltBusinessTemplateList instead.', DeprecationWarning)
-      return self.getBuiltBusinessTemplateList()
-
     def getBuiltBusinessTemplateList(self):
       """Get the list of built and not installed business templates.
       """
-      built_bts = []
-      for bt in self.contentValues(portal_type='Business Template'):
-        if bt.getInstallationState() == 'not_installed' and bt.getBuildingState() == 'built':
-          built_bts.append(bt)
-      return built_bts
+      return [bt for bt in self.objectValues(portal_type='Business Template')
+                 if bt.getInstallationState() == 'not_installed' and
+                    bt.getBuildingState() == 'built']
 
     @property
     def asRepository(self):
@@ -201,7 +190,7 @@ class TemplateTool (BaseTool):
         """Export business template by their title
 
         Provides a view of template tool allowing a user to download the last
-        revision of a business template with a URL like:
+        edited business template with a URL like:
           http://.../erp5/portal_templates/asRepository/erp5_core
         """
         def __before_publishing_traverse__(self, self2, request):
@@ -213,9 +202,9 @@ class TemplateTool (BaseTool):
           last_bt = None, None
           for bt in self.aq_parent.searchFolder(title=title):
             bt = bt.getObject()
-            revision = int(bt.getRevision())
-            if last_bt[0] < revision and bt.getInstallationState() != 'deleted':
-              last_bt = revision, bt
+            modified = bt.getModificationDate()
+            if last_bt[0] < modified and bt.getInstallationState() != 'deleted':
+              last_bt = modified, bt
           if last_bt[1] is None:
             return RESPONSE.notFoundError(title)
           RESPONSE.setHeader('Content-type', 'application/data')
@@ -342,18 +331,6 @@ class TemplateTool (BaseTool):
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
 
-    def assertBtPathExists(self, url):
-      """
-      Check if bt is present on the system
-      """
-      urltype, name = splittype(url)
-      # Windows compatibility
-      if WIN:
-        if os.path.isdir(os.path.normpath(url)) or \
-           os.path.isfile(os.path.normpath(url)):
-          name = os.path.normpath(url)
-      return os.path.exists(os.path.normpath(name))
-
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
       """
@@ -368,13 +345,9 @@ class TemplateTool (BaseTool):
         id = self.generateNewId()
 
       urltype, name = splittype(url)
-      # Windows compatibility
-      if WIN:
-        if os.path.isdir(os.path.normpath(url)) or \
-           os.path.isfile(os.path.normpath(url)):
-          urltype = 'file'
-          name = os.path.normpath(url)
-
+      if WIN and urltype and '\\' in name:
+        urltype = None
+        name = url
       if urltype and urltype != 'file':
         if '/portal_templates/asRepository/' in url:
           # In this case, the downloaded BT is already built.
@@ -384,7 +357,7 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        bt = self._download_local(name, id)
+        bt = self._download_local(os.path.normpath(name), id)
 
       bt.build(no_action=True)
       return bt
@@ -592,9 +565,12 @@ class TemplateTool (BaseTool):
                                'updateRepositoryBusinessTemplateList' )
 
     def updateRepositoryBusinessTemplateList(self, repository_list,
-                                             REQUEST=None, RESPONSE=None, **kw):
+        REQUEST=None, RESPONSE=None, genbt5list=0, **kw):
       """
         Update the information on Business Templates from repositories.
+
+      For local repositories, if bt5list is missing or if genbt5list > 1,
+      bt5list is automatically generated (but not saved on disk).
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
@@ -602,9 +578,19 @@ class TemplateTool (BaseTool):
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
-        url = '/'.join([repository, 'bt5list'])
-        f = urlopen(url)
-        property_dict_list = []
+        urltype, url = splittype(repository)
+        if WIN and urltype and '\\' in url:
+          urltype = None
+          url = repository
+        if urltype and urltype != 'file':
+          f = urlopen(repository + '/bt5list')
+        else:
+          bt5list = os.path.join(url, 'bt5list')
+          if genbt5list > os.path.exists(bt5list):
+            f = generateInformation(url)
+            f.seek(0)
+          else:
+            f = open(bt5list, 'rb')
         try:
           try:
             doc = parse(f)
@@ -618,6 +604,7 @@ class TemplateTool (BaseTool):
             else:
               raise RuntimeError, 'Invalid repository: %s' % repository
           try:
+            property_dict_list = []
             root = doc.documentElement
             for template in root.getElementsByTagName("template"):
               id = template.getAttribute('id')
@@ -958,9 +945,6 @@ class TemplateTool (BaseTool):
          update_only: return only bt that needs to be updated
          template_list: only returns bt within the given list
       """
-      version_state_title_dict = { 'new' : 'New', 'present' : 'Present',
-                                   'old' : 'Old' }
-
       from Products.ERP5Type.Document import newTempBusinessTemplate
       result_list = []
       template_set = None
@@ -987,15 +971,9 @@ class TemplateTool (BaseTool):
               # if this business template is newer.
               previous_repository, previous_property_dict = \
                   template_item_dict[title]
-              diff_version = self.compareVersions(previous_property_dict['version'],
-                                                  property_dict['version'])
-              if diff_version < 0:
+              if self.compareVersions(previous_property_dict['version'],
+                                      property_dict['version']) < 0:
                 template_item_dict[title] = (repository, property_dict)
-              elif diff_version == 0 \
-                   and previous_property_dict['revision'] \
-                   and property_dict['revision'] \
-                   and int(previous_property_dict['revision']) < int(property_dict['revision']):
-                      template_item_dict[title] = (repository, property_dict)
       # Next, select only updated business templates.
       if update_only:
         for repository, property_dict in template_item_dict.values():
@@ -1007,9 +985,8 @@ class TemplateTool (BaseTool):
             if diff_version < 0:
               template_item_list.append((repository, property_dict))
             elif diff_version == 0 \
-                  and installed_bt.getRevision() \
                   and property_dict['revision'] \
-                  and int(installed_bt.getRevision()) < int(property_dict['revision']):
+                  and installed_bt.getRevision() != property_dict['revision']:
                     template_item_list.append((repository, property_dict))
           elif template_list is not None:
             template_item_list.append((repository, property_dict))
@@ -1017,29 +994,24 @@ class TemplateTool (BaseTool):
       # Create temporary Business Template objects for displaying.
       for repository, property_dict in template_item_list:
         property_dict = property_dict.copy()
-        id = property_dict['id']
-        filename = property_dict['id']
-        del property_dict['id']
-        revision = property_dict['revision']
-        version_state = 'new'
+        id = filename = property_dict.pop('id')
         installed_bt = \
             self.getInstalledBusinessTemplate(property_dict['title'])
         if installed_bt is not None:
           installed_version = installed_bt.getVersion()
-          installed_revision = installed_bt.getRevision()
-          result = self.compareVersions(installed_revision, revision)
-          if result == 0:
+          installed_revision = installed_bt.getShortRevision()
+          if installed_bt.getRevision() == property_dict['revision']:
             version_state = 'present'
-          elif result < 0:
-            version_state = 'old'
+          else:
+            version_state = 'different'
         else:
           installed_version = ''
           installed_revision = ''
-        version_state_title = version_state_title_dict[version_state]
+          version_state = 'new'
         uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
-                                      version_state_title = version_state_title,
+                                      version_state_title=version_state.title(),
                                       filename = filename,
                                       installed_version = installed_version,
                                       installed_revision = installed_revision,
@@ -1104,10 +1076,9 @@ class TemplateTool (BaseTool):
 
       return 0
 
-    def _getBusinessTemplateUrlDict(self, newest_only=False):
+    def _getBusinessTemplateUrlDict(self):
       business_template_url_dict = {}
-      for bt in self.getRepositoryBusinessTemplateList(\
-                                    newest_only=newest_only):
+      for bt in self.getRepositoryBusinessTemplateList():
         url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
         if name.endswith('.bt5'):
           name = name[:-4]
@@ -1119,14 +1090,11 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplatesFromRepositories')
-    def installBusinessTemplatesFromRepositories(self, template_list,
-        only_newer=True, update_catalog=_MARKER, activate=False,
-        install_dependency=False):
+    def installBusinessTemplatesFromRepositories(self, *args, **kw):
       """Deprecated.
       """
       DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
-      return self.installBusinessTemplateListFromRepository(template_list,
-        only_newer, update_catalog, activate, install_dependency)
+      return self.installBusinessTemplateListFromRepository(*args, **kw)
 
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
@@ -1187,7 +1155,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplateListFromRepository')
     def installBusinessTemplateListFromRepository(self, template_list,
-        only_newer=True, update_catalog=_MARKER, activate=False,
+        only_different=True, update_catalog=_MARKER, activate=False,
         install_dependency=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
@@ -1197,12 +1165,13 @@ class TemplateTool (BaseTool):
       operation_log = []
       resolved_template_list = self.resolveBusinessTemplateListDependency(
                    template_list)
-
-      installed_bt5_set = set([x.title
-                               for x in self.getInstalledBusinessTemplatesList()])
+      installed_bt5_dict = dict((x.getTitle(), x.getRevision())
+        for x in self.getInstalledBusinessTemplateList())
+      if only_different:
+        template_url_dict = self._getBusinessTemplateUrlDict()
 
       def checkAvailability(bt_title):
-        return bt_title in template_list or bt_title in installed_bt5_set
+        return bt_title in template_list or bt_title in installed_bt5_dict
       missing_dependency_list = [i for i in resolved_template_list
                                  if not checkAvailability(i[1].replace(".bt5", ""))]
 
@@ -1211,17 +1180,14 @@ class TemplateTool (BaseTool):
             "Impossible to install, please install the following dependencies before: %s" \
             % [x[1] for x in missing_dependency_list]
 
-      template_url_dict = self._getBusinessTemplateUrlDict()
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
       for repository, bt_id in resolved_template_list:
-        bt = template_url_dict.get(bt_id)
-        if bt is not None and bt_id in installed_bt5_set:
-          revision = int(bt['revision'])
-          installed_bt5 = self.getInstalledBusinessTemplate(bt_id)
-          if int(installed_bt5.getRevision()) <= revision and only_newer:
+        if only_different:
+          bt = template_url_dict.get(bt_id)
+          if bt is not None and bt['revision'] == installed_bt5_dict.get(bt_id):
             continue
         bt_url = '%s/%s' % (repository, bt_id)
-        param_dict = dict(download_url=bt_url, only_newer=only_newer)
+        param_dict = dict(download_url=bt_url, only_different=only_different)
         if update_catalog is not _MARKER:
           param_dict["update_catalog"] = update_catalog
 
@@ -1234,7 +1200,7 @@ class TemplateTool (BaseTool):
         else:
           document = self.updateBusinessTemplateFromUrl(**param_dict)
           operation_log.append('Installed %s with revision %s' % (
-              document.getTitle(), document.getRevision()))
+              document.getTitle(), document.getShortRevision()))
 
       return operation_log
 
@@ -1248,7 +1214,7 @@ class TemplateTool (BaseTool):
                                          reinstall=False,
                                          active_process=None,
                                          force_keep_list=None,
-                                         only_newer=True):
+                                         only_different=True):
       """
         This method download and install a bt5, from a URL.
 
@@ -1284,18 +1250,13 @@ class TemplateTool (BaseTool):
       if reinstall:
         install_kw = None
       else:
-        previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
-        if (previous_bt5 is not None) and only_newer:
-          try:
-            imported_revision = int(imported_bt5.getRevision())
-            previous_revision = int(previous_bt5.getRevision())
-            if imported_revision <= previous_revision:
-              log("%s is already installed with revision %i, which is same or "
-                  "newer revision than new revision %i." % (bt_title,
-                    previous_revision, imported_revision))
-              return imported_bt5
-          except ValueError:
-            pass
+        if only_different:
+          previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
+          if previous_bt5 and \
+             imported_bt5.getRevision() == previous_bt5.getRevision():
+            log("%s is already installed with revision %s"
+                % (bt_title, imported_bt5.getShortRevision()))
+            return imported_bt5
 
         install_kw = {}
         for listbox_line in imported_bt5.BusinessTemplate_getModifiedObject():

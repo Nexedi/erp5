@@ -349,7 +349,7 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
-                          <string>revision</string>
+                          <string>short_revision</string>
                           <string>Revision</string>
                         </tuple>
                         <tuple>

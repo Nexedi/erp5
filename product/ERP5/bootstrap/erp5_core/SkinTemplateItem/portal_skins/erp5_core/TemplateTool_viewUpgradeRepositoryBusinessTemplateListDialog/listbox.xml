@@ -344,12 +344,12 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
-                          <string>revision</string>
-                          <string>Revision</string>
-                        </tuple>
-                        <tuple>
                           <string>installed_version</string>
                           <string>Installed Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_revision</string>
+                          <string>Revision</string>
                         </tuple>
                         <tuple>
                           <string>installed_revision</string>
@@ -366,10 +366,6 @@
                         <tuple>
                           <string>license</string>
                           <string>License</string>
-                        </tuple>
-                        <tuple>
-                          <string>version_state_title</string>
-                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

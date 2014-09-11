@@ -187,7 +187,7 @@ class WorkingCopy(Implicit):
     """
     if business_template.getBuildingState() == 'draft':
       business_template.edit()
-    business_template.build()
+    business_template.build(update_revision=False)
     self._export(business_template)
 
   def _export(self, business_template):
@@ -199,16 +199,6 @@ class WorkingCopy(Implicit):
 
   def update(self, keep=False):
     raise NotAWorkingCopyError
-
-  def newRevision(self):
-    path = os.path.join('bt', 'revision')
-    try:
-      revision = int(self.showOld(path)) + 1
-    except NotVersionedError:
-      return 1
-    with open(os.path.join(self.working_copy, path), 'w') as file:
-      file.write(str(revision))
-    return revision
 
   def hasDiff(self, path):
     try:
@@ -329,7 +319,7 @@ class WorkingCopy(Implicit):
                                         title='tmp_bt_revert',
                                         template_path_list=path_added_list)
       tmp_bt.edit()
-      tmp_bt.build()
+      tmp_bt.build(update_revision=False)
       # Install then uninstall it to remove objects from ZODB
       tmp_bt.install()
       tmp_bt.uninstall()

@@ -85,6 +85,8 @@ import posixpath
 import transaction
 
 import threading
+from Products.ERP5.genbt5list import BusinessTemplateRevision, \
+  item_name_list, item_set
 
 CACHE_DATABASE_PATH = None
 try:
@@ -306,6 +308,7 @@ class BusinessTemplateArchive(object):
   """
   def __init__(self, path, **kw):
     self.path = path
+    self.revision = BusinessTemplateRevision()
 
   def addObject(self, obj, name, path=None, ext='.xml'):
     if path:
@@ -320,14 +323,22 @@ class BusinessTemplateArchive(object):
       if not isinstance(obj, str):
         obj.seek(0)
         obj = obj.read()
+      self.revision.hash(path, obj)
       self._writeString(obj, path)
     else:
       if isinstance(obj, str):
+        self.revision.hash(path, obj)
         obj = StringIO(obj)
+      else:
+        obj.seek(0)
+        self.revision.hash(path, obj.read())
       write(obj, path)
 
   def finishCreation(self):
     pass
+
+  def getRevision(self):
+    return self.revision.digest()
 
 class BusinessTemplateFolder(BusinessTemplateArchive):
   """
@@ -348,9 +359,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       Import file from a local folder
     """
     join = os.path.join
-    path = os.path.normpath(self.path)
-    class_name = item.__class__.__name__
-    root = join(path, class_name, '')
+    item_name = item.__class__.__name__
+    root = join(os.path.normpath(self.path), item_name, '')
     root_path_len = len(root)
     if CACHE_DATABASE_PATH:
       try:
@@ -362,9 +372,13 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
         for file_name in files:
           file_name = join(root, file_name)
           with open(file_name, 'rb') as f:
-            file_name = file_name[root_path_len:]
+            file_name = posixpath.normpath(file_name[root_path_len:])
             if '%' in file_name:
               file_name = unquote(file_name)
+            elif item_name == 'bt' and file_name == 'revision':
+              continue
+            self.revision.hash(item_name + '/' + file_name, f.read())
+            f.seek(0)
             item._importFile(file_name, f)
     finally:
       if hasattr(cache_database, 'db'):
@@ -411,10 +425,16 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
       Import all file from the archive to the site
     """
     extractfile = self.tar.extractfile
-    for file_name, info in self.item_dict.get(item.__class__.__name__, ()):
+    item_name = item.__class__.__name__
+    for file_name, info in self.item_dict.get(item_name, ()):
       if '%' in file_name:
         file_name = unquote(file_name)
-      item._importFile(file_name, extractfile(info))
+      elif item_name == 'bt' and file_name == 'revision':
+        continue
+      f = extractfile(info)
+      self.revision.hash(item_name + '/' + file_name, f.read())
+      f.seek(0)
+      item._importFile(file_name, f)
 
 class TemplateConditionError(Exception): pass
 class TemplateConflictError(Exception): pass
@@ -4782,63 +4802,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
          , 'filter_content_types' : 1
       }
 
-    # This is a global variable
-    # Order is important for installation
-    # We want to have:
-    #  * path after module, because path can be module content
-    #  * path after categories, because path can be categories content
-    #  * path after portal types roles so that roles in the current bt can be used
-    #  * path before workflow chain, because path can be a portal type
-    #         (until chains are set on portal types with categories)
-    #  * skin after paths, because we can install a custom connection string as
-    #       path and use it with SQLMethods in a skin.
-    #    ( and more )
-    _item_name_list = [
-      '_registered_version_priority_selection_item',
-      '_product_item',
-      '_document_item',
-      '_property_sheet_item',
-      '_constraint_item',
-      '_extension_item',
-      '_test_item',
-      '_role_item',
-      '_tool_item',
-      '_message_translation_item',
-      '_workflow_item',
-      '_site_property_item',
-      '_portal_type_item',
-      #'_portal_type_workflow_chain_item',
-      '_portal_type_allowed_content_type_item',
-      '_portal_type_hidden_content_type_item',
-      '_portal_type_property_sheet_item',
-      '_portal_type_base_category_item',
-      '_category_item',
-      '_module_item',
-      '_portal_type_roles_item',
-      '_path_item',
-      '_skin_item',
-      '_registered_skin_selection_item',
-      '_preference_item',
-      '_action_item',
-      '_local_roles_item',
-      '_portal_type_workflow_chain_item',
-      '_catalog_method_item',
-      '_catalog_result_key_item',
-      '_catalog_related_key_item',
-      '_catalog_result_table_item',
-      '_catalog_search_key_item',
-      '_catalog_keyword_key_item',
-      '_catalog_datetime_key_item',
-      '_catalog_full_text_key_item',
-      '_catalog_request_key_item',
-      '_catalog_multivalue_key_item',
-      '_catalog_topic_key_item',
-      '_catalog_scriptable_key_item',
-      '_catalog_role_key_item',
-      '_catalog_local_role_key_item',
-      '_catalog_security_uid_column_item',
-    ]
-
     def __init__(self, *args, **kw):
       XMLObject.__init__(self, *args, **kw)
       self._clean()
@@ -4870,23 +4833,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
           self.workflow_history[
                             'business_template_installation_workflow'] = None
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getRevision')
-    def getRevision(self):
-      """returns the revision property.
-      This is a workaround for #461.
-      """
-      return self._baseGetRevision()
-
-    def updateRevisionNumber(self):
-        """Increment bt revision number.
-        """
-        revision_number = self.getRevision()
-        if revision_number is None or revision_number.strip() == '':
-          revision_number = 1
-        else:
-          revision_number = int(revision_number)+1
-        self.setRevision(revision_number)
+    def getShortRevision(self):
+      """Returned a shortened revision"""
+      r = self.getRevision()
+      return r and r[:5]
 
     security.declareProtected(Permissions.ManagePortal, 'storeTemplateItemData')
     def storeTemplateItemData(self):
@@ -5009,7 +4959,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         pass
 
     security.declareProtected(Permissions.ManagePortal, 'build')
-    def build(self, no_action=0):
+    def build(self, no_action=0, update_revision=True):
       """
         Copy existing portal objects to self
       """
@@ -5018,19 +4968,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Make sure that everything is sane.
       self.clean()
 
-      try:
-        from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
-        try:
-          self.setRevision(self.getVcsTool().newRevision())
-        except NotAWorkingCopyError:
-          raise ImportError
-      except ImportError:
-        self.updateRevisionNumber()
       self._setTemplateFormatVersion(1)
       self.storeTemplateItemData()
 
       # Build each part
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         item = getattr(self, item_name)
         if item is None:
           continue
@@ -5039,6 +4981,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         item.build(self)
       # update _p_jar property of objects cleaned by removeProperties
       transaction.savepoint(optimistic=True)
+      if update_revision:
+        self._export()
 
     def publish(self, url, username=None, password=None):
       """
@@ -5118,14 +5062,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
         return modified_object_list
       elif installed_bt_format == 0 and new_bt_format == 1:
         # return list of all object in bt
-        for item_name in self._item_name_list:
+        for item_name in item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
             for path in item._objects.keys():
               modified_object_list.update({path : ['New', item.__class__.__name__[:-12]]})
         return modified_object_list
 
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         new_item = getattr(self, item_name, None)
         installed_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
@@ -5186,7 +5130,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Install everything
       if len(object_to_update) or force:
-        for item_name in self._item_name_list:
+        for item_name in item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
             item.install(self, force=force, object_to_update=object_to_update, 
@@ -5211,7 +5155,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # remove object from old business template
       if len(remove_object_dict):
         # XXX: this code assumes that there is an installed_bt
-        for item_name in reversed(installed_bt._item_name_list):
+        for item_name in reversed(item_name_list):
           item = getattr(installed_bt, item_name, None)
           if item is not None:
             item.remove(self, remove_object_dict=remove_object_dict, trashbin=trashbin)
@@ -5255,7 +5199,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         not remove all items.
       """
       # Trash everything
-      for item_name in self._item_name_list[::-1]:
+      for item_name in reversed(item_name_list):
         item = getattr(self, item_name, None)
         if item is not None:
           item.trash(
@@ -5268,7 +5212,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       # Uninstall everything
       # Trash everything
-      for item_name in self._item_name_list[::-1]:
+      for item_name in reversed(item_name_list):
         item = getattr(self, item_name, None)
         if item is not None:
           item.uninstall(self, **kw)
@@ -5296,7 +5240,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if hasattr(self, attr):
           delattr(self, attr)
       # Secondly, make attributes empty.
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         setattr(self, item_name, None)
 
     security.declareProtected(Permissions.ManagePortal, 'clean')
@@ -5558,7 +5502,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self.getBuildingState() != 'built':
         raise TemplateConditionError, \
               'Business Template must be built before export'
+      return self._export(path, local, bta)
 
+    def _export(self, path=None, local=0, bta=None):
       if bta is None:
         if local:
           # we export into a folder tree
@@ -5573,7 +5519,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for prop in self.propertyMap():
         prop_type = prop['type']
         id = prop['id']
-        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id',
+        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'revision',
                   'install_object_list_list', 'id_generator', 'bt_for_diff'):
           continue
         value = self.getProperty(id)
@@ -5585,11 +5531,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
           bta.addObject('\n'.join(value), name=id, path='bt', ext='')
 
       # Export each part
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         item = getattr(self, item_name, None)
         if item is not None:
           item.export(context=self, bta=bta)
 
+      self._setRevision(bta.getRevision())
       return bta.finishCreation()
 
     security.declareProtected(Permissions.ManagePortal, 'importFile')
@@ -5630,7 +5577,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           setattr(module, template_id, type(template_id,
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         item_object = getattr(self, item_name, None)
         # this check is due to backwards compatability when there can be a
         # difference between install erp5_property_sheets (esp. BusinessTemplate
@@ -5643,11 +5590,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for module_id in module_id_list:
         del sys.modules[module_id]
 
+      self._setRevision(bta.getRevision())
+
     def getItemsList(self):
       """Return list of items in business template
       """
       items_list = []
-      for item_name in self._item_name_list:
+      for item_name in item_name_list:
         item = getattr(self, item_name, None)
         if item is not None:
           items_list.extend(item.getKeys())
@@ -6106,5 +6055,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
-for key in BusinessTemplate._item_name_list:
+for key in item_name_list:
   setattr(BusinessTemplate, key, None)
+# Check naming convention of items.
+assert item_set.issubset(globals()), item_set.difference(globals())
