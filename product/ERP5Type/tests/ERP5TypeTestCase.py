@@ -492,43 +492,15 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                            % ', '.join(not_found_list))
       return new_template_list
 
-    def setupAutomaticBusinessTemplateRepository(self, accept_public=True,
-                              searchable_business_template_list=None):
-     # Try to setup some valid Repository List by reusing ERP5TypeTestCase API.
-     # if accept_public we can accept public repository can be set, otherwise
-     # we let failure happens.
-     if searchable_business_template_list is None:
-       searchable_business_template_list = ["erp5_base"]
-
-     # Assume that the public official repository is a valid repository
-     public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
-
-     template_list = []
-     for bt_id in searchable_business_template_list:
-       bt_template_list = self._getBTPathAndIdList([bt_id])
-       if len(bt_template_list):
-         template_list.append(bt_template_list[0])
-     if len(template_list) > 0:
-       bt5_repository_path_list = ["/".join(x[0].split("/")[:-1])
-                                   for x in template_list]
-       if accept_public:
-         try:
-           self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                  bt5_repository_path_list, None)
-         except (RuntimeError, IOError), e:
-           # If bt5 repository is not a repository use public one.
-           self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                   public_bt5_repository_list)
-       else:
-         self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                  bt5_repository_path_list, None)
-     elif accept_public:
-       self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                     public_bt5_repository_list)
-     else:
-       raise ValueError("ERP5 was unable to determinate a valid local " + \
-                        "repository, please check your environment or " + \
-                        "use accept_public as True")
+    def setupAutomaticBusinessTemplateRepository(self,
+                              searchable_business_template_list=("erp5_base",)):
+      template_tool = self.portal.portal_templates
+      bt_set = set(searchable_business_template_list).difference(x['title']
+        for x in template_tool.repository_dict.itervalues() for x in x)
+      if bt_set:
+        template_tool.updateRepositoryBusinessTemplateList(set(
+          os.path.dirname(x[0]) for x in self._getBTPathAndIdList(bt_set)),
+          genbt5list=1)
 
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:

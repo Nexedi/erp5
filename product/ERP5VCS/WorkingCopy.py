@@ -89,9 +89,9 @@ class WorkingCopy(Implicit):
       if cls.reference:
         cls._registry.append((cls.reference, cls))
 
-  def __init__(self, path=None):
+  def __init__(self, path=None, restricted=False):
     if path:
-      self.working_copy = self.checkWorkingPath(path)
+      self.working_copy = self.checkWorkingPath(path, restricted)
 
   def getWorkingCopyList(self):
     working_copy_list = []
@@ -111,7 +111,7 @@ class WorkingCopy(Implicit):
     os.mkdir(path)
     self.working_copy = path
 
-  def checkWorkingPath(self, path):
+  def checkWorkingPath(self, path, restricted):
     # First remove any '..' to prevent escaping.
     # Note that 'normpath' ignore symlinks so it would not do it correctly.
     parts = path.split(os.sep)
@@ -124,11 +124,14 @@ class WorkingCopy(Implicit):
     # Allow symlinks inside instance home.
     path = os.path.normpath(path)
     real_path = os.path.realpath(path)
-    for allowed in getConfiguration().instancehome, gettempdir():
-      if issubdir(allowed, path) or issubdir(allowed, real_path):
-        return real_path
-    raise Unauthorized("Unauthorized access to path %r."
-                       " It is NOT in your Zope home instance." % path)
+    if restricted and not any(
+        issubdir(allowed, path) or issubdir(allowed, real_path)
+        for allowed in (getConfiguration().instancehome, gettempdir())):
+      raise Unauthorized("Unauthorized access to path %r."
+                         " It is NOT in your Zope home instance." % path)
+    if os.path.isdir(real_path):
+      return real_path
+    raise NotAWorkingCopyError(real_path)
 
   def _getCookie(self, name, default=None):
     try:
@@ -186,7 +189,7 @@ class WorkingCopy(Implicit):
     """
     if business_template.getBuildingState() == 'draft':
       business_template.edit()
-    business_template.build()
+    business_template.build(update_revision=False)
     self._export(business_template)
 
   def _export(self, business_template):
@@ -198,16 +201,6 @@ class WorkingCopy(Implicit):
 
   def update(self, keep=False):
     raise NotAWorkingCopyError
-
-  def newRevision(self):
-    path = os.path.join('bt', 'revision')
-    try:
-      revision = int(self.showOld(path)) + 1
-    except NotVersionedError:
-      return 1
-    with open(os.path.join(self.working_copy, path), 'w') as file:
-      file.write(str(revision))
-    return revision
 
   def hasDiff(self, path):
     try:
@@ -328,7 +321,7 @@ class WorkingCopy(Implicit):
                                         title='tmp_bt_revert',
                                         template_path_list=path_added_list)
       tmp_bt.edit()
-      tmp_bt.build()
+      tmp_bt.build(update_revision=False)
       # Install then uninstall it to remove objects from ZODB
       tmp_bt.install()
       tmp_bt.uninstall()
@@ -338,16 +331,16 @@ class WorkingCopy(Implicit):
     installed_bt.reinstall(object_to_update=object_to_update, force=0)
 
 
-def getVcsTool(vcs=None, path=None):
+def getVcsTool(vcs=None, path=None, restricted=False):
   if vcs:
     for x in WorkingCopy._registry:
       if x[0] == vcs:
-        return x[1](path)
+        return x[1](path, restricted)
     raise ValueError("Unsupported Version Control System: %s" % vcs)
   elif path:
     for x in WorkingCopy._registry:
       try:
-        return x[1](path)
+        return x[1](path, restricted)
       except NotAWorkingCopyError:
         pass
     raise NotAWorkingCopyError(path)
