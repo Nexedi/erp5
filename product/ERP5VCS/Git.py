@@ -315,6 +315,11 @@ class Git(WorkingCopy):
     #except AttributeError:
     #  pass
 
+  def getRevision(self, dirty=False):
+    if dirty and self._git('diff-index', '--quiet', 'HEAD').wait():
+      return self.git('rev-parse', '--short', 'HEAD') + '+'
+    return self.git('rev-parse', 'HEAD')
+
   def commit(self, changelog, added=(), modified=(), removed=()):
     context = self.aq_parent
     request = context.REQUEST

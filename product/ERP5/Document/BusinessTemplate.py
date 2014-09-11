@@ -40,6 +40,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import transactional_cached
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -5479,12 +5480,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
           if os.path.isdir(bt_path):
             return bt_path
 
-    @transactional_cached(lambda self, vcs=None, path=None: (self, vcs, path))
-    def getVcsTool(self, vcs=None, path=None):
+    @transactional_cached(lambda self, vcs=None, path=None, restricted=False:
+                          (self, vcs, path, restricted))
+    def _getVcsTool(self, vcs=None, path=None, restricted=False):
       from Products.ERP5VCS.WorkingCopy import getVcsTool
       if not (path or vcs):
         path = self.getExportPath()
-      return getVcsTool(vcs=vcs, path=path).__of__(self)
+      return getVcsTool(vcs, path, restricted).__of__(self)
+
+    def getVcsTool(self, vcs=None, path=None):
+      return self._getVcsTool(vcs, path, True)
 
     def isVcsType(self, *vcs):
       # could be moved to Products.ERP5.Base.Base
@@ -5561,6 +5566,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
+
+      from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
+      try:
+        vcs_tool = self._getVcsTool(path=path)
+      except NotAWorkingCopyError:
+        pass
+      else:
+        comment = translateString(
+          'Downloaded from ${type} repository at revision ${revision}',
+          mapping={'type': vcs_tool.title,
+                   'revision': vcs_tool.getRevision(True)})
+        workflow_tool = self.getPortalObject().portal_workflow
+        workflow_tool.business_template_building_workflow.notifyWorkflowMethod(
+          self, 'edit', kw={'comment': comment})
 
       self.storeTemplateItemData()
 

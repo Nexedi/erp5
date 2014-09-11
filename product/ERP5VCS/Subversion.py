@@ -65,10 +65,17 @@ class Subversion(WorkingCopy):
   _login_cookie_name = 'erp5_subversion_login'
   _ssl_trust_cookie_name = 'erp5_subversion_ssl_trust'
 
-  def __init__(self, path):
-    WorkingCopy.__init__(self, path)
-    if path and not os.path.exists(os.path.join(self.working_copy, '.svn')):
-      raise NotAWorkingCopyError(self.working_copy)
+  def __init__(self, *args, **kw):
+    WorkingCopy.__init__(self, *args, **kw)
+    try:
+      path = self.working_copy
+    except AttributeError:
+      return
+    from pysvn import ClientError
+    try:
+      self.getRevision()
+    except (ClientError, KeyError):
+      raise NotAWorkingCopyError(path)
 
   def setLogin(self, realm, user, password):
     """Set login information.
@@ -158,6 +165,12 @@ class Subversion(WorkingCopy):
 
   def getRemoteComment(self):
     return 'r%s' % self.info()['revision']
+
+  def getRevision(self, dirty=False):
+    r = self.info()['commit_revision']
+    if dirty and self._getClient().status(self.working_copy, get_all=False):
+      return "%s+" % r
+    return r
 
   def export(self, path, url):
     return self._getClient().export(path, url)
