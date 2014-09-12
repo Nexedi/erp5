@@ -58,6 +58,7 @@ REPLACE INTO\n
   catalog (uid, path,relative_url,security_uid,portal_type,parent_uid)\n
 VALUES\n
   (<dtml-sqlvar uid type="int">, \'deleted\',\'\',NULL,\'\',NULL)\n
+<dtml-var sql_delimiter>\n
 <dtml-comment>\n
   Note on "UPDATE stock" query: this query preserve transactionality of movement\n
   deletion: all movements deleted in a single transaction will be either\n
