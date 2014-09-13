@@ -133,7 +133,10 @@ if len(payment_request_set) > 1:\n
   else:\n
     a((\'getDestinationPaymentRequestTitle\', \'Payment Request\'))\n
 \n
-if len(project_set) > 2:\n
+min_project_count = 1\n
+if context.getSourceProject() or context.getDestinationProject():\n
+  min_project_count = 2\n
+if len(project_set) > min_project_count:\n
   if source:\n
     a((\'getSourceProjectTitle\', \'Project\'))\n
   else:\n
