@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Cancel Transaction</string> </value>
         </item>
@@ -62,6 +66,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>roles</string> </key>
             <value>
               <tuple>
@@ -70,6 +80,19 @@
                 <string>Associate</string>
               </tuple>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: here.getProperty(\'causality_state\', \'default\') != \'building\'</string> </value>
         </item>
       </dictionary>
     </pickle>
