@@ -1,4 +1,5 @@
 from App.Management import Navigation
+from ZODB.POSException import ConflictError
 from Acquisition import aq_parent
 import json
 
@@ -9,7 +10,16 @@ def manage_page_footer(self):
     return default
 
   portal = self.getPortalObject()
-  if portal.portal_preferences.getPreference('preferred_source_code_editor') != 'ace':
+  try:
+    # Make sure we are able to display ZMI when preference tool / catalog does
+    # not work.
+    editor = portal.portal_preferences.getPreference('preferred_source_code_editor')
+  except ConflictError:
+    raise
+  except:
+    editor = None
+
+  if editor != 'ace':
     return default
 
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
