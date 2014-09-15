@@ -220,7 +220,7 @@ def main(dir_list=None, **kw):
     try:
       with open(d, 'wb') as f:
         f.write(bt5list)
-      os.rename(d, d[:-4])
+      os.rename(d, 'bt5list')
     finally:
       try:
         os.remove(d)
