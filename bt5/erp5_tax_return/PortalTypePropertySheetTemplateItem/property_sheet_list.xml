@@ -1,0 +1,10 @@
+<property_sheet_list>
+ <portal_type id="Sample Tax Return">
+  <item>Comment</item>
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Tax Return Line">
+  <item>Base</item>
+  <item>SortIndex</item>
+ </portal_type>
+</property_sheet_list>

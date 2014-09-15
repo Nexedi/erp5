@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Sample Tax Return</type>
+  <workflow>edit_workflow, tax_return_workflow</workflow>
+ </chain>
+</workflow_chain>

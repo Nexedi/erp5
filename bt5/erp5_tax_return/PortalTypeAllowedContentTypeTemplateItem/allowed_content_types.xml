@@ -1,0 +1,10 @@
+<allowed_content_type_list>
+ <portal_type id="Tax Return Module">
+  <item>Tax Return</item>
+ </portal_type>
+ <portal_type id="Tax Return Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+  <item>Tax Return Line</item>
+ </portal_type>
+</allowed_content_type_list>

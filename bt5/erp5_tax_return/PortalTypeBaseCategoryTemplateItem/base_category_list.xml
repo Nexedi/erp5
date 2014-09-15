@@ -1,0 +1,13 @@
+<base_category_list>
+ <portal_type id="Sample Tax Return">
+  <item>group</item>
+ </portal_type>
+ <portal_type id="Tax Return Line">
+  <item>base_contribution</item>
+  <item>group</item>
+  <item>trade_phase</item>
+ </portal_type>
+ <portal_type id="Tax Return Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

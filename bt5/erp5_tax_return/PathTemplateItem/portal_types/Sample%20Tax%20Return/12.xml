@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Role Information" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Configured by ERP5 Configurator</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>12</string> </value>
+        </item>
+        <item>
+            <key> <string>role_category</string> </key>
+            <value>
+              <tuple>
+                <string>function/unternehmen/mitarbeiter</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>role_name</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Assignee</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

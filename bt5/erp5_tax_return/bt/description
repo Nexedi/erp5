@@ -1,0 +1,7 @@
+A framework for configurable Tax Return report.
+
+A Tax Return is an item to aggregate line that needs to be declared to the authorities, such as invoice lines need to be declared for the VAT procedure.
+
+This contain a new type, Tax Return Type that allows to define different level of reporting based on base contribution & portal types.
+A sample type, Sample Tax Return exists as an example. Real reports must be based on this one and define the different lines of the report by creating some Tax Return Line.
+In the default workflow when a tax return is validated, all the selected movements will be set as aggregate of this report so that the return does not change and always displays what has been declared.
