@@ -103,10 +103,10 @@ AAA=</string> </value>
                              global reference_list python:[here.getReference(\'R\')]">\n
       <tal:block metal:define-macro="line"\n
                  tal:define="requirement_base python:\'-\'.join(reference_list)">\n
-        <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\' tal:content="python:\'%s %s\' % (current_requirement.getReference(requirement_base), current_requirement.getTitle())"\n
+        <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\' tal:content="python:\'%s %s\' % (current_requirement.getReference(requirement_base), current_requirement.getTranslatedTitle())"\n
                 tal:attributes="text:outline-level python:\'%s\' % depth;\n
                                  text:style-name python:\'Heading_20_%s\' % depth"><tal:trans i18n:domain="erp5_ui" i18n:translate="Project Line">Project Line</tal:trans></text:h>\n
-        <text:p text:style-name=\'Text_20_body\' tal:content="current_requirement/getDescription"\n
+        <text:p text:style-name=\'Text_20_body\' tal:content="current_requirement/getTranslatedDescription"\n
                 tal:condition="current_requirement/getDescription">Description of project line.</text:p>\n
         <tal:block tal:define="requirement_list python:current_requirement.contentValues(portal_type=\'Requirement\', sort_on=((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\')">\n
       <!-- make sure there are some lines to display in the table -->\n
@@ -142,13 +142,13 @@ AAA=</string> </value>
             <text:p text:style-name=\'Table_20_Contents\' tal:content="python:requirement.getReference(\'%s-%s\' % (requirement_base, requirement.getIntIndex(requirement.getId())))">Reference here</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'RequirementList.A2\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\' tal:content="requirement/getTitle">Title here</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\' tal:content="requirement/getTranslatedTitle">Title here</text:p>\n
           </table:table-cell>\n
           <table:table-cell table:style-name=\'RequirementList.C2\' office:value-type=\'string\'>\n
-            <text:p text:style-name=\'Table_20_Contents\'  tal:content="requirement/getDescription">Description here</text:p>\n
+            <text:p text:style-name=\'Table_20_Contents\'  tal:content="requirement/getTranslatedDescription">Description here</text:p>\n
             <text:p text:style-name=\'Comment\'\n
-              tal:condition="python: request.get(\'show_comment\') and requirement.getComment()"\n
-              tal:content="requirement/getComment">Comment here</text:p>\n
+              tal:condition="python: request.get(\'show_comment\') and requirement.getTranslatedComment()"\n
+              tal:content="requirement/getTranslatedComment">Comment here</text:p>\n
           </table:table-cell>\n
         </table:table-row>\n
         </tal:block>\n
@@ -171,8 +171,7 @@ AAA=</string> </value>
   </tal:block>\n
     </office:text>\n
   </office:body>\n
-</office:document-content>\n
-
+</office:document-content>
 
 ]]></unicode> </value>
         </item>
@@ -198,7 +197,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
