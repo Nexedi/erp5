@@ -236,3 +236,5 @@ if __name__ == '__main__':
     check(data, 5, 0, 5, '0123X', [0])
     data.truncate(3)
     check(data, 3, 0, 3, '012', [0])
+    data.truncate(0)
+    check(data, 0, 0, 0, '', [])
