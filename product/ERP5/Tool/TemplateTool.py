@@ -397,7 +397,7 @@ class TemplateTool (BaseTool):
         os.close(tempid) # Close the opened fd as soon as possible
         with open(temppath, 'wb') as tempfile:
           tempfile.write(import_file.read())
-        bt = self._importBT(temppath, id)
+        bt = self._download_local(temppath, id)
       finally:
         os.remove(temppath)
       bt.build(no_action=True)
