@@ -68,6 +68,7 @@ new_object = module[new_id]\n
 # because of programmable acquisition\n
 new_object.edit(\n
         title=current_object.getTitle(),\n
+        causality_value=context,\n
         client_value_list = current_object.getSourceValueList()\n
 )\n
 # Now create the relation between the current object and the new one\n
