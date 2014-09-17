@@ -181,10 +181,11 @@ class BTreeData(Persistent):
             # It is not possible to drop keys as we iterate when using
             # iterkeys, so call minKey repeatedly.
             while True:
-                next_key = minKey(offset)
-                if next_key is None:
-                    break
-                del tree[key]
+                try:
+                  next_key = minKey(offset)
+                except ValueError:
+                  break
+                del tree[next_key]
 
 if __name__ == '__main__':
 
@@ -229,3 +230,9 @@ if __name__ == '__main__':
     data.write('ABCDE', 6)
     check(data, 11, 0, 11, '0123XYABCDE', [0, 5, 8, 10])
 
+    data.truncate(7)
+    check(data, 7, 0, 7, '0123XYA', [0, 5])
+    data.truncate(5)
+    check(data, 5, 0, 5, '0123X', [0])
+    data.truncate(3)
+    check(data, 3, 0, 3, '012', [0])
