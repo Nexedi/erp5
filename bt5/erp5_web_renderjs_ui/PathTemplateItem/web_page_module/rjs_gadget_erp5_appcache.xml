@@ -100,7 +100,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 01 Aug 2014 13:05:19 +0000\n
+# generated on Thu, 18 Sep 2014 12:48:25 +0000\n
 CACHE:\n
 images/ajax-loader.gif\n
 RSVP.js\n
@@ -126,12 +126,18 @@ gadget_codemirror.js\n
 gadget_erp5.css\n
 gadget_erp5.html\n
 gadget_erp5.js\n
+gadget_erp5_breadcrumb.html\n
+gadget_erp5_breadcrumb.js\n
+gadget_erp5_floatfield.html\n
+gadget_erp5_floatfield.js\n
 gadget_erp5_form.html\n
 gadget_erp5_form.js\n
 gadget_erp5_listbox.html\n
 gadget_erp5_listbox.js\n
 gadget_erp5_listfield.html\n
 gadget_erp5_listfield.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
 gadget_erp5_pt_form_list.html\n
 gadget_erp5_pt_form_list.js\n
 gadget_erp5_pt_form_view.html\n
@@ -148,6 +154,8 @@ gadget_erp5_stringfield.html\n
 gadget_erp5_stringfield.js\n
 gadget_erp5_tab_list.html\n
 gadget_erp5_tab_list.js\n
+gadget_erp5_textareafield.html\n
+gadget_erp5_textareafield.js\n
 gadget_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
@@ -293,7 +301,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.39087.37460.32904</string> </value>
+                <value> <string>937.42655.40265.30037</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +319,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898319.86</float>
+                        <float>1411044505.47</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
