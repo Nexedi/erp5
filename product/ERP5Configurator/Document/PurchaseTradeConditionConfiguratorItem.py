@@ -38,7 +38,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup Rules. """
 
   meta_type = 'ERP5 Purchase Trade Condition Configurator Item'
-  portal_type = 'Business Process Configurator Item'
+  portal_type = 'Purchase Trade Condition Configurator Item'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
