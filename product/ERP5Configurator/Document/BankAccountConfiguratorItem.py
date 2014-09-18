@@ -94,7 +94,6 @@ class BankAccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                   }
           bank_account.edit(**bank_dict)
 
-          business_configuration = self.getBusinessConfigurationValue()
           # store globally bank_account_id
           business_configuration.setGlobalConfigurationAttr(bank_account_id=bank_account.getId())
 

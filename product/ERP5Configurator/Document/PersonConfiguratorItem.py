@@ -72,9 +72,14 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
         group_id = getattr(aq_base(self), 'group_id', None)
         site_id = getattr(aq_base(self), 'site_id', None)
 
-        if getattr(aq_base(self), 'organisation_id', None) is not None:
+        business_configuration = self.getBusinessConfigurationValue()
+        organisation_id = getattr(aq_base(self), 'organisation_id', None)
+        if organisation_id is None:
+          organisation_id = business_configuration.\
+                              getGlobalConfigurationAttr('organisation_id')
+        if organisation_id is not None:
           person.setCareerSubordination('organisation_module/%s' % \
-                                        self.organisation_id)
+                                         organisation_id)
 
         # save
         person.edit(**{'default_email_text': self.getDefaultEmailText(),
