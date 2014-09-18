@@ -212,13 +212,14 @@
           result.data = answer.target.response;\n
         }\n
       } else if (typeof answer.target.responseText === "string") {\n
-        dom = new DOMParser().parseFromString(\n
-          answer.target.responseText,\n
-          "text/html"\n
-        );\n
-        result.message = (dom.querySelector(\'#master\') ||\n
-                          dom.firstElementChild).textContent;\n
-        if (!result.message) { delete result.message; }\n
+        result.message = answer.target.responseText;\n
+//         dom = new DOMParser().parseFromString(\n
+//           answer.target.responseText,\n
+//           "text/html"\n
+//         );\n
+//         result.message = (dom.querySelector(\'#master\') ||\n
+//                           dom.firstElementChild).textContent;\n
+//         if (!result.message) { delete result.message; }\n
       }\n
       throw result;\n
     }\n
@@ -640,7 +641,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.37712.8330.56490</string> </value>
+                <value> <string>937.690.6828.44612</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -658,7 +659,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406816893.97</float>
+                        <float>1410861948.88</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
