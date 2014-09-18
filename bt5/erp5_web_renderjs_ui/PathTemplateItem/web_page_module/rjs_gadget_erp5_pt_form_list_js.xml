@@ -99,10 +99,8 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
+            <value> <string>/*global window, rJS, RSVP */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
@@ -111,9 +109,9 @@
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-      var gadget = this;\n
-      var form_options = options.erp5_form || {};\n
-      var search_options = {};\n
+      var gadget = this,\n
+        form_options = options.erp5_form || {},\n
+        search_options = {};\n
 \n
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
@@ -261,7 +259,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -275,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.38886.21323.13414</string> </value>
+                <value> <string>937.42830.22069.25770</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406887769.32</float>
+                        <float>1411054986.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

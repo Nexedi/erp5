@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>(function (window, rJS, RSVP, CodeMirror) {\n
+            <value> <string>/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, CodeMirror */\n
+(function (window, rJS, CodeMirror) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -129,13 +131,13 @@
         vimMode: true,\n
         matchBrackets: true,\n
         showCursorWhenSelecting: true,\n
-        autofocus: false,\n
+        autofocus: false\n
       });\n
 \n
     });\n
- \n
+\n
      // CodeMirror.commands.save = function(){ alert("Saving"); };\n
-}(window, rJS, RSVP, CodeMirror));</string> </value>
+}(window, rJS, CodeMirror));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -270,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.25841.6645.48810</string> </value>
+                <value> <string>937.42768.23617.25890</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406103469.44</float>
+                        <float>1411051242.17</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

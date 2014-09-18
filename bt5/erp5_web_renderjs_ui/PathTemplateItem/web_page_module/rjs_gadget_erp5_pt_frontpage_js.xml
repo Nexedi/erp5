@@ -101,8 +101,8 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, Handlebars, initGadgetMixin */\n
-/*jslint nomen: true */\n
+/*global window, rJS, RSVP, Handlebars */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, Handlebars) {\n
   "use strict";\n
 \n
@@ -143,7 +143,7 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function (options) {\n
+    .declareMethod("render", function () {\n
       var gadget = this;\n
 \n
       return gadget.jio_allDocs({\n
@@ -172,7 +172,7 @@
               title: doc[1]\n
             };\n
           }\n
-          \n
+\n
           parameter_list.sort(function (a, b) {\n
             var result = 0;\n
             if (a.title < b.title) {\n
@@ -326,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.39090.50399.1467</string> </value>
+                <value> <string>937.42839.47775.36010</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407400113.3</float>
+                        <float>1411055530.72</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

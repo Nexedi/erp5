@@ -99,8 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, console, RSVP */\n
-(function (rJS) {\n
+            <value> <string>/*global window, rJS */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -120,7 +121,7 @@
       return {};\n
     });\n
 \n
-}(rJS));</string> </value>
+}(window, rJS));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -255,7 +256,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.35997.62527.57105</string> </value>
+                <value> <string>937.42715.45132.18756</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -273,7 +274,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406712967.57</float>
+                        <float>1411055878.45</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

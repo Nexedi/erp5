@@ -101,12 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+/*global window, document, rJS, RSVP, Handlebars, loopEventListener */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP, Handlebars, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -144,8 +141,8 @@
         });\n
     })\n
 \n
-   .declareAcquiredMethod("aq_put", "jio_put")\n
-   .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("aq_put", "jio_put")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -156,7 +153,7 @@
         form_gadget = this,\n
         promise_list = [],\n
         i;\n
-  \n
+\n
       for (i = 0; i < action_list.length; i += 1) {\n
         promise_list.push(this.whoWantToDisplayThisPage({\n
           name: action_list[i].name\n
@@ -180,39 +177,39 @@
             all_result = all_gadget[2],\n
             actionlist = [],\n
             class_list,\n
-            i;\n
+            j;\n
 \n
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
-          \n
+\n
           tab_options.erp5_document = options.erp5_document;\n
           tab_options.form_definition = options.form_definition;\n
           tab_options.view = options.view;\n
           tab_options.action_view = options.action_view;\n
 \n
-          for (i = 0; i < all_result.length; i += 1) {\n
-            switch (i) {\n
-              case 0:\n
-                class_list = "ui-btn ui-first-child";\n
-                break;\n
-              case (all_result.length - 1):\n
-                class_list = "ui-btn ui-last-child";\n
-                break;\n
-              default:\n
-                class_list = "ui-btn";\n
-                break;\n
+          for (j = 0; j < all_result.length; j += 1) {\n
+            switch (j) {\n
+            case 0:\n
+              class_list = "ui-btn ui-first-child";\n
+              break;\n
+            case (all_result.length - 1):\n
+              class_list = "ui-btn ui-last-child";\n
+              break;\n
+            default:\n
+              class_list = "ui-btn";\n
+              break;\n
             }\n
             actionlist.push({\n
               class: class_list,\n
-              title: action_list[i].title,\n
-              link: all_result[i],\n
+              title: action_list[j].title,\n
+              link: all_result[j]\n
             });\n
           }\n
           form_gadget.__element.appendChild(fragment);\n
           form_gadget.__element.querySelector("div.ui-controlgroup-controls")\n
             .innerHTML = workflow_template({actionlist: actionlist});\n
-          \n
+\n
 \n
           return RSVP.all([\n
             all_gadget[0].render(tab_options),\n
@@ -232,9 +229,9 @@
             return erp5_form.getContent();\n
           })\n
           .push(function (data) {\n
-            data["_id"] = form_gadget.props.id;\n
+            data._id = form_gadget.props.id;\n
             return form_gadget.aq_put(data, {"_view": form_gadget.props.view});\n
-          })\n
+          });\n
       }\n
 \n
       // Listen to form submit\n
@@ -244,9 +241,9 @@
         false,\n
         formSubmit\n
       );\n
-  });\n
+    });\n
 \n
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP, Handlebars, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -369,7 +366,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -383,7 +380,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.22215.35138.15906</string> </value>
+                <value> <string>937.42837.59193.40226</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -401,7 +398,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409818069.12</float>
+                        <float>1411055410.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

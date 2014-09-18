@@ -101,12 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, document, rJS, RSVP*/\n
+(function (window, document, rJS, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -132,7 +129,7 @@
         });\n
     })\n
 \n
-   .declareAcquiredMethod("aq_put", "jio_put")\n
+    .declareAcquiredMethod("aq_put", "jio_put")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -154,7 +151,7 @@
       form_gadget.state_parameter_dict = options.form_gadget || {};\n
       // XXX Hardcoded for searchfield - remove later!\n
       if (form_definition.extended_search) {\n
-         suboption_dict.extended_search = form_definition.extended_search;\n
+        suboption_dict.extended_search = form_definition.extended_search;\n
       }\n
 \n
       form_gadget.props.gadget_list = [];\n
@@ -167,7 +164,7 @@
               fieldset_element = document.createElement("fieldset"),\n
               group_queue = new RSVP.Queue();\n
 \n
-            function addField(field, scope) {\n
+            function addField(field) {\n
               group_queue.push(function () {\n
                 if (rendered_form.hasOwnProperty(field[0])) {\n
                   // Field is enabled in this context\n
@@ -252,41 +249,39 @@
 \n
 \n
     .declareMethod("getContent", function () {\n
-      var form_gadget = this;\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        data = {},\n
+        queue = new RSVP.Queue();\n
 \n
-        var k,\n
-          field_gadget,\n
-          count = form_gadget.props.gadget_list.length,\n
-//           // data = new FormData(),\n
-          data = {},\n
-          queue = new RSVP.Queue();\n
-\n
-        function extendData(field_data) {\n
-          var key;\n
-          for (key in field_data) {\n
-            if (field_data.hasOwnProperty(key)) {\n
-              data[key] = field_data[key];\n
-            }\n
+      function extendData(field_data) {\n
+        var key;\n
+        for (key in field_data) {\n
+          if (field_data.hasOwnProperty(key)) {\n
+            data[key] = field_data[key];\n
           }\n
         }\n
+      }\n
 \n
-        for (k = 0; k < count; k += 1) {\n
-          field_gadget = form_gadget.props.gadget_list[k];\n
-          // XXX Hack until better defined\n
-          if (field_gadget.getContent !== undefined) {\n
-            queue\n
-              .push(field_gadget.getContent.bind(field_gadget))\n
-              .push(extendData);\n
-          }\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.getContent !== undefined) {\n
+          queue\n
+            .push(field_gadget.getContent.bind(field_gadget))\n
+            .push(extendData);\n
         }\n
-        return queue\n
-          .push(function () {\n
-            return data;\n
-          });\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return data;\n
+        });\n
 \n
-  });\n
+    });\n
 \n
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP));
 
 ]]></string> </value>
         </item>
@@ -409,7 +404,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -423,7 +418,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.56175.55013.14626</string> </value>
+                <value> <string>937.42816.54745.57241</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -441,7 +436,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407924093.61</float>
+                        <float>1411054146.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

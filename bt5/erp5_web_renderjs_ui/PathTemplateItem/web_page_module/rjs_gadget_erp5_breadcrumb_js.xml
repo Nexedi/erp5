@@ -99,12 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+            <value> <string>/*jslint indent: 2, maxerr: 3 */\n
+/*global URI, document, window, rJS */\n
+(function (URI, document, window, rJS) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -166,9 +163,9 @@
             parent_element.appendChild(link_element);\n
           });\n
       }\n
-  });\n
+    });\n
 \n
-}(window, rJS, RSVP));</string> </value>
+}(URI, document, window, rJS));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -289,7 +286,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -303,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.8179.20788.60245</string> </value>
+                <value> <string>937.42799.61797.63761</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -321,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1408976172.25</float>
+                        <float>1411053138.25</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

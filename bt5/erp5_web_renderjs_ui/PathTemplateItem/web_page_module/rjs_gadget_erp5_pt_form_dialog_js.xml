@@ -101,12 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, RSVP, FormData, jIO*/\n
+(function (window, rJS, RSVP, FormData, jIO) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -232,7 +229,7 @@
       );\n
   });\n
 \n
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, FormData, jIO));
 
 ]]></string> </value>
         </item>
@@ -369,7 +366,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46364.59346.52275</string> </value>
+                <value> <string>937.42828.64511.54152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,7 +384,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407335049.69</float>
+                        <float>1411054893.66</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

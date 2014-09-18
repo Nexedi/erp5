@@ -101,8 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, jIO */\n
-(function (rJS, jIO) {\n
+/*global window, rJS, jIO */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, jIO) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -156,7 +157,7 @@
       return storage.post.apply(storage, arguments);\n
     });\n
 \n
-}(rJS, jIO));
+}(window, rJS, jIO));
 
 ]]></string> </value>
         </item>
@@ -279,7 +280,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -293,7 +294,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.17267.5882.44902</string> </value>
+                <value> <string>937.42715.45132.18756</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +312,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933455.01</float>
+                        <float>1411056501.97</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

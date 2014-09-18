@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, URI, console, $ */\n
-/*jslint indent: 2, maxlen: 80, nomen: true */\n
-(function (rJS, RSVP, URI) {\n
+/*global window, document, rJS, RSVP, jQuery, URI, console, jQuery */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP, $, URI, console) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -127,7 +127,7 @@
       });\n
   }\n
 \n
-  function renderFrontpage(gadget, options) {\n
+  function renderFrontpage(gadget) {\n
     return gadget.props.breadcrumb_gadget.render({title: "ERP5"})\n
       .push(function () {\n
         return gadget.declareGadget(gadget.props.frontpage_gadget, {\n
@@ -142,7 +142,7 @@
       });\n
   }\n
 \n
-  function renderLoginForm(gadget, options) {\n
+  function renderLoginForm(gadget) {\n
     return gadget.props.breadcrumb_gadget.render({title: "Login"})\n
       .push(function () {\n
         return gadget.declareGadget("gadget_erp5_pt_loginform.html", {\n
@@ -206,11 +206,11 @@
         sub_options.view = options.view;\n
         sub_options.action_view = gadget.props.action_view;\n
 \n
-       return RSVP.all([\n
-         gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
-           scope: "form_gadget"\n
-         })\n
-       ]);\n
+        return RSVP.all([\n
+          gadget.declareGadget("gadget_erp5_pt_" + sub_options.form_definition.pt + ".html", {\n
+            scope: "form_gadget"\n
+          })\n
+        ]);\n
       })\n
       .push(function (gadget_list) {\n
         var form_gadget = gadget_list[0],\n
@@ -255,15 +255,15 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {\n
-         frontpage_gadget: "gadget_erp5_pt_frontpage.html",\n
-         hateoas_url: "hateoas/",\n
-         action_view: "action_object_view",\n
-         default_view_reference: "view",\n
+        frontpage_gadget: "gadget_erp5_pt_frontpage.html",\n
+        hateoas_url: "hateoas/",\n
+        action_view: "action_object_view",\n
+        default_view_reference: "view"\n
       };\n
       return g.getDeclaredGadget("breadcrumb")\n
-      .push(function (sub_gadget) {\n
-        g.props.breadcrumb_gadget = sub_gadget;\n
-      });\n
+        .push(function (sub_gadget) {\n
+          g.props.breadcrumb_gadget = sub_gadget;\n
+        });\n
     })\n
 \n
     // Configure jIO to use localstorage\n
@@ -352,10 +352,11 @@
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
+        new_element,\n
         queue;\n
 \n
       if (options.jio_key === undefined) {\n
-        var new_element = gadget.__element.querySelector(".ui-icon-plus");\n
+        new_element = gadget.__element.querySelector(".ui-icon-plus");\n
         new_element.href = "";\n
         if (!new_element.classList.contains("ui-disabled")) {\n
           new_element.classList.add("ui-disabled");\n
@@ -392,10 +393,10 @@
 \n
           // add all HTML nodes to fragment\n
           for (i = 0, len = response_list.length; i < len; i += 1) {\n
-             item = response_list[i] || {};\n
-             if (item.nodeType && item.nodeType == 1) {\n
-               fragment.appendChild(item);\n
-             }\n
+            item = response_list[i] || {};\n
+            if (item.nodeType && item.nodeType === 1) {\n
+              fragment.appendChild(item);\n
+            }\n
           }\n
 \n
           // Clear first to DOM, append after to reduce flickering/manip\n
@@ -420,7 +421,7 @@
         });\n
     });\n
 \n
-}(rJS, RSVP, URI));
+}(window, document, rJS, RSVP, jQuery, URI, console));
 
 ]]></string> </value>
         </item>
@@ -543,7 +544,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -557,7 +558,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.22192.46889.64802</string> </value>
+                <value> <string>937.42777.53771.30873</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -575,7 +576,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409819356.02</float>
+                        <float>1411051824.11</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

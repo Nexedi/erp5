@@ -101,8 +101,8 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global RSVP, FileReader */\n
-/*jslint unparam: true */\n
+/*global window, RSVP, FileReader */\n
+/*jslint indent: 2, maxerr: 3, unparam: true */\n
 (function (window, RSVP, FileReader) {\n
   "use strict";\n
 \n
@@ -314,7 +314,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -328,7 +328,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.16154.18438.49817</string> </value>
+                <value> <string>937.42855.7627.63982</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -346,7 +346,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933455.07</float>
+                        <float>1411056451.0</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

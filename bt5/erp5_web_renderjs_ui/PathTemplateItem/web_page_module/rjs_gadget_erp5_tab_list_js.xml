@@ -101,12 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP, $) {\n
+/*global window, rJS, Handlebars, RSVP */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, Handlebars, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -147,7 +144,7 @@
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-      var tab_gadget = this, \n
+      var tab_gadget = this,\n
         nav_element = tab_gadget.props.element.querySelector(".grid-container"),\n
         erp5_document = options.erp5_document,\n
         view_list = erp5_document._links[options.action_view],\n
@@ -167,7 +164,7 @@
       for (i = 0; i < view_list.length; i += 1) {\n
         promise_list.push(this.whoWantToDisplayThisPage({\n
           name: view_list[i].name\n
-        }));     \n
+        }));\n
       }\n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -178,12 +175,12 @@
             if (view_list[i].name === options.view) {\n
               nav_html += active_navigation_template({\n
                 title: view_list[i].title,\n
-                link: all_result[i],\n
+                link: all_result[i]\n
               });\n
             } else {\n
               nav_html += navigation_template({\n
                 title: view_list[i].title,\n
-                link: all_result[i],\n
+                link: all_result[i]\n
               });\n
             }\n
 \n
@@ -196,7 +193,7 @@
 \n
     });\n
 \n
-}(window, rJS, RSVP, jQuery));
+}(window, rJS, Handlebars, RSVP));
 
 ]]></string> </value>
         </item>
@@ -319,7 +316,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -333,7 +330,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.690.6828.44612</string> </value>
+                <value> <string>937.42853.28217.34935</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409818434.1</float>
+                        <float>1411056327.35</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

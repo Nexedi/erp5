@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*global window, rJS, Handlebars */\n
-/*jslint nomen: true */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, Handlebars) {\n
   "use strict";\n
 \n
@@ -292,7 +292,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.47463.9384.63232</string> </value>
+                <value> <string>937.42824.63714.12373</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -310,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407400855.36</float>
+                        <float>1411054676.69</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
