@@ -62,6 +62,10 @@ allowed_portal_type_list = portal.getPortalDocumentTypeList() + portal.getPortal
 if portal_type not in allowed_portal_type_list:\n
   return False\n
 \n
+# XXX hardcoded validation states blacklist. Do State Types?\n
+if context.getValidationState() in ["draft", "deleted", "cancelled", "archived"]:\n
+  return False\n
+\n
 # XXX: we do check if "data" methods exists on pretending to be Document portal types\n
 # we need a way to do this by introspection\n
 return (getattr(context, "getData", None) is not None and context.getData() not in MARKER) or \\\n
