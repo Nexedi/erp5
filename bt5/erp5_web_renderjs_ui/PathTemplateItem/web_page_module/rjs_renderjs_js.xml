@@ -101,6 +101,16 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// IE does not support have Document.prototype.contains.\n
+if (typeof document.contains != \'function\') {\n
+  Document.prototype.contains = function(node) {\n
+    if (node === this || node.parentNode === this)\n
+      return true;\n
+    return this.documentElement.contains(node);\n
+ }\n
+}\n
+\n
+\n
 /*\n
  * js_channel is a very lightweight abstraction on top of\n
  * postMessage which defines message formats and semantics\n
@@ -760,34 +770,8 @@
   };\n
 }(DOMParser));\n
 \n
-;var DOMattachCSS = \'data:text/css;base64,QGtleWZyYW1lcyBub2RlSW5zZXJ0ZWQgeyAgCiAgICBmcm9tIHsgIAogICAgICAgIG91dGxpbmUtY29sb3I6ICNmZmY7IAogICAgfQogICAgdG8geyAgCiAgICAgICAgb3V0bGluZS1jb2xvcjogIzAwMDsKICAgIH0gCn0KCkAtbW96LWtleWZyYW1lcyBub2RlSW5zZXJ0ZWQgeyAgCiAgICBmcm9tIHsgIAogICAgICAgIG91dGxpbmUtY29sb3I6ICNmZmY7IAogICAgfQogICAgdG8geyAgCiAgICAgICAgb3V0bGluZS1jb2xvcjogIzAwMDsKICAgIH0gIAp9CgpALXdlYmtpdC1rZXlmcmFtZXMgbm9kZUluc2VydGVkIHsgIAogICAgZnJvbSB7ICAKICAgICAgICBvdXRsaW5lLWNvbG9yOiAjZmZmOyAKICAgIH0KICAgIHRvIHsgIAogICAgICAgIG91dGxpbmUtY29sb3I6ICMwMDA7CiAgICB9ICAKfQoKW2RhdGEtZ2FkZ2V0LXVybF0gewogICAgYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjAxczsKICAgIC1tb3otYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjAxczsKICAgIC13ZWJraXQtYW5pbWF0aW9uLWR1cmF0aW9uOiAwLjAxczsKICAgIGFuaW1hdGlvbi1uYW1lOiBub2RlSW5zZXJ0ZWQ7CiAgICAtbW96LWFuaW1hdGlvbi1uYW1lOiBub2RlSW5zZXJ0ZWQ7CiAgICAtd2Via2l0LWFuaW1hdGlvbi1uYW1lOiBub2RlSW5zZXJ0ZWQ7Cn0K\';;/*! RenderJs */\n
+;/*! RenderJs */\n
 /*jslint nomen: true*/\n
-\n
-function promiseEventListener(target, type, useCapture) {\n
-  "use strict";\n
-  //////////////////////////\n
-  // Resolve the promise as soon as the event is triggered\n
-  // eventListener is removed when promise is cancelled/resolved/rejected\n
-  //////////////////////////\n
-  var handle_event_callback;\n
-\n
-  function canceller() {\n
-    target.removeEventListener(type, handle_event_callback, useCapture);\n
-  }\n
-\n
-  function resolver(resolve) {\n
-    handle_event_callback = function (evt) {\n
-      canceller();\n
-      evt.stopPropagation();\n
-      evt.preventDefault();\n
-      resolve(evt);\n
-      return false;\n
-    };\n
-\n
-    target.addEventListener(type, handle_event_callback, useCapture);\n
-  }\n
-  return new RSVP.Promise(resolver, canceller);\n
-}\n
 \n
 function loopEventListener(target, type, useCapture, callback) {\n
   "use strict";\n
@@ -838,8 +822,8 @@ function loopEventListener(target, type, useCapture, callback) {\n
  * renderJs - Generic Gadget library renderer.\n
  * http://www.renderjs.org/documentation\n
  */\n
-(function (document, window, RSVP, DOMParser, Channel, DOMattachCSS,\n
-           undefined) {\n
+(function (document, window, RSVP, DOMParser, Channel, MutationObserver,\n
+           Node, undefined) {\n
   "use strict";\n
 \n
   var gadget_model_dict = {},\n
@@ -847,9 +831,12 @@ function loopEventListener(target, type, useCapture, callback) {\n
     stylesheet_registration_dict = {},\n
     gadget_loading_klass,\n
     loading_klass_promise,\n
-    waitForDomAttachment,\n
-    renderJS;\n
+    renderJS,\n
+    Monitor;\n
 \n
+  /////////////////////////////////////////////////////////////////\n
+  // Helper functions\n
+  /////////////////////////////////////////////////////////////////\n
   function removeHash(url) {\n
     var index = url.indexOf(\'#\');\n
     if (index > 0) {\n
@@ -858,32 +845,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
     return url;\n
   }\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // RenderJSGadget\n
-  /////////////////////////////////////////////////////////////////\n
-  function RenderJSGadget() {\n
-    if (!(this instanceof RenderJSGadget)) {\n
-      return new RenderJSGadget();\n
-    }\n
-  }\n
-//   RenderJSGadget.prototype.__monitor = RSVP.reject(new Error("No monitor"));\n
-  RenderJSGadget.prototype.__title = "";\n
-  RenderJSGadget.prototype.__interface_list = [];\n
-  RenderJSGadget.prototype.__path = "";\n
-  RenderJSGadget.prototype.__html = "";\n
-  RenderJSGadget.prototype.__required_css_list = [];\n
-  RenderJSGadget.prototype.__required_js_list = [];\n
-\n
-//   function dError(error) {\n
-//     console.error(error);\n
-//     alert(error);\n
-//   }\n
-\n
   function letsCrash(e) {\n
-    console.error(e);\n
-    console.error(e.stack);\n
-    // XXX Do not crash the application if it fails\n
-    // Where to write the error?\n
     if (e.constructor === XMLHttpRequest) {\n
       e = {\n
         readyState: e.readyState,\n
@@ -898,18 +860,149 @@ function loopEventListener(target, type, useCapture, callback) {\n
       try {\n
         e = JSON.stringify(e);\n
       } catch (ignore) {\n
-//         console.error(exception);\n
       }\n
     }\n
-//     console.warn(e);\n
     document.getElementsByTagName(\'body\')[0].textContent = e;\n
+    // XXX Do not crash the application if it fails\n
+    // Where to write the error?\n
+    /*global console*/\n
+    console.error(e.stack);\n
+    console.error(e);\n
   }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Service Monitor promise\n
+  /////////////////////////////////////////////////////////////////\n
+  function ResolvedMonitorError(message) {\n
+    this.name = "resolved";\n
+    if ((message !== undefined) && (typeof message !== "string")) {\n
+      throw new TypeError(\'You must pass a string.\');\n
+    }\n
+    this.message = message || "Default Message";\n
+  }\n
+  ResolvedMonitorError.prototype = new Error();\n
+  ResolvedMonitorError.prototype.constructor = ResolvedMonitorError;\n
+\n
+  Monitor = function () {\n
+    var monitor = this,\n
+      promise_list = [],\n
+      promise,\n
+      reject,\n
+      notify,\n
+      resolved;\n
+\n
+    if (!(this instanceof Monitor)) {\n
+      return new Monitor();\n
+    }\n
+\n
+    function canceller() {\n
+      var len = promise_list.length,\n
+        i;\n
+      for (i = 0; i < len; i += 1) {\n
+        promise_list[i].cancel();\n
+      }\n
+      // Clean it to speed up other canceller run\n
+      promise_list = [];\n
+    }\n
+\n
+    promise = new RSVP.Promise(function (done, fail, progress) {\n
+      reject = function (rejectedReason) {\n
+        if (resolved) {\n
+          return;\n
+        }\n
+        monitor.isRejected = true;\n
+        monitor.rejectedReason = rejectedReason;\n
+        resolved = true;\n
+        canceller();\n
+        return fail(rejectedReason);\n
+      };\n
+      notify = progress;\n
+    }, canceller);\n
+\n
+    monitor.cancel = function () {\n
+      if (resolved) {\n
+        return;\n
+      }\n
+      resolved = true;\n
+      promise.cancel();\n
+      promise.fail(function (rejectedReason) {\n
+        monitor.isRejected = true;\n
+        monitor.rejectedReason = rejectedReason;\n
+      });\n
+    };\n
+    monitor.then = function () {\n
+      return promise.then.apply(promise, arguments);\n
+    };\n
+    monitor.fail = function () {\n
+      return promise.fail.apply(promise, arguments);\n
+    };\n
+\n
+    monitor.monitor = function (promise_to_monitor) {\n
+      if (resolved) {\n
+        throw new ResolvedMonitorError();\n
+      }\n
+      var queue = new RSVP.Queue()\n
+        .push(function () {\n
+          return promise_to_monitor;\n
+        })\n
+        .push(function (fulfillmentValue) {\n
+          // Promise to monitor is fullfilled, remove it from the list\n
+          var len = promise_list.length,\n
+            sub_promise_to_monitor,\n
+            new_promise_list = [],\n
+            i;\n
+          for (i = 0; i < len; i += 1) {\n
+            sub_promise_to_monitor = promise_list[i];\n
+            if (!(sub_promise_to_monitor.isFulfilled ||\n
+                sub_promise_to_monitor.isRejected)) {\n
+              new_promise_list.push(sub_promise_to_monitor);\n
+            }\n
+          }\n
+          promise_list = new_promise_list;\n
+        }, function (rejectedReason) {\n
+          if (rejectedReason instanceof RSVP.CancellationError) {\n
+            if (!(promise_to_monitor.isFulfilled &&\n
+                  promise_to_monitor.isRejected)) {\n
+              // The queue could be cancelled before the first push is run\n
+              promise_to_monitor.cancel();\n
+            }\n
+          }\n
+          reject(rejectedReason);\n
+          throw rejectedReason;\n
+        }, function (notificationValue) {\n
+          notify(notificationValue);\n
+          return notificationValue;\n
+        });\n
+\n
+      promise_list.push(queue);\n
+\n
+      return this;\n
+    };\n
+  };\n
+\n
+  Monitor.prototype = Object.create(RSVP.Promise.prototype);\n
+  Monitor.prototype.constructor = Monitor;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function RenderJSGadget() {\n
+    if (!(this instanceof RenderJSGadget)) {\n
+      return new RenderJSGadget();\n
+    }\n
+  }\n
+  RenderJSGadget.prototype.__title = "";\n
+  RenderJSGadget.prototype.__interface_list = [];\n
+  RenderJSGadget.prototype.__path = "";\n
+  RenderJSGadget.prototype.__html = "";\n
+  RenderJSGadget.prototype.__required_css_list = [];\n
+  RenderJSGadget.prototype.__required_js_list = [];\n
 \n
   function createMonitor(g) {\n
     if (g.__monitor !== undefined) {\n
       g.__monitor.cancel();\n
     }\n
-    g.__monitor = new RSVP.Monitor();\n
+    g.__monitor = new Monitor();\n
     g.__monitor.fail(function (error) {\n
       if (!(error instanceof RSVP.CancellationError)) {\n
         return g.aq_reportServiceError(error);\n
@@ -972,134 +1065,13 @@ function loopEventListener(target, type, useCapture, callback) {\n
         for (i = 0; i < service_list.length; i += 1) {\n
           gadget.__monitor.monitor(service_list[i].apply(gadget));\n
         }\n
-        // + listen for DOM detach\n
-        function checkDetachEvent(evt) {\n
-//           gadget.__monitor.cancel("Et hop");\n
-//           if (evt.eventPhase === 2) {\n
-//             console.log("Removed from DOM");\n
-//           var previous_monitor = gadget.__monitor;\n
-          createMonitor(gadget);\n
-//           previous_monitor.cancel("Removed from DOM");\n
-          gadget.__monitor.monitor(waitForDomAttachment(gadget));\n
-//             gadget_instance.__monitor = new RSVP.Monitor();\n
-//             startService(gadget_instance);\n
-//             evt.stopPropagation();\n
-//             evt.preventDefault();\n
-//             return false;\n
-//           }\n
-        }\n
-        gadget.__monitor.monitor(\n
-          loopEventListener(\n
-            gadget.__element,\n
-            "DOMNodeRemovedFromDocument",\n
-            false,\n
-            checkDetachEvent\n
-          )\n
-        );\n
-\n
       })\n
       );\n
-\n
   }\n
 \n
-  waitForDomAttachment = function (gadget) {\n
-    function waitForAnimationEvent(event_name) {\n
-      gadget.__monitor.monitor(\n
-        new RSVP.Queue()\n
-          .push(function () {\n
-            return promiseEventListener(\n
-              gadget.__element,\n
-              event_name,\n
-              false\n
-            );\n
-          })\n
-          .push(function (evt) {\n
-            if (evt.eventPhase === 2) {\n
-              if (evt.animationName === \'nodeInserted\') {\n
-  //             if (evt.target === gadget_instance.__element) {\n
-                createMonitor(gadget);\n
-                startService(gadget);\n
-//                 evt.stopPropagation();\n
-//                 evt.preventDefault();\n
-                return false;\n
-              }\n
-            }\n
-          })\n
-\n
-      );\n
-    }\n
-\n
-    gadget.__monitor.monitor(waitForAnimationEvent("animationstart"));\n
-    gadget.__monitor.monitor(waitForAnimationEvent("webkitAnimationStart"));\n
-\n
-//     gadget.__monitor.monitor(new RSVP.Queue()\n
-//       .push(function () {\n
-//         // + listen for DOM attach\n
-//       })\n
-//     );\n
-//\n
-//\n
-//\n
-//           gadget_instance.__element.addEventListener(\n
-// //             "DOMNodeRemovedFromDocument",\n
-//             "animationstart",\n
-//             function (evt) {\n
-// //               console.log("Inserted: " + gadget_instance);\n
-// //               console.log(evt);\n
-// //               console.log(gadget_instance.__element);\n
-//               if (evt.eventPhase === 2) {\n
-//                 if (evt.animationName === \'nodeInserted\') {\n
-//   //               if (evt.target === gadget_instance.__element) {\n
-//                   createMonitor(gadget_instance);\n
-//                   startService(gadget_instance);\n
-//                   evt.stopPropagation();\n
-//                   evt.preventDefault();\n
-//                   return false;\n
-//                 }\n
-//               }\n
-// //               console.log(evt);\n
-//             },\n
-//             false\n
-//           );\n
-//\n
-//           gadget_instance.__element.addEventListener(\n
-// //             "DOMNodeRemovedFromDocument",\n
-//             "webkitAnimationStart",\n
-//             function (evt) {\n
-// //               console.log("Inserted: " + gadget_instance);\n
-// //               console.log(evt);\n
-// //               console.log(gadget_instance.__element);\n
-//               if (evt.eventPhase === 2) {\n
-//                 if (evt.animationName === \'nodeInserted\') {\n
-//   //               if (evt.target === gadget_instance.__element) {\n
-//                   createMonitor(gadget_instance);\n
-//                   startService(gadget_instance);\n
-//                   evt.stopPropagation();\n
-//                   evt.preventDefault();\n
-//                   return false;\n
-//                 }\n
-//               }\n
-// //               console.log(evt);\n
-//             },\n
-//             false\n
-//           );\n
-\n
-\n
-\n
-\n
-\n
-\n
-  };\n
   /////////////////////////////////////////////////////////////////\n
   // RenderJSGadget.declareMethod\n
   /////////////////////////////////////////////////////////////////\n
-//   function checkIfMonitorFailed(gadget, result) {\n
-//     if (gadget.hasOwnProperty("__monitor")) {\n
-//       // Do not use queue, as\n
-//       return gadget.__monitor.then(function () {return ;});\n
-//\n
-//     }\n
-\n
   RenderJSGadget.declareMethod = function (name, callback) {\n
     this.prototype[name] = function () {\n
       var context = this,\n
@@ -1107,15 +1079,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
-          var result = callback.apply(context, argument_list);\n
-//           if (context.hasOwnProperty("__monitor")) {\n
-//             result = RSVP.any([\n
-//               result,\n
-//               // monitor is never supposed to succeed\n
-//               context.__monitor.then(function () {return; })\n
-//             ]);\n
-//           }\n
-          return result;\n
+          return callback.apply(context, argument_list);\n
         });\n
     };\n
     // Allow chain\n
@@ -1158,8 +1122,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
     var gadget = this,\n
       key,\n
       gadget_scope;\n
-//     console.log("Acquiring " + method_name);\n
-//     console.log(argument_list);\n
 \n
     for (key in gadget.__sub_gadget_dict) {\n
       if (gadget.__sub_gadget_dict.hasOwnProperty(key)) {\n
@@ -1195,26 +1157,33 @@ function loopEventListener(target, type, useCapture, callback) {\n
           gadget = this;\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            var result = gadget.__aq_parent(method_name_to_acquire,\n
-                                            argument_list);\n
-//             if (gadget.hasOwnProperty("__monitor")) {\n
-//               result = RSVP.any([\n
-//                 result,\n
-//                 // monitor is never supposed to succeed\n
-//                 gadget.__monitor.then(function () {return; })\n
-//               ]);\n
-//             }\n
-            return result;\n
+            return gadget.__aq_parent(method_name_to_acquire, argument_list);\n
           });\n
       };\n
 \n
       // Allow chain\n
       return this;\n
     };\n
-  RenderJSGadget.declareAcquiredMethod("aq_pleasePublishMyState",\n
-                                       "pleasePublishMyState");\n
   RenderJSGadget.declareAcquiredMethod("aq_reportServiceError",\n
                                        "reportServiceError");\n
+  RenderJSGadget.declareAcquiredMethod("aq_pleasePublishMyState",\n
+                                       "pleasePublishMyState");\n
+\n
+  function pleasePublishMyState(param_list, child_gadget_scope) {\n
+    var new_param = {},\n
+      key;\n
+    for (key in this.state_parameter_dict) {\n
+      if (this.state_parameter_dict.hasOwnProperty(key)) {\n
+        new_param[key] = this.state_parameter_dict[key];\n
+      }\n
+    }\n
+    if (child_gadget_scope === undefined) {\n
+      throw new Error("gadget scope is mandatory");\n
+    }\n
+    new_param[child_gadget_scope] = param_list[0];\n
+    param_list = [new_param];\n
+    return this.aq_pleasePublishMyState.apply(this, param_list);\n
+  }\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // RenderJSGadget.allowPublicAcquisition\n
@@ -1233,22 +1202,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
       return acquire.apply(parent_gadget, [gadget_instance, method_name,\n
                                            argument_list]);\n
     };\n
-  }\n
-\n
-  function pleasePublishMyState(param_list, child_gadget_scope) {\n
-    var new_param = {},\n
-      key;\n
-    for (key in this.state_parameter_dict) {\n
-      if (this.state_parameter_dict.hasOwnProperty(key)) {\n
-        new_param[key] = this.state_parameter_dict[key];\n
-      }\n
-    }\n
-    if (child_gadget_scope === undefined) {\n
-      throw new Error("gadget scope is mandatory");\n
-    }\n
-    new_param[child_gadget_scope] = param_list[0];\n
-    param_list = [new_param];\n
-    return this.aq_pleasePublishMyState.apply(this, param_list);\n
   }\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -1518,39 +1471,14 @@ function loopEventListener(target, type, useCapture, callback) {\n
           gadget_instance.__element.setAttribute("data-gadget-url", url);\n
           gadget_instance.__element.setAttribute("data-gadget-sandbox",\n
                                                  options.sandbox);\n
+          gadget_instance.__element._gadget = gadget_instance;\n
 \n
           if (document.contains(gadget_instance.__element)) {\n
             // Put a timeout\n
             queue.push(startService);\n
-          } else {\n
-            // Listen for DOM attachment\n
-            queue.push(waitForDomAttachment);\n
           }\n
           // Always return the gadget instance after ready function\n
           queue.push(ready_wrapper);\n
-\n
-//           console.log(document.contains(gadget_instance.__element));\n
-\n
-//           gadget_instance.__element.addEventListener(\n
-// //             "DOMNodeRemovedFromDocument",\n
-//             "DOMNodeRemoved",\n
-//             function (evt) {\n
-// //               console.log("Dropped: " + gadget_instance);\n
-// //               if (evt.target === gadget_instance.__element) {\n
-//               if (evt.eventPhase === 2) {\n
-//                 gadget_instance.__monitor.cancel("Removed from DOM");\n
-//                 evt.stopPropagation();\n
-//                 evt.preventDefault();\n
-//                 return false;\n
-//               }\n
-//             },\n
-//             false\n
-//           );\n
-\n
-//           gadget_instance.__element.unload = function () {\n
-//             alert("couscous");\n
-//           };\n
-\n
 \n
           return gadget_instance;\n
         });\n
@@ -2093,12 +2021,77 @@ function loopEventListener(target, type, useCapture, callback) {\n
               stylesheet_registration_dict[css_list[i]] = null;\n
             }\n
             gadget_loading_klass = undefined;\n
-            return renderJS.declareCSS(DOMattachCSS);\n
           }).then(function () {\n
+\n
+            // select the target node\n
+            var target = document.querySelector(\'body\'),\n
+              // create an observer instance\n
+              observer = new MutationObserver(function (mutations) {\n
+                var i, k, len, len2, node, added_list;\n
+                mutations.forEach(function (mutation) {\n
+                  if (mutation.type === \'childList\') {\n
+\n
+                    len = mutation.removedNodes.length;\n
+                    for (i = 0; i < len; i += 1) {\n
+                      node = mutation.removedNodes[i];\n
+                      if (node.nodeType === Node.ELEMENT_NODE) {\n
+                        if (node.hasAttribute("data-gadget-url") &&\n
+                            (node._gadget !== undefined)) {\n
+                          createMonitor(node._gadget);\n
+                        }\n
+                        added_list =\n
+                          node.querySelectorAll("[data-gadget-url]");\n
+                        len2 = added_list.length;\n
+                        for (k = 0; k < len2; k += 1) {\n
+                          node = added_list[k];\n
+                          if (node._gadget !== undefined) {\n
+                            createMonitor(node._gadget);\n
+                          }\n
+                        }\n
+                      }\n
+                    }\n
+\n
+                    len = mutation.addedNodes.length;\n
+                    for (i = 0; i < len; i += 1) {\n
+                      node = mutation.addedNodes[i];\n
+                      if (node.nodeType === Node.ELEMENT_NODE) {\n
+                        if (node.hasAttribute("data-gadget-url") &&\n
+                            (node._gadget !== undefined)) {\n
+                          if (document.contains(node)) {\n
+                            startService(node._gadget);\n
+                          }\n
+                        }\n
+                        added_list =\n
+                          node.querySelectorAll("[data-gadget-url]");\n
+                        len2 = added_list.length;\n
+                        for (k = 0; k < len2; k += 1) {\n
+                          node = added_list[k];\n
+                          if (document.contains(node)) {\n
+                            if (node._gadget !== undefined) {\n
+                              startService(node._gadget);\n
+                            }\n
+                          }\n
+                        }\n
+                      }\n
+                    }\n
+\n
+                  }\n
+                });\n
+              }),\n
+              // configuration of the observer:\n
+              config = {\n
+                childList: true,\n
+                subtree: true,\n
+                attributes: false,\n
+                characterData: false\n
+              };\n
+\n
+            // pass in the target node, as well as the observer options\n
+            observer.observe(target, config);\n
+\n
             return root_gadget;\n
           }).then(resolve, function (e) {\n
             reject(e);\n
-            /*global console */\n
             console.error(e);\n
             throw e;\n
           });\n
@@ -2142,19 +2135,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             .push(ready_wrapper);\n
         }\n
       });\n
-    if (window.self !== window.top) {\n
-      // Inform parent window that gadget is correctly loaded\n
-      loading_gadget_promise\n
-        .then(function () {\n
-          gadget_ready = true;\n
-          notifyReady();\n
-        })\n
-        .fail(function (e) {\n
-          embedded_channel.notify({method: "failed", params: e.toString()});\n
-          throw e;\n
-        });\n
-    } else {\n
-      // XXX Bootstrap run\n
+    if (window.self === window.top) {\n
       loading_gadget_promise\n
         .then(function () {\n
 \n
@@ -2217,23 +2198,28 @@ function loopEventListener(target, type, useCapture, callback) {\n
             loopEventListener(window, \'hashchange\', false,\n
                                    extractHashAndDispatch)\n
           ]);\n
-\n
-        }).fail(function (e) {\n
+        })\n
+        .fail(function (e) {\n
           letsCrash(e);\n
+          throw e;\n
         });\n
-\n
-\n
+    } else {\n
+      // Inform parent window that gadget is correctly loaded\n
+      loading_gadget_promise\n
+        .then(function () {\n
+          gadget_ready = true;\n
+          notifyReady();\n
+        })\n
+        .fail(function (e) {\n
+          embedded_channel.notify({method: "failed", params: e.toString()});\n
+          throw e;\n
+        });\n
     }\n
-    loading_gadget_promise\n
-      .fail(function (e) {\n
-        console.error(e);\n
-        throw e;\n
-      });\n
 \n
   }\n
   bootstrap();\n
 \n
-}(document, window, RSVP, DOMParser, Channel, DOMattachCSS));\n
+}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node));\n
 
 
 ]]></string> </value>
@@ -2357,7 +2343,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -2371,7 +2357,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.57662.10223.7219</string> </value>
+                <value> <string>937.39596.23974.43622</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -2389,7 +2375,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1408020541.67</float>
+                        <float>1410871234.37</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

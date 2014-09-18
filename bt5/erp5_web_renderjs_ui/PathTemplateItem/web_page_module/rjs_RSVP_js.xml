@@ -771,11 +771,6 @@ define("rsvp/promise",\n
           then = value.then;\n
 \n
           if (isFunction(then)) {\n
-            if (isFunction(value.on)) {\n
-              value.on(\'promise:notified\', function (event) {\n
-                notify(promise, event.detail);\n
-              });\n
-            }\n
             promise.on(\'promise:cancelled\', function(event) {\n
               if (isFunction(value.cancel)) {\n
                 value.cancel();\n
@@ -861,7 +856,6 @@ define("rsvp/queue",\n
         promise,\n
         fulfill,\n
         reject,\n
-        notify,\n
         resolved;\n
 \n
       if (!(this instanceof Queue)) {\n
@@ -874,7 +868,7 @@ define("rsvp/queue",\n
         }\n
       }\n
 \n
-      promise = new Promise(function(done, fail, progress) {\n
+      promise = new Promise(function(done, fail) {\n
         fulfill = function (fulfillmentValue) {\n
           if (resolved) {return;}\n
           queue.isFulfilled = true;\n
@@ -889,7 +883,6 @@ define("rsvp/queue",\n
           resolved = true;\n
           return fail(rejectedReason);\n
         };\n
-        notify = progress;\n
       }, canceller);\n
 \n
       promise_list.push(delay());\n
@@ -913,7 +906,7 @@ define("rsvp/queue",\n
         return promise.then.apply(promise, arguments);\n
       };\n
 \n
-      queue.push = function(done, fail, progress) {\n
+      queue.push = function(done, fail) {\n
         var last_promise = promise_list[promise_list.length - 1],\n
           next_promise;\n
 \n
@@ -921,11 +914,11 @@ define("rsvp/queue",\n
           throw new ResolvedQueueError();\n
         }\n
 \n
-        next_promise = last_promise.then(done, fail, progress);\n
+        next_promise = last_promise.then(done, fail);\n
         promise_list.push(next_promise);\n
 \n
         // Handle pop\n
-        last_promise = next_promise.then(function (fulfillmentValue) {\n
+        promise_list.push(next_promise.then(function (fulfillmentValue) {\n
           promise_list.splice(0, 2);\n
           if (promise_list.length === 0) {\n
             fulfill(fulfillmentValue);\n
@@ -939,13 +932,7 @@ define("rsvp/queue",\n
           } else {\n
             throw rejectedReason;\n
           }\n
-        }, function (notificationValue) {\n
-          if (promise_list[promise_list.length - 1] === last_promise) {\n
-            notify(notificationValue);\n
-          }\n
-          return notificationValue;\n
-        });\n
-        promise_list.push(last_promise);\n
+        }));\n
 \n
         return this;\n
       };\n
@@ -1057,128 +1044,9 @@ define("rsvp/timeout",\n
     __exports__.delay = delay;\n
     __exports__.timeout = timeout;\n
   });\n
-define("rsvp/watcher",\n
-  ["rsvp/promise","rsvp/queue","rsvp/cancellation_error","exports"],\n
-  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {\n
-    "use strict";\n
-    var Promise = __dependency1__.Promise;\n
-    var Queue = __dependency2__.Queue;\n
-    var CancellationError = __dependency3__.CancellationError;\n
-\n
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error\n
-    function ResolvedMonitorError(message) {\n
-      this.name = "resolved";\n
-      if ((message !== undefined) && (typeof message !== "string")) {\n
-        throw new TypeError(\'You must pass a string.\');\n
-      }\n
-      this.message = message || "Default Message";\n
-    }\n
-    ResolvedMonitorError.prototype = new Error();\n
-    ResolvedMonitorError.prototype.constructor = ResolvedMonitorError;\n
-\n
-    function isFunction(x){\n
-      return typeof x === "function";\n
-    }\n
-\n
-    var Monitor = function() {\n
-      var monitor = this,\n
-        promise_list = [],\n
-        promise,\n
-        reject,\n
-        notify,\n
-        resolved;\n
-\n
-      if (!(this instanceof Monitor)) {\n
-        return new Monitor();\n
-      }\n
-\n
-      function canceller() {\n
-        var len = promise_list.length,\n
-          i;\n
-        for (i = 0; i < len; i += 1) {\n
-          promise_list[i].cancel();\n
-        }\n
-        // Clean it to speed up other canceller run\n
-        promise_list = [];\n
-      }\n
-\n
-      promise = new Promise(function(done, fail, progress) {\n
-        reject = function (rejectedReason) {\n
-          if (resolved) {return;}\n
-          monitor.isRejected = true;\n
-          monitor.rejectedReason = rejectedReason ;\n
-          resolved = true;\n
-          canceller();\n
-          return fail(rejectedReason);\n
-        };\n
-        notify = progress;\n
-      }, canceller);\n
-\n
-      monitor.cancel = function () {\n
-        if (resolved) {return;}\n
-        resolved = true;\n
-        promise.cancel();\n
-        promise.fail(function (rejectedReason) {\n
-          monitor.isRejected = true;\n
-          monitor.rejectedReason = rejectedReason;\n
-        });\n
-      };\n
-      monitor.then = function () {\n
-        return promise.then.apply(promise, arguments);\n
-      };\n
-\n
-      monitor.monitor = function(promise_to_monitor) {\n
-        if (resolved) {\n
-          throw new ResolvedMonitorError();\n
-        }\n
-        var queue = new Queue()\n
-          .push(function () {\n
-            return promise_to_monitor;\n
-          })\n
-          .push(function (fulfillmentValue) {\n
-            // Promise to monitor is fullfilled, remove it from the list\n
-            var len = promise_list.length,\n
-              promise_to_monitor,\n
-              new_promise_list = [],\n
-              i;\n
-            for (i = 0; i < len; i += 1) {\n
-              promise_to_monitor = promise_list[i];\n
-              if (!(promise_to_monitor.isFulfilled ||\n
-                  promise_to_monitor.isRejected)) {\n
-                new_promise_list.push(promise_to_monitor);\n
-              }\n
-            }\n
-            promise_list = new_promise_list;\n
-          }, function (rejectedReason) {\n
-            if (rejectedReason instanceof CancellationError) {\n
-              if (!(promise_to_monitor.isFulfilled && promise_to_monitor.isRejected)) {\n
-                // The queue could be cancelled before the first push is run\n
-                promise_to_monitor.cancel();\n
-              }\n
-            }\n
-            reject(rejectedReason);\n
-            throw rejectedReason;\n
-          }, function (notificationValue) {\n
-            notify(notificationValue);\n
-            return notificationValue;\n
-          });\n
-\n
-        promise_list.push(queue);\n
-\n
-        return this;\n
-      };\n
-    };\n
-\n
-    Monitor.prototype = Object.create(Promise.prototype);\n
-    Monitor.prototype.constructor = Monitor;\n
-\n
-\n
-    __exports__.Monitor = Monitor;\n
-    __exports__.ResolvedMonitorError = ResolvedMonitorError;\n
-  });\n
 define("rsvp",\n
-  ["rsvp/events","rsvp/cancellation_error","rsvp/promise","rsvp/node","rsvp/all","rsvp/queue","rsvp/watcher","rsvp/timeout","rsvp/hash","rsvp/rethrow","rsvp/defer","rsvp/config","rsvp/resolve","rsvp/reject","exports"],\n
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __exports__) {\n
+  ["rsvp/events","rsvp/cancellation_error","rsvp/promise","rsvp/node","rsvp/all","rsvp/queue","rsvp/timeout","rsvp/hash","rsvp/rethrow","rsvp/defer","rsvp/config","rsvp/resolve","rsvp/reject","exports"],\n
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __exports__) {\n
     "use strict";\n
     var EventTarget = __dependency1__.EventTarget;\n
     var CancellationError = __dependency2__.CancellationError;\n
@@ -1188,16 +1056,14 @@ define("rsvp",\n
     var any = __dependency5__.any;\n
     var Queue = __dependency6__.Queue;\n
     var ResolvedQueueError = __dependency6__.ResolvedQueueError;\n
-    var Monitor = __dependency7__.Monitor;\n
-    var ResolvedMonitorError = __dependency7__.ResolvedMonitorError;\n
-    var delay = __dependency8__.delay;\n
-    var timeout = __dependency8__.timeout;\n
-    var hash = __dependency9__.hash;\n
-    var rethrow = __dependency10__.rethrow;\n
-    var defer = __dependency11__.defer;\n
-    var config = __dependency12__.config;\n
-    var resolve = __dependency13__.resolve;\n
-    var reject = __dependency14__.reject;\n
+    var delay = __dependency7__.delay;\n
+    var timeout = __dependency7__.timeout;\n
+    var hash = __dependency8__.hash;\n
+    var rethrow = __dependency9__.rethrow;\n
+    var defer = __dependency10__.defer;\n
+    var config = __dependency11__.config;\n
+    var resolve = __dependency12__.resolve;\n
+    var reject = __dependency13__.reject;\n
 \n
     function configure(name, value) {\n
       config[name] = value;\n
@@ -1211,8 +1077,6 @@ define("rsvp",\n
     __exports__.any = any;\n
     __exports__.Queue = Queue;\n
     __exports__.ResolvedQueueError = ResolvedQueueError;\n
-    __exports__.Monitor = Monitor;\n
-    __exports__.ResolvedMonitorError = ResolvedMonitorError;\n
     __exports__.delay = delay;\n
     __exports__.timeout = timeout;\n
     __exports__.hash = hash;\n
@@ -1347,7 +1211,7 @@ window.RSVP = requireModule("rsvp");\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1361,7 +1225,7 @@ window.RSVP = requireModule("rsvp");\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.7406.33851.57122</string> </value>
+                <value> <string>937.690.6828.44612</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1379,7 +1243,7 @@ window.RSVP = requireModule("rsvp");\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933454.76</float>
+                        <float>1410857997.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
