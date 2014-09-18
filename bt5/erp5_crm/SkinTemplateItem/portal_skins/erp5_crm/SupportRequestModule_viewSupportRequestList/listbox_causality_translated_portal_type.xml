@@ -12,13 +12,12 @@
               <list>
                 <string>default</string>
                 <string>editable</string>
-                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_causality_portal_type</string> </value>
+            <value> <string>listbox_causality_translated_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,10 +75,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -107,10 +102,6 @@
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Channel</string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -125,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:getattr(here.getCausalityValue(), \'getPortalType\', lambda:None)()</string> </value>
+            <value> <string>python:getattr(cell.getCausalityValue(), \'getTranslatedPortalType\', lambda:None)()</string> </value>
         </item>
       </dictionary>
     </pickle>

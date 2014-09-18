@@ -151,7 +151,7 @@
                         <string>your_dialog_mode_single_event</string>
                         <string>your_dialog_mode_follow_up</string>
                         <string>my_dialog_mode_direction</string>
-                        <string>my_causality_portal_type</string>
+                        <string>my_causality_translated_portal_type</string>
                       </list>
                     </value>
                 </item>
