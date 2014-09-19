@@ -75,7 +75,7 @@ class BigFile(File):
     """
     self._setContentMd5(None)
 
-  def _read_data(self, file, data=None):
+  def _read_data(self, file, data=None, serialize=True):
 
     # We might need to make this value configurable. It is important to
     # consider the max quantity of object used in the cache. With a default
@@ -112,7 +112,8 @@ class BigFile(File):
       btree.write(read(next-pos), offset+pos)
       pos = file.tell()
 
-    self.serialize()
+    if serialize:
+      self.serialize()
     return btree, len(btree)
 
   def _range_request_handler(self, REQUEST, RESPONSE):
