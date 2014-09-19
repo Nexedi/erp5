@@ -136,7 +136,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
         price = movement.getPrice()
         price_currency = movement.getPriceCurrency()
         base_application_list = movement.getBaseApplicationList()
-        base_contribution_list = movhement.getBaseContributionList()
+        base_contribution_list = movement.getBaseContributionList()
         use_list = movement.getUseList()
 
         specialise = movement.getSpecialise()
