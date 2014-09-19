@@ -72,14 +72,27 @@ class TestDocumentWithPreConversion(TestDocument):
                                                reference='Embedded-XXX',
                                                version='001',
                                                language='en')
-    # empty image is not convertible
-    self.assertEqual(False, image.Base_isConvertible())
 
-    # image with data is convertible
+    # draft image is not convertible
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image.edit(file=upload_file)
     self.tic()
+    self.assertEqual(False, image.Base_isConvertible())
+
+    # published image with data is convertible
+    image.publish()
+    self.tic()
     self.assertEqual(True, image.Base_isConvertible())
+
+    image = self.portal.image_module.newContent(portal_type='Image',
+                                               reference='Embedded-YYY',
+                                               version='001',
+                                               language='en')
+    image.publish()
+    self.tic()
+
+    # published empty image is not convertible
+    self.assertEqual(False, image.Base_isConvertible())
 
 def test_suite():
   suite = unittest.TestSuite()
