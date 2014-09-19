@@ -56,7 +56,7 @@ trust_dict=dict((x, request[x]) for x in (\n
 \n
 context.getVcsTool().acceptSSLServer(trust_dict, True)\n
 \n
-return request.traverseName(context, caller)(**caller_kw)\n
+return context.restrictedTraverse(caller)(**caller_kw)\n
 </string> </value>
         </item>
         <item>
