@@ -123,11 +123,12 @@
     <script src="gadget_erp5_pt_frontpage.js" type="text/javascript"></script>\n
 \n
     <script id="table-template" type="text/x-handlebars-template">\n
-      <ul data-role="listview" data-inset="true" class="document-listview">\n
+      <dl data-role="listview" data-inset="true" class="document-listview">\n
+        <dt>{{definition_title}}</dt>\n
         {{#each documentlist}}\n
-          <li><a href="{{link}}">{{title}}</a></li>\n
+          <dd><a href="{{link}}">{{title}}</a></dd>\n
         {{/each}}\n
-      </ul>\n
+      </dl>\n
     </script>\n
 \n
   </head>\n
@@ -271,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.25886.55930.55876</string> </value>
+                <value> <string>937.42724.27724.55893</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406120865.84</float>
+                        <float>1411117135.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
