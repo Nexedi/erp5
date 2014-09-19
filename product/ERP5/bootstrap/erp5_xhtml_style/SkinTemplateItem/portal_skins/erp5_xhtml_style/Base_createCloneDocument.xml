@@ -67,10 +67,12 @@ else:\n
 \n
 # We copy contents in place if possible\n
 try:\n
-  directory = context.aq_explicit.original_container\n
+  source = context.aq_explicit.original_container\n
 except AttributeError:\n
-  directory = context.getParentValue()\n
-if not (portal_type in directory.getVisibleAllowedContentTypeList() and\n
+  source = context.getParentValue()\n
+if destination is None:\n
+  destination = source\n
+if not (portal_type in destination.getVisibleAllowedContentTypeList() and\n
         portal.portal_membership.checkPermission(\'Copy or Move\', context)):\n
   if batch_mode:\n
     return None\n
@@ -98,14 +100,14 @@ if clone:\n
   except AttributeError:\n
     original_id = context.getId()\n
   # This is required for objects acquired in Web Section\n
-  clipboard = directory.manage_copyObjects(ids=[original_id])\n
+  clipboard = source.manage_copyObjects(ids=[original_id])\n
   context.REQUEST.set(\'__cp\', clipboard) # CopySupport is using this to set\n
                            # tracebility information in edit_workflow history\n
-  paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
-  new_object = directory[paste_result[0][\'new_id\']]\n
+  paste_result = destination.manage_pasteObjects(cb_copy_data=clipboard)\n
+  new_object = destination[paste_result[0][\'new_id\']]\n
   message_kind = \'Clone\'\n
 else:\n
-  new_object = directory.newContent(portal_type=portal_type)\n
+  new_object = destination.newContent(portal_type=portal_type)\n
   message_kind = \'New\'\n
 \n
 if web_mode:\n
@@ -136,7 +138,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>clone=1, form_id=\'view\', web_mode=0, editable_mode=0, batch_mode=0</string> </value>
+            <value> <string>clone=1, form_id=\'view\', web_mode=0, editable_mode=0, batch_mode=0, destination=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
