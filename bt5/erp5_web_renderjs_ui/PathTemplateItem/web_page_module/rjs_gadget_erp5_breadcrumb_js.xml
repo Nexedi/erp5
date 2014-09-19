@@ -99,16 +99,20 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2, maxerr: 3 */\n
-/*global URI, document, window, rJS */\n
-(function (URI, document, window, rJS) {\n
+            <value> <string>/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global URI, window, rJS, Handlebars, RSVP */\n
+(function (URI, window, rJS, Handlebars, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Handlebars\n
   /////////////////////////////////////////////////////////////////\n
   // Precompile the templates while loading the first gadget instance\n
-  var gadget_klass = rJS(window);\n
+  var gadget_klass = rJS(window),\n
+    source = gadget_klass.__template_element\n
+                         .getElementById("breadcrumb-template")\n
+                         .innerHTML,\n
+    breadcrumb_template = Handlebars.compile(source);\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -124,48 +128,68 @@
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
+          g.props.nav_element = element.querySelector("nav");\n
         });\n
     })\n
 \n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
+      var gadget = this,\n
+        parent_queue = new RSVP.Queue(),\n
+        parent_list = [];\n
 \n
-      var h1_element = this.props.element.querySelector("h1"),\n
-        parent_element = this.props.element.querySelector(".breadcrumb_container"),\n
-        title = options.title || "ERP5",\n
-        parent_link = options.parent_link,\n
-        gadget = this,\n
-        uri,\n
-        link_element;\n
-\n
-      h1_element.textContent = title;\n
-      // Clear the previous rendering\n
-      while (parent_element.firstChild) {\n
-        parent_element.removeChild(parent_element.firstChild);\n
-      }\n
-      if (parent_link !== undefined) {\n
-        uri = new URI(parent_link.href);\n
-        return gadget.whoWantToDisplayThis(uri.segment(2))\n
-          .push(function (parent_href) {\n
-            link_element = document.createElement("a");\n
-            // XXX Romain: please allow to "go home" via breadcrumb\n
-            if (parent_href === "#erp5_gadget.jio_key=undefined") {\n
-              parent_href = "#";\n
+      function handleParent(parent_link) {\n
+        parent_queue.push(function () {\n
+          var uri,\n
+            jio_key;\n
+          if (parent_link !== undefined) {\n
+            uri = new URI(parent_link.href);\n
+            jio_key = uri.segment(2);\n
+            if (jio_key === undefined) {\n
+              // Parent is the ERP5 site\n
+              parent_list.splice(0, 0, {\n
+                title: "ERP5",\n
+                link: "#"\n
+              });\n
+            } else {\n
+              // Parent is an ERP5 document\n
+              return gadget.whoWantToDisplayThis(jio_key)\n
+                .push(function (parent_href) {\n
+                  parent_list.splice(0, 0, {\n
+                    title: parent_link.name,\n
+                    link: parent_href\n
+                  });\n
+                  return gadget.jio_get({"_id": jio_key});\n
+                })\n
+                .push(function (result) {\n
+                  // XXX Copy/pasted from gadget_erp5.js\n
+                  handleParent(result.data._links.parent || "#");\n
+                });\n
             }\n
-            link_element.textContent = parent_link.name || "Home";\n
-            link_element.href = parent_href;\n
-            link_element.setAttribute("class", "responsive ui-btn ui-icon-carat-u ui-btn-icon-left");\n
-            link_element.setAttribute("data-role", "button");\n
-            link_element.setAttribute("role", "button");\n
-            parent_element.appendChild(link_element);\n
-          });\n
+\n
+          }\n
+        });\n
       }\n
+\n
+      handleParent(options.parent_link);\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return parent_queue;\n
+        })\n
+        .push(function () {\n
+          gadget.props.nav_element.innerHTML = breadcrumb_template({\n
+            title: options.title || "ERP5",\n
+            parentlist: parent_list\n
+          });\n
+        });\n
     });\n
 \n
-}(URI, document, window, rJS));</string> </value>
+}(URI, window, rJS, Handlebars, RSVP));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -300,7 +324,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42799.61797.63761</string> </value>
+                <value> <string>937.44174.27024.38451</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,7 +342,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411053138.25</float>
+                        <float>1411135730.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -116,18 +116,28 @@
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="URI.js" type="text/javascript"></script>\n
-\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_erp5_breadcrumb.js" type="text/javascript"></script>\n
+    \n
+    <script id="breadcrumb-template" type="text/x-handlebars-template">\n
+      <p>\n
+        {{#each parentlist}}\n
+          <a href="{{link}}">{{title}}</a> >\n
+        {{/each}}\n
+        <a class="responsive ui-btn ui-icon-carat-d ui-btn-icon-right" data-role="button" role="button">{{title}}</a>\n
+      </p>\n
+    </script>\n
+    \n
 \n
   </head>\n
   <body>\n
     <nav class="ui-title">\n
-      <div class="breadcrumb_container"></div>\n
-      <h1>ERP5</h1>\n
+      <p>\n
+        <a class="responsive ui-btn ui-icon-carat-d ui-btn-icon-right" data-role="button" role="button">ERP5</a>\n
+      </p>\n
     </nav>\n
-\n
   </body>\n
 </html>
 
@@ -252,7 +262,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -266,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46085.31000.7680</string> </value>
+                <value> <string>937.44124.45260.39765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -284,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407318368.87</float>
+                        <float>1411132836.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
