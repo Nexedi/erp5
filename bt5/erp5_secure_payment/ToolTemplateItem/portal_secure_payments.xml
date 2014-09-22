@@ -31,6 +31,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_Access_future_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Access_inactive_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -1120,6 +1128,22 @@
         </item>
         <item>
             <key> <string>_Open_Close_Database_Connections_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Private__only_accessible_from_trusted_code_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Public__everyone_can_access_Permission</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
