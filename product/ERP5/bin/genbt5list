@@ -213,14 +213,16 @@ def main(dir_list=None, **kw):
 
   for d in dir_list:
     bt5list = generateInformation(d, **kw).getvalue()
-    d = os.path.join(d, 'bt5list.new')
+    # add pid in filename to avoid conflicts if several process calls genbt5list
+    destination_path =  os.path.join(d, 'bt5list')
+    temporary_path = destination_path + '.new.%i' % os.getpid()
     try:
-      with open(d, 'wb') as f:
+      with open(temporary_path, 'wb') as f:
         f.write(bt5list)
-      os.rename(d, d[:-4])
+      os.rename(temporary_path, destination_path)
     finally:
       try:
-        os.remove(d)
+        os.remove(temporary_path)
       except OSError:
         pass
 
