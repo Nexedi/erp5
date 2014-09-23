@@ -53,9 +53,9 @@
             <value> <string>"""\n
   MySQL\'s full text searchable key implementation.\n
 """\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
 \n
-query = Query(**{\'catalog_full_text.fulltext_description\': \'*D+ %s\' % value, \'key\': \'FullTextKey\'} )\n
+query = SimpleQuery(**{\'catalog_full_text.fulltext_description\': \'*D+ %s\' % value, \'comparison_operator\': \'match_boolean\'} )\n
 return query\n
 </string> </value>
         </item>
