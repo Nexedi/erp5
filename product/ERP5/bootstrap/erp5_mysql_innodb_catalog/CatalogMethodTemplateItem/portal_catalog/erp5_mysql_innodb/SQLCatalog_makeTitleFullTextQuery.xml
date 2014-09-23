@@ -55,7 +55,7 @@
 """\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-query = Query(**{\'catalog_full_text.fulltext_title\': value} )\n
+query = Query(**{\'catalog_full_text.fulltext_title\': \'*D+ %s\' % value, \'key\': \'FullTextKey\'} )\n
 return query\n
 </string> </value>
         </item>
