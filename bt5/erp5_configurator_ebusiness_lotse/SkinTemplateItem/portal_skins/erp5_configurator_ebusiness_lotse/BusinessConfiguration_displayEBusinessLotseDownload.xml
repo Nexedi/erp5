@@ -66,7 +66,7 @@ context.BusinessConfiguration_setupOrganisation(\n
   configuration_save_url = configuration_save_url,\n
   title = \'ISIH GmbH\',\n
   default_email_text = \'mail@isih-gmbh.de\',\n
-  default_telephone_tex = \'555-5555\',\n
+  default_telephone_text = \'555-5555\',\n
   default_address_street_address = \'Musterstr. 1\',\n
   default_address_zip_code = \'00001\',\n
   default_address_city = \'Dresden\',\n
@@ -89,7 +89,6 @@ configuration_save.addConfigurationItem(\n
   last_name = \'Admin\',\n
   reference = \'user\',\n
   password = \'test\',\n
-  password_confirm = \'test\',\n
   default_email_text = \'herradmin@isih-gmbh.de\',\n
   default_telephone_text = \'\',\n
   function = \'function/company\',\n
