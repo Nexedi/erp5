@@ -55,6 +55,9 @@
 if getattr(context.portal_skins, "erp5_ace_editor", None) is not None:\n
   editor_list.append(("Ace Editor", "ace"))\n
 \n
+if getattr(context.portal_skins, "erp5_code_mirror", None) is not None:\n
+  editor_list.append(("Code Mirror", "codemirror"))\n
+\n
 return editor_list\n
 </string> </value>
         </item>
