@@ -377,6 +377,14 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                 accounting_transaction_gap='gap/fr/pcg',
                 gap='fr/pcg/1/10/101')
 
+  def stepCheckAccountingConfigurationItemListGermany(self, sequence=None, sequence_list=None, **kw):
+    """ Check the German accounting configuration item """
+    self._stepCheckAccountingConfigurationItemList(
+                business_configuration=sequence.get("business_configuration"),
+                bt5_id='erp5_accounting_l10n_de_skr04',
+                accounting_transaction_gap='gap/de/skr04',
+                gap='de/skr04/3/1/2/1/1')
+
   def stepCheckAccountingConfigurationItemListBrazil(self, sequence=None, sequence_list=None, **kw):
     """ Check the Brazilian accounting configuration item """
     self._stepCheckAccountingConfigurationItemList(
@@ -506,6 +514,12 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self._stepCheckInstanceIsConfigured(
                 business_configuration=sequence.get('business_configuration'),
                 bt5_tuple=('erp5_accounting_l10n_fr', 'erp5_l10n_fr',))
+
+  def stepCheckInstanceIsConfiguredGermany(self, sequence=None,  sequence_list=None, **kw):
+    """ Check if the instance is configured with German business templates """
+    self._stepCheckInstanceIsConfigured(
+                business_configuration=sequence.get('business_configuration'),
+                bt5_tuple=('erp5_accounting_l10n_de_skr04', 'erp5_l10n_de',))
 
   def stepCheckInstanceIsConfiguredBrazil(self, sequence=None,  sequence_list=None, **kw):
     """ Check if the instance is configured with Brazilian business templates """
