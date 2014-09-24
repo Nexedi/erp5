@@ -61,11 +61,14 @@ for bt in bt_list:\n
   if installation_state in (\'deleted\', \'replaced\'):\n
     delete_list.append(bt_id)\n
   elif installation_state == \'not_installed\':\n
-    if len([x for x in bt_list \\\n
-     if x.getTitle() == bt.getTitle() and \\\n
-        x.getInstallationState() in (\'installed\', \'not_installed\') and \\\n
-        int(x.getRevision() or \'0\') > int(bt.getRevision() or \'0\')]):\n
-      delete_list.append(bt_id)\n
+    title = bt.getTitle()\n
+    modification_date = bt.getModificationDate()\n
+    for x in bt_list:\n
+      if (x.getTitle() == title and\n
+          x.getInstallationState() in (\'installed\', \'not_installed\') and\n
+          x.getModificationDate() > modification_date):\n
+        delete_list.append(bt_id)\n
+        break\n
 \n
 print \'Deleted id list:%r\' % delete_list\n
 portal_templates.manage_delObjects(delete_list)\n
