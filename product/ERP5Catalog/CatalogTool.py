@@ -881,7 +881,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       by looking at the category tree.
 
       For exemple it will generate:
-      destination_title | category,catalog/title/z_related_destination
+      destination_title | category,catalog_full_text/fulltext_title/z_related_destination
       default_destination_title | category,catalog/title/z_related_destination
       strict_destination_title | category,catalog/title/z_related_strict_destination
 
@@ -923,7 +923,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               is_uid = end_key == 'uid'
               if is_uid:
                 end_key = 'uid' if related else 'category_uid'
-              related_key_list.append(
+              if end_key in ('title', 'description'):
+                assert not is_uid
+                related_key_list.append(
+                prefix + key + ' | category' +
+                ('' if is_uid else ',catalog_full_text') +
+                '/fulltext_' +
+                end_key +
+                '/z_related_' +
+                ('strict_' if strict else '') +
+                expected_base_cat_id +
+                ('_related' if related else '')
+              )
+              else:
+                related_key_list.append(
                 prefix + key + ' | category' +
                 ('' if is_uid else ',catalog') +
                 '/' +
