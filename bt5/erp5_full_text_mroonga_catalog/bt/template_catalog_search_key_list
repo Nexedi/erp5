@@ -1,2 +1,6 @@
 SearchableText | MroongaFullTextKey
+catalog_full_text.description | MroongaFullTextKey
+catalog_full_text.title | MroongaBooleanFullTextKey
+description | MroongaFullTextKey
 full_text.SearchableText | MroongaFullTextKey
+title | MroongaBooleanFullTextKey

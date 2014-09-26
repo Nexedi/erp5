@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -14,10 +20,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-SearchableText\r\n
-getTitle\r\n
-getDescription</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -39,11 +42,11 @@ getDescription</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_sql_deferred_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_catalog_fulltext_list</string> </value>
+            <value> <string>z0_drop_catalog_fulltext</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -55,47 +58,7 @@ getDescription</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM\n
-  full_text\n
-WHERE\n
-<dtml-in uid>\n
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>\n
-;\n
-<dtml-var "\'\\0\'"><dtml-let document_list="[]">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "SearchableText[loop_item]">\n
-      <dtml-call expr="document_list.append(loop_item)">\n
-    </dtml-if>\n
-  </dtml-in>\n
-  <dtml-if expr="_.len(document_list) > 0">\n
-INSERT INTO\n
-  full_text\n
-VALUES\n
-    <dtml-in prefix="loop" expr="document_list">\n
-( \n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="SearchableText[loop_item]" type="string" optional>\n
-)<dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-  </dtml-if>\n
-</dtml-let>\n
-<dtml-var sql_delimiter>\n
-REPLACE INTO\n
-  catalog_full_text (`uid`, `title`, `description`)\n
-VALUES\n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
-  <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>\n
-)<dtml-unless sequence-end>,</dtml-unless>\n
-</dtml-in>\n
-
-
-]]></string> </value>
+            <value> <string>DROP TABLE IF EXISTS catalog_full_text</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

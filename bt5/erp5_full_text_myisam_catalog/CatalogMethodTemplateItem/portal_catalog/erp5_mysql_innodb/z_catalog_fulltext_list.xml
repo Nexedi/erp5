@@ -15,7 +15,9 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\r\n
-SearchableText</string> </value>
+SearchableText\r\n
+getTitle\r\n
+getDescription</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -79,7 +81,19 @@ VALUES\n
 )<dtml-unless sequence-end>,</dtml-unless>\n
     </dtml-in>\n
   </dtml-if>\n
-</dtml-let>
+</dtml-let>\n
+<dtml-var sql_delimiter>\n
+REPLACE INTO\n
+  catalog_full_text (`uid`, `title`, `description`)\n
+VALUES\n
+<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+(\n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
+  <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>\n
+)<dtml-unless sequence-end>,</dtml-unless>\n
+</dtml-in>\n
+
 
 ]]></string> </value>
         </item>
