@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_listfield.js</string> </value>
+            <value> <string>gadget_erp5_field_list.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -128,7 +128,7 @@
         });\n
     })\n
     .declareMethod(\'render\', function (options) {\n
-      var select = this.element.getElementsByTagName(\'select\')[0],\n
+      var select = this.element.querySelector(\'select\'),\n
         i,\n
         template,\n
         field_json = options.field_json,\n
@@ -146,6 +146,12 @@
         });\n
       }\n
       select.innerHTML += tmp;\n
+      if (field_json.editable !== 1) {\n
+        select.setAttribute(\'readonly\', \'readonly\');\n
+        select.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+        // select.setAttribute(\'disabled\', \'disabled\');\n
+\n
+      }\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -278,7 +284,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -292,7 +298,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42824.63714.12373</string> </value>
+                <value> <string>937.51405.48576.10854</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -310,7 +316,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411054676.69</float>
+                        <float>1411570828.74</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

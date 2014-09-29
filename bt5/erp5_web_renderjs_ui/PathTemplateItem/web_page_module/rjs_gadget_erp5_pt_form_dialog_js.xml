@@ -102,8 +102,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, RSVP, FormData, jIO*/\n
-(function (window, rJS, RSVP, FormData, jIO) {\n
+/*global window, rJS, RSVP, FormData, jIO, URI, loopEventListener */\n
+(function (window, rJS, RSVP, FormData, jIO, URI, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -136,6 +136,7 @@
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -163,13 +164,24 @@
               title = view_list[i].title;\n
             }\n
           }\n
-          form_gadget.__element.querySelector("button").textContent = title;\n
+          form_gadget.__element.querySelector("h1").textContent = title;\n
 \n
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
 \n
-          return erp5_form.render(form_options);\n
+          return RSVP.all([\n
+            erp5_form.render(form_options),\n
+            form_gadget.whoWantToDisplayThis(options.jio_key),\n
+            form_gadget.whoWantToDisplayThisPage({page: "breadcrumb"})\n
+          ]);\n
+        })\n
+        .push(function (all_result) {\n
+          return form_gadget.renderPageHeader({\n
+            cancel_url: all_result[1],\n
+            page_title: options.erp5_document.title,\n
+            breadcrumb_url: all_result[2]\n
+          });\n
         });\n
     })\n
 \n
@@ -184,7 +196,7 @@
           })\n
           .push(function (content_dict) {\n
             var data = new FormData(),\n
-            key;\n
+              key;\n
 \n
             data.append(form_gadget.props.form_id.key,\n
                                     form_gadget.props.form_id[\'default\']);\n
@@ -211,9 +223,8 @@
             if (location === undefined) {\n
               // No redirection, stay on the same document\n
               return form_gadget.whoWantToDisplayThisPage({name: "view"});\n
-            } else {\n
-              return form_gadget.whoWantToDisplayThis(new URI(location).segment(2));\n
             }\n
+            return form_gadget.whoWantToDisplayThis(new URI(location).segment(2));\n
           })\n
           .push(function (url) {\n
             return form_gadget.pleaseRedirectMyHash(url);\n
@@ -227,9 +238,9 @@
         false,\n
         formSubmit\n
       );\n
-  });\n
+    });\n
 \n
-}(window, rJS, RSVP, FormData, jIO));
+}(window, rJS, RSVP, FormData, jIO, URI, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -366,7 +377,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42828.64511.54152</string> </value>
+                <value> <string>937.58416.46801.34491</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -384,7 +395,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411054893.66</float>
+                        <float>1411990143.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

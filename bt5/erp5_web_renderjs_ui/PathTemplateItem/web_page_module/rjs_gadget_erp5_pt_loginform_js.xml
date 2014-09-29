@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_loginform.js</string> </value>
+            <value> <string>gadget_erp5_page_login.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -291,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42844.47051.28194</string> </value>
+                <value> <string>937.49597.63791.22067</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411055816.03</float>
+                        <float>1411461067.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

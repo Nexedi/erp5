@@ -115,41 +115,23 @@
     <!-- renderjs -->\n
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="handlebars.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_global.js" type="text/javascript"></script>\n
     <script src="gadget_erp5_pt_form_view.js" type="text/javascript"></script>\n
 \n
-    <script id="workflow-template" type="text/x-handlebars-template">\n
-        {{#each actionlist}}\n
-          <a class="{{class}}" href="{{link}}">{{title}}</a>\n
-        {{/each}}\n
-    </script>\n
-\n
   </head>\n
   <body>\n
-  \n
-    <div data-gadget-url="gadget_erp5_tab_list.html"\n
-              data-gadget-scope="erp5_tab"\n
-               data-gadget-sandbox="public">\n
-    </div>\n
-\n
-    <!-- XXX action, method, fieldset -->\n
-    <form class="save_form">\n
-      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
-        ui-icon-edit ui-btn-icon-right">Save</button>\n
-\n
-      <div class="action_list ui-controlgroup ui-controlgroup-horizontal ui-corner-all">\n
-        <div class="ui-controlgroup-controls">\n
-        </div>\n
-      </div>\n
-\n
+    <!-- XXX this is a form replacement -->\n
+    <div class="ui-body-c">\n
+      \n
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
               data-gadget-sandbox="public">\n
       </div>\n
-    </form>\n
+    \n
+      \n
+    </div>\n
   </body>\n
 </html>
 
@@ -288,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.22212.34746.7150</string> </value>
+                <value> <string>937.49983.23949.119</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409817872.15</float>
+                        <float>1411576583.27</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

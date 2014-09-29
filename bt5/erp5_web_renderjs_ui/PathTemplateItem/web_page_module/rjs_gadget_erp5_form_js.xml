@@ -161,7 +161,8 @@
         queue\n
           .push(function () {\n
             var j,\n
-              fieldset_element = document.createElement("fieldset"),\n
+              // XXX: > Romain: fieldset will be needed later for menus\n
+              fieldset_element = document.createElement("div"),\n
               group_queue = new RSVP.Queue();\n
 \n
             function addField(field) {\n
@@ -169,15 +170,17 @@
                 if (rendered_form.hasOwnProperty(field[0])) {\n
                   // Field is enabled in this context\n
                   var field_queue = new RSVP.Queue(),\n
-                    field_url = \'gadget_erp5_readonlyfield.html\',\n
+                    sandbox = "public",\n
+                    field_url = \'gadget_erp5_field_readonly.html\',\n
                     field_element = document.createElement("div"),\n
                     gadget_element = document.createElement("div"),\n
                     label_element = document.createElement("label"),\n
                     renderered_field = rendered_form[field[0]];\n
 \n
+                  field_element.className = "ui-field-contain";\n
                   if (renderered_field.hidden === 1) {\n
                     // Hide field\n
-                    field_element.setAttribute("class", "ui-screen-hidden");\n
+                    field_element.className = field_element.className + " ui-screen-hidden";\n
                   }\n
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
@@ -187,27 +190,30 @@
                   }\n
                   field_element.appendChild(gadget_element);\n
                   fieldset_element.appendChild(field_element);\n
-                  if ((renderered_field.type === \'ListField\') ||\n
-                      (renderered_field.type === \'ParallelListField\') ||\n
-                      (renderered_field.type === \'MultiListField\')) {\n
-                    field_url = \'gadget_erp5_listfield.html\';\n
+                  if (renderered_field.type === \'ListField\') {\n
+//                      (renderered_field.type === \'ParallelListField\') ||\n
+//                      (renderered_field.type === \'MultiListField\')) {\n
+                    field_url = \'gadget_erp5_field_list.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
-                    field_url = \'gadget_erp5_stringfield.html\';\n
+                    field_url = \'gadget_erp5_field_string.html\';\n
                   } else if (renderered_field.type === \'TextAreaField\') {\n
-                    field_url = \'gadget_erp5_textareafield.html\';\n
+                    field_url = \'gadget_erp5_field_textarea.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
-                    field_url = \'gadget_erp5_floatfield.html\';\n
+                    field_url = \'gadget_erp5_field_float.html\';\n
                   } else if (renderered_field.type === \'ListBox\') {\n
-                    field_url = \'gadget_erp5_listbox.html\';\n
+                    field_url = \'gadget_erp5_field_listbox.html\';\n
                   } else if (renderered_field.type === \'EditorField\') {\n
-                    field_url = \'gadget_codemirror.html\';\n
+                    field_url = \'gadget_erp5_field_textarea.html\';\n
+                    // field_url = \'gadget_codemirror.html\';\n
+                    // sandbox = \'iframe\';\n
                   }\n
 \n
                   return field_queue\n
                     .push(function () {\n
                       return form_gadget.declareGadget(field_url, {\n
                         scope: renderered_field.key,\n
-                        element: gadget_element\n
+                        element: gadget_element,\n
+                        sandbox: sandbox\n
                       });\n
                     })\n
                     .push(function (field_gadget) {\n
@@ -418,7 +424,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42816.54745.57241</string> </value>
+                <value> <string>937.58318.16438.37768</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -436,7 +442,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411054146.03</float>
+                        <float>1411999896.88</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

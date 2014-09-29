@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_stringfield.js</string> </value>
+            <value> <string>gadget_erp5_field_string.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -122,7 +122,8 @@
       input.setAttribute(\'title\', field_json.title);\n
       if (field_json.editable !== 1) {\n
         input.setAttribute(\'readonly\', \'readonly\');\n
-        input.setAttribute(\'disabled\', \'disabled\');\n
+        input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+        // input.setAttribute(\'disabled\', \'disabled\');\n
 \n
       }\n
     })\n
@@ -255,7 +256,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -269,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42715.45132.18756</string> </value>
+                <value> <string>937.51382.41153.54784</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411056143.98</float>
+                        <float>1411568284.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

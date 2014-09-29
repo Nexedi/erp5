@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_tab_list.js</string> </value>
+            <value> <string>gadget_erp5_header.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_tab_list_js</string> </value>
+            <value> <string>rjs_gadget_erp5_header_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, Handlebars, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, Handlebars, RSVP) {\n
+/*global window, rJS, Handlebars, document */\n
+(function (window, rJS, Handlebars, document) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -111,16 +111,26 @@
   /////////////////////////////////////////////////////////////////\n
   // Precompile the templates while loading the first gadget instance\n
   var gadget_klass = rJS(window),\n
-    navigation_template = Handlebars.compile(\n
-      gadget_klass.__template_element\n
-                         .getElementById("navigation-template")\n
-                         .innerHTML\n
-    ),\n
-    active_navigation_template = Handlebars.compile(\n
-      gadget_klass.__template_element\n
-                         .getElementById("active-navigation-template")\n
-                         .innerHTML\n
-    );\n
+\n
+    header_title_source = gadget_klass.__template_element\n
+                         .getElementById("header-title-template")\n
+                         .innerHTML,\n
+    header_title_template = Handlebars.compile(header_title_source),\n
+\n
+    header_title_link_source = gadget_klass.__template_element\n
+                         .getElementById("header-title-link-template")\n
+                         .innerHTML,\n
+    header_title_link_template = Handlebars.compile(header_title_link_source),\n
+\n
+\n
+    sub_header_source = gadget_klass.__template_element\n
+                         .getElementById("sub-header-template")\n
+                         .innerHTML,\n
+    sub_header_template = Handlebars.compile(sub_header_source),\n
+    header_link_source = gadget_klass.__template_element\n
+                         .getElementById("header-link-template")\n
+                         .innerHTML,\n
+    header_link_template = Handlebars.compile(header_link_source);\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -136,70 +146,144 @@
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
+          g.props.sub_header_element = element.querySelector(".ui-subheader");\n
+          g.props.sub_header_ul = g.props.sub_header_element.querySelector("ul");\n
+          g.props.left_link = element.querySelector(".ui-btn-left > div");\n
+          g.props.right_link = element.querySelector(".ui-btn-right > div");\n
+          g.props.title_element = element.querySelector("h1");\n
         });\n
     })\n
 \n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-      var tab_gadget = this,\n
-        nav_element = tab_gadget.props.element.querySelector(".grid-container"),\n
-        erp5_document = options.erp5_document,\n
-        view_list = erp5_document._links[options.action_view],\n
-        nav_html = \'<nav data-role="navbar"><ul class="grid-items">\',\n
-        promise_list = [],\n
-        i;\n
+      var gadget = this,\n
+        possible_left_link_list = [\n
+          // [\'menu_url\', \'Menu\', \'bars\'],\n
+          [\'selection_url\', \'Select\', \'rotate-left\'],\n
+          [\'view_url\', \'View\', \'check\'],\n
+          [\'cancel_url\', \'Cancel\', \'times\'],\n
+          [\'back_url\', \'Back\', \'arrow-left\']\n
+        ],\n
+        possible_right_link_list = [\n
+          [\'edit_url\', \'Edit\', \'edit\']\n
+        ],\n
+        possible_sub_header_list = [\n
+          [\'tab_url\', \'Tabs\', \'eye\'],\n
+          [\'jump_url\', \'Jump\', \'plane\'],\n
+          [\'cut_url\', \'Cut\', \'scissors\'],\n
+          [\'export_url\', \'Export\', \'share-square-o\'],\n
+          [\'actions_url\', \'Actions\', \'cogs\'],\n
+          [\'delete_url\', \'Delete\', \'times\'],\n
+          [\'add_url\', \'Add\', \'plus\'],\n
+          [\'previous_url\', \'Previous\', \'carat-l\'],\n
+          [\'next_url\', \'Next\', \'carat-r\']\n
+        ],\n
+        i,\n
+        klass,\n
+        count = 0,\n
+        left_link,\n
+        right_link,\n
+        title_link = {title: "ERP5"},\n
+        sub_header_list = [],\n
+        alphabet = "abcdefghijklmnopqrstuvwxyz";\n
 \n
-      // XXX return if no views - do this on the parent gadget\n
-      if (view_list === undefined) {\n
-        return;\n
+      // Handle main title\n
+      if (options.hasOwnProperty("page_title")) {\n
+        title_link.title = options.page_title;\n
+      }\n
+      // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now\n
+      document.title = title_link.title;\n
+      if (options.hasOwnProperty("breadcrumb_url")) {\n
+        title_link.url = options.breadcrumb_url;\n
+        gadget.props.title_element.innerHTML = header_title_link_template(title_link);\n
+      } else {\n
+        gadget.props.title_element.innerHTML = header_title_template(title_link);\n
       }\n
 \n
-      if (view_list.constructor !== Array) {\n
-        view_list = [view_list];\n
-      }\n
-\n
-      for (i = 0; i < view_list.length; i += 1) {\n
-        promise_list.push(this.whoWantToDisplayThisPage({\n
-          name: view_list[i].name\n
-        }));\n
-      }\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all(promise_list);\n
-        })\n
-        .push(function (all_result) {\n
-          for (i = 0; i < all_result.length; i += 1) {\n
-            if (view_list[i].name === options.view) {\n
-              nav_html += active_navigation_template({\n
-                title: view_list[i].title,\n
-                link: all_result[i]\n
-              });\n
-            } else {\n
-              nav_html += navigation_template({\n
-                title: view_list[i].title,\n
-                link: all_result[i]\n
-              });\n
-            }\n
-\n
+      // Handle left link\n
+      for (i = 0; i < possible_left_link_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_left_link_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_left_link_list[i][0]]) {\n
+            klass = "ui-disabled";\n
           }\n
-          nav_html += \'</ul></nav>\';\n
-          nav_element.innerHTML = nav_html;\n
+          left_link = {\n
+            title: possible_left_link_list[i][1],\n
+            icon: possible_left_link_list[i][2],\n
+            url: options[possible_left_link_list[i][0]],\n
+            class: klass\n
+          };\n
+          count += 1;\n
+        }\n
+      }\n
+      if (left_link === undefined) {\n
+        gadget.props.left_link.innerHTML = "";\n
+      } else {\n
+        gadget.props.left_link.innerHTML = header_link_template(left_link);\n
+      }\n
 \n
-          return tab_gadget;\n
-        });\n
+      // Handle right link\n
+      for (i = 0; i < possible_right_link_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_right_link_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_right_link_list[i][0]]) {\n
+            klass = "ui-disabled";\n
+          }\n
+          right_link = {\n
+            title: possible_right_link_list[i][1],\n
+            icon: possible_right_link_list[i][2],\n
+            url: options[possible_right_link_list[i][0]],\n
+            class: klass\n
+          };\n
+          count += 1;\n
+        }\n
+      }\n
+      if (right_link === undefined) {\n
+        gadget.props.right_link.innerHTML = "";\n
+      } else {\n
+        gadget.props.right_link.innerHTML = header_link_template(right_link);\n
+      }\n
+\n
+      // Handle sub header\n
+      for (i = 0; i < possible_sub_header_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_sub_header_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_sub_header_list[i][0]]) {\n
+            klass = "ui-disabled";\n
+          }\n
+          sub_header_list.push({\n
+            title: possible_sub_header_list[i][1],\n
+            icon: possible_sub_header_list[i][2],\n
+            url: options[possible_sub_header_list[i][0]],\n
+            class: klass,\n
+            block: alphabet.charAt(count)\n
+          });\n
+          count += 1;\n
+        }\n
+      }\n
+\n
+      if (sub_header_list.length !== 0) {\n
+        sub_header_list[0].class += " ui-first-child";\n
+        sub_header_list[sub_header_list.length - 1].class += " ui-last-child";\n
+      }\n
+      // gadget.props.sub_header_ul.textContent = JSON.stringify(options);\n
+      gadget.props.sub_header_ul.innerHTML = sub_header_template({\n
+        sub_header_list: sub_header_list\n
+      });\n
 \n
     });\n
 \n
-}(window, rJS, Handlebars, RSVP));
+}(window, rJS, Handlebars, document));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Tab List JS</string> </value>
+            <value> <string>Gadget ERP5 Header JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -285,7 +369,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.76</float>
+                        <float>1411375841.62</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -330,7 +414,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42853.28217.34935</string> </value>
+                <value> <string>937.58590.25550.25514</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -348,7 +432,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411056327.35</float>
+                        <float>1412000590.73</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -405,7 +489,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406015645.22</float>
+                        <float>1411375820.35</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -105,6 +105,13 @@
   "use strict";\n
 \n
   rJS(window)\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -126,13 +133,24 @@
         .push(function () {\n
           return RSVP.all([\n
             gadget.getDeclaredGadget("erp5_searchfield"),\n
-            gadget.getDeclaredGadget("erp5_form")\n
+            gadget.getDeclaredGadget("erp5_form"),\n
+            gadget.whoWantToDisplayThisPage({name: options.view, page: "breadcrumb"})\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           return RSVP.all([\n
             all_gadget[0].render(search_options),\n
-            all_gadget[1].render(form_options)\n
+            all_gadget[1].render(form_options),\n
+            gadget.renderPageHeader({\n
+              jump_url: "",\n
+              cut_url: "",\n
+              actions_url: "",\n
+              export_url: "",\n
+              add_url: "",\n
+              page_title: options.erp5_document.title,\n
+              breadcrumb_url: all_gadget[2]\n
+            })\n
+\n
           ]);\n
         });\n
 \n
@@ -273,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42830.22069.25770</string> </value>
+                <value> <string>937.54284.12675.3652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411054986.85</float>
+                        <float>1411742227.2</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

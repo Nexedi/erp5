@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_listbox.js</string> </value>
+            <value> <string>gadget_erp5_field_listbox.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -101,7 +101,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint indent: 2, maxerr: 3 */\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
 /*global window, document, rJS, URI, RSVP */\n
 (function (window, document, rJS, URI, RSVP) {\n
   "use strict";\n
@@ -216,6 +216,7 @@
             th = document.createElement("th");\n
             a = document.createElement("a");\n
             a.href = tmp_url;\n
+            a.className = "ui-link";\n
             a.textContent = (result.data.rows[i]\n
                 .value[field_json.column_list[j][0]] || "");\n
             th.appendChild(a);\n
@@ -248,7 +249,8 @@
 \n
       }).push(function (url_list) {\n
         var fragment = document.createDocumentFragment(),\n
-          tfoot = document.createElement("tfoot"),\n
+          tfoot = gadget.__element.querySelector("tfoot"),\n
+          //tfoot = document.createElement("tfoot"),\n
           tr = document.createElement("tr"),\n
           th = document.createElement("th"),\n
           paging_prev = document.createElement("a"),\n
@@ -435,7 +437,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42823.42032.43861</string> </value>
+                <value> <string>937.51222.46996.32273</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -453,7 +455,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411054572.53</float>
+                        <float>1411984629.48</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

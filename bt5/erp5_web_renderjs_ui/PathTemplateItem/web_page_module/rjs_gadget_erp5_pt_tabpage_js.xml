@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_tab_list.html</string> </value>
+            <value> <string>gadget_erp5_page_tab.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_tab_list_html</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_tabpage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,42 +101,108 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Tab List</title>\n
+/*global window, rJS, RSVP, Handlebars */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, RSVP, Handlebars) {\n
+  "use strict";\n
 \n
-    <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="handlebars.js" type="text/javascript"></script>\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+    source = gadget_klass.__template_element\n
+                         .getElementById("table-template")\n
+                         .innerHTML,\n
+    table_template = Handlebars.compile(source);\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_tab_list.js" type="text/javascript"></script>\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
-    <script id="active-navigation-template" type="text/x-handlebars-template">\n
-      <li><a class="ui-btn-active ui-state-persist" href="{{link}}">{{title}}</a></li>\n
-    </script>\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
 \n
-    <script id="navigation-template" type="text/x-handlebars-template">\n
-      <li><a href="{{link}}">{{title}}</a></li>\n
-    </script>\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
-  </head>\n
-  <body>\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this,\n
+        matching,\n
+        view_list;\n
 \n
-    <div class="grid-container"></div>\n
+      return gadget.jio_get({"_id": options.jio_key})\n
+        .push(function (result) {\n
+          var erp5_document = result.data,\n
+            i,\n
+            promise_list = [];\n
+          view_list = erp5_document._links[options.action_view];\n
 \n
-  </body>\n
-</html>
+          // All ERP5 document should at least have one view.\n
+          // So, no need normally to test undefined\n
+          if (view_list.constructor !== Array) {\n
+            view_list = [view_list];\n
+          }\n
+\n
+          for (i = 0; i < view_list.length; i += 1) {\n
+            if (options.view === view_list[i].name) {\n
+              matching = i;\n
+            }\n
+            promise_list.push(gadget.whoWantToDisplayThisPage({\n
+              name: view_list[i].name,\n
+              editable: true\n
+            }));\n
+          }\n
+          return RSVP.all(promise_list);\n
+        })\n
+        .push(function (all_result) {\n
+          var i,\n
+            tab_list = [];\n
+\n
+          for (i = 0; i < all_result.length; i += 1) {\n
+            tab_list.push({\n
+              title: view_list[i].title,\n
+              link: all_result[i]\n
+            });\n
+          }\n
+\n
+\n
+          gadget.props.element.innerHTML = table_template({\n
+            definition_title: "Views",\n
+            documentlist: tab_list\n
+          });\n
+\n
+          return gadget.renderPageHeader({\n
+            cancel_url: tab_list[matching].link\n
+          });\n
+        });\n
+\n
+    });\n
+\n
+}(window, rJS, RSVP, Handlebars));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Tab List</string> </value>
+            <value> <string>Gadget ERP5 Tab JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -226,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.75</float>
+                        <float>1411723496.44</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -257,7 +319,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -271,7 +333,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46254.12819.56183</string> </value>
+                <value> <string>937.54023.36332.45994</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +351,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407329213.15</float>
+                        <float>1411726674.75</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -346,7 +408,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406015645.23</float>
+                        <float>1411723463.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

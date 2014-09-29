@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_frontpage.js</string> </value>
+            <value> <string>gadget_erp5_page_front.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -362,7 +362,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.43884.286.40960</string> </value>
+                <value> <string>937.43885.22553.46165</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -380,7 +380,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411118240.63</float>
+                        <float>1411461029.62</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

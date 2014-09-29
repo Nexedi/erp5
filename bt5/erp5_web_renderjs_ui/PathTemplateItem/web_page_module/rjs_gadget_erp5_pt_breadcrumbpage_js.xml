@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_login.html</string> </value>
+            <value> <string>gadget_erp5_page_breadcrumb.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_loginform_html</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_breadcrumbpage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,61 +99,119 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 PT Loginpage</title>\n
+            <value> <string>/*global window, rJS, RSVP, Handlebars, URI */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, RSVP, Handlebars, URI) {\n
+  "use strict";\n
 \n
-    <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+    source = gadget_klass.__template_element\n
+                         .getElementById("table-template")\n
+                         .innerHTML,\n
+    table_template = Handlebars.compile(source);\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5_page_login.js" type="text/javascript"></script>\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
-  </head>\n
-  <body>\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
 \n
-  <fieldset class="center">\n
-    <form class="login_form">\n
-         <div class="ui-card ui-body-inherit ui-corner-all ui-shadow ui-content ui-responsive">\n
-             <label>Login:</label>\n
-             <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
-               <input type="text" required="required" data-enhanced="true" name="login" value="" />\n
-             </div>\n
-             <label>Password:</label>\n
-             <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
-               <input type="password" required="required" name="password" value="" data-enhanced="true" />\n
-             </div>\n
-           <div class="ui-grid-a ui-responsive">\n
-             <div class="ui-block-a">\n
-               <!-- <a href="#" class="ui-disabled ui-link">Forgot password</a> -->\n
-             </div>\n
-             <div class="ui-block-b">\n
-               <div class="ui-btn ui-btn-b ui-input-btn ui-corner-all ui-icon-carat-r ui-btn-icon-right">\n
-                 <span>Login</span>\n
-                 <input data-enhanced="true" type="submit" value="Login" />\n
-          </div>\n
-             </div>\n
-           </div>\n
-         \n
-         </div>\n
-    </form>\n
-  </fieldset>\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
-  </body>\n
-</html>
-
-]]></string> </value>
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this,\n
+        erp5_document,\n
+        header_options = {},\n
+        parent_queue,\n
+        parent_list = [];\n
+\n
+      function handleParent(parent_link) {\n
+        parent_queue.push(function () {\n
+          var uri,\n
+            jio_key;\n
+          if (parent_link !== undefined) {\n
+            uri = new URI(parent_link.href);\n
+            jio_key = uri.segment(2);\n
+            if (jio_key === undefined) {\n
+              // Parent is the ERP5 site\n
+              parent_list.push({\n
+                title: "ERP5",\n
+                link: "#"\n
+              });\n
+            } else {\n
+              // Parent is an ERP5 document\n
+              return gadget.whoWantToDisplayThis(jio_key)\n
+                .push(function (parent_href) {\n
+                  parent_list.push({\n
+                    title: parent_link.name,\n
+                    link: parent_href\n
+                  });\n
+                  return gadget.jio_get({"_id": jio_key});\n
+                })\n
+                .push(function (result) {\n
+                  handleParent(result.data._links.parent || "#");\n
+                });\n
+            }\n
+\n
+          }\n
+        });\n
+      }\n
+\n
+      return gadget.whoWantToDisplayThisPage({name: options.view, editable: options.editable})\n
+        .push(function (back_url) {\n
+          header_options.back_url = back_url;\n
+          return gadget.jio_get({"_id": options.jio_key});\n
+        })\n
+        .push(function (result) {\n
+          erp5_document = result.data;\n
+          header_options.page_title = erp5_document.title;\n
+          parent_queue = new RSVP.Queue();\n
+\n
+          handleParent(erp5_document._links.parent || "#");\n
+\n
+          return parent_queue;\n
+        })\n
+        .push(function () {\n
+          gadget.props.element.innerHTML = table_template({\n
+            definition_title: "Breadcrumb",\n
+            documentlist: parent_list\n
+          });\n
+\n
+          return gadget.renderPageHeader(header_options);\n
+\n
+        });\n
+\n
+    });\n
+\n
+}(window, rJS, RSVP, Handlebars, URI));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Loginform</string> </value>
+            <value> <string>Gadget ERP5 Breadcrumb JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -221,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -243,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406902763.96</float>
+                        <float>1411741191.74</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -288,7 +342,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.49599.22266.28279</string> </value>
+                <value> <string>937.58290.6512.49237</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +360,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411461090.07</float>
+                        <float>1411984884.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -363,7 +417,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406817511.26</float>
+                        <float>1411741169.32</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

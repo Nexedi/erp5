@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_listfield.html</string> </value>
+            <value> <string>gadget_erp5_field_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -117,7 +117,7 @@
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="handlebars.js" type="text/javascript"></script>\n
     <!-- custom script -->\n
-    <script src="gadget_erp5_listfield.js" type="text/javascript"></script>\n
+    <script src="gadget_erp5_field_list.js" type="text/javascript"></script>\n
 \n
     <script id="option-template" type="text/x-handlebars-template">\n
       <option value="{{value}}">{{text}}</option>\n
@@ -254,7 +254,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -268,7 +268,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.14639.2726.21299</string> </value>
+                <value> <string>937.51428.60613.12390</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +286,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933454.94</float>
+                        <float>1411576752.72</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

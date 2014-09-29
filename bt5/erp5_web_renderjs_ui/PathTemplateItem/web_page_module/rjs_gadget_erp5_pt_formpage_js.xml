@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_login.html</string> </value>
+            <value> <string>gadget_erp5_page_form.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_loginform_html</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_formpage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,59 +101,94 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 PT Loginpage</title>\n
+/*global window, rJS, URI */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, URI) {\n
+  "use strict";\n
 \n
-    <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
+  var gadget_klass = rJS(window);\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5_page_login.js" type="text/javascript"></script>\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
 \n
-  </head>\n
-  <body>\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
 \n
-  <fieldset class="center">\n
-    <form class="login_form">\n
-         <div class="ui-card ui-body-inherit ui-corner-all ui-shadow ui-content ui-responsive">\n
-             <label>Login:</label>\n
-             <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
-               <input type="text" required="required" data-enhanced="true" name="login" value="" />\n
-             </div>\n
-             <label>Password:</label>\n
-             <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
-               <input type="password" required="required" name="password" value="" data-enhanced="true" />\n
-             </div>\n
-           <div class="ui-grid-a ui-responsive">\n
-             <div class="ui-block-a">\n
-               <!-- <a href="#" class="ui-disabled ui-link">Forgot password</a> -->\n
-             </div>\n
-             <div class="ui-block-b">\n
-               <div class="ui-btn ui-btn-b ui-input-btn ui-corner-all ui-icon-carat-r ui-btn-icon-right">\n
-                 <span>Login</span>\n
-                 <input data-enhanced="true" type="submit" value="Login" />\n
-          </div>\n
-             </div>\n
-           </div>\n
-         \n
-         </div>\n
-    </form>\n
-  </fieldset>\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this,\n
+        element = gadget.props.element,\n
+        erp5_document,\n
+        erp5_form,\n
+        form_gadget;\n
 \n
-  </body>\n
-</html>
+      return gadget.jio_get({"_id": options.jio_key}, {"_view": options.view})\n
+        .push(function (result) {\n
+          var uri = new URI(result.data._embedded._view._links.form_definition.href);\n
+          erp5_document = result.data;\n
+          return gadget.jio_get({"_id": uri.segment(2)}, {"_view": "view"});\n
+        })\n
+        .push(function (result) {\n
+          erp5_form = result.data;\n
+\n
+          var url = "gadget_erp5_pt_" + erp5_form.pt;\n
+          // XXX Hardcoded specific behaviour for form_view\n
+          if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {\n
+            url += "_editable";\n
+          }\n
+          url += ".html";\n
+\n
+          return gadget.declareGadget(url, {\n
+            scope: "fg"\n
+          });\n
+        })\n
+        .push(function (result) {\n
+          var sub_options = options.fg || {};\n
+          sub_options.erp5_document = erp5_document;\n
+          sub_options.form_definition = erp5_form;\n
+          sub_options.view = options.view;\n
+          sub_options.action_view = options.action_view;\n
+          sub_options.jio_key = options.jio_key;\n
+\n
+          form_gadget = result;\n
+          return form_gadget.render(sub_options);\n
+        })\n
+        .push(function () {\n
+          return form_gadget.getElement();\n
+        })\n
+        .push(function (fragment) {\n
+          // Clear first to DOM, append after to reduce flickering/manip\n
+          while (element.firstChild) {\n
+            element.removeChild(element.firstChild);\n
+          }\n
+          element.appendChild(fragment);\n
+        });\n
+    });\n
+\n
+}(window, rJS, URI));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Loginform</string> </value>
+            <value> <string>Gadget ERP5 Doc JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -221,7 +252,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -243,7 +274,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406902763.96</float>
+                        <float>1411464845.21</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -288,7 +319,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.49599.22266.28279</string> </value>
+                <value> <string>937.58334.39803.33518</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411461090.07</float>
+                        <float>1411985226.68</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -363,7 +394,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406817511.26</float>
+                        <float>1411464822.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
