@@ -55,7 +55,8 @@
 """\n
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
 \n
-query = SimpleQuery(**{\'catalog_full_text.fulltext_title\': \'*D+ %s\' % value, \'comparison_operator\': \'match_boolean\'} )\n
+query = SimpleQuery(**{\'catalog_full_text.fulltext_title\': \'*D+ %s\' % value.replace(r\'*\', r\'\\*\').replace(r\'~\', r\'\\~\'), \'comparison_operator\': \'match_boolean\'} )\n
+\n
 return query\n
 </string> </value>
         </item>
