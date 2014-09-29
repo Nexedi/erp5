@@ -4108,7 +4108,7 @@ msgid "Data"
 msgstr ""
 
 msgid "Data updated."
-msgstr ""
+msgstr "数据已更新"
 
 msgid "Date"
 msgstr "日期"
@@ -12334,7 +12334,7 @@ msgid "Set Ready"
 msgstr ""
 
 msgid "Set Relation"
-msgstr ""
+msgstr "设置关联"
 
 msgid "Set Resolved"
 msgstr ""
