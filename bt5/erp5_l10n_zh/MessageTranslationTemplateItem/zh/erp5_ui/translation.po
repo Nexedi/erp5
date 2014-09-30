@@ -12316,7 +12316,7 @@ msgid "Session Tool"
 msgstr ""
 
 msgid "Set List Setting"
-msgstr ""
+msgstr "设置列表"
 
 msgid "Set Packing List Ready"
 msgstr "装箱单设为已就绪"
