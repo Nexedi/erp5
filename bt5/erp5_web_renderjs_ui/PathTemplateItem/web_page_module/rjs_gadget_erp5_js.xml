@@ -150,6 +150,35 @@
       });\n
   }\n
 \n
+  function displayError(gadget, error) {\n
+    // Do not break the application in case of errors.\n
+    // Display it to the user for now, and allow user to go back to the frontpage\n
+    var error_text = "";\n
+    if (error.status === 401) {\n
+      // Redirect to the login view\n
+      return gadget.aq_pleasePublishMyState({page: "login"})\n
+        .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+    }\n
+    if (error instanceof RSVP.CancellationError) {\n
+      return;\n
+    }\n
+\n
+    if (error instanceof XMLHttpRequest) {\n
+      error_text = error.toString() + " " +\n
+        error.status + " " +\n
+        error.statusText;\n
+    } else if (error instanceof Error) {\n
+      error_text = error.toString();\n
+    } else {\n
+      error_text = JSON.stringify(error);\n
+    }\n
+\n
+    console.error(error);\n
+    console.error(error.stack);\n
+    // XXX Improve error rendering\n
+    gadget.props.article.textContent = "Error: " + error_text;\n
+  }\n
+\n
   /////////////////////////////////////////////////////////////////\n
   // Gadget behaviour\n
   /////////////////////////////////////////////////////////////////\n
@@ -249,6 +278,10 @@
       this.props.header_argument_list = param_list;\n
     })\n
 \n
+    .allowPublicAcquisition(\'reportServiceError\', function (param_list) {\n
+      return displayError(this, param_list[0]);\n
+    })\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -318,33 +351,8 @@
         })\n
 \n
         .push(undefined, function (error) {\n
-          // Do not break the application in case of errors.\n
-          // Display it to the user for now, and allow user to go back to the frontpage\n
-          var error_text = "";\n
-          if (error.status === 401) {\n
-            // Redirect to the login view\n
-            return gadget.aq_pleasePublishMyState({page: "login"})\n
-              .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-          }\n
-          if (error instanceof RSVP.CancellationError) {\n
-            return;\n
-          }\n
-\n
-          if (error instanceof XMLHttpRequest) {\n
-            error_text = error.toString() + " " +\n
-              error.status + " " +\n
-              error.statusText;\n
-          } else if (error instanceof Error) {\n
-            error_text = error.toString();\n
-          } else {\n
-            error_text = JSON.stringify(error);\n
-          }\n
-\n
-          console.error(error);\n
-          console.error(error.stack);\n
-          // XXX Improve error rendering\n
-          gadget.props.article.textContent = "Error: " + error_text;\n
           $.mobile.loading(\'hide\');\n
+          return displayError(gadget, error);\n
         });\n
     });\n
 \n
@@ -485,7 +493,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58323.33142.30617</string> </value>
+                <value> <string>937.59906.57015.45841</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -503,7 +511,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412000231.85</float>
+                        <float>1412080420.18</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
