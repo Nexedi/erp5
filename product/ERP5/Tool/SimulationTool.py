@@ -1300,39 +1300,53 @@ class SimulationTool(BaseTool):
         'convert_quantity_result': convert_quantity_result,
         'quantity_unit_uid': quantity_unit_uid,
       }
-      # Get cached data
-      if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
-              optimisation__ and (not kw.get('from_date')) and \
-              'transformed_resource' not in kw:
-        # Here is the different kind of date
-        # from_date : >=
-        # to_date   : <
-        # at_date   : <=
-        # As we just have from_date, it means that we must use
-        # the to_date for the cache in order to avoid double computation
-        # of the same line
-        at_date = kw.pop("at_date", None)
-        if at_date is None:
-          to_date = kw.pop("to_date", None)
+
+      # Required:
+      #   + ALTER TABLE stock ADD KEY `resource_section_node_date` (`resource_uid`, `section_uid`, `node_uid`, `date`);
+      #   + ALTER TABLE stock ADD KEY `variation_text_section_node` (`variation_text`, `section_uid`, `node_uid`);
+      if (optimisation__ and
+          'at_date' not in kw and
+          'from_date' not in kw and
+          'to_date' not in kw and
+          'variation_text' not in kw and
+          'resource_uid' in kw):
+        resource_uid_list = kw['resource_uid']
+        if not isinstance(resource_uid_list, (list, set, tuple)):
+          resource_uid_list = [resource_uid_list]
+
+        # Get available variations from the cache
+        from_date = None
+        variation_text_set = set()
+        for brain in self.Base_zGetKRAllInventoryCacheVariation(
+                resource_uid_list=resource_uid_list):
+          variation_text_set.add(brain['variation_text'])
+          # All the entries in the cache are generated at the same date
+          if from_date is None:
+            from_date = brain['to_date']
+
+        if from_date is not None:
+          node_uid_list = kw['node_uid']
+          if not isinstance(node_uid_list, (list, set, tuple)):
+            node_uid_list = [node_uid_list]
+          section_uid_list = kw['section_uid']
+          if not isinstance(section_uid_list, (list, set, tuple)):
+            section_uid_list = [section_uid_list]
+
+          # Get variations added since the cache was created
+          for brain in self.Base_zGetKRAllInventoryDeltaVariation(
+              from_date=from_date,
+              resource_uid_list=resource_uid_list,
+              # TODO-arnau: section_uid and node_uid seems always to be given to
+              # get*InventoryList...
+              section_uid_list=section_uid_list,
+              node_uid_list=node_uid_list):
+            variation_text_set.add(brain['variation_text'])
+
+          del kw['resource_uid']
+          kw['variation_text'] = list(variation_text_set)
         else:
-          # add one second so that we can use to_date
-          to_date = at_date + MYSQL_MIN_DATETIME_RESOLUTION
-        try:
-          cached_result, cached_date = self._getCachedInventoryList(
-              to_date=to_date,
-              sql_kw=kw,
-              **base_inventory_kw)
-        except StockOptimisationError:
-          cached_result = []
-          kw['to_date'] = to_date
-        else:
-          if src__:
-            sql_source_list.extend(cached_result)
-          # Now must generate query for date diff
-          kw['to_date'] = to_date
-          kw['from_date'] = cached_date
-      else:
-        cached_result = []
+          LOG("SimulationTool.getInventoryList", WARNING, "Not using Inventory Cache!")
+
       sql_kw, new_kw = self._generateKeywordDict(**kw)
       # Copy kw content as _generateSQLKeywordDictFromKeywordDict
       # remove some values from it
@@ -1346,142 +1360,11 @@ class SimulationTool(BaseTool):
       stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
           table=default_stock_table, sql_kw=sql_kw, new_kw=new_kw_copy)
       stock_sql_kw.update(base_inventory_kw)
-      delta_result = self.Resource_zGetInventoryList(
-          **stock_sql_kw)
-      if src__:
-        sql_source_list.append(delta_result)
-        result = ';\n-- NEXT QUERY\n'.join(sql_source_list)
-      else:
-        if cached_result:
-            result = self._addBrainResults(delta_result, cached_result, new_kw)
-        else:
-            result = delta_result
-      return result
 
-    def getInventoryCacheLag(self):
-      """
-      Returns a duration, in days, for stock cache management.
-      If data in stock cache is older than lag compared to query's date
-      (at_date or to_date), then it becomes a "soft miss": use found value,
-      but add a new entry to cache at query's date minus half the lag.
-      So this value should be:
-      - Small enough that few enough rows need to be table-scanned for
-        average queries (probably queries against current date).
-      - Large enough that few enough documents get modified past that date,
-        otherwise cache entries would be removed from cache all the time.
-      """
-      return self.SimulationTool_getInventoryCacheLag()
+      if 'variation_text' in kw:
+        stock_sql_kw['use_kr_inventory_cache'] = True
 
-    def _getCachedInventoryList(self, to_date, sql_kw, stock_table_id, src__=False, **kw):
-      """
-      Try to get a cached inventory list result
-      If not existing, fill the cache
-      """
-      Resource_zGetInventoryList = self.Resource_zGetInventoryList
-      # Generate the SQL source without date parameter
-      # This will be the cache key
-      try:
-          no_date_kw = deepcopy(sql_kw)
-      except TypeError:
-          LOG("SimulationTool._getCachedInventoryList", WARNING,
-              "Failed copying sql_kw, disabling stock cache",
-              error=exc_info())
-          raise StockOptimisationError
-      no_date_sql_kw, no_date_new_kw = self._generateKeywordDict(**no_date_kw)
-      no_date_stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
-        table=stock_table_id, sql_kw=no_date_sql_kw,
-        new_kw=no_date_new_kw)
-      kw.update(no_date_stock_sql_kw)
-      if src__:
-        sql_source_list = []
-      # Generate the cache key (md5 of query source)
-      sql_text_hash = md5(Resource_zGetInventoryList(
-        stock_table_id=stock_table_id,
-        src__=1,
-        **kw)).digest()
-      # Try to get result from cache
-      Resource_zGetInventoryCacheResult = self.Resource_zGetInventoryCacheResult
-      inventory_cache_kw = {'query': sql_text_hash}
-      if to_date is not None:
-        inventory_cache_kw['date'] = to_date
-      try:
-          cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
-      except ProgrammingError:
-          # First use of the optimisation, we need to create the table
-          LOG("SimulationTool._getCachedInventoryList", INFO,
-              "Creating inventory cache stock")
-          if src__:
-              sql_source_list.append(self.SimulationTool_zCreateInventoryCache(src__=1))
-          else:
-              self.SimulationTool_zCreateInventoryCache()
-          cached_sql_result = None
-
-      if src__:
-        sql_source_list.append(Resource_zGetInventoryCacheResult(src__=1, **inventory_cache_kw))
-      if cached_sql_result:
-        brain_result = loads(cached_sql_result[0].result)
-        # Rebuild the brains
-        cached_result = Results(
-          (brain_result['items'], brain_result['data']),
-          brains=getBrain(
-            Resource_zGetInventoryList.class_file_,
-            Resource_zGetInventoryList.class_name_,
-          ),
-          parent=self,
-        )
-      else:
-        cached_result = []
-      cache_lag = self.getInventoryCacheLag()
-      if cached_sql_result and (to_date is None or (to_date - DateTime(cached_sql_result[0].date) < cache_lag)):
-        cached_date = DateTime(cached_sql_result[0].date)
-        result = cached_result
-      elif to_date is not None:
-        # Cache miss, or hit with old data: store a new entry in cache.
-        # Don't store it at to_date, as it risks being flushed soon (ie, when
-        # any document older than to_date gets reindexed in stock table).
-        # Don't store it at to_date - cache_lag, as it would risk expiring
-        # soon as we store it (except if to_date is fixed for many queries,
-        # which we cannot tell here).
-        # So store it at half the cache_lag before to_date.
-        cached_date = to_date - cache_lag / 2
-        new_cache_kw = deepcopy(sql_kw)
-        if cached_result:
-          # We can use cached result to generate new cache result
-          new_cache_kw['from_date'] = DateTime(cached_sql_result[0].date)
-        sql_kw, new_kw = self._generateKeywordDict(
-          to_date=cached_date,
-          **new_cache_kw)
-        kw.update(self._generateSQLKeywordDictFromKeywordDict(
-            table=stock_table_id,
-            sql_kw=sql_kw,
-            new_kw=new_kw,
-          )
-        )
-        new_result = Resource_zGetInventoryList(
-          stock_table_id=stock_table_id,
-          src__=src__,
-          **kw)
-        if src__:
-          sql_source_list.append(new_result)
-        else:
-          result = self._addBrainResults(new_result, cached_result, new_kw)
-          self.Resource_zInsertInventoryCacheResult(
-            query=sql_text_hash,
-            date=cached_date,
-            result=dumps({
-              'items': result.__items__,
-              'data': result._data,
-            }),
-          )
-      else:
-        # Cache miss and this getInventory() not specifying to_date,
-        # and other getInventory() have not created usable caches.
-        # In such case, do not create cache, do not use cache.
-        result = []
-        cached_date = None
-      if src__:
-        result = sql_source_list
-      return result, cached_date
+      return self.Resource_zGetInventoryList(**stock_sql_kw)
 
     def _addBrainResults(self, first_result, second_result, new_kw):
       """
