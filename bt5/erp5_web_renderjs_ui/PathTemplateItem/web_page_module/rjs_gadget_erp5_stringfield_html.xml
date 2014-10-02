@@ -117,6 +117,8 @@
     <script src="renderjs.js" type="text/javascript"></script>\n
     <!-- custom script -->\n
     <script src="gadget_erp5_field_string.js" type="text/javascript"></script>\n
+    <script src="gadget_global.js" type="text/javascript"></script>\n
+\n
 \n
   </head>\n
   <body>\n
@@ -245,7 +247,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -259,7 +261,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51417.2754.60177</string> </value>
+                <value> <string>937.51526.35217.14489</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +279,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411576712.22</float>
+                        <float>1412257603.97</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

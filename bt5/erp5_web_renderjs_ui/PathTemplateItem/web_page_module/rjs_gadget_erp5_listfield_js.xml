@@ -146,6 +146,9 @@
         });\n
       }\n
       select.innerHTML += tmp;\n
+      if (field_json.required === 1) {\n
+        select.setAttribute(\'required\', \'required\');\n
+      }\n
       if (field_json.editable !== 1) {\n
         select.setAttribute(\'readonly\', \'readonly\');\n
         select.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
@@ -284,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -298,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51405.48576.10854</string> </value>
+                <value> <string>937.59950.62249.34679</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411570828.74</float>
+                        <float>1412243487.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

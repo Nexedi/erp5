@@ -130,6 +130,27 @@
     })\n
 \n
     .declareAcquiredMethod("aq_put", "jio_put")\n
+\n
+    .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = " (" + param_list[0] + ")";\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("notifyValid", function (param_list, scope) {\n
+      /*jslint unparam:true*/\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = "";\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -172,9 +193,11 @@
                   var field_queue = new RSVP.Queue(),\n
                     sandbox = "public",\n
                     field_url = \'gadget_erp5_field_readonly.html\',\n
+                    // Don\'t change the structure without changing notifyValid and notifyInvalid\n
                     field_element = document.createElement("div"),\n
                     gadget_element = document.createElement("div"),\n
                     label_element = document.createElement("label"),\n
+                    error_element = document.createElement("span"),\n
                     renderered_field = rendered_form[field[0]];\n
 \n
                   field_element.className = "ui-field-contain";\n
@@ -185,6 +208,8 @@
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
+                  // error_element.setAttribute(\'class\', \'ui-state-error ui-corner-all\');\n
+                  label_element.appendChild(error_element);\n
                   if (group[0] !== "bottom") {\n
                     field_element.appendChild(label_element);\n
                   }\n
@@ -196,6 +221,8 @@
                     field_url = \'gadget_erp5_field_list.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
                     field_url = \'gadget_erp5_field_string.html\';\n
+                  } else if (renderered_field.type === \'RelationStringField\') {\n
+                    field_url = \'gadget_erp5_field_relation_string.html\';\n
                   } else if (renderered_field.type === \'TextAreaField\') {\n
                     field_url = \'gadget_erp5_field_textarea.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
@@ -283,6 +310,34 @@
       return queue\n
         .push(function () {\n
           return data;\n
+        });\n
+    })\n
+\n
+\n
+    .declareMethod("checkValidity", function () {\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        result = true,\n
+        queue = new RSVP.Queue();\n
+\n
+      function extendData(field_validity) {\n
+        result = result && field_validity;\n
+      }\n
+\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.checkValidity !== undefined) {\n
+          queue\n
+            .push(field_gadget.checkValidity.bind(field_gadget))\n
+            .push(extendData);\n
+        }\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return result;\n
         });\n
 \n
     });\n
@@ -424,7 +479,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58318.16438.37768</string> </value>
+                <value> <string>937.64263.33357.15633</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -442,7 +497,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411999896.88</float>
+                        <float>1412254860.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

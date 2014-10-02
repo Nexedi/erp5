@@ -282,6 +282,31 @@
       return displayError(this, param_list[0]);\n
     })\n
 \n
+    .allowPublicAcquisition(\'notifySubmitting\', function () {\n
+      return this.getDeclaredGadget("header")\n
+        .push(function (header_gadget) {\n
+          return header_gadget.notifySubmitting();\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition(\'notifySubmitted\', function () {\n
+      return this.getDeclaredGadget("header")\n
+        .push(function (header_gadget) {\n
+          return header_gadget.notifySubmitted();\n
+        });\n
+    })\n
+    .allowPublicAcquisition(\'notifyChange\', function () {\n
+      return this.getDeclaredGadget("header")\n
+        .push(function (header_gadget) {\n
+          return header_gadget.notifyChange();\n
+        });\n
+    })\n
+    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
+      return this.getDeclaredGadget("pg")\n
+        .push(function (page_gadget) {\n
+          return page_gadget.triggerSubmit();\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -299,10 +324,14 @@
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
+        header_gadget,\n
         main_gadget;\n
-      return new RSVP.Queue()\n
+      return gadget.getDeclaredGadget("header")\n
+        .push(function (declared_gadget) {\n
+          header_gadget = declared_gadget;\n
+          return header_gadget.notifyLoading();\n
+        })\n
         .push(function () {\n
-          $.mobile.loading(\'show\');\n
 \n
           // By default, init the header options to be empty (ERP5 title by default + sidebar)\n
           gadget.props.header_argument_list = [{}];\n
@@ -327,9 +356,6 @@
 \n
         .push(function (result) {\n
           main_gadget = result;\n
-          return gadget.getDeclaredGadget("header");\n
-        })\n
-        .push(function (header_gadget) {\n
           return header_gadget.render.apply(header_gadget, gadget.props.header_argument_list);\n
         })\n
         .push(function () {\n
@@ -344,14 +370,13 @@
                   element.removeChild(element.firstChild);\n
                 }\n
                 element.appendChild(fragment);\n
-                $.mobile.loading(\'hide\');\n
-                return $(element).trigger("create");\n
+                $(element).trigger("create");\n
+                return header_gadget.notifyLoaded();\n
               });\n
           }\n
         })\n
 \n
         .push(undefined, function (error) {\n
-          $.mobile.loading(\'hide\');\n
           return displayError(gadget, error);\n
         });\n
     });\n
@@ -493,7 +518,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.59906.57015.45841</string> </value>
+                <value> <string>937.64000.63491.17493</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -511,7 +536,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412080420.18</float>
+                        <float>1412256764.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

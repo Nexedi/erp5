@@ -118,7 +118,9 @@
       textarea.value = field_json.value || field_json.default || "";\n
       textarea.setAttribute(\'name\', field_json.key);\n
       textarea.setAttribute(\'title\', field_json.title);\n
-\n
+      if (field_json.required === 1) {\n
+        textarea.setAttribute(\'required\', \'required\');\n
+      }\n
       if (field_json.editable !== 1) {\n
         textarea.setAttribute(\'readonly\', \'readonly\');\n
         textarea.className += "ui-state-readonly";\n
@@ -254,7 +256,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -268,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51406.65298.39270</string> </value>
+                <value> <string>937.59950.21418.24371</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411570045.73</float>
+                        <float>1412257665.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

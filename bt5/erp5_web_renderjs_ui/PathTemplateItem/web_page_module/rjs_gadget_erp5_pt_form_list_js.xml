@@ -131,10 +131,19 @@
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
+          var new_content_action = options.erp5_document._links.action_object_new_content_action;\n
+          if (new_content_action !== undefined) {\n
+            new_content_action = gadget.whoWantToDisplayThisPage({name: new_content_action.name});\n
+          } else {\n
+            new_content_action = "";\n
+          }\n
+\n
           return RSVP.all([\n
             gadget.getDeclaredGadget("erp5_searchfield"),\n
             gadget.getDeclaredGadget("erp5_form"),\n
-            gadget.whoWantToDisplayThisPage({name: options.view, page: "breadcrumb"})\n
+            gadget.whoWantToDisplayThisPage({name: options.view, page: "breadcrumb"}),\n
+            new_content_action,\n
+            gadget.whoWantToDisplayThisPage({page: "action", name: options.view})\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
@@ -144,9 +153,9 @@
             gadget.renderPageHeader({\n
               jump_url: "",\n
               cut_url: "",\n
-              actions_url: "",\n
+              actions_url: all_gadget[4],\n
               export_url: "",\n
-              add_url: "",\n
+              add_url: all_gadget[3],\n
               page_title: options.erp5_document.title,\n
               breadcrumb_url: all_gadget[2]\n
             })\n
@@ -291,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54284.12675.3652</string> </value>
+                <value> <string>937.64086.34377.7560</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411742227.2</float>
+                        <float>1412257173.84</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -130,14 +130,9 @@
 \n
     <!-- XXX action, method, fieldset -->\n
     <!-- XXX needs a theme -->\n
-    <form class="save_form ui-body-c">\n
-      <!--button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
-        ui-icon-edit ui-btn-icon-right">Save</button-->\n
-\n
-      <!--div class="action_list ui-controlgroup ui-controlgroup-horizontal ui-corner-all">\n
-        <div class="ui-controlgroup-controls">\n
-        </div>\n
-      </div-->\n
+    <form class="save_form ui-body-c" novalidate>\n
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
+        ui-icon-edit ui-btn-icon-right ui-screen-hidden">Save</button>\n
 \n
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
@@ -282,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51523.55.16605</string> </value>
+                <value> <string>937.59883.50986.57548</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -300,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411991218.07</float>
+                        <float>1412085640.69</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -141,6 +141,9 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'triggerSubmit\', function () {\n
+      this.props.element.querySelector(\'button\').click();\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var erp5_document = options.erp5_document,\n
         form_options = options.erp5_form || {},\n
@@ -180,7 +183,8 @@
           return form_gadget.renderPageHeader({\n
             cancel_url: all_result[1],\n
             page_title: options.erp5_document.title,\n
-            breadcrumb_url: all_result[2]\n
+            breadcrumb_url: all_result[2],\n
+            submit_action: true\n
           });\n
         });\n
     })\n
@@ -377,7 +381,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58416.46801.34491</string> </value>
+                <value> <string>937.64201.40983.3993</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -395,7 +399,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411990143.42</float>
+                        <float>1412251248.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

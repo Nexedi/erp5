@@ -116,6 +116,7 @@
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="handlebars.js" type="text/javascript"></script>\n
+    <script src="gadget_global.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_erp5_header.js" type="text/javascript"></script>\n
@@ -125,6 +126,9 @@
 \n
     <script id="header-link-template" type="text/x-handlebars-template">\n
        <a role="button" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
+    </script>\n
+    <script id="header-button-template" type="text/x-handlebars-template">\n
+       <form><button type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
     </script>\n
 \n
     <script id="sub-header-template" type="text/x-handlebars-template">\n
@@ -306,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54262.65313.31897</string> </value>
+                <value> <string>937.58644.46215.53674</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -324,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411993212.79</float>
+                        <float>1412241646.76</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

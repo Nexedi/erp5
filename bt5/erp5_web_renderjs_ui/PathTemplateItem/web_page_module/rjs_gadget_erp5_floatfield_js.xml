@@ -120,6 +120,9 @@
       );\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
+      if (field_json.required === 1) {\n
+        input.setAttribute(\'required\', \'required\');\n
+      }\n
       if (field_json.editable !== 1) {\n
         input.setAttribute(\'readonly\', \'readonly\');\n
         input.setAttribute(\'data-wrapper-class\', \'ui-state-disabled ui-state-readonly\');\n
@@ -256,7 +259,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -270,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.48460.49347.43246</string> </value>
+                <value> <string>937.51520.38687.48861</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411576355.41</float>
+                        <float>1412082125.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

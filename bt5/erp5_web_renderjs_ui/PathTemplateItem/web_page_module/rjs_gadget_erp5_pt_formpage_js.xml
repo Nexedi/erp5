@@ -132,6 +132,12 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'triggerSubmit\', function () {\n
+      return this.getDeclaredGadget(\'fg\')\n
+        .push(function (g) {\n
+          return g.triggerSubmit();\n
+        })\n
+    })\n
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
         element = gadget.props.element,\n
@@ -319,7 +325,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58334.39803.33518</string> </value>
+                <value> <string>937.58335.7310.17476</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,7 +343,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411985226.68</float>
+                        <float>1412239088.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
