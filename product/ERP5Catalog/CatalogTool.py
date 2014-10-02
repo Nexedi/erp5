@@ -894,6 +894,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       strict_string = 'strict_'
       related_string = 'related_'
       column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
+      #if key_list == ["destination_title"]:
+      #  import ipdb
+      #  ipdb.set_trace()
       for key in key_list:
         prefix = ''
         strict = 0

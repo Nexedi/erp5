@@ -266,6 +266,8 @@ class DB(TM):
 
     def columns(self, table_name):
         """Returns a list of column descriptions for 'table_name'."""
+        import ipdb
+        ipdb.set_trace()
         try:
             c = self._query('SHOW COLUMNS FROM %s' % table_name)
         except Exception:

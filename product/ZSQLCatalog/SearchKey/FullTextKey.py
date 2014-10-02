@@ -93,6 +93,7 @@ class FullTextKey(SearchKey):
       append(SimpleQuery(search_key=self,
                          comparison_operator=comparison_operator,
                          group=group, **{column: ' '.join(value_list)}))
+    #raise RuntimeError("XXX Tristan FullTextKey.py 1")
     return query_list
 
 verifyClass(ISearchKey, FullTextKey)

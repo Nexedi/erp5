@@ -92,6 +92,8 @@ except ImportError:
   def getTransactionalVariable():
     return {}
 
+show_table_engine_re = re.compile(r'^\)\sENGINE=(\S+)', re.MULTILINE)
+
 def getInstanceID(instance):
   # XXX: getPhysicalPath is overkill for a unique cache identifier.
   # What I would like to use instead of it is:
@@ -481,11 +483,6 @@ class Catalog(Folder,
       'mode'    : 'w' },
     { 'id'      : 'sql_catalog_tables',
       'description' : 'Method to get the main catalog tables',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_table_description',
-      'description' : 'Method to get the main catalog table creation description',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -1064,6 +1061,8 @@ class Catalog(Folder,
     return self.sql_search_result_keys
 
   def _getCatalogSchema(self, table=None):
+    #import ipdb
+    #ipdb.set_trace()
     result_list = []
     try:
       method_name = self.sql_catalog_schema
@@ -1077,6 +1076,22 @@ class Catalog(Folder,
       LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
       pass
     return tuple(result_list)
+
+  def _getSQLCatalogEngine(self, table=None):
+    """
+    """
+    result = ""
+    try:
+      method_name = self.sql_catalog_table_description
+      method = getattr(self, method_name)
+      search_result = method(table=table)
+      result = show_table_engine_re.search(getattr(search_result[0], "CREATE TABLE")).group(1)
+    except ConflictError:
+      raise
+    except:
+      LOG('SQLCatalog', WARNING, '_getCatalogEngine failed with the method %s' % method_name, error=sys.exc_info())
+      pass
+    return result
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
     cache_factory='erp5_content_long',
@@ -1099,6 +1114,8 @@ class Catalog(Folder,
     return sorted(keys)
 
   def getColumnIds(self):
+    #import ipdb
+    #ipdb.set_trace()
     """
     Calls the show column method and returns dictionnary of
     Field Ids
@@ -2436,6 +2453,8 @@ class Catalog(Folder,
         if column in result:
           LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
         else:
+          # if column in ("title", "description") and key == "FullTextKey":
+          #   if mroonga: key = "MroongaFullTextKey"
           result[column] = key
     for line in self.sql_catalog_search_keys:
       try:
