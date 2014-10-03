@@ -372,13 +372,18 @@
           if (main_gadget !== undefined) {\n
             return main_gadget.getElement()\n
               .push(function (fragment) {\n
-                var element = gadget.props.article;\n
-\n
+                var element = gadget.props.article,\n
+                  hack = document.createElement("div");\n
+                // XXX Horrible temporary hack to get the header fixed and content not hidden behind it...\n
+                hack.innerHTML = "<p><br/><br/><br/></p>";\n
+                // Go to the top of the page\n
+                window.scrollTo(0, 0);\n
                 // Clear first to DOM, append after to reduce flickering/manip\n
                 while (element.firstChild) {\n
                   element.removeChild(element.firstChild);\n
                 }\n
-                element.appendChild(fragment);\n
+                hack.appendChild(fragment);\n
+                element.appendChild(hack);\n
                 $(element).trigger("create");\n
                 return header_gadget.notifyLoaded();\n
               });\n

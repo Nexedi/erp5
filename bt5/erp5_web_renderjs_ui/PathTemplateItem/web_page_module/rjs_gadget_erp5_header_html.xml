@@ -141,7 +141,7 @@
   <body>\n
 \n
   <!-- data-position="fixed" -->\n
-  <div data-role="header"data-theme="a" class="custom-headroom-header ui-header ui-bar-a">\n
+  <div data-role="header" data-theme="a" class="custom-headroom-header ui-header ui-bar-a" data-position="fixed">\n
 \n
     <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
       <div class="ui-controlgroup-controls">\n
@@ -310,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58644.46215.53674</string> </value>
+                <value> <string>937.65430.11917.20872</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -328,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412241646.76</float>
+                        <float>1412326537.12</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
