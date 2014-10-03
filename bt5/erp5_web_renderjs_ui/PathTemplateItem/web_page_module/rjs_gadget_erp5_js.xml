@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest */\n
+/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, $, XMLHttpRequest, console) {\n
+(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -411,9 +411,28 @@
         .push(undefined, function (error) {\n
           return displayError(gadget, error);\n
         });\n
+    })\n
+\n
+    .declareService(function () {\n
+      ////////////////////////////////////\n
+      // Form submit listening. Prevent browser to automatically handle the form submit in case of a bug\n
+      ////////////////////////////////////\n
+      var gadget = this;\n
+\n
+      function catchFormSubmit() {\n
+        return displayError(new Error("Unexpected form submit"));\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        gadget.props.element,\n
+        \'submit\',\n
+        false,\n
+        catchFormSubmit\n
+      );\n
     });\n
 \n
-}(window, rJS, RSVP, jQuery, XMLHttpRequest, console));
+}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener));
 
 ]]></string> </value>
         </item>
