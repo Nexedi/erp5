@@ -225,10 +225,10 @@
         possible_sub_header_list = [\n
           [\'tab_url\', \'Tabs\', \'eye\'],\n
           [\'jump_url\', \'Jump\', \'plane\'],\n
-          [\'cut_url\', \'Cut\', \'scissors\'],\n
+          [\'delete_url\', \'Delete\', \'times\'],\n
           [\'export_url\', \'Export\', \'share-square-o\'],\n
           [\'actions_url\', \'Actions\', \'cogs\'],\n
-          [\'delete_url\', \'Delete\', \'times\'],\n
+          [\'cut_url\', \'Cut\', \'scissors\'],\n
           [\'add_url\', \'Add\', \'plus\'],\n
           [\'previous_url\', \'Previous\', \'carat-l\'],\n
           [\'next_url\', \'Next\', \'carat-r\']\n
