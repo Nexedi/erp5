@@ -170,13 +170,16 @@
               editable: true\n
             }));\n
           }\n
+          promise_list.push(gadget.whoWantToDisplayThisPage({\n
+            name: view_list[0].name\n
+          }));\n
           return RSVP.all(promise_list);\n
         })\n
         .push(function (all_result) {\n
           var i,\n
             tab_list = [];\n
 \n
-          for (i = 0; i < all_result.length; i += 1) {\n
+          for (i = 0; i < all_result.length - 1; i += 1) {\n
             tab_list.push({\n
               title: view_list[i].title,\n
               link: all_result[i]\n
@@ -186,6 +189,12 @@
 \n
           gadget.props.element.innerHTML = table_template({\n
             definition_title: "Views",\n
+            documentlist: [{\n
+              title: view_list[0].title,\n
+              link: all_result[all_result.length - 1]\n
+            }]\n
+          }) + table_template({\n
+            definition_title: "Editables",\n
             documentlist: tab_list\n
           });\n
 \n
@@ -333,7 +342,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54023.36332.45994</string> </value>
+                <value> <string>937.65458.5148.27426</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +360,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411726674.75</float>
+                        <float>1412344005.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

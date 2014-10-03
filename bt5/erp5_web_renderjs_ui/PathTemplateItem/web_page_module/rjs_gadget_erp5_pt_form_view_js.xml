@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP */\n
+/*global window, rJS, RSVP, URI */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP) {\n
+(function (window, rJS, RSVP, URI) {\n
   "use strict";\n
 \n
   // Precompile the templates while loading the first gadget instance\n
@@ -123,6 +123,7 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -156,7 +157,8 @@
             form_gadget.render(form_options),\n
             gadget.whoWantToDisplayThisPage({name: options.view, editable: true}),\n
             gadget.whoWantToDisplayThisPage({page: "action", name: options.view}),\n
-            gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view})\n
+            gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view}),\n
+            gadget.whoWantToDisplayThis((new URI(options.erp5_document._links.parent.href)).segment(2))\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -168,14 +170,14 @@
             next_url: "",\n
             export_url: "",\n
             edit_url: all_result[1],\n
-            selection_url: "",\n
+            selection_url: all_result[4],\n
             page_title: options.erp5_document.title,\n
             breadcrumb_url: all_result[3]\n
           });\n
         });\n
     });\n
 \n
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, URI));
 
 ]]></string> </value>
         </item>
@@ -312,7 +314,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58419.29836.39389</string> </value>
+                <value> <string>938.194.24732.3993</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -330,7 +332,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411990309.14</float>
+                        <float>1412343893.37</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

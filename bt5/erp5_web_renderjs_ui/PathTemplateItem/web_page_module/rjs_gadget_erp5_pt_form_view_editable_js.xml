@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener, URI */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, loopEventListener) {\n
+(function (window, rJS, RSVP, loopEventListener, URI) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -170,7 +170,8 @@
             form_gadget.whoWantToDisplayThisPage({page: "tab", name: options.view}),\n
             form_gadget.whoWantToDisplayThisPage({page: "action", name: options.view, editable: true}),\n
             form_gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view, editable: true}),\n
-            new_content_action\n
+            new_content_action,\n
+            form_gadget.whoWantToDisplayThis((new URI(options.erp5_document._links.parent.href)).segment(2))\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -181,7 +182,8 @@
             actions_url: all_result[3],\n
             delete_url: "",\n
             add_url: all_result[5],\n
-            view_url: all_result[1],\n
+            // view_url: all_result[1],\n
+            selection_url: all_result[6],\n
             page_title: options.erp5_document.title,\n
             breadcrumb_url: all_result[4],\n
             save_action: true\n
@@ -210,8 +212,8 @@
                 .push(function (data) {\n
                   data._id = form_gadget.props.id;\n
                   return RSVP.all([\n
-                    form_gadget.aq_put(data, {"_view": form_gadget.props.view}),\n
-                    form_gadget.notifySubmitting()\n
+                    form_gadget.notifySubmitting(),\n
+                    form_gadget.aq_put(data, {"_view": form_gadget.props.view})\n
                   ]);\n
                 })\n
                 .push(form_gadget.notifySubmitted.bind(form_gadget));\n
@@ -228,7 +230,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener));</string> </value>
+}(window, rJS, RSVP, loopEventListener, URI));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -363,7 +365,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64076.58625.38690</string> </value>
+                <value> <string>938.190.52141.13448</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -381,7 +383,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412257242.7</float>
+                        <float>1412343933.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
