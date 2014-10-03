@@ -257,7 +257,16 @@
 \n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
       // Hey, I want to display some URL\n
-      return this.aq_pleasePublishMyState({jio_key: param_list[0], view: this.props.default_view_reference});\n
+      var options = {\n
+        jio_key: param_list[0],\n
+        view: this.props.default_view_reference\n
+      };\n
+      if (param_list[1] !== undefined) {\n
+        if (param_list[1].editable !== undefined) {\n
+          options.editable = param_list[1].editable;\n
+        }\n
+      }\n
+      return this.aq_pleasePublishMyState(options);\n
     })\n
     .allowPublicAcquisition("whoWantToDisplayThisPage", function (param_list) {\n
       // Hey, I want to display some URL\n

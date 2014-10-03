@@ -137,6 +137,9 @@
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
+\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -151,6 +154,7 @@
 \n
       form_gadget.props.id = erp5_document._id;\n
       form_gadget.props.view = options.view;\n
+      form_gadget.props.editable = options.editable;\n
       form_gadget.props.action = erp5_document._embedded._view._actions.put;\n
       form_gadget.props.form_id = erp5_document._embedded._view.form_id;\n
 \n
@@ -194,7 +198,10 @@
       var form_gadget = this;\n
 \n
       function formSubmit() {\n
-        return form_gadget.getDeclaredGadget("erp5_form")\n
+        return form_gadget.notifySubmitting()\n
+          .push(function () {\n
+            return form_gadget.getDeclaredGadget("erp5_form");\n
+          })\n
           .push(function (erp5_form) {\n
             return erp5_form.getContent();\n
           })\n
@@ -228,10 +235,13 @@
               // No redirection, stay on the same document\n
               return form_gadget.whoWantToDisplayThisPage({name: "view"});\n
             }\n
-            return form_gadget.whoWantToDisplayThis(new URI(location).segment(2));\n
+            return form_gadget.whoWantToDisplayThis(new URI(location).segment(2), {editable: form_gadget.props.editable});\n
           })\n
           .push(function (url) {\n
-            return form_gadget.pleaseRedirectMyHash(url);\n
+            return RSVP.all([\n
+              form_gadget.notifySubmitted(),\n
+              form_gadget.pleaseRedirectMyHash(url)\n
+            ]);\n
           });\n
       }\n
 \n
@@ -381,7 +391,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64201.40983.3993</string> </value>
+                <value> <string>937.65475.63762.40123</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -399,7 +409,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412251248.98</float>
+                        <float>1412328524.22</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

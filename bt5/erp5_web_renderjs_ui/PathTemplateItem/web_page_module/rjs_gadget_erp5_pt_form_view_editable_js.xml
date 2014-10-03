@@ -159,7 +159,7 @@
 \n
           new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = form_gadget.whoWantToDisplayThisPage({name: new_content_action.name});\n
+            new_content_action = form_gadget.whoWantToDisplayThisPage({name: new_content_action.name, editable: true});\n
           } else {\n
             new_content_action = "";\n
           }\n

@@ -133,7 +133,7 @@
         .push(function () {\n
           var new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = gadget.whoWantToDisplayThisPage({name: new_content_action.name});\n
+            new_content_action = gadget.whoWantToDisplayThisPage({name: new_content_action.name, editable: true});\n
           } else {\n
             new_content_action = "";\n
           }\n
@@ -300,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64086.34377.7560</string> </value>
+                <value> <string>937.64343.1806.54016</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412257173.84</float>
+                        <float>1412327028.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

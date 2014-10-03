@@ -136,7 +136,7 @@
       return this.getDeclaredGadget(\'fg\')\n
         .push(function (g) {\n
           return g.triggerSubmit();\n
-        })\n
+        });\n
     })\n
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
@@ -172,6 +172,7 @@
           sub_options.view = options.view;\n
           sub_options.action_view = options.action_view;\n
           sub_options.jio_key = options.jio_key;\n
+          sub_options.editable = options.editable;\n
 \n
           form_gadget = result;\n
           return form_gadget.render(sub_options);\n
@@ -325,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58335.7310.17476</string> </value>
+                <value> <string>937.65478.52910.50056</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -343,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412239088.85</float>
+                        <float>1412344031.82</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
