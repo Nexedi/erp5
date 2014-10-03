@@ -150,7 +150,7 @@
       });\n
   }\n
 \n
-  function displayError(gadget, error) {\n
+  function displayErrorContent(gadget, error) {\n
     // Do not break the application in case of errors.\n
     // Display it to the user for now, and allow user to go back to the frontpage\n
     var error_text = "";\n
@@ -177,6 +177,24 @@
     console.error(error.stack);\n
     // XXX Improve error rendering\n
     gadget.props.article.textContent = "Error: " + error_text;\n
+  }\n
+\n
+  function displayError(gadget, error) {\n
+    return gadget.getDeclaredGadget("header")\n
+      .push(function (g) {\n
+        return g.notifyError();\n
+      })\n
+      .push(function () {\n
+        return displayErrorContent(gadget, error);\n
+      })\n
+      .push(function () {\n
+        return gadget.dropGadget("pg")\n
+          .push(undefined, function () {\n
+            // Do not crash the app if the pg gadget in not defined\n
+            // ie, keep the original error on screen\n
+            return;\n
+          });\n
+      });\n
   }\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -532,7 +550,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64000.63491.17493</string> </value>
+                <value> <string>938.273.44627.4590</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -550,7 +568,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412256764.71</float>
+                        <float>1412347942.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

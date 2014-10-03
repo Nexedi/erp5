@@ -147,6 +147,7 @@
         loaded: false,\n
         modified: false,\n
         submitted: true,\n
+        error: false,\n
         options: {}\n
       };\n
     })\n
@@ -174,6 +175,16 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'notifyError\', function () {\n
+      this.stats.loaded = true;\n
+      this.stats.submitted = true;\n
+      this.stats.error = true;\n
+      var gadget = this;\n
+      return this.render(this.stats.options)\n
+        .push(function () {\n
+          gadget.stats.error = false;\n
+        });\n
+    })\n
     .declareMethod(\'notifyLoading\', function () {\n
       if (this.stats.loaded) {\n
         this.stats.loaded = false;\n
@@ -280,7 +291,9 @@
       }\n
 \n
       // Handle right link\n
-      if (!gadget.stats.loaded) {\n
+      if (gadget.stats.error) {\n
+        default_right_icon = "exclamation";\n
+      } else if (!gadget.stats.loaded) {\n
         default_right_icon = "spinner";\n
         // Show default loading information\n
         right_link = {\n
@@ -315,6 +328,9 @@
             title: possible_right_button_list[i][1],\n
             icon: default_right_icon || possible_right_button_list[i][2]\n
           };\n
+          if (gadget.stats.error) {\n
+            right_button.class = "ui-disabled";\n
+          }\n
         }\n
       }\n
       if (right_button !== undefined) {\n
@@ -509,7 +525,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64299.47970.64017</string> </value>
+                <value> <string>938.142.63057.34594</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -527,7 +543,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412256721.33</float>
+                        <float>1412343494.43</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
