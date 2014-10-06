@@ -29,8 +29,6 @@
 
 from types import StringType
 from mimetypes import guess_extension
-from zLOG import LOG , INFO
-from zLOG import PROBLEM
 from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
@@ -40,7 +38,6 @@ from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
-from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder
@@ -540,14 +537,6 @@ class OOoTemplate(ZopePageTemplate):
       ooo = ooo_builder.render()
     else:
       ooo = ooo_builder.render(name=self.title or self.id, source=source)
-
-    if DevelopmentMode:
-      # Validate XML in development mode
-      from Products.ERP5OOo.tests.utils import Validator
-      err_list = Validator().validate(ooo)
-      if err_list:
-        LOG('ERP5OOo', PROBLEM,
-            'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
 
     extension = None
     mimetype = ooo_builder.getMimeType()
