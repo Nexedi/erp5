@@ -277,9 +277,9 @@
         if ((begin_from === 0) && (counter === 0)) {\n
           paging_info.textContent = "No records";\n
         } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
-          paging_info.textContent = counter + " records";\n
+          paging_info.textContent = counter + " record(s)";\n
         } else {\n
-          paging_info.textContent = "Records " + (((begin_from + lines) / lines - 1) * lines) + " to " + (((begin_from + lines) / lines - 1) * lines + counter);\n
+          paging_info.textContent = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " to " + (((begin_from + lines) / lines - 1) * lines + counter);\n
         }\n
         // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
         paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right ui-last-child";\n
@@ -449,7 +449,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.4259.17102.18414</string> </value>
+                <value> <string>938.5956.58558.46011</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -467,7 +467,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412586621.73</float>
+                        <float>1412689886.0</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
