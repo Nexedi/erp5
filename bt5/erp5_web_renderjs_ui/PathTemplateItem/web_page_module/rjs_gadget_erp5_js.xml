@@ -340,6 +340,12 @@
           return page_gadget.triggerSubmit();\n
         });\n
     })\n
+    .allowPublicAcquisition(\'triggerPanel\', function () {\n
+      return this.getDeclaredGadget("panel")\n
+        .push(function (panel_gadget) {\n
+          return panel_gadget.toggle();\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -367,7 +373,9 @@
         .push(function () {\n
 \n
           // By default, init the header options to be empty (ERP5 title by default + sidebar)\n
-          gadget.props.header_argument_list = [{}];\n
+          gadget.props.header_argument_list = [{\n
+            panel_action: true\n
+          }];\n
 \n
           options.action_view = gadget.props.action_view;\n
           gadget.state_parameter_dict = {\n
@@ -575,7 +583,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.5954.37249.58333</string> </value>
+                <value> <string>938.7130.7783.39850</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -593,7 +601,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412758687.11</float>
+                        <float>1412758828.97</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

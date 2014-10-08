@@ -151,6 +151,7 @@
             all_gadget[0].render(search_options),\n
             all_gadget[1].render(form_options),\n
             gadget.renderPageHeader({\n
+              panel_action: true,\n
               jump_url: "",\n
               cut_url: "",\n
               actions_url: all_gadget[4],\n
@@ -300,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64343.1806.54016</string> </value>
+                <value> <string>937.65471.52542.37171</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412327028.09</float>
+                        <float>1412596633.53</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

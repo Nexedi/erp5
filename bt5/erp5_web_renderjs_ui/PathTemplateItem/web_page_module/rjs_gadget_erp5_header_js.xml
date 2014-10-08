@@ -172,6 +172,7 @@
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")\n
+    .declareAcquiredMethod("triggerPanel", "triggerPanel")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -226,12 +227,15 @@
           [\'cancel_url\', \'Cancel\', \'times\'],\n
           [\'back_url\', \'Back\', \'arrow-left\']\n
         ],\n
+        possible_left_button_list = [\n
+          [\'panel_action\', \'Menu\', \'bars\', \'panel\']\n
+        ],\n
         possible_right_link_list = [\n
           [\'edit_url\', \'Edit\', \'edit\']\n
         ],\n
         possible_right_button_list = [\n
-          [\'save_action\', \'Save\', \'check\'],\n
-          [\'submit_action\', \'Proceed\', \'share\']\n
+          [\'save_action\', \'Save\', \'check\', \'submit\'],\n
+          [\'submit_action\', \'Proceed\', \'share\', \'submit\']\n
         ],\n
         possible_sub_header_list = [\n
           [\'tab_url\', \'Tabs\', \'eye\'],\n
@@ -247,7 +251,14 @@
         i,\n
         klass,\n
         count = 0,\n
+        //left_link = {\n
+        //  title: "Menu",\n
+        //  icon: "bars",\n
+        //  url: "#leftpanel",\n
+          // class: "ui-disabled"\n
+        // },\n
         left_link,\n
+        left_button,\n
         right_link,\n
         right_button,\n
         default_right_icon = "",\n
@@ -281,10 +292,20 @@
             url: options[possible_left_link_list[i][0]],\n
             class: klass\n
           };\n
-          count += 1;\n
         }\n
       }\n
-      if (left_link === undefined) {\n
+      for (i = 0; i < possible_left_button_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_left_button_list[i][0])) {\n
+          left_button = {\n
+            title: possible_left_button_list[i][1],\n
+            icon: possible_left_button_list[i][2],\n
+            name: possible_left_button_list[i][3]\n
+          };\n
+        }\n
+      }\n
+      if (left_button !== undefined) {\n
+        gadget.props.left_link.innerHTML = header_button_template(left_button);\n
+      } else if (left_link === undefined) {\n
         gadget.props.left_link.innerHTML = "";\n
       } else {\n
         gadget.props.left_link.innerHTML = header_link_template(left_link);\n
@@ -319,14 +340,14 @@
             url: options[possible_right_link_list[i][0]],\n
             class: klass\n
           };\n
-          count += 1;\n
         }\n
       }\n
       for (i = 0; i < possible_right_button_list.length; i += 1) {\n
         if (options.hasOwnProperty(possible_right_button_list[i][0])) {\n
           right_button = {\n
             title: possible_right_button_list[i][1],\n
-            icon: default_right_icon || possible_right_button_list[i][2]\n
+            icon: default_right_icon || possible_right_button_list[i][2],\n
+            name: possible_right_button_list[i][3]\n
           };\n
           if (gadget.stats.error) {\n
             right_button.class = "ui-disabled";\n
@@ -375,8 +396,16 @@
     .declareService(function () {\n
       var form_gadget = this;\n
 \n
-      function formSubmit() {\n
-        return form_gadget.triggerSubmit();\n
+      function formSubmit(evt) {\n
+        var button = evt.target[0],\n
+          name = button.getAttribute("name");\n
+        if (name === "panel") {\n
+          return form_gadget.triggerPanel();\n
+        }\n
+        if (name === "submit") {\n
+          return form_gadget.triggerSubmit();\n
+        }\n
+        throw new Error("Unsupported button " + name);\n
       }\n
 \n
       // Listen to form submit\n
@@ -525,7 +554,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.142.63057.34594</string> </value>
+                <value> <string>938.4424.15337.59562</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -543,7 +572,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412343494.43</float>
+                        <float>1412596556.28</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

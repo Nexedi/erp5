@@ -221,8 +221,8 @@
                     field_url = \'gadget_erp5_field_list.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
                     field_url = \'gadget_erp5_field_string.html\';\n
-                  } else if (renderered_field.type === \'RelationStringField\') {\n
-                    field_url = \'gadget_erp5_field_relation_string.html\';\n
+                  // } else if (renderered_field.type === \'RelationStringField\') {\n
+                  //  field_url = \'gadget_erp5_field_relation_string.html\';\n
                   } else if (renderered_field.type === \'TextAreaField\') {\n
                     field_url = \'gadget_erp5_field_textarea.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
@@ -479,7 +479,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64263.33357.15633</string> </value>
+                <value> <string>937.64346.57999.39918</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -497,7 +497,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412254860.94</float>
+                        <float>1412339249.91</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

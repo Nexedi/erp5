@@ -128,7 +128,7 @@
        <a role="button" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
     </script>\n
     <script id="header-button-template" type="text/x-handlebars-template">\n
-       <form><button type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
+       <form><button name=\'{{name}}\' type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
     </script>\n
 \n
     <script id="sub-header-template" type="text/x-handlebars-template">\n
@@ -310,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.65430.11917.20872</string> </value>
+                <value> <string>938.4401.55907.17169</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -328,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412326537.12</float>
+                        <float>1412595274.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
