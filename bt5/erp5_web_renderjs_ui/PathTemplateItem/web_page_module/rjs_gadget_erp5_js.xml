@@ -176,7 +176,8 @@
     console.error(error);\n
     console.error(error.stack);\n
     // XXX Improve error rendering\n
-    gadget.props.article.textContent = "Error: " + error_text;\n
+    gadget.props.article.innerHTML = "<br/><br/><br/><pre></pre>";\n
+    gadget.props.article.querySelector(\'pre\').textContent = "Error: " + error_text;\n
   }\n
 \n
   function displayError(gadget, error) {\n
@@ -305,7 +306,12 @@
       this.props.header_argument_list = param_list;\n
     })\n
 \n
-    .allowPublicAcquisition(\'reportServiceError\', function (param_list) {\n
+    .allowPublicAcquisition(\'reportServiceError\', function (param_list, gadget_scope) {\n
+      if (gadget_scope === undefined) {\n
+        // don\'t fail in case of dropped subgadget (like previous page)\n
+        // only accept errors from header, panel and displayed page\n
+        return;\n
+      }\n
       return displayError(this, param_list[0]);\n
     })\n
 \n
@@ -569,7 +575,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.273.44627.4590</string> </value>
+                <value> <string>938.5954.37249.58333</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -587,7 +593,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412347942.24</float>
+                        <float>1412758687.11</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
