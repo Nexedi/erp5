@@ -87,9 +87,14 @@ class LocalRoleAssignorMixIn(object):
         if owner:
           user_name = owner[1]
         else:
-          user_name = getSecurityManager().getUser().getId()
+          for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
+            if 'Owner' in role_list:
+              user_name = group
+              break
+          else:
+            user_name = getSecurityManager().getUser().getId()
 
-      group_id_role_dict = {}
+      group_id_role_dict = {user_name: set(('Owner',))}
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):
@@ -110,10 +115,6 @@ class LocalRoleAssignorMixIn(object):
               local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, role),))
 
       ## Update role assignments to groups
-      # Save the owner
-      for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
-        if 'Owner' in role_list:
-          group_id_role_dict.setdefault(group, set()).add('Owner')
       # Assign new roles
       ac_local_roles = {}
       for group, role_list in group_id_role_dict.iteritems():
