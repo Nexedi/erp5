@@ -30,6 +30,7 @@
 import unittest
 from base64 import b64encode, b64decode, b16encode
 from lxml import etree
+from unittest import expectedFailure
 
 from AccessControl.SecurityManagement import newSecurityManager
 from ERP5Diff import ERP5Diff
@@ -43,7 +44,6 @@ from Products.ERP5SyncML.SyncMLConstant import MAX_LEN
 from Products.ERP5SyncML.Document import SyncMLSubscription
 from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin \
      as TestMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestERP5SyncMLMixin(TestMixin):
 

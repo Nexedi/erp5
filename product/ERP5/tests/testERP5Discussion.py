@@ -32,7 +32,6 @@
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5OOo.tests.testDms import makeFileUpload
 
 

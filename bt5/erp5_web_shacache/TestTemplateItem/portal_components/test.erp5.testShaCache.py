@@ -30,9 +30,9 @@
 
 import httplib
 import urlparse
+from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
   """

@@ -28,7 +28,6 @@
 ##############################################################################
 
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
-from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestProductERP5Synchronization(testPrestashopMixin):
   """ This class allows to check different cases of Product's sync. """

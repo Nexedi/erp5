@@ -34,7 +34,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import to_utf8
 from Products.ERP5Type.Utils import getMessageIdWithContext
 from zLOG import LOG
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 # dependency order
 target_business_templates = (

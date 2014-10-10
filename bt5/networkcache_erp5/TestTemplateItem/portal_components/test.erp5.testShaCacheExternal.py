@@ -30,11 +30,11 @@
 
 import base64
 import httplib
+from unittest import expectedFailure
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
 from erp5.component.test.ShaSecurityMixin import ShaSecurityMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
   """

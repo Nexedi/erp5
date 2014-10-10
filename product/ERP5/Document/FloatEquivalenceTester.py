@@ -35,9 +35,9 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-ROUNDING_OPTION_DICT = dict((name, value)
-                            for name, value in decimal.__dict__.items()
-                            if name.startswith('ROUND_'))
+ROUNDING_OPTION_DICT = {name: value
+                        for name, value in decimal.__dict__.items()
+                        if name.startswith('ROUND_')}
 
 # XXX: We could compute a value based on sys.float_info.epsilon
 DEFAULT_PRECISION = 1e-12

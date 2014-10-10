@@ -29,9 +29,9 @@
 
 
 import os
+from unittest import expectedFailure
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \

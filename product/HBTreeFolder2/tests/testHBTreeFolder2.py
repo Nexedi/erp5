@@ -24,7 +24,7 @@ from OFS.Folder import Folder
 from Acquisition import aq_base
 import timeit
 from textwrap import dedent
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.PythonScripts.PythonScript import PythonScript
 

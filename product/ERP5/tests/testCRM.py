@@ -29,6 +29,7 @@
 import unittest
 import os
 import textwrap
+from unittest import expectedFailure
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
@@ -36,7 +37,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from email.header import decode_header
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase

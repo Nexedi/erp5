@@ -34,6 +34,7 @@ import logging
 import random
 import socket
 import sys
+import unittest
 import ZODB
 import zLOG
 from App.config import getConfiguration
@@ -42,7 +43,6 @@ from Zope2.Startup.datatypes import ZopeDatabase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from email import message_from_string
-import backportUnittest
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
@@ -380,9 +380,7 @@ def reindex(func):
 # The test will be skipped:
 #  - the fixture itself is not run
 #  - if a TODO test is in fact successful, no one will ever know
-#
-# Test cases using this decorator must extend backportUnittest.TestCase
-todo_erp5 = backportUnittest.skip("TODO ERP5")
+todo_erp5 = unittest.skip("TODO ERP5")
 
 class LogInterceptor:
     '''Replacement for Products.CMFCore.tests.base.testcase.LogInterceptor

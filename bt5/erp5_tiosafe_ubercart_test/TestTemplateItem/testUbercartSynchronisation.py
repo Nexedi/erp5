@@ -28,11 +28,11 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import unittest
+from unittest import expectedFailure
 from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 import os
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestUbercartSynchronization(ERP5TypeTestCase):
   """

@@ -45,7 +45,7 @@ from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 import urllib
 import urllib2
 import httplib

@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+from unittest import skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -35,7 +36,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import reindex
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
-from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestMRPMixin(TestBPMMixin):

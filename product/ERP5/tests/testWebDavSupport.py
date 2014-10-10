@@ -38,7 +38,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer,\
      createZODBPythonScript, FileUpload
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 
 import httplib
 from StringIO import StringIO

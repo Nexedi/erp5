@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.testERP5TypeInterfaces import addTestMethodDynamically
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 import unittest
 
 # this list can be generated automatically using introspection or can be set

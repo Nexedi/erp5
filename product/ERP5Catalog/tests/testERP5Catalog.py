@@ -29,6 +29,7 @@
 
 import unittest
 import sys
+from unittest import expectedFailure
 from _mysql_exceptions import ProgrammingError
 
 from Testing import ZopeTestCase
@@ -40,12 +41,10 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
                                           getExtraSqlConnectionStringList
-from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 
 from OFS.ObjectManager import ObjectManager

@@ -29,6 +29,7 @@
 
 import os
 import unittest
+from unittest import expectedFailure
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -36,7 +37,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.

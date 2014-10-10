@@ -27,13 +27,13 @@
 ##############################################################################
 
 import unittest
+from unittest import expectedFailure
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestResource(ERP5TypeTestCase):
   """

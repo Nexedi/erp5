@@ -40,6 +40,7 @@
 
 
 import unittest
+from unittest import expectedFailure
 
 from Products.ERP5Type.Utils import cartesianProduct
 from copy import copy
@@ -51,7 +52,6 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5.tests.testOrder import TestOrderMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Form.Selection import DomainSelection
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from textwrap import dedent

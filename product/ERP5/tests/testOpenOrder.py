@@ -27,8 +27,8 @@
 import unittest
 import os
 import time
+from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from DateTime import DateTime
 
 # explicitly set Europe/Paris timezone

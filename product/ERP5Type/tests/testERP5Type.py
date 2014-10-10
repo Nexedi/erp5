@@ -32,6 +32,7 @@ import sys
 
 import transaction
 from random import randint
+from unittest import expectedFailure
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -47,7 +48,6 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.

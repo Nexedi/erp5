@@ -30,8 +30,8 @@
 ##############################################################################
 
 import unittest
+from unittest import skip
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime

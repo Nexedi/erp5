@@ -28,7 +28,7 @@
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
     TestLiveConfiguratorWorkflowMixin
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 
 class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
   """

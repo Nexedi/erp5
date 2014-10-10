@@ -50,6 +50,7 @@ import time
 import StringIO
 from subprocess import Popen, PIPE
 from cgi import FieldStorage
+from unittest import expectedFailure
 
 import ZPublisher.HTTPRequest
 from Testing import ZopeTestCase
@@ -74,7 +75,6 @@ import difflib
 import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from DateTime import DateTime
 
 QUIET = 0

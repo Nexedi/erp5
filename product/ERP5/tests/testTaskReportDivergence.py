@@ -27,12 +27,11 @@
 ##############################################################################
 
 import unittest
+from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testTask import TestTaskMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 
 class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):

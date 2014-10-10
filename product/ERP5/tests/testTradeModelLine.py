@@ -31,12 +31,12 @@
 from UserDict import UserDict
 import random
 import unittest
+from unittest import expectedFailure
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.utils import createZODBPythonScript, updateCellList
 
 

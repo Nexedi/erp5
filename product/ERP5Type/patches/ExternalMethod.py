@@ -112,7 +112,10 @@ if 1:
 
         __traceback_info__=args, kw, self._v_func_defaults
 
-        # TODO python2.7: use inspect.getcallargs instead of try..except block
+        # XXX: We'd like to use inspect.getcallargs instead of try..except.
+        #      However, for the same reason as we use getargs instead of
+        #      getargspec, we need something that works for any callable
+        #      providing func_code & func_default (not only functions).
         try: return f(*args, **kw)
         except TypeError, v:
             tb=sys.exc_info()[2]

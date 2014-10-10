@@ -28,7 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zope.interface.verify import verifyClass
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import unittest
 
 implements_tuple_list = [
@@ -96,7 +95,7 @@ for failing_method in [
     'test_Products.ERP5Type.ConsistencyMessage_ConsistencyMessage_implements_IConsistencyMessage',
   ]:
   setattr(TestERP5TypeInterfaces, failing_method,
-      expectedFailure(getattr(TestERP5TypeInterfaces,failing_method)))
+      unittest.expectedFailure(getattr(TestERP5TypeInterfaces,failing_method)))
 
 
 def test_suite():

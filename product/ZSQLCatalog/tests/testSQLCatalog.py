@@ -37,7 +37,6 @@ from Products.ZSQLCatalog.Query.EntireQuery import EntireQuery
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class MatchList(list):
@@ -227,7 +226,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     query = self._catalog.buildQuery(kw)
     assertEqual = self.assertEqual
     if expected_failure:
-      assertEqual = expectedFailure(assertEqual)
+      assertEqual = unittest.expectedFailure(assertEqual)
 
     assertEqual(reference_tree, query)
     search_text = query.asSearchTextExpression(self._catalog)

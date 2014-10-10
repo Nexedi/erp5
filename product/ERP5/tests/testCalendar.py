@@ -26,12 +26,13 @@
 #
 ##############################################################################
 
+import unittest
+from unittest import skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
-from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestCalendar(ERP5ReportTestCase):
 
@@ -1502,8 +1503,6 @@ class TestCalendar(ERP5ReportTestCase):
                                 'calendar_period_type/type3': 1.5,})
 
 
-
-import unittest
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCalendar))

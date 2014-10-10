@@ -28,17 +28,6 @@
 
 import os, re, sys
 
-if sys.version_info < (2, 7):
-
-  try:
-    from ordereddict import OrderedDict
-  except ImportError, missing_ordereddict:
-    def OrderedDict(*args, **kw):
-      raise missing_ordereddict
-  import collections
-  collections.OrderedDict = OrderedDict
-
-
 if 1:
     # Speed up email parsing (see also http://bugs.python.org/issue1243730)
     from email import parser, feedparser

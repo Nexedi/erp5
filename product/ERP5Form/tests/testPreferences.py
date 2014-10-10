@@ -29,6 +29,7 @@
 ##############################################################################
 
 import unittest
+from unittest import expectedFailure
 
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -36,7 +37,6 @@ from zExceptions import Unauthorized
 from AccessControl.ZopeGuards import guarded_hasattr
 from DateTime import DateTime
 
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Form.PreferenceTool import Priority

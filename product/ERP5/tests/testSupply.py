@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 from DateTime import DateTime
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import transaction
 
 class TestSupplyMixin:

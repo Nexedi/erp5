@@ -35,6 +35,7 @@ TODO: test variation
 import os
 import random
 import unittest
+from unittest import expectedFailure
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
@@ -42,7 +43,6 @@ from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5.Tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
 
 

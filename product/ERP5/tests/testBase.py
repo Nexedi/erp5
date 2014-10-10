@@ -30,7 +30,7 @@
 
 import unittest
 import os
-
+from unittest import skip
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
@@ -41,7 +41,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 from zExceptions import BadRequest
-from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.CMFCore.WorkflowCore import WorkflowException
 

@@ -40,8 +40,7 @@ class TimeoutTransport(SafeTransport):
     def make_connection(*args, **kw):
       connection = transport_class.make_connection(self, *args, **kw)
       if timeout is not None:
-        # BBB: On Python < 2.7, HTTP connection is wrapped
-        getattr(connection, '_conn', connection).timeout = timeout
+        connection.timeout = timeout
       return connection
     self.make_connection = make_connection
 
@@ -49,6 +48,5 @@ class TimeoutTransport(SafeTransport):
     try:
       return SafeTransport.send_content(self, connection, request_body)
     except socket.error, e:
-      # BBB: On Python < 2.7, HTTP connection is wrapped
-      raise ProtocolError(getattr(connection, '_conn', connection).host, -1,
+      raise ProtocolError(connection.host, -1,
                           "Could not connect to server", None)

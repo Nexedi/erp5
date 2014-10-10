@@ -27,13 +27,13 @@
 ##############################################################################
 
 import unittest
+from unittest import expectedFailure
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestNestedLineMixin(TestSaleInvoiceMixin):
 

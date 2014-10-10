@@ -29,6 +29,7 @@
 
 import unittest
 import logging
+from unittest import expectedFailure, skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
@@ -40,7 +41,6 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
-from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os

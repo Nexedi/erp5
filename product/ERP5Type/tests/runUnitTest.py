@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 import os
 import sys
 import pdb
@@ -12,8 +12,6 @@ import errno
 import random
 import transaction
 from glob import glob
-
-import backportUnittest
 try:
   from coverage import coverage
 except ImportError:
@@ -445,8 +443,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       return filtered_name_list
     return name_list
 
-# BBB: Python < 2.7
-getattr(unittest, 'loader', unittest).TestLoader = ERP5TypeTestLoader
+unittest.loader.TestLoader = ERP5TypeTestLoader
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
@@ -606,7 +603,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   root_db_name, = cfg.dbtab.databases.keys()
   DbFactory(root_db_name).addMountPoint('/')
 
-  TestRunner = backportUnittest.TextTestRunner
+  TestRunner = unittest.TextTestRunner
 
   import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \

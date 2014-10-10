@@ -29,6 +29,7 @@
 
 import os
 from base64 import b16encode
+from unittest import expectedFailure
 import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
@@ -39,7 +40,6 @@ from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5SyncML.Tool import SynchronizationTool
 from Products.ERP5SyncML.tests.testERP5SyncML import TestERP5SyncMLMixin
 from Products.ERP5SyncML.Document import SyncMLSubscription
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 test_files = os.path.join(os.path.dirname(__file__), 'test_document')
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-\

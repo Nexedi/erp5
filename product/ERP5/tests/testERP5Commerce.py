@@ -29,11 +29,12 @@
 
 import os
 import string
+import unittest
 import urllib
+from unittest import skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5Type.tests.backportUnittest import skip
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -936,8 +937,6 @@ class TestCommerce(ERP5TypeTestCase):
 
     sale_order_object_list = self.portal.sale_order_module.contentValues()
     self.assertEqual(comment, sale_order_object_list[0].getComment())
-
-import unittest
 
 
 def test_suite():

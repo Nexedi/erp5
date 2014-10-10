@@ -11,8 +11,8 @@
 #
 ############################################################################
 
-# XXX: This file starts with an underscore because by default, on Python 2.6,
-#      imports are relative.
+# XXX: This file starts with an underscore because imports are relative
+#      by default.
 
 from time import time
 from transaction import _manager

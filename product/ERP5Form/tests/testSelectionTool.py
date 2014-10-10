@@ -29,6 +29,7 @@
 import unittest
 from threading import Thread
 from thread import get_ident
+from unittest import skip
 
 import transaction
 import ZODB
@@ -37,7 +38,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Form.Selection import Selection
 from Products.ERP5Form.Tool.SelectionTool import SelectionTool
-from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestSelectionTool(ERP5TypeTestCase):
 

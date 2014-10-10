@@ -87,14 +87,13 @@ class LocalRoleAssignorMixIn(object):
         if owner:
           user_name = owner[1]
         else:
-          for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
+          for user_name, role_list in (ob.__ac_local_roles__ or {}).iteritems():
             if 'Owner' in role_list:
-              user_name = group
               break
           else:
             user_name = getSecurityManager().getUser().getId()
 
-      group_id_role_dict = {user_name: set(('Owner',))}
+      group_id_role_dict = {user_name: {'Owner'}}
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):
@@ -116,18 +115,19 @@ class LocalRoleAssignorMixIn(object):
 
       ## Update role assignments to groups
       # Assign new roles
-      ac_local_roles = {}
-      for group, role_list in group_id_role_dict.iteritems():
-        if role_list:
-          ac_local_roles[group] = list(role_list)
+      ac_local_roles = {group: list(role_list)
+        for group, role_list in group_id_role_dict.iteritems()
+        if role_list}
 
       if ac_local_roles != ob.__ac_local_roles__:
         ob.__ac_local_roles__ = ac_local_roles
       if local_roles_group_id_group_id:
         ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
-      elif getattr(aq_base(ob),
-            '__ac_local_roles_group_id_dict__', None) is not None:
-        delattr(ob, '__ac_local_roles_group_id_dict__')
+      else:
+        try:
+          del ob.__ac_local_roles_group_id_dict__
+        except AttributeError:
+          pass
 
       ## Make sure that the object is reindexed if modified
       # XXX: Document modification detection assumes local roles are always

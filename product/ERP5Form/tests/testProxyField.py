@@ -34,7 +34,7 @@ from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
 import unittest
 from lxml import etree
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from unittest import expectedFailure
 
 class TestProxyField(ERP5TypeTestCase):
   """
