@@ -1313,6 +1313,13 @@ class SimulationTool(BaseTool):
         resource_uid_list = kw['resource_uid']
         if not isinstance(resource_uid_list, (list, set, tuple)):
           resource_uid_list = [resource_uid_list]
+        else:
+          resource_uid_list = deepcopy(resource_uid_list)
+
+        for brain in self.portal_catalog(uid=resource_uid_list):
+          resource = brain.getObject()
+          if resource.getLotControlType() != '1':
+            resource_uid_list.remove(resource.getUid())
 
         # Get available variations from the cache
         from_date = None
