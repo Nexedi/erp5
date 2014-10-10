@@ -1,0 +1,313 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ERP5 Localized Content\n"
+"POT-Creation-Date: 2014-09-05 13:09+CET\n"
+"PO-Revision-Date: 2014-09-05 13:09+CET\n"
+"Last-Translator:  <>\n"
+"Language-Team: de <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Accounts Payable"
+msgstr "Verbindlichkeiten aus Lieferungen und Leistungen"
+
+msgid "Area"
+msgstr "Fläche"
+
+msgid "Asset"
+msgstr "Vermögen"
+
+msgid "Assets"
+msgstr "Vermögen"
+
+msgid "Bank"
+msgstr "Bank"
+
+msgid "Cash"
+msgstr "Kasse"
+
+msgid "Cash and Cash Equivalents"
+msgstr "Kasse, Bankguthaben u. ähnl."
+
+msgid "Cheque"
+msgstr "Scheck"
+
+msgid "Cohabitating"
+msgstr "Zusammenlebend"
+
+msgid "Collected VAT"
+msgstr "Umsatzsteuer"
+
+msgid "Cost of Sales"
+msgstr "Vertriebskosten"
+
+msgid "Credit Card"
+msgstr "Kreditkarte"
+
+msgid "Cubic Meter"
+msgstr "Kubikmeter"
+
+msgid "Current Assets"
+msgstr "Umlaufvermögen"
+
+msgid "Current Liabilities"
+msgstr "Kurzfristige Verbindlichkeiten"
+
+msgid "Custom"
+msgstr "Spezifisch"
+
+msgid "Day"
+msgstr "Tag"
+
+msgid "Deprecation of Financials Assets"
+msgstr "Abschreibungen auf Finanzanlagen"
+
+msgid "Deprecation of Fixed Assets"
+msgstr "Abschreibungen auf Sachanlagen"
+
+msgid "Deprecation of Intangible Assets"
+msgstr "Abschreibungen auf Immaterielle Vermögensgegenstände"
+
+msgid "Deprecation of Other Receivables"
+msgstr "Abschreibungen auf Sonstige Forderungen"
+
+msgid "Deprecation of Trade Receivables"
+msgstr "Abschreibungen auf Forderungen aus Lieferungen und Leistungen"
+
+msgid "Deprecation of inventories"
+msgstr "Abschreibungen auf Vorräte"
+
+msgid "Divorced"
+msgstr "Geschieden"
+
+msgid "Doctor"
+msgstr "Dr."
+
+msgid "Energy"
+msgstr "Energie"
+
+msgid "Equity"
+msgstr "Eigenkapital"
+
+msgid "Expense"
+msgstr "Aufwendungen"
+
+msgid "Female"
+msgstr "weiblich"
+
+msgid "Financials Assets"
+msgstr "Finanzanlagen"
+
+msgid "Fixed Assets"
+msgstr "Sachanlagen"
+
+msgid "Germany"
+msgstr "Deutschland"
+
+msgid "Gram"
+msgstr "Gramm"
+
+msgid "High"
+msgstr "Hoch"
+
+msgid "Hour"
+msgstr "Stunde"
+
+msgid "In Cash"
+msgstr "Barzahlung"
+
+msgid "Income"
+msgstr "Erträge"
+
+msgid "Intangible Assets"
+msgstr "Immaterielle Vermögensgegenstände"
+
+msgid "Interest Expense"
+msgstr "Zinsen und Ähnliche Aufwendungen"
+
+msgid "Interest Income"
+msgstr "Zinsen und Ähnliche Erträge"
+
+msgid "Inventories"
+msgstr "Vorräte"
+
+msgid "Invoice"
+msgstr "Rechnung"
+
+msgid "Kilowatt-Hour"
+msgstr "Kilowattstunden"
+
+msgid "Length"
+msgstr "Länge"
+
+msgid "Liability"
+msgstr "Verbindlichkeiten"
+
+msgid "Litre"
+msgstr "Liter"
+
+msgid "Loans"
+msgstr "Darlehen"
+
+msgid "Long Term Assets"
+msgstr "Anlagevermögen"
+
+msgid "Long Term Liabilities"
+msgstr "Langfristige Verbindlichkeiten"
+
+msgid "Low Priority"
+msgstr "Niedrig"
+
+msgid "Madam"
+msgstr "Frau"
+
+msgid "Male"
+msgstr "männlich"
+
+msgid "Market Survey"
+msgstr "Marktstudie"
+
+msgid "Marketing Campaign"
+msgstr "Marketing Kampagne"
+
+msgid "Married"
+msgstr "Verheiratet"
+
+msgid "Mass"
+msgstr "Gewicht"
+
+msgid "Mister"
+msgstr "Herr"
+
+msgid "National Defense and Public Order and Security and Safety Services"
+msgstr "Auftrag"
+
+msgid "Non Op. Income"
+msgstr "Außerordentliche Erträge"
+
+msgid "Non Operating Expense"
+msgstr "Außerordentliche Aufwendungen"
+
+msgid "Non Operating Income"
+msgstr "Außerordentliche Erträge"
+
+msgid "Normal"
+msgstr "Standard"
+
+msgid "Operating Expenses"
+msgstr "Betriebliche Aufwendungen"
+
+msgid "Operating Income"
+msgstr "Betriebliche Erträge"
+
+msgid "Order"
+msgstr "Auftrag"
+
+msgid "Other"
+msgstr "Sonstige"
+
+msgid "Other Current Liabilities"
+msgstr "Sonstige Kurzfristige Verbindlichkeiten"
+
+msgid "Other Marketing Service"
+msgstr "Andere Marketing Dienstleistungen"
+
+msgid "Other Receivables"
+msgstr "Sonstige Forderungen"
+
+msgid "Others Liabilities"
+msgstr "Sonstige Verbindlichkeiten"
+
+msgid "Package (Express)"
+msgstr "Paket (Express)"
+
+msgid "Package (Standard)"
+msgstr "Paket (Standard)"
+
+msgid "Packing List"
+msgstr "Lieferschein"
+
+msgid "Payable"
+msgstr "Zahlbar"
+
+msgid "Piece"
+msgstr "Stück"
+
+msgid "Profit or Loss"
+msgstr "Jahresüberschuss oder Jahresfehlbetrag"
+
+msgid "Purchase - Work Contract"
+msgstr "Kauf-/Werkvertrag"
+
+msgid "Purchases Campaign"
+msgstr "Einkaufskampagne"
+
+msgid "Receivable"
+msgstr "Forderungen"
+
+msgid "Refundable VAT"
+msgstr "Vorsteuer"
+
+msgid "Rent - Maintenance Contract"
+msgstr "Miet-/Wartungsvertrag"
+
+msgid "Revenue"
+msgstr "Umsatzerlöse"
+
+msgid "Sales Campaign"
+msgstr "Verkaufskampagne"
+
+msgid "Second"
+msgstr "Sekunde"
+
+msgid "Selling, General and Adm."
+msgstr "Allgemeine Verwaltungskosten"
+
+msgid "Selling, General and Administrative Expenses"
+msgstr "Verwaltungskosten"
+
+msgid "Share Capital"
+msgstr "Gezeichnetes Kapital"
+
+msgid "Shipping (Express)"
+msgstr "Spedition (Express)"
+
+msgid "Shipping (Standard)"
+msgstr "Spedition (Standard)"
+
+msgid "Single"
+msgstr "Ledig"
+
+msgid "Square Meter"
+msgstr "Quadratmeter"
+
+msgid "Tax"
+msgstr "Steuer"
+
+msgid "Time"
+msgstr "Zeit"
+
+msgid "Ton"
+msgstr "Tonne"
+
+msgid "Trade Receivables"
+msgstr "Forderungen aus Lief. u. Leist."
+
+msgid "Unit"
+msgstr "Einheit"
+
+msgid "Urgent"
+msgstr "Hoch"
+
+msgid "Volume"
+msgstr "Volumen"
+
+msgid "Week"
+msgstr "Woche"
+
+msgid "Widowed"
+msgstr "Verwitwet"
+
+msgid "Wire Transfer"
+msgstr "Überweisung"

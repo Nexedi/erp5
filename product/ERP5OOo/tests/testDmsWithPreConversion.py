@@ -40,7 +40,7 @@ class TestDocumentWithPreConversion(TestDocument):
   def getTitle(self):
     return "DMS with Preconversion"
 
-  def test_preConvertedEmbeddedImageInWebPageContent(self):
+  def test_preConvertedReferencedImageInWebPageContent(self):
     # create an image
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image = self.portal.image_module.newContent(portal_type='Image',
@@ -51,17 +51,20 @@ class TestDocumentWithPreConversion(TestDocument):
     image.publish()
     self.tic()
 
+    # after a web page creation, the referenced images are found and should be pre converted
+    # with the parameters given in their src URL
     web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
     web_page.setTextContent('''<b> test </b>
-<img src="Embedded-XXX?format=png&display=large&quality=75"/>
-<img src="Embedded-XXX?format=jpeg&display=large&quality=75"/>''')
+<img src="Embedded-XXX?format=png&display=large&quality=64"/>
+<img src="Embedded-XXX?format=jpeg&display=large&quality=64"/>''')
+    web_page.publish()
     self.tic()
 
     # check that referenced in Web Page's content image(s) is well converted
-    self.assertTrue(image.hasConversion(**{'format':'jpeg', 'display':'large', 'quality':75}))
-    self.assertTrue(image.hasConversion(**{'format':'png', 'display':'large', 'quality':75}))
-    self.assertSameSet(['Embedded-XXX?format=png&display=large&quality=75', \
-                        'Embedded-XXX?format=jpeg&display=large&quality=75'],
+    self.assertTrue(image.hasConversion(**{'format':'jpeg', 'display':'large', 'quality':64}))
+    self.assertTrue(image.hasConversion(**{'format':'png', 'display':'large', 'quality':64}))
+    self.assertSameSet(['Embedded-XXX?format=png&display=large&quality=64', \
+                        'Embedded-XXX?format=jpeg&display=large&quality=64'],
                         web_page.Base_extractImageUrlList())
 
   def test_Base_isConvertible(self):
@@ -72,14 +75,27 @@ class TestDocumentWithPreConversion(TestDocument):
                                                reference='Embedded-XXX',
                                                version='001',
                                                language='en')
-    # empty image is not convertible
-    self.assertEqual(False, image.Base_isConvertible())
 
-    # image with data is convertible
+    # draft image is not convertible
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image.edit(file=upload_file)
     self.tic()
+    self.assertEqual(False, image.Base_isConvertible())
+
+    # published image with data is convertible
+    image.publish()
+    self.tic()
     self.assertEqual(True, image.Base_isConvertible())
+
+    image = self.portal.image_module.newContent(portal_type='Image',
+                                               reference='Embedded-YYY',
+                                               version='001',
+                                               language='en')
+    image.publish()
+    self.tic()
+
+    # published empty image is not convertible
+    self.assertEqual(False, image.Base_isConvertible())
 
 def test_suite():
   suite = unittest.TestSuite()

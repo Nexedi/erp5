@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CONTRIBUTING.md</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string># How to contribute\n
+\n
+- [Getting help](#getting-help-)\n
+- [Submitting bug reports](#submitting-bug-reports-)\n
+- [Contributing code](#contributing-code-)\n
+\n
+## Getting help\n
+\n
+Community discussion, questions, and informal bug reporting is done on the\n
+[CodeMirror Google group](http://groups.google.com/group/codemirror).\n
+\n
+## Submitting bug reports\n
+\n
+The preferred way to report bugs is to use the\n
+[GitHub issue tracker](http://github.com/marijnh/CodeMirror/issues). Before\n
+reporting a bug, read these pointers.\n
+\n
+**Note:** The issue tracker is for *bugs*, not requests for help. Questions\n
+should be asked on the\n
+[CodeMirror Google group](http://groups.google.com/group/codemirror) instead.\n
+\n
+### Reporting bugs effectively\n
+\n
+- CodeMirror is maintained by volunteers. They don\'t owe you anything, so be\n
+  polite. Reports with an indignant or belligerent tone tend to be moved to the\n
+  bottom of the pile.\n
+\n
+- Include information about **the browser in which the problem occurred**. Even\n
+  if you tested several browsers, and the problem occurred in all of them,\n
+  mention this fact in the bug report. Also include browser version numbers and\n
+  the operating system that you\'re on.\n
+\n
+- Mention which release of CodeMirror you\'re using. Preferably, try also with\n
+  the current development snapshot, to ensure the problem has not already been\n
+  fixed.\n
+\n
+- Mention very precisely what went wrong. "X is broken" is not a good bug\n
+  report. What did you expect to happen? What happened instead? Describe the\n
+  exact steps a maintainer has to take to make the problem occur. We can not\n
+  fix something that we can not observe.\n
+\n
+- If the problem can not be reproduced in any of the demos included in the\n
+  CodeMirror distribution, please provide an HTML document that demonstrates\n
+  the problem. The best way to do this is to go to\n
+  [jsbin.com](http://jsbin.com/ihunin/edit), enter it there, press save, and\n
+  include the resulting link in your bug report.\n
+\n
+## Contributing code\n
+\n
+- Make sure you have a [GitHub Account](https://github.com/signup/free)\n
+- Fork [CodeMirror](https://github.com/marijnh/CodeMirror/)\n
+  ([how to fork a repo](https://help.github.com/articles/fork-a-repo))\n
+- Make your changes\n
+- If your changes are easy to test or likely to regress, add tests.\n
+  Tests for the core go into `test/test.js`, some modes have their own\n
+  test suite under `mode/XXX/test.js`. Feel free to add new test\n
+  suites to modes that don\'t have one yet (be sure to link the new\n
+  tests into `test/index.html`).\n
+- Follow the general code style of the rest of the project (see\n
+  below). Run `bin/lint` to verify that the linter is happy.\n
+- Make sure all tests pass. Visit `test/index.html` in your browser to\n
+  run them.\n
+- Submit a pull request\n
+([how to create a pull request](https://help.github.com/articles/fork-a-repo))\n
+\n
+### Coding standards\n
+\n
+- 2 spaces per indentation level, no tabs.\n
+- Include semicolons after statements.\n
+- Note that the linter (`bin/lint`) which is run after each commit\n
+  complains about unused variables and functions. Prefix their names\n
+  with an underscore to muffle it.\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

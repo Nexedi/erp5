@@ -1,0 +1,615 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_header.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_header_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, Handlebars, document, loopEventListener */\n
+(function (window, rJS, Handlebars, document, loopEventListener) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+\n
+    header_title_source = gadget_klass.__template_element\n
+                         .getElementById("header-title-template")\n
+                         .innerHTML,\n
+    header_title_template = Handlebars.compile(header_title_source),\n
+\n
+    header_title_link_source = gadget_klass.__template_element\n
+                         .getElementById("header-title-link-template")\n
+                         .innerHTML,\n
+    header_title_link_template = Handlebars.compile(header_title_link_source),\n
+\n
+    sub_header_source = gadget_klass.__template_element\n
+                         .getElementById("sub-header-template")\n
+                         .innerHTML,\n
+    sub_header_template = Handlebars.compile(sub_header_source),\n
+\n
+    header_button_source = gadget_klass.__template_element\n
+                         .getElementById("header-button-template")\n
+                         .innerHTML,\n
+    header_button_template = Handlebars.compile(header_button_source),\n
+    header_link_source = gadget_klass.__template_element\n
+                         .getElementById("header-link-template")\n
+                         .innerHTML,\n
+    header_link_template = Handlebars.compile(header_link_source);\n
+\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      g.stats = {\n
+        loaded: false,\n
+        modified: false,\n
+        submitted: true,\n
+        error: false,\n
+        options: {}\n
+      };\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.sub_header_element = element.querySelector(".ui-subheader");\n
+          g.props.sub_header_ul = g.props.sub_header_element.querySelector("ul");\n
+          g.props.left_link = element.querySelector(".ui-btn-left > div");\n
+          g.props.right_link = element.querySelector(".ui-btn-right > div");\n
+          g.props.title_element = element.querySelector("h1");\n
+        });\n
+    })\n
+\n
+    .ready(function (g) {\n
+      return g.render(g.stats.options);\n
+    })\n
+\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("triggerSubmit", "triggerSubmit")\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'notifyError\', function () {\n
+      this.stats.loaded = true;\n
+      this.stats.submitted = true;\n
+      this.stats.error = true;\n
+      var gadget = this;\n
+      return this.render(this.stats.options)\n
+        .push(function () {\n
+          gadget.stats.error = false;\n
+        });\n
+    })\n
+    .declareMethod(\'notifyLoading\', function () {\n
+      if (this.stats.loaded) {\n
+        this.stats.loaded = false;\n
+        return this.render(this.stats.options);\n
+      }\n
+    })\n
+    .declareMethod(\'notifyLoaded\', function () {\n
+      if (!this.stats.loaded) {\n
+        this.stats.loaded = true;\n
+        return this.render(this.stats.options);\n
+      }\n
+    })\n
+    .declareMethod(\'notifyChange\', function () {\n
+      if (!this.stats.modified) {\n
+        this.stats.modified = true;\n
+        return this.render(this.stats.options);\n
+      }\n
+    })\n
+    .declareMethod(\'notifySubmitting\', function () {\n
+      if (this.stats.submitted) {\n
+        this.stats.submitted = false;\n
+        return this.render(this.stats.options);\n
+      }\n
+    })\n
+    .declareMethod(\'notifySubmitted\', function () {\n
+      if (!this.stats.submitted) {\n
+        this.stats.submitted = true;\n
+        // Change modify here, to allow user to redo some modification and being correctly notified\n
+        this.stats.modified = false;\n
+        return this.render(this.stats.options);\n
+      }\n
+    })\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this,\n
+        possible_left_link_list = [\n
+          // [\'menu_url\', \'Menu\', \'bars\'],\n
+          [\'selection_url\', \'Select\', \'rotate-left\'],\n
+          [\'view_url\', \'View\', \'check\'],\n
+          [\'cancel_url\', \'Cancel\', \'times\'],\n
+          [\'back_url\', \'Back\', \'arrow-left\']\n
+        ],\n
+        possible_right_link_list = [\n
+          [\'edit_url\', \'Edit\', \'edit\']\n
+        ],\n
+        possible_right_button_list = [\n
+          [\'save_action\', \'Save\', \'check\'],\n
+          [\'submit_action\', \'Proceed\', \'share\']\n
+        ],\n
+        possible_sub_header_list = [\n
+          [\'tab_url\', \'Tabs\', \'eye\'],\n
+          [\'jump_url\', \'Jump\', \'plane\'],\n
+          [\'delete_url\', \'Delete\', \'times\'],\n
+          [\'export_url\', \'Export\', \'share-square-o\'],\n
+          [\'actions_url\', \'Actions\', \'cogs\'],\n
+          [\'cut_url\', \'Cut\', \'scissors\'],\n
+          [\'add_url\', \'Add\', \'plus\'],\n
+          [\'previous_url\', \'Previous\', \'carat-l\'],\n
+          [\'next_url\', \'Next\', \'carat-r\']\n
+        ],\n
+        i,\n
+        klass,\n
+        count = 0,\n
+        left_link,\n
+        right_link,\n
+        right_button,\n
+        default_right_icon = "",\n
+        title_link = {title: "ERP5"},\n
+        sub_header_list = [],\n
+        alphabet = "abcdefghijklmnopqrstuvwxyz";\n
+      gadget.stats.options = options;\n
+      // Handle main title\n
+      if (options.hasOwnProperty("page_title")) {\n
+        title_link.title = options.page_title;\n
+      }\n
+      // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now\n
+      document.title = title_link.title;\n
+      if (options.hasOwnProperty("breadcrumb_url")) {\n
+        title_link.url = options.breadcrumb_url;\n
+        gadget.props.title_element.innerHTML = header_title_link_template(title_link);\n
+      } else {\n
+        gadget.props.title_element.innerHTML = header_title_template(title_link);\n
+      }\n
+\n
+      // Handle left link\n
+      for (i = 0; i < possible_left_link_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_left_link_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_left_link_list[i][0]]) {\n
+            klass = "ui-disabled";\n
+          }\n
+          left_link = {\n
+            title: possible_left_link_list[i][1],\n
+            icon: possible_left_link_list[i][2],\n
+            url: options[possible_left_link_list[i][0]],\n
+            class: klass\n
+          };\n
+          count += 1;\n
+        }\n
+      }\n
+      if (left_link === undefined) {\n
+        gadget.props.left_link.innerHTML = "";\n
+      } else {\n
+        gadget.props.left_link.innerHTML = header_link_template(left_link);\n
+      }\n
+\n
+      // Handle right link\n
+      if (gadget.stats.error) {\n
+        default_right_icon = "exclamation";\n
+      } else if (!gadget.stats.loaded) {\n
+        default_right_icon = "spinner";\n
+        // Show default loading information\n
+        right_link = {\n
+          title: "Loading",\n
+          icon: default_right_icon,\n
+          url: "",\n
+          class: "ui-disabled"\n
+        };\n
+      } else if (!gadget.stats.submitted) {\n
+        default_right_icon = "spinner";\n
+      } else if (gadget.stats.modified) {\n
+        default_right_icon = "warning";\n
+      }\n
+      for (i = 0; i < possible_right_link_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_right_link_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_right_link_list[i][0]]) {\n
+            klass = "ui-disabled";\n
+          }\n
+          right_link = {\n
+            title: possible_right_link_list[i][1],\n
+            icon: default_right_icon || possible_right_link_list[i][2],\n
+            url: options[possible_right_link_list[i][0]],\n
+            class: klass\n
+          };\n
+          count += 1;\n
+        }\n
+      }\n
+      for (i = 0; i < possible_right_button_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_right_button_list[i][0])) {\n
+          right_button = {\n
+            title: possible_right_button_list[i][1],\n
+            icon: default_right_icon || possible_right_button_list[i][2]\n
+          };\n
+          if (gadget.stats.error) {\n
+            right_button.class = "ui-disabled";\n
+          }\n
+        }\n
+      }\n
+      if (right_button !== undefined) {\n
+        gadget.props.right_link.innerHTML = header_button_template(right_button);\n
+      } else if (right_link !== undefined) {\n
+        gadget.props.right_link.innerHTML = header_link_template(right_link);\n
+      } else {\n
+        gadget.props.right_link.innerHTML = "";\n
+      }\n
+\n
+      // Handle sub header\n
+      for (i = 0; i < possible_sub_header_list.length; i += 1) {\n
+        if (options.hasOwnProperty(possible_sub_header_list[i][0])) {\n
+          klass = "";\n
+          if (!options[possible_sub_header_list[i][0]]) {\n
+            klass = "ui-disabled";\n
+          }\n
+          sub_header_list.push({\n
+            title: possible_sub_header_list[i][1],\n
+            icon: possible_sub_header_list[i][2],\n
+            url: options[possible_sub_header_list[i][0]],\n
+            class: klass,\n
+            block: alphabet.charAt(count)\n
+          });\n
+          count += 1;\n
+        }\n
+      }\n
+\n
+      if (sub_header_list.length !== 0) {\n
+        sub_header_list[0].class += " ui-first-child";\n
+        sub_header_list[sub_header_list.length - 1].class += " ui-last-child";\n
+      }\n
+      // gadget.props.sub_header_ul.textContent = JSON.stringify(options);\n
+      gadget.props.sub_header_ul.innerHTML = sub_header_template({\n
+        sub_header_list: sub_header_list\n
+      });\n
+    })\n
+\n
+    //////////////////////////////////////////////\n
+    // handle button click\n
+    //////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var form_gadget = this;\n
+\n
+      function formSubmit() {\n
+        return form_gadget.triggerSubmit();\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        form_gadget.props.element,\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
+    });\n
+\n
+}(window, rJS, Handlebars, document, loopEventListener));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Header JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411375841.62</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>938.142.63057.34594</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412343494.43</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411375820.35</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

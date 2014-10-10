@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string># CodeMirror\n
+[![Build Status](https://secure.travis-ci.org/marijnh/CodeMirror.png?branch=master)](http://travis-ci.org/marijnh/CodeMirror)\n
+[![NPM version](https://badge.fury.io/js/codemirror.png)](http://badge.fury.io/js/codemirror)\n
+\n
+CodeMirror is a JavaScript component that provides a code editor in\n
+the browser. When a mode is available for the language you are coding\n
+in, it will color your code, and optionally help with indentation.\n
+\n
+The project page is http://codemirror.net  \n
+The manual is at http://codemirror.net/doc/manual.html  \n
+The contributing guidelines are in [CONTRIBUTING.md](https://github.com/marijnh/CodeMirror/blob/master/CONTRIBUTING.md)\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

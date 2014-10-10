@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>merge.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.CodeMirror-merge {\n
+  position: relative;\n
+  border: 1px solid #ddd;\n
+  white-space: pre;\n
+}\n
+\n
+.CodeMirror-merge, .CodeMirror-merge .CodeMirror {\n
+  height: 350px;\n
+}\n
+\n
+.CodeMirror-merge-2pane .CodeMirror-merge-pane { width: 47%; }\n
+.CodeMirror-merge-2pane .CodeMirror-merge-gap { width: 6%; }\n
+.CodeMirror-merge-3pane .CodeMirror-merge-pane { width: 31%; }\n
+.CodeMirror-merge-3pane .CodeMirror-merge-gap { width: 3.5%; }\n
+\n
+.CodeMirror-merge-pane {\n
+  display: inline-block;\n
+  white-space: normal;\n
+  vertical-align: top;\n
+}\n
+.CodeMirror-merge-pane-rightmost {\n
+  position: absolute;\n
+  right: 0px;\n
+  z-index: 1;\n
+}\n
+\n
+.CodeMirror-merge-gap {\n
+  z-index: 2;\n
+  display: inline-block;\n
+  height: 100%;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+  overflow: hidden;\n
+  border-left: 1px solid #ddd;\n
+  border-right: 1px solid #ddd;\n
+  position: relative;\n
+  background: #f8f8f8;\n
+}\n
+\n
+.CodeMirror-merge-scrolllock-wrap {\n
+  position: absolute;\n
+  bottom: 0; left: 50%;\n
+}\n
+.CodeMirror-merge-scrolllock {\n
+  position: relative;\n
+  left: -50%;\n
+  cursor: pointer;\n
+  color: #555;\n
+  line-height: 1;\n
+}\n
+\n
+.CodeMirror-merge-copybuttons-left, .CodeMirror-merge-copybuttons-right {\n
+  position: absolute;\n
+  left: 0; top: 0;\n
+  right: 0; bottom: 0;\n
+  line-height: 1;\n
+}\n
+\n
+.CodeMirror-merge-copy {\n
+  position: absolute;\n
+  cursor: pointer;\n
+  color: #44c;\n
+}\n
+\n
+.CodeMirror-merge-copybuttons-left .CodeMirror-merge-copy { left: 2px; }\n
+.CodeMirror-merge-copybuttons-right .CodeMirror-merge-copy { right: 2px; }\n
+\n
+.CodeMirror-merge-r-inserted, .CodeMirror-merge-l-inserted {\n
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAYAAACddGYaAAAAGUlEQVQI12MwuCXy3+CWyH8GBgYGJgYkAABZbAQ9ELXurwAAAABJRU5ErkJggg==);\n
+  background-position: bottom left;\n
+  background-repeat: repeat-x;\n
+}\n
+\n
+.CodeMirror-merge-r-deleted, .CodeMirror-merge-l-deleted {\n
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAYAAACddGYaAAAAGUlEQVQI12M4Kyb2/6yY2H8GBgYGJgYkAABURgPz6Ks7wQAAAABJRU5ErkJggg==);\n
+  background-position: bottom left;\n
+  background-repeat: repeat-x;\n
+}\n
+\n
+.CodeMirror-merge-r-chunk { background: #ffffe0; }\n
+.CodeMirror-merge-r-chunk-start { border-top: 1px solid #ee8; }\n
+.CodeMirror-merge-r-chunk-end { border-bottom: 1px solid #ee8; }\n
+.CodeMirror-merge-r-connect { fill: #ffffe0; stroke: #ee8; stroke-width: 1px; }\n
+\n
+.CodeMirror-merge-l-chunk { background: #eef; }\n
+.CodeMirror-merge-l-chunk-start { border-top: 1px solid #88e; }\n
+.CodeMirror-merge-l-chunk-end { border-bottom: 1px solid #88e; }\n
+.CodeMirror-merge-l-connect { fill: #eef; stroke: #88e; stroke-width: 1px; }\n
+\n
+.CodeMirror-merge-l-chunk.CodeMirror-merge-r-chunk { background: #dfd; }\n
+.CodeMirror-merge-l-chunk-start.CodeMirror-merge-r-chunk-start { border-top: 1px solid #4e4; }\n
+.CodeMirror-merge-l-chunk-end.CodeMirror-merge-r-chunk-end { border-bottom: 1px solid #4e4; }\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

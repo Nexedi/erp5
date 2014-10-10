@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>codemirror.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* BASICS */\n
+\n
+.CodeMirror {\n
+  /* Set height, width, borders, and global font properties here */\n
+  font-family: monospace;\n
+  height: 300px;\n
+}\n
+.CodeMirror-scroll {\n
+  /* Set scrolling behaviour here */\n
+  overflow: auto;\n
+}\n
+\n
+/* PADDING */\n
+\n
+.CodeMirror-lines {\n
+  padding: 4px 0; /* Vertical padding around content */\n
+}\n
+.CodeMirror pre {\n
+  padding: 0 4px; /* Horizontal padding of content */\n
+}\n
+\n
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {\n
+  background-color: white; /* The little square between H and V scrollbars */\n
+}\n
+\n
+/* GUTTER */\n
+\n
+.CodeMirror-gutters {\n
+  border-right: 1px solid #ddd;\n
+  background-color: #f7f7f7;\n
+  white-space: nowrap;\n
+}\n
+.CodeMirror-linenumbers {}\n
+.CodeMirror-linenumber {\n
+  padding: 0 3px 0 5px;\n
+  min-width: 20px;\n
+  text-align: right;\n
+  color: #999;\n
+  -moz-box-sizing: content-box;\n
+  box-sizing: content-box;\n
+}\n
+\n
+/* CURSOR */\n
+\n
+.CodeMirror div.CodeMirror-cursor {\n
+  border-left: 1px solid black;\n
+  z-index: 3;\n
+}\n
+/* Shown when moving in bi-directional text */\n
+.CodeMirror div.CodeMirror-secondarycursor {\n
+  border-left: 1px solid silver;\n
+}\n
+.CodeMirror.cm-keymap-fat-cursor div.CodeMirror-cursor {\n
+  width: auto;\n
+  border: 0;\n
+  background: #7e7;\n
+  z-index: 1;\n
+}\n
+/* Can style cursor different in overwrite (non-insert) mode */\n
+.CodeMirror div.CodeMirror-cursor.CodeMirror-overwrite {}\n
+\n
+.cm-tab { display: inline-block; }\n
+\n
+.CodeMirror-ruler {\n
+  border-left: 1px solid #ccc;\n
+  position: absolute;\n
+}\n
+\n
+/* DEFAULT THEME */\n
+\n
+.cm-s-default .cm-keyword {color: #708;}\n
+.cm-s-default .cm-atom {color: #219;}\n
+.cm-s-default .cm-number {color: #164;}\n
+.cm-s-default .cm-def {color: #00f;}\n
+.cm-s-default .cm-variable {color: black;}\n
+.cm-s-default .cm-variable-2 {color: #05a;}\n
+.cm-s-default .cm-variable-3 {color: #085;}\n
+.cm-s-default .cm-property {color: black;}\n
+.cm-s-default .cm-operator {color: black;}\n
+.cm-s-default .cm-comment {color: #a50;}\n
+.cm-s-default .cm-string {color: #a11;}\n
+.cm-s-default .cm-string-2 {color: #f50;}\n
+.cm-s-default .cm-meta {color: #555;}\n
+.cm-s-default .cm-qualifier {color: #555;}\n
+.cm-s-default .cm-builtin {color: #30a;}\n
+.cm-s-default .cm-bracket {color: #997;}\n
+.cm-s-default .cm-tag {color: #170;}\n
+.cm-s-default .cm-attribute {color: #00c;}\n
+.cm-s-default .cm-header {color: blue;}\n
+.cm-s-default .cm-quote {color: #090;}\n
+.cm-s-default .cm-hr {color: #999;}\n
+.cm-s-default .cm-link {color: #00c;}\n
+\n
+.cm-negative {color: #d44;}\n
+.cm-positive {color: #292;}\n
+.cm-header, .cm-strong {font-weight: bold;}\n
+.cm-em {font-style: italic;}\n
+.cm-link {text-decoration: underline;}\n
+\n
+.cm-s-default .cm-error {color: #f00;}\n
+.cm-invalidchar {color: #f00;}\n
+\n
+div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}\n
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
+.CodeMirror-activeline-background {background: #e8f2ff;}\n
+\n
+/* STOP */\n
+\n
+/* The rest of this file contains styles related to the mechanics of\n
+   the editor. You probably shouldn\'t touch them. */\n
+\n
+.CodeMirror {\n
+  line-height: 1;\n
+  position: relative;\n
+  overflow: hidden;\n
+  background: white;\n
+  color: black;\n
+}\n
+\n
+.CodeMirror-scroll {\n
+  /* 30px is the magic margin used to hide the element\'s real scrollbars */\n
+  /* See overflow: hidden in .CodeMirror */\n
+  margin-bottom: -30px; margin-right: -30px;\n
+  padding-bottom: 30px;\n
+  height: 100%;\n
+  outline: none; /* Prevent dragging from highlighting the element */\n
+  position: relative;\n
+  -moz-box-sizing: content-box;\n
+  box-sizing: content-box;\n
+}\n
+.CodeMirror-sizer {\n
+  position: relative;\n
+  border-right: 30px solid transparent;\n
+  -moz-box-sizing: content-box;\n
+  box-sizing: content-box;\n
+}\n
+\n
+/* The fake, visible scrollbars. Used to force redraw during scrolling\n
+   before actuall scrolling happens, thus preventing shaking and\n
+   flickering artifacts. */\n
+.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {\n
+  position: absolute;\n
+  z-index: 6;\n
+  display: none;\n
+}\n
+.CodeMirror-vscrollbar {\n
+  right: 0; top: 0;\n
+  overflow-x: hidden;\n
+  overflow-y: scroll;\n
+}\n
+.CodeMirror-hscrollbar {\n
+  bottom: 0; left: 0;\n
+  overflow-y: hidden;\n
+  overflow-x: scroll;\n
+}\n
+.CodeMirror-scrollbar-filler {\n
+  right: 0; bottom: 0;\n
+}\n
+.CodeMirror-gutter-filler {\n
+  left: 0; bottom: 0;\n
+}\n
+\n
+.CodeMirror-gutters {\n
+  position: absolute; left: 0; top: 0;\n
+  padding-bottom: 30px;\n
+  z-index: 3;\n
+}\n
+.CodeMirror-gutter {\n
+  white-space: normal;\n
+  height: 100%;\n
+  -moz-box-sizing: content-box;\n
+  box-sizing: content-box;\n
+  padding-bottom: 30px;\n
+  margin-bottom: -32px;\n
+  display: inline-block;\n
+  /* Hack to make IE7 behave */\n
+  *zoom:1;\n
+  *display:inline;\n
+}\n
+.CodeMirror-gutter-elt {\n
+  position: absolute;\n
+  cursor: default;\n
+  z-index: 4;\n
+}\n
+\n
+.CodeMirror-lines {\n
+  cursor: text;\n
+}\n
+.CodeMirror pre {\n
+  /* Reset some styles that the rest of the page might have set */\n
+  -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;\n
+  border-width: 0;\n
+  background: transparent;\n
+  font-family: inherit;\n
+  font-size: inherit;\n
+  margin: 0;\n
+  white-space: pre;\n
+  word-wrap: normal;\n
+  line-height: inherit;\n
+  color: inherit;\n
+  z-index: 2;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+.CodeMirror-wrap pre {\n
+  word-wrap: break-word;\n
+  white-space: pre-wrap;\n
+  word-break: normal;\n
+}\n
+\n
+.CodeMirror-linebackground {\n
+  position: absolute;\n
+  left: 0; right: 0; top: 0; bottom: 0;\n
+  z-index: 0;\n
+}\n
+\n
+.CodeMirror-linewidget {\n
+  position: relative;\n
+  z-index: 2;\n
+  overflow: auto;\n
+}\n
+\n
+.CodeMirror-widget {}\n
+\n
+.CodeMirror-wrap .CodeMirror-scroll {\n
+  overflow-x: hidden;\n
+}\n
+\n
+.CodeMirror-measure {\n
+  position: absolute;\n
+  width: 100%;\n
+  height: 0;\n
+  overflow: hidden;\n
+  visibility: hidden;\n
+}\n
+.CodeMirror-measure pre { position: static; }\n
+\n
+.CodeMirror div.CodeMirror-cursor {\n
+  position: absolute;\n
+  visibility: hidden;\n
+  border-right: none;\n
+  width: 0;\n
+}\n
+.CodeMirror-focused div.CodeMirror-cursor {\n
+  visibility: visible;\n
+}\n
+\n
+.CodeMirror-selected { background: #d9d9d9; }\n
+.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }\n
+\n
+.cm-searching {\n
+  background: #ffa;\n
+  background: rgba(255, 255, 0, .4);\n
+}\n
+\n
+/* IE7 hack to prevent it from returning funny offsetTops on the spans */\n
+.CodeMirror span { *vertical-align: text-bottom; }\n
+\n
+@media print {\n
+  /* Hide the cursor when printing */\n
+  .CodeMirror div.CodeMirror-cursor {\n
+    visibility: hidden;\n
+  }\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

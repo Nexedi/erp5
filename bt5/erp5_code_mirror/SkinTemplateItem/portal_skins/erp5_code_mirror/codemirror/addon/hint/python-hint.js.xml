@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403075.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>python-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function () {\n
+  function forEach(arr, f) {\n
+    for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);\n
+  }\n
+\n
+  function arrayContains(arr, item) {\n
+    if (!Array.prototype.indexOf) {\n
+      var i = arr.length;\n
+      while (i--) {\n
+        if (arr[i] === item) {\n
+          return true;\n
+        }\n
+      }\n
+      return false;\n
+    }\n
+    return arr.indexOf(item) != -1;\n
+  }\n
+\n
+  function scriptHint(editor, _keywords, getToken) {\n
+    // Find the token at the cursor\n
+    var cur = editor.getCursor(), token = getToken(editor, cur), tprop = token;\n
+    // If it\'s not a \'word-style\' token, ignore the token.\n
+\n
+    if (!/^[\\w$_]*$/.test(token.string)) {\n
+        token = tprop = {start: cur.ch, end: cur.ch, string: "", state: token.state,\n
+                         className: token.string == ":" ? "python-type" : null};\n
+    }\n
+\n
+    if (!context) var context = [];\n
+    context.push(tprop);\n
+\n
+    var completionList = getCompletions(token, context);\n
+    completionList = completionList.sort();\n
+\n
+    return {list: completionList,\n
+            from: CodeMirror.Pos(cur.line, token.start),\n
+            to: CodeMirror.Pos(cur.line, token.end)};\n
+  }\n
+\n
+  function pythonHint(editor) {\n
+    return scriptHint(editor, pythonKeywordsU, function (e, cur) {return e.getTokenAt(cur);});\n
+  }\n
+  CodeMirror.pythonHint = pythonHint; // deprecated\n
+  CodeMirror.registerHelper("hint", "python", pythonHint);\n
+\n
+  var pythonKeywords = "and del from not while as elif global or with assert else if pass yield"\n
++ "break except import print class exec in raise continue finally is return def for lambda try";\n
+  var pythonKeywordsL = pythonKeywords.split(" ");\n
+  var pythonKeywordsU = pythonKeywords.toUpperCase().split(" ");\n
+\n
+  var pythonBuiltins = "abs divmod input open staticmethod all enumerate int ord str "\n
++ "any eval isinstance pow sum basestring execfile issubclass print super"\n
++ "bin file iter property tuple bool filter len range type"\n
++ "bytearray float list raw_input unichr callable format locals reduce unicode"\n
++ "chr frozenset long reload vars classmethod getattr map repr xrange"\n
++ "cmp globals max reversed zip compile hasattr memoryview round __import__"\n
++ "complex hash min set apply delattr help next setattr buffer"\n
++ "dict hex object slice coerce dir id oct sorted intern ";\n
+  var pythonBuiltinsL = pythonBuiltins.split(" ").join("() ").split(" ");\n
+  var pythonBuiltinsU = pythonBuiltins.toUpperCase().split(" ").join("() ").split(" ");\n
+\n
+  function getCompletions(token, context) {\n
+    var found = [], start = token.string;\n
+    function maybeAdd(str) {\n
+      if (str.lastIndexOf(start, 0) == 0 && !arrayContains(found, str)) found.push(str);\n
+    }\n
+\n
+    function gatherCompletions(_obj) {\n
+        forEach(pythonBuiltinsL, maybeAdd);\n
+        forEach(pythonBuiltinsU, maybeAdd);\n
+        forEach(pythonKeywordsL, maybeAdd);\n
+        forEach(pythonKeywordsU, maybeAdd);\n
+    }\n
+\n
+    if (context) {\n
+      // If this is a property, see if it belongs to some object we can\n
+      // find in the current environment.\n
+      var obj = context.pop(), base;\n
+\n
+      if (obj.type == "variable")\n
+          base = obj.string;\n
+      else if(obj.type == "variable-3")\n
+          base = ":" + obj.string;\n
+\n
+      while (base != null && context.length)\n
+        base = base[context.pop().string];\n
+      if (base != null) gatherCompletions(base);\n
+    }\n
+    return found;\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3331</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

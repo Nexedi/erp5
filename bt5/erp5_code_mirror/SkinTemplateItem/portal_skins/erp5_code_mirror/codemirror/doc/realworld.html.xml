@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Real-world Uses</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Real-world uses</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2>CodeMirror real-world uses</h2>\n
+\n
+    <p><a href="mailto:marijnh@gmail.com">Contact me</a> if you\'d like\n
+    your project to be added to this list.</p>\n
+\n
+    <ul>\n
+      <li><a href="http://brackets.io">Adobe Brackets</a> (code editor)</li>\n
+      <li><a href="http://amber-lang.net/">Amber</a> (JavaScript-based Smalltalk system)</li>\n
+      <li><a href="http://apeye.org/">APEye</a> (tool for testing &amp; documenting APIs)</li>\n
+      <li><a href="http://blog.bitbucket.org/2013/05/14/edit-your-code-in-the-cloud-with-bitbucket/">Bitbucket</a> (code hosting)</li>\n
+      <li><a href="http://buzz.blogger.com/2013/04/improvements-to-blogger-template-html.html">Blogger\'s template editor</a></li>\n
+      <li><a href="http://bluegriffon.org/">BlueGriffon</a> (HTML editor)</li>\n
+      <li><a href="http://cargocollective.com/">Cargo Collective</a> (creative publishing platform)</li>\n
+      <li><a href="https://developers.google.com/chrome-developer-tools/">Chrome DevTools</a></li>\n
+      <li><a href="http://clickhelp.co/">ClickHelp</a> (technical writing tool)</li>\n
+      <li><a href="http://complete-ly.appspot.com/playground/code.playground.html">Complete.ly playground</a></li>\n
+      <li><a href="http://drupal.org/project/cpn">Code per Node</a> (Drupal module)</li>\n
+      <li><a href="http://www.codebugapp.com/">Codebug</a> (PHP Xdebug front-end)</li>\n
+      <li><a href="https://github.com/angelozerr/CodeMirror-Eclipse">CodeMirror Eclipse</a> (embed CM in Eclipse)</li>\n
+      <li><a href="http://emmet.io/blog/codemirror-movie/">CodeMirror movie</a> (scripted editing demos)</li>\n
+      <li><a href="http://code.google.com/p/codemirror2-gwt/">CodeMirror2-GWT</a> (Google Web Toolkit wrapper)</li>\n
+      <li><a href="http://www.crunchzilla.com/code-monster">Code Monster</a> & <a href="http://www.crunchzilla.com/code-maven">Code Maven</a> (learning environment)</li>\n
+      <li><a href="http://codepen.io">Codepen</a> (gallery of animations)</li>\n
+      <li><a href="http://sasstwo.codeschool.com/levels/1/challenges/1">Code School</a> (online tech learning environment)</li>\n
+      <li><a href="http://code-snippets.bungeshea.com/">Code Snippets</a> (WordPress snippet management plugin)</li>\n
+      <li><a href="http://antonmi.github.io/code_together/">Code together</a> (collaborative editing)</li>\n
+      <li><a href="http://codev.it/">Codev</a> (collaborative IDE)</li>\n
+      <li><a href="http://www.codezample.com">CodeZample</a> (code snippet sharing)</li>\n
+      <li><a href="http://codio.com">Codio</a> (Web IDE)</li>\n
+      <li><a href="http://ot.substance.io/demo/">Collaborative CodeMirror demo</a> (CodeMirror + operational transforms)</li>\n
+      <li><a href="http://www.communitycodecamp.com/">Community Code Camp</a> (code snippet sharing)</li>\n
+      <li><a href="http://www.compilejava.net/">compilejava.net</a> (online Java sandbox)</li>\n
+      <li><a href="http://www.ckwnc.com/">CKWNC</a> (UML editor)</li>\n
+      <li><a href="http://www.crudzilla.com/">Crudzilla</a> (self-hosted web IDE)</li>\n
+      <li><a href="http://cssdeck.com/">CSSDeck</a> (CSS showcase)</li>\n
+      <li><a href="http://ireneros.com/deck/deck.js-codemirror/introduction/#textarea-code">Deck.js integration</a> (slides with editors)</li>\n
+      <li><a href="http://www.dbninja.com">DbNinja</a> (MySQL access interface)</li>\n
+      <li><a href="https://chat.echoplex.us/">Echoplexus</a> (chat and collaborative coding)</li>\n
+      <li><a href="http://elm-lang.org/Examples.elm">Elm language examples</a></li>\n
+      <li><a href="http://eloquentjavascript.net/chapter1.html">Eloquent JavaScript</a> (book)</li>\n
+      <li><a href="http://emmet.io">Emmet</a> (fast XML editing)</li>\n
+      <li><a href="http://www.fastfig.com/">Fastfig</a> (online computation/math tool)</li>\n
+      <li><a href="https://metacpan.org/module/Farabi">Farabi</a> (modern Perl IDE)</li>\n
+      <li><a href="http://blog.pamelafox.org/2012/02/interactive-html5-slides-with-fathomjs.html">FathomJS integration</a> (slides with editors, again)</li>\n
+      <li><a href="http://fiddlesalad.com/">Fiddle Salad</a> (web development environment)</li>\n
+      <li><a href="https://hacks.mozilla.org/2013/11/firefox-developer-tools-episode-27-edit-as-html-codemirror-more/">Firefox Developer Tools</a></li>\n
+      <li><a href="http://www.firepad.io">Firepad</a> (collaborative text editor)</li>\n
+      <li><a href="https://code.google.com/p/gerrit/">Gerrit</a>\'s diff view</a></li>\n
+      <li><a href="http://tour.golang.org">Go language tour</a></li>\n
+      <li><a href="https://github.com/github/android">GitHub\'s Android app</a></li>\n
+      <li><a href="https://script.google.com/">Google Apps Script</a></li>\n
+      <li><a href="http://web.uvic.ca/~siefkenj/graphit/graphit.html">Graphit</a> (function graphing)</li>\n
+      <li><a href="http://www.handcraft.com/">Handcraft</a> (HTML prototyping)</li>\n
+      <li><a href="http://try.haxe.org">Haxe</a> (Haxe Playground) </li>\n
+      <li><a href="http://haxpad.com/">HaxPad</a> (editor for Win RT)</li>\n
+      <li><a href="http://megafonweblab.github.com/histone-javascript/">Histone template engine playground</a></li>\n
+      <li><a href="http://icecoder.net">ICEcoder</a> (web IDE)</li>\n
+      <li><a href="http://i-mos.org/imos/">i-MOS</a> (modeling and simulation platform)</li>\n
+      <li><a href="http://www.janvas.com/">Janvas</a> (vector graphics editor)</li>\n
+      <li><a href="http://extensions.joomla.org/extensions/edition/editors/8723">Joomla plugin</a></li>\n
+      <li><a href="http://jqfundamentals.com/">jQuery fundamentals</a> (interactive tutorial)</li>\n
+      <li><a href="http://jsbin.com">jsbin.com</a> (JS playground)</li>\n
+      <li><a href="http://jsfiddle.com">jsfiddle.com</a> (another JS playground)</li>\n
+      <li><a href="http://www.jshint.com/">JSHint</a> (JS linter)</li>\n
+      <li><a href="http://jumpseller.com/">Jumpseller</a> (online store builder)</li>\n
+      <li><a href="http://kl1p.com/cmtest/1">kl1p</a> (paste service)</li>\n
+      <li><a href="http://kodtest.com/">Kodtest</a> (HTML/JS/CSS playground)</li>\n
+      <li><a href="https://laborate.io/">Laborate</a> (collaborative coding)</li>\n
+      <li><a href="http://lighttable.com/">Light Table</a> (experimental IDE)</li>\n
+      <li><a href="http://liveweave.com/">Liveweave</a> (HTML/CSS/JS scratchpad)</li>\n
+      <li><a href="http://marklighteditor.com/">Marklight editor</a> (lightweight markup editor)</li>\n
+      <li><a href="http://www.mergely.com/">Mergely</a> (interactive diffing)</li>\n
+      <li><a href="http://www.iunbug.com/mihtool">MIHTool</a> (iOS web-app debugging tool)</li>\n
+      <li><a href="http://mongo-mapreduce-webbrowser.opensagres.cloudbees.net/">Mongo MapReduce WebBrowser</a></li>\n
+      <li><a href="http://mvcplayground.apphb.com/">MVC Playground</a></li>\n
+      <li><a href="https://www.my2ndgeneration.com/">My2ndGeneration</a> (social coding)</li>\n
+      <li><a href="http://www.navigatecms.com">Navigate CMS</a></li>\n
+      <li><a href="https://github.com/soliton4/nodeMirror">nodeMirror</a> (IDE project)</li>\n
+      <li><a href="https://notex.ch">NoTex</a> (rST authoring)</li>\n
+      <li><a href="http://oakoutliner.com">Oak</a> (online outliner)</li>\n
+      <li><a href="http://clrhome.org/asm/">ORG</a> (z80 assembly IDE)</li>\n
+      <li><a href="https://github.com/mamacdon/orion-codemirror">Orion-CodeMirror integration</a> (running CodeMirror modes in Orion)</li>\n
+      <li><a href="http://paperjs.org/">Paper.js</a> (graphics scripting)</li>\n
+      <li><a href="http://prinbit.com/">PrinBit</a> (collaborative coding tool)</li>\n
+      <li><a href="http://prose.io/">Prose.io</a> (github content editor)</li>\n
+      <li><a href="http://www.puzzlescript.net/">Puzzlescript</a> (puzzle game engine)</li>\n
+      <li><a href="http://ql.io/">ql.io</a> (http API query helper)</li>\n
+      <li><a href="http://qyapp.com">QiYun web app platform</a></li>\n
+      <li><a href="http://ariya.ofilabs.com/2011/09/hybrid-webnative-desktop-codemirror.html">Qt+Webkit integration</a> (building a desktop CodeMirror app)</li>\n
+      <li><a href="http://www.quivive-file-manager.com">Quivive File Manager</a></li>\n
+      <li><a href="http://rascalmicro.com/docs/basic-tutorial-getting-started.html">Rascal</a> (tiny computer)</li>\n
+      <li><a href="https://www.realtime.io/">RealTime.io</a> (Internet-of-Things infrastructure)</li>\n
+      <li><a href="https://www.shadertoy.com/">Shadertoy</a> (shader sharing)</li>\n
+      <li><a href="http://www.sketchpatch.net/labs/livecodelabIntro.html">sketchPatch Livecodelab</a></li>\n
+      <li><a href="http://www.skulpt.org/">Skulpt</a> (in-browser Python environment)</li>\n
+      <li><a href="http://snippets.pro/">Snippets.pro</a> (code snippet sharing)</li>\n
+      <li><a href="http://www.solidshops.com/">SolidShops</a> (hosted e-commerce platform)</li>\n
+      <li><a href="http://sqlfiddle.com">SQLFiddle</a> (SQL playground)</li>\n
+      <li><a href="https://thefiletree.com">The File Tree</a> (collab editor)</li>\n
+      <li><a href="http://www.mapbox.com/tilemill/">TileMill</a> (map design tool)</li>\n
+      <li><a href="http://www.toolsverse.com/products/data-explorer/">Toolsverse Data Explorer</a> (database management)</li>\n
+      <li><a href="http://enjalot.com/tributary/2636296/sinwaves.js">Tributary</a> (augmented editing)</li>\n
+      <li><a href="http://blog.englard.net/post/39608000629/codeintumblr">Tumblr code highlighting shim</a></li>\n
+      <li><a href="http://turbopy.com/">TurboPY</a> (web publishing framework)</li>\n
+      <li><a href="http://uicod.com/">uiCod</a> (animation demo gallery and sharing)</li>\n
+      <li><a href="http://cruise.eecs.uottawa.ca/umpleonline/">UmpleOnline</a> (model-oriented programming tool)</li>\n
+      <li><a href="https://upsource.jetbrains.com/#idea/view/923f30395f2603cd9f42a32bcafd13b6c28de0ff/plugins/groovy/src/org/jetbrains/plugins/groovy/intentions/style/ReplaceAbstractClassInstanceByMapIntention.java">Upsource</a> (code viewer)</li>\n
+      <li><a href="https://github.com/brettz9/webappfind">webappfind</a> (windows file bindings for webapps)</li>\n
+      <li><a href="http://www.webglacademy.com/">WebGL academy</a> (learning WebGL)</li>\n
+      <li><a href="http://webglplayground.net/">WebGL playground</a></li>\n
+      <li><a href="https://www.webkit.org/blog/2518/state-of-web-inspector/#source-code">WebKit Web inspector</a></li>\n
+      <li><a href="http://www.wescheme.org/">WeScheme</a> (learning tool)</li>\n
+      <li><a href="http://wordpress.org/extend/plugins/codemirror-for-codeeditor/">WordPress plugin</a></li>\n
+      <li><a href="https://www.writelatex.com">writeLaTeX</a> (Collaborative LaTeX Editor)</li>\n
+      <li><a href="http://www.xosystem.org/home/applications_websites/xosystem_website/xoside_EN.php">XOSide</a> (online editor)</li>\n
+      <li><a href="http://videlibri.sourceforge.net/cgi-bin/xidelcgi">XQuery tester</a></li>\n
+      <li><a href="http://q42jaap.github.io/xsd2codemirror/">xsd2codemirror</a> (convert XSD to CM XML completion info)</li>\n
+    </ul>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>realworld.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

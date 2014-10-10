@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_frontpage.js</string> </value>
+            <value> <string>gadget_erp5_page_front.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -101,8 +101,8 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, Handlebars, initGadgetMixin */\n
-/*jslint nomen: true */\n
+/*global window, rJS, RSVP, Handlebars */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, Handlebars) {\n
   "use strict";\n
 \n
@@ -143,12 +143,12 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function (options) {\n
+    .declareMethod("render", function () {\n
       var gadget = this;\n
 \n
       return gadget.jio_allDocs({\n
         "query": \'meta_type:"ERP5 Folder" AND id:"%_module"\',\n
-        "select_list": ["title"]\n
+        "select_list": ["title", "business_application_title"]\n
       })\n
         .push(function (result) {\n
           var result_list = [],\n
@@ -156,24 +156,53 @@
           for (i = 0; i < result.data.rows.length; i += 1) {\n
             result_list.push(RSVP.all([\n
               gadget.whoWantToDisplayThis(result.data.rows[i].id),\n
-              result.data.rows[i].value.title || result.data.rows[i].id\n
+              result.data.rows[i].value.title || result.data.rows[i].id,\n
+              result.data.rows[i].value.business_application_title\n
             ]));\n
           }\n
           return RSVP.all(result_list);\n
         })\n
         .push(function (document_list) {\n
           var i,\n
-            parameter_list = [],\n
+            business_application_dict = {},\n
+            business_application_list = [],\n
+            business_application,\n
+            module_info,\n
+            result_html = "",\n
             doc;\n
           for (i = 0; i < document_list.length; i += 1) {\n
             doc = document_list[i];\n
-            parameter_list[i] = {\n
+            if (doc[2] === undefined) {\n
+              doc[2] = "Other";\n
+            }\n
+            module_info = {\n
               link: doc[0],\n
               title: doc[1]\n
             };\n
+            if (business_application_dict[doc[2]] === undefined) {\n
+              business_application_dict[doc[2]] = [module_info];\n
+              business_application_list.push(doc[2]);\n
+            } else {\n
+              business_application_dict[doc[2]].push(module_info);\n
+            }\n
           }\n
-          \n
-          parameter_list.sort(function (a, b) {\n
+\n
+          business_application_list.sort(function (a, b) {\n
+            // Push the "Other" value at the end\n
+            var result = 0;\n
+            if (a === "Other") {\n
+              result = 1;\n
+            } else if (b === "Other") {\n
+              result = -1;\n
+            } else if (a < b) {\n
+              result = -1;\n
+            } else if (a > b) {\n
+              result = 1;\n
+            }\n
+            return result;\n
+          });\n
+\n
+          function sort_module(a, b) {\n
             var result = 0;\n
             if (a.title < b.title) {\n
               result = -1;\n
@@ -181,12 +210,19 @@
               result = 1;\n
             }\n
             return result;\n
-          });\n
+          }\n
 \n
-          gadget.props.element.querySelector(\'.document_list\').innerHTML =\n
-            table_template({\n
-              documentlist: parameter_list\n
+          for (i = 0; i < business_application_list.length; i += 1) {\n
+            business_application = business_application_list[i];\n
+            business_application_dict[business_application].sort(sort_module);\n
+            result_html += table_template({\n
+              definition_title: business_application,\n
+              documentlist: business_application_dict[business_application]\n
             });\n
+          }\n
+\n
+\n
+          gadget.props.element.querySelector(\'.document_list\').innerHTML = result_html;\n
         });\n
     });\n
 }(window, rJS, RSVP, Handlebars));
@@ -326,7 +362,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.39090.50399.1467</string> </value>
+                <value> <string>937.43885.22553.46165</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +380,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407400113.3</float>
+                        <float>1411461029.62</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

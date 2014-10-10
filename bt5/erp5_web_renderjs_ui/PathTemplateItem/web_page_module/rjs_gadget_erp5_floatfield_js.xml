@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_floatfield.js</string> </value>
+            <value> <string>gadget_erp5_field_float.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,8 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, console, RSVP */\n
-(function (rJS) {\n
+            <value> <string>/*global window, rJS */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -119,8 +120,12 @@
       );\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
+      if (field_json.required === 1) {\n
+        input.setAttribute(\'required\', \'required\');\n
+      }\n
       if (field_json.editable !== 1) {\n
         input.setAttribute(\'readonly\', \'readonly\');\n
+        input.setAttribute(\'data-wrapper-class\', \'ui-state-disabled ui-state-readonly\');\n
         input.setAttribute(\'disabled\', \'disabled\');\n
 \n
       }\n
@@ -133,7 +138,7 @@
       return result;\n
     });\n
 \n
-}(rJS));</string> </value>
+}(window, rJS));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -268,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.48879.33714.580</string> </value>
+                <value> <string>937.51520.38687.48861</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407485752.3</float>
+                        <float>1412082125.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

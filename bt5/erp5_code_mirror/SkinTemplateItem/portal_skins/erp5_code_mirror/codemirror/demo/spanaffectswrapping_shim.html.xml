@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Automatically derive odd wrapping behavior for your browser</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Automatically derive odd wrapping behavior for your browser</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Automatically derive odd wrapping behavior for your browser</h2>\n
+\n
+\n
+    <p>This is a hack to automatically derive\n
+    a <code>spanAffectsWrapping</code> regexp for a browser. See the\n
+    comments above that variable\n
+    in <a href="../lib/codemirror.js"><code>lib/codemirror.js</code></a>\n
+    for some more details.</p>\n
+\n
+    <div style="white-space: pre-wrap; width: 50px;" id="area"></div>\n
+    <pre id="output"></pre>\n
+\n
+    <script id="script">\n
+      var a = document.getElementById("area"), bad = Object.create(null);\n
+      var chars = "a~`!@#$%^&*()-_=+}{[]\\\\|\'\\"/?.>,<:;", l = chars.length;\n
+      for (var x = 0; x < l; ++x) for (var y = 0; y < l; ++y) {\n
+        var s1 = "foooo" + chars.charAt(x), s2 = chars.charAt(y) + "br";\n
+        a.appendChild(document.createTextNode(s1 + s2));\n
+        var h1 = a.offsetHeight;\n
+        a.innerHTML = "";\n
+        a.appendChild(document.createElement("span")).appendChild(document.createTextNode(s1));\n
+        a.appendChild(document.createElement("span")).appendChild(document.createTextNode(s2));\n
+        if (a.offsetHeight != h1)\n
+          bad[chars.charAt(x)] = (bad[chars.charAt(x)] || "") + chars.charAt(y);\n
+        a.innerHTML = "";\n
+      }\n
+\n
+      var re = "";\n
+      function toREElt(str) {\n
+        if (str.length > 1) {\n
+          var invert = false;\n
+          if (str.length > chars.length * .6) {\n
+            invert = true;\n
+            var newStr = "";\n
+            for (var i = 0; i < l; ++i) if (str.indexOf(chars.charAt(i)) == -1) newStr += chars.charAt(i);\n
+            str = newStr;\n
+          }\n
+          str = str.replace(/[\\-\\.\\]\\"\\\'\\\\\\/\\^a]/g, function(orig) { return orig == "a" ? "\\\\w" : "\\\\" + orig; });\n
+          return "[" + (invert ? "^" : "") + str + "]";\n
+        } else if (str == "a") {\n
+          return "\\\\w";\n
+        } else if (/[?$*()+{}[\\]\\.|/\\\'\\"]/.test(str)) {\n
+          return "\\\\" + str;\n
+        } else {\n
+          return str;\n
+        }\n
+      }\n
+\n
+      var newRE = "";\n
+      for (;;) {\n
+        var left = null;\n
+        for (var left in bad) break;\n
+        if (left == null) break;\n
+        var right = bad[left];\n
+        delete bad[left];\n
+        for (var other in bad) if (bad[other] == right) {\n
+          left += other;\n
+          delete bad[other];\n
+        }\n
+        newRE += (newRE ? "|" : "") + toREElt(left) + toREElt(right);\n
+      }\n
+\n
+      document.getElementById("output").appendChild(document.createTextNode("Your regexp is: " + (newRE || "^$")));\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>spanaffectswrapping_shim.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

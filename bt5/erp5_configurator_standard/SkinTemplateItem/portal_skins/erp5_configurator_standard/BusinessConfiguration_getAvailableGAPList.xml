@@ -66,6 +66,10 @@ return [\n
        name=Base_translateString(\'PCG (France)\'),\n
        root=\'gap/fr/pcg\',\n
        bt5=\'erp5_accounting_l10n_fr\',),\n
+  dict(id=\'de\',\n
+       name=Base_translateString(\'SKR04 (Germany)\'),\n
+       root=\'gap/de/skr04\',\n
+       bt5=\'erp5_accounting_l10n_de_skr04\',),\n
   dict(id=\'sn\',\n
        name=Base_translateString(\'SYSCOA (West Africa)\'),\n
        root=\'gap/ohada/syscohada\',\n

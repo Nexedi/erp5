@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_listbox.js</string> </value>
+            <value> <string>gadget_erp5_field_listbox.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, document, RSVP, URI, console */\n
-/*jslint maxlen:120, nomen: true */\n
-(function (rJS, document, RSVP, window, URI) {\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
+/*global window, document, rJS, URI, RSVP */\n
+(function (window, document, rJS, URI, RSVP) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -161,6 +161,7 @@
         field_json = props.field_json,\n
         begin_from = props.begin_from,\n
         table = props.element.querySelector(\'table\'),\n
+        original_tfoot = props.element.querySelector(\'tfoot\'),\n
         tbody = document.createElement("tbody"),\n
         url_query =  props.extended_search,\n
         query_string = "",\n
@@ -170,6 +171,10 @@
         counter,\n
         i;\n
 \n
+      if (field_json.query === undefined) {\n
+        original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
+        return;\n
+      }\n
      // function buildQueryString(previous, next) {\n
      //   return previous + next[0] + \':= "\' + url_query + \'" OR \';\n
      // }\n
@@ -203,8 +208,10 @@
           tr,\n
           th,\n
           a,\n
-          result = dataset = result_list[0],\n
+          result = result_list[0],\n
           tmp_url;\n
+\n
+        dataset = result;\n
 \n
         for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
@@ -214,6 +221,7 @@
             th = document.createElement("th");\n
             a = document.createElement("a");\n
             a.href = tmp_url;\n
+            a.className = "ui-link";\n
             a.textContent = (result.data.rows[i]\n
                 .value[field_json.column_list[j][0]] || "");\n
             th.appendChild(a);\n
@@ -246,7 +254,8 @@
 \n
       }).push(function (url_list) {\n
         var fragment = document.createDocumentFragment(),\n
-          tfoot = document.createElement("tfoot"),\n
+          tfoot = gadget.__element.querySelector("tfoot"),\n
+          //tfoot = document.createElement("tfoot"),\n
           tr = document.createElement("tr"),\n
           th = document.createElement("th"),\n
           paging_prev = document.createElement("a"),\n
@@ -265,7 +274,7 @@
         paging_prev.textContent = "Previous";\n
         paging_prev.href = url_list[0];\n
         paging_info.className = "ui-btn ui-disabled custom-readonly";\n
-        paging_info.textContent = "Page " + ((begin_from + lines)/lines);\n
+        paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
         paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right ui-last-child";\n
         paging_next.textContent = "Next";\n
         paging_next.href = url_list[1];\n
@@ -296,7 +305,7 @@
       });\n
     });\n
 \n
-}(rJS, document, RSVP, window, URI));
+}(window, document, rJS, URI, RSVP));
 
 ]]></string> </value>
         </item>
@@ -419,7 +428,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -433,7 +442,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.38910.37618.18432</string> </value>
+                <value> <string>937.64366.64920.32563</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -451,7 +460,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406887627.77</float>
+                        <float>1412261538.63</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

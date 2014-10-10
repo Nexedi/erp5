@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403096.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>smarty.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Smarty 2 and 3 mode.\n
+ */\n
+CodeMirror.defineMode("smarty", function(config) {\n
+  "use strict";\n
+\n
+  // our default settings; check to see if they\'re overridden\n
+  var settings = {\n
+    rightDelimiter: \'}\',\n
+    leftDelimiter: \'{\',\n
+    smartyVersion: 2 // for backward compatibility\n
+  };\n
+  if (config.hasOwnProperty("leftDelimiter")) {\n
+    settings.leftDelimiter = config.leftDelimiter;\n
+  }\n
+  if (config.hasOwnProperty("rightDelimiter")) {\n
+    settings.rightDelimiter = config.rightDelimiter;\n
+  }\n
+  if (config.hasOwnProperty("smartyVersion") && config.smartyVersion === 3) {\n
+    settings.smartyVersion = 3;\n
+  }\n
+\n
+  var keyFunctions = ["debug", "extends", "function", "include", "literal"];\n
+  var last;\n
+  var regs = {\n
+    operatorChars: /[+\\-*&%=<>!?]/,\n
+    validIdentifier: /[a-zA-Z0-9_]/,\n
+    stringChar: /[\'"]/\n
+  };\n
+\n
+  var helpers = {\n
+    cont: function(style, lastType) {\n
+      last = lastType;\n
+      return style;\n
+    },\n
+    chain: function(stream, state, parser) {\n
+      state.tokenize = parser;\n
+      return parser(stream, state);\n
+    }\n
+  };\n
+\n
+\n
+  // our various parsers\n
+  var parsers = {\n
+\n
+    // the main tokenizer\n
+    tokenizer: function(stream, state) {\n
+      if (stream.match(settings.leftDelimiter, true)) {\n
+        if (stream.eat("*")) {\n
+          return helpers.chain(stream, state, parsers.inBlock("comment", "*" + settings.rightDelimiter));\n
+        } else {\n
+          // Smarty 3 allows { and } surrounded by whitespace to NOT slip into Smarty mode\n
+          state.depth++;\n
+          var isEol = stream.eol();\n
+          var isFollowedByWhitespace = /\\s/.test(stream.peek());\n
+          if (settings.smartyVersion === 3 && settings.leftDelimiter === "{" && (isEol || isFollowedByWhitespace)) {\n
+            state.depth--;\n
+            return null;\n
+          } else {\n
+            state.tokenize = parsers.smarty;\n
+            last = "startTag";\n
+            return "tag";\n
+          }\n
+        }\n
+      } else {\n
+        stream.next();\n
+        return null;\n
+      }\n
+    },\n
+\n
+    // parsing Smarty content\n
+    smarty: function(stream, state) {\n
+      if (stream.match(settings.rightDelimiter, true)) {\n
+        if (settings.smartyVersion === 3) {\n
+          state.depth--;\n
+          if (state.depth <= 0) {\n
+            state.tokenize = parsers.tokenizer;\n
+          }\n
+        } else {\n
+          state.tokenize = parsers.tokenizer;\n
+        }\n
+        return helpers.cont("tag", null);\n
+      }\n
+\n
+      if (stream.match(settings.leftDelimiter, true)) {\n
+        state.depth++;\n
+        return helpers.cont("tag", "startTag");\n
+      }\n
+\n
+      var ch = stream.next();\n
+      if (ch == "$") {\n
+        stream.eatWhile(regs.validIdentifier);\n
+        return helpers.cont("variable-2", "variable");\n
+      } else if (ch == "|") {\n
+        return helpers.cont("operator", "pipe");\n
+      } else if (ch == ".") {\n
+        return helpers.cont("operator", "property");\n
+      } else if (regs.stringChar.test(ch)) {\n
+        state.tokenize = parsers.inAttribute(ch);\n
+        return helpers.cont("string", "string");\n
+      } else if (regs.operatorChars.test(ch)) {\n
+        stream.eatWhile(regs.operatorChars);\n
+        return helpers.cont("operator", "operator");\n
+      } else if (ch == "[" || ch == "]") {\n
+        return helpers.cont("bracket", "bracket");\n
+      } else if (ch == "(" || ch == ")") {\n
+        return helpers.cont("bracket", "operator");\n
+      } else if (/\\d/.test(ch)) {\n
+        stream.eatWhile(/\\d/);\n
+        return helpers.cont("number", "number");\n
+      } else {\n
+\n
+        if (state.last == "variable") {\n
+          if (ch == "@") {\n
+            stream.eatWhile(regs.validIdentifier);\n
+            return helpers.cont("property", "property");\n
+          } else if (ch == "|") {\n
+            stream.eatWhile(regs.validIdentifier);\n
+            return helpers.cont("qualifier", "modifier");\n
+          }\n
+        } else if (state.last == "pipe") {\n
+          stream.eatWhile(regs.validIdentifier);\n
+          return helpers.cont("qualifier", "modifier");\n
+        } else if (state.last == "whitespace") {\n
+          stream.eatWhile(regs.validIdentifier);\n
+          return helpers.cont("attribute", "modifier");\n
+        } if (state.last == "property") {\n
+          stream.eatWhile(regs.validIdentifier);\n
+          return helpers.cont("property", null);\n
+        } else if (/\\s/.test(ch)) {\n
+          last = "whitespace";\n
+          return null;\n
+        }\n
+\n
+        var str = "";\n
+        if (ch != "/") {\n
+          str += ch;\n
+        }\n
+        var c = null;\n
+        while (c = stream.eat(regs.validIdentifier)) {\n
+          str += c;\n
+        }\n
+        for (var i=0, j=keyFunctions.length; i<j; i++) {\n
+          if (keyFunctions[i] == str) {\n
+            return helpers.cont("keyword", "keyword");\n
+          }\n
+        }\n
+        if (/\\s/.test(ch)) {\n
+          return null;\n
+        }\n
+        return helpers.cont("tag", "tag");\n
+      }\n
+    },\n
+\n
+    inAttribute: function(quote) {\n
+      return function(stream, state) {\n
+        var prevChar = null;\n
+        var currChar = null;\n
+        while (!stream.eol()) {\n
+          currChar = stream.peek();\n
+          if (stream.next() == quote && prevChar !== \'\\\\\') {\n
+            state.tokenize = parsers.smarty;\n
+            break;\n
+          }\n
+          prevChar = currChar;\n
+        }\n
+        return "string";\n
+      };\n
+    },\n
+\n
+    inBlock: function(style, terminator) {\n
+      return function(stream, state) {\n
+        while (!stream.eol()) {\n
+          if (stream.match(terminator)) {\n
+            state.tokenize = parsers.tokenizer;\n
+            break;\n
+          }\n
+          stream.next();\n
+        }\n
+        return style;\n
+      };\n
+    }\n
+  };\n
+\n
+\n
+  // the public API for CodeMirror\n
+  return {\n
+    startState: function() {\n
+      return {\n
+        tokenize: parsers.tokenizer,\n
+        mode: "smarty",\n
+        last: null,\n
+        depth: 0\n
+      };\n
+    },\n
+    token: function(stream, state) {\n
+      var style = state.tokenize(stream, state);\n
+      state.last = last;\n
+      return style;\n
+    },\n
+    electricChars: ""\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-smarty", "smarty");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5957</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

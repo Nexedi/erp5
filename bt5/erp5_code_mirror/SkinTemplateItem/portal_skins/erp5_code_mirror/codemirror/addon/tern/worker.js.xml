@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403075.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>worker.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// declare global: tern, server\n
+\n
+var server;\n
+\n
+this.onmessage = function(e) {\n
+  var data = e.data;\n
+  switch (data.type) {\n
+  case "init": return startServer(data.defs, data.plugins, data.scripts);\n
+  case "add": return server.addFile(data.name, data.text);\n
+  case "del": return server.delFile(data.name);\n
+  case "req": return server.request(data.body, function(err, reqData) {\n
+    postMessage({id: data.id, body: reqData, err: err && String(err)});\n
+  });\n
+  case "getFile":\n
+    var c = pending[data.id];\n
+    delete pending[data.id];\n
+    return c(data.err, data.text);\n
+  default: throw new Error("Unknown message type: " + data.type);\n
+  }\n
+};\n
+\n
+var nextId = 0, pending = {};\n
+function getFile(file, c) {\n
+  postMessage({type: "getFile", name: file, id: ++nextId});\n
+  pending[nextId] = c;\n
+}\n
+\n
+function startServer(defs, plugins, scripts) {\n
+  if (scripts) importScripts.apply(null, scripts);\n
+\n
+  server = new tern.Server({\n
+    getFile: getFile,\n
+    async: true,\n
+    defs: defs,\n
+    plugins: plugins\n
+  });\n
+}\n
+\n
+var console = {\n
+  log: function(v) { postMessage({type: "debug", message: v}); }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1079</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

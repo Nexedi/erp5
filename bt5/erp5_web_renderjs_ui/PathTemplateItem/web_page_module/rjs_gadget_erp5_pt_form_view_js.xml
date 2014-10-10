@@ -101,24 +101,13 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+/*global window, rJS, RSVP, URI */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, RSVP, URI) {\n
   "use strict";\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // Handlebars\n
-  /////////////////////////////////////////////////////////////////\n
   // Precompile the templates while loading the first gadget instance\n
-  var gadget_klass = rJS(window),\n
-    workflow_template = Handlebars.compile(\n
-      gadget_klass.__template_element\n
-                         .getElementById("workflow-template")\n
-                         .innerHTML\n
-    );\n
+  var gadget_klass = rJS(window);\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -128,125 +117,67 @@
     .ready(function (g) {\n
       g.props = {};\n
     })\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
 \n
-    // Assign the element to a variable\n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
+    /////////////////////////////////////////////////////////////////\n
+    // Acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
 \n
-   .declareAcquiredMethod("aq_put", "jio_put")\n
-   .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
-      var erp5_document = options.erp5_document,\n
-        action_list = erp5_document._links.action_workflow || [],\n
-        fragment = document.createDocumentFragment(),\n
-        form_gadget = this,\n
-        promise_list = [],\n
-        i;\n
-  \n
-      for (i = 0; i < action_list.length; i += 1) {\n
-        promise_list.push(this.whoWantToDisplayThisPage({\n
-          name: action_list[i].name\n
-        }));\n
-      }\n
-\n
-      form_gadget.props.id = erp5_document._id;\n
-      form_gadget.props.view = options.view;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all([\n
-            form_gadget.getDeclaredGadget("erp5_tab"),\n
-            form_gadget.getDeclaredGadget("erp5_form"),\n
-            RSVP.all(promise_list)\n
-          ]);\n
-        })\n
-        .push(function (all_gadget) {\n
+      var gadget = this;\n
+      return this.getDeclaredGadget("erp5_form")\n
+        .push(function (form_gadget) {\n
           var form_options = options.erp5_form || {},\n
-            tab_options = options.erp5_tag || {},\n
-            all_result = all_gadget[2],\n
-            actionlist = [],\n
-            class_list,\n
-            i;\n
+            rendered_form = options.erp5_document._embedded._view,\n
+            rendered_field,\n
+            key;\n
+\n
+          // Remove all empty fields, and mark all others as non editable\n
+          for (key in rendered_form) {\n
+            if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {\n
+              rendered_field = rendered_form[key];\n
+              if ((rendered_field.type !== "ListBox") && ((!rendered_field.default) || (rendered_field.hidden === 1) || (rendered_field.default.length === 0))) {\n
+                delete rendered_form[key];\n
+              } else {\n
+                rendered_field.editable = 0;\n
+              }\n
+            }\n
+          }\n
 \n
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
-          \n
-          tab_options.erp5_document = options.erp5_document;\n
-          tab_options.form_definition = options.form_definition;\n
-          tab_options.view = options.view;\n
-          tab_options.action_view = options.action_view;\n
-\n
-          for (i = 0; i < all_result.length; i += 1) {\n
-            switch (i) {\n
-              case 0:\n
-                class_list = "ui-btn ui-first-child";\n
-                break;\n
-              case (all_result.length - 1):\n
-                class_list = "ui-btn ui-last-child";\n
-                break;\n
-              default:\n
-                class_list = "ui-btn";\n
-                break;\n
-            }\n
-            actionlist.push({\n
-              class: class_list,\n
-              title: action_list[i].title,\n
-              link: all_result[i],\n
-            });\n
-          }\n
-          form_gadget.__element.appendChild(fragment);\n
-          form_gadget.__element.querySelector("div.ui-controlgroup-controls")\n
-            .innerHTML = workflow_template({actionlist: actionlist});\n
-          \n
 \n
           return RSVP.all([\n
-            all_gadget[0].render(tab_options),\n
-            all_gadget[1].render(form_options)\n
+            form_gadget.render(form_options),\n
+            gadget.whoWantToDisplayThisPage({name: options.view, editable: true}),\n
+            gadget.whoWantToDisplayThisPage({page: "action", name: options.view}),\n
+            gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view}),\n
+            gadget.whoWantToDisplayThis((new URI(options.erp5_document._links.parent.href)).segment(2))\n
           ]);\n
+        })\n
+        .push(function (all_result) {\n
+\n
+          return gadget.renderPageHeader({\n
+            jump_url: "",\n
+            actions_url: all_result[2],\n
+            previous_url: "",\n
+            next_url: "",\n
+            export_url: "",\n
+            edit_url: all_result[1],\n
+            selection_url: all_result[4],\n
+            page_title: options.erp5_document.title,\n
+            breadcrumb_url: all_result[3]\n
+          });\n
         });\n
+    });\n
 \n
-    })\n
-\n
-\n
-    .declareService(function () {\n
-      var form_gadget = this;\n
-\n
-      function formSubmit() {\n
-        return form_gadget.getDeclaredGadget("erp5_form")\n
-          .push(function (erp5_form) {\n
-            return erp5_form.getContent();\n
-          })\n
-          .push(function (data) {\n
-            data["_id"] = form_gadget.props.id;\n
-            return form_gadget.aq_put(data, {"_view": form_gadget.props.view});\n
-          })\n
-      }\n
-\n
-      // Listen to form submit\n
-      return loopEventListener(\n
-        form_gadget.props.element.querySelector(\'form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
-  });\n
-\n
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, URI));
 
 ]]></string> </value>
         </item>
@@ -369,7 +300,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -383,7 +314,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.22215.35138.15906</string> </value>
+                <value> <string>938.194.24732.3993</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -401,7 +332,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409818069.12</float>
+                        <float>1412343893.37</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

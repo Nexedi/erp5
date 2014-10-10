@@ -54,6 +54,7 @@
 portal = context.getPortalObject()\n
 portal_type_list = portal.getPortalEventTypeList()\n
 portal_types = portal.portal_types\n
+translateString = portal.Base_translateString\n
 domain_list = []\n
 \n
 domain_list_append = domain_list.append\n
@@ -61,7 +62,7 @@ domain_list_append = domain_list.append\n
 if depth == 0:\n
   for uid, portal_type in enumerate(portal_type_list):\n
     domain = parent.generateTempDomain(id=\'%s_%s\' % (depth, uid))\n
-    domain.edit(title=portal_types[portal_type].getTranslatedTitle(),\n
+    domain.edit(title=translateString(portal_types[portal_type].getId()),\n
                 domain_generator_method_id=script.id,\n
                 uid=uid)\n
     domain.setCriterion(property=\'causality_portal_type\', identity=portal_type)\n

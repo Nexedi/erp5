@@ -355,3 +355,47 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     new_component.validate()
 
     return new_component
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getTextContentHistoryRevisionDictList')
+  def getTextContentHistoryRevisionDictList(self, limit=100):
+    """
+    TODO
+    """
+    history_dict_list = self._p_jar.db().history(self._p_oid, size=limit)
+    if history_dict_list is None:
+      # Storage doesn't support history
+      return ()
+
+    from struct import unpack
+    from OFS.History import historicalRevision
+
+    previous_text_content = None
+    result = []
+    for history_dict in history_dict_list:
+      text_content = historicalRevision(self, history_dict['tid']).getTextContent()
+      if text_content and text_content != previous_text_content:
+        history_dict['time'] = history_dict['time']
+        history_dict['user_name'] = history_dict['user_name'].strip()
+        history_dict['key'] = '.'.join(map(str, unpack(">HHHH", history_dict['tid'])))
+        del history_dict['tid']
+        del history_dict['size']
+
+        result.append(history_dict)
+        previous_text_content = text_content
+
+    return result
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getTextContentHistory')
+  def getTextContentHistory(self, key):
+    """
+    TODO
+    """
+    from struct import pack
+    from OFS.History import historicalRevision
+
+    serial = apply(pack, ('>HHHH',) + tuple(map(int, key.split('.'))))
+    rev = historicalRevision(self, serial)
+
+    return rev.getTextContent()

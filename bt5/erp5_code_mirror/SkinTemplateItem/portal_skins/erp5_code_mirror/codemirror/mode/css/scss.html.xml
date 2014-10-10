@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: SCSS mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="css.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">SCSS</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>SCSS mode</h2>\n
+<form><textarea id="code" name="code">\n
+/* Some example SCSS */\n
+\n
+@import "compass/css3";\n
+$variable: #333;\n
+\n
+$blue: #3bbfce;\n
+$margin: 16px;\n
+\n
+.content-navigation {\n
+  #nested {\n
+    background-color: black;\n
+  }\n
+  border-color: $blue;\n
+  color:\n
+    darken($blue, 9%);\n
+}\n
+\n
+.border {\n
+  padding: $margin / 2;\n
+  margin: $margin / 2;\n
+  border-color: $blue;\n
+}\n
+\n
+@mixin table-base {\n
+  th {\n
+    text-align: center;\n
+    font-weight: bold;\n
+  }\n
+  td, th {padding: 2px}\n
+}\n
+\n
+table.hl {\n
+  margin: 2em 0;\n
+  td.ln {\n
+    text-align: right;\n
+  }\n
+}\n
+\n
+li {\n
+  font: {\n
+    family: serif;\n
+    weight: bold;\n
+    size: 1.2em;\n
+  }\n
+}\n
+\n
+@mixin left($dist) {\n
+  float: left;\n
+  margin-left: $dist;\n
+}\n
+\n
+#data {\n
+  @include left(10px);\n
+  @include table-base;\n
+}\n
+\n
+.source {\n
+  @include flow-into(target);\n
+  border: 10px solid green;\n
+  margin: 20px;\n
+  width: 200px; }\n
+\n
+.new-container {\n
+  @include flow-from(target);\n
+  border: 10px solid red;\n
+  margin: 20px;\n
+  width: 200px; }\n
+\n
+body {\n
+  margin: 0;\n
+  padding: 3em 6em;\n
+  font-family: tahoma, arial, sans-serif;\n
+  color: #000;\n
+}\n
+\n
+@mixin yellow() {\n
+  background: yellow;\n
+}\n
+\n
+.big {\n
+  font-size: 14px;\n
+}\n
+\n
+.nested {\n
+  @include border-radius(3px);\n
+  @extend .big;\n
+  p {\n
+    background: whitesmoke;\n
+    a {\n
+      color: red;\n
+    }\n
+  }\n
+}\n
+\n
+#navigation a {\n
+  font-weight: bold;\n
+  text-decoration: none !important;\n
+}\n
+\n
+h1 {\n
+  font-size: 2.5em;\n
+}\n
+\n
+h2 {\n
+  font-size: 1.7em;\n
+}\n
+\n
+h1:before, h2:before {\n
+  content: "::";\n
+}\n
+\n
+code {\n
+  font-family: courier, monospace;\n
+  font-size: 80%;\n
+  color: #418A8A;\n
+}\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-scss"\n
+      });\n
+    </script>\n
+\n
+    <p>The SCSS mode is a sub-mode of the <a href="index.html">CSS mode</a> (defined in <code>css.js</code>.</p>\n
+\n
+    <p><strong>Parsing/Highlighting Tests:</strong> <a href="../../test/index.html#scss_*">normal</a>,  <a href="../../test/index.html#verbose,scss_*">verbose</a>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>scss.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

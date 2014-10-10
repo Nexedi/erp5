@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Any Word Completion Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/hint/show-hint.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/hint/show-hint.js"></script>\n
+<script src="../addon/hint/anyword-hint.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Any Word Completion</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Any Word Completion Demo</h2>\n
+<form><textarea id="code" name="code">\n
+(function() {\n
+  "use strict";\n
+\n
+  var WORD = /[\\w$]+/g, RANGE = 500;\n
+\n
+  CodeMirror.registerHelper("hint", "anyword", function(editor, options) {\n
+    var word = options && options.word || WORD;\n
+    var range = options && options.range || RANGE;\n
+    var cur = editor.getCursor(), curLine = editor.getLine(cur.line);\n
+    var start = cur.ch, end = start;\n
+    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;\n
+    while (start && word.test(curLine.charAt(start - 1))) --start;\n
+    var curWord = start != end && curLine.slice(start, end);\n
+\n
+    var list = [], seen = {};\n
+    function scan(dir) {\n
+      var line = cur.line, end = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;\n
+      for (; line != end; line += dir) {\n
+        var text = editor.getLine(line), m;\n
+        word.lastIndex = 0;\n
+        while (m = word.exec(text)) {\n
+          if ((!curWord || m[0].indexOf(curWord) == 0) && !seen.hasOwnProperty(m[0])) {\n
+            seen[m[0]] = true;\n
+            list.push(m[0]);\n
+          }\n
+        }\n
+      }\n
+    }\n
+    scan(-1);\n
+    scan(1);\n
+    return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};\n
+  });\n
+})();\n
+</textarea></form>\n
+\n
+<p>Press <strong>ctrl-space</strong> to activate autocompletion. The\n
+completion uses\n
+the <a href="../doc/manual.html#addon_anyword-hint">anyword-hint.js</a>\n
+module, which simply looks at nearby words in the buffer and completes\n
+to those.</p>\n
+\n
+    <script>\n
+      CodeMirror.commands.autocomplete = function(cm) {\n
+        CodeMirror.showHint(cm, CodeMirror.hint.anyword);\n
+      }\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        extraKeys: {"Ctrl-Space": "autocomplete"}\n
+      });\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>anywordhint.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

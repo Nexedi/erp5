@@ -1,0 +1,828 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Scala mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/ambiance.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/edit/matchbrackets.js"></script>\n
+<script src="clike.js"></script>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Scala</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Scala mode</h2>\n
+<form>\n
+<textarea id="code" name="code">\n
+\n
+  /*                     __                                               *\\\n
+  **     ________ ___   / /  ___     Scala API                            **\n
+  **    / __/ __// _ | / /  / _ |    (c) 2003-2011, LAMP/EPFL             **\n
+  **  __\\ \\/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **\n
+  ** /____/\\___/_/ |_/____/_/ | |                                         **\n
+  **                          |/                                          **\n
+  \\*                                                                      */\n
+\n
+  package scala.collection\n
+\n
+  import generic._\n
+  import mutable.{ Builder, ListBuffer }\n
+  import annotation.{tailrec, migration, bridge}\n
+  import annotation.unchecked.{ uncheckedVariance => uV }\n
+  import parallel.ParIterable\n
+\n
+  /** A template trait for traversable collections of type `Traversable[A]`.\n
+   *  \n
+   *  $traversableInfo\n
+   *  @define mutability\n
+   *  @define traversableInfo\n
+   *  This is a base trait of all kinds of $mutability Scala collections. It\n
+   *  implements the behavior common to all collections, in terms of a method\n
+   *  `foreach` with signature:\n
+   * {{{\n
+   *     def foreach[U](f: Elem => U): Unit\n
+   * }}}\n
+   *  Collection classes mixing in this trait provide a concrete \n
+   *  `foreach` method which traverses all the\n
+   *  elements contained in the collection, applying a given function to each.\n
+   *  They also need to provide a method `newBuilder`\n
+   *  which creates a builder for collections of the same kind.\n
+   *  \n
+   *  A traversable class might or might not have two properties: strictness\n
+   *  and orderedness. Neither is represented as a type.\n
+   *  \n
+   *  The instances of a strict collection class have all their elements\n
+   *  computed before they can be used as values. By contrast, instances of\n
+   *  a non-strict collection class may defer computation of some of their\n
+   *  elements until after the instance is available as a value.\n
+   *  A typical example of a non-strict collection class is a\n
+   *  <a href="../immutable/Stream.html" target="ContentFrame">\n
+   *  `scala.collection.immutable.Stream`</a>.\n
+   *  A more general class of examples are `TraversableViews`.\n
+   *  \n
+   *  If a collection is an instance of an ordered collection class, traversing\n
+   *  its elements with `foreach` will always visit elements in the\n
+   *  same order, even for different runs of the program. If the class is not\n
+   *  ordered, `foreach` can visit elements in different orders for\n
+   *  different runs (but it will keep the same order in the same run).\'\n
+   * \n
+   *  A typical example of a collection class which is not ordered is a\n
+   *  `HashMap` of objects. The traversal order for hash maps will\n
+   *  depend on the hash codes of its elements, and these hash codes might\n
+   *  differ from one run to the next. By contrast, a `LinkedHashMap`\n
+   *  is ordered because it\'s `foreach` method visits elements in the\n
+   *  order they were inserted into the `HashMap`.\n
+   *\n
+   *  @author Martin Odersky\n
+   *  @version 2.8\n
+   *  @since   2.8\n
+   *  @tparam A    the element type of the collection\n
+   *  @tparam Repr the type of the actual collection containing the elements.\n
+   *\n
+   *  @define Coll Traversable\n
+   *  @define coll traversable collection\n
+   */\n
+  trait TraversableLike[+A, +Repr] extends HasNewBuilder[A, Repr] \n
+                                      with FilterMonadic[A, Repr]\n
+                                      with TraversableOnce[A]\n
+                                      with GenTraversableLike[A, Repr]\n
+                                      with Parallelizable[A, ParIterable[A]]\n
+  {\n
+    self =>\n
+\n
+    import Traversable.breaks._\n
+\n
+    /** The type implementing this traversable */\n
+    protected type Self = Repr\n
+\n
+    /** The collection of type $coll underlying this `TraversableLike` object.\n
+     *  By default this is implemented as the `TraversableLike` object itself,\n
+     *  but this can be overridden.\n
+     */\n
+    def repr: Repr = this.asInstanceOf[Repr]\n
+\n
+    /** The underlying collection seen as an instance of `$Coll`.\n
+     *  By default this is implemented as the current collection object itself,\n
+     *  but this can be overridden.\n
+     */\n
+    protected[this] def thisCollection: Traversable[A] = this.asInstanceOf[Traversable[A]]\n
+\n
+    /** A conversion from collections of type `Repr` to `$Coll` objects.\n
+     *  By default this is implemented as just a cast, but this can be overridden.\n
+     */\n
+    protected[this] def toCollection(repr: Repr): Traversable[A] = repr.asInstanceOf[Traversable[A]]\n
+\n
+    /** Creates a new builder for this collection type.\n
+     */\n
+    protected[this] def newBuilder: Builder[A, Repr]\n
+\n
+    protected[this] def parCombiner = ParIterable.newCombiner[A]\n
+\n
+    /** Applies a function `f` to all elements of this $coll.\n
+     *  \n
+     *    Note: this method underlies the implementation of most other bulk operations.\n
+     *    It\'s important to implement this method in an efficient way.\n
+     *  \n
+     *\n
+     *  @param  f   the function that is applied for its side-effect to every element.\n
+     *              The result of function `f` is discarded.\n
+     *              \n
+     *  @tparam  U  the type parameter describing the result of function `f`. \n
+     *              This result will always be ignored. Typically `U` is `Unit`,\n
+     *              but this is not necessary.\n
+     *\n
+     *  @usecase def foreach(f: A => Unit): Unit\n
+     */\n
+    def foreach[U](f: A => U): Unit\n
+\n
+    /** Tests whether this $coll is empty.\n
+     *\n
+     *  @return    `true` if the $coll contain no elements, `false` otherwise.\n
+     */\n
+    def isEmpty: Boolean = {\n
+      var result = true\n
+      breakable {\n
+        for (x <- this) {\n
+          result = false\n
+          break\n
+        }\n
+      }\n
+      result\n
+    }\n
+\n
+    /** Tests whether this $coll is known to have a finite size.\n
+     *  All strict collections are known to have finite size. For a non-strict collection\n
+     *  such as `Stream`, the predicate returns `true` if all elements have been computed.\n
+     *  It returns `false` if the stream is not yet evaluated to the end.\n
+     *\n
+     *  Note: many collection methods will not work on collections of infinite sizes. \n
+     *\n
+     *  @return  `true` if this collection is known to have finite size, `false` otherwise.\n
+     */\n
+    def hasDefiniteSize = true\n
+\n
+    def ++[B >: A, That](that: GenTraversableOnce[B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      if (that.isInstanceOf[IndexedSeqLike[_, _]]) b.sizeHint(this, that.seq.size)\n
+      b ++= thisCollection\n
+      b ++= that.seq\n
+      b.result\n
+    }\n
+\n
+    @bridge\n
+    def ++[B >: A, That](that: TraversableOnce[B])(implicit bf: CanBuildFrom[Repr, B, That]): That =\n
+      ++(that: GenTraversableOnce[B])(bf)\n
+\n
+    /** Concatenates this $coll with the elements of a traversable collection.\n
+     *  It differs from ++ in that the right operand determines the type of the\n
+     *  resulting collection rather than the left one.\n
+     * \n
+     *  @param that   the traversable to append.\n
+     *  @tparam B     the element type of the returned collection. \n
+     *  @tparam That  $thatinfo\n
+     *  @param bf     $bfinfo\n
+     *  @return       a new collection of type `That` which contains all elements\n
+     *                of this $coll followed by all elements of `that`.\n
+     * \n
+     *  @usecase def ++:[B](that: TraversableOnce[B]): $Coll[B]\n
+     *  \n
+     *  @return       a new $coll which contains all elements of this $coll\n
+     *                followed by all elements of `that`.\n
+     */\n
+    def ++:[B >: A, That](that: TraversableOnce[B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      if (that.isInstanceOf[IndexedSeqLike[_, _]]) b.sizeHint(this, that.size)\n
+      b ++= that\n
+      b ++= thisCollection\n
+      b.result\n
+    }\n
+\n
+    /** This overload exists because: for the implementation of ++: we should reuse\n
+     *  that of ++ because many collections override it with more efficient versions.\n
+     *  Since TraversableOnce has no \'++\' method, we have to implement that directly,\n
+     *  but Traversable and down can use the overload.\n
+     */\n
+    def ++:[B >: A, That](that: Traversable[B])(implicit bf: CanBuildFrom[Repr, B, That]): That =\n
+      (that ++ seq)(breakOut)\n
+\n
+    def map[B, That](f: A => B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      b.sizeHint(this) \n
+      for (x <- this) b += f(x)\n
+      b.result\n
+    }\n
+\n
+    def flatMap[B, That](f: A => GenTraversableOnce[B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      for (x <- this) b ++= f(x).seq\n
+      b.result\n
+    }\n
+\n
+    /** Selects all elements of this $coll which satisfy a predicate.\n
+     *\n
+     *  @param p     the predicate used to test elements.\n
+     *  @return      a new $coll consisting of all elements of this $coll that satisfy the given\n
+     *               predicate `p`. The order of the elements is preserved.\n
+     */\n
+    def filter(p: A => Boolean): Repr = {\n
+      val b = newBuilder\n
+      for (x <- this) \n
+        if (p(x)) b += x\n
+      b.result\n
+    }\n
+\n
+    /** Selects all elements of this $coll which do not satisfy a predicate.\n
+     *\n
+     *  @param p     the predicate used to test elements.\n
+     *  @return      a new $coll consisting of all elements of this $coll that do not satisfy the given\n
+     *               predicate `p`. The order of the elements is preserved.\n
+     */\n
+    def filterNot(p: A => Boolean): Repr = filter(!p(_))\n
+\n
+    def collect[B, That](pf: PartialFunction[A, B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      for (x <- this) if (pf.isDefinedAt(x)) b += pf(x)\n
+      b.result\n
+    }\n
+\n
+    /** Builds a new collection by applying an option-valued function to all\n
+     *  elements of this $coll on which the function is defined.\n
+     *\n
+     *  @param f      the option-valued function which filters and maps the $coll.\n
+     *  @tparam B     the element type of the returned collection.\n
+     *  @tparam That  $thatinfo\n
+     *  @param bf     $bfinfo\n
+     *  @return       a new collection of type `That` resulting from applying the option-valued function\n
+     *                `f` to each element and collecting all defined results.\n
+     *                The order of the elements is preserved.\n
+     *\n
+     *  @usecase def filterMap[B](f: A => Option[B]): $Coll[B]\n
+     *  \n
+     *  @param pf     the partial function which filters and maps the $coll.\n
+     *  @return       a new $coll resulting from applying the given option-valued function\n
+     *                `f` to each element and collecting all defined results.\n
+     *                The order of the elements is preserved.\n
+    def filterMap[B, That](f: A => Option[B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      for (x <- this) \n
+        f(x) match {\n
+          case Some(y) => b += y\n
+          case _ =>\n
+        }\n
+      b.result\n
+    }\n
+     */\n
+\n
+    /** Partitions this $coll in two ${coll}s according to a predicate.\n
+     *\n
+     *  @param p the predicate on which to partition.\n
+     *  @return  a pair of ${coll}s: the first $coll consists of all elements that \n
+     *           satisfy the predicate `p` and the second $coll consists of all elements\n
+     *           that don\'t. The relative order of the elements in the resulting ${coll}s\n
+     *           is the same as in the original $coll.\n
+     */\n
+    def partition(p: A => Boolean): (Repr, Repr) = {\n
+      val l, r = newBuilder\n
+      for (x <- this) (if (p(x)) l else r) += x\n
+      (l.result, r.result)\n
+    }\n
+\n
+    def groupBy[K](f: A => K): immutable.Map[K, Repr] = {\n
+      val m = mutable.Map.empty[K, Builder[A, Repr]]\n
+      for (elem <- this) {\n
+        val key = f(elem)\n
+        val bldr = m.getOrElseUpdate(key, newBuilder)\n
+        bldr += elem\n
+      }\n
+      val b = immutable.Map.newBuilder[K, Repr]\n
+      for ((k, v) <- m)\n
+        b += ((k, v.result))\n
+\n
+      b.result\n
+    }\n
+\n
+    /** Tests whether a predicate holds for all elements of this $coll.\n
+     *\n
+     *  $mayNotTerminateInf\n
+     *\n
+     *  @param   p     the predicate used to test elements.\n
+     *  @return        `true` if the given predicate `p` holds for all elements\n
+     *                 of this $coll, otherwise `false`.\n
+     */\n
+    def forall(p: A => Boolean): Boolean = {\n
+      var result = true\n
+      breakable {\n
+        for (x <- this)\n
+          if (!p(x)) { result = false; break }\n
+      }\n
+      result\n
+    }\n
+\n
+    /** Tests whether a predicate holds for some of the elements of this $coll.\n
+     *\n
+     *  $mayNotTerminateInf\n
+     *\n
+     *  @param   p     the predicate used to test elements.\n
+     *  @return        `true` if the given predicate `p` holds for some of the\n
+     *                 elements of this $coll, otherwise `false`.\n
+     */\n
+    def exists(p: A => Boolean): Boolean = {\n
+      var result = false\n
+      breakable {\n
+        for (x <- this)\n
+          if (p(x)) { result = true; break }\n
+      }\n
+      result\n
+    }\n
+\n
+    /** Finds the first element of the $coll satisfying a predicate, if any.\n
+     * \n
+     *  $mayNotTerminateInf\n
+     *  $orderDependent\n
+     *\n
+     *  @param p    the predicate used to test elements.\n
+     *  @return     an option value containing the first element in the $coll\n
+     *              that satisfies `p`, or `None` if none exists.\n
+     */\n
+    def find(p: A => Boolean): Option[A] = {\n
+      var result: Option[A] = None\n
+      breakable {\n
+        for (x <- this)\n
+          if (p(x)) { result = Some(x); break }\n
+      }\n
+      result\n
+    }\n
+\n
+    def scan[B >: A, That](z: B)(op: (B, B) => B)(implicit cbf: CanBuildFrom[Repr, B, That]): That = scanLeft(z)(op)\n
+\n
+    def scanLeft[B, That](z: B)(op: (B, A) => B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      val b = bf(repr)\n
+      b.sizeHint(this, 1)\n
+      var acc = z\n
+      b += acc\n
+      for (x <- this) { acc = op(acc, x); b += acc }\n
+      b.result\n
+    }\n
+\n
+    @migration(2, 9,\n
+      "This scanRight definition has changed in 2.9.\\n" +\n
+      "The previous behavior can be reproduced with scanRight.reverse."\n
+    )\n
+    def scanRight[B, That](z: B)(op: (A, B) => B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+      var scanned = List(z)\n
+      var acc = z\n
+      for (x <- reversed) {\n
+        acc = op(x, acc)\n
+        scanned ::= acc\n
+      }\n
+      val b = bf(repr)\n
+      for (elem <- scanned) b += elem\n
+      b.result\n
+    }\n
+\n
+    /** Selects the first element of this $coll.\n
+     *  $orderDependent\n
+     *  @return  the first element of this $coll.\n
+     *  @throws `NoSuchElementException` if the $coll is empty.\n
+     */\n
+    def head: A = {\n
+      var result: () => A = () => throw new NoSuchElementException\n
+      breakable {\n
+        for (x <- this) {\n
+          result = () => x\n
+          break\n
+        }\n
+      }\n
+      result()\n
+    }\n
+\n
+    /** Optionally selects the first element.\n
+     *  $orderDependent\n
+     *  @return  the first element of this $coll if it is nonempty, `None` if it is empty.\n
+     */\n
+    def headOption: Option[A] = if (isEmpty) None else Some(head)\n
+\n
+    /** Selects all elements except the first.\n
+     *  $orderDependent\n
+     *  @return  a $coll consisting of all elements of this $coll\n
+     *           except the first one.\n
+     *  @throws `UnsupportedOperationException` if the $coll is empty.\n
+     */ \n
+    override def tail: Repr = {\n
+      if (isEmpty) throw new UnsupportedOperationException("empty.tail")\n
+      drop(1)\n
+    }\n
+\n
+    /** Selects the last element.\n
+      * $orderDependent\n
+      * @return The last element of this $coll.\n
+      * @throws NoSuchElementException If the $coll is empty.\n
+      */\n
+    def last: A = {\n
+      var lst = head\n
+      for (x <- this)\n
+        lst = x\n
+      lst\n
+    }\n
+\n
+    /** Optionally selects the last element.\n
+     *  $orderDependent\n
+     *  @return  the last element of this $coll$ if it is nonempty, `None` if it is empty.\n
+     */\n
+    def lastOption: Option[A] = if (isEmpty) None else Some(last)\n
+\n
+    /** Selects all elements except the last.\n
+     *  $orderDependent\n
+     *  @return  a $coll consisting of all elements of this $coll\n
+     *           except the last one.\n
+     *  @throws `UnsupportedOperationException` if the $coll is empty.\n
+     */\n
+    def init: Repr = {\n
+      if (isEmpty) throw new UnsupportedOperationException("empty.init")\n
+      var lst = head\n
+      var follow = false\n
+      val b = newBuilder\n
+      b.sizeHint(this, -1)\n
+      for (x <- this.seq) {\n
+        if (follow) b += lst\n
+        else follow = true\n
+        lst = x\n
+      }\n
+      b.result\n
+    }\n
+\n
+    def take(n: Int): Repr = slice(0, n)\n
+\n
+    def drop(n: Int): Repr = \n
+      if (n <= 0) {\n
+        val b = newBuilder\n
+        b.sizeHint(this)\n
+        b ++= thisCollection result\n
+      }\n
+      else sliceWithKnownDelta(n, Int.MaxValue, -n)\n
+\n
+    def slice(from: Int, until: Int): Repr = sliceWithKnownBound(math.max(from, 0), until)\n
+\n
+    // Precondition: from >= 0, until > 0, builder already configured for building.\n
+    private[this] def sliceInternal(from: Int, until: Int, b: Builder[A, Repr]): Repr = {\n
+      var i = 0\n
+      breakable {\n
+        for (x <- this.seq) {\n
+          if (i >= from) b += x\n
+          i += 1\n
+          if (i >= until) break\n
+        }\n
+      }\n
+      b.result\n
+    }\n
+    // Precondition: from >= 0\n
+    private[scala] def sliceWithKnownDelta(from: Int, until: Int, delta: Int): Repr = {\n
+      val b = newBuilder\n
+      if (until <= from) b.result\n
+      else {\n
+        b.sizeHint(this, delta)\n
+        sliceInternal(from, until, b)\n
+      }\n
+    }\n
+    // Precondition: from >= 0\n
+    private[scala] def sliceWithKnownBound(from: Int, until: Int): Repr = {\n
+      val b = newBuilder\n
+      if (until <= from) b.result\n
+      else {\n
+        b.sizeHintBounded(until - from, this)      \n
+        sliceInternal(from, until, b)\n
+      }\n
+    }\n
+\n
+    def takeWhile(p: A => Boolean): Repr = {\n
+      val b = newBuilder\n
+      breakable {\n
+        for (x <- this) {\n
+          if (!p(x)) break\n
+          b += x\n
+        }\n
+      }\n
+      b.result\n
+    }\n
+\n
+    def dropWhile(p: A => Boolean): Repr = {\n
+      val b = newBuilder\n
+      var go = false\n
+      for (x <- this) {\n
+        if (!p(x)) go = true\n
+        if (go) b += x\n
+      }\n
+      b.result\n
+    }\n
+\n
+    def span(p: A => Boolean): (Repr, Repr) = {\n
+      val l, r = newBuilder\n
+      var toLeft = true\n
+      for (x <- this) {\n
+        toLeft = toLeft && p(x)\n
+        (if (toLeft) l else r) += x\n
+      }\n
+      (l.result, r.result)\n
+    }\n
+\n
+    def splitAt(n: Int): (Repr, Repr) = {\n
+      val l, r = newBuilder\n
+      l.sizeHintBounded(n, this)\n
+      if (n >= 0) r.sizeHint(this, -n)\n
+      var i = 0\n
+      for (x <- this) {\n
+        (if (i < n) l else r) += x\n
+        i += 1\n
+      }\n
+      (l.result, r.result)\n
+    }\n
+\n
+    /** Iterates over the tails of this $coll. The first value will be this\n
+     *  $coll and the final one will be an empty $coll, with the intervening\n
+     *  values the results of successive applications of `tail`.\n
+     *\n
+     *  @return   an iterator over all the tails of this $coll\n
+     *  @example  `List(1,2,3).tails = Iterator(List(1,2,3), List(2,3), List(3), Nil)`\n
+     */  \n
+    def tails: Iterator[Repr] = iterateUntilEmpty(_.tail)\n
+\n
+    /** Iterates over the inits of this $coll. The first value will be this\n
+     *  $coll and the final one will be an empty $coll, with the intervening\n
+     *  values the results of successive applications of `init`.\n
+     *\n
+     *  @return  an iterator over all the inits of this $coll\n
+     *  @example  `List(1,2,3).inits = Iterator(List(1,2,3), List(1,2), List(1), Nil)`\n
+     */\n
+    def inits: Iterator[Repr] = iterateUntilEmpty(_.init)\n
+\n
+    /** Copies elements of this $coll to an array.\n
+     *  Fills the given array `xs` with at most `len` elements of\n
+     *  this $coll, starting at position `start`.\n
+     *  Copying will stop once either the end of the current $coll is reached,\n
+     *  or the end of the array is reached, or `len` elements have been copied.\n
+     *\n
+     *  $willNotTerminateInf\n
+     * \n
+     *  @param  xs     the array to fill.\n
+     *  @param  start  the starting index.\n
+     *  @param  len    the maximal number of elements to copy.\n
+     *  @tparam B      the type of the elements of the array. \n
+     * \n
+     *\n
+     *  @usecase def copyToArray(xs: Array[A], start: Int, len: Int): Unit\n
+     */\n
+    def copyToArray[B >: A](xs: Array[B], start: Int, len: Int) {\n
+      var i = start\n
+      val end = (start + len) min xs.length\n
+      breakable {\n
+        for (x <- this) {\n
+          if (i >= end) break\n
+          xs(i) = x\n
+          i += 1\n
+        }\n
+      }\n
+    }\n
+\n
+    def toTraversable: Traversable[A] = thisCollection\n
+    def toIterator: Iterator[A] = toStream.iterator\n
+    def toStream: Stream[A] = toBuffer.toStream\n
+\n
+    /** Converts this $coll to a string.\n
+     *\n
+     *  @return   a string representation of this collection. By default this\n
+     *            string consists of the `stringPrefix` of this $coll,\n
+     *            followed by all elements separated by commas and enclosed in parentheses.\n
+     */\n
+    override def toString = mkString(stringPrefix + "(", ", ", ")")\n
+\n
+    /** Defines the prefix of this object\'s `toString` representation.\n
+     *\n
+     *  @return  a string representation which starts the result of `toString`\n
+     *           applied to this $coll. By default the string prefix is the\n
+     *           simple name of the collection class $coll.\n
+     */\n
+    def stringPrefix : String = {\n
+      var string = repr.asInstanceOf[AnyRef].getClass.getName\n
+      val idx1 = string.lastIndexOf(\'.\' : Int)\n
+      if (idx1 != -1) string = string.substring(idx1 + 1)\n
+      val idx2 = string.indexOf(\'$\')\n
+      if (idx2 != -1) string = string.substring(0, idx2)\n
+      string\n
+    }\n
+\n
+    /** Creates a non-strict view of this $coll.\n
+     * \n
+     *  @return a non-strict view of this $coll.\n
+     */\n
+    def view = new TraversableView[A, Repr] {\n
+      protected lazy val underlying = self.repr\n
+      override def foreach[U](f: A => U) = self foreach f\n
+    }\n
+\n
+    /** Creates a non-strict view of a slice of this $coll.\n
+     *\n
+     *  Note: the difference between `view` and `slice` is that `view` produces\n
+     *        a view of the current $coll, whereas `slice` produces a new $coll.\n
+     * \n
+     *  Note: `view(from, to)` is equivalent to `view.slice(from, to)`\n
+     *  $orderDependent\n
+     * \n
+     *  @param from   the index of the first element of the view\n
+     *  @param until  the index of the element following the view\n
+     *  @return a non-strict view of a slice of this $coll, starting at index `from`\n
+     *  and extending up to (but not including) index `until`.\n
+     */\n
+    def view(from: Int, until: Int): TraversableView[A, Repr] = view.slice(from, until)\n
+\n
+    /** Creates a non-strict filter of this $coll.\n
+     *\n
+     *  Note: the difference between `c filter p` and `c withFilter p` is that\n
+     *        the former creates a new collection, whereas the latter only\n
+     *        restricts the domain of subsequent `map`, `flatMap`, `foreach`,\n
+     *        and `withFilter` operations.\n
+     *  $orderDependent\n
+     * \n
+     *  @param p   the predicate used to test elements.\n
+     *  @return    an object of class `WithFilter`, which supports\n
+     *             `map`, `flatMap`, `foreach`, and `withFilter` operations.\n
+     *             All these operations apply to those elements of this $coll which\n
+     *             satisfy the predicate `p`.\n
+     */\n
+    def withFilter(p: A => Boolean): FilterMonadic[A, Repr] = new WithFilter(p)\n
+\n
+    /** A class supporting filtered operations. Instances of this class are\n
+     *  returned by method `withFilter`.\n
+     */\n
+    class WithFilter(p: A => Boolean) extends FilterMonadic[A, Repr] {\n
+\n
+      /** Builds a new collection by applying a function to all elements of the\n
+       *  outer $coll containing this `WithFilter` instance that satisfy predicate `p`.\n
+       *\n
+       *  @param f      the function to apply to each element.\n
+       *  @tparam B     the element type of the returned collection.\n
+       *  @tparam That  $thatinfo\n
+       *  @param bf     $bfinfo\n
+       *  @return       a new collection of type `That` resulting from applying\n
+       *                the given function `f` to each element of the outer $coll\n
+       *                that satisfies predicate `p` and collecting the results.\n
+       *\n
+       *  @usecase def map[B](f: A => B): $Coll[B] \n
+       *  \n
+       *  @return       a new $coll resulting from applying the given function\n
+       *                `f` to each element of the outer $coll that satisfies\n
+       *                predicate `p` and collecting the results.\n
+       */\n
+      def map[B, That](f: A => B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+        val b = bf(repr)\n
+        for (x <- self) \n
+          if (p(x)) b += f(x)\n
+        b.result\n
+      }\n
+\n
+      /** Builds a new collection by applying a function to all elements of the\n
+       *  outer $coll containing this `WithFilter` instance that satisfy\n
+       *  predicate `p` and concatenating the results. \n
+       *\n
+       *  @param f      the function to apply to each element.\n
+       *  @tparam B     the element type of the returned collection.\n
+       *  @tparam That  $thatinfo\n
+       *  @param bf     $bfinfo\n
+       *  @return       a new collection of type `That` resulting from applying\n
+       *                the given collection-valued function `f` to each element\n
+       *                of the outer $coll that satisfies predicate `p` and\n
+       *                concatenating the results.\n
+       *\n
+       *  @usecase def flatMap[B](f: A => TraversableOnce[B]): $Coll[B]\n
+       * \n
+       *  @return       a new $coll resulting from applying the given collection-valued function\n
+       *                `f` to each element of the outer $coll that satisfies predicate `p` and concatenating the results.\n
+       */\n
+      def flatMap[B, That](f: A => GenTraversableOnce[B])(implicit bf: CanBuildFrom[Repr, B, That]): That = {\n
+        val b = bf(repr)\n
+        for (x <- self) \n
+          if (p(x)) b ++= f(x).seq\n
+        b.result\n
+      }\n
+\n
+      /** Applies a function `f` to all elements of the outer $coll containing\n
+       *  this `WithFilter` instance that satisfy predicate `p`.\n
+       *\n
+       *  @param  f   the function that is applied for its side-effect to every element.\n
+       *              The result of function `f` is discarded.\n
+       *              \n
+       *  @tparam  U  the type parameter describing the result of function `f`. \n
+       *              This result will always be ignored. Typically `U` is `Unit`,\n
+       *              but this is not necessary.\n
+       *\n
+       *  @usecase def foreach(f: A => Unit): Unit\n
+       */   \n
+      def foreach[U](f: A => U): Unit = \n
+        for (x <- self) \n
+          if (p(x)) f(x)\n
+\n
+      /** Further refines the filter for this $coll.\n
+       *\n
+       *  @param q   the predicate used to test elements.\n
+       *  @return    an object of class `WithFilter`, which supports\n
+       *             `map`, `flatMap`, `foreach`, and `withFilter` operations.\n
+       *             All these operations apply to those elements of this $coll which\n
+       *             satisfy the predicate `q` in addition to the predicate `p`.\n
+       */\n
+      def withFilter(q: A => Boolean): WithFilter = \n
+        new WithFilter(x => p(x) && q(x))\n
+    }\n
+\n
+    // A helper for tails and inits.\n
+    private def iterateUntilEmpty(f: Traversable[A @uV] => Traversable[A @uV]): Iterator[Repr] = {\n
+      val it = Iterator.iterate(thisCollection)(f) takeWhile (x => !x.isEmpty)\n
+      it ++ Iterator(Nil) map (newBuilder ++= _ result)\n
+    }\n
+  }\n
+\n
+\n
+</textarea>\n
+</form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        theme: "ambiance",\n
+        mode: "text/x-scala"\n
+      });\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>scala.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

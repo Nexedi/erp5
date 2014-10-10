@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Emacs bindings demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/dialog/dialog.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/clike/clike.js"></script>\n
+<script src="../keymap/emacs.js"></script>\n
+<script src="../addon/edit/matchbrackets.js"></script>\n
+<script src="../addon/comment/comment.js"></script>\n
+<script src="../addon/dialog/dialog.js"></script>\n
+<script src="../addon/search/searchcursor.js"></script>\n
+<script src="../addon/search/search.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Emacs bindings</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Emacs bindings demo</h2>\n
+<form><textarea id="code" name="code">\n
+#include "syscalls.h"\n
+/* getchar:  simple buffered version */\n
+int getchar(void)\n
+{\n
+  static char buf[BUFSIZ];\n
+  static char *bufp = buf;\n
+  static int n = 0;\n
+  if (n == 0) {  /* buffer is empty */\n
+    n = read(0, buf, sizeof buf);\n
+    bufp = buf;\n
+  }\n
+  return (--n >= 0) ? (unsigned char) *bufp++ : EOF;\n
+}\n
+</textarea></form>\n
+\n
+<p>The emacs keybindings are enabled by\n
+including <a href="../keymap/emacs.js">keymap/emacs.js</a> and setting\n
+the <code>keyMap</code> option to <code>"emacs"</code>. Because\n
+CodeMirror\'s internal API is quite different from Emacs, they are only\n
+a loose approximation of actual emacs bindings, though.</p>\n
+\n
+<p>Also note that a lot of browsers disallow certain keys from being\n
+captured. For example, Chrome blocks both Ctrl-W and Ctrl-N, with the\n
+result that idiomatic use of Emacs keys will constantly close your tab\n
+or open a new window.</p>\n
+\n
+    <script>\n
+      CodeMirror.commands.save = function() {\n
+        var elt = editor.getWrapperElement();\n
+        elt.style.background = "#def";\n
+        setTimeout(function() { elt.style.background = ""; }, 300);\n
+      };\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-csrc",\n
+        keyMap: "emacs"\n
+      });\n
+    </script>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>emacs.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

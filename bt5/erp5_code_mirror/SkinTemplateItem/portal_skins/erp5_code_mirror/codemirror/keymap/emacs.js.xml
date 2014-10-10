@@ -1,0 +1,442 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403085.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>emacs.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var Pos = CodeMirror.Pos;\n
+  function posEq(a, b) { return a.line == b.line && a.ch == b.ch; }\n
+\n
+  // Kill \'ring\'\n
+\n
+  var killRing = [];\n
+  function addToRing(str) {\n
+    killRing.push(str);\n
+    if (killRing.length > 50) killRing.shift();\n
+  }\n
+  function growRingTop(str) {\n
+    if (!killRing.length) return addToRing(str);\n
+    killRing[killRing.length - 1] += str;\n
+  }\n
+  function getFromRing(n) { return killRing[killRing.length - (n ? Math.min(n, 1) : 1)] || ""; }\n
+  function popFromRing() { if (killRing.length > 1) killRing.pop(); return getFromRing(); }\n
+\n
+  var lastKill = null;\n
+\n
+  function kill(cm, from, to, mayGrow, text) {\n
+    if (text == null) text = cm.getRange(from, to);\n
+\n
+    if (mayGrow && lastKill && lastKill.cm == cm && posEq(from, lastKill.pos) && cm.isClean(lastKill.gen))\n
+      growRingTop(text);\n
+    else\n
+      addToRing(text);\n
+    cm.replaceRange("", from, to, "+delete");\n
+\n
+    if (mayGrow) lastKill = {cm: cm, pos: from, gen: cm.changeGeneration()};\n
+    else lastKill = null;\n
+  }\n
+\n
+  // Boundaries of various units\n
+\n
+  function byChar(cm, pos, dir) {\n
+    return cm.findPosH(pos, dir, "char", true);\n
+  }\n
+\n
+  function byWord(cm, pos, dir) {\n
+    return cm.findPosH(pos, dir, "word", true);\n
+  }\n
+\n
+  function byLine(cm, pos, dir) {\n
+    return cm.findPosV(pos, dir, "line", cm.doc.sel.goalColumn);\n
+  }\n
+\n
+  function byPage(cm, pos, dir) {\n
+    return cm.findPosV(pos, dir, "page", cm.doc.sel.goalColumn);\n
+  }\n
+\n
+  function byParagraph(cm, pos, dir) {\n
+    var no = pos.line, line = cm.getLine(no);\n
+    var sawText = /\\S/.test(dir < 0 ? line.slice(0, pos.ch) : line.slice(pos.ch));\n
+    var fst = cm.firstLine(), lst = cm.lastLine();\n
+    for (;;) {\n
+      no += dir;\n
+      if (no < fst || no > lst)\n
+        return cm.clipPos(Pos(no - dir, dir < 0 ? 0 : null));\n
+      line = cm.getLine(no);\n
+      var hasText = /\\S/.test(line);\n
+      if (hasText) sawText = true;\n
+      else if (sawText) return Pos(no, 0);\n
+    }\n
+  }\n
+\n
+  function bySentence(cm, pos, dir) {\n
+    var line = pos.line, ch = pos.ch;\n
+    var text = cm.getLine(pos.line), sawWord = false;\n
+    for (;;) {\n
+      var next = text.charAt(ch + (dir < 0 ? -1 : 0));\n
+      if (!next) { // End/beginning of line reached\n
+        if (line == (dir < 0 ? cm.firstLine() : cm.lastLine())) return Pos(line, ch);\n
+        text = cm.getLine(line + dir);\n
+        if (!/\\S/.test(text)) return Pos(line, ch);\n
+        line += dir;\n
+        ch = dir < 0 ? text.length : 0;\n
+        continue;\n
+      }\n
+      if (sawWord && /[!?.]/.test(next)) return Pos(line, ch + (dir > 0 ? 1 : 0));\n
+      if (!sawWord) sawWord = /\\w/.test(next);\n
+      ch += dir;\n
+    }\n
+  }\n
+\n
+  function byExpr(cm, pos, dir) {\n
+    var wrap;\n
+    if (cm.findMatchingBracket && (wrap = cm.findMatchingBracket(pos, true))\n
+        && wrap.match && (wrap.forward ? 1 : -1) == dir)\n
+      return dir > 0 ? Pos(wrap.to.line, wrap.to.ch + 1) : wrap.to;\n
+\n
+    for (var first = true;; first = false) {\n
+      var token = cm.getTokenAt(pos);\n
+      var after = Pos(pos.line, dir < 0 ? token.start : token.end);\n
+      if (first && dir > 0 && token.end == pos.ch || !/\\w/.test(token.string)) {\n
+        var newPos = cm.findPosH(after, dir, "char");\n
+        if (posEq(after, newPos)) return pos;\n
+        else pos = newPos;\n
+      } else {\n
+        return after;\n
+      }\n
+    }\n
+  }\n
+\n
+  // Prefixes (only crudely supported)\n
+\n
+  function getPrefix(cm, precise) {\n
+    var digits = cm.state.emacsPrefix;\n
+    if (!digits) return precise ? null : 1;\n
+    clearPrefix(cm);\n
+    return digits == "-" ? -1 : Number(digits);\n
+  }\n
+\n
+  function repeated(cmd) {\n
+    var f = typeof cmd == "string" ? function(cm) { cm.execCommand(cmd); } : cmd;\n
+    return function(cm) {\n
+      var prefix = getPrefix(cm);\n
+      f(cm);\n
+      for (var i = 1; i < prefix; ++i) f(cm);\n
+    };\n
+  }\n
+\n
+  function findEnd(cm, by, dir) {\n
+    var pos = cm.getCursor(), prefix = getPrefix(cm);\n
+    if (prefix < 0) { dir = -dir; prefix = -prefix; }\n
+    for (var i = 0; i < prefix; ++i) {\n
+      var newPos = by(cm, pos, dir);\n
+      if (posEq(newPos, pos)) break;\n
+      pos = newPos;\n
+    }\n
+    return pos;\n
+  }\n
+\n
+  function move(by, dir) {\n
+    var f = function(cm) {\n
+      cm.extendSelection(findEnd(cm, by, dir));\n
+    };\n
+    f.motion = true;\n
+    return f;\n
+  }\n
+\n
+  function killTo(cm, by, dir) {\n
+    kill(cm, cm.getCursor(), findEnd(cm, by, dir), true);\n
+  }\n
+\n
+  function addPrefix(cm, digit) {\n
+    if (cm.state.emacsPrefix) {\n
+      if (digit != "-") cm.state.emacsPrefix += digit;\n
+      return;\n
+    }\n
+    // Not active yet\n
+    cm.state.emacsPrefix = digit;\n
+    cm.on("keyHandled", maybeClearPrefix);\n
+    cm.on("inputRead", maybeDuplicateInput);\n
+  }\n
+\n
+  var prefixPreservingKeys = {"Alt-G": true, "Ctrl-X": true, "Ctrl-Q": true, "Ctrl-U": true};\n
+\n
+  function maybeClearPrefix(cm, arg) {\n
+    if (!cm.state.emacsPrefixMap && !prefixPreservingKeys.hasOwnProperty(arg))\n
+      clearPrefix(cm);\n
+  }\n
+\n
+  function clearPrefix(cm) {\n
+    cm.state.emacsPrefix = null;\n
+    cm.off("keyHandled", maybeClearPrefix);\n
+    cm.off("inputRead", maybeDuplicateInput);\n
+  }\n
+\n
+  function maybeDuplicateInput(cm, event) {\n
+    var dup = getPrefix(cm);\n
+    if (dup > 1 && event.origin == "+input") {\n
+      var one = event.text.join("\\n"), txt = "";\n
+      for (var i = 1; i < dup; ++i) txt += one;\n
+      cm.replaceSelection(txt, "end", "+input");\n
+    }\n
+  }\n
+\n
+  function addPrefixMap(cm) {\n
+    cm.state.emacsPrefixMap = true;\n
+    cm.addKeyMap(prefixMap);\n
+    cm.on("keyHandled", maybeRemovePrefixMap);\n
+    cm.on("inputRead", maybeRemovePrefixMap);\n
+  }\n
+\n
+  function maybeRemovePrefixMap(cm, arg) {\n
+    if (typeof arg == "string" && (/^\\d$/.test(arg) || arg == "Ctrl-U")) return;\n
+    cm.removeKeyMap(prefixMap);\n
+    cm.state.emacsPrefixMap = false;\n
+    cm.off("keyHandled", maybeRemovePrefixMap);\n
+    cm.off("inputRead", maybeRemovePrefixMap);\n
+  }\n
+\n
+  // Utilities\n
+\n
+  function setMark(cm) {\n
+    cm.setCursor(cm.getCursor());\n
+    cm.setExtending(true);\n
+    cm.on("change", function() { cm.setExtending(false); });\n
+  }\n
+\n
+  function clearMark(cm) {\n
+    cm.setExtending(false);\n
+    cm.setCursor(cm.getCursor());\n
+  }\n
+\n
+  function getInput(cm, msg, f) {\n
+    if (cm.openDialog)\n
+      cm.openDialog(msg + ": <input type=\\"text\\" style=\\"width: 10em\\"/>", f, {bottom: true});\n
+    else\n
+      f(prompt(msg, ""));\n
+  }\n
+\n
+  function operateOnWord(cm, op) {\n
+    var start = cm.getCursor(), end = cm.findPosH(start, 1, "word");\n
+    cm.replaceRange(op(cm.getRange(start, end)), start, end);\n
+    cm.setCursor(end);\n
+  }\n
+\n
+  function toEnclosingExpr(cm) {\n
+    var pos = cm.getCursor(), line = pos.line, ch = pos.ch;\n
+    var stack = [];\n
+    while (line >= cm.firstLine()) {\n
+      var text = cm.getLine(line);\n
+      for (var i = ch == null ? text.length : ch; i > 0;) {\n
+        var ch = text.charAt(--i);\n
+        if (ch == ")")\n
+          stack.push("(");\n
+        else if (ch == "]")\n
+          stack.push("[");\n
+        else if (ch == "}")\n
+          stack.push("{");\n
+        else if (/[\\(\\{\\[]/.test(ch) && (!stack.length || stack.pop() != ch))\n
+          return cm.extendSelection(Pos(line, i));\n
+      }\n
+      --line; ch = null;\n
+    }\n
+  }\n
+\n
+  function quit(cm) {\n
+    cm.execCommand("clearSearch");\n
+    clearMark(cm);\n
+  }\n
+\n
+  // Actual keymap\n
+\n
+  var keyMap = CodeMirror.keyMap.emacs = {\n
+    "Ctrl-W": function(cm) {kill(cm, cm.getCursor("start"), cm.getCursor("end"));},\n
+    "Ctrl-K": repeated(function(cm) {\n
+      var start = cm.getCursor(), end = cm.clipPos(Pos(start.line));\n
+      var text = cm.getRange(start, end);\n
+      if (!/\\S/.test(text)) {\n
+        text += "\\n";\n
+        end = Pos(start.line + 1, 0);\n
+      }\n
+      kill(cm, start, end, true, text);\n
+    }),\n
+    "Alt-W": function(cm) {\n
+      addToRing(cm.getSelection());\n
+      clearMark(cm);\n
+    },\n
+    "Ctrl-Y": function(cm) {\n
+      var start = cm.getCursor();\n
+      cm.replaceRange(getFromRing(getPrefix(cm)), start, start, "paste");\n
+      cm.setSelection(start, cm.getCursor());\n
+    },\n
+    "Alt-Y": function(cm) {cm.replaceSelection(popFromRing());},\n
+\n
+    "Ctrl-Space": setMark, "Ctrl-Shift-2": setMark,\n
+\n
+    "Ctrl-F": move(byChar, 1), "Ctrl-B": move(byChar, -1),\n
+    "Right": move(byChar, 1), "Left": move(byChar, -1),\n
+    "Ctrl-D": function(cm) { killTo(cm, byChar, 1); },\n
+    "Delete": function(cm) { killTo(cm, byChar, 1); },\n
+    "Ctrl-H": function(cm) { killTo(cm, byChar, -1); },\n
+    "Backspace": function(cm) { killTo(cm, byChar, -1); },\n
+\n
+    "Alt-F": move(byWord, 1), "Alt-B": move(byWord, -1),\n
+    "Alt-D": function(cm) { killTo(cm, byWord, 1); },\n
+    "Alt-Backspace": function(cm) { killTo(cm, byWord, -1); },\n
+\n
+    "Ctrl-N": move(byLine, 1), "Ctrl-P": move(byLine, -1),\n
+    "Down": move(byLine, 1), "Up": move(byLine, -1),\n
+    "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd",\n
+    "End": "goLineEnd", "Home": "goLineStart",\n
+\n
+    "Alt-V": move(byPage, -1), "Ctrl-V": move(byPage, 1),\n
+    "PageUp": move(byPage, -1), "PageDown": move(byPage, 1),\n
+\n
+    "Ctrl-Up": move(byParagraph, -1), "Ctrl-Down": move(byParagraph, 1),\n
+\n
+    "Alt-A": move(bySentence, -1), "Alt-E": move(bySentence, 1),\n
+    "Alt-K": function(cm) { killTo(cm, bySentence, 1); },\n
+\n
+    "Ctrl-Alt-K": function(cm) { killTo(cm, byExpr, 1); },\n
+    "Ctrl-Alt-Backspace": function(cm) { killTo(cm, byExpr, -1); },\n
+    "Ctrl-Alt-F": move(byExpr, 1), "Ctrl-Alt-B": move(byExpr, -1),\n
+\n
+    "Shift-Ctrl-Alt-2": function(cm) {\n
+      cm.setSelection(findEnd(cm, byExpr, 1), cm.getCursor());\n
+    },\n
+    "Ctrl-Alt-T": function(cm) {\n
+      var leftStart = byExpr(cm, cm.getCursor(), -1), leftEnd = byExpr(cm, leftStart, 1);\n
+      var rightEnd = byExpr(cm, leftEnd, 1), rightStart = byExpr(cm, rightEnd, -1);\n
+      cm.replaceRange(cm.getRange(rightStart, rightEnd) + cm.getRange(leftEnd, rightStart) +\n
+                      cm.getRange(leftStart, leftEnd), leftStart, rightEnd);\n
+    },\n
+    "Ctrl-Alt-U": repeated(toEnclosingExpr),\n
+\n
+    "Alt-Space": function(cm) {\n
+      var pos = cm.getCursor(), from = pos.ch, to = pos.ch, text = cm.getLine(pos.line);\n
+      while (from && /\\s/.test(text.charAt(from - 1))) --from;\n
+      while (to < text.length && /\\s/.test(text.charAt(to))) ++to;\n
+      cm.replaceRange(" ", Pos(pos.line, from), Pos(pos.line, to));\n
+    },\n
+    "Ctrl-O": repeated(function(cm) { cm.replaceSelection("\\n", "start"); }),\n
+    "Ctrl-T": repeated(function(cm) {\n
+      var pos = cm.getCursor();\n
+      if (pos.ch < cm.getLine(pos.line).length) pos = Pos(pos.line, pos.ch + 1);\n
+      var from = cm.findPosH(pos, -2, "char");\n
+      var range = cm.getRange(from, pos);\n
+      if (range.length != 2) return;\n
+      cm.setSelection(from, pos);\n
+      cm.replaceSelection(range.charAt(1) + range.charAt(0), "end");\n
+    }),\n
+\n
+    "Alt-C": repeated(function(cm) {\n
+      operateOnWord(cm, function(w) {\n
+        var letter = w.search(/\\w/);\n
+        if (letter == -1) return w;\n
+        return w.slice(0, letter) + w.charAt(letter).toUpperCase() + w.slice(letter + 1).toLowerCase();\n
+      });\n
+    }),\n
+    "Alt-U": repeated(function(cm) {\n
+      operateOnWord(cm, function(w) { return w.toUpperCase(); });\n
+    }),\n
+    "Alt-L": repeated(function(cm) {\n
+      operateOnWord(cm, function(w) { return w.toLowerCase(); });\n
+    }),\n
+\n
+    "Alt-;": "toggleComment",\n
+\n
+    "Ctrl-/": repeated("undo"), "Shift-Ctrl--": repeated("undo"),\n
+    "Ctrl-Z": repeated("undo"), "Cmd-Z": repeated("undo"),\n
+    "Shift-Alt-,": "goDocStart", "Shift-Alt-.": "goDocEnd",\n
+    "Ctrl-S": "findNext", "Ctrl-R": "findPrev", "Ctrl-G": quit, "Shift-Alt-5": "replace",\n
+    "Alt-/": "autocomplete",\n
+    "Ctrl-J": "newlineAndIndent", "Enter": false, "Tab": "indentAuto",\n
+\n
+    "Alt-G": function(cm) {cm.setOption("keyMap", "emacs-Alt-G");},\n
+    "Ctrl-X": function(cm) {cm.setOption("keyMap", "emacs-Ctrl-X");},\n
+    "Ctrl-Q": function(cm) {cm.setOption("keyMap", "emacs-Ctrl-Q");},\n
+    "Ctrl-U": addPrefixMap\n
+  };\n
+\n
+  CodeMirror.keyMap["emacs-Ctrl-X"] = {\n
+    "Tab": function(cm) {\n
+      cm.indentSelection(getPrefix(cm, true) || cm.getOption("indentUnit"));\n
+    },\n
+    "Ctrl-X": function(cm) {\n
+      cm.setSelection(cm.getCursor("head"), cm.getCursor("anchor"));\n
+    },\n
+\n
+    "Ctrl-S": "save", "Ctrl-W": "save", "S": "saveAll", "F": "open", "U": repeated("undo"), "K": "close",\n
+    "Delete": function(cm) { kill(cm, cm.getCursor(), bySentence(cm, cm.getCursor(), 1), true); },\n
+    auto: "emacs", nofallthrough: true, disableInput: true\n
+  };\n
+\n
+  CodeMirror.keyMap["emacs-Alt-G"] = {\n
+    "G": function(cm) {\n
+      var prefix = getPrefix(cm, true);\n
+      if (prefix != null && prefix > 0) return cm.setCursor(prefix - 1);\n
+\n
+      getInput(cm, "Goto line", function(str) {\n
+        var num;\n
+        if (str && !isNaN(num = Number(str)) && num == num|0 && num > 0)\n
+          cm.setCursor(num - 1);\n
+      });\n
+    },\n
+    auto: "emacs", nofallthrough: true, disableInput: true\n
+  };\n
+\n
+  CodeMirror.keyMap["emacs-Ctrl-Q"] = {\n
+    "Tab": repeated("insertTab"),\n
+    auto: "emacs", nofallthrough: true\n
+  };\n
+\n
+  var prefixMap = {"Ctrl-G": clearPrefix};\n
+  function regPrefix(d) {\n
+    prefixMap[d] = function(cm) { addPrefix(cm, d); };\n
+    keyMap["Ctrl-" + d] = function(cm) { addPrefix(cm, d); };\n
+    prefixPreservingKeys["Ctrl-" + d] = true;\n
+  }\n
+  for (var i = 0; i < 10; ++i) regPrefix(String(i));\n
+  regPrefix("-");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13044</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

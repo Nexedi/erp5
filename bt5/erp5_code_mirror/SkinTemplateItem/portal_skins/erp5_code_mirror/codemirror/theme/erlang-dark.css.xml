@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erlang-dark.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-erlang-dark.CodeMirror { background: #002240; color: white; }\n
+.cm-s-erlang-dark div.CodeMirror-selected { background: #b36539 !important; }\n
+.cm-s-erlang-dark .CodeMirror-gutters { background: #002240; border-right: 1px solid #aaa; }\n
+.cm-s-erlang-dark .CodeMirror-linenumber { color: #d0d0d0; }\n
+.cm-s-erlang-dark .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+\n
+.cm-s-erlang-dark span.cm-atom       { color: #f133f1; }\n
+.cm-s-erlang-dark span.cm-attribute  { color: #ff80e1; }\n
+.cm-s-erlang-dark span.cm-bracket    { color: #ff9d00; }\n
+.cm-s-erlang-dark span.cm-builtin    { color: #eaa; }\n
+.cm-s-erlang-dark span.cm-comment    { color: #77f; }\n
+.cm-s-erlang-dark span.cm-def        { color: #e7a; }\n
+.cm-s-erlang-dark span.cm-keyword    { color: #ffee80; }\n
+.cm-s-erlang-dark span.cm-meta       { color: #50fefe; }\n
+.cm-s-erlang-dark span.cm-number     { color: #ffd0d0; }\n
+.cm-s-erlang-dark span.cm-operator   { color: #d55; }\n
+.cm-s-erlang-dark span.cm-property   { color: #ccc; }\n
+.cm-s-erlang-dark span.cm-qualifier  { color: #ccc; }\n
+.cm-s-erlang-dark span.cm-quote      { color: #ccc; }\n
+.cm-s-erlang-dark span.cm-special    { color: #ffbbbb; }\n
+.cm-s-erlang-dark span.cm-string     { color: #3ad900; }\n
+.cm-s-erlang-dark span.cm-string-2   { color: #ccc; }\n
+.cm-s-erlang-dark span.cm-tag        { color: #9effff; }\n
+.cm-s-erlang-dark span.cm-variable   { color: #50fe50; }\n
+.cm-s-erlang-dark span.cm-variable-2 { color: #e0e; }\n
+.cm-s-erlang-dark span.cm-variable-3 { color: #ccc; }\n
+.cm-s-erlang-dark span.cm-error      { color: #9d1e15; }\n
+\n
+.cm-s-erlang-dark .CodeMirror-activeline-background {background: #013461 !important;}\n
+.cm-s-erlang-dark .CodeMirror-matchingbracket {outline:1px solid grey; color:white !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

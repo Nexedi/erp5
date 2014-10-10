@@ -1,0 +1,352 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403092.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tiki.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode(\'tiki\', function(config) {\n
+  function inBlock(style, terminator, returnTokenizer) {\n
+    return function(stream, state) {\n
+      while (!stream.eol()) {\n
+        if (stream.match(terminator)) {\n
+          state.tokenize = inText;\n
+          break;\n
+        }\n
+        stream.next();\n
+      }\n
+\n
+      if (returnTokenizer) state.tokenize = returnTokenizer;\n
+\n
+      return style;\n
+    };\n
+  }\n
+\n
+  function inLine(style) {\n
+    return function(stream, state) {\n
+      while(!stream.eol()) {\n
+        stream.next();\n
+      }\n
+      state.tokenize = inText;\n
+      return style;\n
+    };\n
+  }\n
+\n
+  function inText(stream, state) {\n
+    function chain(parser) {\n
+      state.tokenize = parser;\n
+      return parser(stream, state);\n
+    }\n
+\n
+    var sol = stream.sol();\n
+    var ch = stream.next();\n
+\n
+    //non start of line\n
+    switch (ch) { //switch is generally much faster than if, so it is used here\n
+    case "{": //plugin\n
+      stream.eat("/");\n
+      stream.eatSpace();\n
+      var tagName = "";\n
+      var c;\n
+      while ((c = stream.eat(/[^\\s\\u00a0=\\"\\\'\\/?(}]/))) tagName += c;\n
+      state.tokenize = inPlugin;\n
+      return "tag";\n
+      break;\n
+    case "_": //bold\n
+      if (stream.eat("_")) {\n
+        return chain(inBlock("strong", "__", inText));\n
+      }\n
+      break;\n
+    case "\'": //italics\n
+      if (stream.eat("\'")) {\n
+        // Italic text\n
+        return chain(inBlock("em", "\'\'", inText));\n
+      }\n
+      break;\n
+    case "(":// Wiki Link\n
+      if (stream.eat("(")) {\n
+        return chain(inBlock("variable-2", "))", inText));\n
+      }\n
+      break;\n
+    case "[":// Weblink\n
+      return chain(inBlock("variable-3", "]", inText));\n
+      break;\n
+    case "|": //table\n
+      if (stream.eat("|")) {\n
+        return chain(inBlock("comment", "||"));\n
+      }\n
+      break;\n
+    case "-":\n
+      if (stream.eat("=")) {//titleBar\n
+        return chain(inBlock("header string", "=-", inText));\n
+      } else if (stream.eat("-")) {//deleted\n
+        return chain(inBlock("error tw-deleted", "--", inText));\n
+      }\n
+      break;\n
+    case "=": //underline\n
+      if (stream.match("==")) {\n
+        return chain(inBlock("tw-underline", "===", inText));\n
+      }\n
+      break;\n
+    case ":":\n
+      if (stream.eat(":")) {\n
+        return chain(inBlock("comment", "::"));\n
+      }\n
+      break;\n
+    case "^": //box\n
+      return chain(inBlock("tw-box", "^"));\n
+      break;\n
+    case "~": //np\n
+      if (stream.match("np~")) {\n
+        return chain(inBlock("meta", "~/np~"));\n
+      }\n
+      break;\n
+    }\n
+\n
+    //start of line types\n
+    if (sol) {\n
+      switch (ch) {\n
+      case "!": //header at start of line\n
+        if (stream.match(\'!!!!!\')) {\n
+          return chain(inLine("header string"));\n
+        } else if (stream.match(\'!!!!\')) {\n
+          return chain(inLine("header string"));\n
+        } else if (stream.match(\'!!!\')) {\n
+          return chain(inLine("header string"));\n
+        } else if (stream.match(\'!!\')) {\n
+          return chain(inLine("header string"));\n
+        } else {\n
+          return chain(inLine("header string"));\n
+        }\n
+        break;\n
+      case "*": //unordered list line item, or <li /> at start of line\n
+      case "#": //ordered list line item, or <li /> at start of line\n
+      case "+": //ordered list line item, or <li /> at start of line\n
+        return chain(inLine("tw-listitem bracket"));\n
+        break;\n
+      }\n
+    }\n
+\n
+    //stream.eatWhile(/[&{]/); was eating up plugins, turned off to act less like html and more like tiki\n
+    return null;\n
+  }\n
+\n
+  var indentUnit = config.indentUnit;\n
+\n
+  // Return variables for tokenizers\n
+  var pluginName, type;\n
+  function inPlugin(stream, state) {\n
+    var ch = stream.next();\n
+    var peek = stream.peek();\n
+\n
+    if (ch == "}") {\n
+      state.tokenize = inText;\n
+      //type = ch == ")" ? "endPlugin" : "selfclosePlugin"; inPlugin\n
+      return "tag";\n
+    } else if (ch == "(" || ch == ")") {\n
+      return "bracket";\n
+    } else if (ch == "=") {\n
+      type = "equals";\n
+\n
+      if (peek == ">") {\n
+        ch = stream.next();\n
+        peek = stream.peek();\n
+      }\n
+\n
+      //here we detect values directly after equal character with no quotes\n
+      if (!/[\\\'\\"]/.test(peek)) {\n
+        state.tokenize = inAttributeNoQuote();\n
+      }\n
+      //end detect values\n
+\n
+      return "operator";\n
+    } else if (/[\\\'\\"]/.test(ch)) {\n
+      state.tokenize = inAttribute(ch);\n
+      return state.tokenize(stream, state);\n
+    } else {\n
+      stream.eatWhile(/[^\\s\\u00a0=\\"\\\'\\/?]/);\n
+      return "keyword";\n
+    }\n
+  }\n
+\n
+  function inAttribute(quote) {\n
+    return function(stream, state) {\n
+      while (!stream.eol()) {\n
+        if (stream.next() == quote) {\n
+          state.tokenize = inPlugin;\n
+          break;\n
+        }\n
+      }\n
+      return "string";\n
+    };\n
+  }\n
+\n
+  function inAttributeNoQuote() {\n
+    return function(stream, state) {\n
+      while (!stream.eol()) {\n
+        var ch = stream.next();\n
+        var peek = stream.peek();\n
+        if (ch == " " || ch == "," || /[ )}]/.test(peek)) {\n
+      state.tokenize = inPlugin;\n
+      break;\n
+    }\n
+  }\n
+  return "string";\n
+};\n
+                     }\n
+\n
+var curState, setStyle;\n
+function pass() {\n
+  for (var i = arguments.length - 1; i >= 0; i--) curState.cc.push(arguments[i]);\n
+}\n
+\n
+function cont() {\n
+  pass.apply(null, arguments);\n
+  return true;\n
+}\n
+\n
+function pushContext(pluginName, startOfLine) {\n
+  var noIndent = curState.context && curState.context.noIndent;\n
+  curState.context = {\n
+    prev: curState.context,\n
+    pluginName: pluginName,\n
+    indent: curState.indented,\n
+    startOfLine: startOfLine,\n
+    noIndent: noIndent\n
+  };\n
+}\n
+\n
+function popContext() {\n
+  if (curState.context) curState.context = curState.context.prev;\n
+}\n
+\n
+function element(type) {\n
+  if (type == "openPlugin") {curState.pluginName = pluginName; return cont(attributes, endplugin(curState.startOfLine));}\n
+  else if (type == "closePlugin") {\n
+    var err = false;\n
+    if (curState.context) {\n
+      err = curState.context.pluginName != pluginName;\n
+      popContext();\n
+    } else {\n
+      err = true;\n
+    }\n
+    if (err) setStyle = "error";\n
+    return cont(endcloseplugin(err));\n
+  }\n
+  else if (type == "string") {\n
+    if (!curState.context || curState.context.name != "!cdata") pushContext("!cdata");\n
+    if (curState.tokenize == inText) popContext();\n
+    return cont();\n
+  }\n
+  else return cont();\n
+}\n
+\n
+function endplugin(startOfLine) {\n
+  return function(type) {\n
+    if (\n
+      type == "selfclosePlugin" ||\n
+        type == "endPlugin"\n
+    )\n
+      return cont();\n
+    if (type == "endPlugin") {pushContext(curState.pluginName, startOfLine); return cont();}\n
+    return cont();\n
+  };\n
+}\n
+\n
+function endcloseplugin(err) {\n
+  return function(type) {\n
+    if (err) setStyle = "error";\n
+    if (type == "endPlugin") return cont();\n
+    return pass();\n
+  };\n
+}\n
+\n
+function attributes(type) {\n
+  if (type == "keyword") {setStyle = "attribute"; return cont(attributes);}\n
+  if (type == "equals") return cont(attvalue, attributes);\n
+  return pass();\n
+}\n
+function attvalue(type) {\n
+  if (type == "keyword") {setStyle = "string"; return cont();}\n
+  if (type == "string") return cont(attvaluemaybe);\n
+  return pass();\n
+}\n
+function attvaluemaybe(type) {\n
+  if (type == "string") return cont(attvaluemaybe);\n
+  else return pass();\n
+}\n
+return {\n
+  startState: function() {\n
+    return {tokenize: inText, cc: [], indented: 0, startOfLine: true, pluginName: null, context: null};\n
+  },\n
+  token: function(stream, state) {\n
+    if (stream.sol()) {\n
+      state.startOfLine = true;\n
+      state.indented = stream.indentation();\n
+    }\n
+    if (stream.eatSpace()) return null;\n
+\n
+    setStyle = type = pluginName = null;\n
+    var style = state.tokenize(stream, state);\n
+    if ((style || type) && style != "comment") {\n
+      curState = state;\n
+      while (true) {\n
+        var comb = state.cc.pop() || element;\n
+        if (comb(type || style)) break;\n
+      }\n
+    }\n
+    state.startOfLine = false;\n
+    return setStyle || style;\n
+  },\n
+  indent: function(state, textAfter) {\n
+    var context = state.context;\n
+    if (context && context.noIndent) return 0;\n
+    if (context && /^{\\//.test(textAfter))\n
+        context = context.prev;\n
+        while (context && !context.startOfLine)\n
+          context = context.prev;\n
+        if (context) return context.indent + indentUnit;\n
+        else return 0;\n
+       },\n
+    electricChars: "/"\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/tiki", "tiki");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8194</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

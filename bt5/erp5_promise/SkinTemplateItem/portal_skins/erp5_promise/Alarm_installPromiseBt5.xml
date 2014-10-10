@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>from Products.ERP5.Tool.TemplateTool import CATALOG_UPDATABLE\n
+\n
+portal = context.getPortalObject()\n
 bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
 \n
 if bt5 is None:\n
@@ -58,7 +60,7 @@ if bt5 is None:\n
 \n
 bt5_list = bt5.split()\n
 bt5_list.extend(portal.portal_templates.getInstalledBusinessTemplateTitleList())\n
-portal.portal_templates.upgradeSite(bt5_list)\n
+portal.portal_templates.upgradeSite(bt5_list, update_catalog=CATALOG_UPDATABLE)\n
 </string> </value>
         </item>
         <item>

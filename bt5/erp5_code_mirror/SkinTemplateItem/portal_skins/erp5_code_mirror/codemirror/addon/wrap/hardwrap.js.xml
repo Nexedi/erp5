@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403072.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hardwrap.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  function findParagraph(cm, pos, options) {\n
+    var startRE = options.paragraphStart || cm.getHelper(pos, "paragraphStart");\n
+    for (var start = pos.line, first = cm.firstLine(); start > first; --start) {\n
+      var line = cm.getLine(start);\n
+      if (startRE && startRE.test(line)) break;\n
+      if (!/\\S/.test(line)) { ++start; break; }\n
+    }\n
+    var endRE = options.paragraphEnd || cm.getHelper(pos, "paragraphEnd");\n
+    for (var end = pos.line + 1, last = cm.lastLine(); end <= last; ++end) {\n
+      var line = cm.getLine(end);\n
+      if (endRE && endRE.test(line)) { ++end; break; }\n
+      if (!/\\S/.test(line)) break;\n
+    }\n
+    return {from: start, to: end};\n
+  }\n
+\n
+  function findBreakPoint(text, column, wrapOn, killTrailingSpace) {\n
+    for (var at = column; at > 0; --at)\n
+      if (wrapOn.test(text.slice(at - 1, at + 1))) break;\n
+    if (at == 0) at = column;\n
+    var endOfText = at;\n
+    if (killTrailingSpace)\n
+      while (text.charAt(endOfText - 1) == " ") --endOfText;\n
+    return {from: endOfText, to: at};\n
+  }\n
+\n
+  function wrapRange(cm, from, to, options) {\n
+    from = cm.clipPos(from); to = cm.clipPos(to);\n
+    var column = options.column || 80;\n
+    var wrapOn = options.wrapOn || /\\s\\S|-[^\\.\\d]/;\n
+    var killTrailing = options.killTrailingSpace !== false;\n
+    var changes = [], curLine = "", curNo = from.line;\n
+    var lines = cm.getRange(from, to, false);\n
+    if (!lines.length) return null;\n
+    var leadingSpace = lines[0].match(/^[ \\t]*/)[0];\n
+\n
+    for (var i = 0; i < lines.length; ++i) {\n
+      var text = lines[i], oldLen = curLine.length, spaceInserted = 0;\n
+      if (curLine && text && !wrapOn.test(curLine.charAt(curLine.length - 1) + text.charAt(0))) {\n
+        curLine += " ";\n
+        spaceInserted = 1;\n
+      }\n
+      var spaceTrimmed = "";\n
+      if (i) {\n
+        spaceTrimmed = text.match(/^\\s*/)[0];\n
+        text = text.slice(spaceTrimmed.length);\n
+      }\n
+      curLine += text;\n
+      if (i) {\n
+        var firstBreak = curLine.length > column && leadingSpace == spaceTrimmed &&\n
+          findBreakPoint(curLine, column, wrapOn, killTrailing);\n
+        // If this isn\'t broken, or is broken at a different point, remove old break\n
+        if (!firstBreak || firstBreak.from != oldLen || firstBreak.to != oldLen + spaceInserted) {\n
+          changes.push({text: [spaceInserted ? " " : ""],\n
+                        from: Pos(curNo, oldLen),\n
+                        to: Pos(curNo + 1, spaceTrimmed.length)});\n
+        } else {\n
+          curLine = leadingSpace + text;\n
+          ++curNo;\n
+        }\n
+      }\n
+      while (curLine.length > column) {\n
+        var bp = findBreakPoint(curLine, column, wrapOn, killTrailing);\n
+        changes.push({text: ["", leadingSpace],\n
+                      from: Pos(curNo, bp.from),\n
+                      to: Pos(curNo, bp.to)});\n
+        curLine = leadingSpace + curLine.slice(bp.to);\n
+        ++curNo;\n
+      }\n
+    }\n
+    if (changes.length) cm.operation(function() {\n
+      for (var i = 0; i < changes.length; ++i) {\n
+        var change = changes[i];\n
+        cm.replaceRange(change.text, change.from, change.to);\n
+      }\n
+    });\n
+    return changes.length ? {from: changes[0].from, to: CodeMirror.changeEnd(changes[changes.length - 1])} : null;\n
+  }\n
+\n
+  CodeMirror.defineExtension("wrapParagraph", function(pos, options) {\n
+    options = options || {};\n
+    if (!pos) pos = this.getCursor();\n
+    var para = findParagraph(this, pos, options);\n
+    return wrapRange(this, Pos(para.from, 0), Pos(para.to - 1), options);\n
+  });\n
+\n
+  CodeMirror.defineExtension("wrapRange", function(from, to, options) {\n
+    return wrapRange(this, from, to, options || {});\n
+  });\n
+\n
+  CodeMirror.defineExtension("wrapParagraphsInRange", function(from, to, options) {\n
+    options = options || {};\n
+    var cm = this, paras = [];\n
+    for (var line = from.line; line <= to.line;) {\n
+      var para = findParagraph(cm, Pos(line, 0), options);\n
+      paras.push(para);\n
+      line = para.to;\n
+    }\n
+    var madeChange = false;\n
+    if (paras.length) cm.operation(function() {\n
+      for (var i = paras.length - 1; i >= 0; --i)\n
+        madeChange = madeChange || wrapRange(cm, Pos(paras[i].from, 0), Pos(paras[i].to - 1), options);\n
+    });\n
+    return madeChange;\n
+  });\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4229</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

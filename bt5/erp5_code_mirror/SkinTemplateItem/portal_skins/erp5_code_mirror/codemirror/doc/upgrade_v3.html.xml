@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Version 3 upgrade guide</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../addon/runmode/runmode.js"></script>\n
+<script src="../addon/runmode/colorize.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../mode/css/css.js"></script>\n
+<script src="../mode/htmlmixed/htmlmixed.js"></script>\n
+<script src="activebookmark.js"></script>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#upgrade">Upgrade guide</a>\n
+    <li><a href="#dom">DOM structure</a></li>\n
+    <li><a href="#gutters">Gutter model</a></li>\n
+    <li><a href="#events">Event handling</a></li>\n
+    <li><a href="#marktext">markText method arguments</a></li>\n
+    <li><a href="#folding">Line folding</a></li>\n
+    <li><a href="#lineclass">Line CSS classes</a></li>\n
+    <li><a href="#positions">Position properties</a></li>\n
+    <li><a href="#matchbrackets">Bracket matching</a></li>\n
+    <li><a href="#modes">Mode management</a></li>\n
+    <li><a href="#new">New features</a></li>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2 id=upgrade>Upgrading to version 3</h2>\n
+\n
+<p>Version 3 does not depart too much from 2.x API, and sites that use\n
+CodeMirror in a very simple way might be able to upgrade without\n
+trouble. But it does introduce a number of incompatibilities. Please\n
+at least skim this text before upgrading.</p>\n
+\n
+<p>Note that <strong>version 3 drops full support for Internet\n
+Explorer 7</strong>. The editor will mostly work on that browser, but\n
+it\'ll be significantly glitchy.</p>\n
+\n
+<section id=dom>\n
+  <h2>DOM structure</h2>\n
+\n
+<p>This one is the most likely to cause problems. The internal\n
+structure of the editor has changed quite a lot, mostly to implement a\n
+new scrolling model.</p>\n
+\n
+<p>Editor height is now set on the outer wrapper element (CSS\n
+class <code>CodeMirror</code>), not on the scroller element\n
+(<code>CodeMirror-scroll</code>).</p>\n
+\n
+<p>Other nodes were moved, dropped, and added. If you have any code\n
+that makes assumptions about the internal DOM structure of the editor,\n
+you\'ll have to re-test it and probably update it to work with v3.</p>\n
+\n
+<p>See the <a href="manual.html#styling">styling section</a> of the\n
+manual for more information.</p>\n
+</section>\n
+<section id=gutters>\n
+  <h2>Gutter model</h2>\n
+\n
+<p>In CodeMirror 2.x, there was a single gutter, and line markers\n
+created with <code>setMarker</code> would have to somehow coexist with\n
+the line numbers (if present). Version 3 allows you to specify an\n
+array of gutters, <a href="manual.html#option_gutters">by class\n
+name</a>,\n
+use <a href="manual.html#setGutterMarker"><code>setGutterMarker</code></a>\n
+to add or remove markers in individual gutters, and clear whole\n
+gutters\n
+with <a href="manual.html#clearGutter"><code>clearGutter</code></a>.\n
+Gutter markers are now specified as DOM nodes, rather than HTML\n
+snippets.</p>\n
+\n
+<p>The gutters no longer horizontally scrolls along with the content.\n
+The <code>fixedGutter</code> option was removed (since it is now the\n
+only behavior).</p>\n
+\n
+<pre data-lang="text/html">\n
+&lt;style>\n
+  /* Define a gutter style */\n
+  .note-gutter { width: 3em; background: cyan; }\n
+&lt;/style>\n
+&lt;script>\n
+  // Create an instance with two gutters -- line numbers and notes\n
+  var cm = new CodeMirror(document.body, {\n
+    gutters: ["note-gutter", "CodeMirror-linenumbers"],\n
+    lineNumbers: true\n
+  });\n
+  // Add a note to line 0\n
+  cm.setGutterMarker(0, "note-gutter", document.createTextNode("hi"));\n
+&lt;/script>\n
+</pre>\n
+</section>\n
+<section id=events>\n
+  <h2>Event handling</h2>\n
+\n
+<p>Most of the <code>onXYZ</code> options have been removed. The same\n
+effect is now obtained by calling\n
+the <a href="manual.html#on"><code>on</code></a> method with a string\n
+identifying the event type. Multiple handlers can now be registered\n
+(and individually unregistered) for an event, and objects such as line\n
+handlers now also expose events. See <a href="manual.html#events">the\n
+full list here</a>.</p>\n
+\n
+<p>(The <code>onKeyEvent</code> and <code>onDragEvent</code> options,\n
+which act more as hooks than as event handlers, are still there in\n
+their old form.)</p>\n
+\n
+<pre data-lang="javascript">\n
+cm.on("change", function(cm, change) {\n
+  console.log("something changed! (" + change.origin + ")");\n
+});\n
+</pre>\n
+</section>\n
+<section id=marktext>\n
+  <h2>markText method arguments</h2>\n
+\n
+<p>The <a href="manual.html#markText"><code>markText</code></a> method\n
+(which has gained some interesting new features, such as creating\n
+atomic and read-only spans, or replacing spans with widgets) no longer\n
+takes the CSS class name as a separate argument, but makes it an\n
+optional field in the options object instead.</p>\n
+\n
+<pre data-lang="javascript">\n
+// Style first ten lines, and forbid the cursor from entering them\n
+cm.markText({line: 0, ch: 0}, {line: 10, ch: 0}, {\n
+  className: "magic-text",\n
+  inclusiveLeft: true,\n
+  atomic: true\n
+});\n
+</pre>\n
+</section>\n
+<section id=folding>\n
+  <h2>Line folding</h2>\n
+\n
+<p>The interface for hiding lines has been\n
+removed. <a href="manual.html#markText"><code>markText</code></a> can\n
+now be used to do the same in a more flexible and powerful way.</p>\n
+\n
+<p>The <a href="../demo/folding.html">folding script</a> has been\n
+updated to use the new interface, and should now be more robust.</p>\n
+\n
+<pre data-lang="javascript">\n
+// Fold a range, replacing it with the text "??"\n
+var range = cm.markText({line: 4, ch: 2}, {line: 8, ch: 1}, {\n
+  replacedWith: document.createTextNode("??"),\n
+  // Auto-unfold when cursor moves into the range\n
+  clearOnEnter: true\n
+});\n
+// Get notified when auto-unfolding\n
+CodeMirror.on(range, "clear", function() {\n
+  console.log("boom");\n
+});\n
+</pre>\n
+</section>\n
+<section id=lineclass>\n
+  <h2>Line CSS classes</h2>\n
+\n
+<p>The <code>setLineClass</code> method has been replaced\n
+by <a href="manual.html#addLineClass"><code>addLineClass</code></a>\n
+and <a href="manual.html#removeLineClass"><code>removeLineClass</code></a>,\n
+which allow more modular control over the classes attached to a line.</p>\n
+\n
+<pre data-lang="javascript">\n
+var marked = cm.addLineClass(10, "background", "highlighted-line");\n
+setTimeout(function() {\n
+  cm.removeLineClass(marked, "background", "highlighted-line");\n
+});\n
+</pre>\n
+</section>\n
+<section id=positions>\n
+  <h2>Position properties</h2>\n
+\n
+<p>All methods that take or return objects that represent screen\n
+positions now use <code>{left, top, bottom, right}</code> properties\n
+(not always all of them) instead of the <code>{x, y, yBot}</code> used\n
+by some methods in v2.x.</p>\n
+\n
+<p>Affected methods\n
+are <a href="manual.html#cursorCoords"><code>cursorCoords</code></a>, <a href="manual.html#charCoords"><code>charCoords</code></a>, <a href="manual.html#coordsChar"><code>coordsChar</code></a>,\n
+and <a href="manual.html#getScrollInfo"><code>getScrollInfo</code></a>.</p>\n
+</section>\n
+<section id=matchbrackets>\n
+  <h2>Bracket matching no longer in core</h2>\n
+\n
+<p>The <a href="manual.html#addon_matchbrackets"><code>matchBrackets</code></a>\n
+option is no longer defined in the core editor.\n
+Load <code>addon/edit/matchbrackets.js</code> to enable it.</p>\n
+</section>\n
+<section id=modes>\n
+  <h2>Mode management</h2>\n
+\n
+<p>The <code>CodeMirror.listModes</code>\n
+and <code>CodeMirror.listMIMEs</code> functions, used for listing\n
+defined modes, are gone. You are now encouraged to simply\n
+inspect <code>CodeMirror.modes</code> (mapping mode names to mode\n
+constructors) and <code>CodeMirror.mimeModes</code> (mapping MIME\n
+strings to mode specs).</p>\n
+</section>\n
+<section id=new>\n
+  <h2>New features</h2>\n
+\n
+<p>Some more reasons to upgrade to version 3.</p>\n
+\n
+<ul>\n
+  <li>Bi-directional text support. CodeMirror will now mostly do the\n
+  right thing when editing Arabic or Hebrew text.</li>\n
+  <li>Arbitrary line heights. Using fonts with different heights\n
+  inside the editor (whether off by one pixel or fifty) is now\n
+  supported and handled gracefully.</li>\n
+  <li>In-line widgets. See <a href="../demo/widget.html">the demo</a>\n
+  and <a href="manual.html#addLineWidget">the docs</a>.</li>\n
+  <li>Defining custom options\n
+  with <a href="manual.html#defineOption"><code>CodeMirror.defineOption</code></a>.</li>\n
+</ul>\n
+</section>\n
+</article>\n
+\n
+<script>setTimeout(function(){CodeMirror.colorize();}, 20);</script>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>upgrade_v3.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

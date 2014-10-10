@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403073.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>active-line.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Because sometimes you need to style the cursor\'s line.\n
+//\n
+// Adds an option \'styleActiveLine\' which, when enabled, gives the\n
+// active line\'s wrapping <div> the CSS class "CodeMirror-activeline",\n
+// and gives its background <div> the class "CodeMirror-activeline-background".\n
+\n
+(function() {\n
+  "use strict";\n
+  var WRAP_CLASS = "CodeMirror-activeline";\n
+  var BACK_CLASS = "CodeMirror-activeline-background";\n
+\n
+  CodeMirror.defineOption("styleActiveLine", false, function(cm, val, old) {\n
+    var prev = old && old != CodeMirror.Init;\n
+    if (val && !prev) {\n
+      updateActiveLine(cm, cm.getCursor().line);\n
+      cm.on("beforeSelectionChange", selectionChange);\n
+    } else if (!val && prev) {\n
+      cm.off("beforeSelectionChange", selectionChange);\n
+      clearActiveLine(cm);\n
+      delete cm.state.activeLine;\n
+    }\n
+  });\n
+\n
+  function clearActiveLine(cm) {\n
+    if ("activeLine" in cm.state) {\n
+      cm.removeLineClass(cm.state.activeLine, "wrap", WRAP_CLASS);\n
+      cm.removeLineClass(cm.state.activeLine, "background", BACK_CLASS);\n
+    }\n
+  }\n
+\n
+  function updateActiveLine(cm, selectedLine) {\n
+    var line = cm.getLineHandleVisualStart(selectedLine);\n
+    if (cm.state.activeLine == line) return;\n
+    cm.operation(function() {\n
+      clearActiveLine(cm);\n
+      cm.addLineClass(line, "wrap", WRAP_CLASS);\n
+      cm.addLineClass(line, "background", BACK_CLASS);\n
+      cm.state.activeLine = line;\n
+    });\n
+  }\n
+\n
+  function selectionChange(cm, sel) {\n
+    updateActiveLine(cm, sel.head.line);\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1490</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

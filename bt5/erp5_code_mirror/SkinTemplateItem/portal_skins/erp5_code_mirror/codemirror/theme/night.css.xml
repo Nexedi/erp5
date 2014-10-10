@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>night.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* Loosely based on the Midnight Textmate theme */\n
+\n
+.cm-s-night.CodeMirror { background: #0a001f; color: #f8f8f8; }\n
+.cm-s-night div.CodeMirror-selected { background: #447 !important; }\n
+.cm-s-night .CodeMirror-gutters { background: #0a001f; border-right: 1px solid #aaa; }\n
+.cm-s-night .CodeMirror-linenumber { color: #f8f8f8; }\n
+.cm-s-night .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+\n
+.cm-s-night span.cm-comment { color: #6900a1; }\n
+.cm-s-night span.cm-atom { color: #845dc4; }\n
+.cm-s-night span.cm-number, .cm-s-night span.cm-attribute { color: #ffd500; }\n
+.cm-s-night span.cm-keyword { color: #599eff; }\n
+.cm-s-night span.cm-string { color: #37f14a; }\n
+.cm-s-night span.cm-meta { color: #7678e2; }\n
+.cm-s-night span.cm-variable-2, .cm-s-night span.cm-tag { color: #99b2ff; }\n
+.cm-s-night span.cm-variable-3, .cm-s-night span.cm-def { color: white; }\n
+.cm-s-night span.cm-bracket { color: #8da6ce; }\n
+.cm-s-night span.cm-comment { color: #6900a1; }\n
+.cm-s-night span.cm-builtin, .cm-s-night span.cm-special { color: #ff9e59; }\n
+.cm-s-night span.cm-link { color: #845dc4; }\n
+.cm-s-night span.cm-error { color: #9d1e15; }\n
+\n
+.cm-s-night .CodeMirror-activeline-background {background: #1C005A !important;}\n
+.cm-s-night .CodeMirror-matchingbracket {outline:1px solid grey; color:white !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

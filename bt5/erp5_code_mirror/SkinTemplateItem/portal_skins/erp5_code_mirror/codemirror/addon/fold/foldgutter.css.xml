@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>foldgutter.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.CodeMirror-foldmarker {\n
+  color: blue;\n
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;\n
+  font-family: arial;\n
+  line-height: .3;\n
+  cursor: pointer;\n
+}\n
+.CodeMirror-foldgutter {\n
+  width: .7em;\n
+}\n
+.CodeMirror-foldgutter-open,\n
+.CodeMirror-foldgutter-folded {\n
+  color: #555;\n
+  cursor: pointer;\n
+}\n
+.CodeMirror-foldgutter-open:after {\n
+  content: "\\25BE";\n
+}\n
+.CodeMirror-foldgutter-folded:after {\n
+  content: "\\25B8";\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

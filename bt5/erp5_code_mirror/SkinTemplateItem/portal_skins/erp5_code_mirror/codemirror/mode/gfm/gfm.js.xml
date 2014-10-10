@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403096.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gfm.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
+  var codeDepth = 0;\n
+  function blankLine(state) {\n
+    state.code = false;\n
+    return null;\n
+  }\n
+  var gfmOverlay = {\n
+    startState: function() {\n
+      return {\n
+        code: false,\n
+        codeBlock: false,\n
+        ateSpace: false\n
+      };\n
+    },\n
+    copyState: function(s) {\n
+      return {\n
+        code: s.code,\n
+        codeBlock: s.codeBlock,\n
+        ateSpace: s.ateSpace\n
+      };\n
+    },\n
+    token: function(stream, state) {\n
+      // Hack to prevent formatting override inside code blocks (block and inline)\n
+      if (state.codeBlock) {\n
+        if (stream.match(/^```/)) {\n
+          state.codeBlock = false;\n
+          return null;\n
+        }\n
+        stream.skipToEnd();\n
+        return null;\n
+      }\n
+      if (stream.sol()) {\n
+        state.code = false;\n
+      }\n
+      if (stream.sol() && stream.match(/^```/)) {\n
+        stream.skipToEnd();\n
+        state.codeBlock = true;\n
+        return null;\n
+      }\n
+      // If this block is changed, it may need to be updated in Markdown mode\n
+      if (stream.peek() === \'`\') {\n
+        stream.next();\n
+        var before = stream.pos;\n
+        stream.eatWhile(\'`\');\n
+        var difference = 1 + stream.pos - before;\n
+        if (!state.code) {\n
+          codeDepth = difference;\n
+          state.code = true;\n
+        } else {\n
+          if (difference === codeDepth) { // Must be exact\n
+            state.code = false;\n
+          }\n
+        }\n
+        return null;\n
+      } else if (state.code) {\n
+        stream.next();\n
+        return null;\n
+      }\n
+      // Check if space. If so, links can be formatted later on\n
+      if (stream.eatSpace()) {\n
+        state.ateSpace = true;\n
+        return null;\n
+      }\n
+      if (stream.sol() || state.ateSpace) {\n
+        state.ateSpace = false;\n
+        if(stream.match(/^(?:[a-zA-Z0-9\\-_]+\\/)?(?:[a-zA-Z0-9\\-_]+@)?(?:[a-f0-9]{7,40}\\b)/)) {\n
+          // User/Project@SHA\n
+          // User@SHA\n
+          // SHA\n
+          return "link";\n
+        } else if (stream.match(/^(?:[a-zA-Z0-9\\-_]+\\/)?(?:[a-zA-Z0-9\\-_]+)?#[0-9]+\\b/)) {\n
+          // User/Project#Num\n
+          // User#Num\n
+          // #Num\n
+          return "link";\n
+        }\n
+      }\n
+      if (stream.match(/^((?:[a-z][\\w-]+:(?:\\/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]|\\([^\\s()<>]*\\))+(?:\\([^\\s()<>]*\\)|[^\\s`!()\\[\\]{};:\'".,<>?«»“”‘’]))/i) &&\n
+         stream.string.slice(stream.start - 2, stream.start) != "](") {\n
+        // URLs\n
+        // Taken from http://daringfireball.net/2010/07/improved_regex_for_matching_urls\n
+        // And then (issue #1160) simplified to make it not crash the Chrome Regexp engine\n
+        return "link";\n
+      }\n
+      stream.next();\n
+      return null;\n
+    },\n
+    blankLine: blankLine\n
+  };\n
+\n
+  var markdownConfig = {\n
+    underscoresBreakWords: false,\n
+    taskLists: true,\n
+    fencedCodeBlocks: true\n
+  };\n
+  for (var attr in modeConfig) {\n
+    markdownConfig[attr] = modeConfig[attr];\n
+  }\n
+  markdownConfig.name = "markdown";\n
+  CodeMirror.defineMIME("gfmBase", markdownConfig);\n
+  return CodeMirror.overlayMode(CodeMirror.getMode(config, "gfmBase"), gfmOverlay);\n
+}, "markdown");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3119</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

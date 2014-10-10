@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tern.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.CodeMirror-Tern-completion {\n
+  padding-left: 22px;\n
+  position: relative;\n
+}\n
+.CodeMirror-Tern-completion:before {\n
+  position: absolute;\n
+  left: 2px;\n
+  bottom: 2px;\n
+  border-radius: 50%;\n
+  font-size: 12px;\n
+  font-weight: bold;\n
+  height: 15px;\n
+  width: 15px;\n
+  line-height: 16px;\n
+  text-align: center;\n
+  color: white;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+.CodeMirror-Tern-completion-unknown:before {\n
+  content: "?";\n
+  background: #4bb;\n
+}\n
+.CodeMirror-Tern-completion-object:before {\n
+  content: "O";\n
+  background: #77c;\n
+}\n
+.CodeMirror-Tern-completion-fn:before {\n
+  content: "F";\n
+  background: #7c7;\n
+}\n
+.CodeMirror-Tern-completion-array:before {\n
+  content: "A";\n
+  background: #c66;\n
+}\n
+.CodeMirror-Tern-completion-number:before {\n
+  content: "1";\n
+  background: #999;\n
+}\n
+.CodeMirror-Tern-completion-string:before {\n
+  content: "S";\n
+  background: #999;\n
+}\n
+.CodeMirror-Tern-completion-bool:before {\n
+  content: "B";\n
+  background: #999;\n
+}\n
+\n
+.CodeMirror-Tern-completion-guess {\n
+  color: #999;\n
+}\n
+\n
+.CodeMirror-Tern-tooltip {\n
+  border: 1px solid silver;\n
+  border-radius: 3px;\n
+  color: #444;\n
+  padding: 2px 5px;\n
+  font-size: 90%;\n
+  font-family: monospace;\n
+  background-color: white;\n
+  white-space: pre-wrap;\n
+\n
+  max-width: 40em;\n
+  position: absolute;\n
+  z-index: 10;\n
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);\n
+\n
+  transition: opacity 1s;\n
+  -moz-transition: opacity 1s;\n
+  -webkit-transition: opacity 1s;\n
+  -o-transition: opacity 1s;\n
+  -ms-transition: opacity 1s;\n
+}\n
+\n
+.CodeMirror-Tern-hint-doc {\n
+  max-width: 25em;\n
+}\n
+\n
+.CodeMirror-Tern-fname { color: black; }\n
+.CodeMirror-Tern-farg { color: #70a; }\n
+.CodeMirror-Tern-farg-current { text-decoration: underline; }\n
+.CodeMirror-Tern-type { color: #07c; }\n
+.CodeMirror-Tern-fhint-guess { opacity: .7; }\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

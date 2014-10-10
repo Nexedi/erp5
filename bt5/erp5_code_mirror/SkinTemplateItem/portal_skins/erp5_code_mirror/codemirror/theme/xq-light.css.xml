@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xq-light.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (C) 2011 by MarkLogic Corporation\n
+Author: Mike Brevoort <mike@brevoort.com>\n
+\n
+Permission is hereby granted, free of charge, to any person obtaining a copy\n
+of this software and associated documentation files (the "Software"), to deal\n
+in the Software without restriction, including without limitation the rights\n
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n
+copies of the Software, and to permit persons to whom the Software is\n
+furnished to do so, subject to the following conditions:\n
+\n
+The above copyright notice and this permission notice shall be included in\n
+all copies or substantial portions of the Software.\n
+\n
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n
+THE SOFTWARE.\n
+*/\n
+.cm-s-xq-light span.cm-keyword {line-height: 1em; font-weight: bold; color: #5A5CAD; }\n
+.cm-s-xq-light span.cm-atom {color: #6C8CD5;}\n
+.cm-s-xq-light span.cm-number {color: #164;}\n
+.cm-s-xq-light span.cm-def {text-decoration:underline;}\n
+.cm-s-xq-light span.cm-variable {color: black; }\n
+.cm-s-xq-light span.cm-variable-2 {color:black;}\n
+.cm-s-xq-light span.cm-variable-3 {color: black; }\n
+.cm-s-xq-light span.cm-property {}\n
+.cm-s-xq-light span.cm-operator {}\n
+.cm-s-xq-light span.cm-comment {color: #0080FF; font-style: italic;}\n
+.cm-s-xq-light span.cm-string {color: red;}\n
+.cm-s-xq-light span.cm-meta {color: yellow;}\n
+.cm-s-xq-light span.cm-qualifier {color: grey}\n
+.cm-s-xq-light span.cm-builtin {color: #7EA656;}\n
+.cm-s-xq-light span.cm-bracket {color: #cc7;}\n
+.cm-s-xq-light span.cm-tag {color: #3F7F7F;}\n
+.cm-s-xq-light span.cm-attribute {color: #7F007F;}\n
+.cm-s-xq-light span.cm-error {color: #f00;}\n
+\n
+.cm-s-xq-light .CodeMirror-activeline-background {background: #e8f2ff !important;}\n
+.cm-s-xq-light .CodeMirror-matchingbracket {outline:1px solid grey;color:black !important;background:yellow;}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

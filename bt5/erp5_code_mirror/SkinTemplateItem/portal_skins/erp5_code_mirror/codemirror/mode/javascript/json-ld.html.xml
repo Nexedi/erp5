@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: JSON-LD mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/edit/matchbrackets.js"></script>\n
+<script src="../../addon/comment/continuecomment.js"></script>\n
+<script src="../../addon/comment/comment.js"></script>\n
+<script src="javascript.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id="nav">\n
+  <a href="http://codemirror.net"><img id=logo src="../../doc/logo.png"/></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">JSON-LD</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>JSON-LD mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+{\n
+  "@context": {\n
+    "name": "http://schema.org/name",\n
+    "description": "http://schema.org/description",\n
+    "image": {\n
+      "@id": "http://schema.org/image",\n
+      "@type": "@id"\n
+    },\n
+    "geo": "http://schema.org/geo",\n
+    "latitude": {\n
+      "@id": "http://schema.org/latitude",\n
+      "@type": "xsd:float"\n
+    },\n
+    "longitude": {\n
+      "@id": "http://schema.org/longitude",\n
+      "@type": "xsd:float"\n
+    },\n
+    "xsd": "http://www.w3.org/2001/XMLSchema#"\n
+  },\n
+  "name": "The Empire State Building",\n
+  "description": "The Empire State Building is a 102-story landmark in New York City.",\n
+  "image": "http://www.civil.usherbrooke.ca/cours/gci215a/empire-state-building.jpg",\n
+  "geo": {\n
+    "latitude": "40.75",\n
+    "longitude": "73.98"\n
+  }\n
+}\n
+</textarea></div>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        matchBrackets: true,\n
+        autoCloseBrackets: true,\n
+        mode: "application/ld+json",\n
+        lineWrapping: true\n
+      });\n
+    </script>\n
+    \n
+    <p>This is a specialization of the <a href="index.html">JavaScript mode</a>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>json-ld.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

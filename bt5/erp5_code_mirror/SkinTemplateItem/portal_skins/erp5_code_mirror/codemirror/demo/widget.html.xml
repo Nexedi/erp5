@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Inline Widget Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid black;}\n
+      .lint-error {font-family: arial; font-size: 70%; background: #ffa; color: #a00; padding: 2px 5px 3px; }\n
+      .lint-error-icon {color: white; background-color: red; font-weight: bold; border-radius: 50%; padding: 0 3px; margin-right: 7px;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Inline Widget</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Inline Widget Demo</h2>\n
+\n
+\n
+    <div id=code></div>\n
+    <script id="script">var widgets = []\n
+function updateHints() {\n
+  editor.operation(function(){\n
+    for (var i = 0; i < widgets.length; ++i)\n
+      editor.removeLineWidget(widgets[i]);\n
+    widgets.length = 0;\n
+\n
+    JSHINT(editor.getValue());\n
+    for (var i = 0; i < JSHINT.errors.length; ++i) {\n
+      var err = JSHINT.errors[i];\n
+      if (!err) continue;\n
+      var msg = document.createElement("div");\n
+      var icon = msg.appendChild(document.createElement("span"));\n
+      icon.innerHTML = "!!";\n
+      icon.className = "lint-error-icon";\n
+      msg.appendChild(document.createTextNode(err.reason));\n
+      msg.className = "lint-error";\n
+      widgets.push(editor.addLineWidget(err.line - 1, msg, {coverGutter: false, noHScroll: true}));\n
+    }\n
+  });\n
+  var info = editor.getScrollInfo();\n
+  var after = editor.charCoords({line: editor.getCursor().line + 1, ch: 0}, "local").top;\n
+  if (info.top + info.clientHeight < after)\n
+    editor.scrollTo(null, after - info.clientHeight + 3);\n
+}\n
+\n
+window.onload = function() {\n
+  var sc = document.getElementById("script");\n
+  var content = sc.textContent || sc.innerText || sc.innerHTML;\n
+\n
+  window.editor = CodeMirror(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    mode: "javascript",\n
+    value: content\n
+  });\n
+\n
+  var waiting;\n
+  editor.on("change", function() {\n
+    clearTimeout(waiting);\n
+    waiting = setTimeout(updateHints, 500);\n
+  });\n
+\n
+  setTimeout(updateHints, 100);\n
+};\n
+\n
+"long line to create a horizontal scrollbar, in order to test whether the (non-inline) widgets stay in place when scrolling to the right";\n
+</script>\n
+<p>This demo runs <a href="http://jshint.com">JSHint</a> over the code\n
+in the editor (which is the script used on this page), and\n
+inserts <a href="../doc/manual.html#addLineWidget">line widgets</a> to\n
+display the warnings that JSHint comes up with.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>widget.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

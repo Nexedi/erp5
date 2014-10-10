@@ -108,9 +108,10 @@
   <head>\n
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>RenderJS Bin</title>\n
+    <title>ERP5</title>\n
     <link rel="shortcut icon" href="favicon.ico">\n
 \n
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
     <link rel="stylesheet" href="jquerymobile.css">\n
     <link rel="stylesheet" href="gadget_erp5.css">\n
     <script src="RSVP.js" type="text/javascript"></script>\n
@@ -118,6 +119,7 @@
     <script src="URI.js" type="text/javascript"></script>\n
     <script src="jquery.js" type="text/javascript"></script>\n
     <script src="jquerymobile.js"> type="text/javascript"></script>\n
+    <script src="gadget_global.js" type="text/javascript"></script>\n
     <script src="gadget_erp5.js" type="text/javascript"></script>\n
 \n
     <script id="panel-template" type="text/x-handlebars-template">\n
@@ -135,28 +137,15 @@
 \n
   <div data-role="panel" id="leftpanel" data-display="overlay"></div>\n
 \n
-  <header data-role="header">\n
-    <a href="#leftpanel" class="responsive ui-btn ui-icon-bars ui-btn-icon-left">Menu</a>\n
-    <div data-gadget-url="gadget_erp5_breadcrumb.html"\n
-          data-gadget-scope="breadcrumb"\n
+  <div data-gadget-url="gadget_erp5_header.html"\n
+          data-gadget-scope="header"\n
           data-gadget-sandbox="public"></div>\n
-      </div>\n
 \n
-    <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
-      <div class="ui-controlgroup-controls">\n
-        <a class="responsive ui-btn ui-icon-plus ui-btn-icon-left ui-disabled" role="button" data-role="button">New</a>\n
-        <a role="button" data-role="button" href="#" class="responsive ui-btn ui-icon-home ui-btn-icon-left">Home</a>\n
-      </div>\n
-    </div>\n
-\n
-  </header>\n
-\n
-  <article></article>\n
+  <article class="ui-content"></article>\n
 \n
   <section data-gadget-url="gadget_jio.html"\n
     data-gadget-scope="jio_gadget"\n
     data-gadget-sandbox="public"></section>\n
-    <!-- <aside></aside> -->\n
   </body>\n
 </html>
 
@@ -281,7 +270,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -295,7 +284,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.49302.26306.5341</string> </value>
+                <value> <string>937.64343.1806.54016</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -313,7 +302,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407832402.03</float>
+                        <float>1412343671.79</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mbo.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* Based on mbonaci\'s Brackets mbo theme */\n
+\n
+.cm-s-mbo.CodeMirror {background: #2c2c2c; color: #ffffe9;}\n
+.cm-s-mbo div.CodeMirror-selected {background: #716C62 !important;}\n
+.cm-s-mbo .CodeMirror-gutters {background: #4e4e4e; border-right: 0px;}\n
+.cm-s-mbo .CodeMirror-linenumber {color: #dadada;}\n
+.cm-s-mbo .CodeMirror-cursor {border-left: 1px solid #ffffec !important;}\n
+\n
+.cm-s-mbo span.cm-comment {color: #95958a;}\n
+.cm-s-mbo span.cm-atom {color: #00a8c6;}\n
+.cm-s-mbo span.cm-number {color: #00a8c6;}\n
+\n
+.cm-s-mbo span.cm-property, .cm-s-mbo span.cm-attribute {color: #9ddfe9;}\n
+.cm-s-mbo span.cm-keyword {color: #ffb928;}\n
+.cm-s-mbo span.cm-string {color: #ffcf6c;}\n
+\n
+.cm-s-mbo span.cm-variable {color: #ffffec;}\n
+.cm-s-mbo span.cm-variable-2 {color: #00a8c6;}\n
+.cm-s-mbo span.cm-def {color: #ffffec;}\n
+.cm-s-mbo span.cm-bracket {color: #fffffc; font-weight: bold;}\n
+.cm-s-mbo span.cm-tag {color: #9ddfe9;}\n
+.cm-s-mbo span.cm-link {color: #f54b07;}\n
+.cm-s-mbo span.cm-error {background: #636363; color: #ffffec;}\n
+\n
+.cm-s-mbo .CodeMirror-activeline-background {background: #494b41 !important;}\n
+.cm-s-mbo .CodeMirror-matchingbracket {\n
+  text-decoration: underline;\n
+  color: #f5e107 !important;\n
+ }\n
+ \n
+.cm-s-mbo .CodeMirror-matchingtag {background: #4e4e4e;}\n
+\n
+.cm-s-mbo span.cm-searching {\n
+  background-color: none;\n
+  background: none;\n
+  box-shadow: 0 0 0 1px #ffffec;\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

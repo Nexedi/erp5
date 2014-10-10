@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403077.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>foldgutter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  CodeMirror.defineOption("foldGutter", false, function(cm, val, old) {\n
+    if (old && old != CodeMirror.Init) {\n
+      cm.clearGutter(cm.state.foldGutter.options.gutter);\n
+      cm.state.foldGutter = null;\n
+      cm.off("gutterClick", onGutterClick);\n
+      cm.off("change", onChange);\n
+      cm.off("viewportChange", onViewportChange);\n
+      cm.off("fold", onFold);\n
+      cm.off("unfold", onFold);\n
+      cm.off("swapDoc", updateInViewport);\n
+    }\n
+    if (val) {\n
+      cm.state.foldGutter = new State(parseOptions(val));\n
+      updateInViewport(cm);\n
+      cm.on("gutterClick", onGutterClick);\n
+      cm.on("change", onChange);\n
+      cm.on("viewportChange", onViewportChange);\n
+      cm.on("fold", onFold);\n
+      cm.on("unfold", onFold);\n
+      cm.on("swapDoc", updateInViewport);\n
+    }\n
+  });\n
+\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  function State(options) {\n
+    this.options = options;\n
+    this.from = this.to = 0;\n
+  }\n
+\n
+  function parseOptions(opts) {\n
+    if (opts === true) opts = {};\n
+    if (opts.gutter == null) opts.gutter = "CodeMirror-foldgutter";\n
+    if (opts.indicatorOpen == null) opts.indicatorOpen = "CodeMirror-foldgutter-open";\n
+    if (opts.indicatorFolded == null) opts.indicatorFolded = "CodeMirror-foldgutter-folded";\n
+    return opts;\n
+  }\n
+\n
+  function isFolded(cm, line) {\n
+    var marks = cm.findMarksAt(Pos(line));\n
+    for (var i = 0; i < marks.length; ++i)\n
+      if (marks[i].__isFold && marks[i].find().from.line == line) return true;\n
+  }\n
+\n
+  function marker(spec) {\n
+    if (typeof spec == "string") {\n
+      var elt = document.createElement("div");\n
+      elt.className = spec;\n
+      return elt;\n
+    } else {\n
+      return spec.cloneNode(true);\n
+    }\n
+  }\n
+\n
+  function updateFoldInfo(cm, from, to) {\n
+    var opts = cm.state.foldGutter.options, cur = from;\n
+    cm.eachLine(from, to, function(line) {\n
+      var mark = null;\n
+      if (isFolded(cm, cur)) {\n
+        mark = marker(opts.indicatorFolded);\n
+      } else {\n
+        var pos = Pos(cur, 0), func = opts.rangeFinder || CodeMirror.fold.auto;\n
+        var range = func && func(cm, pos);\n
+        if (range && range.from.line + 1 < range.to.line)\n
+          mark = marker(opts.indicatorOpen);\n
+      }\n
+      cm.setGutterMarker(line, opts.gutter, mark);\n
+      ++cur;\n
+    });\n
+  }\n
+\n
+  function updateInViewport(cm) {\n
+    var vp = cm.getViewport(), state = cm.state.foldGutter;\n
+    if (!state) return;\n
+    cm.operation(function() {\n
+      updateFoldInfo(cm, vp.from, vp.to);\n
+    });\n
+    state.from = vp.from; state.to = vp.to;\n
+  }\n
+\n
+  function onGutterClick(cm, line, gutter) {\n
+    var opts = cm.state.foldGutter.options;\n
+    if (gutter != opts.gutter) return;\n
+    cm.foldCode(Pos(line, 0), opts.rangeFinder);\n
+  }\n
+\n
+  function onChange(cm) {\n
+    var state = cm.state.foldGutter, opts = cm.state.foldGutter.options;\n
+    state.from = state.to = 0;\n
+    clearTimeout(state.changeUpdate);\n
+    state.changeUpdate = setTimeout(function() { updateInViewport(cm); }, opts.foldOnChangeTimeSpan || 600);\n
+  }\n
+\n
+  function onViewportChange(cm) {\n
+    var state = cm.state.foldGutter, opts = cm.state.foldGutter.options;\n
+    clearTimeout(state.changeUpdate);\n
+    state.changeUpdate = setTimeout(function() {\n
+      var vp = cm.getViewport();\n
+      if (state.from == state.to || vp.from - state.to > 20 || state.from - vp.to > 20) {\n
+        updateInViewport(cm);\n
+      } else {\n
+        cm.operation(function() {\n
+          if (vp.from < state.from) {\n
+            updateFoldInfo(cm, vp.from, state.from);\n
+            state.from = vp.from;\n
+          }\n
+          if (vp.to > state.to) {\n
+            updateFoldInfo(cm, state.to, vp.to);\n
+            state.to = vp.to;\n
+          }\n
+        });\n
+      }\n
+    }, opts.updateViewportTimeSpan || 400);\n
+  }\n
+\n
+  function onFold(cm, from) {\n
+    var state = cm.state.foldGutter, line = from.line;\n
+    if (line >= state.from && line < state.to)\n
+      updateFoldInfo(cm, line, line + 1);\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3874</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

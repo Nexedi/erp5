@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403077.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>loadmode.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  if (!CodeMirror.modeURL) CodeMirror.modeURL = "../mode/%N/%N.js";\n
+\n
+  var loading = {};\n
+  function splitCallback(cont, n) {\n
+    var countDown = n;\n
+    return function() { if (--countDown == 0) cont(); };\n
+  }\n
+  function ensureDeps(mode, cont) {\n
+    var deps = CodeMirror.modes[mode].dependencies;\n
+    if (!deps) return cont();\n
+    var missing = [];\n
+    for (var i = 0; i < deps.length; ++i) {\n
+      if (!CodeMirror.modes.hasOwnProperty(deps[i]))\n
+        missing.push(deps[i]);\n
+    }\n
+    if (!missing.length) return cont();\n
+    var split = splitCallback(cont, missing.length);\n
+    for (var i = 0; i < missing.length; ++i)\n
+      CodeMirror.requireMode(missing[i], split);\n
+  }\n
+\n
+  CodeMirror.requireMode = function(mode, cont) {\n
+    if (typeof mode != "string") mode = mode.name;\n
+    if (CodeMirror.modes.hasOwnProperty(mode)) return ensureDeps(mode, cont);\n
+    if (loading.hasOwnProperty(mode)) return loading[mode].push(cont);\n
+\n
+    var script = document.createElement("script");\n
+    script.src = CodeMirror.modeURL.replace(/%N/g, mode);\n
+    var others = document.getElementsByTagName("script")[0];\n
+    others.parentNode.insertBefore(script, others);\n
+    var list = loading[mode] = [cont];\n
+    var count = 0, poll = setInterval(function() {\n
+      if (++count > 100) return clearInterval(poll);\n
+      if (CodeMirror.modes.hasOwnProperty(mode)) {\n
+        clearInterval(poll);\n
+        loading[mode] = null;\n
+        ensureDeps(mode, function() {\n
+          for (var i = 0; i < list.length; ++i) list[i]();\n
+        });\n
+      }\n
+    }, 200);\n
+  };\n
+\n
+  CodeMirror.autoLoadMode = function(instance, mode) {\n
+    if (!CodeMirror.modes.hasOwnProperty(mode))\n
+      CodeMirror.requireMode(mode, function() {\n
+        instance.setOption("mode", instance.getOption("mode"));\n
+      });\n
+  };\n
+}());\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1787</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

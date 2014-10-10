@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Tag Matcher Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/fold/xml-fold.js"></script>\n
+<script src="../addon/edit/matchtags.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+      .CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Tag Matcher</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Tag Matcher Demo</h2>\n
+\n
+\n
+    <div id="editor"></div>\n
+\n
+    <script>\n
+window.onload = function() {\n
+  editor = CodeMirror(document.getElementById("editor"), {\n
+    value: "<html>\\n  " + document.documentElement.innerHTML + "\\n</html>",\n
+    mode: "text/html",\n
+    matchTags: {bothTags: true},\n
+    extraKeys: {"Ctrl-J": "toMatchingTag"}\n
+  });\n
+};\n
+    </script>\n
+\n
+    <p>Put the cursor on or inside a pair of tags to highlight them.\n
+    Press Ctrl-J to jump to the tag that matches the one under the\n
+    cursor.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>matchtags.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

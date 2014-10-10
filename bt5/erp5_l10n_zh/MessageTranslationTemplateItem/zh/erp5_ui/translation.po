@@ -4108,7 +4108,7 @@ msgid "Data"
 msgstr ""
 
 msgid "Data updated."
-msgstr ""
+msgstr "数据已更新"
 
 msgid "Date"
 msgstr "日期"
@@ -12316,7 +12316,7 @@ msgid "Session Tool"
 msgstr ""
 
 msgid "Set List Setting"
-msgstr ""
+msgstr "设置列表"
 
 msgid "Set Packing List Ready"
 msgstr "装箱单设为已就绪"
@@ -12334,7 +12334,7 @@ msgid "Set Ready"
 msgstr ""
 
 msgid "Set Relation"
-msgstr ""
+msgstr "设置关联"
 
 msgid "Set Resolved"
 msgstr ""

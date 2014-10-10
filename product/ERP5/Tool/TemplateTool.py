@@ -66,7 +66,8 @@ import time
 
 WIN = os.name == 'nt'
 
-_MARKER = []
+CATALOG_UPDATABLE = object()
+ModuleSecurityInfo(__name__).declarePublic('CATALOG_UPDATABLE')
 
 class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
@@ -1166,7 +1167,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplateListFromRepository')
     def installBusinessTemplateListFromRepository(self, template_list,
-        only_different=True, update_catalog=_MARKER, activate=False,
+        only_different=True, update_catalog=False, activate=False,
         install_dependency=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
@@ -1199,8 +1200,7 @@ class TemplateTool (BaseTool):
             continue
         bt_url = '%s/%s' % (repository, bt_id)
         param_dict = dict(download_url=bt_url, only_different=only_different)
-        if update_catalog is not _MARKER:
-          param_dict["update_catalog"] = update_catalog
+        param_dict["update_catalog"] = update_catalog
 
         if activate:
           self.activate(**activate_kw).\
@@ -1303,6 +1303,13 @@ class TemplateTool (BaseTool):
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
+      # Note: CATALOG_UPDATABLE should only be used in eceptional cases
+      #       where the caller installs several bts and does not know
+      #       which ones need to update catalog. Handling catalog should be
+      #       usually done at upgrader level.
+      if update_catalog is CATALOG_UPDATABLE and install_kw != {}:
+        update_catalog = imported_bt5.isCatalogUpdatable()
+
       imported_bt5.install(object_to_update=install_kw,
                            update_catalog=update_catalog)
 
@@ -1358,7 +1365,8 @@ class TemplateTool (BaseTool):
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
                     deprecated_reinstall_set=None, dry_run=False,
                     delete_orphaned=False,
-                    keep_bt5_id_set=[]):
+                    keep_bt5_id_set=[],
+                    update_catalog=False):
       """
       Upgrade many business templates at a time. bt5_list should
       contains only final business templates, then all dependencies
@@ -1374,6 +1382,12 @@ class TemplateTool (BaseTool):
                                 by setting it at business template level.
                                 It list all business templates who needs
                                 reinstall
+
+      update_catalog: handling catalog should be handled outside upgradeSite.
+                      This option only exists for the case where it is not
+                      known which bts need catalog update. In this case one
+                      can pass CATALOG_UPDATABLE which will be propagated to
+                      updateBusinessTemplateFromUrl.
       """
       # make sure that we updated information on repository
       self.updateRepositoryBusinessTemplateList(self.getRepositoryList())
@@ -1397,7 +1411,8 @@ class TemplateTool (BaseTool):
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
         if not(dry_run):
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
-          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall)
+          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
+                                             update_catalog=update_catalog)
       if delete_orphaned:
         if keep_bt5_id_set is None:
           keep_bt5_id_set = set()

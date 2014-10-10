@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403092.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Quick and dirty spec file highlighting\n
+\n
+CodeMirror.defineMode("spec", function() {\n
+  var arch = /^(i386|i586|i686|x86_64|ppc64|ppc|ia64|s390x|s390|sparc64|sparcv9|sparc|noarch|alphaev6|alpha|hppa|mipsel)/;\n
+\n
+  var preamble = /^(Name|Version|Release|License|Summary|Url|Group|Source|BuildArch|BuildRequires|BuildRoot|AutoReqProv|Provides|Requires(\\(\\w+\\))?|Obsoletes|Conflicts|Recommends|Source\\d*|Patch\\d*|ExclusiveArch|NoSource|Supplements):/;\n
+  var section = /^%(debug_package|package|description|prep|build|install|files|clean|changelog|preinstall|preun|postinstall|postun|pre|post|triggerin|triggerun|pretrans|posttrans|verifyscript|check|triggerpostun|triggerprein|trigger)/;\n
+  var control_flow_complex = /^%(ifnarch|ifarch|if)/; // rpm control flow macros\n
+  var control_flow_simple = /^%(else|endif)/; // rpm control flow macros\n
+  var operators = /^(\\!|\\?|\\<\\=|\\<|\\>\\=|\\>|\\=\\=|\\&\\&|\\|\\|)/; // operators in control flow macros\n
+\n
+  return {\n
+    startState: function () {\n
+        return {\n
+          controlFlow: false,\n
+          macroParameters: false,\n
+          section: false\n
+        };\n
+    },\n
+    token: function (stream, state) {\n
+      var ch = stream.peek();\n
+      if (ch == "#") { stream.skipToEnd(); return "comment"; }\n
+\n
+      if (stream.sol()) {\n
+        if (stream.match(preamble)) { return "preamble"; }\n
+        if (stream.match(section)) { return "section"; }\n
+      }\n
+\n
+      if (stream.match(/^\\$\\w+/)) { return "def"; } // Variables like \'$RPM_BUILD_ROOT\'\n
+      if (stream.match(/^\\$\\{\\w+\\}/)) { return "def"; } // Variables like \'${RPM_BUILD_ROOT}\'\n
+\n
+      if (stream.match(control_flow_simple)) { return "keyword"; }\n
+      if (stream.match(control_flow_complex)) {\n
+        state.controlFlow = true;\n
+        return "keyword";\n
+      }\n
+      if (state.controlFlow) {\n
+        if (stream.match(operators)) { return "operator"; }\n
+        if (stream.match(/^(\\d+)/)) { return "number"; }\n
+        if (stream.eol()) { state.controlFlow = false; }\n
+      }\n
+\n
+      if (stream.match(arch)) { return "number"; }\n
+\n
+      // Macros like \'%make_install\' or \'%attr(0775,root,root)\'\n
+      if (stream.match(/^%[\\w]+/)) {\n
+        if (stream.match(/^\\(/)) { state.macroParameters = true; }\n
+        return "macro";\n
+      }\n
+      if (state.macroParameters) {\n
+        if (stream.match(/^\\d+/)) { return "number";}\n
+        if (stream.match(/^\\)/)) {\n
+          state.macroParameters = false;\n
+          return "macro";\n
+        }\n
+      }\n
+      if (stream.match(/^%\\{\\??[\\w \\-]+\\}/)) { return "macro"; } // Macros like \'%{defined fedora}\'\n
+\n
+      //TODO: Include bash script sub-parser (CodeMirror supports that)\n
+      stream.next();\n
+      return null;\n
+    }\n
+  };\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-rpm-spec", "spec");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2703</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_floatfield.html</string> </value>
+            <value> <string>gadget_erp5_field_float.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -116,7 +116,7 @@
     <script src="RSVP.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
     <!-- custom script -->\n
-    <script src="gadget_erp5_floatfield.js" type="text/javascript"></script>\n
+    <script src="gadget_erp5_field_float.js" type="text/javascript"></script>\n
 \n
   </head>\n
   <body>\n
@@ -259,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.53479.26332.17100</string> </value>
+                <value> <string>937.51521.250.37802</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407762037.69</float>
+                        <float>1411576768.35</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

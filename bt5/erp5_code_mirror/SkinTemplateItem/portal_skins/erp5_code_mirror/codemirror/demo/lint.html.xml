@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Linter Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/lint/lint.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/css/css.js"></script>\n
+<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
+<script src="https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script>\n
+<script src="https://rawgithub.com/stubbornella/csslint/master/release/csslint.js"></script>\n
+<script src="../addon/lint/lint.js"></script>\n
+<script src="../addon/lint/javascript-lint.js"></script>\n
+<script src="../addon/lint/json-lint.js"></script>\n
+<script src="../addon/lint/css-lint.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border: 1px solid black;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Linter</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Linter Demo</h2>\n
+\n
+\n
+    <p><textarea id="code-js">var widgets = []\n
+function updateHints() {\n
+  editor.operation(function(){\n
+    for (var i = 0; i < widgets.length; ++i)\n
+      editor.removeLineWidget(widgets[i]);\n
+    widgets.length = 0;\n
+\n
+    JSHINT(editor.getValue());\n
+    for (var i = 0; i < JSHINT.errors.length; ++i) {\n
+      var err = JSHINT.errors[i];\n
+      if (!err) continue;\n
+      var msg = document.createElement("div");\n
+      var icon = msg.appendChild(document.createElement("span"));\n
+      icon.innerHTML = "!!";\n
+      icon.className = "lint-error-icon";\n
+      msg.appendChild(document.createTextNode(err.reason));\n
+      msg.className = "lint-error";\n
+      widgets.push(editor.addLineWidget(err.line - 1, msg, {coverGutter: false, noHScroll: true}));\n
+    }\n
+  });\n
+  var info = editor.getScrollInfo();\n
+  var after = editor.charCoords({line: editor.getCursor().line + 1, ch: 0}, "local").top;\n
+  if (info.top + info.clientHeight < after)\n
+    editor.scrollTo(null, after - info.clientHeight + 3);\n
+}\n
+</textarea></p>\n
+\n
+    <p><textarea id="code-json">[\n
+ {\n
+  _id: "post 1",\n
+  "author": "Bob",\n
+  "content": "...",\n
+  "page_views": 5\n
+ },\n
+ {\n
+  "_id": "post 2",\n
+  "author": "Bob",\n
+  "content": "...",\n
+  "page_views": 9\n
+ },\n
+ {\n
+  "_id": "post 3",\n
+  "author": "Bob",\n
+  "content": "...",\n
+  "page_views": 8\n
+ }\n
+]\n
+</textarea></p>\n
+\n
+    <p><textarea id="code-css">@charset "UTF-8";\n
+\n
+@import url("booya.css") print, screen;\n
+@import "whatup.css" screen;\n
+@import "wicked.css";\n
+\n
+/*Error*/\n
+@charset "UTF-8";\n
+\n
+\n
+@namespace "http://www.w3.org/1999/xhtml";\n
+@namespace svg "http://www.w3.org/2000/svg";\n
+\n
+/*Warning: empty ruleset */\n
+.foo {\n
+}\n
+\n
+h1 {\n
+    font-weight: bold;\n
+}\n
+\n
+/*Warning: qualified heading */\n
+.foo h1 {\n
+    font-weight: bold;\n
+}\n
+\n
+/*Warning: adjoining classes */\n
+.foo.bar {\n
+    zoom: 1;\n
+}\n
+\n
+li.inline {\n
+    width: 100%;  /*Warning: 100% can be problematic*/\n
+}\n
+\n
+li.last {\n
+  display: inline;\n
+  padding-left: 3px !important;\n
+  padding-right: 3px;\n
+  border-right: 0px;\n
+}\n
+\n
+@media print {\n
+    li.inline {\n
+      color: black;\n
+    }\n
+}\n
+\n
+@page {\n
+  margin: 10%;\n
+  counter-increment: page;\n
+\n
+  @top-center {\n
+    font-family: sans-serif;\n
+    font-weight: bold;\n
+    font-size: 2em;\n
+    content: counter(page);\n
+  }\n
+}\n
+</textarea></p>\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code-js"), {\n
+    lineNumbers: true,\n
+    mode: "javascript",\n
+    gutters: ["CodeMirror-lint-markers"],\n
+    lint: true\n
+  });\n
+\n
+  var editor_json = CodeMirror.fromTextArea(document.getElementById("code-json"), {\n
+    lineNumbers: true,\n
+    mode: "application/json",\n
+    gutters: ["CodeMirror-lint-markers"],\n
+    lint: true\n
+  });\n
+  \n
+  var editor_css = CodeMirror.fromTextArea(document.getElementById("code-css"), {\n
+    lineNumbers: true,\n
+    mode: "css",\n
+    gutters: ["CodeMirror-lint-markers"],\n
+    lint: true\n
+  });\n
+</script>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>lint.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

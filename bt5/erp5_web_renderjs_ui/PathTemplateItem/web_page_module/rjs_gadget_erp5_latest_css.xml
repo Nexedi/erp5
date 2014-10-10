@@ -1,0 +1,1538 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Style" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_latest.css</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_latest_css</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Style</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ------------------------------ Global Font  ---------------------------- */\n
+/* NOTE: family/size should only be set here! */\n
+input, select, textarea, button, p, h1, h2, h3, h4, h5, h6, table,\n
+.ui-header h1.ui-title,\n
+html.ui-mobile legend, .ui-btn, .ui-li-static, html.ui-mobile body form label {\n
+  font-family: Helvetica, Arial, sans-serif;\n
+  font-size: 90%;\n
+}\n
+html body .ui-controlgroup.ui-btn-right,\n
+html body .ui-header .ui-btn,\n
+html body .ui-navbar li .ui-btn {\n
+  font-size: 90%;\n
+}\n
+/* fix font-size on notext buttons, so icons don\'t zoom, JQMs-px font-size */\n
+html body .ui-header .ui-controlgroup .ui-btn,\n
+html body .ui-footer .ui-controlgroup .ui-btn {\n
+  font-size: 100%;\n
+}\n
+\n
+\n
+/* ========================== Overrides Themes ============================ */\n
+/* JQM custom themes */\n
+/* a */\n
+/*--------------------------------------------------------------------------*/\n
+\n
+/* Bar: Toolbars, dividers, slider track */\n
+.ui-bar-a,\n
+.ui-page-theme-a .ui-bar-inherit,\n
+html .ui-bar-a .ui-bar-inherit,\n
+html .ui-body-a .ui-bar-inherit,\n
+html body .ui-group-theme-a .ui-bar-inherit {\n
+  background: 0 none;\n
+  background-color: #fff;\n
+  color: rgb(115, 115, 115); /* IE8 */\n
+  color: rgba(0, 0, 0, 0.55);\n
+  text-shadow: none;\n
+  border-color: #aaa;\n
+  font-weight: normal;\n
+}\n
+.ui-bar-a {\n
+  border-width: 1px;\n
+  border-style: solid;\n
+}\n
+/* tables & controlbar & tabs & labels */\n
+html .ui-overlay-a fieldset label,\n
+html .ui-overlay-a fieldset legend,\n
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn,\n
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn,\n
+html .ui-page-theme-a .document-table thead a.ui-btn,\n
+html .ui-page-theme-a .document-table thead label,\n
+html .ui-page-theme-a .document-table thead tr th {\n
+  color: rgb(115, 115, 115); /* IE8 */\n
+  color: rgba(0, 0, 0, 0.55);\n
+  text-shadow: #FFFFFF 0px 1px 0px;\n
+}\n
+html body .ui-page-theme-a table.document-table,\n
+html .document-table thead tr th {\n
+  background-color: #fff;\n
+  border-color: #aaa;\n
+}\n
+html .ui-page-theme-a .ui-popup .ui-header,\n
+html .ui-page-theme-a .ui-popup .ui-footer,\n
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn,\n
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn {\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #fff ), to( #f1f1f1 ));\n
+  background-image: -webkit-linear-gradient( #fff , #f1f1f1 );\n
+  background-image:    -moz-linear-gradient( #fff , #f1f1f1 );\n
+  background-image:     -ms-linear-gradient( #fff , #f1f1f1 );\n
+  background-image:      -o-linear-gradient( #fff , #f1f1f1 );\n
+  background-image:         linear-gradient( #fff , #f1f1f1 );\n
+  border-color: #aaa;\n
+}\n
+\n
+/* Page: background */\n
+.ui-page-theme-a,\n
+.ui-page-theme-a .ui-panel-wrapper {\n
+  color: #333;\n
+  text-shadow: none;\n
+  background: #f9f9f9;\n
+  background-image:  -webkit-gradient(linear, left top, left bottom, from( #f9f9f9), to( #eee ));\n
+  background-image:  -webkit-linear-gradient( #f9f9f9, #eee );\n
+  background-image:    -moz-linear-gradient( #f9f9f9, #eee );\n
+  background-image:     -ms-linear-gradient( #f9f9f9, #eee );\n
+  background-image:      -o-linear-gradient( #f9f9f9, #eee );\n
+  background-image:         linear-gradient( #f9f9f9, #eee );\n
+}\n
+/* Body: Read-only lists, text inputs, collapsible content */\n
+.ui-body-a,\n
+.ui-page-theme-a .ui-body-inherit,\n
+.ui-page-theme-a .ui-content-element,\n
+html .ui-bar-a .ui-body-inherit,\n
+html .ui-body-a .ui-body-inherit,\n
+html body .ui-group-theme-a .ui-body-inherit,\n
+.ui-overlay-a {\n
+  background-image: none;\n
+  background: #fff;\n
+  border-color:  #aaa;\n
+  color: #111;\n
+  text-shadow: none;\n
+}\n
+.ui-body-a {\n
+  border-width: 1px;\n
+  border-style: solid;\n
+}\n
+\n
+/* Links */\n
+.ui-page-theme-a a,\n
+html .ui-bar-a a,\n
+html .ui-body-a a\n
+/* visited */\n
+.ui-page-theme-a a:visited,\n
+html body.ui-overlay-a .ui-btn:visited,\n
+html body.ui-overlay-a a:visited,\n
+html .ui-bar-a a:visited,\n
+html .ui-body-a a:visited,\n
+html body .ui-group-theme-a a:visited,\n
+/* hover */\n
+html body.ui-overlay-a a:hover,\n
+html body.ui-overlay-a .ui-btn:hover,\n
+.ui-page-theme-a a:hover,\n
+html .ui-bar-a a:hover,\n
+html .ui-body-a a:hover,\n
+html body .ui-group-theme-a a:hover,\n
+html body.ui-overlay-a .ui-btn:hover,\n
+.ui-page-theme-a .ui-btn:hover,\n
+html .ui-bar-a .ui-btn:hover,\n
+html .ui-body-a .ui-btn:hover,\n
+html body .ui-group-theme-a .ui-btn:hover,\n
+/* texts */\n
+html body .ui-group-theme-a p, /* overwritten by ui-btn */\n
+html body .ui-group-theme-a h1,\n
+html body .ui-group-theme-a h2,\n
+html body .ui-group-theme-a h3,\n
+html body .ui-group-theme-a h4,\n
+html body .ui-group-theme-a h5,\n
+html body .ui-group-theme-a h6,\n
+html .ui-page-theme-a .ui-content-element {\n
+  color: rgb(115, 115, 115); /* IE8 */\n
+  color: rgba(0, 0, 0, 0.55);\n
+  border-color: #aaa;\n
+  text-shadow: none;\n
+}\n
+\n
+.ui-page-theme-a .ui-btn:active,\n
+html .ui-bar-a .ui-btn:active,\n
+html .ui-body-a .ui-btn:active,\n
+html body .ui-group-theme-a .ui-btn:active {\n
+  color: #fff;\n
+}\n
+\n
+/* Button up */\n
+.ui-page-theme-a .ui-btn,\n
+html .ui-bar-a .ui-btn,\n
+html .ui-body-a .ui-btn,\n
+html body .ui-btn.ui-btn-a,\n
+html body .ui-group-theme-a .ui-btn,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a,\n
+.ui-page-theme-a .ui-bar-plain,\n
+/* Button visited */\n
+.ui-page-theme-a .ui-btn:visited,\n
+html .ui-bar-a .ui-btn:visited,\n
+html .ui-body-a .ui-btn:visited,\n
+html body .ui-btn.ui-btn-a:visited,\n
+html body .ui-group-theme-a .ui-btn:visited,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:visited,\n
+/* table */\n
+html .ui-page-theme-a .document-table tr td a:visited {\n
+  background: #fff;\n
+  color: rgb(115, 115, 115); /* IE8 */\n
+  color: rgba(0, 0, 0, 0.55);\n
+  text-shadow: none;\n
+  border-color: #aaa;\n
+}\n
+html .ui-page-theme-a .ui-input-clear:active,\n
+html .ui-page-theme-a .ui-input-clear.ui-btn-active,\n
+html .ui-page-theme-a .ui-input-action:active,\n
+html .ui-page-theme-a .ui-input-action.ui-btn-active {\n
+  background: #fff !important;\n
+}\n
+\n
+/* ------------------------- Header Buttons ------------------------------- */\n
+.ui-page-theme-a .ui-header .ui-btn,\n
+html .ui-bar-a .ui-header .ui-btn,\n
+html .ui-bar-a.ui-header .ui-btn,\n
+html .ui-body-a  .ui-header .ui-btn,\n
+html body  .ui-header .ui-btn.ui-btn-a,\n
+html body  .ui-header .ui-group-theme-a .ui-btn,\n
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-a,\n
+/* Button visited */\n
+.ui-page-theme-a  .ui-header  .ui-btn:visited,\n
+html .ui-bar-a  .ui-header .ui-btn:visited,\n
+html .ui-body-a  .ui-header .ui-btn:visited,\n
+html body .ui-header .ui-btn.ui-btn-a:visited,\n
+html body .ui-header .ui-group-theme-a .ui-btn:visited,\n
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-a:visited,\n
+.ui-page-theme-a  .ui-header  a:visited,\n
+html .ui-bar-a  .ui-header a:visited,\n
+html .ui-body-a  .ui-header a:visited,\n
+html body .ui-header a.ui-btn-a:visited,\n
+html body .ui-header .ui-group-theme-a a:visited,\n
+.ui-header [class*="ui-group-theme-"] a.ui-btn-a:visited {\n
+  background: none repeat scroll 0 center transparent;\n
+  border: 0 none;\n
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;\n
+  border-radius: 0 0 0 0  /* iOS3 */ !important;\n
+  -webkit-box-shadow: none /* iOS3 */ !important;\n
+  box-shadow: none /* iOS3 */ !important;\n
+  color: rgb(115, 115, 115); /* IE8 */\n
+  color: rgba(0, 0, 0, 0.55);\n
+  text-shadow: none;\n
+  font-weight: normal;\n
+  line-height: 3em; /* IE cannot take 300% */\n
+}\n
+/* Button special handling: panel listitems */\n
+.ui-page-theme-a .ui-panel-inner li .ui-btn,\n
+html .ui-bar-a .ui-panel-inner li .ui-btn,\n
+html .ui-body-a .ui-panel-inner li .ui-btn,\n
+html .ui-body-a .ui-panel-inner li.ui-li-static,\n
+html body .ui-panel-inner li .ui-btn.ui-btn-a,\n
+html body .ui-panel-inner li .ui-group-theme-a .ui-btn,\n
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-a,\n
+/* Button visited */\n
+.ui-page-theme-a .ui-panel-inner li .ui-btn:visited,\n
+html .ui-bar-a .ui-panel-inner li .ui-btn:visited,\n
+html .ui-body-a .ui-panel-inner li .ui-btn:visited,\n
+html body .ui-panel-inner li .ui-btn.ui-btn-a:visited,\n
+html body .ui-panel-inner li .ui-group-theme-a .ui-btn:visited,\n
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-a:visited,\n
+/* table */\n
+html .ui-page-theme-a .document-table,\n
+html .ui-page-theme-a .document-table {\n
+  background: none repeat scroll 0 0 transparent;\n
+  border-color: rgb(232, 232, 232);\n
+  border-color: rgba(255,255,255,.3);\n
+}\n
+/* dropshadow */\n
+html body .ui-group-theme-a li {\n
+  border-top: 1px solid #111;\n
+}\n
+html body .ui-group-theme-a li.ui-last-child {\n
+  border-top: 1px solid #111;\n
+  border-bottom: 1px solid #111;\n
+}\n
+html body .ui-group-theme-b li.ui-last-child a.ui-btn {\n
+  border-bottom: none\n
+}\n
+/* Button background hover */\n
+.ui-page-theme-a .ui-btn:hover,\n
+html .ui-bar-a .ui-btn:hover,\n
+html .ui-body-a .ui-btn:hover,\n
+html body .ui-btn.ui-btn-a:hover,\n
+html body .ui-group-theme-a .ui-btn:hover,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:hover,\n
+/* table rows */\n
+html .ui-page-theme-a .document-table tr th:hover ~ td,\n
+/* controlbars */\n
+html .ui-page-theme-a .ui-controlbar .ui-btn:hover,\n
+/* tabs */\n
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover,\n
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn:hover{\n
+  background-color: #e8e8e8;\n
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#e8e8e8));\n
+  background:        -webkit-linear-gradient(bottom, #fff, #e8e8e8);\n
+  background:           -moz-linear-gradient(bottom, #fff, #e8e8e8);\n
+  background:             -o-linear-gradient(bottom, #fff, #e8e8e8);\n
+  background:            -ms-linear-gradient(bottom, #fff, #e8e8e8);\n
+  background:                linear-gradient(bottom, #fff, #e8e8e8);\n
+}\n
+\n
+/* b */\n
+/*--------------------------------------------------------------------------*/\n
+/* Bar: Toolbars, dividers, slider track */\n
+.ui-bar-b,\n
+.ui-page-theme-b .ui-bar-inherit,\n
+html .ui-bar-b .ui-bar-inherit,\n
+html .ui-body-b .ui-bar-inherit,\n
+html body .ui-group-theme-b .ui-bar-inherit {\n
+  background: 0 none;\n
+  background: #222;\n
+  color: #fff;\n
+  text-shadow: 0 1px 0 #111111;\n
+  font-weight: normal;\n
+}\n
+.ui-bar-b {\n
+  border-width: 1px;\n
+  border-style: solid;\n
+}\n
+/* tables & controlbar & tabs & labels */\n
+html .ui-overlay-b fieldset label,\n
+html .ui-overlay-b fieldset legend,\n
+html .ui-page-theme-b .ui-controlbar .ui-btn,\n
+html .ui-page-theme-b .ui-controlbar ~ .ui-controlgroup .ui-btn,\n
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn,\n
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn,\n
+html .ui-page-theme-b .document-table thead a.ui-btn,\n
+html .ui-page-theme-b .document-table thead label {\n
+  color: #444;\n
+  text-shadow: 0 1px 0 #111111;\n
+}\n
+/* tables & controlbars */\n
+.ui-page-theme-b .document-table {\n
+  background-color: #222;\n
+  border-color: rgb(232, 232, 232); /* IE8 */\n
+  border-color: rgba(255,255,255,.3);\n
+}\n
+html .ui-page-theme-b .ui-popup .ui-header,\n
+html .ui-page-theme-b .ui-popup .ui-footer,\n
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn\n
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn {\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));\n
+  background-image: -webkit-linear-gradient( #444 , #222 );\n
+  background-image:    -moz-linear-gradient( #444 , #222 );\n
+  background-image:     -ms-linear-gradient( #444 , #222 );\n
+  background-image:      -o-linear-gradient( #444 , #222 );\n
+  background-image:         linear-gradient( #444 , #222 );\n
+  border-color: #444;\n
+}\n
+\n
+/* Page background */\n
+.ui-page-theme-b,\n
+.ui-page-theme-b .ui-panel-wrapper {\n
+  color: #fff;\n
+  text-shadow: 0 1px 0 #111111;\n
+  background: #222;\n
+  border-color:  #444;\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));\n
+  background-image: -webkit-linear-gradient( #444 , #222 );\n
+  background-image:    -moz-linear-gradient( #444 , #222 );\n
+  background-image:     -ms-linear-gradient( #444 , #222 );\n
+  background-image:      -o-linear-gradient( #444 , #222 );\n
+  background-image:         linear-gradient( #444 , #222 );\n
+}\n
+/* Body: Read-only lists, text inputs, collapsible content */\n
+.ui-body-b,\n
+.ui-page-theme-b .ui-body-inherit,\n
+.ui-page-theme-b .ui-content-element,\n
+html .ui-bar-b .ui-body-inherit,\n
+html .ui-body-b .ui-body-inherit,\n
+html body .ui-group-theme-b .ui-body-inherit,\n
+.ui-overlay-b {\n
+  color: #fff;\n
+  text-shadow: 0 1px 0 #111111;\n
+  background: #222;\n
+  border-color:  #444;\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));\n
+  background-image: -webkit-linear-gradient( #444 , #222 );\n
+  background-image:    -moz-linear-gradient( #444 , #222 );\n
+  background-image:     -ms-linear-gradient( #444 , #222 );\n
+  background-image:      -o-linear-gradient( #444 , #222 );\n
+  background-image:         linear-gradient( #444 , #222 );\n
+}\n
+.ui-body-b {\n
+  border-width: 1px;\n
+  border-style: solid;\n
+}\n
+/* Input filterable */\n
+html .ui-body-b .ui-body-inherit.ui-input-search {\n
+  background-image: none;\n
+}\n
+\n
+/* Links */\n
+.ui-page-theme-b a,\n
+html .ui-bar-b a,\n
+html .ui-body-b a,\n
+html body .ui-group-theme-b a,\n
+/* visited */\n
+.ui-page-theme-b a:visited,\n
+html body.ui-overlay-b a:visited,\n
+html body.ui-overlay-b .ui-btn:visited,\n
+html .ui-bar-b a:visited,\n
+html .ui-body-b a:visited,\n
+html body .ui-group-theme-b a:visited,\n
+/* hover */\n
+html body.ui-overlay-b .ui-btn:hover,\n
+html body.ui-overlay-b a:hover,\n
+.ui-page-theme-b a:hover,\n
+html .ui-bar-b a:hover,\n
+html .ui-body-b a:hover,\n
+html body .ui-group-theme-a a:hover,\n
+.ui-overlay-b .ui-btn:hover,\n
+.ui-page-theme-b .ui-btn:hover,\n
+html .ui-page-theme-b .ui-btn:hover,\n
+html .ui-page-theme-b .ui-btn:hover,\n
+html body .ui-group-theme-b .ui-btn:hover,\n
+/* active */\n
+.ui-page-theme-b .ui-btn:active,\n
+html .ui-bar-b .ui-btn:active,\n
+html .ui-body-b .ui-btn:active,\n
+html body .ui-group-theme-b .ui-btn:active,\n
+/* Texts */\n
+html body .ui-group-theme-b p,\n
+html body .ui-group-theme-b h1,\n
+html body .ui-group-theme-b h2,\n
+html body .ui-group-theme-b h3,\n
+html body .ui-group-theme-b h4,\n
+html body .ui-group-theme-b h5,\n
+html body .ui-group-theme-b h6,\n
+html .ui-page-theme-b .ui-content-element {\n
+  color: #fff;\n
+  border-color: auto;\n
+  text-shadow: none;\n
+}\n
+/* Button up */\n
+.ui-page-theme-b .ui-btn,\n
+html .ui-bar-b .ui-btn,\n
+html .ui-body-b .ui-btn,\n
+html body .ui-btn.ui-btn-b,\n
+html body .ui-group-theme-b .ui-btn,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b,\n
+.ui-page-theme-b .ui-bar-plain,\n
+/* Button visited */\n
+.ui-page-theme-b .ui-btn:visited,\n
+html .ui-bar-b .ui-btn:visited,\n
+html .ui-body-b .ui-btn:visited,\n
+html body .ui-btn.ui-btn-b:visited,\n
+html body .ui-group-theme-b .ui-btn:visited,\n
+[class*="ui-group-theme-"] a.ui-btn-b:visited,\n
+.ui-page-theme-b a:visited,\n
+html .ui-bar-b a:visited,\n
+html .ui-body-b a:visited,\n
+html body a.ui-btn-b:visited,\n
+html body .ui-group-theme-b a:visited,\n
+[class*="ui-group-theme-"] a.ui-btn-b:visited,\n
+html .ui-page-theme-b table tr td a:visited,\n
+/* table */\n
+html .ui-page-theme-b .document-table,\n
+html .ui-page-theme-b .document-table {\n
+  background: #222;\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));\n
+  background-image: -webkit-linear-gradient( #444 , #222 );\n
+  background-image:    -moz-linear-gradient( #444 , #222 );\n
+  background-image:     -ms-linear-gradient( #444 , #222 );\n
+  background-image:      -o-linear-gradient( #444 , #222 );\n
+  background-image:         linear-gradient( #444 , #222 );\n
+  border-color: #444;\n
+  color: #fff;\n
+  text-shadow: 0px 1px 0px #111;\n
+}\n
+html .ui-page-theme-b .ui-input-clear:active,\n
+html .ui-page-theme-b .ui-input-clear.ui-btn-active,\n
+html .ui-page-theme-b .ui-input-action:active,\n
+html .ui-page-theme-b .ui-input-action.ui-btn-active {\n
+  background: #222 !important;\n
+}\n
+/* Header Buttons */\n
+.ui-page-theme-b .ui-header .ui-btn,\n
+html .ui-bar-b.ui-header .ui-btn,\n
+html .ui-bar-b  .ui-header .ui-btn,\n
+html .ui-body-b  .ui-header .ui-btn,\n
+html body  .ui-header .ui-btn.ui-btn-b,\n
+html body  .ui-header .ui-group-theme-b .ui-btn,\n
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-b,\n
+/* Button visited */\n
+.ui-page-theme-b  .ui-header  .ui-btn:visited,\n
+html .ui-bar-b  .ui-header .ui-btn:visited,\n
+html .ui-body-b  .ui-header .ui-btn:visited,\n
+html body .ui-header .ui-btn.ui-btn-b:visited,\n
+html body .ui-header .ui-group-theme-b .ui-btn:visited,\n
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-b:visited,\n
+/* ADD also not on :hover */\n
+.ui-page-theme-b .ui-header  .ui-btn:hover,\n
+html .ui-bar-b .ui-header  .ui-btn:hover,\n
+html .ui-body-b .ui-header  .ui-btn:hover,\n
+html body .ui-header .ui-btn.ui-btn-b:hover,\n
+html body .ui-header .ui-group-theme-b .ui-btn:hover,\n
+.ui-header  [class*="ui-group-theme-"] .ui-btn.ui-btn-b:hover {\n
+  background: none repeat scroll 0 center transparent;\n
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;\n
+  border-radius: 0 0 0 0  /* iOS3 */ !important;\n
+  -webkit-box-shadow: none /* iOS3 */ !important;\n
+  box-shadow: none /* iOS3 */ !important;\n
+  color: #fff;\n
+  text-shadow: none;\n
+  font-weight: normal;\n
+  line-height: 3.25em; /* IE cannot take 325% */\n
+}\n
+/* Button special handling: listitem , collapsibles */\n
+.ui-page-theme-b .ui-panel-inner li .ui-btn,\n
+html .ui-bar-b .ui-panel-inner li .ui-btn,\n
+html .ui-body-b .ui-panel-inner li .ui-btn,\n
+html .ui-body-b .ui-panel-inner li.ui-li-static,\n
+html body .ui-panel-inner .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle,\n
+html body .ui-panel-inner .ui-group-theme-b .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle,\n
+html body .ui-panel-inner li .ui-btn.ui-btn-b,\n
+html body .ui-panel-inner li .ui-group-theme-b .ui-btn,\n
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-b,\n
+/* Button visited */\n
+.ui-page-theme-b .ui-panel-inner li .ui-btn:visited,\n
+html .ui-bar-b .ui-panel-inner li .ui-btn:visited,\n
+html .ui-body-b .ui-panel-inner li .ui-btn:visited,\n
+html body .ui-panel-inner .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle:visited,\n
+html body .ui-panel-inner .ui-group-theme-b .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle:visited\n
+html body .ui-panel-inner li .ui-btn.ui-btn-b:visited,\n
+html body .ui-panel-inner li .ui-group-theme-b .ui-btn:visited,\n
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-b:visited {\n
+  background: none repeat scroll 0 0 transparent;\n
+  border-color: rgb(232, 232, 232); /* IE8 */\n
+  border-color: rgba(255,255,255,.3);\n
+}\n
+/* dropshadow */\n
+html body .ui-group-theme-b li {\n
+  border-top: 1px solid #111;\n
+}\n
+html body .ui-group-theme-b li.ui-last-child {\n
+  border-bottom: 1px solid #111;\n
+}\n
+html body .ui-group-theme-b li.ui-last-child a.ui-btn {\n
+  border-bottom: none\n
+}\n
+\n
+/* Button hover */\n
+.ui-page-theme-b .ui-btn:hover,\n
+html .ui-bar-b .ui-btn:hover,\n
+html .ui-body-b .ui-btn:hover,\n
+html body .ui-btn.ui-btn-b:hover,\n
+html body .ui-group-theme-b .ui-btn:hover,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b:hover,\n
+/* table rows */\n
+html .ui-page-theme-b .document-table tr th:hover ~ td,\n
+/* controlbars */\n
+html .ui-page-theme-b .ui-controlbar .ui-btn:hover,\n
+/* tabs */\n
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn:hover\n
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover {\n
+  background: #222;\n
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));\n
+  background-image: -webkit-linear-gradient( #444 , #222 );\n
+  background-image:    -moz-linear-gradient( #444 , #222 );\n
+  background-image:     -ms-linear-gradient( #444 , #222 );\n
+  background-image:      -o-linear-gradient( #444 , #222 );\n
+  background-image:         linear-gradient( #444 , #222 );\n
+  border-color: rgb(232, 232, 232); /* IE8 */\n
+  border-color: rgba(255,255,255,.3);\n
+  /* border-color: #444 */\n
+  color: #fff;\n
+  text-shadow: 0px 1px 0px #111;\n
+}\n
+\n
+\n
+\n
+\n
+\n
+/* swatch "active" - need this for every swatch!!! */\n
+/*--------------------------------------------------------------------------*/\n
+\n
+/* Button down */\n
+html .ui-page-theme-a .ui-bar-active, /* if we do more like this, we need to have a proper theme */\n
+.ui-page-theme-a .ui-btn:active,\n
+html .ui-bar-a .ui-btn:active,\n
+html .ui-body-a .ui-btn:active,\n
+html body .ui-btn.ui-btn-a:active,\n
+html body .ui-group-theme-a .ui-btn:active,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:active,\n
+/* Active button */\n
+.ui-page-theme-a .ui-btn.ui-btn-active,\n
+html .ui-bar-a .ui-btn.ui-btn-active,\n
+html .ui-body-a .ui-btn.ui-btn-active,\n
+html body .ui-btn.ui-btn-a.ui-btn-active,\n
+html body .ui-group-theme-a .ui-btn.ui-btn-active,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a.ui-btn-active,\n
+/* radio button */\n
+.ui-page-theme-a .ui-btn.ui-radio-on,\n
+html .ui-bar-a .ui-btn.ui-radio-on,\n
+html .ui-body-a .ui-btn.ui-radio-on,\n
+html body .ui-group-theme-a .ui-btn.ui-radio-on,\n
+.ui-btn.ui-radio-on.ui-btn-a,\n
+/* Active flipswitch background */\n
+.ui-page-theme-a .ui-flipswitch-active,\n
+html .ui-bar-a .ui-flipswitch-active,\n
+html .ui-body-a .ui-flipswitch-active,\n
+html body .ui-group-theme-a .ui-flipswitch-active,\n
+html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active,\n
+/* Active slider track */\n
+.ui-page-theme-a .ui-slider-track .ui-btn-active,\n
+html .ui-bar-a .ui-slider-track .ui-btn-active,\n
+html .ui-body-a .ui-slider-track .ui-btn-active,\n
+html body .ui-group-theme-a .ui-slider-track .ui-btn-active,\n
+html body div.ui-slider-track.ui-body-a .ui-btn-active,\n
+/* Controlbar */\n
+html .ui-page-theme-a .ui-controlbar .ui-btn:active,\n
+html .ui-page-theme-a .ui-controlbar .ui-btn.ui-btn-active,\n
+/* Tab Buttons */\n
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn:active,\n
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn.ui-btn-active,\n
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,\n
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active,\n
+/* black */\n
+html .ui-page-theme-b .ui-bar-active,\n
+.ui-page-theme-b .ui-btn:active,\n
+html .ui-bar-b .ui-btn:active,\n
+html .ui-body-b .ui-btn:active,\n
+html body .ui-btn.ui-btn-b:active,\n
+html body .ui-group-theme-b .ui-btn:active,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b:active,\n
+/* Active button */\n
+.ui-page-theme-b .ui-btn.ui-btn-active,\n
+html .ui-bar-b .ui-btn.ui-btn-active,\n
+html .ui-body-b .ui-btn.ui-btn-active,\n
+html body .ui-btn.ui-btn-b.ui-btn-active,\n
+html body .ui-group-theme-b .ui-btn.ui-btn-active,\n
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b.ui-btn-active,\n
+/* radio on */\n
+.ui-page-theme-b .ui-btn.ui-radio-on,\n
+html .ui-bar-b .ui-btn.ui-radio-on,\n
+html .ui-body-b .ui-btn.ui-radio-on,\n
+html body .ui-group-theme-b .ui-btn.ui-radio-on,\n
+.ui-btn.ui-radio-on.ui-btn-b ,\n
+/* Active flipswitch background */\n
+.ui-page-theme-b .ui-flipswitch-active,\n
+html .ui-bar-b .ui-flipswitch-active,\n
+html .ui-body-b .ui-flipswitch-active,\n
+html body .ui-group-theme-b .ui-flipswitch-active,\n
+html body .ui-flipswitch.ui-bar-b.ui-flipswitch-active,\n
+/* Active slider track */\n
+.ui-page-theme-b .ui-slider-track .ui-btn-active,\n
+html .ui-bar-b .ui-slider-track .ui-btn-active,\n
+html .ui-body-b .ui-slider-track .ui-btn-active,\n
+html body .ui-group-theme-b .ui-slider-track .ui-btn-active,\n
+html body div.ui-slider-track.ui-body-b .ui-btn-active,\n
+/* Table rows on hover */\n
+html .document-table tbody tr.linkable:hover td:not(.ui-no-result),\n
+html .document-table tbody tr.linkable:hover th:not(.ui-no-result),\n
+/* Controlbar */\n
+html .ui-page-theme-b .ui-controlbar .ui-btn:active,\n
+html .ui-page-theme-b .ui-controlbar .ui-btn.ui-btn-active,\n
+/* Tab Buttons */\n
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn:active,\n
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn.ui-btn-active\n
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,\n
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active,\n
+/* LOADER */\n
+html .ui-loader.ui-body-loader-active {\n
+  background-color: #94f2f1;\n
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0fbabd), to(#94f2f1));\n
+  background:        -webkit-linear-gradient(bottom, #0fbabd, #94f2f1);\n
+  background:           -moz-linear-gradient(bottom, #0fbabd, #94f2f1);\n
+  background:             -o-linear-gradient(bottom, #0fbabd, #94f2f1);\n
+  background:            -ms-linear-gradient(bottom, #0fbabd, #94f2f1);\n
+  background:                linear-gradient(bottom, #0fbabd, #94f2f1);\n
+  color: #fff !important;\n
+  text-shadow: none;\n
+  cursor: pointer;\n
+}\n
+/* Table rows ,no pointer... */\n
+html .document-table tbody tr:hover td {\n
+  cursor: default;\n
+}\n
+\n
+/* Active radio button */\n
+/* white */\n
+.ui-page-theme-a .ui-btn.ui-radio-on:after,\n
+html .ui-bar-a .ui-btn.ui-radio-on:after,\n
+html .ui-body-a .ui-btn.ui-radio-on:after,\n
+html body .ui-group-theme-a .ui-btn.ui-radio-on:after,\n
+.ui-btn.ui-radio-on.ui-btn-a:after,\n
+/* black */\n
+.ui-page-theme-b .ui-btn.ui-radio-on:after,\n
+html .ui-bar-b .ui-btn.ui-radio-on:after,\n
+html .ui-body-b .ui-btn.ui-radio-on:after,\n
+html body .ui-group-theme-b .ui-btn.ui-radio-on:after,\n
+.ui-btn.ui-radio-on.ui-btn-b:after {\n
+  border-color:     #fff;\n
+}\n
+\n
+/* Focus */\n
+/* white */\n
+.ui-overlay-a .ui-btn:focus,\n
+.ui-page-theme-a .ui-btn:focus,\n
+html .ui-bar-a .ui-btn:focus,\n
+html .ui-body-a .ui-btn:focus,\n
+html body .ui-group-theme-a .ui-btn:focus,\n
+html head + body .ui-btn.ui-btn-a:focus,\n
+/* Focus buttons and text inputs with div wrap */\n
+.ui-overlay-a .ui-focus,\n
+.ui-page-theme-a .ui-focus,\n
+html .ui-bar-a .ui-focus,\n
+html .ui-body-a .ui-focus,\n
+html body .ui-group-theme-a .ui-focus,\n
+html head + body .ui-btn-a.ui-focus,\n
+html head + body .ui-body-a.ui-focus,\n
+/* black */\n
+.ui-overlay-b .ui-btn:focus,\n
+.ui-page-theme-b .ui-btn:focus,\n
+html .ui-bar-b .ui-btn:focus,\n
+html .ui-body-b .ui-btn:focus,\n
+html body .ui-group-theme-b .ui-btn:focus,\n
+html head + body .ui-btn.ui-btn-b:focus,\n
+/* Focus buttons and text inputs with div wrap */\n
+.ui-overlay-b .ui-focus,\n
+.ui-page-theme-b .ui-focus,\n
+html .ui-bar-b .ui-focus,\n
+html .ui-body-b .ui-focus,\n
+html body .ui-group-theme-b .ui-focus,\n
+html head + body .ui-btn-b.ui-focus,\n
+html head + body .ui-body-b.ui-focus{\n
+  -webkit-box-shadow: 0 0 6px #0fbabd;\n
+  box-shadow: 0 0 6px #0fbabd;\n
+}\n
+\n
+\n
+/* =========================== Override Widgets =========================== */\n
+\n
+/* ------------------------ Toolbar (header/footer) ----------------------- */\n
+.ui-header, .ui-footer {\n
+  border-width: 1px 0;\n
+}\n
+/* position */\n
+.ui-header .ui-btn-left,\n
+.ui-header .ui-btn-right {\n
+  top: 0;\n
+  position: absolute;\n
+  bottom: 0;\n
+}\n
+.ui-header .ui-btn-left {\n
+  left: 0;\n
+}\n
+.ui-header .ui-btn-right {\n
+  right: 0;\n
+}\n
+/* fix controlgroups in header font-size */\n
+.ui-header .ui-controlgroup.ui-btn-left,\n
+.ui-header .ui-controlgroup.ui-btn-right {\n
+  font-size: auto;\n
+}\n
+/* double borders */\n
+html .ui-header .ui-btn-left.ui-btn,\n
+html .ui-header .ui-btn-left .ui-btn {\n
+  border-right: 1px solid rgb(232, 232, 232); /* IE8 */\n
+  border-right: 1px solid rgba(232, 232, 232, 0.5);\n
+}\n
+html .ui-header .ui-btn-right.ui-btn,\n
+html .ui-header .ui-btn-right .ui-btn {\n
+  border-left: 1px solid rgb(115, 115, 115); /* IE8 */\n
+  border-left: 1px solid rgba(0, 0, 0, 0.55);\n
+}\n
+/* blank JQM icons for font-awesome, remove icon borders/background */\n
+.ui-header .ui-btn:before {\n
+  content: "";\n
+  height: 100%;\n
+  position: absolute;\n
+  width: 0;\n
+  bottom: 0;\n
+  top: 0;\n
+}\n
+.ui-header .ui-btn-left .ui-btn:before,\n
+.ui-header .ui-btn-left.ui-btn:before {\n
+  right: 0px;\n
+  border-right: 1px solid rgb(115, 115, 115); /* IE8 */\n
+  border-right: 1px solid rgba(0, 0, 0, 0.55);\n
+}\n
+.ui-header .ui-btn-right .ui-btn:before,\n
+.ui-header .ui-btn-right.ui-btn:before {\n
+  left: 0px;\n
+  border-left: 1px solid rgb(232, 232, 232); /* IE8 */\n
+  border-left: 1px solid rgba(232, 232, 232, 0.5);\n
+}\n
+\n
+/* hide button text on small screens, if button has class "responsive" */\n
+@media (max-width: 40em) {\n
+  .responsive.ui-btn,\n
+  .ui-select span.responsive {\n
+    text-indent: -9999px;\n
+    white-space: nowrap !important;\n
+  }\n
+  .responsive.ui-btn:after {\n
+    text-indent: 0px;\n
+    left: .6em;\n
+  }\n
+  /* center select(!) icons on responsive layouts */\n
+  .ui-mini.ui-btn-icon-left:after,\n
+  .ui-mini .ui-btn-icon-left:after,\n
+  .ui-header .ui-btn-icon-left:after,\n
+  .ui-footer .ui-btn-icon-left:after {\n
+    left: .6em;\n
+  }\n
+}\n
+/* stretch */\n
+html body .ui-header a.ui-btn,\n
+html body .ui-header .ui-controlgroup div.ui-select .ui-btn {\n
+  -webkit-border-radius: 0;\n
+  border-radius: 0;\n
+  -webkit-box-shadow: none;\n
+  box-shadow: none;\n
+  height: 100%;\n
+  margin: 0;\n
+  padding-bottom: 0;\n
+  padding-top: 0;\n
+}\n
+/* =============================== SELECT ================================= */\n
+/* align with height of inputs */\n
+html body div.ui-select div {\n
+    height: 22px;\n
+    line-height: 1.7em;\n
+    padding-bottom: 5px;\n
+    padding-top: 5px;\n
+}\n
+html body div.ui-select div span {\n
+   color: #000;\n
+}\n
+/* =============================== BUTTON ================================= */\n
+/* unbold */\n
+html .ui-btn, label.ui-btn {\n
+    font-weight: normal;\n
+}\n
+/* fix svg icon positioning */\n
+.ui-btn-icon-notext:after,\n
+.ui-btn-icon-left:after,\n
+.ui-btn-icon-top:after,\n
+.ui.btn-icon-bottom:after,\n
+.ui-btn-icon-right:after,\n
+.ui-listview > li > .ui-btn[class*="ui-icon-"]:after {\n
+    margin-top: -11px;\n
+    top: 50%;\n
+}\n
+\n
+/* fix text-indent when trying to use custom icons on iconpos-notext buttons */\n
+.ui-btn-icon-notext {\n
+  text-indent: -9999px;\n
+}\n
+.ui-btn-icon-notext:after {\n
+  text-indent: 0;\n
+}\n
+\n
+/* ---------------------------- TABLE  ------------------------------------ */\n
+/* NOTE: since the table widget is not used, JQM CSS is added hard coded */\n
+/* default table styles */\n
+.document-table {\n
+  border-collapse: separate;\n
+  border-spacing: 0;\n
+  padding: 0;\n
+  width: 100%;\n
+}\n
+.document-table th,\n
+.document-table td {\n
+  line-height: 1.5em;\n
+  text-align: left;\n
+  padding: .4em .5em;\n
+  vertical-align:top;\n
+}\n
+.document-table th .ui-btn,\n
+.document-table td .ui-btn {\n
+  line-height: normal;\n
+}\n
+.document-table th {\n
+  font-weight: bold;\n
+}\n
+.document-table caption {\n
+  text-align: left;\n
+  margin-bottom: 1.4em;\n
+  opacity: .5;\n
+}\n
+\n
+/* radius */\n
+.ui-table-inset {\n
+  -webkit-border-radius: .3125em;\n
+  border-radius: .3125em;\n
+}\n
+.ui-table-inset thead,\n
+.ui-table-inset thead tr:first-child {\n
+  -webkit-border-top-left-radius: inherit;\n
+  border-top-left-radius: inherit;\n
+  -webkit-border-top-right-radius: inherit;\n
+  border-top-right-radius: inherit;\n
+}\n
+.ui-table-inset thead tr:first-child td:first-child,\n
+.ui-table-inset thead tr:first-child th:first-child{\n
+  -webkit-border-top-left-radius: inherit;\n
+  border-top-left-radius: inherit;\n
+}\n
+.ui-table-inset thead tr:first-child td:last-child,\n
+.ui-table-inset thead tr:first-child th:last-child{\n
+  -webkit-border-top-right-radius: inherit;\n
+  border-top-right-radius: inherit;\n
+}\n
+.ui-table-inset tbody tr:last-child td:first-child,\n
+.ui-table-inset tbody tr:last-child th:first-child {\n
+  -webkit-border-bottom-left-radius: inherit;\n
+  border-bottom-left-radius: inherit;\n
+}\n
+.ui-table-inset tbody tr:last-child td:last-child,\n
+.ui-table-inset tbody tr:last-child th:last-child {\n
+  -webkit-border-bottom-right-radius: inherit;\n
+  border-bottom-right-radius: inherit;\n
+}\n
+\n
+/* format header cells (partially overwriting theme css) */\n
+html .document-table thead th,\n
+html .document-table thead td {\n
+  padding: 0;\n
+  text-shadow: none;\n
+  font-weight: normal;\n
+  vertical-align: middle;\n
+  text-align: center;\n
+  padding: 0 .25em;\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+/* set same padding everywhere */\n
+html .document-table tbdoy th,\n
+html .document-table tbody td {\n
+  padding: 0 1em;\n
+  vertical-align: middle;\n
+}\n
+@media (max-width: 20em) {\n
+  html .document-table tbdoy th,\n
+  html .document-table tbody td {\n
+    padding: 0;\n
+    height: 2.125em; /* mh... */\n
+  }\n
+}\n
+/* uncss table body links */\n
+html .document-table tbody td a,\n
+html .document-table tbody th a {\n
+  text-decoration: none;\n
+  font-weight: normal;\n
+}\n
+html .document-table tbody td:hover a,\n
+html .document-table tbody th:hover a {\n
+  text-decoration: none;\n
+}\n
+\n
+/* override JQM default format */\n
+html .document-table {\n
+  border: 1px solid;\n
+}\n
+/* alignment */\n
+html .document-table thead th .ui-btn,\n
+html .document-table thead td .ui-btn {\n
+  text-align: left;\n
+}\n
+/* table strokes/stripe */\n
+html .document-table thead th,\n
+html .document-table thead th,\n
+html .document-table tbody tr:last-child {\n
+  border-bottom: 1px solid #d6d6d6; /* non-RGBA fallback */\n
+  border-bottom: 1px solid rgba(0,0,0,.1);\n
+}\n
+html .document-table tbody th,\n
+html .document-table tbody td {\n
+  border-bottom: 1px solid #e6e6e6; /* non-RGBA fallback  */\n
+  border-bottom: 1px solid rgba(0,0,0,.05);\n
+}\n
+html .document-table tbody tr:last-child th,\n
+html .document-table tbody tr:last-child td {\n
+  border-bottom: 0;\n
+}\n
+html .document-table tbody tr:nth-child(odd) td,\n
+html .document-table tbody tr:nth-child(odd) th {\n
+  background-color: #eeeeee; /* non-RGBA fallback  */\n
+  background-color: rgba(0,0,0,.04);\n
+}\n
+\n
+/* ------------------------ TABS/GRID ------------------------------------ */\n
+/* copy JQM grid CSS without width (set below) */\n
+ul.grid-items, ul.grid-items li {\n
+    list-style: none outside none;\n
+    margin-left: 0;\n
+    margin-right: 0;\n
+    padding: 0;\n
+}\n
+ul.grid-items {\n
+    overflow: hidden;\n
+}\n
+ul.grid-items li {\n
+  float: left;\n
+}\n
+.grid-container ul li:first-child {\n
+  clear: left;\n
+}\n
+/*\n
+ * Width:\n
+ * default all in one line (as for tabs)\n
+ * > add .line-[x] to .grid-container = force [x] items/line\n
+ * > add .ui-responsive to .grid-container = force ONE item/line on smartphone\n
+ */\n
+\n
+/* thx: Lea Verou - http://bit.ly/1rAhqzm */\n
+.grid-container li a {\n
+  border-top: 0px;\n
+}\n
+.grid-container li.ui-block-a,\n
+.grid-container li.ui-block-b {\n
+  clear: none;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(1),\n
+div.grid-container ul.grid-items.line-1 li,\n
+div.grid-container ul.grid-items.line-1 li ~ li {\n
+  width: 100%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(2),\n
+.grid-container ul li:first-child:nth-last-child(2) ~ li,\n
+div.grid-container ul.grid-items.line-2 li,\n
+div.grid-container ul.grid-items.line-2 li ~ li {\n
+  width: 50%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(3),\n
+.grid-container ul li:first-child:nth-last-child(3) ~ li,\n
+div.grid-container ul.grid-items.line-3 li,\n
+div.grid-container ul.grid-items.line-3 li ~ li {\n
+  width: 33.3333%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(4),\n
+.grid-container ul li:first-child:nth-last-child(4) ~ li,\n
+div.grid-container ul.grid-items.line-4 li,\n
+div.grid-container ul.grid-items.line-4 li ~ li {\n
+  width: 25%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(5),\n
+.grid-container ul li:first-child:nth-last-child(5) ~ li,\n
+div.grid-container ul.grid-items.line-5 li,\n
+div.grid-container ul.grid-items.line-5 li ~ li {\n
+  width: 20%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(6),\n
+.grid-container ul li:first-child:nth-last-child(6) ~ li,\n
+div.grid-container ul.grid-items.line-6 li,\n
+div.grid-container ul.grid-items.line-6 li ~ li {\n
+  width: 16.667%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(7),\n
+.grid-container ul li:first-child:nth-last-child(7) ~ li,\n
+div.grid-container ul.grid-items.line-7 li,\n
+div.grid-container ul.grid-items.line-7 li ~ li {\n
+  width: 14,285714286%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(8),\n
+.grid-container ul li:first-child:nth-last-child(8) ~ li,\n
+div.grid-container ul.grid-items.line-8 li,\n
+div.grid-container ul.grid-items.line-8 li ~ li {\n
+  width: 12.5%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(9),\n
+.grid-container ul li:first-child:nth-last-child(9) ~ li,\n
+div.grid-container ul.grid-items.line-9 li,\n
+div.grid-container ul.grid-items.line-9 li ~ li {\n
+  width: 11.112%;\n
+}\n
+.grid-container ul li:first-child:nth-last-child(10),\n
+.grid-container ul li:first-child:nth-last-child(10) ~ li,\n
+div.grid-container ul.grid-items.line-10 li,\n
+div.grid-container ul.grid-items.line-10 li ~ li {\n
+  width: 10%;\n
+}\n
+\n
+@media (max-width: 40em) {\n
+  div.grid-container.ui-responsive ul.grid-items li,\n
+  div.grid-container.ui-responsive ul.grid-items li ~ li {\n
+    width: 100%;\n
+  }\n
+}\n
+/* ----------------------------- FORM LAYOUT ------------------------------ */\n
+/* Romain */\n
+iframe {\n
+  width: 95%;\n
+  height: 500px;\n
+}\n
+\n
+/* XXX still terrilble */\n
+/* mimic ui-content */\n
+section.document_list,\n
+section.document_table,\n
+form.save_form {\n
+  border-width: 0;\n
+  overflow: visible;\n
+  overflow-x: hidden;\n
+  padding: 1em;\n
+}\n
+form.save_form section.document_table {\n
+  padding: 0;\n
+}\n
+section.document_table thead tr th {\n
+  height: 2.25em;\n
+}\n
+/* inset + listview|table|form */\n
+.document-listview,\n
+.document-table {\n
+  margin: -1em;\n
+}\n
+.document-listview.ui-listview-inset,\n
+.document-table.ui-table-inset {\n
+  margin: 1em 0;\n
+}\n
+\n
+/* action menu */\n
+.action_list {\n
+  display: inline-block;\n
+}\n
+/* override default page wrapping */\n
+.ui-mobile .ui-page-active {\n
+  overflow: hidden;\n
+}\n
+\n
+/* readonly */\n
+.custom-readonly {\n
+  opacity: 1;\n
+}\n
+/* padding and overall width */\n
+html .left, html .right, html .center, html .bottom {\n
+  vertical-align: top;\n
+  padding: 0 2%;\n
+}\n
+html .center, html .bottom {\n
+  display: block;\n
+  width: 96%;\n
+}\n
+html .left, html .right {\n
+  display: inline-block;\n
+  width: 45%;\n
+}\n
+html .left textarea, html .right textarea {\n
+  width: 100%;\n
+  display: inline-block;\n
+  vertical-align: midle;\n
+}\n
+/* override border-radius for all inputs to match buttons */\n
+html form .ui-input-text.ui-corner-all {\n
+  -webkit-border-radius: .325em;\n
+  border-radius: .325em;\n
+}\n
+\n
+/* set line height on forms*/\n
+html.ui-mobile body form label {\n
+  line-height: 1em;\n
+}\n
+\n
+/* fix relation of label/legend to input to display side-by-side */\n
+.field_container fieldset label:not(.ui-btn),\n
+.field_container fieldset div.ui-controlgroup-label {\n
+    max-width: 30%;\n
+    min-width: 30%;\n
+}\n
+.field_container .left label:not(.ui-btn) ~ *,\n
+.field_container .left div.ui-controlgroup-label ~ *,\n
+.field_container .right label:not(.ui-btn) ~ * ,\n
+.field_container .right div.ui-controlgroup-label ~ * {\n
+  width: 70%;\n
+}\n
+.field_container .center label:not(.ui-btn) ~ *,\n
+.field_container .center div.ui-controlgroup-label ~ * {\n
+  width: 68%;\n
+}\n
+\n
+@media (max-width: 40em) {\n
+  html .center, html .bottom, html .left, html .right {\n
+    width: auto;\n
+    display: block;\n
+  }\n
+\n
+  html .left textarea,\n
+  html .right textarea,\n
+  html.ui-mobile body .field_container fieldset.left div label,\n
+  html.ui-mobile body .field_container fieldset.left div label ~ *,\n
+  html.ui-mobile body .field_container fieldset.right div label,\n
+  html.ui-mobile body .field_container fieldset.right div label ~ *,\n
+  html.ui-mobile body .field_container fieldset.center div label,\n
+  html.ui-mobile body .field_container fieldset.center div label ~ * {\n
+    width: auto;\n
+  }\n
+  html.ui-mobile body .field_container fieldset.left div label,\n
+  html.ui-mobile body .field_container fieldset.right div label,\n
+  html.ui-mobile body .field_container fieldset.center div label {\n
+    min-width: none;\n
+    max-width: none;\n
+    margin-bottom: -.5em;\n
+  }\n
+  html .left textarea,\n
+  html .right textarea {\n
+    min-width: 100%;\n
+  }\n
+}\n
+/* --------------------------- FORM INPUTS -------------------------------- */\n
+\n
+/* set field and input side by side */\n
+.field_container fieldset label:not(.ui-btn),\n
+.field_container fieldset div.ui-controlgroup-label,\n
+.field_container fieldset label:not(.ui-btn) ~ *,\n
+.field_container fieldset div.ui-controlgroup-label ~ * {\n
+    display: inline-block;\n
+    vertical-align: middle;\n
+}\n
+@media (max-width: 40em) {\n
+  .field_container fieldset label:not(.ui-btn),\n
+  .field_container fieldset div.ui-controlgroup-label,\n
+  .field_container fieldset label:not(.ui-btn) ~ *,\n
+  .field_container fieldset div.ui-controlgroup-label ~ * {\n
+      display: block;\n
+      vertical-align: top;\n
+  }\n
+}\n
+/* --------------------------- CARD -------------------------------- */\n
+html .ui-card {\n
+  border: 1px solid;\n
+  max-width: 35%;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+  margin-top: 10%;\n
+}\n
+@media (max-width: 40em) {\n
+  html .ui-card {\n
+    max-width: none;\n
+    margin-top: 30%;\n
+  }\n
+}\n
+/* -------------------- BREADCRUMB ----------------------------- */\n
+html.ui-mobile body nav.ui-title {\n
+    padding: 0;\n
+}\n
+.breadcrumb_container {\n
+    float: left;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget ERP5 CSS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411390496.99</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>937.48419.62008.14711</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411390338.58</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411390316.76</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

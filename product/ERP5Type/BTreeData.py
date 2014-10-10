@@ -11,6 +11,10 @@ class PersistentString(Persistent):
     def __str__(self):
         return self.value
 
+    # Save place when storing this data in zodb
+    __getstate__ = __str__
+    __setstate__ = __init__
+
 negative_offset_error = ValueError('Negative offset')
 
 class BTreeData(Persistent):

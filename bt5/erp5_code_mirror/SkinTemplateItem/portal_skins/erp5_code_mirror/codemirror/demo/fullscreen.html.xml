@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Full Screen Editing</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/display/fullscreen.css">\n
+<link rel="stylesheet" href="../theme/night.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../addon/display/fullscreen.js"></script>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Full Screen Editing</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Full Screen Editing</h2>\n
+<form><textarea id="code" name="code" rows="5">\n
+<dl>\n
+  <dt id="option_indentWithTabs"><code><strong>indentWithTabs</strong>: boolean</code></dt>\n
+  <dd>Whether, when indenting, the first N*<code>tabSize</code>\n
+  spaces should be replaced by N tabs. Default is false.</dd>\n
+\n
+  <dt id="option_electricChars"><code><strong>electricChars</strong>: boolean</code></dt>\n
+  <dd>Configures whether the editor should re-indent the current\n
+  line when a character is typed that might change its proper\n
+  indentation (only works if the mode supports indentation).\n
+  Default is true.</dd>\n
+\n
+  <dt id="option_specialChars"><code><strong>specialChars</strong>: RegExp</code></dt>\n
+  <dd>A regular expression used to determine which characters\n
+  should be replaced by a\n
+  special <a href="#option_specialCharPlaceholder">placeholder</a>.\n
+  Mostly useful for non-printing special characters. The default\n
+  is <code>/[\\u0000-\\u0019\\u00ad\\u200b\\u2028\\u2029\\ufeff]/</code>.</dd>\n
+  <dt id="option_specialCharPlaceholder"><code><strong>specialCharPlaceholder</strong>: function(char)Â âÂ Element</code></dt>\n
+  <dd>A function that, given a special character identified by\n
+  the <a href="#option_specialChars"><code>specialChars</code></a>\n
+  option, produces a DOM node that is used to represent the\n
+  character. By default, a red dot (<span style="color: red">â¢</span>)\n
+  is shown, with a title tooltip to indicate the character code.</dd>\n
+\n
+  <dt id="option_rtlMoveVisually"><code><strong>rtlMoveVisually</strong>: boolean</code></dt>\n
+  <dd>Determines whether horizontal cursor movement through\n
+  right-to-left (Arabic, Hebrew) text is visual (pressing the left\n
+  arrow moves the cursor left) or logical (pressing the left arrow\n
+  moves to the next lower index in the string, which is visually\n
+  right in right-to-left text). The default is <code>false</code>\n
+  on Windows, and <code>true</code> on other platforms.</dd>\n
+</dl>\n
+</textarea></form>\n
+  <script>\n
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+      lineNumbers: true,\n
+      theme: "night",\n
+      extraKeys: {\n
+        "F11": function(cm) {\n
+          cm.setOption("fullScreen", !cm.getOption("fullScreen"));\n
+        },\n
+        "Esc": function(cm) {\n
+          if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);\n
+        }\n
+      }\n
+    });\n
+  </script>\n
+\n
+    <p>Demonstration of\n
+    the <a href="../doc/manual.html#addon_fullscreen">fullscreen</a>\n
+    addon. Press <strong>F11</strong> when cursor is in the editor to\n
+    toggle full screen editing. <strong>Esc</strong> can also be used\n
+    to <i>exit</i> full screen editing.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fullscreen.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

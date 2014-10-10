@@ -60,6 +60,9 @@ return [\n
   dict(id=\'fr\',\n
        name=Base_translateString(\'French\'),\n
        bt5=\'erp5_l10n_fr\',),\n
+  dict(id=\'de\',\n
+       name=Base_translateString(\'German\'),\n
+       bt5=\'erp5_l10n_de\',),\n
   dict(id=\'pl\',\n
        name=Base_translateString(\'Polish\'),\n
        bt5=\'erp5_l10n_pl_PL\',),\n

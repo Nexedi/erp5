@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403074.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xml-hint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  function getHints(cm, options) {\n
+    var tags = options && options.schemaInfo;\n
+    var quote = (options && options.quoteChar) || \'"\';\n
+    if (!tags) return;\n
+    var cur = cm.getCursor(), token = cm.getTokenAt(cur);\n
+    var inner = CodeMirror.innerMode(cm.getMode(), token.state);\n
+    if (inner.mode.name != "xml") return;\n
+    var result = [], replaceToken = false, prefix;\n
+    var isTag = token.string.charAt(0) == "<";\n
+    if (!inner.state.tagName || isTag) { // Tag completion\n
+      if (isTag) {\n
+        prefix = token.string.slice(1);\n
+        replaceToken = true;\n
+      }\n
+      var cx = inner.state.context, curTag = cx && tags[cx.tagName];\n
+      var childList = cx ? curTag && curTag.children : tags["!top"];\n
+      if (childList) {\n
+        for (var i = 0; i < childList.length; ++i) if (!prefix || childList[i].lastIndexOf(prefix, 0) == 0)\n
+          result.push("<" + childList[i]);\n
+      } else {\n
+        for (var name in tags) if (tags.hasOwnProperty(name) && name != "!top" && (!prefix || name.lastIndexOf(prefix, 0) == 0))\n
+          result.push("<" + name);\n
+      }\n
+      if (cx && (!prefix || ("/" + cx.tagName).lastIndexOf(prefix, 0) == 0))\n
+        result.push("</" + cx.tagName + ">");\n
+    } else {\n
+      // Attribute completion\n
+      var curTag = tags[inner.state.tagName], attrs = curTag && curTag.attrs;\n
+      if (!attrs) return;\n
+      if (token.type == "string" || token.string == "=") { // A value\n
+        var before = cm.getRange(Pos(cur.line, Math.max(0, cur.ch - 60)),\n
+                                 Pos(cur.line, token.type == "string" ? token.start : token.end));\n
+        var atName = before.match(/([^\\s\\u00a0=<>\\"\\\']+)=$/), atValues;\n
+        if (!atName || !attrs.hasOwnProperty(atName[1]) || !(atValues = attrs[atName[1]])) return;\n
+        if (typeof atValues == \'function\') atValues = atValues.call(this, cm); // Functions can be used to supply values for autocomplete widget\n
+        if (token.type == "string") {\n
+          prefix = token.string;\n
+          if (/[\'"]/.test(token.string.charAt(0))) {\n
+            quote = token.string.charAt(0);\n
+            prefix = token.string.slice(1);\n
+          }\n
+          replaceToken = true;\n
+        }\n
+        for (var i = 0; i < atValues.length; ++i) if (!prefix || atValues[i].lastIndexOf(prefix, 0) == 0)\n
+          result.push(quote + atValues[i] + quote);\n
+      } else { // An attribute name\n
+        if (token.type == "attribute") {\n
+          prefix = token.string;\n
+          replaceToken = true;\n
+        }\n
+        for (var attr in attrs) if (attrs.hasOwnProperty(attr) && (!prefix || attr.lastIndexOf(prefix, 0) == 0))\n
+          result.push(attr);\n
+      }\n
+    }\n
+    return {\n
+      list: result,\n
+      from: replaceToken ? Pos(cur.line, token.start) : cur,\n
+      to: replaceToken ? Pos(cur.line, token.end) : cur\n
+    };\n
+  }\n
+\n
+  CodeMirror.xmlHint = getHints; // deprecated\n
+  CodeMirror.registerHelper("hint", "xml", getHints);\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2964</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

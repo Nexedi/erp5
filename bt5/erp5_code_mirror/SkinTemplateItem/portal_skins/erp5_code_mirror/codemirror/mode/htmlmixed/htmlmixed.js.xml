@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403086.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>htmlmixed.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
+  var htmlMode = CodeMirror.getMode(config, {name: "xml",\n
+                                             htmlMode: true,\n
+                                             multilineTagIndentFactor: parserConfig.multilineTagIndentFactor,\n
+                                             multilineTagIndentPastTag: parserConfig.multilineTagIndentPastTag});\n
+  var cssMode = CodeMirror.getMode(config, "css");\n
+\n
+  var scriptTypes = [], scriptTypesConf = parserConfig && parserConfig.scriptTypes;\n
+  scriptTypes.push({matches: /^(?:text|application)\\/(?:x-)?(?:java|ecma)script$|^$/i,\n
+                    mode: CodeMirror.getMode(config, "javascript")});\n
+  if (scriptTypesConf) for (var i = 0; i < scriptTypesConf.length; ++i) {\n
+    var conf = scriptTypesConf[i];\n
+    scriptTypes.push({matches: conf.matches, mode: conf.mode && CodeMirror.getMode(config, conf.mode)});\n
+  }\n
+  scriptTypes.push({matches: /./,\n
+                    mode: CodeMirror.getMode(config, "text/plain")});\n
+\n
+  function html(stream, state) {\n
+    var tagName = state.htmlState.tagName;\n
+    var style = htmlMode.token(stream, state.htmlState);\n
+    if (tagName == "script" && /\\btag\\b/.test(style) && stream.current() == ">") {\n
+      // Script block: mode to change to depends on type attribute\n
+      var scriptType = stream.string.slice(Math.max(0, stream.pos - 100), stream.pos).match(/\\btype\\s*=\\s*("[^"]+"|\'[^\']+\'|\\S+)[^<]*$/i);\n
+      scriptType = scriptType ? scriptType[1] : "";\n
+      if (scriptType && /[\\"\\\']/.test(scriptType.charAt(0))) scriptType = scriptType.slice(1, scriptType.length - 1);\n
+      for (var i = 0; i < scriptTypes.length; ++i) {\n
+        var tp = scriptTypes[i];\n
+        if (typeof tp.matches == "string" ? scriptType == tp.matches : tp.matches.test(scriptType)) {\n
+          if (tp.mode) {\n
+            state.token = script;\n
+            state.localMode = tp.mode;\n
+            state.localState = tp.mode.startState && tp.mode.startState(htmlMode.indent(state.htmlState, ""));\n
+          }\n
+          break;\n
+        }\n
+      }\n
+    } else if (tagName == "style" && /\\btag\\b/.test(style) && stream.current() == ">") {\n
+      state.token = css;\n
+      state.localMode = cssMode;\n
+      state.localState = cssMode.startState(htmlMode.indent(state.htmlState, ""));\n
+    }\n
+    return style;\n
+  }\n
+  function maybeBackup(stream, pat, style) {\n
+    var cur = stream.current();\n
+    var close = cur.search(pat), m;\n
+    if (close > -1) stream.backUp(cur.length - close);\n
+    else if (m = cur.match(/<\\/?$/)) {\n
+      stream.backUp(cur.length);\n
+      if (!stream.match(pat, false)) stream.match(cur);\n
+    }\n
+    return style;\n
+  }\n
+  function script(stream, state) {\n
+    if (stream.match(/^<\\/\\s*script\\s*>/i, false)) {\n
+      state.token = html;\n
+      state.localState = state.localMode = null;\n
+      return html(stream, state);\n
+    }\n
+    return maybeBackup(stream, /<\\/\\s*script\\s*>/,\n
+                       state.localMode.token(stream, state.localState));\n
+  }\n
+  function css(stream, state) {\n
+    if (stream.match(/^<\\/\\s*style\\s*>/i, false)) {\n
+      state.token = html;\n
+      state.localState = state.localMode = null;\n
+      return html(stream, state);\n
+    }\n
+    return maybeBackup(stream, /<\\/\\s*style\\s*>/,\n
+                       cssMode.token(stream, state.localState));\n
+  }\n
+\n
+  return {\n
+    startState: function() {\n
+      var state = htmlMode.startState();\n
+      return {token: html, localMode: null, localState: null, htmlState: state};\n
+    },\n
+\n
+    copyState: function(state) {\n
+      if (state.localState)\n
+        var local = CodeMirror.copyState(state.localMode, state.localState);\n
+      return {token: state.token, localMode: state.localMode, localState: local,\n
+              htmlState: CodeMirror.copyState(htmlMode, state.htmlState)};\n
+    },\n
+\n
+    token: function(stream, state) {\n
+      return state.token(stream, state);\n
+    },\n
+\n
+    indent: function(state, textAfter) {\n
+      if (!state.localMode || /^\\s*<\\//.test(textAfter))\n
+        return htmlMode.indent(state.htmlState, textAfter);\n
+      else if (state.localMode.indent)\n
+        return state.localMode.indent(state.localState, textAfter);\n
+      else\n
+        return CodeMirror.Pass;\n
+    },\n
+\n
+    innerMode: function(state) {\n
+      return {state: state.localState || state.htmlState, mode: state.localMode || htmlMode};\n
+    }\n
+  };\n
+}, "xml", "javascript", "css");\n
+\n
+CodeMirror.defineMIME("text/html", "htmlmixed");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4388</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

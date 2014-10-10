@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403097.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var mode = CodeMirror.getMode({tabSize: 4}, "gfm");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeHighlightFormatting = CodeMirror.getMode({tabSize: 4}, {name: "gfm", highlightFormatting: true});\n
+  function FT(name) { test.mode(name, modeHighlightFormatting, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  FT("codeBackticks",\n
+     "[comment&formatting&formatting-code `][comment foo][comment&formatting&formatting-code `]");\n
+\n
+  FT("doubleBackticks",\n
+     "[comment&formatting&formatting-code ``][comment foo ` bar][comment&formatting&formatting-code ``]");\n
+\n
+  FT("codeBlock",\n
+     "[comment&formatting&formatting-code-block ```css]",\n
+     "[tag foo]",\n
+     "[comment&formatting&formatting-code-block ```]");\n
+\n
+  FT("taskList",\n
+     "[variable-2&formatting&formatting-list&formatting-list-ul - ][meta&formatting&formatting-task [ ]]][variable-2  foo]",\n
+     "[variable-2&formatting&formatting-list&formatting-list-ul - ][property&formatting&formatting-task [x]]][variable-2  foo]");\n
+\n
+  MT("emInWordAsterisk",\n
+     "foo[em *bar*]hello");\n
+\n
+  MT("emInWordUnderscore",\n
+     "foo_bar_hello");\n
+\n
+  MT("emStrongUnderscore",\n
+     "[strong __][em&strong _foo__][em _] bar");\n
+\n
+  MT("fencedCodeBlocks",\n
+     "[comment ```]",\n
+     "[comment foo]",\n
+     "",\n
+     "[comment ```]",\n
+     "bar");\n
+\n
+  MT("fencedCodeBlockModeSwitching",\n
+     "[comment ```javascript]",\n
+     "[variable foo]",\n
+     "",\n
+     "[comment ```]",\n
+     "bar");\n
+\n
+  MT("taskListAsterisk",\n
+     "[variable-2 * []] foo]", // Invalid; must have space or x between []\n
+     "[variable-2 * [ ]]bar]", // Invalid; must have space after ]\n
+     "[variable-2 * [x]]hello]", // Invalid; must have space after ]\n
+     "[variable-2 * ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links\n
+     "    [variable-3 * ][property [x]]][variable-3  foo]"); // Valid; can be nested\n
+\n
+  MT("taskListPlus",\n
+     "[variable-2 + []] foo]", // Invalid; must have space or x between []\n
+     "[variable-2 + [ ]]bar]", // Invalid; must have space after ]\n
+     "[variable-2 + [x]]hello]", // Invalid; must have space after ]\n
+     "[variable-2 + ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links\n
+     "    [variable-3 + ][property [x]]][variable-3  foo]"); // Valid; can be nested\n
+\n
+  MT("taskListDash",\n
+     "[variable-2 - []] foo]", // Invalid; must have space or x between []\n
+     "[variable-2 - [ ]]bar]", // Invalid; must have space after ]\n
+     "[variable-2 - [x]]hello]", // Invalid; must have space after ]\n
+     "[variable-2 - ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links\n
+     "    [variable-3 - ][property [x]]][variable-3  foo]"); // Valid; can be nested\n
+\n
+  MT("taskListNumber",\n
+     "[variable-2 1. []] foo]", // Invalid; must have space or x between []\n
+     "[variable-2 2. [ ]]bar]", // Invalid; must have space after ]\n
+     "[variable-2 3. [x]]hello]", // Invalid; must have space after ]\n
+     "[variable-2 4. ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links\n
+     "    [variable-3 1. ][property [x]]][variable-3  foo]"); // Valid; can be nested\n
+\n
+  MT("SHA",\n
+     "foo [link be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] bar");\n
+\n
+  MT("shortSHA",\n
+     "foo [link be6a8cc] bar");\n
+\n
+  MT("tooShortSHA",\n
+     "foo be6a8c bar");\n
+\n
+  MT("longSHA",\n
+     "foo be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd22 bar");\n
+\n
+  MT("badSHA",\n
+     "foo be6a8cc1c1ecfe9489fb51e4869af15a13fc2cg2 bar");\n
+\n
+  MT("userSHA",\n
+     "foo [link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] hello");\n
+\n
+  MT("userProjectSHA",\n
+     "foo [link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] world");\n
+\n
+  MT("num",\n
+     "foo [link #1] bar");\n
+\n
+  MT("badNum",\n
+     "foo #1bar hello");\n
+\n
+  MT("userNum",\n
+     "foo [link bar#1] hello");\n
+\n
+  MT("userProjectNum",\n
+     "foo [link bar/hello#1] world");\n
+\n
+  MT("vanillaLink",\n
+     "foo [link http://www.example.com/] bar");\n
+\n
+  MT("vanillaLinkPunctuation",\n
+     "foo [link http://www.example.com/]. bar");\n
+\n
+  MT("vanillaLinkExtension",\n
+     "foo [link http://www.example.com/index.html] bar");\n
+\n
+  MT("notALink",\n
+     "[comment ```css]",\n
+     "[tag foo] {[property color]:[keyword black];}",\n
+     "[comment ```][link http://www.example.com/]");\n
+\n
+  MT("notALink",\n
+     "[comment ``foo `bar` http://www.example.com/``] hello");\n
+\n
+  MT("notALink",\n
+     "[comment `foo]",\n
+     "[link http://www.example.com/]",\n
+     "[comment `foo]",\n
+     "",\n
+     "[link http://www.example.com/]");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4478</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

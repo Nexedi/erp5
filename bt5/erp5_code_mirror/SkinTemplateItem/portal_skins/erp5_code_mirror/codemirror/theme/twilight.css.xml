@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>twilight.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-twilight.CodeMirror { background: #141414; color: #f7f7f7; } /**/\n
+.cm-s-twilight .CodeMirror-selected { background: #323232 !important; } /**/\n
+\n
+.cm-s-twilight .CodeMirror-gutters { background: #222; border-right: 1px solid #aaa; }\n
+.cm-s-twilight .CodeMirror-linenumber { color: #aaa; }\n
+.cm-s-twilight .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+\n
+.cm-s-twilight .cm-keyword {  color: #f9ee98; } /**/\n
+.cm-s-twilight .cm-atom { color: #FC0; }\n
+.cm-s-twilight .cm-number { color:  #ca7841; } /**/\n
+.cm-s-twilight .cm-def { color: #8DA6CE; }\n
+.cm-s-twilight span.cm-variable-2, .cm-s-twilight span.cm-tag { color: #607392; } /**/\n
+.cm-s-twilight span.cm-variable-3, .cm-s-twilight span.cm-def { color: #607392; } /**/\n
+.cm-s-twilight .cm-operator { color: #cda869; } /**/\n
+.cm-s-twilight .cm-comment { color:#777; font-style:italic; font-weight:normal; } /**/\n
+.cm-s-twilight .cm-string { color:#8f9d6a; font-style:italic; } /**/\n
+.cm-s-twilight .cm-string-2 { color:#bd6b18 } /*?*/\n
+.cm-s-twilight .cm-meta { background-color:#141414; color:#f7f7f7; } /*?*/\n
+.cm-s-twilight .cm-builtin { color: #cda869; } /*?*/\n
+.cm-s-twilight .cm-tag { color: #997643; } /**/\n
+.cm-s-twilight .cm-attribute { color: #d6bb6d; } /*?*/\n
+.cm-s-twilight .cm-header { color: #FF6400; }\n
+.cm-s-twilight .cm-hr { color: #AEAEAE; }\n
+.cm-s-twilight .cm-link {   color:#ad9361; font-style:italic; text-decoration:none; } /**/\n
+.cm-s-twilight .cm-error { border-bottom: 1px solid red; }\n
+\n
+.cm-s-twilight .CodeMirror-activeline-background {background: #27282E !important;}\n
+.cm-s-twilight .CodeMirror-matchingbracket {outline:1px solid grey; color:white !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

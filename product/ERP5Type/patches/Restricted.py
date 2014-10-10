@@ -228,3 +228,5 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
       fromlist = ['__name__']
   return orig_guarded_import(mname, globals, locals, fromlist, level)
 safe_builtins['__import__'] = guarded_import
+
+ModuleSecurityInfo('transaction').declarePublic('doom')

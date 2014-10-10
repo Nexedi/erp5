@@ -1,0 +1,768 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403087.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var mode = CodeMirror.getMode({tabSize: 4}, "markdown");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeHighlightFormatting = CodeMirror.getMode({tabSize: 4}, {name: "markdown", highlightFormatting: true});\n
+  function FT(name) { test.mode(name, modeHighlightFormatting, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  FT("formatting_emAsterisk",\n
+     "[em&formatting&formatting-em *][em foo][em&formatting&formatting-em *]");\n
+\n
+  FT("formatting_emUnderscore",\n
+     "[em&formatting&formatting-em _][em foo][em&formatting&formatting-em _]");\n
+\n
+  FT("formatting_strongAsterisk",\n
+     "[strong&formatting&formatting-strong **][strong foo][strong&formatting&formatting-strong **]");\n
+\n
+  FT("formatting_strongUnderscore",\n
+     "[strong&formatting&formatting-strong __][strong foo][strong&formatting&formatting-strong __]");\n
+\n
+  FT("formatting_codeBackticks",\n
+     "[comment&formatting&formatting-code `][comment foo][comment&formatting&formatting-code `]");\n
+\n
+  FT("formatting_doubleBackticks",\n
+     "[comment&formatting&formatting-code ``][comment foo ` bar][comment&formatting&formatting-code ``]");\n
+\n
+  FT("formatting_atxHeader",\n
+     "[header&header-1&formatting&formatting-header&formatting-header-1 #][header&header-1  foo # bar ][header&header-1&formatting&formatting-header&formatting-header-1 #]");\n
+\n
+  FT("formatting_setextHeader",\n
+     "foo",\n
+     "[header&header-1&formatting&formatting-header&formatting-header-1 =]");\n
+\n
+  FT("formatting_blockquote",\n
+     "[quote&quote-1&formatting&formatting-quote&formatting-quote-1 > ][quote&quote-1 foo]");\n
+\n
+  FT("formatting_list",\n
+     "[variable-2&formatting&formatting-list&formatting-list-ul - ][variable-2 foo]");\n
+  FT("formatting_list",\n
+     "[variable-2&formatting&formatting-list&formatting-list-ol 1. ][variable-2 foo]");\n
+\n
+  FT("formatting_link",\n
+     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string (][string http://example.com/][string&formatting&formatting-link-string )]");\n
+\n
+  FT("formatting_linkReference",\n
+     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string [][string bar][string&formatting&formatting-link-string ]]]",\n
+     "[link&formatting&formatting-link [][link bar][link&formatting&formatting-link ]]:] [string http://example.com/]");\n
+\n
+  FT("formatting_linkWeb",\n
+     "[link&formatting&formatting-link <][link http://example.com/][link&formatting&formatting-link >]");\n
+\n
+  FT("formatting_linkEmail",\n
+     "[link&formatting&formatting-link <][link user@example.com][link&formatting&formatting-link >]");\n
+\n
+  FT("formatting_escape",\n
+     "[formatting&formatting-escape \\\\]*");\n
+\n
+  MT("plainText",\n
+     "foo");\n
+\n
+  // Don\'t style single trailing space\n
+  MT("trailingSpace1",\n
+     "foo ");\n
+\n
+  // Two or more trailing spaces should be styled with line break character\n
+  MT("trailingSpace2",\n
+     "foo[trailing-space-a  ][trailing-space-new-line  ]");\n
+\n
+  MT("trailingSpace3",\n
+     "foo[trailing-space-a  ][trailing-space-b  ][trailing-space-new-line  ]");\n
+\n
+  MT("trailingSpace4",\n
+     "foo[trailing-space-a  ][trailing-space-b  ][trailing-space-a  ][trailing-space-new-line  ]");\n
+\n
+  // Code blocks using 4 spaces (regardless of CodeMirror.tabSize value)\n
+  MT("codeBlocksUsing4Spaces",\n
+     "    [comment foo]");\n
+\n
+  // Code blocks using 4 spaces with internal indentation\n
+  MT("codeBlocksUsing4SpacesIndentation",\n
+     "    [comment bar]",\n
+     "        [comment hello]",\n
+     "            [comment world]",\n
+     "    [comment foo]",\n
+     "bar");\n
+\n
+  // Code blocks using 4 spaces with internal indentation\n
+  MT("codeBlocksUsing4SpacesIndentation",\n
+     " foo",\n
+     "    [comment bar]",\n
+     "        [comment hello]",\n
+     "    [comment world]");\n
+\n
+  // Code blocks using 1 tab (regardless of CodeMirror.indentWithTabs value)\n
+  MT("codeBlocksUsing1Tab",\n
+     "\\t[comment foo]");\n
+\n
+  // Inline code using backticks\n
+  MT("inlineCodeUsingBackticks",\n
+     "foo [comment `bar`]");\n
+\n
+  // Block code using single backtick (shouldn\'t work)\n
+  MT("blockCodeSingleBacktick",\n
+     "[comment `]",\n
+     "foo",\n
+     "[comment `]");\n
+\n
+  // Unclosed backticks\n
+  // Instead of simply marking as CODE, it would be nice to have an\n
+  // incomplete flag for CODE, that is styled slightly different.\n
+  MT("unclosedBackticks",\n
+     "foo [comment `bar]");\n
+\n
+  // Per documentation: "To include a literal backtick character within a\n
+  // code span, you can use multiple backticks as the opening and closing\n
+  // delimiters"\n
+  MT("doubleBackticks",\n
+     "[comment ``foo ` bar``]");\n
+\n
+  // Tests based on Dingus\n
+  // http://daringfireball.net/projects/markdown/dingus\n
+  //\n
+  // Multiple backticks within an inline code block\n
+  MT("consecutiveBackticks",\n
+     "[comment `foo```bar`]");\n
+\n
+  // Multiple backticks within an inline code block with a second code block\n
+  MT("consecutiveBackticks",\n
+     "[comment `foo```bar`] hello [comment `world`]");\n
+\n
+  // Unclosed with several different groups of backticks\n
+  MT("unclosedBackticks",\n
+     "[comment ``foo ``` bar` hello]");\n
+\n
+  // Closed with several different groups of backticks\n
+  MT("closedBackticks",\n
+     "[comment ``foo ``` bar` hello``] world");\n
+\n
+  // atx headers\n
+  // http://daringfireball.net/projects/markdown/syntax#header\n
+\n
+  MT("atxH1",\n
+     "[header&header-1 # foo]");\n
+\n
+  MT("atxH2",\n
+     "[header&header-2 ## foo]");\n
+\n
+  MT("atxH3",\n
+     "[header&header-3 ### foo]");\n
+\n
+  MT("atxH4",\n
+     "[header&header-4 #### foo]");\n
+\n
+  MT("atxH5",\n
+     "[header&header-5 ##### foo]");\n
+\n
+  MT("atxH6",\n
+     "[header&header-6 ###### foo]");\n
+\n
+  // H6 - 7x \'#\' should still be H6, per Dingus\n
+  // http://daringfireball.net/projects/markdown/dingus\n
+  MT("atxH6NotH7",\n
+     "[header&header-6 ####### foo]");\n
+\n
+  // Inline styles should be parsed inside headers\n
+  MT("atxH1inline",\n
+     "[header&header-1 # foo ][header&header-1&em *bar*]");\n
+\n
+  // Setext headers - H1, H2\n
+  // Per documentation, "Any number of underlining =’s or -’s will work."\n
+  // http://daringfireball.net/projects/markdown/syntax#header\n
+  // Ideally, the text would be marked as `header` as well, but this is\n
+  // not really feasible at the moment. So, instead, we\'re testing against\n
+  // what works today, to avoid any regressions.\n
+  //\n
+  // Check if single underlining = works\n
+  MT("setextH1",\n
+     "foo",\n
+     "[header&header-1 =]");\n
+\n
+  // Check if 3+ =\'s work\n
+  MT("setextH1",\n
+     "foo",\n
+     "[header&header-1 ===]");\n
+\n
+  // Check if single underlining - works\n
+  MT("setextH2",\n
+     "foo",\n
+     "[header&header-2 -]");\n
+\n
+  // Check if 3+ -\'s work\n
+  MT("setextH2",\n
+     "foo",\n
+     "[header&header-2 ---]");\n
+\n
+  // Single-line blockquote with trailing space\n
+  MT("blockquoteSpace",\n
+     "[quote&quote-1 > foo]");\n
+\n
+  // Single-line blockquote\n
+  MT("blockquoteNoSpace",\n
+     "[quote&quote-1 >foo]");\n
+\n
+  // No blank line before blockquote\n
+  MT("blockquoteNoBlankLine",\n
+     "foo",\n
+     "[quote&quote-1 > bar]");\n
+\n
+  // Nested blockquote\n
+  MT("blockquoteSpace",\n
+     "[quote&quote-1 > foo]",\n
+     "[quote&quote-1 >][quote&quote-2 > foo]",\n
+     "[quote&quote-1 >][quote&quote-2 >][quote&quote-3 > foo]");\n
+\n
+  // Single-line blockquote followed by normal paragraph\n
+  MT("blockquoteThenParagraph",\n
+     "[quote&quote-1 >foo]",\n
+     "",\n
+     "bar");\n
+\n
+  // Multi-line blockquote (lazy mode)\n
+  MT("multiBlockquoteLazy",\n
+     "[quote&quote-1 >foo]",\n
+     "[quote&quote-1 bar]");\n
+\n
+  // Multi-line blockquote followed by normal paragraph (lazy mode)\n
+  MT("multiBlockquoteLazyThenParagraph",\n
+     "[quote&quote-1 >foo]",\n
+     "[quote&quote-1 bar]",\n
+     "",\n
+     "hello");\n
+\n
+  // Multi-line blockquote (non-lazy mode)\n
+  MT("multiBlockquote",\n
+     "[quote&quote-1 >foo]",\n
+     "[quote&quote-1 >bar]");\n
+\n
+  // Multi-line blockquote followed by normal paragraph (non-lazy mode)\n
+  MT("multiBlockquoteThenParagraph",\n
+     "[quote&quote-1 >foo]",\n
+     "[quote&quote-1 >bar]",\n
+     "",\n
+     "hello");\n
+\n
+  // Check list types\n
+\n
+  MT("listAsterisk",\n
+     "foo",\n
+     "bar",\n
+     "",\n
+     "[variable-2 * foo]",\n
+     "[variable-2 * bar]");\n
+\n
+  MT("listPlus",\n
+     "foo",\n
+     "bar",\n
+     "",\n
+     "[variable-2 + foo]",\n
+     "[variable-2 + bar]");\n
+\n
+  MT("listDash",\n
+     "foo",\n
+     "bar",\n
+     "",\n
+     "[variable-2 - foo]",\n
+     "[variable-2 - bar]");\n
+\n
+  MT("listNumber",\n
+     "foo",\n
+     "bar",\n
+     "",\n
+     "[variable-2 1. foo]",\n
+     "[variable-2 2. bar]");\n
+\n
+  // Lists require a preceding blank line (per Dingus)\n
+  MT("listBogus",\n
+     "foo",\n
+     "1. bar",\n
+     "2. hello");\n
+\n
+  // List after header\n
+  MT("listAfterHeader",\n
+     "[header&header-1 # foo]",\n
+     "[variable-2 - bar]");\n
+\n
+  // Formatting in lists (*)\n
+  MT("listAsteriskFormatting",\n
+     "[variable-2 * ][variable-2&em *foo*][variable-2  bar]",\n
+     "[variable-2 * ][variable-2&strong **foo**][variable-2  bar]",\n
+     "[variable-2 * ][variable-2&strong **][variable-2&em&strong *foo**][variable-2&em *][variable-2  bar]",\n
+     "[variable-2 * ][variable-2&comment `foo`][variable-2  bar]");\n
+\n
+  // Formatting in lists (+)\n
+  MT("listPlusFormatting",\n
+     "[variable-2 + ][variable-2&em *foo*][variable-2  bar]",\n
+     "[variable-2 + ][variable-2&strong **foo**][variable-2  bar]",\n
+     "[variable-2 + ][variable-2&strong **][variable-2&em&strong *foo**][variable-2&em *][variable-2  bar]",\n
+     "[variable-2 + ][variable-2&comment `foo`][variable-2  bar]");\n
+\n
+  // Formatting in lists (-)\n
+  MT("listDashFormatting",\n
+     "[variable-2 - ][variable-2&em *foo*][variable-2  bar]",\n
+     "[variable-2 - ][variable-2&strong **foo**][variable-2  bar]",\n
+     "[variable-2 - ][variable-2&strong **][variable-2&em&strong *foo**][variable-2&em *][variable-2  bar]",\n
+     "[variable-2 - ][variable-2&comment `foo`][variable-2  bar]");\n
+\n
+  // Formatting in lists (1.)\n
+  MT("listNumberFormatting",\n
+     "[variable-2 1. ][variable-2&em *foo*][variable-2  bar]",\n
+     "[variable-2 2. ][variable-2&strong **foo**][variable-2  bar]",\n
+     "[variable-2 3. ][variable-2&strong **][variable-2&em&strong *foo**][variable-2&em *][variable-2  bar]",\n
+     "[variable-2 4. ][variable-2&comment `foo`][variable-2  bar]");\n
+\n
+  // Paragraph lists\n
+  MT("listParagraph",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]");\n
+\n
+  // Multi-paragraph lists\n
+  //\n
+  // 4 spaces\n
+  MT("listMultiParagraph",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "    [variable-2 hello]");\n
+\n
+  // 4 spaces, extra blank lines (should still be list, per Dingus)\n
+  MT("listMultiParagraphExtra",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "",\n
+     "    [variable-2 hello]");\n
+\n
+  // 4 spaces, plus 1 space (should still be list, per Dingus)\n
+  MT("listMultiParagraphExtraSpace",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "     [variable-2 hello]",\n
+     "",\n
+     "    [variable-2 world]");\n
+\n
+  // 1 tab\n
+  MT("listTab",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "\\t[variable-2 hello]");\n
+\n
+  // No indent\n
+  MT("listNoIndent",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "hello");\n
+\n
+  // Blockquote\n
+  MT("blockquote",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "    [variable-2&quote&quote-1 > hello]");\n
+\n
+  // Code block\n
+  MT("blockquoteCode",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "[variable-2 * bar]",\n
+     "",\n
+     "        [comment > hello]",\n
+     "",\n
+     "    [variable-2 world]");\n
+\n
+  // Code block followed by text\n
+  MT("blockquoteCodeText",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "    [variable-2 bar]",\n
+     "",\n
+     "        [comment hello]",\n
+     "",\n
+     "    [variable-2 world]");\n
+\n
+  // Nested list\n
+\n
+  MT("listAsteriskNested",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "    [variable-3 * bar]");\n
+\n
+  MT("listPlusNested",\n
+     "[variable-2 + foo]",\n
+     "",\n
+     "    [variable-3 + bar]");\n
+\n
+  MT("listDashNested",\n
+     "[variable-2 - foo]",\n
+     "",\n
+     "    [variable-3 - bar]");\n
+\n
+  MT("listNumberNested",\n
+     "[variable-2 1. foo]",\n
+     "",\n
+     "    [variable-3 2. bar]");\n
+\n
+  MT("listMixed",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "    [variable-3 + bar]",\n
+     "",\n
+     "        [keyword - hello]",\n
+     "",\n
+     "            [variable-2 1. world]");\n
+\n
+  MT("listBlockquote",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "    [variable-3 + bar]",\n
+     "",\n
+     "        [quote&quote-1&variable-3 > hello]");\n
+\n
+  MT("listCode",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "    [variable-3 + bar]",\n
+     "",\n
+     "            [comment hello]");\n
+\n
+  // Code with internal indentation\n
+  MT("listCodeIndentation",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "        [comment bar]",\n
+     "            [comment hello]",\n
+     "                [comment world]",\n
+     "        [comment foo]",\n
+     "    [variable-2 bar]");\n
+\n
+  // List nesting edge cases\n
+  MT("listNested",\n
+    "[variable-2 * foo]",\n
+    "",\n
+    "    [variable-3 * bar]",\n
+    "",\n
+    "       [variable-2 hello]"\n
+  );\n
+  MT("listNested",\n
+    "[variable-2 * foo]",\n
+    "",\n
+    "    [variable-3 * bar]",\n
+    "",\n
+    "      [variable-3 * foo]"\n
+  );\n
+\n
+  // Code followed by text\n
+  MT("listCodeText",\n
+     "[variable-2 * foo]",\n
+     "",\n
+     "        [comment bar]",\n
+     "",\n
+     "hello");\n
+\n
+  // Following tests directly from official Markdown documentation\n
+  // http://daringfireball.net/projects/markdown/syntax#hr\n
+\n
+  MT("hrSpace",\n
+     "[hr * * *]");\n
+\n
+  MT("hr",\n
+     "[hr ***]");\n
+\n
+  MT("hrLong",\n
+     "[hr *****]");\n
+\n
+  MT("hrSpaceDash",\n
+     "[hr - - -]");\n
+\n
+  MT("hrDashLong",\n
+     "[hr ---------------------------------------]");\n
+\n
+  // Inline link with title\n
+  MT("linkTitle",\n
+     "[link [[foo]]][string (http://example.com/ \\"bar\\")] hello");\n
+\n
+  // Inline link without title\n
+  MT("linkNoTitle",\n
+     "[link [[foo]]][string (http://example.com/)] bar");\n
+\n
+  // Inline link with image\n
+  MT("linkImage",\n
+     "[link [[][tag ![[foo]]][string (http://example.com/)][link ]]][string (http://example.com/)] bar");\n
+\n
+  // Inline link with Em\n
+  MT("linkEm",\n
+     "[link [[][link&em *foo*][link ]]][string (http://example.com/)] bar");\n
+\n
+  // Inline link with Strong\n
+  MT("linkStrong",\n
+     "[link [[][link&strong **foo**][link ]]][string (http://example.com/)] bar");\n
+\n
+  // Inline link with EmStrong\n
+  MT("linkEmStrong",\n
+     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string (http://example.com/)] bar");\n
+\n
+  // Image with title\n
+  MT("imageTitle",\n
+     "[tag ![[foo]]][string (http://example.com/ \\"bar\\")] hello");\n
+\n
+  // Image without title\n
+  MT("imageNoTitle",\n
+     "[tag ![[foo]]][string (http://example.com/)] bar");\n
+\n
+  // Image with asterisks\n
+  MT("imageAsterisks",\n
+     "[tag ![[*foo*]]][string (http://example.com/)] bar");\n
+\n
+  // Not a link. Should be normal text due to square brackets being used\n
+  // regularly in text, especially in quoted material, and no space is allowed\n
+  // between square brackets and parentheses (per Dingus).\n
+  MT("notALink",\n
+     "[[foo]] (bar)");\n
+\n
+  // Reference-style links\n
+  MT("linkReference",\n
+     "[link [[foo]]][string [[bar]]] hello");\n
+\n
+  // Reference-style links with Em\n
+  MT("linkReferenceEm",\n
+     "[link [[][link&em *foo*][link ]]][string [[bar]]] hello");\n
+\n
+  // Reference-style links with Strong\n
+  MT("linkReferenceStrong",\n
+     "[link [[][link&strong **foo**][link ]]][string [[bar]]] hello");\n
+\n
+  // Reference-style links with EmStrong\n
+  MT("linkReferenceEmStrong",\n
+     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string [[bar]]] hello");\n
+\n
+  // Reference-style links with optional space separator (per docuentation)\n
+  // "You can optionally use a space to separate the sets of brackets"\n
+  MT("linkReferenceSpace",\n
+     "[link [[foo]]] [string [[bar]]] hello");\n
+\n
+  // Should only allow a single space ("...use *a* space...")\n
+  MT("linkReferenceDoubleSpace",\n
+     "[[foo]]  [[bar]] hello");\n
+\n
+  // Reference-style links with implicit link name\n
+  MT("linkImplicit",\n
+     "[link [[foo]]][string [[]]] hello");\n
+\n
+  // @todo It would be nice if, at some point, the document was actually\n
+  // checked to see if the referenced link exists\n
+\n
+  // Link label, for reference-style links (taken from documentation)\n
+\n
+  MT("labelNoTitle",\n
+     "[link [[foo]]:] [string http://example.com/]");\n
+\n
+  MT("labelIndented",\n
+     "   [link [[foo]]:] [string http://example.com/]");\n
+\n
+  MT("labelSpaceTitle",\n
+     "[link [[foo bar]]:] [string http://example.com/ \\"hello\\"]");\n
+\n
+  MT("labelDoubleTitle",\n
+     "[link [[foo bar]]:] [string http://example.com/ \\"hello\\"] \\"world\\"");\n
+\n
+  MT("labelTitleDoubleQuotes",\n
+     "[link [[foo]]:] [string http://example.com/  \\"bar\\"]");\n
+\n
+  MT("labelTitleSingleQuotes",\n
+     "[link [[foo]]:] [string http://example.com/  \'bar\']");\n
+\n
+  MT("labelTitleParenthese",\n
+     "[link [[foo]]:] [string http://example.com/  (bar)]");\n
+\n
+  MT("labelTitleInvalid",\n
+     "[link [[foo]]:] [string http://example.com/] bar");\n
+\n
+  MT("labelLinkAngleBrackets",\n
+     "[link [[foo]]:] [string <http://example.com/>  \\"bar\\"]");\n
+\n
+  MT("labelTitleNextDoubleQuotes",\n
+     "[link [[foo]]:] [string http://example.com/]",\n
+     "[string \\"bar\\"] hello");\n
+\n
+  MT("labelTitleNextSingleQuotes",\n
+     "[link [[foo]]:] [string http://example.com/]",\n
+     "[string \'bar\'] hello");\n
+\n
+  MT("labelTitleNextParenthese",\n
+     "[link [[foo]]:] [string http://example.com/]",\n
+     "[string (bar)] hello");\n
+\n
+  MT("labelTitleNextMixed",\n
+     "[link [[foo]]:] [string http://example.com/]",\n
+     "(bar\\" hello");\n
+\n
+  MT("linkWeb",\n
+     "[link <http://example.com/>] foo");\n
+\n
+  MT("linkWebDouble",\n
+     "[link <http://example.com/>] foo [link <http://example.com/>]");\n
+\n
+  MT("linkEmail",\n
+     "[link <user@example.com>] foo");\n
+\n
+  MT("linkEmailDouble",\n
+     "[link <user@example.com>] foo [link <user@example.com>]");\n
+\n
+  MT("emAsterisk",\n
+     "[em *foo*] bar");\n
+\n
+  MT("emUnderscore",\n
+     "[em _foo_] bar");\n
+\n
+  MT("emInWordAsterisk",\n
+     "foo[em *bar*]hello");\n
+\n
+  MT("emInWordUnderscore",\n
+     "foo[em _bar_]hello");\n
+\n
+  // Per documentation: "...surround an * or _ with spaces, it’ll be\n
+  // treated as a literal asterisk or underscore."\n
+\n
+  MT("emEscapedBySpaceIn",\n
+     "foo [em _bar _ hello_] world");\n
+\n
+  MT("emEscapedBySpaceOut",\n
+     "foo _ bar[em _hello_]world");\n
+\n
+  MT("emEscapedByNewline",\n
+     "foo",\n
+     "_ bar[em _hello_]world");\n
+\n
+  // Unclosed emphasis characters\n
+  // Instead of simply marking as EM / STRONG, it would be nice to have an\n
+  // incomplete flag for EM and STRONG, that is styled slightly different.\n
+  MT("emIncompleteAsterisk",\n
+     "foo [em *bar]");\n
+\n
+  MT("emIncompleteUnderscore",\n
+     "foo [em _bar]");\n
+\n
+  MT("strongAsterisk",\n
+     "[strong **foo**] bar");\n
+\n
+  MT("strongUnderscore",\n
+     "[strong __foo__] bar");\n
+\n
+  MT("emStrongAsterisk",\n
+     "[em *foo][em&strong **bar*][strong hello**] world");\n
+\n
+  MT("emStrongUnderscore",\n
+     "[em _foo][em&strong __bar_][strong hello__] world");\n
+\n
+  // "...same character must be used to open and close an emphasis span.""\n
+  MT("emStrongMixed",\n
+     "[em _foo][em&strong **bar*hello__ world]");\n
+\n
+  MT("emStrongMixed",\n
+     "[em *foo][em&strong __bar_hello** world]");\n
+\n
+  // These characters should be escaped:\n
+  // \\   backslash\n
+  // `   backtick\n
+  // *   asterisk\n
+  // _   underscore\n
+  // {}  curly braces\n
+  // []  square brackets\n
+  // ()  parentheses\n
+  // #   hash mark\n
+  // +   plus sign\n
+  // -   minus sign (hyphen)\n
+  // .   dot\n
+  // !   exclamation mark\n
+\n
+  MT("escapeBacktick",\n
+     "foo \\\\`bar\\\\`");\n
+\n
+  MT("doubleEscapeBacktick",\n
+     "foo \\\\\\\\[comment `bar\\\\\\\\`]");\n
+\n
+  MT("escapeAsterisk",\n
+     "foo \\\\*bar\\\\*");\n
+\n
+  MT("doubleEscapeAsterisk",\n
+     "foo \\\\\\\\[em *bar\\\\\\\\*]");\n
+\n
+  MT("escapeUnderscore",\n
+     "foo \\\\_bar\\\\_");\n
+\n
+  MT("doubleEscapeUnderscore",\n
+     "foo \\\\\\\\[em _bar\\\\\\\\_]");\n
+\n
+  MT("escapeHash",\n
+     "\\\\# foo");\n
+\n
+  MT("doubleEscapeHash",\n
+     "\\\\\\\\# foo");\n
+\n
+  MT("escapeNewline",\n
+     "\\\\",\n
+     "[em *foo*]");\n
+\n
+\n
+  // Tests to make sure GFM-specific things aren\'t getting through\n
+\n
+  MT("taskList",\n
+     "[variable-2 * [ ]] bar]");\n
+\n
+  MT("fencedCodeBlocks",\n
+     "[comment ```]",\n
+     "foo",\n
+     "[comment ```]");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19952</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

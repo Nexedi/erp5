@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: merge view demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel=stylesheet href="../lib/codemirror.css">\n
+<link rel=stylesheet href="../addon/merge/merge.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../addon/merge/dep/diff_match_patch.js"></script>\n
+<script src="../addon/merge/merge.js"></script>\n
+<style>\n
+    .CodeMirror { line-height: 1.2; }\n
+    span.clicky {\n
+      cursor: pointer;\n
+      background: #d70;\n
+      color: white;\n
+      padding: 0 3px;\n
+      border-radius: 3px;\n
+    }\n
+  </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">merge view</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>merge view demo</h2>\n
+\n
+\n
+<div id=view></div>\n
+\n
+<p>The <a href="../doc/manual.html#addon_merge"><code>merge</code></a>\n
+addon provides an interface for displaying and merging diffs,\n
+either <span class=clicky onclick="initUI(2)">two-way</span>\n
+or <span class=clicky onclick="initUI(3)">three-way</span>. The left\n
+(or center) pane is editable, and the differences with the other\n
+pane(s) are <span class=clicky onclick="toggleDifferences()">optionally</span> shown live as you edit it.</p>\n
+\n
+<p>This addon depends on\n
+the <a href="https://code.google.com/p/google-diff-match-patch/">google-diff-match-patch</a>\n
+library to compute the diffs.</p>\n
+\n
+<script>\n
+var value, orig1, orig2, dv, hilight= true;\n
+function initUI(panes) {\n
+  if (value == null) return;\n
+  var target = document.getElementById("view");\n
+  target.innerHTML = "";\n
+  dv = CodeMirror.MergeView(target, {\n
+    value: value,\n
+    origLeft: panes == 3 ? orig1 : null,\n
+    orig: orig2,\n
+    lineNumbers: true,\n
+    mode: "text/html",\n
+    highlightDifferences: hilight\n
+  });\n
+}\n
+\n
+function toggleDifferences() {\n
+  dv.setShowDifferences(hilight = !hilight);\n
+}\n
+\n
+window.onload = function() {\n
+  value = document.documentElement.innerHTML;\n
+  orig1 = value.replace(/\\.\\.\\//g, "codemirror/").replace("yellow", "orange");\n
+  orig2 = value.replace(/\\u003cscript/g, "\\u003cscript type=text/javascript ")\n
+    .replace("white", "purple;\\n      font: comic sans;\\n      text-decoration: underline;\\n      height: 15em");\n
+  initUI(2);\n
+};\n
+</script>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>merge.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403073.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>javascript-lint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+  // declare global: JSHINT\n
+\n
+  var bogus = [ "Dangerous comment" ];\n
+\n
+  var warnings = [ [ "Expected \'{\'",\n
+                     "Statement body should be inside \'{ }\' braces." ] ];\n
+\n
+  var errors = [ "Missing semicolon", "Extra comma", "Missing property name",\n
+                 "Unmatched ", " and instead saw", " is not defined",\n
+                 "Unclosed string", "Stopping, unable to continue" ];\n
+\n
+  function validator(text, options) {\n
+    JSHINT(text, options);\n
+    var errors = JSHINT.data().errors, result = [];\n
+    if (errors) parseErrors(errors, result);\n
+    return result;\n
+  }\n
+\n
+  CodeMirror.registerHelper("lint", "javascript", validator);\n
+  CodeMirror.javascriptValidator = CodeMirror.lint.javascript; // deprecated\n
+\n
+  function cleanup(error) {\n
+    // All problems are warnings by default\n
+    fixWith(error, warnings, "warning", true);\n
+    fixWith(error, errors, "error");\n
+\n
+    return isBogus(error) ? null : error;\n
+  }\n
+\n
+  function fixWith(error, fixes, severity, force) {\n
+    var description, fix, find, replace, found;\n
+\n
+    description = error.description;\n
+\n
+    for ( var i = 0; i < fixes.length; i++) {\n
+      fix = fixes[i];\n
+      find = (typeof fix === "string" ? fix : fix[0]);\n
+      replace = (typeof fix === "string" ? null : fix[1]);\n
+      found = description.indexOf(find) !== -1;\n
+\n
+      if (force || found) {\n
+        error.severity = severity;\n
+      }\n
+      if (found && replace) {\n
+        error.description = replace;\n
+      }\n
+    }\n
+  }\n
+\n
+  function isBogus(error) {\n
+    var description = error.description;\n
+    for ( var i = 0; i < bogus.length; i++) {\n
+      if (description.indexOf(bogus[i]) !== -1) {\n
+        return true;\n
+      }\n
+    }\n
+    return false;\n
+  }\n
+\n
+  function parseErrors(errors, output) {\n
+    for ( var i = 0; i < errors.length; i++) {\n
+      var error = errors[i];\n
+      if (error) {\n
+        var linetabpositions, index;\n
+\n
+        linetabpositions = [];\n
+\n
+        // This next block is to fix a problem in jshint. Jshint\n
+        // replaces\n
+        // all tabs with spaces then performs some checks. The error\n
+        // positions (character/space) are then reported incorrectly,\n
+        // not taking the replacement step into account. Here we look\n
+        // at the evidence line and try to adjust the character position\n
+        // to the correct value.\n
+        if (error.evidence) {\n
+          // Tab positions are computed once per line and cached\n
+          var tabpositions = linetabpositions[error.line];\n
+          if (!tabpositions) {\n
+            var evidence = error.evidence;\n
+            tabpositions = [];\n
+            // ugggh phantomjs does not like this\n
+            // forEachChar(evidence, function(item, index) {\n
+            Array.prototype.forEach.call(evidence, function(item,\n
+                                                            index) {\n
+              if (item === \'\\t\') {\n
+                // First col is 1 (not 0) to match error\n
+                // positions\n
+                tabpositions.push(index + 1);\n
+              }\n
+            });\n
+            linetabpositions[error.line] = tabpositions;\n
+          }\n
+          if (tabpositions.length > 0) {\n
+            var pos = error.character;\n
+            tabpositions.forEach(function(tabposition) {\n
+              if (pos > tabposition) pos -= 1;\n
+            });\n
+            error.character = pos;\n
+          }\n
+        }\n
+\n
+        var start = error.character - 1, end = start + 1;\n
+        if (error.evidence) {\n
+          index = error.evidence.substring(start).search(/.\\b/);\n
+          if (index > -1) {\n
+            end += index;\n
+          }\n
+        }\n
+\n
+        // Convert to format expected by validation service\n
+        error.description = error.reason;// + "(jshint)";\n
+        error.start = error.character;\n
+        error.end = end;\n
+        error = cleanup(error);\n
+\n
+        if (error)\n
+          output.push({message: error.description,\n
+                       severity: error.severity,\n
+                       from: CodeMirror.Pos(error.line - 1, start),\n
+                       to: CodeMirror.Pos(error.line - 1, end)});\n
+      }\n
+    }\n
+  }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4069</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

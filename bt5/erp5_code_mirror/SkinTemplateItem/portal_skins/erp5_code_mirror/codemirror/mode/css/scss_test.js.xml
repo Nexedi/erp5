@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403094.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scss_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-scss");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1), "scss"); }\n
+\n
+  MT(\'url_with_quotation\',\n
+    "[tag foo] { [property background]:[atom url]([string test.jpg]) }");\n
+\n
+  MT(\'url_with_double_quotes\',\n
+    "[tag foo] { [property background]:[atom url]([string \\"test.jpg\\"]) }");\n
+\n
+  MT(\'url_with_single_quotes\',\n
+    "[tag foo] { [property background]:[atom url]([string \\\'test.jpg\\\']) }");\n
+\n
+  MT(\'string\',\n
+    "[def @import] [string \\"compass/css3\\"]");\n
+\n
+  MT(\'important_keyword\',\n
+    "[tag foo] { [property background]:[atom url]([string \\\'test.jpg\\\']) [keyword !important] }");\n
+\n
+  MT(\'variable\',\n
+    "[variable-2 $blue]:[atom #333]");\n
+\n
+  MT(\'variable_as_attribute\',\n
+    "[tag foo] { [property color]:[variable-2 $blue] }");\n
+\n
+  MT(\'numbers\',\n
+    "[tag foo] { [property padding]:[number 10px] [number 10] [number 10em] [number 8in] }");\n
+\n
+  MT(\'number_percentage\',\n
+    "[tag foo] { [property width]:[number 80%] }");\n
+\n
+  MT(\'selector\',\n
+    "[builtin #hello][qualifier .world]{}");\n
+\n
+  MT(\'singleline_comment\',\n
+    "[comment // this is a comment]");\n
+\n
+  MT(\'multiline_comment\',\n
+    "[comment /*foobar*/]");\n
+\n
+  MT(\'attribute_with_hyphen\',\n
+    "[tag foo] { [property font-size]:[number 10px] }");\n
+\n
+  MT(\'string_after_attribute\',\n
+    "[tag foo] { [property content]:[string \\"::\\"] }");\n
+\n
+  MT(\'directives\',\n
+    "[def @include] [qualifier .mixin]");\n
+\n
+  MT(\'basic_structure\',\n
+    "[tag p] { [property background]:[keyword red]; }");\n
+\n
+  MT(\'nested_structure\',\n
+    "[tag p] { [tag a] { [property color]:[keyword red]; } }");\n
+\n
+  MT(\'mixin\',\n
+    "[def @mixin] [tag table-base] {}");\n
+\n
+  MT(\'number_without_semicolon\',\n
+    "[tag p] {[property width]:[number 12]}",\n
+    "[tag a] {[property color]:[keyword red];}");\n
+\n
+  MT(\'atom_in_nested_block\',\n
+    "[tag p] { [tag a] { [property color]:[atom #000]; } }");\n
+\n
+  MT(\'interpolation_in_property\',\n
+    "[tag foo] { #{[variable-2 $hello]}:[number 2]; }");\n
+\n
+  MT(\'interpolation_in_selector\',\n
+    "[tag foo]#{[variable-2 $hello]} { [property color]:[atom #000]; }");\n
+\n
+  MT(\'interpolation_error\',\n
+    "[tag foo]#{[error foo]} { [property color]:[atom #000]; }");\n
+\n
+  MT("divide_operator",\n
+    "[tag foo] { [property width]:[number 4] [operator /] [number 2] }");\n
+\n
+  MT(\'nested_structure_with_id_selector\',\n
+    "[tag p] { [builtin #hello] { [property color]:[keyword red]; } }");\n
+\n
+  MT(\'indent_mixin\',\n
+     "[def @mixin] [tag container] (",\n
+     "  [variable-2 $a]: [number 10],",\n
+     "  [variable-2 $b]: [number 10])",\n
+     "{}");\n
+\n
+  MT(\'indent_nested\',\n
+     "[tag foo] {",\n
+     "  [tag bar] {",\n
+     "  }",\n
+     "}");\n
+\n
+  MT(\'indent_parentheses\',\n
+     "[tag foo] {",\n
+     "  [property color]: [variable darken]([variable-2 $blue],",\n
+     "    [number 9%]);",\n
+     "}");\n
+\n
+  MT(\'indent_vardef\',\n
+     "[variable-2 $name]:",\n
+     "  [string \'val\'];",\n
+     "[tag tag] {",\n
+     "  [tag inner] {",\n
+     "    [property margin]: [number 3px];",\n
+     "  }",\n
+     "}");\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2997</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

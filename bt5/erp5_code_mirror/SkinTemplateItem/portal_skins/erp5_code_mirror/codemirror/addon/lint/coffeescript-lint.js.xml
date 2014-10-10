@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403072.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>coffeescript-lint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Depends on coffeelint.js from http://www.coffeelint.org/js/coffeelint.js\n
+\n
+// declare global: coffeelint\n
+\n
+CodeMirror.registerHelper("lint", "coffeescript", function(text) {\n
+  var found = [];\n
+  var parseError = function(err) {\n
+    var loc = err.lineNumber;\n
+    found.push({from: CodeMirror.Pos(loc-1, 0),\n
+                to: CodeMirror.Pos(loc, 0),\n
+                severity: err.level,\n
+                message: err.message});\n
+  };\n
+  try {\n
+    var res = coffeelint.lint(text);\n
+    for(var i = 0; i < res.length; i++) {\n
+      parseError(res[i]);\n
+    }\n
+  } catch(e) {\n
+    found.push({from: CodeMirror.Pos(e.location.first_line, 0),\n
+                to: CodeMirror.Pos(e.location.last_line, e.location.last_column),\n
+                severity: \'error\',\n
+                message: e.message});\n
+  }\n
+  return found;\n
+});\n
+CodeMirror.coffeeValidator = CodeMirror.lint.coffeescript; // deprecated\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>882</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

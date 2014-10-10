@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<head>\n
+  <title>CodeMirror: Code Folding Demo</title>\n
+  <meta charset="utf-8"/>\n
+  <link rel=stylesheet href="../doc/docs.css">\n
+\n
+  <link rel="stylesheet" href="../lib/codemirror.css">\n
+  <link rel="stylesheet" href="../addon/fold/foldgutter.css" />\n
+  <script src="../lib/codemirror.js"></script>\n
+  <script src="../addon/fold/foldcode.js"></script>\n
+  <script src="../addon/fold/foldgutter.js"></script>\n
+  <script src="../addon/fold/brace-fold.js"></script>\n
+  <script src="../addon/fold/xml-fold.js"></script>\n
+  <script src="../addon/fold/markdown-fold.js"></script>\n
+  <script src="../addon/fold/comment-fold.js"></script>\n
+  <script src="../mode/javascript/javascript.js"></script>\n
+  <script src="../mode/xml/xml.js"></script>\n
+  <script src="../mode/markdown/markdown.js"></script>\n
+  <style type="text/css">\n
+    .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+  </style>\n
+</head>\n
+\n
+<body>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Code Folding</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+  <h2>Code Folding Demo</h2>\n
+  <form>\n
+    <div style="max-width: 50em; margin-bottom: 1em">JavaScript:<br>\n
+    <textarea id="code" name="code"></textarea></div>\n
+    <div style="max-width: 50em; margin-bottom: 1em">HTML:<br>\n
+    <textarea id="code-html" name="code-html"></textarea></div>\n
+    <div style="max-width: 50em">Markdown:<br>\n
+    <textarea id="code-markdown" name="code"></textarea></div>\n
+  </form>\n
+  <script id="script">\n
+/*\n
+ * Demonstration of code folding\n
+ */\n
+window.onload = function() {\n
+  var te = document.getElementById("code");\n
+  var sc = document.getElementById("script");\n
+  te.value = (sc.textContent || sc.innerText || sc.innerHTML).replace(/^\\s*/, "");\n
+  sc.innerHTML = "";\n
+  var te_html = document.getElementById("code-html");\n
+  te_html.value = document.documentElement.innerHTML;\n
+  var te_markdown = document.getElementById("code-markdown");\n
+  te_markdown.value = "# Foo\\n## Bar\\n\\nblah blah\\n\\n## Baz\\n\\nblah blah\\n\\n# Quux\\n\\nblah blah\\n"\n
+\n
+  window.editor = CodeMirror.fromTextArea(te, {\n
+    mode: "javascript",\n
+    lineNumbers: true,\n
+    lineWrapping: true,\n
+    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},\n
+    foldGutter: true,\n
+    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]\n
+  });\n
+  editor.foldCode(CodeMirror.Pos(11, 0));\n
+\n
+  window.editor_html = CodeMirror.fromTextArea(te_html, {\n
+    mode: "text/html",\n
+    lineNumbers: true,\n
+    lineWrapping: true,\n
+    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},\n
+    foldGutter: true,\n
+    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]\n
+  });\n
+  editor_html.foldCode(CodeMirror.Pos(0, 0));\n
+  editor_html.foldCode(CodeMirror.Pos(21, 0));\n
+\n
+  window.editor_markdown = CodeMirror.fromTextArea(te_markdown, {\n
+    mode: "markdown",\n
+    lineNumbers: true,\n
+    lineWrapping: true,\n
+    extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},\n
+    foldGutter: true,\n
+    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]\n
+  });\n
+};\n
+  </script>\n
+</article>\n
+</body>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>folding.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

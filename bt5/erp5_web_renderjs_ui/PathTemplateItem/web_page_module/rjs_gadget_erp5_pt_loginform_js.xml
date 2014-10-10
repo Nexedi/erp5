@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_loginform.js</string> </value>
+            <value> <string>gadget_erp5_page_login.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global rJS, RSVP, Handlebars, initGadgetMixin */\n
-/*jslint nomen: true */\n
-(function (window, rJS, RSVP) {\n
+            <value> <string>/*global window, document, rJS, RSVP, promiseEventListener */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP, promiseEventListener) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -129,7 +129,7 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function (options) {\n
+    .declareMethod("render", function () {\n
       return "ok";\n
     })\n
 \n
@@ -155,8 +155,8 @@
 \n
         });\n
 \n
-  });\n
-}(window, rJS, RSVP));</string> </value>
+    });\n
+}(window, document, rJS, RSVP, promiseEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -291,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.38838.60120.11025</string> </value>
+                <value> <string>937.49597.63791.22067</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406886785.69</float>
+                        <float>1411461067.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

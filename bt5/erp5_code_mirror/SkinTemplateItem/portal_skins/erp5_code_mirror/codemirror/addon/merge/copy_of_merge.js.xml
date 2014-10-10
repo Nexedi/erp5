@@ -1,0 +1,523 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403073.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>copy_of_merge.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+  // declare global: diff_match_patch, DIFF_INSERT, DIFF_DELETE, DIFF_EQUAL\n
+\n
+  var Pos = CodeMirror.Pos;\n
+  var svgNS = "http://www.w3.org/2000/svg";\n
+\n
+  function DiffView(mv, type) {\n
+    this.mv = mv;\n
+    this.type = type;\n
+    this.classes = type == "left"\n
+      ? {chunk: "CodeMirror-merge-l-chunk",\n
+         start: "CodeMirror-merge-l-chunk-start",\n
+         end: "CodeMirror-merge-l-chunk-end",\n
+         insert: "CodeMirror-merge-l-inserted",\n
+         del: "CodeMirror-merge-l-deleted",\n
+         connect: "CodeMirror-merge-l-connect"}\n
+      : {chunk: "CodeMirror-merge-r-chunk",\n
+         start: "CodeMirror-merge-r-chunk-start",\n
+         end: "CodeMirror-merge-r-chunk-end",\n
+         insert: "CodeMirror-merge-r-inserted",\n
+         del: "CodeMirror-merge-r-deleted",\n
+         connect: "CodeMirror-merge-r-connect"};\n
+  }\n
+\n
+  DiffView.prototype = {\n
+    constructor: DiffView,\n
+    init: function(pane, orig, options) {\n
+      this.edit = this.mv.edit;\n
+      this.orig = CodeMirror(pane, copyObj({value: orig, readOnly: true}, copyObj(options)));\n
+\n
+      this.diff = getDiff(asString(orig), asString(options.value));\n
+      this.diffOutOfDate = false;\n
+\n
+      this.showDifferences = options.showDifferences !== false;\n
+      this.forceUpdate = registerUpdate(this);\n
+      setScrollLock(this, true, false);\n
+      registerScroll(this);\n
+    },\n
+    setShowDifferences: function(val) {\n
+      val = val !== false;\n
+      if (val != this.showDifferences) {\n
+        this.showDifferences = val;\n
+        this.forceUpdate("full");\n
+      }\n
+    }\n
+  };\n
+\n
+  function registerUpdate(dv) {\n
+    var edit = {from: 0, to: 0, marked: []};\n
+    var orig = {from: 0, to: 0, marked: []};\n
+    var debounceChange;\n
+    function update(mode) {\n
+      if (mode == "full") {\n
+        if (dv.svg) clear(dv.svg);\n
+        clear(dv.copyButtons);\n
+        clearMarks(dv.edit, edit.marked, dv.classes);\n
+        clearMarks(dv.orig, orig.marked, dv.classes);\n
+        edit.from = edit.to = orig.from = orig.to = 0;\n
+      }\n
+      if (dv.diffOutOfDate) {\n
+        dv.diff = getDiff(dv.orig.getValue(), dv.edit.getValue());\n
+        dv.diffOutOfDate = false;\n
+        CodeMirror.signal(dv.edit, "updateDiff", dv.diff);\n
+      }\n
+      if (dv.showDifferences) {\n
+        updateMarks(dv.edit, dv.diff, edit, DIFF_INSERT, dv.classes);\n
+        updateMarks(dv.orig, dv.diff, orig, DIFF_DELETE, dv.classes);\n
+      }\n
+      drawConnectors(dv);\n
+    }\n
+    function set(slow) {\n
+      clearTimeout(debounceChange);\n
+      debounceChange = setTimeout(update, slow == true ? 250 : 100);\n
+    }\n
+    function change() {\n
+      if (!dv.diffOutOfDate) {\n
+        dv.diffOutOfDate = true;\n
+        edit.from = edit.to = orig.from = orig.to = 0;\n
+      }\n
+      set(true);\n
+    }\n
+    dv.edit.on("change", change);\n
+    dv.orig.on("change", change);\n
+    dv.edit.on("viewportChange", set);\n
+    dv.orig.on("viewportChange", set);\n
+    update();\n
+    return update;\n
+  }\n
+\n
+  function registerScroll(dv) {\n
+    dv.edit.on("scroll", function() {\n
+      syncScroll(dv, DIFF_INSERT) && drawConnectors(dv);\n
+    });\n
+    dv.orig.on("scroll", function() {\n
+      syncScroll(dv, DIFF_DELETE) && drawConnectors(dv);\n
+    });\n
+  }\n
+\n
+  function syncScroll(dv, type) {\n
+    // Change handler will do a refresh after a timeout when diff is out of date\n
+    if (dv.diffOutOfDate) return false;\n
+    if (!dv.lockScroll) return true;\n
+    var editor, other, now = +new Date;\n
+    if (type == DIFF_INSERT) { editor = dv.edit; other = dv.orig; }\n
+    else { editor = dv.orig; other = dv.edit; }\n
+    // Don\'t take action if the position of this editor was recently set\n
+    // (to prevent feedback loops)\n
+    if (editor.state.scrollSetBy == dv && (editor.state.scrollSetAt || 0) + 50 > now) return false;\n
+\n
+    var sInfo = editor.getScrollInfo(), halfScreen = .5 * sInfo.clientHeight, midY = sInfo.top + halfScreen;\n
+    var mid = editor.lineAtHeight(midY, "local");\n
+    var around = chunkBoundariesAround(dv.diff, mid, type == DIFF_INSERT);\n
+    var off = getOffsets(editor, type == DIFF_INSERT ? around.edit : around.orig);\n
+    var offOther = getOffsets(other, type == DIFF_INSERT ? around.orig : around.edit);\n
+    var ratio = (midY - off.top) / (off.bot - off.top);\n
+    var targetPos = (offOther.top - halfScreen) + ratio * (offOther.bot - offOther.top);\n
+\n
+    var botDist, mix;\n
+    // Some careful tweaking to make sure no space is left out of view\n
+    // when scrolling to top or bottom.\n
+    if (targetPos > sInfo.top && (mix = sInfo.top / halfScreen) < 1) {\n
+      targetPos = targetPos * mix + sInfo.top * (1 - mix);\n
+    } else if ((botDist = sInfo.height - sInfo.clientHeight - sInfo.top) < halfScreen) {\n
+      var otherInfo = other.getScrollInfo();\n
+      var botDistOther = otherInfo.height - otherInfo.clientHeight - targetPos;\n
+      if (botDistOther > botDist && (mix = botDist / halfScreen) < 1)\n
+        targetPos = targetPos * mix + (otherInfo.height - otherInfo.clientHeight - botDist) * (1 - mix);\n
+    }\n
+\n
+    other.scrollTo(sInfo.left, targetPos);\n
+    other.state.scrollSetAt = now;\n
+    other.state.scrollSetBy = dv;\n
+    return true;\n
+  }\n
+\n
+  function getOffsets(editor, around) {\n
+    var bot = around.after;\n
+    if (bot == null) bot = editor.lastLine() + 1;\n
+    return {top: editor.heightAtLine(around.before || 0, "local"),\n
+            bot: editor.heightAtLine(bot, "local")};\n
+  }\n
+\n
+  function setScrollLock(dv, val, action) {\n
+    dv.lockScroll = val;\n
+    if (val && action != false) syncScroll(dv, DIFF_INSERT) && drawConnectors(dv);\n
+    dv.lockButton.innerHTML = val ? "\\u21db\\u21da" : "\\u21db&nbsp;&nbsp;\\u21da";\n
+  }\n
+\n
+  // Updating the marks for editor content\n
+\n
+  function clearMarks(editor, arr, classes) {\n
+    for (var i = 0; i < arr.length; ++i) {\n
+      var mark = arr[i];\n
+      if (mark instanceof CodeMirror.TextMarker) {\n
+        mark.clear();\n
+      } else {\n
+        editor.removeLineClass(mark, "background", classes.chunk);\n
+        editor.removeLineClass(mark, "background", classes.start);\n
+        editor.removeLineClass(mark, "background", classes.end);\n
+      }\n
+    }\n
+    arr.length = 0;\n
+  }\n
+\n
+  // FIXME maybe add a margin around viewport to prevent too many updates\n
+  function updateMarks(editor, diff, state, type, classes) {\n
+    var vp = editor.getViewport();\n
+    editor.operation(function() {\n
+      if (state.from == state.to || vp.from - state.to > 20 || state.from - vp.to > 20) {\n
+        clearMarks(editor, state.marked, classes);\n
+        markChanges(editor, diff, type, state.marked, vp.from, vp.to, classes);\n
+        state.from = vp.from; state.to = vp.to;\n
+      } else {\n
+        if (vp.from < state.from) {\n
+          markChanges(editor, diff, type, state.marked, vp.from, state.from, classes);\n
+          state.from = vp.from;\n
+        }\n
+        if (vp.to > state.to) {\n
+          markChanges(editor, diff, type, state.marked, state.to, vp.to, classes);\n
+          state.to = vp.to;\n
+        }\n
+      }\n
+    });\n
+  }\n
+\n
+  function markChanges(editor, diff, type, marks, from, to, classes) {\n
+    var pos = Pos(0, 0);\n
+    var top = Pos(from, 0), bot = editor.clipPos(Pos(to - 1));\n
+    var cls = type == DIFF_DELETE ? classes.del : classes.insert;\n
+    function markChunk(start, end) {\n
+      var bfrom = Math.max(from, start), bto = Math.min(to, end);\n
+      for (var i = bfrom; i < bto; ++i) {\n
+        var line = editor.addLineClass(i, "background", classes.chunk);\n
+        if (i == start) editor.addLineClass(line, "background", classes.start);\n
+        if (i == end - 1) editor.addLineClass(line, "background", classes.end);\n
+        marks.push(line);\n
+      }\n
+      // When the chunk is empty, make sure a horizontal line shows up\n
+      if (start == end && bfrom == end && bto == end) {\n
+        if (bfrom)\n
+          marks.push(editor.addLineClass(bfrom - 1, "background", classes.end));\n
+        else\n
+          marks.push(editor.addLineClass(bfrom, "background", classes.start));\n
+      }\n
+    }\n
+\n
+    var chunkStart = 0;\n
+    for (var i = 0; i < diff.length; ++i) {\n
+      var part = diff[i], tp = part[0], str = part[1];\n
+      if (tp == DIFF_EQUAL) {\n
+        var cleanFrom = pos.line + (startOfLineClean(diff, i) ? 0 : 1);\n
+        moveOver(pos, str);\n
+        var cleanTo = pos.line + (endOfLineClean(diff, i) ? 1 : 0);\n
+        if (cleanTo > cleanFrom) {\n
+          if (i) markChunk(chunkStart, cleanFrom);\n
+          chunkStart = cleanTo;\n
+        }\n
+      } else {\n
+        if (tp == type) {\n
+          var end = moveOver(pos, str, true);\n
+          var a = posMax(top, pos), b = posMin(bot, end);\n
+          if (!posEq(a, b))\n
+            marks.push(editor.markText(a, b, {className: cls}));\n
+          pos = end;\n
+        }\n
+      }\n
+    }\n
+    if (chunkStart <= pos.line) markChunk(chunkStart, pos.line + 1);\n
+  }\n
+\n
+  // Updating the gap between editor and original\n
+\n
+  function drawConnectors(dv) {\n
+    if (!dv.showDifferences) return;\n
+\n
+    if (dv.svg) {\n
+      clear(dv.svg);\n
+      var w = dv.gap.offsetWidth;\n
+      attrs(dv.svg, "width", w, "height", dv.gap.offsetHeight);\n
+    }\n
+    clear(dv.copyButtons);\n
+\n
+    var flip = dv.type == "left";\n
+    var vpEdit = dv.edit.getViewport(), vpOrig = dv.orig.getViewport();\n
+    var sTopEdit = dv.edit.getScrollInfo().top, sTopOrig = dv.orig.getScrollInfo().top;\n
+    iterateChunks(dv.diff, function(topOrig, botOrig, topEdit, botEdit) {\n
+      if (topEdit > vpEdit.to || botEdit < vpEdit.from ||\n
+          topOrig > vpOrig.to || botOrig < vpOrig.from)\n
+        return;\n
+      var topLpx = dv.orig.heightAtLine(topOrig, "local") - sTopOrig, top = topLpx;\n
+      if (dv.svg) {\n
+        var topRpx = dv.edit.heightAtLine(topEdit, "local") - sTopEdit;\n
+        if (flip) { var tmp = topLpx; topLpx = topRpx; topRpx = tmp; }\n
+        var botLpx = dv.orig.heightAtLine(botOrig, "local") - sTopOrig;\n
+        var botRpx = dv.edit.heightAtLine(botEdit, "local") - sTopEdit;\n
+        if (flip) { var tmp = botLpx; botLpx = botRpx; botRpx = tmp; }\n
+        var curveTop = " C " + w/2 + " " + topRpx + " " + w/2 + " " + topLpx + " " + (w + 2) + " " + topLpx;\n
+        var curveBot = " C " + w/2 + " " + botLpx + " " + w/2 + " " + botRpx + " -1 " + botRpx;\n
+        attrs(dv.svg.appendChild(document.createElementNS(svgNS, "path")),\n
+              "d", "M -1 " + topRpx + curveTop + " L " + (w + 2) + " " + botLpx + curveBot + " z",\n
+              "class", dv.classes.connect);\n
+      }\n
+      var copy = dv.copyButtons.appendChild(elt("div", dv.type == "left" ? "\\u21dd" : "\\u21dc",\n
+                                                "CodeMirror-merge-copy"));\n
+      copy.title = "Revert chunk";\n
+      copy.chunk = {topEdit: topEdit, botEdit: botEdit, topOrig: topOrig, botOrig: botOrig};\n
+      copy.style.top = top + "px";\n
+    });\n
+  }\n
+\n
+  function copyChunk(dv, chunk) {\n
+    if (dv.diffOutOfDate) return;\n
+    dv.edit.replaceRange(dv.orig.getRange(Pos(chunk.topOrig, 0), Pos(chunk.botOrig, 0)),\n
+                         Pos(chunk.topEdit, 0), Pos(chunk.botEdit, 0));\n
+  }\n
+\n
+  // Merge view, containing 0, 1, or 2 diff views.\n
+\n
+  var MergeView = CodeMirror.MergeView = function(node, options) {\n
+    if (!(this instanceof MergeView)) return new MergeView(node, options);\n
+\n
+    var origLeft = options.origLeft, origRight = options.origRight == null ? options.orig : options.origRight;\n
+    var hasLeft = origLeft != null, hasRight = origRight != null;\n
+    var panes = 1 + (hasLeft ? 1 : 0) + (hasRight ? 1 : 0);\n
+    var wrap = [], left = this.left = null, right = this.right = null;\n
+\n
+    if (hasLeft) {\n
+      left = this.left = new DiffView(this, "left");\n
+      var leftPane = elt("div", null, "CodeMirror-merge-pane");\n
+      wrap.push(leftPane);\n
+      wrap.push(buildGap(left));\n
+    }\n
+\n
+    var editPane = elt("div", null, "CodeMirror-merge-pane");\n
+    wrap.push(editPane);\n
+\n
+    if (hasRight) {\n
+      right = this.right = new DiffView(this, "right");\n
+      wrap.push(buildGap(right));\n
+      var rightPane = elt("div", null, "CodeMirror-merge-pane");\n
+      wrap.push(rightPane);\n
+    }\n
+\n
+    (hasRight ? rightPane : editPane).className += " CodeMirror-merge-pane-rightmost";\n
+\n
+    wrap.push(elt("div", null, null, "height: 0; clear: both;"));\n
+    var wrapElt = this.wrap = node.appendChild(elt("div", wrap, "CodeMirror-merge CodeMirror-merge-" + panes + "pane"));\n
+    this.edit = CodeMirror(editPane, copyObj(options));\n
+\n
+    if (left) left.init(leftPane, origLeft, options);\n
+    if (right) right.init(rightPane, origRight, options);\n
+\n
+    var onResize = function() {\n
+      if (left) drawConnectors(left);\n
+      if (right) drawConnectors(right);\n
+    };\n
+    CodeMirror.on(window, "resize", onResize);\n
+    var resizeInterval = setInterval(function() {\n
+      for (var p = wrapElt.parentNode; p && p != document.body; p = p.parentNode) {}\n
+      if (!p) { clearInterval(resizeInterval); CodeMirror.off(window, "resize", onResize); }\n
+    }, 5000);\n
+  };\n
+\n
+  function buildGap(dv) {\n
+    var lock = dv.lockButton = elt("div", null, "CodeMirror-merge-scrolllock");\n
+    lock.title = "Toggle locked scrolling";\n
+    var lockWrap = elt("div", [lock], "CodeMirror-merge-scrolllock-wrap");\n
+    CodeMirror.on(lock, "click", function() { setScrollLock(dv, !dv.lockScroll); });\n
+    dv.copyButtons = elt("div", null, "CodeMirror-merge-copybuttons-" + dv.type);\n
+    CodeMirror.on(dv.copyButtons, "click", function(e) {\n
+      var node = e.target || e.srcElement;\n
+      if (node.chunk) copyChunk(dv, node.chunk);\n
+    });\n
+    var gapElts = [dv.copyButtons, lockWrap];\n
+    var svg = document.createElementNS && document.createElementNS(svgNS, "svg");\n
+    if (svg && !svg.createSVGRect) svg = null;\n
+    dv.svg = svg;\n
+    if (svg) gapElts.push(svg);\n
+\n
+    return dv.gap = elt("div", gapElts, "CodeMirror-merge-gap");\n
+  }\n
+\n
+  MergeView.prototype = {\n
+    constuctor: MergeView,\n
+    editor: function() { return this.edit; },\n
+    rightOriginal: function() { return this.right && this.right.orig; },\n
+    leftOriginal: function() { return this.left && this.left.orig; },\n
+    setShowDifferences: function(val) {\n
+      if (this.right) this.right.setShowDifferences(val);\n
+      if (this.left) this.left.setShowDifferences(val);\n
+    }\n
+  };\n
+\n
+  function asString(obj) {\n
+    if (typeof obj == "string") return obj;\n
+    else return obj.getValue();\n
+  }\n
+\n
+  // Operations on diffs\n
+\n
+  var dmp = new diff_match_patch();\n
+  function getDiff(a, b) {\n
+    var diff = dmp.diff_main(a, b);\n
+    dmp.diff_cleanupSemantic(diff);\n
+    // The library sometimes leaves in empty parts, which confuse the algorithm\n
+    for (var i = 0; i < diff.length; ++i) {\n
+      var part = diff[i];\n
+      if (!part[1]) {\n
+        diff.splice(i--, 1);\n
+      } else if (i && diff[i - 1][0] == part[0]) {\n
+        diff.splice(i--, 1);\n
+        diff[i][1] += part[1];\n
+      }\n
+    }\n
+    return diff;\n
+  }\n
+\n
+  function iterateChunks(diff, f) {\n
+    var startEdit = 0, startOrig = 0;\n
+    var edit = Pos(0, 0), orig = Pos(0, 0);\n
+    for (var i = 0; i < diff.length; ++i) {\n
+      var part = diff[i], tp = part[0];\n
+      if (tp == DIFF_EQUAL) {\n
+        var startOff = startOfLineClean(diff, i) ? 0 : 1;\n
+        var cleanFromEdit = edit.line + startOff, cleanFromOrig = orig.line + startOff;\n
+        moveOver(edit, part[1], null, orig);\n
+        var endOff = endOfLineClean(diff, i) ? 1 : 0;\n
+        var cleanToEdit = edit.line + endOff, cleanToOrig = orig.line + endOff;\n
+        if (cleanToEdit > cleanFromEdit) {\n
+          if (i) f(startOrig, cleanFromOrig, startEdit, cleanFromEdit);\n
+          startEdit = cleanToEdit; startOrig = cleanToOrig;\n
+        }\n
+      } else {\n
+        moveOver(tp == DIFF_INSERT ? edit : orig, part[1]);\n
+      }\n
+    }\n
+    if (startEdit <= edit.line || startOrig <= orig.line)\n
+      f(startOrig, orig.line + 1, startEdit, edit.line + 1);\n
+  }\n
+\n
+  function endOfLineClean(diff, i) {\n
+    if (i == diff.length - 1) return true;\n
+    var next = diff[i + 1][1];\n
+    if (next.length == 1 || next.charCodeAt(0) != 10) return false;\n
+    if (i == diff.length - 2) return true;\n
+    next = diff[i + 2][1];\n
+    return next.length > 1 && next.charCodeAt(0) == 10;\n
+  }\n
+\n
+  function startOfLineClean(diff, i) {\n
+    if (i == 0) return true;\n
+    var last = diff[i - 1][1];\n
+    if (last.charCodeAt(last.length - 1) != 10) return false;\n
+    if (i == 1) return true;\n
+    last = diff[i - 2][1];\n
+    return last.charCodeAt(last.length - 1) == 10;\n
+  }\n
+\n
+  function chunkBoundariesAround(diff, n, nInEdit) {\n
+    var beforeE, afterE, beforeO, afterO;\n
+    iterateChunks(diff, function(fromOrig, toOrig, fromEdit, toEdit) {\n
+      var fromLocal = nInEdit ? fromEdit : fromOrig;\n
+      var toLocal = nInEdit ? toEdit : toOrig;\n
+      if (afterE == null) {\n
+        if (fromLocal > n) { afterE = fromEdit; afterO = fromOrig; }\n
+        else if (toLocal > n) { afterE = toEdit; afterO = toOrig; }\n
+      }\n
+      if (toLocal <= n) { beforeE = toEdit; beforeO = toOrig; }\n
+      else if (fromLocal <= n) { beforeE = fromEdit; beforeO = fromOrig; }\n
+    });\n
+    return {edit: {before: beforeE, after: afterE}, orig: {before: beforeO, after: afterO}};\n
+  }\n
+\n
+  // General utilities\n
+\n
+  function elt(tag, content, className, style) {\n
+    var e = document.createElement(tag);\n
+    if (className) e.className = className;\n
+    if (style) e.style.cssText = style;\n
+    if (typeof content == "string") e.appendChild(document.createTextNode(content));\n
+    else if (content) for (var i = 0; i < content.length; ++i) e.appendChild(content[i]);\n
+    return e;\n
+  }\n
+\n
+  function clear(node) {\n
+    for (var count = node.childNodes.length; count > 0; --count)\n
+      node.removeChild(node.firstChild);\n
+  }\n
+\n
+  function attrs(elt) {\n
+    for (var i = 1; i < arguments.length; i += 2)\n
+      elt.setAttribute(arguments[i], arguments[i+1]);\n
+  }\n
+\n
+  function copyObj(obj, target) {\n
+    if (!target) target = {};\n
+    for (var prop in obj) if (obj.hasOwnProperty(prop)) target[prop] = obj[prop];\n
+    return target;\n
+  }\n
+\n
+  function moveOver(pos, str, copy, other) {\n
+    var out = copy ? Pos(pos.line, pos.ch) : pos, at = 0;\n
+    for (;;) {\n
+      var nl = str.indexOf("\\n", at);\n
+      if (nl == -1) break;\n
+      ++out.line;\n
+      if (other) ++other.line;\n
+      at = nl + 1;\n
+    }\n
+    out.ch = (at ? 0 : out.ch) + (str.length - at);\n
+    if (other) other.ch = (at ? 0 : other.ch) + (str.length - at);\n
+    return out;\n
+  }\n
+\n
+  function posMin(a, b) { return (a.line - b.line || a.ch - b.ch) < 0 ? a : b; }\n
+  function posMax(a, b) { return (a.line - b.line || a.ch - b.ch) > 0 ? a : b; }\n
+  function posEq(a, b) { return a.line == b.line && a.ch == b.ch; }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18196</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

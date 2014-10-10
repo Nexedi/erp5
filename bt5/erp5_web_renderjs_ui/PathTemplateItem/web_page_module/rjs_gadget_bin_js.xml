@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global jQuery, rJS, RSVP, Handlebars, initGadgetMixin */\n
-/*jslint nomen: true */\n
-(function (window, $, rJS, RSVP, Handlebars, initGadgetMixin) {\n
+/*global jQuery, rJS, RSVP, Handlebars, initGadgetMixin, window, document */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, document, $, rJS, RSVP, Handlebars, initGadgetMixin) {\n
   "use strict";\n
   /////////////////////////////////////////////////////////////////\n
   // Desactivate jQuery Mobile URL management\n
@@ -641,7 +641,7 @@
           }\n
         });\n
     });\n
-}(window, jQuery, rJS, RSVP));
+}(window, document, jQuery, rJS, RSVP));
 
 ]]></string> </value>
         </item>
@@ -764,7 +764,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -778,7 +778,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.8778.52375.55654</string> </value>
+                <value> <string>937.42762.14684.44987</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -796,7 +796,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933454.75</float>
+                        <float>1411050883.77</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

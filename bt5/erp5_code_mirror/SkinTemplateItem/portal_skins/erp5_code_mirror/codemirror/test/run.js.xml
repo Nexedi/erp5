@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403103.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>run.js</string> </value>
+        </item>
+        <item>
+            <key> <string>__propsets__</string> </key>
+            <value>
+              <tuple>
+                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>#!/usr/bin/env node\n
+\n
+var lint = require("./lint/lint");\n
+\n
+lint.checkDir("mode");\n
+lint.checkDir("lib");\n
+lint.checkDir("addon");\n
+lint.checkDir("keymap");\n
+\n
+var ok = lint.success();\n
+\n
+var files = new (require(\'node-static\').Server)();\n
+\n
+var server = require(\'http\').createServer(function (req, res) {\n
+  req.addListener(\'end\', function () {\n
+    files.serve(req, res, function (err/*, result */) {\n
+      if (err) {\n
+        console.error(err);\n
+        process.exit(1);\n
+      }\n
+    });\n
+  }).resume();\n
+}).addListener(\'error\', function (err) {\n
+  throw err;\n
+}).listen(3000, function () {\n
+  var childProcess = require(\'child_process\');\n
+  var phantomjs = require("phantomjs");\n
+  var childArgs = [\n
+    require("path").join(__dirname, \'phantom_driver.js\')\n
+  ];\n
+  childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {\n
+    server.close();\n
+    console.log(stdout);\n
+    if (err) console.error(err);\n
+    if (stderr) console.error(stderr);\n
+    process.exit(err || stderr || !ok ? 1 : 0);\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1002</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PropertySheet" module="OFS.PropertySheets"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_md</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>xmlns</string> </key>
+                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <unicode>executable</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta</string> </key>
+                      <value>
+                        <dictionary>
+                          <item>
+                              <key> <string>__xml_attrs__</string> </key>
+                              <value>
+                                <dictionary/>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>executable</string> </key>
+            <value> <string>T</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

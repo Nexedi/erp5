@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403077.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>foldcode.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  "use strict";\n
+\n
+  function doFold(cm, pos, options, force) {\n
+    var finder = options && (options.call ? options : options.rangeFinder);\n
+    if (!finder) finder = CodeMirror.fold.auto;\n
+    if (typeof pos == "number") pos = CodeMirror.Pos(pos, 0);\n
+    var minSize = options && options.minFoldSize || 0;\n
+\n
+    function getRange(allowFolded) {\n
+      var range = finder(cm, pos);\n
+      if (!range || range.to.line - range.from.line < minSize) return null;\n
+      var marks = cm.findMarksAt(range.from);\n
+      for (var i = 0; i < marks.length; ++i) {\n
+        if (marks[i].__isFold && force !== "fold") {\n
+          if (!allowFolded) return null;\n
+          range.cleared = true;\n
+          marks[i].clear();\n
+        }\n
+      }\n
+      return range;\n
+    }\n
+\n
+    var range = getRange(true);\n
+    if (options && options.scanUp) while (!range && pos.line > cm.firstLine()) {\n
+      pos = CodeMirror.Pos(pos.line - 1, 0);\n
+      range = getRange(false);\n
+    }\n
+    if (!range || range.cleared || force === "unfold") return;\n
+\n
+    var myWidget = makeWidget(options);\n
+    CodeMirror.on(myWidget, "mousedown", function() { myRange.clear(); });\n
+    var myRange = cm.markText(range.from, range.to, {\n
+      replacedWith: myWidget,\n
+      clearOnEnter: true,\n
+      __isFold: true\n
+    });\n
+    myRange.on("clear", function(from, to) {\n
+      CodeMirror.signal(cm, "unfold", cm, from, to);\n
+    });\n
+    CodeMirror.signal(cm, "fold", cm, range.from, range.to);\n
+  }\n
+\n
+  function makeWidget(options) {\n
+    var widget = (options && options.widget) || "\\u2194";\n
+    if (typeof widget == "string") {\n
+      var text = document.createTextNode(widget);\n
+      widget = document.createElement("span");\n
+      widget.appendChild(text);\n
+      widget.className = "CodeMirror-foldmarker";\n
+    }\n
+    return widget;\n
+  }\n
+\n
+  // Clumsy backwards-compatible interface\n
+  CodeMirror.newFoldFunction = function(rangeFinder, widget) {\n
+    return function(cm, pos) { doFold(cm, pos, {rangeFinder: rangeFinder, widget: widget}); };\n
+  };\n
+\n
+  // New-style interface\n
+  CodeMirror.defineExtension("foldCode", function(pos, options, force) {\n
+    doFold(this, pos, options, force);\n
+  });\n
+\n
+  CodeMirror.defineExtension("isFolded", function(pos) {\n
+    var marks = this.findMarksAt(pos);\n
+    for (var i = 0; i < marks.length; ++i)\n
+      if (marks[i].__isFold) return true;\n
+  });\n
+\n
+  CodeMirror.commands.fold = function(cm) {\n
+    cm.foldCode(cm.getCursor());\n
+  };\n
+\n
+  CodeMirror.registerHelper("fold", "combine", function() {\n
+    var funcs = Array.prototype.slice.call(arguments, 0);\n
+    return function(cm, start) {\n
+      for (var i = 0; i < funcs.length; ++i) {\n
+        var found = funcs[i](cm, start);\n
+        if (found) return found;\n
+      }\n
+    };\n
+  });\n
+\n
+  CodeMirror.registerHelper("fold", "auto", function(cm, start) {\n
+    var helpers = cm.getHelpers(start, "fold");\n
+    for (var i = 0; i < helpers.length; i++) {\n
+      var cur = helpers[i](cm, start);\n
+      if (cur) return cur;\n
+    }\n
+  });\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2941</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

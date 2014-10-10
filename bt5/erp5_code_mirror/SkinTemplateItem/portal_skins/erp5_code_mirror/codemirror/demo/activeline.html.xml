@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Active Line Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../addon/selection/active-line.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Active Line</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Active Line Demo</h2>\n
+<form><textarea id="code" name="code">\n
+<?xml version="1.0" encoding="UTF-8"?>\n
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"\n
+     xmlns:georss="http://www.georss.org/georss"\n
+     xmlns:twitter="http://api.twitter.com">\n
+  <channel>\n
+    <title>Twitter / codemirror</title>\n
+    <link>http://twitter.com/codemirror</link>\n
+    <atom:link type="application/rss+xml"\n
+               href="http://twitter.com/statuses/user_timeline/242283288.rss" rel="self"/>\n
+    <description>Twitter updates from CodeMirror / codemirror.</description>\n
+    <language>en-us</language>\n
+    <ttl>40</ttl>\n
+  <item>\n
+    <title>codemirror: http://cloud-ide.com &#8212; they\'re springing up like mushrooms. This one\n
+      uses CodeMirror as its editor.</title>\n
+    <description>codemirror: http://cloud-ide.com &#8212; they\'re springing up like mushrooms. This\n
+      one uses CodeMirror as its editor.</description>\n
+    <pubDate>Thu, 17 Mar 2011 23:34:47 +0000</pubDate>\n
+    <guid>http://twitter.com/codemirror/statuses/48527733722058752</guid>\n
+    <link>http://twitter.com/codemirror/statuses/48527733722058752</link>\n
+    <twitter:source>web</twitter:source>\n
+    <twitter:place/>\n
+  </item>\n
+  <item>\n
+    <title>codemirror: Posted a description of the CodeMirror 2 internals at\n
+      http://codemirror.net/2/internals.html</title>\n
+    <description>codemirror: Posted a description of the CodeMirror 2 internals at\n
+      http://codemirror.net/2/internals.html</description>\n
+    <pubDate>Wed, 02 Mar 2011 12:15:09 +0000</pubDate>\n
+    <guid>http://twitter.com/codemirror/statuses/42920879788789760</guid>\n
+    <link>http://twitter.com/codemirror/statuses/42920879788789760</link>\n
+    <twitter:source>web</twitter:source>\n
+    <twitter:place/>\n
+  </item>\n
+  </channel>\n
+</rss></textarea></form>\n
+\n
+    <script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  mode: "application/xml",\n
+  styleActiveLine: true,\n
+  lineNumbers: true,\n
+  lineWrapping: true\n
+});\n
+</script>\n
+\n
+    <p>Styling the current cursor line.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>activeline.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

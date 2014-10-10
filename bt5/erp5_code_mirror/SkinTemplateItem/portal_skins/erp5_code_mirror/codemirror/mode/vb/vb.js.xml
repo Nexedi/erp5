@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403100.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>vb.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CodeMirror.defineMode("vb", function(conf, parserConf) {\n
+    var ERRORCLASS = \'error\';\n
+\n
+    function wordRegexp(words) {\n
+        return new RegExp("^((" + words.join(")|(") + "))\\\\b", "i");\n
+    }\n
+\n
+    var singleOperators = new RegExp("^[\\\\+\\\\-\\\\*/%&\\\\\\\\|\\\\^~<>!]");\n
+    var singleDelimiters = new RegExp(\'^[\\\\(\\\\)\\\\[\\\\]\\\\{\\\\}@,:`=;\\\\.]\');\n
+    var doubleOperators = new RegExp("^((==)|(<>)|(<=)|(>=)|(<>)|(<<)|(>>)|(//)|(\\\\*\\\\*))");\n
+    var doubleDelimiters = new RegExp("^((\\\\+=)|(\\\\-=)|(\\\\*=)|(%=)|(/=)|(&=)|(\\\\|=)|(\\\\^=))");\n
+    var tripleDelimiters = new RegExp("^((//=)|(>>=)|(<<=)|(\\\\*\\\\*=))");\n
+    var identifiers = new RegExp("^[_A-Za-z][_A-Za-z0-9]*");\n
+\n
+    var openingKeywords = [\'class\',\'module\', \'sub\',\'enum\',\'select\',\'while\',\'if\',\'function\',  \'get\',\'set\',\'property\', \'try\'];\n
+    var middleKeywords = [\'else\',\'elseif\',\'case\', \'catch\'];\n
+    var endKeywords = [\'next\',\'loop\'];\n
+\n
+    var wordOperators = wordRegexp([\'and\', \'or\', \'not\', \'xor\', \'in\']);\n
+    var commonkeywords = [\'as\', \'dim\', \'break\',  \'continue\',\'optional\', \'then\',  \'until\',\n
+                          \'goto\', \'byval\',\'byref\',\'new\',\'handles\',\'property\', \'return\',\n
+                          \'const\',\'private\', \'protected\', \'friend\', \'public\', \'shared\', \'static\', \'true\',\'false\'];\n
+    var commontypes = [\'integer\',\'string\',\'double\',\'decimal\',\'boolean\',\'short\',\'char\', \'float\',\'single\'];\n
+\n
+    var keywords = wordRegexp(commonkeywords);\n
+    var types = wordRegexp(commontypes);\n
+    var stringPrefixes = \'"\';\n
+\n
+    var opening = wordRegexp(openingKeywords);\n
+    var middle = wordRegexp(middleKeywords);\n
+    var closing = wordRegexp(endKeywords);\n
+    var doubleClosing = wordRegexp([\'end\']);\n
+    var doOpening = wordRegexp([\'do\']);\n
+\n
+    var indentInfo = null;\n
+\n
+\n
+\n
+\n
+    function indent(_stream, state) {\n
+      state.currentIndent++;\n
+    }\n
+\n
+    function dedent(_stream, state) {\n
+      state.currentIndent--;\n
+    }\n
+    // tokenizers\n
+    function tokenBase(stream, state) {\n
+        if (stream.eatSpace()) {\n
+            return null;\n
+        }\n
+\n
+        var ch = stream.peek();\n
+\n
+        // Handle Comments\n
+        if (ch === "\'") {\n
+            stream.skipToEnd();\n
+            return \'comment\';\n
+        }\n
+\n
+\n
+        // Handle Number Literals\n
+        if (stream.match(/^((&H)|(&O))?[0-9\\.a-f]/i, false)) {\n
+            var floatLiteral = false;\n
+            // Floats\n
+            if (stream.match(/^\\d*\\.\\d+F?/i)) { floatLiteral = true; }\n
+            else if (stream.match(/^\\d+\\.\\d*F?/)) { floatLiteral = true; }\n
+            else if (stream.match(/^\\.\\d+F?/)) { floatLiteral = true; }\n
+\n
+            if (floatLiteral) {\n
+                // Float literals may be "imaginary"\n
+                stream.eat(/J/i);\n
+                return \'number\';\n
+            }\n
+            // Integers\n
+            var intLiteral = false;\n
+            // Hex\n
+            if (stream.match(/^&H[0-9a-f]+/i)) { intLiteral = true; }\n
+            // Octal\n
+            else if (stream.match(/^&O[0-7]+/i)) { intLiteral = true; }\n
+            // Decimal\n
+            else if (stream.match(/^[1-9]\\d*F?/)) {\n
+                // Decimal literals may be "imaginary"\n
+                stream.eat(/J/i);\n
+                // TODO - Can you have imaginary longs?\n
+                intLiteral = true;\n
+            }\n
+            // Zero by itself with no other piece of number.\n
+            else if (stream.match(/^0(?![\\dx])/i)) { intLiteral = true; }\n
+            if (intLiteral) {\n
+                // Integer literals may be "long"\n
+                stream.eat(/L/i);\n
+                return \'number\';\n
+            }\n
+        }\n
+\n
+        // Handle Strings\n
+        if (stream.match(stringPrefixes)) {\n
+            state.tokenize = tokenStringFactory(stream.current());\n
+            return state.tokenize(stream, state);\n
+        }\n
+\n
+        // Handle operators and Delimiters\n
+        if (stream.match(tripleDelimiters) || stream.match(doubleDelimiters)) {\n
+            return null;\n
+        }\n
+        if (stream.match(doubleOperators)\n
+            || stream.match(singleOperators)\n
+            || stream.match(wordOperators)) {\n
+            return \'operator\';\n
+        }\n
+        if (stream.match(singleDelimiters)) {\n
+            return null;\n
+        }\n
+        if (stream.match(doOpening)) {\n
+            indent(stream,state);\n
+            state.doInCurrentLine = true;\n
+            return \'keyword\';\n
+        }\n
+        if (stream.match(opening)) {\n
+            if (! state.doInCurrentLine)\n
+              indent(stream,state);\n
+            else\n
+              state.doInCurrentLine = false;\n
+            return \'keyword\';\n
+        }\n
+        if (stream.match(middle)) {\n
+            return \'keyword\';\n
+        }\n
+\n
+        if (stream.match(doubleClosing)) {\n
+            dedent(stream,state);\n
+            dedent(stream,state);\n
+            return \'keyword\';\n
+        }\n
+        if (stream.match(closing)) {\n
+            dedent(stream,state);\n
+            return \'keyword\';\n
+        }\n
+\n
+        if (stream.match(types)) {\n
+            return \'keyword\';\n
+        }\n
+\n
+        if (stream.match(keywords)) {\n
+            return \'keyword\';\n
+        }\n
+\n
+        if (stream.match(identifiers)) {\n
+            return \'variable\';\n
+        }\n
+\n
+        // Handle non-detected items\n
+        stream.next();\n
+        return ERRORCLASS;\n
+    }\n
+\n
+    function tokenStringFactory(delimiter) {\n
+        var singleline = delimiter.length == 1;\n
+        var OUTCLASS = \'string\';\n
+\n
+        return function(stream, state) {\n
+            while (!stream.eol()) {\n
+                stream.eatWhile(/[^\'"]/);\n
+                if (stream.match(delimiter)) {\n
+                    state.tokenize = tokenBase;\n
+                    return OUTCLASS;\n
+                } else {\n
+                    stream.eat(/[\'"]/);\n
+                }\n
+            }\n
+            if (singleline) {\n
+                if (parserConf.singleLineStringErrors) {\n
+                    return ERRORCLASS;\n
+                } else {\n
+                    state.tokenize = tokenBase;\n
+                }\n
+            }\n
+            return OUTCLASS;\n
+        };\n
+    }\n
+\n
+\n
+    function tokenLexer(stream, state) {\n
+        var style = state.tokenize(stream, state);\n
+        var current = stream.current();\n
+\n
+        // Handle \'.\' connected identifiers\n
+        if (current === \'.\') {\n
+            style = state.tokenize(stream, state);\n
+            current = stream.current();\n
+            if (style === \'variable\') {\n
+                return \'variable\';\n
+            } else {\n
+                return ERRORCLASS;\n
+            }\n
+        }\n
+\n
+\n
+        var delimiter_index = \'[({\'.indexOf(current);\n
+        if (delimiter_index !== -1) {\n
+            indent(stream, state );\n
+        }\n
+        if (indentInfo === \'dedent\') {\n
+            if (dedent(stream, state)) {\n
+                return ERRORCLASS;\n
+            }\n
+        }\n
+        delimiter_index = \'])}\'.indexOf(current);\n
+        if (delimiter_index !== -1) {\n
+            if (dedent(stream, state)) {\n
+                return ERRORCLASS;\n
+            }\n
+        }\n
+\n
+        return style;\n
+    }\n
+\n
+    var external = {\n
+        electricChars:"dDpPtTfFeE ",\n
+        startState: function() {\n
+            return {\n
+              tokenize: tokenBase,\n
+              lastToken: null,\n
+              currentIndent: 0,\n
+              nextLineIndent: 0,\n
+              doInCurrentLine: false\n
+\n
+\n
+          };\n
+        },\n
+\n
+        token: function(stream, state) {\n
+            if (stream.sol()) {\n
+              state.currentIndent += state.nextLineIndent;\n
+              state.nextLineIndent = 0;\n
+              state.doInCurrentLine = 0;\n
+            }\n
+            var style = tokenLexer(stream, state);\n
+\n
+            state.lastToken = {style:style, content: stream.current()};\n
+\n
+\n
+\n
+            return style;\n
+        },\n
+\n
+        indent: function(state, textAfter) {\n
+            var trueText = textAfter.replace(/^\\s+|\\s+$/g, \'\') ;\n
+            if (trueText.match(closing) || trueText.match(doubleClosing) || trueText.match(middle)) return conf.indentUnit*(state.currentIndent-1);\n
+            if(state.currentIndent < 0) return 0;\n
+            return state.currentIndent * conf.indentUnit;\n
+        }\n
+\n
+    };\n
+    return external;\n
+});\n
+\n
+CodeMirror.defineMIME("text/x-vb", "vb");\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8033</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

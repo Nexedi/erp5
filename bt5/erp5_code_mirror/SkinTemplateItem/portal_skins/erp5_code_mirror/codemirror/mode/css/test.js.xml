@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93403095.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "css");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  // Error, because "foobarhello" is neither a known type or property, but\n
+  // property was expected (after "and"), and it should be in parenthese.\n
+  MT("atMediaUnknownType",\n
+     "[def @media] [attribute screen] [keyword and] [error foobarhello] { }");\n
+\n
+  // Soft error, because "foobarhello" is not a known property or type.\n
+  MT("atMediaUnknownProperty",\n
+     "[def @media] [attribute screen] [keyword and] ([error foobarhello]) { }");\n
+\n
+  // Make sure nesting works with media queries\n
+  MT("atMediaMaxWidthNested",\n
+     "[def @media] [attribute screen] [keyword and] ([property max-width]: [number 25px]) { [tag foo] { } }");\n
+\n
+  MT("tagSelector",\n
+     "[tag foo] { }");\n
+\n
+  MT("classSelector",\n
+     "[qualifier .foo-bar_hello] { }");\n
+\n
+  MT("idSelector",\n
+     "[builtin #foo] { [error #foo] }");\n
+\n
+  MT("tagSelectorUnclosed",\n
+     "[tag foo] { [property margin]: [number 0] } [tag bar] { }");\n
+\n
+  MT("tagStringNoQuotes",\n
+     "[tag foo] { [property font-family]: [variable hello] [variable world]; }");\n
+\n
+  MT("tagStringDouble",\n
+     "[tag foo] { [property font-family]: [string \\"hello world\\"]; }");\n
+\n
+  MT("tagStringSingle",\n
+     "[tag foo] { [property font-family]: [string \'hello world\']; }");\n
+\n
+  MT("tagColorKeyword",\n
+     "[tag foo] {",\n
+     "  [property color]: [keyword black];",\n
+     "  [property color]: [keyword navy];",\n
+     "  [property color]: [keyword yellow];",\n
+     "}");\n
+\n
+  MT("tagColorHex3",\n
+     "[tag foo] { [property background]: [atom #fff]; }");\n
+\n
+  MT("tagColorHex6",\n
+     "[tag foo] { [property background]: [atom #ffffff]; }");\n
+\n
+  MT("tagColorHex4",\n
+     "[tag foo] { [property background]: [atom&error #ffff]; }");\n
+\n
+  MT("tagColorHexInvalid",\n
+     "[tag foo] { [property background]: [atom&error #ffg]; }");\n
+\n
+  MT("tagNegativeNumber",\n
+     "[tag foo] { [property margin]: [number -5px]; }");\n
+\n
+  MT("tagPositiveNumber",\n
+     "[tag foo] { [property padding]: [number 5px]; }");\n
+\n
+  MT("tagVendor",\n
+     "[tag foo] { [meta -foo-][property box-sizing]: [meta -foo-][atom border-box]; }");\n
+\n
+  MT("tagBogusProperty",\n
+     "[tag foo] { [property&error barhelloworld]: [number 0]; }");\n
+\n
+  MT("tagTwoProperties",\n
+     "[tag foo] { [property margin]: [number 0]; [property padding]: [number 0]; }");\n
+\n
+  MT("tagTwoPropertiesURL",\n
+     "[tag foo] { [property background]: [atom url]([string //example.com/foo.png]); [property padding]: [number 0]; }");\n
+\n
+  MT("commentSGML",\n
+     "[comment <!--comment-->]");\n
+\n
+  MT("commentSGML2",\n
+     "[comment <!--comment]",\n
+     "[comment -->] [tag div] {}");\n
+\n
+  MT("indent_tagSelector",\n
+     "[tag strong], [tag em] {",\n
+     "  [property background]: [atom rgba](",\n
+     "    [number 255], [number 255], [number 0], [number .2]",\n
+     "  );",\n
+     "}");\n
+\n
+  MT("indent_atMedia",\n
+     "[def @media] {",\n
+     "  [tag foo] {",\n
+     "    [property color]:",\n
+     "      [keyword yellow];",\n
+     "  }",\n
+     "}");\n
+\n
+  MT("indent_comma",\n
+     "[tag foo] {",\n
+     "  [property font-family]: [variable verdana],",\n
+     "    [atom sans-serif];",\n
+     "}");\n
+\n
+  MT("indent_parentheses",\n
+     "[tag foo]:[variable-3 before] {",\n
+     "  [property background]: [atom url](",\n
+     "[string     blahblah]",\n
+     "[string     etc]",\n
+     "[string   ]) [keyword !important];",\n
+     "}");\n
+\n
+  MT("font_face",\n
+     "[def @font-face] {",\n
+     "  [property font-family]: [string \'myfont\'];",\n
+     "  [error nonsense]: [string \'abc\'];",\n
+     "  [property src]: [atom url]([string http://blah]),",\n
+     "    [atom url]([string http://foo]);",\n
+     "}");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3644</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

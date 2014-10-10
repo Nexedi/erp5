@@ -2,6 +2,7 @@
  <key>base_category_id | category,catalog/id/z_related_base_category_id</key>
  <key>career_skill_id | category,catalog,catalog/id/z_related_career_skill</key>
  <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>
+ <key>causality_translated_portal_type | category,catalog,translation/translated_message/z_related_translated_causality_portal_type</key>
  <key>child_aggregate_relative_url | catalog,category,catalog/relative_url/z_related_child_aggregate</key>
  <key>children_reference | catalog/reference/z_related_children</key>
  <key>deliveryLineType | stock,catalog/portal_type/z_related_uid_or_parent_uid</key>

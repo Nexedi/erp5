@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Lazy Mode Loading Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/mode/loadmode.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Lazy Mode Loading</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Lazy Mode Loading Demo</h2>\n
+<form><textarea id="code" name="code">This is the editor.\n
+// It starts out in plain text mode,\n
+#  use the control below to load and apply a mode\n
+  "you\'ll see the highlighting of" this text /*change*/.\n
+</textarea></form>\n
+<p><input type=text value=javascript id=mode> <button type=button onclick="change()">change mode</button></p>\n
+\n
+    <script>\n
+CodeMirror.modeURL = "../mode/%N/%N.js";\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  lineNumbers: true\n
+});\n
+var modeInput = document.getElementById("mode");\n
+CodeMirror.on(modeInput, "keypress", function(e) {\n
+  if (e.keyCode == 13) change();\n
+});\n
+function change() {\n
+   editor.setOption("mode", modeInput.value);\n
+   CodeMirror.autoLoadMode(editor, modeInput.value);\n
+}\n
+</script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>loadmode.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

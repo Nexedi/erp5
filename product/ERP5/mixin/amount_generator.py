@@ -374,8 +374,9 @@ class AmountGeneratorMixin:
               'causality_value_list': [],
               'efficiency': self.getEfficiency(),
               'quantity_unit': self.getQuantityUnit(),
-              # XXX If they are several cells, we have duplicate references.
-              'reference': reference,
+              # The trade model rule often matches by reference and fails if
+              # getAggregatedAmountList returns amounts with same reference.
+              'reference': cell.getReference() or reference,
             }
           # Then collect the mapped values (quantity, price, trade_phase...)
           for key in cell.getMappedValuePropertyList():

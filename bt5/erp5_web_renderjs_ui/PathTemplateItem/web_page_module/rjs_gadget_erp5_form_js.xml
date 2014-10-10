@@ -101,12 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global rJS, RSVP, jQuery, Handlebars,\n
-  promiseEventListener, console */\n
-/*jslint nomen: true */\n
-/*global window, rJS, RSVP, StatelessJS, alert, FormData, document, console */\n
-/*jslint maxlen:200, nomen: true */\n
-(function (window, rJS, RSVP) {\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, document, rJS, RSVP*/\n
+(function (window, document, rJS, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -132,7 +129,28 @@
         });\n
     })\n
 \n
-   .declareAcquiredMethod("aq_put", "jio_put")\n
+    .declareAcquiredMethod("aq_put", "jio_put")\n
+\n
+    .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = " (" + param_list[0] + ")";\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("notifyValid", function (param_list, scope) {\n
+      /*jslint unparam:true*/\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = "";\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -154,7 +172,7 @@
       form_gadget.state_parameter_dict = options.form_gadget || {};\n
       // XXX Hardcoded for searchfield - remove later!\n
       if (form_definition.extended_search) {\n
-         suboption_dict.extended_search = form_definition.extended_search;\n
+        suboption_dict.extended_search = form_definition.extended_search;\n
       }\n
 \n
       form_gadget.props.gadget_list = [];\n
@@ -164,53 +182,65 @@
         queue\n
           .push(function () {\n
             var j,\n
-              fieldset_element = document.createElement("fieldset"),\n
+              // XXX: > Romain: fieldset will be needed later for menus\n
+              fieldset_element = document.createElement("div"),\n
               group_queue = new RSVP.Queue();\n
 \n
-            function addField(field, scope) {\n
+            function addField(field) {\n
               group_queue.push(function () {\n
                 if (rendered_form.hasOwnProperty(field[0])) {\n
                   // Field is enabled in this context\n
                   var field_queue = new RSVP.Queue(),\n
-                    field_url = \'gadget_erp5_readonlyfield.html\',\n
+                    sandbox = "public",\n
+                    field_url = \'gadget_erp5_field_readonly.html\',\n
+                    // Don\'t change the structure without changing notifyValid and notifyInvalid\n
                     field_element = document.createElement("div"),\n
                     gadget_element = document.createElement("div"),\n
                     label_element = document.createElement("label"),\n
+                    error_element = document.createElement("span"),\n
                     renderered_field = rendered_form[field[0]];\n
 \n
+                  field_element.className = "ui-field-contain";\n
                   if (renderered_field.hidden === 1) {\n
                     // Hide field\n
-                    field_element.setAttribute("class", "ui-screen-hidden");\n
+                    field_element.className = field_element.className + " ui-screen-hidden";\n
                   }\n
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
+                  // error_element.setAttribute(\'class\', \'ui-state-error ui-corner-all\');\n
+                  label_element.appendChild(error_element);\n
                   if (group[0] !== "bottom") {\n
                     field_element.appendChild(label_element);\n
                   }\n
                   field_element.appendChild(gadget_element);\n
                   fieldset_element.appendChild(field_element);\n
-                  if ((renderered_field.type === \'ListField\') ||\n
-                      (renderered_field.type === \'ParallelListField\') ||\n
-                      (renderered_field.type === \'MultiListField\')) {\n
-                    field_url = \'gadget_erp5_listfield.html\';\n
+                  if (renderered_field.type === \'ListField\') {\n
+//                      (renderered_field.type === \'ParallelListField\') ||\n
+//                      (renderered_field.type === \'MultiListField\')) {\n
+                    field_url = \'gadget_erp5_field_list.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
-                    field_url = \'gadget_erp5_stringfield.html\';\n
+                    field_url = \'gadget_erp5_field_string.html\';\n
+                  } else if (renderered_field.type === \'RelationStringField\') {\n
+                    field_url = \'gadget_erp5_field_relation_string.html\';\n
                   } else if (renderered_field.type === \'TextAreaField\') {\n
-                    field_url = \'gadget_erp5_textareafield.html\';\n
+                    field_url = \'gadget_erp5_field_textarea.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
-                    field_url = \'gadget_erp5_floatfield.html\';\n
+                    field_url = \'gadget_erp5_field_float.html\';\n
                   } else if (renderered_field.type === \'ListBox\') {\n
-                    field_url = \'gadget_erp5_listbox.html\';\n
+                    field_url = \'gadget_erp5_field_listbox.html\';\n
                   } else if (renderered_field.type === \'EditorField\') {\n
-                    field_url = \'gadget_codemirror.html\';\n
+                    field_url = \'gadget_erp5_field_textarea.html\';\n
+                    // field_url = \'gadget_codemirror.html\';\n
+                    // sandbox = \'iframe\';\n
                   }\n
 \n
                   return field_queue\n
                     .push(function () {\n
                       return form_gadget.declareGadget(field_url, {\n
                         scope: renderered_field.key,\n
-                        element: gadget_element\n
+                        element: gadget_element,\n
+                        sandbox: sandbox\n
                       });\n
                     })\n
                     .push(function (field_gadget) {\n
@@ -252,41 +282,67 @@
 \n
 \n
     .declareMethod("getContent", function () {\n
-      var form_gadget = this;\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        data = {},\n
+        queue = new RSVP.Queue();\n
 \n
-        var k,\n
-          field_gadget,\n
-          count = form_gadget.props.gadget_list.length,\n
-//           // data = new FormData(),\n
-          data = {},\n
-          queue = new RSVP.Queue();\n
-\n
-        function extendData(field_data) {\n
-          var key;\n
-          for (key in field_data) {\n
-            if (field_data.hasOwnProperty(key)) {\n
-              data[key] = field_data[key];\n
-            }\n
+      function extendData(field_data) {\n
+        var key;\n
+        for (key in field_data) {\n
+          if (field_data.hasOwnProperty(key)) {\n
+            data[key] = field_data[key];\n
           }\n
         }\n
+      }\n
 \n
-        for (k = 0; k < count; k += 1) {\n
-          field_gadget = form_gadget.props.gadget_list[k];\n
-          // XXX Hack until better defined\n
-          if (field_gadget.getContent !== undefined) {\n
-            queue\n
-              .push(field_gadget.getContent.bind(field_gadget))\n
-              .push(extendData);\n
-          }\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.getContent !== undefined) {\n
+          queue\n
+            .push(field_gadget.getContent.bind(field_gadget))\n
+            .push(extendData);\n
         }\n
-        return queue\n
-          .push(function () {\n
-            return data;\n
-          });\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return data;\n
+        });\n
+    })\n
 \n
-  });\n
 \n
-}(window, rJS, RSVP));
+    .declareMethod("checkValidity", function () {\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        result = true,\n
+        queue = new RSVP.Queue();\n
+\n
+      function extendData(field_validity) {\n
+        result = result && field_validity;\n
+      }\n
+\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.checkValidity !== undefined) {\n
+          queue\n
+            .push(field_gadget.checkValidity.bind(field_gadget))\n
+            .push(extendData);\n
+        }\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return result;\n
+        });\n
+\n
+    });\n
+\n
+}(window, document, rJS, RSVP));
 
 ]]></string> </value>
         </item>
@@ -409,7 +465,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -423,7 +479,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.56175.55013.14626</string> </value>
+                <value> <string>937.64263.33357.15633</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -441,7 +497,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407924093.61</float>
+                        <float>1412254860.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

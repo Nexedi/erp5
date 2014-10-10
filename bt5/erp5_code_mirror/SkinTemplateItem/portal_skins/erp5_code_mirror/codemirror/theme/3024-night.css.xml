@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>3024-night.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\n
+\n
+    Name:       3024 night\n
+    Author:     Jan T. Sott (http://github.com/idleberg)\n
+\n
+    CodeMirror template by Jan T. Sott (https://github.com/idleberg/base16-codemirror)\n
+    Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)\n
+\n
+*/\n
+\n
+.cm-s-3024-night.CodeMirror {background: #090300; color: #d6d5d4;}\n
+.cm-s-3024-night div.CodeMirror-selected {background: #3a3432 !important;}\n
+.cm-s-3024-night .CodeMirror-gutters {background: #090300; border-right: 0px;}\n
+.cm-s-3024-night .CodeMirror-linenumber {color: #5c5855;}\n
+.cm-s-3024-night .CodeMirror-cursor {border-left: 1px solid #807d7c !important;}\n
+\n
+.cm-s-3024-night span.cm-comment {color: #cdab53;}\n
+.cm-s-3024-night span.cm-atom {color: #a16a94;}\n
+.cm-s-3024-night span.cm-number {color: #a16a94;}\n
+\n
+.cm-s-3024-night span.cm-property, .cm-s-3024-night span.cm-attribute {color: #01a252;}\n
+.cm-s-3024-night span.cm-keyword {color: #db2d20;}\n
+.cm-s-3024-night span.cm-string {color: #fded02;}\n
+\n
+.cm-s-3024-night span.cm-variable {color: #01a252;}\n
+.cm-s-3024-night span.cm-variable-2 {color: #01a0e4;}\n
+.cm-s-3024-night span.cm-def {color: #e8bbd0;}\n
+.cm-s-3024-night span.cm-bracket {color: #d6d5d4;}\n
+.cm-s-3024-night span.cm-tag {color: #db2d20;}\n
+.cm-s-3024-night span.cm-link {color: #a16a94;}\n
+.cm-s-3024-night span.cm-error {background: #db2d20; color: #807d7c;}\n
+\n
+.cm-s-3024-night .CodeMirror-activeline-background {background: #2F2F2F !important;}\n
+.cm-s-3024-night .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
