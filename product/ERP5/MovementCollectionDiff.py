@@ -120,10 +120,8 @@ def _getPropertyList(document, acquire=True):
   return property_dict
 
 def _getCategoryList(document, acquire=True):
-  bad_category_list = ['solver', ]
   # we care already stored category only
-  document_category_set = set([x.split('/',1)[0] for x in \
-                                 document.getCategoryList()])
+  document_category_set = {x.split('/',1)[0]
+                           for x in document.getCategoryList()}
   getPropertyList = document.getPropertyList
-  return dict([(x, getPropertyList(x)) for x in document_category_set \
-                 if x not in bad_category_list])
+  return {x: getPropertyList(x) for x in document_category_set if x != 'solver'}

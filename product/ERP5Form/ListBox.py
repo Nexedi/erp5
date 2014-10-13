@@ -896,10 +896,10 @@ class ListBoxRenderer:
        Make sure there is no duplicates.
     """
     all_column_list = list(self.getColumnList())
-    all_column_id_set = set([c[0] for c in all_column_list])
-    all_column_list.extend([(str(c[0]), unicode(c[1], self.getEncoding())) \
-                              for c in self.field.get_value('all_columns') \
-                              if c[0] not in all_column_id_set])
+    all_column_id_set = {c[0] for c in all_column_list}
+    all_column_list.extend((str(c[0]), unicode(c[1], self.getEncoding()))
+                           for c in self.field.get_value('all_columns')
+                           if c[0] not in all_column_id_set)
     return all_column_list
 
   getAllColumnList = lazyMethod(getAllColumnList)
@@ -1004,14 +1004,9 @@ class ListBoxRenderer:
     """
     search_columns = self.field.get_value('search_columns')
     if search_columns:
-      search_column_id_list = [c[0] for c in search_columns]
-    else:
-      search_column_id_list = []
-      isValidColumn = self.getCatalogTool().getSQLCatalog().isValidColumn
-      for column_id, column_title in self.getAllColumnList():
-        if isValidColumn(column_id):
-          search_column_id_list.append(column_id)
-    return set(search_column_id_list)
+      return {c[0] for c in search_columns}
+    isValidColumn = self.getCatalogTool().getSQLCatalog().isValidColumn
+    return {id for id, title in self.getAllColumnList() if isValidColumn(id)}
 
   getSearchColumnIdSet = lazyMethod(getSearchColumnIdSet)
 
@@ -1020,10 +1015,8 @@ class ListBoxRenderer:
     """
     sort_columns = self.field.get_value('sort_columns')
     if sort_columns:
-      sort_column_id_set = set([c[0] for c in sort_columns])
-    else:
-      sort_column_id_set = self.getSearchColumnIdSet()
-    return sort_column_id_set
+      return {c[0] for c in sort_columns}
+    return self.getSearchColumnIdSet()
 
   getSortColumnIdSet = lazyMethod(getSortColumnIdSet)
 
@@ -1031,7 +1024,7 @@ class ListBoxRenderer:
     """Return the set of the ids of the editable columns.
     """
     editable_columns = self.field.get_value('editable_columns')
-    return set([c[0] for c in editable_columns])
+    return {c[0] for c in editable_columns}
 
   getEditableColumnIdSet = lazyMethod(getEditableColumnIdSet)
 
@@ -1309,7 +1302,7 @@ class ListBoxRenderer:
     field = self.field
     original_field_id = field.id
     while True:
-      for field_id in set((original_field_id, field.id)):
+      for field_id in {original_field_id, field.id}:
         if field.aq_parent.has_field("%s_%s" % (field_id, alias), include_disabled=1):
           return field.aq_parent.get_field("%s_%s" % (field_id, alias),
                                            include_disabled=1)

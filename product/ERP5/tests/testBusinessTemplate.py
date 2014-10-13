@@ -6623,9 +6623,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_object.__ac_local_roles__ = dict(group=['Assignee', 'Assignor'],
                                          another_group=['Assignee'])
     initial___ac_local_roles_group_id_dict__ = dict(
-      Alternate=set([('group', 'Assignee')]),
-      Another=set([('group', 'Assignor'),
-                   ('another_group', 'Assignee')])).copy()
+      Alternate={('group', 'Assignee')},
+      Another={('group', 'Assignor'),
+               ('another_group', 'Assignee')})
     new_object.__ac_local_roles_group_id_dict__ = initial___ac_local_roles_group_id_dict__
     self.tic()
 

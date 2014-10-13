@@ -408,7 +408,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(0, message_count)
     # Check if all objects are catalogued as before
     new_path_list = self.getSQLPathList()
-    self.assertEqual(set(original_path_list) - set(new_path_list), set())
+    self.assertTrue(set(original_path_list).issubset(new_path_list))
 
   def test_14_ReindexWithBrokenCategory(self):
     """Reindexing an object with 1 broken category must not affect other valid
@@ -1046,10 +1046,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     for k, v in query_dict.items():
       setattr(query_record, k, v)
 
-    self.assertEqual(set([org_b.getPath(), org_c.getPath()]),
-        set([x.path for x in self.getCatalogTool()(
-                portal_type='Organisation',
-                title=query_record)]))
+    self.assertEqual({org_b.getPath(), org_c.getPath()},
+      {x.path for x in self.getCatalogTool()(portal_type='Organisation',
+                                             title=query_record)})
 
   def test_39_DeferredConnection(self):
     """ERP5Catalog uses a deferred connection for full text indexing.
@@ -1329,7 +1328,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     original_path_list = self.getSQLPathList(self.original_connection_id)
     new_path_list = self.getSQLPathList(self.new_connection_id)
-    self.assertEqual(set(original_path_list) - set(new_path_list), set())
+    self.assertTrue(set(original_path_list).issubset(new_path_list))
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
@@ -2107,9 +2106,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # future, in this case, this test have to be updated)
     self.assertSameSet([doc], [x.getObject() for x in
         ctool(portal_type='Organisation', description='Foo')])
-    self.assertEqual(set([doc, other_doc]), set([x.getObject() for x in
+    self.assertEqual({doc, other_doc}, {x.getObject() for x in
       ctool(portal_type='Organisation', description=dict(query='Foo',
-                                                         key='Keyword'))]))
+                                                         key='Keyword'))})
 
 
   def test_ignore_empty_string(self):
@@ -2119,13 +2118,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ctool = self.getCatalogTool()
     def searchResults(**kw):
       kw['portal_type'] = 'Organisation'
-      return set([x.getObject() for x in ctool.searchResults(**kw)])
+      return {x.getObject() for x in ctool.searchResults(**kw)}
 
     # description='' is ignored
-    self.assertEqual(set([doc_with_empty_description, doc_with_description]),
+    self.assertEqual({doc_with_empty_description, doc_with_description},
                       searchResults(description=''))
     # unless we exlicitly say we don't want to ignore empty strings
-    self.assertEqual(set([doc_with_empty_description]),
+    self.assertEqual({doc_with_empty_description},
                       searchResults(ignore_empty_string=0, description=''))
 
   def test_ignore_empty_string_related_key(self):
@@ -2138,11 +2137,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ctool = self.getCatalogTool()
     def searchResults(**kw):
       kw['portal_type'] = 'Organisation'
-      return set([x.getObject() for x in ctool.searchResults(**kw)])
+      return {x.getObject() for x in ctool.searchResults(**kw)}
 
-    self.assertEqual(set([doc_with_empty_region_description, doc_without_region]),
+    self.assertEqual({doc_with_empty_region_description, doc_without_region},
                       searchResults(region_description=''))
-    self.assertEqual(set([doc_with_empty_region_description]),
+    self.assertEqual({doc_with_empty_region_description},
         searchResults(ignore_empty_string=0, region_description=''))
 
   def test_complex_query(self):

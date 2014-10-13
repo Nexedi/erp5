@@ -2016,9 +2016,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(2, len(data_line_list))
     self.assertEqual(
-        set([line.getColumnProperty('Movement_getSpecificReference') for line in
-              data_line_list]),
-        set(('Source Reference', 'Destination Reference')))
+        {line.getColumnProperty('Movement_getSpecificReference')
+         for line in data_line_list},
+        {'Source Reference', 'Destination Reference'})
 
     for line in data_line_list:
       if line.getColumnProperty('Movement_getSpecificReference')\

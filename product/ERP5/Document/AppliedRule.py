@@ -272,7 +272,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
         break
       if root_rule:
         self._setSpecialise(root_rule)
-      delivery_set = set((delivery,))
+      delivery_set = {delivery}
       def updateMovementCollection(rule, context, *args, **kw):
         orig_updateMovementCollection(rule, context, *args, **kw)
         new_parent = context.getParentValue()

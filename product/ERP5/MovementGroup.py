@@ -341,7 +341,7 @@ class FakeMovement:
       Be careful: behaviour differs from CMFCategory in that returned
       list may include None, when there is at least 1 unlinked SM.
     """
-    return list(set(x.getDelivery() for x in self.__movement_list))
+    return list({x.getDelivery() for x in self.__movement_list})
 
   def getDeliveryValue(self):
     """

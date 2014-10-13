@@ -511,8 +511,7 @@ class ContributionTool(BaseTool):
     if depth < 0:
       # Do nothing if crawling depth is reached
       return
-    url_list = content.getContentNormalisedURLList()
-    for url in set(url_list):
+    for url in set(content.getContentNormalisedURLList()):
       # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled
       if urlparse.urlsplit(url)[0] in no_crawl_protocol_list:

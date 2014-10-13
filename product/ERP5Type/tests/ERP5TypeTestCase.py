@@ -498,15 +498,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt_set = set(searchable_business_template_list).difference(x['title']
         for x in template_tool.repository_dict.itervalues() for x in x)
       if bt_set:
-        template_tool.updateRepositoryBusinessTemplateList(set(
-          os.path.dirname(x[0]) for x in self._getBTPathAndIdList(bt_set)),
+        template_tool.updateRepositoryBusinessTemplateList(
+          {os.path.dirname(x[0]) for x in self._getBTPathAndIdList(bt_set)},
           genbt5list=1)
 
-    def failIfDifferentSet(self, a, b, msg=""):
-      if not msg:
-        msg='%r != %r' % (a, b)
-      self.assertEqual(set(a), set(b), msg)
-    assertSameSet = failIfDifferentSet
+    def assertSameSet(self, a, b, msg=None):
+      self.assertSetEqual(set(a), set(b), msg)
+    failIfDifferentSet = assertSameSet
 
     def assertHasAttribute(self, obj, attribute, msg=None):
       self.assertNotEqual(None, getattr(obj, attribute, None),

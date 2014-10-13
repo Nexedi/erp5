@@ -136,8 +136,7 @@ class BusinessProcess(Path, XMLObject):
     if trade_phase is not None:
       if isinstance(trade_phase, basestring):
         trade_phase = (trade_phase,)
-      trade_phase = set(x.split('trade_phase/', 1)[-1]
-                        for x in trade_phase)
+      trade_phase = {x.split('trade_phase/', 1)[-1] for x in trade_phase}
     kw.setdefault('portal_type', self.getPortalTradeModelPathTypeList())
     kw.setdefault('sort_on', 'int_index')
     original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS

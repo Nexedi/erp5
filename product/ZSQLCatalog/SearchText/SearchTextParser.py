@@ -287,7 +287,7 @@ if __name__ == '__main__':
     return result
 
   original_parse = parse
-  fake_column_id_set = set(['a', 'b', 'c', 'd', 'title', 'toto', 'titi', 'foo', 'bar'])
+  fake_column_id_set = {'a', 'b', 'c', 'd', 'title', 'toto', 'titi', 'foo', 'bar'}
 
   def isColumn(value):
     return value in fake_column_id_set

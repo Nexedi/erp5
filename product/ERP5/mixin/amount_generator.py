@@ -229,8 +229,8 @@ class BaseAmountResolver(BaseAmountDict):
     variated_base_amount = base_amount, variation_category_list
     resolving = self._resolving
     if variated_base_amount not in self._dict:
-      self._resolving = self._dict[variated_base_amount] = set(
-        (variated_base_amount,))
+      self._resolving = self._dict[variated_base_amount] = \
+        {variated_base_amount}
       self._getGeneratedAmountQuantity(base_amount, variation_category_list)
       self._resolving = resolving
     resolving |= self._dict[variated_base_amount]

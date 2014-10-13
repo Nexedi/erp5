@@ -191,11 +191,11 @@ class SQLExpression(object):
       ValueError.
     """
     result = self.order_by_list[:]
-    known_column_set = set([x[0] for x in result])
+    known_column_set = {x[0] for x in result}
     for sql_expression in self.sql_expression_list:
       for order_by in sql_expression.getOrderByList():
         if order_by[0] in known_column_set:
-          raise ValueError, 'I don\'t know how to merge order_by yet'
+          raise ValueError("I don't know how to merge order_by yet")
         else:
           result.append(order_by)
           known_column_set.add(order_by[0])

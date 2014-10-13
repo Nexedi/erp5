@@ -1094,7 +1094,7 @@ class TestInvoiceMixin(TestPackingListMixin):
             # for each movement, we want to make sure that each rule is not
             # instanciated more than once
             if len(found_rule_dict):
-              self.assertEqual(set(found_rule_dict.itervalues()), set([1]))
+              self.assertEqual(set(found_rule_dict.itervalues()), {1})
         elif k == 'parent_movement_type_list':
           if rule.getParentValue().getDeliveryValue() is not None:
             parent_type = rule.getParentValue().getDeliveryValue().getPortalType()

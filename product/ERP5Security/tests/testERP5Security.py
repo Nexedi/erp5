@@ -222,9 +222,8 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_searchUsers(self):
     p1 = self._makePerson(reference='person1')
     p2 = self._makePerson(reference='person2')
-    self.assertEqual(set(['person1', 'person2']),
-      set([x['userid'] for x in
-        self.portal.acl_users.searchUsers(id='person')]))
+    self.assertEqual({'person1', 'person2'},
+      {x['userid'] for x in self.portal.acl_users.searchUsers(id='person')})
 
   def test_searchUsersExactMatch(self):
     p = self._makePerson(reference='person')
@@ -595,7 +594,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     obj = self._makeOne()
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
-    self.assertEqual(set([('F1_G1_S1', 'Assignor')]),
+    self.assertEqual({('F1_G1_S1', 'Assignor')},
       obj.__ac_local_roles_group_id_dict__.get('Alternate'))
     self.abort()
 

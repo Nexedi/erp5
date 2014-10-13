@@ -60,10 +60,10 @@ def parseStream(stream, child_discard_set, callback_dict, catchall=None):
   """
   if catchall is None:
     catchall = lambda x: None
-    callback_set = set(
+    callback_set = {
       y for x, y in callback_dict
       if x in ('start', 'end', None) # None is equivalent to 'end'
-    )
+    }
   else:
     callback_set = INFINITE_SET
   def elementFactory(tag, attrs):
@@ -72,7 +72,7 @@ def parseStream(stream, child_discard_set, callback_dict, catchall=None):
     return RestrictedElement(tag, attrs)
   for event, elem in iterparse(
           stream,
-          events=set([x for x, _ in callback_dict.iterkeys()]),
+          events={x for x, _ in callback_dict},
           parser=XMLParser(
             target=TreeBuilder(
               element_factory=elementFactory,

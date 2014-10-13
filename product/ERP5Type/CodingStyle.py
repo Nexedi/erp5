@@ -82,8 +82,7 @@ def getSkinPrefixList(self):
     'Form', # Acceptable for ERP5 Forms which will soon become portal types too
   ))
 
-  skin_prefix_list = set(skin_prefix_list)
-  return skin_prefix_list
+  return set(skin_prefix_list)
 
 # Generic method to check consistency of a skin item
 def checkConsistency(self, fixit=0, source_code=None):

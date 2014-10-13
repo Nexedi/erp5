@@ -78,8 +78,8 @@ class TradeModelSolver(AcceptSolver):
     # related lines.
     # XXX is there any better way than using rule's reference?
     trade_model_related_movement_dict = {}
-    for delivery in set(movement.getRootDeliveryValue()
-                        for movement in delivery_dict):
+    for delivery in {movement.getRootDeliveryValue()
+                     for movement in delivery_dict}:
       for movement in delivery.getMovementList():
         movement_list = delivery_dict.get(movement)
         # hard coded reference name

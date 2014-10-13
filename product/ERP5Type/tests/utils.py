@@ -626,10 +626,10 @@ class SubcontentReindexingWrapper(object):
         catalogged_object_path_set.add(q.getPath())
       return orig_catalogObjectList(self, object_list, *args, **kw)
     orig_catalogObjectList = Catalog.__dict__['catalogObjectList']
-    expected_path_set = set(q.getPath()
-      for q in children_document_list + [parent_document])
-    self.assertEqual(expected_path_set, set(x.getPath()
-      for x in self.portal.portal_catalog(path=expected_path_set)))
+    expected_path_set = {q.getPath()
+      for q in children_document_list + [parent_document]}
+    self.assertEqual(expected_path_set, {x.getPath()
+      for x in self.portal.portal_catalog(path=expected_path_set)})
     try:
       Catalog.catalogObjectList = catalogObjectList
       catalogged_object_path_set = set()

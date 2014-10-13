@@ -1114,7 +1114,7 @@ class TemplateTool (BaseTool):
       template_title_list = set(template_title_list)
       installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
 
-      bt5_set = set([])
+      bt5_set = set()
       for available_bt5 in available_bt5_list:
         if available_bt5.title in template_title_list:
           template_title_list.remove(available_bt5.title)

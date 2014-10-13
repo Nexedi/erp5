@@ -151,8 +151,8 @@ class PropertySheetTool(BaseTool):
           'templates to have fixed version of these property sheets: ' \
           '$business_templates'
         mapping['failed_import'] = ', '.join(failed_import)
-        mapping['business_templates'] = ', '.join(set(
-          KNOWN_BROKEN_PROPERTY_SHEET_DICT[x] for x in failed_import))
+        mapping['business_templates'] = ', '.join({
+          KNOWN_BROKEN_PROPERTY_SHEET_DICT[x] for x in failed_import})
       message = portal.Base_translateString(base_message, mapping=mapping)
       return self.Base_redirect('view',
                                 keep_items={'portal_status_message': message})
@@ -164,5 +164,5 @@ class PropertySheetTool(BaseTool):
     Return a sorted set of all the permissions useful for read/write
     permissions for properties of ZODB Property Sheets
     """
-    return sorted(set([ value for key, value in Permissions.__dict__.iteritems() \
-                        if key[0].isupper() ]))
+    return sorted({value for key, value in Permissions.__dict__.iteritems()
+                         if key[0].isupper()})

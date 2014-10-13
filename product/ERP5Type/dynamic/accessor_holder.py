@@ -369,8 +369,8 @@ def createAllAccessorHolderList(site,
   if portal_type is not None:
     accessor_holder_list.extend(portal_type.getAccessorHolderList())
 
-    portal_type_property_sheet_name_set = set(
-      [ accessor_holder.__name__ for accessor_holder in accessor_holder_list ])
+    portal_type_property_sheet_name_set = {
+      accessor_holder.__name__ for accessor_holder in accessor_holder_list}
 
   else:
     portal_type_property_sheet_name_set = set()

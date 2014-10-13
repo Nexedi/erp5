@@ -493,10 +493,10 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       use_cache = search_result is not None
       if use_cache:
         ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
-        ignored_security_uid_parameter_set = set(x
+        ignored_security_uid_parameter_set = {x
           for x, y in catalog_security_uid_groups_columns_dict.iteritems()
           if y in ignored_security_column_id_set
-        )
+        }
         _getSecurityUidDictAndRoleColumnDict = getSecurityUidDictAndRoleColumnDict
         def getSecurityUidDictAndRoleColumnDict(**kw):
           security_uid_dict, role_column_dict, local_role_column_dict = \

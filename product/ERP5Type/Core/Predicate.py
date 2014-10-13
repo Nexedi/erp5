@@ -225,33 +225,29 @@ class Predicate(XMLObject):
     # BBB: accessor is not present on old Predicate property sheet.
     if criterion_list or getattr(self, 'isEmptyPredicateValid', lambda: True)():
       for criterion in criterion_list:
-        if criterion.min and criterion.max:
-          catalog_kw[criterion.property] = { 'query' : (criterion.min, criterion.max),
-                                             'range' : 'minmax'
-                                           }
-        elif criterion.min:
-          catalog_kw[criterion.property] = { 'query' : criterion.min,
-                                             'range' : 'min'
-                                           }
+        p = criterion.property
+        if criterion.min:
+          if criterion.max:
+            catalog_kw[p] = {'query': (criterion.min, criterion.max),
+                             'range': 'minmax'}
+          else:
+            catalog_kw[p] = {'query': criterion.min, 'range': 'min'}
         elif criterion.max:
-          catalog_kw[criterion.property] = { 'query' : criterion.max,
-                                             'range' : 'max'
-                                           }
+          catalog_kw[p] = {'query': criterion.max, 'range': 'max'}
         else:
           # if a filter was passed as argument
-          if catalog_kw.has_key(criterion.property):
-            if isinstance(catalog_kw[criterion.property], (tuple, list)):
-              catalog_filter_set = set(catalog_kw[criterion.property])
-            else:
-              catalog_filter_set = set([catalog_kw[criterion.property]])
-            if isinstance(criterion.identity, (tuple, list)):
-              parameter_filter_set = set(criterion.identity)
-            else:
-              parameter_filter_set = set([criterion.identity])
-            catalog_kw[criterion.property] = \
-                list(catalog_filter_set.intersection(parameter_filter_set))
+          try:
+            f = catalog_kw[p]
+          except KeyError:
+            catalog_kw[p] = criterion.identity
           else:
-            catalog_kw[criterion.property] = criterion.identity
+            f = set(f) if isinstance(f, (tuple, list)) else {f}
+            i = criterion.identity
+            if isinstance(i, (tuple, list)):
+              f.intersection_update(i)
+            else:
+              f = (i,) if i in f else ()
+            catalog_kw[p] = list(f)
     else:
       # By catalog definition, no object has uid 0, so this condition forces an
       # empty result.

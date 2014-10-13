@@ -135,10 +135,10 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
           translated_state_title = self.getTranslation(msgid)
 
           if translated_state_title is not None:
-            if translation_dict.has_key(translated_state_title):
+            try:
               translation_dict[translated_state_title].add(state_id)
-            else:
-              translation_dict[translated_state_title] = set([state_id])
+            except KeyError:
+              translation_dict[translated_state_title] = {state_id}
 
 
     for key, value in translation_dict.items():
@@ -460,14 +460,12 @@ class TestTranslation(ERP5TypeTestCase):
                             portal_type='Organisation')
 
     self.tic()
-    self.assertEqual(set([person_1, person_2]),
-        set([x.getObject() for x in
-          self.portal.portal_catalog(translated_portal_type='Personne')]))
+    self.assertEqual({person_1, person_2}, {x.getObject() for x in
+          self.portal.portal_catalog(translated_portal_type='Personne')})
 
-    self.assertEqual(set([person_2, organisation]),
-        set([x.getObject() for x in
+    self.assertEqual({person_2, organisation}, {x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
-                                     portal_type=('Person', 'Organisation'))]))
+                                     portal_type=('Person', 'Organisation'))})
     self.assertEqual([person_2],
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',

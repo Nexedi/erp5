@@ -114,8 +114,8 @@ class TestIngestion(ERP5TypeTestCase):
       module.manage_delObjects([id for id in module.objectIds()])
     self.tic()
     activity_tool = self.portal.portal_activities
-    activity_status = set(m.processing_node < -1
-                          for m in activity_tool.getMessageList())
+    activity_status = {m.processing_node < -1
+                       for m in activity_tool.getMessageList()}
     if True in activity_status:
       activity_tool.manageClearActivities()
     else:

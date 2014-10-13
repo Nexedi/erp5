@@ -569,8 +569,8 @@ class TestPredicates(TestPredicateMixIn):
 
     # check that if we define the same filter than on predicate we get same result
     self.assertEqual(len(predicate.searchResults()), 2)
-    self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
-    'Organisation'])]), set([fabien, nexedi]))
+    self.assertEqual({fabien, nexedi}, {x.getObject()
+      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))})
 
     # check that it's possible to filter results
     self.assertEqual([x.getObject() for x in \
@@ -583,8 +583,8 @@ class TestPredicates(TestPredicateMixIn):
     currency_module = self.portal.getDefaultModule('Currency')
     euro = currency_module.newContent(title='euro')
 
-    self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
-    'Organisation'])]), set([fabien, nexedi]))
+    self.assertEqual({fabien, nexedi}, {x.getObject()
+      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))})
 
   def test_TalesExpression(self):
     # Predicates can test that a document is member of a category

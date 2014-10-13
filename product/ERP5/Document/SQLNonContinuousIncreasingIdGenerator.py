@@ -135,7 +135,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       id_group_done.append(id_group)
 
     # save the last ids which not exist in sql
-    for id_group in (set(self.last_max_id_dict.keys()) - set(id_group_done)):
+    for id_group in set(self.last_max_id_dict).difference(id_group_done):
       set_last_id_method(id_group=id_group,
           last_id=self.last_max_id_dict[id_group].value)
 

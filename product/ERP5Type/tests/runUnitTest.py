@@ -402,8 +402,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
 
           bt5_path = os.environ.get('erp5_tests_bt5_path')
           if bt5_path:
-            bt5_path_list.extend(set([re.sub("(\/\*|\*)", '', bt5_path)
-                                   for bt5_path in bt5_path.split(',')]))
+            bt5_path_list += {re.sub("(\/\*|\*)", '', bt5_path)
+                              for bt5_path in bt5_path.split(',')}
           else:
             from App.config import getConfiguration
             instancehome = getConfiguration().instancehome

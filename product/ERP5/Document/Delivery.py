@@ -224,7 +224,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       if movement_list:
 
         if isinstance(portal_type, str):
-          portal_type = set((portal_type,))
+          portal_type = portal_type,
         elif isinstance(portal_type, (list, tuple)):
           portal_type = set(portal_type)
 

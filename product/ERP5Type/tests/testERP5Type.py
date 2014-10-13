@@ -2015,21 +2015,21 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Check getCategorySet accessor
       foo.setDefaultRegionValue(beta)
-      self.assertSameSet(set([beta_path]), foo.getRegionSet())
+      self.assertSameSet({beta_path}, foo.getRegionSet())
       self.assertSameSet(
           set(),
           foo.getRegionSet(checked_permission=checked_permission))
 
       # Check getCategoryIdSet accessor
       foo.setDefaultRegionValue(beta)
-      self.assertSameSet(set([beta_id]), foo.getRegionIdSet())
+      self.assertSameSet({beta_id}, foo.getRegionIdSet())
       self.assertSameSet(
           set(),
           foo.getRegionIdSet(checked_permission=checked_permission))
 
       # Check getCategoryTitleSet accessor
       foo.setDefaultRegionValue(beta)
-      self.assertSameSet(set([beta_title]), foo.getRegionTitleSet())
+      self.assertSameSet({beta_title}, foo.getRegionTitleSet())
       self.assertSameSet(
           set(),
           foo.getRegionTitleSet(
@@ -2037,7 +2037,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Check getCategoryValueSet accessor
       foo.setDefaultRegionValue(beta)
-      self.assertSameSet(set([beta]), foo.getRegionValueSet())
+      self.assertSameSet({beta}, foo.getRegionValueSet())
       self.assertSameSet(
           set(),
           foo.getRegionValueSet(

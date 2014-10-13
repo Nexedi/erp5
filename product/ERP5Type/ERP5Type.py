@@ -656,8 +656,8 @@ class ERP5TypeInformation(XMLObject,
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailablePropertySheetList')
     def getAvailablePropertySheetList(self):
-      property_sheet_set = set([k for k in PropertySheet.__dict__
-                                if not k.startswith('_')])
+      property_sheet_set = {k for k in PropertySheet.__dict__
+                              if not k.startswith('_')}
 
       property_sheet_tool = self.getPortalObject().portal_property_sheets
       property_sheet_set.update(property_sheet_tool.objectIds())

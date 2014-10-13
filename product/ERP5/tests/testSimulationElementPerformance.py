@@ -476,9 +476,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                   'Simulation Movement')
           self.assertEqual(simulation_movement.getQuantity(), 1.0)
           self.assertEqual(simulation_movement.getResource(), resource)
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/order_path',
-                  'business_process_module/test_bp/order')))
+                  'business_process_module/test_bp/order'})
           self.assertEqual(simulation_movement.getDestinationDecision(),
                   destination_decision)
           self.assertEqual(simulation_movement.getDestinationAdministration(),
@@ -512,9 +512,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
           for simulation_movement in simulation_movement_list:
             self.assertEqual(simulation_movement.getPortalType(),
                     'Simulation Movement')
-            self.assertEqual(set(simulation_movement.getCausalityList()), set((
+            self.assertEqual(set(simulation_movement.getCausalityList()),{
                     'business_process_module/test_bp/deliver_path',
-                    'business_process_module/test_bp/deliver')))
+                    'business_process_module/test_bp/deliver'})
 
     def stepCheckBuiltSaleInvoices(self, sequence=None, sequence_list=None,
             **kw):
@@ -547,9 +547,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
-                  'business_process_module/test_bp/invoice')))
+                  'business_process_module/test_bp/invoice'})
 
         tax_invoice_line = invoice_line_list[1]
         self.assertEqual(tax_invoice_line.getResource(),
@@ -568,10 +568,10 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
-                  'sale_trade_condition_module/test_stc/vat_low')))
+                  'sale_trade_condition_module/test_stc/vat_low'})
 
     def stepCheckAddedSaleInvoices(self, sequence=None, sequence_list=None,
             **kw):
@@ -604,9 +604,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
-                  'business_process_module/test_bp/invoice')))
+                  'business_process_module/test_bp/invoice'})
 
         luxury_invoice_line = invoice_line_list[1]
         self.assertEqual(luxury_invoice_line.getResource(),
@@ -622,9 +622,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
-                  'business_process_module/test_bp/invoice')))
+                  'business_process_module/test_bp/invoice'})
 
         high_tax_invoice_line = invoice_line_list[2]
         self.assertEqual(high_tax_invoice_line.getResource(),
@@ -641,10 +641,10 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
-                  'sale_trade_condition_module/test_stc/vat_high')))
+                  'sale_trade_condition_module/test_stc/vat_high'})
 
         low_tax_invoice_line = invoice_line_list[3]
         self.assertEqual(low_tax_invoice_line.getResource(),
@@ -663,10 +663,10 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         for simulation_movement in simulation_movement_list:
           self.assertEqual(simulation_movement.getPortalType(),
                   'Simulation Movement')
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/invoice_path',
                   'business_process_module/test_bp/invoice',
-                  'sale_trade_condition_module/test_stc/vat_low')))
+                  'sale_trade_condition_module/test_stc/vat_low'})
 
     def stepCheckConvergedSalePackingLists(self, sequence=None,
             sequence_list=None, **kw):
@@ -713,9 +713,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                   delivery.getQuantity())
           self.assertEqual(simulation_movement.getResource(),
                   delivery.getResource())
-          self.assertEqual(set(simulation_movement.getCausalityList()), set((
+          self.assertEqual(set(simulation_movement.getCausalityList()), {
                   'business_process_module/test_bp/deliver_path',
-                  'business_process_module/test_bp/deliver')))
+                  'business_process_module/test_bp/deliver'})
           self.assertEqual(simulation_movement.getDestinationDecision(),
                   destination_decision)
           self.assertEqual(simulation_movement.getDestinationAdministration(),

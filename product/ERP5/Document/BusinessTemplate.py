@@ -558,9 +558,9 @@ class BaseTemplateItem(Implicit, Persistent):
     klass = obj.__class__
     classname = klass.__name__
 
-    attr_set = set(('_dav_writelocks', '_filepath', '_owner', '_related_index',
-                    'last_id', 'uid',
-                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__'))
+    attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                'last_id', 'uid',
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
     if export:
       if keep_workflow_history_last_history_only:
         self._removeAllButLastWorkflowHistory(obj)
@@ -2002,14 +2002,12 @@ class WorkflowTemplateItem(ObjectTemplateItem):
                           context.getTemplatePortalTypeWorkflowChainList()]
       chain_dict = getChainByType(context)[1]
       for workflow_id in removed_workflow_id_list:
-        affected_portal_type_set = set([x[0][6:] for x in \
-                                        chain_dict.iteritems() \
-                                        if workflow_id in \
-                                        [y.strip() for y in x[1].split(',')]])
-        safe_portal_type_set = set([x[0] for x in installed_chain_list \
-                                    if x[1] == workflow_id]) - \
-                               set([x[0] for x in new_chain_list \
-                                    if x[1] == workflow_id])
+        affected_portal_type_set = {x[6:] for x, y in chain_dict.iteritems()
+          if any(workflow_id == y.strip() for y in y.split(','))}
+        safe_portal_type_set = {x for x, y in installed_chain_list
+                                  if y == workflow_id}
+        safe_portal_type_set.difference_update(x for x, y in new_chain_list
+                                                 if y == workflow_id)
         if affected_portal_type_set - safe_portal_type_set:
           value = modified_workflow_dict['portal_workflow/%s' % workflow_id]
           modified_workflow_dict['portal_workflow/%s' % workflow_id] = \
@@ -2057,10 +2055,10 @@ class WorkflowTemplateItem(ObjectTemplateItem):
       object_keys = [object_path]
     else:
       object_keys = self._archive.keys()
-    removed_workflow_id_list = set([x.split('/', 1)[1] for x in object_keys])
+    removed_workflow_id_list = {x.split('/', 1)[1] for x in object_keys}
     (default_chain, chain_dict) = getChainByType(context)
     for portal_type, workflow_ids in chain_dict.iteritems():
-      workflow_ids = set([x.strip() for x in workflow_ids.split(',')]) - \
+      workflow_ids = {x.strip() for x in workflow_ids.split(',')} - \
                      removed_workflow_id_list
       chain_dict[portal_type] = ', '.join(workflow_ids)
     context.portal_workflow.manage_changeWorkflows(default_chain,
@@ -2510,7 +2508,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
                             self.business_template_class_property)._objects
     else:
       old_objects = {}
-    for key in set(self._objects.keys()).union(set(old_objects.keys())):
+    for key in set(self._objects.keys()).union(old_objects.keys()):
       if key in update_dict or force:
         if not force:
           action = update_dict[key]

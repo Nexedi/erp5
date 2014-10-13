@@ -348,10 +348,9 @@ def _aq_reset():
 class PropertyHolder(object):
   isRADContent = 1
   WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
-  RESERVED_PROPERTY_SET = set(('_constraints', '_properties', '_categories',
-                               '__implements__', 'property_sheets',
-                               '__ac_permissions__',
-                               '_erp5_properties'))
+  RESERVED_PROPERTY_SET = {'_constraints', '_properties', '_categories',
+                           '__implements__', 'property_sheets',
+                           '__ac_permissions__', '_erp5_properties'}
 
   def __init__(self, name='PropertyHolder'):
     self.__name__ = name
@@ -1419,17 +1418,17 @@ class Base( CopyContainer,
 
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
-    restricted_method_set = set()
-    default_permission_set = set(('Access contents information',
-                              'Modify portal content'))
     if restricted:
       # retrieve list of accessors which doesn't use default permissions
-      for ancestor in self.__class__.mro():
-        for permissions in getattr(ancestor, '__ac_permissions__', ()):
-          if permissions[0] not in default_permission_set:
-            for method in permissions[1]:
-              if method.startswith('set'):
-                restricted_method_set.add(method)
+      restricted_method_set = {method
+        for ancestor in self.__class__.mro()
+        for permissions in getattr(ancestor, '__ac_permissions__', ())
+        if permissions[0] not in ('Access contents information',
+                                  'Modify portal content')
+        for method in permissions[1]
+        if method.startswith('set')}
+    else:
+      restricted_method_set = ()
 
     getProperty = self.getProperty
     hasProperty = self.hasProperty

@@ -795,11 +795,11 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       portal = self.getPortalObject()
       folder_id = self.aq_parent.id
       # Find a business template which manages the context skin folder.
-      folder_id_set = set([folder_id])
+      folder_id_set = {folder_id}
       for template in portal.portal_templates.getInstalledBusinessTemplateList():
         template_skin_id_list = template.getTemplateSkinIdList()
         if folder_id in template_skin_id_list:
-          folder_id_set.update(set(template_skin_id_list))
+          folder_id_set.update(template_skin_id_list)
 
           # Find folders which can be surcharged by this skin folder
           if '_' in folder_id:

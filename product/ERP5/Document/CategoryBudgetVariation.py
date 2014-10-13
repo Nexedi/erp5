@@ -84,9 +84,9 @@ class CategoryBudgetVariation(BudgetVariation):
     item_list = self.getBudgetLineVariationRangeCategoryList(budget_line)
 
     if matrixbox:
-      used_node_item_set = set([item[0] for item in cell_range[0]])
+      used_node_item_set = {item[0] for item in cell_range[0]}
     else:
-      used_node_item_set = set([item for item in cell_range[0]])
+      used_node_item_set = {item for item in cell_range[0]}
 
     if engaged_budget:
       consumption_dict = budget_line.getConsumedBudgetDict()

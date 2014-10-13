@@ -220,8 +220,8 @@ class TaskDistributionTool(BaseTool):
     if test_result.getSimulationState() == 'started':
       if line.getSimulationState() == "started":
         line.stop(**status_dict)
-      if set([x.getSimulationState() for x in test_result.objectValues(
-                portal_type="Test Result Line")]) == set(["stopped"]):
+      if {"stopped"} == {x.getSimulationState()
+          for x in test_result.objectValues(portal_type="Test Result Line")}:
         test_result.stop()
 
   def _extractXMLRPCDict(self, xmlrpc_dict):

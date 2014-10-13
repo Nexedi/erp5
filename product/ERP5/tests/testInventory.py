@@ -2383,10 +2383,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     try:
       self.assertEqual(len(expected_history), len(actual_history))
       for expected, actual in zip(expected_history, actual_history):
-        shared_keys = set(expected.keys()) & set(actual.keys())
-        self.assertEqual(len(shared_keys), len(expected.keys()))
+        shared_keys = set(expected) & set(actual)
+        self.assertEqual(len(shared_keys), len(expected))
         shared_item = set(expected.items()) & set(actual.items())
-        self.assertEqual(len(shared_item), len(expected.keys()))
+        self.assertEqual(len(shared_item), len(expected))
     except AssertionError:
       msg = 'History differs between expected:\n%s\nand real:\n%s'\
              % (repr(expected_history), repr(actual_history))

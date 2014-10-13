@@ -912,7 +912,7 @@ class Catalog(Folder,
     # Get subject information
     # XXX if more collation is available, we can have smaller number of
     # unique subject sets.
-    subject_list = tuple(sorted(set([(x or '').lower() for x in getSubjectList()])))
+    subject_list = tuple(sorted({(x or '').lower() for x in getSubjectList()}))
     if not subject_list:
       return (None, None)
     # Make sure no duplicates
@@ -2468,12 +2468,11 @@ class Catalog(Folder,
     """
     return getComparisonOperatorInstance(operator)
 
-  PROPAGATE_PARAMETER_SET = set(['selection_domain',
-                                 'selection_report',
-                                 # XXX should get the next parameters from
-                                 # the ZSQLMethod class itself
-                                 'zsql_brain',
-                               ])
+  PROPAGATE_PARAMETER_SET = ('selection_domain',
+                             'selection_report',
+                             # XXX should get the next parameters from
+                             # the ZSQLMethod class itself
+                             'zsql_brain')
   def _queryResults(self, REQUEST=None, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
@@ -2484,10 +2483,8 @@ class Catalog(Folder,
     ENFORCE_SEPARATION = True
     if ENFORCE_SEPARATION:
       # Some parameters must be propagated:
-      new_kw = dict((name, kw[name])
-                    for name in self.PROPAGATE_PARAMETER_SET & set(kw))
-      # discard all others:
-      kw = new_kw
+      kw = {name: kw[name] for name in self.PROPAGATE_PARAMETER_SET
+                           if name in kw}
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']

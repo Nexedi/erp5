@@ -1801,10 +1801,10 @@ class ERP5Generator(PortalGenerator):
       container_path = root[prefix_len:]
       load = traverse(container_path)._importObjectFromFile
       if container_path:
-        id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
+        id_set = {x[:-4] for x in files if x[-4:] == '.xml'}
       else:
-        id_set = set(quote(x) for x in content_id_list
-                              if not context.hasObject(x))
+        id_set = {quote(x) for x in content_id_list
+                           if not context.hasObject(x)}
       dirs[:] = id_set.intersection(dirs)
       for file in id_set:
         load(os.path.join(root, file + '.xml'),

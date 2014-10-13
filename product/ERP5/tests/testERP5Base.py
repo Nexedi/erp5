@@ -1073,13 +1073,12 @@ class TestERP5Base(ERP5TypeTestCase):
     # patch the method, we'll abort later
     self.portal.Localizer.get_selected_language = lambda: lang
 
-    self.assertEqual(set([person_1, person_2]),
-        set([x.getObject() for x in
-          self.portal.portal_catalog(translated_portal_type='Personne')]))
-    self.assertEqual(set([person_2, organisation]),
-        set([x.getObject() for x in
-          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
-                                     portal_type=('Person', 'Organisation'))]))
+    self.assertEqual({person_1, person_2}, {x.getObject()
+      for x in self.portal.portal_catalog(translated_portal_type='Personne')})
+    self.assertEqual({person_2, organisation}, {x.getObject()
+      for x in self.portal.portal_catalog(
+        translated_validation_state_title='Brouillon',
+        portal_type=('Person', 'Organisation'))})
     self.assertEqual([person_2],
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',

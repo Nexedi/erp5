@@ -175,10 +175,8 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     transformation.setResourceValue(swimcap)
 
     self.tic()
-    self.assertSameSet(
-        set(swimcap.getVariationCategoryList()),
-        set(transformation.getVariationCategoryList()),
-    )
+    self.assertSameSet(swimcap.getVariationCategoryList(),
+                       transformation.getVariationCategoryList())
 
   def test_variationCategoryWithIndividualVariation(self):
     '''Check that individual variation are return when getVariationCategoryList

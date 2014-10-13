@@ -84,7 +84,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
                                 connection._db.classFactory)
     ObjectWriter.__init__(self, obj)
     migrated_oid_set = set()
-    oid_set = set((obj._p_oid,))
+    oid_set = {obj._p_oid}
     while oid_set:
       oid = oid_set.pop()
       obj = ObjectReader.load_oid(self, oid)

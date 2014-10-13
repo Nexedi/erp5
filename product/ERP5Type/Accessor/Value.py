@@ -190,7 +190,7 @@ def defMethodGetter(key, method=None):
   name = '%sSetGetter' % key
   def __call__(self, instance, *args, **kw):
     r = ListGetter.__call__(self, instance, **kw)
-    return list(set(method(x) for x in r)) if r or not args else args[0]
+    return list({method(x) for x in r}) if r or not args else args[0]
   psyco.bind(__call__)
   globals()[name] = type(name, (ListGetter,), {'__call__': __call__})
 
