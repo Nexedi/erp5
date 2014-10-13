@@ -30,6 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Item import Item
 from erp5.component.mixin.CompositionMixin import CompositionMixin
@@ -107,19 +108,24 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       of resource, ie. float or unit)
     """
     result = []
+    catalog_tool = getToolByName(self, 'portal_catalog')
 
     # Try to find the source open order
-    open_order_movement_list = self.getAggregateRelatedValueList(
-                portal_type="Open Sale Order Line") # XXX-JPS Hard Coded
-    if not open_order_movement_list:
-      return result
-
-    # Now generate movements for each valid open order
-    for movement in open_order_movement_list: # YXU-Why we have a list here?
-      if movement.getParentValue().getValidationState() in ('open', 'validated'): # XXX-JPS hard coding
+    for movement in catalog_tool(portal_type="Open Sale Order Line",
+        default_aggregate_uid=self.getUid(),
+        validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
+        sort_on=(('effective_date', 'descending'),
+                # Do not return archived if effective dates are identical
+                ('validation_state', 'descending')),
+        limit=1 # Note Luke: Support the newest Open Order which defines
+                # something for current subscription item
+        ): # YXU-Why we have a list here?
         resource = movement.getResource()
         start_date = movement.getStartDate()
         stop_date = movement.getStopDate()
+        if start_date is None or stop_date is None or start_date>=stop_date:
+          # infinity nor time back machine does not exist
+          continue
         source = movement.getSource()
         source_section = movement.getSourceSection()
         source_decision = movement.getSourceDecision()
@@ -139,8 +145,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
         id_index = 0
         while current_date < stop_date:
           next_date = self.getNextPeriodicalDate(current_date)
-          if next_date > stop_date:
-            next_date = stop_date
           generated_movement = self.newContent(temp_object=True,
                                                portal_type='Movement',
                                                id='subscription_%s' % id_index)
