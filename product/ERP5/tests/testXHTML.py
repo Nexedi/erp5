@@ -445,10 +445,8 @@ class W3Validator(object):
     '''
       retrun two list : a list of errors and an other for warnings
     '''
-    if isinstance(page_source, unicode):
-      # Zope 2.12 renders page templates as unicode
-      page_source = page_source.encode('utf-8')
-    source = 'fragment=%s&output=soap12' % urllib.quote_plus(page_source)
+    source = 'fragment=%s&output=soap12' % urllib.quote_plus(
+      page_source.encode('utf-8'))
     stdout, stderr = Popen(self.validator_path,
             stdin=PIPE, stdout=PIPE, stderr=PIPE,
             close_fds=True,

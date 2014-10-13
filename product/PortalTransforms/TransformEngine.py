@@ -11,11 +11,7 @@ from OFS.Folder import Folder
 from Persistence import PersistentMapping
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal, View
-try:
-    from Products.CMFCore.utils import registerToolInterface
-except ImportError: # BACK: Zope 2.8
-    registerToolInterface = lambda tool_id, tool_interface: None
-from Products.CMFCore.utils import UniqueObject
+from Products.CMFCore.utils import registerToolInterface, UniqueObject
 from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 

@@ -74,10 +74,8 @@ class ComponentTool(BaseTool):
     is called on Portal Type class when loading Componet Tool Portal Type
     class
     """
-    # XXX-Cosmetic: From Zope >= 2.13, getPermissions() can be used instead of
-    # protected _registeredPermissions module attribute
-    from AccessControl.Permission import _registeredPermissions, pname
-    for permission_name in _registeredPermissions:
+    from AccessControl.Permission import getPermissions, pname
+    for permission_name, _, _ in getPermissions():
       if permission_name == 'Reset dynamic classes':
         permission_function = lambda self: ('Manager',)
       elif permission_name in ('Change permissions', 'Define permissions'):

@@ -30,8 +30,6 @@ class DemoStorage(_DemoStorage.DemoStorage, ConflictResolvingStorage):
         except ConflictError, e:
             old = e.serials[0]
             rdata = self.tryToResolveConflict(oid, old, serial, data)
-            if rdata is None: # BBB: Zope < 2.13
-                raise ConflictError(oid=oid, serials=(old, serial), data=data)
             self.changes.store(oid, old, rdata, '', transaction)
             return ResolvedSerial
 

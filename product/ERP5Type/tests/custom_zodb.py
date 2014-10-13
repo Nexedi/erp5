@@ -66,23 +66,9 @@ elif save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
 zeo_server_pid = None
 node_pid_list = []
 
-ZEvent = sys.modules.get('ZServer.PubCore.ZEvent')
-zrpc = sys.modules.get('ZEO.zrpc.connection')
 def fork():
   pid = os.fork()
   if pid:
-    # recreate event pipes that already exist
-    # BBB: This is useless on Zope 2.13+ since ZEO now imports cleanly.
-    for obj in socket_map.values():
-      obj.close()
-      if obj is ZEvent.the_trigger:
-        ZEvent.the_trigger = ZEvent.simple_trigger()
-      else:
-        assert obj is zrpc.ManagedServerConnection.trigger
-        zrpc.ManagedServerConnection.trigger = zrpc.trigger()
-        zrpc.ManagedClientConnection.trigger.close()
-        zrpc.ManagedClientConnection.trigger = \
-          zrpc.client_trigger = zrpc.trigger(zrpc.client_map)
     # make sure parent and child have 2 different RNG
     instance_random.seed(instance_random.random())
   return pid

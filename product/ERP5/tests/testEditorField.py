@@ -34,7 +34,6 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import to_utf8
 
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
@@ -128,7 +127,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       text_content -- the embedded text content
     """
-    html_text = to_utf8(html_text)
+    html_text = html_text.encode('utf-8')
     match_string1 = "var oFCKeditor      = new FCKeditor('field_%s');" % field_id
     match_string2 = "oFCKeditor.Value    = '%s';" % ('\\n'.join(text_content.splitlines()))
     if html_text.find(match_string1) == -1:
@@ -153,7 +152,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       text_content -- the embedded text content
     """
-    html_text = to_utf8(html_text)
+    html_text = html_text.encode('utf-8')
     match_string = """name="field_%s" >\n%s</textarea>""" % (field_id, text_content)
     if html_text.find(match_string) == -1:
       print html_text
@@ -172,7 +171,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       document -- the document which content is displayed in
                   read only mode
     """
-    html_text = to_utf8(html_text)
+    html_text = html_text.encode('utf-8')
     text_content = document.asStrippedHTML()
     match_string1 = """<div class="input"><div class="page" >\n%s</div></div>""" % text_content
     match_string2 = """<div class="field page"""

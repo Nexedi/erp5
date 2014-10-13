@@ -27,10 +27,7 @@ import sys
 from zLOG import LOG, INFO
 from ldif import LDIFRecordList, is_dn, valid_changetype_dict, CHANGE_TYPES
 import ldifvar
-try:
-  from DocumentTemplate.security import RestrictedDTML
-except ImportError: # BBB Zope-2.12
-  from AccessControl.DTML import RestrictedDTML
+from DocumentTemplate.security import RestrictedDTML
 try:
     from AccessControl import getSecurityManager
 except ImportError:

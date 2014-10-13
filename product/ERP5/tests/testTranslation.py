@@ -31,7 +31,6 @@ import unittest
 import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import to_utf8
 from Products.ERP5Type.Utils import getMessageIdWithContext
 from zLOG import LOG
 
@@ -440,8 +439,7 @@ class TestTranslation(ERP5TypeTestCase):
     </tal:ommit>
     """ % domain
     self.myzpt.pt_edit(zpt_template, 'text/html')
-    results = to_utf8(self.myzpt(words=words)).split()
-    return results
+    return self.myzpt(words=words).encode('utf-8').split()
 
   def test_ZPT_translation(self):
     results = self.translate_by_zpt('erp5_ui', 'Person', 'Draft')
