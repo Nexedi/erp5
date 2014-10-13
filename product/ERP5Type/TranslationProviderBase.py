@@ -47,8 +47,7 @@ class TranslationProviderBase(object):
       pass
     else:
       property_domain_dict.update(my_property_domain_dict)
-    return dict((k, v.__of__(self))
-      for k, v in property_domain_dict.iteritems())
+    return {k: v.__of__(self) for k, v in property_domain_dict.iteritems()}
 
   security.declarePublic('getContentTranslationDomainPropertyNameList')
   def getContentTranslationDomainPropertyNameList(self):

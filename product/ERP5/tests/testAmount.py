@@ -118,8 +118,7 @@ class TestAmount(ERP5TypeTestCase):
     resource = sequence.get('resource')
     amount.setResourceValue(resource)
     sequence.edit(
-       variation_property_dict= \
-           dict([(x, None) for x in self.variation_property_dict])
+       variation_property_dict=dict.fromkeys(self.variation_property_dict)
     )
 
   def stepCheckEmptyGetVariationPropertyDict(self, sequence=None,

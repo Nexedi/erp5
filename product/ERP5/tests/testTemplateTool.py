@@ -611,14 +611,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     many business templates that are already installed
     """
     template_tool = self.portal.portal_templates
-    before = dict((bt.getTitle(), bt.getId())
-      for bt in template_tool.getInstalledBusinessTemplateList())
+    before = {bt.getTitle(): bt.getId()
+      for bt in template_tool.getInstalledBusinessTemplateList()}
     bt_title = 'erp5_calendar'
     template_tool.installBusinessTemplateListFromRepository([bt_title],
         install_dependency=True)
     self.tic()
-    after = dict((bt.getTitle(), bt.getId())
-      for bt in template_tool.getInstalledBusinessTemplateList())
+    after = {bt.getTitle(): bt.getId()
+      for bt in template_tool.getInstalledBusinessTemplateList()}
     del after[bt_title]
     self.assertEqual(before, after)
 
@@ -645,19 +645,20 @@ class TestTemplateTool(ERP5TypeTestCase):
     fourth_group = range(10, 12)
     fifth_group = range(12, 13)
 
-    expected_position_dict = dict((('erp5_property_sheets', first_group),
-                                   ('erp5_core_proxy_field_legacy', first_group),
-                                   ('erp5_mysql_innodb_catalog', first_group),
-                                   ('erp5_core', first_group),
-                                   ('erp5_full_text_myisam_catalog', first_group),
-                                   ('erp5_xhtml_style', first_group),
-                                   ('erp5_ingestion_mysql_innodb_catalog', second_group),
-                                   ('erp5_base', second_group),
-                                   ('erp5_jquery', third_group),
-                                   ('erp5_ingestion', third_group),
-                                   ('erp5_web', fourth_group),
-                                   ('erp5_crm', fourth_group),
-                                   ('erp5_credential', fifth_group)))
+    expected_position_dict = {
+      'erp5_property_sheets': first_group,
+      'erp5_core_proxy_field_legacy': first_group,
+      'erp5_mysql_innodb_catalog': first_group,
+      'erp5_core': first_group,
+      'erp5_full_text_myisam_catalog': first_group,
+      'erp5_xhtml_style': first_group,
+      'erp5_ingestion_mysql_innodb_catalog': second_group,
+      'erp5_base': second_group,
+      'erp5_jquery': third_group,
+      'erp5_ingestion': third_group,
+      'erp5_web': fourth_group,
+      'erp5_crm': fourth_group,
+      'erp5_credential': fifth_group}
 
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],

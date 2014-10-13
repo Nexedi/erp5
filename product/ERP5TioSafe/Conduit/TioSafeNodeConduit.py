@@ -175,18 +175,13 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
         keyword[tag] = value
         document.context.person_module.updatePersonAddress(**keyword)
     else:
-      # getter used to retrieve the current values and to check conflicts
-      property_list = ['birthday', ]
-      getter_value_dict = dict([
-          (prop, getattr(document, prop))
-          for prop in property_list
-          if getattr(document, prop, None) is not None
-      ])
+      assert tag == 'birthday', tag
+      current_value = getattr(document, tag)
+      assert current_value is not None, current_value
 
       # create and fill a conflict when the integration site value, the erp5
       # value and the previous value are differents
-      current_value = getter_value_dict[tag]
-      if  current_value not in [value, previous_value]:
+      if value != current_value != previous_value:
         conflict_list.append(self._generateConflict(path=document.getPhysicalPath(),
                                       tag=tag,
                                       xml=xml,

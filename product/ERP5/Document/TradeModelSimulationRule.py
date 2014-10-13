@@ -100,9 +100,9 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       if amount.getResource():
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?
-        movement = input_movement.asContext(**dict((k, v)
+        movement = input_movement.asContext(**{k: v
             for k, v in amount.__dict__.iteritems()
-            if k[0] != '_' and k != 'categories'))
+            if k[0] != '_' and k != 'categories'})
         base_category_set = set(amount.getBaseCategoryList())
         base_category_set.remove('price_currency') # XXX
         movement._setCategoryMembership(base_category_set,

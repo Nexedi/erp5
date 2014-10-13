@@ -415,8 +415,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     for line in delivery.getMovementList():
       simulation_movement_list, = \
         self.getTradeModelSimulationMovementList(line)
-      result_dict = dict((sm.getResourceValue().getUse(), sm)
-                         for sm in simulation_movement_list)
+      result_dict = {sm.getResourceValue().getUse(): sm
+                     for sm in simulation_movement_list}
       self.assertEqual(len(simulation_movement_list),
                        len(result_dict))
       for use in 'discount', 'tax':
@@ -596,8 +596,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     # on invoice, make specialise point to a new TC and check it diverged
     trade_condition = self['trade_condition']
     new_trade_condition = self.clone(trade_condition)
-    line_dict = dict((line.getReference(), line)
-                     for line in new_trade_condition.objectValues())
+    line_dict = {line.getReference(): line
+                 for line in new_trade_condition.objectValues()}
     line_dict['discount'].edit(reference='discount_2',
                                price=self.new_discount_ratio)
     line_dict['tax'].edit(reference='tax_2',

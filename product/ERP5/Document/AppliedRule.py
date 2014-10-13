@@ -369,7 +369,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
         del AppliedRule.isIndexable, SimulationMovement.isIndexable
       self.recursiveReindexObject()
       assert str not in map(type, old_dict), old_dict
-      return dict((k, sum(v.values(), [])) for k, v in deleted), delivery_set
+      return {k: sum(v.values(), []) for k, v in deleted}, delivery_set
     simulation_tool._delObject(self.getId())
 
   def _checkExpand(self):

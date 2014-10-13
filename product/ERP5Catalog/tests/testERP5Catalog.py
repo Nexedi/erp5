@@ -3935,9 +3935,8 @@ VALUES
     org4 = module.newContent(portal_type='Organisation', title='org4')
     org4.setGroupList(['nexedi', 'tiolive'])
     # check associations are correct
-    actual_group_title_map = dict((org.getTitle(),
-                                   sorted(org.getGroupTitleList()))
-                                  for org in (org1, org2, org3, org4))
+    actual_group_title_map = {org.getTitle(): sorted(org.getGroupTitleList())
+                              for org in (org1, org2, org3, org4)}
     expected_group_title_map = dict(org1=[],
                                     org2=['Nexedi'],
                                     org3=['TIOLive'],

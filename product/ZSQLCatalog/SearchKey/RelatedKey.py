@@ -211,9 +211,8 @@ class RelatedKey(SearchKey):
                              destination_table))
 
     # map aliases to use in ZSQLMethod.
-    table_alias_dict = dict(('table_%s' % (index, ), table_alias)
-                            for (index, (table_alias, table_name))
-                            in enumerate(table_alias_list))
+    table_alias_dict = {'table_%s' % index: alias[0]
+                        for index, alias in enumerate(table_alias_list)}
 
     assert len(table_alias_list) == len(table_alias_dict)
 

@@ -318,8 +318,8 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
         format_data = TemplateDict()
         format_data._push(info)
         variable_match.setdefault(SECURITY_PARAMETER_ID, ())
-        format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
-                                           k, v in variable_match.iteritems()))
+        format_data._push({k: ('&%s:list=' % k).join(v)
+                           for k, v in variable_match.iteritems()})
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,

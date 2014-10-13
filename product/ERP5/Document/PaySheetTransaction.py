@@ -150,10 +150,10 @@ class PaySheetTransaction(Invoice):
 
   security.declarePrivate('updateAggregatedAmountList')
   def updateAggregatedAmountList(self, *args, **kw):
-    amount_dict = dict(((x.getReference(),
-                         tuple(x.getVariationCategoryList())), x)
-                       for x in self.getAggregatedAmountList(*args, **kw)
-                       if x.getResource())
+    amount_dict = {(x.getReference(),
+                    tuple(x.getVariationCategoryList())): x
+                   for x in self.getAggregatedAmountList(*args, **kw)
+                   if x.getResource()}
     movement_to_delete_list = []
     for movement in self.getMovementList():
       if movement.getBaseApplication():
@@ -163,9 +163,9 @@ class PaySheetTransaction(Invoice):
         if amount is None:
           movement_to_delete_list.append(movement)
         else:
-          movement.edit(**dict((x, amount.getProperty(x))
+          movement.edit(**{x: amount.getProperty(x)
               for x in ('price', 'resource', 'quantity',
-                        'base_application_list', 'base_contribution_list')))
+                        'base_application_list', 'base_contribution_list')})
 
     return {'movement_to_delete_list': movement_to_delete_list,
             'movement_to_add_list': amount_dict.values()}
@@ -208,8 +208,8 @@ class PaySheetTransaction(Invoice):
         # convert Amount into Simulation Movement with Business Link
         movement_list = []
         for amount in movement_list_trade_phase_dic[trade_phase]:
-          variation_dict = dict(
-            [tuple(x.split('/', 1)) for x in amount.getVariationCategoryList()])
+          variation_dict = dict(x.split('/', 1)
+                                for x in amount.getVariationCategoryList())
           movement_list.extend(
             business_process.getTradePhaseMovementList(
               self, amount, trade_phase, update_property_dict=variation_dict))

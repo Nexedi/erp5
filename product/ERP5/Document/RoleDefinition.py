@@ -63,6 +63,6 @@ class RoleDefinition(XMLObject):
       group_id_generator = getattr(ob,
         ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
       role_list = self.getRoleName(),
-      return dict((group_id, role_list)
+      return {group_id: role_list
         for group_id in group_id_generator(category_order=('agent',),
-                                           agent=self.getAgentList()))
+                                           agent=self.getAgentList())}

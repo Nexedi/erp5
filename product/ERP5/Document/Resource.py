@@ -119,14 +119,14 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
             sort_on=[('title','ascending')])
         individual_variation_list = [x.getObject() for x in
             individual_variation_list]
-        other_base_category_dict = dict([(i,1) for i in base_category_list])
+        other_base_category_set = set(base_category_list)
 
         if not omit_individual_variation:
           for variation in individual_variation_list:
             for base_category in variation.getVariationBaseCategoryList():
               if base_category_list is ()\
                   or base_category in base_category_list:
-                other_base_category_dict[base_category] = 0
+                other_base_category_set.discard(base_category)
                 # XXX now, call Renderer a lot of time.
                 # Better implementation needed
                 result.extend(Renderer(
@@ -136,12 +136,10 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                     current_category=current_category,
                     display_id=display_id).render([variation]))
 
-        other_base_category_list = [x for x, y in
-            other_base_category_dict.iteritems() if y == 1]
         # Get category variation
-        if other_base_category_list:
+        if other_base_category_set:
           result.extend(super(Resource, self).getVariationRangeCategoryItemList(
-              base_category_list=other_base_category_list,
+              base_category_list=list(other_base_category_set),
               base=base, display_base_category=display_base_category, **kw))
         # Return result
         return result

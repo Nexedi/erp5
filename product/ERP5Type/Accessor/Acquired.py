@@ -207,7 +207,4 @@ class SetGetter(ListGetter):
     Gets a category value set
     """
     def __call__(self, instance, *args, **kw):
-      result_list = ListGetter.__call__(self, instance, *args, **kw)
-      result_set = dict([(x, 0) for x in result_list]).keys()
-      return result_set
-
+      return list(set(ListGetter.__call__(self, instance, *args, **kw)))

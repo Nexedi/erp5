@@ -1720,14 +1720,16 @@ def guessEncodingFromText(data, content_type='text/html'):
                 ' You must install python-magic'
     raise NotImplementedError, message
 
-_reencodeUrlEscapes_map = dict((chr(x), chr(x) in (# safe
-                                                   "!'()*-." "0123456789" "_~"
-                                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                                   "abcdefghijklmnopqrstuvwxyz"
-                                                   # reserved (maybe unsafe)
-                                                   "#$&+,/:;=?@[]")
-                                        and chr(x) or "%%%02X" % x)
-                               for x in xrange(256))
+_reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
+    # safe
+    "!'()*-." "0123456789" "_~"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    # reserved (maybe unsafe)
+    "#$&+,/:;=?@[]"
+  else "%%%02X" % x
+  for x in xrange(256)}
+
 def reencodeUrlEscapes(url):
   """Fix a non-conformant %-escaped URL (or quote an unescaped one)
 

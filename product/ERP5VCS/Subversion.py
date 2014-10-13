@@ -381,8 +381,8 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
   def export(self, business_template):
     # Dicts to track svn status in case it is not consistent with existing
     # files and directories
-    self.versioned_dict = dict((x.getPath(), x) for x in self.client.status('.')
-      if str(x.getTextStatus()) not in ('ignored', 'unversioned'))
+    self.versioned_dict = {x.getPath(): x for x in self.client.status('.')
+      if str(x.getTextStatus()) not in ('ignored', 'unversioned')}
     del self.versioned_dict['.']
     self.versioned_dict[''] = None
     self.added_set = set()

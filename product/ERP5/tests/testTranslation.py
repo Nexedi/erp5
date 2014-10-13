@@ -149,8 +149,8 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
       # State ID has multiple translation associated, and it leads to
       # unexpected results for the user when using portal catalog.
       rejected_key_list = translation_dict.keys()
-      result_dict = dict([(x, []) for x in rejected_key_list])
-      error_dict =  dict([(x, []) for x in rejected_key_list])
+      result_dict = {x: [] for x in rejected_key_list}
+      error_dict =  {x: [] for x in rejected_key_list}
       error = 0
 
       # Browse all workflows to ease fixing this issue.

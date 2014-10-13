@@ -376,8 +376,7 @@ try:
       # transform entry to dict to make it more usable in zope
       members_tuple = ('url', 'uuid', 'revision', 'kind', \
       'commit_author', 'commit_revision', 'commit_time',)
-      entry_dict = dict([(member, getattr(entry, member)) \
-      for member in members_tuple])
+      entry_dict = {member: getattr(entry, member) for member in members_tuple}
       entry_dict['revision'] = entry_dict['revision'].number
       entry_dict['commit_revision'] = entry_dict['commit_revision'].number
       entry_dict['commit_time'] = DateTime(entry_dict['commit_time'])

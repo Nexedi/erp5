@@ -526,14 +526,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         return
 
       # Update variation category list on line
-      variation_category_dict = dict([(variation_category, True) for
-                                      variation_category in
-                                      delivery_line.getVariationCategoryList()])
+      variation_category_set = set(delivery_line.getVariationCategoryList())
       for movement in movement_group_node.getMovementList():
-        for category in movement.getVariationCategoryList():
-          variation_category_dict[category] = True
-      variation_category_list = sorted(variation_category_dict.keys())
-      delivery_line.setVariationCategoryList(variation_category_list)
+        variation_category_set.update(movement.getVariationCategoryList())
+      delivery_line.setVariationCategoryList(sorted(variation_category_set))
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       grouped_node_list = movement_group_node.getGroupList()

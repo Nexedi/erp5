@@ -90,8 +90,8 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     """Returns all the engagements in a dict where the keys are the cells, and
     the value is the engaged budget.
     """
-    budget_dict =  dict([(k, v * -1) for (k,v) in
-                         self.getEngagedBudgetDict(**kw).items()])
+    budget_dict = {k: v * -1
+      for k, v in self.getEngagedBudgetDict(**kw).iteritems()}
 
     cell_key_list = self.getCellKeyList()
     for cell_key in cell_key_list:

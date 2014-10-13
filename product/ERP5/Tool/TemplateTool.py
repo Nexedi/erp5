@@ -1177,8 +1177,8 @@ class TemplateTool (BaseTool):
       operation_log = []
       resolved_template_list = self.resolveBusinessTemplateListDependency(
                    template_list)
-      installed_bt5_dict = dict((x.getTitle(), x.getRevision())
-        for x in self.getInstalledBusinessTemplateList())
+      installed_bt5_dict = {x.getTitle(): x.getRevision()
+        for x in self.getInstalledBusinessTemplateList()}
       if only_different:
         template_url_dict = self._getBusinessTemplateUrlDict()
 

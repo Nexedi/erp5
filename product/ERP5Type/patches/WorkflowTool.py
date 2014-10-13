@@ -382,8 +382,8 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   if len(catalog_result) > 0:
     # Transtype all worklist definitions where needed
     criterion_id_list = []
-    class_dict = dict(((name, _sql_cast_dict.get(x['type'], _sql_cast_fallback))
-      for name, x in catalog_result.data_dictionary().iteritems()))
+    class_dict = {name: _sql_cast_dict.get(x['type'], _sql_cast_fallback)
+      for name, x in catalog_result.data_dictionary().iteritems()}
     for criterion_dict in grouped_worklist_dict.itervalues():
       for criterion_id, criterion_value_list in criterion_dict.iteritems():
         if type(criterion_value_list) is not ExclusionList:
@@ -691,7 +691,7 @@ def WorkflowTool_refreshWorklistCache(self):
         #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
         #    (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
-        value_column_dict = dict([(x, []) for x in table_column_id_set])
+        value_column_dict = {x: [] for x in table_column_id_set}
         for catalog_brain_line in catalog_brain_result.dictionaries():
           for column_id, value in catalog_brain_line.iteritems():
             if column_id in value_column_dict:

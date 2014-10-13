@@ -228,8 +228,8 @@ class TaskDistributionTool(BaseTool):
     """
     extract all xmlrpclib.Binary instance
     """
-    return dict([(x,isinstance(y, Binary) and y.data or y) \
-       for (x, y) in xmlrpc_dict.iteritems()])
+    return {x: y.data if isinstance(y, Binary) else y
+       for x, y in xmlrpc_dict.iteritems()}
 
   security.declarePublic('reportTaskFailure')
   def reportTaskFailure(self, test_result_path, status_dict, node_title):

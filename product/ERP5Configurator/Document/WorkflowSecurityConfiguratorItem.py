@@ -93,7 +93,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         for permission in permission_list:
           state.setPermission(permission, 0, [])
         # Update state matrix
-        permission_dict = dict([(x, []) for x in permission_list])
+        permission_dict = {x: [] for x in permission_list}
         for role, perm_symbol in state_config.items():
           managed_permission_list = []
           if 'A' in perm_symbol:

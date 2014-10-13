@@ -116,6 +116,6 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
     decision_movement -- a delivery movement (decision)
     """
     get = self._getTestedPropertyValue
-    return dict((tested_property, get(prevision_movement, tested_property))
-                for tested_property in ('variation_category_list',
-                                        'variation_property_dict'))
+    return {tested_property: get(prevision_movement, tested_property)
+      for tested_property in ('variation_category_list',
+                              'variation_property_dict')}

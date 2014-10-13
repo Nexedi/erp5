@@ -163,8 +163,8 @@ class TestWorklist(ERP5TypeTestCase):
     worklists.addWorklist(worklist_id)
     worklists._getOb(worklist_id).setProperties('',
         actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
-        props=dict((k.startswith('guard_') and k or 'var_match_'+k, v)
-                    for k, v in kw.iteritems()))
+        props={k if k.startswith('guard_') else 'var_match_' + k: v
+               for k, v in kw.iteritems()})
 
   def removeWorklist(self, workflow_id, worklist_id_list):
     worklists = self.getWorkflowTool()[workflow_id].worklists

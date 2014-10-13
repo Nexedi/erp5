@@ -1661,12 +1661,9 @@ class Catalog(Folder,
             method.func_code.co_varnames[:method.func_code.co_argcount]
         else:
           arguments = []
-        kw = dict(
-          (x, LazyIndexationParameterList(
-            catalogged_object_list,
-            x,
-            argument_cache,
-          )) for x in arguments)
+        kw = {x: LazyIndexationParameterList(catalogged_object_list,
+                                             x, argument_cache)
+          for x in arguments}
 
         # Alter/Create row
         try:
@@ -2352,7 +2349,7 @@ class Catalog(Folder,
       else:
         select_dict = None
     elif isinstance(select_dict, (list, tuple)):
-      select_dict = dict([(x, None) for x in select_dict])
+      select_dict = dict.fromkeys(select_dict)
     # Handle left_join_list
     left_join_list = kw.pop('left_join_list', ())
     # Handle implicit_join. It's True by default, as there's a lot of code

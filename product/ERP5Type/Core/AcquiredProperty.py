@@ -73,9 +73,10 @@ class AcquiredProperty(StandardProperty):
                                    'translation_acquired_property_id')
 
   # Add names specific to 'content' type (see StandardProperty)
-  _name_mapping_filesystem_to_zodb_dict = \
-      dict([ (name, 'content_' + name,) for name in _content_type_attribute_tuple ],
-           **StandardProperty._name_mapping_filesystem_to_zodb_dict)
+  _name_mapping_filesystem_to_zodb_dict = {name: 'content_' + name
+    for name in _content_type_attribute_tuple}
+  _name_mapping_filesystem_to_zodb_dict.update(
+    StandardProperty._name_mapping_filesystem_to_zodb_dict)
 
   # ZODB name of attributes whose value is a TALES Expression string
   _expression_attribute_tuple = \

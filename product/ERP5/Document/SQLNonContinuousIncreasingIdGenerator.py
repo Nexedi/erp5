@@ -236,8 +236,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if self.getStoredInZodb():
       self._updateSqlTable()
     # Return values from sql
-    return dict([(line['id_group'],int(line['last_id'])) for line in
-      self._getValueListFromTable()])
+    return {line['id_group']: int(line['last_id'])
+            for line in self._getValueListFromTable()}
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'importGeneratorIdDict')

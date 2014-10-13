@@ -68,9 +68,12 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                           'size', 'extra_item',
                           ]
 
-  property_names = Widget.LinesTextAreaWidget.property_names + \
-                   Widget.TextWidget.property_names + \
-                   local_property_names
+  property_names = (lambda name_list, name_set=set():
+    # delete double (but preserve order) in order to keep a usable ZMI...
+    [x for x in name_list if not (x in name_set or name_set.add(x))])(
+      Widget.LinesTextAreaWidget.property_names +
+      Widget.TextWidget.property_names +
+      local_property_names)
 
   # XXX Field to remove...
   update_method = fields.StringField('update_method',
@@ -193,17 +196,6 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                description=('A list of listbox that can be used as proxy'),
                                default='',
                                required=0)
-
-  # delete double in order to keep a usable ZMI...
-  # XXX need to keep order !
-  #property_names = dict([(i,0) for i in property_names]).keys()
-  _v_dict = {}
-  _v_property_name_list = []
-  for property_name in property_names:
-    if not _v_dict.has_key(property_name):
-      _v_property_name_list.append(property_name)
-      _v_dict[property_name] = 1
-  property_names = _v_property_name_list
 
   default_widget_rendering_instance = Widget.LinesTextAreaWidgetInstance
 

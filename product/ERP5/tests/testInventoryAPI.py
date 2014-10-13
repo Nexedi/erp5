@@ -3214,7 +3214,7 @@ class TestUnitConversion(BaseTestUnitConversion):
           (None,      None,         None, None), ## empty
         )}.iteritems():
       for measure in measure_list:
-        kw = dict((keys[i], v) for i, v in enumerate(measure) if v is not None)
+        kw = {keys[i]: v for i, v in enumerate(measure) if v is not None}
         resource.newContent(portal_type='Measure', **kw)
 
     self.resource.setOptionalVariationBaseCategory('industrial_phase')
