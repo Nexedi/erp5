@@ -121,12 +121,13 @@
     <!-- custom script -->\n
     <script src="gadget_erp5_header.js" type="text/javascript"></script>\n
 \n
-    <script id="header-title-link-template" type="text/x-handlebars-template"><a href="{{url}}">{{title}}</a></script>\n
+    <script id="header-title-link-template" type="text/x-handlebars-template"><a class="ui-btn ui-btn-icon-left ui-icon-caret-up" href="{{url}}">{{title}}</a></script>\n
     <script id="header-title-template" type="text/x-handlebars-template">{{title}}</script>\n
 \n
     <script id="header-link-template" type="text/x-handlebars-template">\n
        <a role="button" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
     </script>\n
+\n
     <script id="header-button-template" type="text/x-handlebars-template">\n
        <form><button name=\'{{name}}\' type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
     </script>\n
@@ -296,7 +297,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -310,7 +311,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.4401.55907.17169</string> </value>
+                <value> <string>938.16099.57174.3840</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -328,7 +329,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412595274.24</float>
+                        <float>1413297257.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
