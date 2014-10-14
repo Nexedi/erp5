@@ -476,6 +476,11 @@ class MatrixBoxWidget(Widget.Widget):
             if render_format == 'list':
               list_result.append(list_result_tab)
 
+        # XXX Does not leave garbage in REQUEST['cell'], because some other
+        # fields also use that key...
+        REQUEST.other.pop('cell', None)
+        REQUEST.other.pop('cell_index', None)
+
         if render_format == 'list':
           return list_result
 
