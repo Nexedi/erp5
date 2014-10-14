@@ -1550,10 +1550,10 @@ class ActivityTool (Folder, UniqueObject):
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
-    def newActiveProcess(self, REQUEST=None, portal_type='Active Process', **kw):
+    def newActiveProcess(self, REQUEST=None, **kw):
       # note: if one wants to create an Actice Process without ERP5 products,
       # she can call ActiveProcess.addActiveProcess
-      obj = self.newContent(portal_type=portal_type, **kw)
+      obj = self.newContent(portal_type="Active Process", **kw)
       if REQUEST is not None:
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
