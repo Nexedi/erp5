@@ -163,7 +163,7 @@ for section in section_list:\n
   # This must match the difference between assets, liability and equity accounts.\n
   profit_and_loss_accounts_balance = portal.portal_simulation.getInventoryAssetPrice(\n
     from_date=context.getStartDate(),\n
-    node_category=profit_and_loss_node_category_list,\n
+    node_category_strict_membership=profit_and_loss_node_category_list,\n
     **inventory_param_dict)\n
   selected_profit_and_loss_account_balance = portal.portal_simulation.getInventoryAssetPrice(\n
     node=profit_and_loss_account,\n
