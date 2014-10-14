@@ -1546,18 +1546,9 @@ html body .ui-tag-list .ui-controlgroup-horizontal .ui-btn {\n
 .ui-btn-icon-notext:after {\n
   text-indent: 0;\n
 }\n
-/* align fontawesome */\n
-.ui-btn-icon-notext:after,\n
-.ui-btn-icon-top:after,\n
-.ui-btn-icon-bottom:after {\n
-  left: 49%;\n
-}\n
 /* set icon dimensions */\n
 .ui-btn-icon-left:after,\n
-.ui-btn-icon-right:after, \n
-.ui-btn-icon-top:after, \n
-.ui-btn-icon-bottom:after, \n
-.ui-btn-icon-notext:after {\n
+.ui-btn-icon-right:after {\n
   width: auto;\n
   height: auto;\n
 }\n
@@ -1814,9 +1805,9 @@ html .ui-footer .ui-title {\n
 \n
 /* set logo dimensions */\n
 html .ui-header img.ui-title {\n
-  max-height: 32px;\n
-  padding-top: .25em;\n
-  padding-bottom: .25em;\n
+  max-height: 24px;\n
+  padding-top: .5em;\n
+  padding-bottom: .5em;\n
 }\n
 \n
 /* move title to left if only one controlgroup with menu */\n
@@ -4400,7 +4391,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16005.6007.42325</string> </value>
+                <value> <string>938.16076.54392.60535</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4418,7 +4409,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413291362.58</float>
+                        <float>1413295536.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
