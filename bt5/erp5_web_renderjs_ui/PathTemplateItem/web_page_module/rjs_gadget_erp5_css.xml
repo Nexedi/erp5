@@ -1255,11 +1255,12 @@ html body div.ui-select div span {\n
    ------------------------------- Panel -----------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
-/* unset margin inside panel */\n
-html .ui-panel .ui-header,\n
-html .ui-panel .ui-content {\n
+/* unset margin inside panel if panel wraps content in .ui-panel-inner\n
+html .ui-panel .ui-panel-inner .ui-header,\n
+html .ui-panel .ui-panel-inner .ui-content {\n
   margin: -1em;\n
 }\n
+*/\n
 /* reposition panel content section */\n
 html .ui-panel .ui-header ~ .ui-content {\n
   margin-top: 1em;\n
@@ -1792,6 +1793,13 @@ html .ui-footer .ui-title {\n
   padding: 0.7em 0;\n
 }\n
 \n
+/* set logo dimensions */\n
+html .ui-header img.ui-title {\n
+  max-height: 32px;\n
+  padding-top: .25em;\n
+  padding-bottom: .25em;\n
+}\n
+\n
 /* move title to left if only one controlgroup with menu */\n
 html .ui-header .ui-title {\n
   margin: 0 59% 0 1%;\n
@@ -1806,16 +1814,9 @@ html .ui-header .ui-controlgroup ~ .ui-title {\n
 .ui-header-fixed ~ .ui-content {\n
   padding-top: 3em;\n
 }\n
-/* correct border, add shadow */\n
+/* remove border on header */\n
 .ui-header {\n
-  border-top-width: 0;\n
-  border-left-width: 0;\n
-  border-right-width: 0;\n
-  /*\n
-  -webkit-box-shadow: 0 1px 4px #aaa;\n
-  -moz-box-shadow: 0 1px 4px #aaa;\n
-  box-shadow: 0 1px 4px #aaa;\n
-  */\n
+  border-width: 0;\n
 }\n
 \n
 /* inset shadow for subheader */\n
@@ -1824,13 +1825,6 @@ html body .ui-mobile-viewport .ui-subheader {\n
   -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.2);\n
   -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.2);\n
   box-shadow: inset 0 1px 3px rgba(0,0,0,.2);\n
-}\n
-\n
-/* Double Borders for header and subheader */\n
-html body.ui-mobile-viewport .ui-header,\n
-html body .ui-mobile-viewport .ui-header {\n
-  border-bottom-color: rgb(115, 115, 115); /* IE8 */\n
-  border-bottom-color:  rgba(0, 0, 0, .25);\n
 }\n
 html body.ui-mobile-viewport .ui-subheader,\n
 html body .ui-mobile-viewport .ui-subheader {\n
@@ -4397,7 +4391,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54301.29012.61115</string> </value>
+                <value> <string>938.15820.36055.62600</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4415,7 +4409,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411743240.94</float>
+                        <float>1413280129.44</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
