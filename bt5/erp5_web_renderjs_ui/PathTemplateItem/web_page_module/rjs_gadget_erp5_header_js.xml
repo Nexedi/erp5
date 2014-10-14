@@ -321,7 +321,7 @@
           title: "Loading",\n
           icon: default_right_icon,\n
           url: "",\n
-          class: "ui-disabled"\n
+          class: "ui-disabled ui-icon-spin"\n
         };\n
       } else if (!gadget.stats.submitted) {\n
         default_right_icon = "spinner";\n
@@ -540,7 +540,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -554,7 +554,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.4424.15337.59562</string> </value>
+                <value> <string>938.15847.29908.51046</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -572,7 +572,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412596556.28</float>
+                        <float>1413281825.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
