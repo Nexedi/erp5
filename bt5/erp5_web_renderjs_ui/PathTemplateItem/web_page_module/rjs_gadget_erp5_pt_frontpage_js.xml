@@ -168,7 +168,7 @@
             business_application_list = [],\n
             business_application,\n
             module_info,\n
-            result_html = "",\n
+            result_html = \'<div data-role="collapsible-set" data-theme="c">\',\n
             doc;\n
           for (i = 0; i < document_list.length; i += 1) {\n
             doc = document_list[i];\n
@@ -215,12 +215,14 @@
           for (i = 0; i < business_application_list.length; i += 1) {\n
             business_application = business_application_list[i];\n
             business_application_dict[business_application].sort(sort_module);\n
+\n
             result_html += table_template({\n
               definition_title: business_application,\n
               documentlist: business_application_dict[business_application]\n
             });\n
           }\n
 \n
+          result_html += \'</div>\';\n
 \n
           gadget.props.element.querySelector(\'.document_list\').innerHTML = result_html;\n
         });\n
@@ -348,7 +350,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -362,7 +364,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.43885.22553.46165</string> </value>
+                <value> <string>938.16182.63738.26641</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -380,7 +382,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411461029.62</float>
+                        <float>1413301956.28</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

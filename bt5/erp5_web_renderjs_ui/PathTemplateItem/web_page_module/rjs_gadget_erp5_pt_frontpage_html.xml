@@ -124,12 +124,15 @@
 \n
     <!-- XXX must set theme here! -->\n
     <script id="table-template" type="text/x-handlebars-template">\n
-      <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
-        <li data-role="list-divider"><h1>{{definition_title}}</h1></li>\n
-        {{#each documentlist}}\n
-          <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
-        {{/each}}\n
-      </ul>\n
+      <div data-role="collapsible">\n
+        <h3>{{definition_title}}</h3>\n
+        <ul data-role="listview" data-theme="c" class="document-listview ui-corner-all">\n
+          <!--<li data-role="list-divider"><h1>{{definition_title}}</h1></li>-->\n
+          {{#each documentlist}}\n
+            <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
+          {{/each}}\n
+        </ul>\n
+      </div>\n
     </script>\n
 \n
   </head>\n
@@ -273,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51130.19006.10035</string> </value>
+                <value> <string>938.16173.13985.45960</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411573263.53</float>
+                        <float>1413301675.99</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
