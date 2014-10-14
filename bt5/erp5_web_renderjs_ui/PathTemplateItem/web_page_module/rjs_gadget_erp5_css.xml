@@ -1804,25 +1804,16 @@ html .ui-footer .ui-title {\n
   padding: 0.7em 0;\n
 }\n
 \n
-/* set logo dimensions */\n
+/* logo dimensions, left/right padding needed, because img does not fill space*/\n
 html .ui-header img.ui-title {\n
   max-height: 24px;\n
-  padding-top: .5em;\n
-  padding-bottom: .5em;\n
+  padding: 0.5em 1.7em;\n
 }\n
-/* set breadcrumb dimensions */\n
+/* breadcrumb dimensions, unsure negative margin is good to offset padding */\n
 html .ui-header .ui-title .ui-btn {\n
-  margin: -.9em 0;\n
-}\n
-\n
-/* move title to left if only one controlgroup with menu */\n
-html .ui-header .ui-title {\n
-  margin: 0 59% 0 1%;\n
-  text-align: left;\n
-}\n
-html .ui-header .ui-controlgroup ~ .ui-title {\n
-  margin: 0 30%;\n
-  text-align: center;\n
+  display: block;\n
+  margin: -0.9em 0;\n
+  max-height: 3.1em;\n
 }\n
 \n
 /* fixed header needs to push down content further */\n
@@ -1931,14 +1922,15 @@ html .ui-header .ui-btn {\n
 .ui-responsive.ui-btn {\n
   text-indent: -9999px;\n
 }\n
-.responsive.ui-btn:after,\n
 .ui-header .ui-btn-icon-left:after,\n
-.ui-footer .ui-btn-icon-left:after,\n
-.ui-responsive.ui-btn:after {\n
+.ui-footer .ui-btn-icon-left:after {\n
   text-indent: 0;\n
   left: .6em;\n
 }\n
-\n
+.responsive.ui-btn:after,\n
+.ui-responsive.ui-btn:after {\n
+  left: .8em;\n
+}\n
 /* reset on larger screens */\n
 @media (min-width: 48em) {\n
   .responsive.ui-btn:after,\n
@@ -4396,7 +4388,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16104.22669.9489</string> </value>
+                <value> <string>938.16148.22388.20394</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4414,7 +4406,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413297220.53</float>
+                        <float>1413299820.02</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
