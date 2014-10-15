@@ -75,7 +75,17 @@ class BTreeData(Persistent):
                 if lower_key + value_len > offset:
                     key = lower_key
                     buf = chunk.value[:offset - key] + buf
-        while buf:
+        try:
+            tree.minKey(len(buf) + offset)
+        except ValueError:
+            try:
+                eof = tree.maxKey()
+            except ValueError:
+                pass
+            else:
+                if not tree[eof].value:
+                    del tree[eof]
+        while buf or offset > len(self):
             try:
                 next_key = tree.minKey(key + 1)
             except ValueError:
@@ -190,6 +200,7 @@ class BTreeData(Persistent):
                 except ValueError:
                   break
                 del tree[next_key]
+        self.write('', offset)
 
 if __name__ == '__main__':
 
@@ -207,6 +218,9 @@ if __name__ == '__main__':
     data = BTreeData()
 
     data.write('', 10)
+    check(data, 10, 0, 20, '\x00' * 10, [10])
+
+    data.truncate(0)
     check(data, 0, 0, 20, '', [])
 
     data.write('a', 5)
@@ -242,3 +256,10 @@ if __name__ == '__main__':
     check(data, 3, 0, 3, '012', [0])
     data.truncate(0)
     check(data, 0, 0, 0, '', [])
+
+    data.truncate(10)
+    check(data, 10, 0, 10, '\x00' * 10, [10])
+    data.write('a', 15)
+    check(data, 16, 0, 16, '\x00' * 15 + 'a', [15])
+    data.write('bc', 9)
+    check(data, 16, 0, 16, '\x00' * 9 + 'bc' + '\x00' * 4 + 'a', [9, 15])
