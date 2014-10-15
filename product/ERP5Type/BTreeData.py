@@ -71,8 +71,7 @@ class BTreeData(Persistent):
             # writes.
             if lower_key < offset:
                 chunk = tree[lower_key]
-                value_len = len(chunk.value)
-                if lower_key + value_len > offset:
+                if lower_key + len(chunk.value) > offset:
                     key = lower_key
                     buf = chunk.value[:offset - key] + buf
         try:
