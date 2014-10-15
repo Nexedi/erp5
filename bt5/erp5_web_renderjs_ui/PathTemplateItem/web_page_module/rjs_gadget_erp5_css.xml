@@ -774,6 +774,18 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     top: 2.15em;\n
   }\n
 }\n
+/*\n
+   -------------------------------------------------------------------------\n
+   ---------------------------- Collapsible --------------------------------\n
+   -------------------------------------------------------------------------\n
+*/\n
+.ui-collapsible .ui-listview .ui-last-child {\n
+  -webkit-border-bottom-left-radius: .625em;\n
+  border-bottom-left-radius: .625em;\n
+  -webkit-border-bottom-right-radius: .625em;\n
+  border-bottom-right-radius: .625em;\n
+  \n
+}\n
 \n
 /*\n
    -------------------------------------------------------------------------\n
@@ -2713,10 +2725,10 @@ html .ui-icon.pull-right {\n
   margin-left: .3em;\n
 }\n
 html .ui-icon-spin:after {\n
-  -webkit-animation: spin 1s infinite linear;\n
-  -moz-animation: spin 1s infinite linear;\n
-  -o-animation: spin 1s infinite linear;\n
-  animation: spin 1s infinite linear;\n
+  -webkit-animation: spin .5s infinite linear;\n
+  -moz-animation: spin .5s infinite linear;\n
+  -o-animation: spin .5s infinite linear;\n
+  animation: spin .5s infinite linear;\n
 }\n
 @-moz-keyframes spin {\n
   0% {\n
@@ -4388,7 +4400,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16148.22388.20394</string> </value>
+                <value> <string>938.16158.8004.25992</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4406,7 +4418,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413299820.02</float>
+                        <float>1413361727.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

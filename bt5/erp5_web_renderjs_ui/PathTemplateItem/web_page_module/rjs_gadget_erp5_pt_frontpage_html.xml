@@ -126,7 +126,7 @@
     <script id="table-template" type="text/x-handlebars-template">\n
       <div data-role="collapsible">\n
         <h3>{{definition_title}}</h3>\n
-        <ul data-role="listview" data-theme="c" class="document-listview ui-corner-all">\n
+        <ul data-role="listview" data-theme="c" class="document-listview">\n
           <!--<li data-role="list-divider"><h1>{{definition_title}}</h1></li>-->\n
           {{#each documentlist}}\n
             <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16173.13985.45960</string> </value>
+                <value> <string>938.16179.61167.15104</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413301675.99</float>
+                        <float>1413360430.58</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
