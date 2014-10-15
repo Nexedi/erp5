@@ -73,7 +73,8 @@ class BTreeData(Persistent):
                 chunk = tree[lower_key]
                 if lower_key + len(chunk.value) > offset:
                     key = lower_key
-                    buf = chunk.value[:offset - key] + buf
+                    chunk_offset = offset - key
+                    buf = chunk.value[:chunk_offset] + buf + chunk.value[chunk_offset + len(buf):]
         try:
             tree.minKey(len(buf) + offset)
         except ValueError:
@@ -239,20 +240,26 @@ if __name__ == '__main__':
     data.write('XY', 4)
     check(data, 7, 0, 10, '0123XY6', [0, 5])
 
+    data.write('VW', 1)
+    check(data, 7, 0, 10, '0VW3XY6', [0, 5])
+
+    data.write('', 4)
+    check(data, 7, 0, 10, '0VW3XY6', [0, 5])
+
     data.write('a', 10)
     data.write('8', 8)
-    check(data, 11, 0, 10, '0123XY6\x008\x00', [0, 5, 8, 10])
+    check(data, 11, 0, 10, '0VW3XY6\x008\x00', [0, 5, 8, 10])
     check(data, 11, 7, 10, '\x008\x00a')
 
     data.write('ABCDE', 6)
-    check(data, 11, 0, 11, '0123XYABCDE', [0, 5, 8, 10])
+    check(data, 11, 0, 11, '0VW3XYABCDE', [0, 5, 8, 10])
 
     data.truncate(7)
-    check(data, 7, 0, 7, '0123XYA', [0, 5])
+    check(data, 7, 0, 7, '0VW3XYA', [0, 5])
     data.truncate(5)
-    check(data, 5, 0, 5, '0123X', [0])
+    check(data, 5, 0, 5, '0VW3X', [0])
     data.truncate(3)
-    check(data, 3, 0, 3, '012', [0])
+    check(data, 3, 0, 3, '0VW', [0])
     data.truncate(0)
     check(data, 0, 0, 0, '', [])
 
