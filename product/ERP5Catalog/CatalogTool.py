@@ -895,7 +895,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       the category.
       """
       related_key_list = []
-      base_cat_id_list = self.portal_categories.getBaseCategoryDict()
+      base_cat_id_set = set(
+        self.getPortalObject().portal_categories.getBaseCategoryList()
+      )
+      base_cat_id_set.discard('parent')
       default_string = 'default_'
       strict_string = 'strict_'
       related_string = 'related_'
@@ -913,8 +916,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         split_key = key.split('_')
         for i in xrange(len(split_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(split_key[0:i])
-          if expected_base_cat_id != 'parent' and \
-             expected_base_cat_id in base_cat_id_list:
+          if expected_base_cat_id in base_cat_id_set:
             # We have found a base_category
             end_key = '_'.join(split_key[i:])
             related = end_key.startswith(related_string)
