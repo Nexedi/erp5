@@ -204,6 +204,7 @@ class BTreeData(Persistent):
 if __name__ == '__main__':
 
     def check(tree, length, read_offset, read_length, data, keys=None):
+        print list(tree._tree.items())
         tree_length = len(tree)
         tree_data = tree.read(read_offset, read_length)
         tree_iterator_data = ''.join(tree.iterate(read_offset, read_length))
@@ -213,6 +214,8 @@ if __name__ == '__main__':
         if keys is not None:
             tree_keys = list(tree._tree.keys())
             assert tree_keys == keys, tree_keys
+
+    PersistentString.__repr__ = lambda self: repr(self.value)
 
     data = BTreeData()
 
