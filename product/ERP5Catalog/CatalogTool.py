@@ -910,15 +910,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           strict = 1
           key = key[len(strict_string):]
           prefix = prefix + strict_string
-        splitted_key = key.split('_')
-        # look from the end of the key from the beginning if we
-        # can find 'title', or 'portal_type'...
-        for i in xrange(len(splitted_key) - 1, 0, -1):
-          expected_base_cat_id = '_'.join(splitted_key[0:i])
+        split_key = key.split('_')
+        for i in xrange(len(split_key) - 1, 0, -1):
+          expected_base_cat_id = '_'.join(split_key[0:i])
           if expected_base_cat_id != 'parent' and \
              expected_base_cat_id in base_cat_id_list:
             # We have found a base_category
-            end_key = '_'.join(splitted_key[i:])
+            end_key = '_'.join(split_key[i:])
             related = end_key.startswith(related_string)
             if related:
               end_key = end_key[len(related_string):]
