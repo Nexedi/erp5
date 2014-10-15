@@ -195,10 +195,10 @@ class BTreeData(Persistent):
             # iterkeys, so call minKey repeatedly.
             while True:
                 try:
-                  next_key = minKey(offset)
+                    key = minKey(offset)
                 except ValueError:
-                  break
-                del tree[next_key]
+                    break
+                del tree[key]
         self.write('', offset)
 
 if __name__ == '__main__':
