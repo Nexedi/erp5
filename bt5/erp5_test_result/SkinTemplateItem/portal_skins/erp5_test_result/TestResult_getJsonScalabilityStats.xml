@@ -76,9 +76,7 @@ test_suite = context.getPortalObject().test_suite_module.searchFolder(title=cont
 xs = map(int, test_suite.getGraphCoordinate())\n
 \n
 \n
-test_informations = dict()\n
-test_informations.update({"test":tests, "xs":xs})\n
-return json.dumps(test_informations)\n
+return json.dumps({"test": tests, "xs": xs})\n
 </string> </value>
         </item>
         <item>

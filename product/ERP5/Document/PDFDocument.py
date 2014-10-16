@@ -278,7 +278,7 @@ class PDFDocument(Image):
     """Returns the information about the PDF document with pdfinfo.
     """
     if not self.hasData():
-      return dict()
+      return {}
     try:
       return self._content_information.copy()
     except AttributeError:

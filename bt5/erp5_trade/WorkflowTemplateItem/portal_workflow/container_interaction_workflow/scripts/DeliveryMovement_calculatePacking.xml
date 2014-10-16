@@ -53,7 +53,7 @@
             <value> <string>object = state_change[\'object\']\n
 delivery = object.getExplanationValue()\n
 \n
-activate_kw = dict()\n
+activate_kw = {}\n
 if getattr(delivery, \'calculatePacking\', None) is not None:\n
   try:\n
     container = object.getContainerValue()\n

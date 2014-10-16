@@ -57,7 +57,7 @@ except KeyError:\n
 \n
 dependant_dimensions_dict = context.BudgetLine_getSummaryDimensionKeyDict()\n
 \n
-summary_key_dict = dict()\n
+summary_key_dict = {}\n
 \n
 from Products.ERP5Type.Utils import cartesianProduct\n
 # also add all cell coordinates in the dictionnary\n

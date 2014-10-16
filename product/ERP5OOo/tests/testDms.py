@@ -1327,7 +1327,7 @@ class TestDocument(TestDocumentMixin):
     document = self.portal.document_module.newContent(portal_type='PDF')
     content_information = document.getContentInformation()
     # empty PDF have no content information
-    self.assertEqual(dict(), content_information)
+    self.assertEqual({}, content_information)
 
   def test_apple_PDF_metadata(self):
     # PDF created with Apple software have a special 'AAPL:Keywords' info tag

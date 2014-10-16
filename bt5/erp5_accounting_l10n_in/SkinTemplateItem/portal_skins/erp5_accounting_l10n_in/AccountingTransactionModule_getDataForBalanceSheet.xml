@@ -218,7 +218,7 @@ loop_dict = dict(\n
 \t\tsub_prefix = 1,\n
 \t\tend_prefix = \'a\',\n
 \t\tschedule_index = \'A\',\n
-\t\tschedules = dict()\n
+\t\tschedules = {}\n
 \t\t)\n
 \n
 def do_section(item):\n

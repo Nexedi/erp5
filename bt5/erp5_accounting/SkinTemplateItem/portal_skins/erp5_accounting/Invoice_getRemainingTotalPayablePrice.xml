@@ -79,7 +79,7 @@ original transaction currency. If currencies on this invoice and the related\n
 payments are not consistent, a ValueError is raised.\n
 """\n
 portal = context.getPortalObject()\n
-total_payable_price_per_node_section = dict()\n
+total_payable_price_per_node_section = {}\n
 \n
 if simulation_state is None:\n
   state_list = [x[1] for x in context.ERP5Site_getWorkflowStateItemList(\n

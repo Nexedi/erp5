@@ -95,7 +95,7 @@ def createReturnLine(uid,list):\n
   return len(list)-1\n
   \n
 # Prepare the parameters to filter\n
-query_dict = dict()\n
+query_dict = {}\n
 if request_start_date:\n
   query_dict[\'delivery.start_date\'] = dict(range=\'min\', query=request_start_date)\n
 if request_stop_date:\n

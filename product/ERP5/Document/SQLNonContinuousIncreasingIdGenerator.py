@@ -252,7 +252,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     set_last_id_method = portal.IdTool_zSetLastId
     if not isinstance(id_dict, dict):
       raise TypeError, 'the argument given is not a dictionary'
-    new_id_dict = dict()
+    new_id_dict = {}
     for key, value in id_dict.items():
       if isinstance(value, int):
         set_last_id_method(id_group=key, last_id=value)

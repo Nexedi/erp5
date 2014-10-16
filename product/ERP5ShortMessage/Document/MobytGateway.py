@@ -83,7 +83,7 @@ class MobytGateway(XMLObject):
     def _fetchSendResponseAsDict(self,page):
       """Page result is like Key=value in text format.
          We transform it to a more powerfull dictionnary"""
-      result = dict()
+      result = {}
       lines = page.readlines()
       assert len(lines) == 1, "Multi lines response is not managed %s" % lines
       line = lines[0]
@@ -98,7 +98,7 @@ class MobytGateway(XMLObject):
     def _fetchStatusResponseAsDict(self,page):
       """Page result is like Key=value in text format.
          We transform it to a more powerfull dictionnary"""
-      result = dict()
+      result = {}
       lines = page.readlines()
 
       #First line is special : CSV column title or error inform

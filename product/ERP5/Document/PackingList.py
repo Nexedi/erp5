@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
@@ -94,7 +95,7 @@ class PackingList(Delivery):
       """
       # build a mapping of
       # (resource, variation_text) -> quantity
-      container_dict = dict()
+      container_dict = defaultdict(int)
       for container in self.contentValues(
           portal_type=self.getPortalContainerTypeList()):
         for container_line in container.contentValues(
@@ -104,13 +105,11 @@ class PackingList(Delivery):
                 portal_type=self.getPortalContainerLineTypeList(),):
               key = (container_cell.getResource(),
                 container_cell.getVariationText())
-              container_dict[key] = container_dict.get(key, 0) +\
-                container_cell.getQuantity()
+              container_dict[key] += container_cell.getQuantity()
           else:
             key = (container_line.getResource(),
               container_line.getVariationText())
-            container_dict[key] = container_dict.get(key, 0) +\
-              container_line.getQuantity()
+            container_dict[key] += container_line.getQuantity()
 
       if not container_dict:
         return False
@@ -119,7 +118,7 @@ class PackingList(Delivery):
       for movement in self.getMovementList():
         key = (movement.getResource(),
                movement.getVariationText())
-        if container_dict.get(key, None) != movement.getQuantity():
+        if container_dict.get(key) != movement.getQuantity():
           return False
       return True
 

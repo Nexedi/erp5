@@ -146,7 +146,7 @@ if creation_date_range_min or creation_date_range_max:\n
 if stat:\n
   return context.countFolder(**params)\n
 \n
-select_dict = params.get(\'select_dict\') or dict()\n
+select_dict = params.get(\'select_dict\') or {}\n
 select_dict.update(dict(total_debit=None,\n
                         total_credit=None,\n
                         reference=None,\n

@@ -634,7 +634,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       """
       def __init__(self):
         dict.__init__(self)
-        self.visited_movement_dict = dict()
+        self.visited_movement_dict = {}
 
     path_tree = treeNode()
     def updateTree(simulation_movement, path):

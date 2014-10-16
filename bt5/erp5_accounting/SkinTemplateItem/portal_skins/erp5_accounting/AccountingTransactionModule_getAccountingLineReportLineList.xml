@@ -105,7 +105,7 @@ else:\n
                                         params=params)\n
 \n
 \n
-account_reference_cache = dict()\n
+account_reference_cache = {}\n
 def getAccountReference(node):\n
   try:\n
     return account_reference_cache[node]\n
@@ -122,7 +122,7 @@ def getTitle(document):\n
     return document.getTranslatedTitle()\n
   return \'\'\n
 \n
-bank_account_title_cache = dict()\n
+bank_account_title_cache = {}\n
 def getBankAccountTitle(bank_account):\n
   try:\n
     return bank_account_title_cache[bank_account]\n
@@ -141,7 +141,7 @@ def getBankAccountTitle(bank_account):\n
   bank_account_title_cache[bank_account] = value\n
   return value\n
 \n
-accounting_currency_reference_cache = dict()\n
+accounting_currency_reference_cache = {}\n
 def getAccountingCurrencyReference(section_relative_url):\n
   try:\n
     return accounting_currency_reference_cache[section_relative_url]\n
@@ -157,7 +157,7 @@ def getAccountingCurrencyReference(section_relative_url):\n
 \n
 portal_type = context.getPortalAccountingMovementTypeList()\n
 \n
-displayed_delivery_dict = dict()\n
+displayed_delivery_dict = {}\n
 for delivery in delivery_list:\n
   if delivery.uid in displayed_delivery_dict: continue\n
   displayed_delivery_dict[delivery.uid] = True\n

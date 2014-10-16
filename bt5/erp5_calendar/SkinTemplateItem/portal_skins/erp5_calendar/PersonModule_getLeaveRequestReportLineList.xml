@@ -60,7 +60,7 @@ person_value_list = portal.portal_categories.restrictedTraverse(\n
                                             checked_permission=\'View\')\n
 \n
 # for stat\n
-total_time_per_resource = dict()\n
+total_time_per_resource = {}\n
 total_time = 0\n
 \n
 result_list = []\n
@@ -76,7 +76,7 @@ presence_resource_uid_list = [inventory.resource_uid for inventory\n
 \n
 \n
 for person in person_value_list:\n
-  result_dict = dict()\n
+  result_dict = {}\n
   person_total = 0\n
 \n
   person_planned_time = person.getAvailableTime(\n

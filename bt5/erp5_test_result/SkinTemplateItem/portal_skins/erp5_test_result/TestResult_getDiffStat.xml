@@ -67,7 +67,7 @@ if a.getSimulationState() != "stopped" or b.getSimulationState() != "stopped":\n
 compared_prop_list = (\'all_tests\', \'errors\', \'failures\', \'skips\')\n
 \n
 \n
-d = dict()\n
+d = {}\n
 for prop in compared_prop_list:\n
   d[prop] = b.getProperty(prop) - a.getProperty(prop)\n
 \n

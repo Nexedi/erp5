@@ -82,7 +82,7 @@ def URLGetter(section_title,\n
                               total_price=total_price,)\n
   return getListItemUrl\n
 \n
-total = dict()\n
+total = {}\n
 \n
 base_contribution_uid_dict = {}\n
 for base_contribution in base_contribution_list:\n

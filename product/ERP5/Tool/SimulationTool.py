@@ -496,7 +496,7 @@ class SimulationTool(BaseTool):
 
         # group by involving a related key (eg. group_by=['product_line_uid'])
         related_key_dict_passthrough_group_by = new_kw.get(
-                'related_key_dict_passthrough', dict()).pop('group_by', [])
+                'related_key_dict_passthrough', {}).pop('group_by', [])
         if isinstance(related_key_dict_passthrough_group_by, basestring):
           related_key_dict_passthrough_group_by = (
                 related_key_dict_passthrough_group_by,)
@@ -506,13 +506,12 @@ class SimulationTool(BaseTool):
           new_kw['group_by'] = group_by
 
         # select expression
-        select_dict = new_kw.get('select_dict', dict())
+        select_dict = new_kw.setdefault('select_dict', {})
         related_key_select_expression_list = new_kw.pop(
                 'related_key_select_expression_list', [])
         for related_key_select in related_key_select_expression_list:
           select_dict[related_key_select] = '%s_%s' % (table,
                                                        related_key_select)
-        new_kw['select_dict'] = select_dict
 
         # Column values
         column_value_dict = new_kw.pop('column_value_dict', {})

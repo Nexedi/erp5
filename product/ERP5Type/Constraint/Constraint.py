@@ -49,8 +49,8 @@ class Constraint:
       self.id = id
       self.description = description
       self.type = type
-      self.constraint_definition = dict()
-      self.message_id_dict = dict()
+      self.constraint_definition = {}
+      self.message_id_dict = {}
       self.edit(id, description, type, condition, **constraint_definition)
 
     def edit(self, id=None, description=None, type=None, condition=None,

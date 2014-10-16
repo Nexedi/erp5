@@ -68,7 +68,7 @@ workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]\n
 if not workflow_id in workflow_id_list:\n
   return []\n
 \n
-actor_name_cache = dict()\n
+actor_name_cache = {}\n
 def getActorName(actor):\n
   # returns the name of the actor. If it\'s a person, show the usual name of the person\n
   try:\n

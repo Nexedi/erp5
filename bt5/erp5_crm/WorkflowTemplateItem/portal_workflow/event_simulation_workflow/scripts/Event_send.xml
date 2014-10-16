@@ -59,7 +59,7 @@ if getattr(send_method, \'meta_type\', None) == \'Script (Python)\':\n
   parameter_list = send_method.ZScriptHTML_tryParams()\n
 \n
 # Turn the SafeMapping from keyword arguments into a dict.\n
-kwargs = dict()\n
+kwargs = {}\n
 for key in parameter_list:\n
   state_change_arg = state_change[\'kwargs\'].get(key)\n
   if state_change_arg:\n

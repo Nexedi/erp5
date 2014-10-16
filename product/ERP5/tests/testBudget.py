@@ -416,7 +416,7 @@ class TestBudget(ERP5TypeTestCase):
     # a confirmed transaction engages budget
     self.tic()
 
-    self.assertEqual(dict(), budget_line.getConsumedBudgetDict())
+    self.assertEqual({}, budget_line.getConsumedBudgetDict())
 
     self.assertEqual(
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,

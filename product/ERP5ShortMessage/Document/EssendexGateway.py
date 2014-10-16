@@ -84,7 +84,7 @@ class EssendexGateway(XMLObject):
     def _fetchPageAsDict(self,page):
       """Page result is like Key=value in text format.
          We transform it to a more powerfull dictionnary"""
-      result = dict()
+      result = {}
       index = 0
 
       #Read all lines

@@ -59,16 +59,16 @@ The script must be called on the context of the document.\n
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
 def filterDuplicateActions(actions):\n
-  new_actions = dict()\n
+  new_actions = {}\n
 \n
   for action_category, action_list in actions.items():\n
-    existing_actions = dict()\n
+    existing_actions = set()\n
     new_actions[action_category] = []\n
     keep_action = new_actions[action_category].append\n
 \n
     for action in action_list:\n
       if action[\'id\'] not in existing_actions:\n
-        existing_actions[action[\'id\']] = 1\n
+        existing_actions.add(action[\'id\'])\n
         keep_action(action)\n
   return new_actions\n
 \n

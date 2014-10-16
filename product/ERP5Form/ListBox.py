@@ -1145,17 +1145,13 @@ class ListBoxRenderer:
     list_style_column_change_required = listbox_display_style not in ('', DEFAULT_LISTBOX_DISPLAY_STYLE,)
     if dynamic_column_list_override:
       # dynamically setting columns is supported
-      available_column = self.getAllColumnList()
       #Create a dict to make a easy search
-      available_column_dict = dict()
-      for id,title in available_column:
-        available_column_dict[id] = (id,title)
-
+      available_column_dict = {x[0]: x for x in self.getAllColumnList()}
       # We check columns are present
       for id in self.getDisplayedColumnIdList():
-        if available_column_dict.has_key(id):
+        try:
           column_list.append(available_column_dict[id])
-        else:
+        except KeyError:
           raise AttributeError, "Column %s is not avaible" % id
     elif list_style_column_change_required and not dynamic_column_list_override:
       # no dynamically setting of columns happens , still we have different than default

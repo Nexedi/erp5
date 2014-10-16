@@ -516,7 +516,7 @@ class OOoTemplate(ZopePageTemplate):
       self.OLE_documents_zipstring = None
 
     # Convert if necessary
-    opts = extra_context.get("options", dict())
+    opts = extra_context.get("options", {})
 
     # Get batch_mode
     batch_mode = opts.get('batch_mode', None)

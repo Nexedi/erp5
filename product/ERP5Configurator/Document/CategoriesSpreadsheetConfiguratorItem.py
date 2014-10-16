@@ -146,26 +146,25 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     # If we add default here, it should also be used in build
                     # ...
 
-    category_path_dict = dict()
-    for item in cache[base_category_id]:
-      category_path_dict[item['path']] = item
+    category_path_dict = {item['path']: item
+      for item in cache[base_category_id]}
 
-    for item in cache[base_category_id]:
+    for path, item in category_path_dict.iteritems():
       # the first item in this list is the base category itself, so we skip it.
-      if item['path'] == base_category_id:
+      if path == base_category_id:
         continue
 
       # recreate logical path
       path_element_list = []
       title_list = []
-      for path_element in item['path'].split('/'):
+      for path_element in path.split('/'):
         path_element_list.append(path_element)
         title_list.append(category_path_dict['/'.join(path_element_list)]['title'])
 
       if base:
-        result.append(('/'.join(title_list[1:]), item['path']))
+        result.append(('/'.join(title_list[1:]), path))
       else:
         result.append(('/'.join(title_list[1:]),
-                       '/'.join(item['path'].split('/')[1:])))
+                       '/'.join(path.split('/')[1:])))
 
     return result

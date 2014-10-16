@@ -217,7 +217,7 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
     movement_group_node = self.builder.collectMovement(movement_list)
     group_list = movement_group_node.getGroupList()
     self.assertEqual(1, len(group_list))
-    self.assertEqual(dict(), group_list[0].getGroupEditDict())
+    self.assertEqual({}, group_list[0].getGroupEditDict())
 
 class TestOrderMovementGroup(MovementGroupTestCase):
   """Tests Order Movement Group - grouping and separating by

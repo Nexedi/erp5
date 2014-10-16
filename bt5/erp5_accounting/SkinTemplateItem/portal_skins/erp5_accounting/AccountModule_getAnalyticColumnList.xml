@@ -59,11 +59,11 @@ request = portal.REQUEST\n
 # cache the title in the request, it will be used by Movement_getProjectTitle\n
 # and Movement_getFunctionTitle scripts\n
 request.other[\'Movement_getProjectTitle.project_title_dict\'\n
-    ] = project_title_dict = dict()\n
+    ] = project_title_dict = {}\n
 request.other[\'Movement_getFunctionTitle.function_title_dict\'\n
-    ] = function_title_dict = dict()\n
+    ] = function_title_dict = {}\n
 request.other[\'Movement_getFundingTitle.funding_title_dict\'\n
-    ] = funding_title_dict = dict()\n
+    ] = funding_title_dict = {}\n
 \n
 analytic_column_list = ()\n
 funding_item_list = context.AccountingTransactionLine_getFundingItemList()\n

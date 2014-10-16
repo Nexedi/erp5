@@ -82,7 +82,7 @@ way that parent always precedes their children.\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
 parser = OOoParser()\n
-category_list_spreadsheet_mapping = dict()\n
+category_list_spreadsheet_mapping = {}\n
 error_list = []\n
 \n
 def default_invalid_spreadsheet_error_handler(error_message):\n

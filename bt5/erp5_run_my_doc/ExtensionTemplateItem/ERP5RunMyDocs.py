@@ -7,7 +7,7 @@ def parseTestReport(text):
   parser.feed(text)
   root = parser.close()
   table = root.xpath('//table[@id="SELENIUM-TEST"]')[0]
-  report = dict()
+  report = {}
   header = table[0][0]
   report['status'] = header.attrib['class'].find('passed') > -1
   report['name'] = header[0].text

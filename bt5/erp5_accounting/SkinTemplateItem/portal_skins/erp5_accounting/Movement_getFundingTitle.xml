@@ -54,7 +54,7 @@
 funding_uid = context.funding_uid\n
 \n
 title_dict = container.REQUEST.get(\n
-      \'Movement_getFundingTitle.funding_title_dict\') or dict()\n
+      \'Movement_getFundingTitle.funding_title_dict\') or {}\n
 if funding_uid in title_dict:\n
   return title_dict[funding_uid]\n
 \n

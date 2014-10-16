@@ -71,7 +71,7 @@ try:\n
 finally:\n
   context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, saved_selection_params)\n
 \n
-account_title_cache = dict()\n
+account_title_cache = {}\n
 def getAccountTitle(relative_url):\n
   try:\n
     return account_title_cache[relative_url]\n

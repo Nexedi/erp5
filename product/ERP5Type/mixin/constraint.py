@@ -118,7 +118,7 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
     Call before actually converting the attributes common to all
     constraints
     """
-    return dict()
+    return {}
 
   @staticmethod
   def _convertFromFilesystemDefinition(*args, **kw):
@@ -133,7 +133,7 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
 
     @see importFromFilesystemDefinition
     """
-    yield dict()
+    yield {}
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')

@@ -3063,15 +3063,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           portal_actions.deleteActions(selections=index_list)
 
     def test_propertyMap_unique_properties(self):
-      portal = self.getPortalObject()
-      person = portal.person_module.newContent(portal_type='Person')
-      property_id_dict = dict()
-      non_unique_property_id_list = []
-      for property_id in [p['id'] for p in person.propertyMap()]:
-        if property_id in property_id_dict:
-          non_unique_property_id_list.append(property_id)
-        property_id_dict[property_id] = 1
-      self.assertEqual([], non_unique_property_id_list)
+      person = self.portal.person_module.newContent(portal_type='Person')
+      property_id_list = [p['id'] for p in person.propertyMap()]
+      self.assertEqual(len(property_id_list), len(set(property_id_list)),
+                       property_id_list)
 
     def testLocalProperties(self):
       portal = self.getPortalObject()

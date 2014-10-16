@@ -58,7 +58,7 @@ class AttributeEquality(PropertyExistence):
     errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
     for attribute_name, expected_value in self.constraint_definition.items():
       message_id = None
-      mapping = dict()
+      mapping = {}
       # If property does not exist, error will be raised by
       # PropertyExistence Constraint.
       if obj.hasProperty(attribute_name):

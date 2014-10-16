@@ -97,7 +97,7 @@ class BudgetModel(Predicate):
   def getInventoryQueryDict(self, budget_cell):
     """Returns the query dict to pass to simulation query for a budget cell
     """
-    query_dict = dict()
+    query_dict = {}
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):
@@ -115,7 +115,7 @@ class BudgetModel(Predicate):
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line
     """
-    query_dict = dict()
+    query_dict = {}
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):

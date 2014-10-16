@@ -57,7 +57,7 @@ portal = context.getPortalObject()\n
 \n
 line_list = []\n
 \n
-extra_kw = dict()\n
+extra_kw = {}\n
 if payment:\n
   extra_kw[\'payment\'] = payment\n
 \n
@@ -71,7 +71,7 @@ if project_uid:\n
   else:\n
     extra_kw[\'project_uid\'] = project_uid\n
 \n
-account_title_cache = dict()\n
+account_title_cache = {}\n
 def getAccountId(node_relative_url):\n
   if node_relative_url not in account_title_cache:\n
     title = portal.restrictedTraverse(node_relative_url).Account_getGapId(gap_root=gap_root)\n
@@ -80,7 +80,7 @@ def getAccountId(node_relative_url):\n
 \n
 \n
 # FIXME: this can be passed as node category to getMovementHistoryList\n
-account_in_gap_root_cache = dict()\n
+account_in_gap_root_cache = {}\n
 def isAccountInGapRoot(node_relative_url):\n
   if node_relative_url not in account_in_gap_root_cache:\n
     is_in = portal.restrictedTraverse(node_relative_url).isMemberOf(gap_root)\n
@@ -88,7 +88,7 @@ def isAccountInGapRoot(node_relative_url):\n
   return account_in_gap_root_cache[node_relative_url]\n
 \n
 \n
-displayed_transaction = dict()\n
+displayed_transaction = {}\n
 total_credit = 0\n
 total_debit = 0\n
 \n
@@ -159,7 +159,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                 date=date,\n
                 debit=debit,\n
                 credit=credit,)\n
-  analytic_info = dict()\n
+  analytic_info = {}\n
   for analytic_column, analytic_column_title in analytic_column_list:\n
     if analytic_column == \'project\':\n
       analytic_info[\'project\'] = brain.Movement_getProjectTitle()\n

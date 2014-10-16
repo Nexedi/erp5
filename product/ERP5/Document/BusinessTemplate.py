@@ -3557,11 +3557,9 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
   def remove(self, context, **kw):
     """Conversion of magically uniqued paths to real ones"""
     remove_object_dict = kw.get('remove_object_dict', {})
-    new_remove_dict = dict()
-    for k,v in remove_object_dict.iteritems():
-      if k.startswith(self.getTemplateTypeName()+'/'):
-        new_remove_dict[self._getPath(k)] = v
-    kw['remove_object_dict'] = new_remove_dict
+    kw['remove_object_dict'] = {self._getPath(k): v
+      for k, v in remove_object_dict.iteritems()
+      if k.startswith(self.getTemplateTypeName()+'/')}
     BaseTemplateItem.remove(self, context, **kw)
 
   def uninstall(self, context, **kw):
@@ -3710,11 +3708,9 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     Conversion of magically uniqued paths to real ones
     """
     remove_object_dict = kw.get('remove_object_dict', {})
-    new_remove_dict = dict()
-    for k,v in remove_object_dict.iteritems():
-      if k.startswith(self.getTemplateTypeName()+'/'):
-        new_remove_dict[self._getPath(k)] = v
-    kw['remove_object_dict'] = new_remove_dict
+    kw['remove_object_dict'] = {self._getPath(k): v
+      for k, v in remove_object_dict.iteritems()
+      if k.startswith(self.getTemplateTypeName()+'/')}
     ObjectTemplateItem.remove(self, context, **kw)
 
   @staticmethod
@@ -4567,7 +4563,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       local_roles_dict, local_roles_group_id_dict = self._objects[path]
     else:
       # old format, before local roles group id
-      local_roles_group_id_dict = dict()
+      local_roles_group_id_dict = None
       local_roles_dict, = self._objects[path]
 
     xml_data = '<local_roles_item>'
@@ -4645,17 +4641,18 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         if len(self._objects[roles_path]) == 2:
           local_roles_dict, local_roles_group_id_dict = self._objects[roles_path]
         else:
-          local_roles_group_id_dict = dict()
+          local_roles_group_id_dict = None
           local_roles_dict, = self._objects[roles_path]
-        setattr(obj, '__ac_local_roles__', local_roles_dict)
+        obj.__ac_local_roles__ = local_roles_dict
         if local_roles_group_id_dict:
-          setattr(obj, '__ac_local_roles_group_id_dict__',
-                  local_roles_group_id_dict)
+          obj.__ac_local_roles_group_id_dict__ = local_roles_group_id_dict
           # we try to have __ac_local_roles_group_id_dict__ set only if
           # it is actually defining something else than default
-        elif getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
-                    None) is not None:
-          delattr(obj, '__ac_local_roles_group_id_dict__')
+        else:
+          try:
+            del obj.__ac_local_roles_group_id_dict__
+          except AttributeError:
+            pass
         obj.reindexObject()
 
   def uninstall(self, context, object_path=None, **kw):

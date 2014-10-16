@@ -59,7 +59,7 @@
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getPortalTypeContentTranslationMapping():\n
-  result = dict()\n
+  result = {}\n
   for type_information in context.getPortalObject().portal_types.listTypeInfo():\n
     content_translation_domain_property_name_list =\\\n
       type_information.getContentTranslationDomainPropertyNameList()\n

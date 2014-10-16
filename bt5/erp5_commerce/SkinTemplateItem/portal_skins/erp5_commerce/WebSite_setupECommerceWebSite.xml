@@ -54,7 +54,7 @@
 \n
 if (context.getPortalType() != \'Web Site\'):\n
   context.Base_redirect(\'\', keep_items={\n
-   \'portal_status_message\': translateString("You can only launch this script on a web site.", mapping = dict())\n
+   \'portal_status_message\': translateString("You can only launch this script on a web site.", mapping={})\n
                                        })\n
 \n
 # creation the default sections\n
@@ -94,7 +94,7 @@ checkout_section.setProperty(\'ecommerce_default_content\', True)\n
 checkout_section.setProperty(\'ecommerce_product_list\', False)\n
 \n
 context.Base_redirect(\'\', keep_items={\n
-   \'portal_status_message\': translateString("Your web site is now an ecommerce plateform.", mapping = dict())\n
+   \'portal_status_message\': translateString("Your web site is now an ecommerce plateform.", mapping={})\n
                                        })\n
 </string> </value>
         </item>

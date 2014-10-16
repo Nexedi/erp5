@@ -53,7 +53,7 @@
             <value> <string>project_uid = context.project_uid\n
 \n
 title_dict = container.REQUEST.get(\n
-                \'Movement_getProjectTitle.project_title_dict\') or dict()\n
+                \'Movement_getProjectTitle.project_title_dict\') or {}\n
 if project_uid in title_dict:\n
   return title_dict[project_uid]\n
 \n

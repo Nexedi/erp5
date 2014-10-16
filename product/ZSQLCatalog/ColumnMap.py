@@ -92,7 +92,7 @@ class ColumnMap(object):
     self.raw_column_dict = {}
     # Entries: column name
     self.column_ignore_set = set()
-    self.join_table_map = dict()
+    self.join_table_map = {}
     # BBB: Remove join_query_list and its uses when all RelatedKey
     # methods have been converted to properly return each Join
     # condition separately, and all uses of catalog's from_expression

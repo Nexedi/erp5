@@ -85,7 +85,7 @@ for a_line in a.searchFolder(portal_type=\'Test Result Line\'):\n
   if title in b_title_dict:\n
     # do some diffwork\n
     b_line = b[b_title_dict[title]]\n
-    difference_dict = dict()\n
+    difference_dict = {}\n
     for prop in compared_prop_list:\n
       diff = b_line.getProperty(prop) - a_line.getProperty(prop)\n
       if diff != 0:\n

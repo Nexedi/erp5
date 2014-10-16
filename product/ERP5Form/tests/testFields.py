@@ -790,7 +790,7 @@ class TestProxyField(ERP5TypeTestCase):
 
     # beware that all values that are not passed in the mapping will be
     # delegated again, regardless of the old state.
-    proxy_field.manage_edit_surcharged_xmlrpc(dict())
+    proxy_field.manage_edit_surcharged_xmlrpc({})
     self.assertTrue(proxy_field.is_delegated('title'))
 
   def test_same_field_id_in_proxy_field_and_template_field(self):

@@ -114,7 +114,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
     marker = []
     # this will be a dictionnary with (portal_type, workflow_id, workflow_state)
     # as keys, and (count, a random document) as values
-    workflow_state_dict = dict()
+    workflow_state_dict = {}
 
     for document in selected_document_list:
       for state_var in possible_state_list:
@@ -124,12 +124,12 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
           if state_var == workflow.variables.getStateVar():
             key = (document.getPortalTypeName(), workflow.getId(),
                         document.getProperty(state_var))
-            document_count = workflow_state_dict.get(key, [None, 0])[1]
+            document_count = workflow_state_dict.get(key, (None, 0))[1]
             workflow_state_dict[key] = document, document_count + 1
 
 
     for (ptype, workflow_id, state), (doc, document_count) in\
-                workflow_state_dict.items():
+                workflow_state_dict.iteritems():
       workflow = wf_tool.getWorkflowById(workflow_id)
       state_var = workflow.variables.getStateVar()
       translated_workflow_state_title = doc.getProperty(

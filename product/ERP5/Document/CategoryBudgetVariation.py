@@ -104,7 +104,7 @@ class CategoryBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
-    query_dict = dict()
+    query_dict = {}
     axis = self.getInventoryAxis()
     if not axis:
       return query_dict
@@ -149,16 +149,16 @@ class CategoryBudgetVariation(BudgetVariation):
     """
     axis = self.getInventoryAxis()
     if not axis:
-      return dict()
+      return {}
     base_category = self.getProperty('variation_base_category')
     if not base_category:
-      return dict()
+      return {}
 
     context = budget_line
     if self.isMemberOf('budget_variation/budget'):
       context = budget_line.getParentValue()
 
-    query_dict = dict()
+    query_dict = {}
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
       query_dict['group_by'] = [axis]
@@ -193,7 +193,7 @@ class CategoryBudgetVariation(BudgetVariation):
       found = True
     if found:
       return query_dict
-    return dict()
+    return {}
 
   def getBudgetVariationRangeCategoryList(self, context):
     """Returns the Variation Range Category List that can be applied to this

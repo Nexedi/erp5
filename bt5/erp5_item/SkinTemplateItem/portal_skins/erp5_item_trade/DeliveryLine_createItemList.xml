@@ -60,7 +60,7 @@ total_quantity = 0.0\n
 \n
 item_portal_type = kw.get(\'type\')\n
 \n
-item_property_dict = dict()\n
+item_property_dict = {}\n
 \n
 # if the formbox for extra item properties is enabled, use it.\n
 dialog = getattr(context, dialog_id)\n

@@ -241,7 +241,7 @@ if mirror_section_category_list:\n
 \n
 report_section_list = []\n
 \n
-existing_section_dict = dict()\n
+existing_section_dict = {}\n
 \n
 # group by node\n
 # movements in the period\n

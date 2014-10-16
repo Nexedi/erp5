@@ -163,14 +163,11 @@ class DummyLocalizer:
     self.lang = lang
 
   def translate(self, domain, msgid, lang=None, mapping=None, *args, **kw):
-    params = dict()
-    for key in ('lang', 'add', 'default'):
-      if key in kw:
-        params[key] = kw[key]
-    if lang is not None:
-      params['lang'] = lang
+    params = {key: kw[key] for key in ('add', 'default') if key in kw}
     if 'target_language' in kw:
       params['lang'] = kw['target_language']
+    elif lang is not None:
+      params['lang'] = lang
     msg = getattr(self, domain, self.default).gettext(msgid, **params)
     if mapping:
       # this is a simpler version that does not handle unicode

@@ -105,7 +105,7 @@ class IndexableObjectWrapper(object):
                                               getSQLCatalogRoleKeysList())
         getUserById = portal.acl_users.getUserById
 
-        allowed_dict = dict()
+        allowed_dict = {}
 
         # For each local role of a user:
         #   If the local role grants View permission, add it.
@@ -126,7 +126,7 @@ class IndexableObjectWrapper(object):
 
         # XXX make this a method of base ?
         local_roles_group_id_group_id = deepcopy(getattr(ob,
-          '__ac_local_roles_group_id_dict__', dict()))
+          '__ac_local_roles_group_id_dict__', {}))
 
         # If we acquire a permission, then we also want to acquire the local
         # roles group ids
@@ -137,7 +137,7 @@ class IndexableObjectWrapper(object):
             for role_definition_group, user_and_role_list in \
                 getattr(local_roles_container,
                         '__ac_local_roles_group_id_dict__',
-                        dict()).items():
+                        {}).items():
               local_roles_group_id_group_id.setdefault(role_definition_group, set()
                 ).update(user_and_role_list)
           else:

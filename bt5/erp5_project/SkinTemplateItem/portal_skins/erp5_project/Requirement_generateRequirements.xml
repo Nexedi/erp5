@@ -87,7 +87,7 @@ requirements_items.sort(key=lambda x: x[\'id\'])\n
 \n
 clean_requirements = {}\n
 clean_requirements_key_list = [] # use a list for keys, to keep ordering\n
-description_dict = dict()\n
+description_dict = {}\n
 has_1st_level_requirement = False\n
 has_2nd_level_requirement = False\n
 new_1st_level_requirement = None\n

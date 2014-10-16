@@ -299,17 +299,17 @@ def getSearchDialog(self, REQUEST=None):
 
   allowed_content_types = self.getTypeInfo().getTypeAllowedContentTypeList()
   # remember which workflow we already displayed
-  workflow_dict = dict()
+  workflow_set = set()
   # possible workflow states
   for type_name in allowed_content_types:
     for workflow_id in workflow_tool.getChainFor(type_name):
       workflow = workflow_tool.getWorkflowById(workflow_id)
       state_var = workflow.variables.getStateVar()
 
-      if state_var in workflow_dict:
+      if state_var in workflow_set:
         continue
 
-      workflow_dict[state_var] = 1
+      workflow_set.add(state_var)
       if workflow.states is None or \
                 len(workflow.states.objectIds()) <= 1:
         continue

@@ -150,7 +150,7 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
                   Movement_getExplanationTitle=\n
                     mvt.hasTitle() and mvt.getTitle() or transaction.getTitle())\n
 \n
-    analytic_info = dict()\n
+    analytic_info = {}\n
     for analytic_column, analytic_column_title in analytic_column_list:\n
       if analytic_column == \'project\':\n
         if is_source:\n

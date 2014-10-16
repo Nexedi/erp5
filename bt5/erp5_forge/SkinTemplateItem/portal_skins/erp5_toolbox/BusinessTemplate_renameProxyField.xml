@@ -79,7 +79,7 @@ for line in listbox:\n
 # selected_dict contains the list of selected fields that needs\n
 # to change of template. The user can select or unselect any field\n
 # in the preview_listbox\n
-selected_dict = dict()\n
+selected_dict = {}\n
 if preview_listbox is not None:\n
   for line in preview_listbox:\n
     if line[\'selected\']:\n

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw = dict()\n
+            <value> <string>kw = {}\n
 budget = context.getParentValue().getParentValue()\n
 budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
 if budget_model is not None:\n

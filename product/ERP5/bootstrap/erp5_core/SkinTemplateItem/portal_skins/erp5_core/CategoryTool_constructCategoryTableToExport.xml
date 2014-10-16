@@ -61,8 +61,7 @@ def getHeaderTitle(property_id):\n
 cat_info_list = []\n
 for base_cat_id in context.REQUEST[\'category_list\']:\n
   base_cat = context.portal_categories[base_cat_id]\n
-  d = dict()\n
-  d[\'base_cat\'] = base_cat\n
+  d = {\'base_cat\': base_cat}\n
   d[\'cat_list\'] = cat_list = []\n
   d[\'max_cat_depth\'] = max_cat_depth = 0\n
   cat_info_list.append(d)\n
@@ -82,13 +81,12 @@ for base_cat_id in context.REQUEST[\'category_list\']:\n
 \n
 result = []\n
 for cat_info in cat_info_list:\n
-  table_dict = dict()\n
-  table_dict[\'name\'] = cat_info[\'base_cat\'].getId()\n
+  table_dict = {\'name\': cat_info[\'base_cat\'].getId()}\n
   table_dict[\'row_list\'] = row_list = []\n
   result.append(table_dict)\n
 \n
   # make headers\n
-  header_dict = dict()\n
+  header_dict = {}\n
   table_dict[\'header_row\'] = header_dict\n
 \n
   cat_list = cat_info[\'cat_list\']\n
@@ -99,12 +97,13 @@ for cat_info in cat_info_list:\n
     header_dict[\'category_property_list\'] = [getHeaderTitle(property_id)\n
                                              for property_id in editable_property_id_list]\n
     for cat in cat_list:\n
-      row = dict()\n
-      row[\'path_cell_list\'] = [\'\'] * (max_cat_depth - 1)\n
-      row[\'path_cell_list\'][len(cat.getRelativeUrl().split(\'/\')) - 2] = \'*\'\n
-      row[\'category_property_list\'] = [cat.getProperty(property_id)\n
-                                       for property_id in editable_property_id_list]\n
-      row_list.append(row)\n
+      path_cell_list = [\'\'] * (max_cat_depth - 1)\n
+      path_cell_list[len(cat.getRelativeUrl().split(\'/\')) - 2] = \'*\'\n
+      category_property_list = map(cat.getProperty, editable_property_id_list)\n
+      row_list.append({\n
+        \'path_cell_list\': path_cell_list,\n
+        \'category_property_list\': category_property_list,\n
+        })\n
   else:\n
     header_dict[\'path_cell_list\'] = [\'Path\']\n
     header_dict[\'category_property_list\'] = []\n

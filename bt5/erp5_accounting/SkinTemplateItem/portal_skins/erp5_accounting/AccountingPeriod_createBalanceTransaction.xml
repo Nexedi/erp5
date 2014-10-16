@@ -58,7 +58,7 @@
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 \n
-precision_cache = dict()\n
+precision_cache = {}\n
 def roundCurrency(value, resource_relative_url):\n
   if resource_relative_url not in precision_cache:\n
     qty_precision = portal.restrictedTraverse(\n

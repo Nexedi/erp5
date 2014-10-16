@@ -157,7 +157,7 @@ for budget in budget_list:\n
 \n
   # To get the count of lines correct (for the print range)\n
   if target_currency_title:\n
-    line_list.append(dict())\n
+    line_list.append({})\n
 \n
   for budget_line in budget.contentValues(sort_on=((\'int_index\', \'asc\'),)):\n
     total_level_1_initial_budget = 0\n

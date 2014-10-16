@@ -271,23 +271,31 @@ for base_category_id in base_category_id_list:\n
           # TODO: add a dialog parameter allowing to delete this path\n
           if \'warning\' in displayed_report:\n
             report_line = newTempBase(context, \'item\')\n
-            report_line.edit(field_type = \'Warning\', field_category = category.getRelativeUrl(),  field_message = translateString("Category is used and can not be deleted or expired ", mapping=dict()))\n
+            report_line.edit(field_type=\'Warning\',\n
+              field_category=category.getRelativeUrl(),\n
+              field_message=translateString("Category is used and can not be deleted or expired "))\n
             detailed_report_append(report_line)\n
         else:\n
           if existing_category_list == \'keep\' and \'kept\' in displayed_report:\n
             report_line = newTempBase(context, \'item\')\n
-            report_line.edit(field_type = \'Keep\', field_category = category.getRelativeUrl(), field_message = translateString("Kept category", mapping=dict()))\n
+            report_line.edit(field_type=\'Keep\',\n
+              field_category=category.getRelativeUrl(),\n
+              field_message=translateString("Kept category"))\n
             detailed_report_append(report_line)\n
         kept_category_counter += 1\n
       else:\n
         if existing_category_list == \'delete\' and \'deleted\' in displayed_report:\n
           report_line = newTempBase(context, \'item\')\n
-          report_line.edit(field_type = \'Delete\', field_category = category.getRelativeUrl(), field_message = translateString("Deleted category", mapping=dict()))\n
+          report_line.edit(field_type=\'Delete\',\n
+            field_category=category.getRelativeUrl(),\n
+            field_message=translateString("Deleted category"))\n
           detailed_report_append(report_line)\n
           deleted_category_counter += 1\n
         if existing_category_list == \'expire\' and \'expired\' in displayed_report:\n
           report_line = newTempBase(context, \'item\')\n
-          report_line.edit(field_type = \'Expire\', field_category = category.getRelativeUrl(), field_message = translateString("Expired category", mapping=dict()))\n
+          report_line.edit(field_type=\'Expire\',\n
+            field_category=category.getRelativeUrl(),\n
+            field_message=translateString("Expired category"))\n
           detailed_report_append(report_line)\n
           expired_category_counter += 1\n
         category_to_delete_list.append(category.getRelativeUrl())\n

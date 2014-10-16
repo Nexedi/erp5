@@ -54,7 +54,7 @@
 from DateTime import DateTime\n
 request = container.REQUEST\n
 \n
-preferences = dict()\n
+preferences = {}\n
 if not box_relative_url:\n
   box_relative_url = request.get(\'box_relative_url\', None)\n
 if box_relative_url:\n

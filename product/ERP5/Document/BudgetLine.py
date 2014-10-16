@@ -112,15 +112,15 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     budget = self.getParentValue()
     budget_model = budget.getSpecialiseValue(portal_type='Budget Model')
     if budget_model is None:
-      return dict()
+      return {}
 
     query_dict = budget_model.getInventoryListQueryDict(self)
     query_dict.update(kw)
     query_dict.setdefault('ignore_group_by', True)
 
     sign = self.BudgetLine_getConsumptionSign()
-    cell_key_cache = dict()
-    budget_dict = dict()
+    cell_key_cache = {}
+    budget_dict = {}
 
     portal = self.getPortalObject()
     getInventoryList = portal.portal_simulation.getInventoryList

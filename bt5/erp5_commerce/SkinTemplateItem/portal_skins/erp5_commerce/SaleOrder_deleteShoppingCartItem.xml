@@ -200,7 +200,7 @@ else:\n
   portal_status_message = "Please select an item."\n
 \n
 context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
-                      keep_items={\'portal_status_message\': translateString(portal_status_message, mapping = dict())})\n
+                      keep_items={\'portal_status_message\': translateString(portal_status_message, mapping={})})\n
 </string> </value>
         </item>
         <item>

@@ -139,7 +139,7 @@ class NodeBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
-    query_dict = dict()
+    query_dict = {}
     axis = self.getInventoryAxis()
     if not axis:
       return query_dict
@@ -223,17 +223,17 @@ class NodeBudgetVariation(BudgetVariation):
     """
     axis = self.getInventoryAxis()
     if not axis:
-      return dict()
+      return {}
     base_category = self.getProperty('variation_base_category')
     if not base_category:
-      return dict()
+      return {}
 
     context = budget_line
     if self.isMemberOf('budget_variation/budget'):
       context = budget_line.getParentValue()
 
     portal_categories = self.getPortalObject().portal_categories
-    query_dict = dict()
+    query_dict = {}
     uid_based_axis = False
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
@@ -291,7 +291,7 @@ class NodeBudgetVariation(BudgetVariation):
         else:
           query_dict[axis] = Query(**{axis: None})
       return query_dict
-    return dict()
+    return {}
 
   def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
                                          cell_key_cache=None):

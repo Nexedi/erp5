@@ -62,7 +62,7 @@ coordinates.\n
 """\n
 # look on the budget model to see which base categories are used for non strict\n
 # membership. We will only update summaries for thoses axis\n
-non_strict_base_category_set = dict()\n
+non_strict_base_category_set = {}\n
 budget_model = context.getParentValue().getSpecialiseValue()\n
 if budget_model is not None:\n
   for budget_variation in budget_model.contentValues(\n
@@ -87,7 +87,7 @@ def reversed(seq):\n
   return seq\n
 \n
 # build a dict of dependant dimensions\n
-dependant_dimensions_dict = dict()\n
+dependant_dimensions_dict = {}\n
 for bc in non_strict_base_category_set.keys():\n
   vcl = reversed(context.getVariationCategoryList(base_category_list=(bc,)))\n
   for vc in vcl:\n

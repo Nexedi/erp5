@@ -113,7 +113,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
   def _getPortalTypeRoleDict(self):
     """Read the spreadsheet and provide processed dict.
     """
-    role_dict = dict()
+    role_dict = {}
     info_dict = self.ConfigurationTemplate_readOOCalcFile(
                       "portal_roles_spreadsheet.ods",
                       data=self.getDefaultConfigurationSpreadsheetData())

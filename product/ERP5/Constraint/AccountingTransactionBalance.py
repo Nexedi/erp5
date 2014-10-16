@@ -45,8 +45,8 @@ class AccountingTransactionBalance(Constraint):
     """Implement here the consistency checker
     """
     error_list = []
-    source_sum = dict()
-    destination_sum = dict()
+    source_sum = {}
+    destination_sum = {}
     for line in obj.getMovementList(
           portal_type=obj.getPortalAccountingMovementTypeList()):
       if line.getSourceValue() is not None:

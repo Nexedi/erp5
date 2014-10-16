@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>search_kw = dict()\n
+            <value> <string>search_kw = {}\n
 portal = context.getPortalObject()\n
 financial_section_list = context.getVariationCategoryList(base_category_list=(\'financial_section\'))\n
 for financial_section in financial_section_list:\n

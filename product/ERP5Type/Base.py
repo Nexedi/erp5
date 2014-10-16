@@ -502,8 +502,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
-  dc_workflow_dict = dict()
-  interaction_workflow_dict = dict()
+  dc_workflow_dict = {}
+  interaction_workflow_dict = {}
   for wf in portal_workflow.getWorkflowsFor(portal_type):
     wf_id = wf.id
     wf_type = wf.__class__.__name__
@@ -536,9 +536,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
     # extract Trigger transitions from workflow definitions for later
     transition_id_set = set(transitions.objectIds())
-    trigger_dict = dict()
+    trigger_dict = {}
     for tr_id in transition_id_set:
-      tdef = transitions.get(tr_id, None)
+      tdef = transitions[tr_id]
       if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
         trigger_dict[tr_id] = tdef
 
@@ -548,8 +548,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       method_id = convertToMixedCase(tr_id)
-      method = getattr(ptype_klass, method_id, _MARKER)
-      if method is _MARKER:
+      try:
+        method = getattr(ptype_klass, method_id)
+      except AttributeError:
         ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
                                               method_id)
         ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id)

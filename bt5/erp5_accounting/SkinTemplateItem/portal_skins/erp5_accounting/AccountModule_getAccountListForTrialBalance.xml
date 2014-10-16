@@ -678,7 +678,7 @@ for key, data in line_per_account.items():\n
                 final_balance_if_credit=max(-closing_balance, 0) or 0,)\n
 \n
   sort_key = (node_string_index, node_title, mirror_section_title)\n
-  analytic_dict = dict()\n
+  analytic_dict = {}\n
   for analytic, uid in zip(group_analytic, analytic_key_list):\n
     title = getAnalyticTitleFromUid(uid)\n
     analytic_dict[analytic] = title\n
@@ -727,7 +727,7 @@ def getAccountClass(account_relative_url):\n
   return None # this account has no class on the current GAP  \n
 \n
 new_line_list = []\n
-account_per_class = dict()\n
+account_per_class = {}\n
 for brain in line_list:\n
   account_per_class.setdefault(\n
       getAccountClass(brain.node_relative_url), []).append(brain)\n

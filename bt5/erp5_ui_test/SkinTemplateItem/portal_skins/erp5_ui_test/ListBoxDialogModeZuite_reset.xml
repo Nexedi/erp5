@@ -90,7 +90,7 @@ def resetSelection(selection_name):\n
     selection_tool.setSelectionColumns(selection_name, [])\n
     selection_tool.setSelectionStats(selection_name, [])\n
     selection_tool.setListboxDisplayMode(context.REQUEST, \'FlatListMode\', selection_name)\n
-    selection_tool.setSelectionParamsFor(selection_name, dict())\n
+    selection_tool.setSelectionParamsFor(selection_name, {})\n
 \n
 resetSelection(\'foo_selection\')\n
 resetSelection(\'foo_line_selection\')\n

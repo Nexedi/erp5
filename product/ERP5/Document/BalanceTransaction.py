@@ -132,7 +132,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Looks the current stock by calling getInventoryList, and building a
     dictionnary of InventoryKey
     """
-    current_stock = dict()
+    current_stock = {}
     getInventoryList = self.getPortalObject()\
                             .portal_simulation.getInventoryList
     section_uid = self.getDestinationSectionUid()
@@ -247,7 +247,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """Looks the new stock on lines in this inventory, and building a
     dictionnary of InventoryKey
     """
-    new_stock = dict()
+    new_stock = {}
     # node
     for movement in self._getGroupByNodeMovementList():
       node_uid = movement.getDestinationUid()

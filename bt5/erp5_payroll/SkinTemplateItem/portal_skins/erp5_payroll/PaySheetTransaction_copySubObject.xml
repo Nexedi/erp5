@@ -69,7 +69,7 @@ for sub_object in sub_object_list:\n
 if delete_id_list:\n
   context.manage_delObjects(ids=delete_id_list)\n
 \n
-sub_object_by_model = dict()\n
+sub_object_by_model = {}\n
 for sub_object in sub_object_list:\n
   sub_object_by_model.setdefault(\n
            sub_object.getParentValue(), []).append(sub_object.getId())\n

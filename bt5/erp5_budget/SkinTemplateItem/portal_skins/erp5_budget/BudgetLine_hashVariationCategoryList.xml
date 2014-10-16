@@ -60,8 +60,8 @@ split_depth = 1\n
 # Build a dict of title to display, based on the titles of corresponding\n
 # budget variations, and a dict of indexes for sorting.\n
 # Also build a list of line level variations, for which we only choose one value.\n
-base_category_title_dict = dict()\n
-base_category_int_index_dict = dict()\n
+base_category_title_dict = {}\n
+base_category_int_index_dict = {}\n
 budget_line = container.REQUEST.get(\'here\')\n
 line_level_variation_list = []\n
 if budget_line is not None:\n

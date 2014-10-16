@@ -53,7 +53,7 @@
             <value> <string>from Products.ERP5Type.Message import translateString\n
 types_tool = context.getPortalObject().portal_types\n
 movement_type_list = context.getPortalMovementTypeList()\n
-type_set = dict()\n
+type_set = {}\n
 \n
 for type_name in types_tool.getTypeInfo(context).getTypeAllowedContentTypeList():\n
   for line_type_name in types_tool.getTypeInfo(type_name).getTypeAllowedContentTypeList():\n

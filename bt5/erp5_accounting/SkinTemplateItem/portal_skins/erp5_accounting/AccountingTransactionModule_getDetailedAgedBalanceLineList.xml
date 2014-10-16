@@ -71,7 +71,7 @@ grouping_query = ComplexQuery(\n
       Query(grouping_date=at_date, range="min"),\n
       operator="OR")\n
       \n
-account_number_memo = dict()\n
+account_number_memo = {}\n
 def getAccountNumber(account_url):\n
   try:\n
     return account_number_memo[account_url]\n
@@ -80,7 +80,7 @@ def getAccountNumber(account_url):\n
       portal.restrictedTraverse(account_url).Account_getGapId()\n
   return account_number_memo[account_url]\n
 \n
-section_title_memo = dict()\n
+section_title_memo = {}\n
 def getSectionTitle(uid):\n
   try:\n
     return section_title_memo[uid]\n

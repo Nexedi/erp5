@@ -53,7 +53,7 @@
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
 result=[]\n
 request = context.REQUEST\n
-params = dict()\n
+params = {}\n
 \n
 selection_columns = [(\'validation_state\', \'State\')]\n
 #Add dynamicaly ticket type columns to the form\n

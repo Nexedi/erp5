@@ -68,7 +68,7 @@ past_title=portal.Base_translateString("past")\n
 line_list = []\n
 \n
 # Prepare the parameters to filter\n
-query_dict = dict()\n
+query_dict = {}\n
 if request_start_date:\n
   query_dict[\'delivery.start_date\'] = dict(range=\'min\', query=request_start_date)\n
 if request_stop_date:\n

@@ -417,7 +417,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       if password is None:
         password = reference
       if person_kw is None:
-        person_kw = dict()
+        person_kw = {}
 
       person = self.portal.person_module.newContent(portal_type='Person',
                                                     reference=reference,

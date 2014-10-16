@@ -54,7 +54,7 @@
 function_uid = context.function_uid\n
 \n
 title_dict = container.REQUEST.get(\n
-      \'Movement_getFunctionTitle.function_title_dict\') or dict()\n
+      \'Movement_getFunctionTitle.function_title_dict\') or {}\n
 if function_uid in title_dict:\n
   return title_dict[function_uid]\n
 \n

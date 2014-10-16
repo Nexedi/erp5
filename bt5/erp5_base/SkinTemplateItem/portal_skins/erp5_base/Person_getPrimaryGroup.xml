@@ -76,7 +76,7 @@ if REQUEST is not None:\n
 from DateTime import DateTime\n
 now = DateTime()\n
 \n
-existing_group_set = dict()\n
+existing_group_set = {}\n
 for assignment in context.contentValues(portal_type=\'Assignment\'):\n
   if assignment.getGroup() \\\n
       and assignment.getValidationState() == \'open\' \\\n
