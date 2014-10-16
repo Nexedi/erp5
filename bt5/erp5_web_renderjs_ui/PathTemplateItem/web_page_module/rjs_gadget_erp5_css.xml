@@ -145,6 +145,16 @@ html.ui-mobile body .ui-header .ui-title .ui-btn {\n
   font-size: 100%;\n
 }\n
 \n
+/* responsive listview-table */\n
+@media (max-width: 48em) {\n
+  html table tbody tr td:first-child ~ td a,\n
+  html table tbody tr th:first-child ~ th a,\n
+  html table tbody tr td:first-child ~ td a,\n
+  html table tbody tr th:first-child ~ th a {\n
+    font-size: 85%;\n
+  }\n
+}\n
+\n
 /* from here on in % of whatever is set above */\n
 .ui-content-header-section .ui-content-title {\n
   font-size: 500%;\n
@@ -780,10 +790,10 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
    -------------------------------------------------------------------------\n
 */\n
 .ui-collapsible .ui-listview .ui-last-child {\n
-  -webkit-border-bottom-left-radius: .625em;\n
-  border-bottom-left-radius: .625em;\n
-  -webkit-border-bottom-right-radius: .625em;\n
-  border-bottom-right-radius: .625em;\n
+  -webkit-border-bottom-left-radius: 0;\n
+  border-bottom-left-radius: 0;\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-right-radius: 0;\n
   \n
 }\n
 \n
@@ -804,8 +814,9 @@ table th,\n
 table td {\n
   line-height: 1.5em;\n
   text-align: left;\n
-  padding: .4em .25em;\n
+  min-height: 2.5em; /* hardcoded if no links;*/\n
   vertical-align: middle;\n
+  padding: 0;\n
 }\n
 table th .ui-btn,\n
 table td .ui-btn {\n
@@ -877,16 +888,18 @@ table caption {\n
 tfoot,\n
 tfoot tr,\n
 .ui-table-inset tfoot tr:last-child th:last-child,\n
-.ui-table-inset tfoot tr:last-child td:last-child {\n
-  -webkit-border-bottom-right-radius: .6em;\n
-  border-bottom-right-radius: .6em;\n
+.ui-table-inset tfoot tr:last-child td:last-child,\n
+.ui-table-inset tfoot .ui-corner-all {\n
+  -webkit-border-bottom-right-radius: .325em;\n
+  border-bottom-right-radius: .325em;\n
 }\n
 tfoot,\n
 tfoot tr,\n
 .ui-table-inset tfoot tr:last-child th:first-child,\n
-.ui-table-inset tfoot tr:last-child td:first-child {\n
-  -webkit-border-bottom-left-radius: .6em;\n
-  border-bottom-left-radius: .6em;\n
+.ui-table-inset tfoot tr:last-child td:first-child,\n
+.ui-table-inset tfoot .ui-corner-all {\n
+  -webkit-border-bottom-left-radius: .325em;\n
+  border-bottom-left-radius: .325em;\n
 }\n
 \n
 /* make sure JQM does not mess up table footer */\n
@@ -901,6 +914,15 @@ html .ui-field-contain tfoot .ui-controlgroup-controls {\n
     margin: auto;\n
 }\n
 \n
+/* box size everything */\n
+html table td,\n
+html table th,\n
+html table td a,\n
+html table th a {\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
 /* header cell formatting */\n
 html table thead th,\n
 html table thead td {\n
@@ -908,16 +930,17 @@ html table thead td {\n
   font-weight: normal;\n
   vertical-align: middle;\n
   text-align: left;\n
-  -webkit-box-sizing: border-box;\n
-  -moz-box-sizing: border-box;\n
-  box-sizing: border-box;\n
 }\n
 \n
-/* uncss table body links */\n
+/* uncss and stretch table body links */\n
 html table tbody td a,\n
 html table tbody th a {\n
   text-decoration: none;\n
   font-weight: normal;\n
+  width: 100%;\n
+  display: block;\n
+  padding: .4em .25em;\n
+  min-height: inherit;\n
 }\n
 html table tbody td:hover a,\n
 html table tbody th:hover a {\n
@@ -1020,6 +1043,10 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     width: 100%;\n
     display: block;\n
   }\n
+  \n
+  table th, table td {\n
+    min-height: 0;\n
+  }\n
 \n
   /* accessibly hide table header if there is a hand made table-header */\n
   html .ui-table-header ~ table thead {\n
@@ -1067,24 +1094,6 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     border-left-width: 0;\n
   }\n
 \n
-  /* hide header excess rows and cells\n
-  html table thead tr:not(:first-child),\n
-  html table thead th:not(:first-child) {\n
-    display: none;\n
-  }\n
-  */\n
-  /* first cell is like ui-title\n
-  html table thead tr:first-child {\n
-    width: 100%;\n
-    border-bottom-width: 1px;\n
-    border-bottom-style: solid;\n
-  }\n
-  html table thead th:first-child {\n
-    margin: 0 30%;\n
-    text-align: center;\n
-  }\n
-  */\n
-\n
   /* hide background and borders */\n
   html table tbody tr:nth-child(odd) td,\n
   html table tbody tr:nth-child(odd) th {\n
@@ -1097,16 +1106,18 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     border-bottom-width: 0;\n
   }\n
 \n
-  /* block the table */\n
+  /* block the table, set to overflow to cover leaking cells */\n
   table.ui-responsive,\n
   table.ui-responsive tbody {\n
     display: block;\n
     width: 100%;\n
   }\n
 \n
-  /* each row becomes a table */\n
+  /* each row becomes a table, now block */\n
   table.ui-responsive tr {\n
-    display: table;\n
+    display: block;\n
+    line-height: 1.5em;\n
+    overflow: hidden;\n
     width: 100%;\n
   }\n
 \n
@@ -1115,41 +1126,84 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
   table.ui-responsive tr th {\n
     display: inline-block;\n
   }\n
-\n
-  /* first cell block element */\n
+  \n
+  /* first cell must be locked */\n
   table.ui-responsive tr td:first-child,\n
   table.ui-responsive tr th:first-child {\n
-    display: block;\n
+    display: inline-block;\n
+    width: 100%;\n
   }\n
 \n
   /* link icon for table rows */\n
   table.ui-responsive tbody tr {\n
-    min-height: 1.25em;\n
-    padding: 0.4em 2.75em 0.4em 1em;\n
+    min-height: 3.9em;\n
+    max-height: 3.9em;\n
     position: relative;\n
+    line-height: 1.1em;\n
     -webkit-box-sizing: border-box;\n
     -moz-box-sizing: border-box;\n
     box-sizing: border-box;\n
     border-top: 1px solid;\n
+    padding: .4em .25em;\n
   }\n
+\n
+  /* bottom border on last row */  \n
+  table.ui-responsive tbody tr:last-child {\n
+    border-bottom-width: 1px;\n
+    border-bottom-style: solid;\n
+  }\n
+\n
+  /* icon itself */\n
   table.ui-responsive tbody tr:after {\n
     font-size: 1.25em;\n
-    background: none repeat scroll 0 center rgba(0, 0, 0, 0);\n
+    background: transparent;\n
     border-radius: 0;\n
     content: "";   /* Thanks FontAwesome */\n
-    display: inline-block;\n
     font-family: FontAwesome;\n
     font-style: normal;\n
     font-weight: normal;\n
     line-height: 1;\n
-    margin-top: -9px;\n
-    right: 0.5625em;\n
+    right: 0;\n
     margin-top: -11px;\n
     top: 50%;\n
     display: block;\n
     height: 22px;\n
     position: absolute;\n
     width: 22px;\n
+  }\n
+\n
+  /* stretch first link to full width (positioned relative to <tr>) */\n
+  html table tbody tr td:first-child a,\n
+  html table tbody tr th:first-child a {\n
+    position: absolute;\n
+    width: 100%;\n
+    top: 0;\n
+    bottom: 0;\n
+    margin-left: -.25em;\n
+  }\n
+  \n
+  /* set line height on cells after first row */\n
+  table tbody tr th:first-child ~ th {\n
+    line-height: 0;\n
+  }\n
+\n
+  /* disactivate all links in these cells and set line-height, too */\n
+  html table tbody tr td:first-child ~ td a,\n
+  html table tbody tr th:first-child ~ th a,\n
+  html table tbody tr td:first-child ~ td a,\n
+  html table tbody tr th:first-child ~ th a {\n
+    display: inline-block;\n
+    padding: 0;\n
+    pointer-events: none;\n
+    line-height: 1em;\n
+  }\n
+  \n
+  /* pad non-empty cells just a little */\n
+  html table tbody tr td:first-child ~ td a:not(:empty),\n
+  html table tbody tr th:first-child ~ td a:not(:empty),\n
+  html table tbody tr td:first-child ~ th a:not(:empty),\n
+  html table tbody tr th:first-child ~ th a:not(:empty) {\n
+    padding: 0 0.1em;\n
   }\n
 \n
   /* reset align */\n
@@ -2170,6 +2224,13 @@ html head + body .ui-bar-a .ui-btn:active,\n
 html head + body .ui-body-a .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-a:active,\n
 html head + body .ui-group-theme-a .ui-btn:active,\n
+html head + body .ui-group-theme-a .ui-btn-a:active,\n
+\n
+html head + body .ui-bar-a .ui-btn-active,\n
+html head + body .ui-body-a .ui-btn-active,\n
+html head + body .ui-btn.ui-btn-a.ui-btn-active,\n
+html head + body .ui-group-theme-a .ui-btn-active,\n
+html head + body .ui-group-theme-a .ui-btn-a.ui-btn-active,\n
 \n
 /* Table row */\n
 html head + body table.ui-body-a tbody tr:hover {\n
@@ -2376,7 +2437,13 @@ html head + body .ui-bar-c .ui-btn:active,\n
 html head + body .ui-body-c .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-c:active,\n
 html head + body .ui-group-theme-c .ui-btn:active,\n
-html head + body .ui-group-theme-c .ui-btn.ui-btn-c:active,\n
+html head + body .ui-group-theme-c .ui-btn-c:active\n
+\n
+html head + body .ui-bar-c .ui-btn-active,\n
+html head + body .ui-body-c .ui-btn-active,\n
+html head + body .ui-btn.ui-btn-c.ui-btn-active,\n
+html head + body .ui-group-theme-c .ui-btn-active,\n
+html head + body .ui-group-theme-c .ui-btn-c.ui-btn-active,\n
 \n
 /* Table row hover */\n
 html head + body table.ui-body-c tbody tr:hover{\n
@@ -2568,6 +2635,12 @@ html head + body .ui-body-d .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-d:active,\n
 html head + body .ui-group-theme-d .ui-btn:active,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-d:active,\n
+\n
+html head + body .ui-bar-d .ui-btn-active,\n
+html head + body .ui-body-d .ui-btn-active,\n
+html head + body .ui-btn.ui-btn-d.ui-btn-active,\n
+html head + body .ui-group-theme-d .ui-btn.ui-btn-active,\n
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d.ui-btn-active,\n
 \n
 /* Table row hover */\n
 html head + body table.ui-body-d tbody tr:hover {\n
@@ -4400,7 +4473,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16158.8004.25992</string> </value>
+                <value> <string>938.18709.39605.41420</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4418,7 +4491,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413361727.89</float>
+                        <float>1413453525.02</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
