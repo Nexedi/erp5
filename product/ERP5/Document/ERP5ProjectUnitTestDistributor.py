@@ -258,7 +258,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return test_suite_list
 
   security.declarePublic("startTestSuite")
-  def startTestSuite(self,title, batch_mode=0):
+  def startTestSuite(self,title, computer_guid=None, batch_mode=0):
     """
     startTestSuite doc
     """

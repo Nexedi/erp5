@@ -69,7 +69,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
       test_node.setAggregateList(test_suite_list)
 
   security.declarePublic("startTestSuite")
-  def startTestSuite(self,title):
+  def startTestSuite(self,title, computer_guid=None):
     """
     give the list of test suite to start. We will take all test suites
     associated to the testnode. Then we add the test node title to the
