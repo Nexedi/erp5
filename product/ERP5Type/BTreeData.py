@@ -73,8 +73,7 @@ class BTreeData(Persistent):
                 chunk = tree[lower_key]
                 if lower_key + len(chunk.value) > offset:
                     key = lower_key
-                    chunk_offset = offset - key
-                    buf = chunk.value[:chunk_offset] + buf + chunk.value[chunk_offset + len(buf):]
+                    buf = chunk.value[:offset - key] + buf
         try:
             tree.minKey(len(buf) + offset)
         except ValueError:
@@ -92,7 +91,7 @@ class BTreeData(Persistent):
                 to_write_len = len(buf)
                 next_key = None
             else:
-                to_write_len = next_key - key
+                to_write_len = min(len(buf), next_key - key)
             try:
                 chunk = tree[key]
             except KeyError:
