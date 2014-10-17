@@ -105,6 +105,13 @@ if context.AccountingTransactionLine_getFunctionItemList(source=source):\n
     a((\'source_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
   else:\n
     a((\'destination_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
+    \n
+if context.AccountingTransactionLine_getFundingItemList(source=source):\n
+  if source:\n
+    a((\'source_funding\', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))\n
+  else:\n
+    a((\'destination_funding\', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))\n
+\n
   \n
 if multiple_sections:\n
   if source:\n
