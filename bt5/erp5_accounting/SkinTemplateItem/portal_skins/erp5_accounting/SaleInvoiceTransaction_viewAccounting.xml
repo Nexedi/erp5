@@ -83,6 +83,7 @@
                         <string>listbox_source_credit</string>
                         <string>listbox_source_debit</string>
                         <string>listbox_source_function</string>
+                        <string>listbox_source_funding</string>
                       </list>
                     </value>
                 </item>

@@ -112,6 +112,7 @@
                         <string>listbox_source_asset_credit</string>
                         <string>listbox_source_asset_debit</string>
                         <string>listbox_function</string>
+                        <string>listbox_funding</string>
                       </list>
                     </value>
                 </item>

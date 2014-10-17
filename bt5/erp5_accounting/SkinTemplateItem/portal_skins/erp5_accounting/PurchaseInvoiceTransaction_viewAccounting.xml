@@ -83,6 +83,7 @@
                         <string>listbox_destination_credit</string>
                         <string>listbox_destination_debit</string>
                         <string>listbox_destination_function</string>
+                        <string>listbox_destination_funding</string>
                       </list>
                     </value>
                 </item>
