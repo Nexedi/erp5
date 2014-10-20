@@ -340,7 +340,8 @@ portal = context.getPortalObject()\n
 sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 \n
 # Calculate the site root to prevent unexpected browsing\n
-is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) or context.isWebMode()\n
+is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) or (hasattr(context, \'isWebMode\') and context.isWebMode())\n
+
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
   site_root = context.getWebSectionValue()\n
