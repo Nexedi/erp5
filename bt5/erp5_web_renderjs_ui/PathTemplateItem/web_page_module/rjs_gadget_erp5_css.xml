@@ -219,6 +219,12 @@ html body .ui-page .ui-panel-wrapper {\n
   text-shadow: none;\n
 }\n
 \n
+/* page padding - JQM tries to set this through the wrapping page-div. Once\n
+   this is gone, remove rule */\n
+html body .ui-page-header-fixed {\n
+  padding-top: 41px !important;\n
+}\n
+\n
 /*\n
    -------------------------------------------------------------------------\n
    ------------------------------- Content ---------------------------------\n
@@ -378,9 +384,13 @@ html body section ~ .ui-content-section .ui-content-header-inline {\n
    ------------------------------- Form ------------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
+/* form validation (assuming label>span is used) */\n
+form label span {\n
+  color: red;\n
+}\n
+\n
 \n
 /* layout form with left|right|center|bottom */\n
-.ui-form-center,\n
 .center {\n
   width: 100%;\n
   padding: 0 .5em;\n
@@ -389,27 +399,19 @@ html body section ~ .ui-content-section .ui-content-header-inline {\n
   box-sizing: border-box;\n
   text-align: left;\n
 }\n
-.ui-form-left,\n
 .left,\n
-.ui-form-right,\n
 .right,\n
-.ui-form-center,\n
 .center,\n
-.ui-form-bottom,\n
 .bottom {\n
   vertical-align: top;\n
   padding: 0 2%;\n
 }\n
-.ui-form-center,\n
 .center,\n
-.ui-form-bottom,\n
 .bottom  {\n
   display: block;\n
   width: 96%;\n
 }\n
-.ui-form-left,\n
 .left,\n
-.ui-form-right,\n
 .right {\n
   display: inline-block;\n
   width: 45%;\n
@@ -426,17 +428,13 @@ html body section ~ .ui-content-section .ui-content-header-inline {\n
 }\n
 \n
 /* extend textarea and fullwidth element container */\n
-.ui-form-center .ui-field-contain,\n
-.ui-form-bottom .ui-field-contain,\n
 .center .ui-field-contain,\n
 .bottom .ui-field-contain {\n
   width: 99.4%;\n
 }\n
 \n
 /* stretch textarea */\n
-.ui-form-left textarea,\n
 .left textara,\n
-.ui-form-right textarea,\n
 .right textarea {\n
   width: 100%;\n
   display: inline-block;\n
@@ -462,13 +460,9 @@ html.ui-mobile head + body fieldset div.ui-controlgroup-label {\n
 }\n
 /* label for textarea has double space, so needs half of the above */\n
 html.ui-mobile head + body .center label:not(.ui-btn),\n
-html.ui-mobile head + body .ui-form-center label:not(.ui-btn),\n
 html.ui-mobile head + body .center fieldset div.ui-controlgroup-label,\n
-html.ui-mobile head + body .ui-form-center fieldset div.ui-controlgroup-label,\n
 html.ui-mobile head + body .bottom label:not(.ui-btn),\n
-html.ui-mobile head + body .ui-form-bottom label:not(.ui-btn),\n
-html.ui-mobile head + body .bottom fieldset div.ui-controlgroup-label,\n
-html.ui-mobile head + body .ui-form-bottom fieldset div.ui-controlgroup-label {\n
+html.ui-mobile head + body .bottom fieldset div.ui-controlgroup-label {\n
   max-width: 13.5%;\n
   min-width: 13.5%;\n
   margin-right: 1%;\n
@@ -508,8 +502,6 @@ html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup div.ui-con
 /* and textarea/other elements in center/bottom */\n
 html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
 html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,\n
-html.ui-mobile head + body .ui-form-bottom div.ui-field-contain textarea.ui-input-text,\n
-html.ui-mobile head + body .ui-form-center div.ui-field-contain textarea.ui-input-text,\n
 /* include gadget */\n
 html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,\n
 html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {\n
@@ -582,18 +574,23 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
   /* set width and spacing */\n
   .left,\n
-  .ui-form-left,\n
   .right,\n
-  .ui-form-right,\n
   .center,\n
-  .ui-form-center,\n
-  .bottom,\n
-  .ui-form-bottom {\n
-    width: auto;\n
+  .bottom {\n
     display: block;\n
     -webkit-box-sizing: padding-box;\n
     -moz-box-sizing: padding-box;\n
     box-sizing: padding-box;\n
+  }\n
+  \n
+  /* set width (XXX Assuming listbox is always in bottom, otherwise need to edit*/\n
+  .left,\n
+  .right,\n
+  .bottom {\n
+    width: auto;\n
+  }\n
+  .center {\n
+    width: 96%;\n
   }\n
 \n
   /* reset min/max width and shrink labels ... */\n
@@ -631,9 +628,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   /* extend textarea and fullwidth element container */\n
   html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
   html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-bottom div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-center div.ui-field-contain textarea.ui-input-text,\n
-\n
+  \n
   /* include gadget */\n
   html.ui-mobile head + body .field_container .bottom div.ui-field-contain label + div,\n
   html.ui-mobile head + body .field_container .center div.ui-field-contain label + div {\n
@@ -642,7 +637,6 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
   /* textarea has double space, so needs half of the above */\n
   html.ui-mobile head + body div.center div.ui-field-contain  label,\n
-  html.ui-mobile head + body div.ui-form-center div.ui-field-contain  label,\n
   html.ui-mobile head + body div.bottom div.ui-field-contain label,\n
   html.ui-mobile head + body div.ui-field-contain div.ui-field-contain label {\n
     max-width: 20%;\n
@@ -655,13 +649,9 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
    /* set width and spacing */\n
   .left,\n
-  .ui-form-left,\n
   .right,\n
-  .ui-form-right,\n
   .center,\n
-  .ui-form-center,\n
-  .bottom,\n
-  .ui-form-bottom {\n
+  .bottom {\n
     width: auto;\n
     display: block;\n
     -webkit-box-sizing: border-box;\n
@@ -688,17 +678,13 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   /* bottom/center > 94.4% + 2x2% padding + 2x.25padding */\n
   /* extend textarea and fullwidth element container */\n
   html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-bottom div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-center div.ui-field-contain textarea.ui-input-text {\n
+  html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text {\n
     max-width: 90%;\n
   }\n
 \n
   /* and textarea/other elements in center/bottom */\n
   html.ui-mobile head + body .center textarea,\n
-  html.ui-mobile head + body .ui-form-center textarea,\n
   html.ui-mobile head + body .bottom textarea,\n
-  html.ui-mobile head + body .ui-form-bottom textarea,\n
   html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,\n
   html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {\n
     max-width: 100%;\n
@@ -711,11 +697,8 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   }\n
 \n
   /* extend textarea and fullwidth element container */\n
-  .ui-form-center .ui-field-contain,\n
-  .ui-form-bottom .ui-field-contain,\n
-  .center .ui-field-contain,\n
-  .bottom .ui-field-contain {\n
-    width: 89.4%;\n
+  .center .ui-field-contain {\n
+    width: 94.4%;\n
   }\n
 }\n
 \n
@@ -769,8 +752,6 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   /* and textarea/other elements in center/bottom */\n
   html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
   html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-bottom div.ui-field-contain textarea.ui-input-text,\n
-  html.ui-mobile head + body .ui-form-center div.ui-field-contain textarea.ui-input-text,\n
   html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,\n
   html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {\n
     max-width: none;\n
@@ -782,6 +763,11 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     height: 2.2em;\n
     right: 0;\n
     top: 2.15em;\n
+  }\n
+  \n
+  /* extend textarea and fullwidth element container */\n
+  .center .ui-field-contain {\n
+    width: 90.4%;\n
   }\n
 }\n
 /*\n
@@ -836,6 +822,18 @@ table caption {\n
   border-top-width: 0;\n
 }\n
 \n
+  \n
+/* hard-lock margin */\n
+html body .ui-table-header .ui-title {\n
+  margin: 0 30%\n
+}\n
+\n
+/* max width for buttons XXX: assumes single buttons in controlgroup */\n
+html body div.ui-table-header div.ui-controlgroup {\n
+  max-width: none;\n
+  min-width: 0;\n
+}\n
+\n
 /* radius */\n
 .ui-table-inset {\n
   -webkit-border-radius: .3125em;\n
@@ -850,6 +848,16 @@ table caption {\n
 .ui-table-header .ui-btn-right .ui-last-child:hover {\n
   -webkit-border-top-right-radius: .325em;\n
   border-top-right-radius: .325em;\n
+}\n
+\n
+/* reset page header customizations ... */\n
+.ui-table-header .ui-controlgroup-horizontal .ui-controlgroup-controls,\n
+.ui-table-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn, \n
+.ui-table-header .ui-controlgroup-controls .ui-btn-icon-notext,\n
+/* reset field-container capturing table-header controlgroups as listbox is inside field-container... */\n
+html.ui-mobile head + body .ui-field-contain *:first-child:nth-last-child(3) ~ div, \n
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls *:first-child:nth-last-child(3) ~ div {\n
+  width: auto;\n
 }\n
 \n
 .ui-table-inset thead,\n
@@ -929,7 +937,8 @@ html table thead td {\n
   text-shadow: none;\n
   font-weight: normal;\n
   vertical-align: middle;\n
-  text-align: left;\n
+  text-align: center;\n
+  padding: .5em 0; /* must be changed if there is a link in the header! */\n
 }\n
 \n
 /* uncss and stretch table body links */\n
@@ -1022,7 +1031,7 @@ tfoot .ui-controlgroup .ui-controlgroup-controls .ui-first-child {\n
   -webkit-border-bottom-left-radius: 0;\n
   border-bottom-left-radius: 0;\n
 }\n
-tfoot .ui-controlgroup .ui-controlgroup-controls .ui-last-child {\n
+tfoot .ui-controlgroup.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn.ui-last-child {\n
   -webkit-border-top-right-radius: 0;\n
   border-top-right-radius: 0;\n
   border-right-width: 0;\n
@@ -1033,6 +1042,23 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
   border-top-width: 0;\n
 }\n
 \n
+/* paging-menu records indicator height XXX not sure, don\'t like */\n
+.ui-paging-menu .ui-controlgroup-controls > span {\n
+  line-height: 1.6em;\n
+}\n
+\n
+/* hide table header border */\n
+div.ui-table-header {\n
+  border-width: 1px;\n
+}\n
+/* need pseudo to add transparency over ui-bar-xxx */\n
+html .ui-table-header:before {\n
+  background-color: rgba(0, 0, 0, 0.04);\n
+  content: "";\n
+  height: 39px; /* not nice */\n
+  position: absolute;\n
+  width: 100%;\n
+}\n
 \n
 /* convert to listview look */\n
 @media (max-width: 48em) {\n
@@ -1078,11 +1104,6 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
   html table thead tr:first-child td:first-child,\n
   html table thead tr:first-child th:first-child {\n
     text-align: center;\n
-  }\n
-\n
-  /* hide table header border */\n
-  .ui-table-header {\n
-    border-bottom-width: 0;\n
   }\n
 \n
   /* remove all cell borders */\n
@@ -1180,6 +1201,9 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     top: 0;\n
     bottom: 0;\n
     margin-left: -.25em;\n
+    overflow: hidden;\n
+    white-space: nowrap;\n
+    text-overflow: ellipsis;\n
   }\n
   \n
   /* set line height on cells after first row */\n
@@ -1204,6 +1228,20 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
   html table tbody tr td:first-child ~ th a:not(:empty),\n
   html table tbody tr th:first-child ~ th a:not(:empty) {\n
     padding: 0 0.1em;\n
+  }\n
+  \n
+  /* add tide */\n
+  html table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after,\n
+  html table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after,\n
+  html table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after, \n
+  html table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after {\n
+    content: " ~ ";\n
+  }\n
+\n
+  /* pad top row */\n
+  html table tbody tr td:first-child, tbody tr th:first-child {\n
+    line-height: 1em;\n
+    padding-bottom: 1.25em;\n
   }\n
 \n
   /* reset align */\n
@@ -1238,21 +1276,20 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     box-sizing: border-box;\n
   }\n
 \n
-  /* element width XXX merge into grid container, remove this */\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(1) {\n
-    width: 100%;\n
-  }\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(2),\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(2) ~ a,\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(2) ~ span {\n
+\n
+  /* give more space to record counter and move icons to the middle */\n
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > span {\n
     width: 50%;\n
   }\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(3),\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(3) ~ a,\n
-  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls :first-child:nth-last-child(3) ~ span {\n
-    width: 33.3333%;\n
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn {\n
+    width: 25%;\n
   }\n
-\n
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn-icon-left:after {\n
+    right: .5em;\n
+  }\n
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn-icon-right:after {\n
+    left: .5em;\n
+  }\n
 \n
 \n
   /* first cell radio/check */\n
@@ -1273,16 +1310,33 @@ tfoot .ui-controlgroup .ui-controlgroup-controls a {\n
     padding-left: 0;\n
     padding-right: 0;\n
 }\n
+/*\n
+   -------------------------------------------------------------------------\n
+   --------------------------- Inputs:readonly -----------------------------\n
+   -------------------------------------------------------------------------\n
+*/\n
 /* remove box-shadow on readonly elements */\n
 .ui-state-readonly,\n
 .ui-state-readonly:focus,\n
-.ui-state-readonly input.ui-focus {\n
+.ui-state-readonly input.ui-focus,\n
+.ui-state-readonly select.ui-focus {\n
+\tcursor: default !important;\n
+\tpointer-events: none;\n
   -webkit-box-shadow: none;\n
   -moz-box-shadow: none;\n
   box-shadow: none;\n
   border: 0 none;\n
+  text-align: left;\n
+  padding-left: 0;\n
 }\n
-\n
+html body .ui-select .ui-state-readonly {\n
+  padding-left: .4em;\n
+  padding-top: .4em;\n
+  padding-bottom: .4em;\n
+}\n
+html body .ui-state-readonly:after {\n
+  content: none;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    ----------------------------- Checkbox ----------------------------------\n
@@ -1864,10 +1918,17 @@ ul.ui-card-deck .ui-li-static .ui-icon-custom:after {\n
    -------------------------------------------------------------------------\n
 */\n
 \n
-/* set header padding ~ 10px to match font-size (> set to .9em) */\n
+/* padding to match font-size (> set to .9em), margin expect single button only */\n
 html .ui-header .ui-title,\n
 html .ui-footer .ui-title {\n
   padding: 0.7em 0;\n
+  margin: 0 45px;\n
+}\n
+\n
+/* max width for buttons */\n
+.ui-header .ui-controlgroup {\n
+  max-width: 45px;\n
+  min-width: 45px;\n
 }\n
 \n
 /* logo dimensions, left/right padding needed, because img does not fill space*/\n
@@ -1875,17 +1936,26 @@ html .ui-header img.ui-title {\n
   max-height: 24px;\n
   padding: 0.5em 1.7em;\n
 }\n
+\n
+/* fix icon size on title (depends on font size of title) XXX: move up!*/\n
+html .ui-title .ui-btn[class*="ui-icon-"]:after, \n
+html .ui-title .ui-btn[class*="ui-icon-"]:after {\n
+    font-size: 1.15em;\n
+}\n
+\n
 /* breadcrumb dimensions, unsure negative margin is good to offset padding */\n
 html .ui-header .ui-title .ui-btn {\n
   display: block;\n
   margin: -0.9em 0;\n
   max-height: 3.1em;\n
+  border: 0 none;\n
 }\n
 \n
-/* fixed header needs to push down content further */\n
-.ui-header-fixed ~ .ui-content {\n
-  padding-top: 3em;\n
+/* pages with subheader increase padding on ui-content */\n
+.ui-has-subheader {\n
+  padding-top: 4.5em;\n
 }\n
+\n
 /* remove border on header */\n
 .ui-header {\n
   border-width: 0;\n
@@ -1905,6 +1975,8 @@ html body .ui-mobile-viewport .ui-subheader {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
 }\n
+\n
+/* double borders header */\n
 html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-btn {\n
   border-right: 1px solid rgb(115, 115, 115); /* IE8 */\n
   border-right: 1px solid rgba(0, 0, 0, 0.55);\n
@@ -1982,37 +2054,71 @@ html .ui-header .ui-btn {\n
   border-bottom: 0;\n
 }\n
 \n
-\n
 /* hide button text on small screens, center icon */\n
 .responsive.ui-btn,\n
 .ui-responsive.ui-btn {\n
   text-indent: -9999px;\n
 }\n
-.ui-header .ui-btn-icon-left:after,\n
-.ui-footer .ui-btn-icon-left:after {\n
-  text-indent: 0;\n
-  left: .6em;\n
-}\n
 .responsive.ui-btn:after,\n
 .ui-responsive.ui-btn:after {\n
+  text-indent: 0;\n
+}\n
+\n
+.ui-header .responsive .ui-btn:after,\n
+.ui-header .responsive.ui-btn:after {\n
   left: .8em;\n
 }\n
-/* reset on larger screens */\n
-@media (min-width: 48em) {\n
-  .responsive.ui-btn:after,\n
-  .ui-header .responsive.ui-btn-icon-left:after,\n
-  .ui-footer .responsive.ui-btn-icon-left:after {\n
-    text-indent: 0;\n
-  }\n
-  .responsive.ui-btn,\n
-  .ui-responsive.ui-btn {\n
-    text-indent: 0;\n
-  }\n
+\n
+/* stretch control to available width */\n
+.ui-header .ui-controlgroup-controls {\n
+  width: 100%;\n
 }\n
+/* stretch button elements to available width */\n
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn,\n
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn,\n
+.ui-header .ui-controlgroup-controls .ui-btn-icon-notext {\n
+  width: 100%;\n
+  -moz-box-sizing: border-box;\n
+  -webkit-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+\n
 /* subheader reset formatting for subheader buttons */\n
 .ui-header .ui-subheader .ui-btn.ui-btn-icon-top {\n
     line-height: 3.25em;\n
     padding-top: 1.5em;\n
+}\n
+\n
+@media (max-width: 32em) {\n
+  /* fix icon size on title (depends on font size of title) XXX move up */\n
+  html .ui-title .ui-btn[class*="ui-icon-"]:after, \n
+  html .ui-title .ui-btn[class*="ui-icon-"]:after {\n
+      font-size: 1.35em;\n
+  }\n
+}\n
+/* reset on larger screens */\n
+@media (min-width: 48em) {\n
+  \n
+  /* hard-lock margin */\n
+  html .ui-header .ui-title,\n
+  html .ui-footer .ui-title {\n
+    margin: 0 8%;\n
+  }\n
+\n
+  /* max width for buttons XXX: assumes single buttons in controlgroup */\n
+  .ui-header .ui-controlgroup {\n
+    max-width: 8%;\n
+    min-width: 8%;\n
+  }\n
+\n
+\n
+  .responsive.ui-btn:after,\n
+  .ui-header .responsive.ui-btn-icon-left:after,\n
+  .ui-footer .responsive.ui-btn-icon-left:after,\n
+  .responsive.ui-btn,\n
+  .ui-responsive.ui-btn {\n
+    text-indent: 0;\n
+  }\n
 }\n
 \n
 \n
@@ -2050,10 +2156,10 @@ html .ui-header .ui-btn {\n
     Text:  #757575\n
 \n
   3. Light (JQM: c)\n
-    Main: #eeeeee  | #e0e0e0\n
-    Dark: #aaaaaa  | #f0f0f0\n
-    Light: #ffffff | #f5f5f5\n
-    Text: #444444  | #757575\n
+    Main: #eeeeee  | #e0e0e0    |  \n
+    Dark: #aaaaaa  | #f0f0f0    |  #777777\n
+    Light: #ffffff | #f5f5f5    |  \n
+    Text: #444444  | #757575    |  #222222\n
 \n
   4. Dark (JQM: d)\n
     Main: #444444\n
@@ -2091,6 +2197,16 @@ html head + body .ui-body-a tbody tr th a {\n
 }\n
 \n
 /* === CUSTOM === */\n
+/* Constrast labels in light color */\n
+html .ui-body-a label,\n
+html .ui-bar-a label,\n
+html .ui-btn-a label,\n
+html .ui-body-a thead th,\n
+html .ui-bar-a thead th,\n
+html body div.ui-bar-a.ui-table-header a.ui-btn,\n
+html body div.ui-bar-a.ui-table-header .ui-title {\n
+  color: #085078;\n
+}\n
 /* Custom Icon Color and background opacity */\n
 html .ui-body-a.ui-icon-custom:after,\n
 html .ui-bar-a .ui-icon-custom.ui-body-inherit:after,\n
@@ -2230,10 +2346,7 @@ html head + body .ui-bar-a .ui-btn-active,\n
 html head + body .ui-body-a .ui-btn-active,\n
 html head + body .ui-btn.ui-btn-a.ui-btn-active,\n
 html head + body .ui-group-theme-a .ui-btn-active,\n
-html head + body .ui-group-theme-a .ui-btn-a.ui-btn-active,\n
-\n
-/* Table row */\n
-html head + body table.ui-body-a tbody tr:hover {\n
+html head + body .ui-group-theme-a .ui-btn-a.ui-btn-active {\n
   background-color: #085078;\n
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#85D8CE), to(#0E81C2));\n
   background:        -webkit-linear-gradient(bottom, #85D8CE, #0E81C2);\n
@@ -2247,22 +2360,6 @@ html head + body table.ui-body-a tbody tr:hover {\n
   text-shadow: none;\n
 }\n
 \n
-/* Button Focus */\n
-html .ui-overlay-a .ui-btn:focus,\n
-html .ui-bar-a .ui-btn:focus,\n
-html .ui-body-a .ui-btn:focus,\n
-html .ui-group-theme-a .ui-btn:focus,\n
-html head + body .ui-btn-a:focus,\n
-html head + body .ui-body-a:focus,\n
-html .ui-overlay-a .ui-focus,\n
-html .ui-bar-a .ui-focus,\n
-html .ui-body-a .ui-focus,\n
-html body .ui-group-theme-a .ui-focus,\n
-html head + body .ui-btn-a.ui-focus,\n
-html head + body .ui-body-a.ui-focus {\n
-  box-shadow: 0 0 12px #0E81C2;\n
-}\n
-\n
 \n
 /* ============================= B (Accent) ============================= */\n
 \n
@@ -2272,6 +2369,27 @@ html.ui-mobile body.ui-mobile-viewport .ui-accent {\n
     font-weight: 700;\n
     text-transform: uppercase;\n
     border: 0 none;\n
+}\n
+\n
+/* Table row */\n
+html head + body table tbody tr:hover,\n
+\n
+/* Save button XXX: should not depend on icon!*/\n
+html body .ui-header .ui-icon-save,\n
+html body .ui-header .ui-icon-exclamation,\n
+html body .ui-header .ui-icon-warning {\n
+  background: none repeat scroll 0 0 #e4ebf1;\n
+  border-color: rgba(0, 0, 0, 0.3);\n
+  color: #777;\n
+  text-shadow: none;\n
+}\n
+\n
+/* Focus */\n
+\n
+/* Button Focus */\n
+html body .ui-btn:focus,\n
+html body .ui-focus {\n
+  box-shadow: 0 0 12px #add8e6;\n
 }\n
 \n
 \n
@@ -2300,11 +2418,21 @@ html body .ui-group-theme-c .ui-bar-inherit,\n
 html body .ui-group-theme-c .ui-body-inherit,\n
 html head + body .ui-body-c tbody tr td a,\n
 html head + body .ui-body-c tbody tr th a {\n
-  color: #757575;\n
+  color: #222222;\n
 }\n
 \n
 \n
 /* === CUSTOM === */\n
+/* Constrast labels in light color */\n
+html .ui-body-c label,\n
+html .ui-bar-c label,\n
+html .ui-btn-c label,\n
+html .ui-body-c thead th,\n
+html .ui-bar-c thead th,\n
+html body div.ui-bar-c.ui-table-header a.ui-btn,\n
+html body div.ui-bar-c.ui-table-header .ui-title {\n
+  color: #777777;\n
+}\n
 /* Custom Icon Color and background opacity */\n
 html .ui-body-c.ui-icon-custom:after,\n
 html .ui-bar-c .ui-icon-custom.ui-body-inherit:after,\n
@@ -2312,7 +2440,7 @@ html .ui-body-c .ui-icon-custom.ui-body-inherit:after,\n
 html .ui-group-theme-c .ui-icon-custom.ui-body-inherit:after,\n
 html .ui-icon-custom.ui-body-c:after {\n
   background-color: rgba(0, 0, 0, 0.15);\n
-  color: #f5f5f5;\n
+  color: #222222;\n
 }\n
 \n
 /* No borders on custom icon elements */\n
@@ -2419,7 +2547,7 @@ html head + body .ui-bar-c .ui-link:hover,\n
 html head + body .ui-body-c .ui-link:hover,\n
 html head + body .ui-group-theme-c .ui-link:hover {\n
   background: none repeat scroll 0 0 transparent;\n
-  color: #757575;\n
+  color: #222222;\n
   text-shadow: none;\n
   border-color: rgb(0, 0, 0);\n
   border-color: rgba(0, 0, 0, 0.3);\n
@@ -2443,10 +2571,7 @@ html head + body .ui-bar-c .ui-btn-active,\n
 html head + body .ui-body-c .ui-btn-active,\n
 html head + body .ui-btn.ui-btn-c.ui-btn-active,\n
 html head + body .ui-group-theme-c .ui-btn-active,\n
-html head + body .ui-group-theme-c .ui-btn-c.ui-btn-active,\n
-\n
-/* Table row hover */\n
-html head + body table.ui-body-c tbody tr:hover{\n
+html head + body .ui-group-theme-c .ui-btn-c.ui-btn-active {\n
   background-color: #e0e0e0;\n
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eeeeee), to(#f5f5f5));\n
   background:        -webkit-linear-gradient(bottom, #eeeeee, #f5f5f5);\n
@@ -2454,27 +2579,12 @@ html head + body table.ui-body-c tbody tr:hover{\n
   background:           -moz-linear-gradient(bottom, #eeeeee, #f5f5f5);\n
   background:             -o-linear-gradient(bottom, #eeeeee, #f5f5f5);\n
   background:            -ms-linear-gradient(bottom, #eeeeee, #f5f5f5);\n
-  color: #757575;\n
+  color: #222222;\n
   text-shadow: none;\n
   border-color: rgb(0, 0, 0);\n
   border-color: rgba(0, 0, 0, 0.5);\n
 }\n
 \n
-/* Button Focus */\n
-html .ui-overlay-c .ui-btn:focus,\n
-html .ui-bar-c .ui-btn:focus,\n
-html .ui-body-c .ui-btn:focus,\n
-html .ui-group-theme-c .ui-btn:focus,\n
-html head + body .ui-btn-c:focus,\n
-html head + body .ui-body-c:focus,\n
-html .ui-overlay-c .ui-focus,\n
-html .ui-bar-c .ui-focus,\n
-html .ui-body-c .ui-focus,\n
-html body .ui-group-theme-c .ui-focus,\n
-html head + body .ui-btn-c.ui-focus,\n
-html head + body .ui-body-c.ui-focus {\n
-  box-shadow: 0 0 6px #757575;\n
-}\n
 \n
 /* ============================= D (Dark) =============================== */\n
 html head + body.ui-overlay-d,\n
@@ -2503,6 +2613,16 @@ html head + body .ui-body-d tbody tr th a {\n
   color: #ffffff;\n
 }\n
 /* === CUSTOM === */\n
+/* Constrast labels in light color */\n
+html .ui-body-d label,\n
+html .ui-bar-d label,\n
+html .ui-btn-d label, \n
+html .ui-body-d thead th,\n
+html .ui-bar-d thead th,\n
+html body div.ui-bar-d.ui-table-header a.ui-btn,\n
+html body div.ui-bar-d.ui-table-header .ui-title {\n
+  color: #444444;\n
+}\n
 /* Custom Icon Color and background opacity */\n
 html .ui-body-d.ui-icon-custom:after,\n
 html .ui-bar-d .ui-icon-custom.ui-body-inherit:after,\n
@@ -2640,10 +2760,7 @@ html head + body .ui-bar-d .ui-btn-active,\n
 html head + body .ui-body-d .ui-btn-active,\n
 html head + body .ui-btn.ui-btn-d.ui-btn-active,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-active,\n
-html head + body .ui-group-theme-d .ui-btn.ui-btn-d.ui-btn-active,\n
-\n
-/* Table row hover */\n
-html head + body table.ui-body-d tbody tr:hover {\n
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d.ui-btn-active {\n
   background-color: #25292b;\n
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#444444), to(#25292b));\n
   background:        -webkit-linear-gradient(bottom, #444444, #25292b);\n
@@ -2657,21 +2774,6 @@ html head + body table.ui-body-d tbody tr:hover {\n
   border-color: rgba(255,255,255, .3);\n
 }\n
 \n
-/* Button Focus */\n
-html .ui-overlay-d .ui-btn:focus,\n
-html .ui-bar-d .ui-btn:focus,\n
-html .ui-body-d .ui-btn:focus,\n
-html .ui-group-theme-d .ui-btn:focus,\n
-html head + body .ui-btn-d:focus,\n
-html head + body .ui-body-d:focus,\n
-html .ui-overlay-d .ui-focus,\n
-html .ui-bar-d .ui-focus,\n
-html .ui-body-d .ui-focus,\n
-html body .ui-group-theme-d .ui-focus,\n
-html head + body .ui-btn-d.ui-focus,\n
-html head + body .ui-body-d.ui-focus {\n
-  box-shadow: 0 0 12px #ffffff;\n
-}\n
 \n
 \n
 \n
@@ -4473,7 +4575,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.18709.39605.41420</string> </value>
+                <value> <string>938.20529.55980.2884</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4491,7 +4593,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413453525.02</float>
+                        <float>1413562906.22</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
