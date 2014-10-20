@@ -121,7 +121,7 @@
     <!-- custom script -->\n
     <script src="gadget_erp5_header.js" type="text/javascript"></script>\n
 \n
-    <script id="header-title-link-template" type="text/x-handlebars-template"><a class="ui-btn ui-btn-icon-left ui-icon-caret-up" href="{{url}}">{{title}}</a></script>\n
+    <script id="header-title-link-template" type="text/x-handlebars-template"><a class="ui-btn ui-btn-icon-left ui-icon-arrow-down" href="{{url}}">{{title}}</a></script>\n
     <script id="header-title-template" type="text/x-handlebars-template">{{title}}</script>\n
 \n
     <script id="header-link-template" type="text/x-handlebars-template">\n
@@ -141,8 +141,7 @@
   </head>\n
   <body>\n
 \n
-  <!-- data-position="fixed" -->\n
-  <div data-role="header" data-theme="a" class="custom-headroom-header ui-header ui-bar-a" data-position="fixed">\n
+  <div data-role="header" data-theme="a" class="ui-header ui-bar-a" data-position="fixed" data-tap-toggle="false">\n
 \n
     <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
       <div class="ui-controlgroup-controls">\n
@@ -311,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16099.57174.3840</string> </value>
+                <value> <string>938.19002.31422.38075</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -329,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413297257.24</float>
+                        <float>1413471560.4</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

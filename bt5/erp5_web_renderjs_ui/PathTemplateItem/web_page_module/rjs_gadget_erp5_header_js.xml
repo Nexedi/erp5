@@ -222,7 +222,7 @@
       var gadget = this,\n
         possible_left_link_list = [\n
           // [\'menu_url\', \'Menu\', \'bars\'],\n
-          [\'selection_url\', \'Select\', \'rotate-left\'],\n
+          [\'selection_url\', \'Back\', \'arrow-left\'],\n
           [\'view_url\', \'View\', \'check\'],\n
           [\'cancel_url\', \'Cancel\', \'times\'],\n
           [\'back_url\', \'Back\', \'arrow-left\']\n
@@ -231,10 +231,10 @@
           [\'panel_action\', \'Menu\', \'bars\', \'panel\']\n
         ],\n
         possible_right_link_list = [\n
-          [\'edit_url\', \'Edit\', \'edit\']\n
+          [\'edit_url\', \'Edit\', \'pencil\']\n
         ],\n
         possible_right_button_list = [\n
-          [\'save_action\', \'Save\', \'check\', \'submit\'],\n
+          [\'save_action\', \'Ok\', \'check\', \'submit\'],\n
           [\'submit_action\', \'Proceed\', \'share\', \'submit\']\n
         ],\n
         possible_sub_header_list = [\n
@@ -261,6 +261,7 @@
         left_button,\n
         right_link,\n
         right_button,\n
+        default_right_text,\n
         default_right_icon = "",\n
         title_link = {title: "ERP5"},\n
         sub_header_list = [],\n
@@ -326,6 +327,7 @@
       } else if (!gadget.stats.submitted) {\n
         default_right_icon = "spinner";\n
       } else if (gadget.stats.modified) {\n
+        default_right_text = "Save";\n
         default_right_icon = "warning";\n
       }\n
       for (i = 0; i < possible_right_link_list.length; i += 1) {\n
@@ -345,7 +347,7 @@
       for (i = 0; i < possible_right_button_list.length; i += 1) {\n
         if (options.hasOwnProperty(possible_right_button_list[i][0])) {\n
           right_button = {\n
-            title: possible_right_button_list[i][1],\n
+            title: default_right_text || possible_right_button_list[i][1],\n
             icon: default_right_icon || possible_right_button_list[i][2],\n
             name: possible_right_button_list[i][3]\n
           };\n
@@ -554,7 +556,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.15847.29908.51046</string> </value>
+                <value> <string>938.20348.39960.27733</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -572,7 +574,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413281825.19</float>
+                        <float>1413553172.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
