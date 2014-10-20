@@ -126,13 +126,15 @@
   <form class="save_form document_form">\n
     <div class="center">\n
       <div class="ui-field-contain">\n
-        <!-- XXX needs a theme set -->\n
+        <!-- XXX needs a theme set for now -->\n
         <div class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-input-has-clear">\n
           <input type="text" data-enhanced="true" value="" name="search" />\n
           <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext">\n
             Submit<input data-enhanced="true" type="submit" value="Submit">\n
           </div>\n
         </div>\n
+        <!-- XXX needs a theme set for now -->\n
+        <a href="#" class="ui-btn ui-btn-c ui-btn-icon-notext ui-icon-filter ui-override-theme">Filters</a>\n
       </div>\n
     </div>\n
   </form>\n
@@ -274,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51294.57239.19217</string> </value>
+                <value> <string>938.24471.49375.27665</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -292,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411563524.79</float>
+                        <float>1413799940.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

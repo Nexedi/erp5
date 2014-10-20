@@ -390,7 +390,7 @@ form label span {\n
 }\n
 \n
 \n
-/* layout form with left|right|center|bottom */\n
+/* layout form with left|right|center|bottom XXX: One big mess to re-factor!!!\n
 .center {\n
   width: 100%;\n
   padding: 0 .5em;\n
@@ -399,6 +399,7 @@ form label span {\n
   box-sizing: border-box;\n
   text-align: left;\n
 }\n
+ */\n
 .left,\n
 .right,\n
 .center,\n
@@ -408,8 +409,8 @@ form label span {\n
 }\n
 .center,\n
 .bottom  {\n
-  display: block;\n
   width: 96%;\n
+  display: block;\n
 }\n
 .left,\n
 .right {\n
@@ -427,12 +428,6 @@ form label span {\n
   float: left;\n
 }\n
 \n
-/* extend textarea and fullwidth element container */\n
-.center .ui-field-contain,\n
-.bottom .ui-field-contain {\n
-  width: 99.4%;\n
-}\n
-\n
 /* stretch textarea */\n
 .left textara,\n
 .right textarea {\n
@@ -441,15 +436,36 @@ form label span {\n
   vertical-align: middle;\n
 }\n
 \n
-/* override border-radius for all inputs to match buttons */\n
-html.ui-mobile head + body .ui-input-text.ui-corner-all {\n
+/* override border-radius for all inputs to match buttons XXX Punting with center */\n
+html.ui-mobile head + body .center .ui-input-text.ui-corner-all {\n
   -webkit-border-radius: .325em;\n
   border-radius: .325em;\n
 }\n
+/* field-containers with add on button have no right corners */\n
+html.ui-mobile head + body .center .ui-field-contain > :first-child:nth-last-child(2) {\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-right-radius: 0;\n
+}\n
+\n
+/* remove left corners and margin from side button */\n
+html.ui-mobile head + body .ui-field-contain > :first-child:nth-last-child(2) ~ .ui-btn {\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
+  -webkit-border-bottom-left-radius: 0;\n
+  border-bottom-left-radius: 0;\n
+  margin: 0;\n
+  border-left-width: 0;\n
+}\n
+\n
+\n
 \n
 /* indent all field-containers so they could hold right hand icons */\n
-html.ui-mobile head + body div.ui-field-contain {\n
-  padding-right: 2.375em;\n
+html.ui-mobile head + body .left div.ui-field-contain,\n
+html.ui-mobile head + body .right div.ui-field-contain,\n
+html.ui-mobile head + body .center div.ui-field-contain {\n
+  padding-right: 2em; /* used to be 2.375em */\n
 }\n
 \n
 /* labels field  (leaving space right side of input for button) */\n
@@ -537,7 +553,7 @@ html.ui-mobile head + body div.ui-field-contain > a.ui-btn {\n
     border-radius: 0 0.325em 0.325em 0;\n
     height: 2.2em;\n
     margin: 0 .4em 0 0;\n
-    width: 2.25em;\n
+    width: 2.2em;\n
     position: absolute;\n
     top: 0;\n
     right: 0;\n
@@ -583,14 +599,12 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     box-sizing: padding-box;\n
   }\n
   \n
-  /* set width (XXX Assuming listbox is always in bottom, otherwise need to edit*/\n
+  /* set width (XXX assume listbox ONLY is in bottom, otherwise padded side */\n
   .left,\n
   .right,\n
-  .bottom {\n
-    width: auto;\n
-  }\n
+  .bottom,\n
   .center {\n
-    width: 96%;\n
+    width: auto;\n
   }\n
 \n
   /* reset min/max width and shrink labels ... */\n
@@ -698,7 +712,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
   /* extend textarea and fullwidth element container */\n
   .center .ui-field-contain {\n
-    width: 94.4%;\n
+    width: auto;\n
   }\n
 }\n
 \n
@@ -730,8 +744,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   /* JQM switches margin to padding on the field-container to show the border,\n
      adjust add-on icon position matching padding-top: .8em */\n
   html.ui-mobile head + body div.ui-field-contain > a.ui-btn {\n
-    /* top: .9em; */\n
-    top: 2.55em;\n
+    top: 22%;\n
   }\n
 \n
   /* <label><input> */\n
@@ -767,7 +780,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   \n
   /* extend textarea and fullwidth element container */\n
   .center .ui-field-contain {\n
-    width: 90.4%;\n
+    width: auto;\n
   }\n
 }\n
 /*\n
@@ -780,12 +793,17 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   border-bottom-left-radius: 0;\n
   -webkit-border-bottom-right-radius: 0;\n
   border-bottom-right-radius: 0;\n
-  \n
+}\n
+.ui-collapsible-set > .ui-last-child .ui-listview > .ui-last-child {\n
+  -webkit-border-bottom-left-radius: inherit;\n
+  border-bottom-left-radius: inherit;\n
+  -webkit-border-bottom-right-radius: inherit;\n
+  border-bottom-right-radius: inherit;\n
 }\n
 \n
 /*\n
    -------------------------------------------------------------------------\n
-   ------------------------------ Table ------------------------------------\n
+   ------------------------------ Table --------t----------------------------\n
    -------------------------------------------------------------------------\n
 */\n
 \n
@@ -828,11 +846,6 @@ html body .ui-table-header .ui-title {\n
   margin: 0 30%\n
 }\n
 \n
-/* max width for buttons XXX: assumes single buttons in controlgroup */\n
-html body div.ui-table-header div.ui-controlgroup {\n
-  max-width: none;\n
-  min-width: 0;\n
-}\n
 \n
 /* radius */\n
 .ui-table-inset {\n
@@ -1061,7 +1074,7 @@ html .ui-table-header:before {\n
 }\n
 \n
 /* convert to listview look */\n
-@media (max-width: 48em) {\n
+@media (max-width: 62em) {\n
 \n
   /* show or hide table header/footer */\n
   html table thead,\n
@@ -1081,6 +1094,15 @@ html .ui-table-header:before {\n
     width: 1px;\n
     overflow: hidden;\n
     clip: rect(1px,1px,1px,1px);\n
+  }\n
+  \n
+  /* remove bottom border */\n
+  html div.ui-table-header {\n
+    border-bottom-width: 0;\n
+  }\n
+  /* overwrite JQM icon positioning */\n
+  html .ui-table-header .ui-controlgroup-controls .ui-btn:after {\n
+    left: .6em;\n
   }\n
 \n
   /* fix pagination width */\n
@@ -1220,6 +1242,8 @@ html .ui-table-header:before {\n
     padding: 0;\n
     pointer-events: none;\n
     line-height: 1em;\n
+    max-height: 1.05em;\n
+    overflow: hidden;\n
   }\n
   \n
   /* pad non-empty cells just a little */\n
@@ -1385,12 +1409,6 @@ html body div.ui-select div span {\n
    -------------------------------------------------------------------------\n
    ------------------------------- Panel -----------------------------------\n
    -------------------------------------------------------------------------\n
-*/\n
-/* unset margin inside panel if panel wraps content in .ui-panel-inner\n
-html .ui-panel .ui-panel-inner .ui-header,\n
-html .ui-panel .ui-panel-inner .ui-content {\n
-  margin: -1em;\n
-}\n
 */\n
 /* reposition panel content section */\n
 html .ui-panel .ui-header ~ .ui-content {\n
@@ -1925,16 +1943,19 @@ html .ui-footer .ui-title {\n
   margin: 0 45px;\n
 }\n
 \n
-/* max width for buttons */\n
-.ui-header .ui-controlgroup {\n
+/* max width for buttons */ \n
+.ui-header .ui-controlgroup,\n
+.ui-panel .ui-header .ui-controlgroup {\n
   max-width: 45px;\n
   min-width: 45px;\n
 }\n
+\n
 \n
 /* logo dimensions, left/right padding needed, because img does not fill space*/\n
 html .ui-header img.ui-title {\n
   max-height: 24px;\n
   padding: 0.5em 1.7em;\n
+  margin: 0 30%;\n
 }\n
 \n
 /* fix icon size on title (depends on font size of title) XXX: move up!*/\n
@@ -2099,16 +2120,25 @@ html .ui-header .ui-btn {\n
 /* reset on larger screens */\n
 @media (min-width: 48em) {\n
   \n
-  /* hard-lock margin */\n
+  /* hard-lock margin XXX Thierry: this is to expand title to edge of button */\n
   html .ui-header .ui-title,\n
   html .ui-footer .ui-title {\n
     margin: 0 8%;\n
+  }\n
+  html .ui-header img.ui-title {\n
+    margin: 0 30%;\n
   }\n
 \n
   /* max width for buttons XXX: assumes single buttons in controlgroup */\n
   .ui-header .ui-controlgroup {\n
     max-width: 8%;\n
     min-width: 8%;\n
+  }\n
+\n
+  /* unset for everywhere else a header is used.*/\n
+  html body div.ui-table-header div.ui-controlgroup {\n
+    max-width: none;\n
+    min-width: 0;\n
   }\n
 \n
 \n
@@ -2203,8 +2233,8 @@ html .ui-bar-a label,\n
 html .ui-btn-a label,\n
 html .ui-body-a thead th,\n
 html .ui-bar-a thead th,\n
-html body div.ui-bar-a.ui-table-header a.ui-btn,\n
-html body div.ui-bar-a.ui-table-header .ui-title {\n
+html.ui-mobile .ui-bar-a .ui-override-theme.ui-btn,\n
+html.ui-mobile .ui-bar-a .ui-override-theme.ui-title {\n
   color: #085078;\n
 }\n
 /* Custom Icon Color and background opacity */\n
@@ -2429,8 +2459,8 @@ html .ui-bar-c label,\n
 html .ui-btn-c label,\n
 html .ui-body-c thead th,\n
 html .ui-bar-c thead th,\n
-html body div.ui-bar-c.ui-table-header a.ui-btn,\n
-html body div.ui-bar-c.ui-table-header .ui-title {\n
+html.ui-mobile .ui-bar-c .ui-override-theme.ui-btn,\n
+html.ui-mobile .ui-bar-c .ui-override-theme.ui-title {\n
   color: #777777;\n
 }\n
 /* Custom Icon Color and background opacity */\n
@@ -2619,8 +2649,8 @@ html .ui-bar-d label,\n
 html .ui-btn-d label, \n
 html .ui-body-d thead th,\n
 html .ui-bar-d thead th,\n
-html body div.ui-bar-d.ui-table-header a.ui-btn,\n
-html body div.ui-bar-d.ui-table-header .ui-title {\n
+html.ui-mobile .ui-bar-d .ui-override-theme.ui-btn,\n
+html.ui-mobile .ui-bar-d .ui-override-theme.ui-title {\n
   color: #444444;\n
 }\n
 /* Custom Icon Color and background opacity */\n
@@ -4412,7 +4442,7 @@ html .ui-btn[class*="ui-icon-"]:after,\n
 html .ui-btn[class*="ui-icon-"]:after {\n
   font-size: 1.25em;\n
 }\n
-@media (max-width: 30em) {\n
+@media (max-width: 32em) {\n
   html .ui-btn[class*="ui-icon-"]:after,\n
   html .ui-btn[class*="ui-icon-"]:after {\n
     font-size: 1.5em;\n
@@ -4575,7 +4605,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.20529.55980.2884</string> </value>
+                <value> <string>938.24623.58665.31163</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4593,7 +4623,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413562906.22</float>
+                        <float>1413808329.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
