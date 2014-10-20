@@ -125,7 +125,7 @@
     <!-- XXX must set theme here! -->\n
     <script id="table-template" type="text/x-handlebars-template">\n
       <div data-role="collapsible">\n
-        <h3>{{definition_title}}</h3>\n
+        <h3 class="ui-bar-inherit">{{definition_title}}</h3>\n
         <ul data-role="listview" data-theme="c" class="document-listview">\n
           <!--<li data-role="list-divider"><h1>{{definition_title}}</h1></li>-->\n
           {{#each documentlist}}\n
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16179.61167.15104</string> </value>
+                <value> <string>938.17159.11576.22732</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413360430.58</float>
+                        <float>1413363058.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
