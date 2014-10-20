@@ -126,6 +126,19 @@
 \n
     <!-- XXX must set a theme here -->\n
     <section class="document_table">\n
+      <div class="ui-table-header ui-header ui-bar-c ui-corner-all">\n
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
+          <div class="ui-controlgroup-controls">\n
+            <a class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child" href="#">Hide Rows</a>\n
+          </div>\n
+        </div>\n
+        <h1 class="ui-title">0 items selected</h1>\n
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+          <div class="ui-controlgroup-controls">\n
+            <a class="ui-responsive ui-btn ui-btn-icon-left ui-icon-sort-amount-desc ui-last-child" href="#">Apply Filter</a>\n
+          </div>\n
+        </div>\n
+      </div>\n
       <table class="ui-responsive ui-body-c ui-table-inset">\n
         <thead class="ui-bar-inherit"></thead>\n
         <tfoot class="ui-bar-inherit"></tfoot>\n
@@ -270,7 +283,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51306.4912.34986</string> </value>
+                <value> <string>938.20466.7800.9574</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +301,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411576737.72</float>
+                        <float>1413558987.65</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

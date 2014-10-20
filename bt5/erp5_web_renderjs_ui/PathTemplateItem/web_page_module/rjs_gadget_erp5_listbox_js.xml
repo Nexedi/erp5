@@ -113,6 +113,7 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {};\n
+      \n
     })\n
 \n
     // Assign the element to a variable\n
@@ -127,7 +128,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("whoWantToDisplayThisFromQuery", "whoWantToDisplayThisFromQuery")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
@@ -198,7 +199,7 @@
 \n
         for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
-            gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
+            gadget.whoWantToDisplayThisFromQuery(result.data.rows[i].id)\n
           );\n
         }\n
         return RSVP.all(promise_list);\n
@@ -266,14 +267,14 @@
           len;\n
 \n
         th.setAttribute("colspan", field_json.column_list.length);\n
-\n
-        paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all";\n
+        // NOTE: Romain: paging menu with 3+ buttons should have another class name (like ui-paging-grid)\n
+        paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all ui-paging-menu";\n
         paging_wrap.className = "ui-controlgroup-controls";\n
 \n
-        paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left ui-first-child";\n
+        paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
         paging_prev.textContent = "Previous";\n
         paging_prev.href = url_list[0];\n
-        paging_info.className = "ui-btn ui-disabled custom-readonly";\n
+        paging_info.className = "ui-btn ui-disabled";\n
         if ((begin_from === 0) && (counter === 0)) {\n
           paging_info.textContent = "No records";\n
         } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
@@ -282,7 +283,7 @@
           paging_info.textContent = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " to " + (((begin_from + lines) / lines - 1) * lines + counter);\n
         }\n
         // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
-        paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right ui-last-child";\n
+        paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
         paging_next.textContent = "Next";\n
         paging_next.href = url_list[1];\n
 \n
@@ -435,7 +436,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -449,7 +450,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.5956.58558.46011</string> </value>
+                <value> <string>938.20414.6642.36608</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -467,7 +468,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412689886.0</float>
+                        <float>1413558513.8</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
