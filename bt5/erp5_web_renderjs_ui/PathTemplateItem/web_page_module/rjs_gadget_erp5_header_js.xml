@@ -234,8 +234,8 @@
           [\'edit_url\', \'Edit\', \'pencil\']\n
         ],\n
         possible_right_button_list = [\n
-          [\'save_action\', \'Ok\', \'check\', \'submit\'],\n
-          [\'submit_action\', \'Proceed\', \'share\', \'submit\']\n
+          [\'save_action\', \'Save\', \'check\', \'submit\'],\n
+          [\'submit_action\', \'Proceed\', \'check\', \'submit\']\n
         ],\n
         possible_sub_header_list = [\n
           [\'tab_url\', \'Tabs\', \'eye\'],\n
@@ -556,7 +556,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.20348.39960.27733</string> </value>
+                <value> <string>938.24670.17693.28962</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -574,7 +574,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413553172.1</float>
+                        <float>1413879432.64</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
