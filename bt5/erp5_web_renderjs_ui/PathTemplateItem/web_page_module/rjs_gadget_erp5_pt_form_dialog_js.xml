@@ -164,6 +164,9 @@
         .push(function (erp5_form) {\n
           var title = options.form_definition.title,\n
             i,\n
+            icon,\n
+            span = document.createElement("span"),\n
+            selector = form_gadget.__element.querySelector("h3"),\n
             view_list = erp5_document._links.action_workflow || [];\n
 \n
           for (i = 0; i < view_list.length; i += 1) {\n
@@ -171,8 +174,21 @@
               title = view_list[i].title;\n
             }\n
           }\n
-          form_gadget.__element.querySelector("h1").textContent = title;\n
+          \n
+          // XXX hardcoded...\n
+          switch (title) {\n
+            case "Create User": icon = " ui-icon-user"; break;\n
+            case "Create Document": icon = " ui-icon-file-o"; break;\n
+            case "Change State": icon = " ui-icon-share-alt"; break;\n
+            case "Submit": icon = " ui-icon-check"; break;\n
+            default: icon = " ui-icon-random"; break;\n
+          }\n
+          span.className = "ui-icon ui-icon-custom" + icon;\n
+          span.textContent = "\\u00A0";\n
+          selector.appendChild(span);\n
+          selector.appendChild(document.createTextNode(title));\n
 \n
+          // <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>\n
           form_options.erp5_document = options.erp5_document;\n
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
@@ -377,7 +393,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -391,7 +407,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.65475.63762.40123</string> </value>
+                <value> <string>938.25845.4177.6041</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -409,7 +425,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412328524.22</float>
+                        <float>1413881685.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -124,7 +124,10 @@
   </head>\n
   <body>\n
 \n
-    <h1></h1>\n
+    <section class="ui-content-header-plain">\n
+      <h3 class="ui-content-title ui-body-c"></h3>\n
+    </section>\n
+\n
     <!-- XXX action, method, fieldset -->\n
     <form class="dialog_form">\n
       <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
@@ -258,7 +261,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -272,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54178.32965.53043</string> </value>
+                <value> <string>937.64343.1806.54016</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -290,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412240451.98</float>
+                        <float>1413880520.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
