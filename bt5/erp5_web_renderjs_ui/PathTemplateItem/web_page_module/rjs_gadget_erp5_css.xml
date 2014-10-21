@@ -236,11 +236,11 @@ html body .ui-page-header-fixed {\n
 .ui-content-section {\n
   border-style: solid;\n
   border-width: 1px;\n
-  max-width: 85%;\n
+  /* max-width: 85%; */\n
   margin: 0 auto;\n
 }\n
 .ui-content-header-plain {\n
-  max-width: 85%;\n
+  /*  max-width: 85%; */\n
   margin: 0 auto;\n
 }\n
 \n
@@ -1410,15 +1410,18 @@ html body div.ui-select div span {\n
    ------------------------------- Panel -----------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
-/* reposition panel content section */\n
-html .ui-panel .ui-header ~ .ui-content {\n
-  margin-top: 1em;\n
-  padding-top: .5em;\n
-}\n
+\n
 /* position panel content elements */\n
 html .ui-panel .ui-content > .ui-listview,\n
 html .ui-panel .ui-content > form {\n
-  margin: auto -1em;\n
+  margin: 1em -1em auto;\n
+}\n
+html .ui-panel .ui-content .center,\n
+html .ui-panel .ui-content .bottom {\n
+  padding: 0;\n
+}\n
+html .ui-panel .ui-content .ui-field-contain {\n
+  margin: 0;\n
 }\n
 \n
 /* fix font-size inside panel header/footer buttons */\n
@@ -4442,10 +4445,20 @@ html .ui-btn[class*="ui-icon-"]:after,\n
 html .ui-btn[class*="ui-icon-"]:after {\n
   font-size: 1.25em;\n
 }\n
+/* panel get less XXX: keep? */\n
+html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after,\n
+html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
+  font-size: 1em;\n
+}\n
+\n
 @media (max-width: 32em) {\n
   html .ui-btn[class*="ui-icon-"]:after,\n
   html .ui-btn[class*="ui-icon-"]:after {\n
     font-size: 1.5em;\n
+  }\n
+  html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after,\n
+  html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
+    font-size: 1.25em;\n
   }\n
 }\n
 \n
@@ -4605,7 +4618,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24623.58665.31163</string> </value>
+                <value> <string>938.24818.64644.31590</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4623,7 +4636,7 @@ html .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413808329.54</float>
+                        <float>1413820101.16</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
