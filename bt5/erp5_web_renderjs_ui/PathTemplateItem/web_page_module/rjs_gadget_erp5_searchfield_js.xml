@@ -104,7 +104,17 @@
 (function (window, rJS, RSVP, loopEventListener) {\n
   "use strict";\n
 \n
-  rJS(window)\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+    source = gadget_klass.__template_element\n
+                         .getElementById("panel-template")\n
+                         .innerHTML,\n
+    panel_template = Handlebars.compile(source);\n
+\n
+  gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
@@ -126,8 +136,24 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod(\'render\', function (options) {\n
-      this.props.element.querySelector("input").value = options.extended_search || "";\n
+    .declareMethod(\'render\', function (option_dict) {\n
+      var append_class,\n
+        append_attribute,\n
+        placeholder = "",\n
+        is_disabled = option_dict.disabled,\n
+        search_gadget = this;\n
+\n
+      if (is_disabled) {\n
+        append_class = " ui-disabled";\n
+        append_attribute = \' disabled="disabled\';\n
+      }\n
+\n
+      search_gadget.props.element.innerHTML = panel_template({\n
+        widget_value: option_dict.extended_search || placeholder,\n
+        widget_theme: option_dict.theme || "c",\n
+        widget_status_attribute: append_attribute || placeholder,\n
+        widget_status_class: append_class || placeholder\n
+      });\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -286,7 +312,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -300,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42848.57946.4044</string> </value>
+                <value> <string>938.24816.20339.61866</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411056079.35</float>
+                        <float>1413819887.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
