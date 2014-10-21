@@ -122,13 +122,21 @@
     <script src="gadget_global.js" type="text/javascript"></script>\n
     <script src="gadget_erp5_page_action.js" type="text/javascript"></script>\n
 \n
+    <!-- XXX need theme here currently -->\n
     <script id="table-template" type="text/x-handlebars-template">\n
+      <section class="ui-content-header-plain">\n
+        <h3 class="ui-content-title ui-body-c">\n
+          <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>\n
+          {{definition_title}}\n
+        </h3>\n
+      </section>\n
+\n
       <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
-        <li data-role="list-divider"><h1>{{definition_title}}</h1></li>\n
         {{#each documentlist}}\n
           <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
         {{/each}}\n
       </ul>\n
+\n
     </script>\n
 \n
   </head>\n
@@ -257,7 +265,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -271,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.54148.37538.12919</string> </value>
+                <value> <string>938.24736.3025.60689</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411734053.92</float>
+                        <float>1413815082.99</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
