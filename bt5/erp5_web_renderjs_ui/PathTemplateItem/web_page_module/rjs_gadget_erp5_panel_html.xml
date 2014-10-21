@@ -137,12 +137,12 @@
     </div>\n
     <div class="ui-content">\n
       <ul data-role="listview">\n
-        <li><a href="{{module_href}}" class="ui-btn">Modules</a></li>\n
-        <li><a class="ui-btn">Worklists</a></li>\n
-        <li><a href="{{history_href}}" class="ui-btn">History</a></li>\n
-        <li><a class="ui-btn">Preferences</a></li>\n
-        <li><a class="ui-btn">Language</a></li>\n
-        <li><a class="ui-btn">Logout</a></li>\n
+        <li><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece">Modules</a></li>\n
+        <li><a class="ui-btn ui-btn-icon-left ui-icon-clipboard">Worklists</a></li>\n
+        <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history">History</a></li>\n
+        <li><a class="ui-btn ui-btn-icon-left ui-icon-gear">Preferences</a></li>\n
+        <li><a class="ui-btn ui-btn-icon-left ui-icon-comment-o">Language</a></li>\n
+        <li><a class="ui-btn ui-btn-icon-left ui-icon-power-off">Logout</a></li>\n
       </ul>\n
     </div>\n
     </script>\n
@@ -293,7 +293,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.17417.34725.59835</string> </value>
+                <value> <string>938.24764.47660.35054</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413798804.43</float>
+                        <float>1413816767.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

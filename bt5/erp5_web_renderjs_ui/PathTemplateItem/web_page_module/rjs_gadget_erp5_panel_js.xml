@@ -166,6 +166,36 @@
       this.props.jelement.panel("toggle");\n
     })\n
     \n
+    .declareMethod(\'render\', function (option_dict) {\n
+      var panel_gadget = this;\n
+\n
+      if (panel_gadget.props.set_search === true) {\n
+        return panel_gadget;\n
+      }\n
+\n
+      return new RSVP.Queue()\n
+        .push(function() {\n
+          return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {"scope": "search"});\n
+        })\n
+        .push(function (my_search_gadget) {\n
+          var selector, parent_node, search_option_dict = {};\n
+\n
+          panel_gadget.props.set_search = true;\n
+\n
+          // XXX disable for now\n
+          search_option_dict.disabled = true;\n
+          search_option_dict.theme = "d";\n
+          search_option_dict.extended_search = "";\n
+          parent_node = panel_gadget.__element.querySelector(".ui-content");\n
+\n
+          parent_node.insertBefore(my_search_gadget.__element, parent_node.firstChild);\n
+          return my_search_gadget.render(search_option_dict);\n
+        })\n
+        .push(function () {\n
+          return panel_gadget;\n
+        });\n
+    })\n
+    \n
     /////////////////////////////////////////////////////////////////\n
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
@@ -320,7 +350,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.15803.15252.14882</string> </value>
+                <value> <string>938.25789.47838.52889</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -338,7 +368,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413280356.13</float>
+                        <float>1413879105.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
