@@ -189,12 +189,14 @@
 \n
           gadget.props.element.innerHTML = table_template({\n
             definition_title: "Views",\n
+            definition_icon: "eye",\n
             documentlist: [{\n
               title: view_list[0].title,\n
               link: all_result[all_result.length - 1]\n
             }]\n
           }) + table_template({\n
             definition_title: "Editables",\n
+            definition_icon: "edit",\n
             documentlist: tab_list\n
           });\n
 \n
@@ -328,7 +330,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -342,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.65458.5148.27426</string> </value>
+                <value> <string>938.218.49333.26675</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +362,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412344005.15</float>
+                        <float>1413882038.33</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
