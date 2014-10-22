@@ -108,8 +108,8 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     at_date = DateTime("2014/01/01")
     result = callReport()
     # Initially we should have only one line for an empty total
-    self.assertEqual((["Worker", "Total"],
-                      [["Total", None]]),
+    self.assertEqual((["Worker", "Undefined", "Total"],
+                      [["Total", None, None]]),
                       getDataResult(result))
 
     # Then create one task with no item, see if we it is displayed in the report
@@ -119,7 +119,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           source='person_module/Person_1',
           )
     result = callReport()
-    self.assertEqual((["Worker", "undefined", "Total"],
+    self.assertEqual((["Worker", "Undefined", "Total"],
                        [["Person_1", 3, 3],
                        ["Total", 3, 3]]),
                       getDataResult(result))
@@ -132,7 +132,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           line_aggregate_relative_url='research_item_module/Item_1',
           )
     result = callReport()
-    self.assertEqual((["Worker",   "undefined", "Item_1", "Total"],
+    self.assertEqual((["Worker",   "Undefined", "Item_1", "Total"],
                        [["Person_1",     3,        None,        3],
                         ["Person_2",  None,         5.2,      5.2],
                         ["Total",        3,         5.2,      8.2]]),
@@ -158,7 +158,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
           line_aggregate_relative_url='research_item_module/Item_2',
           )
     result = callReport()
-    self.assertEqual((["Worker",   "undefined", "Item_1", "Item_2", "Total"],
+    self.assertEqual((["Worker",   "Undefined", "Item_1", "Item_2", "Total"],
                        [["Person_1",     3,        None,      1.7,     4.7],
                         ["Person_2",  None,         7.6,      0.9,     8.5],
                         ["Total",        3,         7.6,      2.6,    13.2]]),
