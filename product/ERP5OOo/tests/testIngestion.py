@@ -187,6 +187,12 @@ class TestIngestion(ERP5TypeTestCase):
                           ,{'path' : 'group/anybody'
                            ,'title': 'Anybody'
                            }
+                          ,{'path' : 'group/anybody/a1'
+                           ,'title': 'Anybody 1'
+                           }
+                          ,{'path' : 'group/anybody/a2'
+                           ,'title': 'Anybody 2'
+                           }
                           ,{'path' : 'publication_section/cop'
                            ,'title': 'COPs'
                            }
@@ -1464,9 +1470,36 @@ class TestIngestion(ERP5TypeTestCase):
     document.discoverMetadata(document.getFilename(), 'contributor1')
     self.tic()
     self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
-    self.assertEqual('musician/wind/saxophone', document.getFunction())
     self.assertEqual('anybody', document.getGroup())
-    self.assertEqual('arctic/spitsbergen', document.getSite())
+    self.assertEqual(None, document.getFunction())
+    self.assertEqual(None, document.getSite())
+
+  def test_TestMetadataDiscoveryFromUserLoginHigherGroup(self):
+    portal = self.portal
+    contribution_tool = getToolByName(portal, 'portal_contributions')
+
+    user = self.createUser(reference='contributor3')
+    self.createUserAssignment(user, dict(group='anybody/a1',))
+    self.createUserAssignment(user, dict(group='anybody/a2',))
+    self.createUserAssignment(user, dict(group='anybody',))
+
+    other_user = self.createUser(reference='contributor2')
+    self.createUserAssignment(other_user, dict(group='anybody/a1',))
+    self.createUserAssignment(other_user, dict(group='anybody/a2',))
+
+    portal.document_module.manage_setLocalRoles('contributor2', ['Assignor',])
+    self.tic()
+    file_object = makeFileUpload('TEST-en-002.doc')
+    document = contribution_tool.newContent(file=file_object)
+
+    # We only consider the higher group of assignments
+    document.discoverMetadata(document.getFilename(), user.getReference())
+    self.tic()
+    self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
+    self.assertEqual(['anybody'], document.getGroupList())
+
+    document.discoverMetadata(document.getFilename(), other_user.getReference())
+    self.assertEqual(['anybody/a1', 'anybody/a2'], document.getGroupList())
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase1(self):
     """How to configure meta data discovery so that each time a file

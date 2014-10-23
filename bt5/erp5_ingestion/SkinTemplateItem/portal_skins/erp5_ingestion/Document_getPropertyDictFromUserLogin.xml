@@ -56,11 +56,22 @@ User would be usually the current user, but sometimes the name has to be given e
 if e.g. the doc is contributed by email, and the script is run by zope user.\n
 """\n
 assignment_dict = context.ERP5Site_getPersonAssignmentDict(user_name=user_name)\n
+group_list = assignment_dict[\'group_list\']\n
 \n
-# XXX: make list of properties configurable through preferences\n
-return {\'group_list\': assignment_dict[\'group_list\'],\n
-        \'site_list\': assignment_dict[\'site_list\'],\n
-        \'function_list\': assignment_dict[\'function_list\']}\n
+if group_list:\n
+  group_level_dict = {}\n
+  for group in group_list:\n
+    group_level = len(group.split("/"))\n
+    group_level_dict[group] = group_level\n
+  \n
+  #Get the highest levels groups of the assignments\n
+  ##if group_list = [\'g1\', \'g1/g1.1\', \'g1/g1.2\'] returns [\'g1\']\n
+  ##if group_list = [\'g1/g1.1\', \'g1/g1.2\'] returns [\'g1/g1.1\', \'g1/g1.2\']\n
+  highest_level_group_value = min(group_level_dict.itervalues())\n
+  highest_level_group_list = [k for k in group_level_dict if group_level_dict[k] == highest_level_group_value]\n
+  return {\'group_list\': highest_level_group_list}\n
+\n
+return {}\n
 </string> </value>
         </item>
         <item>
