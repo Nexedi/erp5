@@ -96,7 +96,7 @@ return history_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current=1, *args, **kw</string> </value>
+            <value> <string>current=0, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
