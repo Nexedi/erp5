@@ -68,8 +68,9 @@ for path in path_list:\n
   try:\n
     tmp_dict = {}\n
     for property in property_list:\n
-      if property == \'SearchableText\':\n
-        value = obj.SearchableText()\n
+      getter = getattr(obj, property, None)\n
+      if getter is not None and callable(getter):\n
+        value = getter()\n
       else:\n
         value = getattr(obj, \'get%s\' % UpperCase(property))()\n
       tmp_dict[property] = value\n

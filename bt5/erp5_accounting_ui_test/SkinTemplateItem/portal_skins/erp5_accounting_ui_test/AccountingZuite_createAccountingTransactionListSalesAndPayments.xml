@@ -53,6 +53,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
 \n
 # params\n
 section_title = \'My Organisation\'\n
@@ -80,7 +81,7 @@ if 1:\n
 def getAccountByTitle(title):\n
   account_list = [x.getObject().getRelativeUrl() for x in\n
     portal.portal_catalog(portal_type=\'Account\',\n
-                          title=title)]\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
   assert len(account_list) == 1, \\\n
         \'%d account with title "%s"\' % (len(account_list), title)\n
   return account_list[0]\n
@@ -88,7 +89,7 @@ def getAccountByTitle(title):\n
 def getOrganisationByTitle(title):\n
   document_list = [x.getObject().getRelativeUrl() for x in\n
     portal.portal_catalog(portal_type=\'Organisation\',\n
-                          title=title)]\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
   assert len(document_list) == 1, \\\n
         \'%d organisation with title "%s"\' % (len(document_list), title)\n
   return document_list[0]\n
@@ -106,7 +107,7 @@ euro_resource = getCurrencyByReference(\'EUR\')\n
 def getBankAccountByTitle(title):\n
   document_list = [x.getObject().getRelativeUrl() for x in\n
     portal.portal_catalog(portal_type=\'Bank Account\',\n
-                          title=title)]\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
   assert len(document_list) == 1, \\\n
       \'%d Bank Account with title "%s"\' % (len(document_list), title)\n
   return document_list[0]\n

@@ -1,0 +1,8 @@
+<key_list>
+ <key>SearchableText | MroongaBooleanFullTextKey</key>
+ <key>catalog_full_text.description | MroongaBooleanFullTextKey</key>
+ <key>catalog_full_text.title | MroongaBooleanFullTextKey</key>
+ <key>description | MroongaBooleanFullTextKey</key>
+ <key>full_text.SearchableText | MroongaBooleanFullTextKey</key>
+ <key>title | MroongaBooleanFullTextKey</key>
+</key_list>

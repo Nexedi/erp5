@@ -334,6 +334,9 @@ class SQLExpression(object):
           if can_merge_sql_expression and alias in mergeable_set:
             # Custom conflict resolution
             column = '%s + %s' % (existing_value, column)
+          elif alias.endswith('__score__'):
+            # We only support the first full text score in select dict.
+            pass
           else:
             message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
             if DEBUG:

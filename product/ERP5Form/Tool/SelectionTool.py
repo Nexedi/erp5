@@ -1271,7 +1271,8 @@ class SelectionTool( BaseTool, SimpleItem ):
           if len(field_value):
             sql_catalog = self.portal_catalog.getSQLCatalog()
             field_value = sql_catalog.buildQuery({
-              catalog_index: field_value.splitlines()
+              catalog_index:{'query':field_value.splitlines(),
+                             'key':'ExactMatch',},
             }).asSearchTextExpression(sql_catalog, column='')
 
           REQUEST.form[field_key] = field_value

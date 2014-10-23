@@ -30,6 +30,7 @@ import random
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from zLOG import LOG
 from xmlrpclib import Binary
 
@@ -91,7 +92,7 @@ class TaskDistributionTool(BaseTool):
     def createTestResultLineList(test_result, test_name_list):
       duration_list = []
       previous_test_result_list = portal.test_result_module.searchFolder(
-             title='="%s"' % test_result.getTitle(),
+             title=SimpleQuery(comparison_operator='=', title=test_result.getTitle()),
              sort_on=[('creation_date','descending')],
              simulation_state=('stopped', 'public_stopped'),
              limit=1)
@@ -126,7 +127,7 @@ class TaskDistributionTool(BaseTool):
       int_index, reference = revision
     result_list = portal.test_result_module.searchFolder(
                          portal_type="Test Result",
-                         title='="%s"' % test_title,
+                         title=SimpleQuery(comparison_operator='=', title=test_title),
                          sort_on=(("creation_date","descending"),),
                          limit=1)
     if result_list:
@@ -162,7 +163,7 @@ class TaskDistributionTool(BaseTool):
       test_result._setIntIndex(int_index)
     if project_title is not None:
       project_list = portal.portal_catalog(portal_type='Project',
-                                           title='="%s"' % project_title)
+                                           title=SimpleQuery(comparison_operator='=', title=project_title))
       if len(project_list) != 1:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))

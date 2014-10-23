@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5.Document.ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from zLOG import LOG,ERROR
 
 from AccessControl import ClassSecurityInfo
@@ -110,7 +111,10 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
 
     tag = "%s_%s" % (self.getRelativeUrl(), title)
     if portal.portal_activities.countMessageWithTag(tag) == 0:
-      test_node_list = test_node_module.searchFolder(portal_type="Test Node",title=title)
+      test_node_list = test_node_module.searchFolder(
+        portal_type="Test Node",
+        title=SimpleQuery(comparison_operator='=', title=title),
+      )
       assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
       test_node = None
       if len(test_node_list) == 1:
@@ -129,7 +133,8 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     isMasterTestnode : return True if the node given in parameter exists and is a validated master
     """
     test_node_module = self._getTestNodeModule()
-    test_node_master = [ node for node in test_node_module.searchFolder(portal_type="Test Node", title=title,
+    test_node_master = [ node for node in test_node_module.searchFolder(portal_type="Test Node",
+                                      title=SimpleQuery(comparison_operator='=', title=title),
                                       specialise_uid=self.getUid(),
                                       validation_state="validated") if node.getMaster() == 1 ]
     if len(test_node_master) == 1:

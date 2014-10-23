@@ -28,29 +28,30 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
+from DefaultKey import DefaultKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
-from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
+from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
 import re
 
 FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
-class FullTextKey(SearchKey):
+class FullTextKey(DefaultKey):
   """
     This SearchKey generates SQL fulltext comparisons.
   """
   default_comparison_operator = 'match'
   get_operator_from_value = False
 
-  def parseSearchText(self, value, is_column):
-    return parse(value, is_column)
-
   def dequoteParsedText(self):
     return False
 
   def _renderValueAsSearchText(self, value, operator):
+    # XXX:
+    # return value for 'a b' here is '(a b), but keyword search with
+    # '(a b)' means fulltext search with (a OR b), that is different
+    # from fulltext='a b' that means fulltext search with (a AND b).
     return '(%s)' % (value, )
 
   def _processSearchValue(self, search_value, logical_operator,
@@ -61,8 +62,8 @@ class FullTextKey(SearchKey):
       mode, make the operator for that value be 'match_boolean'.
     """
     operator_value_dict, logical_operator, parsed = \
-      SearchKey._processSearchValue(self, search_value, logical_operator,
-                                    comparison_operator)
+      super(FullTextKey, self)._processSearchValue(
+        search_value, logical_operator, comparison_operator)
     new_value_list = []
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
@@ -77,6 +78,13 @@ class FullTextKey(SearchKey):
         operator_value_dict['match_boolean'].extend(new_value_list)
       else:
         operator_value_dict['match'] = new_value_list
+    # Dequote for non full-text queries.
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      if comparison_operator not in ('match', 'match_boolean'):
+        operator_value_dict[comparison_operator] = [
+          isinstance(value, basestring) and dequote(value) or value
+          for value in value_list
+        ]
     return operator_value_dict, logical_operator, parsed
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
@@ -88,10 +96,20 @@ class FullTextKey(SearchKey):
     column = self.getColumn()
     query_list = []
     append = query_list.append
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator in ('match', 'match_boolean'):
+      value_list = operator_value_dict.pop(comparison_operator, [])
+      if not value_list:
+        continue
+      # XXX:
+      # In MySQL FTS, no operator implies OR so that we should not merge
+      # AND queries into one...
       append(SimpleQuery(search_key=self,
                          comparison_operator=comparison_operator,
                          group=group, **{column: ' '.join(value_list)}))
+    # Other comparison operators are handled by the super class.
+    if operator_value_dict:
+      query_list += super(FullTextKey, self)._buildQuery(
+        operator_value_dict, logical_operator, parsed, group)
     return query_list
 
 verifyClass(ISearchKey, FullTextKey)

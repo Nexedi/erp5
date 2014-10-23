@@ -1,4 +1,4 @@
-source_organisation_title | category,catalog/title/z_related_source_organisation
+source_organisation_title | category,catalog_full_text/title/z_related_source_organisation
 event_causality_ticket_uid | category,catalog,category,catalog/uid/z_related_event_causality_ticket
 related_source_or_destination | category,catalog,catalog/uid/z_related_source_or_destination
 related_source_section_or_destination_section | category,catalog,catalog/uid/z_related_source_section_or_destination_section
