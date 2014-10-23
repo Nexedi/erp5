@@ -6,6 +6,7 @@ Purchase Invoice Transaction | confirmed_invoice_view
 Purchase Invoice Transaction | invoice_view
 Purchase Invoice Transaction | jump_related_order
 Purchase Invoice Transaction | jump_to_related_purchase_packing_list
+Purchase Invoice Transaction | payment_condition
 Purchase Invoice Transaction | view_trade_model
 Purchase Order | jump_related_invoice
 Sale Invoice Transaction | apply_trade_condition
@@ -14,5 +15,6 @@ Sale Invoice Transaction | invoice_print
 Sale Invoice Transaction | invoice_view
 Sale Invoice Transaction | jump_related_order
 Sale Invoice Transaction | jump_to_related_sale_packing_list
+Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | view_trade_model
 Sale Order | jump_related_invoice
