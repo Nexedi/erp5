@@ -2467,7 +2467,84 @@ class TestTrackingList(InventoryAPITestCase):
       self.assertEqual([], tracking_node_uid_list,
         "%s != %s (state:%s)" % ([], tracking_node_uid_list, state))
 
-    # TODO: missing tests for input=1 and output=1
+  def _createScenarioToTestTrackingListMethod(self,
+    state_a="delivered", state_b="delivered", state_c="delivered"):
+    """
+      Scenario:
+        Item 1 => A -> B -> C
+        Item 2 => A -> B
+    """
+    now = DateTime()
+    item_a = self.getItemModule().newContent(title="Item 1")
+    item_b = self.getItemModule().newContent(title="Item 2")
+    node_a = self._makeOrganisation(title='Node A')
+    node_b = self._makeOrganisation(title='Node B')
+    node_c = self._makeOrganisation(title='Node C')
+    movement_a = self._makeMovement(source_value=node_a,
+      destination_value=node_b, resource=self.resource,
+      quantity=1, aggregate_value=item_a, start_date=now,
+      simulation_state=state_a)
+    movement_b = self._makeMovement(source_value=node_b,
+      destination_value=node_c, resource=self.resource,
+      quantity=1, aggregate_value=item_a, start_date=now+1,
+      simulation_state=state_b)
+    movement_c = self._makeMovement(source_value=node_a,
+      destination_value=node_b, resource=self.resource,
+      quantity=1, aggregate_value=item_b, start_date=now+1,
+      simulation_state=state_c)
+    self.tic()
+    return {"item_a": item_a, "item_b": item_b,
+      "node_a": node_a, "node_b": node_b,
+      "movement_a": movement_a, "movement_b": movement_b,
+      "movement_c": movement_c}
+
+  def testTrackingListWithOutputParameter(self):
+    """
+      Add test to check if getTrackingList with output=1, returns only Item 2
+      if you search for items in B
+    """
+    data_dict = self._createScenarioToTestTrackingListMethod()
+    item_a = data_dict['item_a']
+    item_b = data_dict['item_b']
+    node_b = data_dict['node_b']
+    movement_a = data_dict['movement_a']
+    movement_b = data_dict['movement_b']
+    movement_c = data_dict['movement_c']
+
+    getTrackingList = self.portal.portal_simulation.getTrackingList
+    path_list = [i.path for i in getTrackingList(
+      node_uid=node_b.getUid())]
+    self.assertTrue(item_a.getPath() in path_list,
+      "Is expected %s in B" % item_a.getPath())
+    self.assertTrue(item_b.getPath() in path_list,
+      "Is expected %s in B" % item_b.getPath())
+
+    path_list = [i.path for i in getTrackingList(
+      node_uid=node_b.getUid(), output=1)]
+    self.assertTrue(item_a.getPath() not in path_list,
+      "%s should not be in B" % item_a.getTitle())
+    self.assertTrue(item_b.getPath() in path_list,
+      "%s should be in B" % item_b.getTitle())
+
+  def testCurrentTrackingListWithOutputParameter(self):
+    """
+      Add test to check if getCurrentTrackingList with B -> C started and not delivered,
+      returns only Item 2 if you search for items in B
+    """
+    data_dict = self._createScenarioToTestTrackingListMethod(state_b="started")
+    item_a = data_dict['item_a']
+    item_b = data_dict['item_b']
+    node_b = data_dict['node_b']
+
+    getCurrentTrackingList = self.portal.portal_simulation.getCurrentTrackingList
+    path_list = [i.path for i in getCurrentTrackingList(
+      node_uid=node_b.getUid(), output=1)]
+    self.assertTrue(item_a.getPath() not in path_list,
+      "%s should not be in B" % item_a.getTitle())
+    self.assertTrue(item_b.getPath() in path_list,
+      "%s should be in B" % item_a.getTitle())
+
+  # TODO: missing tests for input=1
 
 
 class TestInventoryCacheTable(InventoryAPITestCase):
