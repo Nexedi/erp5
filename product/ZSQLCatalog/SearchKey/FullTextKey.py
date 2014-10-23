@@ -35,7 +35,6 @@ from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 import re
 
-FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
 class FullTextKey(SearchKey):
   """
@@ -43,6 +42,7 @@ class FullTextKey(SearchKey):
   """
   default_comparison_operator = 'match'
   get_operator_from_value = False
+  fulltext_boolean_detector = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
@@ -67,7 +67,7 @@ class FullTextKey(SearchKey):
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
       if isinstance(value, basestring) and \
-         FULLTEXT_BOOLEAN_DETECTOR.match(value) is not None:
+          self.fulltext_boolean_detector.match(value) is not None:
         operator_value_dict.setdefault('match_boolean', []).append(value)
       else:
         append(value)
