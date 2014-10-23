@@ -41,6 +41,10 @@ class ObjectMessage:
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
 
     self.object_relative_url = object_relative_url
+    from Products.ERP5Type.Message import Message
+    if isinstance(message, Message):
+      mapping = message.mapping
+      message = message.message
     self.message = message
     self.mapping = mapping
 
