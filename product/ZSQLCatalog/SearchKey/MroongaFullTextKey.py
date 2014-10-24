@@ -39,7 +39,7 @@ class MroongaFullTextKey(FullTextKey):
   """
   default_comparison_operator = 'match'
   fulltext_boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
-  fulltext_boolean_detector = re.compile(r'(^[+-]|^["(].+[")]$)')
+  fulltext_boolean_detector = re.compile(r'(^[+-]|^.+\*$|^["(].+[")]$)')
 
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):
