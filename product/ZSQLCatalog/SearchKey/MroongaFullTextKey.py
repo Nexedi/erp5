@@ -29,6 +29,7 @@
 from FullTextKey import FullTextKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
+from SearchKey import SearchKey
 from zope.interface.verify import verifyClass
 import re
  
@@ -37,7 +38,36 @@ class MroongaFullTextKey(FullTextKey):
     This SearchKey generates SQL fulltext comparisons for Mroonga.
   """
   default_comparison_operator = 'match'
-  fulltext_boolean_detector = re.compile(r'.*((^|\s)[\+\-\("]|[\*\)"](\s|$))')
+  fulltext_boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
+  fulltext_boolean_detector = re.compile(r'(^[+-]|^["(].+[")]$)')
+
+  def _processSearchValue(self, search_value, logical_operator,
+                          comparison_operator):
+    """
+      Special SearchValue processor for MroongaFullText queries:
+      if a searched token from 'match' operator group contains an
+      operator recognised in boolean mode, make the operator for
+      that value be 'match_boolean'.
+    """
+    operator_value_dict, logical_operator, parsed = \
+      SearchKey._processSearchValue(self, search_value, logical_operator,
+                                    comparison_operator)
+    new_value_list = []
+    append = new_value_list.append
+    for value in operator_value_dict.pop('match', []):
+      if isinstance(value, basestring):
+        for token in self.fulltext_boolean_splitter.split(value):
+          token = token.strip()
+          if not token:
+            continue
+          elif self.fulltext_boolean_detector.match(token):
+            operator_value_dict.setdefault('match_boolean', []).append(token)
+          else:
+            append(token)
+      else:
+        append(value)
+    operator_value_dict['match'] = new_value_list
+    return operator_value_dict, logical_operator, parsed
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """
