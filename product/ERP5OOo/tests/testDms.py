@@ -1155,13 +1155,13 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
 
     # exact word search
-    kw = {'searchabletext_any': '*',
+    kw = {'searchabletext_any': '',
           'searchabletext_phrase': 'linux python'}
     self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '*',
+    kw = {'searchabletext_any': '',
           'searchabletext_phrase': 'python linux'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '*',
+    kw = {'searchabletext_any': '',
           'searchabletext_phrase': 'python linux knowledge system'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
 
@@ -1243,7 +1243,7 @@ class TestDocument(TestDocumentMixin):
     # should return all documents matching a word no matter of contributor
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': 'owner',
-          'contributor_title': '%Contributor%'}
+          'contributor_title': 'Contributor'}
     self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
 
     # multiple portal_type specified
