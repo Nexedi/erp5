@@ -1300,16 +1300,9 @@ class SimulationTool(BaseTool):
         'convert_quantity_result': convert_quantity_result,
         'quantity_unit_uid': quantity_unit_uid,
       }
-
-      # Use Custom Inventory Cache implementation if any, before falling back
-      # on ERP5 Generic Cache implementation
-      cached_result = []
-      if optimisation__ and \
-              not getattr(self, 'SimulationTool_getInventoryCustomCache', None)(kw,
-                                                                                base_inventory_kw,
-                                                                                cached_result) and \
-              getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
-              (not kw.get('from_date')) and \
+      # Get cached data
+      if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
+              optimisation__ and (not kw.get('from_date')) and \
               'transformed_resource' not in kw:
         # Here is the different kind of date
         # from_date : >=
@@ -1330,6 +1323,7 @@ class SimulationTool(BaseTool):
               sql_kw=kw,
               **base_inventory_kw)
         except StockOptimisationError:
+          cached_result = []
           kw['to_date'] = to_date
         else:
           if src__:
@@ -1337,6 +1331,8 @@ class SimulationTool(BaseTool):
           # Now must generate query for date diff
           kw['to_date'] = to_date
           kw['from_date'] = cached_date
+      else:
+        cached_result = []
       sql_kw, new_kw = self._generateKeywordDict(**kw)
       # Copy kw content as _generateSQLKeywordDictFromKeywordDict
       # remove some values from it
