@@ -41,7 +41,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
     """ Return the list of BT required by unit tests. """
     return (
       'erp5_core_proxy_field_legacy',
-      'erp5_full_text_myisam_catalog',
+      'erp5_full_text_mroonga_catalog',
       'erp5_base',
       'erp5_pdm',
       'erp5_simulation',

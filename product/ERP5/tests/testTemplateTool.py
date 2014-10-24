@@ -52,7 +52,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
-            'erp5_full_text_myisam_catalog',
+            'erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_stock_cache',
             'erp5_csv_style')
@@ -650,7 +650,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_core_proxy_field_legacy': first_group,
       'erp5_mysql_innodb_catalog': first_group,
       'erp5_core': first_group,
-      'erp5_full_text_myisam_catalog': first_group,
+      'erp5_full_text_mroonga_catalog': first_group,
       'erp5_xhtml_style': first_group,
       'erp5_ingestion_mysql_innodb_catalog': second_group,
       'erp5_base': second_group,

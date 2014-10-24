@@ -63,7 +63,7 @@ class TestEgov(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """return list of business templates to be installed. """
     bt_list = ['erp5_core_proxy_field_legacy',
-               'erp5_full_text_myisam_catalog',
+               'erp5_full_text_mroonga_catalog',
                'erp5_base',
                'erp5_web',
                'erp5_ingestion_mysql_innodb_catalog',
