@@ -85,9 +85,14 @@ class MroongaFullTextKey(FullTextKey):
       fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query)
     if match_boolean_query:
       fulltext_query += ' %s' % ' '.join(match_boolean_query)
-    append(SimpleQuery(search_key=self,
-                       comparison_operator='match_boolean',
-                       group=group, **{column: fulltext_query}))
+    if match_query or match_boolean_query:
+      append(SimpleQuery(search_key=self,
+                         comparison_operator='match_boolean',
+                         group=group, **{column: fulltext_query}))
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      append(SimpleQuery(search_key=self,
+                         comparison_operator=comparison_operator,
+                         group=group, **{column: ' '.join(value_list)}))
     return query_list
 
 verifyClass(ISearchKey, MroongaFullTextKey)
