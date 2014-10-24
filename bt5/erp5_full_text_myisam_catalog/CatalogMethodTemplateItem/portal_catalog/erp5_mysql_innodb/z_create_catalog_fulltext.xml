@@ -69,7 +69,7 @@ CREATE TABLE `catalog_full_text` (\n
   PRIMARY KEY  (`uid`),\n
   FULLTEXT `title` (`title`),\n
   FULLTEXT `description` (`description`)\n
-) ENGINE=mroonga;\n
+) ENGINE=MyISAM;\n
 </string> </value>
         </item>
         <item>
