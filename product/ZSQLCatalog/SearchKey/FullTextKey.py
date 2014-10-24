@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from DefaultKey import DefaultKey
 from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.SearchText import parse
@@ -36,7 +37,7 @@ from zope.interface.verify import verifyClass
 import re
 
 
-class FullTextKey(SearchKey):
+class FullTextKey(DefaultKey):
   """
     This SearchKey generates SQL fulltext comparisons.
   """
