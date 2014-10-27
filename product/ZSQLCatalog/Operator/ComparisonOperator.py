@@ -111,7 +111,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     }
     select_dict = {}
     if not only_group_columns:
-      select_dict[column.replace('`', '').split('.')[-1]] = match_string
+      select_dict['%s__score__' % column.replace('`', '').rsplit('.', 1)[-1]] = match_string
     # Sort on this column uses relevance.
     # TODO: Add a way to allow sorting by raw column value.
     order_by_dict = {
