@@ -57,6 +57,10 @@ class MroongaFullTextKey(FullTextKey):
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
       if isinstance(value, basestring):
+        # special case for empty string.
+        if value == '':
+          operator_value_dict.setdefault('=', []).append(value)
+          continue
         for token in self.fulltext_boolean_splitter.split(value):
           token = token.strip()
           if not token:
