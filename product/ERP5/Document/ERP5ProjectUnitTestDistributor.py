@@ -37,7 +37,7 @@ import string
 from zLOG import LOG,INFO,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 TEST_SUITE_MAX = 4
 # Depending on the test suite priority, we will affect
 # more or less cores
@@ -210,7 +210,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
     tag = "%s_%s" % (self.getRelativeUrl(), title)
     if portal.portal_activities.countMessageWithTag(tag) == 0:
-      test_node_list = test_node_module.searchFolder(portal_type="Test Node",title=title)
+      test_node_list = test_node_module.searchFolder(
+        portal_type="Test Node",
+        title=SimpleQuery(comparison_operator='=', title=title),
+      )
       assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
       test_node = None
       if len(test_node_list) == 1:
@@ -244,9 +247,11 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     from_date = now - 30
     def getTestSuiteSortKey(test_suite):
       test_result = portal.portal_catalog(portal_type="Test Result",
-                                          title='="%s"' % test_suite.getTitle(),
-                                          modification_date=Query(**{"creation_date": from_date,
-                                                                  "range": "min"}),
+                                          title=SimpleQuery(title=test_suite.getTitle()),
+                                          creation_date=SimpleQuery(
+                                            creation_date=from_date,
+                                            comparison_operator='>=',
+                                          ),
                                           sort_on=[("modification_date", "descending")],
                                           limit=1)
       if len(test_result):
@@ -268,7 +273,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     config_list = []
     tag = "%s_%s" % (self.getRelativeUrl(), title)
     if portal.portal_activities.countMessageWithTag(tag) == 0:
-      test_node_list = test_node_module.searchFolder(portal_type="Test Node",title=title)
+      test_node_list = test_node_module.searchFolder(
+        portal_type="Test Node",
+        title=SimpleQuery(comparison_operator='=', title=title),
+      )
       assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
       test_node = None
       if len(test_node_list) == 1:
@@ -329,7 +337,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
   def _getTestNodeFromTitle(self, node_title):
     test_node_list = self._getTestNodeModule().searchFolder(
-                       portal_type='Test Node', title="='%s'" % node_title)
+      portal_type="Test Node",
+      title=SimpleQuery(comparison_operator='=', title=node_title),
+    )
     assert len(test_node_list) == 1, "We found %i test nodes for %s" % (
                                       len(test_node_list), node_title)
     test_node = test_node_list[0].getObject()
@@ -337,7 +347,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
   def _getTestSuiteFromTitle(self, suite_title):
     test_suite_list = self._getTestSuiteModule().searchFolder(
-                       portal_type='Test Suite', title="='%s'" % suit_tile, validation_state="validated")
+      portal_type='Test Suite',
+      title=SimpleQuery(comparison_operator='=', title=suite_title),
+      validation_state='validated')
     assert len(test_suite_list) == 1, "We found %i test suite for %s" % (
                                       len(test_suite_list), name)
     test_suite = test_suite_list[0].getObject()
