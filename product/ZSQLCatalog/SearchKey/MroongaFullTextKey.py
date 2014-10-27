@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from DefaultKey import DefaultKey
 from FullTextKey import FullTextKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
@@ -89,10 +90,10 @@ class MroongaFullTextKey(FullTextKey):
       append(SimpleQuery(search_key=self,
                          comparison_operator='match_boolean',
                          group=group, **{column: fulltext_query}))
-    for comparison_operator, value_list in operator_value_dict.iteritems():
-      append(SimpleQuery(search_key=self,
-                         comparison_operator=comparison_operator,
-                         group=group, **{column: ' '.join(value_list)}))
+    # other comparison operators are handled by DefaultKey.
+    if operator_value_dict:
+      query_list += DefaultKey._buildQuery(
+        self, operator_value_dict, logical_operator, parsed, group)
     return query_list
 
 verifyClass(ISearchKey, MroongaFullTextKey)
