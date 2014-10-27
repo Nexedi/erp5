@@ -44,7 +44,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 
 from OFS.ObjectManager import ObjectManager
@@ -189,7 +189,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='1',portal_type='Person')
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list)
-    person.immediateReindexObject()
+    self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('1')
     self.tic()
@@ -197,10 +197,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
                                       portal_type='Person',)
-    person.immediateReindexObject()
+    self.tic()
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
-    person.immediateReindexObject()
+    self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('2')
     self.tic()
@@ -209,7 +209,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person = person_module.newContent(id='3',portal_type='Person')
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list)
-    person.immediateReindexObject()
+    self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.deleteContent('3')
     # Now delete things is made with activities
@@ -223,10 +223,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual([],folder_object_list)
     person = person_module.newContent(id='4',portal_type='Person',)
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
-    person.immediateReindexObject()
+    self.tic()
     person_module.manage_delObjects('4')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
@@ -240,7 +240,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual([],folder_object_list)
 
     person = person_module.newContent(id='4',portal_type='Person')
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
 
@@ -274,7 +274,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog.manage_catalogClear()
 
     person = person_module.newContent(id='4',portal_type='Person')
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
 
@@ -298,7 +298,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog.manage_catalogClear()
 
     person = person_module.newContent(id='4',portal_type='Person')
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
 
@@ -310,11 +310,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog.manage_catalogClear()
 
     person = person_module.newContent(id='a',portal_type='Person',title='a',description='z')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='b',portal_type='Person',title='a',description='y')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId()
               for x in person_module.searchFolder(sort_on=[('id','ascending')])]
     self.assertEqual(['a','b','c'],folder_object_list)
@@ -335,11 +335,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog.manage_catalogClear()
 
     person = person_module.newContent(id='a',portal_type='Person',title='1')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='b',portal_type='Person',title='2')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='c',portal_type='Person',title='12')
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending')])]
     self.assertEqual(['1','12','2'],folder_object_list)
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
@@ -654,7 +654,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     title = 'Sébastien'
     person = person_module.newContent(id='5',portal_type='Person',title=title)
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['5'],folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
@@ -666,7 +666,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     title = 'Sébastien'
     person = person_module.newContent(id='5',portal_type='Person', title=title)
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
     self.assertEqual(['5'],folder_object_list)
@@ -793,7 +793,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
                                       portal_type='Person',)
-    person.immediateReindexObject()
+    self.tic()
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
     # We will delete the connector
@@ -855,19 +855,19 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """Sort-on parameter and related key. (Assumes that region_title is a \
     valid related key)"""
     self.assertTrue(
-              self.getCatalogTool().buildSQLQuery(region_title='foo',
-              sort_on=(('region_title', 'ascending'),))['order_by_expression'].endswith('.`title` ASC'))
+              self.getCatalogTool().buildSQLQuery(region_reference='foo',
+              sort_on=(('region_reference', 'ascending'),))['order_by_expression'].endswith('.`reference` ASC'))
     self.assertTrue(
-              self.getCatalogTool().buildSQLQuery(region_title='foo',
-              sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'))
+              self.getCatalogTool().buildSQLQuery(region_reference='foo',
+              sort_on=(('region_reference', 'descending'),))['order_by_expression'].endswith('.`reference` DESC'))
     self.assertTrue(
               self.getCatalogTool().buildSQLQuery(
-              sort_on=(('region_title', 'ascending'),))['order_by_expression'].endswith('.`title` ASC'),
+              sort_on=(('region_reference', 'ascending'),))['order_by_expression'].endswith('.`reference` ASC'),
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
     self.assertTrue(
               self.getCatalogTool().buildSQLQuery(
-              sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'),
+              sort_on=(('region_reference', 'descending'),))['order_by_expression'].endswith('.`reference` DESC'),
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
 
@@ -957,8 +957,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
-                title={'query': (organisation_title, 'something else'),
-                       'operator': 'or'})])
+                **{'catalog.title':{'query': (organisation_title, 'something else'),
+                                    'operator': 'or'}})])
 
   def test_33_SimpleQueryDictWithAndOperator(self):
     """use a dict as a keyword parameter, with AND operator.
@@ -1149,19 +1149,18 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                                 SearchableText='title')[0][0])
 
     # 'different' is found in more than 50% of records
-    # MySQL ignores such a word, but Tritonn does not ignore.
-    try:
-      self.portal.erp5_sql_connection.manage_test('SHOW SENNA STATUS')
-    except ProgrammingError:
+    # MySQL ignores such a word, but Mroonga does not ignore.
+    if 'ENGINE=Mroonga' in self.portal.erp5_sql_connection.manage_test(
+        'SHOW CREATE TABLE full_text')[0][1]:
+      # Mroonga
+      self.assertEqual(10, self.getCatalogTool().countResults(
+                portal_type='Organisation', SearchableText='different')[0][0])
+    else:
       # MySQL
       self.assertEqual([],
           [x.getObject for x in self.getCatalogTool()(
                   portal_type='Organisation', SearchableText='different')])
       self.assertEqual(0, self.getCatalogTool().countResults(
-                portal_type='Organisation', SearchableText='different')[0][0])
-    else:
-      # Tritonn
-      self.assertEqual(10, self.getCatalogTool().countResults(
                 portal_type='Organisation', SearchableText='different')[0][0])
 
   def test_43_ManagePasteObject(self):
@@ -1221,11 +1220,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Recursive Complex Query
     # (title='abc' and description='abc') OR
     #  title='foo' and description='bar'
-    catalog_kw = {'query':ComplexQuery(ComplexQuery(Query(title='abc'),
-                                                    Query(description='abc'),
+    catalog_kw = {'query':ComplexQuery(ComplexQuery(SimpleQuery(title='abc'),
+                                                    SimpleQuery(description='abc'),
                                                     operator='AND'),
-                                       ComplexQuery(Query(title='foo'),
-                                                    Query(description='bar'),
+                                       ComplexQuery(SimpleQuery(title='foo'),
+                                                    SimpleQuery(description='bar'),
                                                     operator='AND'),
                                        operator='OR')}
     self.failIfDifferentSet([org_a.getPath(), org_f.getPath()],
@@ -1578,11 +1577,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     catalog = portal_catalog.objectValues()[0]
 
     person = person_module.newContent(id='a',portal_type='Person',title='a',description='z')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='b',portal_type='Person',title='a',description='y')
-    person.immediateReindexObject()
+    self.tic()
     person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
-    person.immediateReindexObject()
+    self.tic()
     index_columns = getattr(catalog, 'sql_catalog_index_on_order_keys', None)
     self.assertNotEqual(index_columns, None)
     self.assertEqual(len(index_columns), 0)
@@ -3768,7 +3767,7 @@ VALUES
     title='foo (bar)'
     person = person_module.newContent(portal_type='Person',title=title)
     person_id = person.getId()
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
@@ -3781,15 +3780,16 @@ VALUES
     # Make sure that the catalog will not split it with such research :
     # title=foo AND title=bar
     title='foo bar'
-    person_module.newContent(portal_type='Person',title=title).immediateReindexObject()
+    person_module.newContent(portal_type='Person',title=title)
+    self.tic()
     title = title.replace(' ', '  ')
     person = person_module.newContent(portal_type='Person',title=title)
     person_id = person.getId()
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
-                              person_module.searchFolder(title=title)]
+                              person_module.searchFolder(**{'catalog.title':title})]
     self.assertEqual([person_id],folder_object_list)
 
   def test_SearchFolderWithSingleQuote(self):
@@ -3800,7 +3800,7 @@ VALUES
     title="foo 'bar"
     person = person_module.newContent(portal_type='Person',title=title)
     person_id = person.getId()
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertTrue(person_id in folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
@@ -3817,7 +3817,7 @@ VALUES
     person = person_module.newContent(portal_type='Person',title=title,
                                       description=description)
     person_uid = person.getUid()
-    person.immediateReindexObject()
+    self.tic()
     folder_object_list = person_module.searchFolder(uid=person_uid, select_dict={'title': None})
     new_title = 'bar'
     new_description = 'foobarfoo'
