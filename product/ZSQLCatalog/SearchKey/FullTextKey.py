@@ -45,9 +45,6 @@ class FullTextKey(DefaultKey):
   get_operator_from_value = False
   fulltext_boolean_detector = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
-  def parseSearchText(self, value, is_column):
-    return parse(value, is_column)
-
   def dequoteParsedText(self):
     return False
 
