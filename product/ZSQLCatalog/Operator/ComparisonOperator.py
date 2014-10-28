@@ -165,12 +165,13 @@ class MroongaComparisonOperator(MatchComparisonOperator):
           match_boolean_query_list.append(token)
         else:
           match_query_list.append(token)
+      # Always use BOOLEAN MODE to combine similarity search and boolean search.
+      self.mode = ' IN BOOLEAN MODE'
       fulltext_query = '*D+'
       if match_query_list:
         fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query_list)
       if match_boolean_query_list:
         fulltext_query += ' %s' % ' '.join(match_boolean_query_list)
-        self.mode = ' IN BOOLEAN MODE'
       return self._renderValue(fulltext_query)
 
 verifyClass(IOperator, MroongaComparisonOperator)
@@ -178,7 +179,8 @@ verifyClass(IOperator, MroongaComparisonOperator)
 class MroongaBooleanComparisonOperator(MroongaComparisonOperator):
   def renderValue(self, value_list):
     """
-      value_list must either be a non-list or a single-value list.
+      Special Query renderer for MroongaFullText queries:
+      * by default 'AND' search by using '*D+' pragma.
     """
     if isinstance(value_list, list_type_list):
       try:
