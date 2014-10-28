@@ -3545,19 +3545,19 @@ VALUES
         portal_category.group.objectIds()])
     group_nexedi_category = portal_category.group\
                                 .newContent( id = 'nexedi', title='Nexedi',
-                                             description='a')
+                                             reference='a')
     group_nexedi_category2 = portal_category.group\
                                 .newContent( id = 'storever', title='Storever',
-                                             description='b')
+                                             reference='b')
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',
                                      title='Nexedi Orga',
-                                     description='c')
+                                     reference='c')
     organisation.setGroup('nexedi')
     self.assertEqual(organisation.getGroupValue(), group_nexedi_category)
     organisation2 = module.newContent(portal_type='Organisation',
                                       title='Storever Orga',
-                                      description='d')
+                                      reference='d')
     organisation2.setGroup('storever')
     organisation2.setTitle('Organisation 2')
     self.assertEqual(organisation2.getGroupValue(), group_nexedi_category2)
@@ -3579,19 +3579,19 @@ VALUES
     category_list = [x.getObject() for x in
                          base_category.searchFolder(group_related_id='storever')]
     self.assertEqual(category_list,[group_nexedi_category2])
-    # Try to get the category with the group related organisation description 'd'
+    # Try to get the category with the group related organisation reference 'd'
     category_list = [x.getObject() for x in
-                         base_category.searchFolder(group_related_description='d')]
+                         base_category.searchFolder(group_related_reference='d')]
     self.assertEqual(category_list,[group_nexedi_category2])
-    # Try to get the category with the group related organisation description
+    # Try to get the category with the group related organisation reference
     # 'e'
     category_list = [x.getObject() for x in
-                         base_category.searchFolder(group_related_description='e')]
+                         base_category.searchFolder(group_related_reference='e')]
     self.assertEqual(category_list,[])
-    # Try to get the category with the default group related organisation description
+    # Try to get the category with the default group related organisation reference
     # 'e'
     category_list = [x.getObject() for x in
-                         base_category.searchFolder(default_group_related_description='e')]
+                         base_category.searchFolder(default_group_related_reference='e')]
     self.assertEqual(category_list,[])
     # Try to get the category with the group related organisation relative_url
     organisation_relative_url = organisation.getRelativeUrl()
@@ -3617,19 +3617,19 @@ VALUES
         portal_category.group.objectIds()])
     group_nexedi_category = portal_category.group\
                                 .newContent( id = 'nexedi', title='Nexedi',
-                                             description='a')
+                                             reference='a')
     sub_group_nexedi = group_nexedi_category\
                                 .newContent( id = 'erp5', title='ERP5',
-                                             description='b')
+                                             reference='b')
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',
                                      title='ERP5 Orga',
-                                     description='c')
+                                     reference='c')
     organisation.setGroup('nexedi/erp5')
     self.assertEqual(organisation.getGroupValue(), sub_group_nexedi)
     organisation2 = module.newContent(portal_type='Organisation',
                                      title='Nexedi Orga',
-                                     description='d')
+                                     reference='d')
     organisation2.setGroup('nexedi')
     # Flush message queue
     self.tic()
@@ -3648,15 +3648,15 @@ VALUES
                          base_category.portal_catalog(
                            strict_group_related_title='ERP5 Orga')]
     self.assertEqual(category_list,[sub_group_nexedi])
-    # Try to get the category with the group related organisation description d
+    # Try to get the category with the group related organisation reference d
     category_list = [x.getObject() for x in
                          base_category.portal_catalog(
-                           strict_group_related_description='d')]
+                           strict_group_related_reference='d')]
     self.assertEqual(category_list,[group_nexedi_category])
-    # Try to get the category with the group related organisation description c
+    # Try to get the category with the group related organisation reference c
     category_list = [x.getObject() for x in
                          base_category.portal_catalog(
-                           strict_group_related_description='c')]
+                           strict_group_related_reference='c')]
     self.assertEqual(category_list,[sub_group_nexedi])
 
   def test_EscapingLoginInSescurityQuery(self):
