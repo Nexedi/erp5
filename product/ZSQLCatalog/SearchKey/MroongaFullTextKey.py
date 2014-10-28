@@ -27,10 +27,39 @@
 ##############################################################################
 
 from DefaultKey import DefaultKey
+from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
  
 class MroongaFullTextKey(DefaultKey):
   default_comparison_operator = 'mroonga'
+
+  def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
+    """
+      Special Query builder for FullText queries: merge all values having the
+      same operator into just one query, to save SQL server from the burden to
+      do multiple fulltext lookups when one would suit the purpose.
+    """
+    print '_buildQuery: %r, %r, %r, %r' % (operator_value_dict, logical_operator, parsed, group)
+    column = self.getColumn()
+    query_list = []
+    append = query_list.append
+    def escape(x):
+      return (not parsed and '"%s"' % x.replace('"', '\\\\"') or x).replace(
+        '(', '\\\\(').replace(
+        ')', '\\\\)')
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      if logical_operator == 'and':
+        joined_value = ' '.join(escape(value) for value in value_list)
+        append(SimpleQuery(search_key=self,
+                           comparison_operator=comparison_operator,
+                           group=group, **{column:joined_value}))
+      else:
+        # TODO : We can join to one query like 'aaa OR (bbb ccc) OR "ddd eee"'.
+        for value in value_list:
+          append(SimpleQuery(search_key=self,
+                             comparison_operator=comparison_operator,
+                             group=group, **{column:escape(value)}))
+    return query_list
 
 verifyClass(ISearchKey, MroongaFullTextKey)
