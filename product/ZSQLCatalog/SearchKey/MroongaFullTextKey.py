@@ -89,7 +89,10 @@ class MroongaFullTextKey(FullTextKey):
     if match_query:
       fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query)
     if match_boolean_query:
-      fulltext_query += ' %s' % ' '.join(match_boolean_query)
+      if len(match_boolean_query) > 1 and logical_operator == 'or':
+        fulltext_query += ' %s' % ' OR '.join('(%s)' % x for x in match_boolean_query)
+      else:
+        fulltext_query += ' %s' % ' '.join(match_boolean_query)
     if match_query or match_boolean_query:
       append(SimpleQuery(search_key=self,
                          comparison_operator='match_boolean',
