@@ -33,6 +33,7 @@ from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
+import re
 
 class ComparisonOperatorBase(OperatorBase):
   def asSQLExpression(self, column, value_list, only_group_columns):
@@ -98,16 +99,19 @@ verifyClass(IOperator, MultivaluedComparisonOperator)
 class MatchComparisonOperator(MonovaluedComparisonOperator):
   def __init__(self, operator, mode=''):
     MonovaluedComparisonOperator.__init__(self, operator, '')
-    self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
+    self.mode = mode
+    self.where_expression_format_string = 'MATCH (%(column)s) AGAINST (%(value_list)s%(mode)s)'
 
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
     """
+    value_list = self.renderValue(value_list)
     match_string = self.where_expression_format_string % {
       'column': column,
-      'value_list': self.renderValue(value_list),
+      'value_list': value_list,
+      'mode':self.mode,
     }
     select_dict = {}
     if not only_group_columns:
@@ -124,6 +128,63 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
       order_by_dict=order_by_dict,
       can_merge_select_dict=True,
     )
+
+verifyClass(IOperator, MatchComparisonOperator)
+
+class MroongaComparisonOperator(MatchComparisonOperator):
+  fulltext_boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
+  fulltext_boolean_detector = re.compile(r'(^[+-]|^.+\*$|^["(].+[")]$)')
+
+  def renderValue(self, value_list):
+    """
+      Special Query renderer for MroongaFullText queries:
+      * by default 'AND' search by using '*D+' pragma.
+      * similarity search for non-boolean queries by using '*S"..."' operator.
+    """
+    if isinstance(value_list, list_type_list):
+      try:
+        value_list, = value_list
+      except ValueError:
+        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+
+    if self.mode == ' IN BOOLEAN MODE':
+      fulltext_query = '*D+ %s' % value_list
+      return self._renderValue(fulltext_query)
+    else:
+      match_query_list = []
+      match_boolean_query_list = []
+      for token in self.fulltext_boolean_splitter.split(value_list):
+        token = token.strip()
+        if not token:
+          continue
+        elif self.fulltext_boolean_detector.match(token):
+          match_boolean_query_list.append(token)
+        else:
+          match_query_list.append(token)
+      fulltext_query = '*D+'
+      if match_query_list:
+        fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query_list)
+      if match_boolean_query_list:
+        fulltext_query += ' %s' % ' '.join(match_boolean_query_list)
+        self.mode = ' IN BOOLEAN MODE'
+      return self._renderValue(fulltext_query)
+
+verifyClass(IOperator, MroongaComparisonOperator)
+
+class MroongaBooleanComparisonOperator(MroongaComparisonOperator):
+  def renderValue(self, value_list):
+    """
+      value_list must either be a non-list or a single-value list.
+    """
+    if isinstance(value_list, list_type_list):
+      try:
+        value_list, = value_list
+      except ValueError:
+        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+
+    fulltext_query = '*D+ %s' % value_list
+    print self._renderValue(fulltext_query)
+    return self._renderValue(fulltext_query)
 
 verifyClass(IOperator, MatchComparisonOperator)
 
@@ -173,9 +234,10 @@ operator_dict = {
   'match': MatchComparisonOperator('match'),
   'match_boolean': MatchComparisonOperator('match_boolean', mode=' IN BOOLEAN MODE'),
   'match_expansion': MatchComparisonOperator('match_expansion', mode=' WITH QUERY EXPANSION'),
+  'mroonga': MroongaComparisonOperator('mroonga'),
+  'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', mode=' IN BOOLEAN MODE'),
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
   'is not': MonovaluedComparisonOperator('is not', '!='),
 }
-

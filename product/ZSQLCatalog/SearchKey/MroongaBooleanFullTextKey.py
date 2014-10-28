@@ -35,6 +35,6 @@ class MroongaBooleanFullTextKey(MroongaFullTextKey):
     This SearchKey generates SQL fulltext comparisons for Mroonga whose
     default comparison operator is match_boolean.
   """
-  default_comparison_operator = 'match_boolean'
+  default_comparison_operator = 'mroonga_boolean'
 
 verifyClass(ISearchKey, MroongaBooleanFullTextKey)
