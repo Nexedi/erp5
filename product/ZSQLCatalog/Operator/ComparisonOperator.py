@@ -107,6 +107,10 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
       This operator can emit a select expression, so it overrides
       asSQLExpression inseatd of just defining a render method.
     """
+    # No need fo do full text search for an empty string.
+    if value_list == '':
+      column, value_list = self.render(column, value_list)
+      return SQLExpression(self, where_expression='%s %s %s' % (column, '=', value_list))
     value_list = self.renderValue(value_list)
     match_string = self.where_expression_format_string % {
       'column': column,
