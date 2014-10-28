@@ -62,12 +62,14 @@ class RelatedQuery(Query):
     self.table_alias_list = table_alias_list
 
   def _asSearchTextExpression(self, sql_catalog, column=None):
-    assert column is None
+    assert column in (None, '')
+    if column is None:
+      column = self.search_key.getColumn()
     join_condition = self.join_condition
     if join_condition is None:
       result = None
     else:
-      result = join_condition.asSearchTextExpression(sql_catalog, column=self.search_key.getColumn())
+      result = join_condition.asSearchTextExpression(sql_catalog, column=column)
     return False, result
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
