@@ -139,6 +139,10 @@ class MroongaComparisonOperator(MatchComparisonOperator):
   fulltext_boolean_splitter = re.compile(r'(\s|\(.+?\)|".+?")')
   fulltext_boolean_detector = re.compile(r'(^[+-]|^.+\*$|^["(].+[")]$)')
 
+  def __init__(self, operator, force_boolean=False):
+    MatchComparisonOperator.__init__(self, operator, ' IN BOOLEAN MODE')
+    self.force_boolean = force_boolean
+
   def renderValue(self, value_list):
     """
       Special Query renderer for MroongaFullText queries:
@@ -151,7 +155,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
       except ValueError:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
 
-    if self.mode == ' IN BOOLEAN MODE':
+    if self.force_boolean:
       fulltext_query = '*D+ %s' % value_list
       return self._renderValue(fulltext_query)
     else:
@@ -166,7 +170,6 @@ class MroongaComparisonOperator(MatchComparisonOperator):
         else:
           match_query_list.append(token)
       # Always use BOOLEAN MODE to combine similarity search and boolean search.
-      self.mode = ' IN BOOLEAN MODE'
       fulltext_query = '*D+'
       if match_query_list:
         fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query_list)
@@ -175,24 +178,6 @@ class MroongaComparisonOperator(MatchComparisonOperator):
       return self._renderValue(fulltext_query)
 
 verifyClass(IOperator, MroongaComparisonOperator)
-
-class MroongaBooleanComparisonOperator(MroongaComparisonOperator):
-  def renderValue(self, value_list):
-    """
-      Special Query renderer for MroongaFullText queries:
-      * by default 'AND' search by using '*D+' pragma.
-    """
-    if isinstance(value_list, list_type_list):
-      try:
-        value_list, = value_list
-      except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
-
-    fulltext_query = '*D+ %s' % value_list
-    print self._renderValue(fulltext_query)
-    return self._renderValue(fulltext_query)
-
-verifyClass(IOperator, MatchComparisonOperator)
 
 class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
   def __init__(self, operator, mode=''):
@@ -241,7 +226,7 @@ operator_dict = {
   'match_boolean': MatchComparisonOperator('match_boolean', mode=' IN BOOLEAN MODE'),
   'match_expansion': MatchComparisonOperator('match_expansion', mode=' WITH QUERY EXPANSION'),
   'mroonga': MroongaComparisonOperator('mroonga'),
-  'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', mode=' IN BOOLEAN MODE'),
+  'mroonga_boolean': MroongaComparisonOperator('mroonga_boolean', force_boolean=True),
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
