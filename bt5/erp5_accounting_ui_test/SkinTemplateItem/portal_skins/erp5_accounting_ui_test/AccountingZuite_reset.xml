@@ -130,7 +130,7 @@ stool.setSelectionColumns(\'account_module_selection\',\n
 \n
 # delete the "dummy account" we create in test_account_gap_parallel_list_field\n
 dummy_account_list = portal.account_module.searchFolder(\n
-  title=SimpleQuery(title=\'Dummy Product for testing\', comparison_operator=\'=\'))\n
+  title=SimpleQuery(title=\'Dummy Account for UI Test\', comparison_operator=\'=\'))\n
 if dummy_account_list:\n
   portal.account_module.manage_delObjects([dummy_account_list[0].getId()])\n
 \n

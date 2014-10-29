@@ -107,7 +107,7 @@ euro_resource = getCurrencyByReference(\'EUR\')\n
 def getBankAccountByTitle(title):\n
   document_list = [x.getObject().getRelativeUrl() for x in\n
     portal.portal_catalog(portal_type=\'Bank Account\',\n
-                          title=SimpleQuery(title=\'Dummy Product for testing\', comparison_operator=\'=\'))]\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
   assert len(document_list) == 1, \\\n
       \'%d Bank Account with title "%s"\' % (len(document_list), title)\n
   return document_list[0]\n
