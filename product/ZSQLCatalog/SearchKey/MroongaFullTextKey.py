@@ -40,15 +40,19 @@ class MroongaFullTextKey(DefaultKey):
       same operator into just one query, to save SQL server from the burden to
       do multiple fulltext lookups when one would suit the purpose.
     """
-    print '_buildQuery: %r, %r, %r, %r' % (operator_value_dict, logical_operator, parsed, group)
     column = self.getColumn()
     query_list = []
     append = query_list.append
     def escape(x):
-      return (not parsed and '"%s"' % x.replace('"', '\\\\"') or x).replace(
-        '(', '\\\\(').replace(
-        ')', '\\\\)')
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+      # We need to escape once here for Mroonga, and it will be
+      # escaped once more in OperatorBase._renderValue().
+      return (not parsed and '"%s"' % x.replace('"', '\\"') or x).replace(
+        '(', '\\(').replace(
+        ')', '\\)')
+    for comparison_operator in ('mroonga', 'mroonga_boolean'):
+      value_list = operator_value_dict.pop(comparison_operator, [])
+      if not value_list:
+        continue
       if logical_operator == 'and':
         joined_value = ' '.join(escape(value) for value in value_list)
         append(SimpleQuery(search_key=self,
@@ -60,6 +64,10 @@ class MroongaFullTextKey(DefaultKey):
           append(SimpleQuery(search_key=self,
                              comparison_operator=comparison_operator,
                              group=group, **{column:escape(value)}))
+    # Other comparison operators are handled by the super class.
+    if operator_value_dict:
+      query_list += super(MroongaFullTextKey, self)._buildQuery(
+        operator_value_dict, logical_operator, parsed, group)
     return query_list
 
 verifyClass(ISearchKey, MroongaFullTextKey)
