@@ -124,6 +124,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                     self.getCategoryTool().region,
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
+      module.reindexObject()
     # Remove copied sql_connector and catalog
     if self.new_erp5_sql_connection in self.portal.objectIds():
       self.portal.manage_delObjects([self.new_erp5_sql_connection])
