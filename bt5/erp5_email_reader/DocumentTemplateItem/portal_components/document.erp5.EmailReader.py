@@ -32,7 +32,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.ExternalSource import ExternalSource
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache
+from Products.ERP5Type.Cache import transactional_cached
 
 # IMAP imports
 import imaplib
@@ -140,10 +140,10 @@ class IMAPSServer(MailServer):
       LOG('server.select folder %s' % message_folder, INFO, "Response: %s" % response)
       if response in ('OK', 'EXISTS'): # is this right status list XXX
         self.successful_select = True
-	self.message_count = message_count[0]
-	LOG('server.select folder %s' % message_folder, INFO, "Count: %s" % self.message_count)
+        self.message_count = message_count[0]
+        LOG('server.select folder %s' % message_folder, INFO, "Count: %s" % self.message_count)
       else:
-	raise ValueError(message_count[0]) # Use a better exception here XXX
+        raise ValueError(message_count[0]) # Use a better exception here XXX
     return self.message_count 
 
   def getMessageUIDList(self, message_folder=None):
@@ -215,7 +215,7 @@ class IMAPServer(IMAPSServer):
     are closed and logged out.
   """
   def __init__(self, host, user, password, port=143):
-    return IMAPSServer.__init__(self, host, user, password, port=port)
+    IMAPSServer.__init__(self, host, user, password, port=port)
 
 class POPSServer(MailServer):
   """
@@ -227,7 +227,7 @@ class POPSServer(MailServer):
 
 class POPServer(POPSServer):
   def __init__(self, host, user, password, port=143):
-    return POPSServer.__init__(self, host, user, password, port=port)
+    POPSServer.__init__(self, host, user, password, port=port)
 
 
 class EmailReader(ExternalSource):
@@ -274,7 +274,7 @@ class EmailReader(ExternalSource):
                     , PropertySheet.DublinCore
                     , PropertySheet.Url
                     , PropertySheet.Login
-		    , PropertySheet.ExternalDocument
+                    , PropertySheet.ExternalDocument
                     )
 
   # Global values
@@ -405,8 +405,8 @@ class EmailReader(ExternalSource):
     # Ingest MAX_UID_LIST_SIZE emails
     for uid in uid_list[0:min(uid_len, self.MAX_UID_LIST_SIZE)]:
       #if not self.hasContent(self.getMessageID(uid, message_folder)):
-	# Only ingest new messages
-	#self.activate(activity='SQLQueue', tag=message_activity_tag,
+        # Only ingest new messages
+        #self.activate(activity='SQLQueue', tag=message_activity_tag,
         #              priority=2).ingestMessage(uid, 
         #                               message_folder=message_folder)
       self.ingestMessage(uid, message_folder=message_folder)
@@ -437,28 +437,17 @@ class EmailReader(ExternalSource):
     return "%s-%s" % (message_folder.replace('/','.'), uid) # Can this be configurable, based on what ? date?
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMessageFolderList')
+  @transactional_cached()
   def getMessageFolderList(self):
     """
       Returns the list of folders of the current server
       XXX Add read only transaction cache
     """
-    cache = getReadOnlyTransactionCache()
-    if cache is not None:
-      key = ('getMessageFolderList', self)
-      try:
-        return cache[key]
-      except KeyError:
-        pass
-
     server = self._getMailServer()
-    if server is None: return ()
-    result = server.getMessageFolderList()
-    if cache is not None:
-      cache[key] = result
-
-    return result
+    return () if server is None else server.getMessageFolderList()
 
   ### Implementation - Private methods
+  @transactional_cached()
   def _getMailServer(self):
     """
       A private method to retrieve a mail server
@@ -468,32 +457,23 @@ class EmailReader(ExternalSource):
       break things. An interactor is required to clear
       the variable
     """
-    cache = getReadOnlyTransactionCache()
-    if cache is not None:
-      key = ('_getMailServer', self)
-      try:
-        return cache[key]
-      except KeyError:
-        pass
-
     # No server defined
-    if not self.getURLServer(): return None
+    server_url = self.getURLServer()
+    if not server_url:
+      return
 
     # XXX - Here we need to add a switch (POP vs. IMAP vs. IMAPS etc.)
     url_protocol = self.getUrlProtocol('imaps') # Default to IMAP
     if url_protocol == 'imaps':
-      result = IMAPSServer(self.getURLServer(), self.getUserId(), self.getPassword(), port=self.getURLPort())
+      server_class = IMAPSServer
     elif url_protocol == 'imap':
-      result = IMAPServer(self.getURLServer(), self.getUserId(), self.getPassword(), port=self.getURLPort())
+      server_class = IMAPServer
     elif url_protocol == 'pops':
-      result = POPSServer(self.getURLServer(), self.getUserId(), self.getPassword(), port=self.getURLPort())
+      server_class = POPSServer
     elif url_protocol == 'pop':
-      result = POPServer(self.getURLServer(), self.getUserId(), self.getPassword(), port=self.getURLPort())
+      server_class = POPServer
     else:
       raise NotImplementedError
 
-    if cache is not None:
-      cache[key] = result
-
-    return result
-
+    return server_class(server_url, self.getUserId(), self.getPassword(),
+                        port=self.getURLPort())
