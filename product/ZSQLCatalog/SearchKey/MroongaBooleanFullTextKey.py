@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2014-2006 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2014 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -33,7 +33,7 @@ from zope.interface.verify import verifyClass
 class MroongaBooleanFullTextKey(MroongaFullTextKey):
   """
     This SearchKey generates SQL fulltext comparisons for Mroonga whose
-    default comparison operator is match_boolean.
+    default comparison operator is mroonga_boolean.
   """
   default_comparison_operator = 'mroonga_boolean'
 
