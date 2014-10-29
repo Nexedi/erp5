@@ -145,8 +145,8 @@
               id="add_new_tab_dialog_add_button">Add</button>\n
   </div>\n
 \n
+  <tal:block tal:condition="python:active_knowledge_pad is not None">\n
   <div id="rename_tab_dialog" \n
-       tal:condition="python:active_knowledge_pad is not None"\n
        class="toggable_dialog"\n
        tal:define="active_knowledge_pad_relative_url python:active_knowledge_pad and active_knowledge_pad.getRelativeUrl() or \'\'">\n
     <h3 i18n:translate="" i18n:domain="ui"> Rename tab </h3>\n
@@ -170,6 +170,7 @@
         Rename \n
       </button>\n
   </div>\n
+</tal:block>\n
 </tal:block>\n
 \n
 \n
