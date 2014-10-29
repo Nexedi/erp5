@@ -1,8 +1,5 @@
 career_skill_title | category,catalog,catalog_full_text/title/z_related_career_skill
 description | catalog_full_text/description/z_related_uid
-destination_person_title | category,catalog_full_text/title/z_related_destination_person
 parent_description | catalog_full_text/description/z_related_parent
 parent_title | catalog_full_text/title/z_related_parent
-source_organisation_title | category,catalog_full_text/title/z_related_source_organisation
-source_person_title | category,catalog_full_text/title/z_related_source_person
 title | catalog_full_text/title/z_related_uid
