@@ -135,7 +135,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//*[@class=\'listbox-data-line-0 DataA\']//input[@type="checkbox"]</td>\n
+  <td>//tr//a[.="a"]/parent::td/preceding-sibling::td/input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
