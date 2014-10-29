@@ -30,9 +30,10 @@
 
 from DefaultKey import DefaultKey
 from SearchKey import SearchKey
+
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
-from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
+from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
 import re
 
@@ -49,7 +50,7 @@ class FullTextKey(DefaultKey):
     return False
 
   def _renderValueAsSearchText(self, value, operator):
-    return '(%s)' % (value, )
+    return '"%s"' % value.replace('"', '\\"')
 
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):
@@ -75,6 +76,13 @@ class FullTextKey(DefaultKey):
         operator_value_dict['match_boolean'].extend(new_value_list)
       else:
         operator_value_dict['match'] = new_value_list
+    # Dequote for non full-text queries.
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      if comparison_operator not in ('match', 'match_boolean'):
+        operator_value_dict[comparison_operator] = [
+          isinstance(value, basestring) and dequote(value) or value
+          for value in value_list
+        ]
     return operator_value_dict, logical_operator, parsed
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
@@ -86,10 +94,26 @@ class FullTextKey(DefaultKey):
     column = self.getColumn()
     query_list = []
     append = query_list.append
-    for comparison_operator, value_list in operator_value_dict.iteritems():
-      append(SimpleQuery(search_key=self,
-                         comparison_operator=comparison_operator,
-                         group=group, **{column: ' '.join(value_list)}))
+    for comparison_operator in ('match', 'match_boolean'):
+      value_list = operator_value_dict.pop(comparison_operator, [])
+      if not value_list:
+        continue
+      if logical_operator == 'or':
+        joined_value = ' '.join(value_list)
+        append(SimpleQuery(search_key=self,
+                           comparison_operator=comparison_operator,
+                           group=group, **{column:joined_value}))
+      else:
+        # In MySQL FTS, no operator implies OR so that we cannot merge
+        # AND queries into one.
+        for value in value_list:
+          append(SimpleQuery(search_key=self,
+                             comparison_operator=comparison_operator,
+                             group=group, **{column:value}))
+    # Other comparison operators are handled by the super class.
+    if operator_value_dict:
+      query_list += super(FullTextKey, self)._buildQuery(
+        operator_value_dict, logical_operator, parsed, group)
     return query_list
 
 verifyClass(ISearchKey, FullTextKey)

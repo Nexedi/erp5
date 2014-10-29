@@ -29,10 +29,31 @@
 from DefaultKey import DefaultKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
+from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
  
 class MroongaFullTextKey(DefaultKey):
   default_comparison_operator = 'mroonga'
+
+  def dequoteParsedText(self):
+    return False
+
+  def _renderValueAsSearchText(self, value, operator):
+    return '"%s"' % value.replace('"', '\\"')
+
+  def _processSearchValue(self, search_value, logical_operator,
+                          comparison_operator):
+    operator_value_dict, logical_operator, parsed = \
+      super(MroongaFullTextKey, self)._processSearchValue(
+        search_value, logical_operator, comparison_operator)
+    # Dequote for non full-text queries.
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      if comparison_operator not in ('mroonga', 'mroonga_boolean'):
+        operator_value_dict[comparison_operator] = [
+          isinstance(value, basestring) and dequote(value) or value
+          for value in value_list
+        ]
+    return operator_value_dict, logical_operator, parsed
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """
@@ -43,18 +64,12 @@ class MroongaFullTextKey(DefaultKey):
     column = self.getColumn()
     query_list = []
     append = query_list.append
-    def escape(x):
-      # We need to escape once here for Mroonga, and it will be
-      # escaped once more in OperatorBase._renderValue().
-      return (not parsed and '"%s"' % x.replace('"', '\\"') or x).replace(
-        '(', '\\(').replace(
-        ')', '\\)')
     for comparison_operator in ('mroonga', 'mroonga_boolean'):
       value_list = operator_value_dict.pop(comparison_operator, [])
       if not value_list:
         continue
       if logical_operator == 'and':
-        joined_value = ' '.join(escape(value) for value in value_list)
+        joined_value = ' '.join(value_list)
         append(SimpleQuery(search_key=self,
                            comparison_operator=comparison_operator,
                            group=group, **{column:joined_value}))
@@ -63,7 +78,7 @@ class MroongaFullTextKey(DefaultKey):
         for value in value_list:
           append(SimpleQuery(search_key=self,
                              comparison_operator=comparison_operator,
-                             group=group, **{column:escape(value)}))
+                             group=group, **{column:value}))
     # Other comparison operators are handled by the super class.
     if operator_value_dict:
       query_list += super(MroongaFullTextKey, self)._buildQuery(

@@ -172,7 +172,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
       # Always use BOOLEAN MODE to combine similarity search and boolean search.
       fulltext_query = '*D+'
       if match_query_list:
-        fulltext_query += ' *S"%s"' % ' '.join(x.replace('"', '\\"') for x in match_query_list)
+        fulltext_query += ' *S"%s"' % ' '.join(match_query_list)
       if match_boolean_query_list:
         fulltext_query += ' %s' % ' '.join(match_boolean_query_list)
       return self._renderValue(fulltext_query)
