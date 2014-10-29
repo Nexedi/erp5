@@ -268,15 +268,12 @@ else:
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
+  filter_test_list = None
   _testMethodPrefix = 'test'
 
   testMethodPrefix = property(
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
-
-  def __init__(self, filter_test_list=()):
-    super(ERP5TypeTestLoader, self).__init__()
-    self.filter_test_list = filter_test_list
 
   def loadTestsFromName(self, name, module=None):
     """
@@ -433,10 +430,10 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     The returned list only contain names matching --run_only
     """
     name_list = super(ERP5TypeTestLoader, self).getTestCaseNames(testCaseClass)
-    if self.filter_test_list:
+    if ERP5TypeTestLoader.filter_test_list:
       filtered_name_list = []
       for name in name_list:
-        for test in self.filter_test_list:
+        for test in ERP5TypeTestLoader.filter_test_list:
           if test(name):
             filtered_name_list.append(name)
             break
@@ -654,8 +651,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
             result = super(DebugTextTestRunner, self)._makeResult()
             return DebugTestResult(result)
         TestRunner = DebugTextTestRunner
-      loader = ERP5TypeTestLoader(
-        [re.compile(x).search for x in run_only.split(',')] if run_only else ())
+      loader = ERP5TypeTestLoader()
+      if run_only:
+        ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
+                for x in run_only.split(',')]
       suite = loader.loadTestsFromNames(test_list)
 
     if node_pid_list is None:
