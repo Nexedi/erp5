@@ -2533,6 +2533,10 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           html = u'<a href="%s">%s</a>' % (url, html)
 
       html_list.append((html, original_value, error, editable_field, url))
+
+    # XXX Does not leave garbage in REQUEST['cell'], because some other
+    # fields also use that key...
+    request.other.pop('cell', None)
     return html_list
 
 allow_class(ListBoxHTMLRendererLine)
@@ -2918,6 +2922,10 @@ class ListBoxValidator(Validator.Validator):
             #LOG("ListBox FormValidationError",0,str(error_result))
             #LOG("ListBox FormValidationError",0,str(errors))
             raise FormValidationError(errors, error_result)
+
+        # XXX Does not leave garbage in REQUEST['cell'], because some other
+        # fields also use that key...
+        REQUEST.other.pop('cell', None)
         return result
 
 ListBoxValidatorInstance = ListBoxValidator()
