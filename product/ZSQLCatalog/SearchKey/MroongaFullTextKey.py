@@ -39,7 +39,7 @@ class MroongaFullTextKey(DefaultKey):
     return False
 
   def _renderValueAsSearchText(self, value, operator):
-    return '"%s"' % value.replace('"', '\\"')
+    return '(%s)' % (value, )
 
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):

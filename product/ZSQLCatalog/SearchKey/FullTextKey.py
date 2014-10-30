@@ -50,7 +50,7 @@ class FullTextKey(DefaultKey):
     return False
 
   def _renderValueAsSearchText(self, value, operator):
-    return '"%s"' % value.replace('"', '\\"')
+    return '(%s)' % (value, )
 
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):
@@ -60,8 +60,8 @@ class FullTextKey(DefaultKey):
       mode, make the operator for that value be 'match_boolean'.
     """
     operator_value_dict, logical_operator, parsed = \
-      SearchKey._processSearchValue(self, search_value, logical_operator,
-                                    comparison_operator)
+      super(FullTextKey, self)._processSearchValue(
+        search_value, logical_operator, comparison_operator)
     new_value_list = []
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
