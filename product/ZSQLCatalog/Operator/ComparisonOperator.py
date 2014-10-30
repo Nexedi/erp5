@@ -119,7 +119,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     if self.mode == ' IN BOOLEAN MODE' and \
         not fulltext_boolean_detector.search(value_list):
       value_list = ' '.join(['+%s' % x for x in value_list.split()])
-      return self._renderValue(value_list)
+    return self._renderValue(value_list)
 
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
