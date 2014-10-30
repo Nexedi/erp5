@@ -691,10 +691,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         portal_category.group.objectIds()])
     group_nexedi_category = portal_category.group\
                                 .newContent( id = 'nexedi', title='Nexedi',
-                                             description='a')
+                                             reference='a')
     group_nexedi_category2 = portal_category.group\
                                 .newContent( id = 'storever', title='Storever',
-                                             description='b')
+                                             reference='b')
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
     organisation.setGroup('nexedi')
@@ -717,17 +717,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_list = [x.getObject() for x in
                          module.searchFolder(group_id='storever')]
     self.assertEqual(organisation_list,[organisation2])
-    # Try to get the organisation with the group description 'a'
+    # Try to get the organisation with the group reference 'a'
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(group_description='a')]
+                         module.searchFolder(group_reference='a')]
     self.assertEqual(organisation_list,[organisation])
-    # Try to get the organisation with the group description 'c'
+    # Try to get the organisation with the group reference 'c'
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(group_description='c')]
+                         module.searchFolder(group_reference='c')]
     self.assertEqual(organisation_list,[])
-    # Try to get the organisation with the default group description 'c'
+    # Try to get the organisation with the default group reference 'c'
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(default_group_description='c')]
+                         module.searchFolder(default_group_reference='c')]
     self.assertEqual(organisation_list,[])
     # Try to get the organisation with group relative_url
     group_relative_url = group_nexedi_category.getRelativeUrl()
@@ -753,10 +753,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         portal_category.group.objectIds()])
     group_nexedi_category = portal_category.group\
                                 .newContent( id = 'nexedi', title='Nexedi',
-                                             description='a')
+                                             reference='a')
     sub_group_nexedi = group_nexedi_category\
                                 .newContent( id = 'erp5', title='ERP5',
-                                             description='b')
+                                             reference='b')
     module = portal.getDefaultModule('Organisation')
     organisation = module.newContent(portal_type='Organisation',)
     organisation.setGroup('nexedi/erp5')
@@ -772,13 +772,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation_list = [x.getObject() for x in
                          module.searchFolder(strict_group_title='ERP5')]
     self.assertEqual(organisation_list,[organisation])
-    # Try to get the organisation with the group description a
+    # Try to get the organisation with the group reference a
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(strict_group_description='a')]
+                         module.searchFolder(strict_group_reference='a')]
     self.assertEqual(organisation_list,[])
-    # Try to get the organisation with the group description b
+    # Try to get the organisation with the group reference b
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(strict_group_description='b')]
+                         module.searchFolder(strict_group_reference='b')]
     self.assertEqual(organisation_list,[organisation])
 
   def test_22_SearchingWithUnicode(self):
