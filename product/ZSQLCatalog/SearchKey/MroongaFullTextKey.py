@@ -39,6 +39,10 @@ class MroongaFullTextKey(DefaultKey):
     return False
 
   def _renderValueAsSearchText(self, value, operator):
+    # XXX:
+    # return value for 'a b' here is '(a b), but keyword search with
+    # '(a b)' means fulltext search with (a OR b), that is different
+    # from fulltext='a b' that means fulltext search with (a AND b).
     return '(%s)' % (value, )
 
   def _processSearchValue(self, search_value, logical_operator,
