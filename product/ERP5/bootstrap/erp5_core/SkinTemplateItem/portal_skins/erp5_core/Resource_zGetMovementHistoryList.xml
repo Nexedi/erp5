@@ -417,7 +417,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>from_table_list:list\r\n
+            <value> <string>from_expression\r\n
+from_table_list:list\r\n
 where_expression\r\n
 order_by_expression\r\n
 group_by_expression\r\n
@@ -512,12 +513,16 @@ SELECT\n
   stock.node_uid AS node_uid,\n
   stock.section_uid AS section_uid\n
 FROM\n
+<dtml-if from_expression>\n
+  <dtml-var from_expression>\n
+<dtml-else>\n
   stock\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
+</dtml-if>\n
   <dtml-if selection_domain><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias=\'domain_category\')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>\n
   <dtml-if selection_report><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report, category_table_alias=\'report_category\')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>\n
 \n
