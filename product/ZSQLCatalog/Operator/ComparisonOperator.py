@@ -99,8 +99,7 @@ verifyClass(IOperator, MultivaluedComparisonOperator)
 class MatchComparisonOperator(MonovaluedComparisonOperator):
   def __init__(self, operator, mode=''):
     MonovaluedComparisonOperator.__init__(self, operator, '')
-    self.mode = mode
-    self.where_expression_format_string = 'MATCH (%(column)s) AGAINST (%(value_list)s%(mode)s)'
+    self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
 
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
@@ -111,11 +110,9 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
     if value_list == '':
       column, value_list = self.render(column, value_list)
       return SQLExpression(self, where_expression='%s %s %s' % (column, '=', value_list))
-    value_list = self.renderValue(value_list)
     match_string = self.where_expression_format_string % {
       'column': column,
-      'value_list': value_list,
-      'mode':self.mode,
+      'value_list': self.renderValue(value_list),
     }
     select_dict = {}
     if not only_group_columns:
