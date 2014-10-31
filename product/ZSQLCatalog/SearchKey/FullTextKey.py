@@ -35,6 +35,7 @@ from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
 import re
 
+FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
 class FullTextKey(DefaultKey):
   """
@@ -42,7 +43,6 @@ class FullTextKey(DefaultKey):
   """
   default_comparison_operator = 'match'
   get_operator_from_value = False
-  fulltext_boolean_detector = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
   def dequoteParsedText(self):
     return False
@@ -64,7 +64,7 @@ class FullTextKey(DefaultKey):
     append = new_value_list.append
     for value in operator_value_dict.pop('match', []):
       if isinstance(value, basestring) and \
-          self.fulltext_boolean_detector.match(value) is not None:
+         FULLTEXT_BOOLEAN_DETECTOR.match(value) is not None:
         operator_value_dict.setdefault('match_boolean', []).append(value)
       else:
         append(value)
