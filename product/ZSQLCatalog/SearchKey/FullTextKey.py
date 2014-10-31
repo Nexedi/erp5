@@ -29,8 +29,6 @@
 ##############################################################################
 
 from DefaultKey import DefaultKey
-from SearchKey import SearchKey
-
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Products.ZSQLCatalog.SearchText import dequote
@@ -98,18 +96,12 @@ class FullTextKey(DefaultKey):
       value_list = operator_value_dict.pop(comparison_operator, [])
       if not value_list:
         continue
-      if logical_operator == 'or':
-        joined_value = ' '.join(value_list)
-        append(SimpleQuery(search_key=self,
-                           comparison_operator=comparison_operator,
-                           group=group, **{column:joined_value}))
-      else:
-        # In MySQL FTS, no operator implies OR so that we cannot merge
-        # AND queries into one.
-        for value in value_list:
-          append(SimpleQuery(search_key=self,
-                             comparison_operator=comparison_operator,
-                             group=group, **{column:value}))
+      # XXX:
+      # In MySQL FTS, no operator implies OR so that we should not merge
+      # AND queries into one...
+      append(SimpleQuery(search_key=self,
+                         comparison_operator=comparison_operator,
+                         group=group, **{column: ' '.join(value_list)}))
     # Other comparison operators are handled by the super class.
     if operator_value_dict:
       query_list += super(FullTextKey, self)._buildQuery(
