@@ -69,22 +69,6 @@ class TestI18NSearch(ERP5TypeTestCase):
     self.assertEqual(len(result), 1)
     self.assertEqual(result[0].getPath(), person2.getPath())
 
-    # check natural language mode search
-    result = person_module.searchFolder(SearchableText='quick fox dog')
-    self.assertEqual(len(result), 2)
-    sorted_result = sorted(list(result), key=lambda x:x.SearchableText, reverse=True)
-    # all of 'quick', 'fox' and 'dog' match.
-    self.assertEqual(result[0].getPath(), person1.getPath())
-    # only 'fox' and 'dog' match.
-    self.assertEqual(result[1].getPath(), person2.getPath())
-    result = person_module.searchFolder(description='quick fox dog')
-    self.assertEqual(len(result), 2)
-    sorted_result = sorted(list(result), key=lambda x:x.description, reverse=True)
-    # all of 'quick', 'fox' and 'dog' match.
-    self.assertEqual(result[0].getPath(), person1.getPath())
-    # only 'fox' and 'dog' match.
-    self.assertEqual(result[1].getPath(), person2.getPath())
-
     # check boolean language mode search
     result = person_module.searchFolder(SearchableText='+quick +fox +dog')
     self.assertEqual(len(result), 1)
