@@ -98,15 +98,14 @@ class FullTextKey(DefaultKey):
       value_list = operator_value_dict.pop(comparison_operator, [])
       if not value_list:
         continue
-      # In MySQL FTS, no operator implies OR, but we make 'default
-      # AND' for boolean mode.
-      if (comparison_operator == 'match' and logical_operator == 'or') or \
-        (comparison_operator == 'match_boolean' and logical_operator == 'and'):
+      if logical_operator == 'or':
         joined_value = ' '.join(value_list)
         append(SimpleQuery(search_key=self,
                            comparison_operator=comparison_operator,
                            group=group, **{column:joined_value}))
       else:
+        # In MySQL FTS, no operator implies OR so that we cannot merge
+        # AND queries into one.
         for value in value_list:
           append(SimpleQuery(search_key=self,
                              comparison_operator=comparison_operator,

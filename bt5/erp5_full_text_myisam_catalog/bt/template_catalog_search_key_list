@@ -1,6 +1,0 @@
-SearchableText | FullTextKey
-catalog_full_text.description | FullTextKey
-catalog_full_text.title | BooleanFullTextKey
-description | FullTextKey
-full_text.SearchableText | FullTextKey
-title | BooleanFullTextKey

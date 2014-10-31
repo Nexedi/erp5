@@ -96,30 +96,11 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
 
 verifyClass(IOperator, MultivaluedComparisonOperator)
 
-fulltext_boolean_detector = re.compile(r'((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
-
 class MatchComparisonOperator(MonovaluedComparisonOperator):
   def __init__(self, operator, mode=''):
     MonovaluedComparisonOperator.__init__(self, operator, '')
     self.mode = mode
     self.where_expression_format_string = 'MATCH (%(column)s) AGAINST (%(value_list)s%(mode)s)'
-
-  def renderValue(self, value_list):
-    """
-      Special Query renderer for MroongaFullText queries:
-      * in boolean mode, we make 'AND' search by using '+word' format,
-        if no explicit boolean operation usage exists.
-    """
-    if isinstance(value_list, list_type_list):
-      try:
-        value_list, = value_list
-      except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
-
-    if self.mode == ' IN BOOLEAN MODE' and \
-        not fulltext_boolean_detector.search(value_list):
-      value_list = ' '.join(['+%s' % x for x in value_list.split()])
-    return self._renderValue(value_list)
 
   def asSQLExpression(self, column, value_list, only_group_columns):
     """
