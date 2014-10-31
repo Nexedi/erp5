@@ -2903,7 +2903,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
           'Redirected action export',
           'Attempted to retrieve action %r from %r which is no longer an '
-          'IActionProvided. Retrieving action from portal_actions instead' %
+          'IActionProvider. Retrieving action from portal_actions instead' %
           (value, obj.getId()))
       obj = context.getPortalObject().portal_actions
     id_id = 'id'
@@ -2977,7 +2977,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
               'Redirected action import',
               'Attempted to store action %r in %r which is no longer an '
-              'IActionProvided. Storing action on portal_actions instead' %
+              'IActionProvider. Storing action on portal_actions instead' %
               (id, path))
           container = p.portal_actions
         obj, action = container, obj
