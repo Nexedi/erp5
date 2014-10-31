@@ -67,8 +67,8 @@ CREATE TABLE `catalog_full_text` (\n
   `title` varchar(255) default \'\',\n
   `description` text,\n
   PRIMARY KEY  (`uid`),\n
-  FULLTEXT `title` (`title`),\n
-  FULLTEXT `description` (`description`)\n
+  FULLTEXT `title` (`title`) COMMENT \'parser "TokenBigramSplitSymbolAlpha"\',\n
+  FULLTEXT `description` (`description`) COMMENT \'parser "TokenBigramSplitSymbolAlpha"\'\n
 ) ENGINE=mroonga;\n
 </string> </value>
         </item>
