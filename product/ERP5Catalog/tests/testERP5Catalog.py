@@ -2105,7 +2105,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # description is not a keyword by default. (This might change in the
     # future, in this case, this test have to be updated)
     self.assertSameSet([doc], [x.getObject() for x in
-        ctool(portal_type='Organisation', description='Foo')])
+        ctool(portal_type='Organisation', description='=Foo')])
     self.assertEqual({doc, other_doc}, {x.getObject() for x in
       ctool(portal_type='Organisation', description=dict(query='Foo',
                                                          key='Keyword'))})
