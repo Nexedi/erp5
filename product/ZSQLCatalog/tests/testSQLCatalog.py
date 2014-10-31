@@ -168,8 +168,10 @@ class DummyCatalog(SQLCatalog):
 
   sql_catalog_keyword_search_keys = ('keyword', )
   sql_catalog_datetime_search_keys = ('date', )
-  sql_catalog_full_text_search_keys = ('fulltext', )
+  sql_catalog_full_text_search_keys = ('old_fulltext', )
   sql_catalog_scriptable_keys = ('scriptable_keyword | scriptableKeyScript', )
+  sql_catalog_search_keys = ('fulltext | MroongaFullTextKey',
+                             'fulltext_boolean | MroongaBooleanFullTextKey',)
 
   def getColumnMap(self):
     """
@@ -180,7 +182,9 @@ class DummyCatalog(SQLCatalog):
       'default': ['foo', ],
       'keyword': ['foo', ],
       'date': ['foo', ],
+      'old_fulltext': ['foo', ],
       'fulltext': ['foo', ],
+      'fulltext_boolean': ['foo', ],
       'other_uid': ['bar', ],
       'ambiguous_mapping': ['foo', 'bar'],
     }
@@ -495,8 +499,8 @@ class TestSQLCatalog(ERP5TypeTestCase):
     # This example introduces impossible-to-merge search text criterion, which
     # is allowed as long as
     reference_query = ReferenceQuery(
-        ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
-        ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'),
+        ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'),
+        ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='b'),
       operator='not'), operator='and'), operator='and')
     self.catalog(reference_query, {'fulltext': 'a NOT b'})
     # The same, with an order by, must raise
@@ -504,15 +508,15 @@ class TestSQLCatalog(ERP5TypeTestCase):
       {'fulltext': 'a NOT b', 'order_by_list': [('fulltext', ), ]},
       check_search_text=False)
     # If one want to sort on, he must use the equivalent FullText syntax:
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='mroonga',
       fulltext=MatchList(['a -b', '-b a'])), operator='and'),
       {'fulltext': 'a -b', 'order_by_list': [('fulltext', ), ]},
       check_search_text=False)
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
-                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='or'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'),
+                                               ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='b'), operator='not'), operator='or'), operator='and'),
                  {'fulltext': 'a OR NOT b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
-                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='and'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'),
+                                               ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='b'), operator='not'), operator='and'), operator='and'),
                  {'fulltext': 'a AND NOT b'})
 
   def test_006_testRelatedKey_with_multiple_join(self):
@@ -540,7 +544,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  check_search_text=False)
 
   def test_009_testFullTextKey(self):
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'), operator='and'),
                  {'fulltext': 'a'})
 
   def test_isAdvancedSearchText(self):
@@ -551,15 +555,20 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def test_FullTextSearchMergesQueries(self):
     """
+      XXX this test is for old FullTextKey, not for MroongaFullTextKey
+      that merges queries only when logical_operator is 'and'. Also
+      _renderValueAsSearchText it not perfect so that we cannot use the
+      test codes below for mroonga search key.
+
       FullText criterion on the same scope must be merged into one query.
       Logical operator is ignored, as fulltext operators are expected instead.
     """
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='and'),
-                 {'fulltext': 'a AND b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='and'),
-                 {'fulltext': 'a OR b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='not'), operator='and'),
-                 {'fulltext': 'NOT (a b)'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a b'), operator='and'),
+                 {'old_fulltext': 'a AND b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a b'), operator='and'),
+                 {'old_fulltext': 'a OR b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a b'), operator='not'), operator='and'),
+                 {'old_fulltext': 'NOT (a b)'})
 
   def test_NoneValueToSimpleQuery(self):
     """
@@ -583,60 +592,69 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def test_FullTextBooleanMode(self):
     """
+      XXX this test is for old FullTextKey, not for MroongaFullTextKey
+      that does no automatic mode switch.
+
       Fulltext searches must switch automatically to boolean mode if boolean
       operators are found in search value.
     """
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
-                                fulltext=MatchList(['a*'])), operator='and'),
-                 {'fulltext': 'a*'})
+                                old_fulltext=MatchList(['a*'])), operator='and'),
+                 {'old_fulltext': 'a*'})
 
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
-                                fulltext=MatchList(['a* b'])), operator='and'),
-                 {'fulltext': 'a* b'})
+                                old_fulltext=MatchList(['a* b'])), operator='and'),
+                 {'old_fulltext': 'a* b'})
 
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='*a'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='*a'),
                                 operator='and'),
-                 {'fulltext': '*a'})
+                 {'old_fulltext': '*a'})
 
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a'),
                                 operator='and'),
-                 {'fulltext': 'a'})
+                 {'old_fulltext': 'a'})
 
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a+b'), operator='and'),
-                 {'fulltext': 'a+b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', old_fulltext='a+b'), operator='and'),
+                 {'old_fulltext': 'a+b'})
 
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
-      fulltext=MatchList(['a +b', '+b a'])), operator='and'),
-                 {'fulltext': 'a +b'}, check_search_text=False)
+      old_fulltext=MatchList(['a +b', '+b a'])), operator='and'),
+                 {'old_fulltext': 'a +b'}, check_search_text=False)
 
     self.catalog(ReferenceQuery(ReferenceQuery(
         ReferenceQuery(operator='=', uid='foo'),
         ReferenceQuery(operator='match_boolean',
-          fulltext=MatchList(['+a b', 'b +a'])),
-      operator='and'), operator='and'), {'fulltext': '+a b uid:foo'})
+          old_fulltext=MatchList(['+a b', 'b +a'])),
+      operator='and'), operator='and'), {'old_fulltext': '+a b uid:foo'})
 
   def test_FullTextQuoting(self):
+    """
+      XXX this test is for old FullTextKey, not for MroongaFullTextKey
+      that merges queries only when logical_operator is 'and'. Also
+      _renderValueAsSearchText it not perfect so that we cannot use the
+      test codes below for mroonga search key.
+    """
     # Quotes must be kept
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
-      fulltext='"a"'), operator='and'),
-      {'fulltext': '"a"'})
+      old_fulltext='"a"'), operator='and'),
+      {'old_fulltext': '"a"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
-      fulltext='"foo" bar "baz"'), operator='and'),
-      {'fulltext': '"foo" bar "baz"'})
+      old_fulltext='"foo" bar "baz"'), operator='and'),
+      {'old_fulltext': '"foo" bar "baz"'})
     # ...But each column must follow rules defined in configured SearchKey for
     # that column (in this case: quotes must be stripped).
     ref_query = ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match',
-      fulltext='"foo" bar'), ReferenceQuery(operator='=',
+      old_fulltext='"foo" bar'), ReferenceQuery(operator='=',
       default='hoge \"pon'), operator='and'), operator='and')
     self.catalog(ref_query, {
-      'keyword': 'default:"hoge \\"pon" AND fulltext:("foo" bar)'})
+      'keyword': 'default:"hoge \\"pon" AND old_fulltext:("foo" AND bar)'})
     self.catalog(ref_query, {
-      'fulltext': '"foo" bar AND default:"hoge \\"pon"'})
+      'old_fulltext': '"foo" bar AND default:"hoge \\"pon"'})
     ref_query = ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match',
-      fulltext='"\\"foo\\" bar"'), ReferenceQuery(operator='=',
+      old_fulltext='"\\"foo\\" bar"'), ReferenceQuery(operator='=',
       default='hoge \"pon'), operator='and'), operator='and')
     self.catalog(ref_query, {
-      'keyword': 'default:"hoge \\"pon" AND fulltext:"\\"foo\\" bar"'})
+      'keyword': 'default:"hoge \\"pon" AND old_fulltext:"\\"foo\\" bar"'})
 
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),
