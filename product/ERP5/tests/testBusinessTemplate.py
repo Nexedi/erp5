@@ -1494,6 +1494,15 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                          float_index=2.0)
     sequence.edit(first_action_id='become_geek')
 
+  def stepTestFirstAction(self, sequence=None,**kw):
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    result, message = bt.getPortalTypesProperties()
+    self.assertEquals(result,0)
+
   def stepCreateEmptyAction(self, sequence=None, **kw):
     """
     Create an empty action
@@ -1506,6 +1515,15 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                          action_permission_list=(),
                          float_index=1.2)
 
+  def stepTestEmptyAction(self, sequence=None,**kw):
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    result, message = bt.getPortalTypesProperties()
+    self.assertEquals(result,1)  
+  
   def stepCreateSecondAction(self, sequence=None, **kw):
     """
     Create a second action
@@ -3938,9 +3956,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       TestFirstAction\
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        CreateEmptyAction \
+                       TestEmptyAction\
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
