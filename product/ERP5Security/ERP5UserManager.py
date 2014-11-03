@@ -150,7 +150,7 @@ class ERP5UserManager(BasePlugin):
                 if assignment.getStartDate() is not None and \
                        assignment.getStartDate() > login_date:
                   continue
-                if assignment.getStopDate() is not None and \
+                if assignment.hasStopDate() and \
                        assignment.getStopDate() < login_date:
                   continue
                 valid_assignment_list.append(assignment)
