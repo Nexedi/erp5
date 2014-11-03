@@ -1494,14 +1494,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                          float_index=2.0)
     sequence.edit(first_action_id='become_geek')
 
-  def stepTestFirstAction(self, sequence=None,**kw):
+  def stepTestFirstAction(self, sequence=None, **kw):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     bt = sequence.get('current_bt', None)
     self.assertTrue(bt is not None)
     result, message = bt.getPortalTypesProperties()
-    self.assertEqual(result,0)
+    self.assertEqual(result, 0)
 
   def stepCreateEmptyAction(self, sequence=None, **kw):
     """
@@ -1515,14 +1515,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                          action_permission_list=(),
                          float_index=1.2)
 
-  def stepTestEmptyAction(self, sequence=None,**kw):
+  def stepTestEmptyAction(self, sequence=None, **kw):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
     bt = sequence.get('current_bt', None)
     self.assertTrue(bt is not None)
     result, message = bt.getPortalTypesProperties()
-    self.assertEqual(result,1)  
+    self.assertEqual(result, 1)
   
   def stepCreateSecondAction(self, sequence=None, **kw):
     """

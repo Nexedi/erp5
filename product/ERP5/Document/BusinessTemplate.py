@@ -85,6 +85,7 @@ from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
 import transaction
+
 import threading
 from ZODB.broken import Broken
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
@@ -115,9 +116,6 @@ catalog_method_filter_list = ('_filter_expression_archive',
 
 INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
 _MARKER = []
-
-
-
 
 def _getCatalog(acquisition_context):
   """
@@ -5867,8 +5865,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         for act_id in action_list:
           if act_id is None:
-            return (1, Base_translateString("ERROR: An action has an empty id on portal_type ${id}"
-            ,mapping=dict(id=id)))
+            return (1, Base_translateString(
+              "ERROR: An action has an empty id on portal_type ${id}",
+              mapping=dict(id=id)))
           action_id = id+' | '+act_id
           if action_id not in bt_action_list:
             bt_action_list.append(action_id)
