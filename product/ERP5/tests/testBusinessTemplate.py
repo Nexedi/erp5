@@ -1501,7 +1501,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt', None)
     self.assertTrue(bt is not None)
     result, message = bt.getPortalTypesProperties()
-    self.assertEquals(result,0)
+    self.assertEqual(result,0)
 
   def stepCreateEmptyAction(self, sequence=None, **kw):
     """
@@ -1522,7 +1522,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt', None)
     self.assertTrue(bt is not None)
     result, message = bt.getPortalTypesProperties()
-    self.assertEquals(result,1)  
+    self.assertEqual(result,1)  
   
   def stepCreateSecondAction(self, sequence=None, **kw):
     """
