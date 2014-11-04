@@ -197,15 +197,11 @@ for line in getSubLineList(context):\n
         display_id = \'title\'\n
       variation_description = \', \'.join([x[0] for x in line.getVariationCategoryItemList(display_id=display_id)])\n
       desc = (\'%s %s\' % (desc[0], variation_description), )\n
-    is_tax=0\n
-    portal_preferences = context.getPortalObject().portal_preferences\n
-    if portal_preferences.getPreferredTaxUseList()==[] :\n
-      use_of_tax="use/trade/tax"\n
-      is_tax=line.isMemberOf(use_of_tax)   \n
-    else:\n
-      tax_list=portal_preferences.getPreferredTaxUseList()     \n
-      for use_of_tax in tax_list:\n
-        is_tax = is_tax or line.isMemberOf(use_of_tax)\n
+    is_tax = 0\n
+    for tax_use in (context.getPortalObject().portal_preferences.getPreferredTaxUseList() or ["use/trade/tax"]):\n
+      if line.isMemberOf(tax_use):\n
+        is_tax = 1\n
+        break\n
 \n
     #set the not_tax_line with the tax_number and the tax_line with the tax_name\n
     tax_number=\'\'\n
@@ -247,8 +243,9 @@ for line in getSubLineList(context):\n
     }\n
 \n
     if line_dict[\'use_type_tax\']:\n
-      total_tax_price+=line.getTotalPrice() or 0.0\n
-      line_tax.append(unicodeDict(line_dict.copy()))\n
+      if line.getQuantity():\n
+        total_tax_price+=line.getTotalPrice() or 0.0\n
+        line_tax.append(unicodeDict(line_dict.copy()))\n
     else:\n
       number_line_not_tax = number_line_not_tax+1\n
       line_dict[\'number_not_tax_line\'] = number_line_not_tax\n
