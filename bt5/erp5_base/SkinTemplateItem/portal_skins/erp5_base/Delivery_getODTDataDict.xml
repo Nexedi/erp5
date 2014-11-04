@@ -380,6 +380,10 @@ data_dict = {\n
           getEmail(source_administration.getProperty(\'email_text\', \'\')),\n
   \'source_administration_vatid\':\n
           getVatId(source_administration.getProperty(\'vat_code\', \'\')),\n
+  \'source_administration_registeredcapital\':\n
+          getSocialCapital(source_administration.getProperty(\'social_capital\', \'\')),\n
+  \'source_administration_corporateregcode\':\n
+          getCorporateRegCode(source_administration.getProperty(\'corporate_registration_code\', \'\')),\n
 \n
   \'source_title\': source.getProperty(\'corporate_name\') or source.getTitle(),\n
   \'source_address\': getOneLineAddress(\n
@@ -457,6 +461,10 @@ data_dict = {\n
           getEmail(destination_administration.getProperty(\'email_text\', \'\')),\n
   \'destination_administration_vatid\':\n
           getVatId(destination_administration.getProperty(\'vat_code\', \'\')),\n
+  \'destination_administration_registeredcapital\':\n
+          getSocialCapital(destination_administration.getProperty(\'social_capital\', \'\')),\n
+  \'destination_administration_corporateregcode\':\n
+          getCorporateRegCode(destination_administration.getProperty(\'corporate_registration_code\', \'\')),\n
 \n
   \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
   \'destination_decision_telfax\': getPhoneAndFax(destination_decision.getTelephoneText() or \'\',\n

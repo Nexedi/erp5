@@ -346,6 +346,12 @@ AAA=</string> </value>
                       tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_email\'] or data_dict[\'source_administration_email\']">\n
               </text:p>\n
               <text:p text:style-name="Header"\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_corporateregcode\'] or data_dict[\'source_administration_corporateregcode\']">\n
+              </text:p>\n
+              <text:p text:style-name="Header"\n
+                      tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_registeredcapital\'] or data_dict[\'source_administration_registeredcapital\']">\n
+              </text:p>\n
+              <text:p text:style-name="Header"\n
                       tal:content="python: here.getPortalType().startswith(\'Purchase\') and data_dict[\'destination_administration_vatid\'] or data_dict[\'source_administration_vatid\']">\n
               </text:p>\n
             </table:table-cell>\n
@@ -371,8 +377,7 @@ AAA=</string> </value>
     </style:master-page>\n
     <style:master-page style:name="Endnote" style:page-layout-name="pm2"/>\n
   </office:master-styles>\n
-</office:document-styles>\n
-
+</office:document-styles>
 
 ]]></unicode> </value>
         </item>
@@ -402,7 +407,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
