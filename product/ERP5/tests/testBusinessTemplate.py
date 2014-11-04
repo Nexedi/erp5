@@ -1523,7 +1523,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(bt is not None)
     result, message = bt.getPortalTypesProperties()
     self.assertEqual(result, 1)
-  
+
   def stepCreateSecondAction(self, sequence=None, **kw):
     """
     Create a second action

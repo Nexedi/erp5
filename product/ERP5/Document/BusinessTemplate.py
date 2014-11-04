@@ -5817,7 +5817,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
       bt_portal_type_roles_list = list(self.getTemplatePortalTypeRoleList())
       bt_wf_chain_list = list(self.getTemplatePortalTypeWorkflowChainList())
-      Base_translateString = self.Base_translateString
 
       for id in bt_portal_types_id_list:
         portal_type = ttool.getTypeInfo(id)
@@ -5865,7 +5864,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         for act_id in action_list:
           if act_id is None:
-            return (1, Base_translateString(
+            return (1, self.Base_translateString(
               "ERROR: An action has an empty id on portal_type ${id}",
               mapping=dict(id=id)))
           action_id = id+' | '+act_id
