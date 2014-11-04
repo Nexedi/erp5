@@ -134,7 +134,7 @@ def getPaymentConditionText(order):\n
     return translateString("${days} Days", mapping=dict(days=days))\n
   elif end_of_month:\n
     return translateString("End of Month") \n
-  return \'\'\n
+  return getOrderedDate(order.getStartDate())\n
 \n
 def getTaxLineList(order):\n
   tax_line_list = [line for line in\n
