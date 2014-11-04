@@ -1,0 +1,511 @@
+#############################################################################
+#
+# Copyright (c) 2014 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
+
+"""Tests Bank Reconciliation
+"""
+
+import unittest
+import os
+
+from DateTime import DateTime
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
+from Products.ERP5.tests.testAccounting import AccountingTestCase
+
+class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
+  """Test Bank Reconciliation
+
+  """
+  def getBusinessTemplateList(self):
+    return AccountingTestCase.getBusinessTemplateList(self) + (
+        'erp5_bank_reconciliation',)
+
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    self.bank_account = self.section.newContent(
+        portal_type='Bank Account',
+        price_currency_value=self.portal.currency_module.euro)
+    self.bank_account.validate()
+    self.tic()
+
+  def test_BankReconciliation_getAccountingTransactionLineList(self):
+    account_module = self.account_module
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              title='First',
+              reference='P1',
+              source_payment_value=self.bank_account,
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              title='Second',
+              reference='P2',
+              source_payment_value=self.bank_account,
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2014, 1, 2),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    payment3 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              title='Not in range',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 2, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=700,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=700)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList()
+    self.assertEqual([payment1.bank, payment2.bank],
+                     [line.getObject() for line in line_list])
+
+    # The user can search in the listbox
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList(
+        Movement_getExplanationTitle='First', # XXX this is the column name
+    )
+    self.assertEqual([payment1.bank, ],
+                     [line.getObject() for line in line_list])
+
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList(
+        Movement_getExplanationReference='P2',
+    )
+    self.assertEqual([payment2.bank, ],
+                     [line.getObject() for line in line_list])
+
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList(
+        Movement_getMirrorSectionTitle=self.portal.organisation_module.client_2.getTitle(),
+    )
+    self.assertEqual([payment2.bank, ],
+                     [line.getObject() for line in line_list])
+
+    # We manually reconcile.
+    payment1.bank.setAggregateValue(bank_reconciliation)
+    self.tic()
+    # Now the listbox only show non reconciled transactions
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList()
+    self.assertEqual([payment2.bank, ],
+                     [line.getObject() for line in line_list])
+
+    # This listbox can also be used to unreconcile some previously reconciled
+    # transactions.
+    line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList(
+        mode="unreconcile",
+    )
+    self.assertEqual([payment1.bank, ],
+                     [line.getObject() for line in line_list])
+
+
+  def test_BankReconciliation_getReconciledAccountBalance(self):
+    account_module = self.account_module
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 2, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    self.assertEqual(100,
+        bank_reconciliation.BankReconciliation_getAccountBalance())
+
+    # At this point nothing is reconciled.
+    self.assertEqual(0,
+        bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
+
+    # Reconciling sets an aggregate relation from payment line to Bank
+    # Reconciliation
+    payment1.bank.setAggregateValue(bank_reconciliation)
+    self.tic()
+    # Once the payment line is reconciled, the it is counted in reconciled
+    # balance
+    self.assertEqual(100,
+        bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
+
+    # Payment lines reconciled later are not counted.
+    another_bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 3, 31))
+    payment2.bank.setAggregateValue(another_bank_reconciliation)
+    self.tic()
+
+    self.assertEqual(100,
+        bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(100 + 200,
+        another_bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
+
+    # "simple" account balance is same as reconciled, as everything is
+    # reconciled in this test
+    self.assertEqual(100,
+        bank_reconciliation.BankReconciliation_getAccountBalance())
+    self.assertEqual(100 + 200,
+        another_bank_reconciliation.BankReconciliation_getAccountBalance())
+
+
+  def test_BankReconciliation_fastInput(self):
+    account_module = self.account_module
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              title='First',
+              reference='P1',
+              source_payment_value=self.bank_account,
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              title='Second',
+              reference='P2',
+              source_payment_value=self.bank_account,
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2014, 1, 2),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    # View the dialog, to make sure we can display it and to reset selection
+    self.portal.REQUEST.set('reset', 1)
+    bank_reconciliation.BankReconciliation_viewBankReconciliationFastInputDialog()
+    # Call the fast input action script
+    list_selection_name = bank_reconciliation\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(payment1.bank.getUid(),),
+        mode='reconcile')
+    self.tic()
+
+    self.assertEqual(bank_reconciliation, payment1.bank.getAggregateValue())
+    self.assertEqual(None, payment2.bank.getAggregateValue())
+
+    # View the dialog, to make sure we can display it and to reset selection
+    self.portal.REQUEST.set('reset', 1)
+    bank_reconciliation.BankReconciliation_viewBankReconciliationFastInputDialog()
+    # Call the fast input action script
+    list_selection_name = bank_reconciliation\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(payment1.bank.getUid(),),
+        mode='unreconcile')
+    self.tic()
+
+    self.assertEqual(None, payment1.bank.getAggregateValue())
+    self.assertEqual(None, payment2.bank.getAggregateValue())
+
+  def test_BankReconciliation_Workflow(self):
+    account_module = self.account_module
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        quantity_range_max=0,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    doActionFor = self.portal.portal_workflow.doActionFor
+    self.assertEqual('draft', bank_reconciliation.getValidationState())
+    doActionFor(bank_reconciliation, 'open_action')
+    self.assertEqual('open', bank_reconciliation.getValidationState())
+    doActionFor(bank_reconciliation, 'close_action')
+    self.assertEqual('closed', bank_reconciliation.getValidationState())
+    doActionFor(bank_reconciliation, 'open_action')
+    self.assertEqual('open', bank_reconciliation.getValidationState())
+
+    # Cancel has an interaction to remove all the reconciliations
+    payment1.bank.setAggregateValue(bank_reconciliation)
+    self.tic()
+
+    doActionFor(bank_reconciliation, 'cancel_action')
+    self.assertEqual('cancelled', bank_reconciliation.getValidationState())
+    self.tic()
+    self.assertEqual(None, payment1.bank.getAggregateValue())
+
+  def test_BankReconciliation_Constraint(self):
+    # Add the property sheet for this test.
+    self._addPropertySheet('Bank Reconciliation',
+        'BankReconciliationConstraint')
+
+    account_module = self.account_module
+    previous_bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        quantity_range_max=100,
+        stop_date=DateTime(2014, 1, 31))
+    previous_bank_reconciliation.open()
+
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          aggregate_value=previous_bank_reconciliation,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 2, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 2, 28))
+    bank_reconciliation.open()
+
+    constraint = self.portal.portal_property_sheets.BankReconciliationConstraint
+    self.assertEqual([], constraint.checkConsistency(bank_reconciliation))
+
+    # reconciled balance must match
+    bank_reconciliation.setQuantityRangeMax(10)
+    self.assertEqual(1, len(bank_reconciliation.checkConsistency()))
+    bank_reconciliation.setQuantityRangeMax(100)
+    self.assertEqual(0, len(bank_reconciliation.checkConsistency()))
+
+    self.assertEqual(0, len(previous_bank_reconciliation.checkConsistency()))
+    previous_bank_reconciliation.setQuantityRangeMax(10)
+    self.assertEqual(1, len(previous_bank_reconciliation.checkConsistency()))
+    previous_bank_reconciliation.setQuantityRangeMax(100)
+
+    # Previous reconciled balance must match as well
+    bank_reconciliation.setStartDate(DateTime(2014, 1, 31))
+    bank_reconciliation.setQuantityRangeMin(10)
+    self.assertEqual(1, len(bank_reconciliation.checkConsistency()))
+
+    # These constraints are only verified when we go from open to close state.
+    # (that is why the bank reconciliation have been openned for the
+    # assertions above)
+    with self.assertRaises(ValidationFailed):
+      self.portal.portal_workflow.doActionFor(
+        bank_reconciliation,
+        'close_action')
+
+    bank_reconciliation.setQuantityRangeMin(100)
+    self.assertEqual(0, len(bank_reconciliation.checkConsistency()))
+    self.portal.portal_workflow.doActionFor(
+        bank_reconciliation,
+        'close_action')
+
+    bank_reconciliation.setQuantityRangeMax(10)
+    # we can pass the transition
+    self.portal.portal_workflow.doActionFor(
+        bank_reconciliation,
+        'open_action')
+
+  def test_BankReconciliation_Report(self):
+    account_module = self.account_module
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        quantity_range_max=100,
+        stop_date=DateTime(2014, 1, 31))
+    bank_reconciliation.open()
+
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          aggregate_value=bank_reconciliation,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 2),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    report_section_list = self.getReportSectionList(
+                               bank_reconciliation,
+                               'BankReconciliation_viewBankReconciliationReport')
+    self.assertEqual(3, len(report_section_list))
+
+    # First report is just the bank reconciliation view
+    self.assertEqual('BankReconciliation_view', report_section_list[0].form_id)
+
+    # Then we have the reconciled lines
+    self.assertEqual({'mode': 'unreconcile',
+                      'title': 'Reconciled Transactions'},
+                      report_section_list[1].selection_params)
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit=100, credit=0)
+
+    # And finally the non reconciled lines
+    line_list = self.getListBoxLineList(report_section_list[2])
+    self.assertEqual({'mode': 'reconcile',
+                      'title': 'Not Reconciled Transactions'},
+                      report_section_list[2].selection_params)
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit=200, credit=0)
+
+  def test_BankReconciliation_initialReconciliation(self):
+    account_module = self.account_module
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=self.bank_account,
+              start_date=DateTime(2014, 2, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    # we can display the dialog without error
+    bank_reconciliation.BankReconciliation_viewInitialBankReconciliationDialog()
+    bank_reconciliation.BankReconciliation_initialReconciliation()
+    self.tic()
+
+    # All lines with date < stop_date are reconciled
+    self.assertEqual(bank_reconciliation, payment1.bank.getAggregateValue())
+    self.assertEqual(None, payment2.bank.getAggregateValue())
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestBankReconciliation))
+  return suite
+

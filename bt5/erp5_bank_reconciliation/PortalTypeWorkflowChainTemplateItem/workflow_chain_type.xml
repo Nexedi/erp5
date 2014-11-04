@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Bank Reconciliation</type>
+  <workflow>bank_reconciliation_validation_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>
