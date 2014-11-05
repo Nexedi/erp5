@@ -140,20 +140,19 @@ class DomainTool(BaseTool):
                     Query(**{equality: value}),
                     ComplexQuery(
                       ComplexQuery(
-                        Query(**{range_min: dict(query=value, range='ngt',)}),
+                        Query(**{range_min: {'query': value, 'range': 'ngt'}}),
                         Query(**{range_max: None}),
-                        logical_operator='AND',),
+                        logical_operator='AND'),
                       ComplexQuery(
                         Query(**{range_min: None}),
-                        Query(**{range_max: dict(query=value, range='min',)}),
-                        logical_operator='AND',),
+                        Query(**{range_max: {'query': value, 'range': 'min'}}),
+                        logical_operator='AND'),
                       ComplexQuery(
-                        Query(**{range_min: dict(query=value, range='ngt',)}),
-                        Query(**{range_max: dict(query=value, range='min',)}),
-                        logical_operator='AND',),
-                      logical_operator='OR',),
-                    logical_operator='OR',
-                    ),
+                        Query(**{range_min: {'query': value, 'range': 'ngt'}}),
+                        Query(**{range_max: {'query': value, 'range': 'min'}}),
+                        logical_operator='AND'),
+                      logical_operator='OR'),
+                    logical_operator='OR'),
                   logical_operator='OR')
 
             query_list.append(query)
