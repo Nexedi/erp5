@@ -122,7 +122,7 @@ class SyncMLSubscription(XMLObject):
       packet_size=None
       search_kw={}
     try:
-      r = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
+      r_list = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
                                                             # the result is sorted
     except TypeError:
       if not RETRO_COMPATIBLE:
@@ -130,11 +130,11 @@ class SyncMLSubscription(XMLObject):
       else:
         syncml_logger.warning("Script %s does not accept paramaters limit=%s kw=%s" %
                               (self.getListMethodId(), limit, search_kw,))
-        r = self.getDocumentList()  # It is assumed that
+        r_list = self.getDocumentList()  # It is assumed that
                                     # the result is sorted
-    result_count = len(r)
+    result_count = len(r_list)
     if result_count:
-      r = [str(x.path) for x in r]
+      r = [str(x.path) for x in r_list]
       if not limit:
         # We do not split in activity so call the callback right now
         syncml_logger.info("getAndIndex : got %d result and no limit, calling callback..." %
@@ -150,7 +150,7 @@ class SyncMLSubscription(XMLObject):
         if result_count == limit:
           # Recursive call to prevent too many activity generation
           next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
-          kw["min_id"] = r[-1].getId()
+          kw["min_id"] = r_list[-1].getId()
           syncml_logger.info("--> calling getAndIndex in activity, min = %s" %
                              (kw["min_id"],))
           self.activate(**next_kw).getAndIndex(
