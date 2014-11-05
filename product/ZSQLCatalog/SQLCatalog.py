@@ -2130,6 +2130,16 @@ class Catalog(Folder,
     return result
 
   def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap):
+    """
+    node
+      Abstract syntax tree node (see SearchText/AdvancedSearchTextParser.py,
+      classes inheriting from Node).
+    search_key
+      Search key to generate queries from values found during syntax tree walk.
+    wrap
+      Callback transforming a value just before it is passed to
+      search_key.buildQuery .
+    """
     if search_key.dequoteParsedText():
       _dequote = dequote
     else:
