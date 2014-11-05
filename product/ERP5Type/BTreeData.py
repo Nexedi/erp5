@@ -239,12 +239,13 @@ if __name__ == '__main__':
     check(data, 7, 5, 1, '5')
     check(data, 7, 6, 1, '6')
 
+    # Unaligned write, spilling in next existing chunk
     data.write('XY', 4)
     check(data, 7, 0, 10, '0123XY6', [0, 5])
-
+    # Unaligned write, inside existing chunk
     data.write('VW', 1)
     check(data, 7, 0, 10, '0VW3XY6', [0, 5])
-
+    # Empty write inside existing chunk
     data.write('', 4)
     check(data, 7, 0, 10, '0VW3XY6', [0, 5])
 
