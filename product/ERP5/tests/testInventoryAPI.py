@@ -786,6 +786,18 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(0, node_uid=self.node.getUid(), omit_input=1)
     self.assertInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
 
+  def test_NodeTitle(self):
+    self._makeMovement(quantity=1)
+    self.assertInventoryEquals(1, stock_node_title=self.node.getTitle())
+    self.assertInventoryEquals(-1, stock_node_title=self.mirror_node.getTitle())
+
+  def test_MirrorSectionTitle(self):
+    self._makeMovement(quantity=1)
+    self.assertInventoryEquals(1,
+        stock_mirror_section_title=self.mirror_section.getTitle())
+    self.assertInventoryEquals(-1,
+        stock_mirror_section_title=self.section.getTitle())
+
   def test_TimeZone(self):
     """
     Check that getInventory support DateTime parameter with
@@ -1220,6 +1232,30 @@ class TestInventoryList(InventoryAPITestCase):
                                       omit_output=1)
     self.assertEqual(1, len(inventory_list))
     self.assertEqual(-1, inventory_list[0].total_price)
+    self.assertEqual(-1, inventory_list[0].total_quantity)
+
+  def test_NodeTitle(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=1)
+    inventory_list = getInventoryList(stock_node_title=self.node.getTitle())
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(1, inventory_list[0].total_quantity)
+
+    inventory_list = getInventoryList(stock_node_title=self.mirror_node.getTitle())
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(-1, inventory_list[0].total_quantity)
+
+  def test_MirrorSectionTitle(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=1)
+    inventory_list = getInventoryList(
+        stock_mirror_section_title=self.mirror_section.getTitle())
+    self.assertEqual(1, len(inventory_list))
+    self.assertEqual(1, inventory_list[0].total_quantity)
+
+    inventory_list = getInventoryList(
+        stock_mirror_section_title=self.section.getTitle())
+    self.assertEqual(1, len(inventory_list))
     self.assertEqual(-1, inventory_list[0].total_quantity)
 
   def test_CurentAvailableFutureInventoryList(self):
@@ -2139,6 +2175,32 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                               node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
+
+  def test_NodeTitle(self):
+    self._makeMovement(quantity=1)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList(
+        stock_node_title=self.node.getTitle())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].total_quantity)
+
+    mvt_history_list = getMovementHistoryList(
+        stock_node_title=self.mirror_node.getTitle())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].total_quantity)
+
+  def test_MirrorSectionTitle(self):
+    self._makeMovement(quantity=1)
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList(
+        stock_mirror_section_title=self.mirror_section.getTitle())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(1, mvt_history_list[0].total_quantity)
+
+    mvt_history_list = getMovementHistoryList(
+        stock_mirror_section_title=self.section.getTitle())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(-1, mvt_history_list[0].total_quantity)
 
   def test_debit_credit(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
