@@ -214,6 +214,16 @@ class FolderMixIn(ExtensionClass.Base):
     self._setLastId(my_id) # Make sure no reindexing happens
     return my_id
 
+  def _generatePerNodeId(self):
+    """
+    Generate id base on node-id defined in zope.conf,
+    useful for import and mass creation
+    of objects inside a module using activities
+    We also append random id
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    return "%s-%s" %(activity_tool.getCurrentNode(), self._generateRandomId())
+
   def _generatePerNodeNumberId(self):
     """
     Generate id base on node number, useful for import and mass creation
