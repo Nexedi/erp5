@@ -49,14 +49,12 @@ from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5ShortMessage.Errors import SMSGatewayError
 
 
-
 class MobytGateway(XMLObject):
 
     """Mobyt SMS Gateway Implementation"""
     meta_type='Mobyt Gateway'
     portal_type = 'Mobyt Gateway'
     security = ClassSecurityInfo()
-
 
     add_permission = Permissions.AddPortalContent
 
@@ -204,7 +202,6 @@ class MobytGateway(XMLObject):
         LOG("MobytGateway", INFO, params)
         result =  {'status': "Test"}
       else:
-        LOG('MobytGateway, sending to with params', 0, (base_url, params))
         params = urllib.urlencode(params)
         page = urllib.urlopen(base_url, params)
         result = self._fetchSendResponseAsDict(page)
@@ -270,8 +267,6 @@ class MobytGateway(XMLObject):
         #Restore orinal user
         setSecurityManager(sm)
 
-
-
     security.declareProtected(Permissions.ManagePortal, 'notifyReception')
     def notifyReception(self, sender, text, message_id):
       """The gateway inform what we ha a new message.
@@ -282,7 +277,6 @@ class MobytGateway(XMLObject):
         #XXX: Should register well formatted number or brut number ?
         #return number
         return "+%s(%s)-%s" % (number[0:2],0,number[2:])
-
 
       #Create the new sms in activities
       self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
