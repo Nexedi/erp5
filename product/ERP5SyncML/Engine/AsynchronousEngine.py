@@ -81,7 +81,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
         # Make sure it is launched after indexation step
         self.runGetAndActivate(subscription=subscription, tag=tag,
                                after_method_id=("getAndIndex",
-                                                "SQLCatalog_indexSyncMLSignatureList"))
+                                                "SQLCatalog_indexSyncMLDocumentList"))
         syncml_logger.info("X-> Client is sendind modification in activities")
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
