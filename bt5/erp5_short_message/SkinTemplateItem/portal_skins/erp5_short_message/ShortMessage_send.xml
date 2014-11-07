@@ -59,18 +59,18 @@
 if not to_url:\n
   recipient_phone_list = [person.getDefaultMobileTelephoneValue() for person in context.getDestinationValueList()]\n
   if None in recipient_phone_list:\n
-    raise ValueError, "All recipients should have a default mobile phone"\n
+    raise ValueError("All recipients should have a default mobile phone")\n
 \n
   to_url = [phone.asURL() for phone in recipient_phone_list]\n
   if None in to_url:\n
-    raise ValueError, "All recipients should have a valid default mobile phone number"\n
+    raise ValueError("All recipients should have a valid default mobile phone number")\n
 \n
 #Get sender\n
 if not from_url:\n
   if context.getSourceValue():\n
     sender_phone = context.getSourceValue().getDefaultMobileTelephoneValue()\n
     if not sender_phone:\n
-      raise ValueError, "The sender should have a default mobile phone"\n
+      raise ValueError("The sender should have a default mobile phone")\n
     #We use title of sender\n
     from_title = sender_phone.getTitle()    \n
     from_url = sender_phone.asURL()\n
