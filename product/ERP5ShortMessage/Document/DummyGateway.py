@@ -105,12 +105,11 @@ class DummyGateway(XMLObject):
         LOG("DummyGateway", INFO, params)
         return None
       else:
-        return generateRandomMessageId()
+        return self._generateRandomMessageId()
 
     security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
     def getMessageStatus(self, message_id):
       """Retrive the status of a message"""
-
       return "delivered"
 
     security.declarePublic('receive')
@@ -127,7 +126,7 @@ class DummyGateway(XMLObject):
         #Dummy notify only new SMS
         self.notifyReception(REQUEST.get("sender"),
                              REQUEST.get("text"),
-                             _generateRandomMessageId())
+                             self._generateRandomMessageId())
       finally:
         #Restore orinal user
         setSecurityManager(sm)
@@ -155,7 +154,7 @@ class DummyGateway(XMLObject):
                               message_type='text/plain',
                               reception_date=DateTime())
 
-    def _generateRandomMessageId():
+    def _generateRandomMessageId(self):
       letters = random.sample(string.ascii_lowercase,20)
       return "%s-%s-%s-%s" % (''.join(letters[0:5]),
                               ''.join(letters[5:10]),
