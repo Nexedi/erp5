@@ -50,10 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
-through web sites.\n
-\n
-Reference will be probably generated with dedicated tool\n
+            <value> <string>"""Reference will be probably generated with dedicated tool\n
 in near future\n
 """\n
 portal = context.getPortalObject()\n
@@ -69,21 +66,12 @@ new_id = portal.portal_ids.generateNewId(id_group=id_group, default=default)\n
 reference = \'%s-%s\' % (short_portal_type, new_id)\n
 \n
 # Set preferred text format and reference\n
-context.edit(content_type=\'text/plain\',\n
-             reference=reference)\n
+context.edit(content_type=\'text/plain\', reference=reference)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Owner</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
