@@ -32,7 +32,6 @@
 # from Products.ERP5.Errors import DeferredCatalogError
 
 from Products.PythonScripts.Utility import allow_class
-from Products.CMFCore.WorkflowCore import WorkflowException
 
 class SMSGatewayError(Exception):pass
 

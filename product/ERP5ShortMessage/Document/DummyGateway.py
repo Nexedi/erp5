@@ -34,21 +34,15 @@ import string
 from DateTime import DateTime
 
 #Import Zope module
-from AccessControl import ClassSecurityInfo, \
-                          Unauthorized
+from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import  getSecurityManager, \
                                               setSecurityManager, \
                                               newSecurityManager
 import zope.interface
-from zLOG import LOG, INFO
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
-
-#Product Module
-from Products.ERP5ShortMessage.Errors import SMSGatewayError
-
 
 
 class DummyGateway(XMLObject):
@@ -102,7 +96,6 @@ class DummyGateway(XMLObject):
 
       #Send message (or test)
       if test or self.isSimulationMode():
-        LOG("DummyGateway", INFO, params)
         return None
       else:
         return self._generateRandomMessageId()

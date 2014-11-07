@@ -33,8 +33,7 @@ import urllib
 from DateTime import DateTime
 
 #Import Zope module
-from AccessControl import ClassSecurityInfo, \
-                          Unauthorized
+from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import  getSecurityManager, \
                                               setSecurityManager, \
                                               newSecurityManager
@@ -195,7 +194,7 @@ class MobytGateway(XMLObject):
       if message_type != "text":
         assert quality == 'n', "This type of message require top level messsage quality"
         assert message_type in self.getAllowedMessageType(), "Unknown message type"
-        param['operation'] = message_type.capitalize()
+        params['operation'] = message_type.capitalize()
 
       #Send message (or test)
       if test or self.isSimulationMode():
