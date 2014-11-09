@@ -60,6 +60,8 @@ class Transition(XMLObject):
     """
     Execute transition.
     """
+    if form_kw is None:
+      form_kw = {}
     workflow = self.getParentValue()
     # Call the before script
     self._executeBeforeScript(document)
