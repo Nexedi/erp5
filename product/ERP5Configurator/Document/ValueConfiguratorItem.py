@@ -61,7 +61,7 @@ class ValueConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     portal = self.getPortalObject()
     error_list = []
     for  configuration_dict in iter(self.getConfigurationListList()):
-     search_dict, relative_path, property_value_dict = map(
+      search_dict, relative_path, property_value_dict = map(
        configuration_dict.get,('search_dict', 'relative_path',
                                'property_value_dict'))
       if search_dict is not None:
