@@ -29,6 +29,7 @@
   <item>Currency Configurator Item</item>
   <item>Customer BT5 Configurator Item</item>
   <item>Organisation Configurator Item</item>
+  <item>Path Configurator Item</item>
   <item>Permission Configurator Item</item>
   <item>Person Configurator Item</item>
   <item>Portal Type Configurator Item</item>
@@ -44,6 +45,7 @@
   <item>Solver Configurator Item</item>
   <item>Standard BT5 Configurator Item</item>
   <item>System Preference Configurator Item</item>
+  <item>Value Configurator Item</item>
   <item>Workflow Security Configurator Item</item>
  </portal_type>
  <portal_type id="Organisation Configurator Item">
