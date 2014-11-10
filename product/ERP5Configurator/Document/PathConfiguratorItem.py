@@ -60,16 +60,21 @@ class PathConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
     error_list = []
-    for container_path, document_dict, transition_method in iter(self.getConfigurationListList()):
+    for container_path, transition_method, document_dict in iter(self.getConfigurationListList()):
+      document_dict = document_dict.copy()
+      document_id = document_dict.pop('id')
+      portal_type = document_dict.pop('portal_type')
       container = portal.unrestrictedTraverse(container_path, None)
       if container is not None:
-        document = getattr(container, document_dict['id'], None)
+        document = getattr(container, document_id, None)
         if document is None:
           error_list.append(self._createConstraintMessage(
-            "%s %s should be created" %(document_dict['id'],
-                                        document_dict['portal_type'])))
+            "%s %s should be created" %(portal_type, document_id)))
           if fixit:
-            document = container.newContent(**document_dict)
+            document = container.newContent(id=document_id,
+                                            portal_type=portal_type)
+            for property_id, value in document_dict.items():
+              document.setProperty(property_id, value)
             if transition_method is not None:
               getattr(document, transition_method) (
                 comment=translateString("Transition executed by Configurator"))
