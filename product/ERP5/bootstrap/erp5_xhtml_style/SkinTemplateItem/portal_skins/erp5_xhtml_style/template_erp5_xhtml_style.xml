@@ -80,7 +80,7 @@ IDEAS:\n
                          tal:attributes="type python:\'text/css\'">\n
                   </style>\n
                 </tal:block>\n
-                <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
+                <tal:block tal:define="dummy python: js_list.extend(x for x in field.get_javascript_list(REQUEST=request) if not (x in js_list))" />\n
               </tal:block>\n
             </tal:block>\n
           </tal:block>\n
@@ -149,8 +149,7 @@ IDEAS:\n
       </html>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
