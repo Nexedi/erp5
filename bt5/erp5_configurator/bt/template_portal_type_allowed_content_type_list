@@ -19,6 +19,7 @@ Configuration Save | Category Configurator Item
 Configuration Save | Currency Configurator Item
 Configuration Save | Customer BT5 Configurator Item
 Configuration Save | Organisation Configurator Item
+Configuration Save | Path Configurator Item
 Configuration Save | Permission Configurator Item
 Configuration Save | Person Configurator Item
 Configuration Save | Portal Type Configurator Item
@@ -34,6 +35,7 @@ Configuration Save | Site Property Configurator Item
 Configuration Save | Solver Configurator Item
 Configuration Save | Standard BT5 Configurator Item
 Configuration Save | System Preference Configurator Item
+Configuration Save | Value Configurator Item
 Configuration Save | Workflow Security Configurator Item
 Organisation Configurator Item | Address
 Organisation Configurator Item | Email
