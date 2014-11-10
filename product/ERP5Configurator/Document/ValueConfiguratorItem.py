@@ -65,7 +65,7 @@ class ValueConfiguratorItem(ConfiguratorItemMixin, XMLObject):
        configuration_dict.get,('search_dict', 'relative_path',
                                'property_value_dict'))
       if search_dict is not None:
-        document = self.portal_catalog.getResultValue(search_dict)
+        document = self.portal_catalog.getResultValue(**search_dict)
       else:
         document = portal
       if relative_path is not None and document is not None:
