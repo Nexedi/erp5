@@ -63,14 +63,19 @@ class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     error_list = []
     property_dict = {
       "active_sense_method_id" : self.getActiveSenseMethodId(),
+      "destination_list" : self.getDesitnationList(),
       "periodicity_hour_list" : self.getPeriodicityHourList(),
       "periodicity_minute_list": self.getPeriodicityMinuteList(),
       "periodicity_minute_frequency": self.getPeriodicityMinuteFrequency(),
+      "periodicity_week_list": self.getPeriodicityWeekList(),
+      "periodicity_week_day_list": self.getPeriodicityWeeDaykList(),
+      "periodicity_week_frequency": self.getPeriodicityWeekFrequency(),
       "periodicity_month_list": self.getPeriodicityMonthList(),
       "periodicity_month_day_list": self.getPeriodicityMonthDayList(),
       "periodicity_start_date": DateTime() - 1,
       #"periodicity_stop_date": self.getPeriodicityStopDate(),
       "periodicity_week_list": self.getPeriodicityWeekList(),
+      "report_method_id": self.getReportMethodId(),
                         }
 
     alarm_id = self.getId()
