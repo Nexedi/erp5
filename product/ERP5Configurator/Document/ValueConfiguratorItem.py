@@ -71,7 +71,7 @@ class ValueConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       if relative_path is not None and document is not None:
         document = document.unrestrictedTraverse(relative_path, None)
       if document is not None:
-        for property_id, value in property_value_dict:
+        for property_id, value in property_value_dict.items():
           if document.getProperty(property_id) != value:
             error_list.append(self._createConstraintMessage(
               '%s: property "%s" should be changed to value "%s"' %(
