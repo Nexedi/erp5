@@ -71,8 +71,11 @@ class PathConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           error_list.append(self._createConstraintMessage(
             "%s %s should be created" %(portal_type, document_id)))
           if fixit:
-            document = container.newContent(id=document_id,
-                                            portal_type=portal_type)
+            document_init_dict = { 'portal_type' : portal_type,
+                                   'document_id': document_id }
+            if title in document_dict:
+              document_init_dict['title'] = document_dict.pop('title')
+            document = container.newContent(**document_init_dict)
             document.edit(**document_dict)
             if transition_method is not None:
               getattr(document, transition_method) (
