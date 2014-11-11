@@ -73,8 +73,7 @@ class PathConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           if fixit:
             document = container.newContent(id=document_id,
                                             portal_type=portal_type)
-            for property_id, value in document_dict.items():
-              document.setProperty(property_id, value)
+            document.edit(**document_dict)
             if transition_method is not None:
               getattr(document, transition_method) (
                 comment=translateString("Transition executed by Configurator"))
