@@ -381,6 +381,8 @@ class SynchronizationTool(BaseTool):
       subscription.activate(
         after_tag="%s_reset" %(subscription.getPath(),),
         activity="SQLQueue",
+        after_method_id=('processServerSynchronization',
+                         'SQLCatalog_indexSyncMLDocumentList'),
         priority=ACTIVITY_PRIORITY,
         tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
     else:
