@@ -1,0 +1,26 @@
+<!doctype html>
+<html tal:define="portal_url here/portal_url;
+                  default_printer_url python: getattr(context,'default_printer_url', None);
+                  printer_url python: default_printer_url and default_printer_url.getUrlString();">
+  <head>
+    <meta charset="utf-8">
+    <title>Receipt</title>
+    <script type="text/javascript" tal:attributes='src python:"%s/jquery/core/jquery.js" % portal_url'></script>
+    <script type="text/javascript" tal:attributes='src python:"%s/epos-print-2.0.0.js" % portal_url' ></script>
+    <script type="text/javascript" tal:attributes='src python:"%s/erp5_epson_printout.js" % portal_url' ></script>
+
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+  </head>
+  <body style="background:white">
+    <h1> PRINTER STATUS FOR: <span tal:replace="context/getTitle" /> </h1>
+    <p>URL: <span tal:content="printer_url" /> </p>
+    <div id="js_error_log"> </div>
+    <button style="display:none;" id="enable_monitoring" onclick="enableEpsonMonitoring();"
+            tal:attributes="onclick python: 'enableEpsonMonitoring(\'%s\')' % printer_url"> Enable </button>
+    <script type="text/javascript">
+      $(window).load(function() {
+        $("#enable_monitoring").click();
+      });
+    </script>
+  </body>
+</html>
