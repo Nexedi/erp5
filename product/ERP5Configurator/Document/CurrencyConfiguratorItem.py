@@ -80,6 +80,8 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     if currency:
       business_configuration = self.getBusinessConfigurationValue()
       business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
+      business_configuration.setGlobalConfigurationAttr(\
+        currency_path='currency_module/%s' %currency.getId())
       ## add to customer template
       self.install(currency, business_configuration)
 
