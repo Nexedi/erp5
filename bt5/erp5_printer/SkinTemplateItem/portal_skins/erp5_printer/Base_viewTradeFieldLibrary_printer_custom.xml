@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_view_mode_title</string>
+                        <string>my_report_mode_listbox_variation_category_item_list</string>
+                        <string>my_report_mode_listbox_quantity_unit</string>
+                        <string>my_view_mode_listbox_aggregate_title_list</string>
+                        <string>my_view_mode_listbox_base_contribution_title_list</string>
+                        <string>my_view_mode_listbox_int_index</string>
+                        <string>my_view_mode_listbox_price</string>
+                        <string>my_view_mode_listbox_quantity</string>
+                        <string>my_view_mode_listbox_quantity_unit</string>
+                        <string>my_view_mode_listbox_reference</string>
+                        <string>my_view_mode_listbox_start_date</string>
+                        <string>my_view_mode_listbox_stop_date</string>
+                        <string>my_view_mode_listbox_total_price</string>
+                        <string>my_view_mode_comment</string>
+                        <string>my_view_mode_delivery_mode</string>
+                        <string>my_view_mode_description</string>
+                        <string>my_view_mode_incoterm</string>
+                        <string>my_view_mode_order</string>
+                        <string>my_view_mode_origin</string>
+                        <string>my_view_mode_price_currency</string>
+                        <string>my_view_mode_reference</string>
+                        <string>my_view_mode_destination_decision_title</string>
+                        <string>my_view_mode_source_title</string>
+                        <string>my_view_mode_source_decision_title</string>
+                        <string>my_view_mode_specialise_title</string>
+                        <string>my_view_mode_start_date</string>
+                        <string>my_view_mode_stop_date</string>
+                        <string>my_view_mode_total_price</string>
+                        <string>my_view_mode_translated_simulation_state_title</string>
+                        <string>my_view_mode_destination_section_title</string>
+                        <string>my_view_mode_source_section_title</string>
+                        <string>my_report_mode_at_date</string>
+                        <string>my_report_mode_site_title</string>
+                        <string>my_view_mode_listbox_variation_category_item_list</string>
+                        <string>my_view_mode_quantity_unit</string>
+                        <string>my_view_mode_resource_title</string>
+                        <string>my_view_mode_variation_category_list</string>
+                        <string>my_view_mode_total_quantity</string>
+                        <string>my_view_mode_container_quantity</string>
+                        <string>my_view_mode_quantity_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_predicate_category_list</string>
+                        <string>my_view_mode_matrixbox_quantity</string>
+                        <string>my_view_mode_matrixbox_variation_category_list</string>
+                        <string>my_view_mode_read_only_resource_title</string>
+                        <string>my_view_mode_read_only_title</string>
+                        <string>my_view_mode_line_quantity_unit</string>
+                        <string>my_view_mode_contained_total_quantity</string>
+                        <string>my_view_mode_gross_weight</string>
+                        <string>my_view_mode_serial_number</string>
+                        <string>my_view_mode_container_resource_title</string>
+                        <string>my_view_mode_price</string>
+                        <string>my_view_mode_aggregate_title_list</string>
+                        <string>my_view_mode_amortisation_method</string>
+                        <string>my_view_mode_listbox_base_application_title_list</string>
+                        <string>my_view_mode_price_quantity_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_industrial_phase_list</string>
+                        <string>my_view_mode_matrixbox_price</string>
+                        <string>my_dialog_mode_deferred_style</string>
+                        <string>my_dialog_mode_format</string>
+                        <string>my_dialog_mode_hidden_landscape</string>
+                        <string>my_dialog_mode_portal_skin</string>
+                        <string>my_dialog_mode_portal_type</string>
+                        <string>my_view_mode_listbox_use_title_list</string>
+                        <string>my_view_mode_listbox_read_only_price</string>
+                        <string>my_view_mode_listbox_read_only_quantity</string>
+                        <string>my_view_mode_internal_causality_title</string>
+                        <string>my_view_mode_destination_title</string>
+                        <string>my_view_mode_destination_account</string>
+                        <string>my_view_mode_destination_administration_title</string>
+                        <string>my_view_mode_destination_carrier_title</string>
+                        <string>my_view_mode_destination_payment</string>
+                        <string>my_view_mode_destination_project_title</string>
+                        <string>my_view_mode_destination_reference</string>
+                        <string>my_view_mode_source_administration_title</string>
+                        <string>my_view_mode_source_carrier_title</string>
+                        <string>my_view_mode_source_payment</string>
+                        <string>my_view_mode_source_project_title</string>
+                        <string>my_view_mode_source_reference</string>
+                        <string>my_view_mode_source_trade_title_list</string>
+                        <string>my_view_mode_source_account</string>
+                        <string>my_view_mode_base_contribution_list</string>
+                        <string>my_view_mode_use</string>
+                        <string>my_view_mode_read_only_price_currency</string>
+                        <string>my_view_mode_translated_causality_state_title</string>
+                        <string>my_view_mode_translated_container_state_title</string>
+                        <string>my_view_mode_translated_immobilisation_state_title</string>
+                        <string>my_view_mode_sale_causality_title</string>
+                        <string>my_view_mode_source_section</string>
+                        <string>my_view_mode_inventory</string>
+                        <string>my_view_mode_read_only_variation_category_list</string>
+                        <string>my_view_mode_purchase_destination_account</string>
+                        <string>my_view_mode_sale_source_account</string>
+                        <string>my_view_mode_read_only_reference</string>
+                        <string>my_view_mode_inventory_price_mapped_value_property_list</string>
+                        <string>my_view_mode_matrixbox_inventory</string>
+                        <string>my_view_mode_full_inventory</string>
+                        <string>my_view_mode_inventory_destination_section_title</string>
+                        <string>my_view_mode_inventory_destination_title</string>
+                        <string>my_view_mode_inventory_start_date</string>
+                        <string>my_view_mode_listbox_total_quantity</string>
+                        <string>my_view_mode_listbox_read_only_stop_date</string>
+                        <string>my_view_mode_listbox_read_only_quantity_unit</string>
+                        <string>my_dialog_mode_listbox_variation_category_list</string>
+                        <string>my_dialog_mode_listbox_quantity_unit</string>
+                        <string>my_dialog_mode_listbox_quantity</string>
+                        <string>my_dialog_mode_aggregation_level</string>
+                        <string>my_dialog_mode_at_date</string>
+                        <string>my_dialog_mode_delivery_mode</string>
+                        <string>my_dialog_mode_from_date</string>
+                        <string>my_dialog_mode_group_by</string>
+                        <string>my_dialog_mode_incoterm</string>
+                        <string>my_dialog_mode_order</string>
+                        <string>my_dialog_mode_section_category</string>
+                        <string>my_dialog_mode_order_simulation_state</string>
+                        <string>my_dialog_mode_use_selection</string>
+                        <string>my_dialog_mode_spreadsheet_format</string>
+                        <string>my_dialog_mode_reference_as_prefix</string>
+                        <string>my_dialog_mode_international_form</string>
+                        <string>my_dialog_mode_target_language</string>
+                        <string>my_dialog_mode_use_line_title</string>
+                        <string>my_dialog_mode_text_format</string>
+                        <string>my_view_mode_listbox_title</string>
+                        <string>my_dialog_mode_editable_total_price</string>
+                        <string>my_view_mode_int_index</string>
+                        <string>my_dialog_mode_comment</string>
+                        <string>my_dialog_mode_start_date</string>
+                        <string>my_dialog_mode_stop_date</string>
+                        <string>my_dialog_mode_workflow_action</string>
+                        <string>my_view_mode_purchase_causality_title</string>
+                        <string>my_view_mode_causality_title</string>
+                        <string>my_view_mode_activity</string>
+                        <string>my_view_mode_effective_date</string>
+                        <string>my_view_mode_expiration_date</string>
+                        <string>my_view_mode_group</string>
+                        <string>my_view_mode_purchase_trade_condition_specialise_title_list</string>
+                        <string>my_view_mode_translated_validation_state_title</string>
+                        <string>my_view_mode_version</string>
+                        <string>my_view_mode_trade_condition_type</string>
+                        <string>my_view_mode_returned_purchase_causality_title</string>
+                        <string>my_view_mode_opposite_source_decision_title</string>
+                        <string>my_view_mode_opposite_destination_decision_title</string>
+                        <string>my_view_mode_opposite_destination_section_title</string>
+                        <string>my_view_mode_opposite_destination_title</string>
+                        <string>my_view_mode_opposite_source_section_title</string>
+                        <string>my_view_mode_opposite_source_title</string>
+                        <string>my_view_mode_returned_sale_causality_title</string>
+                        <string>my_dialog_mode_item_stock</string>
+                        <string>my_dialog_mode_negative_stock</string>
+                        <string>my_dialog_mode_positive_stock</string>
+                        <string>my_dialog_mode_zero_stock</string>
+                        <string>my_dialog_mode_site</string>
+                        <string>my_dialog_mode_listbox_container_quantity</string>
+                        <string>my_dialog_mode_container_count</string>
+                        <string>my_dialog_mode_container_type</string>
+                        <string>my_dialog_mode_gross_weight</string>
+                        <string>my_dialog_mode_next_container_int_index</string>
+                        <string>my_view_mode_trade_condition_specialise_title_list</string>
+                        <string>my_view_mode_efficiency</string>
+                        <string>my_view_mode_end_of</string>
+                        <string>my_view_mode_payment_mode</string>
+                        <string>my_view_mode_batch_quantity</string>
+                        <string>my_view_mode_completed_state_list</string>
+                        <string>my_view_mode_destination_method_id</string>
+                        <string>my_view_mode_frozen_state_list</string>
+                        <string>my_view_mode_source_method_id</string>
+                        <string>my_view_mode_trade_phase</string>
+                        <string>my_view_mode_business_process_specialise_title_list</string>
+                        <string>my_view_mode_listbox_delivery_builder_title_list</string>
+                        <string>my_view_mode_listbox_order_builder_title_list</string>
+                        <string>my_view_mode_purchase_trade_condition_specialise_title</string>
+                        <string>my_view_mode_destination_section</string>
+                        <string>my_view_mode_payment_additional_term</string>
+                        <string>my_view_mode_payment_date</string>
+                        <string>my_view_mode_payment_end_of_month</string>
+                        <string>my_view_mode_payment_term</string>
+                        <string>my_view_mode_amount_quantity</string>
+                        <string>my_view_mode_trade_date</string>
+                        <string>my_view_mode_base_application_list</string>
+                        <string>my_view_mode_ratio_price</string>
+                        <string>my_core_mode_total_price</string>
+                        <string>my_view_mode_listbox_read_only_start_date</string>
+                        <string>my_report_mode_aggregation_level</string>
+                        <string>my_report_mode_delivery_mode</string>
+                        <string>my_report_mode_from_date</string>
+                        <string>my_report_mode_group_by</string>
+                        <string>my_report_mode_incoterm</string>
+                        <string>my_report_mode_order</string>
+                        <string>my_report_mode_section_category</string>
+                        <string>my_dialog_mode_quantity_unit_list</string>
+                        <string>my_view_mode_preferred_client_role_list</string>
+                        <string>my_view_mode_preferred_packing_use_list</string>
+                        <string>my_view_mode_preferred_purchase_use_list</string>
+                        <string>my_view_mode_preferred_sale_use_list</string>
+                        <string>my_view_mode_preferred_supplier_role_list</string>
+                        <string>my_view_mode_listbox_percent_price</string>
+                        <string>my_view_mode_listbox_read_only_use_title_list</string>
+                        <string>my_view_mode_module_listbox</string>
+                        <string>my_view_mode_listbox</string>
+                        <string>my_view_mode_predecessor</string>
+                        <string>my_view_mode_successor</string>
+                        <string>my_view_mode_trade_phase_list</string>
+                        <string>my_view_mode_matrix_box</string>
+                        <string>my_view_mode_planning_box</string>
+                        <string>my_report_mode_report_box</string>
+                        <string>my_view_mode_preferred_trade_base_amount_list</string>
+                        <string>my_view_mode_movement_use</string>
+                        <string>my_view_mode_listbox_resource_relative_url</string>
+                        <string>my_view_mode_listbox_movement_relative_url</string>
+                        <string>my_view_mode_movement_listbox_price</string>
+                        <string>my_view_mode_movement_listbox_quantity</string>
+                        <string>my_view_mode_target_delivery</string>
+                        <string>my_view_mode_internal_trade_condition_specialise_title</string>
+                        <string>my_view_mode_delivery_builder</string>
+                        <string>my_view_mode_max_delay</string>
+                        <string>my_view_mode_min_delay</string>
+                        <string>my_view_mode_movement_quantity</string>
+                        <string>my_view_mode_quantity</string>
+                        <string>my_view_mode_preferred_internal_use_list</string>
+                        <string>my_view_mode_listbox_read_only_effective_date</string>
+                        <string>my_view_mode_listbox_read_only_expiration_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewTradeFieldLibrary_printer_custom</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>Base_viewTradeFieldLibrary</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
