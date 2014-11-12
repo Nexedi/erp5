@@ -72,8 +72,8 @@ class PathConfiguratorItem(ConfiguratorItemMixin, XMLObject):
             "%s %s should be created" %(portal_type, document_id)))
           if fixit:
             document_init_dict = { 'portal_type' : portal_type,
-                                   'document_id': document_id }
-            if title in document_dict:
+                                   'id': document_id }
+            if 'title' in document_dict:
               document_init_dict['title'] = document_dict.pop('title')
             document = container.newContent(**document_init_dict)
             document.edit(**document_dict)
