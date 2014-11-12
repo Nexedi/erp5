@@ -11,6 +11,10 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts57897042.09</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>epos-print-2.0.0.js</string> </value>
         </item>

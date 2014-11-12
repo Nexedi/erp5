@@ -1,0 +1,532 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_epson_printout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 20xx-2006 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+//if the price number length > 13 use the Scientific notation,\n
+//if the length==11,12,13 , just need to remove the number after Decimal point\n
+function priceControl(price,builder){\n
+  var content=parseFloat(price).toFixed(2);\n
+  var content_len=content.length;\n
+  if(content_len>13)\n
+    content=parseFloat(content).toExponential(4);\n
+  else if(content_len>10&&content_len<14)\n
+    content=parseInt(content);\n
+  builder.addText(content);\n
+}\n
+\n
+monitoring_enabled = 0;\n
+\n
+function enableEpsonMonitoring(printer_url){\n
+  if (monitoring_enabled == 0) {\n
+    monitoring_enabled = 1;\n
+  } else {\n
+     return true;\n
+  };\n
+  var monitoting_epos = new epson.ePOSPrint(printer_url);\n
+  monitoting_epos.interval = 5000;\n
+  monitoting_epos.onpoweroff = function () {\n
+    msg = "ERROR: Unable to connect to the printer at the URL (Unreachable or Power off): " + monitoting_epos.address\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  }\n
+\n
+  monitoting_epos.onoffline = function () {\n
+    msg = "ERROR: Printer seems offline check if you can access printer at the URL (Unreachable or Power off): " + monitoting_epos.address\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  }\n
+\n
+  monitoting_epos.online = function () {\n
+    msg = "INFO: Printer is online at" + monitoting_epos.address\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  }\n
+\n
+  monitoting_epos.onpaperend = function () {\n
+    msg = "WARNNING: Printer report that paper is finished!"\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.onpapernearend = function () {\n
+    msg = "WARNNING: Printer report that paper is near finished from finish!"\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.onpaperok = function () {\n
+    msg = "INFO: Printer report that paper is OK."\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.ondrawerclosed = function () {\n
+    msg = "INFO: Printer report that drawer is closed."\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.ondraweropen = function () {\n
+    msg = "INFO: Printer report that drawer is open."\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.oncoveropen = function () {\n
+    msg = "WARNNING: Printer report that cover is open! Please close it!"\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.oncoverok = function () {\n
+    msg = "INFO: Printer cover is closed."\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.onstatuschange = function (status) {\n
+    msg = "INFO: Printer changed status to :" + status;\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+    console.log(msg);\n
+  };\n
+\n
+  monitoting_epos.open();\n
+}\n
+\n
+function printInvoiceOnEpson(printer_url){\n
+  enableEpsonMonitoring(printer_url)\n
+  var url = printer_url;\n
+\n
+  // create print data builder object\n
+  var builder = new epson.ePOSBuilder();\n
+\n
+  // initialize (ank mode, smoothing)\n
+  builder.addTextLang(\'en\').addTextSmooth(true);\n
+\n
+  //add logo\n
+  builder.addTextAlign(builder.ALIGN_CENTER);\n
+  var canvas = $(\'#canvas\')[0];\n
+  var context = canvas.getContext(\'2d\');\n
+  context.drawImage($(\'#company_logo\')[0], 0, 0, 330, 75);\n
+  builder.addImage(context, 0, 0, 330, 75);\n
+  builder.addFeed();\n
+\n
+  //add company information\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  $("#company-info div").each(function(){\n
+      builder.addText($(this).text());\n
+      builder.addFeed();\n
+  });\n
+\n
+  //add products information\n
+  builder.addTextSize(2, 1);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addText($.trim($("#invoice_information_title").text()));\n
+  builder.addTextSize(1, 1);\n
+  builder.addFeedLine(2);\n
+  $("#invoice_information_detail div").each(function(){\n
+    $(this).find("span").each(function(i){\n
+      if(i==0){\n
+        builder.addTextStyle(false, false, true);\n
+        builder.addTextAlign(builder.ALIGN_LEFT);\n
+        builder.addText($.trim($(this).text()));\n
+      }\n
+      else{\n
+        builder.addTextStyle(false, false, false);\n
+        builder.addTextPosition(350);\n
+        builder.addText($.trim($(this).text()));\n
+      }   \n
+    });\n
+    builder.addFeed();\n
+  });\n
+  builder.addFeed();\n
+\n
+  //add products line\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextFont(builder.FONT_C);\n
+  builder.addTextStyle(false, false, true);\n
+  $("#invoice_line thead tr").each(function(j){\n
+    var textPosition=0;\n
+    $(this).find("th").each(function(i){\n
+      builder.addTextPosition(textPosition);\n
+      builder.addText($.trim($(this).text()));\n
+      switch(i)\n
+      {\n
+      case 0:\n
+        textPosition+=285;\n
+        break;\n
+      case 1:\n
+        textPosition+=100;        \n
+        break;\n
+      case 3:\n
+        textPosition+=60;\n
+        break;\n
+      }\n
+    });\n
+  });\n
+  builder.addFeed();\n
+  builder.addTextStyle(false, false, false);\n
+  $("#invoice_line tbody tr").each(function(){\n
+    var textPosition=0;\n
+    $(this).find("td").each(function(i){\n
+        builder.addTextPosition(textPosition);\n
+        switch(i)\n
+        {\n
+        case 0:\n
+          var content=$.trim($(this).text());\n
+          content_len=content.length;\n
+          if(content_len>20)\n
+            content=content.substr(0,12)+"..."+content.substr(content_len-4,5)\n
+          builder.addText(content);\n
+          textPosition+=285;\n
+          break;\n
+        case 1:\n
+          var content=parseFloat($.trim($(this).text())).toFixed(1);\n
+          var content_len=content.length;\n
+          if(content_len>10)\n
+            content=parseFloat(content).toExponential(2);\n
+          else if(content_len>8&&content_len<11)\n
+            content=parseInt(content);\n
+          builder.addText(content);\n
+          textPosition+=100;\n
+          break;\n
+        case 2:\n
+          priceControl($.trim($(this).text()),builder)\n
+          textPosition+=60;\n
+          break;\n
+        case 3:\n
+          var content=$.trim($(this).text());\n
+          var content_len=content.length;\n
+          content=content.substr(0,5);\n
+          builder.addText(content);\n
+          textPosition+=60;\n
+          break;\n
+        case 4:\n
+          priceControl($.trim($(this).text()),builder)\n
+          break;\n
+        }\n
+    });\n
+    builder.addFeed();\n
+  });\n
+\n
+  //add total excluding tax price\n
+  /* DON\'T Include Tax Information.\n
+  builder.addTextPosition(360);\n
+  builder.addText("===========");\n
+  builder.addFeed();\n
+  builder.addTextSize(1, 2);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextPosition(130);\n
+  builder.addText($.trim($("#total_without_tax tr th").text()));\n
+  builder.addTextPosition(385);\n
+  priceControl($.trim($("#total_without_tax tr td").text()),builder)\n
+  builder.addFeedLine(4);\n
+  \n
+  //add the tax line\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextFont(builder.FONT_C);\n
+  builder.addTextStyle(false, false, true);\n
+  $("#tax thead tr").each(function(j){\n
+    var textPosition=100;\n
+    $(this).find("th").each(function(i){\n
+      builder.addTextPosition(textPosition);\n
+      builder.addText($.trim($(this).text()));\n
+      switch(i)\n
+      {\n
+      case 0:\n
+        textPosition+=60;\n
+        break;\n
+      case 1:\n
+        textPosition+=125;\n
+        break;\n
+      case 2:\n
+        textPosition+=100;\n
+        break;\n
+      }\n
+    });\n
+  });\n
+  builder.addFeed();\n
+  builder.addTextStyle(false, false, false);\n
+  $("#tax tbody tr").each(function(){\n
+    var textPosition=100;\n
+    $(this).find("td").each(function(i){\n
+        builder.addTextPosition(textPosition);\n
+        switch(i)\n
+        {\n
+        case 0:\n
+          builder.addText($.trim($(this).text()));\n
+          textPosition+=60;\n
+          break;\n
+        case 1:\n
+          priceControl($.trim($(this).text()),builder);\n
+          textPosition+=125;\n
+          break;\n
+        case 2:\n
+          builder.addText($.trim($(this).text()));\n
+          textPosition+=100;\n
+          break;\n
+        case 3:\n
+          priceControl($.trim($(this).text()),builder);\n
+          break;\n
+        }\n
+    });\n
+    builder.addFeed();\n
+  });\n
+  builder.addFeed();\n
+  */\n
+  //add total excluding tax price\n
+  builder.addTextPosition(360);\n
+  builder.addText("===========");\n
+  builder.addFeed();\n
+  builder.addTextSize(1, 2);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextPosition(130);\n
+  builder.addText($.trim($("#total_price tr th").text()));\n
+  builder.addTextPosition(385);\n
+  priceControl($.trim($("#total_price tr td").text()),builder)\n
+  builder.addFeedLine(2);\n
+\n
+  if ($("#total_discount").length > 0) {\n
+    builder.addTextSize(1, 2);\n
+    builder.addTextStyle(false, false, true);\n
+    builder.addTextAlign(builder.ALIGN_LEFT);\n
+    builder.addTextPosition(130);\n
+    builder.addText($.trim($("#total_discount tr th").text()));\n
+    builder.addTextPosition(385);\n
+    priceControl($.trim($("#total_discount tr td").text()),builder)\n
+    builder.addFeed();\n
+\n
+    builder.addTextPosition(360);\n
+    builder.addText("===========");\n
+    builder.addFeed();\n
+    builder.addTextSize(1, 2);\n
+    builder.addTextStyle(false, false, true);\n
+    builder.addTextAlign(builder.ALIGN_LEFT);\n
+    builder.addTextPosition(130);\n
+    builder.addText($.trim($("#total_price_with_discount tr th").text()));\n
+    builder.addTextPosition(385);\n
+    priceControl($.trim($("#total_price_with_discount tr td").text()),builder)\n
+  }\n
+\n
+  builder.addFeedLine(4)\n
+  // Loyalty information\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextStyle(false, false, false);\n
+  builder.addTextAlign(builder.ALIGN_CENTER);\n
+  $("#loyalty_information_header span").each(function(){\n
+      builder.addText($.trim($(this).text()));\n
+      builder.addFeed();\n
+   });\n
+\n
+  builder.addTextAlign(builder.ALIGN_CENTER);\n
+  var canvas = $(\'#ordernumbercanvas\')[0];\n
+  var context = canvas.getContext(\'2d\');\n
+  context.drawImage($(\'#order_barcode\')[0], 0, 0, 330, 75);\n
+  builder.addImage(context, 0, 0, 330, 75);\n
+  builder.addFeed();\n
+\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextStyle(false, false, false);\n
+  builder.addTextAlign(builder.ALIGN_CENTER);\n
+  builder.addText($.trim($("#order_number").text()));\n
+  builder.addFeed()\n
+\n
+  $("#loyalty_information_bottom span").each(function(){\n
+      builder.addText($.trim($(this).text()));\n
+      builder.addFeed();\n
+   });\n
+\n
+  builder.addFeedLine(2);\n
+  // append date and time\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  var now = new Date();\n
+  builder.addText(now.toDateString() + \' \' + now.toTimeString().slice(0, 8) + \'\\n\');\n
+\n
+  // append paper cutting\n
+  builder.addCut(); \n
+\n
+  // create print object\n
+  var epos = new epson.ePOSPrint(url);\n
+\n
+  // register callback function\n
+\n
+  epos.onreceive = function (res) {\n
+    // Obtain the print result and error code\n
+    var msg = \'Print\' + (res.success ? \'Success\' : \'Failure\') + \'\\nCode:\' + res.code;\n
+\n
+    switch(res.code) {\n
+      case "EPTR_AUTOMATICAL":\n
+        msg += \' An automatically recoverable error occurred\\n\';\n
+        break;\n
+      case "EPTR_COVER_OPEN":\n
+        msg += \' A cover open error occurred\\n\';\n
+        break;\n
+      case "EPTR_CUTTER":\n
+        msg += \' An autocutter error occurred\\n\';\n
+        break;\n
+      case \'EPTR_MECHANICAL\':\n
+        msg += \' A mechanical error occurred\\n\';\n
+        break;\n
+      case \'EPTR_REC_EMPTY\':\n
+        msg += \' No paper in roll paper end sensor\\n\';\n
+        break;\n
+      case \'EPTR_UNRECOVERABLE\':\n
+        msg += \' An unrecoverable error occurred\\n\';\n
+        break;\n
+      case \'SchemaError\':\n
+        msg += \' The request document contains a syntax error\\n\';\n
+        break;\n
+      case \'DeviceNotFound\':\n
+        msg += \' The printer with the specified device ID does not exist\\n\';\n
+        break;\n
+      case \'PrintSystemError\':\n
+        msg += \' An error occurred on the printing system\\n\';\n
+        break;\n
+      case \'EX_BADPORT\':\n
+        msg += \' An error was detected on the communication port\\n\';\n
+        break;\n
+      case \'EX_TIMEOUT\':\n
+        msg += \' A print timeout occurred\\n\';\n
+        break;\n
+     }\n
+    \n
+    msg += \'\\nStatus:\\n\';\n
+    // Obtain the printer status\n
+    var asb = res.status;\n
+    if (asb & epos.ASB_NO_RESPONSE) {\n
+      msg += \' No printer response\\n\';\n
+    }\n
+    if (asb & epos.ASB_PRINT_SUCCESS) {\n
+      msg += \' Print complete\\n\';\n
+    }\n
+    if (asb & epos.ASB_DRAWER_KICK) {\n
+      msg += \' Status of the drawer kick number 3 connector pin = "H"\\n\';\n
+    }\n
+    if (asb & epos.ASB_OFF_LINE) {\n
+      msg += \' Offline status\\n\';\n
+    }\n
+    if (asb & epos.ASB_COVER_OPEN) {\n
+      msg += \' Cover is open\\n\';\n
+    }\n
+    if (asb & epos.ASB_PAPER_FEED) {\n
+      msg += \' Paper feed switch is feeding paper\\n\';\n
+    }\n
+    if (asb & epos.ASB_WAIT_ON_LINE) {\n
+      msg += \' Waiting for online recovery\\n\';\n
+    }\n
+    if (asb & epos.ASB_PANEL_SWITCH) {\n
+      msg += \' Panel switch is ON\\n\';\n
+    }\n
+    if (asb & epos.ASB_MECHANICAL_ERR) {\n
+      msg += \' Mechanical error generated\\n\';\n
+    }\n
+    if (asb & epos.ASB_AUTOCUTTER_ERR) {\n
+      msg += \' Auto cutter error generated\\n\';\n
+    }\n
+    if (asb & epos.ASB_UNRECOVER_ERR) {\n
+      msg += \' Unrecoverable error generated\\n\';\n
+    }\n
+    if (asb & epos.ASB_AUTORECOVER_ERR) {\n
+      msg += \' Auto recovery error generated\\n\';\n
+    }\n
+    if (asb & epos.ASB_RECEIPT_NEAR_END) {\n
+      msg += \' No paper in the roll paper near end detector\\n\';\n
+    }\n
+    if (asb & epos.ASB_RECEIPT_END) {\n
+      msg += \' No paper in the roll paper end detector\\n\';\n
+    }\n
+    if (asb & epos.ASB_BUZZER) {\n
+      msg += \' Sounding the buzzer (limited model)\\n\';\n
+    }\n
+    if (asb & epos.ASB_SPOOLER_IS_STOPPED) {\n
+      msg += \' Stop the spooler\\n\';\n
+    }\n
+    // Display in the dialog box\n
+    self.console(msg);\n
+    $("#js_error_log").append("<div>" + msg + "</div>");\n
+  }\n
+\n
+  // register callback function\n
+  epos.onerror = function (err) {\n
+    $("#js_error_log").append("<div> Error Status: " + err.status + " Response: " + err.responseText + "</div>");\n
+    if (err.status == 0) {\n
+      $("#js_error_log").append("<div> Make sure you are able to access the printer at: " + epos.address + "</div>");\n
+    };\n
+    console.log("Error Status: " + err.status + "Response: " + err.responseText);\n
+  }\n
+\n
+  // send\n
+  $("#js_error_log").append("<div> The print will start soon...</div>");\n
+  console.log(builder.toString());\n
+  epos.send(builder.toString());\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

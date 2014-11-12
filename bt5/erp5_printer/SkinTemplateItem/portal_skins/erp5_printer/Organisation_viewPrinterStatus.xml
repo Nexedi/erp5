@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html tal:define="portal_url here/portal_url;\n
+                  default_printer_url python: getattr(context,\'default_printer_url\', None);\n
+                  printer_url python: default_printer_url and default_printer_url.getUrlString();">\n
+  <head>\n
+    <meta charset="utf-8">\n
+    <title>Receipt</title>\n
+    <script type="text/javascript" tal:attributes=\'src python:"%s/jquery/core/jquery.js" % portal_url\'></script>\n
+    <script type="text/javascript" tal:attributes=\'src python:"%s/epos-print-2.0.0.js" % portal_url\' ></script>\n
+    <script type="text/javascript" tal:attributes=\'src python:"%s/erp5_epson_printout.js" % portal_url\' ></script>\n
+\n
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">\n
+  </head>\n
+  <body style="background:white">\n
+    <h1> PRINTER STATUS FOR: <span tal:replace="context/getTitle" /> </h1>\n
+    <p>URL: <span tal:content="printer_url" /> </p>\n
+    <div id="js_error_log"> </div>\n
+    <button style="display:none;" id="enable_monitoring" onclick="enableEpsonMonitoring();"\n
+            tal:attributes="onclick python: \'enableEpsonMonitoring(\\\'%s\\\')\' % printer_url"> Enable </button>\n
+    <script type="text/javascript">\n
+      $(window).load(function() {\n
+        $("#enable_monitoring").click();\n
+      });\n
+    </script>\n
+  </body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Organisation_viewPrinterStatus</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
