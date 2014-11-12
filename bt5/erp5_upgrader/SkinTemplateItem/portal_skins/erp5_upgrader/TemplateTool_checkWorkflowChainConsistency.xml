@@ -119,7 +119,7 @@ return error_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_checkPostUpgradeWorkflowChainConsistency</string> </value>
+            <value> <string>TemplateTool_checkWorkflowChainConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

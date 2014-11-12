@@ -1,2 +1,3 @@
-Template Tool | TemplateToolPostUpgradeConstraint
-Template Tool | TemplateToolUpgraderConstraint
+Template Tool | TemplateToolBusinessTemplateInstallationConstraint
+Template Tool | TemplateToolTableExistenceConstraint
+Template Tool | TemplateToolWorkflowChainConsistencyConstraint

@@ -50,21 +50,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>bt5_list, keep_bt5_id_set = context.Base_getUpgradeBusinessTemplateList()\n
-\n
-template_tool = context.getPortalObject().portal_templates\n
-return template_tool.upgradeSite(bt5_list,\n
-  keep_bt5_id_set=keep_bt5_id_set,\n
-  dry_run=(not fixit))\n
+            <value> <string>"""\n
+Check for some table existence according to the create table list.\n
+If `fixit` is True, then it uses the associated sql_method to create it.\n
+"""\n
+create_table_list = [\n
+  # ("category", "z_create_category"), # example\n
+  ("catalog_full_text", "z_create_catalog_fulltext"),\n
+]\n
+sql_catalog = context.portal_catalog.getSQLCatalog()\n
+table_list = [r[0] for r in sql_catalog.z_show_tables(table="not needed so far")]\n
+report_list = []\n
+for create_table_information in create_table_list:\n
+  if not callable(getattr(sql_catalog, create_table_information[1], None)):\n
+    continue\n
+  if create_table_information[0] not in table_list:\n
+    if fixit:\n
+      getattr(sql_catalog, create_table_information[1], None)()\n
+    else:\n
+      report_list.append("Table `%s` not created (%s)" % create_table_information)\n
+return report_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>fixit=False, **kw</string> </value>
+            <value> <string>fixit=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_checkUpgradeConsistency</string> </value>
+            <value> <string>TemplateTool_checkTableExistence</string> </value>
         </item>
       </dictionary>
     </pickle>
