@@ -79,6 +79,8 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       business_configuration = self.getBusinessConfigurationValue()
       # store globally organization_id
       business_configuration.setGlobalConfigurationAttr(organisation_id=organisation.getId())
+      business_configuration.setGlobalConfigurationAttr(\
+        organisation_path='organisation_module/%s' %organisation.getId())
 
       if self.portal_workflow.isTransitionPossible(organisation, 'validate'):
         organisation.validate(comment=translateString("Validated by Configurator"))
