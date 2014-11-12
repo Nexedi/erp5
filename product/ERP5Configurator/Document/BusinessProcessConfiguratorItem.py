@@ -69,6 +69,8 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       business_configuration = self.getBusinessConfigurationValue()
       business_configuration.setGlobalConfigurationAttr(\
                     business_process_id=business_process.getId())
+      business_configuration.setGlobalConfigurationAttr(\
+        business_process_path='business_process_module/%s' %business_process.getId())
 
 
       business_process_dict = self._getBusinessProcessDict()
