@@ -70,8 +70,8 @@ alarm = getattr(portal_alarms, \'upgrader_check_pre_upgrade\')\n
 if alarm.sense() in (None, True):\n
   active_process.postActiveResult(summary=context.getTitle(),\n
       severity=1,\n
-      detail="Is required solve Pre Upgrade first. " +\\\n
-        "You need run active sense once at least on this alarm")\n
+      detail=["Is required solve Pre Upgrade first. " +\\\n
+        "You need run active sense once at least on this alarm",])\n
   return\n
 \n
 _, type_per_constraint_type = context.Base_getConstraintTypeListPerPortalType()\n
@@ -91,6 +91,7 @@ for portal_type in portal_type_list:\n
       portal_type=portal_type_list)[0][0] > REINDEX_SPLIT_COUNT:\n
     portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
       portal_type=portal_type,\n
+      activate_kw={"tag": "erp5_upgrader"},\n
       method_kw=method_kw)\n
   else:\n
     for result in portal.portal_catalog(portal_type=portal_type):\n

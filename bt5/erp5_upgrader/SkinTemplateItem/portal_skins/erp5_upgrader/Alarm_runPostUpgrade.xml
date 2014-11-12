@@ -61,8 +61,8 @@ alarm = getattr(portal_alarms, \'upgrader_check_upgrader\')\n
 if alarm.sense() in (None, True):\n
   active_process.postActiveResult(summary=context.getTitle(),\n
       severity=1,\n
-      detail="Is required run upgrade before solve it. " +\\\n
-        "You need run active sense once at least on this alarm")\n
+      detail=["Is required run upgrade before solve it. " +\\\n
+        "You need run active sense once at least on this alarm",])\n
   return\n
 \n
 context.ERP5Site_checkUpgraderConsistency(fixit=True,\n

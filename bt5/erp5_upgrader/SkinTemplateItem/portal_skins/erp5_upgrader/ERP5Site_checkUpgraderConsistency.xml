@@ -65,6 +65,7 @@ if portal_type_list:\n
   context.getPortalObject().portal_catalog.searchAndActivate(\n
     \'Base_postCheckConsistencyResult\',\n
     portal_type=portal_type_list,\n
+    activate_kw={"tag": "erp5_upgrader"},\n
     method_kw={\n
       \'fixit\': fixit,\n
       \'filter\': filter_dict,\n
