@@ -59,8 +59,11 @@ class PathConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
+    business_configuration = self.getBusinessConfigurationValue()
     error_list = []
-    for container_path, transition_method, document_dict in iter(self.getConfigurationListList()):
+    for container_path, transition_method, document_dict, substitution_dict in iter(self.getConfigurationListList()):
+      for key, attr in substitution_dict.items():
+        document_dict[key] = business_configuration.getGlobalConfigurationAttr(attr)
       document_dict = document_dict.copy()
       document_id = document_dict.pop('id')
       portal_type = document_dict.pop('portal_type')
