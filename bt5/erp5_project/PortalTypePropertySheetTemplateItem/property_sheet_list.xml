@@ -4,6 +4,7 @@
  </portal_type>
  <portal_type id="Project Line">
   <item>Amount</item>
+  <item>Fundraising</item>
   <item>OutcomeDescription</item>
   <item>SortIndex</item>
  </portal_type>
