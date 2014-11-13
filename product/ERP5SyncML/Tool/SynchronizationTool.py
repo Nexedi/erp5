@@ -382,6 +382,7 @@ class SynchronizationTool(BaseTool):
         after_tag="%s_reset" %(subscription.getPath(),),
         activity="SQLQueue",
         after_method_id=('processServerSynchronization',
+                         'getAndIndex',
                          'SQLCatalog_indexSyncMLDocumentList'),
         priority=ACTIVITY_PRIORITY,
         tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
