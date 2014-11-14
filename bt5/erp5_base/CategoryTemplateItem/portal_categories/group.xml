@@ -33,7 +33,6 @@
             <value>
               <tuple>
                 <string>subordination</string>
-                <string>parent</string>
               </tuple>
             </value>
         </item>
@@ -53,7 +52,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: [\'Career\', \'Organisation\', \'Person\', \'Computer\']</string> </value>
+            <value> <string>python: [\'Career\', \'Organisation\', \'Person\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
