@@ -1818,9 +1818,10 @@ class Base( CopyContainer,
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
     getRelativeUrl = self.getPortalObject().portal_url.getRelativeUrl
+        
     def cleanupCategory(path):
       # prevent duplicating base categories and storing "portal_categories/"
-      for start_string in ("%s/" % id, "portal_categories/"):
+      for start_string in ("portal_categories/", "%s/" % id):
         if path.startswith(start_string):
           path = path[len(start_string):]
       return path
