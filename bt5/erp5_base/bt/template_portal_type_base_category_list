@@ -6,5 +6,6 @@ Notification Message Module | business_application
 Notification Message | specialise
 Organisation Module | business_application
 Person Module | business_application
+Person | validation_state
 Query Module | business_application
 Query | agent

@@ -18,6 +18,9 @@
  <portal_type id="Organisation Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Person">
+  <item>validation_state</item>
+ </portal_type>
  <portal_type id="Person Module">
   <item>business_application</item>
  </portal_type>
