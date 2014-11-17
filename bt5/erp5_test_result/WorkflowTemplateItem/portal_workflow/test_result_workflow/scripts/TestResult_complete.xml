@@ -55,20 +55,21 @@ kw = sci[\'kwargs\']\n
 stop_date = kw.get(\'date\') or DateTime()\n
 test_result.setStopDate(stop_date)\n
 if test_result.getPortalType() == \'Test Result\':\n
-  if test_result:\n
-    edit_kw = dict(duration=0,\n
-                   all_tests=0,\n
-                   errors=0,\n
-                   failures=0,\n
-                   skips=0)\n
-    for line in test_result.objectValues(portal_type=\'Test Result Line\'):\n
-      for prop in edit_kw:\n
-        edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)\n
-    if edit_kw[\'errors\'] or edit_kw[\'failures\']:\n
-      status = \'FAIL\'\n
-    else:\n
-      status = \'PASS\'\n
-    test_result.edit(string_index=status, **edit_kw)\n
+  has_unknown_result = False\n
+  edit_kw = dict(duration=0,\n
+                 all_tests=0,\n
+                 errors=0,\n
+                 failures=0,\n
+                 skips=0)\n
+  for line in test_result.objectValues(portal_type=\'Test Result Line\'):\n
+    for prop in edit_kw:\n
+      edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)\n
+    has_unknown_result = has_unknown_result or line.getStringIndex() == 'UNKNOWN'\n
+  if has_unknown_result or edit_kw[\'errors\'] or edit_kw[\'failures\']:\n
+    status = \'FAIL\'\n
+  else:\n
+    status = \'PASS\'\n
+  test_result.edit(string_index=status, **edit_kw)\n
   test_result.activate().TestResult_afterComplete()\n
 elif test_result.getPortalType() == \'Test Result Line\':\n
   all_tests = kw.get(\'test_count\')\n
