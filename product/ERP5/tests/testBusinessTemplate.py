@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from OFS.SimpleItem import SimpleItem
 from App.config import getConfiguration
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
@@ -7068,6 +7068,28 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def testKeepVariousObjectsAndProperties(self):
+    sequence = Sequence()
+    self.stepCreateNewBusinessTemplate(sequence=sequence)
+    business_template = sequence.get("export_bt")
+    for property_id, method_id in [('template_keep_path_list', 'isKeepObject'),
+         ('template_keep_workflow_path_list', 'isKeepWorkflowObject'),
+         ('template_keep_last_workflow_history_only_path_list', 'isKeepWorkflowObjectLastHistoryOnly')]:
+      method = getattr(business_template, method_id)
+      self.assertEqual(False, method("aa/bb"))
+      business_template.setProperty(property_id, ["aa/bb"])
+      self.assertEqual(True, method("aa/bb"))
+      self.assertEqual(False, method("aa/bbcc"))
+      business_template.setProperty(property_id, ["aa/*"])
+      self.assertEqual(True, method("aa/bb"))
+      self.assertEqual(False, method("aa/bb/cc"))
+      business_template.setProperty(property_id, ["aa/b*"])
+      self.assertEqual(True, method("aa/bb"))
+      self.assertEqual(False, method("aa/bb/cc"))
+      self.assertEqual(False, method("aa/ca"))
+      business_template.setProperty(property_id, ["aa/**"])
+      self.assertEqual(True, method("aa/bb"))
+      self.assertEqual(True, method("aa/bb/cc"))
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 

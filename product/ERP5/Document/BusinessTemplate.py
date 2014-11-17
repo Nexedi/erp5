@@ -5378,6 +5378,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for keep_path in keep_list:
         if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
           return True
+        elif keep_path.endswith('*') and path.startswith(keep_path[:-1])\
+            and len(keep_path.split('/')) == len(path.split('/')):
+          return True
         elif path == keep_path:
           return True
       return False
