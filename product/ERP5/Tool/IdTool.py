@@ -134,10 +134,8 @@ class IdTool(BaseTool):
       new_id = last_generator.generateNewId(id_group=id_group, \
                                             default=default)
     except KeyError:
-      template_tool = getattr(self, 'portal_templates', None)
-      revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
       # XXX backward compatiblity
-      if int(revision) > 1561:
+      if self.getTypeInfo():
         LOG('generateNewId', ERROR, 'while generating id')
         raise
       else:
@@ -194,10 +192,8 @@ class IdTool(BaseTool):
       new_id_list = last_generator.generateNewIdList(id_group=id_group,
                          id_count=id_count, default=default)
     except (KeyError, ValueError):
-      template_tool = getattr(self, 'portal_templates', None)
-      revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
       # XXX backward compatiblity
-      if int(revision) > 1561:
+      if self.getTypeInfo():
         LOG('generateNewIdList', ERROR, 'while generating id')
         raise
       else:
