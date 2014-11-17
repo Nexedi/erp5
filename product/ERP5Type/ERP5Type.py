@@ -20,7 +20,6 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -416,6 +415,9 @@ class ERP5TypeInformation(XMLObject,
         if workflow_tool is not None:
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
+
+        for erp5_workflow in self.getErp5WorkflowValueList():
+          erp5_workflow.initializeDocument(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
