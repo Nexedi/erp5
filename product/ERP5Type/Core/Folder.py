@@ -32,7 +32,8 @@ from collections import deque
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.ZopeGuards import NullIter
 from Acquisition import aq_base, aq_parent, aq_inner
-from OFS.ObjectManager import ObjectManager
+from OFS.ObjectManager import ObjectManager, checkValidId
+from zExceptions import BadRequest
 from OFS.History import Historical
 import ExtensionClass
 
@@ -216,13 +217,18 @@ class FolderMixIn(ExtensionClass.Base):
 
   def _generatePerNodeId(self):
     """
-    Generate id base on node-id defined in zope.conf,
+    Generate id base on the node id defined in the zope.conf,
     useful for import and mass creation
     of objects inside a module using activities
     We also append random id
     """
     activity_tool = self.getPortalObject().portal_activities
-    return "%s-%s" %(activity_tool.getCurrentNode(), self._generateRandomId())
+    new_id = "%s-%s" %(activity_tool.getCurrentNode(), self._generateRandomId())
+    try:
+       checkValidId(new_id)
+    except BadRequest:
+      return self._generateNextId()
+    return new_id
 
   def _generatePerNodeNumberId(self):
     """
