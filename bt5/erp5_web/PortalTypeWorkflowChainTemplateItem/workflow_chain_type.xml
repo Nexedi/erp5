@@ -13,10 +13,10 @@
  </chain>
  <chain>
   <type>Web Section</type>
-  <workflow>category_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>category_publication_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Site</type>
-  <workflow>category_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>category_publication_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
