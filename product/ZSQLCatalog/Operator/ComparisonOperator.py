@@ -119,7 +119,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
       select_dict['%s__score__' % column.replace('`', '').rsplit('.', 1)[-1]] = match_string
     # Support sort on the relevance by using (column)__score__ key.
     order_by_dict = {
-      '`%s__score__`' % column.strip('`'): match_string,
+      '`%s__score__`' % '`.`'.join([x.strip('`') for x in column.split('.')]): match_string,
     }
     return SQLExpression(
       self,
