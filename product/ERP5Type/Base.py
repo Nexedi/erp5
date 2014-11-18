@@ -1870,7 +1870,7 @@ class Base(
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
     getRelativeUrl = self.getPortalObject().portal_url.getRelativeUrl
-        
+    
     def cleanupCategory(path):
       # prevent duplicating base categories and storing "portal_categories/"
       for start_string in ("portal_categories/", "%s/" % id):
@@ -3256,13 +3256,14 @@ class Base(
       pass
     else:
       max_date = None
-      for history in history_list.itervalues():
-        try:
-          date = history[-1]['time']
-        except (IndexError, KeyError, TypeError):
-          continue
-        if date > max_date:
-          max_date = date
+      portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
+      getStatusOf = portal_workflow.getStatusOf
+      for key, _ in history_list.iteritems():
+        status = getStatusOf(key, self)
+        if status is not None and status.has_key('time'):
+          date = status['time']
+          if date > max_date:
+            max_date = date
       if max_date:
         # Return a copy of history time, to prevent modification
         return DateTime(max_date)
