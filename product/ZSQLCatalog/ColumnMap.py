@@ -453,11 +453,16 @@ class ColumnMap(object):
        '.' in raw_column or '*' in raw_column:
       result = raw_column
     else:
+      if raw_column.endswith('__score__'):
+        raw_column = raw_column[:-9]
+        column_suffix = '__score__'
+      else:
+        column_suffix = ''
       function, column = self.raw_column_dict.get(raw_column, (None, raw_column))
       if group is DEFAULT_GROUP_ID:
         group, column = self.related_key_dict.get(column, (group, raw_column))
       alias = self.table_alias_dict[(group, self.column_map[(group, column)])]
-      result = '`%s`.`%s`' % (alias, column)
+      result = '`%s`.`%s%s`' % (alias, column, column_suffix)
       if function is not None:
         result = '%s(%s)' % (function, result)
     return result

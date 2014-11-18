@@ -505,12 +505,12 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self.catalog(reference_query, {'fulltext': 'a NOT b'})
     # The same, with an order by, must raise
     self.assertRaises(MergeConflictError, self.catalog, reference_query,
-      {'fulltext': 'a NOT b', 'order_by_list': [('fulltext', ), ]},
+      {'fulltext': 'a NOT b', 'order_by_list': [('fulltext__score__', ), ]},
       check_search_text=False)
     # If one want to sort on, he must use the equivalent FullText syntax:
     self.catalog(ReferenceQuery(ReferenceQuery(operator='mroonga',
       fulltext=MatchList(['a -b', '-b a'])), operator='and'),
-      {'fulltext': 'a -b', 'order_by_list': [('fulltext', ), ]},
+      {'fulltext': 'a -b', 'order_by_list': [('fulltext__score__', ), ]},
       check_search_text=False)
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='a'),
                                                ReferenceQuery(ReferenceQuery(operator='mroonga', fulltext='b'), operator='not'), operator='or'), operator='and'),
@@ -727,19 +727,26 @@ class TestSQLCatalog(ERP5TypeTestCase):
       'order_by_list': [('fulltext', ), ]})
     order_by_expression = sql_expression.getOrderByExpression()
     self.assertNotEqual(order_by_expression, '')
+    # ... and not sort by relevance
+    self.assertFalse('MATCH' in order_by_expression, order_by_expression)
+    # order_by_list on fulltext column + '__score__, resulting "ORDER BY" must be non-empty.
+    sql_expression = self.asSQLExpression({'fulltext': 'foo',
+      'order_by_list': [('fulltext__score__', ), ]})
+    order_by_expression = sql_expression.getOrderByExpression()
+    self.assertNotEqual(order_by_expression, '')
     # ... and must sort by relevance
     self.assertTrue('MATCH' in order_by_expression, order_by_expression)
     # ordering on fulltext column with sort order specified must preserve
     # sorting by relevance.
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
-        'order_by_list': [('fulltext', direction), ]})
+        'order_by_list': [('fulltext__score__', direction), ]})
       order_by_expression = sql_expression.getOrderByExpression()
       self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
     # Providing a None cast should work too
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
-        'order_by_list': [('fulltext', direction, None), ]})
+        'order_by_list': [('fulltext__score__', direction, None), ]})
       order_by_expression = sql_expression.getOrderByExpression()
       self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
 

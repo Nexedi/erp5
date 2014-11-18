@@ -80,6 +80,12 @@ class TestI18NSearch(ERP5TypeTestCase):
     # check fulltext search for automatically generated related keys.
     self.assertTrue('MATCH' in self.portal.portal_catalog(destination_title='Faure', src__=1))
 
+    # check sort on fulltext column
+    self.assertFalse('ORDER BY\n  MATCH' in self.portal.portal_catalog(title='Faure', sort_on=(('title', 'ascending'),), src__=1))
+
+    # check sort on fulltext search score
+    self.assertTrue('ORDER BY\n  MATCH' in self.portal.portal_catalog(title='Faure', sort_on=(('title__score__', 'ascending'),), src__=1))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestI18NSearch))
