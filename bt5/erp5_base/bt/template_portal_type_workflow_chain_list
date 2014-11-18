@@ -37,7 +37,6 @@ Organisation | validation_workflow
 Person | edit_workflow
 Person | person_interaction_workflow
 Person | user_account_workflow
-Person | validation_workflow
 Query | edit_workflow
 Query | query_workflow
 Role Definition | edit_workflow

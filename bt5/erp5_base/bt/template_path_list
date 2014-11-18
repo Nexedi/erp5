@@ -8,3 +8,5 @@ portal_categories/divergence_scope/category
 portal_categories/divergence_scope/property
 portal_categories/divergence_scope/quantity
 portal_memcached/persistent_memcached_plugin
+workflow_module/wenjie_workflow
+workflow_module/wenjie_workflow/**
