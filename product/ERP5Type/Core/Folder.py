@@ -223,9 +223,10 @@ class FolderMixIn(ExtensionClass.Base):
     We also append random id
     """
     activity_tool = self.getPortalObject().portal_activities
-    new_id = "%s-%s" %(activity_tool.getCurrentNode(), self._generateRandomId())
+    new_id = "%s-%s" %(activity_tool.getCurrentNode().replace("-", "_"),
+                       self._generateRandomId())
     try:
-       checkValidId(new_id)
+       checkValidId(self, new_id)
     except BadRequest:
       return self._generateNextId()
     return new_id
