@@ -8,6 +8,7 @@ Test Node | edit_workflow
 Test Node | test_node_workflow
 Test Result Line | edit_workflow
 Test Result Line | test_result_workflow
+Test Result Node | edit_workflow
 Test Result Node | test_result_workflow
 Test Result | edit_workflow
 Test Result | test_result_workflow

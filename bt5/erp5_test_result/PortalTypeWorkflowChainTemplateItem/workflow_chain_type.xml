@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Test Result Node</type>
-  <workflow>test_result_workflow</workflow>
+  <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
   <type>Test Suite</type>
