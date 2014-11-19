@@ -49,6 +49,29 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+packing_list = context\n
+related_order = packing_list.getCausalityValue()\n
+\n
+if packing_list.getSimulationState() == \'draft\':\n
+  packing_list.edit(\n
+    comment = related_order.getComment(),\n
+    title = related_order.getTitle()\n
+  )\n
+\n
+  # copy order\'s payment conditions\n
+  payment_condition_copy_id_list = related_order.contentIds(filter={\'portal_type\':\'Payment Condition\'})\n
+  if len(payment_condition_copy_id_list) > 0:\n
+    clipboard = related_order.manage_copyObjects(\n
+      ids=payment_condition_copy_id_list)\n
+    packing_list.manage_pasteObjects(clipboard)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

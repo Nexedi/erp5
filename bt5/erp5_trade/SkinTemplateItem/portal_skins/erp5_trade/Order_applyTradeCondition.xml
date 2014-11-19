@@ -49,6 +49,114 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+order = context\n
+\n
+# copy categories\n
+category_list = [\n
+  \'source\', \'source_section\', \'source_decision\',\n
+  \'source_administration\', \'source_payment\', \'source_project\',\n
+  \'source_carrier\', \'source_referral\', \'source_function\',\n
+  \'source_trade\',\n
+  \'destination\', \'destination_section\', \'destination_decision\',\n
+  \'destination_administration\', \'destination_payment\', \'destination_project\',\n
+  \'destination_carrier\', \'destination_referral\', \'destination_function\',\n
+  \'destination_trade\',\n
+  \'price_currency\', \'incoterm\', \'delivery_mode\',\n
+]\n
+new_category_dict = {}\n
+\n
+\n
+def getPropertyFromTradeCondition(trade_condition, property_name):\n
+  """Get a property from the trade condition, or from a specialised trade\n
+  condition\n
+  """\n
+  v = trade_condition.getProperty(property_name)\n
+  if v:\n
+    return v\n
+  for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
+    v = getPropertyFromTradeCondition(\n
+              specialised_trade_condition, property_name)\n
+    if v:\n
+      return v\n
+\n
+if not reverse_arrow_category:\n
+  for category in category_list:\n
+    if force or not order.getPropertyList(category):\n
+      v = getPropertyFromTradeCondition(trade_condition, category)\n
+      if v:\n
+        new_category_dict[category] = v\n
+        # for accounting transactions, we also initialize resource with the price\n
+        # currency\n
+        if category == \'price_currency\' and \\\n
+            context.getPortalType() in \\\n
+            context.getPortalAccountingTransactionTypeList():\n
+          new_category_dict[\'resource\'] = v\n
+else:\n
+  # Reverse source and destination\n
+  # This is useful for Returned Sale/Purchase XXX types.\n
+  reverse_dict = {\n
+    \'source\':\'destination\',\n
+    \'source_section\':\'destination_section\',\n
+    \'source_decision\':\'destination_decision\',\n
+    \'source_administration\':\'destination_administration\',\n
+    \'source_payment\':\'destination_payment\',\n
+    \'source_project\':\'destination_project\',\n
+    \'source_carrier\':\'destination_carrier\',\n
+    \'source_referral\':\'destination_referral\',\n
+    \'source_function\':\'destination_function\',\n
+    \'destination\':\'source\',\n
+    \'destination_section\':\'source_section\',\n
+    \'destination_decision\':\'source_decision\',\n
+    \'destination_administration\':\'source_administration\',\n
+    \'destination_payment\':\'source_payment\',\n
+    \'destination_project\':\'source_project\',\n
+    \'destination_carrier\':\'source_carrier\',\n
+    \'destination_referral\':\'source_referral\',\n
+    \'destination_function\':\'source_function\',\n
+    }\n
+  for category in category_list:\n
+    if force or not order.getPropertyList(category):\n
+      if category in reverse_dict:\n
+        trade_condition_category = reverse_dict[category]\n
+      else:\n
+        trade_condition_category = category\n
+      v = getPropertyFromTradeCondition(trade_condition, trade_condition_category)\n
+      if v:\n
+        new_category_dict[category] = v\n
+        # for accounting transactions, we also initialize resource with the price\n
+        # currency\n
+        if category == \'price_currency\' and \\\n
+            context.getPortalType() in \\\n
+            context.getPortalAccountingTransactionTypeList():\n
+          new_category_dict[\'resource\'] = v\n
+\n
+def copyPaymentCondition(order, trade_condition):\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  to_copy = trade_condition.contentIds(filter=filter_dict)\n
+  if len(to_copy) > 0 :\n
+    copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+    order.manage_pasteObjects(copy_data)\n
+  for other_trade_condition in trade_condition.getSpecialiseValueList():\n
+    copyPaymentCondition(order, other_trade_condition)\n
+  \n
+filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+if force:\n
+  order.manage_delObjects(list(order.contentIds(filter=filter_dict)))\n
+if len(order.contentIds(filter=filter_dict)) == 0:\n
+  copyPaymentCondition(order, trade_condition)\n
+\n
+# set specialise\n
+new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
+\n
+order.edit(**new_category_dict)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>trade_condition, force=0, reverse_arrow_category=0</string> </value>
         </item>
