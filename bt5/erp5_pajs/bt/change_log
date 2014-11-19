@@ -1,0 +1,9 @@
+2.2 (30 June 2009)
+- More algorithms - RIPEMD-160, SHA-256 and SHA-512 are now supported, based on contributed code. Support for MD4 has been dropped.
+- Compressed versions of the scripts are available, processed by YUI Compressor. sha1-min.js is less than 3KB.
+- Improved Unicode support. By default, the input string is now encoded as utf-8, before being hashed, which is what most people want. It is still possible to use utf-16, but the chrsz configuration variable is gone.
+- Arbitrary output encoding. You can specify a string of characters to use for output encoding; the string length does not need to be a power of two. This is helpful for password makers, which want to use as much unpredictability as possible, in a short password.
+- Bug fixes:
+- The scripts now work correctly if immediate code is not executed, so they support some unusual platforms, including GreaseMonkey.
+- rstr2binl now preinitialises the array with zeros, to work around bugs in some browsers.
+- md5_vm_test now works if hex_case is set to 1
