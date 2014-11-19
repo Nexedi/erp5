@@ -156,9 +156,10 @@
           if (parent_link !== undefined) {\n
             uri = new URI(parent_link.href);\n
             jio_key = uri.segment(2);\n
-            if (jio_key === undefined) {\n
+\n
+            if ((uri.protocol() !== \'urn\') || (uri.segment(0) !== \'jio\') || (uri.segment(1) !== "get")) {\n
               // Parent is the ERP5 site\n
-              parent_list.push({\n
+              parent_list.unshift({\n
                 title: "ERP5",\n
                 link: "#"\n
               });\n
@@ -166,7 +167,7 @@
               // Parent is an ERP5 document\n
               return gadget.whoWantToDisplayThis(jio_key)\n
                 .push(function (parent_href) {\n
-                  parent_list.push({\n
+                  parent_list.unshift({\n
                     title: parent_link.name,\n
                     link: parent_href\n
                   });\n
@@ -202,7 +203,6 @@
           });\n
 \n
           return gadget.renderPageHeader(header_options);\n
-\n
         });\n
 \n
     });\n
@@ -328,7 +328,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -342,7 +342,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58290.6512.49237</string> </value>
+                <value> <string>938.26113.11046.50244</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +360,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411984884.71</float>
+                        <float>1413897881.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
