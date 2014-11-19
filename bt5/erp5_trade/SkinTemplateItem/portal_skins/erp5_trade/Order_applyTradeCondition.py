@@ -79,6 +79,22 @@ else:
             context.getPortalAccountingTransactionTypeList():
           new_category_dict['resource'] = v
 
+
+def copyPaymentCondition(order, trade_condition):
+  filter_dict = {'portal_type': 'Payment Condition'}
+  to_copy = trade_condition.contentIds(filter=filter_dict)
+  if len(to_copy) > 0 :
+    copy_data = trade_condition.manage_copyObjects(ids=to_copy)
+    order.manage_pasteObjects(copy_data)
+  for other_trade_condition in trade_condition.getSpecialiseValueList():
+    copyPaymentCondition(order, other_trade_condition)
+
+filter_dict = {'portal_type': 'Payment Condition'}
+if force:
+  order.manage_delObjects(list(order.contentIds(filter=filter_dict)))
+if len(order.contentIds(filter=filter_dict)) == 0:
+  copyPaymentCondition(order, trade_condition)
+
 # set specialise
 new_category_dict['specialise'] = trade_condition.getRelativeUrl()
 
