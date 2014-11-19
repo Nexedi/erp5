@@ -139,6 +139,11 @@ class MroongaComparisonOperator(MatchComparisonOperator):
     MatchComparisonOperator.__init__(self, operator, ' IN BOOLEAN MODE')
     self.force_boolean = force_boolean
 
+  def _escape(self, query_string):
+    # TODO : We need to escape more invalid boolean operator usage
+    # like '+' or '-' without any letter.
+    return re.compile(r'([()])').sub(r'\\\g<1>', query_string)
+
   def renderValue(self, value_list):
     """
       Special Query renderer for MroongaFullText queries:
@@ -153,7 +158,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
 
     if self.force_boolean:
       fulltext_query = '*D+ %s' % value_list
-      return self._renderValue(fulltext_query)
+      return self._renderValue(self._escape(fulltext_query))
     else:
       match_query_list = []
       match_boolean_query_list = []
@@ -170,7 +175,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
       if match_query_list:
         fulltext_query += ' *S"%s"' % ' '.join(match_query_list)
       if match_boolean_query_list:
-        fulltext_query += ' %s' % ' '.join(match_boolean_query_list)
+        fulltext_query += ' %s' % self._escape(' '.join(match_boolean_query_list))
       return self._renderValue(fulltext_query)
 
 verifyClass(IOperator, MroongaComparisonOperator)

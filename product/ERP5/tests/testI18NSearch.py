@@ -51,6 +51,11 @@ class TestI18NSearch(ERP5TypeTestCase):
       last_name='実篤',
       description='Slow white fox jumps over the diligent dog.',
       )
+    person3 = person_module.newContent(
+      portal_type='Person',
+      first_name='( - + )',
+      last_name='',
+      )
     self.tic()
 
     # check if 'é' == 'e' collation works
@@ -76,6 +81,12 @@ class TestI18NSearch(ERP5TypeTestCase):
     result = person_module.searchFolder(description='+quick +fox +dog')
     self.assertEqual(len(result), 1)
     self.assertEqual(result[0].getPath(), person1.getPath())
+
+    # check search with a special character
+    for query in ('(', ')', ):
+      result = person_module.searchFolder(title=query)
+      self.assertEqual(len(result), 1)
+      self.assertEqual(result[0].getPath(), person3.getPath())
 
     # check fulltext search for automatically generated related keys.
     self.assertTrue('MATCH' in self.portal.portal_catalog(destination_title='Faure', src__=1))
