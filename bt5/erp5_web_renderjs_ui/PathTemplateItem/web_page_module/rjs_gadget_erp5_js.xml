@@ -273,7 +273,6 @@
           return jio_gadget.get.apply(jio_gadget, param_list);\n
         });\n
     })\n
-\n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
       // Hey, I want to display some URL\n
       var options = {\n
@@ -301,8 +300,31 @@
       }\n
       return this.aq_pleasePublishMyState(options);\n
     })\n
+    .allowPublicAcquisition("whoWantToDisplayThisFrontPage", function (param_list) {\n
+      // Hey, I want to display some URL\n
+      var options = {\n
+        page: param_list[0]\n
+      };\n
+      return this.aq_pleasePublishMyState(options);\n
+    })\n
 \n
     .allowPublicAcquisition("renderPageHeader", function (param_list) {\n
+      \n
+      // XXX Sven hack: number of _url determine padding for subheader on ui-content \n
+      function hasSubNavigation(my_param_dict) {\n
+        var i,\n
+          count = 0;\n
+        for (i in my_param_dict) {\n
+          if (my_param_dict.hasOwnProperty(i) && i.indexOf("_url") > -1) {\n
+            count += 1;\n
+          }\n
+        }\n
+        return count;\n
+      }\n
+\n
+      if (hasSubNavigation(param_list[0]) > 2) {\n
+        this.props.sub_header_class = "ui-has-subheader";\n
+      }\n
       this.props.header_argument_list = param_list;\n
     })\n
 \n
@@ -349,6 +371,7 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    \n
     // Render the page\n
     .declareMethod(\'configure\', function (options) {\n
       var key;\n
@@ -364,14 +387,26 @@
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         header_gadget,\n
+        panel_gadget,\n
         main_gadget;\n
-      return gadget.getDeclaredGadget("header")\n
-        .push(function (declared_gadget) {\n
-          header_gadget = declared_gadget;\n
-          return header_gadget.notifyLoading();\n
+\n
+      gadget.props.options = options;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            gadget.getDeclaredGadget("header"),\n
+            gadget.getDeclaredGadget("panel")\n
+          ]);\n
+        })\n
+        .push(function (my_gadget_list) {\n
+          header_gadget = my_gadget_list[0];\n
+          panel_gadget = my_gadget_list[1];\n
+          return RSVP.all([\n
+            panel_gadget.render({}),\n
+            header_gadget.notifyLoading()\n
+          ]);\n
         })\n
         .push(function () {\n
-\n
           // By default, init the header options to be empty (ERP5 title by default + sidebar)\n
           gadget.props.header_argument_list = [{\n
             panel_action: true\n
@@ -392,11 +427,13 @@
             return gadget.aq_pleasePublishMyState({page: \'front\'})\n
               .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
           }\n
+\n
           return renderPage(gadget, options.page, options);\n
         })\n
 \n
         .push(function (result) {\n
           main_gadget = result;\n
+\n
           return header_gadget.render.apply(header_gadget, gadget.props.header_argument_list);\n
         })\n
         .push(function () {\n
@@ -404,18 +441,24 @@
           if (main_gadget !== undefined) {\n
             return main_gadget.getElement()\n
               .push(function (fragment) {\n
-                var element = gadget.props.article,\n
-                  hack = document.createElement("div");\n
-                // XXX Horrible temporary hack to get the header fixed and content not hidden behind it...\n
-                hack.innerHTML = "<p><br/><br/><br/></p>";\n
-                // Go to the top of the page\n
+                 var element = gadget.props.article,\n
+                    content_container = document.createElement("div");\n
+                \n
+                content_container.className = "ui-content " + (gadget.props.sub_header_class || "");\n
+                \n
+                // reset subheader indicator\n
+                delete gadget.props.sub_header_class;\n
+\n
+                // go to the top of the page\n
                 window.scrollTo(0, 0);\n
+\n
                 // Clear first to DOM, append after to reduce flickering/manip\n
                 while (element.firstChild) {\n
                   element.removeChild(element.firstChild);\n
                 }\n
-                hack.appendChild(fragment);\n
-                element.appendChild(hack);\n
+                content_container.appendChild(fragment);\n
+                element.appendChild(content_container);\n
+\n
                 $(element).trigger("create");\n
                 return header_gadget.notifyLoaded();\n
               });\n
@@ -569,7 +612,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -583,7 +626,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.7130.7783.39850</string> </value>
+                <value> <string>938.39279.27944.4147</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -601,7 +644,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412758828.97</float>
+                        <float>1414687653.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
