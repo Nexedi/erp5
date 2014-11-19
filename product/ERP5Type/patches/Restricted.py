@@ -194,6 +194,10 @@ ContainerAssertions[datetime.timedelta] = 1
 ContainerAssertions[datetime.tzinfo] = 1
 allow_module('difflib')
 allow_module('hashlib')
+import hashlib
+# XXX: assumes all hash types share the same base class (this is at least true
+# for md5 and sha1/224/256/384/512)
+allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('urlparse')
 allow_module('struct')
