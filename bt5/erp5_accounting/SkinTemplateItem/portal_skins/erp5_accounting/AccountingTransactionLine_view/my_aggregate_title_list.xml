@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>enabled</string>
                 <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
                 <string>title</string>
@@ -20,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_aggregate_title</string> </value>
+            <value> <string>my_aggregate_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -61,12 +60,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,7 +69,9 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>proxy_listbox_ids</string> </key>
@@ -117,12 +112,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -136,6 +127,10 @@
                           <string>Payment Transaction Group</string>
                           <string>Payment Transaction Group</string>
                         </tuple>
+                        <tuple>
+                          <string>Bank Reconciliation</string>
+                          <string>Bank Reconciliation</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -144,8 +139,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
+                        <tuple>
                           <string>PaymentTransactionGroupModule_viewPaymentTransactionGroupList/listbox</string>
                           <string>Payment Transaction Groups</string>
+                        </tuple>
+                        <tuple>
+                          <string>BankReconciliationModule_viewBankReconciliationList/listbox</string>
+                          <string>Bank Reconciliations</string>
                         </tuple>
                       </list>
                     </value>
@@ -156,7 +159,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payment Transaction Group</string> </value>
+                    <value> <string>Aggregate</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -172,7 +175,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getDestinationValue(portal_type = \'Account\') is not None and here.getDestinationValue(portal_type = \'Account\').isMemberOf(\'account_type/asset/cash\') and context.Base_checkPermission(\'payment_transaction_group_module\', \'View\')</string> </value>
+            <value> <string>python: list(context.getPortalItemTypeList()) + (\'Payment Transaction Group\', )</string> </value>
         </item>
       </dictionary>
     </pickle>
