@@ -52,10 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-"""Reset the grouping reference after a copy & paste.\n
+"""Reset reconciliation after a copy & paste.\n
+\n
 """\n
 context.setGroupingReference(None)\n
 context.setGroupingDate(None)\n
+\n
+context.setAggregate(None, portal_type=\'Bank Reconciliation\')\n
 
 
 ]]></string> </value>
