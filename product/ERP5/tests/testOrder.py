@@ -2720,6 +2720,44 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual(10 + 20, order.getTotalQuantity())
     self.assertEqual(10*4 + 20*5, order.getTotalPrice())
 
+  def test_order_payment_condition_copied(self):
+    # Payment Condition should be copied in the packing list
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              specialise=self.business_process,
+                              title='Order',
+                              start_date=self.datetime,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    # set properties, on the default payment condition
+    order.setDefaultPaymentConditionQuantity(10)
+    self.assertEqual(1, len(order.contentValues(
+                              portal_type='Payment Condition')))
+
+    order.confirm()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
+    self.tic()
+    related_packing_list = order.getCausalityRelatedValue(
+                                   portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(related_packing_list, None)
+    self.assertEqual(1, len(related_packing_list.contentValues(
+                                          portal_type='Payment Condition')))
+
   def test_Order_viewAsODT(self):
     # tests order printout
     resource = self.portal.getDefaultModule(
