@@ -160,15 +160,33 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEqual(self.client, self.order.getDestinationValue())
     self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
 
-  def test_apply_trade_condition_with_payment_conditions(self):
+  def test_apply_trade_condition_copy_subobjects(self):
     self.trade_condition.setPaymentConditionTradeDate('custom')
     self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
     self.order.setSpecialiseValue(self.trade_condition)
-    self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
-    self.assertEqual(DateTime(2001, 01, 01),
-                      self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
 
-  def test_apply_trade_condition_with_payment_conditions_with_hierarchy(self):
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
+                      self.order.getPaymentConditionPaymentDate())
+
+  def test_apply_twice_trade_condition_copy_subobjects(self):
+    self.trade_condition.setPaymentConditionTradeDate('custom')
+    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
+    self.order.setSpecialiseValue(self.trade_condition)
+
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    self.assertEqual(1, len(self.order.contentValues(
+                                portal_type='Payment Condition')))
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEqual(DateTime(2001, 01, 01),
+                      self.order.getPaymentConditionPaymentDate())
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    self.assertEqual(1, len(self.order.contentValues(
+                                portal_type='Payment Condition')))
+
+  def test_apply_trade_condition_copy_subobjects_with_hierarchy(self):
     other_trade_condition = self.trade_condition_module.newContent(
                             portal_type=self.trade_condition.getPortalType(),
                             title='Other Trade Condition')
@@ -178,9 +196,12 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
     self.trade_condition.setSpecialiseValue(other_trade_condition)
     self.order.setSpecialiseValue(self.trade_condition)
-    self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
+
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
     self.assertEqual(DateTime(2001, 01, 01),
-                      self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
+                      self.order.getPaymentConditionPaymentDate())
 
   def test_apply_trade_condition_twice_update_order(self):
     self.trade_condition.setSourceSectionValue(self.vendor)
@@ -200,9 +221,9 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEqual(self.client, self.order.getDestinationSectionValue())
     self.assertEqual(self.client, self.order.getDestinationValue())
     self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
-    self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
     self.assertEqual(DateTime(2001, 01, 01),
-                      self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
+                      self.order.getPaymentConditionPaymentDate())
 
     new_vendor = self.portal.organisation_module.newContent(
                     portal_type='Organisation',
@@ -214,15 +235,14 @@ class TestApplyTradeCondition(TradeConditionTestCase):
                     payment_condition_payment_date=DateTime(2002, 2, 2))
 
     self.order.Order_applyTradeCondition(new_trade_condition, force=1)
-    self.tic()
     self.assertEqual(new_vendor, self.order.getSourceSectionValue())
     self.assertEqual(self.vendor, self.order.getSourceValue())
     self.assertEqual(self.client, self.order.getDestinationSectionValue())
     self.assertEqual(self.client, self.order.getDestinationValue())
     self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
-    self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
+    self.assertEqual('custom', self.order.getPaymentConditionTradeDate())
     self.assertEqual(DateTime(2002, 02, 02),
-                      self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
+                      self.order.getPaymentConditionPaymentDate())
 
 
 class TestTradeConditionSupplyLine(TradeConditionTestCase):
