@@ -111,7 +111,7 @@
     <title>ERP5</title>\n
     <link rel="shortcut icon" href="favicon.ico">\n
 \n
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
     <link rel="stylesheet" href="jquerymobile.css">\n
     <link rel="stylesheet" href="gadget_erp5.css">\n
     <script src="RSVP.js" type="text/javascript"></script>\n
@@ -272,7 +272,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -286,7 +286,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.4433.7668.55722</string> </value>
+                <value> <string>938.26262.19465.39389</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -304,7 +304,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412596999.08</float>
+                        <float>1414049137.38</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
