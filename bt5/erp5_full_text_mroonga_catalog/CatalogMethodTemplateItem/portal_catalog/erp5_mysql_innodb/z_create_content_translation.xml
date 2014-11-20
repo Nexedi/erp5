@@ -64,7 +64,7 @@
   `content_language` VARBINARY(100),\n
   `translated_text` TEXT,\n
   PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
-  FULLTEXT KEY (`translated_text`) COMMENT \'parser "TokenBigramSplitSymbolAlpha"\'\n
+  FULLTEXT KEY (`translated_text`) COMMENT \'parser "TokenBigramSplitSymbolAlphaDigit"\'\n
 ) ENGINE=mroonga;\n
 </string> </value>
         </item>

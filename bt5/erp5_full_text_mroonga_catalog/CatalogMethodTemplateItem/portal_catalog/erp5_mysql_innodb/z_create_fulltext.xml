@@ -66,7 +66,7 @@ CREATE TABLE `full_text` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `SearchableText` MEDIUMTEXT,\n
   PRIMARY KEY  (`uid`),\n
-  FULLTEXT `SearchableText` (`SearchableText`) COMMENT \'parser "TokenBigramSplitSymbolAlpha"\'\n
+  FULLTEXT `SearchableText` (`SearchableText`) COMMENT \'parser "TokenBigramSplitSymbolAlphaDigit"\'\n
 ) ENGINE=mroonga;\n
 </string> </value>
         </item>
