@@ -463,8 +463,9 @@ class SyncMLSubscription(XMLObject):
       path_list.append(signature.getPath())
       force = signature.isForce()  # XXX-must check the use of this later
     else:
-      force = True  # Always erease data in this mode
-      document = None  # For now, do no try to retrieve previous version of document
+      force = True  # Always erease data in this mod
+      document = self.getDocumentFromGid(gid)
+      #document = None  # For now, do no try to retrieve previous version of document
       # XXX this has to be managed with a property
       # XXX Some improvement can also be done to retrieve a list of document at once
 
