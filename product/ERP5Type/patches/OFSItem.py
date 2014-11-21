@@ -1,3 +1,4 @@
+from AccessControl import ClassSecurityInfo
 from OFS.SimpleItem import SimpleItem
 
 """
@@ -14,6 +15,8 @@ NOTE: This patches OFS.Item.SimpleItem as it's the lowest patchable class
 before persistence.Persistent, where this patch would actually belong.
 """
 
+security = ClassSecurityInfo()
+security.declarePublic('volatileCached')
 def volatileCached(self, func):
   """
   Cache "func()" return value using a volatile on self.
@@ -40,7 +43,7 @@ def volatileCached(self, func):
     # volatile property anyway.
     self._v_SimpleItem_Item_vCache = cache_dict = {}
   # Use whole func_code as a key, as it is the only reliable way to identify a
-  # function reliably.
+  # function.
   key = func.func_code
   try:
     return cache_dict[key]
@@ -49,4 +52,4 @@ def volatileCached(self, func):
     return value
 
 SimpleItem.volatileCached = volatileCached
-
+security.apply(SimpleItem)
