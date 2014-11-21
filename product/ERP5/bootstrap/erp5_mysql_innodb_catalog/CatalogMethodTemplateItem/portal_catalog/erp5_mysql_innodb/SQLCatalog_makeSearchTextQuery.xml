@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Search text query generator. Accepts a string and returns a ComplexQuery.\n
   For example:\n
 \n
@@ -67,48 +65,17 @@
   - are contributed by given Person\'s title\n
   - etc ..\n
 """\n
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery\n
-\n
-parsed_dict = context.Base_parseSearchString(value)\n
-full_text = parsed_dict.pop(\'searchabletext\')\n
-\n
-#context.log(parsed_dict)\n
-\n
-# use full_text scriptable key!\n
-query_list = [Query(**{\'full_text\': full_text})]\n
-\n
-# XXX: "newest" ?\n
-# XXX: get known columns rather than hard-code \n
-for key in (\'reference\', \'version\', \'language\', \'portal_type\', \'contributor_title\'):\n
-  value = parsed_dict.get(key, None)\n
-  if value is not None:\n
-    query_list.append(Query(**{key: value}))\n
-\n
-# user wants only his documents\n
-if parsed_dict.get(\'mine\', None) is not None:\n
-  query_list.append(Query(**{\'owner\': str(context.portal_membership.getAuthenticatedMember())}))\n
-\n
-creation_from = parsed_dict.get(\'creation_from\', None)\n
-creation_to = parsed_dict.get(\'creation_to\', None)\n
-modification_from = parsed_dict.get(\'modification_from\', None)\n
-modification_to = parsed_dict.get(\'modification_to\', None)\n
-\n
-if creation_from is not None:\n
-  query_list.append(SimpleQuery(**{\'catalog.creation_date\': creation_from, \n
-                                   \'comparison_operator\': \'>=\'}))\n
-if creation_to is not None:\n
-  query_list.append(SimpleQuery(**{\'catalog.creation_date\': creation_to, \n
-                                   \'comparison_operator\': \'=<\'}))\n
-if modification_from is not None:\n
-  query_list.append(SimpleQuery(**{\'catalog.modification_date\': modification_from, \n
-                                   \'comparison_operator\': \'>=\'}))\n
-if modification_to is not None:\n
-  query_list.append(SimpleQuery(**{\'catalog.modification_date\': modification_to, \n
-                                   \'comparison_operator\': \'<=\'}))\n
-return ComplexQuery(query_list, operator="AND")\n
-
-
-]]></string> </value>
+if \'full_text\' in context.sql_search_tables:\n
+  column = \'SearchableText\'\n
+else:\n
+  column = \'title\'\n
+node = context.Base_getAdvancedSearchSyntaxTreeNode(value, column=column)\n
+if node is None:\n
+  from Products.ZSQLCatalog.SQLCatalog import Query\n
+  return Query(**{column:value})\n
+else:\n
+  return context.getPortalObject().portal_catalog.getSQLCatalog().buildQueryFromAbstractSyntaxTreeNode(node, column)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
