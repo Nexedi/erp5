@@ -66,9 +66,11 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
   def test_Erp5Workflow(self):
     """Tests the connection between ERP5Workflow and Objects."""
-    # Create a base category as the intermidiate
+    # Create base category as the intermidiate
+    
     self.portal.portal_categories.newContent('category_state')
-
+    #self.portal.portal_categories.newContent('erp5_workflow')
+    
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
                                                    id='new_workflow')
@@ -84,7 +86,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # state variable
     new_workflow.setStateBaseCategory('category_state')
 
-    # create a portal type
+    # create a base type and a portal type based on this base type
+    
     type_object = self.portal.portal_types.newContent(
       portal_type='Base Type',
       id='Object Type',
@@ -92,11 +95,12 @@ class TestERP5Workflow(ERP5TypeTestCase):
       type_base_category_list=('category_state')
       )
 
-    type_object.setErp5WorkflowValue(new_workflow)
+    type_object.setWorkflow5Value(new_workflow)
 
-    self.assertEqual(type_object.getBaseCategoryList(), ['erp5_workflow'])
-    self.assertEqual(type_object.getErp5Workflow(), 'workflow_module/new_workflow')
-    self.assertEqual(len(type_object.getErp5WorkflowValueList()), 1)
+    self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
+    self.assertEqual(type_object.getWorkflow5(),
+      'workflow_module/new_workflow')
+    self.assertEqual(len(type_object.getWorkflow5ValueList()), 1)
 
     # create a module
     self.portal.portal_types.newContent(
@@ -114,6 +118,91 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(new_object.getPortalType(), "Object Type")
     self.assertEqual(new_object.getPortalType(), 'Object Type')
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+  
+  def test_Erp5Transition(self):
+    """Tests ERP5Workflow transition"""
+    # Create base category as the intermidiate
+    
+    self.portal.portal_categories.newContent('category_state')
+    self.portal.portal_categories.newContent('category_transition')
+    
+    # Create a workflow
+    new_workflow = self.workflow_module.newContent(portal_type='Workflow',
+                                                   id='new_workflow')
+    s1 = new_workflow.newContent(portal_type='State',title='State 1')
+    s2 = new_workflow.newContent(portal_type='State',title='State 2')
+    t1 = new_workflow.newContent(portal_type='Transition',
+      title='Transition 1',
+      id='transition1')
+    t2 = new_workflow.newContent(portal_type='Transition',
+      title='Transition 2',
+      id='transition2')
+    s1.setDestinationValue(t1)
+    s2.setDestinationValue(t2)
+    t1.setDestinationValue(s2)
+    t2.setDestinationValue(s1)
+
+    # set initial state
+    new_workflow.setSourceValue(s1)
+
+    # state variable
+    new_workflow.setStateBaseCategory('category_state','category_transition')
+
+    # create a base type and a portal type based on this base type
+    
+    type_object = self.portal.portal_types.newContent(
+      portal_type='Base Type',
+      id='Object Type',
+      type_class='XMLObject',
+      type_base_category_list=(['category_state','category_transition'])
+      )
+
+    type_object.setWorkflow5Value(new_workflow)
+
+    self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
+    self.assertEqual(type_object.getWorkflow5(),
+      'workflow_module/new_workflow')
+    self.assertEqual(len(type_object.getWorkflow5ValueList()), 1)
+
+    # create a module
+    self.portal.portal_types.newContent(
+      'Module Type', 'Base Type',
+      type_class='Folder',
+      type_filter_content_type=1,
+      type_allowed_content_type_list=('Object Type',))
+
+    self.portal.newContent(portal_type='Module Type', id='new_module')
+
+    # create an object based on new-created portal type in the module
+    new_object = self.portal.new_module.newContent(portal_type='Object Type',
+                                                    id='new_object')
+    self.assertTrue(new_object is not None)
+    self.assertEqual(new_object.getPortalType(), 'Object Type')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+    
+    # Pass transition
+    """Method 1"""
+    t1.execute(new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
+    t2.execute(new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+    """Method 2"""
+    s1.executeTransition(t1, new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
+    s2.executeTransition(t2, new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+    """Method 3"""
+    new_object.getCategoryStateValue().executeTransition(
+      new_workflow.transition1, 
+      new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
+    new_object.getCategoryStateValue().executeTransition(
+      new_workflow.transition2, 
+      new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+    
+    #new_object.transition2a1()
+
 
 def test_suite():
   suite = unittest.TestSuite()

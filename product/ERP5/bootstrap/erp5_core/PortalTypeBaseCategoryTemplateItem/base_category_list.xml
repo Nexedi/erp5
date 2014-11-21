@@ -3,7 +3,7 @@
   <item>specialise</item>
  </portal_type>
  <portal_type id="Base Type">
-  <item>erp5_workflow</item>
+  <item>workflow5</item>
  </portal_type>
  <portal_type id="Conceptual Id Generator">
   <item>specialise</item>
