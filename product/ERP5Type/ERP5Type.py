@@ -416,8 +416,8 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-        for erp5_workflow in self.getErp5WorkflowValueList():
-          erp5_workflow.initializeDocument(ob)
+        for workflow5 in self.getWorkflow5ValueList():
+          workflow5.initializeDocument(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
