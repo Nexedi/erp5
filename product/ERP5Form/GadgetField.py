@@ -2,77 +2,63 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator import Widget
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
-from zLOG import LOG
+from zLOG import LOG, ERROR
 
 class GadgetWidget(Widget.TextWidget):
   """
   A widget that displays a renderjs gadget
   """
   property_names = Widget.TextWidget.property_names + \
-       ['gadget_html', 'gadget_cached', 'gadget_cache_id', 'gadget_property',
-        'gadget_connection', 'gadget_id']
+       ['gadget_url', 'js_sandbox']
 
-  gadget_html = fields.StringField('gadget_html',
-                         title='Gadget Html',
-                         description=("The id of the html page containing the \
+  gadget_url = fields.StringField('gadget_url',
+                         title='Gadget Url',
+                         description=("The url of the html page containing the \
                                       gadget"),
                          default='',
                          required=0)
 
-  gadget_id = fields.StringField('gadget_id',
-                         title='Gadget Id',
-                         description=("The id of the gadget"),
-                         default='',
-                         required=0)
-
-  gadget_cache_id = fields.StringField('gadget_cache_id',
-                         title='Gadget Cache Id',
-                         description=("The id of the cache in localstorage"),
-                         default='',
-                         required=0)
-
-  gadget_property = fields.StringField('gadget_property',
-                         title='Gadget Properties',
-                         description=("Json Data used to initialize the gadget"),
-                         default='',
-                         required=0)
-
-  gadget_connection = fields.StringField('gadget_connection',
-                         title='Gadget Connections',
-                         description=("Json Data used to define interactions"),
-                         default='',
-                         required=0)
-
-  gadget_cached = fields.CheckBoxField('gadget_cached',
-                         title='Gadget Cached',
-                         description=("The rendering of the gadget will be \
-                                       cached in localstorage."),
-                         default=0,
-                         required=0)
+  js_sandbox = fields.StringField('js_sandbox',
+                          title='Gadget Sandbox',
+                          description=("Gadget sandbox"),
+                          default='',
+                          required=0)
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
-      return self.render_view(field, value, REQUEST, render_prefix)
+      return self.render_view(field, value, REQUEST, render_prefix, key)
 
-  def render_view(self, field, value, REQUEST=None, render_prefix=None):
-    kw = {}
-    gadget_mapping = {"gadget_cached": "data-gadget-cacheable",
-                      "gadget_cache_id": "data-gadget-cache-id",
-                      "gadget_html": "data-gadget",
-                      "gadget_id": "id",
-                      "gadget_connection": "data-gadget-connection",
-                      "gadget_property": "data-gadget-property"}
-    for property_name in gadget_mapping.keys():
-      property_value = field.get_value(property_name)
-      if property_value or property_name=="gadget_html":
-        kw[gadget_mapping[property_name]] = property_value
-    return Widget.render_element("div",
+  def render_view(self, field, value, REQUEST=None, render_prefix=None, key=None):
+     kw = {}
+     kw['data-gadget-url'] = field.get_value('gadget_url')
+     kw['data-gadget-scope'] = field.id
+     if key is not None:
+       kw['editable'] = key
+     kw['class'] = "gadget"
+     kw['value'] = value
+     kw['data-gadget-sandbox'] = field.get_value('js_sandbox')
+     return Widget.render_element("section",
                       **kw)
+
+  def get_javascript_list(self, field, REQUEST=None):
+    """
+    Returns list of javascript needed by the widget
+    """
+    js_list = ['rsvp.js', 'renderjs.js', 'erp5_gadgetfield.js',
+               'jio_sha256.amd.js', 'jio.js']
+    result = []
+    try:
+      for js_file in js_list:
+        result.append(field.restrictedTraverse(js_file).absolute_url()) 
+    except KeyError:
+      LOG('keyError:', ERROR, 'Error Value: %s' % js_file)
+      return []
+
+    return result
+
 
 GadgetWidgetInstance = GadgetWidget()
 
 class GadgetField(ZMIField):
-    """ Gadget field
-    """
     meta_type = "GadgetField"
 
     widget = GadgetWidgetInstance

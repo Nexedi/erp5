@@ -1,0 +1,5607 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts12610905.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jio.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function (dependencies, module) {\n
+  "use strict";\n
+  if (typeof define === \'function\' && define.amd) {\n
+    return define(dependencies, module);\n
+  }\n
+  window.jIO = {};\n
+  module(window.jIO, RSVP, {hex_sha256: hex_sha256});\n
+}([\'exports\', \'rsvp\', \'sha256\'], function (exports, RSVP, sha256) {\n
+  "use strict";\n
+\n
+  var hex_sha256 = sha256.hex_sha256;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global uniqueJSONStringify, methodType */\n
+\n
+var defaults = {}, constants = {};\n
+\n
+defaults.storage_types = {};\n
+\n
+constants.dcmi_types = {\n
+  \'Collection\': \'Collection\',\n
+  \'Dataset\': \'Dataset\',\n
+  \'Event\': \'Event\',\n
+  \'Image\': \'Image\',\n
+  \'InteractiveResource\': \'InteractiveResource\',\n
+  \'MovingImage\': \'MovingImage\',\n
+  \'PhysicalObject\': \'PhysicalObject\',\n
+  \'Service\': \'Service\',\n
+  \'Software\': \'Software\',\n
+  \'Sound\': \'Sound\',\n
+  \'StillImage\': \'StillImage\',\n
+  \'Text\': \'Text\'\n
+};\n
+// if (dcmi_types.Collection === \'Collection\') { is a DCMI type }\n
+// if (typeof dcmi_types[name] === \'string\')   { is a DCMI type }\n
+\n
+constants.http_status_text = {\n
+  "0": "Unknown",\n
+  "550": "Internal JIO Error",\n
+  "551": "Internal Storage Error",\n
+  "555": "Cancelled",\n
+  "Unknown": "Unknown",\n
+  "Internal JIO Error": "Internal JIO Error",\n
+  "Internal Storage Error": "Internal Storage Error",\n
+  "Cancelled": "Cancelled",\n
+  "unknown": "Unknown",\n
+  "internal_jio_error": "Internal JIO Error",\n
+  "internal_storage_error": "Internal Storage Error",\n
+  "cancelled": "Cancelled",\n
+\n
+  "200": "Ok",\n
+  "201": "Created",\n
+  "204": "No Content",\n
+  "205": "Reset Content",\n
+  "206": "Partial Content",\n
+  "304": "Not Modified",\n
+  "400": "Bad Request",\n
+  "401": "Unauthorized",\n
+  "402": "Payment Required",\n
+  "403": "Forbidden",\n
+  "404": "Not Found",\n
+  "405": "Method Not Allowed",\n
+  "406": "Not Acceptable",\n
+  "407": "Proxy Authentication Required",\n
+  "408": "Request Timeout",\n
+  "409": "Conflict",\n
+  "410": "Gone",\n
+  "411": "Length Required",\n
+  "412": "Precondition Failed",\n
+  "413": "Request Entity Too Large",\n
+  "414": "Request-URI Too Long",\n
+  "415": "Unsupported Media Type",\n
+  "416": "Requested Range Not Satisfiable",\n
+  "417": "Expectation Failed",\n
+  "418": "I\'m a teapot",\n
+  "419": "Authentication Timeout",\n
+  "500": "Internal Server Error",\n
+  "501": "Not Implemented",\n
+  "502": "Bad Gateway",\n
+  "503": "Service Unavailable",\n
+  "504": "Gateway Timeout",\n
+  "507": "Insufficient Storage",\n
+\n
+  "Ok": "Ok",\n
+  "OK": "Ok",\n
+  "Created": "Created",\n
+  "No Content": "No Content",\n
+  "Reset Content": "Reset Content",\n
+  "Partial Content": "Partial Content",\n
+  "Not Modified": "Not Modified",\n
+  "Bad Request": "Bad Request",\n
+  "Unauthorized": "Unauthorized",\n
+  "Payment Required": "Payment Required",\n
+  "Forbidden": "Forbidden",\n
+  "Not Found": "Not Found",\n
+  "Method Not Allowed": "Method Not Allowed",\n
+  "Not Acceptable": "Not Acceptable",\n
+  "Proxy Authentication Required": "Proxy Authentication Required",\n
+  "Request Timeout": "Request Timeout",\n
+  "Conflict": "Conflict",\n
+  "Gone": "Gone",\n
+  "Length Required": "Length Required",\n
+  "Precondition Failed": "Precondition Failed",\n
+  "Request Entity Too Large": "Request Entity Too Large",\n
+  "Request-URI Too Long": "Request-URI Too Long",\n
+  "Unsupported Media Type": "Unsupported Media Type",\n
+  "Requested Range Not Satisfiable": "Requested Range Not Satisfiable",\n
+  "Expectation Failed": "Expectation Failed",\n
+  "I\'m a teapot": "I\'m a teapot",\n
+  "Authentication Timeout": "Authentication Timeout",\n
+  "Internal Server Error": "Internal Server Error",\n
+  "Not Implemented": "Not Implemented",\n
+  "Bad Gateway": "Bad Gateway",\n
+  "Service Unavailable": "Service Unavailable",\n
+  "Gateway Timeout": "Gateway Timeout",\n
+  "Insufficient Storage": "Insufficient Storage",\n
+\n
+  "ok": "Ok",\n
+  "created": "Created",\n
+  "no_content": "No Content",\n
+  "reset_content": "Reset Content",\n
+  "partial_content": "Partial Content",\n
+  "not_modified": "Not Modified",\n
+  "bad_request": "Bad Request",\n
+  "unauthorized": "Unauthorized",\n
+  "payment_required": "Payment Required",\n
+  "forbidden": "Forbidden",\n
+  "not_found": "Not Found",\n
+  "method_not_allowed": "Method Not Allowed",\n
+  "not_acceptable": "Not Acceptable",\n
+  "proxy_authentication_required": "Proxy Authentication Required",\n
+  "request_timeout": "Request Timeout",\n
+  "conflict": "Conflict",\n
+  "gone": "Gone",\n
+  "length_required": "Length Required",\n
+  "precondition_failed": "Precondition Failed",\n
+  "request_entity_too_large": "Request Entity Too Large",\n
+  "request-uri_too_long": "Request-URI Too Long",\n
+  "unsupported_media_type": "Unsupported Media Type",\n
+  "requested_range_not_satisfiable": "Requested Range Not Satisfiable",\n
+  "expectation_failed": "Expectation Failed",\n
+  "im_a_teapot": "I\'m a teapot",\n
+  "authentication_timeout": "Authentication Timeout",\n
+  "internal_server_error": "Internal Server Error",\n
+  "not_implemented": "Not Implemented",\n
+  "bad_gateway": "Bad Gateway",\n
+  "service_unavailable": "Service Unavailable",\n
+  "gateway_timeout": "Gateway Timeout",\n
+  "insufficient_storage": "Insufficient Storage"\n
+};\n
+\n
+constants.http_status = {\n
+  "0": 0,\n
+  "550": 550,\n
+  "551": 551,\n
+  "555": 555,\n
+  "Unknown": 0,\n
+  "Internal JIO Error": 550,\n
+  "Internal Storage Error": 551,\n
+  "Cancelled": 555,\n
+  "unknown": 0,\n
+  "internal_jio_error": 550,\n
+  "internal_storage_error": 551,\n
+  "cancelled": 555,\n
+\n
+  "200": 200,\n
+  "201": 201,\n
+  "204": 204,\n
+  "205": 205,\n
+  "206": 206,\n
+  "304": 304,\n
+  "400": 400,\n
+  "401": 401,\n
+  "402": 402,\n
+  "403": 403,\n
+  "404": 404,\n
+  "405": 405,\n
+  "406": 406,\n
+  "407": 407,\n
+  "408": 408,\n
+  "409": 409,\n
+  "410": 410,\n
+  "411": 411,\n
+  "412": 412,\n
+  "413": 413,\n
+  "414": 414,\n
+  "415": 415,\n
+  "416": 416,\n
+  "417": 417,\n
+  "418": 418,\n
+  "419": 419,\n
+  "500": 500,\n
+  "501": 501,\n
+  "502": 502,\n
+  "503": 503,\n
+  "504": 504,\n
+  "507": 507,\n
+\n
+  "Ok": 200,\n
+  "OK": 200,\n
+  "Created": 201,\n
+  "No Content": 204,\n
+  "Reset Content": 205,\n
+  "Partial Content": 206,\n
+  "Not Modified": 304,\n
+  "Bad Request": 400,\n
+  "Unauthorized": 401,\n
+  "Payment Required": 402,\n
+  "Forbidden": 403,\n
+  "Not Found": 404,\n
+  "Method Not Allowed": 405,\n
+  "Not Acceptable": 406,\n
+  "Proxy Authentication Required": 407,\n
+  "Request Timeout": 408,\n
+  "Conflict": 409,\n
+  "Gone": 410,\n
+  "Length Required": 411,\n
+  "Precondition Failed": 412,\n
+  "Request Entity Too Large": 413,\n
+  "Request-URI Too Long": 414,\n
+  "Unsupported Media Type": 415,\n
+  "Requested Range Not Satisfiable": 416,\n
+  "Expectation Failed": 417,\n
+  "I\'m a teapot": 418,\n
+  "Authentication Timeout": 419,\n
+  "Internal Server Error": 500,\n
+  "Not Implemented": 501,\n
+  "Bad Gateway": 502,\n
+  "Service Unavailable": 503,\n
+  "Gateway Timeout": 504,\n
+  "Insufficient Storage": 507,\n
+\n
+  "ok": 200,\n
+  "created": 201,\n
+  "no_content": 204,\n
+  "reset_content": 205,\n
+  "partial_content": 206,\n
+  "not_modified": 304,\n
+  "bad_request": 400,\n
+  "unauthorized": 401,\n
+  "payment_required": 402,\n
+  "forbidden": 403,\n
+  "not_found": 404,\n
+  "method_not_allowed": 405,\n
+  "not_acceptable": 406,\n
+  "proxy_authentication_required": 407,\n
+  "request_timeout": 408,\n
+  "conflict": 409,\n
+  "gone": 410,\n
+  "length_required": 411,\n
+  "precondition_failed": 412,\n
+  "request_entity_too_large": 413,\n
+  "request-uri_too_long": 414,\n
+  "unsupported_media_type": 415,\n
+  "requested_range_not_satisfiable": 416,\n
+  "expectation_failed": 417,\n
+  "im_a_teapot": 418,\n
+  "authentication_timeout": 419,\n
+  "internal_server_error": 500,\n
+  "not_implemented": 501,\n
+  "bad_gateway": 502,\n
+  "service_unavailable": 503,\n
+  "gateway_timeout": 504,\n
+  "insufficient_storage": 507\n
+};\n
+\n
+constants.http_action = {\n
+  "0": "error",\n
+  "550": "error",\n
+  "551": "error",\n
+  "555": "error",\n
+  "Unknown": "error",\n
+  "Internal JIO Error": "error",\n
+  "Internal Storage Error": "error",\n
+  "Cancelled": "error",\n
+  "unknown": "error",\n
+  "internal_jio_error": "error",\n
+  "internal_storage_error": "error",\n
+  "cancelled": "error",\n
+\n
+  "200": "success",\n
+  "201": "success",\n
+  "204": "success",\n
+  "205": "success",\n
+  "206": "success",\n
+  "304": "success",\n
+  "400": "error",\n
+  "401": "error",\n
+  "402": "error",\n
+  "403": "error",\n
+  "404": "error",\n
+  "405": "error",\n
+  "406": "error",\n
+  "407": "error",\n
+  "408": "error",\n
+  "409": "error",\n
+  "410": "error",\n
+  "411": "error",\n
+  "412": "error",\n
+  "413": "error",\n
+  "414": "error",\n
+  "415": "error",\n
+  "416": "error",\n
+  "417": "error",\n
+  "418": "error",\n
+  "419": "retry",\n
+  "500": "retry",\n
+  "501": "error",\n
+  "502": "error",\n
+  "503": "retry",\n
+  "504": "retry",\n
+  "507": "error",\n
+\n
+  "Ok": "success",\n
+  "OK": "success",\n
+  "Created": "success",\n
+  "No Content": "success",\n
+  "Reset Content": "success",\n
+  "Partial Content": "success",\n
+  "Not Modified": "success",\n
+  "Bad Request": "error",\n
+  "Unauthorized": "error",\n
+  "Payment Required": "error",\n
+  "Forbidden": "error",\n
+  "Not Found": "error",\n
+  "Method Not Allowed": "error",\n
+  "Not Acceptable": "error",\n
+  "Proxy Authentication Required": "error",\n
+  "Request Timeout": "error",\n
+  "Conflict": "error",\n
+  "Gone": "error",\n
+  "Length Required": "error",\n
+  "Precondition Failed": "error",\n
+  "Request Entity Too Large": "error",\n
+  "Request-URI Too Long": "error",\n
+  "Unsupported Media Type": "error",\n
+  "Requested Range Not Satisfiable": "error",\n
+  "Expectation Failed": "error",\n
+  "I\'m a teapot": "error",\n
+  "Authentication Timeout": "retry",\n
+  "Internal Server Error": "retry",\n
+  "Not Implemented": "error",\n
+  "Bad Gateway": "error",\n
+  "Service Unavailable": "retry",\n
+  "Gateway Timeout": "retry",\n
+  "Insufficient Storage": "error",\n
+\n
+  "ok": "success",\n
+  "created": "success",\n
+  "no_content": "success",\n
+  "reset_content": "success",\n
+  "partial_content": "success",\n
+  "not_modified": "success",\n
+  "bad_request": "error",\n
+  "unauthorized": "error",\n
+  "payment_required": "error",\n
+  "forbidden": "error",\n
+  "not_found": "error",\n
+  "method_not_allowed": "error",\n
+  "not_acceptable": "error",\n
+  "proxy_authentication_required": "error",\n
+  "request_timeout": "error",\n
+  "conflict": "error",\n
+  "gone": "error",\n
+  "length_required": "error",\n
+  "precondition_failed": "error",\n
+  "request_entity_too_large": "error",\n
+  "request-uri_too_long": "error",\n
+  "unsupported_media_type": "error",\n
+  "requested_range_not_satisfiable": "error",\n
+  "expectation_failed": "error",\n
+  "im_a_teapot": "error",\n
+  "authentication_timeout": "retry",\n
+  "internal_server_error": "retry",\n
+  "not_implemented": "error",\n
+  "bad_gateway": "error",\n
+  "service_unavailable": "retry",\n
+  "gateway_timeout": "retry",\n
+  "insufficient_storage": "error"\n
+};\n
+\n
+constants.content_type_re =\n
+  /^([a-z]+\\/[a-zA-Z0-9\\+\\-\\.]+)(?:\\s*;\\s*charset\\s*=\\s*([a-zA-Z0-9\\-]+))?$/;\n
+\n
+/**\n
+ * Function that does nothing\n
+ */\n
+constants.emptyFunction = function () {\n
+  return;\n
+};\n
+\n
+defaults.job_rule_conditions = {};\n
+\n
+/**\n
+ * Adds some job rule conditions\n
+ */\n
+(function () {\n
+\n
+  /**\n
+   * Compare two jobs and test if they use the same storage description\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function sameStorageDescription(a, b) {\n
+    return uniqueJSONStringify(a.storage_spec) ===\n
+      uniqueJSONStringify(b.storage_spec);\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if they are writers\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function areWriters(a, b) {\n
+    return methodType(a.method) === \'writer\' &&\n
+      methodType(b.method) === \'writer\';\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if they use metadata only\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function useMetadataOnly(a, b) {\n
+    if ([\'post\', \'put\', \'get\', \'remove\', \'allDocs\'].indexOf(a.method) === -1) {\n
+      return false;\n
+    }\n
+    if ([\'post\', \'put\', \'get\', \'remove\', \'allDocs\'].indexOf(b.method) === -1) {\n
+      return false;\n
+    }\n
+    return true;\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if they are readers\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function areReaders(a, b) {\n
+    return methodType(a.method) === \'reader\' &&\n
+      methodType(b.method) === \'reader\';\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if their methods are the same\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function sameMethod(a, b) {\n
+    return a.method === b.method;\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if their document ids are the same\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function sameDocumentId(a, b) {\n
+    return a.kwargs._id === b.kwargs._id;\n
+  }\n
+\n
+  /**\n
+   * Test if the jobs have a document id.\n
+   *\n
+   * @param  {Object} a The first job to test\n
+   * @param  {Object} b The second job to test\n
+   * @return {Boolean} True if ids exist, else false\n
+   */\n
+  function haveDocumentIds(a, b) {\n
+    if (typeof a.kwargs._id !== "string" || a.kwargs._id === "") {\n
+      return false;\n
+    }\n
+    if (typeof b.kwargs._id !== "string" || b.kwargs._id === "") {\n
+      return false;\n
+    }\n
+    return true;\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if their kwargs are equal\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function sameParameters(a, b) {\n
+    return uniqueJSONStringify(a.kwargs) ===\n
+      uniqueJSONStringify(b.kwargs);\n
+  }\n
+\n
+  /**\n
+   * Compare two jobs and test if their options are equal\n
+   *\n
+   * @param  {Object} a The first job to compare\n
+   * @param  {Object} b The second job to compare\n
+   * @return {Boolean} True if equal, else false\n
+   */\n
+  function sameOptions(a, b) {\n
+    return uniqueJSONStringify(a.options) ===\n
+      uniqueJSONStringify(b.options);\n
+  }\n
+\n
+  defaults.job_rule_conditions = {\n
+    "sameStorageDescription": sameStorageDescription,\n
+    "areWriters": areWriters,\n
+    "areReaders": areReaders,\n
+    "useMetadataOnly": useMetadataOnly,\n
+    "sameMethod": sameMethod,\n
+    "sameDocumentId": sameDocumentId,\n
+    "sameParameters": sameParameters,\n
+    "sameOptions": sameOptions,\n
+    "haveDocumentIds": haveDocumentIds\n
+  };\n
+\n
+}());\n
+\n
+/*jslint indent: 2, maxlen: 80, nomen: true, sloppy: true */\n
+/*global exports, Blob, FileReader, RSVP, hex_sha256, XMLHttpRequest,\n
+  constants */\n
+\n
+/**\n
+ * Do not exports these tools unless they are not writable, not configurable.\n
+ */\n
+\n
+exports.util = {};\n
+\n
+/**\n
+ * Inherits the prototype methods from one constructor into another. The\n
+ * prototype of `constructor` will be set to a new object created from\n
+ * `superConstructor`.\n
+ *\n
+ * @param  {Function} constructor The constructor which inherits the super\n
+ *   one\n
+ * @param  {Function} superConstructor The super constructor\n
+ */\n
+function inherits(constructor, superConstructor) {\n
+  constructor.super_ = superConstructor;\n
+  constructor.prototype = Object.create(superConstructor.prototype, {\n
+    "constructor": {\n
+      "configurable": true,\n
+      "enumerable": false,\n
+      "writable": true,\n
+      "value": constructor\n
+    }\n
+  });\n
+}\n
+\n
+/**\n
+ * Clones jsonable object in depth\n
+ *\n
+ * @param  {A} object The jsonable object to clone\n
+ * @return {A} The cloned object\n
+ */\n
+function jsonDeepClone(object) {\n
+  var tmp = JSON.stringify(object);\n
+  if (tmp === undefined) {\n
+    return undefined;\n
+  }\n
+  return JSON.parse(tmp);\n
+}\n
+exports.util.jsonDeepClone = jsonDeepClone;\n
+\n
+/**\n
+ * Clones all native object in deep. Managed types: Object, Array, String,\n
+ * Number, Boolean, Function, null.\n
+ *\n
+ * It can also clone object which are serializable, like Date.\n
+ *\n
+ * To make a class serializable, you need to implement the `toJSON` function\n
+ * which returns a JSON representation of the object. The returned value is used\n
+ * as first parameter of the object constructor.\n
+ *\n
+ * @param  {A} object The object to clone\n
+ * @return {A} The cloned object\n
+ */\n
+function deepClone(object) {\n
+  var i, cloned;\n
+  if (Array.isArray(object)) {\n
+    cloned = [];\n
+    for (i = 0; i < object.length; i += 1) {\n
+      cloned[i] = deepClone(object[i]);\n
+    }\n
+    return cloned;\n
+  }\n
+  if (object === null) {\n
+    return null;\n
+  }\n
+  if (typeof object === \'object\') {\n
+    if (Object.getPrototypeOf(object) === Object.prototype) {\n
+      cloned = {};\n
+      for (i in object) {\n
+        if (object.hasOwnProperty(i)) {\n
+          cloned[i] = deepClone(object[i]);\n
+        }\n
+      }\n
+      return cloned;\n
+    }\n
+    if (object instanceof Date) {\n
+      // XXX this block is to enable phantomjs and browsers compatibility with\n
+      // Date.prototype.toJSON when it is an invalid date. In phantomjs, it\n
+      // returns `"Invalid Date"` but in browsers it returns `null`. In\n
+      // browsers, giving `null` as parameter to `new Date()` doesn\'t return an\n
+      // invalid date.\n
+\n
+      // Cloning a date with `return new Date(object)` has problems on Firefox.\n
+      // I don\'t know why...  (Tested on Firefox 23)\n
+\n
+      if (isFinite(object.getTime())) {\n
+        return new Date(object.toJSON());\n
+      }\n
+      return new Date("Invalid Date");\n
+    }\n
+    // clone serializable objects\n
+    if (typeof object.toJSON === \'function\') {\n
+      return new (Object.getPrototypeOf(object).constructor)(object.toJSON());\n
+    }\n
+    // cannot clone\n
+    return object;\n
+  }\n
+  return object;\n
+}\n
+exports.util.deepClone = deepClone;\n
+\n
+/**\n
+ * Update a dictionary by adding/replacing key values from another dict.\n
+ * Enumerable values equal to undefined are also used.\n
+ *\n
+ * @param  {Object} original The dict to update\n
+ * @param  {Object} other The other dict\n
+ * @return {Object} The updated original dict\n
+ */\n
+function dictUpdate(original, other) {\n
+  var k;\n
+  for (k in other) {\n
+    if (other.hasOwnProperty(k)) {\n
+      original[k] = other[k];\n
+    }\n
+  }\n
+  return original;\n
+}\n
+exports.util.dictUpdate = dictUpdate;\n
+\n
+/**\n
+ * Like \'dict.clear()\' in python. Delete all dict entries.\n
+ *\n
+ * @method dictClear\n
+ * @param  {Object} self The dict to clear\n
+ */\n
+function dictClear(dict) {\n
+  var i;\n
+  for (i in dict) {\n
+    if (dict.hasOwnProperty(i)) {\n
+      delete dict[i];\n
+      // dictClear(dict);\n
+      // break;\n
+    }\n
+  }\n
+}\n
+exports.util.dictClear = dictClear;\n
+\n
+/**\n
+ * Filter a dict to keep only values which keys are in `keys` list.\n
+ *\n
+ * @param  {Object} dict The dict to filter\n
+ * @param  {Array} keys The key list to keep\n
+ */\n
+function dictFilter(dict, keys) {\n
+  var i, buffer = [];\n
+  for (i = 0; i < keys.length; i += 1) {\n
+    buffer[i] = dict[keys[i]];\n
+  }\n
+  dictClear(dict);\n
+  for (i = 0; i < buffer.length; i += 1) {\n
+    dict[keys[i]] = buffer[i];\n
+  }\n
+}\n
+exports.util.dictFilter = dictFilter;\n
+\n
+/**\n
+ * Gets all elements of an array and classifies them in a dict of array.\n
+ * Dict keys are element types, and values are list of element of type \'key\'.\n
+ *\n
+ * @param  {Array} array The array of elements to pop\n
+ * @return {Object} The type dict\n
+ */\n
+function arrayValuesToTypeDict(array) {\n
+  var i, l, type_object = {}, type, v;\n
+  for (i = 0, l = array.length; i < l; i += 1) {\n
+    v = array[i];\n
+    type = Array.isArray(v) ? "array" : typeof v;\n
+    /*jslint ass: true */\n
+    (type_object[type] = type_object[type] || []).push(v);\n
+  }\n
+  return type_object;\n
+}\n
+\n
+/**\n
+ * An Universal Unique ID generator\n
+ *\n
+ * @return {String} The new UUID.\n
+ */\n
+function generateUuid() {\n
+  function S4() {\n
+    return (\'0000\' + Math.floor(\n
+      Math.random() * 0x10000 /* 65536 */\n
+    ).toString(16)).slice(-4);\n
+  }\n
+  return S4() + S4() + "-" +\n
+    S4() + "-" +\n
+    S4() + "-" +\n
+    S4() + "-" +\n
+    S4() + S4() + S4();\n
+}\n
+exports.util.generateUuid = generateUuid;\n
+\n
+/**\n
+ * Concatenate a `string` `n` times.\n
+ *\n
+ * @param  {String} string The string to concat\n
+ * @param  {Number} n The number of time to concat\n
+ * @return {String} The concatenated string\n
+ */\n
+function concatStringNTimes(string, n) {\n
+  /*jslint plusplus: true */\n
+  var res = "";\n
+  while (--n >= 0) { res += string; }\n
+  return res;\n
+}\n
+\n
+/**\n
+ * JSON stringify a value. Object keys are sorted in order to make a kind of\n
+ * deepEqual thanks to a simple string comparison.\n
+ *\n
+ *     JSON.stringify({"a": "b", "c": "d"}) ===\n
+ *       JSON.stringify({"c": "d", "a": "b"})                 // false\n
+ *\n
+ *     deepEqual({"a": "b", "c": "d"}, {"c": "d", "a": "b"}); // true\n
+ *\n
+ *     uniqueJSONStringify({"a": "b", "c": "d"}) ===\n
+ *       uniqueJSONStringify({"c": "d", "a": "b"})            // true\n
+ *\n
+ * @param  {Any} value The value to stringify\n
+ * @param  {Function,Array} [replacer] A function to replace values during parse\n
+ * @param  {String,Number} [space] Causes the result to be pretty-printed\n
+ * @return {String} The unique JSON stringified value\n
+ */\n
+function uniqueJSONStringify(value, replacer, space) {\n
+  var indent, key_value_space = "";\n
+  if (typeof space === "string") {\n
+    if (space !== "") {\n
+      indent = space;\n
+      key_value_space = " ";\n
+    }\n
+  } else if (typeof space === "number") {\n
+    if (isFinite(space) && space > 0) {\n
+      indent = concatStringNTimes(" ", space);\n
+      key_value_space = " ";\n
+    }\n
+  }\n
+\n
+  function uniqueJSONStringifyRec(key, value, deep) {\n
+    var i, l, res, my_space;\n
+    if (value && typeof value.toJSON === "function") {\n
+      value = value.toJSON();\n
+    }\n
+    if (typeof replacer === "function") {\n
+      value = replacer(key, value);\n
+    }\n
+\n
+    if (indent) {\n
+      my_space = concatStringNTimes(indent, deep);\n
+    }\n
+    if (Array.isArray(value)) {\n
+      res = [];\n
+      for (i = 0; i < value.length; i += 1) {\n
+        res[res.length] = uniqueJSONStringifyRec(i, value[i], deep + 1);\n
+        if (res[res.length - 1] === undefined) {\n
+          res[res.length - 1] = "null";\n
+        }\n
+      }\n
+      if (res.length === 0) { return "[]"; }\n
+      if (indent) {\n
+        return "[\\n" + my_space + indent +\n
+          res.join(",\\n" + my_space + indent) +\n
+          "\\n" + my_space + "]";\n
+      }\n
+      return "[" + res.join(",") + "]";\n
+    }\n
+    if (typeof value === "object" && value !== null) {\n
+      if (Array.isArray(replacer)) {\n
+        res = replacer.reduce(function (p, c) {\n
+          p.push(c);\n
+          return p;\n
+        }, []);\n
+      } else {\n
+        res = Object.keys(value);\n
+      }\n
+      res.sort();\n
+      for (i = 0, l = res.length; i < l; i += 1) {\n
+        key = res[i];\n
+        res[i] = uniqueJSONStringifyRec(key, value[key], deep + 1);\n
+        if (res[i] !== undefined) {\n
+          res[i] = JSON.stringify(key) + ":" + key_value_space + res[i];\n
+        } else {\n
+          res.splice(i, 1);\n
+          l -= 1;\n
+          i -= 1;\n
+        }\n
+      }\n
+      if (res.length === 0) { return "{}"; }\n
+      if (indent) {\n
+        return "{\\n" + my_space + indent +\n
+          res.join(",\\n" + my_space + indent) +\n
+          "\\n" + my_space + "}";\n
+      }\n
+      return "{" + res.join(",") + "}";\n
+    }\n
+    return JSON.stringify(value);\n
+  }\n
+  return uniqueJSONStringifyRec("", value, 0);\n
+}\n
+exports.util.uniqueJSONStringify = uniqueJSONStringify;\n
+\n
+function makeBinaryStringDigest(string) {\n
+  return \'sha256-\' + hex_sha256(string);\n
+}\n
+exports.util.makeBinaryStringDigest = makeBinaryStringDigest;\n
+\n
+function readBlobAsBinaryString(blob) {\n
+  var fr = new FileReader();\n
+  return new RSVP.Promise(function (resolve, reject, notify) {\n
+    fr.addEventListener("load", resolve);\n
+    fr.addEventListener("error", reject);\n
+    fr.addEventListener("progress", notify);\n
+    fr.readAsBinaryString(blob);\n
+  }, function () {\n
+    fr.abort();\n
+  });\n
+}\n
+exports.util.readBlobAsBinaryString = readBlobAsBinaryString;\n
+\n
+function readBlobAsArrayBuffer(blob) {\n
+  var fr = new FileReader();\n
+  return new RSVP.Promise(function (resolve, reject, notify) {\n
+    fr.addEventListener("load", resolve);\n
+    fr.addEventListener("error", reject);\n
+    fr.addEventListener("progress", notify);\n
+    fr.readAsArrayBuffer(blob);\n
+  }, function () {\n
+    fr.abort();\n
+  });\n
+}\n
+exports.util.readBlobAsArrayBuffer = readBlobAsArrayBuffer;\n
+\n
+function readBlobAsText(blob) {\n
+  var fr = new FileReader();\n
+  return new RSVP.Promise(function (resolve, reject, notify) {\n
+    fr.addEventListener("load", resolve);\n
+    fr.addEventListener("error", reject);\n
+    fr.addEventListener("progress", notify);\n
+    fr.readAsText(blob);\n
+  }, function () {\n
+    fr.abort();\n
+  });\n
+}\n
+exports.util.readBlobAsText = readBlobAsText;\n
+\n
+/**\n
+ * Send request with XHR and return a promise. xhr.onload: The promise is\n
+ * resolved when the status code is lower than 400 with the xhr object as first\n
+ * parameter. xhr.onerror: reject with xhr object as first\n
+ * parameter. xhr.onprogress: notifies the xhr object.\n
+ *\n
+ * @param  {Object} param The parameters\n
+ * @param  {String} [param.type="GET"] The request method\n
+ * @param  {String} [param.dataType=""] The data type to retrieve\n
+ * @param  {String} param.url The url\n
+ * @param  {Any} [param.data] The data to send\n
+ * @param  {Function} [param.beforeSend] A function called just before the send\n
+ *   request. The first parameter of this function is the XHR object.\n
+ * @return {Promise} The promise\n
+ */\n
+function ajax(param) {\n
+  var xhr = new XMLHttpRequest();\n
+  return new RSVP.Promise(function (resolve, reject, notify) {\n
+    var k;\n
+    xhr.open(param.type || "GET", param.url, true);\n
+    xhr.responseType = param.dataType || "";\n
+    if (typeof param.headers === \'object\' && param.headers !== null) {\n
+      for (k in param.headers) {\n
+        if (param.headers.hasOwnProperty(k)) {\n
+          xhr.setRequestHeader(k, param.headers[k]);\n
+        }\n
+      }\n
+    }\n
+    xhr.addEventListener("load", function (e) {\n
+      if (e.target.status >= 400) {\n
+        return reject(e);\n
+      }\n
+      resolve(e);\n
+    });\n
+    xhr.addEventListener("error", reject);\n
+    xhr.addEventListener("progress", notify);\n
+    if (typeof param.xhrFields === \'object\' && param.xhrFields !== null) {\n
+      for (k in param.xhrFields) {\n
+        if (param.xhrFields.hasOwnProperty(k)) {\n
+          xhr[k] = param.xhrFields[k];\n
+        }\n
+      }\n
+    }\n
+    if (typeof param.beforeSend === \'function\') {\n
+      param.beforeSend(xhr);\n
+    }\n
+    xhr.send(param.data);\n
+  }, function () {\n
+    xhr.abort();\n
+  });\n
+}\n
+exports.util.ajax = ajax;\n
+\n
+/**\n
+ * Acts like `Array.prototype.concat` but does not create a copy of the original\n
+ * array. It extends the original array and return it.\n
+ *\n
+ * @param  {Array} array The array to extend\n
+ * @param  {Any} [args]* Values to add in the array\n
+ * @return {Array} The original array\n
+ */\n
+function arrayExtend(array) { // args*\n
+  var i, j;\n
+  for (i = 1; i < arguments.length; i += 1) {\n
+    if (Array.isArray(arguments[i])) {\n
+      for (j = 0; j < arguments[i].length; j += 1) {\n
+        array[array.length] = arguments[i][j];\n
+      }\n
+    } else {\n
+      array[array.length] = arguments[i];\n
+    }\n
+  }\n
+  return array;\n
+}\n
+exports.util.arrayExtend = arrayExtend;\n
+\n
+/**\n
+ * Acts like `Array.prototype.concat` but does not create a copy of the original\n
+ * array. It extends the original array from a specific position and return it.\n
+ *\n
+ * @param  {Array} array The array to extend\n
+ * @param  {Number} position The position where to extend\n
+ * @param  {Any} [args]* Values to add in the array\n
+ * @return {Array} The original array\n
+ */\n
+function arrayInsert(array, position) { // args*\n
+  var array_part = array.splice(position, array.length - position);\n
+  arrayExtend.apply(null, arrayExtend([\n
+  ], [array], Array.prototype.slice.call(arguments, 2)));\n
+  return arrayExtend(array, array_part);\n
+}\n
+exports.util.arrayInsert = arrayInsert;\n
+\n
+/**\n
+ * Guess if the method is a writer or a reader.\n
+ *\n
+ * @param  {String} method The method name\n
+ * @return {String} "writer", "reader" or "unknown"\n
+ */\n
+function methodType(method) {\n
+  switch (method) {\n
+  case "post":\n
+  case "put":\n
+  case "putAttachment":\n
+  case "remove":\n
+  case "removeAttachment":\n
+  case "repair":\n
+    return \'writer\';\n
+  case "get":\n
+  case "getAttachment":\n
+  case "allDocs":\n
+  case "check":\n
+    return \'reader\';\n
+  default:\n
+    return \'unknown\';\n
+  }\n
+}\n
+\n
+/**\n
+ *     forEach(array, callback[, thisArg]): Promise\n
+ *\n
+ * It executes the provided `callback` once for each element of the array with\n
+ * an assigned value asynchronously. If the `callback` returns a promise, then\n
+ * the function will wait for its fulfillment before executing the next\n
+ * iteration.\n
+ *\n
+ * `callback` is invoked with three arguments:\n
+ *\n
+ * - the element value\n
+ * - the element index\n
+ * - the array being traversed\n
+ *\n
+ * If a `thisArg` parameter is provided to `forEach`, it will be passed to\n
+ * `callback` when invoked, for use as its `this` value.  Otherwise, the value\n
+ * `undefined` will be passed for use as its `this` value.\n
+ *\n
+ * Unlike `Array.prototype.forEach`, you can stop the iteration by throwing\n
+ * something, or by doing a `cancel` to the returned promise if it is\n
+ * cancellable promise.\n
+ *\n
+ * Inspired by `Array.prototype.forEach` from Mozilla Developer Network.\n
+ *\n
+ * @param  {Array} array The array to parse\n
+ * @param  {Function} callback Function to execute for each element.\n
+ * @param  {Any} [thisArg] Value to use as `this` when executing `callback`.\n
+ * @param  {Promise} A new promise.\n
+ */\n
+function forEach(array, fn, thisArg) {\n
+  if (arguments.length === 0) {\n
+    throw new TypeError("missing argument 0 when calling function forEach");\n
+  }\n
+  if (!Array.isArray(array)) {\n
+    throw new TypeError(array + " is not an array");\n
+  }\n
+  if (arguments.length === 1) {\n
+    throw new TypeError("missing argument 1 when calling function forEach");\n
+  }\n
+  if (typeof fn !== "function") {\n
+    throw new TypeError(fn + " is not a function");\n
+  }\n
+  var cancelled, current_promise = RSVP.resolve();\n
+  return new RSVP.Promise(function (done, fail, notify) {\n
+    var i = 0;\n
+    function next() {\n
+      if (cancelled) {\n
+        fail(new Error("Cancelled"));\n
+        return;\n
+      }\n
+      if (i < array.length) {\n
+        current_promise =\n
+          current_promise.then(fn.bind(thisArg, array[i], i, array));\n
+        current_promise.then(next, fail, notify);\n
+        i += 1;\n
+        return;\n
+      }\n
+      done();\n
+    }\n
+    next();\n
+  }, function () {\n
+    cancelled = true;\n
+    if (typeof current_promise.cancel === "function") {\n
+      current_promise.cancel();\n
+    }\n
+  });\n
+}\n
+exports.util.forEach = forEach;\n
+\n
+/**\n
+ *     range(stop, callback): Promise\n
+ *     range(start, stop[, step], callback): Promise\n
+ *\n
+ * It executes the provided `callback` once for each step between `start` and\n
+ * `stop`. If the `callback` returns a promise, then the function will wait\n
+ * for its fulfillment before executing the next iteration.\n
+ *\n
+ * `callback` is invoked with one argument:\n
+ *\n
+ * - the index of the step\n
+ *\n
+ * `start`, `stop` and `step` must be finite numbers. If `step` is not\n
+ * provided, then the default step will be `1`. If `start` and `step` are not\n
+ * provided, `start` will be `0` and `step` will be `1`.\n
+ *\n
+ * Inspired by `range()` from Python 3 built-in functions.\n
+ *\n
+ *     range(10, function (index) {\n
+ *       return notifyIndex(index);\n
+ *     }).then(onDone, onError, onNotify);\n
+ *\n
+ * @param  {Number} [start=0] The start index\n
+ * @param  {Number} stop The stop index\n
+ * @param  {Number} [step=1] One step\n
+ * @param  {Function} callback Function to execute on each iteration.\n
+ * @param  {Promise} A new promise with no fulfillment value.\n
+ */\n
+function range(start, stop, step, callback) {\n
+  var type_object, cancelled, current_promise;\n
+  type_object = arrayValuesToTypeDict([start, stop, step, callback]);\n
+\n
+  if (type_object["function"].length !== 1) {\n
+    throw new TypeError("range(): only one callback is needed");\n
+  }\n
+  start = type_object.number.length;\n
+  if (start < 1) {\n
+    throw new TypeError("range(): 1, 2 or 3 numbers are needed");\n
+  }\n
+  if (start > 3) {\n
+    throw new TypeError("range(): only 1, 2 or 3 numbers are needed");\n
+  }\n
+\n
+  callback = type_object["function"][0];\n
+\n
+  if (start === 1) {\n
+    start = 0;\n
+    stop = type_object.number[0];\n
+    step = 1;\n
+  }\n
+\n
+  if (start === 2) {\n
+    start = type_object.number[0];\n
+    stop = type_object.number[1];\n
+    step = 1;\n
+  }\n
+\n
+  if (start === 3) {\n
+    start = type_object.number[0];\n
+    stop = type_object.number[1];\n
+    step = type_object.number[2];\n
+    if (step === 0) {\n
+      throw new TypeError("range(): step must not be zero");\n
+    }\n
+  }\n
+\n
+  type_object = undefined;\n
+  current_promise = RSVP.resolve();\n
+  return new RSVP.Promise(function (done, fail, notify) {\n
+    var i = start, test;\n
+    function next() {\n
+      if (cancelled) {\n
+        fail(new Error("Cancelled"));\n
+        return;\n
+      }\n
+      test = step > 0 ? i < stop : i > stop;\n
+      if (test) {\n
+        current_promise = current_promise.then(callback.bind(null, i));\n
+        current_promise.then(next, fail, notify);\n
+        i += step;\n
+        return;\n
+      }\n
+      done();\n
+    }\n
+    next();\n
+  }, function () {\n
+    cancelled = true;\n
+    if (typeof current_promise.cancel === "function") {\n
+      current_promise.cancel();\n
+    }\n
+  });\n
+}\n
+exports.util.range = range;\n
+\n
+/*jslint indent: 2, maxlen: 80, nomen: true, sloppy: true */\n
+/*global secureMethods, exports, console */\n
+\n
+/**\n
+ * Inspired by nodejs EventEmitter class\n
+ * http://nodejs.org/api/events.html\n
+ *\n
+ * When an EventEmitter instance experiences an error, the typical action is\n
+ * to emit an \'error\' event. Error events are treated as a special case in\n
+ * node. If there is no listener for it, then the default action throws the\n
+ * exception again.\n
+ *\n
+ * All EventEmitters emit the event \'newListener\' when new listeners are added\n
+ * and \'removeListener\' when a listener is removed.\n
+ *\n
+ * @class EventEmitter\n
+ * @constructor\n
+ */\n
+function EventEmitter() {\n
+  this._events = {};\n
+  this._maxListeners = 10;\n
+}\n
+\n
+/**\n
+ * Adds a listener to the end of the listeners array for the specified\n
+ * event.\n
+ *\n
+ * @method addListener\n
+ * @param  {String} event The event name\n
+ * @param  {Function} listener The listener callback\n
+ * @return {EventEmitter} This emitter\n
+ */\n
+EventEmitter.prototype.addListener = function (event, listener) {\n
+  var listener_list;\n
+  if (typeof listener !== "function") {\n
+    return this;\n
+  }\n
+  this.emit("newListener", event, listener);\n
+  listener_list = this._events[event];\n
+  if (listener_list === undefined) {\n
+    this._events[event] = listener;\n
+    listener_list = listener;\n
+  } else if (typeof listener_list === "function") {\n
+    this._events[event] = [listener_list, listener];\n
+    listener_list = this._events[event];\n
+  } else {\n
+    listener_list[listener_list.length] = listener;\n
+  }\n
+  if (this._maxListeners > 0 &&\n
+      typeof listener_list !== "function" &&\n
+      listener_list.length > this._maxListeners &&\n
+      listener_list.warned !== true) {\n
+    console.warn("warning: possible EventEmitter memory leak detected. " +\n
+                 listener_list.length + " listeners added. " +\n
+                 "Use emitter.setMaxListeners() to increase limit.");\n
+    listener_list.warned = true;\n
+  }\n
+  return this;\n
+};\n
+\n
+/**\n
+ * #crossLink "EventEmitter/addListener:method"\n
+ *\n
+ * @method on\n
+ */\n
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;\n
+\n
+/**\n
+ * Adds a one time listener for the event. This listener is invoked only the\n
+ * next time the event is fired, after which it is removed.\n
+ *\n
+ * @method once\n
+ * @param  {String} event The event name\n
+ * @param  {Function} listener The listener callback\n
+ * @return {EventEmitter} This emitter\n
+ */\n
+EventEmitter.prototype.once = function (event, listener) {\n
+  var that = this, wrapper = function () {\n
+    that.removeListener(event, wrapper);\n
+    listener.apply(that, arguments);\n
+  };\n
+  wrapper.original = listener;\n
+  return that.on(event, wrapper);\n
+};\n
+\n
+/**\n
+ * Remove a listener from the listener array for the specified event.\n
+ * Caution: changes array indices in the listener array behind the listener\n
+ *\n
+ * @method removeListener\n
+ * @param  {String} event The event name\n
+ * @param  {Function} listener The listener callback\n
+ * @return {EventEmitter} This emitter\n
+ */\n
+EventEmitter.prototype.removeListener = function (event, listener) {\n
+  var listener_list = this._events[event], i;\n
+  if (listener_list) {\n
+    if (typeof listener_list === "function") {\n
+      if (listener_list === listener || listener_list.original === listener) {\n
+        delete this._events[event];\n
+      }\n
+      return this;\n
+    }\n
+    for (i = 0; i < listener_list.length; i += 1) {\n
+      if (listener_list[i] === listener ||\n
+          listener_list[i].original === listener) {\n
+        listener_list.splice(i, 1);\n
+        this.emit("removeListener", event, listener);\n
+        break;\n
+      }\n
+    }\n
+    if (listener_list.length === 1) {\n
+      this._events[event] = listener_list[0];\n
+    }\n
+    if (listener_list.length === 0) {\n
+      this._events[event] = undefined;\n
+    }\n
+  }\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Removes all listeners, or those of the specified event.\n
+ *\n
+ * @method removeAllListeners\n
+ * @param  {String} event The event name (optional)\n
+ * @return {EventEmitter} This emitter\n
+ */\n
+EventEmitter.prototype.removeAllListeners = function (event) {\n
+  var key;\n
+  if (event === undefined) {\n
+    for (key in this._events) {\n
+      if (this._events.hasOwnProperty(key)) {\n
+        delete this._events[key];\n
+      }\n
+    }\n
+    return this;\n
+  }\n
+  delete this._events[event];\n
+  return this;\n
+};\n
+\n
+/**\n
+ * By default EventEmitters will print a warning if more than 10 listeners\n
+ * are added for a particular event. This is a useful default which helps\n
+ * finding memory leaks. Obviously not all Emitters should be limited to 10.\n
+ * This function allows that to be increased. Set to zero for unlimited.\n
+ *\n
+ * @method setMaxListeners\n
+ * @param  {Number} max_listeners The maximum of listeners\n
+ */\n
+EventEmitter.prototype.setMaxListeners = function (max_listeners) {\n
+  this._maxListeners = max_listeners;\n
+};\n
+\n
+/**\n
+ * Execute each of the listeners in order with the supplied arguments.\n
+ *\n
+ * @method emit\n
+ * @param  {String} event The event name\n
+ * @param  {Any} [args]* The listener argument to give\n
+ * @return {Boolean} true if event had listeners, false otherwise.\n
+ */\n
+EventEmitter.prototype.emit = function (event) {\n
+  var i, argument_list, listener_list;\n
+  listener_list = this._events[event];\n
+  if (typeof listener_list === \'function\') {\n
+    listener_list = [listener_list];\n
+  } else if (Array.isArray(listener_list)) {\n
+    listener_list = listener_list.slice();\n
+  } else {\n
+    return false;\n
+  }\n
+  argument_list = Array.prototype.slice.call(arguments, 1);\n
+  for (i = 0; i < listener_list.length; i += 1) {\n
+    try {\n
+      listener_list[i].apply(this, argument_list);\n
+    } catch (e) {\n
+      if (this.listeners("error").length > 0) {\n
+        this.emit("error", e);\n
+        break;\n
+      }\n
+      throw e;\n
+    }\n
+  }\n
+  return true;\n
+};\n
+\n
+/**\n
+ * Returns an array of listeners for the specified event.\n
+ *\n
+ * @method listeners\n
+ * @param  {String} event The event name\n
+ * @return {Array} The array of listeners\n
+ */\n
+EventEmitter.prototype.listeners = function (event) {\n
+  return (typeof this._events[event] === \'function\' ?\n
+          [this._events[event]] : (this._events[event] || []).slice());\n
+};\n
+\n
+/**\n
+ * Static method; Return the number of listeners for a given event.\n
+ *\n
+ * @method listenerCount\n
+ * @static\n
+ * @param  {EventEmitter} emitter The event emitter\n
+ * @param  {String} event The event name\n
+ * @return {Number} The number of listener\n
+ */\n
+EventEmitter.listenerCount = function (emitter, event) {\n
+  return emitter.listeners(event).length;\n
+};\n
+\n
+exports.EventEmitter = EventEmitter;\n
+\n
+/*jslint indent: 2, maxlen: 80, nomen: true, sloppy: true */\n
+/*global EventEmitter, deepClone, inherits, exports */\n
+/*global enableRestAPI, enableRestParamChecker, enableJobMaker, enableJobRetry,\n
+  enableJobReference, enableJobChecker, enableJobQueue, enableJobRecovery,\n
+  enableJobTimeout, enableJobExecuter */\n
+\n
+function JIO(storage_spec, options) {\n
+  JIO.super_.call(this);\n
+  var shared = new EventEmitter();\n
+\n
+  shared.storage_spec = deepClone(storage_spec);\n
+\n
+  if (options === undefined) {\n
+    options = {};\n
+  } else if (typeof options !== \'object\' || Array.isArray(options)) {\n
+    throw new TypeError("JIO(): Optional argument 2 is not of type \'object\'");\n
+  }\n
+\n
+  enableRestAPI(this, shared, options);\n
+  enableRestParamChecker(this, shared, options);\n
+  enableJobMaker(this, shared, options);\n
+  enableJobReference(this, shared, options);\n
+  enableJobRetry(this, shared, options);\n
+  enableJobTimeout(this, shared, options);\n
+  enableJobChecker(this, shared, options);\n
+  enableJobQueue(this, shared, options);\n
+  enableJobRecovery(this, shared, options);\n
+  enableJobExecuter(this, shared, options);\n
+\n
+  shared.emit(\'load\');\n
+}\n
+inherits(JIO, EventEmitter);\n
+\n
+JIO.createInstance = function (storage_spec, options) {\n
+  return new JIO(storage_spec, options);\n
+};\n
+\n
+exports.JIO = JIO;\n
+\n
+exports.createJIO = JIO.createInstance;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global deepClone, dictFilter, uniqueJSONStringify */\n
+\n
+/**\n
+ * Tool to manipulate a list of object containing at least one property: \'id\'.\n
+ * Id must be a number > 0.\n
+ *\n
+ * @class JobQueue\n
+ * @constructor\n
+ * @param  {Workspace} workspace The workspace where to store\n
+ * @param  {String} namespace The namespace to use in the workspace\n
+ * @param  {Array} job_keys An array of job keys to store\n
+ * @param  {Array} [array] An array of object\n
+ */\n
+function JobQueue(workspace, namespace, job_keys, array) {\n
+  this._workspace = workspace;\n
+  this._namespace = namespace;\n
+  this._job_keys = job_keys;\n
+  if (Array.isArray(array)) {\n
+    this._array = array;\n
+  } else {\n
+    this._array = [];\n
+  }\n
+}\n
+\n
+/**\n
+ * Store the job queue into the workspace.\n
+ *\n
+ * @method save\n
+ */\n
+JobQueue.prototype.save = function () {\n
+  var i, job_queue = deepClone(this._array);\n
+  for (i = 0; i < job_queue.length; i += 1) {\n
+    dictFilter(job_queue[i], this._job_keys);\n
+  }\n
+  if (this._array.length === 0) {\n
+    this._workspace.removeItem(this._namespace);\n
+  } else {\n
+    this._workspace.setItem(\n
+      this._namespace,\n
+      uniqueJSONStringify(job_queue)\n
+    );\n
+  }\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Loads the job queue from the workspace.\n
+ *\n
+ * @method load\n
+ */\n
+JobQueue.prototype.load = function () {\n
+  var job_list;\n
+  try {\n
+    job_list = JSON.parse(this._workspace.getItem(this._namespace));\n
+  } catch (ignore) {}\n
+  if (!Array.isArray(job_list)) {\n
+    job_list = [];\n
+  }\n
+  this.clear();\n
+  new JobQueue(job_list).repair();\n
+  this.update(job_list);\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Returns the array version of the job queue\n
+ *\n
+ * @method asArray\n
+ * @return {Array} The job queue as array\n
+ */\n
+JobQueue.prototype.asArray = function () {\n
+  return this._array;\n
+};\n
+\n
+/**\n
+ * Removes elements which are not objects containing at least \'id\' property.\n
+ *\n
+ * @method repair\n
+ */\n
+JobQueue.prototype.repair = function () {\n
+  var i, job;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    job = this._array[i];\n
+    if (typeof job !== \'object\' || Array.isArray(job) ||\n
+        typeof job.id !== \'number\' || job.id <= 0) {\n
+      this._array.splice(i, 1);\n
+      i -= 1;\n
+    }\n
+  }\n
+};\n
+\n
+/**\n
+ * Post an object and generate an id\n
+ *\n
+ * @method post\n
+ * @param  {Object} job The job object\n
+ * @return {Number} The generated id\n
+ */\n
+JobQueue.prototype.post = function (job) {\n
+  var i, next = 1;\n
+  // get next id\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i].id >= next) {\n
+      next = this._array[i].id + 1;\n
+    }\n
+  }\n
+  job.id = next;\n
+  this._array[this._array.length] = deepClone(job);\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Put an object to the list. If an object contains the same id, it is replaced\n
+ * by the new one.\n
+ *\n
+ * @method put\n
+ * @param  {Object} job The job object with an id\n
+ */\n
+JobQueue.prototype.put = function (job) {\n
+  var i;\n
+  if (typeof job.id !== \'number\' || job.id <= 0) {\n
+    throw new TypeError("JobQueue().put(): Job id should be a positive number");\n
+  }\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i].id === job.id) {\n
+      break;\n
+    }\n
+  }\n
+  this._array[i] = deepClone(job);\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Puts some object into the list. Update object with the same id, and add\n
+ * unreferenced one.\n
+ *\n
+ * @method update\n
+ * @param  {Array} job_list A list of new jobs\n
+ */\n
+JobQueue.prototype.update = function (job_list) {\n
+  var i, j = 0, j_max, index = {}, next = 1, job, post_list = [];\n
+  j_max = this._array.length;\n
+  for (i = 0; i < job_list.length; i += 1) {\n
+    if (typeof job_list[i].id !== \'number\' || job_list[i].id <= 0) {\n
+      // this job has no id, it has to be post\n
+      post_list[post_list.length] = job_list[i];\n
+    } else {\n
+      job = deepClone(job_list[i]);\n
+      if (index[job.id] !== undefined) {\n
+        // this job is on the list, update\n
+        this._array[index[job.id]] = job;\n
+      } else if (j === j_max) {\n
+        // this job is not on the list, update\n
+        this._array[this._array.length] = job;\n
+      } else {\n
+        // don\'t if the job is there or not\n
+        // searching same job in the original list\n
+        while (j < j_max) {\n
+          // references visited job\n
+          index[this._array[j].id] = j;\n
+          if (this._array[j].id >= next) {\n
+            next = this._array[j].id + 1;\n
+          }\n
+          if (this._array[j].id === job.id) {\n
+            // found on the list, just update\n
+            this._array[j] = job;\n
+            break;\n
+          }\n
+          j += 1;\n
+        }\n
+        if (j === j_max) {\n
+          // not found on the list, add to the end\n
+          this._array[this._array.length] = job;\n
+        } else {\n
+          // found on the list, already updated\n
+          j += 1;\n
+        }\n
+      }\n
+      if (job.id >= next) {\n
+        next = job.id + 1;\n
+      }\n
+    }\n
+  }\n
+  for (i = 0; i < post_list.length; i += 1) {\n
+    // adding job without id\n
+    post_list[i].id = next;\n
+    next += 1;\n
+    this._array[this._array.length] = deepClone(post_list[i]);\n
+  }\n
+  return this;\n
+};\n
+\n
+/**\n
+ * Get an object from an id. Returns undefined if not found\n
+ *\n
+ * @method get\n
+ * @param  {Number} id The job id\n
+ * @return {Object} The job or undefined\n
+ */\n
+JobQueue.prototype.get = function (id) {\n
+  var i;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i].id === id) {\n
+      return deepClone(this._array[i]);\n
+    }\n
+  }\n
+};\n
+\n
+/**\n
+ * Removes an object from an id\n
+ *\n
+ * @method remove\n
+ * @param  {Number} id The job id\n
+ */\n
+JobQueue.prototype.remove = function (id) {\n
+  var i;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i].id === id) {\n
+      this._array.splice(i, 1);\n
+      return true;\n
+    }\n
+  }\n
+  return false;\n
+};\n
+\n
+/**\n
+ * Clears the list.\n
+ *\n
+ * @method clear\n
+ */\n
+JobQueue.prototype.clear = function () {\n
+  this._array.length = 0;\n
+  return this;\n
+};\n
+\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true */\n
+/*global localStorage */\n
+\n
+// keywords: js, javascript, store on local storage as array\n
+\n
+function LocalStorageArray(namespace) {\n
+  var index, next;\n
+\n
+  function nextId() {\n
+    var i = next;\n
+    next += 1;\n
+    return i;\n
+  }\n
+\n
+  this.length = function () {\n
+    return index.length;\n
+  };\n
+\n
+  this.truncate = function (length) {\n
+    var i;\n
+    if (length === index.length) {\n
+      return this;\n
+    }\n
+    if (length > index.length) {\n
+      index.length = length;\n
+      localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+      return this;\n
+    }\n
+    while (length < index.length) {\n
+      i = index.pop();\n
+      if (i !== undefined && i !== null) {\n
+        delete localStorage[namespace + \'.\' + i];\n
+      }\n
+    }\n
+    localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+    return this;\n
+  };\n
+\n
+  this.get = function (i) {\n
+    return JSON.parse(localStorage[namespace + \'.\' + index[i]] || \'null\');\n
+  };\n
+\n
+  this.set = function (i, value) {\n
+    if (index[i] === undefined || index[i] === null) {\n
+      index[i] = nextId();\n
+      localStorage[namespace + \'.\' + index[i]] = JSON.stringify(value);\n
+      localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+    } else {\n
+      localStorage[namespace + \'.\' + index[i]] = JSON.stringify(value);\n
+    }\n
+    return this;\n
+  };\n
+\n
+  this.append = function (value) {\n
+    index[index.length] = nextId();\n
+    localStorage[namespace + \'.\' + index[index.length - 1]] =\n
+      JSON.stringify(value);\n
+    localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+    return this;\n
+  };\n
+\n
+  this.pop = function (i) {\n
+    var value, key;\n
+    if (i === undefined || i === null) {\n
+      key = namespace + \'.\' + index[index.length - 1];\n
+      index.pop();\n
+    } else {\n
+      if (i < 0 || i >= index.length) {\n
+        return null;\n
+      }\n
+      key = namespace + \'.\' + i;\n
+      index.splice(i, 1);\n
+    }\n
+\n
+    value = localStorage[key];\n
+\n
+    if (index.length === 0) {\n
+      delete localStorage[namespace + \'.index\'];\n
+    } else {\n
+      localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+    }\n
+    delete localStorage[key];\n
+\n
+    return JSON.parse(value || \'null\');\n
+  };\n
+\n
+  this.clear = function () {\n
+    var i;\n
+    for (i = 0; i < index.length; i += 1) {\n
+      delete localStorage[namespace + \'.\' + index[i]];\n
+    }\n
+    index = [];\n
+    delete localStorage[namespace + \'.index\'];\n
+    return this;\n
+  };\n
+\n
+  this.reload = function () {\n
+    var i;\n
+    index = JSON.parse(localStorage[namespace + \'.index\'] || \'[]\');\n
+    next = 0;\n
+    for (i = 0; i < index.length; i += 1) {\n
+      if (next < index[i]) {\n
+        next = index[i];\n
+      }\n
+    }\n
+    return this;\n
+  };\n
+\n
+  this.toArray = function () {\n
+    var i, list = [];\n
+    for (i = 0; i < index.length; i += 1) {\n
+      list[list.length] = this.get(i);\n
+    }\n
+    return list;\n
+  };\n
+\n
+  this.update = function (list) {\n
+    if (!Array.isArray(list)) {\n
+      throw new TypeError("LocalStorageArray().saveArray(): " +\n
+                          "Argument 1 is not of type \'array\'");\n
+    }\n
+    var i, location;\n
+    // update previous values\n
+    for (i = 0; i < list.length; i += 1) {\n
+      location = index[i];\n
+      if (location === undefined || location === null) {\n
+        location = nextId();\n
+        index[i] = location;\n
+      }\n
+      localStorage[namespace + \'.\' + location] =\n
+        JSON.stringify(list[i]);\n
+    }\n
+    // remove last ones\n
+    while (list.length < index.length) {\n
+      location = index.pop();\n
+      if (location !== undefined && location !== null) {\n
+        delete localStorage[namespace + \'.\' + location];\n
+      }\n
+    }\n
+    // store index\n
+    localStorage[namespace + \'.index\'] = JSON.stringify(index);\n
+    return this;\n
+  };\n
+\n
+  this.reload();\n
+}\n
+\n
+LocalStorageArray.saveArray = function (namespace, list) {\n
+  if (!Array.isArray(list)) {\n
+    throw new TypeError("LocalStorageArray.saveArray(): " +\n
+                        "Argument 2 is not of type \'array\'");\n
+  }\n
+  var local_storage_array = new LocalStorageArray(namespace).clear(), i;\n
+  for (i = 0; i < list.length; i += 1) {\n
+    local_storage_array.append(list[i]);\n
+  }\n
+};\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global exports, deepClone, jsonDeepClone */\n
+\n
+/**\n
+ * A class to manipulate metadata\n
+ *\n
+ * @class Metadata\n
+ * @constructor\n
+ */\n
+function Metadata(metadata) {\n
+  if (arguments.length > 0) {\n
+    if (metadata === null || typeof metadata !== \'object\' ||\n
+        Array.isArray(metadata)) {\n
+      throw new TypeError("Metadata(): Optional argument 1 is not an object");\n
+    }\n
+    this._dict = metadata;\n
+  } else {\n
+    this._dict = {};\n
+  }\n
+}\n
+\n
+Metadata.prototype.format = function () {\n
+  return this.update(this._dict);\n
+};\n
+\n
+Metadata.prototype.check = function () {\n
+  var k;\n
+  for (k in this._dict) {\n
+    if (this._dict.hasOwnProperty(k)) {\n
+      if (k[0] !== \'_\') {\n
+        if (!Metadata.checkValue(this._dict[k])) {\n
+          return false;\n
+        }\n
+      }\n
+    }\n
+  }\n
+  return true;\n
+};\n
+\n
+Metadata.prototype.update = function (metadata) {\n
+  var k;\n
+  for (k in metadata) {\n
+    if (metadata.hasOwnProperty(k)) {\n
+      if (k[0] === \'_\') {\n
+        this._dict[k] = jsonDeepClone(metadata[k]);\n
+      } else {\n
+        this._dict[k] = Metadata.normalizeValue(metadata[k]);\n
+      }\n
+      if (this._dict[k] === undefined) {\n
+        delete this._dict[k];\n
+      }\n
+    }\n
+  }\n
+  return this;\n
+};\n
+\n
+Metadata.prototype.get = function (key) {\n
+  return this._dict[key];\n
+};\n
+\n
+Metadata.prototype.add = function (key, value) {\n
+  var i;\n
+  if (key[0] === \'_\') {\n
+    return this;\n
+  }\n
+  if (this._dict[key] === undefined) {\n
+    this._dict[key] = Metadata.normalizeValue(value);\n
+    if (this._dict[key] === undefined) {\n
+      delete this._dict[key];\n
+    }\n
+    return this;\n
+  }\n
+  if (!Array.isArray(this._dict[key])) {\n
+    this._dict[key] = [this._dict[key]];\n
+  }\n
+  value = Metadata.normalizeValue(value);\n
+  if (value === undefined) {\n
+    return this;\n
+  }\n
+  if (!Array.isArray(value)) {\n
+    value = [value];\n
+  }\n
+  for (i = 0; i < value.length; i += 1) {\n
+    this._dict[key][this._dict[key].length] = value[i];\n
+  }\n
+  return this;\n
+};\n
+\n
+Metadata.prototype.set = function (key, value) {\n
+  if (key[0] === \'_\') {\n
+    this._dict[key] = JSON.parse(JSON.stringify(value));\n
+  } else {\n
+    this._dict[key] = Metadata.normalizeValue(value);\n
+  }\n
+  if (this._dict[key] === undefined) {\n
+    delete this._dict[key];\n
+  }\n
+  return this;\n
+};\n
+\n
+Metadata.prototype.remove = function (key) {\n
+  delete this._dict[key];\n
+  return this;\n
+};\n
+\n
+\n
+Metadata.prototype.forEach = function (key, fun) {\n
+  var k, i, value, that = this;\n
+  if (typeof key === \'function\') {\n
+    fun = key;\n
+    key = undefined;\n
+  }\n
+  function forEach(key, fun) {\n
+    value = that._dict[key];\n
+    if (!Array.isArray(that._dict[key])) {\n
+      value = [value];\n
+    }\n
+    for (i = 0; i < value.length; i += 1) {\n
+      if (typeof value[i] === \'object\') {\n
+        fun.call(that, key, deepClone(value[i]), i);\n
+      } else {\n
+        fun.call(that, key, {\'content\': value[i]}, i);\n
+      }\n
+    }\n
+  }\n
+  if (key === undefined) {\n
+    for (k in this._dict) {\n
+      if (this._dict.hasOwnProperty(k)) {\n
+        forEach(k, fun);\n
+      }\n
+    }\n
+  } else {\n
+    forEach(key, fun);\n
+  }\n
+  return this;\n
+};\n
+\n
+Metadata.prototype.toFullDict = function () {\n
+  var dict = {};\n
+  this.forEach(function (key, value, index) {\n
+    dict[key] = dict[key] || [];\n
+    dict[key][index] = value;\n
+  });\n
+  return dict;\n
+};\n
+\n
+Metadata.asJsonableValue = function (value) {\n
+  switch (typeof value) {\n
+  case \'string\':\n
+  case \'boolean\':\n
+    return value;\n
+  case \'number\':\n
+    if (isFinite(value)) {\n
+      return value;\n
+    }\n
+    return null;\n
+  case \'object\':\n
+    if (value === null) {\n
+      return null;\n
+    }\n
+    if (value instanceof Date) {\n
+      // XXX this block is to enable phantomjs and browsers compatibility with\n
+      // Date.prototype.toJSON when it is a invalid date. In phantomjs, it\n
+      // returns `"Invalid Date"` but in browsers it returns `null`. Here, the\n
+      // result will always be `null`.\n
+      if (isNaN(value.getTime())) {\n
+        return null;\n
+      }\n
+    }\n
+    if (typeof value.toJSON === \'function\') {\n
+      return Metadata.asJsonableValue(value.toJSON());\n
+    }\n
+    return value; // dict, array\n
+  // case \'undefined\':\n
+  default:\n
+    return null;\n
+  }\n
+};\n
+\n
+Metadata.isDict = function (o) {\n
+  return typeof o === \'object\' &&\n
+    Object.getPrototypeOf(o || []) === Object.prototype;\n
+};\n
+\n
+Metadata.isContent = function (c) {\n
+  return typeof c === \'string\' ||\n
+    (typeof c === \'number\' && isFinite(c)) ||\n
+    typeof c === \'boolean\';\n
+};\n
+\n
+Metadata.contentValue = function (value) {\n
+  if (Array.isArray(value)) {\n
+    return Metadata.contentValue(value[0]);\n
+  }\n
+  if (Metadata.isDict(value)) {\n
+    return value.content;\n
+  }\n
+  return value;\n
+};\n
+\n
+Metadata.normalizeArray = function (value) {\n
+  var i;\n
+  value = value.slice();\n
+  i = 0;\n
+  while (i < value.length) {\n
+    value[i] = Metadata.asJsonableValue(value[i]);\n
+    if (Metadata.isDict(value[i])) {\n
+      value[i] = Metadata.normalizeObject(value[i]);\n
+      if (value[i] === undefined) {\n
+        value.splice(i, 1);\n
+      } else {\n
+        i += 1;\n
+      }\n
+    } else if (Metadata.isContent(value[i])) {\n
+      i += 1;\n
+    } else {\n
+      value.splice(i, 1);\n
+    }\n
+  }\n
+  if (value.length === 0) {\n
+    return;\n
+  }\n
+  if (value.length === 1) {\n
+    return value[0];\n
+  }\n
+  return value;\n
+};\n
+\n
+Metadata.normalizeObject = function (value) {\n
+  var i, count = 0, ok = false, new_value = {};\n
+  for (i in value) {\n
+    if (value.hasOwnProperty(i)) {\n
+      value[i] = Metadata.asJsonableValue(value[i]);\n
+      if (Metadata.isContent(value[i])) {\n
+        new_value[i] = value[i];\n
+        if (new_value[i] === undefined) {\n
+          delete new_value[i];\n
+        }\n
+        count += 1;\n
+        if (i === \'content\') {\n
+          ok = true;\n
+        }\n
+      }\n
+    }\n
+  }\n
+  if (ok === false) {\n
+    return;\n
+  }\n
+  if (count === 1) {\n
+    return new_value.content;\n
+  }\n
+  return new_value;\n
+};\n
+\n
+Metadata.normalizeValue = function (value) {\n
+  value = Metadata.asJsonableValue(value);\n
+  if (Metadata.isContent(value)) {\n
+    return value;\n
+  }\n
+  if (Array.isArray(value)) {\n
+    return Metadata.normalizeArray(value);\n
+  }\n
+  if (Metadata.isDict(value)) {\n
+    return Metadata.normalizeObject(value);\n
+  }\n
+};\n
+\n
+Metadata.checkArray = function (value) {\n
+  var i;\n
+  for (i = 0; i < value.length; i += 1) {\n
+    if (Metadata.isDict(value[i])) {\n
+      if (!Metadata.checkObject(value[i])) {\n
+        return false;\n
+      }\n
+    } else if (!Metadata.isContent(value[i])) {\n
+      return false;\n
+    }\n
+  }\n
+  return true;\n
+};\n
+\n
+Metadata.checkObject = function (value) {\n
+  var i, ok = false;\n
+  for (i in value) {\n
+    if (value.hasOwnProperty(i)) {\n
+      if (Metadata.isContent(value[i])) {\n
+        if (i === \'content\') {\n
+          ok = true;\n
+        }\n
+      } else {\n
+        return false;\n
+      }\n
+    }\n
+  }\n
+  if (ok === false) {\n
+    return false;\n
+  }\n
+  return true;\n
+};\n
+\n
+Metadata.checkValue = function (value) {\n
+  if (Metadata.isContent(value)) {\n
+    return true;\n
+  }\n
+  if (Array.isArray(value)) {\n
+    return Metadata.checkArray(value);\n
+  }\n
+  if (Metadata.isDict(value)) {\n
+    return Metadata.checkObject(value);\n
+  }\n
+  return false;\n
+};\n
+\n
+exports.Metadata = Metadata;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global */\n
+\n
+/**\n
+ * An array that contain object (or array) references.\n
+ *\n
+ * @class ReferenceArray\n
+ * @constructor\n
+ * @param  {array} [array] The array where to work on\n
+ */\n
+function ReferenceArray(array) {\n
+  if (Array.isArray(array)) {\n
+    this._array = array;\n
+  } else {\n
+    this._array = [];\n
+  }\n
+}\n
+\n
+/**\n
+ * Returns the array version of the job queue\n
+ *\n
+ * @method asArray\n
+ * @return {Array} The job queue as array\n
+ */\n
+ReferenceArray.prototype.asArray = function () {\n
+  return this._array;\n
+};\n
+\n
+/**\n
+ * Returns the index of the object\n
+ *\n
+ * @method indexOf\n
+ * @param  {Object} object The object to search\n
+ */\n
+ReferenceArray.prototype.indexOf = function (object) {\n
+  var i;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i] === object) {\n
+      return i;\n
+    }\n
+  }\n
+  return -1;\n
+};\n
+\n
+/**\n
+ * Put an object to the list. If an object already exists, do nothing.\n
+ *\n
+ * @method put\n
+ * @param  {Object} object The object to add\n
+ */\n
+ReferenceArray.prototype.put = function (object) {\n
+  var i;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i] === object) {\n
+      return false;\n
+    }\n
+  }\n
+  this._array[i] = object;\n
+  return true;\n
+};\n
+\n
+/**\n
+ * Removes an object from the list\n
+ *\n
+ * @method remove\n
+ * @param  {Object} object The object to remove\n
+ */\n
+ReferenceArray.prototype.remove = function (object) {\n
+  var i;\n
+  for (i = 0; i < this._array.length; i += 1) {\n
+    if (this._array[i] === object) {\n
+      this._array.splice(i, 1);\n
+      return true;\n
+    }\n
+  }\n
+  return false;\n
+};\n
+\n
+/**\n
+ * Clears the list.\n
+ *\n
+ * @method clear\n
+ */\n
+ReferenceArray.prototype.clear = function () {\n
+  this._array.length = 0;\n
+  return this;\n
+};\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true */\n
+/*global exports, defaults */\n
+\n
+function Storage() { // (storage_spec, util)\n
+  return undefined; // this is a constructor\n
+}\n
+// end Storage\n
+\n
+function createStorage(storage_spec, util) {\n
+  if (typeof storage_spec.type !== \'string\') {\n
+    throw new TypeError("Invalid storage description");\n
+  }\n
+  if (!defaults.storage_types[storage_spec.type]) {\n
+    throw new TypeError("Unknown storage \'" + storage_spec.type + "\'");\n
+  }\n
+  return new defaults.storage_types[storage_spec.type](storage_spec, util);\n
+}\n
+\n
+function addStorage(type, Constructor) {\n
+  // var proto = {};\n
+  if (typeof type !== \'string\') {\n
+    throw new TypeError("jIO.addStorage(): Argument 1 is not of type \'string\'");\n
+  }\n
+  if (typeof Constructor !== \'function\') {\n
+    throw new TypeError("jIO.addStorage(): " +\n
+                        "Argument 2 is not of type \'function\'");\n
+  }\n
+  if (defaults.storage_types[type]) {\n
+    throw new TypeError("jIO.addStorage(): Storage type already exists");\n
+  }\n
+  // dictUpdate(proto, Constructor.prototype);\n
+  // inherits(Constructor, Storage);\n
+  // dictUpdate(Constructor.prototype, proto);\n
+  defaults.storage_types[type] = Constructor;\n
+}\n
+exports.addStorage = addStorage;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global */\n
+\n
+/**\n
+ * A class that acts like localStorage on a simple object.\n
+ *\n
+ * Like localStorage, the object will contain only strings.\n
+ *\n
+ * @class Workspace\n
+ * @constructor\n
+ */\n
+function Workspace(object) {\n
+  this._object = object;\n
+}\n
+\n
+// // Too dangerous, never use it\n
+// /**\n
+//  * Empty the entire space.\n
+//  *\n
+//  * @method clear\n
+//  */\n
+// Workspace.prototype.clear = function () {\n
+//   var k;\n
+//   for (k in this._object) {\n
+//     if (this._object.hasOwnProperty(k)) {\n
+//       delete this._object;\n
+//     }\n
+//   }\n
+//   return undefined;\n
+// };\n
+\n
+/**\n
+ * Get an item from the space. If the value does not exists, it returns\n
+ * null. Else, it returns the string value.\n
+ *\n
+ * @method getItem\n
+ * @param  {String} key The location where to get the item\n
+ * @return {String} The item\n
+ */\n
+Workspace.prototype.getItem = function (key) {\n
+  return this._object[key] === undefined ? null : this._object[key];\n
+};\n
+\n
+/**\n
+ * Set an item into the space. The value to store is converted to string before.\n
+ *\n
+ * @method setItem\n
+ * @param  {String} key The location where to set the item\n
+ * @param  {Any} value The value to store\n
+ */\n
+Workspace.prototype.setItem = function (key, value) {\n
+  if (value === undefined) {\n
+    this._object[key] = \'undefined\';\n
+  } else if (value === null) {\n
+    this._object[key] = \'null\';\n
+  } else {\n
+    this._object[key] = value.toString();\n
+  }\n
+  return undefined;\n
+};\n
+\n
+/**\n
+ * Removes an item from the space.\n
+ *\n
+ * @method removeItem\n
+ * @param  {String} key The location where to remove the item\n
+ */\n
+Workspace.prototype.removeItem = function (key) {\n
+  delete this._object[key];\n
+  return undefined;\n
+};\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true */\n
+/*global exports, defaults */\n
+\n
+// adds\n
+// - jIO.addJobRuleCondition(name, function)\n
+\n
+function addJobRuleCondition(name, method) {\n
+  if (typeof name !== \'string\') {\n
+    throw new TypeError("jIO.addJobRuleAction(): " +\n
+                        "Argument 1 is not of type \'string\'");\n
+  }\n
+  if (typeof method !== \'function\') {\n
+    throw new TypeError("jIO.addJobRuleAction(): " +\n
+                        "Argument 2 is not of type \'function\'");\n
+  }\n
+  if (defaults.job_rule_conditions[name]) {\n
+    throw new TypeError("jIO.addJobRuleAction(): Action already exists");\n
+  }\n
+  defaults.job_rule_conditions[name] = method;\n
+}\n
+exports.addJobRuleCondition = addJobRuleCondition;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, regexp: true */\n
+/*global constants, dictUpdate, deepClone, DOMException */\n
+\n
+function restCommandRejecter(param, args) {\n
+  // reject(status, reason, message, {"custom": "value"});\n
+  // reject(status, reason, {..});\n
+  // reject(status, {..});\n
+  var arg, current_priority, priority = [\n
+    // 0 - custom parameter values\n
+    {},\n
+    // 1 - default values\n
+    {\n
+      "status": constants.http_status.unknown,\n
+      "statusText": constants.http_status_text.unknown,\n
+      "message": "Command failed",\n
+      "reason": "unknown"\n
+    },\n
+    // 2 - status, reason, message properties\n
+    {},\n
+    // 3 - status, reason, message parameters\n
+    {},\n
+    // 4 - never change\n
+    {"result": "error", "method": param.method}\n
+  ];\n
+  args = Array.prototype.slice.call(args);\n
+  arg = args.shift();\n
+\n
+  // priority 4 - never change\n
+  current_priority = priority[4];\n
+  if (param.kwargs._id) {\n
+    current_priority.id = param.kwargs._id;\n
+  }\n
+  if (/Attachment$/.test(param.method)) {\n
+    current_priority.attachment = param.kwargs._attachment;\n
+  }\n
+\n
+  // priority 3 - status, reason, message parameters\n
+  current_priority = priority[3];\n
+  // parsing first parameter if is not an object\n
+  if (typeof arg !== \'object\' || arg === null || Array.isArray(arg)) {\n
+    // first parameter is mandatory\n
+    current_priority.status = arg;\n
+    arg = args.shift();\n
+  }\n
+  // parsing second parameter if is not an object\n
+  if (typeof arg !== \'object\' || arg === null || Array.isArray(arg)) {\n
+    if (arg !== undefined) {\n
+      current_priority.reason = arg;\n
+    }\n
+    arg = args.shift();\n
+  }\n
+  // parsing third parameter if is not an object\n
+  if (typeof arg !== \'object\' || arg === null || Array.isArray(arg)) {\n
+    if (arg !== undefined) {\n
+      current_priority.message = arg;\n
+    }\n
+    arg = args.shift();\n
+  }\n
+\n
+  // parsing fourth parameter if is an object\n
+  if (typeof arg === \'object\' && arg !== null && !Array.isArray(arg)) {\n
+    // priority 0 - custom values\n
+    dictUpdate(priority[0], arg);\n
+    // priority 2 - status, reason, message properties\n
+    current_priority = priority[2];\n
+    if (arg.hasOwnProperty(\'reason\')) {\n
+      current_priority.reason = arg.reason;\n
+    }\n
+    if (arg.hasOwnProperty(\'message\')) {\n
+      current_priority.message = arg.message;\n
+    }\n
+    if ((arg.statusText || arg.status >= 0)) {\n
+      current_priority.status = arg.statusText || arg.status;\n
+    }\n
+    if (arg instanceof Error || arg instanceof DOMException) {\n
+      if (arg.code !== undefined && arg.code !== null) {\n
+        current_priority.code = arg.code;\n
+      }\n
+      if (arg.lineNumber !== undefined && arg.lineNumber !== null) {\n
+        current_priority.lineNumber = arg.lineNumber;\n
+      }\n
+      if (arg.columnNumber !== undefined && arg.columnNumber !== null) {\n
+        current_priority.columnNumber = arg.columnNumber;\n
+      }\n
+      if (arg.filename !== undefined && arg.filename !== null) {\n
+        current_priority.filename = arg.filename;\n
+      }\n
+      if (arg.message !== undefined && arg.message !== null) {\n
+        current_priority.reason = arg.message;\n
+      }\n
+      current_priority.error = arg.name;\n
+    }\n
+  }\n
+\n
+  // merge priority dicts\n
+  for (current_priority = priority.length - 1;\n
+       current_priority > 0;\n
+       current_priority -= 1) {\n
+    dictUpdate(priority[current_priority - 1], priority[current_priority]);\n
+  }\n
+  priority = priority[0];\n
+\n
+  // check status\n
+  priority.statusText = constants.http_status_text[priority.status];\n
+  if (priority.statusText === undefined) {\n
+    return restCommandRejecter(param, [\n
+      // can create infernal loop if \'internal_storage_error\' is not defined in\n
+      // the constants\n
+      \'internal_storage_error\',\n
+      \'invalid response\',\n
+      \'Unknown status "\' + priority.status + \'"\'\n
+    ]);\n
+  }\n
+  priority.status = constants.http_status[priority.statusText];\n
+\n
+  // set default priority error if not already set\n
+  if (priority.error === undefined) {\n
+    priority.error = priority.statusText.toLowerCase().replace(/ /g, \'_\').\n
+      replace(/[^_a-z]/g, \'\');\n
+  }\n
+  param.storage_response = priority;\n
+  return param.solver.reject(deepClone(priority));\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global constants, methodType, dictUpdate, Blob, deepClone,\n
+  restCommandRejecter */\n
+\n
+function restCommandResolver(param, args) {\n
+  // resolve(\'ok\', {"custom": "value"});\n
+  // resolve(200, {...});\n
+  // resolve({...});\n
+  var arg, current_priority, priority = [\n
+    // 0 - custom parameter values\n
+    {},\n
+    // 1 - default values\n
+    {},\n
+    // 2 - status property\n
+    {},\n
+    // 3 - status parameter\n
+    {},\n
+    // 4 - never change\n
+    {"result": "success", "method": param.method}\n
+  ];\n
+  args = Array.prototype.slice.call(args);\n
+  arg = args.shift();\n
+\n
+  // priority 4 - never change\n
+  current_priority = priority[4];\n
+  if (param.kwargs._id) {\n
+    current_priority.id = param.kwargs._id;\n
+  }\n
+  if (/Attachment$/.test(param.method)) {\n
+    current_priority.attachment = param.kwargs._attachment;\n
+  }\n
+\n
+  // priority 1 - default values\n
+  current_priority = priority[1];\n
+  if (param.method === \'post\') {\n
+    current_priority.status = constants.http_status.created;\n
+    current_priority.statusText = constants.http_status_text.created;\n
+  } else if (methodType(param.method) === "writer" ||\n
+             param.method === "check") {\n
+    current_priority.status = constants.http_status.no_content;\n
+    current_priority.statusText = constants.http_status_text.no_content;\n
+  } else {\n
+    current_priority.status = constants.http_status.ok;\n
+    current_priority.statusText = constants.http_status_text.ok;\n
+  }\n
+\n
+  // priority 3 - status parameter\n
+  current_priority = priority[3];\n
+  // parsing first parameter if is not an object\n
+  if (typeof arg !== \'object\' || arg === null || Array.isArray(arg)) {\n
+    if (arg !== undefined) {\n
+      current_priority.status = arg;\n
+    }\n
+    arg = args.shift();\n
+  }\n
+\n
+  // parsing second parameter if is an object\n
+  if (typeof arg === \'object\' && arg !== null && !Array.isArray(arg)) {\n
+    // priority 0 - custom values\n
+    dictUpdate(current_priority, arg);\n
+    // priority 2 - status property\n
+    if (arg.hasOwnProperty("status") || arg.hasOwnProperty("statusText")) {\n
+      priority[2].status = arg.statusText || arg.status;\n
+    }\n
+  }\n
+\n
+  // merge priority dicts\n
+  for (current_priority = priority.length - 1;\n
+       current_priority > 0;\n
+       current_priority -= 1) {\n
+    dictUpdate(priority[current_priority - 1], priority[current_priority]);\n
+  }\n
+  priority = priority[0];\n
+\n
+  // check document id if post method\n
+  if (param.method === \'post\' &&\n
+      (typeof priority.id !== \'string\' || !priority.id)) {\n
+    return restCommandRejecter(param, [\n
+      \'internal_storage_error\',\n
+      \'invalid response\',\n
+      \'New document id have to be specified\'\n
+    ]);\n
+  }\n
+\n
+  // check status\n
+  priority.statusText = constants.http_status_text[priority.status];\n
+  if (priority.statusText === undefined) {\n
+    return restCommandRejecter(param, [\n
+      \'internal_storage_error\',\n
+      \'invalid response\',\n
+      \'Unknown status "\' + priority.status + \'"\'\n
+    ]);\n
+  }\n
+  priority.status = constants.http_status[priority.statusText];\n
+\n
+  // check data for get Attachment\n
+  if (param.method === \'getAttachment\') {\n
+    if (typeof priority.data === \'string\') {\n
+      priority.data = new Blob([priority.data], {\n
+        "type": priority.content_type || priority.mimetype || ""\n
+      });\n
+      delete priority.content_type;\n
+      delete priority.mimetype;\n
+    }\n
+    if (!(priority.data instanceof Blob)) {\n
+      return restCommandRejecter(param, [\n
+        \'internal_storage_error\',\n
+        \'invalid response\',\n
+        \'getAttachment method needs a Blob as returned "data".\'\n
+      ]);\n
+    }\n
+    // check data for readers (except check method)\n
+  } else if (methodType(param.method) === \'reader\' &&\n
+             param.method !== \'check\' &&\n
+             (typeof priority.data !== \'object\' ||\n
+              priority.data === null ||\n
+              Object.getPrototypeOf(priority.data) !== Object.prototype)) {\n
+    return restCommandRejecter(param, [\n
+      \'internal_storage_error\',\n
+      \'invalid response\',\n
+      param.method + \' method needs a dict as returned "data".\'\n
+    ]);\n
+  }\n
+\n
+  param.storage_response = priority;\n
+  return param.solver.resolve(deepClone(priority));\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global arrayInsert, deepClone, defaults */\n
+\n
+// creates\n
+// - some defaults job rule actions\n
+\n
+function enableJobChecker(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - shared.jobs Object Array\n
+  // - param.promise Object\n
+\n
+  // creates\n
+  // - shared.job_rules Array\n
+\n
+  // uses \'job:new\' event\n
+  // emits \'job:modified\', \'job:start\', \'job:resolved\',\n
+  // \'job:end\', \'job:reject\' events\n
+\n
+  shared.job_rule_action_names = [undefined, "ok", "wait", "update", "deny"];\n
+\n
+  shared.job_rule_actions = {\n
+    wait: function (original_job, new_job) {\n
+      original_job.promise.always(function () {\n
+        new_job.state = \'ready\';\n
+        new_job.modified = new Date();\n
+        shared.emit(\'job:modified\', new_job);\n
+        shared.emit(\'job:start\', new_job);\n
+      });\n
+      new_job.state = \'waiting\';\n
+      new_job.modified = new Date();\n
+      shared.emit(\'job:modified\', new_job);\n
+    },\n
+    update: function (original_job, new_job) {\n
+      if (!new_job.solver) {\n
+        // promise associated to the job\n
+        new_job.state = \'done\';\n
+        shared.emit(\'job:resolved\', new_job, []); // XXX why resolve?\n
+        shared.emit(\'job:end\', new_job);\n
+      } else {\n
+        if (!original_job.solver) {\n
+          original_job.solver = new_job.solver;\n
+        } else {\n
+          original_job.promise.then(function () {\n
+            new_job.command.resolve(deepClone(original_job.storage_response));\n
+          }, function () {\n
+            new_job.command.reject(deepClone(original_job.storage_response));\n
+          }, new_job.command.notify);\n
+        }\n
+      }\n
+      new_job.state = \'running\';\n
+      new_job.modified = new Date();\n
+      shared.emit(\'job:modified\', new_job);\n
+    },\n
+    deny: function (original_job, new_job) {\n
+      new_job.state = "running";\n
+      shared.emit(\'job:reject\', new_job, [\n
+        \'precondition_failed\',\n
+        \'command denied\',\n
+        \'Command rejected by the job checker.\'\n
+      ]);\n
+    }\n
+  };\n
+\n
+  function addJobRule(job_rule) {\n
+    var i, old_position, before_position, after_position;\n
+    // job_rule = {\n
+    //   code_name: string\n
+    //   conditions: [string, ...]\n
+    //   action: \'wait\',\n
+    //   after: code_name\n
+    //   before: code_name\n
+    // }\n
+    if (typeof job_rule !== \'object\' || job_rule === null) {\n
+      // wrong job rule\n
+      return;\n
+    }\n
+    if (typeof job_rule.code_name !== \'string\') {\n
+      // wrong code name\n
+      return;\n
+    }\n
+    if (!Array.isArray(job_rule.conditions)) {\n
+      // wrong conditions\n
+      return;\n
+    }\n
+    if (job_rule.single !== undefined && typeof job_rule.single !== \'boolean\') {\n
+      // wrong single property\n
+      return;\n
+    }\n
+    if (shared.job_rule_action_names.indexOf(job_rule.action) === -1) {\n
+      // wrong action\n
+      return;\n
+    }\n
+    if (job_rule.action !== \'deny\' && job_rule.single === true) {\n
+      // only \'deny\' action doesn\'t require original_job parameter\n
+      return;\n
+    }\n
+\n
+    if (typeof job_rule.after !== \'string\') {\n
+      job_rule.after = \'\';\n
+    }\n
+    if (typeof job_rule.before !== \'string\') {\n
+      job_rule.before = \'\';\n
+    }\n
+\n
+    for (i = 0; i < shared.job_rules.length; i += 1) {\n
+      if (shared.job_rules[i].code_name === job_rule.after) {\n
+        after_position = i + 1;\n
+      }\n
+      if (shared.job_rules[i].code_name === job_rule.before) {\n
+        before_position = i;\n
+      }\n
+      if (shared.job_rules[i].code_name === job_rule.code_name) {\n
+        old_position = i;\n
+      }\n
+    }\n
+\n
+    job_rule = {\n
+      "code_name": job_rule.code_name,\n
+      "conditions": job_rule.conditions,\n
+      "single": job_rule.single || false,\n
+      "action": job_rule.action || "ok"\n
+    };\n
+\n
+    if (before_position === undefined) {\n
+      before_position = shared.job_rules.length;\n
+    }\n
+    if (after_position > before_position) {\n
+      before_position = undefined;\n
+    }\n
+    if (job_rule.action !== "ok" && before_position !== undefined) {\n
+      arrayInsert(shared.job_rules, before_position, job_rule);\n
+    }\n
+    if (old_position !== undefined) {\n
+      if (old_position >= before_position) {\n
+        old_position += 1;\n
+      }\n
+      shared.job_rules.splice(old_position, 1);\n
+    }\n
+  }\n
+\n
+  function jobsRespectConditions(original_job, new_job, conditions) {\n
+    var j;\n
+    // browsing conditions\n
+    for (j = 0; j < conditions.length; j += 1) {\n
+      if (defaults.job_rule_conditions[conditions[j]]) {\n
+        if (\n
+          !defaults.job_rule_conditions[conditions[j]](original_job, new_job)\n
+        ) {\n
+          return false;\n
+        }\n
+      }\n
+    }\n
+    return true;\n
+  }\n
+\n
+  function checkJob(job) {\n
+    var i, j;\n
+    if (job.state === \'ready\') {\n
+      // browsing rules\n
+      for (i = 0; i < shared.job_rules.length; i += 1) {\n
+        if (shared.job_rules[i].single) {\n
+          // no browse\n
+          if (\n
+            jobsRespectConditions(\n
+              job,\n
+              undefined,\n
+              shared.job_rules[i].conditions\n
+            )\n
+          ) {\n
+            shared.job_rule_actions[shared.job_rules[i].action](\n
+              undefined,\n
+              job\n
+            );\n
+            return;\n
+          }\n
+        } else {\n
+          // browsing jobs\n
+          for (j = shared.jobs.length - 1; j >= 0; j -= 1) {\n
+            if (shared.jobs[j] !== job) {\n
+              if (\n
+                jobsRespectConditions(\n
+                  shared.jobs[j],\n
+                  job,\n
+                  shared.job_rules[i].conditions\n
+                )\n
+              ) {\n
+                shared.job_rule_actions[shared.job_rules[i].action](\n
+                  shared.jobs[j],\n
+                  job\n
+                );\n
+                return;\n
+              }\n
+            }\n
+          }\n
+        }\n
+      }\n
+    }\n
+  }\n
+\n
+  var index;\n
+\n
+  if (options.job_management !== false) {\n
+\n
+    shared.job_rules = [{\n
+      "code_name": "readers update",\n
+      "conditions": [\n
+        "sameStorageDescription",\n
+        "areReaders",\n
+        "sameMethod",\n
+        "sameParameters",\n
+        "sameOptions"\n
+      ],\n
+      "action": "update"\n
+    }, {\n
+      "code_name": "metadata writers update",\n
+      "conditions": [\n
+        "sameStorageDescription",\n
+        "areWriters",\n
+        "useMetadataOnly",\n
+        "sameMethod",\n
+        "haveDocumentIds",\n
+        "sameParameters"\n
+      ],\n
+      "action": "update"\n
+    }, {\n
+      "code_name": "writers wait",\n
+      "conditions": [\n
+        "sameStorageDescription",\n
+        "areWriters",\n
+        "haveDocumentIds",\n
+        "sameDocumentId"\n
+      ],\n
+      "action": "wait"\n
+    }];\n
+\n
+    if (options.clear_job_rules === true) {\n
+      shared.job_rules.length = 0;\n
+    }\n
+\n
+    if (Array.isArray(options.job_rules)) {\n
+      for (index = 0; index < options.job_rules.length; index += 1) {\n
+        addJobRule(deepClone(options.job_rules[index]));\n
+      }\n
+    }\n
+\n
+    shared.on(\'job:new\', checkJob);\n
+\n
+  }\n
+\n
+  jio.jobRules = function () {\n
+    return deepClone(shared.job_rules);\n
+  };\n
+\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global setTimeout, Job, createStorage, deepClone, restCommandResolver,\n
+  restCommandRejecter */\n
+\n
+function enableJobExecuter(jio, shared) { // , options) {\n
+\n
+  // uses \'job:new\' events\n
+  // uses actions \'job:resolve\', \'job:reject\' and \'job:notify\'\n
+\n
+  // emits \'job:modified\', \'job:started\', \'job:resolved\',\n
+  // \'job:rejected\', \'job:notified\' and \'job:end\' events\n
+  // emits action \'job:start\'\n
+\n
+  function startJobIfReady(job) {\n
+    if (job.state === \'ready\') {\n
+      shared.emit(\'job:start\', job);\n
+    }\n
+  }\n
+\n
+  function executeJobIfReady(param) {\n
+    var storage;\n
+    if (param.state === \'ready\') {\n
+      param.tried += 1;\n
+      param.started = new Date();\n
+      param.state = \'running\';\n
+      param.modified = new Date();\n
+      shared.emit(\'job:modified\', param);\n
+      shared.emit(\'job:started\', param);\n
+      try {\n
+        storage = createStorage(deepClone(param.storage_spec));\n
+      } catch (e) {\n
+        return param.command.reject(\n
+          \'internal_storage_error\',\n
+          \'invalid description\',\n
+          \'Check if the storage description respects the \' +\n
+            \'constraints provided by the storage designer. (\' +\n
+            e.name + ": " + e.message + \')\'\n
+        );\n
+      }\n
+      if (typeof storage[param.method] !== \'function\') {\n
+        return param.command.reject(\n
+          \'not_implemented\',\n
+          \'method missing\',\n
+          \'Storage "\' + param.storage_spec.type + \'", "\' +\n
+            param.method + \'" method is missing.\'\n
+        );\n
+      }\n
+      setTimeout(function () {\n
+        storage[param.method](\n
+          deepClone(param.command),\n
+          deepClone(param.kwargs),\n
+          deepClone(param.options)\n
+        );\n
+      });\n
+    }\n
+  }\n
+\n
+  function endAndResolveIfRunning(job, args) {\n
+    if (job.state === \'running\') {\n
+      job.state = \'done\';\n
+      job.modified = new Date();\n
+      shared.emit(\'job:modified\', job);\n
+      if (job.solver) {\n
+        restCommandResolver(job, args);\n
+      }\n
+      shared.emit(\'job:resolved\', job, args);\n
+      shared.emit(\'job:end\', job);\n
+    }\n
+  }\n
+\n
+  function endAndRejectIfRunning(job, args) {\n
+    if (job.state === \'running\') {\n
+      job.state = \'fail\';\n
+      job.modified = new Date();\n
+      shared.emit(\'job:modified\', job);\n
+      if (job.solver) {\n
+        restCommandRejecter(job, args);\n
+      }\n
+      shared.emit(\'job:rejected\', job, args);\n
+      shared.emit(\'job:end\', job);\n
+    }\n
+  }\n
+\n
+  function notifyJobIfRunning(job, args) {\n
+    if (job.state === \'running\' && job.solver) {\n
+      job.solver.notify(args[0]);\n
+      shared.emit(\'job:notified\', job, args);\n
+    }\n
+  }\n
+\n
+  // listeners\n
+\n
+  shared.on(\'job:new\', startJobIfReady);\n
+  shared.on(\'job:start\', executeJobIfReady);\n
+\n
+  shared.on(\'job:resolve\', endAndResolveIfRunning);\n
+  shared.on(\'job:reject\', endAndRejectIfRunning);\n
+  shared.on(\'job:notify\', notifyJobIfRunning);\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global arrayExtend */\n
+\n
+function enableJobMaker(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - param.method\n
+  // - param.storage_spec\n
+  // - param.kwargs\n
+  // - param.options\n
+\n
+  // uses (Job)\n
+  // - param.created date\n
+  // - param.modified date\n
+  // - param.tried number >= 0\n
+  // - param.state string \'ready\'\n
+  // - param.method string\n
+  // - param.storage_spec object\n
+  // - param.kwargs object\n
+  // - param.options object\n
+  // - param.command object\n
+\n
+  // list of job events:\n
+  // - Job existence -> new, end\n
+  // - Job execution -> started, stopped\n
+  // - Job resolution -> resolved, rejected, notified, cancelled\n
+  // - Job modification -> modified\n
+\n
+  // emits actions \'job:resolve\', \'job:reject\' and \'job:notify\'\n
+\n
+  // uses `rest method` events\n
+  // emits \'job:new\' event\n
+\n
+  shared.job_keys = arrayExtend(shared.job_keys || [], [\n
+    "created",\n
+    "modified",\n
+    "tried",\n
+    "state",\n
+    "method",\n
+    "storage_spec",\n
+    "kwargs",\n
+    "options"\n
+  ]);\n
+\n
+  function addCommandToJob(job) {\n
+    job.command = {};\n
+    job.command.resolve = function () {\n
+      shared.emit(\'job:resolve\', job, arguments);\n
+    };\n
+    job.command.success = job.command.resolve;\n
+    job.command.reject = function () {\n
+      shared.emit(\'job:reject\', job, arguments);\n
+    };\n
+    job.command.error = job.command.reject;\n
+    job.command.notify = function () {\n
+      shared.emit(\'job:notify\', job, arguments);\n
+    };\n
+    job.command.storage = function () {\n
+      return shared.createRestApi.apply(null, arguments);\n
+    };\n
+    job.command.setCanceller = function (canceller) {\n
+      job.cancellers["command:canceller"] = canceller;\n
+    };\n
+    job.cancellers = job.cancellers || {};\n
+    job.cancellers["job:canceller"] = function () {\n
+      shared.emit("job:reject", job, ["cancelled"]);\n
+    };\n
+  }\n
+\n
+  function createJobFromRest(param) {\n
+    if (param.solver) {\n
+      // rest parameters are good\n
+      shared.emit(\'job:new\', param);\n
+    }\n
+  }\n
+\n
+  function initJob(job) {\n
+    job.state = \'ready\';\n
+    if (typeof job.tried !== \'number\' || !isFinite(job.tried)) {\n
+      job.tried = 0;\n
+    }\n
+    if (!job.created) {\n
+      job.created = new Date();\n
+    }\n
+    addCommandToJob(job);\n
+    job.modified = new Date();\n
+  }\n
+\n
+  // listeners\n
+\n
+  shared.rest_method_names.forEach(function (method) {\n
+    shared.on(method, createJobFromRest);\n
+  });\n
+\n
+  shared.on(\'job:new\', initJob);\n
+\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global arrayExtend, localStorage, Workspace, uniqueJSONStringify, JobQueue,\n
+  constants, setTimeout, clearTimeout */\n
+\n
+function enableJobQueue(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - shared.storage_spec Object\n
+\n
+  // uses\n
+  // - options.workspace Workspace\n
+  // - shared.job_keys String Array\n
+\n
+  // creates\n
+  // - shared.storage_spec_str String\n
+  // - shared.workspace Workspace\n
+  // - shared.job_queue JobQueue\n
+\n
+  // uses \'job:new\', \'job:started\', \'job:stopped\', \'job:modified\',\n
+  // \'job:notified\', \'job:end\' events\n
+\n
+  // emits \'job:end\' event\n
+\n
+  function postJobIfReady(param) {\n
+    if (!param.stored && param.state === \'ready\') {\n
+      clearTimeout(param.queue_ident);\n
+      delete param.queue_ident;\n
+      shared.job_queue.load();\n
+      shared.job_queue.post(param);\n
+      shared.job_queue.save();\n
+      param.stored = true;\n
+    }\n
+  }\n
+\n
+  function deferredPutJob(param) {\n
+    if (param.queue_ident === undefined) {\n
+      param.queue_ident = setTimeout(function () {\n
+        delete param.queue_ident;\n
+        if (param.stored) {\n
+          shared.job_queue.load();\n
+          shared.job_queue.put(param);\n
+          shared.job_queue.save();\n
+        }\n
+      });\n
+    }\n
+  }\n
+\n
+  function removeJob(param) {\n
+    clearTimeout(param.queue_ident);\n
+    delete param.queue_ident;\n
+    if (param.stored) {\n
+      shared.job_queue.load();\n
+      shared.job_queue.remove(param.id);\n
+      shared.job_queue.save();\n
+      delete param.stored;\n
+      delete param.id;\n
+    }\n
+  }\n
+\n
+  function initJob(param) {\n
+    if (!param.command.end) {\n
+      param.command.end = function () {\n
+        shared.emit(\'job:end\', param);\n
+      };\n
+    }\n
+  }\n
+\n
+  shared.on(\'job:new\', initJob);\n
+\n
+  if (options.job_management !== false) {\n
+\n
+    shared.job_keys = arrayExtend(shared.job_keys || [], ["id"]);\n
+\n
+    if (typeof options.workspace !== \'object\') {\n
+      shared.workspace = localStorage;\n
+    } else {\n
+      shared.workspace = new Workspace(options.workspace);\n
+    }\n
+\n
+    if (!shared.storage_spec_str) {\n
+      shared.storage_spec_str = uniqueJSONStringify(shared.storage_spec);\n
+    }\n
+\n
+    shared.job_queue = new JobQueue(\n
+      shared.workspace,\n
+      \'jio/jobs/\' + shared.storage_spec_str,\n
+      shared.job_keys\n
+    );\n
+\n
+    // Listeners\n
+\n
+    shared.on(\'job:new\', postJobIfReady);\n
+\n
+    shared.on(\'job:started\', deferredPutJob);\n
+    shared.on(\'job:stopped\', deferredPutJob);\n
+    shared.on(\'job:modified\', deferredPutJob);\n
+    shared.on(\'job:notified\', deferredPutJob);\n
+\n
+    shared.on(\'job:end\', removeJob);\n
+\n
+  }\n
+\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global setTimeout, methodType */\n
+\n
+function enableJobRecovery(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - JobQueue enabled and before this\n
+\n
+  // uses\n
+  // - shared.job_queue JobQueue\n
+\n
+  // emits \'job:new\' event\n
+\n
+  function numberOrDefault(number, default_value) {\n
+    return (typeof number === \'number\' &&\n
+            isFinite(number) ? number : default_value);\n
+  }\n
+\n
+  function recoverJob(param) {\n
+    shared.job_queue.load();\n
+    shared.job_queue.remove(param.id);\n
+    delete param.id;\n
+    if (methodType(param.method) === \'writer\' &&\n
+        (param.state === \'ready\' ||\n
+         param.state === \'running\' ||\n
+         param.state === \'waiting\')) {\n
+      shared.job_queue.save();\n
+      shared.emit(\'job:new\', param);\n
+    }\n
+  }\n
+\n
+  function jobWaiter(id, modified) {\n
+    return function () {\n
+      var job;\n
+      shared.job_queue.load();\n
+      job = shared.job_queue.get(id);\n
+      if (job && job.modified === modified) {\n
+        // job not modified, no one takes care of it\n
+        recoverJob(job);\n
+      }\n
+    };\n
+  }\n
+\n
+  var i, job_array, delay, deadline, recovery_delay;\n
+\n
+  // 1 m 30 s  ===  default firefox request timeout\n
+  recovery_delay = numberOrDefault(options.recovery_delay, 90000);\n
+  if (recovery_delay < 0) {\n
+    recovery_delay = 90000;\n
+  }\n
+\n
+  if (options.job_management !== false && options.job_recovery !== false) {\n
+\n
+    shared.job_queue.load();\n
+    job_array = shared.job_queue.asArray();\n
+\n
+    for (i = 0; i < job_array.length; i += 1) {\n
+      delay = numberOrDefault(job_array[i].timeout + recovery_delay,\n
+                              recovery_delay);\n
+      deadline = new Date(job_array[i].modified).getTime() + delay;\n
+      if (!isFinite(delay)) {\n
+        // \'modified\' date is broken\n
+        recoverJob(job_array[i]);\n
+      } else if (deadline <= Date.now()) {\n
+        // deadline reached\n
+        recoverJob(job_array[i]);\n
+      } else {\n
+        // deadline not reached yet\n
+        // wait until deadline is reached then check job again\n
+        setTimeout(jobWaiter(job_array[i].id, job_array[i].modified),\n
+                   deadline - Date.now());\n
+      }\n
+    }\n
+\n
+  }\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, unparam: true */\n
+/*global ReferenceArray */\n
+\n
+function enableJobReference(jio, shared, options) {\n
+\n
+  // creates\n
+  // - shared.jobs Object Array\n
+\n
+  // uses \'job:new\' and \'job:end\' events\n
+\n
+  shared.jobs = [];\n
+\n
+  var job_references = new ReferenceArray(shared.jobs);\n
+\n
+  shared.on(\'job:new\', function (param) {\n
+    job_references.put(param);\n
+  });\n
+\n
+  shared.on(\'job:end\', function (param) {\n
+    job_references.remove(param);\n
+  });\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global arrayExtend, setTimeout, methodType, constants */\n
+\n
+function enableJobRetry(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - param.method\n
+  // - param.storage_spec\n
+  // - param.kwargs\n
+  // - param.options\n
+  // - param.command\n
+\n
+  // uses\n
+  // - options.default_writers_max_retry number >= 0 or null\n
+  // - options.default_readers_max_retry number >= 0 or null\n
+  // - options.default_max_retry number >= 0 or null\n
+  // - options.writers_max_retry number >= 0 or null\n
+  // - options.readers_max_retry number >= 0 or null\n
+  // - options.max_retry number >= 0 or null\n
+  // - param.modified date\n
+  // - param.tried number >= 0\n
+  // - param.max_retry >= 0 or undefined\n
+  // - param.state string \'ready\' \'waiting\'\n
+  // - param.method string\n
+  // - param.storage_spec object\n
+  // - param.kwargs object\n
+  // - param.options object\n
+  // - param.command object\n
+\n
+  // uses \'job:new\' and \'job:retry\' events\n
+  // emits action \'job:start\' event\n
+  // emits \'job:retry\', \'job:reject\', \'job:modified\' and \'job:stopped\' events\n
+\n
+  shared.job_keys = arrayExtend(shared.job_keys || [], ["max_retry"]);\n
+\n
+  var writers_max_retry, readers_max_retry, max_retry;\n
+\n
+  function defaultMaxRetry(param) {\n
+    if (methodType(param.method) === \'writers\') {\n
+      if (max_retry === undefined) {\n
+        return writers_max_retry;\n
+      }\n
+      return max_retry;\n
+    }\n
+    if (max_retry === undefined) {\n
+      return readers_max_retry;\n
+    }\n
+    return max_retry;\n
+  }\n
+\n
+  function positiveNumberOrDefault(number, default_value) {\n
+    return (typeof number === \'number\' &&\n
+            number >= 0 ?\n
+            number : default_value);\n
+  }\n
+\n
+  function positiveNumberNullOrDefault(number, default_value) {\n
+    return ((typeof number === \'number\' &&\n
+            number >= 0) || number === null ?\n
+            number : default_value);\n
+  }\n
+\n
+  max_retry = positiveNumberNullOrDefault(\n
+    options.max_retry || options.default_max_retry,\n
+    undefined\n
+  );\n
+  writers_max_retry = positiveNumberNullOrDefault(\n
+    options.writers_max_retry || options.default_writers_max_retry,\n
+    null\n
+  );\n
+  readers_max_retry = positiveNumberNullOrDefault(\n
+    options.readers_max_retry || options.default_readers_max_retry,\n
+    2\n
+  );\n
+\n
+  function initJob(param) {\n
+    if (typeof param.max_retry !== \'number\' || param.max_retry < 0) {\n
+      param.max_retry = positiveNumberOrDefault(\n
+        param.options.max_retry,\n
+        defaultMaxRetry(param)\n
+      );\n
+    }\n
+    param.command.reject = function (status) {\n
+      if (constants.http_action[status || 0] === "retry") {\n
+        shared.emit(\'job:retry\', param, arguments);\n
+      } else {\n
+        shared.emit(\'job:reject\', param, arguments);\n
+      }\n
+    };\n
+    param.command.retry = function () {\n
+      shared.emit(\'job:retry\', param, arguments);\n
+    };\n
+  }\n
+\n
+  function retryIfRunning(param, args) {\n
+    if (param.state === \'running\') {\n
+      if (param.max_retry === undefined ||\n
+          param.max_retry === null ||\n
+          param.max_retry >= param.tried) {\n
+        param.state = \'waiting\';\n
+        param.modified = new Date();\n
+        shared.emit(\'job:modified\', param);\n
+        shared.emit(\'job:stopped\', param);\n
+        setTimeout(function () {\n
+          param.state = \'ready\';\n
+          param.modified = new Date();\n
+          shared.emit(\'job:modified\', param);\n
+          shared.emit(\'job:start\', param);\n
+        }, Math.min(10000, param.tried * 2000));\n
+      } else {\n
+        shared.emit(\'job:reject\', param, args);\n
+      }\n
+    }\n
+  }\n
+\n
+  // listeners\n
+\n
+  shared.on(\'job:new\', initJob);\n
+\n
+  shared.on(\'job:retry\', retryIfRunning);\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global arrayExtend, setTimeout, clearTimeout */\n
+\n
+function enableJobTimeout(jio, shared, options) {\n
+\n
+  // dependencies\n
+  // - param.tried number > 0\n
+  // - param.state string \'running\'\n
+\n
+  // uses\n
+  // - param.tried number > 0\n
+  // - param.timeout number >= 0\n
+  // - param.timeout_ident Timeout\n
+  // - param.state string \'running\'\n
+\n
+  // uses \'job:new\', \'job:stopped\', \'job:started\',\n
+  // \'job:notified\' and \'job:end\' events\n
+  // emits \'job:modified\' event\n
+\n
+  shared.job_keys = arrayExtend(shared.job_keys || [], ["timeout"]);\n
+\n
+  function positiveNumberOrDefault(number, default_value) {\n
+    return (typeof number === \'number\' &&\n
+            number >= 0 ?\n
+            number : default_value);\n
+  }\n
+\n
+  // Infinity by default\n
+  var default_timeout = positiveNumberOrDefault(options.default_timeout, 0);\n
+\n
+  function timeoutReject(param) {\n
+    return function () {\n
+      param.command.reject(\n
+        \'request_timeout\',\n
+        \'timeout\',\n
+        \'Operation canceled after around \' + (\n
+          Date.now() - param.modified.getTime()\n
+        ) + \' milliseconds of inactivity.\'\n
+      );\n
+    };\n
+  }\n
+\n
+  function initJob(job) {\n
+    if (typeof job.timeout !== \'number\' || !isFinite(job.timeout) ||\n
+        job.timeout < 0) {\n
+      job.timeout = positiveNumberOrDefault(\n
+        job.options.timeout,\n
+        default_timeout\n
+      );\n
+    }\n
+    job.modified = new Date();\n
+    shared.emit(\'job:modified\', job);\n
+  }\n
+\n
+  function clearJobTimeout(job) {\n
+    clearTimeout(job.timeout_ident);\n
+    delete job.timeout_ident;\n
+  }\n
+\n
+  function restartJobTimeoutIfRunning(job) {\n
+    clearTimeout(job.timeout_ident);\n
+    if (job.state === \'running\' && job.timeout > 0) {\n
+      job.timeout_ident = setTimeout(timeoutReject(job), job.timeout);\n
+      job.modified = new Date();\n
+    } else {\n
+      delete job.timeout_ident;\n
+    }\n
+  }\n
+\n
+  // listeners\n
+\n
+  shared.on(\'job:new\', initJob);\n
+\n
+  shared.on("job:stopped", clearJobTimeout);\n
+  shared.on("job:end", clearJobTimeout);\n
+\n
+  shared.on("job:started", restartJobTimeoutIfRunning);\n
+  shared.on("job:notified", restartJobTimeoutIfRunning);\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true */\n
+/*global arrayValuesToTypeDict, dictClear, RSVP, deepClone */\n
+\n
+// adds methods to JIO\n
+// - post\n
+// - put\n
+// - get\n
+// - remove\n
+// - allDocs\n
+// - putAttachment\n
+// - getAttachment\n
+// - removeAttachment\n
+// - check\n
+// - repair\n
+\n
+// event shared objet\n
+// - storage_spec object\n
+// - method string\n
+// - kwargs object\n
+// - options object\n
+// - solver object\n
+// - solver.resolve function\n
+// - solver.reject function\n
+// - solver.notify function\n
+// - cancellers object\n
+// - promise object\n
+\n
+function enableRestAPI(jio, shared) { // (jio, shared, options)\n
+\n
+  shared.rest_method_names = [\n
+    "post",\n
+    "put",\n
+    "get",\n
+    "remove",\n
+    "allDocs",\n
+    "putAttachment",\n
+    "getAttachment",\n
+    "removeAttachment",\n
+    "check",\n
+    "repair"\n
+  ];\n
+\n
+  function prepareParamAndEmit(method, storage_spec, args) {\n
+    var callback, type_dict, param = {};\n
+    type_dict = arrayValuesToTypeDict(Array.prototype.slice.call(args));\n
+    type_dict.object = type_dict.object || [];\n
+    if (method !== \'allDocs\') {\n
+      param.kwargs = type_dict.object.shift();\n
+      if (param.kwargs === undefined) {\n
+        throw new TypeError("JIO()." + method +\n
+                            "(): Argument 1 is not of type \'object\'");\n
+      }\n
+      param.kwargs = deepClone(param.kwargs);\n
+    } else {\n
+      param.kwargs = {};\n
+    }\n
+    param.solver = {};\n
+    param.options = deepClone(type_dict.object.shift()) || {};\n
+    param.promise = new RSVP.Promise(function (resolve, reject, notify) {\n
+      param.solver.resolve = resolve;\n
+      param.solver.reject = reject;\n
+      param.solver.notify = notify;\n
+    }, function () {\n
+      if (!param.cancellers) { return; }\n
+      var k;\n
+      for (k in param.cancellers) {\n
+        if (param.cancellers.hasOwnProperty(k)) {\n
+          param.cancellers[k]();\n
+        }\n
+      }\n
+    });\n
+    type_dict[\'function\'] = type_dict[\'function\'] || [];\n
+    if (type_dict[\'function\'].length === 1) {\n
+      callback = type_dict[\'function\'][0];\n
+      param.promise.then(function (answer) {\n
+        callback(undefined, answer);\n
+      }, function (answer) {\n
+        callback(answer, undefined);\n
+      });\n
+    } else if (type_dict[\'function\'].length > 1) {\n
+      param.promise.then(type_dict[\'function\'][0],\n
+                         type_dict[\'function\'][1],\n
+                         type_dict[\'function\'][2]);\n
+    }\n
+    type_dict = dictClear(type_dict);\n
+    param.storage_spec = storage_spec;\n
+    param.method = method;\n
+    shared.emit(method, param);\n
+    return param.promise;\n
+  }\n
+\n
+  shared.createRestApi = function (storage_spec, that) {\n
+    if (that === undefined) {\n
+      that = {};\n
+    }\n
+    shared.rest_method_names.forEach(function (method) {\n
+      that[method] = function () {\n
+        return prepareParamAndEmit(method, storage_spec, arguments);\n
+      };\n
+    });\n
+    return that;\n
+  };\n
+\n
+  shared.createRestApi(shared.storage_spec, jio);\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true, unparam: true */\n
+/*global Blob, restCommandRejecter, Metadata */\n
+\n
+function enableRestParamChecker(jio, shared) {\n
+\n
+  // dependencies\n
+  // - param.solver\n
+  // - param.kwargs\n
+\n
+  // checks the kwargs and convert value if necessary\n
+\n
+  // which is a dict of method to use to announce that\n
+  // the command is finished\n
+\n
+\n
+  // tools\n
+\n
+  function checkId(param) {\n
+    if (typeof param.kwargs._id !== \'string\' || param.kwargs._id === \'\') {\n
+      restCommandRejecter(param, [\n
+        \'bad_request\',\n
+        \'wrong document id\',\n
+        \'Document id must be a non empty string.\'\n
+      ]);\n
+      delete param.solver;\n
+      return false;\n
+    }\n
+    return true;\n
+  }\n
+\n
+  function checkAttachmentId(param) {\n
+    if (typeof param.kwargs._attachment !== \'string\' ||\n
+        param.kwargs._attachment === \'\') {\n
+      restCommandRejecter(param, [\n
+        \'bad_request\',\n
+        \'wrong attachment id\',\n
+        \'Attachment id must be a non empty string.\'\n
+      ]);\n
+      delete param.solver;\n
+      return false;\n
+    }\n
+    return true;\n
+  }\n
+\n
+  // listeners\n
+\n
+  shared.on(\'post\', function (param) {\n
+    if (param.kwargs._id !== undefined) {\n
+      if (!checkId(param)) {\n
+        return;\n
+      }\n
+    }\n
+    new Metadata(param.kwargs).format();\n
+  });\n
+\n
+  ["put", "get", "remove"].forEach(function (method) {\n
+    shared.on(method, function (param) {\n
+      if (!checkId(param)) {\n
+        return;\n
+      }\n
+      new Metadata(param.kwargs).format();\n
+    });\n
+  });\n
+\n
+  shared.on(\'putAttachment\', function (param) {\n
+    if (!checkId(param) || !checkAttachmentId(param)) {\n
+      return;\n
+    }\n
+    if (!(param.kwargs._blob instanceof Blob) &&\n
+        typeof param.kwargs._data === \'string\') {\n
+      param.kwargs._blob = new Blob([param.kwargs._data], {\n
+        "type": param.kwargs._content_type || param.kwargs._mimetype || ""\n
+      });\n
+      delete param.kwargs._data;\n
+      delete param.kwargs._mimetype;\n
+      delete param.kwargs._content_type;\n
+    } else if (param.kwargs._blob instanceof Blob) {\n
+      delete param.kwargs._data;\n
+      delete param.kwargs._mimetype;\n
+      delete param.kwargs._content_type;\n
+    } else if (param.kwargs._data instanceof Blob) {\n
+      param.kwargs._blob = param.kwargs._data;\n
+      delete param.kwargs._data;\n
+      delete param.kwargs._mimetype;\n
+      delete param.kwargs._content_type;\n
+    } else {\n
+      restCommandRejecter(param, [\n
+        \'bad_request\',\n
+        \'wrong attachment\',\n
+        \'Attachment information must be like {"_id": document id, \' +\n
+          \'"_attachment": attachment name, "_data": string, ["_mimetype": \' +\n
+          \'content type]} or {"_id": document id, "_attachment": \' +\n
+          \'attachment name, "_blob": Blob}\'\n
+      ]);\n
+      delete param.solver;\n
+    }\n
+  });\n
+\n
+  ["getAttachment", "removeAttachment"].forEach(function (method) {\n
+    shared.on(method, function (param) {\n
+      if (!checkId(param)) {\n
+        checkAttachmentId(param);\n
+      }\n
+    });\n
+  });\n
+\n
+  ["check", "repair"].forEach(function (method) {\n
+    shared.on(method, function (param) {\n
+      if (param.kwargs._id !== undefined) {\n
+        if (!checkId(param)) {\n
+          return;\n
+        }\n
+      }\n
+    });\n
+  });\n
+\n
+}\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true */\n
+\n
+var query_class_dict = {};\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global parseStringToObject: true, emptyFunction: true, sortOn: true, limit:\n
+  true, select: true, exports, stringEscapeRegexpCharacters: true,\n
+  deepClone, RSVP, sequence */\n
+\n
+/**\n
+ * The query to use to filter a list of objects.\n
+ * This is an abstract class.\n
+ *\n
+ * @class Query\n
+ * @constructor\n
+ */\n
+function Query() {\n
+\n
+  /**\n
+   * Called before parsing the query. Must be overridden!\n
+   *\n
+   * @method onParseStart\n
+   * @param  {Object} object The object shared in the parse process\n
+   * @param  {Object} option Some option gave in parse()\n
+   */\n
+  this.onParseStart = emptyFunction;\n
+\n
+  /**\n
+   * Called when parsing a simple query. Must be overridden!\n
+   *\n
+   * @method onParseSimpleQuery\n
+   * @param  {Object} object The object shared in the parse process\n
+   * @param  {Object} option Some option gave in parse()\n
+   */\n
+  this.onParseSimpleQuery = emptyFunction;\n
+\n
+  /**\n
+   * Called when parsing a complex query. Must be overridden!\n
+   *\n
+   * @method onParseComplexQuery\n
+   * @param  {Object} object The object shared in the parse process\n
+   * @param  {Object} option Some option gave in parse()\n
+   */\n
+  this.onParseComplexQuery = emptyFunction;\n
+\n
+  /**\n
+   * Called after parsing the query. Must be overridden!\n
+   *\n
+   * @method onParseEnd\n
+   * @param  {Object} object The object shared in the parse process\n
+   * @param  {Object} option Some option gave in parse()\n
+   */\n
+  this.onParseEnd = emptyFunction;\n
+\n
+}\n
+\n
+/**\n
+ * Filter the item list with matching item only\n
+ *\n
+ * @method exec\n
+ * @param  {Array} item_list The list of object\n
+ * @param  {Object} [option] Some operation option\n
+ * @param  {Array} [option.select_list] A object keys to retrieve\n
+ * @param  {Array} [option.sort_on] Couples of object keys and "ascending"\n
+ *                 or "descending"\n
+ * @param  {Array} [option.limit] Couple of integer, first is an index and\n
+ *                 second is the length.\n
+ */\n
+Query.prototype.exec = function (item_list, option) {\n
+  var i, promises = [];\n
+  if (!Array.isArray(item_list)) {\n
+    throw new TypeError("Query().exec(): Argument 1 is not of type \'array\'");\n
+  }\n
+  if (option === undefined) {\n
+    option = {};\n
+  }\n
+  if (typeof option !== \'object\') {\n
+    throw new TypeError("Query().exec(): " +\n
+                        "Optional argument 2 is not of type \'object\'");\n
+  }\n
+  for (i = 0; i < item_list.length; i += 1) {\n
+    if (!item_list[i]) {\n
+      promises.push(RSVP.resolve(false));\n
+    } else {\n
+      promises.push(this.match(item_list[i]));\n
+    }\n
+  }\n
+  return sequence([function () {\n
+    return RSVP.all(promises);\n
+  }, function (answers) {\n
+    var j;\n
+    for (j = answers.length - 1; j >= 0; j -= 1) {\n
+      if (!answers[j]) {\n
+        item_list.splice(j, 1);\n
+      }\n
+    }\n
+    if (option.sort_on) {\n
+      return sortOn(option.sort_on, item_list);\n
+    }\n
+  }, function () {\n
+    if (option.limit) {\n
+      return limit(option.limit, item_list);\n
+    }\n
+  }, function () {\n
+    return select(option.select_list || [], item_list);\n
+  }, function () {\n
+    return item_list;\n
+  }]);\n
+};\n
+\n
+/**\n
+ * Test if an item matches this query\n
+ *\n
+ * @method match\n
+ * @param  {Object} item The object to test\n
+ * @return {Boolean} true if match, false otherwise\n
+ */\n
+Query.prototype.match = function () {\n
+  return RSVP.resolve(true);\n
+};\n
+\n
+\n
+/**\n
+ * Browse the Query in deep calling parser method in each step.\n
+ *\n
+ * `onParseStart` is called first, on end `onParseEnd` is called.\n
+ * It starts from the simple queries at the bottom of the tree calling the\n
+ * parser method `onParseSimpleQuery`, and go up calling the\n
+ * `onParseComplexQuery` method.\n
+ *\n
+ * @method parse\n
+ * @param  {Object} option Any options you want (except \'parsed\')\n
+ * @return {Any} The parse result\n
+ */\n
+Query.prototype.parse = function (option) {\n
+  var that = this, object;\n
+  /**\n
+   * The recursive parser.\n
+   *\n
+   * @param  {Object} object The object shared in the parse process\n
+   * @param  {Object} options Some options usable in the parseMethods\n
+   * @return {Any} The parser result\n
+   */\n
+  function recParse(object, option) {\n
+    var query = object.parsed;\n
+    if (query.type === "complex") {\n
+      return sequence([function () {\n
+        return sequence(query.query_list.map(function (v, i) {\n
+          /*jslint unparam: true */\n
+          return function () {\n
+            return sequence([function () {\n
+              object.parsed = query.query_list[i];\n
+              return recParse(object, option);\n
+            }, function () {\n
+              query.query_list[i] = object.parsed;\n
+            }]);\n
+          };\n
+        }));\n
+      }, function () {\n
+        object.parsed = query;\n
+        return that.onParseComplexQuery(object, option);\n
+      }]);\n
+    }\n
+    if (query.type === "simple") {\n
+      return that.onParseSimpleQuery(object, option);\n
+    }\n
+  }\n
+  object = {"parsed": JSON.parse(JSON.stringify(that.serialized()))};\n
+  return sequence([function () {\n
+    return that.onParseStart(object, option);\n
+  }, function () {\n
+    return recParse(object, option);\n
+  }, function () {\n
+    return that.onParseEnd(object, option);\n
+  }, function () {\n
+    return object.parsed;\n
+  }]);\n
+};\n
+\n
+/**\n
+ * Convert this query to a parsable string.\n
+ *\n
+ * @method toString\n
+ * @return {String} The string version of this query\n
+ */\n
+Query.prototype.toString = function () {\n
+  return "";\n
+};\n
+\n
+/**\n
+ * Convert this query to an jsonable object in order to be remake thanks to\n
+ * QueryFactory class.\n
+ *\n
+ * @method serialized\n
+ * @return {Object} The jsonable object\n
+ */\n
+Query.prototype.serialized = function () {\n
+  return undefined;\n
+};\n
+\n
+exports.Query = Query;\n
+\n
+/**\n
+ * Parse a text request to a json query object tree\n
+ *\n
+ * @param  {String} string The string to parse\n
+ * @return {Object} The json query tree\n
+ */\n
+function parseStringToObject(string) {\n
+\n
+\n
+/*\n
+\tDefault template driver for JS/CC generated parsers running as\n
+\tbrowser-based JavaScript/ECMAScript applications.\n
+\t\n
+\tWARNING: \tThis parser template will not run as console and has lesser\n
+\t\t\t\tfeatures for debugging than the console derivates for the\n
+\t\t\t\tvarious JavaScript platforms.\n
+\t\n
+\tFeatures:\n
+\t- Parser trace messages\n
+\t- Integrated panic-mode error recovery\n
+\t\n
+\tWritten 2007, 2008 by Jan Max Meyer, J.M.K S.F. Software Technologies\n
+\t\n
+\tThis is in the public domain.\n
+*/\n
+\n
+var NODEJS__dbg_withtrace\t\t= false;\n
+var NODEJS__dbg_string\t\t\t= new String();\n
+\n
+function __NODEJS_dbg_print( text )\n
+{\n
+\tNODEJS__dbg_string += text + "\\n";\n
+}\n
+\n
+function __NODEJS_lex( info )\n
+{\n
+\tvar state\t\t= 0;\n
+\tvar match\t\t= -1;\n
+\tvar match_pos\t= 0;\n
+\tvar start\t\t= 0;\n
+\tvar pos\t\t\t= info.offset + 1;\n
+\n
+\tdo\n
+\t{\n
+\t\tpos--;\n
+\t\tstate = 0;\n
+\t\tmatch = -2;\n
+\t\tstart = pos;\n
+\n
+\t\tif( info.src.length <= start )\n
+\t\t\treturn 19;\n
+\n
+\t\tdo\n
+\t\t{\n
+\n
+switch( state )\n
+{\n
+\tcase 0:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 8 ) || ( info.src.charCodeAt( pos ) >= 10 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || info.src.charCodeAt( pos ) == 59 || ( info.src.charCodeAt( pos ) >= 63 && info.src.charCodeAt( pos ) <= 64 ) || ( info.src.charCodeAt( pos ) >= 66 && info.src.charCodeAt( pos ) <= 77 ) || ( info.src.charCodeAt( pos ) >= 80 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 9 ) state = 2;\n
+\t\telse if( info.src.charCodeAt( pos ) == 40 ) state = 3;\n
+\t\telse if( info.src.charCodeAt( pos ) == 41 ) state = 4;\n
+\t\telse if( info.src.charCodeAt( pos ) == 60 || info.src.charCodeAt( pos ) == 62 ) state = 5;\n
+\t\telse if( info.src.charCodeAt( pos ) == 33 ) state = 11;\n
+\t\telse if( info.src.charCodeAt( pos ) == 79 ) state = 12;\n
+\t\telse if( info.src.charCodeAt( pos ) == 32 ) state = 13;\n
+\t\telse if( info.src.charCodeAt( pos ) == 61 ) state = 14;\n
+\t\telse if( info.src.charCodeAt( pos ) == 34 ) state = 15;\n
+\t\telse if( info.src.charCodeAt( pos ) == 65 ) state = 19;\n
+\t\telse if( info.src.charCodeAt( pos ) == 78 ) state = 20;\n
+\t\telse state = -1;\n
+\t\tbreak;\n
+\n
+\tcase 1:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 2:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse state = -1;\n
+\t\tmatch = 1;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 3:\n
+\t\tstate = -1;\n
+\t\tmatch = 3;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 4:\n
+\t\tstate = -1;\n
+\t\tmatch = 4;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 5:\n
+\t\tif( info.src.charCodeAt( pos ) == 61 ) state = 14;\n
+\t\telse state = -1;\n
+\t\tmatch = 11;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 6:\n
+\t\tstate = -1;\n
+\t\tmatch = 8;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 7:\n
+\t\tstate = -1;\n
+\t\tmatch = 9;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 8:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse state = -1;\n
+\t\tmatch = 6;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 9:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse state = -1;\n
+\t\tmatch = 5;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 10:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse state = -1;\n
+\t\tmatch = 7;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 11:\n
+\t\tif( info.src.charCodeAt( pos ) == 61 ) state = 14;\n
+\t\telse state = -1;\n
+\t\tbreak;\n
+\n
+\tcase 12:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 81 ) || ( info.src.charCodeAt( pos ) >= 83 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse if( info.src.charCodeAt( pos ) == 82 ) state = 8;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 13:\n
+\t\tstate = -1;\n
+\t\tmatch = 1;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 14:\n
+\t\tstate = -1;\n
+\t\tmatch = 11;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 15:\n
+\t\tif( info.src.charCodeAt( pos ) == 34 ) state = 7;\n
+\t\telse if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 33 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 91 ) || ( info.src.charCodeAt( pos ) >= 93 && info.src.charCodeAt( pos ) <= 254 ) ) state = 15;\n
+\t\telse if( info.src.charCodeAt( pos ) == 92 ) state = 17;\n
+\t\telse state = -1;\n
+\t\tbreak;\n
+\n
+\tcase 16:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 67 ) || ( info.src.charCodeAt( pos ) >= 69 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse if( info.src.charCodeAt( pos ) == 68 ) state = 9;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 17:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 254 ) ) state = 15;\n
+\t\telse state = -1;\n
+\t\tbreak;\n
+\n
+\tcase 18:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 83 ) || ( info.src.charCodeAt( pos ) >= 85 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse if( info.src.charCodeAt( pos ) == 84 ) state = 10;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 19:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 77 ) || ( info.src.charCodeAt( pos ) >= 79 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse if( info.src.charCodeAt( pos ) == 78 ) state = 16;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+\tcase 20:\n
+\t\tif( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 39 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 57 ) || ( info.src.charCodeAt( pos ) >= 59 && info.src.charCodeAt( pos ) <= 78 ) || ( info.src.charCodeAt( pos ) >= 80 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;\n
+\t\telse if( info.src.charCodeAt( pos ) == 58 ) state = 6;\n
+\t\telse if( info.src.charCodeAt( pos ) == 79 ) state = 18;\n
+\t\telse state = -1;\n
+\t\tmatch = 10;\n
+\t\tmatch_pos = pos;\n
+\t\tbreak;\n
+\n
+}\n
+\n
+\n
+\t\t\tpos++;\n
+\n
+\t\t}\n
+\t\twhile( state > -1 );\n
+\n
+\t}\n
+\twhile( 1 > -1 && match == 1 );\n
+\n
+\tif( match > -1 )\n
+\t{\n
+\t\tinfo.att = info.src.substr( start, match_pos - start );\n
+\t\tinfo.offset = match_pos;\n
+\t\t\n
+\n
+\t}\n
+\telse\n
+\t{\n
+\t\tinfo.att = new String();\n
+\t\tmatch = -1;\n
+\t}\n
+\n
+\treturn match;\n
+}\n
+\n
+\n
+function __NODEJS_parse( src, err_off, err_la )\n
+{\n
+\tvar\t\tsstack\t\t\t= new Array();\n
+\tvar\t\tvstack\t\t\t= new Array();\n
+\tvar \terr_cnt\t\t\t= 0;\n
+\tvar\t\tact;\n
+\tvar\t\tgo;\n
+\tvar\t\tla;\n
+\tvar\t\trval;\n
+\tvar \tparseinfo\t\t= new Function( "", "var offset; var src; var att;" );\n
+\tvar\t\tinfo\t\t\t= new parseinfo();\n
+\t\n
+/* Pop-Table */\n
+var pop_tab = new Array(\n
+\tnew Array( 0/* begin\' */, 1 ),\n
+\tnew Array( 13/* begin */, 1 ),\n
+\tnew Array( 12/* search_text */, 1 ),\n
+\tnew Array( 12/* search_text */, 2 ),\n
+\tnew Array( 12/* search_text */, 3 ),\n
+\tnew Array( 14/* and_expression */, 1 ),\n
+\tnew Array( 14/* and_expression */, 3 ),\n
+\tnew Array( 15/* boolean_expression */, 2 ),\n
+\tnew Array( 15/* boolean_expression */, 1 ),\n
+\tnew Array( 16/* expression */, 3 ),\n
+\tnew Array( 16/* expression */, 2 ),\n
+\tnew Array( 16/* expression */, 1 ),\n
+\tnew Array( 17/* value */, 2 ),\n
+\tnew Array( 17/* value */, 1 ),\n
+\tnew Array( 18/* string */, 1 ),\n
+\tnew Array( 18/* string */, 1 )\n
+);\n
+\n
+/* Action-Table */\n
+var act_tab = new Array(\n
+\t/* State 0 */ new Array( 7/* "NOT" */,5 , 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 1 */ new Array( 19/* "$" */,0 ),\n
+\t/* State 2 */ new Array( 19/* "$" */,-1 ),\n
+\t/* State 3 */ new Array( 6/* "OR" */,14 , 7/* "NOT" */,5 , 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 , 19/* "$" */,-2 , 4/* "RIGHT_PARENTHESE" */,-2 ),\n
+\t/* State 4 */ new Array( 5/* "AND" */,16 , 19/* "$" */,-5 , 7/* "NOT" */,-5 , 3/* "LEFT_PARENTHESE" */,-5 , 8/* "COLUMN" */,-5 , 11/* "OPERATOR" */,-5 , 10/* "WORD" */,-5 , 9/* "STRING" */,-5 , 6/* "OR" */,-5 , 4/* "RIGHT_PARENTHESE" */,-5 ),\n
+\t/* State 5 */ new Array( 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 6 */ new Array( 19/* "$" */,-8 , 7/* "NOT" */,-8 , 3/* "LEFT_PARENTHESE" */,-8 , 8/* "COLUMN" */,-8 , 11/* "OPERATOR" */,-8 , 10/* "WORD" */,-8 , 9/* "STRING" */,-8 , 6/* "OR" */,-8 , 5/* "AND" */,-8 , 4/* "RIGHT_PARENTHESE" */,-8 ),\n
+\t/* State 7 */ new Array( 7/* "NOT" */,5 , 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 8 */ new Array( 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 9 */ new Array( 19/* "$" */,-11 , 7/* "NOT" */,-11 , 3/* "LEFT_PARENTHESE" */,-11 , 8/* "COLUMN" */,-11 , 11/* "OPERATOR" */,-11 , 10/* "WORD" */,-11 , 9/* "STRING" */,-11 , 6/* "OR" */,-11 , 5/* "AND" */,-11 , 4/* "RIGHT_PARENTHESE" */,-11 ),\n
+\t/* State 10 */ new Array( 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 11 */ new Array( 19/* "$" */,-13 , 7/* "NOT" */,-13 , 3/* "LEFT_PARENTHESE" */,-13 , 8/* "COLUMN" */,-13 , 11/* "OPERATOR" */,-13 , 10/* "WORD" */,-13 , 9/* "STRING" */,-13 , 6/* "OR" */,-13 , 5/* "AND" */,-13 , 4/* "RIGHT_PARENTHESE" */,-13 ),\n
+\t/* State 12 */ new Array( 19/* "$" */,-14 , 7/* "NOT" */,-14 , 3/* "LEFT_PARENTHESE" */,-14 , 8/* "COLUMN" */,-14 , 11/* "OPERATOR" */,-14 , 10/* "WORD" */,-14 , 9/* "STRING" */,-14 , 6/* "OR" */,-14 , 5/* "AND" */,-14 , 4/* "RIGHT_PARENTHESE" */,-14 ),\n
+\t/* State 13 */ new Array( 19/* "$" */,-15 , 7/* "NOT" */,-15 , 3/* "LEFT_PARENTHESE" */,-15 , 8/* "COLUMN" */,-15 , 11/* "OPERATOR" */,-15 , 10/* "WORD" */,-15 , 9/* "STRING" */,-15 , 6/* "OR" */,-15 , 5/* "AND" */,-15 , 4/* "RIGHT_PARENTHESE" */,-15 ),\n
+\t/* State 14 */ new Array( 7/* "NOT" */,5 , 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 15 */ new Array( 19/* "$" */,-3 , 4/* "RIGHT_PARENTHESE" */,-3 ),\n
+\t/* State 16 */ new Array( 7/* "NOT" */,5 , 3/* "LEFT_PARENTHESE" */,7 , 8/* "COLUMN" */,8 , 11/* "OPERATOR" */,10 , 10/* "WORD" */,12 , 9/* "STRING" */,13 ),\n
+\t/* State 17 */ new Array( 19/* "$" */,-7 , 7/* "NOT" */,-7 , 3/* "LEFT_PARENTHESE" */,-7 , 8/* "COLUMN" */,-7 , 11/* "OPERATOR" */,-7 , 10/* "WORD" */,-7 , 9/* "STRING" */,-7 , 6/* "OR" */,-7 , 5/* "AND" */,-7 , 4/* "RIGHT_PARENTHESE" */,-7 ),\n
+\t/* State 18 */ new Array( 4/* "RIGHT_PARENTHESE" */,23 ),\n
+\t/* State 19 */ new Array( 19/* "$" */,-10 , 7/* "NOT" */,-10 , 3/* "LEFT_PARENTHESE" */,-10 , 8/* "COLUMN" */,-10 , 11/* "OPERATOR" */,-10 , 10/* "WORD" */,-10 , 9/* "STRING" */,-10 , 6/* "OR" */,-10 , 5/* "AND" */,-10 , 4/* "RIGHT_PARENTHESE" */,-10 ),\n
+\t/* State 20 */ new Array( 19/* "$" */,-12 , 7/* "NOT" */,-12 , 3/* "LEFT_PARENTHESE" */,-12 , 8/* "COLUMN" */,-12 , 11/* "OPERATOR" */,-12 , 10/* "WORD" */,-12 , 9/* "STRING" */,-12 , 6/* "OR" */,-12 , 5/* "AND" */,-12 , 4/* "RIGHT_PARENTHESE" */,-12 ),\n
+\t/* State 21 */ new Array( 19/* "$" */,-4 , 4/* "RIGHT_PARENTHESE" */,-4 ),\n
+\t/* State 22 */ new Array( 19/* "$" */,-6 , 7/* "NOT" */,-6 , 3/* "LEFT_PARENTHESE" */,-6 , 8/* "COLUMN" */,-6 , 11/* "OPERATOR" */,-6 , 10/* "WORD" */,-6 , 9/* "STRING" */,-6 , 6/* "OR" */,-6 , 4/* "RIGHT_PARENTHESE" */,-6 ),\n
+\t/* State 23 */ new Array( 19/* "$" */,-9 , 7/* "NOT" */,-9 , 3/* "LEFT_PARENTHESE" */,-9 , 8/* "COLUMN" */,-9 , 11/* "OPERATOR" */,-9 , 10/* "WORD" */,-9 , 9/* "STRING" */,-9 , 6/* "OR" */,-9 , 5/* "AND" */,-9 , 4/* "RIGHT_PARENTHESE" */,-9 )\n
+);\n
+\n
+/* Goto-Table */\n
+var goto_tab = new Array(\n
+\t/* State 0 */ new Array( 13/* begin */,1 , 12/* search_text */,2 , 14/* and_expression */,3 , 15/* boolean_expression */,4 , 16/* expression */,6 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 1 */ new Array(  ),\n
+\t/* State 2 */ new Array(  ),\n
+\t/* State 3 */ new Array( 12/* search_text */,15 , 14/* and_expression */,3 , 15/* boolean_expression */,4 , 16/* expression */,6 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 4 */ new Array(  ),\n
+\t/* State 5 */ new Array( 16/* expression */,17 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 6 */ new Array(  ),\n
+\t/* State 7 */ new Array( 12/* search_text */,18 , 14/* and_expression */,3 , 15/* boolean_expression */,4 , 16/* expression */,6 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 8 */ new Array( 16/* expression */,19 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 9 */ new Array(  ),\n
+\t/* State 10 */ new Array( 18/* string */,20 ),\n
+\t/* State 11 */ new Array(  ),\n
+\t/* State 12 */ new Array(  ),\n
+\t/* State 13 */ new Array(  ),\n
+\t/* State 14 */ new Array( 12/* search_text */,21 , 14/* and_expression */,3 , 15/* boolean_expression */,4 , 16/* expression */,6 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 15 */ new Array(  ),\n
+\t/* State 16 */ new Array( 14/* and_expression */,22 , 15/* boolean_expression */,4 , 16/* expression */,6 , 17/* value */,9 , 18/* string */,11 ),\n
+\t/* State 17 */ new Array(  ),\n
+\t/* State 18 */ new Array(  ),\n
+\t/* State 19 */ new Array(  ),\n
+\t/* State 20 */ new Array(  ),\n
+\t/* State 21 */ new Array(  ),\n
+\t/* State 22 */ new Array(  ),\n
+\t/* State 23 */ new Array(  )\n
+);\n
+\n
+\n
+\n
+/* Symbol labels */\n
+var labels = new Array(\n
+\t"begin\'" /* Non-terminal symbol */,\n
+\t"WHITESPACE" /* Terminal symbol */,\n
+\t"WHITESPACE" /* Terminal symbol */,\n
+\t"LEFT_PARENTHESE" /* Terminal symbol */,\n
+\t"RIGHT_PARENTHESE" /* Terminal symbol */,\n
+\t"AND" /* Terminal symbol */,\n
+\t"OR" /* Terminal symbol */,\n
+\t"NOT" /* Terminal symbol */,\n
+\t"COLUMN" /* Terminal symbol */,\n
+\t"STRING" /* Terminal symbol */,\n
+\t"WORD" /* Terminal symbol */,\n
+\t"OPERATOR" /* Terminal symbol */,\n
+\t"search_text" /* Non-terminal symbol */,\n
+\t"begin" /* Non-terminal symbol */,\n
+\t"and_expression" /* Non-terminal symbol */,\n
+\t"boolean_expression" /* Non-terminal symbol */,\n
+\t"expression" /* Non-terminal symbol */,\n
+\t"value" /* Non-terminal symbol */,\n
+\t"string" /* Non-terminal symbol */,\n
+\t"$" /* Terminal symbol */\n
+);\n
+\n
+\n
+\t\n
+\tinfo.offset = 0;\n
+\tinfo.src = src;\n
+\tinfo.att = new String();\n
+\t\n
+\tif( !err_off )\n
+\t\terr_off\t= new Array();\n
+\tif( !err_la )\n
+\terr_la = new Array();\n
+\t\n
+\tsstack.push( 0 );\n
+\tvstack.push( 0 );\n
+\t\n
+\tla = __NODEJS_lex( info );\n
+\n
+\twhile( true )\n
+\t{\n
+\t\tact = 25;\n
+\t\tfor( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )\n
+\t\t{\n
+\t\t\tif( act_tab[sstack[sstack.length-1]][i] == la )\n
+\t\t\t{\n
+\t\t\t\tact = act_tab[sstack[sstack.length-1]][i+1];\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif( NODEJS__dbg_withtrace && sstack.length > 0 )\n
+\t\t{\n
+\t\t\t__NODEJS_dbg_print( "\\nState " + sstack[sstack.length-1] + "\\n" +\n
+\t\t\t\t\t\t\t"\\tLookahead: " + labels[la] + " (\\"" + info.att + "\\")\\n" +\n
+\t\t\t\t\t\t\t"\\tAction: " + act + "\\n" + \n
+\t\t\t\t\t\t\t"\\tSource: \\"" + info.src.substr( info.offset, 30 ) + ( ( info.offset + 30 < info.src.length ) ?\n
+\t\t\t\t\t\t\t\t\t"..." : "" ) + "\\"\\n" +\n
+\t\t\t\t\t\t\t"\\tStack: " + sstack.join() + "\\n" +\n
+\t\t\t\t\t\t\t"\\tValue stack: " + vstack.join() + "\\n" );\n
+\t\t}\n
+\t\t\n
+\t\t\t\n
+\t\t//Panic-mode: Try recovery when parse-error occurs!\n
+\t\tif( act == 25 )\n
+\t\t{\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "Error detected: There is no reduce or shift on the symbol " + labels[la] );\n
+\t\t\t\n
+\t\t\terr_cnt++;\n
+\t\t\terr_off.push( info.offset - info.att.length );\t\t\t\n
+\t\t\terr_la.push( new Array() );\n
+\t\t\tfor( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )\n
+\t\t\t\terr_la[err_la.length-1].push( labels[act_tab[sstack[sstack.length-1]][i]] );\n
+\t\t\t\n
+\t\t\t//Remember the original stack!\n
+\t\t\tvar rsstack = new Array();\n
+\t\t\tvar rvstack = new Array();\n
+\t\t\tfor( var i = 0; i < sstack.length; i++ )\n
+\t\t\t{\n
+\t\t\t\trsstack[i] = sstack[i];\n
+\t\t\t\trvstack[i] = vstack[i];\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\twhile( act == 25 && la != 19 )\n
+\t\t\t{\n
+\t\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t\t__NODEJS_dbg_print( "\\tError recovery\\n" +\n
+\t\t\t\t\t\t\t\t\t"Current lookahead: " + labels[la] + " (" + info.att + ")\\n" +\n
+\t\t\t\t\t\t\t\t\t"Action: " + act + "\\n\\n" );\n
+\t\t\t\tif( la == -1 )\n
+\t\t\t\t\tinfo.offset++;\n
+\t\t\t\t\t\n
+\t\t\t\twhile( act == 25 && sstack.length > 0 )\n
+\t\t\t\t{\n
+\t\t\t\t\tsstack.pop();\n
+\t\t\t\t\tvstack.pop();\n
+\t\t\t\t\t\n
+\t\t\t\t\tif( sstack.length == 0 )\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\n
+\t\t\t\t\tact = 25;\n
+\t\t\t\t\tfor( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\tif( act_tab[sstack[sstack.length-1]][i] == la )\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\tact = act_tab[sstack[sstack.length-1]][i+1];\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\t\n
+\t\t\t\tif( act != 25 )\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t\n
+\t\t\t\tfor( var i = 0; i < rsstack.length; i++ )\n
+\t\t\t\t{\n
+\t\t\t\t\tsstack.push( rsstack[i] );\n
+\t\t\t\t\tvstack.push( rvstack[i] );\n
+\t\t\t\t}\n
+\t\t\t\t\n
+\t\t\t\tla = __NODEJS_lex( info );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif( act == 25 )\n
+\t\t\t{\n
+\t\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t\t__NODEJS_dbg_print( "\\tError recovery failed, terminating parse process..." );\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\n
+\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "\\tError recovery succeeded, continuing" );\n
+\t\t}\n
+\t\t\n
+\t\t/*\n
+\t\tif( act == 25 )\n
+\t\t\tbreak;\n
+\t\t*/\n
+\t\t\n
+\t\t\n
+\t\t//Shift\n
+\t\tif( act > 0 )\n
+\t\t{\t\t\t\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "Shifting symbol: " + labels[la] + " (" + info.att + ")" );\n
+\t\t\n
+\t\t\tsstack.push( act );\n
+\t\t\tvstack.push( info.att );\n
+\t\t\t\n
+\t\t\tla = __NODEJS_lex( info );\n
+\t\t\t\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "\\tNew lookahead symbol: " + labels[la] + " (" + info.att + ")" );\n
+\t\t}\n
+\t\t//Reduce\n
+\t\telse\n
+\t\t{\t\t\n
+\t\t\tact *= -1;\n
+\t\t\t\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "Reducing by producution: " + act );\n
+\t\t\t\n
+\t\t\trval = void(0);\n
+\t\t\t\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "\\tPerforming semantic action..." );\n
+\t\t\t\n
+switch( act )\n
+{\n
+\tcase 0:\n
+\t{\n
+\t\trval = vstack[ vstack.length - 1 ];\n
+\t}\n
+\tbreak;\n
+\tcase 1:\n
+\t{\n
+\t\t result = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 2:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 3:\n
+\t{\n
+\t\t rval = mkComplexQuery(\'OR\',[vstack[ vstack.length - 2 ],vstack[ vstack.length - 1 ]]); \n
+\t}\n
+\tbreak;\n
+\tcase 4:\n
+\t{\n
+\t\t rval = mkComplexQuery(\'OR\',[vstack[ vstack.length - 3 ],vstack[ vstack.length - 1 ]]); \n
+\t}\n
+\tbreak;\n
+\tcase 5:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 1 ] ; \n
+\t}\n
+\tbreak;\n
+\tcase 6:\n
+\t{\n
+\t\t rval = mkComplexQuery(\'AND\',[vstack[ vstack.length - 3 ],vstack[ vstack.length - 1 ]]); \n
+\t}\n
+\tbreak;\n
+\tcase 7:\n
+\t{\n
+\t\t rval = mkNotQuery(vstack[ vstack.length - 1 ]); \n
+\t}\n
+\tbreak;\n
+\tcase 8:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 9:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 2 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 10:\n
+\t{\n
+\t\t simpleQuerySetKey(vstack[ vstack.length - 1 ],vstack[ vstack.length - 2 ].split(\':\').slice(0,-1).join(\':\')); rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 11:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 12:\n
+\t{\n
+\t\t vstack[ vstack.length - 1 ].operator = vstack[ vstack.length - 2 ] ; rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 13:\n
+\t{\n
+\t\t rval = vstack[ vstack.length - 1 ]; \n
+\t}\n
+\tbreak;\n
+\tcase 14:\n
+\t{\n
+\t\t rval = mkSimpleQuery(\'\',vstack[ vstack.length - 1 ]); \n
+\t}\n
+\tbreak;\n
+\tcase 15:\n
+\t{\n
+\t\t rval = mkSimpleQuery(\'\',vstack[ vstack.length - 1 ].split(\'"\').slice(1,-1).join(\'"\')); \n
+\t}\n
+\tbreak;\n
+}\n
+\n
+\n
+\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "\\tPopping " + pop_tab[act][1] + " off the stack..." );\n
+\t\t\t\t\n
+\t\t\tfor( var i = 0; i < pop_tab[act][1]; i++ )\n
+\t\t\t{\n
+\t\t\t\tsstack.pop();\n
+\t\t\t\tvstack.pop();\n
+\t\t\t}\n
+\t\t\t\t\t\t\t\t\t\n
+\t\t\tgo = -1;\n
+\t\t\tfor( var i = 0; i < goto_tab[sstack[sstack.length-1]].length; i+=2 )\n
+\t\t\t{\n
+\t\t\t\tif( goto_tab[sstack[sstack.length-1]][i] == pop_tab[act][0] )\n
+\t\t\t\t{\n
+\t\t\t\t\tgo = goto_tab[sstack[sstack.length-1]][i+1];\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif( act == 0 )\n
+\t\t\t\tbreak;\n
+\t\t\t\t\n
+\t\t\tif( NODEJS__dbg_withtrace )\n
+\t\t\t\t__NODEJS_dbg_print( "\\tPushing non-terminal " + labels[ pop_tab[act][0] ] );\n
+\t\t\t\t\n
+\t\t\tsstack.push( go );\n
+\t\t\tvstack.push( rval );\t\t\t\n
+\t\t}\n
+\t\t\n
+\t\tif( NODEJS__dbg_withtrace )\n
+\t\t{\t\t\n
+\t\t\talert( NODEJS__dbg_string );\n
+\t\t\tNODEJS__dbg_string = new String();\n
+\t\t}\n
+\t}\n
+\n
+\tif( NODEJS__dbg_withtrace )\n
+\t{\n
+\t\t__NODEJS_dbg_print( "\\nParse complete." );\n
+\t\talert( NODEJS__dbg_string );\n
+\t}\n
+\t\n
+\treturn err_cnt;\n
+}\n
+\n
+\n
+\n
+var arrayExtend = function () {\n
+  var j, i, newlist = [], list_list = arguments;\n
+  for (j = 0; j < list_list.length; j += 1) {\n
+    for (i = 0; i < list_list[j].length; i += 1) {\n
+      newlist.push(list_list[j][i]);\n
+    }\n
+  }\n
+  return newlist;\n
+\n
+}, mkSimpleQuery = function (key, value, operator) {\n
+  var object = {"type": "simple", "key": key, "value": value};\n
+  if (operator !== undefined) {\n
+    object.operator = operator;\n
+  }\n
+  return object;\n
+\n
+}, mkNotQuery = function (query) {\n
+  if (query.operator === "NOT") {\n
+    return query.query_list[0];\n
+  }\n
+  return {"type": "complex", "operator": "NOT", "query_list": [query]};\n
+\n
+}, mkComplexQuery = function (operator, query_list) {\n
+  var i, query_list2 = [];\n
+  for (i = 0; i < query_list.length; i += 1) {\n
+    if (query_list[i].operator === operator) {\n
+      query_list2 = arrayExtend(query_list2, query_list[i].query_list);\n
+    } else {\n
+      query_list2.push(query_list[i]);\n
+    }\n
+  }\n
+  return {type:"complex",operator:operator,query_list:query_list2};\n
+\n
+}, simpleQuerySetKey = function (query, key) {\n
+  var i;\n
+  if (query.type === "complex") {\n
+    for (i = 0; i < query.query_list.length; ++i) {\n
+      simpleQuerySetKey (query.query_list[i],key);\n
+    }\n
+    return true;\n
+  }\n
+  if (query.type === "simple" && !query.key) {\n
+    query.key = key;\n
+    return true;\n
+  }\n
+  return false;\n
+},\n
+  error_offsets = [],\n
+  error_lookaheads = [],\n
+  error_count = 0,\n
+  result;\n
+\n
+if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0) {\n
+  var i;\n
+  for (i = 0; i < error_count; i += 1) {\n
+    throw new Error("Parse error near \\"" +\n
+                    string.substr(error_offsets[i]) +\n
+                    "\\", expecting \\"" +\n
+                    error_lookaheads[i].join() + "\\"");\n
+  }\n
+}\n
+\n
+\n
+  return result;\n
+} // parseStringToObject\n
+\n
+Query.parseStringToObject = parseStringToObject;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global Query: true, query_class_dict: true, inherits: true,\n
+         exports, QueryFactory, RSVP, sequence */\n
+\n
+/**\n
+ * The ComplexQuery inherits from Query, and compares one or several metadata\n
+ * values.\n
+ *\n
+ * @class ComplexQuery\n
+ * @extends Query\n
+ * @param  {Object} [spec={}] The specifications\n
+ * @param  {String} [spec.operator="AND"] The compare method to use\n
+ * @param  {String} spec.key The metadata key\n
+ * @param  {String} spec.value The value of the metadata to compare\n
+ */\n
+function ComplexQuery(spec, key_schema) {\n
+  Query.call(this);\n
+\n
+  /**\n
+   * Logical operator to use to compare object values\n
+   *\n
+   * @attribute operator\n
+   * @type String\n
+   * @default "AND"\n
+   * @optional\n
+   */\n
+  this.operator = spec.operator;\n
+\n
+  /**\n
+   * The sub Query list which are used to query an item.\n
+   *\n
+   * @attribute query_list\n
+   * @type Array\n
+   * @default []\n
+   * @optional\n
+   */\n
+  this.query_list = spec.query_list || [];\n
+  /*jslint unparam: true*/\n
+  this.query_list = this.query_list.map(\n
+    // decorate the map to avoid sending the index as key_schema argument\n
+    function (o, i) { return QueryFactory.create(o, key_schema); }\n
+  );\n
+  /*jslint unparam: false*/\n
+\n
+}\n
+inherits(ComplexQuery, Query);\n
+\n
+ComplexQuery.prototype.operator = "AND";\n
+ComplexQuery.prototype.type = "complex";\n
+\n
+/**\n
+ * #crossLink "Query/match:method"\n
+ */\n
+ComplexQuery.prototype.match = function (item) {\n
+  var operator = this.operator;\n
+  if (!(/^(?:AND|OR|NOT)$/i.test(operator))) {\n
+    operator = "AND";\n
+  }\n
+  return this[operator.toUpperCase()](item);\n
+};\n
+\n
+/**\n
+ * #crossLink "Query/toString:method"\n
+ */\n
+ComplexQuery.prototype.toString = function () {\n
+  var str_list = [], this_operator = this.operator;\n
+  if (this.operator === "NOT") {\n
+    str_list.push("NOT (");\n
+    str_list.push(this.query_list[0].toString());\n
+    str_list.push(")");\n
+    return str_list.join(" ");\n
+  }\n
+  this.query_list.forEach(function (query) {\n
+    str_list.push("(");\n
+    str_list.push(query.toString());\n
+    str_list.push(")");\n
+    str_list.push(this_operator);\n
+  });\n
+  str_list.length -= 1;\n
+  return str_list.join(" ");\n
+};\n
+\n
+/**\n
+ * #crossLink "Query/serialized:method"\n
+ */\n
+ComplexQuery.prototype.serialized = function () {\n
+  var s = {\n
+    "type": "complex",\n
+    "operator": this.operator,\n
+    "query_list": []\n
+  };\n
+  this.query_list.forEach(function (query) {\n
+    s.query_list.push(\n
+      typeof query.toJSON === "function" ? query.toJSON() : query\n
+    );\n
+  });\n
+  return s;\n
+};\n
+ComplexQuery.prototype.toJSON = ComplexQuery.prototype.serialized;\n
+\n
+/**\n
+ * Comparison operator, test if all sub queries match the\n
+ * item value\n
+ *\n
+ * @method AND\n
+ * @param  {Object} item The item to match\n
+ * @return {Boolean} true if all match, false otherwise\n
+ */\n
+ComplexQuery.prototype.AND = function (item) {\n
+  var j, promises = [];\n
+  for (j = 0; j < this.query_list.length; j += 1) {\n
+    promises.push(this.query_list[j].match(item));\n
+  }\n
+\n
+  function cancel() {\n
+    var i;\n
+    for (i = 0; i < promises.length; i += 1) {\n
+      if (typeof promises.cancel === \'function\') {\n
+        promises.cancel();\n
+      }\n
+    }\n
+  }\n
+\n
+  return new RSVP.Promise(function (resolve, reject) {\n
+    var i, count = 0;\n
+    function resolver(value) {\n
+      if (!value) {\n
+        resolve(false);\n
+      }\n
+      count += 1;\n
+      if (count === promises.length) {\n
+        resolve(true);\n
+      }\n
+    }\n
+\n
+    function rejecter(err) {\n
+      reject(err);\n
+      cancel();\n
+    }\n
+\n
+    for (i = 0; i < promises.length; i += 1) {\n
+      promises[i].then(resolver, rejecter);\n
+    }\n
+  }, cancel);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if one of the sub queries matches the\n
+ * item value\n
+ *\n
+ * @method OR\n
+ * @param  {Object} item The item to match\n
+ * @return {Boolean} true if one match, false otherwise\n
+ */\n
+ComplexQuery.prototype.OR =  function (item) {\n
+  var j, promises = [];\n
+  for (j = 0; j < this.query_list.length; j += 1) {\n
+    promises.push(this.query_list[j].match(item));\n
+  }\n
+\n
+  function cancel() {\n
+    var i;\n
+    for (i = 0; i < promises.length; i += 1) {\n
+      if (typeof promises.cancel === \'function\') {\n
+        promises.cancel();\n
+      }\n
+    }\n
+  }\n
+\n
+  return new RSVP.Promise(function (resolve, reject) {\n
+    var i, count = 0;\n
+    function resolver(value) {\n
+      if (value) {\n
+        resolve(true);\n
+      }\n
+      count += 1;\n
+      if (count === promises.length) {\n
+        resolve(false);\n
+      }\n
+    }\n
+\n
+    function rejecter(err) {\n
+      reject(err);\n
+      cancel();\n
+    }\n
+\n
+    for (i = 0; i < promises.length; i += 1) {\n
+      promises[i].then(resolver, rejecter);\n
+    }\n
+  }, cancel);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if the sub query does not match the\n
+ * item value\n
+ *\n
+ * @method NOT\n
+ * @param  {Object} item The item to match\n
+ * @return {Boolean} true if one match, false otherwise\n
+ */\n
+ComplexQuery.prototype.NOT = function (item) {\n
+  return sequence([function () {\n
+    return this.query_list[0].match(item);\n
+  }, function (answer) {\n
+    return !answer;\n
+  }]);\n
+};\n
+\n
+query_class_dict.complex = ComplexQuery;\n
+\n
+exports.ComplexQuery = ComplexQuery;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global exports, ComplexQuery, SimpleQuery, Query, parseStringToObject,\n
+  query_class_dict */\n
+\n
+/**\n
+ * Provides static methods to create Query object\n
+ *\n
+ * @class QueryFactory\n
+ */\n
+function QueryFactory() {\n
+  return;\n
+}\n
+\n
+/**\n
+ * Creates Query object from a search text string or a serialized version\n
+ * of a Query.\n
+ *\n
+ * @method create\n
+ * @static\n
+ * @param  {Object,String} object The search text or the serialized version\n
+ *         of a Query\n
+ * @return {Query} A Query object\n
+ */\n
+QueryFactory.create = function (object, key_schema) {\n
+  if (object === "") {\n
+    return new Query();\n
+  }\n
+  if (typeof object === "string") {\n
+    object = parseStringToObject(object);\n
+  }\n
+  if (typeof (object || {}).type === "string" &&\n
+      query_class_dict[object.type]) {\n
+    return new query_class_dict[object.type](object, key_schema);\n
+  }\n
+  throw new TypeError("QueryFactory.create(): " +\n
+                      "Argument 1 is not a search text or a parsable object");\n
+};\n
+\n
+exports.QueryFactory = QueryFactory;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global Query, exports */\n
+\n
+function objectToSearchText(query) {\n
+  var str_list = [];\n
+  if (query.type === "complex") {\n
+    str_list.push("(");\n
+    (query.query_list || []).forEach(function (sub_query) {\n
+      str_list.push(objectToSearchText(sub_query));\n
+      str_list.push(query.operator);\n
+    });\n
+    str_list.length -= 1;\n
+    str_list.push(")");\n
+    return str_list.join(" ");\n
+  }\n
+  if (query.type === "simple") {\n
+    return (query.key ? query.key + ": " : "") +\n
+      (query.operator || "") + \' "\' + query.value + \'"\';\n
+  }\n
+  throw new TypeError("This object is not a query");\n
+}\n
+Query.objectToSearchText = objectToSearchText;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global Query, inherits, query_class_dict, exports,\n
+  searchTextToRegExp, RSVP */\n
+\n
+var checkKeySchema = function (key_schema) {\n
+  var prop;\n
+\n
+  if (key_schema !== undefined) {\n
+    if (typeof key_schema !== \'object\') {\n
+      throw new TypeError("SimpleQuery().create(): " +\n
+                          "key_schema is not of type \'object\'");\n
+    }\n
+    // key_set is mandatory\n
+    if (key_schema.key_set === undefined) {\n
+      throw new TypeError("SimpleQuery().create(): " +\n
+                          "key_schema has no \'key_set\' property");\n
+    }\n
+    for (prop in key_schema) {\n
+      if (key_schema.hasOwnProperty(prop)) {\n
+        switch (prop) {\n
+        case \'key_set\':\n
+        case \'cast_lookup\':\n
+        case \'match_lookup\':\n
+          break;\n
+        default:\n
+          throw new TypeError("SimpleQuery().create(): " +\n
+                             "key_schema has unknown property \'" + prop + "\'");\n
+        }\n
+      }\n
+    }\n
+  }\n
+};\n
+\n
+\n
+/**\n
+ * The SimpleQuery inherits from Query, and compares one metadata value\n
+ *\n
+ * @class SimpleQuery\n
+ * @extends Query\n
+ * @param  {Object} [spec={}] The specifications\n
+ * @param  {String} [spec.operator="="] The compare method to use\n
+ * @param  {String} spec.key The metadata key\n
+ * @param  {String} spec.value The value of the metadata to compare\n
+ */\n
+function SimpleQuery(spec, key_schema) {\n
+  Query.call(this);\n
+\n
+  checkKeySchema(key_schema);\n
+\n
+  this._key_schema = key_schema || {};\n
+\n
+  /**\n
+   * Operator to use to compare object values\n
+   *\n
+   * @attribute operator\n
+   * @type String\n
+   * @optional\n
+   */\n
+  this.operator = spec.operator;\n
+\n
+  /**\n
+   * Key of the object which refers to the value to compare\n
+   *\n
+   * @attribute key\n
+   * @type String\n
+   */\n
+  this.key = spec.key;\n
+\n
+  /**\n
+   * Value is used to do the comparison with the object value\n
+   *\n
+   * @attribute value\n
+   * @type String\n
+   */\n
+  this.value = spec.value;\n
+\n
+}\n
+inherits(SimpleQuery, Query);\n
+\n
+SimpleQuery.prototype.type = "simple";\n
+\n
+var checkKey = function (key) {\n
+  var prop;\n
+\n
+  if (key.read_from === undefined) {\n
+    throw new TypeError("Custom key is missing the read_from property");\n
+  }\n
+\n
+  for (prop in key) {\n
+    if (key.hasOwnProperty(prop)) {\n
+      switch (prop) {\n
+      case \'read_from\':\n
+      case \'cast_to\':\n
+      case \'equal_match\':\n
+        break;\n
+      default:\n
+        throw new TypeError("Custom key has unknown property \'" +\n
+                            prop + "\'");\n
+      }\n
+    }\n
+  }\n
+};\n
+\n
+\n
+/**\n
+ * #crossLink "Query/match:method"\n
+ */\n
+SimpleQuery.prototype.match = function (item) {\n
+  var object_value = null,\n
+    equal_match = null,\n
+    cast_to = null,\n
+    matchMethod = null,\n
+    operator = this.operator,\n
+    value = null,\n
+    key = this.key;\n
+\n
+  /*jslint regexp: true */\n
+  if (!(/^(?:!?=|<=?|>=?)$/i.test(operator))) {\n
+    // `operator` is not correct, we have to change it to "like" or "="\n
+    if (/%/.test(this.value)) {\n
+      // `value` contains a non escaped `%`\n
+      operator = "like";\n
+    } else {\n
+      // `value` does not contain non escaped `%`\n
+      operator = "=";\n
+    }\n
+  }\n
+\n
+  matchMethod = this[operator];\n
+\n
+  if (this._key_schema.key_set && this._key_schema.key_set[key] !== undefined) {\n
+    key = this._key_schema.key_set[key];\n
+  }\n
+\n
+  if (typeof key === \'object\') {\n
+    checkKey(key);\n
+    object_value = item[key.read_from];\n
+\n
+    equal_match = key.equal_match;\n
+\n
+    // equal_match can be a string\n
+    if (typeof equal_match === \'string\') {\n
+      // XXX raise error if equal_match not in match_lookup\n
+      equal_match = this._key_schema.match_lookup[equal_match];\n
+    }\n
+\n
+    // equal_match overrides the default \'=\' operator\n
+    if (equal_match !== undefined) {\n
+      matchMethod = (operator === "=" || operator === "like" ?\n
+                     equal_match : matchMethod);\n
+    }\n
+\n
+    value = this.value;\n
+    cast_to = key.cast_to;\n
+    if (cast_to) {\n
+      // cast_to can be a string\n
+      if (typeof cast_to === \'string\') {\n
+        // XXX raise error if cast_to not in cast_lookup\n
+        cast_to = this._key_schema.cast_lookup[cast_to];\n
+      }\n
+\n
+      try {\n
+        value = cast_to(value);\n
+      } catch (e) {\n
+        value = undefined;\n
+      }\n
+\n
+      try {\n
+        object_value = cast_to(object_value);\n
+      } catch (e) {\n
+        object_value = undefined;\n
+      }\n
+    }\n
+  } else {\n
+    object_value = item[key];\n
+    value = this.value;\n
+  }\n
+  if (object_value === undefined || value === undefined) {\n
+    return RSVP.resolve(false);\n
+  }\n
+  return matchMethod(object_value, value);\n
+};\n
+\n
+/**\n
+ * #crossLink "Query/toString:method"\n
+ */\n
+SimpleQuery.prototype.toString = function () {\n
+  return (this.key ? this.key + ":" : "") +\n
+    (this.operator ? " " + this.operator : "") + \' "\' + this.value + \'"\';\n
+};\n
+\n
+/**\n
+ * #crossLink "Query/serialized:method"\n
+ */\n
+SimpleQuery.prototype.serialized = function () {\n
+  var object = {\n
+    "type": "simple",\n
+    "key": this.key,\n
+    "value": this.value\n
+  };\n
+  if (this.operator !== undefined) {\n
+    object.operator = this.operator;\n
+  }\n
+  return object;\n
+};\n
+SimpleQuery.prototype.toJSON = SimpleQuery.prototype.serialized;\n
+\n
+/**\n
+ * Comparison operator, test if this query value matches the item value\n
+ *\n
+ * @method =\n
+ * @param  {String} object_value The value to compare\n
+ * @param  {String} comparison_value The comparison value\n
+ * @return {Boolean} true if match, false otherwise\n
+ */\n
+SimpleQuery.prototype["="] = function (object_value, comparison_value) {\n
+  var value, i;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  for (i = 0; i < object_value.length; i += 1) {\n
+    value = object_value[i];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return RSVP.resolve(value.cmp(comparison_value) === 0);\n
+    }\n
+    if (\n
+      searchTextToRegExp(comparison_value.toString(), false).\n
+        test(value.toString())\n
+    ) {\n
+      return RSVP.resolve(true);\n
+    }\n
+  }\n
+  return RSVP.resolve(false);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value matches the item value\n
+ *\n
+ * @method like\n
+ * @param  {String} object_value The value to compare\n
+ * @param  {String} comparison_value The comparison value\n
+ * @return {Boolean} true if match, false otherwise\n
+ */\n
+SimpleQuery.prototype.like = function (object_value, comparison_value) {\n
+  var value, i;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  for (i = 0; i < object_value.length; i += 1) {\n
+    value = object_value[i];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return RSVP.resolve(value.cmp(comparison_value) === 0);\n
+    }\n
+    if (\n
+      searchTextToRegExp(comparison_value.toString()).test(value.toString())\n
+    ) {\n
+      return RSVP.resolve(true);\n
+    }\n
+  }\n
+  return RSVP.resolve(false);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value does not match the item value\n
+ *\n
+ * @method !=\n
+ * @param  {String} object_value The value to compare\n
+ * @param  {String} comparison_value The comparison value\n
+ * @return {Boolean} true if not match, false otherwise\n
+ */\n
+SimpleQuery.prototype["!="] = function (object_value, comparison_value) {\n
+  var value, i;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  for (i = 0; i < object_value.length; i += 1) {\n
+    value = object_value[i];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return RSVP.resolve(value.cmp(comparison_value) !== 0);\n
+    }\n
+    if (\n
+      searchTextToRegExp(comparison_value.toString(), false).\n
+        test(value.toString())\n
+    ) {\n
+      return RSVP.resolve(false);\n
+    }\n
+  }\n
+  return RSVP.resolve(true);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value is lower than the item value\n
+ *\n
+ * @method <\n
+ * @param  {Number, String} object_value The value to compare\n
+ * @param  {Number, String} comparison_value The comparison value\n
+ * @return {Boolean} true if lower, false otherwise\n
+ */\n
+SimpleQuery.prototype["<"] = function (object_value, comparison_value) {\n
+  var value;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  value = object_value[0];\n
+  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+    value = value.content;\n
+  }\n
+  if (typeof value.cmp === "function") {\n
+    return RSVP.resolve(value.cmp(comparison_value) < 0);\n
+  }\n
+  return RSVP.resolve(value < comparison_value);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value is equal or lower than the\n
+ * item value\n
+ *\n
+ * @method <=\n
+ * @param  {Number, String} object_value The value to compare\n
+ * @param  {Number, String} comparison_value The comparison value\n
+ * @return {Boolean} true if equal or lower, false otherwise\n
+ */\n
+SimpleQuery.prototype["<="] = function (object_value, comparison_value) {\n
+  var value;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  value = object_value[0];\n
+  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+    value = value.content;\n
+  }\n
+  if (typeof value.cmp === "function") {\n
+    return RSVP.resolve(value.cmp(comparison_value) <= 0);\n
+  }\n
+  return RSVP.resolve(value <= comparison_value);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value is greater than the item\n
+ * value\n
+ *\n
+ * @method >\n
+ * @param  {Number, String} object_value The value to compare\n
+ * @param  {Number, String} comparison_value The comparison value\n
+ * @return {Boolean} true if greater, false otherwise\n
+ */\n
+SimpleQuery.prototype[">"] = function (object_value, comparison_value) {\n
+  var value;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  value = object_value[0];\n
+  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+    value = value.content;\n
+  }\n
+  if (typeof value.cmp === "function") {\n
+    return RSVP.resolve(value.cmp(comparison_value) > 0);\n
+  }\n
+  return RSVP.resolve(value > comparison_value);\n
+};\n
+\n
+/**\n
+ * Comparison operator, test if this query value is equal or greater than the\n
+ * item value\n
+ *\n
+ * @method >=\n
+ * @param  {Number, String} object_value The value to compare\n
+ * @param  {Number, String} comparison_value The comparison value\n
+ * @return {Boolean} true if equal or greater, false otherwise\n
+ */\n
+SimpleQuery.prototype[">="] = function (object_value, comparison_value) {\n
+  var value;\n
+  if (!Array.isArray(object_value)) {\n
+    object_value = [object_value];\n
+  }\n
+  value = object_value[0];\n
+  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+    value = value.content;\n
+  }\n
+  if (typeof value.cmp === "function") {\n
+    return RSVP.resolve(value.cmp(comparison_value) >= 0);\n
+  }\n
+  return RSVP.resolve(value >= comparison_value);\n
+};\n
+\n
+query_class_dict.simple = SimpleQuery;\n
+\n
+exports.SimpleQuery = SimpleQuery;\n
+\n
+/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
+/*global Query, RSVP, deepClone */\n
+\n
+/**\n
+ * Escapes regexp special chars from a string.\n
+ *\n
+ * @param  {String} string The string to escape\n
+ * @return {String} The escaped string\n
+ */\n
+function stringEscapeRegexpCharacters(string) {\n
+  if (typeof string === "string") {\n
+    return string.replace(/([\\\\\\.\\$\\[\\]\\(\\)\\{\\}\\^\\?\\*\\+\\-])/g, "\\\\$1");\n
+  }\n
+  throw new TypeError("Query.stringEscapeRegexpCharacters(): " +\n
+                      "Argument no 1 is not of type \'string\'");\n
+}\n
+\n
+Query.stringEscapeRegexpCharacters = stringEscapeRegexpCharacters;\n
+\n
+/**\n
+ * Convert metadata values to array of strings. ex:\n
+ *\n
+ *     "a" -> ["a"],\n
+ *     {"content": "a"} -> ["a"]\n
+ *\n
+ * @param  {Any} value The metadata value\n
+ * @return {Array} The value in string array format\n
+ */\n
+function metadataValueToStringArray(value) {\n
+  var i, new_value = [];\n
+  if (value === undefined) {\n
+    return undefined;\n
+  }\n
+  if (!Array.isArray(value)) {\n
+    value = [value];\n
+  }\n
+  for (i = 0; i < value.length; i += 1) {\n
+    if (typeof value[i] === \'object\') {\n
+      new_value[i] = value[i].content;\n
+    } else {\n
+      new_value[i] = value[i];\n
+    }\n
+  }\n
+  return new_value;\n
+}\n
+\n
+/**\n
+ * A sort function to sort items by key\n
+ *\n
+ * @param  {String} key The key to sort on\n
+ * @param  {String} [way="ascending"] \'ascending\' or \'descending\'\n
+ * @return {Function} The sort function\n
+ */\n
+function sortFunction(key, way) {\n
+  if (way === \'descending\') {\n
+    return function (a, b) {\n
+      // this comparison is 5 times faster than json comparison\n
+      var i, l;\n
+      a = metadataValueToStringArray(a[key]) || [];\n
+      b = metadataValueToStringArray(b[key]) || [];\n
+      l = a.length > b.length ? a.length : b.length;\n
+      for (i = 0; i < l; i += 1) {\n
+        if (a[i] === undefined) {\n
+          return 1;\n
+        }\n
+        if (b[i] === undefined) {\n
+          return -1;\n
+        }\n
+        if (a[i] > b[i]) {\n
+          return -1;\n
+        }\n
+        if (a[i] < b[i]) {\n
+          return 1;\n
+        }\n
+      }\n
+      return 0;\n
+    };\n
+  }\n
+  if (way === \'ascending\') {\n
+    return function (a, b) {\n
+      // this comparison is 5 times faster than json comparison\n
+      var i, l;\n
+      a = metadataValueToStringArray(a[key]) || [];\n
+      b = metadataValueToStringArray(b[key]) || [];\n
+      l = a.length > b.length ? a.length : b.length;\n
+      for (i = 0; i < l; i += 1) {\n
+        if (a[i] === undefined) {\n
+          return -1;\n
+        }\n
+        if (b[i] === undefined) {\n
+          return 1;\n
+        }\n
+        if (a[i] > b[i]) {\n
+          return 1;\n
+        }\n
+        if (a[i] < b[i]) {\n
+          return -1;\n
+        }\n
+      }\n
+      return 0;\n
+    };\n
+  }\n
+  throw new TypeError("Query.sortFunction(): " +\n
+                      "Argument 2 must be \'ascending\' or \'descending\'");\n
+}\n
+\n
+/**\n
+ * Inherits the prototype methods from one constructor into another. The\n
+ * prototype of `constructor` will be set to a new object created from\n
+ * `superConstructor`.\n
+ *\n
+ * @param  {Function} constructor The constructor which inherits the super one\n
+ * @param  {Function} superConstructor The super constructor\n
+ */\n
+function inherits(constructor, superConstructor) {\n
+  constructor.super_ = superConstructor;\n
+  constructor.prototype = Object.create(superConstructor.prototype, {\n
+    "constructor": {\n
+      "configurable": true,\n
+      "enumerable": false,\n
+      "writable": true,\n
+      "value": constructor\n
+    }\n
+  });\n
+}\n
+\n
+/**\n
+ * Does nothing\n
+ */\n
+function emptyFunction() {\n
+  return;\n
+}\n
+\n
+/**\n
+ * Filter a list of items, modifying them to select only wanted keys. If\n
+ * `clone` is true, then the method will act on a cloned list.\n
+ *\n
+ * @param  {Array} select_option Key list to keep\n
+ * @param  {Array} list The item list to filter\n
+ * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
+ * @return {Array} The filtered list\n
+ */\n
+function select(select_option, list, clone) {\n
+  var i, j, new_item;\n
+  if (!Array.isArray(select_option)) {\n
+    throw new TypeError("jioquery.select(): " +\n
+                        "Argument 1 is not of type Array");\n
+  }\n
+  if (!Array.isArray(list)) {\n
+    throw new TypeError("jioquery.select(): " +\n
+                        "Argument 2 is not of type Array");\n
+  }\n
+  if (clone === true) {\n
+    list = deepClone(list);\n
+  }\n
+  for (i = 0; i < list.length; i += 1) {\n
+    new_item = {};\n
+    for (j = 0; j < select_option.length; j += 1) {\n
+      if (list[i].hasOwnProperty([select_option[j]])) {\n
+        new_item[select_option[j]] = list[i][select_option[j]];\n
+      }\n
+    }\n
+    for (j in new_item) {\n
+      if (new_item.hasOwnProperty(j)) {\n
+        list[i] = new_item;\n
+        break;\n
+      }\n
+    }\n
+  }\n
+  return list;\n
+}\n
+\n
+Query.select = select;\n
+\n
+/**\n
+ * Sort a list of items, according to keys and directions. If `clone` is true,\n
+ * then the method will act on a cloned list.\n
+ *\n
+ * @param  {Array} sort_on_option List of couples [key, direction]\n
+ * @param  {Array} list The item list to sort\n
+ * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
+ * @return {Array} The filtered list\n
+ */\n
+function sortOn(sort_on_option, list, clone) {\n
+  var sort_index;\n
+  if (!Array.isArray(sort_on_option)) {\n
+    throw new TypeError("jioquery.sortOn(): " +\n
+                        "Argument 1 is not of type \'array\'");\n
+  }\n
+  if (clone) {\n
+    list = deepClone(list);\n
+  }\n
+  for (sort_index = sort_on_option.length - 1; sort_index >= 0;\n
+       sort_index -= 1) {\n
+    list.sort(sortFunction(\n
+      sort_on_option[sort_index][0],\n
+      sort_on_option[sort_index][1]\n
+    ));\n
+  }\n
+  return list;\n
+}\n
+\n
+Query.sortOn = sortOn;\n
+\n
+/**\n
+ * Limit a list of items, according to index and length. If `clone` is true,\n
+ * then the method will act on a cloned list.\n
+ *\n
+ * @param  {Array} limit_option A couple [from, length]\n
+ * @param  {Array} list The item list to limit\n
+ * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
+ * @return {Array} The filtered list\n
+ */\n
+function limit(limit_option, list, clone) {\n
+  if (!Array.isArray(limit_option)) {\n
+    throw new TypeError("jioquery.limit(): " +\n
+                        "Argument 1 is not of type \'array\'");\n
+  }\n
+  if (!Array.isArray(list)) {\n
+    throw new TypeError("jioquery.limit(): " +\n
+                        "Argument 2 is not of type \'array\'");\n
+  }\n
+  if (clone) {\n
+    list = deepClone(list);\n
+  }\n
+  list.splice(0, limit_option[0]);\n
+  if (limit_option[1]) {\n
+    list.splice(limit_option[1]);\n
+  }\n
+  return list;\n
+}\n
+\n
+Query.limit = limit;\n
+\n
+/**\n
+ * Convert a search text to a regexp.\n
+ *\n
+ * @param  {String} string The string to convert\n
+ * @param  {Boolean} [use_wildcard_character=true] Use wildcard "%" and "_"\n
+ * @return {RegExp} The search text regexp\n
+ */\n
+function searchTextToRegExp(string, use_wildcard_characters) {\n
+  if (typeof string !== \'string\') {\n
+    throw new TypeError("jioquery.searchTextToRegExp(): " +\n
+                        "Argument 1 is not of type \'string\'");\n
+  }\n
+  if (use_wildcard_characters === false) {\n
+    return new RegExp("^" + stringEscapeRegexpCharacters(string) + "$");\n
+  }\n
+  return new RegExp("^" + stringEscapeRegexpCharacters(string).replace(\n
+    /%/g,\n
+    ".*"\n
+  ).replace(\n
+    /_/g,\n
+    "."\n
+  ) + "$");\n
+}\n
+\n
+Query.searchTextToRegExp = searchTextToRegExp;\n
+\n
+/**\n
+ * sequence(thens): Promise\n
+ *\n
+ * Executes a sequence of *then* callbacks. It acts like\n
+ * `smth().then(callback).then(callback)...`. The first callback is called with\n
+ * no parameter.\n
+ *\n
+ * Elements of `thens` array can be a function or an array contaning at most\n
+ * three *then* callbacks: *onFulfilled*, *onRejected*, *onNotified*.\n
+ *\n
+ * When `cancel()` is executed, each then promises are cancelled at the same\n
+ * time.\n
+ *\n
+ * @param  {Array} thens An array of *then* callbacks\n
+ * @return {Promise} A new promise\n
+ */\n
+function sequence(thens) {\n
+  var promises = [];\n
+  return new RSVP.Promise(function (resolve, reject, notify) {\n
+    var i;\n
+    promises[0] = new RSVP.Promise(function (resolve) {\n
+      resolve();\n
+    });\n
+    for (i = 0; i < thens.length; i += 1) {\n
+      if (Array.isArray(thens[i])) {\n
+        promises[i + 1] = promises[i].\n
+          then(thens[i][0], thens[i][1], thens[i][2]);\n
+      } else {\n
+        promises[i + 1] = promises[i].then(thens[i]);\n
+      }\n
+    }\n
+    promises[i].then(resolve, reject, notify);\n
+  }, function () {\n
+    var i;\n
+    for (i = 0; i < promises.length; i += 1) {\n
+      promises[i].cancel();\n
+    }\n
+  });\n
+}\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>155851</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

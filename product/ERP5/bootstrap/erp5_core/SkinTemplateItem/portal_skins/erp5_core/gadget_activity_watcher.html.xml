@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16502968.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gadget_activity_watcher.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
+    <script id="getData" type="text/x-handlebars-template">\n
+      Date : {{time}} \n
+       <table>\n
+        <tr>\n
+         <th>Type</th>\n
+         <th>Message</th>\n
+         <th>Method Id</th>\n
+         <th>Processing Node</th>\n
+         <th>Min pri</th>\n
+         <th>Max pri</th>\n
+        </tr>\n
+  {{#each messageList1}}\n
+      <tr> \n
+         <td>{{this.messagetype}} </td>\n
+         <td>{{this.message}}</td>\n
+         <td>{{this.method_id}}</td>\n
+         <td>{{this.node}}</td>\n
+         <td>{{this.min_pri}}</td>\n
+         <td>{{this.max_pri}}</td>\n
+       </tr>    \n
+  {{/each}}\n
+  {{#each messageList2}}\n
+      <tr> \n
+         <td>{{this.messagetype}} </td>\n
+         <td>{{this.message}}</td>\n
+         <td>{{this.method_id}}</td>\n
+         <td>{{this.node}}</td>\n
+         <td>{{this.min_pri}}</td>\n
+         <td>{{this.max_pri}}</td>\n
+       </tr>    \n
+  {{/each}}\n
+  </table>\n
+    <table>\n
+      <tr>\n
+       <th>Type</th>\n
+       <th>Pri</th>\n
+       <th>Min</th>\n
+       <th>Avg</th>\n
+       <th>Max</th>\n
+      </tr>\n
+  {{#each messagePri1}}\n
+      <tr> \n
+         <td>{{this.messagetype}} </td>\n
+         <td>{{this.pri}}</td>\n
+         <td>{{this.min}}</td>\n
+         <td>{{this.avg}}</td>\n
+         <td>{{this.max}}</td>\n
+       </tr>    \n
+  {{/each}}\n
+  {{#each messagePri2}}\n
+      <tr> \n
+         <td>{{this.messagetype}} </td>\n
+         <td>{{this.pri}}</td>\n
+         <td>{{this.min}}</td>\n
+         <td>{{this.avg}}</td>\n
+         <td>{{this.max}}</td>\n
+       </tr>    \n
+  {{/each}}\n
+  </table>\n
+</script> \n
+\n
+\n
+<script src="rsvp.js" type="text/javascript"></script>\n
+<script src="renderjs.js" type="text/javascript"></script>\n
+<script src="jio_sha256.amd.js" type="text/javascript"></script>\n
+<script src="jio.js" type="text/javascript"></script>\n
+<script src="gadget_activity_watcher.js" type="text/javascript"></script>\n
+\n
+</head>\n
+\n
+<body>\n
+  <div class="activity_watcher_gadget"></div>\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2109</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

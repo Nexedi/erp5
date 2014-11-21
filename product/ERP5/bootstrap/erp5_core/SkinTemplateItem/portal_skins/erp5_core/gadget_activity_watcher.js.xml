@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16394919.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gadget_activity_watcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP, Handlebars, jIO, location */\n
+/*jslint nomen: true, maxlen:80, indent:2*/\n
+(function (rJS, jIO, Handlebars, RSVP, window) {\n
+  "use strict";\n
+  var gk = rJS(window),\n
+    data_source = gk.__template_element.getElementById(\'getData\').innerHTML,\n
+    get_data_template = Handlebars.compile(data_source);\n
+\n
+  function putMessageType(data, messagetype, string) {\n
+    var i;\n
+    if (data[string] && data[string].line_list) {\n
+      for (i = 0; i < data[string].line_list.length; i += 1) {\n
+        data[string].line_list[i].messagetype = messagetype;\n
+      }\n
+      return data[string].line_list;\n
+    }\n
+    return \'\';\n
+  }\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    .ready(function (g) {\n
+      return g.getElement().push(function (element) {\n
+        g.props.element = element;\n
+      });\n
+    })\n
+    .declareService(function () {\n
+      var form_gadget = this,\n
+        html_content,\n
+        basedir = location.pathname.split(\'/\').slice(0, -1).join(\'/\') + \'/\',\n
+        queue = new RSVP.Queue();\n
+      function getDataExamine() {\n
+        queue\n
+          .push(function () {\n
+            return jIO.util.ajax(\n
+              {\n
+                "type": "POST",\n
+                "url":  basedir + \'ActivityTool_getSqlStatisticList\',\n
+                "xhrFields": {\n
+                  withCredentials: true\n
+                }\n
+              }\n
+            );\n
+          })\n
+          .push(function (evt) {\n
+            var data = JSON.parse(evt.target.response);\n
+            html_content = get_data_template(\n
+              {\n
+                time: new Date().toTimeString(),\n
+                messageList1: putMessageType(data, \'dict\', \'SQLDict\'),\n
+                messageList2: putMessageType(data, \'queue\', \'SQLQueue\'),\n
+                messagePri1 : putMessageType(data, \'dict\', \'SQLDict2\'),\n
+                messagePri2 : putMessageType(data, \'queue\', \'SQLQueue2\')\n
+              }\n
+            );\n
+\n
+            form_gadget.props.element.querySelector(".activity_watcher_gadget")\n
+                            .innerHTML = html_content;\n
+            return RSVP.delay(1000);\n
+          })\n
+          .push(function () {\n
+            return getDataExamine();\n
+          });\n
+      }\n
+      return queue.push(function () {\n
+        return getDataExamine();\n
+      });\n
+    });\n
+}(rJS, jIO, Handlebars, RSVP, window));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2318</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

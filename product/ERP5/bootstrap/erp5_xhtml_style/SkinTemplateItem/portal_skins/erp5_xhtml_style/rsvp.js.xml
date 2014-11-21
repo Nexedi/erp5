@@ -1,0 +1,1167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16413642.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>rsvp.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(globals) {\n
+var define, requireModule;\n
+\n
+(function() {\n
+  var registry = {}, seen = {};\n
+\n
+  define = function(name, deps, callback) {\n
+    registry[name] = { deps: deps, callback: callback };\n
+  };\n
+\n
+  requireModule = function(name) {\n
+    if (seen[name]) { return seen[name]; }\n
+    seen[name] = {};\n
+\n
+    var mod = registry[name];\n
+    if (!mod) {\n
+      throw new Error("Module \'" + name + "\' not found.");\n
+    }\n
+\n
+    var deps = mod.deps,\n
+        callback = mod.callback,\n
+        reified = [],\n
+        exports;\n
+\n
+    for (var i=0, l=deps.length; i<l; i++) {\n
+      if (deps[i] === \'exports\') {\n
+        reified.push(exports = {});\n
+      } else {\n
+        reified.push(requireModule(deps[i]));\n
+      }\n
+    }\n
+\n
+    var value = callback.apply(this, reified);\n
+    return seen[name] = exports || value;\n
+  };\n
+})();\n
+\n
+define("rsvp/all",\n
+  ["rsvp/promise","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+    /* global toString */\n
+\n
+\n
+    function promiseAtLeast(expected_count, promises) {\n
+      if (Object.prototype.toString.call(promises) !== "[object Array]") {\n
+        throw new TypeError(\'You must pass an array to all.\');\n
+      }\n
+\n
+      function canceller() {\n
+        var promise;\n
+        for (var i = 0; i < promises.length; i++) {\n
+          promise = promises[i];\n
+\n
+          if (promise && typeof promise.then === \'function\' &&\n
+              typeof promise.cancel === \'function\') {\n
+            promise.cancel();\n
+          }\n
+        }\n
+      }\n
+\n
+      return new Promise(function(resolve, reject, notify) {\n
+        var results = [], remaining = promises.length,\n
+        promise, remaining_count = promises.length - expected_count;\n
+\n
+        if (remaining === 0) {\n
+          if (expected_count === 1) {\n
+            resolve();\n
+          } else {\n
+            resolve([]);\n
+          }\n
+        }\n
+\n
+        function resolver(index) {\n
+          return function(value) {\n
+            resolveAll(index, value);\n
+          };\n
+        }\n
+\n
+        function resolveAll(index, value) {\n
+          results[index] = value;\n
+          if (--remaining === remaining_count) {\n
+            if (remaining_count === 0) {\n
+              resolve(results);\n
+            } else {\n
+              resolve(value);\n
+              canceller();\n
+            }\n
+          }\n
+        }\n
+\n
+        function notifier(index) {\n
+          return function(value) {\n
+            notify({"index": index, "value": value});\n
+          };\n
+        }\n
+\n
+        function cancelAll(rejectionValue) {\n
+          reject(rejectionValue);\n
+          canceller();\n
+        }\n
+\n
+        for (var i = 0; i < promises.length; i++) {\n
+          promise = promises[i];\n
+\n
+          if (promise && typeof promise.then === \'function\') {\n
+            promise.then(resolver(i), cancelAll, notifier(i));\n
+          } else {\n
+            resolveAll(i, promise);\n
+          }\n
+        }\n
+      }, canceller\n
+      );\n
+    }\n
+\n
+    function all(promises) {\n
+      return promiseAtLeast(promises.length, promises);\n
+    }\n
+\n
+    function any(promises) {\n
+      return promiseAtLeast(1, promises);\n
+    }\n
+\n
+\n
+    __exports__.all = all;\n
+    __exports__.any = any;\n
+  });\n
+define("rsvp/async",\n
+  ["exports"],\n
+  function(__exports__) {\n
+    "use strict";\n
+    var browserGlobal = (typeof window !== \'undefined\') ? window : {};\n
+    var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;\n
+    var async;\n
+    var local = (typeof global !== \'undefined\') ? global : this;\n
+\n
+    // old node\n
+    function useNextTick() {\n
+      return function(callback, arg) {\n
+        process.nextTick(function() {\n
+          callback(arg);\n
+        });\n
+      };\n
+    }\n
+\n
+    // node >= 0.10.x\n
+    function useSetImmediate() {\n
+      return function(callback, arg) {\n
+        /* global  setImmediate */\n
+        setImmediate(function(){\n
+          callback(arg);\n
+        });\n
+      };\n
+    }\n
+\n
+    function useMutationObserver() {\n
+      var queue = [];\n
+\n
+      var observer = new BrowserMutationObserver(function() {\n
+        var toProcess = queue.slice();\n
+        queue = [];\n
+\n
+        toProcess.forEach(function(tuple) {\n
+          var callback = tuple[0], arg= tuple[1];\n
+          callback(arg);\n
+        });\n
+      });\n
+\n
+      var element = document.createElement(\'div\');\n
+      observer.observe(element, { attributes: true });\n
+\n
+      // Chrome Memory Leak: https://bugs.webkit.org/show_bug.cgi?id=93661\n
+      window.addEventListener(\'unload\', function(){\n
+        observer.disconnect();\n
+        observer = null;\n
+      }, false);\n
+\n
+      return function(callback, arg) {\n
+        queue.push([callback, arg]);\n
+        element.setAttribute(\'drainQueue\', \'drainQueue\');\n
+      };\n
+    }\n
+\n
+    function useSetTimeout() {\n
+      return function(callback, arg) {\n
+        local.setTimeout(function() {\n
+          callback(arg);\n
+        }, 1);\n
+      };\n
+    }\n
+\n
+    if (typeof setImmediate === \'function\') {\n
+      async = useSetImmediate();\n
+    } else if (typeof process !== \'undefined\' && {}.toString.call(process) === \'[object process]\') {\n
+      async = useNextTick();\n
+    } else if (BrowserMutationObserver) {\n
+      async = useMutationObserver();\n
+    } else {\n
+      async = useSetTimeout();\n
+    }\n
+\n
+\n
+    __exports__.async = async;\n
+  });\n
+define("rsvp/cancellation_error",\n
+  ["exports"],\n
+  function(__exports__) {\n
+    "use strict";\n
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error\n
+    function CancellationError(message) {\n
+      this.name = "cancel";\n
+      if ((message !== undefined) && (typeof message !== "string")) {\n
+        throw new TypeError(\'You must pass a string.\');\n
+      }\n
+      this.message = message || "Default Message";\n
+    }\n
+    CancellationError.prototype = new Error();\n
+    CancellationError.prototype.constructor = CancellationError;\n
+\n
+\n
+    __exports__.CancellationError = CancellationError;\n
+  });\n
+define("rsvp/config",\n
+  ["rsvp/async","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var async = __dependency1__.async;\n
+\n
+    var config = {};\n
+    config.async = async;\n
+\n
+\n
+    __exports__.config = config;\n
+  });\n
+define("rsvp/defer",\n
+  ["rsvp/promise","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+\n
+    function defer() {\n
+      var deferred = {\n
+        // pre-allocate shape\n
+        resolve: undefined,\n
+        reject:  undefined,\n
+        promise: undefined\n
+      };\n
+\n
+      deferred.promise = new Promise(function(resolve, reject) {\n
+        deferred.resolve = resolve;\n
+        deferred.reject = reject;\n
+      });\n
+\n
+      return deferred;\n
+    }\n
+\n
+\n
+    __exports__.defer = defer;\n
+  });\n
+define("rsvp/events",\n
+  ["exports"],\n
+  function(__exports__) {\n
+    "use strict";\n
+    var Event = function(type, options) {\n
+      this.type = type;\n
+\n
+      for (var option in options) {\n
+        if (!options.hasOwnProperty(option)) { continue; }\n
+\n
+        this[option] = options[option];\n
+      }\n
+    };\n
+\n
+    var indexOf = function(callbacks, callback) {\n
+      for (var i=0, l=callbacks.length; i<l; i++) {\n
+        if (callbacks[i][0] === callback) { return i; }\n
+      }\n
+\n
+      return -1;\n
+    };\n
+\n
+    var callbacksFor = function(object) {\n
+      var callbacks = object._promiseCallbacks;\n
+\n
+      if (!callbacks) {\n
+        callbacks = object._promiseCallbacks = {};\n
+      }\n
+\n
+      return callbacks;\n
+    };\n
+\n
+    var EventTarget = {\n
+      mixin: function(object) {\n
+        object.on = this.on;\n
+        object.off = this.off;\n
+        object.trigger = this.trigger;\n
+        return object;\n
+      },\n
+\n
+      on: function(eventNames, callback, binding) {\n
+        var allCallbacks = callbacksFor(this), callbacks, eventName;\n
+        eventNames = eventNames.split(/\\s+/);\n
+        binding = binding || this;\n
+\n
+        while (eventName = eventNames.shift()) {\n
+          callbacks = allCallbacks[eventName];\n
+\n
+          if (!callbacks) {\n
+            callbacks = allCallbacks[eventName] = [];\n
+          }\n
+\n
+          if (indexOf(callbacks, callback) === -1) {\n
+            callbacks.push([callback, binding]);\n
+          }\n
+        }\n
+      },\n
+\n
+      off: function(eventNames, callback) {\n
+        var allCallbacks = callbacksFor(this), callbacks, eventName, index;\n
+        eventNames = eventNames.split(/\\s+/);\n
+\n
+        while (eventName = eventNames.shift()) {\n
+          if (!callback) {\n
+            allCallbacks[eventName] = [];\n
+            continue;\n
+          }\n
+\n
+          callbacks = allCallbacks[eventName];\n
+\n
+          index = indexOf(callbacks, callback);\n
+\n
+          if (index !== -1) { callbacks.splice(index, 1); }\n
+        }\n
+      },\n
+\n
+      trigger: function(eventName, options) {\n
+        var allCallbacks = callbacksFor(this),\n
+            callbacks, callbackTuple, callback, binding, event;\n
+\n
+        if (callbacks = allCallbacks[eventName]) {\n
+          // Don\'t cache the callbacks.length since it may grow\n
+          for (var i=0; i<callbacks.length; i++) {\n
+            callbackTuple = callbacks[i];\n
+            callback = callbackTuple[0];\n
+            binding = callbackTuple[1];\n
+\n
+            if (typeof options !== \'object\') {\n
+              options = { detail: options };\n
+            }\n
+\n
+            event = new Event(eventName, options);\n
+            callback.call(binding, event);\n
+          }\n
+        }\n
+      }\n
+    };\n
+\n
+\n
+    __exports__.EventTarget = EventTarget;\n
+  });\n
+define("rsvp/hash",\n
+  ["rsvp/defer","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var defer = __dependency1__.defer;\n
+\n
+    function size(object) {\n
+      var s = 0;\n
+\n
+      for (var prop in object) {\n
+        s++;\n
+      }\n
+\n
+      return s;\n
+    }\n
+\n
+    function hash(promises) {\n
+      var results = {}, deferred = defer(), remaining = size(promises);\n
+\n
+      if (remaining === 0) {\n
+        deferred.resolve({});\n
+      }\n
+\n
+      var resolver = function(prop) {\n
+        return function(value) {\n
+          resolveAll(prop, value);\n
+        };\n
+      };\n
+\n
+      var resolveAll = function(prop, value) {\n
+        results[prop] = value;\n
+        if (--remaining === 0) {\n
+          deferred.resolve(results);\n
+        }\n
+      };\n
+\n
+      var rejectAll = function(error) {\n
+        deferred.reject(error);\n
+      };\n
+\n
+      for (var prop in promises) {\n
+        if (promises[prop] && typeof promises[prop].then === \'function\') {\n
+          promises[prop].then(resolver(prop), rejectAll);\n
+        } else {\n
+          resolveAll(prop, promises[prop]);\n
+        }\n
+      }\n
+\n
+      return deferred.promise;\n
+    }\n
+\n
+\n
+    __exports__.hash = hash;\n
+  });\n
+define("rsvp/node",\n
+  ["rsvp/promise","rsvp/all","exports"],\n
+  function(__dependency1__, __dependency2__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+    var all = __dependency2__.all;\n
+\n
+    function makeNodeCallbackFor(resolve, reject) {\n
+      return function (error, value) {\n
+        if (error) {\n
+          reject(error);\n
+        } else if (arguments.length > 2) {\n
+          resolve(Array.prototype.slice.call(arguments, 1));\n
+        } else {\n
+          resolve(value);\n
+        }\n
+      };\n
+    }\n
+\n
+    function denodeify(nodeFunc) {\n
+      return function()  {\n
+        var nodeArgs = Array.prototype.slice.call(arguments), resolve, reject;\n
+        var thisArg = this;\n
+\n
+        var promise = new Promise(function(nodeResolve, nodeReject) {\n
+          resolve = nodeResolve;\n
+          reject = nodeReject;\n
+        });\n
+\n
+        all(nodeArgs).then(function(nodeArgs) {\n
+          nodeArgs.push(makeNodeCallbackFor(resolve, reject));\n
+\n
+          try {\n
+            nodeFunc.apply(thisArg, nodeArgs);\n
+          } catch(e) {\n
+            reject(e);\n
+          }\n
+        });\n
+\n
+        return promise;\n
+      };\n
+    }\n
+\n
+\n
+    __exports__.denodeify = denodeify;\n
+  });\n
+define("rsvp/promise",\n
+  ["rsvp/config","rsvp/events","rsvp/cancellation_error","exports"],\n
+  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {\n
+    "use strict";\n
+    var config = __dependency1__.config;\n
+    var EventTarget = __dependency2__.EventTarget;\n
+    var CancellationError = __dependency3__.CancellationError;\n
+\n
+    function objectOrFunction(x) {\n
+      return isFunction(x) || (typeof x === "object" && x !== null);\n
+    }\n
+\n
+    function isFunction(x){\n
+      return typeof x === "function";\n
+    }\n
+\n
+    var Promise = function(resolver, canceller) {\n
+      var promise = this,\n
+      resolved = false;\n
+\n
+      if (typeof resolver !== \'function\') {\n
+        throw new TypeError(\'You must pass a resolver function as the sole argument to the promise constructor\');\n
+      }\n
+\n
+      if ((canceller !== undefined) && (typeof canceller !== \'function\')) {\n
+        throw new TypeError(\'You can only pass a canceller function\' +\n
+          \' as the second argument to the promise constructor\');\n
+      }\n
+\n
+      if (!(promise instanceof Promise)) {\n
+        return new Promise(resolver, canceller);\n
+      }\n
+\n
+      var resolvePromise = function(value) {\n
+        if (resolved) { return; }\n
+        resolved = true;\n
+        resolve(promise, value);\n
+      };\n
+\n
+      var rejectPromise = function(value) {\n
+        if (resolved) { return; }\n
+        resolved = true;\n
+        reject(promise, value);\n
+      };\n
+\n
+      var notifyPromise = function(value) {\n
+        if (resolved) { return; }\n
+        notify(promise, value);\n
+      };\n
+\n
+      this.on(\'promise:failed\', function(event) {\n
+        this.trigger(\'error\', { detail: event.detail });\n
+      }, this);\n
+\n
+      this.on(\'error\', onerror);\n
+\n
+      this.cancel = function () {\n
+        // For now, simply reject the promise and does not propagate the cancel\n
+        // to parent or children\n
+        if (resolved) { return; }\n
+        if (canceller !== undefined) {\n
+          try {\n
+            canceller();\n
+          } catch (e) {\n
+            rejectPromise(e);\n
+            return;\n
+          }\n
+        }\n
+        // Trigger cancel?\n
+        rejectPromise(new CancellationError());\n
+      };\n
+\n
+      try {\n
+        resolver(resolvePromise, rejectPromise, notifyPromise);\n
+      } catch(e) {\n
+        rejectPromise(e);\n
+      }\n
+    };\n
+\n
+    function onerror(event) {\n
+      if (config.onerror) {\n
+        config.onerror(event.detail);\n
+      }\n
+    }\n
+\n
+    var invokeCallback = function(type, promise, callback, event) {\n
+      var hasCallback = isFunction(callback),\n
+          value, error, succeeded, failed;\n
+\n
+      if (promise.isFulfilled) { return; }\n
+      if (promise.isRejected) { return; }\n
+\n
+      if (hasCallback) {\n
+        try {\n
+          value = callback(event.detail);\n
+          succeeded = true;\n
+        } catch(e) {\n
+          failed = true;\n
+          error = e;\n
+        }\n
+      } else {\n
+        value = event.detail;\n
+        succeeded = true;\n
+      }\n
+\n
+      if (handleThenable(promise, value)) {\n
+        return;\n
+      } else if (hasCallback && succeeded) {\n
+        resolve(promise, value);\n
+      } else if (failed) {\n
+        reject(promise, error);\n
+      } else if (type === \'resolve\') {\n
+        resolve(promise, value);\n
+      } else if (type === \'reject\') {\n
+        reject(promise, value);\n
+      }\n
+    };\n
+\n
+\n
+    var invokeNotifyCallback = function(promise, callback, event) {\n
+      var value;\n
+      if (typeof callback === \'function\') {\n
+        try {\n
+          value = callback(event.detail);\n
+        } catch (e) {\n
+          // stop propagating\n
+          return;\n
+        }\n
+        notify(promise, value);\n
+      } else {\n
+        notify(promise, event.detail);\n
+      }\n
+    };\n
+\n
+    Promise.prototype = {\n
+      constructor: Promise,\n
+\n
+      isRejected: undefined,\n
+      isFulfilled: undefined,\n
+      rejectedReason: undefined,\n
+      fulfillmentValue: undefined,\n
+\n
+      then: function(done, fail, progress) {\n
+        this.off(\'error\', onerror);\n
+\n
+        var thenPromise = new this.constructor(function() {},\n
+            function () {\n
+              thenPromise.trigger(\'promise:cancelled\', {});\n
+            });\n
+\n
+        if (this.isFulfilled) {\n
+          config.async(function(promise) {\n
+            invokeCallback(\'resolve\', thenPromise, done, { detail: promise.fulfillmentValue });\n
+          }, this);\n
+        }\n
+\n
+        if (this.isRejected) {\n
+          config.async(function(promise) {\n
+            invokeCallback(\'reject\', thenPromise, fail, { detail: promise.rejectedReason });\n
+          }, this);\n
+        }\n
+\n
+        this.on(\'promise:resolved\', function(event) {\n
+          invokeCallback(\'resolve\', thenPromise, done, event);\n
+        });\n
+\n
+        this.on(\'promise:failed\', function(event) {\n
+          invokeCallback(\'reject\', thenPromise, fail, event);\n
+        });\n
+\n
+        this.on(\'promise:notified\', function (event) {\n
+          invokeNotifyCallback(thenPromise, progress, event);\n
+        });\n
+\n
+        return thenPromise;\n
+      },\n
+\n
+      fail: function(fail) {\n
+        return this.then(null, fail);\n
+      },\n
+\n
+      always: function(fail) {\n
+        return this.then(fail, fail);\n
+      }\n
+    };\n
+\n
+    EventTarget.mixin(Promise.prototype);\n
+\n
+    function resolve(promise, value) {\n
+      if (promise === value) {\n
+        fulfill(promise, value);\n
+      } else if (!handleThenable(promise, value)) {\n
+        fulfill(promise, value);\n
+      }\n
+    }\n
+\n
+    function handleThenable(promise, value) {\n
+      var then = null,\n
+      resolved;\n
+\n
+      try {\n
+        if (promise === value) {\n
+          throw new TypeError("A promises callback cannot return that same promise.");\n
+        }\n
+\n
+        if (objectOrFunction(value)) {\n
+          then = value.then;\n
+\n
+          if (isFunction(then)) {\n
+            if (isFunction(value.on)) {\n
+              value.on(\'promise:notified\', function (event) {\n
+                notify(promise, event.detail);\n
+              });\n
+            }\n
+            promise.on(\'promise:cancelled\', function(event) {\n
+              if (isFunction(value.cancel)) {\n
+                value.cancel();\n
+              }\n
+            });\n
+            then.call(value, function(val) {\n
+              if (resolved) { return true; }\n
+              resolved = true;\n
+\n
+              if (value !== val) {\n
+                resolve(promise, val);\n
+              } else {\n
+                fulfill(promise, val);\n
+              }\n
+            }, function(val) {\n
+              if (resolved) { return true; }\n
+              resolved = true;\n
+\n
+              reject(promise, val);\n
+            });\n
+\n
+            return true;\n
+          }\n
+        }\n
+      } catch (error) {\n
+        reject(promise, error);\n
+        return true;\n
+      }\n
+\n
+      return false;\n
+    }\n
+\n
+    function fulfill(promise, value) {\n
+      config.async(function() {\n
+        if (promise.isFulfilled) { return; }\n
+        if (promise.isRejected) { return; }\n
+        promise.trigger(\'promise:resolved\', { detail: value });\n
+        promise.isFulfilled = true;\n
+        promise.fulfillmentValue = value;\n
+      });\n
+    }\n
+\n
+    function reject(promise, value) {\n
+      config.async(function() {\n
+        if (promise.isFulfilled) { return; }\n
+        if (promise.isRejected) { return; }\n
+        promise.trigger(\'promise:failed\', { detail: value });\n
+        promise.isRejected = true;\n
+        promise.rejectedReason = value;\n
+      });\n
+    }\n
+\n
+    function notify(promise, value) {\n
+      config.async(function() {\n
+        promise.trigger(\'promise:notified\', { detail: value });\n
+      });\n
+    }\n
+\n
+\n
+    __exports__.Promise = Promise;\n
+  });\n
+define("rsvp/queue",\n
+  ["rsvp/promise","rsvp/timeout","exports"],\n
+  function(__dependency1__, __dependency2__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+    var delay = __dependency2__.delay;\n
+\n
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error\n
+    function ResolvedQueueError(message) {\n
+      this.name = "resolved";\n
+      if ((message !== undefined) && (typeof message !== "string")) {\n
+        throw new TypeError(\'You must pass a string.\');\n
+      }\n
+      this.message = message || "Default Message";\n
+    }\n
+    ResolvedQueueError.prototype = new Error();\n
+    ResolvedQueueError.prototype.constructor = ResolvedQueueError;\n
+\n
+    var Queue = function() {\n
+      var queue = this,\n
+        promise_list = [],\n
+        promise,\n
+        fulfill,\n
+        reject,\n
+        notify,\n
+        resolved;\n
+\n
+      if (!(this instanceof Queue)) {\n
+        return new Queue();\n
+      }\n
+\n
+      function canceller() {\n
+        for (var i = 0; i < 2; i++) {\n
+          promise_list[i].cancel();\n
+        }\n
+      }\n
+\n
+      promise = new Promise(function(done, fail, progress) {\n
+        fulfill = function (fulfillmentValue) {\n
+          if (resolved) {return;}\n
+          queue.isFulfilled = true;\n
+          queue.fulfillmentValue = fulfillmentValue;\n
+          resolved = true;\n
+          return done(fulfillmentValue);\n
+        };\n
+        reject = function (rejectedReason) {\n
+          if (resolved) {return;}\n
+          queue.isRejected = true;\n
+          queue.rejectedReason = rejectedReason ;\n
+          resolved = true;\n
+          return fail(rejectedReason);\n
+        };\n
+        notify = progress;\n
+      }, canceller);\n
+\n
+      promise_list.push(delay());\n
+      promise_list.push(promise_list[0].then(function () {\n
+        promise_list.splice(0, 2);\n
+        if (promise_list.length === 0) {\n
+          fulfill();\n
+        }\n
+      }));\n
+\n
+      queue.cancel = function () {\n
+        if (resolved) {return;}\n
+        resolved = true;\n
+        promise.cancel();\n
+        promise.fail(function (rejectedReason) {\n
+          queue.isRejected = true;\n
+          queue.rejectedReason = rejectedReason;\n
+        });\n
+      };\n
+      queue.then = function () {\n
+        return promise.then.apply(promise, arguments);\n
+      };\n
+\n
+      queue.push = function(done, fail, progress) {\n
+        var last_promise = promise_list[promise_list.length - 1],\n
+          next_promise;\n
+\n
+        if (resolved) {\n
+          throw new ResolvedQueueError();\n
+        }\n
+\n
+        next_promise = last_promise.then(done, fail, progress);\n
+        promise_list.push(next_promise);\n
+\n
+        // Handle pop\n
+        last_promise = next_promise.then(function (fulfillmentValue) {\n
+          promise_list.splice(0, 2);\n
+          if (promise_list.length === 0) {\n
+            fulfill(fulfillmentValue);\n
+          } else {\n
+            return fulfillmentValue;\n
+          }\n
+        }, function (rejectedReason) {\n
+          promise_list.splice(0, 2);\n
+          if (promise_list.length === 0) {\n
+            reject(rejectedReason);\n
+          } else {\n
+            throw rejectedReason;\n
+          }\n
+        }, function (notificationValue) {\n
+          if (promise_list[promise_list.length - 1] === last_promise) {\n
+            notify(notificationValue);\n
+          }\n
+          return notificationValue;\n
+        });\n
+        promise_list.push(last_promise);\n
+\n
+        return this;\n
+      };\n
+    };\n
+\n
+    Queue.prototype = Object.create(Promise.prototype);\n
+    Queue.prototype.constructor = Queue;\n
+\n
+\n
+    __exports__.Queue = Queue;\n
+    __exports__.ResolvedQueueError = ResolvedQueueError;\n
+  });\n
+define("rsvp/reject",\n
+  ["rsvp/promise","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+\n
+    function reject(reason) {\n
+      return new Promise(function (resolve, reject) {\n
+        reject(reason);\n
+      });\n
+    }\n
+\n
+\n
+    __exports__.reject = reject;\n
+  });\n
+define("rsvp/resolve",\n
+  ["rsvp/promise","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+\n
+    function resolve(thenable) {\n
+      return new Promise(function(resolve, reject) {\n
+        if (typeof thenable === "object" && thenable !== null) {\n
+          var then = thenable.then;\n
+          if ((then !== undefined) && (typeof then === "function")) {\n
+            return then.apply(thenable, [resolve, reject]);\n
+          }\n
+        }\n
+        return resolve(thenable);\n
+      }, function () {\n
+        if ((thenable !== undefined) && (thenable.cancel !== undefined)) {\n
+          thenable.cancel();\n
+        }\n
+      });\n
+    }\n
+\n
+\n
+    __exports__.resolve = resolve;\n
+  });\n
+define("rsvp/rethrow",\n
+  ["exports"],\n
+  function(__exports__) {\n
+    "use strict";\n
+    var local = (typeof global === "undefined") ? this : global;\n
+\n
+    function rethrow(reason) {\n
+      local.setTimeout(function() {\n
+        throw reason;\n
+      });\n
+      throw reason;\n
+    }\n
+\n
+\n
+    __exports__.rethrow = rethrow;\n
+  });\n
+define("rsvp/timeout",\n
+  ["rsvp/promise","exports"],\n
+  function(__dependency1__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+\n
+    function promiseSetTimeout(millisecond, should_reject, message) {\n
+      var timeout_id;\n
+\n
+      function resolver(resolve, reject) {\n
+        timeout_id = setTimeout(function () {\n
+          if (should_reject) {\n
+            reject(message);\n
+          } else {\n
+            resolve(message);\n
+          }\n
+        }, millisecond);\n
+      }\n
+      function canceller() {\n
+        clearTimeout(timeout_id);\n
+      }\n
+      return new Promise(resolver, canceller);\n
+    }\n
+\n
+    function delay(millisecond, message) {\n
+      return promiseSetTimeout(millisecond, false, message);\n
+    }\n
+\n
+    function timeout(millisecond) {\n
+      return promiseSetTimeout(millisecond, true,\n
+                               "Timed out after " + millisecond + " ms");\n
+    }\n
+\n
+    Promise.prototype.delay = function(millisecond) {\n
+      return this.then(function (fulfillmentValue) {\n
+        return delay(millisecond, fulfillmentValue);\n
+      });\n
+    };\n
+\n
+\n
+    __exports__.delay = delay;\n
+    __exports__.timeout = timeout;\n
+  });\n
+define("rsvp/watcher",\n
+  ["rsvp/promise","rsvp/queue","rsvp/cancellation_error","exports"],\n
+  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {\n
+    "use strict";\n
+    var Promise = __dependency1__.Promise;\n
+    var Queue = __dependency2__.Queue;\n
+    var CancellationError = __dependency3__.CancellationError;\n
+\n
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error\n
+    function ResolvedMonitorError(message) {\n
+      this.name = "resolved";\n
+      if ((message !== undefined) && (typeof message !== "string")) {\n
+        throw new TypeError(\'You must pass a string.\');\n
+      }\n
+      this.message = message || "Default Message";\n
+    }\n
+    ResolvedMonitorError.prototype = new Error();\n
+    ResolvedMonitorError.prototype.constructor = ResolvedMonitorError;\n
+\n
+    function isFunction(x){\n
+      return typeof x === "function";\n
+    }\n
+\n
+    var Monitor = function() {\n
+      var monitor = this,\n
+        promise_list = [],\n
+        promise,\n
+        reject,\n
+        notify,\n
+        resolved;\n
+\n
+      if (!(this instanceof Monitor)) {\n
+        return new Monitor();\n
+      }\n
+\n
+      function canceller() {\n
+        var len = promise_list.length,\n
+          i;\n
+        for (i = 0; i < len; i += 1) {\n
+          promise_list[i].cancel();\n
+        }\n
+        // Clean it to speed up other canceller run\n
+        promise_list = [];\n
+      }\n
+\n
+      promise = new Promise(function(done, fail, progress) {\n
+        reject = function (rejectedReason) {\n
+          if (resolved) {return;}\n
+          monitor.isRejected = true;\n
+          monitor.rejectedReason = rejectedReason ;\n
+          resolved = true;\n
+          canceller();\n
+          return fail(rejectedReason);\n
+        };\n
+        notify = progress;\n
+      }, canceller);\n
+\n
+      monitor.cancel = function () {\n
+        if (resolved) {return;}\n
+        resolved = true;\n
+        promise.cancel();\n
+        promise.fail(function (rejectedReason) {\n
+          monitor.isRejected = true;\n
+          monitor.rejectedReason = rejectedReason;\n
+        });\n
+      };\n
+      monitor.then = function () {\n
+        return promise.then.apply(promise, arguments);\n
+      };\n
+\n
+      monitor.monitor = function(promise_to_monitor) {\n
+        if (resolved) {\n
+          throw new ResolvedMonitorError();\n
+        }\n
+        var queue = new Queue()\n
+          .push(function () {\n
+            return promise_to_monitor;\n
+          })\n
+          .push(function (fulfillmentValue) {\n
+            // Promise to monitor is fullfilled, remove it from the list\n
+            var len = promise_list.length,\n
+              promise_to_monitor,\n
+              new_promise_list = [],\n
+              i;\n
+            for (i = 0; i < len; i += 1) {\n
+              promise_to_monitor = promise_list[i];\n
+              if (!(promise_to_monitor.isFulfilled ||\n
+                  promise_to_monitor.isRejected)) {\n
+                new_promise_list.push(promise_to_monitor);\n
+              }\n
+            }\n
+            promise_list = new_promise_list;\n
+          }, function (rejectedReason) {\n
+            if (rejectedReason instanceof CancellationError) {\n
+              if (!(promise_to_monitor.isFulfilled && promise_to_monitor.isRejected)) {\n
+                // The queue could be cancelled before the first push is run\n
+                promise_to_monitor.cancel();\n
+              }\n
+            }\n
+            reject(rejectedReason);\n
+            throw rejectedReason;\n
+          }, function (notificationValue) {\n
+            notify(notificationValue);\n
+            return notificationValue;\n
+          });\n
+\n
+        promise_list.push(queue);\n
+\n
+        return this;\n
+      };\n
+    };\n
+\n
+    Monitor.prototype = Object.create(Promise.prototype);\n
+    Monitor.prototype.constructor = Monitor;\n
+\n
+\n
+    __exports__.Monitor = Monitor;\n
+    __exports__.ResolvedMonitorError = ResolvedMonitorError;\n
+  });\n
+define("rsvp",\n
+  ["rsvp/events","rsvp/cancellation_error","rsvp/promise","rsvp/node","rsvp/all","rsvp/queue","rsvp/watcher","rsvp/timeout","rsvp/hash","rsvp/rethrow","rsvp/defer","rsvp/config","rsvp/resolve","rsvp/reject","exports"],\n
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __exports__) {\n
+    "use strict";\n
+    var EventTarget = __dependency1__.EventTarget;\n
+    var CancellationError = __dependency2__.CancellationError;\n
+    var Promise = __dependency3__.Promise;\n
+    var denodeify = __dependency4__.denodeify;\n
+    var all = __dependency5__.all;\n
+    var any = __dependency5__.any;\n
+    var Queue = __dependency6__.Queue;\n
+    var ResolvedQueueError = __dependency6__.ResolvedQueueError;\n
+    var Monitor = __dependency7__.Monitor;\n
+    var ResolvedMonitorError = __dependency7__.ResolvedMonitorError;\n
+    var delay = __dependency8__.delay;\n
+    var timeout = __dependency8__.timeout;\n
+    var hash = __dependency9__.hash;\n
+    var rethrow = __dependency10__.rethrow;\n
+    var defer = __dependency11__.defer;\n
+    var config = __dependency12__.config;\n
+    var resolve = __dependency13__.resolve;\n
+    var reject = __dependency14__.reject;\n
+\n
+    function configure(name, value) {\n
+      config[name] = value;\n
+    }\n
+\n
+\n
+    __exports__.CancellationError = CancellationError;\n
+    __exports__.Promise = Promise;\n
+    __exports__.EventTarget = EventTarget;\n
+    __exports__.all = all;\n
+    __exports__.any = any;\n
+    __exports__.Queue = Queue;\n
+    __exports__.ResolvedQueueError = ResolvedQueueError;\n
+    __exports__.Monitor = Monitor;\n
+    __exports__.ResolvedMonitorError = ResolvedMonitorError;\n
+    __exports__.delay = delay;\n
+    __exports__.timeout = timeout;\n
+    __exports__.hash = hash;\n
+    __exports__.rethrow = rethrow;\n
+    __exports__.defer = defer;\n
+    __exports__.denodeify = denodeify;\n
+    __exports__.configure = configure;\n
+    __exports__.resolve = resolve;\n
+    __exports__.reject = reject;\n
+  });\n
+window.RSVP = requireModule("rsvp");\n
+})(window);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>30923</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

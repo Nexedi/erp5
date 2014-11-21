@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16413519.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_gadgetfield.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP, Blob, Uint8Array, document, FormData, jIO */\n
+/*jslint nomen: true, maxlen:80, indent:2*/\n
+(function (window, rJS, RSVP) {\n
+  "use strict";\n
+  function convertDataURL2Blob(url, type) {\n
+    var binary,\n
+      array = [],\n
+      i;\n
+    url = url.split(\',\')[1];\n
+    if (url !== undefined) {\n
+      binary = window.atob(url);\n
+      for (i = 0; i < binary.length; i += 1) {\n
+        array.push(binary.charCodeAt(i));\n
+      }\n
+      return new Blob([new Uint8Array(array)], {type: type});\n
+    }\n
+    throw "Error: URL is not a dataURL";\n
+  }\n
+\n
+  function promiseEventListener(target, type, useCapture) {\n
+    //////////////////////////\n
+    // Resolve the promise as soon as the event is triggered\n
+    // eventListener is removed when promise is cancelled/resolved/rejected\n
+    //////////////////////////\n
+    var handle_event_callback;\n
+\n
+    function canceller() {\n
+      target.removeEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+\n
+    function resolver(resolve) {\n
+      handle_event_callback = function (evt) {\n
+        canceller();\n
+        evt.stopPropagation();\n
+        evt.preventDefault();\n
+        resolve(evt);\n
+        return false;\n
+      };\n
+\n
+      target.addEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+    return new RSVP.Promise(resolver, canceller);\n
+  }\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var g = this,\n
+        i,\n
+        formdata,\n
+        list_gadget = document.getElementsByClassName("gadget"),\n
+        all_gadget,\n
+        list = [],\n
+        gadget_attributes = [],\n
+        scope,\n
+        tmp;\n
+      for (i = 0; i < list_gadget.length; i += 1) {\n
+        scope = list_gadget[i].getAttribute("data-gadget-scope");\n
+        if (scope !== undefined) {\n
+          tmp = {};\n
+          list.push(g.getDeclaredGadget(scope));\n
+          tmp.sandbox = list_gadget[i].getAttribute("data-gadget-sandbox");\n
+          tmp.key = scope;\n
+          tmp.editable = list_gadget[i].getAttribute("editable");\n
+          tmp.value = list_gadget[i].getAttribute("value");\n
+          gadget_attributes.push(tmp);\n
+        }\n
+      }\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all(list);\n
+        })\n
+        .push(function (results) {\n
+          all_gadget = results;\n
+          list = [];\n
+          for (i = 0; i < gadget_attributes.length; i += 1) {\n
+            if (gadget_attributes[i].sandbox === "iframe") {\n
+              list.push(all_gadget[i].getElement());\n
+            }\n
+          }\n
+          return RSVP.all(list);\n
+        })\n
+        .push(function (elements) {\n
+          var iframe,\n
+            j;\n
+          list = [];\n
+          for (i = 0, j = 0; i < gadget_attributes.length; i += 1) {\n
+            if (all_gadget[i].render !== undefined) {\n
+              list.push(\n
+                all_gadget[i].render(\n
+                  {\n
+                    "key": gadget_attributes[i].key,\n
+                    "value": gadget_attributes[i].value\n
+                  }\n
+                )\n
+              );\n
+            }\n
+            if (gadget_attributes[i].sandbox === "iframe") {\n
+              iframe = elements[j].querySelector(\'iframe\');\n
+              //xxx input field\n
+              elements[j].parentNode.style.width = "100%";\n
+              elements[j].parentNode.style.height = "100%";\n
+              //xxx section div\n
+              elements[j].style.width = "100%";\n
+              elements[j].style.height = "100%";\n
+              iframe.style.width = "100%";\n
+              iframe.style.height = "100%";\n
+              j += 1;\n
+            }\n
+          }\n
+          return RSVP.all(list);\n
+        })\n
+        .push(function () {\n
+          return promiseEventListener(g.props.element,\n
+                            \'submit\', false);\n
+        })\n
+        .push(function (evt) {\n
+          list = [];\n
+          formdata = new FormData(evt.target);\n
+          for (i = 0; i < all_gadget.length; i += 1) {\n
+            if (all_gadget[i].getContent !== undefined &&\n
+                gadget_attributes[i].editable !== null) {\n
+              list.push(all_gadget[i].getContent());\n
+            }\n
+          }\n
+          return RSVP.all(list);\n
+        })\n
+        .push(function (all_content) {\n
+          var key,\n
+            form,\n
+            arg,\n
+            result;\n
+          for (i = 0; i < all_content.length; i += 1) {\n
+            for (key in all_content[i]) {\n
+              if (all_content[i].hasOwnProperty(key)) {\n
+                if (typeof all_content[i][key] === "object") {\n
+                  arg = all_content[i][key];\n
+                  result = convertDataURL2Blob(arg.url, arg.type);\n
+                  formdata.append(key, result, arg.file_name);\n
+                } else {\n
+                  formdata.append(key, all_content[i][key]);\n
+                }\n
+              }\n
+            }\n
+          }\n
+          form = g.props.element.querySelector(\'form\');\n
+          return jIO.util.ajax(\n
+            {\n
+              "type": form.getAttribute("method"),\n
+              "url":  form.getAttribute("action"),\n
+              "data": formdata,\n
+              "xhrFields":\n
+                {\n
+                  withCredentials: true\n
+                }\n
+            }\n
+          );\n
+        })\n
+        .push(function (evt) {\n
+         //XXX  WORK ONLY IN ERP5!!!!!\n
+         //In erp5, after form submit, a new page is redirected automatically\n
+         //so get the new url, it should use getResponseHeader(\'Location\')\n
+         //But since the response code is 302, we have no way to get new url\n
+         //with getResponseHeader, that\'s why in this cas, we use responseURL \n
+         //It only works in erp5. \n
+          return window.location.replace(evt.target.responseURL);\n
+        });\n
+    });\n
+}(window, rJS, RSVP));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6233</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

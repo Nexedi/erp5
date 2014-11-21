@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16394141.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gadget_create_manual_dataurl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global window, rJS, btoa*/\n
+/*jslint nomen: true, maxlen:80, indent:2*/\n
+(function (rJS) {\n
+  "use strict";\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this;\n
+      gadget.props.key = options.key || "";\n
+      gadget.props.element.querySelector(\'input\').value = options.value;\n
+      gadget.props.element.querySelector(\'input\').title = options.key;\n
+    })\n
+\n
+    .declareMethod(\'getContent\', function () {\n
+      var input = this.props.element.querySelector(\'input\'),\n
+        form_gadget = this,\n
+        result = {};\n
+      if (input.value) {\n
+        result[form_gadget.props.key] = {\'url\': "data:text/plain;base64,"\n
+                                                 + btoa(input.value),\n
+                                         \'type\': \'text/plain\',\n
+                                         \'file_name\': \'test.txt\'};\n
+      }\n
+      return result;\n
+    });\n
+\n
+}(rJS));</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1093</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

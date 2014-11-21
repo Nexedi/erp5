@@ -36,11 +36,101 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div>\n
-  <div id="activity_watcher_gadget"></div>\n
-  <script src="jquery/core/jquery.js"></script>\n
-  <script src="activity-watcher-gadget.js"></script>\n
-</div>
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Gadget Field</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Gadget Field</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+ <tr>\n
+   <td>open</td>\n
+   <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
+   <td></td>\n
+</tr>\n
+    \n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+   <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewGadgetField</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<!-- Initialize -->\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title=\'my_subject\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@title=\'my_subject\']</td>\n
+  <td>couscous</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>pause</td>\n
+  <td>2000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyBodyText</td>\n
+  <td>"Error: URL is not a dataURL"</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
 
 ]]></unicode> </value>
         </item>
@@ -54,7 +144,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ActivityWatcherGadget_view</string> </value>
+            <value> <string>testNotDataURLException</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

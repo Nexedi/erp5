@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>activity_watcher_gadget</string> </value>
+            <value> <string>my_file</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -37,23 +37,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -177,30 +165,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_cache_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_cached</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_connection</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_html</string> </key>
-                    <value> <string>ActivityWatcherGadget_view</string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_id</string> </key>
-                    <value> <string>activity_watcher_gadget</string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_property</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -214,7 +178,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Watcher</string> </value>
+                    <value> <string>my_file</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -230,7 +194,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_activity_watcher.html\').absolute_url()</string> </value>
+            <value> <string>python: field.restrictedTraverse(\'gadget_create_manual_dataurl.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>

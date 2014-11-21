@@ -1,0 +1,2019 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts16495763.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>renderjs.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>74799</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * js_channel is a very lightweight abstraction on top of\n
+ * postMessage which defines message formats and semantics\n
+ * to support interactions more rich than just message passing\n
+ * js_channel supports:\n
+ *  + query/response - traditional rpc\n
+ *  + query/update/response - incremental async return of results\n
+ *    to a query\n
+ *  + notifications - fire and forget\n
+ *  + error handling\n
+ *\n
+ * js_channel is based heavily on json-rpc, but is focused at the\n
+ * problem of inter-iframe RPC.\n
+ *\n
+ * Message types:\n
+ *  There are 5 types of messages that can flow over this channel,\n
+ *  and you may determine what type of message an object is by\n
+ *  examining its parameters:\n
+ *  1. Requests\n
+ *    + integer id\n
+ *    + string method\n
+ *    + (optional) any params\n
+ *  2. Callback Invocations (or just "Callbacks")\n
+ *    + integer id\n
+ *    + string callback\n
+ *    + (optional) params\n
+ *  3. Error Responses (or just "Errors)\n
+ *    + integer id\n
+ *    + string error\n
+ *    + (optional) string message\n
+ *  4. Responses\n
+ *    + integer id\n
+ *    + (optional) any result\n
+ *  5. Notifications\n
+ *    + string method\n
+ *    + (optional) any params\n
+ */\n
+\n
+;var Channel = (function() {\n
+    "use strict";\n
+\n
+    // current transaction id, start out at a random *odd* number between 1 and a million\n
+    // There is one current transaction counter id per page, and it\'s shared between\n
+    // channel instances.  That means of all messages posted from a single javascript\n
+    // evaluation context, we\'ll never have two with the same id.\n
+    var s_curTranId = Math.floor(Math.random()*1000001);\n
+\n
+    // no two bound channels in the same javascript evaluation context may have the same origin, scope, and window.\n
+    // futher if two bound channels have the same window and scope, they may not have *overlapping* origins\n
+    // (either one or both support \'*\').  This restriction allows a single onMessage handler to efficiently\n
+    // route messages based on origin and scope.  The s_boundChans maps origins to scopes, to message\n
+    // handlers.  Request and Notification messages are routed using this table.\n
+    // Finally, channels are inserted into this table when built, and removed when destroyed.\n
+    var s_boundChans = { };\n
+\n
+    // add a channel to s_boundChans, throwing if a dup exists\n
+    function s_addBoundChan(win, origin, scope, handler) {\n
+        function hasWin(arr) {\n
+            for (var i = 0; i < arr.length; i++) if (arr[i].win === win) return true;\n
+            return false;\n
+        }\n
+\n
+        // does she exist?\n
+        var exists = false;\n
+\n
+\n
+        if (origin === \'*\') {\n
+            // we must check all other origins, sadly.\n
+            for (var k in s_boundChans) {\n
+                if (!s_boundChans.hasOwnProperty(k)) continue;\n
+                if (k === \'*\') continue;\n
+                if (typeof s_boundChans[k][scope] === \'object\') {\n
+                    exists = hasWin(s_boundChans[k][scope]);\n
+                    if (exists) break;\n
+                }\n
+            }\n
+        } else {\n
+            // we must check only \'*\'\n
+            if ((s_boundChans[\'*\'] && s_boundChans[\'*\'][scope])) {\n
+                exists = hasWin(s_boundChans[\'*\'][scope]);\n
+            }\n
+            if (!exists && s_boundChans[origin] && s_boundChans[origin][scope])\n
+            {\n
+                exists = hasWin(s_boundChans[origin][scope]);\n
+            }\n
+        }\n
+        if (exists) throw "A channel is already bound to the same window which overlaps with origin \'"+ origin +"\' and has scope \'"+scope+"\'";\n
+\n
+        if (typeof s_boundChans[origin] != \'object\') s_boundChans[origin] = { };\n
+        if (typeof s_boundChans[origin][scope] != \'object\') s_boundChans[origin][scope] = [ ];\n
+        s_boundChans[origin][scope].push({win: win, handler: handler});\n
+    }\n
+\n
+    function s_removeBoundChan(win, origin, scope) {\n
+        var arr = s_boundChans[origin][scope];\n
+        for (var i = 0; i < arr.length; i++) {\n
+            if (arr[i].win === win) {\n
+                arr.splice(i,1);\n
+            }\n
+        }\n
+        if (s_boundChans[origin][scope].length === 0) {\n
+            delete s_boundChans[origin][scope];\n
+        }\n
+    }\n
+\n
+    function s_isArray(obj) {\n
+        if (Array.isArray) return Array.isArray(obj);\n
+        else {\n
+            return (obj.constructor.toString().indexOf("Array") != -1);\n
+        }\n
+    }\n
+\n
+    // No two outstanding outbound messages may have the same id, period.  Given that, a single table\n
+    // mapping "transaction ids" to message handlers, allows efficient routing of Callback, Error, and\n
+    // Response messages.  Entries are added to this table when requests are sent, and removed when\n
+    // responses are received.\n
+    var s_transIds = { };\n
+\n
+    // class singleton onMessage handler\n
+    // this function is registered once and all incoming messages route through here.  This\n
+    // arrangement allows certain efficiencies, message data is only parsed once and dispatch\n
+    // is more efficient, especially for large numbers of simultaneous channels.\n
+    var s_onMessage = function(e) {\n
+        try {\n
+          var m = JSON.parse(e.data);\n
+          if (typeof m !== \'object\' || m === null) throw "malformed";\n
+        } catch(e) {\n
+          // just ignore any posted messages that do not consist of valid JSON\n
+          return;\n
+        }\n
+\n
+        var w = e.source;\n
+        var o = e.origin;\n
+        var s, i, meth;\n
+\n
+        if (typeof m.method === \'string\') {\n
+            var ar = m.method.split(\'::\');\n
+            if (ar.length == 2) {\n
+                s = ar[0];\n
+                meth = ar[1];\n
+            } else {\n
+                meth = m.method;\n
+            }\n
+        }\n
+\n
+        if (typeof m.id !== \'undefined\') i = m.id;\n
+\n
+        // w is message source window\n
+        // o is message origin\n
+        // m is parsed message\n
+        // s is message scope\n
+        // i is message id (or undefined)\n
+        // meth is unscoped method name\n
+        // ^^ based on these factors we can route the message\n
+\n
+        // if it has a method it\'s either a notification or a request,\n
+        // route using s_boundChans\n
+        if (typeof meth === \'string\') {\n
+            var delivered = false;\n
+            if (s_boundChans[o] && s_boundChans[o][s]) {\n
+                for (var j = 0; j < s_boundChans[o][s].length; j++) {\n
+                    if (s_boundChans[o][s][j].win === w) {\n
+                        s_boundChans[o][s][j].handler(o, meth, m);\n
+                        delivered = true;\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+\n
+            if (!delivered && s_boundChans[\'*\'] && s_boundChans[\'*\'][s]) {\n
+                for (var j = 0; j < s_boundChans[\'*\'][s].length; j++) {\n
+                    if (s_boundChans[\'*\'][s][j].win === w) {\n
+                        s_boundChans[\'*\'][s][j].handler(o, meth, m);\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        // otherwise it must have an id (or be poorly formed\n
+        else if (typeof i != \'undefined\') {\n
+            if (s_transIds[i]) s_transIds[i](o, meth, m);\n
+        }\n
+    };\n
+\n
+    // Setup postMessage event listeners\n
+    if (window.addEventListener) window.addEventListener(\'message\', s_onMessage, false);\n
+    else if(window.attachEvent) window.attachEvent(\'onmessage\', s_onMessage);\n
+\n
+    /* a messaging channel is constructed from a window and an origin.\n
+     * the channel will assert that all messages received over the\n
+     * channel match the origin\n
+     *\n
+     * Arguments to Channel.build(cfg):\n
+     *\n
+     *   cfg.window - the remote window with which we\'ll communicate\n
+     *   cfg.origin - the expected origin of the remote window, may be \'*\'\n
+     *                which matches any origin\n
+     *   cfg.scope  - the \'scope\' of messages.  a scope string that is\n
+     *                prepended to message names.  local and remote endpoints\n
+     *                of a single channel must agree upon scope. Scope may\n
+     *                not contain double colons (\'::\').\n
+     *   cfg.debugOutput - A boolean value.  If true and window.console.log is\n
+     *                a function, then debug strings will be emitted to that\n
+     *                function.\n
+     *   cfg.debugOutput - A boolean value.  If true and window.console.log is\n
+     *                a function, then debug strings will be emitted to that\n
+     *                function.\n
+     *   cfg.postMessageObserver - A function that will be passed two arguments,\n
+     *                an origin and a message.  It will be passed these immediately\n
+     *                before messages are posted.\n
+     *   cfg.gotMessageObserver - A function that will be passed two arguments,\n
+     *                an origin and a message.  It will be passed these arguments\n
+     *                immediately after they pass scope and origin checks, but before\n
+     *                they are processed.\n
+     *   cfg.onReady - A function that will be invoked when a channel becomes "ready",\n
+     *                this occurs once both sides of the channel have been\n
+     *                instantiated and an application level handshake is exchanged.\n
+     *                the onReady function will be passed a single argument which is\n
+     *                the channel object that was returned from build().\n
+     */\n
+    return {\n
+        build: function(cfg) {\n
+            var debug = function(m) {\n
+                if (cfg.debugOutput && window.console && window.console.log) {\n
+                    // try to stringify, if it doesn\'t work we\'ll let javascript\'s built in toString do its magic\n
+                    try { if (typeof m !== \'string\') m = JSON.stringify(m); } catch(e) { }\n
+                    console.log("["+chanId+"] " + m);\n
+                }\n
+            };\n
+\n
+            /* browser capabilities check */\n
+            if (!window.postMessage) throw("jschannel cannot run this browser, no postMessage");\n
+            if (!window.JSON || !window.JSON.stringify || ! window.JSON.parse) {\n
+                throw("jschannel cannot run this browser, no JSON parsing/serialization");\n
+            }\n
+\n
+            /* basic argument validation */\n
+            if (typeof cfg != \'object\') throw("Channel build invoked without a proper object argument");\n
+\n
+            if (!cfg.window || !cfg.window.postMessage) throw("Channel.build() called without a valid window argument");\n
+\n
+            /* we\'d have to do a little more work to be able to run multiple channels that intercommunicate the same\n
+             * window...  Not sure if we care to support that */\n
+            if (window === cfg.window) throw("target window is same as present window -- not allowed");\n
+\n
+            // let\'s require that the client specify an origin.  if we just assume \'*\' we\'ll be\n
+            // propagating unsafe practices.  that would be lame.\n
+            var validOrigin = false;\n
+            if (typeof cfg.origin === \'string\') {\n
+                var oMatch;\n
+                if (cfg.origin === "*") validOrigin = true;\n
+                // allow valid domains under http and https.  Also, trim paths off otherwise valid origins.\n
+                else if (null !== (oMatch = cfg.origin.match(/^https?:\\/\\/(?:[-a-zA-Z0-9_\\.])+(?::\\d+)?/))) {\n
+                    cfg.origin = oMatch[0].toLowerCase();\n
+                    validOrigin = true;\n
+                }\n
+            }\n
+\n
+            if (!validOrigin) throw ("Channel.build() called with an invalid origin");\n
+\n
+            if (typeof cfg.scope !== \'undefined\') {\n
+                if (typeof cfg.scope !== \'string\') throw \'scope, when specified, must be a string\';\n
+                if (cfg.scope.split(\'::\').length > 1) throw "scope may not contain double colons: \'::\'";\n
+            }\n
+\n
+            /* private variables */\n
+            // generate a random and psuedo unique id for this channel\n
+            var chanId = (function () {\n
+                var text = "";\n
+                var alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";\n
+                for(var i=0; i < 5; i++) text += alpha.charAt(Math.floor(Math.random() * alpha.length));\n
+                return text;\n
+            })();\n
+\n
+            // registrations: mapping method names to call objects\n
+            var regTbl = { };\n
+            // current oustanding sent requests\n
+            var outTbl = { };\n
+            // current oustanding received requests\n
+            var inTbl = { };\n
+            // are we ready yet?  when false we will block outbound messages.\n
+            var ready = false;\n
+            var pendingQueue = [ ];\n
+\n
+            var createTransaction = function(id,origin,callbacks) {\n
+                var shouldDelayReturn = false;\n
+                var completed = false;\n
+\n
+                return {\n
+                    origin: origin,\n
+                    invoke: function(cbName, v) {\n
+                        // verify in table\n
+                        if (!inTbl[id]) throw "attempting to invoke a callback of a nonexistent transaction: " + id;\n
+                        // verify that the callback name is valid\n
+                        var valid = false;\n
+                        for (var i = 0; i < callbacks.length; i++) if (cbName === callbacks[i]) { valid = true; break; }\n
+                        if (!valid) throw "request supports no such callback \'" + cbName + "\'";\n
+\n
+                        // send callback invocation\n
+                        postMessage({ id: id, callback: cbName, params: v});\n
+                    },\n
+                    error: function(error, message) {\n
+                        completed = true;\n
+                        // verify in table\n
+                        if (!inTbl[id]) throw "error called for nonexistent message: " + id;\n
+\n
+                        // remove transaction from table\n
+                        delete inTbl[id];\n
+\n
+                        // send error\n
+                        postMessage({ id: id, error: error, message: message });\n
+                    },\n
+                    complete: function(v) {\n
+                        completed = true;\n
+                        // verify in table\n
+                        if (!inTbl[id]) throw "complete called for nonexistent message: " + id;\n
+                        // remove transaction from table\n
+                        delete inTbl[id];\n
+                        // send complete\n
+                        postMessage({ id: id, result: v });\n
+                    },\n
+                    delayReturn: function(delay) {\n
+                        if (typeof delay === \'boolean\') {\n
+                            shouldDelayReturn = (delay === true);\n
+                        }\n
+                        return shouldDelayReturn;\n
+                    },\n
+                    completed: function() {\n
+                        return completed;\n
+                    }\n
+                };\n
+            };\n
+\n
+            var setTransactionTimeout = function(transId, timeout, method) {\n
+              return window.setTimeout(function() {\n
+                if (outTbl[transId]) {\n
+                  // XXX: what if client code raises an exception here?\n
+                  var msg = "timeout (" + timeout + "ms) exceeded on method \'" + method + "\'";\n
+                  (1,outTbl[transId].error)("timeout_error", msg);\n
+                  delete outTbl[transId];\n
+                  delete s_transIds[transId];\n
+                }\n
+              }, timeout);\n
+            };\n
+\n
+            var onMessage = function(origin, method, m) {\n
+                // if an observer was specified at allocation time, invoke it\n
+                if (typeof cfg.gotMessageObserver === \'function\') {\n
+                    // pass observer a clone of the object so that our\n
+                    // manipulations are not visible (i.e. method unscoping).\n
+                    // This is not particularly efficient, but then we expect\n
+                    // that message observers are primarily for debugging anyway.\n
+                    try {\n
+                        cfg.gotMessageObserver(origin, m);\n
+                    } catch (e) {\n
+                        debug("gotMessageObserver() raised an exception: " + e.toString());\n
+                    }\n
+                }\n
+\n
+                // now, what type of message is this?\n
+                if (m.id && method) {\n
+                    // a request!  do we have a registered handler for this request?\n
+                    if (regTbl[method]) {\n
+                        var trans = createTransaction(m.id, origin, m.callbacks ? m.callbacks : [ ]);\n
+                        inTbl[m.id] = { };\n
+                        try {\n
+                            // callback handling.  we\'ll magically create functions inside the parameter list for each\n
+                            // callback\n
+                            if (m.callbacks && s_isArray(m.callbacks) && m.callbacks.length > 0) {\n
+                                for (var i = 0; i < m.callbacks.length; i++) {\n
+                                    var path = m.callbacks[i];\n
+                                    var obj = m.params;\n
+                                    var pathItems = path.split(\'/\');\n
+                                    for (var j = 0; j < pathItems.length - 1; j++) {\n
+                                        var cp = pathItems[j];\n
+                                        if (typeof obj[cp] !== \'object\') obj[cp] = { };\n
+                                        obj = obj[cp];\n
+                                    }\n
+                                    obj[pathItems[pathItems.length - 1]] = (function() {\n
+                                        var cbName = path;\n
+                                        return function(params) {\n
+                                            return trans.invoke(cbName, params);\n
+                                        };\n
+                                    })();\n
+                                }\n
+                            }\n
+                            var resp = regTbl[method](trans, m.params);\n
+                            if (!trans.delayReturn() && !trans.completed()) trans.complete(resp);\n
+                        } catch(e) {\n
+                            // automagic handling of exceptions:\n
+                            var error = "runtime_error";\n
+                            var message = null;\n
+                            // * if it\'s a string then it gets an error code of \'runtime_error\' and string is the message\n
+                            if (typeof e === \'string\') {\n
+                                message = e;\n
+                            } else if (typeof e === \'object\') {\n
+                                // either an array or an object\n
+                                // * if it\'s an array of length two, then  array[0] is the code, array[1] is the error message\n
+                                if (e && s_isArray(e) && e.length == 2) {\n
+                                    error = e[0];\n
+                                    message = e[1];\n
+                                }\n
+                                // * if it\'s an object then we\'ll look form error and message parameters\n
+                                else if (typeof e.error === \'string\') {\n
+                                    error = e.error;\n
+                                    if (!e.message) message = "";\n
+                                    else if (typeof e.message === \'string\') message = e.message;\n
+                                    else e = e.message; // let the stringify/toString message give us a reasonable verbose error string\n
+                                }\n
+                            }\n
+\n
+                            // message is *still* null, let\'s try harder\n
+                            if (message === null) {\n
+                                try {\n
+                                    message = JSON.stringify(e);\n
+                                    /* On MSIE8, this can result in \'out of memory\', which\n
+                                     * leaves message undefined. */\n
+                                    if (typeof(message) == \'undefined\')\n
+                                      message = e.toString();\n
+                                } catch (e2) {\n
+                                    message = e.toString();\n
+                                }\n
+                            }\n
+\n
+                            trans.error(error,message);\n
+                        }\n
+                    }\n
+                } else if (m.id && m.callback) {\n
+                    if (!outTbl[m.id] ||!outTbl[m.id].callbacks || !outTbl[m.id].callbacks[m.callback])\n
+                    {\n
+                        debug("ignoring invalid callback, id:"+m.id+ " (" + m.callback +")");\n
+                    } else {\n
+                        // XXX: what if client code raises an exception here?\n
+                        outTbl[m.id].callbacks[m.callback](m.params);\n
+                    }\n
+                } else if (m.id) {\n
+                    if (!outTbl[m.id]) {\n
+                        debug("ignoring invalid response: " + m.id);\n
+                    } else {\n
+                        // XXX: what if client code raises an exception here?\n
+                        if (m.error) {\n
+                            (1,outTbl[m.id].error)(m.error, m.message);\n
+                        } else {\n
+                            if (m.result !== undefined) (1,outTbl[m.id].success)(m.result);\n
+                            else (1,outTbl[m.id].success)();\n
+                        }\n
+                        delete outTbl[m.id];\n
+                        delete s_transIds[m.id];\n
+                    }\n
+                } else if (method) {\n
+                    // tis a notification.\n
+                    if (regTbl[method]) {\n
+                        // yep, there\'s a handler for that.\n
+                        // transaction has only origin for notifications.\n
+                        regTbl[method]({ origin: origin }, m.params);\n
+                        // if the client throws, we\'ll just let it bubble out\n
+                        // what can we do?  Also, here we\'ll ignore return values\n
+                    }\n
+                }\n
+            };\n
+\n
+            // now register our bound channel for msg routing\n
+            s_addBoundChan(cfg.window, cfg.origin, ((typeof cfg.scope === \'string\') ? cfg.scope : \'\'), onMessage);\n
+\n
+            // scope method names based on cfg.scope specified when the Channel was instantiated\n
+            var scopeMethod = function(m) {\n
+                if (typeof cfg.scope === \'string\' && cfg.scope.length) m = [cfg.scope, m].join("::");\n
+                return m;\n
+            };\n
+\n
+            // a small wrapper around postmessage whose primary function is to handle the\n
+            // case that clients start sending messages before the other end is "ready"\n
+            var postMessage = function(msg, force) {\n
+                if (!msg) throw "postMessage called with null message";\n
+\n
+                // delay posting if we\'re not ready yet.\n
+                var verb = (ready ? "post  " : "queue ");\n
+                debug(verb + " message: " + JSON.stringify(msg));\n
+                if (!force && !ready) {\n
+                    pendingQueue.push(msg);\n
+                } else {\n
+                    if (typeof cfg.postMessageObserver === \'function\') {\n
+                        try {\n
+                            cfg.postMessageObserver(cfg.origin, msg);\n
+                        } catch (e) {\n
+                            debug("postMessageObserver() raised an exception: " + e.toString());\n
+                        }\n
+                    }\n
+\n
+                    cfg.window.postMessage(JSON.stringify(msg), cfg.origin);\n
+                }\n
+            };\n
+\n
+            var onReady = function(trans, type) {\n
+                debug(\'ready msg received\');\n
+                if (ready) throw "received ready message while in ready state.  help!";\n
+\n
+                if (type === \'ping\') {\n
+                    chanId += \'-R\';\n
+                } else {\n
+                    chanId += \'-L\';\n
+                }\n
+\n
+                obj.unbind(\'__ready\'); // now this handler isn\'t needed any more.\n
+                ready = true;\n
+                debug(\'ready msg accepted.\');\n
+\n
+                if (type === \'ping\') {\n
+                    obj.notify({ method: \'__ready\', params: \'pong\' });\n
+                }\n
+\n
+                // flush queue\n
+                while (pendingQueue.length) {\n
+                    postMessage(pendingQueue.pop());\n
+                }\n
+\n
+                // invoke onReady observer if provided\n
+                if (typeof cfg.onReady === \'function\') cfg.onReady(obj);\n
+            };\n
+\n
+            var obj = {\n
+                // tries to unbind a bound message handler.  returns false if not possible\n
+                unbind: function (method) {\n
+                    if (regTbl[method]) {\n
+                        if (!(delete regTbl[method])) throw ("can\'t delete method: " + method);\n
+                        return true;\n
+                    }\n
+                    return false;\n
+                },\n
+                bind: function (method, cb) {\n
+                    if (!method || typeof method !== \'string\') throw "\'method\' argument to bind must be string";\n
+                    if (!cb || typeof cb !== \'function\') throw "callback missing from bind params";\n
+\n
+                    if (regTbl[method]) throw "method \'"+method+"\' is already bound!";\n
+                    regTbl[method] = cb;\n
+                    return this;\n
+                },\n
+                call: function(m) {\n
+                    if (!m) throw \'missing arguments to call function\';\n
+                    if (!m.method || typeof m.method !== \'string\') throw "\'method\' argument to call must be string";\n
+                    if (!m.success || typeof m.success !== \'function\') throw "\'success\' callback missing from call";\n
+\n
+                    // now it\'s time to support the \'callback\' feature of jschannel.  We\'ll traverse the argument\n
+                    // object and pick out all of the functions that were passed as arguments.\n
+                    var callbacks = { };\n
+                    var callbackNames = [ ];\n
+\n
+                    var pruneFunctions = function (path, obj) {\n
+                        if (typeof obj === \'object\') {\n
+                            for (var k in obj) {\n
+                                if (!obj.hasOwnProperty(k)) continue;\n
+                                var np = path + (path.length ? \'/\' : \'\') + k;\n
+                                if (typeof obj[k] === \'function\') {\n
+                                    callbacks[np] = obj[k];\n
+                                    callbackNames.push(np);\n
+                                    delete obj[k];\n
+                                } else if (typeof obj[k] === \'object\') {\n
+                                    pruneFunctions(np, obj[k]);\n
+                                }\n
+                            }\n
+                        }\n
+                    };\n
+                    pruneFunctions("", m.params);\n
+\n
+                    // build a \'request\' message and send it\n
+                    var msg = { id: s_curTranId, method: scopeMethod(m.method), params: m.params };\n
+                    if (callbackNames.length) msg.callbacks = callbackNames;\n
+\n
+                    if (m.timeout)\n
+                      // XXX: This function returns a timeout ID, but we don\'t do anything with it.\n
+                      // We might want to keep track of it so we can cancel it using clearTimeout()\n
+                      // when the transaction completes.\n
+                      setTransactionTimeout(s_curTranId, m.timeout, scopeMethod(m.method));\n
+\n
+                    // insert into the transaction table\n
+                    outTbl[s_curTranId] = { callbacks: callbacks, error: m.error, success: m.success };\n
+                    s_transIds[s_curTranId] = onMessage;\n
+\n
+                    // increment current id\n
+                    s_curTranId++;\n
+\n
+                    postMessage(msg);\n
+                },\n
+                notify: function(m) {\n
+                    if (!m) throw \'missing arguments to notify function\';\n
+                    if (!m.method || typeof m.method !== \'string\') throw "\'method\' argument to notify must be string";\n
+\n
+                    // no need to go into any transaction table\n
+                    postMessage({ method: scopeMethod(m.method), params: m.params });\n
+                },\n
+                destroy: function () {\n
+                    s_removeBoundChan(cfg.window, cfg.origin, ((typeof cfg.scope === \'string\') ? cfg.scope : \'\'));\n
+                    if (window.removeEventListener) window.removeEventListener(\'message\', onMessage, false);\n
+                    else if(window.detachEvent) window.detachEvent(\'onmessage\', onMessage);\n
+                    ready = false;\n
+                    regTbl = { };\n
+                    inTbl = { };\n
+                    outTbl = { };\n
+                    cfg.origin = null;\n
+                    pendingQueue = [ ];\n
+                    debug("channel destroyed");\n
+                    chanId = "";\n
+                }\n
+            };\n
+\n
+            obj.bind(\'__ready\', onReady);\n
+            setTimeout(function() {\n
+                postMessage({ method: scopeMethod(\'__ready\'), params: "ping" }, true);\n
+            }, 0);\n
+\n
+            return obj;\n
+        }\n
+    };\n
+})();\n
+;/*\n
+ * DOMParser HTML extension\n
+ * 2012-09-04\n
+ *\n
+ * By Eli Grey, http://eligrey.com\n
+ * Public domain.\n
+ * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.\n
+ */\n
+/*! @source https://gist.github.com/1129031 */\n
+(function (DOMParser) {\n
+  "use strict";\n
+  var DOMParser_proto = DOMParser.prototype,\n
+    real_parseFromString = DOMParser_proto.parseFromString;\n
+\n
+  // Firefox/Opera/IE throw errors on unsupported types\n
+  try {\n
+    // WebKit returns null on unsupported types\n
+    if ((new DOMParser()).parseFromString("", "text/html")) {\n
+      // text/html parsing is natively supported\n
+      return;\n
+    }\n
+  } catch (ignore) {}\n
+\n
+  DOMParser_proto.parseFromString = function (markup, type) {\n
+    var result, doc, doc_elt, first_elt;\n
+    if (/^\\s*text\\/html\\s*(?:;|$)/i.test(type)) {\n
+      doc = document.implementation.createHTMLDocument("");\n
+      doc_elt = doc.documentElement;\n
+\n
+      doc_elt.innerHTML = markup;\n
+      first_elt = doc_elt.firstElementChild;\n
+\n
+      if (doc_elt.childElementCount === 1\n
+          && first_elt.localName.toLowerCase() === "html") {\n
+        doc.replaceChild(first_elt, doc_elt);\n
+      }\n
+\n
+      result = doc;\n
+    } else {\n
+      result = real_parseFromString.apply(this, arguments);\n
+    }\n
+    return result;\n
+  };\n
+}(DOMParser));\n
+\n
+;/*! RenderJs */\n
+/*jslint nomen: true*/\n
+\n
+/*\n
+ * renderJs - Generic Gadget library renderer.\n
+ * http://www.renderjs.org/documentation\n
+ */\n
+(function (document, window, RSVP, DOMParser, Channel, MutationObserver,\n
+           Node) {\n
+  "use strict";\n
+\n
+  var gadget_model_dict = {},\n
+    javascript_registration_dict = {},\n
+    stylesheet_registration_dict = {},\n
+    gadget_loading_klass,\n
+    loading_klass_promise,\n
+    renderJS,\n
+    Monitor;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Helper functions\n
+  /////////////////////////////////////////////////////////////////\n
+  function removeHash(url) {\n
+    var index = url.indexOf(\'#\');\n
+    if (index > 0) {\n
+      url = url.substring(0, index);\n
+    }\n
+    return url;\n
+  }\n
+\n
+  function letsCrash(e) {\n
+    if (e.constructor === XMLHttpRequest) {\n
+      e = {\n
+        readyState: e.readyState,\n
+        status: e.status,\n
+        statusText: e.statusText,\n
+        response_headers: e.getAllResponseHeaders()\n
+      };\n
+    }\n
+    if (e.constructor === Array ||\n
+        e.constructor === String ||\n
+        e.constructor === Object) {\n
+      try {\n
+        e = JSON.stringify(e);\n
+      } catch (ignore) {\n
+      }\n
+    }\n
+    document.getElementsByTagName(\'body\')[0].textContent = e;\n
+    // XXX Do not crash the application if it fails\n
+    // Where to write the error?\n
+    /*global console*/\n
+    console.error(e.stack);\n
+    console.error(e);\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Service Monitor promise\n
+  /////////////////////////////////////////////////////////////////\n
+  function ResolvedMonitorError(message) {\n
+    this.name = "resolved";\n
+    if ((message !== undefined) && (typeof message !== "string")) {\n
+      throw new TypeError(\'You must pass a string.\');\n
+    }\n
+    this.message = message || "Default Message";\n
+  }\n
+  ResolvedMonitorError.prototype = new Error();\n
+  ResolvedMonitorError.prototype.constructor = ResolvedMonitorError;\n
+\n
+  Monitor = function () {\n
+    var monitor = this,\n
+      promise_list = [],\n
+      promise,\n
+      reject,\n
+      notify,\n
+      resolved;\n
+\n
+    if (!(this instanceof Monitor)) {\n
+      return new Monitor();\n
+    }\n
+\n
+    function canceller() {\n
+      var len = promise_list.length,\n
+        i;\n
+      for (i = 0; i < len; i += 1) {\n
+        promise_list[i].cancel();\n
+      }\n
+      // Clean it to speed up other canceller run\n
+      promise_list = [];\n
+    }\n
+\n
+    promise = new RSVP.Promise(function (done, fail, progress) {\n
+      reject = function (rejectedReason) {\n
+        if (resolved) {\n
+          return;\n
+        }\n
+        monitor.isRejected = true;\n
+        monitor.rejectedReason = rejectedReason;\n
+        resolved = true;\n
+        canceller();\n
+        return fail(rejectedReason);\n
+      };\n
+      notify = progress;\n
+    }, canceller);\n
+\n
+    monitor.cancel = function () {\n
+      if (resolved) {\n
+        return;\n
+      }\n
+      resolved = true;\n
+      promise.cancel();\n
+      promise.fail(function (rejectedReason) {\n
+        monitor.isRejected = true;\n
+        monitor.rejectedReason = rejectedReason;\n
+      });\n
+    };\n
+    monitor.then = function () {\n
+      return promise.then.apply(promise, arguments);\n
+    };\n
+    monitor.fail = function () {\n
+      return promise.fail.apply(promise, arguments);\n
+    };\n
+\n
+    monitor.monitor = function (promise_to_monitor) {\n
+      if (resolved) {\n
+        throw new ResolvedMonitorError();\n
+      }\n
+      var queue = new RSVP.Queue()\n
+        .push(function () {\n
+          return promise_to_monitor;\n
+        })\n
+        .push(function (fulfillmentValue) {\n
+          // Promise to monitor is fullfilled, remove it from the list\n
+          var len = promise_list.length,\n
+            sub_promise_to_monitor,\n
+            new_promise_list = [],\n
+            i;\n
+          for (i = 0; i < len; i += 1) {\n
+            sub_promise_to_monitor = promise_list[i];\n
+            if (!(sub_promise_to_monitor.isFulfilled ||\n
+                sub_promise_to_monitor.isRejected)) {\n
+              new_promise_list.push(sub_promise_to_monitor);\n
+            }\n
+          }\n
+          promise_list = new_promise_list;\n
+        }, function (rejectedReason) {\n
+          if (rejectedReason instanceof RSVP.CancellationError) {\n
+            if (!(promise_to_monitor.isFulfilled &&\n
+                  promise_to_monitor.isRejected)) {\n
+              // The queue could be cancelled before the first push is run\n
+              promise_to_monitor.cancel();\n
+            }\n
+          }\n
+          reject(rejectedReason);\n
+          throw rejectedReason;\n
+        }, function (notificationValue) {\n
+          notify(notificationValue);\n
+          return notificationValue;\n
+        });\n
+\n
+      promise_list.push(queue);\n
+\n
+      return this;\n
+    };\n
+  };\n
+\n
+  Monitor.prototype = Object.create(RSVP.Promise.prototype);\n
+  Monitor.prototype.constructor = Monitor;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function RenderJSGadget() {\n
+    if (!(this instanceof RenderJSGadget)) {\n
+      return new RenderJSGadget();\n
+    }\n
+  }\n
+  RenderJSGadget.prototype.__title = "";\n
+  RenderJSGadget.prototype.__interface_list = [];\n
+  RenderJSGadget.prototype.__path = "";\n
+  RenderJSGadget.prototype.__html = "";\n
+  RenderJSGadget.prototype.__required_css_list = [];\n
+  RenderJSGadget.prototype.__required_js_list = [];\n
+\n
+  function createMonitor(g) {\n
+    if (g.__monitor !== undefined) {\n
+      g.__monitor.cancel();\n
+    }\n
+    g.__monitor = new Monitor();\n
+    g.__monitor.fail(function (error) {\n
+      if (!(error instanceof RSVP.CancellationError)) {\n
+        return g.aq_reportServiceError(error);\n
+      }\n
+    }).fail(function (error) {\n
+      // Crash the application if the acquisition generates an error.\n
+      return letsCrash(error);\n
+    });\n
+  }\n
+\n
+  function clearGadgetInternalParameters(g) {\n
+    g.__sub_gadget_dict = {};\n
+    createMonitor(g);\n
+  }\n
+\n
+  function loadSubGadgetDOMDeclaration(g) {\n
+    var element_list = g.__element.querySelectorAll(\'[data-gadget-scope]\'),\n
+      element,\n
+      promise_list = [],\n
+      scope,\n
+      url,\n
+      sandbox,\n
+      i;\n
+\n
+    for (i = 0; i < element_list.length; i += 1) {\n
+      element = element_list[i];\n
+      scope = element.getAttribute("data-gadget-scope");\n
+      url = element.getAttribute("data-gadget-url");\n
+      sandbox = element.getAttribute("data-gadget-sandbox");\n
+      if ((scope !== null) && (url !== null)) {\n
+        promise_list.push(g.declareGadget(url, {\n
+          element: element,\n
+          scope: scope || undefined,\n
+          sandbox: sandbox || undefined\n
+        }));\n
+      }\n
+    }\n
+\n
+    return RSVP.all(promise_list);\n
+  }\n
+\n
+  RenderJSGadget.__ready_list = [clearGadgetInternalParameters,\n
+                                 loadSubGadgetDOMDeclaration];\n
+  RenderJSGadget.ready = function (callback) {\n
+    this.__ready_list.push(callback);\n
+    return this;\n
+  };\n
+\n
+  RenderJSGadget.__service_list = [];\n
+  RenderJSGadget.declareService = function (callback) {\n
+    this.__service_list.push(callback);\n
+    return this;\n
+  };\n
+\n
+  function startService(gadget) {\n
+    gadget.__monitor.monitor(new RSVP.Queue()\n
+      .push(function () {\n
+        var i,\n
+          service_list = gadget.constructor.__service_list;\n
+        for (i = 0; i < service_list.length; i += 1) {\n
+          gadget.__monitor.monitor(service_list[i].apply(gadget));\n
+        }\n
+      })\n
+      );\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget.declareMethod\n
+  /////////////////////////////////////////////////////////////////\n
+  RenderJSGadget.declareMethod = function (name, callback) {\n
+    this.prototype[name] = function () {\n
+      var context = this,\n
+        argument_list = arguments;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return callback.apply(context, argument_list);\n
+        });\n
+    };\n
+    // Allow chain\n
+    return this;\n
+  };\n
+\n
+  RenderJSGadget\n
+    .declareMethod(\'getInterfaceList\', function () {\n
+      // Returns the list of gadget prototype\n
+      return this.__interface_list;\n
+    })\n
+    .declareMethod(\'getRequiredCSSList\', function () {\n
+      // Returns a list of CSS required by the gadget\n
+      return this.__required_css_list;\n
+    })\n
+    .declareMethod(\'getRequiredJSList\', function () {\n
+      // Returns a list of JS required by the gadget\n
+      return this.__required_js_list;\n
+    })\n
+    .declareMethod(\'getPath\', function () {\n
+      // Returns the path of the code of a gadget\n
+      return this.__path;\n
+    })\n
+    .declareMethod(\'getTitle\', function () {\n
+      // Returns the title of a gadget\n
+      return this.__title;\n
+    })\n
+    .declareMethod(\'getElement\', function () {\n
+      // Returns the DOM Element of a gadget\n
+      if (this.__element === undefined) {\n
+        throw new Error("No element defined");\n
+      }\n
+      return this.__element;\n
+    });\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget.declareAcquiredMethod\n
+  /////////////////////////////////////////////////////////////////\n
+  function acquire(child_gadget, method_name, argument_list) {\n
+    var gadget = this,\n
+      key,\n
+      gadget_scope;\n
+\n
+    for (key in gadget.__sub_gadget_dict) {\n
+      if (gadget.__sub_gadget_dict.hasOwnProperty(key)) {\n
+        if (gadget.__sub_gadget_dict[key] === child_gadget) {\n
+          gadget_scope = key;\n
+        }\n
+      }\n
+    }\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        // Do not specify default __acquired_method_dict on prototype\n
+        // to prevent modifying this default value (with\n
+        // allowPublicAcquiredMethod for example)\n
+        var aq_dict = gadget.__acquired_method_dict || {};\n
+        if (aq_dict.hasOwnProperty(method_name)) {\n
+          return aq_dict[method_name].apply(gadget,\n
+                                            [argument_list, gadget_scope]);\n
+        }\n
+        throw new renderJS.AcquisitionError("aq_dynamic is not defined");\n
+      })\n
+      .push(undefined, function (error) {\n
+        if (error instanceof renderJS.AcquisitionError) {\n
+          return gadget.__aq_parent(method_name, argument_list);\n
+        }\n
+        throw error;\n
+      });\n
+  }\n
+\n
+  RenderJSGadget.declareAcquiredMethod =\n
+    function (name, method_name_to_acquire) {\n
+      this.prototype[name] = function () {\n
+        var argument_list = Array.prototype.slice.call(arguments, 0),\n
+          gadget = this;\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.__aq_parent(method_name_to_acquire, argument_list);\n
+          });\n
+      };\n
+\n
+      // Allow chain\n
+      return this;\n
+    };\n
+  RenderJSGadget.declareAcquiredMethod("aq_reportServiceError",\n
+                                       "reportServiceError");\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget.allowPublicAcquisition\n
+  /////////////////////////////////////////////////////////////////\n
+  RenderJSGadget.allowPublicAcquisition =\n
+    function (method_name, callback) {\n
+      this.prototype.__acquired_method_dict[method_name] = callback;\n
+\n
+      // Allow chain\n
+      return this;\n
+    };\n
+\n
+  // Set aq_parent on gadget_instance which call acquire on parent_gadget\n
+  function setAqParent(gadget_instance, parent_gadget) {\n
+    gadget_instance.__aq_parent = function (method_name, argument_list) {\n
+      return acquire.apply(parent_gadget, [gadget_instance, method_name,\n
+                                           argument_list]);\n
+    };\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSEmbeddedGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  // Class inheritance\n
+  function RenderJSEmbeddedGadget() {\n
+    if (!(this instanceof RenderJSEmbeddedGadget)) {\n
+      return new RenderJSEmbeddedGadget();\n
+    }\n
+    RenderJSGadget.call(this);\n
+  }\n
+  RenderJSEmbeddedGadget.__ready_list = RenderJSGadget.__ready_list.slice();\n
+  RenderJSEmbeddedGadget.__service_list =\n
+    RenderJSGadget.__service_list.slice();\n
+  RenderJSEmbeddedGadget.ready =\n
+    RenderJSGadget.ready;\n
+  RenderJSEmbeddedGadget.declareService =\n
+    RenderJSGadget.declareService;\n
+  RenderJSEmbeddedGadget.prototype = new RenderJSGadget();\n
+  RenderJSEmbeddedGadget.prototype.constructor = RenderJSEmbeddedGadget;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // privateDeclarePublicGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function privateDeclarePublicGadget(url, options, parent_gadget) {\n
+    var gadget_instance;\n
+    if (options.element === undefined) {\n
+      options.element = document.createElement("div");\n
+    }\n
+\n
+    function loadDependency(method, url) {\n
+      return function () {\n
+        return method(url);\n
+      };\n
+    }\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return renderJS.declareGadgetKlass(url);\n
+      })\n
+      // Get the gadget class and instanciate it\n
+      .push(function (Klass) {\n
+        var i,\n
+          template_node_list = Klass.__template_element.body.childNodes;\n
+        gadget_loading_klass = Klass;\n
+        gadget_instance = new Klass();\n
+        gadget_instance.__element = options.element;\n
+        for (i = 0; i < template_node_list.length; i += 1) {\n
+          gadget_instance.__element.appendChild(\n
+            template_node_list[i].cloneNode(true)\n
+          );\n
+        }\n
+        setAqParent(gadget_instance, parent_gadget);\n
+        // Load dependencies if needed\n
+        return RSVP.all([\n
+          gadget_instance.getRequiredJSList(),\n
+          gadget_instance.getRequiredCSSList()\n
+        ]);\n
+      })\n
+      // Load all JS/CSS\n
+      .push(function (all_list) {\n
+        var q = new RSVP.Queue(),\n
+          i;\n
+        // Load JS\n
+        for (i = 0; i < all_list[0].length; i += 1) {\n
+          q.push(loadDependency(renderJS.declareJS, all_list[0][i]));\n
+        }\n
+        // Load CSS\n
+        for (i = 0; i < all_list[1].length; i += 1) {\n
+          q.push(loadDependency(renderJS.declareCSS, all_list[1][i]));\n
+        }\n
+        return q;\n
+      })\n
+      .push(function () {\n
+        return gadget_instance;\n
+      });\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSIframeGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function RenderJSIframeGadget() {\n
+    if (!(this instanceof RenderJSIframeGadget)) {\n
+      return new RenderJSIframeGadget();\n
+    }\n
+    RenderJSGadget.call(this);\n
+  }\n
+  RenderJSIframeGadget.__ready_list = RenderJSGadget.__ready_list.slice();\n
+  RenderJSIframeGadget.ready =\n
+    RenderJSGadget.ready;\n
+  RenderJSIframeGadget.__service_list = RenderJSGadget.__service_list.slice();\n
+  RenderJSIframeGadget.declareService =\n
+    RenderJSGadget.declareService;\n
+  RenderJSIframeGadget.prototype = new RenderJSGadget();\n
+  RenderJSIframeGadget.prototype.constructor = RenderJSIframeGadget;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // privateDeclareIframeGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function privateDeclareIframeGadget(url, options, parent_gadget) {\n
+    var gadget_instance,\n
+      iframe,\n
+      iframe_loading_deferred = RSVP.defer();\n
+    if (options.element === undefined) {\n
+      throw new Error("DOM element is required to create Iframe Gadget " +\n
+                      url);\n
+    }\n
+\n
+    // Check if the element is attached to the DOM\n
+    if (!document.contains(options.element)) {\n
+      throw new Error("The parent element is not attached to the DOM for " +\n
+                      url);\n
+    }\n
+\n
+    gadget_instance = new RenderJSIframeGadget();\n
+    setAqParent(gadget_instance, parent_gadget);\n
+    iframe = document.createElement("iframe");\n
+//    gadget_instance.element.setAttribute("seamless", "seamless");\n
+    iframe.setAttribute("src", url);\n
+    gadget_instance.__path = url;\n
+    gadget_instance.__element = options.element;\n
+    // Attach it to the DOM\n
+    options.element.appendChild(iframe);\n
+\n
+    // XXX Manage unbind when deleting the gadget\n
+\n
+    // Create the communication channel with the iframe\n
+    gadget_instance.__chan = Channel.build({\n
+      window: iframe.contentWindow,\n
+      origin: "*",\n
+      scope: "renderJS"\n
+    });\n
+\n
+    // Create new method from the declareMethod call inside the iframe\n
+    gadget_instance.__chan.bind("declareMethod",\n
+                                function (trans, method_name) {\n
+        gadget_instance[method_name] = function () {\n
+          var argument_list = arguments;\n
+          return new RSVP.Promise(function (resolve, reject) {\n
+            gadget_instance.__chan.call({\n
+              method: "methodCall",\n
+              params: [\n
+                method_name,\n
+                Array.prototype.slice.call(argument_list, 0)],\n
+              success: function (s) {\n
+                resolve(s);\n
+              },\n
+              error: function (e) {\n
+                reject(e);\n
+              }\n
+            });\n
+          });\n
+        };\n
+        return "OK";\n
+      });\n
+\n
+    // Wait for the iframe to be loaded before continuing\n
+    gadget_instance.__chan.bind("ready", function (trans) {\n
+      iframe_loading_deferred.resolve(gadget_instance);\n
+      return "OK";\n
+    });\n
+    gadget_instance.__chan.bind("failed", function (trans, params) {\n
+      iframe_loading_deferred.reject(params);\n
+      return "OK";\n
+    });\n
+    gadget_instance.__chan.bind("acquire", function (trans, params) {\n
+      gadget_instance.__aq_parent.apply(gadget_instance, params)\n
+        .then(function (g) {\n
+          trans.complete(g);\n
+        }).fail(function (e) {\n
+          trans.error(e.toString());\n
+        });\n
+      trans.delayReturn(true);\n
+    });\n
+\n
+    return RSVP.any([\n
+      iframe_loading_deferred.promise,\n
+      // Timeout to prevent non renderJS embeddable gadget\n
+      // XXX Maybe using iframe.onload/onerror would be safer?\n
+      RSVP.timeout(5000)\n
+    ]);\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // RenderJSGadget.declareGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  RenderJSGadget\n
+    .declareMethod(\'declareGadget\', function (url, options) {\n
+      var queue,\n
+        parent_gadget = this,\n
+        local_loading_klass_promise,\n
+        previous_loading_klass_promise = loading_klass_promise;\n
+\n
+      if (options === undefined) {\n
+        options = {};\n
+      }\n
+      if (options.sandbox === undefined) {\n
+        options.sandbox = "public";\n
+      }\n
+\n
+      // transform url to absolute url if it is relative\n
+      url = renderJS.getAbsoluteURL(url, this.__path);\n
+      // Change the global variable to update the loading queue\n
+      loading_klass_promise = new RSVP.Queue()\n
+        // Wait for previous gadget loading to finish first\n
+        .push(function () {\n
+          return previous_loading_klass_promise;\n
+        })\n
+        .push(undefined, function () {\n
+          // Forget previous declareGadget error\n
+          return;\n
+        })\n
+        .push(function () {\n
+          var method;\n
+          if (options.sandbox === "public") {\n
+            method = privateDeclarePublicGadget;\n
+          } else if (options.sandbox === "iframe") {\n
+            method = privateDeclareIframeGadget;\n
+          } else {\n
+            throw new Error("Unsupported sandbox options \'" +\n
+                            options.sandbox + "\'");\n
+          }\n
+          return method(url, options, parent_gadget);\n
+        })\n
+        // Set the HTML context\n
+        .push(function (gadget_instance) {\n
+          // Drop the current loading klass info used by selector\n
+          gadget_loading_klass = undefined;\n
+          return gadget_instance;\n
+        })\n
+        .push(undefined, function (e) {\n
+          // Drop the current loading klass info used by selector\n
+          // even in case of error\n
+          gadget_loading_klass = undefined;\n
+          throw e;\n
+        });\n
+      local_loading_klass_promise = loading_klass_promise;\n
+\n
+      queue = new RSVP.Queue()\n
+        .push(function () {\n
+          return local_loading_klass_promise;\n
+        })\n
+        // Set the HTML context\n
+        .push(function (gadget_instance) {\n
+          var i;\n
+          // Trigger calling of all ready callback\n
+          function ready_wrapper() {\n
+            return gadget_instance;\n
+          }\n
+          for (i = 0; i < gadget_instance.constructor.__ready_list.length;\n
+               i += 1) {\n
+            // Put a timeout?\n
+            queue.push(gadget_instance.constructor.__ready_list[i]);\n
+            // Always return the gadget instance after ready function\n
+            queue.push(ready_wrapper);\n
+          }\n
+\n
+          // Store local reference to the gadget instance\n
+          if (options.scope !== undefined) {\n
+            parent_gadget.__sub_gadget_dict[options.scope] = gadget_instance;\n
+            gadget_instance.__element.setAttribute("data-gadget-scope",\n
+                                                   options.scope);\n
+          }\n
+\n
+          // Put some attribute to ease page layout comprehension\n
+          gadget_instance.__element.setAttribute("data-gadget-url", url);\n
+          gadget_instance.__element.setAttribute("data-gadget-sandbox",\n
+                                                 options.sandbox);\n
+          gadget_instance.__element._gadget = gadget_instance;\n
+\n
+          if (document.contains(gadget_instance.__element)) {\n
+            // Put a timeout\n
+            queue.push(startService);\n
+          }\n
+          // Always return the gadget instance after ready function\n
+          queue.push(ready_wrapper);\n
+\n
+          return gadget_instance;\n
+        });\n
+      return queue;\n
+    })\n
+    .declareMethod(\'getDeclaredGadget\', function (gadget_scope) {\n
+      if (!this.__sub_gadget_dict.hasOwnProperty(gadget_scope)) {\n
+        throw new Error("Gadget scope \'" + gadget_scope + "\' is not known.");\n
+      }\n
+      return this.__sub_gadget_dict[gadget_scope];\n
+    })\n
+    .declareMethod(\'dropGadget\', function (gadget_scope) {\n
+      if (!this.__sub_gadget_dict.hasOwnProperty(gadget_scope)) {\n
+        throw new Error("Gadget scope \'" + gadget_scope + "\' is not known.");\n
+      }\n
+      // http://perfectionkills.com/understanding-delete/\n
+      delete this.__sub_gadget_dict[gadget_scope];\n
+    });\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS selector\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS = function (selector) {\n
+    var result;\n
+    if (selector === window) {\n
+      // window is the \'this\' value when loading a javascript file\n
+      // In this case, use the current loading gadget constructor\n
+      result = gadget_loading_klass;\n
+    }\n
+    if (result === undefined) {\n
+      throw new Error("Unknown selector \'" + selector + "\'");\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.AcquisitionError\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.AcquisitionError = function (message) {\n
+    this.name = "AcquisitionError";\n
+    if ((message !== undefined) && (typeof message !== "string")) {\n
+      throw new TypeError(\'You must pass a string.\');\n
+    }\n
+    this.message = message || "Acquisition failed";\n
+  };\n
+  renderJS.AcquisitionError.prototype = new Error();\n
+  renderJS.AcquisitionError.prototype.constructor =\n
+    renderJS.AcquisitionError;\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.getAbsoluteURL\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.getAbsoluteURL = function (url, base_url) {\n
+    var doc, base, link,\n
+      html = "<!doctype><html><head></head></html>",\n
+      isAbsoluteOrDataURL = new RegExp(\'^(?:[a-z]+:)?//|data:\', \'i\');\n
+\n
+    if (url && base_url && !isAbsoluteOrDataURL.test(url)) {\n
+      doc = (new DOMParser()).parseFromString(html, \'text/html\');\n
+      base = doc.createElement(\'base\');\n
+      link = doc.createElement(\'link\');\n
+      doc.head.appendChild(base);\n
+      doc.head.appendChild(link);\n
+      base.href = base_url;\n
+      link.href = url;\n
+      return link.href;\n
+    }\n
+    return url;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.declareJS\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.declareJS = function (url) {\n
+    // Prevent infinite recursion if loading render.js\n
+    // more than once\n
+    var result;\n
+    if (javascript_registration_dict.hasOwnProperty(url)) {\n
+      result = RSVP.resolve();\n
+    } else {\n
+      result = new RSVP.Promise(function (resolve, reject) {\n
+        var newScript;\n
+        newScript = document.createElement(\'script\');\n
+        newScript.type = \'text/javascript\';\n
+        newScript.src = url;\n
+        newScript.onload = function () {\n
+          javascript_registration_dict[url] = null;\n
+          resolve();\n
+        };\n
+        newScript.onerror = function (e) {\n
+          reject(e);\n
+        };\n
+        document.head.appendChild(newScript);\n
+      });\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.declareCSS\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.declareCSS = function (url) {\n
+    // https://github.com/furf/jquery-getCSS/blob/master/jquery.getCSS.js\n
+    // No way to cleanly check if a css has been loaded\n
+    // So, always resolve the promise...\n
+    // http://requirejs.org/docs/faq-advanced.html#css\n
+    var result;\n
+    if (stylesheet_registration_dict.hasOwnProperty(url)) {\n
+      result = RSVP.resolve();\n
+    } else {\n
+      result = new RSVP.Promise(function (resolve, reject) {\n
+        var link;\n
+        link = document.createElement(\'link\');\n
+        link.rel = \'stylesheet\';\n
+        link.type = \'text/css\';\n
+        link.href = url;\n
+        link.onload = function () {\n
+          stylesheet_registration_dict[url] = null;\n
+          resolve();\n
+        };\n
+        link.onerror = function (e) {\n
+          reject(e);\n
+        };\n
+        document.head.appendChild(link);\n
+      });\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.declareGadgetKlass\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.declareGadgetKlass = function (url) {\n
+    var result,\n
+      xhr;\n
+\n
+    function parse() {\n
+      var tmp_constructor,\n
+        key,\n
+        parsed_html;\n
+      if (!gadget_model_dict.hasOwnProperty(url)) {\n
+        // Class inheritance\n
+        tmp_constructor = function () {\n
+          RenderJSGadget.call(this);\n
+        };\n
+        tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();\n
+        tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();\n
+        tmp_constructor.declareMethod =\n
+          RenderJSGadget.declareMethod;\n
+        tmp_constructor.declareAcquiredMethod =\n
+          RenderJSGadget.declareAcquiredMethod;\n
+        tmp_constructor.allowPublicAcquisition =\n
+          RenderJSGadget.allowPublicAcquisition;\n
+        tmp_constructor.ready =\n
+          RenderJSGadget.ready;\n
+        tmp_constructor.declareService =\n
+          RenderJSGadget.declareService;\n
+        tmp_constructor.prototype = new RenderJSGadget();\n
+        tmp_constructor.prototype.constructor = tmp_constructor;\n
+        tmp_constructor.prototype.__path = url;\n
+        tmp_constructor.prototype.__acquired_method_dict = {};\n
+        // https://developer.mozilla.org/en-US/docs/HTML_in_XMLHttpRequest\n
+        // https://developer.mozilla.org/en-US/docs/Web/API/DOMParser\n
+        // https://developer.mozilla.org/en-US/docs/Code_snippets/HTML_to_DOM\n
+        tmp_constructor.__template_element =\n
+          (new DOMParser()).parseFromString(xhr.responseText, "text/html");\n
+        parsed_html = renderJS.parseGadgetHTMLDocument(\n
+          tmp_constructor.__template_element,\n
+          url\n
+        );\n
+        for (key in parsed_html) {\n
+          if (parsed_html.hasOwnProperty(key)) {\n
+            tmp_constructor.prototype[\'__\' + key] = parsed_html[key];\n
+          }\n
+        }\n
+\n
+        gadget_model_dict[url] = tmp_constructor;\n
+      }\n
+\n
+      return gadget_model_dict[url];\n
+    }\n
+\n
+    function resolver(resolve, reject) {\n
+      function handler() {\n
+        var tmp_result;\n
+        try {\n
+          if (xhr.readyState === 0) {\n
+            // UNSENT\n
+            reject(xhr);\n
+          } else if (xhr.readyState === 4) {\n
+            // DONE\n
+            if ((xhr.status < 200) || (xhr.status >= 300) ||\n
+                (!/^text\\/html[;]?/.test(\n
+                  xhr.getResponseHeader("Content-Type") || ""\n
+                ))) {\n
+              reject(xhr);\n
+            } else {\n
+              tmp_result = parse();\n
+              resolve(tmp_result);\n
+            }\n
+          }\n
+        } catch (e) {\n
+          reject(e);\n
+        }\n
+      }\n
+\n
+      xhr = new XMLHttpRequest();\n
+      xhr.open("GET", url);\n
+      xhr.onreadystatechange = handler;\n
+      xhr.setRequestHeader(\'Accept\', \'text/html\');\n
+      xhr.withCredentials = true;\n
+      xhr.send();\n
+    }\n
+\n
+    function canceller() {\n
+      if ((xhr !== undefined) && (xhr.readyState !== xhr.DONE)) {\n
+        xhr.abort();\n
+      }\n
+    }\n
+\n
+    if (gadget_model_dict.hasOwnProperty(url)) {\n
+      // Return klass object if it already exists\n
+      result = RSVP.resolve(gadget_model_dict[url]);\n
+    } else {\n
+      // Fetch the HTML page and parse it\n
+      result = new RSVP.Promise(resolver, canceller);\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.clearGadgetKlassList\n
+  /////////////////////////////////////////////////////////////////\n
+  // For test purpose only\n
+  renderJS.clearGadgetKlassList = function () {\n
+    gadget_model_dict = {};\n
+    javascript_registration_dict = {};\n
+    stylesheet_registration_dict = {};\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // renderJS.parseGadgetHTMLDocument\n
+  /////////////////////////////////////////////////////////////////\n
+  renderJS.parseGadgetHTMLDocument = function (document_element, url) {\n
+    var settings = {\n
+        title: "",\n
+        interface_list: [],\n
+        required_css_list: [],\n
+        required_js_list: []\n
+      },\n
+      i,\n
+      element,\n
+      isAbsoluteURL = new RegExp(\'^(?:[a-z]+:)?//\', \'i\');\n
+\n
+    if (!url || !isAbsoluteURL.test(url)) {\n
+      throw new Error("The url should be absolute: " + url);\n
+    }\n
+\n
+    if (document_element.nodeType === 9) {\n
+      settings.title = document_element.title;\n
+\n
+      for (i = 0; i < document_element.head.children.length; i += 1) {\n
+        element = document_element.head.children[i];\n
+        if (element.href !== null) {\n
+          // XXX Manage relative URL during extraction of URLs\n
+          // element.href returns absolute URL in firefox but "" in chrome;\n
+          if (element.rel === "stylesheet") {\n
+            settings.required_css_list.push(\n
+              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+            );\n
+          } else if (element.nodeName === "SCRIPT" &&\n
+                     (element.type === "text/javascript" ||\n
+                      !element.type)) {\n
+            settings.required_js_list.push(\n
+              renderJS.getAbsoluteURL(element.getAttribute("src"), url)\n
+            );\n
+          } else if (element.rel === "http://www.renderjs.org/rel/interface") {\n
+            settings.interface_list.push(\n
+              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+            );\n
+          }\n
+        }\n
+      }\n
+    } else {\n
+      throw new Error("The first parameter should be an HTMLDocument");\n
+    }\n
+    return settings;\n
+  };\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // global\n
+  /////////////////////////////////////////////////////////////////\n
+  window.rJS = window.renderJS = renderJS;\n
+  window.__RenderJSGadget = RenderJSGadget;\n
+  window.__RenderJSEmbeddedGadget = RenderJSEmbeddedGadget;\n
+  window.__RenderJSIframeGadget = RenderJSIframeGadget;\n
+\n
+  ///////////////////////////////////////////////////\n
+  // Bootstrap process. Register the self gadget.\n
+  ///////////////////////////////////////////////////\n
+\n
+  function bootstrap() {\n
+    var url = removeHash(window.location.href),\n
+      tmp_constructor,\n
+      root_gadget,\n
+      loading_gadget_promise = new RSVP.Queue(),\n
+      declare_method_count = 0,\n
+      embedded_channel,\n
+      notifyReady,\n
+      notifyDeclareMethod,\n
+      gadget_ready = false,\n
+      iframe_top_gadget,\n
+      last_acquisition_gadget;\n
+\n
+    // Create the gadget class for the current url\n
+    if (gadget_model_dict.hasOwnProperty(url)) {\n
+      throw new Error("bootstrap should not be called twice");\n
+    }\n
+    loading_klass_promise = new RSVP.Promise(function (resolve, reject) {\n
+\n
+      last_acquisition_gadget = new RenderJSGadget();\n
+      last_acquisition_gadget.__acquired_method_dict = {\n
+        getTopURL: function () {\n
+          return url;\n
+        },\n
+        reportServiceError: function (param_list) {\n
+          letsCrash(param_list[0]);\n
+        }\n
+      };\n
+      // Stop acquisition on the last acquisition gadget\n
+      // Do not put this on the klass, as their could be multiple instances\n
+      last_acquisition_gadget.__aq_parent = function (method_name) {\n
+        throw new renderJS.AcquisitionError(\n
+          "No gadget provides " + method_name\n
+        );\n
+      };\n
+\n
+      //we need to determine tmp_constructor\'s value before exit bootstrap\n
+      //because of function : renderJS\n
+      //but since the channel checking is async,\n
+      //we can\'t use code structure like:\n
+      // if channel communication is ok\n
+      //    tmp_constructor = RenderJSGadget\n
+      // else\n
+      //    tmp_constructor = RenderJSEmbeddedGadget\n
+      if (window.self === window.top) {\n
+        // XXX Copy/Paste from declareGadgetKlass\n
+        tmp_constructor = function () {\n
+          RenderJSGadget.call(this);\n
+        };\n
+        tmp_constructor.declareMethod = RenderJSGadget.declareMethod;\n
+        tmp_constructor.declareAcquiredMethod =\n
+          RenderJSGadget.declareAcquiredMethod;\n
+        tmp_constructor.allowPublicAcquisition =\n
+          RenderJSGadget.allowPublicAcquisition;\n
+        tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();\n
+        tmp_constructor.ready = RenderJSGadget.ready;\n
+        tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();\n
+        tmp_constructor.declareService =\n
+          RenderJSGadget.declareService;\n
+        tmp_constructor.prototype = new RenderJSGadget();\n
+        tmp_constructor.prototype.constructor = tmp_constructor;\n
+        tmp_constructor.prototype.__path = url;\n
+        gadget_model_dict[url] = tmp_constructor;\n
+\n
+        // Create the root gadget instance and put it in the loading stack\n
+        root_gadget = new gadget_model_dict[url]();\n
+\n
+        setAqParent(root_gadget, last_acquisition_gadget);\n
+\n
+      } else {\n
+        // Create the communication channel\n
+        embedded_channel = Channel.build({\n
+          window: window.parent,\n
+          origin: "*",\n
+          scope: "renderJS"\n
+        });\n
+        // Create the root gadget instance and put it in the loading stack\n
+        tmp_constructor = RenderJSEmbeddedGadget;\n
+        tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();\n
+        tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();\n
+        tmp_constructor.prototype.__path = url;\n
+        root_gadget = new RenderJSEmbeddedGadget();\n
+\n
+\n
+        // Notify parent about gadget instanciation\n
+        notifyReady = function () {\n
+          if ((declare_method_count === 0) && (gadget_ready === true)) {\n
+            embedded_channel.notify({method: "ready"});\n
+          }\n
+        };\n
+\n
+        // Inform parent gadget about declareMethod calls here.\n
+        notifyDeclareMethod = function (name) {\n
+          declare_method_count += 1;\n
+          embedded_channel.call({\n
+            method: "declareMethod",\n
+            params: name,\n
+            success: function () {\n
+              declare_method_count -= 1;\n
+              notifyReady();\n
+            },\n
+            error: function () {\n
+              declare_method_count -= 1;\n
+            }\n
+          });\n
+        };\n
+\n
+        notifyDeclareMethod("getInterfaceList");\n
+        notifyDeclareMethod("getRequiredCSSList");\n
+        notifyDeclareMethod("getRequiredJSList");\n
+        notifyDeclareMethod("getPath");\n
+        notifyDeclareMethod("getTitle");\n
+\n
+        // Surcharge declareMethod to inform parent window\n
+        tmp_constructor.declareMethod = function (name, callback) {\n
+          var result = RenderJSGadget.declareMethod.apply(\n
+              this,\n
+              [name, callback]\n
+            );\n
+          notifyDeclareMethod(name);\n
+          return result;\n
+        };\n
+\n
+        tmp_constructor.declareService =\n
+          RenderJSGadget.declareService;\n
+        tmp_constructor.declareAcquiredMethod =\n
+          RenderJSGadget.declareAcquiredMethod;\n
+        tmp_constructor.allowPublicAcquisition =\n
+          RenderJSGadget.allowPublicAcquisition;\n
+\n
+        //Default: Define __aq_parent to inform parent window\n
+        tmp_constructor.prototype.__aq_parent = function (method_name,\n
+          argument_list, time_out) {\n
+          return new RSVP.Promise(function (resolve, reject) {\n
+            embedded_channel.call({\n
+              method: "acquire",\n
+              params: [\n
+                method_name,\n
+                argument_list\n
+              ],\n
+              success: function (s) {\n
+                resolve(s);\n
+              },\n
+              error: function (e) {\n
+                reject(e);\n
+              },\n
+              timeout: time_out\n
+            });\n
+          });\n
+        };\n
+      }\n
+\n
+      tmp_constructor.prototype.__acquired_method_dict = {};\n
+      gadget_loading_klass = tmp_constructor;\n
+\n
+      function init() {\n
+        // XXX HTML properties can only be set when the DOM is fully loaded\n
+        var settings = renderJS.parseGadgetHTMLDocument(document, url),\n
+          j,\n
+          key;\n
+        for (key in settings) {\n
+          if (settings.hasOwnProperty(key)) {\n
+            tmp_constructor.prototype[\'__\' + key] = settings[key];\n
+          }\n
+        }\n
+        tmp_constructor.__template_element = document.createElement("div");\n
+        root_gadget.__element = document.body;\n
+        for (j = 0; j < root_gadget.__element.childNodes.length; j += 1) {\n
+          tmp_constructor.__template_element.appendChild(\n
+            root_gadget.__element.childNodes[j].cloneNode(true)\n
+          );\n
+        }\n
+        RSVP.all([root_gadget.getRequiredJSList(),\n
+                  root_gadget.getRequiredCSSList()])\n
+          .then(function (all_list) {\n
+            var i,\n
+              js_list = all_list[0],\n
+              css_list = all_list[1];\n
+            for (i = 0; i < js_list.length; i += 1) {\n
+              javascript_registration_dict[js_list[i]] = null;\n
+            }\n
+            for (i = 0; i < css_list.length; i += 1) {\n
+              stylesheet_registration_dict[css_list[i]] = null;\n
+            }\n
+            gadget_loading_klass = undefined;\n
+          }).then(function () {\n
+\n
+            // select the target node\n
+            var target = document.querySelector(\'body\'),\n
+              // create an observer instance\n
+              observer = new MutationObserver(function (mutations) {\n
+                var i, k, len, len2, node, added_list;\n
+                mutations.forEach(function (mutation) {\n
+                  if (mutation.type === \'childList\') {\n
+\n
+                    len = mutation.removedNodes.length;\n
+                    for (i = 0; i < len; i += 1) {\n
+                      node = mutation.removedNodes[i];\n
+                      if (node.nodeType === Node.ELEMENT_NODE) {\n
+                        if (node.hasAttribute("data-gadget-url") &&\n
+                            (node._gadget !== undefined)) {\n
+                          createMonitor(node._gadget);\n
+                        }\n
+                        added_list =\n
+                          node.querySelectorAll("[data-gadget-url]");\n
+                        len2 = added_list.length;\n
+                        for (k = 0; k < len2; k += 1) {\n
+                          node = added_list[k];\n
+                          if (node._gadget !== undefined) {\n
+                            createMonitor(node._gadget);\n
+                          }\n
+                        }\n
+                      }\n
+                    }\n
+\n
+                    len = mutation.addedNodes.length;\n
+                    for (i = 0; i < len; i += 1) {\n
+                      node = mutation.addedNodes[i];\n
+                      if (node.nodeType === Node.ELEMENT_NODE) {\n
+                        if (node.hasAttribute("data-gadget-url") &&\n
+                            (node._gadget !== undefined)) {\n
+                          if (document.contains(node)) {\n
+                            startService(node._gadget);\n
+                          }\n
+                        }\n
+                        added_list =\n
+                          node.querySelectorAll("[data-gadget-url]");\n
+                        len2 = added_list.length;\n
+                        for (k = 0; k < len2; k += 1) {\n
+                          node = added_list[k];\n
+                          if (document.contains(node)) {\n
+                            if (node._gadget !== undefined) {\n
+                              startService(node._gadget);\n
+                            }\n
+                          }\n
+                        }\n
+                      }\n
+                    }\n
+\n
+                  }\n
+                });\n
+              }),\n
+              // configuration of the observer:\n
+              config = {\n
+                childList: true,\n
+                subtree: true,\n
+                attributes: false,\n
+                characterData: false\n
+              };\n
+\n
+            // pass in the target node, as well as the observer options\n
+            observer.observe(target, config);\n
+\n
+            return root_gadget;\n
+          }).then(resolve, function (e) {\n
+            reject(e);\n
+            console.error(e);\n
+            throw e;\n
+          });\n
+      }\n
+      document.addEventListener(\'DOMContentLoaded\', init, false);\n
+    });\n
+\n
+    loading_gadget_promise\n
+      .push(function () {\n
+        return loading_klass_promise;\n
+      })\n
+      .push(function (root_gadget) {\n
+        var i;\n
+\n
+        function ready_wrapper() {\n
+          return root_gadget;\n
+        }\n
+\n
+        if (window.top !== window.self) {\n
+          //checking channel should be done before sub gadget\'s declaration\n
+          //__ready_list:\n
+          //0: clearGadgetInternalParameters\n
+          //1: loadSubGadgetDOMDeclaration\n
+          //.....\n
+          tmp_constructor.__ready_list.splice(1, 0, function () {\n
+            return root_gadget.__aq_parent(\'getTopURL\', [], 3000)\n
+              .then(function (topURL) {\n
+                var base = document.createElement(\'base\');\n
+                base.href = topURL;\n
+                base.target = "_top";\n
+                document.head.appendChild(base);\n
+                //the channel is ok\n
+                //so bind calls to renderJS method on the instance\n
+                embedded_channel.bind("methodCall", function (trans, v) {\n
+                  root_gadget[v[0]].apply(root_gadget, v[1])\n
+                    .then(function (g) {\n
+                      trans.complete(g);\n
+                    }).fail(function (e) {\n
+                      trans.error(e.toString());\n
+                    });\n
+                  trans.delayReturn(true);\n
+                });\n
+              })\n
+              .fail(function (error) {\n
+                if (error === "timeout_error") {\n
+                  //the channel fail\n
+                  //we consider current gadget is parent gadget\n
+                  //redifine last acquisition gadget\n
+                  iframe_top_gadget = true;\n
+                  setAqParent(root_gadget, last_acquisition_gadget);\n
+                } else {\n
+                  throw error;\n
+                }\n
+              });\n
+          });\n
+        }\n
+\n
+        tmp_constructor.ready(function (g) {\n
+          return startService(g);\n
+        });\n
+\n
+        loading_gadget_promise.push(ready_wrapper);\n
+        for (i = 0; i < tmp_constructor.__ready_list.length; i += 1) {\n
+          // Put a timeout?\n
+          loading_gadget_promise\n
+            .push(tmp_constructor.__ready_list[i])\n
+            // Always return the gadget instance after ready function\n
+            .push(ready_wrapper);\n
+        }\n
+      });\n
+    if (window.self === window.top) {\n
+      loading_gadget_promise\n
+        .fail(function (e) {\n
+          letsCrash(e);\n
+          throw e;\n
+        });\n
+    } else {\n
+      // Inform parent window that gadget is correctly loaded\n
+      loading_gadget_promise\n
+        .then(function () {\n
+          gadget_ready = true;\n
+          notifyReady();\n
+        })\n
+        .fail(function (e) {\n
+          //top gadget in iframe\n
+          if (iframe_top_gadget) {\n
+            letsCrash(e);\n
+          } else {\n
+            embedded_channel.notify({method: "failed", params: e.toString()});\n
+          }\n
+          throw e;\n
+        });\n
+    }\n
+\n
+  }\n
+  bootstrap();\n
+\n
+}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node));\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
