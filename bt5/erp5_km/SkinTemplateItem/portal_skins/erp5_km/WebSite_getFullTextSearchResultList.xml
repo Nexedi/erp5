@@ -61,12 +61,7 @@ kw[\'all_languages\'] = True\n
 if re.search(r\'\\bnewest:yes\\b\', search_text):\n
   #...and now we check for only the newest versions\n
   # but we need to preserve order\n
-  language_match = re.search(r\'\\blanguage:(.+?)\\b\', search_text)\n
-  if language_match:\n
-    language = language_match.groups()[0]\n
-  else:\n
-    language = None\n
-  return [doc.getLatestVersionValue(language=language) \\\n
+  return [doc.getLatestVersionValue(language=doc.getLanguage()) \\\n
           for doc in context.getDocumentValueList(search_text=search_text, **kw)]\n
 else:\n
   return context.getDocumentValueList(search_text=search_text, **kw)\n
