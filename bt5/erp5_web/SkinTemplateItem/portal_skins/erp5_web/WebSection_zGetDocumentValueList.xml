@@ -143,12 +143,16 @@ kw</string> </value>
         priority DESC\n
 \n
     ) AS catalog\n
-  <dtml-if "\'versioning\' in query[\'order_by_expression\']">\n
+  <dtml-if "\'versioning\' in query[\'order_by_expression\'] or all_languages">\n
     , versioning\n
     WHERE catalog.uid = versioning.uid\n
   </dtml-if>\n
 \n
-  GROUP BY reference\n
+  <dtml-if all_languages>\n
+    GROUP BY reference, language\n
+  <dtml-else>\n
+    GROUP BY reference\n
+  </dtml-if>\n
 \n
   <dtml-if "query[\'order_by_expression\']">\n
     ORDER BY\n
