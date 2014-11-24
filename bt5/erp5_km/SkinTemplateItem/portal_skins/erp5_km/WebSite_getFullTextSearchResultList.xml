@@ -53,12 +53,28 @@
             <value> <string>"""\n
   Return the result list of all documents found by specified keyword arguments.\n
 """\n
-return context.getDocumentValueList(**kw)\n
+import re\n
+# if language is not specified in search_text, it means any language.\n
+# if language is specified in search_text, the query anyway includes explicit\n
+# language condition.\n
+kw[\'all_languages\'] = True\n
+if re.search(r\'\\bnewest:yes\\b\', search_text):\n
+  #...and now we check for only the newest versions\n
+  # but we need to preserve order\n
+  language_match = re.search(r\'\\blanguage:(.+?)\\b\', search_text)\n
+  if language_match:\n
+    language = language_match.groups()[0]\n
+  else:\n
+    language = None\n
+  return [doc.getLatestVersionValue(language=language) \\\n
+          for doc in context.getDocumentValueList(search_text=search_text, **kw)]\n
+else:\n
+  return context.getDocumentValueList(search_text=search_text, **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>search_text=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
