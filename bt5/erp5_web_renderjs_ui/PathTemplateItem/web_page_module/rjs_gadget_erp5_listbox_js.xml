@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -128,7 +134,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
-    .declareAcquiredMethod("whoWantToDisplayThisFromQuery", "whoWantToDisplayThisFromQuery")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
@@ -199,7 +205,7 @@
 \n
         for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
-            gadget.whoWantToDisplayThisFromQuery(result.data.rows[i].id)\n
+            gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
           );\n
         }\n
         return RSVP.all(promise_list);\n
@@ -450,7 +456,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.20414.6642.36608</string> </value>
+                <value> <string>939.5358.33203.30173</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -468,8 +474,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413558513.8</float>
-                        <string>GMT</string>
+                        <float>1416588079.38</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
