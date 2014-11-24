@@ -520,63 +520,25 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(['ja', 'ja', 'ja', 'ja', 'ja'],
                            [w.getLanguage() for w in ja_document_value_list])
 
-      # Tests for all_languages parameter
+      # Tests for all_languages parameter (language parameter is simply ignored)
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1)
-      self.assertEqual(6, len(en_document_value_list))
+      self.assertEqual(13, len(en_document_value_list))
       self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(1, len([w.getLanguage() for w in en_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [w.getVersion() for w in en_document_value_list \
-                              if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([w.getLanguage() for w in en_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [w.getVersion() for w in en_document_value_list \
-                              if w.getLanguage() == 'ja'])
 
       pt_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               language='pt')
-      self.assertEqual(6, len(pt_document_value_list))
+      self.assertEqual(13, len(pt_document_value_list))
       self.assertEqual(4, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(1, len([w.getLanguage() for w in pt_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(['3'], [w.getVersion() for w in pt_document_value_list \
-                              if w.getLanguage() == 'en'])
-      self.assertEqual(1, len([w.getLanguage() for w in pt_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [w.getVersion() for w in pt_document_value_list \
-                              if w.getLanguage() == 'ja'])
-
-      ja_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
-                                                                              language='ja')
-      self.assertEqual(6, len(ja_document_value_list))
-      self.assertEqual(4, len([w.getLanguage() for w in ja_document_value_list \
-                              if w.getLanguage() == 'ja']))
-      self.assertEqual(1, len([w.getLanguage() for w in ja_document_value_list \
-                              if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [w.getVersion() for w in ja_document_value_list \
-                              if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([w.getLanguage() for w in ja_document_value_list \
-                              if w.getLanguage() == 'en']))
-      self.assertEqual(['3'], [w.getVersion() for w in ja_document_value_list \
-                            if w.getLanguage() == 'en'])
-
-      bg_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
-                                                                              language='bg')
-      self.assertEqual(6, len(bg_document_value_list))
-      self.assertEqual(0, len([w.getLanguage() for w in bg_document_value_list \
-                              if w.getLanguage() == 'bg']))
-      self.assertEqual(3, len([w.getLanguage() for w in bg_document_value_list \
-                              if w.getLanguage() == 'en']))
-      self.assertEqual(1, len([w.getLanguage() for w in bg_document_value_list \
-                              if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [w.getVersion() for w in bg_document_value_list \
-                              if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([w.getLanguage() for w in bg_document_value_list \
-                              if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [w.getVersion() for w in bg_document_value_list \
-                            if w.getLanguage() == 'ja'])
 
       # Tests for all_languages and all_versions
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
@@ -618,22 +580,22 @@ Hé Hé Hé!""", page.asText().strip())
                        [w.getTitle() for w in \
                          websection.getDocumentValueList(sort_on=[('reference', 'DESC')])])
 
-      self.assertEqual(['A', 'B', 'C', 'D', 'E', 'F'],
+      self.assertEqual(['A', 'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'E', 'F'],
                        [w.getReference() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('reference', 'ASC')])])
 
-      self.assertEqual(['01', '02', '03', '11', '12', '13'],
+      self.assertEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '16'],
                        [w.getTitle() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('title', 'ASC')])])
 
-      self.assertEqual(['F', 'E', 'D', 'C', 'B', 'A'],
-                       [w.getReference() for w in \
+      self.assertEqual(['F', 'E', 'D', 'C', 'C', 'C', 'B', 'B', 'B', 'A', 'A', 'A', 'A'],
+                                              [w.getReference() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('reference', 'DESC')])])
 
-      self.assertEqual(['13', '12', '11', '03', '02', '01'],
+      self.assertEqual(['16', '13', '12', '11', '09', '08', '07', '06', '05', '04', '03', '02', '01'],
                        [w.getTitle() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('title', 'DESC')])])
