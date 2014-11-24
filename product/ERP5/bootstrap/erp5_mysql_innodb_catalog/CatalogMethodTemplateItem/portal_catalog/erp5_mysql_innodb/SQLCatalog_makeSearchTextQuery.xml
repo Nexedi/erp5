@@ -71,10 +71,9 @@ else:\n
   column = \'title\'\n
 node = context.Base_getAdvancedSearchSyntaxTreeNode(value, column=column)\n
 if node is None:\n
-  from Products.ZSQLCatalog.SQLCatalog import Query\n
-  return Query(**{column:value})\n
+  return context.buildSingleQuery(column, value)\n
 else:\n
-  return context.getPortalObject().portal_catalog.getSQLCatalog().buildQueryFromAbstractSyntaxTreeNode(node, column)\n
+  return context.buildQueryFromAbstractSyntaxTreeNode(node, column)\n
 </string> </value>
         </item>
         <item>
