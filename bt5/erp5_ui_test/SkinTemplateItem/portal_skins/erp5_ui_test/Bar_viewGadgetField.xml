@@ -96,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Foo_viewGadgetField</string> </value>
+            <value> <string>Bar_viewGadgetField</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Foo_viewGadgetField</string> </value>
+            <value> <string>Bar_viewGadgetField</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

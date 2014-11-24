@@ -51,7 +51,7 @@
 \n
  <tr>\n
    <td>open</td>\n
-   <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
+   <td>${base_url}/bar_module/ListBoxZuite_reset</td>\n
    <td></td>\n
 </tr>\n
     \n
@@ -63,7 +63,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -73,7 +73,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -84,7 +84,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/Foo_viewGadgetField</td>\n
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField</td>\n
   <td></td>\n
 </tr>\n
 \n
