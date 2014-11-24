@@ -1437,6 +1437,22 @@ div.pdf-preview-navigation img.last{\n
 .captchas_dot_net {\n
     border: none; \n
     vertical-align: bottom\n
+}\n
+\n
+@media print {\n
+\n
+  .bars {\n
+    display: none;\n
+  }\n
+  \n
+  .status {\n
+    display: none;\n
+  }\n
+  \n
+  .actions {\n
+    display: none;\n
+  }\n
+\n
 }
 
 ]]></string> </value>
