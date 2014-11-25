@@ -2453,6 +2453,11 @@ class TestAccountingExport(AccountingTestCase):
 class TestTransactions(AccountingTestCase):
   """Test behaviours and utility scripts for Accounting Transactions.
   """
+
+  def getBusinessTemplateList(self):
+    return AccountingTestCase.getBusinessTemplateList(self) + \
+        ('erp5_invoicing', 'erp5_simplified_invoicing')
+
   def _resetIdGenerator(self):
     # clear all existing ids in portal ids
       self.portal.portal_ids.clearGenerator(all=True)
@@ -3193,6 +3198,124 @@ class TestTransactions(AccountingTestCase):
     for line in invoice.contentValues():
       self.assertTrue(line.getGroupingReference())
 
+  def test_roundDebitCredit_raises_if_big_difference(self):
+    invoice = self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      lines=(dict(source_value=self.account_module.goods_sales,
+                source_debit=100.032345),
+           dict(source_value=self.account_module.receivable,
+                source_credit=100.000001)))
+    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
+    invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
+    self.assertRaises(invoice.AccountingTransaction_roundDebitCredit)
+
+  def test_roundDebitCredit_when_payable_is_different_total_price(self):
+    invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      stop_date=DateTime(),
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.supplier,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                id="expense",
+                destination_debit=100.000001),
+           dict(source_value=self.account_module.payable,
+                id="payable",
+                destination_credit=100.012345)))
+    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
+    invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
+    line_list = invoice.getMovementList(
+                    portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertNotEqual(0.0,
+      sum([round(g.getQuantity(), precision) for g in line_list]))
+    invoice.AccountingTransaction_roundDebitCredit()
+    line_list = invoice.getMovementList(
+                 portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(0.0,
+      sum([round(g.getQuantity(), precision) for g in line_list]))
+    self.assertEqual(100.00, invoice.payable.getDestinationCredit())
+    self.assertEqual(100.00, invoice.expense.getDestinationDebit())
+    self.assertEqual([], invoice.checkConsistency())
+
+  def test_roundDebitCredit_when_payable_is_equal_total_price(self):
+    invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      stop_date=DateTime(),
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.supplier,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                id="expense",
+                destination_debit=100.012345),
+           dict(source_value=self.account_module.payable,
+                id="payable",
+               destination_credit=100.000001)))
+    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
+    invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
+    line_list = invoice.getMovementList(
+                    portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertNotEqual(0.0,
+      sum([round(g.getQuantity(), precision) for g in line_list]))
+    invoice.AccountingTransaction_roundDebitCredit()
+    line_list = invoice.getMovementList(
+                 portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(0.0,
+      sum([round(g.getQuantity(), precision) for g in line_list]))
+    self.assertEqual(100.00, invoice.payable.getDestinationCredit())
+    self.assertEqual(100.00, invoice.expense.getDestinationDebit())
+    self.assertEqual([], invoice.checkConsistency())
+
+  def test_roundDebitCredit_when_receivable_is_equal_total_price(self):
+    invoice = self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      stop_date=DateTime(),
+      destination_section_value=self.section,
+      source_section_value=self.section,
+      lines=(dict(source_value=self.account_module.goods_sales,
+                id="income",
+                source_credit=100.012345),
+           dict(source_value=self.account_module.receivable,
+                id="receivable",
+                source_debit=100.000001)))
+    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
+    invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
+    line_list = invoice.getMovementList(
+                    portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertNotEqual(sum([round(g.getQuantity(), precision) for g in line_list]),
+      0.0)
+    invoice.AccountingTransaction_roundDebitCredit()
+    line_list = invoice.getMovementList(
+                 portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(sum([round(g.getQuantity(), precision) for g in line_list]),
+      0.0)
+    self.assertEqual(100.00, invoice.income.getSourceCredit())
+    self.assertEqual(100.00, invoice.receivable.getSourceDebit())
+    self.assertEqual([], invoice.checkConsistency())
+
+  def test_roundDebitCredit_when_receivable_is_different_total_price(self):
+    invoice = self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      stop_date=DateTime(),
+      destination_section_value=self.section,
+      source_section_value=self.section,
+      lines=(dict(source_value=self.account_module.goods_sales,
+                id="income",
+                source_credit=100.000001),
+           dict(source_value=self.account_module.receivable,
+                id="receivable",
+                source_debit=100.012345)))
+    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
+    invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
+    line_list = invoice.getMovementList(
+                    portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertNotEqual(sum([round(g.getQuantity(), precision) for g in line_list]),
+      0.0)
+    invoice.AccountingTransaction_roundDebitCredit()
+    line_list = invoice.getMovementList(
+                 portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(sum([round(g.getQuantity(), precision) for g in line_list]),
+      0.0)
+    self.assertEqual(100.00, invoice.income.getSourceCredit())
+    self.assertEqual(100.00, invoice.receivable.getSourceDebit())
+    self.assertEqual([], invoice.checkConsistency())
 
   def test_AccountingTransaction_getTotalDebitCredit(self):
     # source view

@@ -52,9 +52,18 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-""" Rounds debit and credit lines on generated transactions, according to \n
-precision of this transaction\'s resource.\n
+""" Rounds debit and credit lines on generated transactions, according to\n
+precision of this transaction\'s resource. \n
+\n
+What is expected with this script:\n
+\n
+  - All lines are rounded to the currency precision\n
+  - Amount on the receivable accounting line match invoice total price\n
+  - total debit == total credit\n
+  - In reality we probably also want that amount on vat line match invoice vat\n
+  amount, but we have ignored this.\n
 """\n
+\n
 precision = context.getQuantityPrecisionFromResource(context.getResource())\n
 resource = context.getResourceValue()\n
 \n
@@ -77,9 +86,65 @@ for line in line_list:\n
 if abs(round(total_quantity, precision)) > 2 * resource.getBaseUnitQuantity():\n
   return\n
 \n
-# if the difference is <= the base quantity unit, we round the last line.\n
-if line is not None:\n
-  line.setQuantity(round(line.getQuantity() - total_quantity, precision))\n
+total_price = round(context.getTotalPrice(), precision)\n
+account_type_dict = {}\n
+\n
+for line in line_list:\n
+  for account in (line.getSourceValue(portal_type=\'Account\'),\n
+      line.getDestinationValue(portal_type=\'Account\'),):\n
+    account_type_dict.setdefault(line, set()).add(\n
+      account is not None and account.getAccountTypeValue() or None)\n
+\n
+account_type = context.getPortalObject().portal_categories.account_type\n
+receivable_type = account_type.asset.receivable\n
+payable_type = account_type.liability.payable\n
+abs_total_quantity = abs(round(total_quantity, precision))\n
+line_to_adjust = None\n
+\n
+asset_line = None\n
+for line, account_type_list in account_type_dict.iteritems():\n
+  if receivable_type in account_type_list or payable_type in account_type_list:\n
+    asset_line = line\n
+    break\n
+\n
+if not asset_line:\n
+  assert total_price == 0.0 and total_quantity == 0.0, \\\n
+    \'receivable or payable line not found.\'\n
+  return\n
+\n
+# If we have a difference between total credit and total debit, one line is \n
+# chosen to add or remove this difference. The payable or receivable is chosen \n
+# only if this line is not matching with invoice total price, because total price\n
+# comes from all invoice lines (quantity * price) and it is what should be payed.\n
+# And payable or receivable line is the record in the accounting of what has \n
+# to be payed. Then, we must not touch it when it already matches.\n
+# If is not a payable or receivable, vat or other line (ie. income) is used.\n
+if abs_total_quantity != 0:\n
+  if round(abs(asset_line.getQuantity()), precision) != round(abs(context.getTotalPrice()), precision):\n
+    # adjust payable or receivable\n
+    for line in line_list:\n
+      if receivable_type in account_type_dict[line] or \\\n
+          payable_type in account_type_dict[line]:\n
+        line_to_adjust = line\n
+        break\n
+  if line_to_adjust is None:\n
+    # VAT\n
+    for line in line_list:\n
+      if receivable_type.refundable_vat in account_type_dict[line] or \\\n
+          payable_type.collected_vat in account_type_dict[line]:\n
+        line_to_adjust = line\n
+        break\n
+  if line_to_adjust is None:\n
+    # adjust anything except payable or receivable\n
+    for line in line_list:\n
+      if receivable_type not in account_type_dict[line] and \\\n
+          payable_type not in account_type_dict[line]:\n
+        line_to_adjust = line\n
+        break\n
+\n
+if line_to_adjust is not None:\n
+  line_to_adjust.setQuantity(\n
+    round(line_to_adjust.getQuantity() - total_quantity, precision))\n
 
 
 ]]></string> </value>
