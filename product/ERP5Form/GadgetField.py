@@ -36,7 +36,7 @@ class GadgetWidget(Widget.TextWidget):
      kw['class'] = "gadget"
      kw['value'] = value
      kw['data-gadget-sandbox'] = field.get_value('js_sandbox')
-     return Widget.render_element("section",
+     return Widget.render_element("div",
                       **kw)
 
   def get_javascript_list(self, field, REQUEST=None):
