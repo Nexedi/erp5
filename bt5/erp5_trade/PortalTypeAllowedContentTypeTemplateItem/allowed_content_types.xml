@@ -82,6 +82,7 @@
   <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Preference">
+  <item>Purchase Order</item>
   <item>Sale Order</item>
  </portal_type>
  <portal_type id="Property Sheet">

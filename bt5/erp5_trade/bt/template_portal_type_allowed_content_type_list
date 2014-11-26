@@ -42,6 +42,7 @@ Order Root Simulation Rule | Net Converted Quantity Divergence Tester
 Order Root Simulation Rule | Specialise Divergence Tester
 Order Root Simulation Rule | String Divergence Tester
 Order Root Simulation Rule | Variation Divergence Tester
+Preference | Purchase Order
 Preference | Sale Order
 Property Sheet | Trade Model Line Cell Consistency Constraint
 Purchase Order Line | Purchase Order Cell
