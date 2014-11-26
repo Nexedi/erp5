@@ -180,8 +180,9 @@ class TestXHTMLMixin(ERP5TypeTestCase):
           path_list.append(script_path)
     def jsl(check_path):
       body = self.publish(check_path).getBody()
+      conf_file = os.path.join(os.path.dirname(__file__), 'jsl.conf')
       try:
-        stdout, stderr = Popen(['jsl', '-stdin', '-nologo', '-nosummary'],
+        stdout, stderr = Popen(['jsl', '-stdin', '-nologo', '-nosummary', '-conf', conf_file],
                                stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True).communicate(body)
       except OSError, e:
         raise OSError, '%r\n%r' % (os.environ, e)
