@@ -19,6 +19,7 @@
 # 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from __future__ import absolute_import
+from inspect import getargspec
 
 try:
     from pylint.checkers import imports
@@ -26,7 +27,7 @@ try:
 except ImportError:
     pass
 else:
-    def get_imported_module(self, modnode, importnode, modname):
+    def _get_imported_module(self, importnode, modname):
         try:
             return importnode.do_import_module(modname)
         except astroid.InferenceError, ex:
@@ -62,5 +63,12 @@ else:
             else:
                 args = repr(modname)
             self.add_message("F0401", args=args, node=importnode)
+
+    if 'modnode' in getargspec(imports.ImportsChecker.get_imported_module).args:
+        # BBB for pylint < 1.4.0
+        def get_imported_module(self, modnode, importnode, modname):
+            return _get_imported_module(self, importnode, modname)
+    else:
+        get_imported_module = _get_imported_module
 
     imports.ImportsChecker.get_imported_module = get_imported_module
