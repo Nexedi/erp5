@@ -49,7 +49,8 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
-  IGNORE_FILE_LIST = ['require.js','require.min.js','wz_dragdrop.js','gadget_activity_watcher.js']
+  IGNORE_FILE_LIST = ['require.js','require.min.js','wz_dragdrop.js',
+                      'gadget_activity_watcher.js','handlebars.js']
 
   def changeSkin(self, skin_name):
     """
