@@ -32,9 +32,9 @@ class GadgetWidget(Widget.TextWidget):
      kw['data-gadget-url'] = field.get_value('gadget_url')
      kw['data-gadget-scope'] = field.id
      if key is not None:
-       kw['editable'] = key
+       kw['data-gadget-editable'] = key
      kw['class'] = "gadget"
-     kw['value'] = value
+     kw['data-gadget-value'] = value
      kw['data-gadget-sandbox'] = field.get_value('js_sandbox')
      return Widget.render_element("div",
                       **kw)
