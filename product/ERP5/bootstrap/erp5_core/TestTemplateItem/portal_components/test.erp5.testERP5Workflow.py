@@ -67,10 +67,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
   def test_Erp5Workflow(self):
     """Tests the connection between ERP5Workflow and Objects."""
     # Create base category as the intermidiate
-    
     self.portal.portal_categories.newContent('category_state')
-    #self.portal.portal_categories.newContent('erp5_workflow')
-    
+
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
                                                    id='new_workflow')
@@ -87,7 +85,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     new_workflow.setStateBaseCategory('category_state')
 
     # create a base type and a portal type based on this base type
-    
+
     type_object = self.portal.portal_types.newContent(
       portal_type='Base Type',
       id='Object Type',
@@ -96,6 +94,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
       )
 
     type_object.setWorkflow5Value(new_workflow)
+
+    #use variable in ERP5Type.py, to avoid using no-exist accessor
+    type_object.workflow_list=('new_workflow',)
 
     self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
     self.assertEqual(type_object.getWorkflow5(),
@@ -118,23 +119,24 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(new_object.getPortalType(), "Object Type")
     self.assertEqual(new_object.getPortalType(), 'Object Type')
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
-  
+
   def test_Erp5Transition(self):
     """Tests ERP5Workflow transition"""
     # Create base category as the intermidiate
-    
     self.portal.portal_categories.newContent('category_state')
     self.portal.portal_categories.newContent('category_transition')
-    
+
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
                                                    id='new_workflow')
     s1 = new_workflow.newContent(portal_type='State',title='State 1')
     s2 = new_workflow.newContent(portal_type='State',title='State 2')
-    t1 = new_workflow.newContent(portal_type='Transition',
+    t1 = new_workflow.newContent(
+      portal_type='Transition',
       title='Transition 1',
       id='transition1')
-    t2 = new_workflow.newContent(portal_type='Transition',
+    t2 = new_workflow.newContent(
+      portal_type='Transition',
       title='Transition 2',
       id='transition2')
     s1.setDestinationValue(t1)
@@ -149,7 +151,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     new_workflow.setStateBaseCategory('category_state','category_transition')
 
     # create a base type and a portal type based on this base type
-    
+
     type_object = self.portal.portal_types.newContent(
       portal_type='Base Type',
       id='Object Type',
@@ -158,6 +160,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
       )
 
     type_object.setWorkflow5Value(new_workflow)
+    type_object.workflow_list=('new_workflow',)
 
     self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
     self.assertEqual(type_object.getWorkflow5(),
@@ -179,7 +182,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertTrue(new_object is not None)
     self.assertEqual(new_object.getPortalType(), 'Object Type')
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
-    
+
     # Pass transition
     """Method 1"""
     t1.execute(new_object)
@@ -193,14 +196,16 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
     """Method 3"""
     new_object.getCategoryStateValue().executeTransition(
-      new_workflow.transition1, 
+      new_workflow.transition1,
       new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
     new_object.getCategoryStateValue().executeTransition(
-      new_workflow.transition2, 
+      new_workflow.transition2,
       new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
-    
+
+    #new_object.transition1()
+    #self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
     #new_object.transition2a1()
 
 
