@@ -94,7 +94,7 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_subject\']</td>\n
+  <td>//input[@title=\'field_my_subject\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -102,7 +102,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@title=\'my_subject\']</td>\n
+  <td>//input[@title=\'field_my_subject\']</td>\n
   <td>couscous</td>\n
 </tr>\n
 \n

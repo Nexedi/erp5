@@ -30,7 +30,7 @@ class GadgetWidget(Widget.TextWidget):
   def render_view(self, field, value, REQUEST=None, render_prefix=None, key=None):
      kw = {}
      kw['data-gadget-url'] = field.get_value('gadget_url')
-     kw['data-gadget-scope'] = field.id
+     kw['data-gadget-scope'] = 'field_' + field.id
      if key is not None:
        kw['data-gadget-editable'] = key
      kw['class'] = "gadget"
@@ -62,4 +62,4 @@ class GadgetField(ZMIField):
     meta_type = "GadgetField"
 
     widget = GadgetWidgetInstance
-    validator = Validator.SuppressValidatorInstance
+    validator = Validator.FileValidatorInstance

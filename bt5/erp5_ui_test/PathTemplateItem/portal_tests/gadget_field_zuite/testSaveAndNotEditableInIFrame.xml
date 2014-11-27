@@ -93,25 +93,25 @@
 <!-- Initialize -->\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_right\']</td>\n
+  <td>//input[@title=\'field_my_right\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_format\']</td>\n
+  <td>//input[@title=\'field_my_format\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@title=\'my_right\']</td>\n
+  <td>//input[@title=\'field_my_right\']</td>\n
   <td>couscous</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@title=\'my_format\']</td>\n
+  <td>//input[@title=\'field_my_format\']</td>\n
   <td>couscous</td>\n
 </tr>\n
 \n
@@ -130,24 +130,24 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_right\']</td>\n
+  <td>//input[@title=\'field_my_right\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_format\']</td>\n
+  <td>//input[@title=\'field_my_format\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//input[@title=\'my_right\']</td>\n
+  <td>//input[@title=\'field_my_right\']</td>\n
   <td>couscous</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//input[@title=\'my_format\']</td>\n
+  <td>//input[@title=\'field_my_format\']</td>\n
   <td></td>\n
 </tr>\n
 \n

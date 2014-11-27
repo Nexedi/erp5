@@ -93,13 +93,13 @@
 <!-- Initialize -->\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'my_file\']</td>\n
+  <td>//input[@title=\'field_my_file\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@title=\'my_file\']</td>\n
+  <td>//input[@title=\'field_my_file\']</td>\n
   <td>test</td>\n
 </tr>\n
 \n
