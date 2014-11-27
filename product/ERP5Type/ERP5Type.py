@@ -416,8 +416,19 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-        for workflow5 in self.getWorkflow5ValueList():
-          workflow5.initializeDocument(ob)
+### Project WORKFLOW5, Wenjie, 12 Nov 2014 ###
+          #raise NotImplementedError(portal) # ERP5Site
+          #raise NotImplementedError(container) # container is Person Module
+          #raise NotImplementedError(klass) # class 'erp5.portal_type.Person'
+          #raise NotImplementedError(id) # id = 73
+          #raise NotImplementedError(base_ob) # Person at 73
+          #raise NotImplementedError(self) # base type at person
+        if hasattr(self, 'getWorkflow5ValueList'): 
+          # test if the current portal type is connected to workflow5
+          # applying Workflow5 step by step, 
+          # so some of the modules don't have workflow5 yet.
+          for workflow5 in self.getWorkflow5ValueList():
+            workflow5.initializeDocument(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
