@@ -418,10 +418,10 @@ class ERP5TypeInformation(XMLObject,
             workflow.notifyCreated(ob)
 
 ### Project WORKFLOW5 , WENJIE , 2014 ###
-        # if workflow_module is not None:
-        workflow_module = portal.getDefaultModule(portal_type="Workflow")
+
         # How to use accessor to redefine workflow_list???
         for workflow5 in self.getTypeWorkflowList():
+          workflow_module = portal.getDefaultModule(portal_type="Workflow")
           workflow5 = workflow_module._getOb(workflow5)
           workflow5.initializeDocument(ob)
 
