@@ -240,6 +240,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
+    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -416,19 +417,13 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-### Project WORKFLOW5, Wenjie, 12 Nov 2014 ###
-          #raise NotImplementedError(portal) # ERP5Site
-          #raise NotImplementedError(container) # container is Person Module
-          #raise NotImplementedError(klass) # class 'erp5.portal_type.Person'
-          #raise NotImplementedError(id) # id = 73
-          #raise NotImplementedError(base_ob) # Person at 73
-          #raise NotImplementedError(self) # base type at person
-        if hasattr(self, 'getWorkflow5ValueList'): 
-          # test if the current portal type is connected to workflow5
-          # applying Workflow5 step by step, 
-          # so some of the modules don't have workflow5 yet.
-          for workflow5 in self.getWorkflow5ValueList():
-            workflow5.initializeDocument(ob)
+### Project WORKFLOW5 , WENJIE , 2014 ###
+        # if workflow_module is not None:
+        workflow_module = portal.getDefaultModule(portal_type="Workflow")
+        # How to use accessor to redefine workflow_list???
+        for workflow5 in self.getTypeWorkflowList():
+          workflow5 = workflow_module._getOb(workflow5)
+          workflow5.initializeDocument(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
@@ -459,6 +454,12 @@ class ERP5TypeInformation(XMLObject,
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeWorkflowList')
+    def getTypeWorkflowList(self):
+      """Getter for 'type_workflow' property"""
+      return list(self.workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
