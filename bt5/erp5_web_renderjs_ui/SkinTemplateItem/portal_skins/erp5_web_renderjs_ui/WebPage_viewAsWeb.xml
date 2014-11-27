@@ -55,18 +55,36 @@
 if response is None:\n
   response = REQUEST.RESPONSE\n
 \n
-web_script = context\n
+web_page = context\n
 \n
-modified_header = REQUEST.getHeader(\'If-Modified-Since\', \'\')\n
-\n
-if (modified_header != "") and (web_script.getModificationDate().rfc822() == DateTime(modified_header).rfc822()):\n
+if REQUEST.getHeader(\'If-Modified-Since\', \'\') == web_page.getModificationDate().rfc822():\n
   response.setStatus(304)\n
   return ""\n
 \n
-js_content = web_script.getTextContent()\n
+portal_type = web_page.getPortalType()\n
+web_content = web_page.getTextContent()\n
 \n
-response.setHeader(\'Content-Type\', \'text/css\')\n
-return js_content\n
+# set headers depending on type of script\n
+if (portal_type == "Web Script"):\n
+  response.setHeader(\'Content-Type\', \'application/javascript\')\n
+\n
+elif (portal_type == "Web Style"):\n
+  response.setHeader(\'Content-Type\', \'text/css\')\n
+\n
+elif (portal_type == "Web Manifest"):\n
+  response.setHeader(\'Content-Type\', \'text/cache-manifest\')\n
+\n
+else:\n
+  # Do not allow to put inside an iframe\n
+  response.setHeader("X-Frame-Options", "SAMEORIGIN")\n
+  response.setHeader("X-Content-Type-Options", "nosniff")\n
+\n
+  # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget\'s code\n
+  response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' data:; media-src \'self\'; connect-src \'self\'; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:")\n
+\n
+  response.setHeader(\'Content-Type\', \'text/html\')\n
+\n
+return web_content\n
 </string> </value>
         </item>
         <item>
@@ -75,7 +93,7 @@ return js_content\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebStyle_viewAsWeb</string> </value>
+            <value> <string>WebPage_viewAsWeb</string> </value>
         </item>
       </dictionary>
     </pickle>

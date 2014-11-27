@@ -58,7 +58,7 @@ if response is None:\n
 web_section = context\n
 default_web_page = web_section.getDefaultDocumentValue()\n
 \n
-return default_web_page.WebPage_viewAsGadget()\n
+return default_web_page.WebPage_viewAsWeb()\n
 </string> </value>
         </item>
         <item>
