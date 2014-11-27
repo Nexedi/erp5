@@ -456,7 +456,7 @@ class ProxyField(ZMIField):
           skin_info = SKINDATA.get(get_ident())
 
           if skin_info is not None:
-            skin_selection_name, ignore, resolve = skin_info
+            _, skin_selection_name, ignore, resolve = skin_info
 
             selection_dict = portal_skins._getSelections()
             candidate_folder_id_list = selection_dict[skin_selection_name].split(',')

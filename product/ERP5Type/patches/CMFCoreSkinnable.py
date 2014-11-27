@@ -105,7 +105,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
   if name[:1] != '_' and name[:3] != 'aq_':
     skin_info = SKINDATA.get(get_ident())
     if skin_info is not None:
-      skin_selection_name, ignore, resolve = skin_info
+      _, skin_selection_name, ignore, resolve = skin_info
       try:
         return resolve[name]
       except KeyError:
@@ -133,7 +133,7 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=No
       if sf is not None:
         skinname = sf.getDefaultSkin()
   tid = get_ident()
-  SKINDATA[tid] = (skinname, {'portal_skins': None}, {})
+  SKINDATA[tid] = (None, skinname, {'portal_skins': None}, {})
   if REQUEST is None:
     REQUEST = getattr(self, 'REQUEST', None)
   if REQUEST is not None:
