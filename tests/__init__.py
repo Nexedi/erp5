@@ -158,3 +158,9 @@ class ERP5_scalability(_ERP5):
 
   def getTestRepetition(self, test_number):
     return 3
+
+class ERP5_XHTML_Only(_ERP5):
+
+  def _getAllTestList(self):
+    path = sys.path[0]
+    return ['%s/product/ERP5/tests/testXHTML.py' % path]
