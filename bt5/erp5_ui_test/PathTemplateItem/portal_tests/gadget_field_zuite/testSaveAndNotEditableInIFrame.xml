@@ -84,12 +84,27 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/bar_module/0/Bar_viewGadgetField</td>\n
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField/my_language/manage_main</td>\n
   <td></td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_js_sandbox\']</td>\n
+  <td>iframe</td>\n
+</tr>\n
 \n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@type=\'submit\']</td>\n
+  <td></td>\n
+</tr>\n
 \n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField</td>\n
+  <td></td>\n
+</tr>\n
 <!-- Initialize -->\n
 <tr>\n
   <td>waitForElementPresent</td>\n
@@ -99,7 +114,7 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'field_my_format\']</td>\n
+  <td>//input[@title=\'null\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -111,7 +126,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@title=\'field_my_format\']</td>\n
+  <td>//input[@title=\'null\']</td>\n
   <td>couscous</td>\n
 </tr>\n
 \n
@@ -136,7 +151,7 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'field_my_format\']</td>\n
+  <td>//input[@title=\'null\']/</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -147,7 +162,25 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//input[@title=\'field_my_format\']</td>\n
+  <td>//input[@title=\'null\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField/my_language/manage_main</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_js_sandbox\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@type=\'submit\']</td>\n
   <td></td>\n
 </tr>\n
 \n

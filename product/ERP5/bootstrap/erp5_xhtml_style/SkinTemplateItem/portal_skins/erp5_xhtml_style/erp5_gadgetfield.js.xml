@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17000485.95</string> </value>
+            <value> <string>ts17097929.83</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -100,8 +100,8 @@
           tmp = {};\n
           list.push(g.getDeclaredGadget(scope));\n
           tmp.sandbox = list_gadget[i].getAttribute("data-gadget-sandbox");\n
-          tmp.key = scope;\n
           tmp.editable = list_gadget[i].getAttribute("data-gadget-editable");\n
+          tmp.key = tmp.editable;\n
           tmp.value = list_gadget[i].getAttribute("data-gadget-value");\n
           gadget_attributes.push(tmp);\n
         }\n
@@ -216,7 +216,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6257</int> </value>
+            <value> <int>6264</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
