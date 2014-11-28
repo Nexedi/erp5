@@ -124,8 +124,8 @@ class UnitTestRunner():
     config = self.testnode.config
     parameter_list = []
     slapos_controler = self._getSlapOSControler(self.testnode.working_directory)
-    run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
-        slapos_controler.instance_root)
+    run_test_suite_path_list = sorted(glob.glob("%s/*/bin/runTestSuite" % \
+        slapos_controler.instance_root))
     if not len(run_test_suite_path_list):
       raise ValueError('No runTestSuite provided in installed partitions.')
     run_test_suite_path = run_test_suite_path_list[0]
