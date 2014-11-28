@@ -292,6 +292,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     bank_account = organisation.newContent(id='bank',
                                            portal_type='Bank Account',
                                            title='bank%s' % organisation.getId())
+    organisation.newContent(id='default_address', portal_type='Address',
+      stress_address='rue xv', zip_code="12345")
     if title is None:
       organisation.edit(title='organisation%s' % organisation.getId())
       sequence.edit(organisation=organisation)
