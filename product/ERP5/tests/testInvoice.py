@@ -2647,6 +2647,11 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       0)
     self.assertEquals(sum([i.getSourceCredit() for i in lines]),
       sum([i.getSourceDebit() for i in lines]))
+    line = [i for i in lines if \
+        i.isMemberOf('source/account_module/customer')][0]
+    data_dict = invoice.Invoice_getODTDataDict()
+    self.assertEquals(round(line.getSourceDebit(), 2),
+        round(data_dict.get('total_price'), 2))
     self.assertEquals([], invoice.checkConsistency())
 
   def test_rounding_issue(self):
