@@ -279,7 +279,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
     tag = "%s_%s" % (self.getRelativeUrl(), title)
     if portal.portal_activities.countMessageWithTag(tag) == 0:
-      test_node_list = test_node_module.searchFolder(portal_type="Test Node",title=title)
+      test_node_list = test_node_module.searchFolder(
+        portal_type="Test Node",
+        title=SimpleQuery(comparison_operator='=', title=title))
       assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
       test_node = None
       if len(test_node_list) == 1:
