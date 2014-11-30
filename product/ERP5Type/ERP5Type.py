@@ -419,11 +419,12 @@ class ERP5TypeInformation(XMLObject,
 
 ### Project WORKFLOW5 , WENJIE , 2014 ###
 
-        # How to use accessor to redefine workflow_list???
         for workflow5 in self.getTypeWorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
-          workflow5 = workflow_module._getOb(workflow5)
-          workflow5.initializeDocument(ob)
+          if workflow_module is not None:
+            workflow5 = workflow_module._getOb(workflow5)
+            workflow5.initializeDocument(ob)
+      
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
