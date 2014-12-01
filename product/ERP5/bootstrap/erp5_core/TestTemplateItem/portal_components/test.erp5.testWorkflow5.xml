@@ -8,15 +8,17 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testERP5Workflow</string> </value>
+            <value> <string>testWorkflow5</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Test ERP5 workflow</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testERP5Workflow</string> </value>
+            <value> <string>test.erp5.testWorkflow5</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

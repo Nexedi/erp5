@@ -28,6 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Acquisition import aq_get
 
 class TestERP5Workflow(ERP5TypeTestCase):
   """
@@ -161,6 +162,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     type_object.setWorkflow5Value(new_workflow)
     type_object.workflow_list=('new_workflow',)
+    #type_object.setProperty('Transition_2', new_workflow)
 
     self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
     self.assertEqual(type_object.getWorkflow5(),
@@ -179,22 +181,24 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # create an object based on new-created portal type in the module
     new_object = self.portal.new_module.newContent(portal_type='Object Type',
                                                     id='new_object')
+    new_object.setCategoryTransitionValue(t2)
     self.assertTrue(new_object is not None)
     self.assertEqual(new_object.getPortalType(), 'Object Type')
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
 
+
     # Pass transition
-    """Method 1"""
+    # Method 1: transition level with base_category
     t1.execute(new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
     t2.execute(new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
-    """Method 2"""
+    # Method 2: state level with base_category
     s1.executeTransition(t1, new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
     s2.executeTransition(t2, new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
-    """Method 3"""
+    # Method 3: object level with base_category
     new_object.getCategoryStateValue().executeTransition(
       new_workflow.transition1,
       new_object)
@@ -204,6 +208,15 @@ class TestERP5Workflow(ERP5TypeTestCase):
       new_object)
     self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
 
+    # Method 4: object level with workflow_list
+    new_object.getDefaultModule(portal_type="Workflow")._getOb('new_workflow').transition1.execute(new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
+    #new_object.getDefaultModule(portal_type="Workflow")._getOb('new_workflow').transition2.execute(new_object)
+    aq_get(new_object, 'workflow_module', 1)._getOb(type_object.workflow_list[0]).transition2.execute(new_object)
+    # getToolByName(new_object, 'new_workflow').transition2.execute(new_object) # marche pas
+    #new_object.Transition1.execute(new_object)
+    self.assertEqual(new_object.getCategoryStateTitle(), 'State 1')
+    
     #new_object.transition1()
     #self.assertEqual(new_object.getCategoryStateTitle(), 'State 2')
     #new_object.transition2a1()

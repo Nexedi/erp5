@@ -73,33 +73,6 @@
                 <value> <string>validate</string> </value>
             </item>
             <item>
-                <key> <string>actor</string> </key>
-                <value> <string>ERP5TypeTestCase</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1377844421.32</float>
-                        <string>GMT+9</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-            <item>
                 <key> <string>validation_state</string> </key>
                 <value> <string>validated</string> </value>
             </item>
