@@ -70,7 +70,8 @@ for test_node in list_node:\n
       if ping_date <= old_date:\n
         test_node.invalidate()\n
   elif validation_state == \'invalidated\':\n
-    test_node.getSpecialiseValue().cleanupInvalidatedTestNode(test_node)\n
+    if test_node.getSpecialise():\n
+      test_node.getSpecialiseValue().cleanupInvalidatedTestNode(test_node)\n
 \n
 portal = context.getPortalObject()\n
 \n
