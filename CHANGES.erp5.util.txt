@@ -1,6 +1,29 @@
 Changes
 =======
 
+0.4.42 (2014-12-02)
+-------------------
+
+ * erp5.util.testnode
+
+    - Typo [Jérôme Perrin]
+    - Run first found runTestSuite from lowest matching partition, not random one [Cédric de Saint Martin]
+
+ * erp5.util
+
+    - Drop support for Python < 2.7 [Julien Muchembled]
+
+0.4.41 (2014-08-07)
+-------------------
+
+ * erp5.util.testnode
+
+    - Fix running test location [Rafael Monnerat]
+
+ * erp5.util
+
+    - Move dealShebang into Utils [Rafael Monnerat]
+
 0.4.40 (2014-07-30)
 -------------------
 
