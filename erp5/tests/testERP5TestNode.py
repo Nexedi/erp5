@@ -86,7 +86,7 @@ class ERP5TestNode(TestCase):
     config["server_url"] = "http://foo.bar"
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
-    
+
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
@@ -213,7 +213,7 @@ class ERP5TestNode(TestCase):
   def test_04_constructProfile(self, my_test_type='UnitTest'):
     """
     Check if the software profile is correctly generated
-    """  
+    """
     test_node = self.getTestNode()
     test_node.test_suite_portal = TaskDistributor
     test_node.test_suite_portal.getTestNode = TaskDistributor.getTestType
@@ -437,16 +437,16 @@ ignore-ssl-certificate = true
         os.makedirs(path_to_create)
         return os.close(os.open(os.path.join(path_to_create,
                                  end_path),os.O_CREAT))
-      
+
       def get_parameters(self, *args, **kw):
         call_parameter_list.append({'args': [x for x in args], 'kw':kw})
-      
+
       def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
        if '--firefox_bin' and '--xvfb_bin' in parameter_list:
          return set(['--firefox_bin','--xvfb_bin'])
        else:
          return []
-      
+
       test_node = self.getTestNode()
       RunnerClass = self.returnGoodClassRunner(my_test_type)
       runner = RunnerClass(test_node)
@@ -507,7 +507,7 @@ ignore-ssl-certificate = true
                          "args": [x for x in args],
                           "kw": kw})
         return {"status_code": self.status_code}
-    
+
     SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
     SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
     SlapOSControler.runComputerPartition = Patch("runComputerPartition")
@@ -551,7 +551,7 @@ ignore-ssl-certificate = true
     def patch_isHostingSubscriptionReady(self, *args, **kw):
       return True
     def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True      
+      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -566,7 +566,7 @@ ignore-ssl-certificate = true
           raise StopIteration
         counter += 1
         return json.dumps([])
-          
+
       def _checkExistingTestSuite(reference_set):
         test_self.assertEquals(set(reference_set),
                   set(os.listdir(test_node.working_directory)))
@@ -644,8 +644,8 @@ ignore-ssl-certificate = true
     TaskDistributionTool.createTestResult = patch_createTestResult
 
     # TestNode
-    test_node = self.getTestNode()  
-    # Modify class UnitTestRunner(or more after) method 
+    test_node = self.getTestNode()
+    # Modify class UnitTestRunner(or more after) method
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass._prepareSlapOS = doNothing
@@ -735,7 +735,7 @@ ignore-ssl-certificate = true
     def patch_isHostingSubscriptionReady(self, *args, **kw):
       return True
     def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True     
+      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -821,7 +821,7 @@ ignore-ssl-certificate = true
     original_prepareSlapOS = RunnerClass._prepareSlapOS
 
     original_runTestSuite = RunnerClass.runTestSuite
- 
+
     if my_test_type == "ScalabilityTest":
       RunnerClass.runTestSuite = patch_runTestSuite
     else:
@@ -906,7 +906,7 @@ ignore-ssl-certificate = true
     initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
     RunnerClass = self.returnGoodClassRunner(my_test_type)
-    runner = RunnerClass(test_node)    
+    runner = RunnerClass(test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
     init_call_kw_list = []
     def initializeSlapOSControler(self, **kw):
@@ -920,7 +920,7 @@ ignore-ssl-certificate = true
          test_node.log, create_partition=0)
     def callRaisingPrepareSlapos():
       self.assertRaises(SubprocessError, callPrepareSlapOS)
-  
+
     self.assertEquals(node_test_suite.retry_software_count, 0)
     for x in xrange(0,11):
       callRaisingPrepareSlapos()
@@ -1008,7 +1008,7 @@ ignore-ssl-certificate = true
     def patch_isHostingSubscriptionReady(self, *args, **kw):
       return True
     def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True     
+      return True
     def patch_runTestSuite(self, *args, **kw):
       return {'status_code':0}
     test_self = self
@@ -1048,7 +1048,7 @@ ignore-ssl-certificate = true
     TaskDistributor.isMasterTestnode = patch_isMasterTestnode
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
-    TaskDistributor.getTestType = patch_getTestType    
+    TaskDistributor.getTestType = patch_getTestType
     TaskDistributionTool.createTestResult = patch_createTestResult
     RunnerClass._prepareSlapOS = doNothing
     RunnerClass.runTestSuite = patch_runTestSuite
@@ -1059,7 +1059,7 @@ ignore-ssl-certificate = true
     SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
     SlapOSMasterCommunicator.__init__ = doNothing
     # Run
-    test_node = self.getTestNode()  
+    test_node = self.getTestNode()
     test_node.run()
     # Restore methods
     TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
