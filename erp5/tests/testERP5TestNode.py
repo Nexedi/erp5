@@ -450,13 +450,14 @@ ignore-ssl-certificate = true
       test_node = self.getTestNode()
       RunnerClass = self.returnGoodClassRunner(my_test_type)
       runner = RunnerClass(test_node)
+      slapos_controler = runner._getSlapOSControler(self.working_directory)
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
       self.updateNodeTestSuiteData(node_test_suite)
       node_test_suite.revision = 'dummy'
       # Path to the dummy runable
       run_test_suite_path = _createPath(
-          os.path.join(runner.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+          os.path.join(slapos_controler.instance_root,'a/bin'),'runTestSuite')
 
       def checkRunTestSuiteParameters(additional_parameter_list=None):
         ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
@@ -465,7 +466,7 @@ ignore-ssl-certificate = true
         runner = RunnerClass(test_node)
         runner.runTestSuite(node_test_suite,"http://foo.bar")
         expected_parameter_list = ['%s/a/bin/runTestSuite'
-           %(runner.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
+           %(slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
            'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
            'http://foo.bar']
         if additional_parameter_list:
