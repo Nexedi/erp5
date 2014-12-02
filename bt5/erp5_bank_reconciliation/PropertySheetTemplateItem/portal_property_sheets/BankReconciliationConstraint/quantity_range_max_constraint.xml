@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>message_no_such_property</string> </key>
-            <value> <string>Bank Statement balance must be defined</string> </value>
+            <value> <string>Bank statement balance must be defined</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

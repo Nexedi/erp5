@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Statement Date</string> </value>
+                    <value> <string>Bank Statement Date</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -110,7 +110,6 @@
                     <value>
                       <list>
                         <string>your_account_balance</string>
-                        <string>your_reconciling</string>
                         <string>your_reconciled_balance</string>
                         <string>my_quantity_range_max</string>
                       </list>
