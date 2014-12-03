@@ -28,20 +28,19 @@
 ##############################################################################
 import unittest
 
-from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import\
-  ERP5TypeFunctionalTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   foreground = 0
-
-def getBusinessTemplateList(self):
-  """
-    Return the list of business templates.
-  """
-  return (
-    'erp5_web_renderjs_ui',
-    'erp5_ui_test_core'
-  )
+  run_only = "renderjs_ui_zuite"
+  
+  def getBusinessTemplateList(self):
+    return (
+      'erp5_web_renderjs_ui',
+      'erp5_ui_test_core',
+      'erp5_full_text_mroonga_catalog'
+      )
 
 def test_suite():
   suite = unittest.TestSuite()
