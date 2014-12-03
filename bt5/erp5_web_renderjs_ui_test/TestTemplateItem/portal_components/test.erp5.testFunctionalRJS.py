@@ -28,7 +28,6 @@
 ##############################################################################
 import unittest
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
@@ -38,8 +37,8 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_web_renderjs_ui',
+      'erp5_web_renderjs_ui_test',
       'erp5_ui_test_core',
-      'erp5_full_text_mroonga_catalog'
       )
 
 def test_suite():
