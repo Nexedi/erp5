@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts31679155.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8">\n
+    <link rel="stylesheet" href="../lib/jquery-ui.css">\n
+    <link rel="stylesheet" href="jsplumb.css">\n
+<!--\n
+ FIXME: renderjs fails if we include renderjs.js twice (this one has a different URL from ERP5\'s one)\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
+-->\n
+    <script src="../lib/jquery.js"  type="text/javascript"></script>\n
+    <script src="../lib/jquery-ui.js"  type="text/javascript"></script>\n
+    <script src="../lib/jquery.jsplumb.js" type="text/javascript"></script>\n
+    <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
+\n
+    <script src="../dream/mixin_promise.js" type="text/javascript"></script>\n
+    <script src="jsplumb.js" type="text/javascript"></script>\n
+\n
+    <script id="node-template" type="text/x-handlebars-template">\n
+      <div class="window {{class}}"\n
+           id="{{element_id}}"\n
+           title="{{title}}">\n
+        {{name}}\n
+        <div class="ep"></div>\n
+      </div>\n
+    </script>\n
+    <script id="popup-edit-template" type="text/x-handlebars-template">\n
+      <div id="edit-popup" data-position-to="origin">\n
+        <div data-role="header" data-theme="a">\n
+          <h1 class="node_class">Edit properties</h1>\n
+          <!-- XXX add this for jquery mobile version.\n
+          <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>\n
+          -->\n
+        </div>\n
+        <br/>\n
+        <form class="ui-content">\n
+          <fieldset></fieldset>\n
+          <input type="button" value="Delete" class="graph_editor_delete_button">\n
+          <input type="submit" value="Validate" class="graph_editor_validate_button">\n
+        </form>\n
+      </div>\n
+    </script>\n
+  </head>\n
+  <body>\n
+    <div class="graph_container"></div>\n
+    <div class="dummy_window"></div>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1927</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
