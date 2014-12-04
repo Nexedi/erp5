@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17687421.03</string> </value>
+            <value> <string>ts17691107.44</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -526,7 +526,6 @@
     }).declareAcquiredMethod("notifyDataChanged", "notifyDataChanged").declareMethod("render", function(data) {\n
         var gadget = this;\n
         this.props.data = {};\n
-        console.log("render", data);\n
         if (data.value) {\n
           // Gadget embedded in ERP5\n
           this.props.erp5_key = data.key;\n
@@ -545,9 +544,11 @@
         }\n
         this.props.jsplumb_instance = jsPlumb.getInstance();\n
     }).declareMethod("getContent", function() {\n
+        var ret = {};\n
         if (this.props.erp5_key) {\n
           // ERP5\n
-          return JSON.stringify({key: this.props.erp5_key, value: this.props.data});\n
+          ret[this.props.erp5_key] = JSON.stringify(this.props.data);\n
+          return ret;\n
         }\n
         return JSON.stringify(this.props.data);\n
     }).declareMethod("startService", function() {\n
@@ -598,7 +599,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25449</int> </value>
+            <value> <int>25441</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

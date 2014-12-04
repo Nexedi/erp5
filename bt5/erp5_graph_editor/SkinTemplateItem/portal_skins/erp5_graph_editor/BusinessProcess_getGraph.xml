@@ -58,9 +58,7 @@ position_graph = context.getProperty(\'jsplumb_graph\')\n
 \n
 if position_graph:\n
   context.log(position_graph)\n
-  \n
-  position_graph = json.loads(position_graph)\n
-  \n
+  position_graph = json.loads(position_graph)[\'graph\']\n
 \n
 visited_business_process_set = set() # prevent infinite recurisions\n
 \n
@@ -72,9 +70,12 @@ def getBusinessProcessGraph(business_process):\n
   for link in business_process.contentValues(portal_type=\'Business Link\'):\n
     for trade_state in (link.getPredecessorValue(), link.getSuccessorValue()):\n
       if trade_state is not None:\n
-        graph[\'node\'][trade_state.getReference() or trade_state.getId()] = dict(\n
+        state_id = trade_state.getReference() or trade_state.getId()\n
+        graph[\'node\'][state_id] = dict(\n
             _class=\'erp5.business_process.trade_state\',\n
             name=trade_state.getTranslatedTitle())\n
+        if state_id in position_graph[\'node\']:\n
+          graph[\'node\'][state_id][\'coordinate\'] = position_graph[\'node\'][state_id][\'coordinate\'] \n
     if link.getPredecessor() and link.getSuccessor(): # XXX no start ??\n
       graph[\'edge\'][link.getRelativeUrl()] = dict(\n
         _class=\'erp5.business_process.business_link\',\n
