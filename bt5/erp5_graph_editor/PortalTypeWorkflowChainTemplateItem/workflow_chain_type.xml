@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Business Process</type>
+  <workflow>business_process_graph_editor_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

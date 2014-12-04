@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681757.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mixin_document_page.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global console, RSVP */\n
+(function(window, RSVP) {\n
+    "use strict";\n
+    window.initDocumentPageMixin = function(gadget_klass) {\n
+        gadget_klass.declareAcquiredMethod("whoWantToDisplayThisDocumentPage", "whoWantToDisplayThisDocumentPage").declareMethod("getNavigationList", function() {\n
+            var key = this.props.jio_key, gadget = this;\n
+            return new RSVP.Queue().push(function() {\n
+                // XXX Conditional simulation menu\n
+                return RSVP.all([ gadget.whoWantToDisplayThisDocumentPage("Input_viewProductionLine", key), gadget.whoWantToDisplayThisDocumentPage("Input_viewTable", key), gadget.whoWantToDisplayThisDocumentPage("Input_viewSimulation", key), gadget.whoWantToDisplayThisDocumentPage("Input_viewDocumentManagement", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewStationUtilisationGraph", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewQueueStatGraph", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewExitStatistics", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewJobGantt", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewJobScheduleSpreadsheet", key), gadget.whoWantToDisplayThisDocumentPage("Output_viewDebugJson", key) ]);\n
+            }).push(function(result_list) {\n
+                return [ {\n
+                    link: result_list[0],\n
+                    title: "Production line"\n
+                }, {\n
+                    link: result_list[1],\n
+                    title: "Edit table"\n
+                }, {\n
+                    link: result_list[2],\n
+                    title: "Run simulation"\n
+                }, {\n
+                    link: result_list[3],\n
+                    title: "Manage document"\n
+                }, {\n
+                    link: result_list[4],\n
+                    title: "Stations Utilization"\n
+                }, {\n
+                    link: result_list[5],\n
+                    title: "Queues Statistics"\n
+                }, {\n
+                    link: result_list[6],\n
+                    title: "Exit Statistics"\n
+                }, {\n
+                    link: result_list[7],\n
+                    title: "Job Gantt"\n
+                }, {\n
+                    link: result_list[8],\n
+                    title: "Job Schedule"\n
+                }, {\n
+                    link: result_list[9],\n
+                    title: "Debug JSON"\n
+                } ];\n
+            });\n
+        });\n
+    };\n
+})(window, RSVP);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2425</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

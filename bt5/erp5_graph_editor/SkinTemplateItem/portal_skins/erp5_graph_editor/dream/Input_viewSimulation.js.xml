@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681758.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Input_viewSimulation.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, promiseEventListener, initGadgetMixin */\n
+/*jslint nomen: true */\n
+(function(window, rJS, RSVP, $, promiseEventListener, initGadgetMixin) {\n
+    "use strict";\n
+    function saveForm(gadget) {\n
+        var general;\n
+        return gadget.getDeclaredGadget("fieldset").push(function(fieldset_gadget) {\n
+            return fieldset_gadget.getContent();\n
+        }).push(function(content) {\n
+            general = content;\n
+            // Always get a fresh version, to prevent deleting spreadsheet & co\n
+            return gadget.aq_getAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json"\n
+            });\n
+        }).push(function(body) {\n
+            var data = JSON.parse(body);\n
+            data.general = general;\n
+            return gadget.aq_putAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json",\n
+                _data: JSON.stringify(data, null, 2),\n
+                _mimetype: "application/json"\n
+            });\n
+        });\n
+    }\n
+    function runSimulation(gadget) {\n
+        return new RSVP.Queue().push(function() {\n
+            return gadget.aq_getAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json"\n
+            });\n
+        }).push(function(body_json) {\n
+            // XXX Hardcoded relative URL\n
+            return gadget.aq_ajax({\n
+                url: "../../runSimulation",\n
+                type: "POST",\n
+                data: body_json,\n
+                headers: {\n
+                    "Content-Type": "application/json"\n
+                }\n
+            });\n
+        }).push(function(evt) {\n
+            var json_data = JSON.parse(evt.target.responseText);\n
+            if (json_data.success !== true) {\n
+                throw new Error(json_data.error);\n
+            }\n
+            return gadget.aq_putAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "simulation.json",\n
+                _data: JSON.stringify(json_data.data, null, 2),\n
+                _mimetype: "application/json"\n
+            });\n
+        }).push(function() {\n
+            return gadget.whoWantsToDisplayThisDocument(gadget.props.jio_key, "view_result");\n
+        }).push(function(url) {\n
+            return gadget.pleaseRedirectMyHash(url);\n
+        });\n
+    }\n
+    function waitForRunSimulation(gadget) {\n
+        var submit_evt;\n
+        return new RSVP.Queue().push(function() {\n
+            return promiseEventListener(gadget.props.element.getElementsByClassName("run_form")[0], "submit", false);\n
+        }).push(function(evt) {\n
+            submit_evt = evt;\n
+            // Prevent double click\n
+            evt.target.getElementsByClassName("ui-btn")[0].disabled = true;\n
+            $.mobile.loading("show");\n
+            return saveForm(gadget);\n
+        }).push(function() {\n
+            return runSimulation(gadget);\n
+        }).push(undefined, function(error) {\n
+            // Always drop the loader\n
+            $.mobile.loading("hide");\n
+            throw error;\n
+        }).push(function() {\n
+            submit_evt.target.getElementsByClassName("ui-btn")[0].disabled = false;\n
+            $.mobile.loading("hide");\n
+        });\n
+    }\n
+    /////////////////////////////////////////////////////////////////\n
+    // Handlebars\n
+    /////////////////////////////////////////////////////////////////\n
+    // Precompile the templates while loading the first gadget instance\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareAcquiredMethod("aq_putAttachment", "jio_putAttachment").declareAcquiredMethod("aq_ajax", "jio_ajax").declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash").declareAcquiredMethod("whoWantsToDisplayThisDocument", "whoWantsToDisplayThisDocument").declareMethod("render", function(options) {\n
+        var gadget = this, data;\n
+        this.props.jio_key = options.id;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "body.json"\n
+        }).push(function(json) {\n
+            var application_configuration = {};\n
+            data = JSON.parse(json);\n
+            application_configuration = data.application_configuration.general || {};\n
+            return gadget.getDeclaredGadget("fieldset").push(function(fieldset_gadget) {\n
+                return fieldset_gadget.render({\n
+                    value: data.general,\n
+                    property_definition: application_configuration\n
+                });\n
+            });\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        return waitForRunSimulation(this);\n
+    });\n
+})(window, rJS, RSVP, jQuery, promiseEventListener, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4723</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

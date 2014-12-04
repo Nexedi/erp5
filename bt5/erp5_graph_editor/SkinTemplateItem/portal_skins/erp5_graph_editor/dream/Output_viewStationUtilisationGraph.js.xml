@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681763.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewStationUtilisationGraph.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, jQuery, initGadgetMixin */\n
+/*jslint unparam: true */\n
+(function(window, rJS, $, initGadgetMixin) {\n
+    "use strict";\n
+    function station_utilisation_graph_widget(output_data) {\n
+        var blockage_data = [], waiting_data = [], failure_data = [], working_data = [], ticks = [], counter = 1, series, options;\n
+        // XXX output is still elementList ???\n
+        $.each(output_data.elementList.sort(function(a, b) {\n
+            return a.id < b.id ? -1 : 1;\n
+        }), function(idx, obj) {\n
+            // add each object that has a working ratio\n
+            if (obj.results !== undefined && obj.results.working_ratio !== undefined) {\n
+                /* when there is only one replication, the ratio is given as a float,\n
+              otherwise we have a mapping avg, ub lb */\n
+                var blockage_ratio = 0, working_ratio = 0, waiting_ratio = 0, failure_ratio = 0;\n
+                if (obj.results.blockage_ratio !== undefined) {\n
+                    if (obj.results.blockage_ratio.avg !== undefined) {\n
+                        blockage_ratio = obj.results.blockage_ratio.avg;\n
+                    } else {\n
+                        blockage_ratio = obj.results.blockage_ratio;\n
+                    }\n
+                }\n
+                blockage_data.push([ counter, blockage_ratio ]);\n
+                // XXX merge setup & loading ratio in working ratio for now\n
+                if (obj.results.setup_ratio !== undefined) {\n
+                    if (obj.results.setup_ratio.avg !== undefined) {\n
+                        working_ratio += obj.results.setup_ratio.avg;\n
+                    } else {\n
+                        working_ratio += obj.results.setup_ratio;\n
+                    }\n
+                }\n
+                if (obj.results.loading_ratio !== undefined) {\n
+                    if (obj.results.loading_ratio.avg !== undefined) {\n
+                        working_ratio += obj.results.loading_ratio.avg;\n
+                    } else {\n
+                        working_ratio += obj.results.loading_ratio;\n
+                    }\n
+                }\n
+                if (obj.results.working_ratio !== undefined) {\n
+                    if (obj.results.working_ratio.avg !== undefined) {\n
+                        working_ratio += obj.results.working_ratio.avg;\n
+                    } else {\n
+                        working_ratio += obj.results.working_ratio;\n
+                    }\n
+                }\n
+                working_data.push([ counter, working_ratio ]);\n
+                if (obj.results.waiting_ratio !== undefined) {\n
+                    if (obj.results.waiting_ratio.avg !== undefined) {\n
+                        waiting_ratio = obj.results.waiting_ratio.avg;\n
+                    } else {\n
+                        waiting_ratio = obj.results.waiting_ratio;\n
+                    }\n
+                }\n
+                waiting_data.push([ counter, waiting_ratio ]);\n
+                if (obj.results.failure_ratio !== undefined) {\n
+                    if (obj.results.failure_ratio.avg !== undefined) {\n
+                        failure_ratio = obj.results.failure_ratio.avg;\n
+                    } else {\n
+                        failure_ratio = obj.results.failure_ratio;\n
+                    }\n
+                }\n
+                failure_data.push([ counter, failure_ratio ]);\n
+                ticks.push([ counter, obj.id ]);\n
+                counter += 1;\n
+            }\n
+        });\n
+        series = [ {\n
+            label: "Working",\n
+            data: working_data\n
+        }, {\n
+            label: "Waiting",\n
+            data: waiting_data\n
+        }, {\n
+            label: "Failures",\n
+            data: failure_data\n
+        }, {\n
+            label: "Blockage",\n
+            data: blockage_data\n
+        } ];\n
+        options = {\n
+            xaxis: {\n
+                minTickSize: 1,\n
+                ticks: ticks\n
+            },\n
+            yaxis: {\n
+                max: 100\n
+            },\n
+            series: {\n
+                bars: {\n
+                    show: true,\n
+                    barWidth: .8,\n
+                    align: "center"\n
+                },\n
+                stack: true\n
+            }\n
+        };\n
+        return [ series, options ];\n
+    }\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        gadget.props.result = options.result;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "simulation.json"\n
+        }).push(function(simulation_json) {\n
+            gadget.props.result_list = station_utilisation_graph_widget(JSON.parse(simulation_json)[gadget.props.result].result);\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        // XXX Manually calculate width and height when resizing\n
+        $.plot(this.props.element.querySelector(".graph_container"), this.props.result_list[0], this.props.result_list[1]);\n
+    });\n
+})(window, rJS, jQuery, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5059</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

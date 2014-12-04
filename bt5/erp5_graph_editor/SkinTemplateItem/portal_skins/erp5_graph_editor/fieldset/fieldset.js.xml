@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681764.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fieldset.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, Handlebars,\n
+  promiseEventListener, initGadgetMixin*/\n
+/*jslint nomen: true */\n
+(function(window, rJS, RSVP, Handlebars, initGadgetMixin) {\n
+    "use strict";\n
+    /////////////////////////////////////////////////////////////////\n
+    // Handlebars\n
+    /////////////////////////////////////////////////////////////////\n
+    // Precompile the templates while loading the first gadget instance\n
+    var gadget_klass = rJS(window), source = gadget_klass.__template_element.getElementById("label-template").innerHTML, label_template = Handlebars.compile(source);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareMethod("render", function(options, node_id) {\n
+        // XXX node_id is added like a property so that one can change the node\n
+        // id\n
+        var gadget = this, queue;\n
+        gadget.props.key = options.key;\n
+        // used for recursive fieldsets\n
+        gadget.props.field_gadget_list = [];\n
+        function addField(property_id, property_definition, value) {\n
+            var sub_gadget;\n
+            queue.push(function() {\n
+                // XXX this is incorrect for recursive fieldsets.\n
+                // we should use nested fieldset with legend\n
+                gadget.props.element.insertAdjacentHTML("beforeend", label_template({\n
+                    "for": property_id,\n
+                    name: property_definition.name || property_id\n
+                }));\n
+                if (property_definition.type === "object") {\n
+                    // Create a recursive fieldset for this key.\n
+                    return gadget.declareGadget("../fieldset/index.html");\n
+                }\n
+                if (property_definition.type === "number") {\n
+                    return gadget.declareGadget("../number_field/index.html");\n
+                }\n
+                if (property_definition.enum) {\n
+                    return gadget.declareGadget("../list_field/index.html");\n
+                }\n
+                return gadget.declareGadget("../string_field/index.html");\n
+            }).push(function(gg) {\n
+                sub_gadget = gg;\n
+                return sub_gadget.render({\n
+                    key: property_id,\n
+                    value: value,\n
+                    property_definition: property_definition\n
+                });\n
+            }).push(function() {\n
+                return sub_gadget.getElement();\n
+            }).push(function(sub_element) {\n
+                gadget.props.element.appendChild(sub_element);\n
+                gadget.props.field_gadget_list.push(sub_gadget);\n
+            });\n
+        }\n
+        queue = new RSVP.Queue().push(function() {\n
+            if (node_id) {\n
+                addField("id", {\n
+                    type: "string"\n
+                }, node_id);\n
+            }\n
+            Object.keys(options.property_definition.properties).forEach(function(property_name) {\n
+                var property_definition = options.property_definition.properties[property_name], value = (options.value || {})[property_name] === undefined ? property_definition._default : options.value[property_name];\n
+                // XXX some properties are not editable\n
+                if (property_name !== "coordinate" && property_name !== "_class") {\n
+                    addField(property_name, property_definition, value);\n
+                }\n
+            });\n
+        });\n
+        return queue;\n
+    }).declareMethod("getContent", function() {\n
+        var i, promise_list = [], gadget = this;\n
+        for (i = 0; i < this.props.field_gadget_list.length; i += 1) {\n
+            promise_list.push(this.props.field_gadget_list[i].getContent());\n
+        }\n
+        return RSVP.Queue().push(function() {\n
+            return RSVP.all(promise_list);\n
+        }).push(function(result_list) {\n
+            var name, result = {}, content = result;\n
+            if (gadget.props.key) {\n
+                content = result[gadget.props.key] = {};\n
+            }\n
+            for (i = 0; i < result_list.length; i += 1) {\n
+                for (name in result_list[i]) {\n
+                    if (result_list[i].hasOwnProperty(name)) {\n
+                        content[name] = result_list[i][name];\n
+                    }\n
+                }\n
+            }\n
+            return result;\n
+        });\n
+    });\n
+})(window, rJS, RSVP, Handlebars, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4262</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

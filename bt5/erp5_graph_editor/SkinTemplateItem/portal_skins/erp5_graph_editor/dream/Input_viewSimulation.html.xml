@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681761.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Input_viewSimulation.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8">\n
+    <meta name="viewport" content="width=device-width, initial-scale=1">\n
+    <title>Run Simulation</title>\n
+    <script src="../lib/rsvp.min.js" type="text/javascript"></script>\n
+    <script src="../lib/renderjs.min.js" type="text/javascript"></script>\n
+    <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
+    <script src="../lib/jquery.js" type="text/javascript"></script>\n
+    <script src="../lib/jquerymobile.js" type="text/javascript"></script>\n
+\n
+    <script id="label-template" type="text/x-handlebars-template">\n
+      <label>{{label}}</label>\n
+    </script>\n
+\n
+    <script src="mixin_gadget.js" type="text/javascript"></script>\n
+    <script src="mixin_promise.js" type="text/javascript"></script>\n
+    <script src="Input_viewSimulation.js" type="text/javascript"></script>\n
+  </head>\n
+  <body>\n
+    <form class="run_form">\n
+      <fieldset>\n
+        <div data-gadget-url="../fieldset/index.html"\n
+             data-gadget-scope="fieldset"></div>\n
+      </fieldset>\n
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
+              ui-icon-refresh ui-btn-icon-right">Run Simulation</button>\n
+    </form>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1205</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

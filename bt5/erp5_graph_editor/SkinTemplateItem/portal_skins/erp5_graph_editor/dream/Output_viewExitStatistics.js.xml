@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681762.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewExitStatistics.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, Handlebars,\n
+         initGadgetMixin */\n
+/*jslint nomen: true */\n
+(function(window, rJS, Handlebars, initGadgetMixin) {\n
+    "use strict";\n
+    /////////////////////////////////////////////////////////////////\n
+    // Handlebars\n
+    /////////////////////////////////////////////////////////////////\n
+    // Precompile the templates while loading the first gadget instance\n
+    var gadget_klass = rJS(window), header_source = gadget_klass.__template_element.getElementById("header-template").innerHTML, header_template = Handlebars.compile(header_source), metric_object_source = gadget_klass.__template_element.getElementById("metric-object-template").innerHTML, metric_object_template = Handlebars.compile(metric_object_source), metric_simple_source = gadget_klass.__template_element.getElementById("simple-metric-template").innerHTML, metric_simple_template = Handlebars.compile(metric_simple_source), metric_interval_source = gadget_klass.__template_element.getElementById("interval-through-metric-template").innerHTML, metric_interval_template = Handlebars.compile(metric_interval_source);\n
+    /////////////////////////////////////////////////////////////////\n
+    // Calculate widget\n
+    /////////////////////////////////////////////////////////////////\n
+    function calculate_average(attainment_list) {\n
+        return (attainment_list.reduce(function(a, b) {\n
+            return a + b;\n
+        }) / attainment_list.length * 100).toFixed(2);\n
+    }\n
+    function calculate_exit_stat(data) {\n
+        var output_data = data.result, input_data = data.input, elementList = output_data.elementList, i, j, metric, metric_value, element, interval_value, interval_list, attainment_list, throughputTarget = input_data.general.throughputTarget, result = "";\n
+        for (i = 0; i < elementList.length; i += 1) {\n
+            element = elementList[i];\n
+            if (element.family === "Exit") {\n
+                result += "<table>";\n
+                result += header_template({\n
+                    name: element.name || element.id\n
+                });\n
+                for (metric in element.results) {\n
+                    if (element.results.hasOwnProperty(metric)) {\n
+                        metric_value = element.results[metric];\n
+                        if (metric === "intervalThroughputList") {\n
+                            interval_list = [];\n
+                            attainment_list = [];\n
+                            for (j = 0; j < metric_value.length; j += 1) {\n
+                                interval_value = metric_value[j];\n
+                                attainment_list.push(interval_value / throughputTarget);\n
+                                if (interval_value > throughputTarget) {\n
+                                    interval_list.push({\n
+                                        interval: interval_value,\n
+                                        icon: "check"\n
+                                    });\n
+                                } else {\n
+                                    interval_list.push({\n
+                                        interval: interval_value,\n
+                                        icon: "delete"\n
+                                    });\n
+                                }\n
+                            }\n
+                            result += metric_interval_template({\n
+                                interval_list: interval_list,\n
+                                average: calculate_average(attainment_list)\n
+                            });\n
+                        } else {\n
+                            if (typeof metric_value === "object") {\n
+                                if (metric_value.ub === metric_value.lb) {\n
+                                    metric_value = metric_value.ub;\n
+                                } else {\n
+                                    metric_value.metric = metric;\n
+                                    metric_value.avg = metric_value.avg.toFixed(2);\n
+                                    metric_value.lb = metric_value.lb.toFixed(2);\n
+                                    metric_value.ub = metric_value.ub.toFixed(2);\n
+                                    metric_value = metric_object_template(metric_value);\n
+                                }\n
+                            }\n
+                            if (typeof metric_value === "number") {\n
+                                metric_value = metric_value.toFixed(2);\n
+                            }\n
+                            // Rename some metric to something more meaningful\n
+                            if (metric === "lifespan") {\n
+                                metric = "Cycle Time";\n
+                            }\n
+                            if (metric === "takt_time") {\n
+                                metric = "Average Departure Rate";\n
+                            }\n
+                            result += metric_simple_template({\n
+                                metric: metric,\n
+                                value: metric_value\n
+                            });\n
+                        }\n
+                    }\n
+                }\n
+                result += "</table>";\n
+            }\n
+        }\n
+        return result;\n
+    }\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        gadget.props.result = options.result;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "simulation.json"\n
+        }).push(function(simulation_json) {\n
+            var result = calculate_exit_stat(JSON.parse(simulation_json)[gadget.props.result]);\n
+            gadget.props.element.innerHTML = result;\n
+        });\n
+    });\n
+})(window, rJS, Handlebars, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5794</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

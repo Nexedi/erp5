@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681761.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewCapacityUtilisationGraph.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, jQuery, initGadgetMixin */\n
+/*jslint unparam: true */\n
+(function(window, rJS, $, initGadgetMixin) {\n
+    "use strict";\n
+    function capacity_utilisation_graph_widget(all_data) {\n
+        var available_capacity_by_station = {}, station_id, series, graph_list = [], options, capacity_usage_by_station = {}, input_data = all_data.input, output_data = all_data.result;\n
+        // Compute availability by station\n
+        $.each(input_data.nodes, function(idx, obj) {\n
+            var available_capacity = [];\n
+            if (obj.intervalCapacity !== undefined) {\n
+                $.each(obj.intervalCapacity, function(i, capacity) {\n
+                    available_capacity.push([ i, capacity ]);\n
+                });\n
+                available_capacity_by_station[obj.id] = available_capacity;\n
+            }\n
+        });\n
+        // Compute used capacity by station\n
+        $.each(output_data.elementList.sort(function(a, b) {\n
+            return a.id < b.id ? -1 : 1;\n
+        }), function(idx, obj) {\n
+            if (obj.results !== undefined && obj.results.capacityUsed !== undefined) {\n
+                var capacity_usage = [];\n
+                $.each(obj.results.capacityUsed, function(i, step) {\n
+                    var period = 0, usage = 0;\n
+                    $.each(step, function(k, v) {\n
+                        if (k === "period") {\n
+                            period = v;\n
+                        }\n
+                    });\n
+                    $.each(step, function(k, v) {\n
+                        if (k !== "utilization" && k !== "period") {\n
+                            usage += v;\n
+                        }\n
+                    });\n
+                    capacity_usage.push([ period, usage ]);\n
+                });\n
+                capacity_usage_by_station[obj.id] = capacity_usage;\n
+            }\n
+        });\n
+        for (station_id in available_capacity_by_station) {\n
+            if (available_capacity_by_station.hasOwnProperty(station_id)) {\n
+                series = [ {\n
+                    label: "Capacity",\n
+                    data: available_capacity_by_station[station_id],\n
+                    color: "green"\n
+                }, {\n
+                    label: "Utilisation",\n
+                    data: capacity_usage_by_station[station_id],\n
+                    color: "red"\n
+                } ];\n
+                options = {\n
+                    series: {\n
+                        lines: {\n
+                            show: true,\n
+                            fill: true\n
+                        }\n
+                    }\n
+                };\n
+                graph_list.push([ input_data.nodes[station_id].name || station_id, series, options ]);\n
+            }\n
+        }\n
+        return graph_list;\n
+    }\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        gadget.props.result = options.result;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "simulation.json"\n
+        }).push(function(simulation_json) {\n
+            gadget.props.result_list = capacity_utilisation_graph_widget(JSON.parse(simulation_json)[gadget.props.result]);\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        var element = $(this.props.element), graph;\n
+        $.each(this.props.result_list, function(idx, result) {\n
+            graph = $("<div class=\'capacity_graph\' " + "style=\'width: 70%; height: 250px\'></div>");\n
+            element.append($("<h2>").text(result[0]), graph);\n
+            $.plot(graph, result[1], result[2]);\n
+        });\n
+    });\n
+})(window, rJS, jQuery, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3769</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

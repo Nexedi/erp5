@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681762.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewJobGantt.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8">\n
+    <meta name="viewport" content="width=device-width, initial-scale=1">\n
+    <title>Job Gantt</title>\n
+    <link rel="stylesheet" href="../lib/dhtmlxgantt.css">\n
+\n
+    <script src="../lib/rsvp.min.js" type="text/javascript"></script>\n
+    <script src="../lib/renderjs.min.js" type="text/javascript"></script>\n
+    <script src="../lib/jquery.js" type="text/javascript"></script>\n
+    <script src="../lib/dhtmlxgantt.js" type="text/javascript"></script>\n
+    <script src="mixin_gadget.js" type="text/javascript"></script>\n
+    <script src="Output_viewJobGantt.js" type="text/javascript"></script>\n
+  </head>\n
+  <body>\n
+    <div class="gant_container" style="height: 800px;"></div>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>745</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,538 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681769.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontable.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Handsontable 0.10.5\n
+ * Handsontable is a simple jQuery plugin for editable tables with basic copy-paste compatibility with Excel and Google Docs\n
+ *\n
+ * Copyright 2012, Marcin Warpechowski\n
+ * Licensed under the MIT license.\n
+ * http://handsontable.com/\n
+ *\n
+ * Date: Mon Mar 31 2014 14:19:47 GMT+0200 (CEST)\n
+ */\n
+\n
+.handsontable {\n
+  position: relative;\n
+}\n
+\n
+.handsontable.htAutoColumnSize {\n
+  visibility: hidden;\n
+  left: 0;\n
+  position: absolute;\n
+  top: 0;\n
+}\n
+\n
+.handsontable table,\n
+.handsontable tbody,\n
+.handsontable thead,\n
+.handsontable td,\n
+.handsontable th,\n
+.handsontable div {\n
+  box-sizing: content-box;\n
+  -webkit-box-sizing: content-box;\n
+  -moz-box-sizing: content-box;\n
+}\n
+\n
+.handsontable table.htCore {\n
+  border-collapse: separate;\n
+  /*it must be separate, otherwise there are offset miscalculations in WebKit: http://stackoverflow.com/questions/2655987/border-collapse-differences-in-ff-and-webkit*/\n
+  position: relative;\n
+  /*this actually only changes appearance of user selection - does not make text unselectable\n
+  -webkit-user-select: none;\n
+  -khtml-user-select: none;\n
+  -moz-user-select: none;\n
+  -o-user-select: none;\n
+  -ms-user-select: none;\n
+  /*user-select: none; /*no browser supports unprefixed version*/\n
+  border-spacing: 0;\n
+  margin: 0;\n
+  border-width: 0;\n
+  table-layout: fixed;\n
+  width: 0;\n
+  outline-width: 0;\n
+  /* reset bootstrap table style. for more info see: https://github.com/warpech/jquery-handsontable/issues/224 */\n
+  max-width: none;\n
+  max-height: none;\n
+}\n
+\n
+.handsontable col {\n
+  width: 50px;\n
+}\n
+\n
+.handsontable col.rowHeader {\n
+  width: 50px;\n
+}\n
+\n
+.handsontable th,\n
+.handsontable td {\n
+  border-right: 1px solid #CCC;\n
+  border-bottom: 1px solid #CCC;\n
+  height: 22px;\n
+  empty-cells: show;\n
+  line-height: 21px;\n
+  padding: 0 4px 0 4px;\n
+  /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */\n
+  background-color: #FFF;\n
+  vertical-align: top;\n
+  overflow: hidden;\n
+  outline-width: 0;\n
+  white-space: pre-line;\n
+  /* preserve new line character in cell */\n
+}\n
+\n
+.handsontable td.htInvalid {\n
+  -webkit-transition: background 0.75s ease;\n
+  transition: background 0.75s ease;\n
+  background-color: #ff4c42;\n
+}\n
+\n
+.handsontable th:last-child {\n
+  /*Foundation framework fix*/\n
+  border-right: 1px solid #CCC;\n
+  border-bottom: 1px solid #CCC;\n
+}\n
+\n
+.handsontable tr:first-child th.htNoFrame,\n
+.handsontable th:first-child.htNoFrame,\n
+.handsontable th.htNoFrame {\n
+  border-left-width: 0;\n
+  background-color: white;\n
+  border-color: #FFF;\n
+}\n
+\n
+.handsontable th:first-child,\n
+.handsontable td:first-child,\n
+.handsontable .htNoFrame + th,\n
+.handsontable .htNoFrame + td {\n
+  border-left: 1px solid #CCC;\n
+}\n
+\n
+.handsontable tr:first-child th,\n
+.handsontable tr:first-child td {\n
+  border-top: 1px solid #CCC;\n
+}\n
+\n
+.handsontable thead tr:last-child th {\n
+  border-bottom-width: 0;\n
+}\n
+\n
+.handsontable thead tr.lastChild th {\n
+  border-bottom-width: 0;\n
+}\n
+\n
+.handsontable th {\n
+  background-color: #EEE;\n
+  color: #222;\n
+  text-align: center;\n
+  font-weight: normal;\n
+  white-space: nowrap;\n
+}\n
+\n
+.handsontable thead th {\n
+  padding: 0;\n
+}\n
+\n
+.handsontable th.active {\n
+  background-color: #CCC;\n
+}\n
+\n
+.handsontable thead th .relative {\n
+  position: relative;\n
+  padding: 2px 4px;\n
+}\n
+\n
+/* plugins */\n
+\n
+.handsontable .manualColumnMover {\n
+  position: absolute;\n
+  left: 0;\n
+  top: 0;\n
+  background-color: transparent;\n
+  width: 5px;\n
+  height: 25px;\n
+  z-index: 999;\n
+  cursor: move;\n
+}\n
+\n
+.handsontable th .manualColumnMover:hover,\n
+.handsontable th .manualColumnMover.active {\n
+  background-color: #88F;\n
+}\n
+\n
+.handsontable .manualColumnResizer {\n
+  position: absolute;\n
+  top: 0;\n
+  cursor: col-resize;\n
+}\n
+\n
+.handsontable .manualColumnResizerHandle {\n
+  background-color: transparent;\n
+  width: 5px;\n
+  height: 25px;\n
+}\n
+\n
+.handsontable .manualColumnResizer:hover .manualColumnResizerHandle,\n
+.handsontable .manualColumnResizer.active .manualColumnResizerHandle {\n
+  background-color: #AAB;\n
+}\n
+\n
+.handsontable .manualColumnResizerLine {\n
+  position: absolute;\n
+  right: 0;\n
+  top: 0;\n
+  background-color: #AAB;\n
+  display: none;\n
+  width: 0;\n
+  border-right: 1px dashed #777;\n
+}\n
+\n
+.handsontable .manualColumnResizer.active .manualColumnResizerLine {\n
+  display: block;\n
+}\n
+\n
+.handsontable .columnSorting:hover {\n
+  text-decoration: underline;\n
+  cursor: pointer;\n
+}\n
+\n
+/* border line */\n
+\n
+.handsontable .wtBorder {\n
+  position: absolute;\n
+  font-size: 0;\n
+}\n
+\n
+.handsontable td.area {\n
+  background-color: #EEF4FF;\n
+}\n
+\n
+/* fill handle */\n
+\n
+.handsontable .wtBorder.corner {\n
+  font-size: 0;\n
+  cursor: crosshair;\n
+}\n
+\n
+.handsontable .htBorder.htFillBorder {\n
+  background: red;\n
+  width: 1px;\n
+  height: 1px;\n
+}\n
+\n
+.handsontableInput {\n
+  border: 2px solid #5292F7;\n
+  outline-width: 0;\n
+  margin: 0;\n
+  padding: 1px 4px 0 2px;\n
+  font-family: Arial, Helvetica, sans-serif;\n
+  /*repeat from .handsontable (inherit doesn\'t work with IE<8) */\n
+  line-height: 1.3em;\n
+  /*repeat from .handsontable (inherit doesn\'t work with IE<8) */\n
+  font-size: inherit;\n
+  -webkit-box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);\n
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);\n
+  resize: none;\n
+  /*below are needed to overwrite stuff added by jQuery UI Bootstrap theme*/\n
+  display: inline-block;\n
+  color: #000;\n
+  border-radius: 0;\n
+  background-color: #FFF;\n
+  /*overwrite styles potentionally made by a framework*/\n
+}\n
+\n
+.handsontableInputHolder {\n
+  position: absolute;\n
+  top: 0;\n
+  left: 0;\n
+  z-index: 100;\n
+}\n
+\n
+.htSelectEditor {\n
+  -webkit-appearance: menulist-button !important;\n
+  position: absolute;\n
+}\n
+\n
+/*\n
+TextRenderer readOnly cell\n
+*/\n
+\n
+.handsontable .htDimmed {\n
+  color: #777;\n
+}\n
+\n
+/*\n
+TextRenderer placeholder value\n
+*/\n
+\n
+.handsontable .htPlaceholder {\n
+  color: #999;\n
+}\n
+\n
+/*\n
+AutocompleteRenderer down arrow\n
+*/\n
+\n
+.handsontable .htAutocompleteArrow {\n
+  float: right;\n
+  font-size: 10px;\n
+  color: #EEE;\n
+  cursor: default;\n
+  width: 16px;\n
+  text-align: center;\n
+}\n
+\n
+.handsontable td .htAutocompleteArrow:hover {\n
+  color: #777;\n
+}\n
+\n
+/*\n
+CheckboxRenderer\n
+*/\n
+\n
+.handsontable .htCheckboxRendererInput.noValue {\n
+  opacity: 0.5;\n
+}\n
+\n
+/*\n
+NumericRenderer\n
+*/\n
+\n
+.handsontable .htNumeric {\n
+  text-align: right;\n
+}\n
+\n
+/*context menu rules*/\n
+\n
+ul.context-menu-list {\n
+  color: black;\n
+}\n
+\n
+ul.context-menu-list li {\n
+  margin-bottom: 0;\n
+  /*Foundation framework fix*/\n
+}\n
+\n
+/**\n
+ * dragdealer\n
+ */\n
+\n
+.handsontable .dragdealer {\n
+  position: relative;\n
+  width: 9px;\n
+  height: 9px;\n
+  background: #F8F8F8;\n
+  border: 1px solid #DDD;\n
+}\n
+\n
+.handsontable .dragdealer .handle {\n
+  position: absolute;\n
+  width: 9px;\n
+  height: 9px;\n
+  background: #C5C5C5;\n
+}\n
+\n
+.handsontable .dragdealer .disabled {\n
+  background: #898989;\n
+}\n
+\n
+/**\n
+ * Handsontable in Handsontable\n
+ */\n
+\n
+.handsontable .handsontable .wtHider {\n
+  padding: 0 0 5px 0;\n
+}\n
+\n
+.handsontable .handsontable table {\n
+  -webkit-box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);\n
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);\n
+}\n
+\n
+/**\n
+ * Handsontable listbox theme\n
+ */\n
+\n
+.handsontable.listbox {\n
+  margin: 0;\n
+}\n
+\n
+.handsontable.listbox table {\n
+  border: 1px solid #ccc;\n
+  border-collapse: separate;\n
+  background: white;\n
+}\n
+\n
+.handsontable.listbox th,\n
+.handsontable.listbox tr:first-child th,\n
+.handsontable.listbox tr:last-child th,\n
+.handsontable.listbox tr:first-child td,\n
+.handsontable.listbox td {\n
+  border-width: 0;\n
+}\n
+\n
+.handsontable.listbox th,\n
+.handsontable.listbox td {\n
+  white-space: nowrap;\n
+  text-overflow: ellipsis;\n
+}\n
+\n
+.handsontable.listbox td.htDimmed {\n
+  cursor: default;\n
+  color: inherit;\n
+  font-style: inherit;\n
+}\n
+\n
+.handsontable.listbox .wtBorder {\n
+  visibility: hidden;\n
+}\n
+\n
+.handsontable.listbox tr td.current,\n
+.handsontable.listbox tr:hover td {\n
+  background: #eee;\n
+}\n
+\n
+.htContextMenu {\n
+  display: none;\n
+  position: absolute;\n
+}\n
+\n
+.htContextMenu table.htCore {\n
+  outline: 1px solid #bbb;\n
+}\n
+\n
+.htContextMenu .wtBorder {\n
+  visibility: hidden;\n
+}\n
+\n
+.htContextMenu table tbody tr td {\n
+  background: white;\n
+  border-width: 0;\n
+  padding: 4px 6px 0px 6px;\n
+  cursor: pointer;\n
+  overflow: hidden;\n
+  white-space: nowrap;\n
+  text-overflow: ellipsis;\n
+}\n
+\n
+.htContextMenu table tbody tr td:first-child {\n
+  border: 0;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDimmed{\n
+  font-style: normal;\n
+  color: #323232;\n
+}\n
+\n
+.htContextMenu table tbody tr td.current{\n
+  background: rgb(233, 233, 233);\n
+}\n
+\n
+.htContextMenu table tbody tr td.htSeparator {\n
+  border-top: 1px solid #bbb;\n
+  height: 0;\n
+  padding: 0;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDisabled {\n
+  color: #999;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDisabled:hover {\n
+  background: white;\n
+  color: #999;\n
+  cursor: default;\n
+}\n
+\n
+.handsontable td.htSearchResult {\n
+  background: #fcedd9;\n
+  color: #583707;\n
+}\n
+\n
+/*WalkontableDebugOverlay*/\n
+\n
+.wtDebugHidden {\n
+  display: none;\n
+}\n
+\n
+.wtDebugVisible {\n
+  display: block;\n
+  -webkit-animation-duration: 0.5s;\n
+  -webkit-animation-name: wtFadeInFromNone;\n
+  animation-duration: 0.5s;\n
+  animation-name: wtFadeInFromNone;\n
+}\n
+\n
+@keyframes wtFadeInFromNone {\n
+  0% {\n
+    display: none;\n
+    opacity: 0;\n
+  }\n
+\n
+  1% {\n
+    display: block;\n
+    opacity: 0;\n
+  }\n
+\n
+  100% {\n
+    display: block;\n
+    opacity: 1;\n
+  }\n
+}\n
+\n
+@-webkit-keyframes wtFadeInFromNone {\n
+  0% {\n
+    display: none;\n
+    opacity: 0;\n
+  }\n
+\n
+  1% {\n
+    display: block;\n
+    opacity: 0;\n
+  }\n
+\n
+  100% {\n
+    display: block;\n
+    opacity: 1;\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8975</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

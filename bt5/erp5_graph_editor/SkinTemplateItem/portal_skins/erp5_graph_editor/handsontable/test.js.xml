@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681765.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global rJS, JSON, QUnit, jQuery*/\n
+(function(rJS, JSON, QUnit, $) {\n
+    "use strict";\n
+    var start = QUnit.start, stop = QUnit.stop, test = QUnit.test, equal = QUnit.equal, sample = JSON.stringify([ [ "row1", "data11", "data12", "data13" ], [ "row2", "data21", "data22", "data23" ], [ "row3", "data31", "data32", "data33" ] ]);\n
+    QUnit.config.testTimeout = 5e3;\n
+    rJS(window).ready(function(g) {\n
+        test("data output is equal to input", function() {\n
+            var hstable_gadget;\n
+            stop();\n
+            g.declareGadget("./index.html", {\n
+                element: document.querySelector("#qunit-fixture")\n
+            }).then(function(new_gadget) {\n
+                hstable_gadget = new_gadget;\n
+                return hstable_gadget.render(sample);\n
+            }).then(function() {\n
+                return hstable_gadget.getData();\n
+            }).then(function(data) {\n
+                equal(data, sample);\n
+            }).always(start);\n
+        });\n
+        test("the table is displayed", function() {\n
+            var hstable_gadget;\n
+            stop();\n
+            g.declareGadget("./index.html", {\n
+                element: document.querySelector("#qunit-fixture")\n
+            }).then(function(new_gadget) {\n
+                hstable_gadget = new_gadget;\n
+                return hstable_gadget.render(sample);\n
+            }).then(function() {\n
+                var rows = $("table tbody tr");\n
+                equal(rows.length, 3);\n
+                equal(rows[0].childNodes.length, 4);\n
+                equal(rows[0].childNodes[2].innerHTML, "data12");\n
+            }).always(start);\n
+        });\n
+        test("the gadget can be configured", function() {\n
+            var hstable_gadget;\n
+            stop();\n
+            g.declareGadget("./index.html", {\n
+                element: document.querySelector("#qunit-fixture")\n
+            }).then(function(new_gadget) {\n
+                hstable_gadget = new_gadget;\n
+                return hstable_gadget.render(sample, {\n
+                    minSpareRows: 1\n
+                });\n
+            }).then(function() {\n
+                var rows = $("table tbody tr");\n
+                // There is one spare row\n
+                equal(rows.length, 4);\n
+            }).then(function() {\n
+                return hstable_gadget.getData();\n
+            }).then(function(data) {\n
+                equal(data, JSON.stringify([ [ "row1", "data11", "data12", "data13" ], [ "row2", "data21", "data22", "data23" ], [ "row3", "data31", "data32", "data33" ], [ null, null, null, null ] ]));\n
+            }).always(start);\n
+        });\n
+    });\n
+})(rJS, JSON, QUnit, jQuery);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2588</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

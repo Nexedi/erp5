@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681763.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>favicon.ico</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/vnd.microsoft.icon</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAA
+AAAAAAD+/////////+H79P+t9Nz/sPTe/+/9+P///////v79//7+/f//////6/z3/63z3P+s89r/
+6Pv0///////+//////////////+W8NH/buq//27qv/+r8tv///////7//v/+//7//////6rz2f9n
+6br/auq8/6Dy1v///////v/////////t/Pf/dOvC/3jrwf9768T/he7M//j79//87uX//PDm//j6
+9v+C7sn/devB/33sxv947MT/7v34///////9//7//////7H03v9q6Lv/bui9/8j87v/8z7H/6aBi
+/+qgZv/90rr/wfzt/2/ov/9z6r//uvTh///////9//7////////////3/vz/3fvx/+H++P/59e3/
+7aZt/+ugav/spHD/7adw//j38f/g/PL/3fns//f+/P/////////////+/f//////+d/L//axhP/2
+sof/+uvf//LAlv/smlv/7J1g//G+l//659j/9a9///Wvff/54M3////////+/f///////ffy/+2p
+d//pomr/6Jla//C4jf/78ef/6su4/+nDrf/67+f/8baH/+mbYf/pnWT/7bF8//77+P//////////
+//349P/tqXX/6p9n/+ibZv/1u4z/qK73/3J7+P91fvn/qKz4//a8h//plVr/66Br/+2reP/9+vb/
+///////+/f//////+dvF//Stfv/7tID/z77U/2109P9pa+n/Z2jp/2Rr9f/TxNT/9rN9/+2pe//4
+3cj////////+/f////////////T9+v/Y9ej/6v/v/7Cx9f9fYez/cnju/3B37v9dZO7/s7Xz///x
+1f/35db//vr3/////////////f/+//////+q89r/a+m//3DtwP+u4OL/dG/x/1xk7P9hZuv/cHj3
+/+HAuv/voF//6Zxg//TMrv////////79///////r/Pf/dOvC/37sxv9z6b//iPPH/8zR+/+bn/X/
+l5rz/8/O9P/zr3T/659p/+2jbf/so2z//PXt/////////////////5nw0/9x6sD/bOm6/6z34///
+6tP/9b2M//W3g//+7db/8sam/+qWXf/rnGD/8LuR//////////7//v/////////n+/T/uPTf/7r2
+4v/w+vP/761+/+mbZv/qnmj/7a19//vw5v/0zrP/9M6w//vw5/////////7+/////////////v//
+/////v///////fz4/+6xhP/snGP/7KJp/+6ugP/++vf//////////v////7/////////////////
+//////7////9//7//P78///////44dD/7qt3/+2uef/34M7///////78+////fz///7+////////
+////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1150</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

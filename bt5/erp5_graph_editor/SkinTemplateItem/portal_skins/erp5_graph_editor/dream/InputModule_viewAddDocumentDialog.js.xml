@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681758.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>InputModule_viewAddDocumentDialog.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global rJS, RSVP, promiseEventListener, promiseReadAsText,\n
+         initGadgetMixin */\n
+(function(window, rJS, RSVP, promiseEventListener, promiseReadAsText, initGadgetMixin) {\n
+    "use strict";\n
+    function createDocument(gadget, name) {\n
+        var now = new Date();\n
+        // Create jIO document\n
+        return gadget.aq_post({\n
+            title: name,\n
+            type: "Dream",\n
+            format: "application/json",\n
+            modified: now.toUTCString(),\n
+            date: now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate()\n
+        });\n
+    }\n
+    function waitForImport(gadget) {\n
+        var json_data, name;\n
+        return new RSVP.Queue().push(function() {\n
+            return promiseEventListener(gadget.props.element.getElementsByClassName("import_form")[0], "submit", false);\n
+        }).push(function(evt) {\n
+            // Prevent double click\n
+            evt.target.getElementsByClassName("ui-btn")[0].disabled = true;\n
+            var file = evt.target.dream_import.files[0];\n
+            name = file.name;\n
+            return promiseReadAsText(file);\n
+        }).push(function(json) {\n
+            json_data = json;\n
+            return createDocument(gadget, name);\n
+        }).push(function(jio_document) {\n
+            // Add JSON as attachment\n
+            return gadget.aq_putAttachment({\n
+                _id: jio_document.id,\n
+                _attachment: "body.json",\n
+                _data: json_data,\n
+                _mimetype: "application/json"\n
+            });\n
+        });\n
+    }\n
+    function waitForNew(gadget) {\n
+        var json_data = {\n
+            nodes: {},\n
+            edges: {},\n
+            preference: {},\n
+            general: {},\n
+            wip_part_spreadsheet: [ [ "Order ID", "Due Date", "Priority", "Project Manager", "Part", "Part Type", "Sequence", "Processing Times", "Prerequisites Parts" ] ],\n
+            shift_spreadsheet: [ [ "Day", "Machines", // XXX more generic name ?\n
+            "Start", "End" ] ],\n
+            capacity_by_project_spreadsheet: [ [ "Project Name", "Sequence", "Capacity Requirements" ] ],\n
+            capacity_by_station_spreadsheet: [ [ "Day", "CS1" ] ],\n
+            dp_capacity_spreadsheet: [ [] ],\n
+            dp_route_spreadsheet: [ [] ]\n
+        }, name = "Untitled";\n
+        return new RSVP.Queue().push(function() {\n
+            return promiseEventListener(gadget.props.element.getElementsByClassName("new_form")[0], "submit", false);\n
+        }).push(function(evt) {\n
+            // Prevent double click\n
+            evt.target.getElementsByClassName("ui-btn")[0].disabled = true;\n
+            return createDocument(gadget, name);\n
+        }).push(function(jio_document) {\n
+            // Add JSON as attachment\n
+            return gadget.aq_putAttachment({\n
+                _id: jio_document.id,\n
+                _attachment: "body.json",\n
+                _data: JSON.stringify(json_data),\n
+                _mimetype: "application/json"\n
+            });\n
+        });\n
+    }\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_post", "jio_post").declareAcquiredMethod("aq_putAttachment", "jio_putAttachment").declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash").declareAcquiredMethod("whoWantsToDisplayThisDocument", "whoWantsToDisplayThisDocument").declareMethod("startService", function() {\n
+        var gadget = this;\n
+        return new RSVP.Queue().push(function() {\n
+            return RSVP.any([ waitForImport(gadget), waitForNew(gadget) ]);\n
+        }).push(function(result) {\n
+            return gadget.whoWantsToDisplayThisDocument(result.id);\n
+        }).push(function(url) {\n
+            return gadget.pleaseRedirectMyHash(url);\n
+        });\n
+    });\n
+})(window, rJS, RSVP, promiseEventListener, promiseReadAsText, initGadgetMixin);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3780</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

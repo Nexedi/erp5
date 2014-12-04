@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681774.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>toolbox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global window, document, RSVP, rJS, initGadgetMixin*/\n
+(function(window, document, RSVP, rJS, initGadgetMixin) {\n
+    "use strict";\n
+    /*jslint nomen: true*/\n
+    var gadget_klass = rJS(window);\n
+    function waitForDragstart(tool) {\n
+        var callback;\n
+        function canceller() {\n
+            if (callback !== undefined) {\n
+                tool.removeEventListener("dragstart", callback, false);\n
+            }\n
+        }\n
+        /*jslint unparam: true*/\n
+        function itsANonResolvableTrap(resolve, reject) {\n
+            callback = function(evt) {\n
+                try {\n
+                    evt.dataTransfer.setData("application/json", tool.dataset.class_name);\n
+                } catch (e) {\n
+                    reject(e);\n
+                }\n
+            };\n
+            tool.addEventListener("dragstart", callback, false);\n
+        }\n
+        return new RSVP.Promise(itsANonResolvableTrap, canceller);\n
+    }\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareMethod("render", function(json_data) {\n
+        var data = JSON.parse(json_data), tools_container = document.createElement("div");\n
+        /* display all nodes in the palette.\n
+       */\n
+        tools_container.className = "tools-container";\n
+        Object.keys(data.class_definition).forEach(function(key) {\n
+            var _class = data.class_definition[key], tool;\n
+            // XXX "expand" the json schema "allOF" etc\n
+            if (_class._class === "node") {\n
+                tool = document.createElement("div");\n
+                // XXX maybe allow to configure the class name ?\n
+                tool.className = "tool " + key;\n
+                tool.textContent = _class.name || key;\n
+                tool.draggable = true;\n
+                tool.dataset.class_name = JSON.stringify(key);\n
+                Object.keys(_class.css || {}).forEach(function(k) {\n
+                    tool.style[k] = _class.css[k];\n
+                });\n
+                tools_container.appendChild(tool);\n
+            }\n
+        });\n
+        this.props.element.querySelector(".tools").appendChild(tools_container);\n
+    }).declareMethod("startService", function() {\n
+        var promiseArray = [];\n
+        [].forEach.call(this.props.element.querySelectorAll(".tool"), function(tool) {\n
+            promiseArray.push(waitForDragstart(tool));\n
+        });\n
+        return RSVP.all(promiseArray);\n
+    });\n
+})(window, document, RSVP, rJS, initGadgetMixin);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2386</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

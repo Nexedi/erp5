@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681762.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewJobGantt.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, jQuery, gantt,\n
+         initGadgetMixin */\n
+/*jslint nomen: true, unparam: true */\n
+(function(window, rJS, RSVP, $, gantt, initGadgetMixin) {\n
+    "use strict";\n
+    gantt.templates.task_class = function(start, end, obj) {\n
+        return obj.parent ? "sub_task" : "";\n
+    };\n
+    function job_gantt_widget(all_data) {\n
+        // XXX: use dhx_gantt zoom level feature (\n
+        // http://dhtmlx.com/docs/products/dhtmlxGantt/02_features.html )\n
+        var now = new Date(), start_date, gantt_data = {\n
+            data: [ {\n
+                id: "by_order",\n
+                text: "By Order",\n
+                start_date: start_date,\n
+                duration: 0,\n
+                project: 1,\n
+                open: true\n
+            }, {\n
+                id: "by_station",\n
+                text: "By Station",\n
+                start_date: start_date,\n
+                duration: 0,\n
+                project: 1,\n
+                open: true\n
+            } ],\n
+            link: []\n
+        }, input_data = all_data.input, output_data = all_data.result;\n
+        // temporary hack\n
+        now.setHours(0);\n
+        now.setMinutes(0);\n
+        now.setSeconds(0);\n
+        start_date = input_data.general.currentDate;\n
+        if (start_date !== undefined && start_date !== "") {\n
+            start_date = new Date(start_date);\n
+        } else {\n
+            start_date = new Date(now.getTime());\n
+        }\n
+        function isVisibleStation(station) {\n
+            // we should be able to define in the backend which\n
+            // station is visible\n
+            return input_data.nodes[station].family !== "Buffer" && input_data.nodes[station].family !== "Exit";\n
+        }\n
+        $.each(output_data.elementList.sort(function(a, b) {\n
+            return a.id < b.id ? -1 : 1;\n
+        }), function(idx, obj) {\n
+            var input_job = null, input_order = null, i, j, node, node_key, order, component, duration, seen_parts = {};\n
+            if (obj.family === "Job") {\n
+                // find the corresponding input\n
+                // find the input order and order component for this job\n
+                for (node_key in input_data.nodes) {\n
+                    if (input_data.nodes.hasOwnProperty(node_key)) {\n
+                        node = input_data.nodes[node_key];\n
+                        if (node.wip) {\n
+                            for (i = 0; i < node.wip.length; i += 1) {\n
+                                order = node.wip[i];\n
+                                if (order.id === obj.id) {\n
+                                    input_job = input_order = order;\n
+                                }\n
+                                if (input_job === null && order.componentsList) {\n
+                                    for (j = 0; j < order.componentsList.length; j += 1) {\n
+                                        component = order.componentsList[j];\n
+                                        if (component.id === obj.id) {\n
+                                            input_order = order;\n
+                                            input_job = component;\n
+                                        }\n
+                                    }\n
+                                }\n
+                            }\n
+                        }\n
+                    }\n
+                }\n
+                duration = 0;\n
+                if (input_job === input_order) {\n
+                    // if we are on the order definition\n
+                    gantt_data.data.push({\n
+                        id: input_order.id,\n
+                        text: input_order.name,\n
+                        project: 1,\n
+                        open: false,\n
+                        parent: "by_order"\n
+                    });\n
+                }\n
+                seen_parts = {};\n
+                $.each(obj.results.schedule, function(i, schedule) {\n
+                    var task_start_date, job_full_id;\n
+                    // Filter intermediate steps in part job shop\n
+                    if (isVisibleStation(schedule.stationId)) {\n
+                        if (schedule.exitTime) {\n
+                            duration = 24 * (schedule.exitTime - schedule.entranceTime);\n
+                        } else {\n
+                            if (obj.results.schedule[i + 1]) {\n
+                                duration = obj.results.schedule[i + 1].entranceTime - schedule.entranceTime;\n
+                            } else {\n
+                                duration = obj.results.completionTime - schedule.entranceTime;\n
+                            }\n
+                        }\n
+                        if (duration > 0) {\n
+                            task_start_date = new Date(start_date.getTime());\n
+                            // for simulation time unit as days\n
+                            // task_start_date.setDate(task_start_date.getDate() +\n
+                            //   schedule[\'entranceTime\']);\n
+                            // for simulation time unit as days hours\n
+                            task_start_date.setTime(task_start_date.getTime() + schedule.entranceTime * 1e3 * 3600 * 24);\n
+                            job_full_id = input_job.id + "." + input_order.id;\n
+                            if (seen_parts[job_full_id] === undefined) {\n
+                                gantt_data.data.push({\n
+                                    id: job_full_id,\n
+                                    text: input_job.name,\n
+                                    parent: input_order.id\n
+                                });\n
+                                seen_parts[job_full_id] = 1;\n
+                            }\n
+                            gantt_data.data.push({\n
+                                id: input_order.id + "." + idx + "_" + i,\n
+                                text: schedule.stationId,\n
+                                start_date: task_start_date,\n
+                                duration: duration,\n
+                                parent: job_full_id\n
+                            });\n
+                            gantt_data.data.push({\n
+                                id: "job." + obj.id + "." + idx + "_" + i,\n
+                                text: input_order.name + "-" + input_job.name,\n
+                                start_date: task_start_date,\n
+                                duration: duration,\n
+                                parent: schedule.stationId,\n
+                                by_station: 1\n
+                            });\n
+                        }\n
+                    }\n
+                });\n
+            } else {\n
+                if (isVisibleStation(obj.id)) {\n
+                    gantt_data.data.push({\n
+                        id: obj.id,\n
+                        text: obj.id,\n
+                        project: 1,\n
+                        open: false,\n
+                        parent: "by_station"\n
+                    });\n
+                }\n
+            }\n
+        });\n
+        //     gantt_output_height = 35 * (gantt_data.data.length + 1) + 1;\n
+        gantt_data.data.sort(function(a, b) {\n
+            // sort gantt data in a chronological order\n
+            var result;\n
+            if (a.start_date === undefined && b.start_date !== undefined) {\n
+                result = 1;\n
+            } else if (a.start_date !== undefined && b.start_date === undefined) {\n
+                result = -1;\n
+            } else if (a.start_date === undefined && b.start_date === undefined) {\n
+                result = 0;\n
+            } else if (a.start_date > b.start_date) {\n
+                result = 1;\n
+            } else if (a.start_date < b.start_date) {\n
+                result = -1;\n
+            } else {\n
+                result = 0;\n
+            }\n
+            return result;\n
+        });\n
+        return gantt_data;\n
+    }\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        gadget.props.result = options.result;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "simulation.json"\n
+        }).push(function(simulation_json) {\n
+            gadget.props.result = job_gantt_widget(JSON.parse(simulation_json)[gadget.props.result]);\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        $(this.props.element).find(".gant_container").dhx_gantt({\n
+            data: this.props.result,\n
+            readonly: true,\n
+            /* for days has simulation time unit\n
+        scale_unit: \'day\',\n
+        step: 7\n
+        */\n
+            // for hours has simulation time unit\n
+            scale_unit: "day",\n
+            duration_unit: 60 * 60 * 1e3,\n
+            //date_grid: "%H:%i",\n
+            date_scale: "%M/%d",\n
+            step: 1,\n
+            subscales: [ {\n
+                unit: "hour",\n
+                step: 4,\n
+                date: "%H:%i"\n
+            } ]\n
+        });\n
+        return new RSVP.Queue().push(function() {\n
+            // Infinite wait, until cancelled\n
+            return new RSVP.defer().promise;\n
+        }).push(undefined, function(error) {\n
+            gantt.clearAll();\n
+            throw error;\n
+        });\n
+    });\n
+})(window, rJS, RSVP, jQuery, gantt, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9180</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

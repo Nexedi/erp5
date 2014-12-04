@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681773.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>toolbox.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.tools{border:1px solid #999;margin:20px 0;border-radius:10px;padding-bottom:20px}.tools-container{margin-bottom:4px}.tools .ui-button{margin:4px 0}.tool{border:1px solid #d3d3d3;box-shadow:1px 1px 2px #aaa;min-width:7em;height:3em;z-index:10001;color:gray;font-family:serif;font-style:italic;font-size:.9em;margin:.8em;display:inline-block;border-radius:5px;text-align:center;padding-top:1.3em;cursor:move}.Dream-Source,.Dream-BatchSource{border:1px solid #bbc;background-color:#ffe;background-image:linear-gradient(to bottom,#ffe 0,#dde 100%)}.Dream-Machine,.Dream-MachineJobShop,.Dream-BatchScrapMachine,.Dream-MachineManagedJob,.Dream-MouldAssembly{border:1px solid #cbc;background-color:#fef;background-image:linear-gradient(to bottom,#fef 0,#ede 100%)}.Dream-Queue,.Dream-QueueJobShop,.Dream-LineClearance,.Dream-QueueManagedJob,.Dream-ConditionalBuffer,.Dream-OrderDecomposition,.Dream-MouldAssemblyBuffer{border:1px solid #bcc;background-color:#eff;background-image:linear-gradient(to bottom,#eff 0,#dee 100%)}.Dream-Exit,.Dream-ExitJobShop{border:1px solid #ccb;background-color:#eef;background-image:linear-gradient(to bottom,#eef 0,#dde 100%)}.Dream-EventGenerator{border:1px solid #cba;background-color:#fdc;background-image:linear-gradient(to bottom,#fdc 0,#ecb 100%)}.Dream-BatchDecomposition,.Dream-BatchDecompositionStartTime,.Dream-BatchReassembly{border:1px solid #bcb;background-color:#dfd;background-image:linear-gradient(to bottom,#dfd 0,#cec 100%)}.Dream-Repairman{border:1px solid #cbb;background-color:#fdd;background-image:linear-gradient(to bottom,#fdd 0,#dcc 100%)}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1592</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

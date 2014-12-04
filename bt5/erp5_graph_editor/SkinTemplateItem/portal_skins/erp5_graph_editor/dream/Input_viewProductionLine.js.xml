@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681758.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Input_viewProductionLine.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global window, rJS, RSVP, loopEventListener*/\n
+(function(window, rJS, RSVP, loopEventListener) {\n
+    "use strict";\n
+    var gadget_klass = rJS(window);\n
+    // TODO: save on parent gadget\n
+    function saveGraph(evt) {\n
+        var gadget = this;\n
+        return new RSVP.Queue().push(function() {\n
+            // Prevent double click\n
+            if (evt) {\n
+                evt.target.getElementsByClassName("ui-btn")[0].disabled = true;\n
+            }\n
+            return gadget.getDeclaredGadget("productionline_graph");\n
+        }).push(function(graph_gadget) {\n
+            return graph_gadget.getContent();\n
+        }).push(function(body) {\n
+            return gadget.aq_putAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json",\n
+                _data: JSON.stringify(JSON.parse(body), null, 2),\n
+                _mimetype: "application/json"\n
+            });\n
+        }).push(function() {\n
+            if (evt) {\n
+                evt.target.getElementsByClassName("ui-btn")[0].disabled = false;\n
+            }\n
+        });\n
+    }\n
+    function waitForSave(gadget) {\n
+        return loopEventListener(gadget.props.element.getElementsByClassName("save_form")[0], "submit", false, saveGraph.bind(gadget));\n
+    }\n
+    gadget_klass.ready(function(g) {\n
+        g.props = {};\n
+    }).ready(function(g) {\n
+        return g.getElement().push(function(element) {\n
+            g.props.element = element;\n
+        });\n
+    }).declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareAcquiredMethod("aq_putAttachment", "jio_putAttachment").allowPublicAcquisition("notifyDataChanged", function() {\n
+        // We are notified by an included gadget that the data has changed.\n
+        // Here we save automatically. We could mark a dirty flag to warn the\n
+        // user if she leaves the page without saving.\n
+        // Since we are notified quite often and saving is resource expensive, we\n
+        // use this trick to prevent saving too many times\n
+        if (this.timeout) {\n
+            window.clearTimeout(this.timeout);\n
+        }\n
+        this.timeout = window.setTimeout(saveGraph.bind(this), 100);\n
+    }).declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this, data;\n
+        gadget.props.jio_key = jio_key;\n
+        return new RSVP.Queue().push(function() {\n
+            /*jslint nomen: true*/\n
+            return RSVP.all([ gadget.aq_getAttachment({\n
+                _id: jio_key,\n
+                _attachment: "body.json"\n
+            }), gadget.getDeclaredGadget("productionline_graph") ]);\n
+        }).push(function(result_list) {\n
+            data = result_list[0];\n
+            return result_list[1].render(data);\n
+        }).push(function() {\n
+            return gadget.getDeclaredGadget("productionline_toolbox");\n
+        }).push(function(toolbox_gadget) {\n
+            toolbox_gadget.render(data);\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        var g = this, graph;\n
+        return g.getDeclaredGadget("productionline_graph").push(function(graph_gadget) {\n
+            graph = graph_gadget;\n
+            return g.getDeclaredGadget("productionline_toolbox");\n
+        }).push(function(toolbox) {\n
+            return RSVP.all([ graph.startService(), toolbox.startService(), waitForSave(g) ]);\n
+        });\n
+    });\n
+})(window, rJS, RSVP, loopEventListener);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3328</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

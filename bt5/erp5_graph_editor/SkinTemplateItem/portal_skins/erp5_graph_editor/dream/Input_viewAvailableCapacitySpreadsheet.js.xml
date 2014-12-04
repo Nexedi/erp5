@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681759.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Input_viewAvailableCapacitySpreadsheet.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, initGadgetMixin, loopEventListener */\n
+(function(window, rJS, RSVP, initGadgetMixin, loopEventListener) {\n
+    "use strict";\n
+    function saveSpreadsheet(evt) {\n
+        var gadget = this, editor_data, editor_gadget;\n
+        return new RSVP.Queue().push(function() {\n
+            // Prevent double click\n
+            if (evt) {\n
+                evt.target.getElementsByClassName("ui-btn")[0].disabled = true;\n
+            }\n
+            return gadget.getDeclaredGadget("tableeditor");\n
+        }).push(function(tablegadget) {\n
+            editor_gadget = tablegadget;\n
+            return editor_gadget.getData();\n
+        }).push(function(data) {\n
+            editor_data = data;\n
+            // Always get a fresh version, to prevent deleting spreadsheet & co\n
+            return gadget.aq_getAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json"\n
+            });\n
+        }).push(function(body) {\n
+            var data = JSON.parse(body);\n
+            data.capacity_by_station_spreadsheet = JSON.parse(editor_data);\n
+            return gadget.aq_putAttachment({\n
+                _id: gadget.props.jio_key,\n
+                _attachment: "body.json",\n
+                _data: JSON.stringify(data, null, 2),\n
+                _mimetype: "application/json"\n
+            });\n
+        }).push(function() {\n
+            if (evt) {\n
+                evt.target.getElementsByClassName("ui-btn")[0].disabled = false;\n
+            }\n
+        });\n
+    }\n
+    function waitForSave(gadget) {\n
+        return loopEventListener(gadget.props.element.getElementsByClassName("save_form")[0], "submit", false, saveSpreadsheet.bind(gadget));\n
+    }\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareAcquiredMethod("aq_putAttachment", "jio_putAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        return new RSVP.Queue().push(function() {\n
+            return RSVP.all([ gadget.aq_getAttachment({\n
+                _id: jio_key,\n
+                _attachment: "body.json"\n
+            }), gadget.getDeclaredGadget("tableeditor") ]);\n
+        }).push(function(result_list) {\n
+            return result_list[1].render(JSON.stringify(JSON.parse(result_list[0]).capacity_by_station_spreadsheet), {\n
+                minSpareCols: 1,\n
+                minSpareRows: 1,\n
+                onChange: function() {\n
+                    if (gadget.timeout) {\n
+                        window.clearTimeout(gadget.timeout);\n
+                    }\n
+                    gadget.timeout = window.setTimeout(saveSpreadsheet.bind(gadget), 100);\n
+                }\n
+            });\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        var gadget = this;\n
+        return this.getDeclaredGadget("tableeditor").push(function(tableeditor) {\n
+            return RSVP.all([ tableeditor.startService(), waitForSave(gadget) ]);\n
+        });\n
+    });\n
+})(window, rJS, RSVP, initGadgetMixin, loopEventListener);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3085</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

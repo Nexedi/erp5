@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681762.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewExitStatistics.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8">\n
+    <meta name="viewport" content="width=device-width, initial-scale=1">\n
+    <title>Exit Statistics</title>\n
+    <script src="../lib/rsvp.min.js" type="text/javascript"></script>\n
+    <script src="../lib/renderjs.min.js" type="text/javascript"></script>\n
+    <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
+    <script src="mixin_gadget.js" type="text/javascript"></script>\n
+    <script src="Output_viewExitStatistics.js" type="text/javascript"></script>\n
+\n
+    <script id="interval-through-metric-template" type="text/x-handlebars-template">\n
+      <tr>\n
+        <td>Daily Attainment</td>\n
+        <td>\n
+          {{#interval_list}}\n
+            <i class="ui-link ui-btn ui-icon-{{icon}} ui-btn-inline ui-cornel-all ui-btn-icon-right">{{interval}}</i><br/>\n
+          {{/interval_list}}\n
+        </td>\n
+      </tr>\n
+      <tr>\n
+        <td>Average Daily Line Attainment</td>\n
+        <td>{{average}}%<td>\n
+      </tr>\n
+    </script>\n
+\n
+    <script id="simple-metric-template" type="text/x-handlebars-template">\n
+      <tr>\n
+        <td>{{metric}}</td>\n
+        <td>{{{value}}}</td>\n
+      </tr>\n
+    </script>\n
+\n
+    <script id="metric-object-template" type="text/x-handlebars-template">\n
+      <table width=\'100%\'>\n
+        <tbody>\n
+          <tr>\n
+            <td>Average</td>\n
+            <td>{{avg}}</td>\n
+          </tr>\n
+          <tr>\n
+            <td>Lower Bound</td>\n
+            <td>{{lb}}</td>\n
+          </tr>\n
+          <tr>\n
+            <td>Upper Bound</td>\n
+            <td>{{ub}}</td>\n
+          </tr>\n
+        </tbody>\n
+      </table>\n
+    </script>\n
+\n
+    <script id="header-template" type="text/x-handlebars-template">\n
+      <tr>\n
+        <th colspan=\'2\'>{{name}}</th>\n
+      </tr>\n
+    </script>\n
+\n
+  </head>\n
+  <body>\n
+    <table>\n
+    </table>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1813</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

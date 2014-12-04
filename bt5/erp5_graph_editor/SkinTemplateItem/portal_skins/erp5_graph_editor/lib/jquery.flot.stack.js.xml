@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681770.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.flot.stack.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Flot plugin for stacking data sets rather than overlyaing them.\n
+\n
+Copyright (c) 2007-2014 IOLA and Ole Laursen.\n
+Licensed under the MIT license.\n
+\n
+The plugin assumes the data is sorted on x (or y if stacking horizontally).\n
+For line charts, it is assumed that if a line has an undefined gap (from a\n
+null point), then the line above it should have the same gap - insert zeros\n
+instead of "null" if you want another behaviour. This also holds for the start\n
+and end of the chart. Note that stacking a mix of positive and negative values\n
+in most instances doesn\'t make sense (so it looks weird).\n
+\n
+Two or more series are stacked when their "stack" attribute is set to the same\n
+key (which can be any number or string or just "true"). To specify the default\n
+stack, you can set the stack option like this:\n
+\n
+\tseries: {\n
+\t\tstack: null/false, true, or a key (number/string)\n
+\t}\n
+\n
+You can also specify it for a single series, like this:\n
+\n
+\t$.plot( $("#placeholder"), [{\n
+\t\tdata: [ ... ],\n
+\t\tstack: true\n
+\t}])\n
+\n
+The stacking order is determined by the order of the data series in the array\n
+(later series end up on top of the previous).\n
+\n
+Internally, the plugin modifies the datapoints in each series, adding an\n
+offset to the y value. For line series, extra data points are inserted through\n
+interpolation. If there\'s a second y value, it\'s also adjusted (e.g for bar\n
+charts or filled areas).\n
+\n
+*/\n
+\n
+(function ($) {\n
+    var options = {\n
+        series: { stack: null } // or number/string\n
+    };\n
+    \n
+    function init(plot) {\n
+        function findMatchingSeries(s, allseries) {\n
+            var res = null;\n
+            for (var i = 0; i < allseries.length; ++i) {\n
+                if (s == allseries[i])\n
+                    break;\n
+                \n
+                if (allseries[i].stack == s.stack)\n
+                    res = allseries[i];\n
+            }\n
+            \n
+            return res;\n
+        }\n
+        \n
+        function stackData(plot, s, datapoints) {\n
+            if (s.stack == null || s.stack === false)\n
+                return;\n
+\n
+            var other = findMatchingSeries(s, plot.getData());\n
+            if (!other)\n
+                return;\n
+\n
+            var ps = datapoints.pointsize,\n
+                points = datapoints.points,\n
+                otherps = other.datapoints.pointsize,\n
+                otherpoints = other.datapoints.points,\n
+                newpoints = [],\n
+                px, py, intery, qx, qy, bottom,\n
+                withlines = s.lines.show,\n
+                horizontal = s.bars.horizontal,\n
+                withbottom = ps > 2 && (horizontal ? datapoints.format[2].x : datapoints.format[2].y),\n
+                withsteps = withlines && s.lines.steps,\n
+                fromgap = true,\n
+                keyOffset = horizontal ? 1 : 0,\n
+                accumulateOffset = horizontal ? 0 : 1,\n
+                i = 0, j = 0, l, m;\n
+\n
+            while (true) {\n
+                if (i >= points.length)\n
+                    break;\n
+\n
+                l = newpoints.length;\n
+\n
+                if (points[i] == null) {\n
+                    // copy gaps\n
+                    for (m = 0; m < ps; ++m)\n
+                        newpoints.push(points[i + m]);\n
+                    i += ps;\n
+                }\n
+                else if (j >= otherpoints.length) {\n
+                    // for lines, we can\'t use the rest of the points\n
+                    if (!withlines) {\n
+                        for (m = 0; m < ps; ++m)\n
+                            newpoints.push(points[i + m]);\n
+                    }\n
+                    i += ps;\n
+                }\n
+                else if (otherpoints[j] == null) {\n
+                    // oops, got a gap\n
+                    for (m = 0; m < ps; ++m)\n
+                        newpoints.push(null);\n
+                    fromgap = true;\n
+                    j += otherps;\n
+                }\n
+                else {\n
+                    // cases where we actually got two points\n
+                    px = points[i + keyOffset];\n
+                    py = points[i + accumulateOffset];\n
+                    qx = otherpoints[j + keyOffset];\n
+                    qy = otherpoints[j + accumulateOffset];\n
+                    bottom = 0;\n
+\n
+                    if (px == qx) {\n
+                        for (m = 0; m < ps; ++m)\n
+                            newpoints.push(points[i + m]);\n
+\n
+                        newpoints[l + accumulateOffset] += qy;\n
+                        bottom = qy;\n
+                        \n
+                        i += ps;\n
+                        j += otherps;\n
+                    }\n
+                    else if (px > qx) {\n
+                        // we got past point below, might need to\n
+                        // insert interpolated extra point\n
+                        if (withlines && i > 0 && points[i - ps] != null) {\n
+                            intery = py + (points[i - ps + accumulateOffset] - py) * (qx - px) / (points[i - ps + keyOffset] - px);\n
+                            newpoints.push(qx);\n
+                            newpoints.push(intery + qy);\n
+                            for (m = 2; m < ps; ++m)\n
+                                newpoints.push(points[i + m]);\n
+                            bottom = qy; \n
+                        }\n
+\n
+                        j += otherps;\n
+                    }\n
+                    else { // px < qx\n
+                        if (fromgap && withlines) {\n
+                            // if we come from a gap, we just skip this point\n
+                            i += ps;\n
+                            continue;\n
+                        }\n
+                            \n
+                        for (m = 0; m < ps; ++m)\n
+                            newpoints.push(points[i + m]);\n
+                        \n
+                        // we might be able to interpolate a point below,\n
+                        // this can give us a better y\n
+                        if (withlines && j > 0 && otherpoints[j - otherps] != null)\n
+                            bottom = qy + (otherpoints[j - otherps + accumulateOffset] - qy) * (px - qx) / (otherpoints[j - otherps + keyOffset] - qx);\n
+\n
+                        newpoints[l + accumulateOffset] += bottom;\n
+                        \n
+                        i += ps;\n
+                    }\n
+\n
+                    fromgap = false;\n
+                    \n
+                    if (l != newpoints.length && withbottom)\n
+                        newpoints[l + 2] += bottom;\n
+                }\n
+\n
+                // maintain the line steps invariant\n
+                if (withsteps && l != newpoints.length && l > 0\n
+                    && newpoints[l] != null\n
+                    && newpoints[l] != newpoints[l - ps]\n
+                    && newpoints[l + 1] != newpoints[l - ps + 1]) {\n
+                    for (m = 0; m < ps; ++m)\n
+                        newpoints[l + ps + m] = newpoints[l + m];\n
+                    newpoints[l + 1] = newpoints[l - ps + 1];\n
+                }\n
+            }\n
+\n
+            datapoints.points = newpoints;\n
+        }\n
+        \n
+        plot.hooks.processDatapoints.push(stackData);\n
+    }\n
+    \n
+    $.plot.plugins.push({\n
+        init: init,\n
+        options: options,\n
+        name: \'stack\',\n
+        version: \'1.2\'\n
+    });\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7090</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681759.17</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>InputModule_viewInputList.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global rJS, RSVP, Handlebars, initGadgetMixin */\n
+/*jslint nomen: true */\n
+(function(window, rJS, RSVP, Handlebars, initGadgetMixin) {\n
+    "use strict";\n
+    /////////////////////////////////////////////////////////////////\n
+    // Handlebars\n
+    /////////////////////////////////////////////////////////////////\n
+    // Precompile the templates while loading the first gadget instance\n
+    var gadget_klass = rJS(window), source = gadget_klass.__template_element.getElementById("table-template").innerHTML, table_template = Handlebars.compile(source);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_allDocs", "jio_allDocs").declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash").declareAcquiredMethod("whoWantsToDisplayThisDocument", "whoWantsToDisplayThisDocument").declareMethod("render", function() {\n
+        var gadget = this;\n
+        return gadget.aq_allDocs({\n
+            select_list: [ "title", "modified" ]\n
+        }).push(function(document_list) {\n
+            var result_list = [], doc, i;\n
+            for (i = 0; i < document_list.data.total_rows; i += 1) {\n
+                doc = document_list.data.rows[i];\n
+                result_list.push(RSVP.all([ gadget.whoWantsToDisplayThisDocument(doc.id), doc.value.title, doc.value.modified ]));\n
+            }\n
+            return RSVP.all(result_list);\n
+        }).push(function(document_list) {\n
+            // Create new doc if nothing exists\n
+            if (document_list.length === 0) {\n
+                return gadget.whoWantsToDisplayThisDocument(undefined, "view_fast_input").push(function(url) {\n
+                    return gadget.pleaseRedirectMyHash(url);\n
+                });\n
+            }\n
+            var i, parameter_list = [], doc;\n
+            for (i = 0; i < document_list.length; i += 1) {\n
+                doc = document_list[i];\n
+                parameter_list[i] = {\n
+                    link: doc[0],\n
+                    title: doc[1] + " (" + doc[2] + ")",\n
+                    date: new Date(doc[2])\n
+                };\n
+            }\n
+            parameter_list.sort(function(a, b) {\n
+                return b.date - a.date;\n
+            });\n
+            //           gadget.props.element.querySelector(\'a\').href = document_list[0];\n
+            gadget.props.element.querySelector(".document_list").innerHTML = table_template({\n
+                documentlist: parameter_list\n
+            });\n
+        });\n
+    });\n
+})(window, rJS, RSVP, Handlebars, initGadgetMixin);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2461</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

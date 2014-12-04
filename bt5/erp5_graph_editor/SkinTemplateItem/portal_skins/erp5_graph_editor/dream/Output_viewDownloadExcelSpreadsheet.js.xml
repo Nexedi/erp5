@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts17681762.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Output_viewDownloadExcelSpreadsheet.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global rJS, RSVP, jQuery, initGadgetMixin */\n
+/*jslint nomen: true, unparam: true */\n
+(function(window, rJS, RSVP, $, initGadgetMixin) {\n
+    "use strict";\n
+    var gadget_klass = rJS(window);\n
+    initGadgetMixin(gadget_klass);\n
+    gadget_klass.declareAcquiredMethod("aq_getAttachment", "jio_getAttachment").declareMethod("render", function(options) {\n
+        var jio_key = options.id, gadget = this;\n
+        gadget.props.jio_key = jio_key;\n
+        gadget.props.result = options.result;\n
+        return gadget.aq_getAttachment({\n
+            _id: gadget.props.jio_key,\n
+            _attachment: "simulation.json"\n
+        }).push(function(simulation_json) {\n
+            var result = JSON.parse(simulation_json)[0].result, download_link = gadget.props.element.querySelector(".download_link");\n
+            download_link.download = "demandPlannerOutput.xls";\n
+            download_link.href = "data:application/excel;base64," + result["demandPlannerOutput.xls"];\n
+        });\n
+    }).declareMethod("startService", function() {\n
+        return new RSVP.Queue().push(function() {\n
+            // Infinite wait, until cancelled\n
+            return new RSVP.defer().promise;\n
+        });\n
+    });\n
+})(window, rJS, RSVP, jQuery, initGadgetMixin);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1223</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
