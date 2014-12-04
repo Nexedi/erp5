@@ -55,8 +55,14 @@ class DummyMovement(Movement):
                     )
 
   def isAccountable(self):
-    """Our dummy movement are always accountable."""
+    """Our dummy movements are always accountable, unless is_accountable
+    attribute is set."""
     return getattr(self, 'is_accountable', 1)
+
+  def isMovingItem(self, item):
+    """Our dummy movements are always moving items, unless is_moving_item
+    attribute is set."""
+    return getattr(self, 'is_moving_item', 1)
 
   # In order to make tests work with dummy movements that are not contained in
   # dummy deliveries, we must borrow a few methods from DummyDelivery.

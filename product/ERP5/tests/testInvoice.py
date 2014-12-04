@@ -2607,6 +2607,62 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
+  def stepCreateCurrency(self, sequence):
+    currency = self.portal.currency_module.newContent(
+      portal_type="Currency", title="Currency",
+      base_unit_quantity=0.01)
+    sequence.edit(currency=currency)
+
+  def stepCreateInvoiceWithBadPrecision(self, sequence):
+    portal = self.portal
+    vendor = sequence.get('vendor')
+    invoice = portal.accounting_module.newContent(
+      portal_type="Sale Invoice Transaction",
+      specialise=self.business_process,
+      source_section_value=vendor,
+      start_date=self.datetime,
+      price_currency_value=sequence.get('currency'),
+      destination_section_value=sequence.get('client1'),
+      source_value=vendor)
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',
+                    sale_supply_line_source_account="account_module/sale",
+                    product_line='apparel')
+    product_line = invoice.newContent(portal_type="Invoice Line",
+      resource_value=resource, quantity=1, price=0.014)
+    product_line = invoice.newContent(portal_type="Invoice Line",
+      resource_value=resource, quantity=1, price=0.014)
+    self.tic()
+    invoice.plan()
+    invoice.confirm()
+    self.tic()
+    invoice.start()
+    self.tic()
+    lines = [i for i in invoice.objectValues(
+      portal_type="Sale Invoice Transaction Line")]
+    self.assertEquals(
+      sum([i.getSourceDebit() or -i.getSourceCredit() for i in lines]),
+      0)
+    self.assertEquals(sum([i.getSourceCredit() for i in lines]),
+      sum([i.getSourceDebit() for i in lines]))
+    line = [i for i in lines if \
+        i.isMemberOf('source/account_module/customer')][0]
+    data_dict = invoice.Invoice_getODTDataDict()
+    self.assertEquals(round(line.getSourceDebit(), 2),
+        round(data_dict.get('total_price'), 2))
+    self.assertEquals([], invoice.checkConsistency())
+
+  def test_rounding_issue(self):
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString("""
+      stepCreateCurrency
+      stepCreateEntities
+      stepCreateInvoiceWithBadPrecision
+    """)
+    sequence_list.play(self)
+
   def test_02_TwoInvoicesFromTwoPackingList(self, quiet=quiet):
     """
     This test was created for the following bug:

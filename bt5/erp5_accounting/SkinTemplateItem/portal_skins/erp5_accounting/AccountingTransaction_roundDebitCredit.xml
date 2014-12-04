@@ -77,9 +77,47 @@ for line in line_list:\n
 if abs(round(total_quantity, precision)) > 2 * resource.getBaseUnitQuantity():\n
   return\n
 \n
-# if the difference is <= the base quantity unit, we round the last line.\n
-if line is not None:\n
-  line.setQuantity(round(line.getQuantity() - total_quantity, precision))\n
+# If the difference is <= the base quantity unit, we adjust quantity on one line.\n
+# We choose the line so that the total price of the invoice matches the payable\n
+# or receivable price. If it is already matching, then we adjust the VAT line or\n
+# the income / expense line if no VAT\n
+\n
+account_type_dict = dict()\n
+for line in line_list:\n
+  for account in (\n
+            line.getSourceValue(portal_type=\'Account\'),\n
+            line.getDestinationValue(portal_type=\'Account\'), ):\n
+    account_type_dict.setdefault(line, set()).add(\n
+      account is not None and account.getAccountTypeValue() or None)\n
+\n
+account_type = context.getPortalObject().portal_categories.account_type\n
+\n
+line_to_adjust = None\n
+if abs(round(total_quantity, precision)) != abs(round(context.getTotalPrice(), precision)):\n
+  for line in line_list:\n
+    if account_type.asset.receivable in account_type_dict[line] or\\\n
+        account_type.liability.payable in account_type_dict[line]:\n
+      line_to_adjust = line\n
+      break\n
+\n
+  if line_to_adjust is None:\n
+    # VAT\n
+    for line in line_list:\n
+      if account_type.asset.receivable.refundable_vat in account_type_dict[line] or\\\n
+          account_type.liability.payable.collected_vat in account_type_dict[line]:\n
+        line_to_adjust = line\n
+        break\n
+\n
+  if line_to_adjust is None:\n
+    # adjust anything but payable or receivable \n
+    for line in line_list:\n
+      if account_type.asset.receivable not in account_type_dict[line] and\\\n
+          account_type.liability.payable not in account_type_dict[line]:\n
+        line_to_adjust = line\n
+        break\n
+\n
+if line_to_adjust is not None:\n
+  line_to_adjust.setQuantity(round(line_to_adjust.getQuantity() - total_quantity, precision))\n
 
 
 ]]></string> </value>

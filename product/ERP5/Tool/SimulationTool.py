@@ -2158,6 +2158,7 @@ class SimulationTool(BaseTool):
                delivered for the last time before at_date or to_date". Cannot be used with input
 
       """
+      next_item_simulation_state = kw.pop('next_item_simulation_state', None)
       new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
       for key in ('at_date', 'to_date'):
         value = kw.get(key, None)
@@ -2177,7 +2178,9 @@ class SimulationTool(BaseTool):
       new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
 
       # Pass simulation state to request
-      if kw.has_key('item.simulation_state'):
+      if next_item_simulation_state:
+        new_kw['simulation_state_list'] = next_item_simulation_state
+      elif kw.has_key('item.simulation_state'):
         new_kw['simulation_state_list'] = kw['item.simulation_state']
       else:
         new_kw['simulation_state_list'] =  None
@@ -2192,8 +2195,12 @@ class SimulationTool(BaseTool):
       """
       Returns list of current inventory grouped by section or site
       """
-      kw['item.simulation_state'] = self.getPortalObject()\
+      portal = self.getPortalObject()
+      kw['item.simulation_state'] = portal\
         .getPortalCurrentInventoryStateList()
+      kw['next_item_simulation_state'] = portal\
+        .getPortalCurrentInventoryStateList() + portal\
+        .getPortalTransitInventoryStateList()
       return self.getTrackingList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingHistoryList')

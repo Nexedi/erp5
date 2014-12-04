@@ -141,7 +141,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
+                          <string>date</string>
                           <string>ascending</string>
                         </tuple>
                       </list>

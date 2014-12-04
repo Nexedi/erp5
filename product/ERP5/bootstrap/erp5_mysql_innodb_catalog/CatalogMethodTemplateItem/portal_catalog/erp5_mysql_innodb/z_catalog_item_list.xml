@@ -23,7 +23,8 @@ getDestinationSectionUid\r\n
 getResourceUid\r\n
 getVariationText\r\n
 getSimulationState\r\n
-getAggregateUidList</string> </value>
+getAggregateUidList\r\n
+getMovedItemUidList</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -75,10 +76,9 @@ WHERE\n
 \n
 <dtml-let movement_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getMovedItemUidList[loop_item]">\n
       <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
-\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
@@ -86,8 +86,8 @@ REPLACE INTO\n
   item\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
-      <dtml-in "getAggregateUidList[loop_item]">\n
-      \n
+      <dtml-in expr="getMovedItemUidList[loop_item]">\n
+\n
 (  \n
   <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
@@ -105,9 +105,7 @@ VALUES\n
       <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
   </dtml-if>\n
-</dtml-let>\n
-\n
-
+</dtml-let>
 
 ]]></string> </value>
         </item>
