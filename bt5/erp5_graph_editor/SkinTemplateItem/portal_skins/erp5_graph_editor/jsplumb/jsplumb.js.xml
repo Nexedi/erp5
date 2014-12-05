@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17759117.85</string> </value>
+            <value> <string>ts17764628.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -149,10 +149,9 @@
     }\n
     function waitForConnectionClick(gadget) {\n
         // TODO: dialog to edit connection properties\n
-        loopJsplumbBind(gadget, "click", function(connection) {\n
-            if (confirm("Delete connection ?")) {\n
-                gadget.props.jsplumb_instance.detach(connection);\n
-            }\n
+        // XXX error in this function are silently ignored !!!\n
+        loopJsplumbBind(gadget, "dblclick", function(connection) {\n
+          return window.location.replace(gadget.props.data.graph.edge[connection.id].business_link_url);\n
         });\n
     }\n
     function convertToAbsolutePosition(gadget, x, y) {\n
@@ -598,7 +597,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25443</int> </value>
+            <value> <int>25483</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

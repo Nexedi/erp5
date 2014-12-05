@@ -96,7 +96,7 @@ def getBusinessProcessGraph(business_process):\n
         source=predecessor,\n
         destination=successor,\n
         name=link.getTranslatedTitle(),\n
-        business_process_relative_url=context.getRelativeUrl(),\n
+        business_link_url=link.getRelativeUrl(),\n
         trade_phase=link.getTradePhase())\n
         \n
   for specialise in [context] + business_process.getSpecialiseValueList(portal_type=\'Business Process\'):\n
