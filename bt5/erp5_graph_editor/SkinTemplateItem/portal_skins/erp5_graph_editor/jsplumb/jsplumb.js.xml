@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17691107.44</string> </value>
+            <value> <string>ts17759117.85</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,7 +24,7 @@
 
 /* ===========================================================================\n
  * Copyright 2013 Nexedi SA and Contributors\n
- *\n
+ * \n
  * This file is part of DREAM.\n
  *\n
  * DREAM is free software: you can redistribute it and/or modify\n
@@ -128,7 +128,7 @@
         if (remove) {\n
             delete gadget.props.data.graph.edge[connection.id];\n
         } else {\n
-            edge_data = edge_data || {\n
+            edge_data = edge_data || gadget.props.data.graph.edge[connection.id] || {\n
                 _class: "Dream.Edge"\n
             };\n
             edge_data.source = getNodeId(gadget, connection.sourceId);\n
@@ -577,7 +577,6 @@
         });\n
         draggable(gadget);\n
         this.props.nodes_click_monitor = RSVP.Monitor();\n
-                console.log(this.props.data);\n
         if (this.props.data) {\n
           // load the data\n
           $.each(this.props.data.graph.node, function(key, value) {\n
@@ -599,7 +598,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25441</int> </value>
+            <value> <int>25443</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
