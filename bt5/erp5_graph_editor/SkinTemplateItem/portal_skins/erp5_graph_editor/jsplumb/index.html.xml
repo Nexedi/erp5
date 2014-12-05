@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17687388.65</string> </value>
+            <value> <string>ts17749154.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,11 +30,11 @@
 \n
 <!--    <link rel="stylesheet" href="../lib/jquerymobile.css">  -->\n
     <link rel="stylesheet" href="jsplumb.css">\n
-\n
+<!--\n
     <script src="../lib/jquery.js"></script>\n
     <script src="../lib/jquery-ui.js"></script>\n
     <script src="../lib/jquerymobile.js"></script> \n
-<!--\n
+\n
     <script src="../lib/rsvp.min.js"></script>\n
     <script src="../lib/renderjs.min.js"></script>\n
 -->\n
