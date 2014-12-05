@@ -53,7 +53,6 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
-    self.portal = self.getPortal()
     self.id_tool = self.portal.portal_ids
     self.id_tool.initializeGenerator(all=True)
     self.createGenerators()
@@ -110,11 +109,10 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
                      .getLatestVersionValue()
     return last_generator
 
-
   def testUpgradeIdToolDicts(self):
     # With old erp5_core, we have no generators, no IdTool_* zsql methods,
     # and we have a dictionary stored on id tool
-    id_tool = self.getPortal().portal_ids
+    id_tool = self.portal.portal_ids
     # Rebuild a persistent mapping like it already existed in beginning 2010
     # First persistent mapping of generateNewLengthIdList
     id_tool.dict_length_ids = PersistentMapping()
@@ -128,41 +126,25 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     # it was unfortunately possible to define something else
     # than strings
     id_tool.dict_ids[('bar','baz')] = 2
-    # Delete new zsql methods which are used by new code
-    skin_folder = self.getPortal().portal_skins.erp5_core
-    custom_skin_folder = self.getPortal().portal_skins.custom
-    script_id_list = [x for x in skin_folder.objectIds()
-                      if x.startswith('IdTool')]
-    self.assertTrue(len(script_id_list)>0)
-    cp_data = skin_folder.manage_cutObjects(ids=script_id_list)
-    custom_skin_folder.manage_pasteObjects(cp_data)
-    # Set old revision for erp5_core bt, because the id tool decide which code
-    # to run depending on this revision
-    template_tool = self.getPortal().portal_templates
-    erp5_core_bt_list = [x for x in template_tool.objectValues()
-                         if x.getTitle()=='erp5_core']
-    self.assertEqual(len(erp5_core_bt_list), 1)
-    erp5_core_bt = erp5_core_bt_list[0]
-    erp5_core_bt.setRevision(1561)
-    # Delete all new generators
-    generator_id_list = [x for x in id_tool.objectIds()]
-    id_tool.manage_delObjects(ids=generator_id_list)
+    # Delete portal type info and new generators
+    id_tool.manage_delObjects(ids=list(id_tool.objectIds()))
+    id_tool.__class__.getTypeInfo = lambda self: None
+    # Test with compatibility
+    self.tic()
     id_list = id_tool.generateNewLengthIdList(id_group='foo', store=1)
     self.assertEqual(id_list, [5])
     self.assertEqual(int(id_tool.dict_length_ids['foo'].value), 6)
-    # Now, reinstall erp5_core, and make sure we still have the possibility
-    # to continue generating ids
-    cp_data = template_tool.manage_copyObjects(ids=(erp5_core_bt.getId(),))
-    new_id = template_tool.manage_pasteObjects(cp_data)[0]['new_id']
-    new_bt = template_tool[new_id]
+    # Now, restore and make sure we can still generate ids
+    del id_tool.__class__.getTypeInfo
+    bt = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_core',
+                                                                  strict=True)
+    for path, obj in bt._path_item._objects.iteritems():
+        path, obj_id = path.rsplit('/', 1)
+        if path == 'portal_ids':
+            id_tool._setObject(obj_id, obj._getCopy(bt))
     self.tic()
-    self.commit()
-    new_bt.install(force=1)
-    erp5_core_bt.setRevision(1562)
-    cp_data = custom_skin_folder.manage_cutObjects(ids=script_id_list)
-    skin_folder.manage_pasteObjects(cp_data)
     id_list = id_tool.generateNewLengthIdList(id_group='foo')
-    # it is known that with current upgrade there is a whole
+    # it is known that with current upgrade there is a hole
     self.assertEqual(id_list, [7])
     new_id = id_tool.generateNewId(id_group='foo')
     self.assertEqual(new_id, 4)
