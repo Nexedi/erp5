@@ -51,11 +51,31 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>import json\n
-graph = sci[\'object\'].getProperty(\'jsplumb_graph\')\n
+business_process = sci[\'object\']\n
+graph = business_process.getProperty(\'jsplumb_graph\')\n
 \n
-#if graph:\n
-#  graph = json.loads(graph)\n
-context.log(graph)\n
+trade_state_dict = dict(start=None, end=None)\n
+for trade_state in business_process.getPortalObject().portal_categories.trade_state.getCategoryChildValueList():\n
+  # XXX I hope no duplicates\n
+  trade_state_dict[trade_state.getReference() or trade_state.getId()] = trade_state\n
+\n
+from pprint import pformat\n
+\n
+if graph:\n
+  graph = json.loads(graph)[\'graph\']\n
+\n
+  for edge_id, edge_data in graph[\'edge\'].items():\n
+    # Create the business link if it does not exist yet.\n
+    if not edge_data.get(\'business_process_relative_url\'):\n
+      business_process.newContent(\n
+        portal_type=\'Business Link\',\n
+        predecessor_value=trade_state_dict[edge_data[\'source\']],\n
+        successor_value=trade_state_dict[edge_data[\'destination\']],\n
+        title=edge_data.get(\'name\'),\n
+        trade_phase=edge_data.get(\'trade_phase\'),\n
+      )\n
+      \n
+if not graph: bam\n
 </string> </value>
         </item>
         <item>
