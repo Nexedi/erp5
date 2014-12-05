@@ -47,7 +47,7 @@ def getSearchDialog(self, REQUEST=None):
   default_view = self.getTypeInfo().getDefaultViewFor(self)
   listbox = default_view.listbox
 
-  temp_form = ERP5Form('Folder_viewSearchDialog', 'Search').__of__(self)
+  temp_form = ERP5Form('Folder_viewSearchDialog', 'Search').__of__(portal).__of__(self)
   temp_form.pt = 'form_dialog'
   temp_form.action = 'Folder_search'
 
