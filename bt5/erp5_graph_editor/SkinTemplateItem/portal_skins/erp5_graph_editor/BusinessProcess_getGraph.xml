@@ -54,7 +54,6 @@
 import json\n
 portal = context.getPortalObject()\n
 \n
-#context.manage_delProperties([\'jsplumb_graph\'])\n
 # if a graph has been saved, we use this info for node coordinates.\n
 position_graph = context.getProperty(\'jsplumb_graph\')\n
 if position_graph:\n
