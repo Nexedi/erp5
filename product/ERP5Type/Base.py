@@ -3124,7 +3124,7 @@ class Base( CopyContainer,
       for history in history_list.itervalues():
         try:
           date = history[-1]['time']
-        except (IndexError, KeyError):
+        except (IndexError, KeyError, TypeError):
           continue
         if date > max_date:
           max_date = date
