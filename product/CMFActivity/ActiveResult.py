@@ -78,5 +78,11 @@ class ActiveResult:
     """
     return self.severity > INFO
 
+  def __str__(self):
+    """
+    String representation of this active result
+    """
+    return "<%s at %s\n%s - %s\n%s>" % (
+        self.__class__, id(self), self.severity, self.summary, self.detail)
 
 allow_class(ActiveResult)
