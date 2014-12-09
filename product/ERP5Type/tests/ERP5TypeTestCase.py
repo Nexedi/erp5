@@ -152,8 +152,6 @@ def _getPersistentMemcachedServerDict():
   return dict(hostname=hostname, port=port)
 
 def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=None):
-  memcached_url = "memcached://%(hostname)s:%(port)s/" % \
-                             _getVolatileMemcachedServerDict()
   kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getVolatileMemcachedServerDict()
   memcached_url = "memcached://%(hostname)s:%(port)s/" % \
