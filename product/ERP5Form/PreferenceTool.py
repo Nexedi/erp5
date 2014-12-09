@@ -30,7 +30,6 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
-from AccessControl.ZopeGuards import guarded_getattr
 
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -73,7 +72,7 @@ class PreferenceMethod(Method):
       # there is a design problem in current archive API.
       sql_catalog_id = kw.pop('sql_catalog_id', None)
       for pref in instance._getSortedPreferenceList(sql_catalog_id=sql_catalog_id):
-        value = guarded_getattr(pref, self._preference_getter)(_marker, *args, **kw)
+        value = getattr(pref, self._preference_getter)(_marker, *args, **kw)
         # XXX Due to UI limitation, null value is treated as if the property
         #     was not defined. The drawback is that it is not possible for a
         #     user to mask a non-null global value with a null value.
