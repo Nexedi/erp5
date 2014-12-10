@@ -1836,7 +1836,7 @@ class ListBoxRenderer:
           stat_result = {}
           for index, (k, v) in enumerate(self.getSelectedColumnList()):
             try:
-              stat_result[k] = str(stat_brain[0][index + 1])
+              stat_result[k] = stat_brain[0][k]
             except IndexError:
               stat_result[k] = ''
 
