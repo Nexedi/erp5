@@ -60,11 +60,11 @@ limit_expression</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-SELECT\n
-  COUNT(DISTINCT catalog.uid) <dtml-comment>We need subselect for better statistics</dtml-comment>\n
-<dtml-if select_expression>\n
-  , <dtml-var select_expression>\n
-</dtml-if>\n
+SELECT count(*) from (\n
+\n
+SELECT DISTINCT\n
+  <dtml-in getCatalogSearchResultKeys> <dtml-var sequence-item><dtml-if sequence-end> <dtml-else>, </dtml-if> </dtml-in>\n
+  <dtml-if select_expression>,<dtml-var select_expression></dtml-if>\n
 FROM\n
   <dtml-if from_expression>\n
     <dtml-var from_expression>\n
@@ -108,6 +108,9 @@ ORDER BY\n
 GROUP BY\n
   <dtml-var group_by_expression>\n
 </dtml-if>\n
+) as q\n
+\n
+<dtml-comment>XXX what is the meaning of limit_expression while counting ? -jerome</dtml-comment>\n
 <dtml-if limit_expression>\n
 LIMIT <dtml-var "limit_expression">\n
 </dtml-if>\n
