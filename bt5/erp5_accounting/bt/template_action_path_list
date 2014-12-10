@@ -10,9 +10,6 @@ Account | view
 Accounting Period | create_secondary_periods
 Accounting Period | jump_related_balance_transaction
 Accounting Period | view
-Accounting Rule Cell Line | view
-Accounting Rule Cell | view
-Accounting Rule Cell | view_destination
 Accounting Transaction Balance Constraint | predicate
 Accounting Transaction Balance Constraint | view
 Accounting Transaction Line | destination_view

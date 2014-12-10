@@ -5,10 +5,6 @@
  <portal_type id="Accounting Period">
   <item>Accounting Period</item>
  </portal_type>
- <portal_type id="Accounting Rule Cell">
-  <item>Accounting Rule Cell Line</item>
-  <item>Accounting Transaction Line</item>
- </portal_type>
  <portal_type id="Accounting Transaction">
   <item>Accounting Transaction Line</item>
   <item>Embedded File</item>
@@ -48,7 +44,6 @@
   <item>Cash Register</item>
  </portal_type>
  <portal_type id="Payment Simulation Rule">
-  <item>Accounting Rule Cell</item>
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>

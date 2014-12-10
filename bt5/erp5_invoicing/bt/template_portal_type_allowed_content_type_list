@@ -8,7 +8,6 @@ Invoice Simulation Rule | Net Converted Quantity Divergence Tester
 Invoice Simulation Rule | Specialise Divergence Tester
 Invoice Simulation Rule | String Divergence Tester
 Invoice Simulation Rule | Variation Divergence Tester
-Invoice Transaction Simulation Rule | Accounting Rule Cell
 Invoice Transaction Simulation Rule | Category Membership Divergence Tester
 Invoice Transaction Simulation Rule | DateTime Divergence Tester
 Invoice Transaction Simulation Rule | Float Divergence Tester

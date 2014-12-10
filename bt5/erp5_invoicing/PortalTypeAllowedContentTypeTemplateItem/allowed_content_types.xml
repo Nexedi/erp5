@@ -14,7 +14,6 @@
   <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Invoice Transaction Simulation Rule">
-  <item>Accounting Rule Cell</item>
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
   <item>Float Divergence Tester</item>
