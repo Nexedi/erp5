@@ -46,6 +46,7 @@ from TranslationProviderBase import TranslationProviderBase
 from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
+from types import NoneType
 
 def getCurrentUserIdOrAnonymousToken():
   """Return connected user_id or simple token for
@@ -421,10 +422,9 @@ class ERP5TypeInformation(XMLObject,
 
         for workflow5 in self.getTypeWorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
-          if workflow_module is not None:
-            workflow5 = workflow_module._getOb(workflow5)
-            workflow5.initializeDocument(ob)
-      
+          workflow5 = workflow_module._getOb(workflow5)
+          workflow5.initializeDocument(ob)
+
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
@@ -531,6 +531,7 @@ class ERP5TypeInformation(XMLObject,
       """
       Return all the properties of the Portal Type
       """
+      ### cls's class is PortalTypeMetaClass defined in ERP5Type/dynamic/lazy_class.py
       cls = self.getPortalObject().portal_types.getPortalTypeClass(self.getId())
       return_set = set()
       for property_dict in cls.getAccessorHolderPropertyList(content=True):

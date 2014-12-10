@@ -165,100 +165,135 @@ class WorkflowMethod(Method):
       # already better than what we had. I (JPS) would prefer to use
       # critical sections in this part of the code and a
       # thread variable which tells in which semantic context the code
-      # should ne executed. - XXX
+      # should be executed. - XXX
       return self._m(instance, *args, **kw)
+
+    #===============  Workflow5 Project, Wenjie, Dec 2014  =====================
+    # Get Workflow5 which is an ERP5 default module.
+    # Available workflow5 bt should be initially installed.
+    # Only check Base Type obejct:
+    wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
+    valid_list5 = []
+    valid_transition_item_list5 = []
+    #if instance.portal_type == "Object Type":
+      #raise NotImplementedError (instance.getTypeInfo())# Base Type at Object Type
+    if hasattr(instance.getTypeInfo(),"workflow_list"):
+      WorkflowList = instance.getTypeInfo().getTypeWorkflowList()
+      #raise NotImplementedError (WorkflowList)# new_workflow
+      for wf_id in WorkflowList:
+        wf5 = wf5_module._getOb(wf_id)
+        for transition in wf5.objectValues(portal_type='Transition'):
+          valid_list5.append(transition.getId())
+        #raise NotImplementedError (valid_list5) # ['transition1', 'transition2']
+        if valid_list5:
+          valid_transition_item_list5.append((wf_id, valid_list5))
+
+      # execute method
+      for wf_id, transition_list in valid_transition_item_list5:
+        # ??? see original <245, 256>
+        for tr in transition_list:
+          method5 = wf5_module._getOb(wf_id)._getOb(tr)
+          method5.execute(instance) # also execute before & after script
+          #return method5._changeState(instance) # only change state
+          #raise NotImplementedError (instance.getId()) # new_object
+          #raise NotImplementedError (method5) # Transition at transition1
+          #raise NotImplementedError (instance.getCategoryStateTitle()) # None
+    #===================================  wf5  =================================
 
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
     try:
-      wf = getattr(instance.getPortalObject(), 'portal_workflow')
+      wf = getattr(instance.getPortalObject(), 'portal_workflow') # portal_workflow is a list! 
     except AttributeError:
       # XXX instance is unwrapped(no acquisition)
       # XXX I must think that what is a correct behavior.(Yusei)
       return self._m(instance, *args, **kw)
 
+    try:
     # Build a list of transitions which may need to be invoked
-    instance_path = instance.getPhysicalPath()
-    portal_type = instance.portal_type
-    transactional_variable = getTransactionalVariable()
-    invoke_once_dict = self._invoke_once.get(portal_type, {})
-    valid_invoke_once_item_list = []
+      instance_path = instance.getPhysicalPath()
+      portal_type = instance.portal_type
+      transactional_variable = getTransactionalVariable()
+      invoke_once_dict = self._invoke_once.get(portal_type, {})
+      valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
-    once_transition_dict = {}
-    for wf_id, transition_list in invoke_once_dict.iteritems():
-      valid_transition_list = []
-      for transition_id in transition_list:
-        once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
-                                wf_id, transition_id, instance_path)
-        once_transition_dict[(wf_id, transition_id)] = once_transition_key
-        if once_transition_key not in transactional_variable:
-          valid_transition_list.append(transition_id)
-      if valid_transition_list:
-        valid_invoke_once_item_list.append((wf_id, valid_transition_list))
-    candidate_transition_item_list = valid_invoke_once_item_list + \
+      once_transition_dict = {}
+      for wf_id, transition_list in invoke_once_dict.iteritems():
+        valid_transition_list = []
+        for transition_id in transition_list:
+          once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
+                                  wf_id, transition_id, instance_path)
+          once_transition_dict[(wf_id, transition_id)] = once_transition_key
+          if once_transition_key not in transactional_variable:
+            valid_transition_list.append(transition_id)
+        if valid_transition_list:
+          valid_invoke_once_item_list.append((wf_id, valid_transition_list))
+      candidate_transition_item_list = valid_invoke_once_item_list + \
                            self._invoke_always.get(portal_type, {}).items()
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
     # Try to return immediately if there are no transition to invoke
-    if not candidate_transition_item_list:
-      return apply(self.__dict__['_m'], (instance,) + args, kw)
+      if not candidate_transition_item_list:
+        return apply(self.__dict__['_m'], (instance,) + args, kw)
 
     # Prepare a list of transitions which should be invoked.
     # This list is based on the results of isWorkflowMethodSupported.
     # An interaction is ignored if the guard prevents execution.
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
-    valid_transition_item_list = []
-    for wf_id, transition_list in candidate_transition_item_list:
-      candidate_workflow = wf[wf_id]
-      valid_list = []
-      for transition_id in transition_list:
-        if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
-          valid_list.append(transition_id)
-          once_transition_key = once_transition_dict.get((wf_id, transition_id))
-          if once_transition_key:
-            # a run-once transition, prevent it from running again in
-            # the same transaction
-            transactional_variable[once_transition_key] = 1
-        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
-          raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+      valid_transition_item_list = []
+      for wf_id, transition_list in candidate_transition_item_list:
+        candidate_workflow = wf[wf_id]
+        valid_list = []
+        for transition_id in transition_list:
+          if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+            valid_list.append(transition_id)
+            once_transition_key = once_transition_dict.get((wf_id, transition_id))
+            if once_transition_key:
+              # a run-once transition, prevent it from running again in
+              # the same transaction
+              transactional_variable[once_transition_key] = 1
+          elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
+            raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           # XXX Keep the log for projects that needs to comment out
           #     the previous line.
-          LOG("WorkflowMethod.__call__", ERROR,
+            LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
               % (wf_id, transition_id, instance,
                  candidate_workflow._getWorkflowStateOf(instance, id_only=1)))
-      if valid_list:
-        valid_transition_item_list.append((wf_id, valid_list))
+        if valid_list:
+          valid_transition_item_list.append((wf_id, valid_list))
 
     #LOG('valid_transition_item_list %s' % self.__name__, 0, str(valid_transition_item_list))
 
-    # Call whatever must be called before changing states
-    for wf_id, transition_list in valid_transition_item_list:
-       wf[wf_id].notifyBefore(instance, transition_list, args=args, kw=kw)
+      # Call whatever must be called before changing states
+      for wf_id, transition_list in valid_transition_item_list:
+         wf[wf_id].notifyBefore(instance, transition_list, args=args, kw=kw)
 
-    # Compute expected result
-    result = apply(self.__dict__['_m'], (instance,) + args, kw)
+      # Compute expected result
+      result = apply(self.__dict__['_m'], (instance,) + args, kw)
 
-    # Change the state of statefull workflows
-    for wf_id, transition_list in valid_transition_item_list:
-      try:
-        wf[wf_id].notifyWorkflowMethod(instance, transition_list, args=args, kw=kw)
-      except ObjectDeleted:
-        # Re-raise with a different result.
-        raise ObjectDeleted(result)
-      except ObjectMoved, ex:
-        # Re-raise with a different result.
-        raise ObjectMoved(ex.getNewObject(), result)
+      # Change the state of statefull workflows
+      for wf_id, transition_list in valid_transition_item_list:
+        try:
+          wf[wf_id].notifyWorkflowMethod(instance, transition_list, args=args, kw=kw)
+        except ObjectDeleted:
+          # Re-raise with a different result.
+          raise ObjectDeleted(result)
+        except ObjectMoved, ex:
+          # Re-raise with a different result.
+          raise ObjectMoved(ex.getNewObject(), result)
 
     # Call whatever must be called after changing states
-    for wf_id, transition_list in valid_transition_item_list:
-      wf[wf_id].notifySuccess(instance, transition_list, result, args=args, kw=kw)
+      for wf_id, transition_list in valid_transition_item_list:
+        # /product/ERP5/InteractionWorkflow.py, update value, provide info
+        wf[wf_id].notifySuccess(instance, transition_list, result, args=args, kw=kw)
 
-    # Return result finally
-    return result
-
+      # Return result finally
+      return result
+    except:
+      pass
   # Interactions should not be disabled during normal operation. Only in very
   # rare and specific cases like data migration. That's why it is implemented
   # with temporary monkey-patching, instead of slowing down __call__ with yet
@@ -492,6 +527,43 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
+# =================== Workflow5 Project, Wenjie, Dec 2014 ======================
+### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
+### in generatePortalTypeAccessors()
+
+def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow5):
+  ### portal_workflow5 is the entire ERP5Workflow module, need to access the
+  ### workflow_list from instance's portal type. So only the related erp5 workflow will be used.
+
+  wf5_module = aq_inner(portal_workflow5)
+  portal_type = portal_workflow5.getPortalObject().getDefaultModule(portal_type="portal_types")
+  pt = portal_type._getOb(ptype_klass.__name__)
+  #raise NotImplementedError (portal_type)
+  #raise NotImplementedError (wf5_module)#<Workflow Module at workflow_module>
+  for workflow5 in pt.workflow_list:
+    for tr in wf5_module._getOb(workflow5).objectValues(portal_type="Transition"):
+      tr_id = tr.id
+      method_id = tr_id
+      wf_id = workflow5
+      ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
+                                              method_id)
+      ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id)
+      method = getattr(ptype_klass, method_id)
+
+      # Wrap method
+      if not callable(method):
+        LOG('initializePortalTypeERP5WorkflowMethods', 100,
+            'WARNING! Can not initialize %s on %s' % \
+              (method_id, portal_type))
+        continue
+
+      if not isinstance(method, WorkflowMethod):
+        method = WorkflowMethod(method)
+        setattr(ptype_klass, method_id, method)
+      method.registerTransitionAlways(portal_type, wf_id, tr_id)
+
+# =================== WF5 ======================================================
+
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
@@ -505,6 +577,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   dc_workflow_dict = dict()
   interaction_workflow_dict = dict()
+
+  # DCworkflow
   for wf in portal_workflow.getWorkflowsFor(portal_type):
     wf_id = wf.id
     wf_type = wf.__class__.__name__
@@ -545,6 +619,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
     storage[wf_id] = (transition_id_set, trigger_dict)
 
+# Generate Workflow method:
   for wf_id, v in dc_workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
