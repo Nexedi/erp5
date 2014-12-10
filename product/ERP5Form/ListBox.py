@@ -1357,8 +1357,8 @@ class ListBoxRenderer:
       # Nothing to do in this case.
       stat_method = None
     elif stat_method_name == 'portal_catalog':
-      stat_method = CatalogMethodWrapper(self.getCatalogTool(), 'countResults')
-    elif stat_method_name == 'countFolder':
+      stat_method = CatalogMethodWrapper(self.getCatalogTool(), 'searchResults')
+    elif stat_method_name == 'searchFolder':
       stat_method = CatalogMethodWrapper(self.getContext(), stat_method_name)
     elif stat_method_name is not None:
       stat_method = getattr(self.getContext(), stat_method_name, None)
