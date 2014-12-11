@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17681771.98</string> </value>
+            <value> <string>ts18206401.86</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -29,10 +29,11 @@
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
     <title>Listfield</title>\n
 \n
-    <!-- renderjs -->\n
+    <!-- renderjs\n
     <script src="../lib/rsvp.min.js" type="text/javascript"></script>\n
     <script src="../lib/renderjs.min.js" type="text/javascript"></script>\n
     <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
+-->\n
     <!-- custom script -->\n
     <script src="listfield.js" type="text/javascript"></script>\n
 \n
