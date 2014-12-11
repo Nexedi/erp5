@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts18282338.36</string> </value>
+            <value> <string>ts18282921.2</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -347,10 +347,10 @@
         delete schema.properties.source;\n
         delete schema.properties.destination;\n
         gadget.props.element.appendChild(document.importNode(popup_edit_template.content, true).children[0]);\n
-        edit_popup = $(gadget.props.element).find("#edit-popup");\n
+        edit_popup = $(gadget.props.element).find("#node-edit-popup");\n
         edit_popup.find(".node_class").text(connection._class);\n
         fieldset_element = edit_popup.find("fieldset")[0];\n
-        edit_popup.popup();\n
+        edit_popup.dialog();\n
         edit_popup.show();\n
         function save_promise(fieldset_gadget, edge_id) {\n
             return RSVP.Queue().push(function() {\n
@@ -389,8 +389,8 @@
                 property_definition: schema\n
             }, edge_id) ]);\n
         }).push(function(fieldset_gadget) {\n
-            edit_popup.enhanceWithin();\n
-            edit_popup.popup("open");\n
+           // edit_popup.enhanceWithin();\n
+            edit_popup.dialog("open");\n
             return fieldset_gadget[0];\n
         }).push(function(fieldset_gadget) {\n
             // Expose the dialog handling promise so that we can wait for it in\n
@@ -398,7 +398,7 @@
             gadget.props.dialog_promise = RSVP.any([ save_promise(fieldset_gadget, edge_id), delete_promise ]);\n
             return gadget.props.dialog_promise;\n
         }).push(function() {\n
-            edit_popup.popup("close");\n
+            edit_popup.dialog("close");\n
             edit_popup.remove();\n
             delete gadget.props.dialog_promise;\n
         });\n
@@ -415,11 +415,11 @@
             node_edit_popup.remove();\n
         }\n
         gadget.props.element.appendChild(document.importNode(popup_edit_template.content, true).children[0]);\n
-        node_edit_popup = $(gadget.props.element).find("#edit-popup");\n
+        node_edit_popup = $(gadget.props.element).find("#node-edit-popup");\n
         // Set the name of the popup to the node class\n
         node_edit_popup.find(".node_class").text(node_data._class);\n
         fieldset_element = node_edit_popup.find("fieldset")[0];\n
-        node_edit_popup.popup();\n
+        node_edit_popup.dialog();\n
         node_data.id = node_id;\n
         // XXX\n
         function save_promise(fieldset_gadget, node_id) {\n
@@ -450,8 +450,8 @@
                 property_definition: schema\n
             }, node_id) ]);\n
         }).push(function(fieldset_gadget) {\n
-            node_edit_popup.enhanceWithin();\n
-            node_edit_popup.popup("open");\n
+            // node_edit_popup.enhanceWithin();\n
+             node_edit_popup.dialog("open");\n
             return fieldset_gadget[0];\n
         }).push(function(fieldset_gadget) {\n
             // Expose the dialog handling promise so that we can wait for it in\n
@@ -459,7 +459,7 @@
             gadget.props.dialog_promise = RSVP.any([ save_promise(fieldset_gadget, node_id), delete_promise ]);\n
             return gadget.props.dialog_promise;\n
         }).push(function() {\n
-            node_edit_popup.popup("close");\n
+            node_edit_popup.dialog("close");\n
             node_edit_popup.remove();\n
             delete gadget.props.dialog_promise;\n
         });\n
@@ -578,13 +578,39 @@
             g.props.element = element;\n
         });\n
     }).declareAcquiredMethod("notifyDataChanged", "notifyDataChanged").declareMethod("render", function(data) {\n
-        // var gadget = this;\n
-        this.props.data = JSON.parse(data);\n
+        var gadget = this;\n
+        this.props.data = {};\n
+        if (data.value) {\n
+          // Gadget embedded in ERP5\n
+          this.props.erp5_key = data.key;\n
+          data = data.value;\n
+        }\n
+        \n
+        if (data) {\n
+          this.props.data = JSON.parse(data);\n
+          // load the data\n
+          $.each(this.props.data.graph.node, function(key, value) {\n
+              addNode(gadget, key, value);\n
+          });\n
+          $.each(this.props.data.graph.edge, function(key, value) {\n
+              addEdge(gadget, key, value);\n
+          });\n
+        }\n
         this.props.jsplumb_instance = jsPlumb.getInstance();\n
     }).declareMethod("getContent", function() {\n
+        var ret = {};\n
+        if (this.props.erp5_key) {\n
+          // ERP5\n
+          ret[this.props.erp5_key] = JSON.stringify(this.props.data);\n
+          return ret;\n
+        }\n
         return JSON.stringify(this.props.data);\n
     }).declareMethod("startService", function() {\n
-        var gadget = this, jsplumb_instance = gadget.props.jsplumb_instance;\n
+      // no more needed, see below\n
+    }).declareService(function() {\n
+        var gadget = this, jsplumb_instance;\n
+        this.props.jsplumb_instance = jsPlumb.getInstance();\n
+        jsplumb_instance= gadget.props.jsplumb_instance;\n
         this.props.main = this.props.element.querySelector("#main");\n
         jsplumb_instance.setRenderMode(jsplumb_instance.SVG);\n
         jsplumb_instance.importDefaults({\n
@@ -605,13 +631,15 @@
         });\n
         draggable(gadget);\n
         this.props.nodes_click_monitor = RSVP.Monitor();\n
-        // load the data\n
-        $.each(this.props.data.graph.node, function(key, value) {\n
-            addNode(gadget, key, value);\n
-        });\n
-        $.each(this.props.data.graph.edge, function(key, value) {\n
-            addEdge(gadget, key, value);\n
-        });\n
+        if (this.props.data) {\n
+          // load the data\n
+          $.each(this.props.data.graph.node, function(key, value) {\n
+              addNode(gadget, key, value);\n
+          });\n
+          $.each(this.props.data.graph.edge, function(key, value) {\n
+              addEdge(gadget, key, value);\n
+          });\n
+        }\n
         return RSVP.all([ waitForDrop(gadget), waitForConnection(gadget), waitForConnectionDetached(gadget), waitForConnectionClick(gadget), gadget.props.nodes_click_monitor ]);\n
     });\n
 })(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser);
@@ -624,7 +652,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>27792</int> </value>
+            <value> <int>28691</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
