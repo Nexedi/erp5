@@ -140,7 +140,9 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -207,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>http://localhost:55432/erp5/portal_skins/custom/jsplumb/index.html</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -240,6 +242,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>context/BusinessProcess_getGraph</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.getPortalObject().restrictedTraverse(\'jsplumb/index.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
