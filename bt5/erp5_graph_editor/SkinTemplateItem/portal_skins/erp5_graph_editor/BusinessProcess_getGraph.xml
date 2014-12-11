@@ -64,12 +64,12 @@ visited_business_process_set = set() # prevent infinite recurisions\n
 def getBusinessProcessGraph(business_process):\n
   graph = dict(node=dict(start=dict(_class=\'erp5.business_process.start\',\n
                                     name=str(translateString(\'Start\'))),\n
-                        end=dict(_class=\'erp5.business_process.end\',\n
+                        end=dict(_class=\'erp5.business_process.end\', # XXX is there an implicit end state ???\n
                                  name=str(translateString(\'End\'))),),\n
                edge=dict())\n
 \n
 \n
-  for trade_state in portal.portal_categories.trade_state.getCategoryChildValueList(): # XXX all\n
+  for trade_state in portal.portal_categories.trade_state.getCategoryChildValueList(): # XXX do we really want to display all trade states ?\n
     state_id = trade_state.getReference() or trade_state.getId()\n
     graph[\'node\'][state_id] = dict(\n
         _class=\'erp5.business_process.trade_state\',\n
@@ -97,7 +97,7 @@ def getBusinessProcessGraph(business_process):\n
         destination=successor,\n
         name=link.getTranslatedTitle(),\n
         business_link_url=link.getRelativeUrl(),\n
-        trade_phase=link.getTradePhase())\n
+        trade_phase=link.getTradePhase() or \'\')\n
         \n
   for specialise in [context] + business_process.getSpecialiseValueList(portal_type=\'Business Process\'):\n
     specialise_graph = getBusinessProcessGraph(specialise)\n
@@ -106,8 +106,22 @@ def getBusinessProcessGraph(business_process):\n
     for node_id, node_data in specialise_graph[\'edge\'].items():\n
       graph[\'edge\'].setdefault(node_id, node_data)\n
   return graph\n
-  \n
-return json.dumps(dict(graph=getBusinessProcessGraph(context), class_definition=[]), indent=2)\n
+\n
+\n
+class_definition = {\n
+  \'erp5.business_process.business_link\': {\n
+    \'_class\': \'edge\',\n
+    \'type\': \'object\',\n
+    \'description\': \'An ERP5 Business Link\',\n
+    \'properties\': {\n
+      \'name\': {\'type\': \'string\'},     \n
+      \'trade_phase\': {\'type\': \'string\', \'enum\': [\'\'] + [\n
+          trade_phase.getId() for trade_phase in portal.portal_categories.trade_phase.getCategoryChildValueList(local_sort_on=(\'int_index\', \'title\'))]},     \n
+    }\n
+  }\n
+}\n
+\n
+return json.dumps(dict(graph=getBusinessProcessGraph(context), class_definition=class_definition), indent=2)\n
 </string> </value>
         </item>
         <item>
