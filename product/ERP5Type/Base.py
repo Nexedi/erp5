@@ -201,22 +201,27 @@ class WorkflowMethod(Method):
     #===============  Workflow5 Project, Wenjie, Dec 2014  =====================
     ### Access the ERP5Type workflow_list
     if instance.getTypeInfo().getTypeWorkflowList() != []:
+      wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
       ### Build the list of method which is call and will be invoked.
       valid_transition_item_list = []
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
-
         for transition_id in transition_list:
-          valid_list.append(transition_id)
-          once_transition_key = once_transition_dict.get((wf_id, transition_id))
-          transactional_variable[once_transition_key] = 1
+          ### early version of isWorkflow5Supported()
+          if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
+            valid_list.append(transition_id)
+            once_transition_key = once_transition_dict.get((wf_id, transition_id))
+            transactional_variable[once_transition_key] = 1
+          else:
+            raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+        if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
       ### Execute method
       for wf_id, transition_list in valid_transition_item_list:
         for tr in transition_list:
           #raise NotImplementedError (tr)
-          method5 = instance.getPortalObject().getDefaultModule(portal_type="Workflow")._getOb(wf_id)._getOb(tr)
+          method5 = wf5_module._getOb(wf_id)._getOb(tr)
           method5.execute(instance)
     #===================================  wf5  =================================
     
@@ -533,7 +538,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow5):
   for workflow5 in pt.workflow_list:
     for tr in wf5_module._getOb(workflow5).objectValues(portal_type="Transition"):
       tr_id = tr.id
-      method_id = tr_id
+      method_id = convertToMixedCase(tr_id)
       wf_id = workflow5
       ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id, 0)
       #ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
