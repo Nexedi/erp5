@@ -525,9 +525,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   a new document in a folder.
 
   ERP5 folders use the ZSQLCatalog to search for objects
-  or display content. This requires a method called
-  *z_search_folder* to be put inside the ZSQLCatalog object
-  of the ERP5 portal.
+  or display content.
 
   An ERP5 Binder document class will eventually be defined
   in order to implement a binder of documents which can itself

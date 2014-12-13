@@ -96,7 +96,6 @@ erp5_mysql_ndb/z_related_translated_validation_state_title
 erp5_mysql_ndb/z_related_uid
 erp5_mysql_ndb/z_related_uid_or_parent_uid
 erp5_mysql_ndb/z_reserve_uid
-erp5_mysql_ndb/z_search_folder
 erp5_mysql_ndb/z_search_results
 erp5_mysql_ndb/z_show_category_columns
 erp5_mysql_ndb/z_show_columns
