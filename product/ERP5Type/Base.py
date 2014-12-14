@@ -207,8 +207,8 @@ class WorkflowMethod(Method):
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          ### early version of isWorkflow5Supported()
-          if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
+          if wf5_module._getOb(wf_id).isWorkflow5MethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
+          #if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
