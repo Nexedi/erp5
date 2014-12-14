@@ -139,6 +139,13 @@ class Workflow(XMLObject):
                           transition_url=transition_url,
                           state=state)
 
+  def isWorkflow5MethodSupported(self, document, transition):
+    state = document.getCategoryStateValue()
+    if state is None:
+      return 0
+    if transition in state.getDestinationValueList():
+      return 1
+    return 0
   ###########
   ## Graph ##
   ############
