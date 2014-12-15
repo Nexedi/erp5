@@ -131,7 +131,7 @@ class TradeModelPath(Path):
             'source_project',
             #'source_referral',
             'source_section',
-            #'source_trade',
+            'source_trade',
             #'source_transport'
             )
 
@@ -155,7 +155,7 @@ class TradeModelPath(Path):
             'destination_project',
             #'destination_referral',
             'destination_section',
-            #'destination_trade',
+            'destination_trade',
             #'destination_transport'
             )
 
