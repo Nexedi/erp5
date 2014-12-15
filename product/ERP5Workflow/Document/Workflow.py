@@ -27,7 +27,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
@@ -39,7 +40,7 @@ from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
-
+#import String
 from DateTime import DateTime
 
 class Workflow(XMLObject):
@@ -143,9 +144,8 @@ class Workflow(XMLObject):
                           transition_url=transition_url,
                           state=state)
 # ========== Workflow5 Project, Wenjie, Dec 2014 ===============================
-  def isWorkflow5MethodSupported(self, document, transition, wf_id):
-    state = self._getWorkflow5StateOf(document, wf_id)
-    #state = document.getCategoryStateValue()
+  def isWorkflow5MethodSupported(self, document, transition):
+    state = self._getWorkflow5StateOf(document)
     if state is None:
       return 0
     if transition in state.getDestinationValueList():
@@ -153,23 +153,15 @@ class Workflow(XMLObject):
     return 0
 
 ### get workflow state from base category value:
-  def _getWorkflow5StateOf(self, ob, wf_id):
-    ### the problem is that: How to pass state_id from base_category
-    getter = WorkflowState.Getter
-    #ptype_klass = self.getPortalObject().portal_types.getPortalTypeClass(ob.getTypeInfo().getId())
-    ptype_klass = ob.getTypeInfo().__class__
-    #raise NotImplementedError (ptype_klass)#class 'erp5.portal_type.Base Type'
-    StateGetter = getter('get%s'%UpperCase(self.getStateBaseCategory()), wf_id)
-    ptype_klass.registerAccessor(StateGetter)
-    # raise NotImplementedError (StateGetter._id)# getCategoryState
-    state_path = ob.getCategoryState()
+  def _getWorkflow5StateOf(self, ob):
+    bc_id = self.getStateBaseCategory()
+    state_path = ob.getCategoryList()
+    state_path = state_path[0].lstrip("%s/"%bc_id)
     ###
     if state_path is not None:
       state = self.restrictedTraverse(state_path)
-      #state = self._getOb(state_id)
     else: state = None
     return state
-
 # =========== WF5 ==============================================================
   ###########
   ## Graph ##
