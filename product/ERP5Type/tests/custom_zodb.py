@@ -53,7 +53,9 @@ if load:
     if os.path.exists(dump_sql_path):
       command = "mysql %s < %s" % (getMySQLArguments(), dump_sql_path)
       _print("Restoring MySQL database with %s ... " % command)
+      _start = time.time()
       subprocess.check_call(command, shell=True)
+      _print('done (%.3fs)\n' % (time.time() - _start))
     else:
       _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'
