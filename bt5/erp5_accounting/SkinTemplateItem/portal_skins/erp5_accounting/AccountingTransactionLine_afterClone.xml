@@ -59,6 +59,7 @@ context.setGroupingReference(None)\n
 context.setGroupingDate(None)\n
 \n
 context.setAggregate(None, portal_type=\'Bank Reconciliation\')\n
+context.setAggregate(None, portal_type=\'Payment Transaction Group\')\n
 
 
 ]]></string> </value>
