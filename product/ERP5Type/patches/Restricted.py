@@ -199,6 +199,7 @@ import hashlib
 # for md5 and sha1/224/256/384/512)
 allow_type(type(hashlib.md5()))
 allow_module('time')
+allow_module('unicodedata')
 allow_module('urlparse')
 allow_module('struct')
 
