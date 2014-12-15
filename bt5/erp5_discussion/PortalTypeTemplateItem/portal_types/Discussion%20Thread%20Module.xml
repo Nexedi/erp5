@@ -39,30 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>  A Folder is a subclass of Base but not of XMLObject.\r\n
-  Folders are not considered as documents and are therefore\r\n
-  not synchronisable.\r\n
-\r\n
-  ERP5 folders are implemented as CMFBTreeFolder objects\r\n
-  and can store up to a million documents on a standard\r\n
-  computer.\r\n
-  ERP5 folders will eventually use in the near future the\r\n
-  AdaptableStorage implementation in order to reach performances\r\n
-  of 10 or 100 millions of documents in a single folder.\r\n
-\r\n
-  ERP5 folders include an automatic id generation feature\r\n
-  which allows user not to define an id when they create\r\n
-  a new document in a folder.\r\n
-\r\n
-  ERP5 folders use the ZSQLCatalog to search for objects\r\n
-  or display content. This requires a method called\r\n
-  *z_search_folder* to be put inside the ZSQLCatalog object\r\n
-  of the ERP5 portal.\r\n
-\r\n
-  An ERP5 Binder document class will eventually be defined\r\n
-  in order to implement a binder of documents which can itself\r\n
-  be categorized.\r\n
-</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
