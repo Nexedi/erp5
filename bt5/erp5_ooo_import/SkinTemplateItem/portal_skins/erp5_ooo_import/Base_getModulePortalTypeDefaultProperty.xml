@@ -61,10 +61,12 @@ def extract_keyword(name):\n
 \n
 def match(name, keyword_list):\n
   count = 0\n
+  if name == keyword_list:\n
+    return 1\n
   for i in keyword_list:\n
     if i in name:\n
       count += 1\n
-  return count/float(len(keyword_list))\n
+  return count/float(len(name + keyword_list))\n
 \n
 module = context\n
 spreadsheet_column = cell.getProperty(\'spreadsheet_column\')\n
