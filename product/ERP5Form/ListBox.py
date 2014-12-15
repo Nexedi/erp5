@@ -92,6 +92,8 @@ class CatalogMethodWrapper(MethodWrapper):
       'md5_object_uid_list', 'cancel_url', 'listbox_list_selection_name',
       'form_id', 'select_language', 'select_favorite', 'select_module',
       'portal_status_message', 'all_languages',
+      'ignore_layout', 'report_depth', 'object_path', 'object_uid',
+      'checked_permission', 'editable_mode',
       'select_jump', 'select_action', 'Base_doSelect'):
       kw.pop(parameter_id, None)
     # Strip all entries which have an empty string as value (ie, an empty
