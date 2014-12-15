@@ -515,6 +515,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   _apply_patches = layer._deferred_setup.pop(0)[0]
   assert _apply_patches.__name__ == '_apply_patches'
 
+  # Set debug mode after importing ZopeLite that resets it to 0
+  cfg.debug_mode = debug
+
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
