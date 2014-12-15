@@ -567,13 +567,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Make sure that locally overridden python modules are used
   sys.path.insert(0, os.path.join(real_instance_home, 'lib', 'python'))
 
-  # XXX Allowing to load modules from here is a wrong idea. use the above path
-  # instead.
-  # Add tests_framework_home as first path element.
-  # this allows to bypass psyco by creating a dummy psyco module
-  # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
-  sys.path.insert(0, tests_framework_home)
-
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
