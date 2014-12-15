@@ -31,12 +31,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
-
+from Products.ERP5Type.Accessor import WorkflowState
+from Products.ERP5Type import Permissions
 from tempfile import mktemp
 import os
 from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
-
+from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
 
 from DateTime import DateTime
@@ -51,6 +52,9 @@ class Workflow(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  ### register the variable given by "base category value"
+  #state_var = 'state'
+  ### In DCworkflow; state/transition can be registered inside workflow 
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -138,14 +142,35 @@ class Workflow(XMLObject):
                           transition=transition,
                           transition_url=transition_url,
                           state=state)
-
-  def isWorkflow5MethodSupported(self, document, transition):
-    state = document.getCategoryStateValue()
+# ========== Workflow5 Project, Wenjie, Dec 2014 ===============================
+  def isWorkflow5MethodSupported(self, document, transition, wf_id):
+    state = self._getWorkflow5StateOf(document, wf_id)
+    #state = document.getCategoryStateValue()
     if state is None:
       return 0
     if transition in state.getDestinationValueList():
       return 1
     return 0
+
+### get workflow state from base category value:
+  def _getWorkflow5StateOf(self, ob, wf_id):
+    ### the problem is that: How to pass state_id from base_category
+    getter = WorkflowState.Getter
+    #ptype_klass = self.getPortalObject().portal_types.getPortalTypeClass(ob.getTypeInfo().getId())
+    ptype_klass = ob.getTypeInfo().__class__
+    #raise NotImplementedError (ptype_klass)#class 'erp5.portal_type.Base Type'
+    StateGetter = getter('get%s'%UpperCase(self.getStateBaseCategory()), wf_id)
+    ptype_klass.registerAccessor(StateGetter)
+    # raise NotImplementedError (StateGetter._id)# getCategoryState
+    state_path = ob.getCategoryState()
+    ###
+    if state_path is not None:
+      state = self.restrictedTraverse(state_path)
+      #state = self._getOb(state_id)
+    else: state = None
+    return state
+
+# =========== WF5 ==============================================================
   ###########
   ## Graph ##
   ############
