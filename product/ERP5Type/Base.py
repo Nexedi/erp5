@@ -72,7 +72,7 @@ from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
-from Accessor import WorkflowState
+from Accessor import WorkflowState, Value
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
@@ -207,7 +207,7 @@ class WorkflowMethod(Method):
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          if wf5_module._getOb(wf_id).isWorkflow5MethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
+          if wf5_module._getOb(wf_id).isWorkflow5MethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id), wf_id):
           #if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
@@ -224,7 +224,7 @@ class WorkflowMethod(Method):
           method5 = wf5_module._getOb(wf_id)._getOb(tr)
           method5.execute(instance)
     #===================================  wf5  =================================
-    
+
     # Prepare a list of transitions which should be invoked.
     # This list is based on the results of isWorkflowMethodSupported.
     # An interaction is ignored if the guard prevents execution.
@@ -535,6 +535,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow5):
   pt = portal_type._getOb(ptype_klass.__name__)
   #raise NotImplementedError (portal_type)
   #raise NotImplementedError (wf5_module)#<Workflow Module at workflow_module>
+  ### creat workflow method:
   for workflow5 in pt.workflow_list:
     for tr in wf5_module._getOb(workflow5).objectValues(portal_type="Transition"):
       tr_id = tr.id
