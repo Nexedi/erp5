@@ -76,7 +76,7 @@ if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
 \n
 category_uid_list = (\'payment_uid\', \'project_uid\', \'funding_uid\',\n
-  \'function_uid\', \'payment_request_uid\')\n
+  \'function_uid\', \'payment_request_uid\', \'default_aggregate_uid\')\n
 for category_uid in category_uid_list:\n
   category_uid_value = kw.get(category_uid)\n
   if category_uid_value:\n
