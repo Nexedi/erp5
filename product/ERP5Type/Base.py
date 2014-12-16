@@ -109,7 +109,7 @@ _MARKER = []
 global registered_workflow_method_set
 wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
-erp5workflow_method_registry =[]
+erp5workflow_method_registry = []
 
 def resetRegisteredWorkflowMethod(portal_type=None):
   """
@@ -213,12 +213,9 @@ class ERP5WorkflowMethod(Method):
         valid_list = []
         for transition_id in transition_list:
           if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
-          #if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
-          #else: ### don't do anything if no supported
-            #raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
@@ -660,8 +657,8 @@ def getClassPropertyList(klass):
   return ps_list
 
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
-  ### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
-  ### in generatePortalTypeAccessors()
+### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
+### in generatePortalTypeAccessors()
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__)

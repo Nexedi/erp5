@@ -52,10 +52,6 @@ class Workflow(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  ### register the variable given by "base category value"
-  #state_var = 'state'
-  ### In DCworkflow; state/transition can be registered inside workflow
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -151,12 +147,10 @@ class Workflow(XMLObject):
       return 1
     return 0
 
-### get workflow state from base category value:
   def _getERP5WorkflowStateOf(self, ob):
     bc_id = self.getStateBaseCategory()
     state_path = ob.getCategoryList()
     state_path = state_path[0].lstrip("%s/"%bc_id)
-    ###
     if state_path is not None:
       sdef = self.restrictedTraverse(state_path)
     else: sdef = None
