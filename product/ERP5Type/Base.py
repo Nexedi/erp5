@@ -109,7 +109,7 @@ _MARKER = []
 global registered_workflow_method_set
 wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
-erp5workflow_method_registry = []
+erp5workflow_method_registry =[]
 
 def resetRegisteredWorkflowMethod(portal_type=None):
   """
@@ -219,7 +219,6 @@ class ERP5WorkflowMethod(Method):
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
-      ### Execute method
       for wf_id, transition_list in valid_transition_item_list:
         for tr in transition_list:
           method5 = wf5_module._getOb(wf_id)._getOb(tr)
@@ -655,6 +654,8 @@ def getClassPropertyList(klass):
       ps_list = ps_list + tuple([p for p in getClassPropertyList(super_klass)
         if p not in ps_list])
   return ps_list
+
+
 
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
 ### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
@@ -3632,5 +3633,3 @@ class TempBase(Base):
 # allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
 # ClassSecurityInfo with one that doesn't declare our public methods
 InitializeClass(TempBase)
-
-
