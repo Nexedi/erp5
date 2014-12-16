@@ -269,10 +269,12 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 # ================== ERP5Workflow Project, Wenjie, Dec 2014 =======================
     portal_type = site.getDefaultModule(portal_type="portal_types")
     ### try to get workflow_list from related types then initialize the class of types
-    try:
-      pt = portal_type._getOb(cls.__name__)
-    #raise NotImplemented (pt)
-      if hasattr(pt, 'workflow_list'):
+    pt = getattr(portal_type, cls.__name__, None)
+    if pt is not None:
+      #pt = portal_type._getOb(cls.__name__)
+      #raise NotImplemented (pt)
+      wf = getattr(pt, 'workflow_list', None)
+      if wf is not None:
         ### Get ERP5Workflow Module
         portal_ERP5Workflow = site.getDefaultModule(portal_type="Workflow")
         if portal_ERP5Workflow is None:
@@ -282,8 +284,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         else:
           ### Generate Workflow Method
           intializePortalTypeERP5WorkflowMethod(cls, portal_ERP5Workflow)
-    except:
-      pass
 # ================== WF5 =======================================================
 
     # portal type group methods, isNodeType, isResourceType...
