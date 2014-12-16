@@ -418,13 +418,14 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-### Project WORKFLOW5 , WENJIE , 2014 ###
-
-        for workflow5 in self.getTypeWorkflowList():
+# =========== Project ERP5Workflow , WENJIE , 2014 ================================
+        ### workflow_list need to be defined somewhere.
+        ### exp: ERP5Workflow in Person module won't work at this situation.
+        for ERP5Workflow in self.getTypeWorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
-          workflow5 = workflow_module._getOb(workflow5)
-          workflow5.initializeDocument(ob)
-
+          ERP5Workflow = workflow_module._getOb(ERP5Workflow)
+          ERP5Workflow.initializeDocument(ob)
+# =========== WF5 ==============================================================
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()

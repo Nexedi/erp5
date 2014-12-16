@@ -266,26 +266,22 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     else:
       initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
 
-# ================== Workflow5 Project, Wenjie, Dec 2014 =======================
-    ### the ERP5Workflow list is defined in ERP5Type, only try to get erp5workflow
-    ### when it's an erp5workflow related type.
+# ================== ERP5Workflow Project, Wenjie, Dec 2014 =======================
     portal_type = site.getDefaultModule(portal_type="portal_types")
-    
     ### try to get workflow_list from related types then initialize the class of types
     try:
       pt = portal_type._getOb(cls.__name__)
     #raise NotImplemented (pt)
       if hasattr(pt, 'workflow_list'):
-    #if cls.__name__ == "Object Type": # Has to be redifined
-        portal_workflow5 = site.getDefaultModule(portal_type="Workflow")
-          #raise NotImplementedError (portal_workflow5) #<Workflow Module at workflow_module>
-          #raise NotImplementedError (cls.__module__) #<class 'erp5.portal_type.Category Property'>
-        if portal_workflow5 is None:
+        ### Get ERP5Workflow Module
+        portal_ERP5Workflow = site.getDefaultModule(portal_type="Workflow")
+        if portal_ERP5Workflow is None:
           LOG("ERP5Type.Dynamic", WARNING,
-              "no workflow5 methods for %s"
+              "no ERP5Workflow methods for %s"
                   % cls.__name__)
         else:
-          intializePortalTypeERP5WorkflowMethod(cls, portal_workflow5)
+          ### Generate Workflow Method
+          intializePortalTypeERP5WorkflowMethod(cls, portal_ERP5Workflow)
     except:
       pass
 # ================== WF5 =======================================================
