@@ -141,23 +141,12 @@ class Workflow(XMLObject):
                           state=state)
 
   def isERP5WorkflowMethodSupported(self, document, transition):
-    sdef = self._getERP5WorkflowStateOf(document)
+    sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
     if sdef is None:
       return 0
     if transition in sdef.getDestinationValueList():
       return 1
     return 0
-
-  def _getERP5WorkflowStateOf(self, ob):
-    bc_id = self.getStateBaseCategory()
-    state_path = ob.getCategoryList()
-    ### should avoid using lstrip
-    state_path = state_path[0].lstrip("%s/"%bc_id)
-
-    if state_path is not None:
-      sdef = self.restrictedTraverse(state_path)
-    else: sdef = None
-    return sdef
 
   ###########
   ## Graph ##
