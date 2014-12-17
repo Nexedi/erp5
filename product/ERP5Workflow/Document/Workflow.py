@@ -151,6 +151,7 @@ class Workflow(XMLObject):
   def _getERP5WorkflowStateOf(self, ob):
     bc_id = self.getStateBaseCategory()
     state_path = ob.getCategoryList()
+    ### should avoid using lstrip
     state_path = state_path[0].lstrip("%s/"%bc_id)
 
     if state_path is not None:

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
@@ -290,8 +289,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     portal_type = site.getDefaultModule(portal_type="portal_types")
     pt = portal_type._getOb(cls.__name__, None)
     if pt is not None:
-      wf = getattr(pt, 'workflow_list', None)
-      if wf is not None:
+      workflow_list = getattr(pt, 'workflow_list', None)
+      if workflow_list is not None:
         portal_ERP5Workflow = site.getDefaultModule(portal_type="Workflow")
         if portal_ERP5Workflow is None:
           LOG("ERP5Type.Dynamic", WARNING,

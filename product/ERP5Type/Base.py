@@ -3633,5 +3633,3 @@ class TempBase(Base):
 # allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
 # ClassSecurityInfo with one that doesn't declare our public methods
 InitializeClass(TempBase)
-
-
