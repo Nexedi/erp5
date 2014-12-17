@@ -3,6 +3,7 @@
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#               2014 Wenjie Zheng <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -109,7 +110,7 @@ _MARKER = []
 global registered_workflow_method_set
 wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
-erp5workflow_method_registry =[]
+erp5workflow_method_registry = []
 
 def resetRegisteredWorkflowMethod(portal_type=None):
   """
@@ -659,38 +660,16 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
-# =================== ERP5Workflow Project, Wenjie, Dec 2014 ======================
-### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
-### in generatePortalTypeAccessors()
-
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
-  ### portal_ERP5Workflow is the entire ERP5Workflow module, need to access the
-  ### workflow_list from instance's portal type. So only the related erp5 workflow will be used.
-
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__)
-  #raise NotImplementedError (portal_type)
-  #raise NotImplementedError (wf5_module)#<Workflow Module at workflow_module>
-  ### creat workflow method:
   for ERP5Workflow in pt.workflow_list:
     for tr in wf5_module._getOb(ERP5Workflow).objectValues(portal_type="Transition"):
       tr_id = tr.id
       method_id = convertToMixedCase(tr_id)
       wf_id = ERP5Workflow
       ptype_klass.registerERP5WorkflowMethod(method_id, wf_id, tr_id, 0)
-      #ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-      #                                        method_id)
-      #ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id)
-      #method = getattr(ptype_klass, method_id)
-      #method = getattr(ptype_klass, method_id, _MARKER) # _MARKER = []
-      #if method is _MARKER:
-        #ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-        #                                      method_id)
-      #  ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id, 0)
-      #  continue
-      #method.registerTransitionAlways(portal_type, wf_id, tr_id)
-# =================== WF5 ======================================================
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined

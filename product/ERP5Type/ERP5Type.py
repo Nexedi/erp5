@@ -4,7 +4,7 @@
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#               2014 Wenjie.Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -418,14 +418,10 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-# =========== Project ERP5Workflow , WENJIE , 2014 ================================
-        ### workflow_list need to be defined somewhere.
-        ### exp: ERP5Workflow in Person module won't work at this situation.
         for ERP5Workflow in self.getTypeWorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
           ERP5Workflow = workflow_module._getOb(ERP5Workflow)
           ERP5Workflow.initializeDocument(ob)
-# =========== WF5 ==============================================================
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()

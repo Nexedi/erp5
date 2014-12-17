@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2014 Wenjie Zheng <wenjie.zheng@tiolive.com>      
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -40,7 +40,6 @@ from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
-#import String
 from DateTime import DateTime
 
 class Workflow(XMLObject):
@@ -53,9 +52,6 @@ class Workflow(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  ### register the variable given by "base category value"
-  #state_var = 'state'
-  ### In DCworkflow; state/transition can be registered inside workflow
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -143,7 +139,7 @@ class Workflow(XMLObject):
                           transition=transition,
                           transition_url=transition_url,
                           state=state)
-# ========== ERP5Workflow Project, Wenjie, Dec 2014 ===============================
+
   def isERP5WorkflowMethodSupported(self, document, transition):
     sdef = self._getERP5WorkflowStateOf(document)
     if sdef is None:
@@ -152,17 +148,16 @@ class Workflow(XMLObject):
       return 1
     return 0
 
-### get workflow state from base category value:
   def _getERP5WorkflowStateOf(self, ob):
     bc_id = self.getStateBaseCategory()
     state_path = ob.getCategoryList()
     state_path = state_path[0].lstrip("%s/"%bc_id)
-    ###
+
     if state_path is not None:
       sdef = self.restrictedTraverse(state_path)
     else: sdef = None
     return sdef
-# =========== WF5 ==============================================================
+
   ###########
   ## Graph ##
   ############
