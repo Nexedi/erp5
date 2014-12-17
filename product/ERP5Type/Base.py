@@ -658,12 +658,9 @@ def getClassPropertyList(klass):
 
 
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
-### this function will be used in /product/ERP5Type/dynamic/lazy_class.py
-### in generatePortalTypeAccessors()
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__)
-  ### creat workflow method:
   for ERP5Workflow in pt.workflow_list:
     for tr in wf5_module._getOb(ERP5Workflow).objectValues(portal_type="Transition"):
       tr_id = tr.id
