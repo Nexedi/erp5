@@ -248,6 +248,36 @@
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    \n
+    // bridge translation gadget\n
+    .allowPublicAcquisition("translateRender", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.render.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
+    .allowPublicAcquisition("changeLanguage", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.changeLanguage.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
+    .allowPublicAcquisition("translateElementList", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translateElementList.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
+\n
     // Bridge to jio gadget\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
@@ -612,7 +642,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -626,7 +656,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.39279.27944.4147</string> </value>
+                <value> <string>939.45541.57768.39543</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -644,7 +674,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1414687653.36</float>
+                        <float>1418913351.61</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

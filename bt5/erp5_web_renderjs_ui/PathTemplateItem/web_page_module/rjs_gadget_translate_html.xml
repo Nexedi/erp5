@@ -75,15 +75,17 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.html</string> </value>
+            <value> <string>gadget_translate.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Starting Point</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_html</string> </value>
+            <value> <string>rjs_gadget_translate_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -104,62 +106,28 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <!DOCTYPE html>\n
-<html manifest="gadget_erp5.appcache">\n
+<html>\n
   <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>ERP5</title>\n
-    <link rel="shortcut icon" href="favicon.ico">\n
+    <meta charset="utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>Jio Gadget</title>\n
 \n
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
-    <link rel="stylesheet" href="jquerymobile.css">\n
-    <link rel="stylesheet" href="gadget_erp5.css">\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="URI.js" type="text/javascript"></script>\n
-    <script src="jquery.js" type="text/javascript"></script>\n
-    <script src="jquerymobile.js"> type="text/javascript"></script>\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5.js" type="text/javascript"></script>\n
+    <script src="RSVP.js"></script>\n
+    <script src="renderjs.js"></script>\n
+    <script src="i18next.js"></script>\n
 \n
-    <script id="panel-template" type="text/x-handlebars-template">\n
-      <ul data-role="listview">\n
-        <li><a class="home_link ui-btn ui-icon-home ui-btn-icon-left" data-icon="home">Documents</a></li>\n
-        <li><a class="fast_input_link ui-btn ui-icon-plus ui-btn-icon-left" data-icon="plus">New Document</a></li>\n
-        {{#navigationlist}}\n
-          <li><a href="{{link}}">{{title}}</a></li>\n
-        {{/navigationlist}}\n
-      </ul>\n
-    </script>\n
+    <!-- custom script -->\n
+    <script src="gadget_translate.js"></script>\n
 \n
   </head>\n
-  <body>\n
-\n
-  <div data-gadget-url="gadget_erp5_header.html"\n
-          data-gadget-scope="header"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-  <div data-gadget-url="gadget_erp5_panel.html"\n
-          data-gadget-scope="panel"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-  <article></article>\n
-\n
-  <section data-gadget-url="gadget_jio.html"\n
-    data-gadget-scope="jio_gadget"\n
-    data-gadget-sandbox="public"></section>\n
-    \n
-  <div data-gadget-sandbox="public" \n
-          data-gadget-url="gadget_translate.html"\n
-          data-gadget-scope="translate"></div>\n
-  </body>\n
+  <body></body>\n
 </html>
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5</string> </value>
+            <value> <string>Gadget Translate</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -223,7 +191,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -245,7 +213,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.69</float>
+                        <float>1418835833.87</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -290,7 +258,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.43978.9403.31744</string> </value>
+                <value> <string>939.45272.15892.529</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,7 +276,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418909214.15</float>
+                        <float>1418892983.83</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -335,7 +303,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -365,7 +333,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405426440.32</float>
+                        <float>1418835393.41</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
