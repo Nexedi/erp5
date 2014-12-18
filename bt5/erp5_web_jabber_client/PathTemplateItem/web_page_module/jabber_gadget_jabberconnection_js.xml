@@ -1,0 +1,649 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_jabberconnection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>jabber_gadget_jabberconnection_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true*/\n
+/*global window, rJS, Strophe, $iq, $pres, $msg, RSVP*/\n
+\n
+(function (window, rJS, Strophe, $iq, $pres, $msg, RSVP) {\n
+  "use strict";\n
+\n
+//   Strophe.log = function (level, msg) {\n
+//     console.log("STROPHE (" + level + "):" + msg);\n
+//   };\n
+  Strophe.Bosh.prototype._hitError = function (reqStatus) {\n
+    if (typeof this.errors !== \'number\') {\n
+      this.errors = 0;\n
+    }\n
+    this.errors += 1;\n
+    Strophe.warn("request errored, status: " + reqStatus +\n
+                 ", number of errors: " + this.errors);\n
+    if (this.errors > 4) {\n
+      this._onDisconnectTimeout();\n
+      this._conn._changeConnectStatus(\n
+        Strophe.Status.ERROR,\n
+        "request error: " + reqStatus\n
+      );\n
+    }\n
+  };\n
+\n
+  var gadget_klass = rJS(window);\n
+\n
+  function enqueueDefer(gadget, callback) {\n
+    var deferred = gadget.props.current_deferred;\n
+\n
+    // Unblock queue\n
+    if (deferred !== undefined) {\n
+      deferred.resolve("Another event added");\n
+    }\n
+\n
+    // Add next callback\n
+    try {\n
+      gadget.props.service_queue.push(callback);\n
+    } catch (error) {\n
+      throw new Error("Connection gadget already crashed... " +\n
+                      gadget.props.service_queue.rejectedReason.toString());\n
+    }\n
+\n
+    // Block the queue\n
+    deferred = RSVP.defer();\n
+    gadget.props.current_deferred = deferred;\n
+    gadget.props.service_queue.push(function () {\n
+      return deferred.promise;\n
+    });\n
+\n
+  }\n
+\n
+  function deferOnMessageStanza(message) {\n
+    var gadget = this;\n
+    enqueueDefer(gadget, function () {\n
+\n
+      var to = Strophe.getBareJidFromJid(message.getAttribute(\'to\')),\n
+        from = Strophe.getBareJidFromJid(message.getAttribute(\'from\')),\n
+        type = message.getAttribute(\'type\'),\n
+        body = message.querySelector(\'body\');\n
+\n
+      if (type !== "chat") {\n
+        throw new Error("Unsupported message type: " + type);\n
+      }\n
+      if (to !== Strophe.getBareJidFromJid(gadget.props.connection.jid)) {\n
+        throw new Error("Expected message to: " + to);\n
+      }\n
+      if (body !== null) {\n
+        return gadget.notifyXMPPMessageTextReceived(from, to,\n
+                                                    body.textContent);\n
+      }\n
+    });\n
+    return true;\n
+  }\n
+\n
+  function deferOnPresenceStanza(presence) {\n
+    var gadget = this;\n
+    enqueueDefer(gadget, function () {\n
+\n
+      var to = Strophe.getBareJidFromJid(presence.getAttribute(\'to\')),\n
+        from = Strophe.getBareJidFromJid(presence.getAttribute(\'from\')),\n
+        type = presence.getAttribute(\'type\');\n
+\n
+      if (to !== Strophe.getBareJidFromJid(gadget.props.connection.jid)) {\n
+        throw new Error("Expected presence to: " + to);\n
+      }\n
+      if (type === "subscribe") {\n
+        return gadget.notifyXMPPSubscribe(from, to);\n
+      }\n
+      if (type === "unsubscribe") {\n
+        return gadget.notifyXMPPUnsubscribe(from, to);\n
+      }\n
+      if (from !== to) {\n
+        return gadget.notifyXMPPPresence(from, to, type);\n
+      }\n
+\n
+    });\n
+    return true;\n
+  }\n
+\n
+  function deferServerConnectionNotification(gadget, status) {\n
+    enqueueDefer(gadget, function () {\n
+      var result;\n
+      if (status === Strophe.Status.CONNECTING) {\n
+        result = gadget.notifyXMPPConnecting();\n
+      } else if (status === Strophe.Status.CONNFAIL) {\n
+        result = gadget.notifyXMPPConnectingFail();\n
+      } else if (status === Strophe.Status.AUTHENTICATING) {\n
+        result = gadget.notifyXMPPAuthenticating();\n
+      } else if (status === Strophe.Status.AUTHFAIL) {\n
+        result = gadget.notifyXMPPAuthenticatingFailed();\n
+      } else if (status === Strophe.Status.CONNECTED) {\n
+        result = gadget.notifyXMPPConnected();\n
+      } else if (status === Strophe.Status.DISCONNECTED) {\n
+        result = gadget.notifyXMPPDisconnected();\n
+      } else if (status === Strophe.Status.DISCONNECTING) {\n
+        result = gadget.notifyXMPPDisconnecting();\n
+      } else if (status === Strophe.Status.ATTACHED) {\n
+        result = gadget.notifyXMPPAttached();\n
+      } else {\n
+        if (status === Strophe.Status.ERROR) {\n
+          throw new Error("XMPP Connection Error");\n
+        }\n
+        throw new Error("Unknown connection status: " + status);\n
+      }\n
+      return result;\n
+    });\n
+  }\n
+\n
+  function deferServerDisconnection(gadget) {\n
+    enqueueDefer(gadget, function () {\n
+      // Try to auto connection\n
+      if (gadget.props.connection !== undefined) {\n
+        gadget.props.connection.disconnect();\n
+        delete gadget.props.connection;\n
+      }\n
+    });\n
+  }\n
+\n
+  function deferServerConnection(gadget) {\n
+    deferServerDisconnection(gadget);\n
+\n
+    function handleConnectionCallback(status) {\n
+      return deferServerConnectionNotification(gadget, status);\n
+    }\n
+\n
+    enqueueDefer(gadget, function () {\n
+      // Try to auto connection\n
+      if (gadget.props.server !== undefined) {\n
+        gadget.props.connection = new Strophe.Connection(gadget.props.server);\n
+\n
+//         gadget.props.connection.rawInput = function (data) {\n
+//           console.log("RECEIVING SOMETHING");\n
+//           console.log(data);\n
+//         };\n
+//         gadget.props.connection.rawOutput = function (data) {\n
+//           console.log("SENDING SOMETHING");\n
+//           console.log(data);\n
+//         };\n
+\n
+        gadget.props.connection.connect(\n
+          gadget.props.jid,\n
+          gadget.props.passwd,\n
+          handleConnectionCallback\n
+        );\n
+        gadget.props.connection.addHandler(\n
+          deferOnPresenceStanza.bind(gadget),\n
+          null,\n
+          "presence"\n
+        );\n
+        gadget.props.connection.addHandler(\n
+          deferOnMessageStanza.bind(gadget),\n
+          null,\n
+          "message",\n
+          "chat"\n
+        );\n
+\n
+      }\n
+    });\n
+  }\n
+\n
+  gadget_klass\n
+\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    .declareAcquiredMethod(\'notifyXMPPConnecting\',\n
+                           \'notifyXMPPConnecting\')\n
+    .declareAcquiredMethod(\'notifyXMPPConnectingFail\',\n
+                           \'notifyXMPPConnectingFail\')\n
+    .declareAcquiredMethod(\'notifyXMPPAuthenticating\',\n
+                           \'notifyXMPPAuthenticating\')\n
+    .declareAcquiredMethod(\'notifyXMPPAuthenticatingFailed\',\n
+                           \'notifyXMPPAuthenticatingFailed\')\n
+    .declareAcquiredMethod(\'notifyXMPPConnected\',\n
+                           \'notifyXMPPConnected\')\n
+    .declareAcquiredMethod(\'notifyXMPPDisconnected\',\n
+                           \'notifyXMPPDisconnected\')\n
+    .declareAcquiredMethod(\'notifyXMPPDisconnecting\',\n
+                           \'notifyXMPPDisconnecting\')\n
+    .declareAcquiredMethod(\'notifyXMPPAttached\',\n
+                           \'notifyXMPPAttached\')\n
+    .declareAcquiredMethod(\'notifyXMPPMessageTextReceived\',\n
+                           \'notifyXMPPMessageTextReceived\')\n
+    .declareAcquiredMethod(\'notifyXMPPSubscribe\',\n
+                           \'notifyXMPPSubscribe\')\n
+    .declareAcquiredMethod(\'notifyXMPPUnsubscribe\',\n
+                           \'notifyXMPPUnsubscribe\')\n
+    .declareAcquiredMethod(\'notifyXMPPPresence\',\n
+                           \'notifyXMPPPresence\')\n
+\n
+    .declareService(function () {\n
+      /////////////////////////\n
+      // Handle XMPP connection\n
+      /////////////////////////\n
+      var context = this;\n
+\n
+      context.props.service_queue = new RSVP.Queue();\n
+      deferServerConnection(context);\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return context.props.service_queue;\n
+        })\n
+        .push(function () {\n
+          // XXX Handle cancellation\n
+          throw new Error("Service should not have been stopped!");\n
+        })\n
+        .push(undefined, function (error) {\n
+          // Always disconnect in case of error\n
+          if (context.props.connection !== undefined) {\n
+            context.props.connection.disconnect();\n
+          }\n
+          throw error;\n
+        });\n
+    })\n
+\n
+    .declareMethod(\'connect\',\n
+                   function (server, jid, passwd) {\n
+        this.props.server = server;\n
+        this.props.jid = jid;\n
+        this.props.passwd = passwd;\n
+        deferServerConnection(this);\n
+      })\n
+\n
+//     .declareMethod(\'fetchRoster\', function () {\n
+//       var defer = RSVP.defer();\n
+// \n
+//       function jsonifyResponse(domElt) {\n
+//         try {\n
+//           var result = [],\n
+//             elt,\n
+//             json_elt,\n
+//             len,\n
+//             i,\n
+//             len2,\n
+//             j,\n
+//             item_list = domElt.querySelectorAll("item");\n
+//           len = item_list.length;\n
+//           for (i = 0; i < len; i += 1) {\n
+//             elt = item_list[i];\n
+//             len2 = elt.attributes.length;\n
+//             json_elt = {};\n
+//             for (j = 0; j < len2; j += 1) {\n
+//               json_elt[elt.attributes[j].name] = elt.attributes[j].value;\n
+//             }\n
+//             result.push(json_elt);\n
+//           }\n
+//           defer.resolve(result);\n
+//         } catch (error) {\n
+//           defer.reject(error);\n
+//         }\n
+//       }\n
+// \n
+//       this.props.connection.sendIQ(\n
+//         $iq({type: "get"}).c("query", {xmlns: Strophe.NS.ROSTER}),\n
+//         jsonifyResponse,\n
+//         defer.reject\n
+//       );\n
+// \n
+//       return defer.promise;\n
+// \n
+//     })\n
+\n
+    .declareMethod(\'sendPresence\', function () {\n
+      this.props.connection.send(\n
+        $pres().tree()\n
+      );\n
+    })\n
+\n
+    .declareMethod(\'requestSubscribe\', function (jid) {\n
+      this.props.connection.send(\n
+        $pres({to: jid, type: "subscribe"}).tree()\n
+      );\n
+    })\n
+\n
+    .declareMethod(\'acceptSubscription\', function (jid) {\n
+      this.props.connection.send(\n
+        $pres({to: jid, type: "subscribed"}).tree()\n
+      );\n
+    })\n
+\n
+    .declareMethod(\'requestUnsubscribe\', function (jid) {\n
+      this.props.connection.send(\n
+        $pres({to: jid, type: "unsubscribe"}).tree()\n
+      );\n
+    })\n
+\n
+    .declareMethod(\'acceptUnsubscription\', function (jid) {\n
+      this.props.connection.send(\n
+        $pres({to: jid, type: "unsubscribed"}).tree()\n
+      );\n
+    })\n
+\n
+    .declareMethod(\'sendMessage\', function (jid, text) {\n
+      this.props.connection.send(\n
+        $msg({to: jid, type: "chat"}).c(\'body\').t(text)\n
+      );\n
+    });\n
+\n
+}(window, rJS, Strophe, $iq, $pres, $msg, RSVP));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget JabberConnection JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1418209617.05</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>939.33961.3512.52974</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1418214516.59</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1418209490.05</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
