@@ -112,6 +112,10 @@
    z-index: 4242 !important;\n
    overflow: hidden !important;\n
  }\n
+\n
+ .CodeMirror pre span {\n
+   font-family: monospace !important;\n
+ }\n
 </style>\n
 \n
 <input type="button" value="Maximize" onclick="maximize()"\n

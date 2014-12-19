@@ -1,3 +1,6 @@
+2014-12-19 arnaud.fontaine
+* Use monospace font in CodeMirror editor, previously overriden by ERP5 CSS.
+
 2014-07-23 arnaud.fontaine
 * erp5_code_mirror: Update to 3.22.
 
