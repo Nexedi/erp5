@@ -107,6 +107,51 @@
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
+  // Some functions\n
+  /////////////////////////////////////////////////////////////////\n
+  \n
+  // duplicate of jIO ajax, which can\'t be acquired here, because\n
+  // translations are declared before jio is declared in gadget_erp5\n
+  // so jio_ajax is not available\n
+  // TODO: fix later\n
+  function ajax(param) {\n
+    var xhr = new XMLHttpRequest();\n
+    return new RSVP.Promise(function (resolve, reject, notify) {\n
+      var k;\n
+      xhr.open(param.type || "GET", param.url, true);\n
+      xhr.responseType = param.dataType || "";\n
+      if (typeof param.headers === \'object\' && param.headers !== null) {\n
+        for (k in param.headers) {\n
+          if (param.headers.hasOwnProperty(k)) {\n
+            xhr.setRequestHeader(k, param.headers[k]);\n
+          }\n
+        }\n
+      }\n
+      xhr.addEventListener("load", function (e) {\n
+        if (e.target.status >= 400) {\n
+          return reject(e);\n
+        }\n
+        resolve(e);\n
+      });\n
+      xhr.addEventListener("error", reject);\n
+      xhr.addEventListener("progress", notify);\n
+      if (typeof param.xhrFields === \'object\' && param.xhrFields !== null) {\n
+        for (k in param.xhrFields) {\n
+          if (param.xhrFields.hasOwnProperty(k)) {\n
+            xhr[k] = param.xhrFields[k];\n
+          }\n
+        }\n
+      }\n
+      if (typeof param.beforeSend === \'function\') {\n
+        param.beforeSend(xhr);\n
+      }\n
+      xhr.send(param.data);\n
+    }, function () {\n
+      xhr.abort();\n
+    });\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
   // Gadget behaviour\n
   /////////////////////////////////////////////////////////////////\n
   rJS(window)\n
@@ -123,7 +168,7 @@
     /////////////////////////////////////////////////////////////////\n
     // acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_ajax", "jio_ajax")\n
+    //.declareAcquiredMethod("jio_ajax", "jio_ajax")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -138,28 +183,60 @@
             return Promise.resolve(i18n.setLng(my_new_language));\n
           })\n
           .push(function () {\n
-            console.log("translating")\n
-            return translation_gadget.translateElementList()\n
+            // XXX: for now, reload as the language is stored in cookie\n
+            window.location.reload();\n
+            //return translation_gadget.translateElementList();\n
           });\n
       }\n
 \n
       return translation_gadget;\n
     })\n
 \n
+    // lookup single values\n
     .declareMethod(\'translateLookup\', function (my_lookup) {\n
       return i18n.t(my_lookup);\n
     })\n
 \n
+    // XXX Sven: Not used yet, would allow to translate based on text only\n
+    // so not necessary to use i18n attributes. If it works.\n
+    // translate text snippets in a string (not really verbose)\n
+    .declareMethod(\'translateStringList\', function (my_string) {\n
+        var node_list,\n
+          treeWalker = document.createTreeWalker(\n
+          my_string,\n
+          NodeFilter.SHOW_TEXT,\n
+          { acceptNode: function(node) {\n
+              // Logic to determine whether to accept, reject or skip node\n
+              // In this case, only accept nodes that have content\n
+              // other than whitespace\n
+              if ( ! /^\\s*$/.test(node.data) ) {\n
+                return NodeFilter.FILTER_ACCEPT;\n
+              }\n
+            }\n
+          },\n
+          false\n
+        );\n
+\n
+        // TODO: try to translate instead and insert back into dom\n
+        node_list = [];\n
+\n
+        while(treeWalker.nextNode()) {\n
+          node_list.push(treeWalker.currentNode);\n
+        }\n
+\n
+    })\n
+    \n
+    // translate a list of elements\n
     .declareMethod(\'translateElementList\', function (my_list) {\n
       var i, l, element, lookup, targets, target, route_text, base, len,\n
         has_breaks, elements;\n
 \n
-      if (my_list === undefined || typeof my_list === "function" ||\n
-            typeof my_list === "object") {\n
-        base = document;\n
+      if (typeof my_list === "object" && my_list.nodeType && my_list.nodeType === 1) {\n
+        base = my_list;\n
       } else {\n
-        base = my_list[0][0];\n
+        throw {"error": "translation only possible for html elements"};\n
       }\n
+\n
       elements = base.querySelectorAll("[data-i18n]");\n
 \n
       for (i = 0, len = elements.length; i < len; i += 1) {\n
@@ -229,6 +306,7 @@
       return base;\n
     })\n
 \n
+    // render\n
     .declareMethod(\'render\', function (my_option_dict) {\n
       var param,\n
         lang,\n
@@ -237,7 +315,7 @@
         props,\n
         translation_gadget = this;\n
 \n
-      function parseRespomse(my_response) {\n
+      function parseResponse(my_response) {\n
         if (typeof my_response === \'string\') {\n
           return JSON.parse(my_response);\n
         }\n
@@ -253,7 +331,6 @@
       // TODO: must follow translation plugin API\n
       i18n.init({\n
         "customLoad": function (my_lng, my_ns, my_option_dict, my_callback) {\n
-\n
           props = translation_gadget.property_dict;\n
           lang = my_lng || props.language_list[0];\n
           // XXX: there seems to be a bug in customLoad, set to "translation"\n
@@ -262,7 +339,7 @@
 \n
           return new RSVP.Queue()\n
             .then(function () {\n
-              return translation_gadget.jio_ajax({\n
+              return ajax({\n
                 "method": "GET",\n
                 "url": path,\n
                 "xhrFields": {"withCredentials": true}\n
@@ -272,9 +349,7 @@
               return my_event.target.responseText;\n
             })\n
             .then(function (my_translation_dict) {\n
-              console.log("so...")\n
-              console.log(my_callback)\n
-              return my_callback(null, parseRespomse(my_translation_dict));\n
+              return my_callback(null, parseResponse(my_translation_dict));\n
             })\n
             .then(function () {\n
               return translation_gadget;\n
@@ -428,7 +503,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.45588.4119.48810</string> </value>
+                <value> <string>939.51301.32726.290</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -446,7 +521,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418912045.34</float>
+                        <float>1419256221.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
