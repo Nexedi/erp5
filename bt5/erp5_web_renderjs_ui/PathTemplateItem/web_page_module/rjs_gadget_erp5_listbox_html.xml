@@ -129,13 +129,13 @@
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
           <div class="ui-controlgroup-controls">\n
-            <a class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child ui-override-theme ui-disabled" href="#">Hide Rows</a>\n
+            <a data-i18n="header-hide" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child ui-override-theme ui-disabled" href="#">Hide Rows</a>\n
           </div>\n
         </div>\n
-        <h1 class="ui-title ui-override-theme">0 items selected</h1>\n
+        <h1 data-i18n="header-selected" class="ui-title ui-override-theme">0 items selected</h1>\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
           <div class="ui-controlgroup-controls">\n
-            <a class="ui-responsive ui-btn ui-btn-icon-left ui-icon-sort-amount-desc ui-last-child ui-override-theme ui-disabled" href="#">Sort</a>\n
+            <a data-i18n="header-sort" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-sort-amount-desc ui-last-child ui-override-theme ui-disabled" href="#">Sort</a>\n
           </div>\n
         </div>\n
       </div>\n
@@ -269,7 +269,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -283,7 +283,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24472.44438.46097</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -301,7 +301,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413812775.46</float>
+                        <float>1419238718.84</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

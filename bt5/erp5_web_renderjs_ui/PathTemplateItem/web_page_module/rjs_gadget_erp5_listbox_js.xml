@@ -134,6 +134,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     //////////////////////////////////////////////\n
@@ -154,6 +155,7 @@
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         th = document.createElement("th");\n
         th.textContent = field_json.column_list[i][1];\n
+        th.setAttribute("data-i18n", "title-" + field_json.column_list[i][1].replace(" ", "-"));\n
         tr.appendChild(th);\n
       }\n
       thead.appendChild(tr);\n
@@ -279,18 +281,25 @@
 \n
         paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
         paging_prev.textContent = "Previous";\n
+        paging_prev.setAttribute("data-i18n", "subheader-previous");\n
         paging_prev.href = url_list[0];\n
         paging_info.className = "ui-btn ui-disabled";\n
         if ((begin_from === 0) && (counter === 0)) {\n
           paging_info.textContent = "No records";\n
+          paging_info.setAttribute("data-i18n", "listbox-no-records");\n
         } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
-          paging_info.textContent = counter + " record(s)";\n
+          paging_info.setAttribute("data-i18n", "[last]listbox-records");\n
+          paging_info.appendChild(document.createTextNode(counter));\n
+          paging_info.appendChild(document.createTextNode("Record(s)"));\n
         } else {\n
-          paging_info.textContent = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " to " + (((begin_from + lines) / lines - 1) * lines + counter);\n
+          paging_info.setAttribute("data-i18n", "[node]listbox-records");\n
+          paging_info.appendChild(document.createTextNode("Records "));\n
+          paging_info.appendChild(document.createTextNode((((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter)));\n
         }\n
         // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
         paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
         paging_next.textContent = "Next";\n
+        paging_next.setAttribute("data-i18n", "subheader-next");\n
         paging_next.href = url_list[1];\n
 \n
         if (begin_from === 0) {\n
@@ -316,6 +325,10 @@
 \n
         table.appendChild(fragment);\n
 \n
+        return gadget.translateElementList(gadget.props.element);\n
+      })\n
+      .push(function () {\n
+        return gadget;\n
       });\n
     });\n
 \n
@@ -442,7 +455,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -456,7 +469,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.5358.33203.30173</string> </value>
+                <value> <string>939.51159.64219.13858</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -474,8 +487,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1416588079.38</float>
-                        <string>UTC</string>
+                        <float>1419255611.6</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

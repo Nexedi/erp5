@@ -127,11 +127,11 @@
           <div class="ui-field-contain">\n
             <div class="ui-input-text ui-body-{{widget_theme}} ui-corner-all ui-shadow-inset ui-input-has-clear {{widget_status_class}}">\n
               <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} />\n
-              <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext">\n
-                Submit<input data-enhanced="true" type="submit" value="Submit" {{widget_status_attribute}} />\n
+              <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext" data-i18n="[node]header-submit">\n
+                Submit<input data-enhanced="true" type="submit" data-i18n="[value]header-submit" value="Submit" {{widget_status_attribute}} />\n
               </div>\n
             </div>\n
-            <a href="#" class="ui-btn ui-btn-{{widget_theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme ui-disabled">Filters</a>\n
+            <a href="#" data-i18n="header-filter" class="ui-btn ui-btn-{{widget_theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme ui-disabled">Filters</a>\n
           </div>\n
         </div>\n
       </form>\n
@@ -263,7 +263,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -277,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.25792.30699.44322</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -295,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413879096.17</float>
+                        <float>1419256755.64</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
