@@ -113,7 +113,7 @@
    overflow: hidden !important;\n
  }\n
 \n
- .CodeMirror pre span {\n
+ .CodeMirror pre, .CodeMirror span {\n
    font-family: monospace !important;\n
  }\n
 </style>\n
