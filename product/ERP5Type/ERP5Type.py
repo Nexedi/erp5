@@ -584,6 +584,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
+      search_source_list += self.getTypeWorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declarePrivate('getDefaultViewFor')
