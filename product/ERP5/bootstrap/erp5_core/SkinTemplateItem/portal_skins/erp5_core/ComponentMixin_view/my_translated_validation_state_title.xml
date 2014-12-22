@@ -73,7 +73,7 @@
               <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>ace_editor_validation_state</string> </value>
+                    <value> <string>editor_validation_state</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

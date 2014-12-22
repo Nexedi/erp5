@@ -209,7 +209,7 @@
 \n
      var maximize_fullscreen_message = data;\n
 \n
-     var validation_state_span = $(\'div.input > .validation_state\');\n
+     var validation_state_span = $(\'div.input > .editor_validation_state\');\n
      if(validation_state_span.length) {\n
        // Animate field to emphasize the change\n
        function getTranslatedValidationStateTitleHandler(data) {\n

@@ -265,7 +265,7 @@
     clickSaveButton(\'Base_edit\');\n
 \n
     /* If the save is successful, then update validation state field (requires\n
-     *  ace_editor_validation_state CSS class to be set on the field) and error\n
+     * editor_validation_state CSS class to be set on the field) and error\n
      * message (requires error CSS class to be set on the field) on the main\n
      * page. If inside maximize/fullscreen mode, display an box with the\n
      * result as well\n
@@ -279,7 +279,7 @@
 \n
       var maximize_fullscreen_message = data;\n
 \n
-      var validation_state_span = $(\'div.input > .ace_editor_validation_state\');\n
+      var validation_state_span = $(\'div.input > .editor_validation_state\');\n
       if(validation_state_span.length) {\n
         // Animate field to emphasize the change\n
         function getTranslatedValidationStateTitleHandler(data) {\n
