@@ -33,6 +33,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import PROBLEM
 
@@ -378,7 +379,6 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
 
-
   def test_decrease_and_increase_dimension(self):
     matrix = self.matrix
 
@@ -433,6 +433,39 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(cell,
         self.portal.portal_catalog.getObject(cell.getUid()))
 
+  def test_change_dimension_and_check_consistency(self):
+    # make sure _checkConsistency does not complain about a cell
+    # having an id outside the len of the dimension after a dimension
+    # change if id is within acceptable values
+    matrix = self.matrix
+
+    cell_range = [['1', '2',], ['a', 'b',]]
+    kwd = {'base_id' : 'quantity'}
+    matrix.setCellRange(*cell_range, **kwd)
+
+    for place in cartesianProduct(cell_range):
+      matrix.newCell(*place, **kwd)
+
+    cell = matrix.getCell('2', 'b', **kwd)
+    self.assertEqual('quantity_1_1', cell.getId())
+    cell.setTitle('This one')
+    self.tic()
+
+    cell_range = [['2', ], ['b',]]
+    matrix.setCellRange(*cell_range, **kwd)
+    self.commit()
+    self.assertEquals(set(["quantity_1_1"]), set([
+      x.getId() for x in matrix.objectValues()]))
+
+    cell = matrix.getCell('2', 'b', **kwd)
+    self.assertEqual('quantity_1_1', cell.getId())
+    self.assertEqual('This one', cell.getTitle())
+
+    self.assertEqual(XMLMatrix._checkConsistency(matrix), [])
+    cell.setId('quantity_2_1')
+    error_list = XMLMatrix._checkConsistency(matrix)
+    self.assertEqual(1, len(error_list))
+    self.assertTrue(error_list[0][3].find("is out of bound") > 0)
 
 def test_suite():
   suite = unittest.TestSuite()

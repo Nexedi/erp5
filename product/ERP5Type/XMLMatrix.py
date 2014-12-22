@@ -567,7 +567,7 @@ class XMLMatrix(Folder):
               to_delete_set.add(object_id)
             else :
               for i, coordinate in enumerate(cell_coordinate_list):
-                if coordinate >= len(base_item[i]):
+                if coordinate not in base_item[i].values():
                   addError("Cell %s is out of bound" % object_id)
                   to_delete_set.add(object_id)
                   break
