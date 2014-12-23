@@ -25,6 +25,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/workflow_module/validation_workflow/draft</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>This workflow aims at replacing validation_workflow in DCWorkflow.</string> </value>
         </item>
