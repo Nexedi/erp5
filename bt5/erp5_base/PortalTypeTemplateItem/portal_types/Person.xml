@@ -48,12 +48,24 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_icon</string> </key>
             <value> <string>person_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
             <value> <string>ERP5 Person</string> </value>
+        </item>
+        <item>
+            <key> <string>contributor_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -107,6 +119,38 @@
             <key> <string>type_mixin</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_workflow</string> </key>
+            <value>
+              <tuple>
+                <string>wenjie_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_workflow_list</string> </key>
+            <value>
+              <tuple>
+                <string>wenjie_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_workflow_list_list</string> </key>
+            <value>
+              <tuple>
+                <string>erp5_standard_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple>
+                <string>validation_workflow</string>
+              </tuple>
             </value>
         </item>
       </dictionary>
