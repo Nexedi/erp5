@@ -92,7 +92,7 @@ def check(node_uid, section_uid, mirror_section_uid):\n
   \n
 node_uid = context.getSourceUid(portal_type=\'Account\')\n
 section_uid = None\n
-section = context.getSourceSectionValue()\n
+section = context.getSourceSectionValue(portal_type=\'Organisation\')\n
 if section is not None:\n
   section = section.Organisation_getMappingRelatedOrganisation()\n
   section_uid = section.getUid()\n
@@ -106,7 +106,7 @@ if node_uid and section_uid:\n
 \n
 node_uid = context.getDestinationUid()\n
 section_uid = None\n
-section = context.getDestinationSectionValue()\n
+section = context.getDestinationSectionValue(portal_type=\'Organisation\')\n
 if section is not None:\n
   section = section.Organisation_getMappingRelatedOrganisation()\n
   section_uid = section.getUid()\n
