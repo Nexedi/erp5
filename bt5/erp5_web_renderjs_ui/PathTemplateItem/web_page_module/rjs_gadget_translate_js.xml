@@ -107,51 +107,6 @@
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
-  // Some functions\n
-  /////////////////////////////////////////////////////////////////\n
-  \n
-  // duplicate of jIO ajax, which can\'t be acquired here, because\n
-  // translations are declared before jio is declared in gadget_erp5\n
-  // so jio_ajax is not available\n
-  // TODO: fix later\n
-  function ajax(param) {\n
-    var xhr = new XMLHttpRequest();\n
-    return new RSVP.Promise(function (resolve, reject, notify) {\n
-      var k;\n
-      xhr.open(param.type || "GET", param.url, true);\n
-      xhr.responseType = param.dataType || "";\n
-      if (typeof param.headers === \'object\' && param.headers !== null) {\n
-        for (k in param.headers) {\n
-          if (param.headers.hasOwnProperty(k)) {\n
-            xhr.setRequestHeader(k, param.headers[k]);\n
-          }\n
-        }\n
-      }\n
-      xhr.addEventListener("load", function (e) {\n
-        if (e.target.status >= 400) {\n
-          return reject(e);\n
-        }\n
-        resolve(e);\n
-      });\n
-      xhr.addEventListener("error", reject);\n
-      xhr.addEventListener("progress", notify);\n
-      if (typeof param.xhrFields === \'object\' && param.xhrFields !== null) {\n
-        for (k in param.xhrFields) {\n
-          if (param.xhrFields.hasOwnProperty(k)) {\n
-            xhr[k] = param.xhrFields[k];\n
-          }\n
-        }\n
-      }\n
-      if (typeof param.beforeSend === \'function\') {\n
-        param.beforeSend(xhr);\n
-      }\n
-      xhr.send(param.data);\n
-    }, function () {\n
-      xhr.abort();\n
-    });\n
-  }\n
-\n
-  /////////////////////////////////////////////////////////////////\n
   // Gadget behaviour\n
   /////////////////////////////////////////////////////////////////\n
   rJS(window)\n
@@ -168,7 +123,7 @@
     /////////////////////////////////////////////////////////////////\n
     // acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    //.declareAcquiredMethod("jio_ajax", "jio_ajax")\n
+    .declareAcquiredMethod("jio_ajax", "jio_ajax")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -312,7 +267,6 @@
         lang,\n
         ns,\n
         path,\n
-        props,\n
         translation_gadget = this;\n
 \n
       function parseResponse(my_response) {\n
@@ -321,25 +275,18 @@
         }\n
         return my_response;\n
       }\n
-\n
-      for (param in my_option_dict) {\n
-        if (my_option_dict.hasOwnProperty(param)) {\n
-          translation_gadget.property_dict[param] = my_option_dict[param];\n
-        }        \n
-      }\n
       \n
       // TODO: must follow translation plugin API\n
       i18n.init({\n
         "customLoad": function (my_lng, my_ns, my_option_dict, my_callback) {\n
-          props = translation_gadget.property_dict;\n
-          lang = my_lng || props.language_list[0];\n
+          lang = my_lng || ["zh-CN", "en-EN"][0];\n
           // XXX: there seems to be a bug in customLoad, set to "translation"\n
-          ns = props.language_ns;\n
-          path = props.language_src + "?language=" + lang + "&namespace=" + ns;\n
+          ns = "dict";\n
+          path = "ERP5Site_getTranslations" + "?language=" + lang + "&namespace=" + ns;\n
 \n
           return new RSVP.Queue()\n
             .then(function () {\n
-              return ajax({\n
+              return translation_gadget.jio_ajax({\n
                 "method": "GET",\n
                 "url": path,\n
                 "xhrFields": {"withCredentials": true}\n
@@ -503,7 +450,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51301.32726.290</string> </value>
+                <value> <string>939.52811.45744.46404</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -521,7 +468,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419256221.09</float>
+                        <float>1419345469.91</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
