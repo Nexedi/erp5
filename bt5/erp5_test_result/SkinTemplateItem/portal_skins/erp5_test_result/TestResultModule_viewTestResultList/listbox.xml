@@ -10,15 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>sort</string>
-                <string>title</string>
-                <string>columns</string>
-                <string>lines</string>
-                <string>selection_name</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>hide_rows_on_no_search_criterion</string>
                 <string>all_columns</string>
+                <string>columns</string>
+                <string>count_method</string>
+                <string>hide_rows_on_no_search_criterion</string>
+                <string>lines</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -188,6 +189,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
