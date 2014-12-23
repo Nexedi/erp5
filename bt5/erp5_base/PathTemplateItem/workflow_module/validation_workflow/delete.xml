@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/wenjie_workflow/1</string>
+                <string>destination/workflow_module/validation_workflow/deleted</string>
               </tuple>
             </value>
         </item>
@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5</string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>delete</string> </value>
+            <value> <string>Delete</string> </value>
         </item>
       </dictionary>
     </pickle>

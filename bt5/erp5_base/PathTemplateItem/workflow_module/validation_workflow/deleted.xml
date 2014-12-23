@@ -7,14 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>destination/workflow_module/wenjie_workflow/12</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -22,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>8</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -30,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>disactivated</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
       </dictionary>
     </pickle>
