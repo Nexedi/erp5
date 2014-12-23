@@ -128,6 +128,7 @@ html.ui-mobile body th,\n
 html.ui-mobile body td,\n
 \n
 /* ...sigh ... */\n
+html.ui-mobile body li.ui-li-divider,\n
 html.ui-mobile body .ui-input-btn,\n
 html.ui-mobile body th .ui-btn,\n
 html.ui-mobile body .ui-header h1.ui-title {\n
@@ -801,6 +802,49 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   border-bottom-right-radius: inherit;\n
 }\n
 \n
+\n
+/* collapsible inside listview (make collapsible look like divider) */\n
+/* XXX: not sure this is so good */\n
+html .ui-listview > li.ui-collapsible {\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+/* format button inside header */\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading a {\n
+  background: 0 none;\n
+  -moz-box-sizing: border-box;\n
+  -webkit-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+  display: block;\n
+  padding: 0 0 0 1.5em;\n
+  text-decoration: none;\n
+  width: 100%;\n
+  pointer-events: none;\n
+}\n
+/* icon size */ \n
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading a:after {\n
+  font-size: 1.25em;\n
+  background: 0 none;\n
+}\n
+/* remove background on fake caret icon on header */\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading:after {\n
+  background: 0 none;\n
+}\n
+/* remove margin and padding on collapsible content */\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-content {\n
+  padding: 0;\n
+}\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset {\n
+  margin: 0;\n
+}\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset form .ui-btn {\n
+  border-right-width: 0;\n
+  border-left-width: 0;\n
+  text-align: left;\n
+}\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset form:last-child .ui-btn {\n
+  border-bottom-width: 0;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    ------------------------------ Table --------t----------------------------\n
@@ -883,14 +927,14 @@ html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls 
 .ui-table-inset thead tr:first-child td:first-child,\n
 .ui-table-inset thead tr:first-child th:first-child,\n
 .ui-table-header ~ .ui-table-inset {\n
-  -webkit-border-top-left-radius: inherit;\n
-  border-top-left-radius: inherit;\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
 }\n
 .ui-table-inset thead tr:first-child td:last-child,\n
 .ui-table-inset thead tr:first-child th:last-child,\n
 .ui-table-header ~ .ui-table-inset {\n
-  -webkit-border-top-right-radius: inherit;\n
-  border-top-right-radius: inherit;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
 }\n
 .ui-table-inset tbody tr:last-child td:first-child,\n
 .ui-table-inset tbody tr:last-child th:first-child,\n
@@ -1410,7 +1454,12 @@ html body div.ui-select div span {\n
    ------------------------------- Panel -----------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
-\n
+/* reset margin for panel header/content \n
+html .ui-panel .ui-header, html .ui-panel .ui-content {\n
+    margin: -1em;\n
+    min-height: 39px;\n
+}\n
+*/\n
 /* position panel content elements */\n
 html .ui-panel .ui-content > .ui-listview,\n
 html .ui-panel .ui-content > form {\n
@@ -1436,10 +1485,18 @@ html body .ui-listview .ui-li-divider {\n
   padding: 0.5em 1em;\n
   border-bottom-width: 0;\n
 }\n
-/* handle panel links, not nice! */\n
-html .ui-panel .ui-listview li a {\n
-  padding: 0.4em 2.75em !important;\n
+/* padding for custom icons */\n
+html .ui-panel .ui-listview li a,\n
+html .ui-panel .ui-listview li div.ui-btn {\n
+  /*padding: .4em 2.75em .4em 1em;*/\n
+  padding: .4em 2.75em !important\n
 }\n
+/*\n
+html .ui-panel .ui-listview .ui-li-has-icon a {\n
+  padding-left: 2.75em;\n
+}\n
+*/\n
+\n
 .ui-panel .ui-listview > li p {\n
   font-size: 70%;\n
   margin: 0;\n
@@ -1539,8 +1596,11 @@ html .ui-panel .ui-listview li a {\n
    -------------------------------------------------------------------------\n
 */\n
 /* override JQM list divider px font-size */\n
-.ui-listview .ui-li-divider {\n
+.ui-listview li.ui-li-divider {\n
   font-size: inherit;\n
+}\n
+.ui-listview li h4.ui-li-divider {\n
+  font-size: 1em; \n
 }\n
 /* space between listviews */\n
 html .ui-listview ~ .ui-listview {\n
@@ -1953,10 +2013,14 @@ html .ui-footer .ui-title {\n
   min-width: 45px;\n
 }\n
 \n
-\n
 /* logo dimensions, left/right padding needed, because img does not fill space*/\n
+/* html .ui-header .ui-title img {\n
+  max-height: 1.5em;\n
+  padding: 0;\n
+  margin: -0.15em 0 -0.35em;\n
+}*/\n
 html .ui-header img.ui-title {\n
-  max-height: 24px;\n
+  max-height: 24px; \n
   padding: 0.5em 1.7em;\n
   margin: 0 30%;\n
 }\n
@@ -4604,7 +4668,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -4618,7 +4682,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24818.64644.31590</string> </value>
+                <value> <string>939.52916.16008.10973</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4636,7 +4700,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413820101.16</float>
+                        <float>1419351689.17</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
