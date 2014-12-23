@@ -137,6 +137,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -203,6 +204,9 @@
           });\n
 \n
           return gadget.renderPageHeader(header_options);\n
+        })\n
+        .push(function () {\n
+          return gadget.translateElementList(gadget.props.element);\n
         });\n
 \n
     });\n
@@ -328,7 +332,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -342,7 +346,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.26113.11046.50244</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +364,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413897881.85</float>
+                        <float>1419349887.08</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -125,7 +125,7 @@
     <!-- XXX need theme here currently -->\n
     <script id="table-template" type="text/x-handlebars-template">\n
       <section class="ui-content-header-plain">\n
-        <h3 class="ui-content-title ui-body-c">\n
+        <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{definition_i18n}}">\n
           <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>\n
           {{definition_title}}\n
         </h3>\n
@@ -133,7 +133,7 @@
 \n
       <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
         {{#each documentlist}}\n
-          <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
+          <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
         {{/each}}\n
       </ul>\n
 \n
@@ -265,7 +265,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -279,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24736.3025.60689</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -297,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413815082.99</float>
+                        <float>1419266049.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -131,8 +131,13 @@
         });\n
     })\n
 \n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -154,6 +159,8 @@
         widget_status_attribute: append_attribute || placeholder,\n
         widget_status_class: append_class || placeholder\n
       });\n
+      \n
+      return search_gadget.translateElementList(search_gadget.props.element);\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -312,7 +319,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +333,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24816.20339.61866</string> </value>
+                <value> <string>939.52819.6586.23620</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +351,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413819887.51</float>
+                        <float>1419345824.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

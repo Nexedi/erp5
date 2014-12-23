@@ -126,11 +126,11 @@
   <fieldset class="center">\n
     <form class="login_form">\n
          <div class="ui-card ui-body-inherit ui-corner-all ui-shadow ui-content ui-responsive">\n
-             <label>Login:</label>\n
+             <label data-i18n="">Login:</label>\n
              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
                <input type="text" required="required" data-enhanced="true" name="login" value="" />\n
              </div>\n
-             <label>Password:</label>\n
+             <label data-i18n="Password">Password:</label>\n
              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">\n
                <input type="password" required="required" name="password" value="" data-enhanced="true" />\n
              </div>\n
@@ -141,7 +141,7 @@
              <div class="ui-block-b">\n
                <div class="ui-btn ui-btn-b ui-input-btn ui-corner-all ui-icon-carat-r ui-btn-icon-right">\n
                  <span>Login</span>\n
-                 <input data-enhanced="true" type="submit" value="Login" />\n
+                 <input data-enhanced="true" type="submit" data-i18n="[value]Login" value="Login" />\n
           </div>\n
              </div>\n
            </div>\n
@@ -274,7 +274,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -288,7 +288,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.49599.22266.28279</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411461090.07</float>
+                        <float>1419348948.68</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

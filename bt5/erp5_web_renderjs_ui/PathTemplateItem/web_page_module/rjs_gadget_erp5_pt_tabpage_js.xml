@@ -138,6 +138,7 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -182,6 +183,7 @@
           for (i = 0; i < all_result.length - 1; i += 1) {\n
             tab_list.push({\n
               title: view_list[i].title,\n
+              i18n: view_list[i].title,\n
               link: all_result[i]\n
             });\n
           }\n
@@ -189,6 +191,7 @@
 \n
           gadget.props.element.innerHTML = table_template({\n
             definition_title: "Views",\n
+            definition_i18n: "Views",\n
             definition_icon: "eye",\n
             documentlist: [{\n
               title: view_list[0].title,\n
@@ -196,6 +199,7 @@
             }]\n
           }) + table_template({\n
             definition_title: "Editables",\n
+            definition_i18n: "Editables",\n
             definition_icon: "edit",\n
             documentlist: tab_list\n
           });\n
@@ -203,6 +207,9 @@
           return gadget.renderPageHeader({\n
             cancel_url: tab_list[matching].link\n
           });\n
+        })\n
+        .push(function () {\n
+          return gadget.translateElementList(gadget.props.element);\n
         });\n
 \n
     });\n
@@ -330,7 +337,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -344,7 +351,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.218.49333.26675</string> </value>
+                <value> <string>939.52859.64388.5905</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +369,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413882038.33</float>
+                        <float>1419348765.01</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

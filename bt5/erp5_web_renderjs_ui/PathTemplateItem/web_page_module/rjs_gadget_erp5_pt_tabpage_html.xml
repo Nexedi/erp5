@@ -124,14 +124,14 @@
 \n
     <script id="table-template" type="text/x-handlebars-template">\n
       <section class="ui-content-header-plain">\n
-        <h3 class="ui-content-title ui-body-c">\n
+        <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{definition_i18n}}">\n
           <span class="ui-icon ui-icon-custom ui-icon-{{definition_icon}}">&nbsp;</span>\n
           {{definition_title}}\n
         </h3>\n
       </section>\n
       <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
         {{#each documentlist}}\n
-          <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
+          <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
         {{/each}}\n
       </ul>\n
     </script>\n
@@ -262,7 +262,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.25853.26425.62054</string> </value>
+                <value> <string>939.51478.33243.40192</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413882117.05</float>
+                        <float>1419265777.06</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -136,6 +136,7 @@
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
@@ -187,6 +188,7 @@
           span.textContent = "\\u00A0";\n
           selector.appendChild(span);\n
           selector.appendChild(document.createTextNode(title));\n
+          selector.setAttribute("data-i18n", "[last]" + title);\n
 \n
           // <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>\n
           form_options.erp5_document = options.erp5_document;\n
@@ -206,6 +208,9 @@
             breadcrumb_url: all_result[2],\n
             submit_action: true\n
           });\n
+        })\n
+        .push(function () {\n
+          return form_gadget.translateElementList(form_gadget.props.element);\n
         });\n
     })\n
 \n
@@ -393,7 +398,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -407,7 +412,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.25845.4177.6041</string> </value>
+                <value> <string>939.52858.19121.54596</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -425,7 +430,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413881685.29</float>
+                        <float>1419348140.66</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

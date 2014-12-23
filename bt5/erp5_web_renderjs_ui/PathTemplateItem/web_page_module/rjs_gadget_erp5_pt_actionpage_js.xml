@@ -137,6 +137,7 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
@@ -176,14 +177,16 @@
           for (i = 2; i < all_result.length; i += 1) {\n
             tab_list.push({\n
               title: view_list[i - 2].title,\n
-              link: all_result[i]\n
+              link: all_result[i],\n
+              i18n: view_list[i - 2].title\n
             });\n
           }\n
 \n
 \n
           gadget.props.element.innerHTML = table_template({\n
             definition_title: "Workflow Transitions",\n
-            documentlist: tab_list\n
+            documentlist: tab_list,\n
+            definition_i18n: "Workflow-Transitions"\n
           });\n
 \n
           return gadget.renderPageHeader({\n
@@ -191,6 +194,9 @@
             page_title: erp5_document.title,\n
             breadcrumb_url: all_result[1]\n
           });\n
+        })\n
+        .push(function () {\n
+          return gadget.translateElementList(gadget.props.element);\n
         });\n
 \n
     });\n
@@ -318,7 +324,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -332,7 +338,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.58328.20811.57019</string> </value>
+                <value> <string>939.52883.6676.56371</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -350,7 +356,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411984843.95</float>
+                        <float>1419349656.69</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

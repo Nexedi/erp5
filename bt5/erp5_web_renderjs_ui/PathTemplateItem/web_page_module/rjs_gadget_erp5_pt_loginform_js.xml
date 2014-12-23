@@ -125,12 +125,18 @@
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("translateElementList", "translateElementList")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod("render", function () {\n
-      return "ok";\n
+      var gadget = this;\n
+      \n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.translateElementList(g.props.element);\n
+        });\n
     })\n
 \n
     .declareService(function () {\n
@@ -152,7 +158,6 @@
           document.cookie = "__ac=" + window.btoa(login + ":" + passwd);\n
           // XXX Hardcoded non generic redirection to the frontpage\n
           return form_gadget.pleaseRedirectMyHash("#");\n
-\n
         });\n
 \n
     });\n
@@ -277,7 +282,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -291,7 +296,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.49597.63791.22067</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411461067.42</float>
+                        <float>1419349125.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

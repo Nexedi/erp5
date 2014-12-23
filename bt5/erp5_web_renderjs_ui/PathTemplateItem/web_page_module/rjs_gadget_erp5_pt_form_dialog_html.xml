@@ -130,7 +130,7 @@
 \n
     <!-- XXX action, method, fieldset -->\n
     <form class="dialog_form">\n
-      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
+      <button type="submit" data-i18n="Submit" class="ui-btn ui-btn-b ui-btn-inline\n
         ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>\n
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
@@ -261,7 +261,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64343.1806.54016</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413880520.29</float>
+                        <float>1419347929.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
