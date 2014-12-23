@@ -234,6 +234,16 @@
         });\n
     })\n
 \n
+    .ready(function (my_gadget) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return my_gadget.getDeclaredGadget("translate");\n
+        })\n
+        .push(function (my_translation_gadget) {\n
+          return my_translation_gadget.render();\n
+        });\n
+    })\n
+\n
     .ready(function (g) {\n
       return g.getDeclaredGadget("header")\n
         .push(function (header_gadget) {\n
@@ -248,6 +258,35 @@
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+\n
+    // bridge translation gadget\n
+    .allowPublicAcquisition("changeLanguage", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.changeLanguage.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
+    .allowPublicAcquisition("translateStringList", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translateStringList.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
+    .allowPublicAcquisition("translateElementList", function (param_list) {\n
+      return this.getDeclaredGadget("translate")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translateElementList.apply(\n
+            translation_gadget,\n
+            param_list\n
+          );\n
+        });\n
+    })\n
 \n
     // Bridge to jio gadget\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
@@ -627,7 +666,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51164.5256.46045</string> </value>
+                <value> <string>939.52807.26806.58419</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -645,7 +684,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419250252.2</float>
+                        <float>1419345403.22</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

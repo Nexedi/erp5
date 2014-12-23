@@ -148,6 +148,10 @@
   <section data-gadget-url="gadget_jio.html"\n
     data-gadget-scope="jio_gadget"\n
     data-gadget-sandbox="public"></section>\n
+\n
+  <section data-gadget-sandbox="public" \n
+    data-gadget-url="gadget_translate.html" \n
+    data-gadget-scope="translate"></section>\n
           \n
   </body>\n
 </html>
@@ -287,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51115.58414.11008</string> </value>
+                <value> <string>939.52806.11840.43758</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -305,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419245088.26</float>
+                        <float>1419345029.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
