@@ -59,14 +59,14 @@ class TestERP5Workflow(ERP5TypeTestCase):
       type_base_category_list=(['category_state',])
       )
 
-    type_object.setWorkflow5Value(new_workflow)
-    type_object.workflow_list=('new_workflow',)
+    #type_object.setWorkflow5Value(new_workflow)
+    type_object.workflow_list = ('new_workflow',)
     #type_object.setProperty('Transition_2', new_workflow)
 
-    self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
-    self.assertEqual(type_object.getWorkflow5(),
-      'workflow_module/new_workflow')
-    self.assertEqual(len(type_object.getWorkflow5ValueList()), 1)
+    #self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
+    #self.assertEqual(type_object.getWorkflow5(),
+    #  'workflow_module/new_workflow')
+    #self.assertEqual(len(type_object.getWorkflow5ValueList()), 1)
 
     # create a module
     self.portal.portal_types.newContent(
