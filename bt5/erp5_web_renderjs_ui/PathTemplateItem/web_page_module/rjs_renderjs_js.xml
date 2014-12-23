@@ -101,16 +101,6 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-// IE does not support have Document.prototype.contains.\n
-if (typeof document.contains != \'function\') {\n
-  Document.prototype.contains = function(node) {\n
-    if (node === this || node.parentNode === this)\n
-      return true;\n
-    return this.documentElement.contains(node);\n
- }\n
-}\n
-\n
-\n
 /*\n
  * js_channel is a very lightweight abstraction on top of\n
  * postMessage which defines message formats and semantics\n
@@ -770,9 +760,17 @@ if (typeof document.contains != \'function\') {\n
   };\n
 }(DOMParser));\n
 \n
+;// IE does not support have Document.prototype.contains.\n
+if (typeof document.contains !== \'function\') {\n
+  Document.prototype.contains = function(node) {\n
+    if (node === this || node.parentNode === this)\n
+      return true;\n
+    return this.documentElement.contains(node);\n
+ }\n
+}\n
 ;/*! RenderJs */\n
+/*global console*/\n
 /*jslint nomen: true*/\n
-\n
 function loopEventListener(target, type, useCapture, callback) {\n
   "use strict";\n
   //////////////////////////\n
@@ -823,7 +821,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
  * http://www.renderjs.org/documentation\n
  */\n
 (function (document, window, RSVP, DOMParser, Channel, MutationObserver,\n
-           Node, undefined) {\n
+           Node) {\n
   "use strict";\n
 \n
   var gadget_model_dict = {},\n
@@ -837,6 +835,71 @@ function loopEventListener(target, type, useCapture, callback) {\n
   /////////////////////////////////////////////////////////////////\n
   // Helper functions\n
   /////////////////////////////////////////////////////////////////\n
+  function listenHashChange(gadget) {\n
+\n
+    function extractHashAndDispatch(evt) {\n
+      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
+        subhashes,\n
+        subhash,\n
+        keyvalue,\n
+        index,\n
+        options = {};\n
+      if (hash === undefined) {\n
+        hash = "";\n
+      } else {\n
+        hash = hash.split(\'?\')[0];\n
+      }\n
+\n
+      function optionalize(key, value, dict) {\n
+        var key_list = key.split("."),\n
+          kk,\n
+          i;\n
+        for (i = 0; i < key_list.length; i += 1) {\n
+          kk = key_list[i];\n
+          if (i === key_list.length - 1) {\n
+            dict[kk] = value;\n
+          } else {\n
+            if (!dict.hasOwnProperty(kk)) {\n
+              dict[kk] = {};\n
+            }\n
+            dict = dict[kk];\n
+          }\n
+        }\n
+      }\n
+\n
+      subhashes = hash.split(\'&\');\n
+      for (index in subhashes) {\n
+        if (subhashes.hasOwnProperty(index)) {\n
+          subhash = subhashes[index];\n
+          if (subhash !== \'\') {\n
+            keyvalue = subhash.split(\'=\');\n
+            if (keyvalue.length === 2) {\n
+\n
+              optionalize(decodeURIComponent(keyvalue[0]),\n
+                decodeURIComponent(keyvalue[1]),\n
+                options);\n
+\n
+            }\n
+          }\n
+        }\n
+      }\n
+\n
+      if (gadget.render !== undefined) {\n
+        return gadget.render(options);\n
+      }\n
+    }\n
+\n
+    var result = loopEventListener(window, \'hashchange\', false,\n
+                                   extractHashAndDispatch),\n
+      event = document.createEvent("Event");\n
+\n
+    event.initEvent(\'hashchange\', true, true);\n
+    event.newURL = window.location.toString();\n
+    window.dispatchEvent(event);\n
+    return result;\n
+  }\n
+\n
+\n
   function removeHash(url) {\n
     var index = url.indexOf(\'#\');\n
     if (index > 0) {\n
@@ -1169,22 +1232,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
   RenderJSGadget.declareAcquiredMethod("aq_pleasePublishMyState",\n
                                        "pleasePublishMyState");\n
 \n
-  function pleasePublishMyState(param_list, child_gadget_scope) {\n
-    var new_param = {},\n
-      key;\n
-    for (key in this.state_parameter_dict) {\n
-      if (this.state_parameter_dict.hasOwnProperty(key)) {\n
-        new_param[key] = this.state_parameter_dict[key];\n
-      }\n
-    }\n
-    if (child_gadget_scope === undefined) {\n
-      throw new Error("gadget scope is mandatory");\n
-    }\n
-    new_param[child_gadget_scope] = param_list[0];\n
-    param_list = [new_param];\n
-    return this.aq_pleasePublishMyState.apply(this, param_list);\n
-  }\n
-\n
   /////////////////////////////////////////////////////////////////\n
   // RenderJSGadget.allowPublicAcquisition\n
   /////////////////////////////////////////////////////////////////\n
@@ -1202,6 +1249,22 @@ function loopEventListener(target, type, useCapture, callback) {\n
       return acquire.apply(parent_gadget, [gadget_instance, method_name,\n
                                            argument_list]);\n
     };\n
+  }\n
+\n
+  function pleasePublishMyState(param_list, child_gadget_scope) {\n
+    var new_param = {},\n
+      key;\n
+    for (key in this.state_parameter_dict) {\n
+      if (this.state_parameter_dict.hasOwnProperty(key)) {\n
+        new_param[key] = this.state_parameter_dict[key];\n
+      }\n
+    }\n
+    if (child_gadget_scope === undefined) {\n
+      throw new Error("gadget scope is mandatory");\n
+    }\n
+    new_param[child_gadget_scope] = param_list[0];\n
+    param_list = [new_param];\n
+    return this.aq_pleasePublishMyState.apply(this, param_list);\n
   }\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -1340,21 +1403,25 @@ function loopEventListener(target, type, useCapture, callback) {\n
     gadget_instance.__chan.bind("declareMethod",\n
                                 function (trans, method_name) {\n
         gadget_instance[method_name] = function () {\n
-          var argument_list = arguments;\n
-          return new RSVP.Promise(function (resolve, reject) {\n
-            gadget_instance.__chan.call({\n
-              method: "methodCall",\n
-              params: [\n
-                method_name,\n
-                Array.prototype.slice.call(argument_list, 0)],\n
-              success: function (s) {\n
-                resolve(s);\n
-              },\n
-              error: function (e) {\n
-                reject(e);\n
-              }\n
+          var argument_list = arguments,\n
+            wait_promise = new RSVP.Promise(function (resolve, reject) {\n
+              gadget_instance.__chan.call({\n
+                method: "methodCall",\n
+                params: [\n
+                  method_name,\n
+                  Array.prototype.slice.call(argument_list, 0)],\n
+                success: function (s) {\n
+                  resolve(s);\n
+                },\n
+                error: function (e) {\n
+                  reject(e);\n
+                }\n
+              });\n
             });\n
-          });\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return wait_promise;\n
+            });\n
         };\n
         return "OK";\n
       });\n
@@ -1742,25 +1809,28 @@ function loopEventListener(target, type, useCapture, callback) {\n
     if (document_element.nodeType === 9) {\n
       settings.title = document_element.title;\n
 \n
-      for (i = 0; i < document_element.head.children.length; i += 1) {\n
-        element = document_element.head.children[i];\n
-        if (element.href !== null) {\n
-          // XXX Manage relative URL during extraction of URLs\n
-          // element.href returns absolute URL in firefox but "" in chrome;\n
-          if (element.rel === "stylesheet") {\n
-            settings.required_css_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
-            );\n
-          } else if (element.nodeName === "SCRIPT" &&\n
-                     (element.type === "text/javascript" ||\n
-                      !element.type)) {\n
-            settings.required_js_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("src"), url)\n
-            );\n
-          } else if (element.rel === "http://www.renderjs.org/rel/interface") {\n
-            settings.interface_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
-            );\n
+      if (document_element.head !== null) {\n
+        for (i = 0; i < document_element.head.children.length; i += 1) {\n
+          element = document_element.head.children[i];\n
+          if (element.href !== null) {\n
+            // XXX Manage relative URL during extraction of URLs\n
+            // element.href returns absolute URL in firefox but "" in chrome;\n
+            if (element.rel === "stylesheet") {\n
+              settings.required_css_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+              );\n
+            } else if (element.nodeName === "SCRIPT" &&\n
+                       (element.type === "text/javascript" ||\n
+                        !element.type)) {\n
+              settings.required_js_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("src"), url)\n
+              );\n
+            } else if (element.rel ===\n
+                       "http://www.renderjs.org/rel/interface") {\n
+              settings.interface_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+              );\n
+            }\n
           }\n
         }\n
       }\n
@@ -1825,6 +1895,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
       notifyReady,\n
       notifyDeclareMethod,\n
       gadget_ready = false,\n
+      iframe_top_gadget,\n
       last_acquisition_gadget;\n
 \n
     // Create the gadget class for the current url\n
@@ -1832,45 +1903,53 @@ function loopEventListener(target, type, useCapture, callback) {\n
       throw new Error("bootstrap should not be called twice");\n
     }\n
     loading_klass_promise = new RSVP.Promise(function (resolve, reject) {\n
-      if (window.self === window.top) {\n
 \n
-        last_acquisition_gadget = new RenderJSGadget();\n
-        last_acquisition_gadget.__acquired_method_dict = {\n
-          getTopURL: function () {\n
-            return url;\n
-          },\n
-          reportServiceError: function (param_list) {\n
-            letsCrash(param_list[0]);\n
-          },\n
-          pleaseRedirectMyHash: function (param_list) {\n
-            window.location.replace(param_list[0]);\n
-          },\n
-          pleasePublishMyState: function (param_list) {\n
-            var key,\n
-              first = true,\n
-              hash = "#";\n
-            param_list[0] = mergeSubDict(param_list[0]);\n
-            for (key in param_list[0]) {\n
-              if (param_list[0].hasOwnProperty(key)) {\n
-                if (!first) {\n
-                  hash += "&";\n
-                }\n
-                hash += encodeURIComponent(key) + "=" +\n
-                  encodeURIComponent(param_list[0][key]);\n
-                first = false;\n
+      last_acquisition_gadget = new RenderJSGadget();\n
+      last_acquisition_gadget.__acquired_method_dict = {\n
+        getTopURL: function () {\n
+          return url;\n
+        },\n
+        reportServiceError: function (param_list) {\n
+          letsCrash(param_list[0]);\n
+        },\n
+        pleaseRedirectMyHash: function (param_list) {\n
+          window.location.replace(param_list[0]);\n
+        },\n
+        pleasePublishMyState: function (param_list) {\n
+          var key,\n
+            first = true,\n
+            hash = "#";\n
+          param_list[0] = mergeSubDict(param_list[0]);\n
+          for (key in param_list[0]) {\n
+            if (param_list[0].hasOwnProperty(key)) {\n
+              if (!first) {\n
+                hash += "&";\n
               }\n
+              hash += encodeURIComponent(key) + "=" +\n
+                encodeURIComponent(param_list[0][key]);\n
+              first = false;\n
             }\n
-            return hash;\n
           }\n
-        };\n
-        // Stop acquisition on the last acquisition gadget\n
-        // Do not put this on the klass, as their could be multiple instances\n
-        last_acquisition_gadget.__aq_parent = function (method_name) {\n
-          throw new renderJS.AcquisitionError(\n
-            "No gadget provides " + method_name\n
-          );\n
-        };\n
+          return hash;\n
+        }\n
+      };\n
+      // Stop acquisition on the last acquisition gadget\n
+      // Do not put this on the klass, as their could be multiple instances\n
+      last_acquisition_gadget.__aq_parent = function (method_name) {\n
+        throw new renderJS.AcquisitionError(\n
+          "No gadget provides " + method_name\n
+        );\n
+      };\n
 \n
+      //we need to determine tmp_constructor\'s value before exit bootstrap\n
+      //because of function : renderJS\n
+      //but since the channel checking is async,\n
+      //we can\'t use code structure like:\n
+      // if channel communication is ok\n
+      //    tmp_constructor = RenderJSGadget\n
+      // else\n
+      //    tmp_constructor = RenderJSEmbeddedGadget\n
+      if (window.self === window.top) {\n
         // XXX Copy/Paste from declareGadgetKlass\n
         tmp_constructor = function () {\n
           RenderJSGadget.call(this);\n
@@ -1893,6 +1972,10 @@ function loopEventListener(target, type, useCapture, callback) {\n
         // Create the root gadget instance and put it in the loading stack\n
         root_gadget = new gadget_model_dict[url]();\n
 \n
+        tmp_constructor.declareService(function () {\n
+          return listenHashChange(this);\n
+        });\n
+\n
         setAqParent(root_gadget, last_acquisition_gadget);\n
 \n
       } else {\n
@@ -1909,15 +1992,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
         tmp_constructor.prototype.__path = url;\n
         root_gadget = new RenderJSEmbeddedGadget();\n
 \n
-        // Bind calls to renderJS method on the instance\n
-        embedded_channel.bind("methodCall", function (trans, v) {\n
-          root_gadget[v[0]].apply(root_gadget, v[1]).then(function (g) {\n
-            trans.complete(g);\n
-          }).fail(function (e) {\n
-            trans.error(e.toString());\n
-          });\n
-          trans.delayReturn(true);\n
-        });\n
 \n
         // Notify parent about gadget instanciation\n
         notifyReady = function () {\n
@@ -1965,9 +2039,9 @@ function loopEventListener(target, type, useCapture, callback) {\n
         tmp_constructor.allowPublicAcquisition =\n
           RenderJSGadget.allowPublicAcquisition;\n
 \n
-        // Define __aq_parent to inform parent window\n
+        //Default: Define __aq_parent to inform parent window\n
         tmp_constructor.prototype.__aq_parent = function (method_name,\n
-          argument_list) {\n
+          argument_list, time_out) {\n
           return new RSVP.Promise(function (resolve, reject) {\n
             embedded_channel.call({\n
               method: "acquire",\n
@@ -1980,7 +2054,8 @@ function loopEventListener(target, type, useCapture, callback) {\n
               },\n
               error: function (e) {\n
                 reject(e);\n
-              }\n
+              },\n
+              timeout: time_out\n
             });\n
           });\n
         };\n
@@ -2111,13 +2186,43 @@ function loopEventListener(target, type, useCapture, callback) {\n
         }\n
 \n
         if (window.top !== window.self) {\n
-          tmp_constructor.ready(function () {\n
-            var base = document.createElement(\'base\');\n
-            return root_gadget.__aq_parent(\'getTopURL\', [])\n
+          //checking channel should be done before sub gadget\'s declaration\n
+          //__ready_list:\n
+          //0: clearGadgetInternalParameters\n
+          //1: loadSubGadgetDOMDeclaration\n
+          //.....\n
+          tmp_constructor.__ready_list.splice(1, 0, function () {\n
+            return root_gadget.__aq_parent(\'getTopURL\', [], 100)\n
               .then(function (topURL) {\n
+                var base = document.createElement(\'base\');\n
                 base.href = topURL;\n
                 base.target = "_top";\n
                 document.head.appendChild(base);\n
+                //the channel is ok\n
+                //so bind calls to renderJS method on the instance\n
+                embedded_channel.bind("methodCall", function (trans, v) {\n
+                  root_gadget[v[0]].apply(root_gadget, v[1])\n
+                    .then(function (g) {\n
+                      trans.complete(g);\n
+                    }).fail(function (e) {\n
+                      trans.error(e.toString());\n
+                    });\n
+                  trans.delayReturn(true);\n
+                });\n
+              })\n
+              .fail(function (error) {\n
+                if (error === "timeout_error") {\n
+                  //the channel fail\n
+                  //we consider current gadget is parent gadget\n
+                  //redifine last acquisition gadget\n
+                  iframe_top_gadget = true;\n
+                  tmp_constructor.declareService(function () {\n
+                    return listenHashChange(this);\n
+                  });\n
+                  setAqParent(root_gadget, last_acquisition_gadget);\n
+                } else {\n
+                  throw error;\n
+                }\n
               });\n
           });\n
         }\n
@@ -2137,68 +2242,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
       });\n
     if (window.self === window.top) {\n
       loading_gadget_promise\n
-        .then(function () {\n
-\n
-          function extractHashAndDispatch(evt) {\n
-            var hash = evt.newURL.split(\'#\')[1],\n
-              subhashes,\n
-              subhash,\n
-              keyvalue,\n
-              index,\n
-              options = {};\n
-            if (hash === undefined) {\n
-              hash = "";\n
-            } else {\n
-              hash = hash.split(\'?\')[0];\n
-            }\n
-\n
-            function optionalize(key, value, dict) {\n
-              var key_list = key.split("."),\n
-                kk,\n
-                i;\n
-              for (i = 0; i < key_list.length; i += 1) {\n
-                kk = key_list[i];\n
-                if (i === key_list.length - 1) {\n
-                  dict[kk] = value;\n
-                } else {\n
-                  if (!dict.hasOwnProperty(kk)) {\n
-                    dict[kk] = {};\n
-                  }\n
-                  dict = dict[kk];\n
-                }\n
-              }\n
-            }\n
-\n
-            subhashes = hash.split(\'&\');\n
-            for (index in subhashes) {\n
-              if (subhashes.hasOwnProperty(index)) {\n
-                subhash = subhashes[index];\n
-                if (subhash !== \'\') {\n
-                  keyvalue = subhash.split(\'=\');\n
-                  if (keyvalue.length === 2) {\n
-\n
-                    optionalize(decodeURIComponent(keyvalue[0]),\n
-                      decodeURIComponent(keyvalue[1]),\n
-                      options);\n
-\n
-                  }\n
-                }\n
-              }\n
-            }\n
-\n
-            if (root_gadget.render !== undefined) {\n
-              return root_gadget.render(options);\n
-            }\n
-          }\n
-\n
-          // XXX Put it in a service\n
-          // XXX Manually trigger hashchange event!\n
-          return RSVP.all([\n
-            extractHashAndDispatch({newURL: window.location.toString()}),\n
-            loopEventListener(window, \'hashchange\', false,\n
-                                   extractHashAndDispatch)\n
-          ]);\n
-        })\n
         .fail(function (e) {\n
           letsCrash(e);\n
           throw e;\n
@@ -2211,7 +2254,12 @@ function loopEventListener(target, type, useCapture, callback) {\n
           notifyReady();\n
         })\n
         .fail(function (e) {\n
-          embedded_channel.notify({method: "failed", params: e.toString()});\n
+          //top gadget in iframe\n
+          if (iframe_top_gadget) {\n
+            letsCrash(e);\n
+          } else {\n
+            embedded_channel.notify({method: "failed", params: e.toString()});\n
+          }\n
           throw e;\n
         });\n
     }\n
@@ -2219,8 +2267,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
   }\n
   bootstrap();\n
 \n
-}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node));\n
-
+}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node));
 
 ]]></string> </value>
         </item>
@@ -2343,7 +2390,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -2357,7 +2404,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.39596.23974.43622</string> </value>
+                <value> <string>939.51246.32089.52411</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -2375,7 +2422,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1410871234.37</float>
+                        <float>1419342867.69</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
