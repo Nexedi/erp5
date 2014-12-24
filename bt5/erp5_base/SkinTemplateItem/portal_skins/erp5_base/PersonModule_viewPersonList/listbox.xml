@@ -322,7 +322,7 @@ Role & Region
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
@@ -393,7 +393,7 @@ Role & Region
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
+                          <string>validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>

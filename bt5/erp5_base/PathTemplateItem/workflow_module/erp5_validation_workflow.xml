@@ -28,17 +28,19 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/workflow_module/validation_workflow/draft</string>
+                <string>source/workflow_module/erp5_validation_workflow/draft</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This workflow aims at replacing validation_workflow in DCWorkflow.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validation_workflow</string> </value>
+            <value> <string>erp5_validation_workflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -50,7 +52,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validation Workflow</string> </value>
+            <value> <string>ERP5 Validation Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

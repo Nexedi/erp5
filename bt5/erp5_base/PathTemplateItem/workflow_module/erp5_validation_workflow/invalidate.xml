@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/validation_workflow/invalidated</string>
+                <string>destination/workflow_module/erp5_validation_workflow/invalidated</string>
               </tuple>
             </value>
         </item>

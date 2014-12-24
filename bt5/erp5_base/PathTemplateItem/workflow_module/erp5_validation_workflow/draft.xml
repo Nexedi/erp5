@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Transition" module="erp5.portal_type"/>
+      <global name="State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/validation_workflow/validated</string>
+                <string>destination/workflow_module/erp5_validation_workflow/validate</string>
               </tuple>
             </value>
         </item>
@@ -21,20 +21,16 @@
             </value>
         </item>
         <item>
-            <key> <string>guard_expression</string> </key>
-            <value> <string>python: True</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>validate</string> </value>
+            <value> <string>draft</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Transition</string> </value>
+            <value> <string>State</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Draft</string> </value>
         </item>
       </dictionary>
     </pickle>
