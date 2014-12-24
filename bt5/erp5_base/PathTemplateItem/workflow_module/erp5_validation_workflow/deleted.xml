@@ -7,15 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>destination/workflow_module/erp5_validation_workflow/validate</string>
-                <string>destination/workflow_module/erp5_validation_workflow/delete</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -23,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>invalidated</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -31,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Invalidated</string> </value>
+            <value> <string>Deleted</string> </value>
         </item>
       </dictionary>
     </pickle>
