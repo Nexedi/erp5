@@ -7,6 +7,7 @@ portal_categories/collect_order_group/line
 portal_categories/divergence_scope/category
 portal_categories/divergence_scope/property
 portal_categories/divergence_scope/quantity
+portal_categories/validation_state
 portal_memcached/persistent_memcached_plugin
 workflow_module/erp5_validation_workflow
 workflow_module/erp5_validation_workflow/**
