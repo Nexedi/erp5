@@ -6715,7 +6715,7 @@ msgid "I"
 msgstr ""
 
 msgid "I forgot my password!"
-msgstr ""
+msgstr "我忘记密码了！"
 
 msgid "IAS-IFRS Compliant"
 msgstr ""
@@ -7075,10 +7075,10 @@ msgid "Input data has errors. Please look at error messages below."
 msgstr ""
 
 msgid "Input data has errors. Please look at the error messages below."
-msgstr ""
+msgstr "录入数据有误，请看下方错误信息提示。"
 
 msgid "Input is required but no input given."
-msgstr ""
+msgstr "此处为必填栏。"
 
 msgid "Inspect Object"
 msgstr ""
@@ -8674,7 +8674,7 @@ msgid "No result."
 msgstr "无记录。"
 
 msgid "No such document was found."
-msgstr ""
+msgstr "系统中未发现该文件。"
 
 msgid "No trade condition."
 msgstr ""
@@ -16582,7 +16582,7 @@ msgid "You did not enter a floating point number."
 msgstr ""
 
 msgid "You did not enter a valid date and time."
-msgstr ""
+msgstr "你输入的日期时间无法验证。"
 
 msgid "You did not enter an email address."
 msgstr ""
