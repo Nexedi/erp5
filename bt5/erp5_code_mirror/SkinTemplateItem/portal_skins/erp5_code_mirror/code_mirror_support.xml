@@ -201,6 +201,8 @@
     * result as well\n
     */\n
    function successHandler(data) {\n
+     generateHistorySelectElement();\n
+\n
      transition_message = $(\'#transition_message\');\n
      transition_message.css(\'opacity\', 0.0);\n
      transition_message.html(data);\n
@@ -466,70 +468,51 @@
      maximize();\n
  }\n
 \n
- function generateHistorySelectElement(data) {\n
-   container_elem = $(\'<p style="margin: 0; padding: 0;"></p>\');\n
-   for(var i = 0; i < 2; i++)\n
-   {\n
-     var is_right = (i == 1);\n
-     if(is_right)\n
-       attrs = \'id="history_select_right" style="float: right"\'\n
+ function generateHistorySelectElement() {\n
+   function successHandler(data) {\n
+     container_elem = $(\'#history_select_container\');\n
+     if(container_elem.length == 0)\n
+       container_elem = $(\'<p style="margin: 0; padding: 0;" id="history_select_container"></p>\');\n
      else\n
-       attrs = \'id="history_select_left" style="float: left"\'\n
+       container_elem.empty();\n
 \n
-     select_revision_element = $(\n
-       "<select class=\'editor_action_button\' " + attrs + "></select>");\n
-\n
-     if(is_right)\n
-       select_revision_element.append($("<option value=\'\'></option>"));\n
-\n
-     $.each(\n
-       data,\n
-       function(j, d) {\n
-         select_revision_element.append(\n
-           $("<option value=\'" + d[\'key\'] + "\'>" + j + ": " +\n
-             new Date(d[\'time\'] * 1000).toString() + " (" + d[\'user_name\'] + ")" +\n
-             "</option>"));\n
-       });\n
-\n
-     function selectHistoryTextContent(event) {\n
-       function loadTextContent(data) {\n
-         cm.setValue(data);\n
-         cm.save();\n
-\n
-         if(merge_mode_elem) {\n
-           merge_mode_elem.edit.setValue(data);\n
-           merge_mode_elem.edit.refresh();\n
-           merge_mode_elem.right.orig.refresh();\n
-         }\n
-\n
-         displayLoadSourceCodeMessage();\n
-       }\n
-\n
-       // TODO: failure\n
-       $.ajax({type: \'GET\',\n
-               async: true,\n
-               dataType: \'text\',\n
-               data: {key: this.value},\n
-               url: \'getTextContentHistory\',\n
-               success: loadTextContent});\n
-     }\n
-\n
-     function selectHistoryTextContentMerge(event) {\n
-       function loadTextContent(data) {\n
-         if(merge_mode_elem) {\n
-           merge_mode_elem.right.orig.setValue(data);\n
-           merge_mode_elem.edit.refresh();\n
-           merge_mode_elem.right.orig.refresh();\n
-         }\n
-         else\n
-           enterMerge(data);\n
-\n
-         displayLoadSourceCodeMessage();\n
-       }\n
-\n
-       if(!this.value)\n
-         leaveMerge();\n
+     for(var i = 0; i < 2; i++)\n
+     {\n
+       var is_right = (i == 1);\n
+       if(is_right)\n
+         attrs = \'id="history_select_right" style="float: right"\'\n
        else\n
+         attrs = \'id="history_select_left" style="float: left"\'\n
+\n
+       select_revision_element = $(\n
+         "<select class=\'editor_action_button\' " + attrs + "></select>");\n
+\n
+       if(is_right)\n
+         select_revision_element.append($("<option value=\'\'></option>"));\n
+\n
+       $.each(\n
+         data,\n
+         function(j, d) {\n
+           select_revision_element.append(\n
+             $("<option value=\'" + d[\'key\'] + "\'>" + j + ": " +\n
+               new Date(d[\'time\'] * 1000).toString() + " (" + d[\'user_name\'] + ")" +\n
+               "</option>"));\n
+         });\n
+\n
+       function selectHistoryTextContent(event) {\n
+         function loadTextContent(data) {\n
+           cm.setValue(data);\n
+           cm.save();\n
+\n
+           if(merge_mode_elem) {\n
+             merge_mode_elem.edit.setValue(data);\n
+             merge_mode_elem.edit.refresh();\n
+             merge_mode_elem.right.orig.refresh();\n
+           }\n
+\n
+           displayLoadSourceCodeMessage();\n
+         }\n
+\n
          // TODO: failure\n
          $.ajax({type: \'GET\',\n
                  async: true,\n
@@ -537,25 +520,53 @@
                  data: {key: this.value},\n
                  url: \'getTextContentHistory\',\n
                  success: loadTextContent});\n
+       }\n
+\n
+       function selectHistoryTextContentMerge(event) {\n
+         function loadTextContent(data) {\n
+           if(merge_mode_elem) {\n
+             merge_mode_elem.right.orig.setValue(data);\n
+             merge_mode_elem.edit.refresh();\n
+             merge_mode_elem.right.orig.refresh();\n
+           }\n
+           else\n
+             enterMerge(data);\n
+\n
+           displayLoadSourceCodeMessage();\n
+         }\n
+\n
+         if(!this.value)\n
+           leaveMerge();\n
+         else\n
+           // TODO: failure\n
+           $.ajax({type: \'GET\',\n
+                   async: true,\n
+                   dataType: \'text\',\n
+                   data: {key: this.value},\n
+                   url: \'getTextContentHistory\',\n
+                   success: loadTextContent});\n
+       }\n
+\n
+       if(!is_right)\n
+         select_revision_element.bind(\'change\', selectHistoryTextContent);\n
+       else\n
+         select_revision_element.bind(\'change\', selectHistoryTextContentMerge);\n
+\n
+       select_revision_element.appendTo(container_elem);\n
      }\n
 \n
-     if(!is_right)\n
-       select_revision_element.bind(\'change\', selectHistoryTextContent);\n
-     else\n
-       select_revision_element.bind(\'change\', selectHistoryTextContentMerge);\n
-\n
-     select_revision_element.appendTo(container_elem);\n
+     container_elem.append($(\'<div style="clear: both;"></div>\'));\n
+     container_elem.prependTo($(\'#merge\'));\n
    }\n
 \n
-   container_elem.append($(\'<div style="clear: both;"></div>\'));\n
-   container_elem.prependTo($(\'#merge\'));\n
- }\n
-\n
- $.ajax({type: \'GET\',\n
+  $.ajax({type: \'GET\',\n
          async: true,\n
          dataType: \'json\',\n
          url: \'Component_getTextContentHistoryRevisionDictListAsJSON\',\n
-         success: generateHistorySelectElement});\n
+         success: successHandler});\n
+ }\n
+\n
+ generateHistorySelectElement();\n
 </script>\n
 
 

@@ -1,4 +1,7 @@
 2014-12-26 arnaud.fontaine
+* Refresh Component history revisions when saving with CTRL+s.
+
+2014-12-26 arnaud.fontaine
 * Fix layout of warnings/errors div to make it consistent with maximize info div.
 
 2014-12-26 arnaud.fontaine
