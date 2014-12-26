@@ -237,7 +237,8 @@
        warning_element.animate({opacity: 1.0}, {duration: 3000, queue: false});\n
      }\n
 \n
-     if(cm.getOption("fullScreen") ||\n
+     if(is_maximized ||\n
+        cm.getOption("fullScreen") ||\n
         (document.fullScreenElement && document.fullScreenElement !== null) ||\n
         document.mozFullScreen || document.webkitIsFullScreen) {\n
        var msg_elem_classes = \'maximize_fullscreen_message\';\n

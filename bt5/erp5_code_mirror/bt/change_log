@@ -1,3 +1,6 @@
+2014-12-26 arnaud.fontaine
+* Fix warning/error messages div not being displayed in maximize mode.
+
 2014-12-19 arnaud.fontaine
 * Use monospace font in CodeMirror editor, previously overriden by ERP5 CSS.
 
