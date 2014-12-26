@@ -263,7 +263,7 @@
          else\n
            $(this).bind(\'click\', function() { $(this).remove() });\n
        }\n
-       msg_elem.animate({opacity: 1.0}, 1500, animateMessageComplete);\n
+       msg_elem.animate({opacity: 1.0}, 3000, animateMessageComplete);\n
      }\n
    }\n
 \n
