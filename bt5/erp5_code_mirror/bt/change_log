@@ -1,4 +1,7 @@
 2014-12-26 arnaud.fontaine
+* Fix layout of warnings/errors div to make it consistent with maximize info div.
+
+2014-12-26 arnaud.fontaine
 * Fix warning/error messages div not being displayed in maximize mode.
 
 2014-12-19 arnaud.fontaine

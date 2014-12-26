@@ -70,9 +70,9 @@
    position: absolute;\n
    bottom: 0;\n
    right: 20px;\n
-   width: 40%;\n
+   max-width: 40%;\n
    z-index: 424242;\n
-   padding: 20px;\n
+   padding: 10px;\n
    background-color: #DAE6F6;\n
    border: 1px solid #97B0D1;\n
    opacity: 0.3;\n
@@ -139,7 +139,7 @@
  merge_mode_elem = null;\n
 \n
  maximize_mode_message = $(\'<span id="maximize_message">Press ESC to leave maximize mode</span>\');\n
- \n
+\n
  function maximizeFullscreenRemoveSaveMessage() {\n
    $(\'.maximize_fullscreen_message\').remove();\n
  }\n
@@ -255,7 +255,7 @@
        msg_elem = $(\'<div class="\' + msg_elem_classes + \'"\' +\n
                     \'<div>\' + maximize_fullscreen_message + \'</div></div>\');\n
 \n
-       msg_elem.appendTo(cm.getWrapperElement());\n
+       $(\'body\').prepend(msg_elem);\n
 \n
        function animateMessageComplete() {\n
          if(!error_arr.length && !warning_arr.length)\n
