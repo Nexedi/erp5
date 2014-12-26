@@ -1,4 +1,7 @@
 2014-12-26 arnaud.fontaine
+* Saving (Ctrl-s) was not working when using Merge view.
+
+2014-12-26 arnaud.fontaine
 * Refresh Component history revisions when saving with CTRL+s.
 
 2014-12-26 arnaud.fontaine

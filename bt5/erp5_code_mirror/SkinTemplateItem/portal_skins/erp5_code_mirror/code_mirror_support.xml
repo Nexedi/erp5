@@ -273,7 +273,12 @@
      alert(\'Saving failed: \' + textStatus);\n
    }\n
 \n
-   cm.save();\n
+   if(merge_mode_elem)\n
+     // TODO: Hack, \'cm\' should work!\n
+     $(\'#&dtml-field_id;\').val(merge_mode_elem.edit.getValue());\n
+   else\n
+     cm.save();\n
+\n
    var edit_data = $(\'form#main_form\').serialize();\n
    edit_data += \'&message_only:int=1\';\n
    $.ajax({type: \'POST\',\n
@@ -389,7 +394,7 @@
     viewportMargin: Infinity,\n
     extraKeys: {"Ctrl-Space": "autocomplete",\n
                 "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},\n
-                "Ctrl-S": function(cm) {saveDocument(cm, $.Event(\'click\'))}},\n
+                "Ctrl-S": function(cm){saveDocument(cm, $.Event(\'click\'))}},\n
     foldGutter: true,\n
     lineWrapping: true,\n
     gutters: ["CodeMirror-linenumbers",\n
@@ -429,7 +434,8 @@
       showTrailingSpace: true,\n
       matchBrackets: true,\n
       /* viewportMargin: Infinity, */\n
-      extraKeys: {"Ctrl-Space": "autocomplete"},\n
+      extraKeys: {"Ctrl-Space": "autocomplete",\n
+                  "Ctrl-S": function(cm){saveDocument(merge_mode_elem.edit, $.Event(\'click\'))}},\n
       foldGutter: true,\n
       lineWrapping: true,\n
       gutters: ["CodeMirror-linenumbers",\n
@@ -472,9 +478,15 @@
    function successHandler(data) {\n
      container_elem = $(\'#history_select_container\');\n
      if(container_elem.length == 0)\n
-       container_elem = $(\'<p style="margin: 0; padding: 0;" id="history_select_container"></p>\');\n
+       {\n
+         right_selected_value = null;\n
+         container_elem = $(\'<p style="margin: 0; padding: 0;" id="history_select_container"></p>\');\n
+       }\n
      else\n
-       container_elem.empty();\n
+       {\n
+         right_selected_value = $(\'#history_select_right\').val();\n
+         container_elem.empty();\n
+       }\n
 \n
      for(var i = 0; i < 2; i++)\n
      {\n
@@ -494,7 +506,9 @@
          data,\n
          function(j, d) {\n
            select_revision_element.append(\n
-             $("<option value=\'" + d[\'key\'] + "\'>" + j + ": " +\n
+             $("<option value=\'" + d[\'key\'] + "\' " +\n
+               (is_right && d[\'key\'] == right_selected_value ? "selected=\'selected\'" : "")\n
+               + ">" + j + ": " +\n
                new Date(d[\'time\'] * 1000).toString() + " (" + d[\'user_name\'] + ")" +\n
                "</option>"));\n
          });\n
