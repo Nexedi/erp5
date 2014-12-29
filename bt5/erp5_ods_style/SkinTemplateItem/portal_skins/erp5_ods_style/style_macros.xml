@@ -71,7 +71,7 @@
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.877cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro4\'>\n
-      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.923cm\'/>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'2cm\'/> <!-- This will be the height of table header row -->\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'ro5\'>\n
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'false\' style:row-height=\'0.644cm\'/>\n
