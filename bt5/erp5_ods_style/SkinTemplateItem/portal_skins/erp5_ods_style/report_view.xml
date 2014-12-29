@@ -68,7 +68,9 @@
               <!-- at least one table-column element is required for ODF to validate -->\n
               <table:table-column\n
                     table:style-name=\'co2\'\n
-                    table:default-cell-style-name=\'report-column-title\'/>\n
+                    table:number-columns-repeated=\'100\'\n
+                    table:default-cell-style-name=\'Default\'/>\n
+             \n
               <table:table-row table:style-name=\'ro2\'>\n
                 <table:table-cell table:style-name="report-title"\n
                                   office:value-type=\'string\'\n

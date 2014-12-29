@@ -53,10 +53,12 @@ dQEAAAAA</string> </value>
 <office:body>\n
   <office:spreadsheet>\n
     <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: unicode(here.getTitle(), \'utf-8\')" i18n:attributes="table:name">\n
+      \n
       <!-- at least one table-column element is required for ODF to validate -->\n
       <table:table-column\n
             table:style-name=\'co2\'\n
-            table:default-cell-style-name=\'report-column-title\'/>\n
+            table:number-columns-repeated=\'100\'\n
+            table:default-cell-style-name=\'Default\'/>\n
 \n
       <!-- macro form_layout -->\n
       <tal:block metal:define-macro="form_layout" tal:define="display_header python:False">\n
