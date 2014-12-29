@@ -390,6 +390,8 @@
    {mode: "python",\n
     lineNumbers: true,\n
     showTrailingSpace: true,\n
+    tabSize: 2,\n
+    indentWithTabs: false,\n
     matchBrackets: true,\n
     viewportMargin: Infinity,\n
     extraKeys: {"Ctrl-Space": "autocomplete",\n
