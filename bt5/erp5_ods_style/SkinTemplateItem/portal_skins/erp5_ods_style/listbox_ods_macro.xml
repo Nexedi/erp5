@@ -74,11 +74,11 @@
                 </tal:block> \n
                 \n
                 <table:table-header-rows>\n
-                  <table:table-row table:style-name=\'ro4\'>\n
+                  <table:table-row table:style-name=\'listbox_header_row\'>\n
                     <tal:block tal:condition="python: is_report_tree_mode">\n
                       <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
                         <tal:block tal:condition="listboxline/getSectionName">\n
-                          <text:p  tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode(\'utf-8\')"/>\n
+                          <text:p tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode(\'utf-8\')"/>\n
                         </tal:block>\n
                       </table:table-cell>\n
                     </tal:block>\n
@@ -105,7 +105,7 @@
               </tal:block>\n
 \n
               <tal:block tal:condition="not:display_header">\n
-                <table:table-row table:style-name=\'ro4\'>\n
+                <table:table-row table:style-name=\'listbox_header_row\'>\n
                   <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">\n
                     <table:table-cell table:style-name=\'report-column-title\'\n
                                       table:number-columns-spanned=\'1\'\n

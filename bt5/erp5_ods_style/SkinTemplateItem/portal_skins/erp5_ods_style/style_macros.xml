@@ -61,6 +61,17 @@
     <style:style style:family=\'table-column\' style:name=\'co4\'>\n
       <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'2.267cm\'/>\n
     </style:style>\n
+    \n
+    <style:style style:family=\'table-row\' style:name=\'listbox_header_row\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'1.5cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'listbox_data_row\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'1.0cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-row\' style:name=\'listbox_stat_row\'>\n
+      <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'0.5cm\'/>\n
+    </style:style>\n
+    \n
     <style:style style:family=\'table-row\' style:name=\'ro1\'>\n
       <style:table-row-properties fo:break-before=\'auto\' style:use-optimal-row-height=\'true\' style:row-height=\'2.91cm\'/>\n
     </style:style>\n

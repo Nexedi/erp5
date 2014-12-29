@@ -54,7 +54,7 @@
 \n
         <!-- title line itself is rendered in listbox_ods_macro --> \n
         <tal:block tal:condition="not:listboxline/isTitleLine">\n
-          <table:table-row>\n
+          <table:table-row tal:attributes="table:style-name python: listboxline.isStatLine() and \'listbox_stat_row\' or \'listbox_data_row\'">\n
             <tal:block tal:condition="python: listboxline.isDataLine()">\n
               <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">\n
                 <table:table-cell table:style-name=\'report-column-title\'\n
