@@ -110,18 +110,22 @@
               </tal:block>\n
             </tal:block>\n
             <tal:block tal:condition="python: (not (same_type(value, []) or same_type(value, ()))) and value is not None">\n
-              <text:p tal:condition="not: item_list" tal:content="value">\n
-              </text:p>\n
-              <tal:block tal:condition="python: value != \'\'">\n
-                <tal:block tal:condition="item_list">\n
-                  <tal:block tal:define="displayed_value_list python: [str(i[0]).replace(\'&amp;\', \'\') for i in item_list if i[1] == value]">\n
-                    <text:p tal:condition="displayed_value_list" tal:content="python: displayed_value_list[0]" />\n
-                    <text:p tal:condition="not: displayed_value_list" tal:content="python: value" />\n
+              <tal:block tal:condition="python:field_meta_type == \'DateTimeField\'">\n
+                <text:p tal:content="python: field.render_pdf(value)"/>\n
+              </tal:block>\n
+              <tal:block tal:condition="python: field_meta_type != \'DateTimeField\'">\n
+                <text:p tal:condition="not: item_list" tal:content="value"></text:p>\n
+                <tal:block tal:condition="python: value != \'\'">\n
+                  <tal:block tal:condition="item_list">\n
+                    <tal:block tal:define="displayed_value_list python: [str(i[0]).replace(\'&amp;\', \'\') for i in item_list if i[1] == value]">\n
+                      <text:p tal:condition="displayed_value_list" tal:content="python: displayed_value_list[0]" />\n
+                      <text:p tal:condition="not: displayed_value_list" tal:content="python: value" />\n
+                    </tal:block>\n
                   </tal:block>\n
                 </tal:block>\n
-              </tal:block>\n
-              <tal:block tal:condition="python: value is None">\n
-                <text:p table:style="Default" tal:content="python: \' \'" />\n
+                <tal:block tal:condition="python: value is None">\n
+                  <text:p table:style="Default" tal:content="python: \' \'" />\n
+                </tal:block>\n
               </tal:block>\n
             </tal:block>\n
           </table:table-cell>\n
