@@ -70,8 +70,10 @@ section_category_strict = context.getProperty(\'section_category_strict\')\n
 section_uid_list = portal.Base_getSectionUidListForSectionCategory(section_category, section_category_strict)\n
 assert section_uid_list\n
 \n
-precision = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict) or 3\n
-\n
+precision = 3\n
+section_currency = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict)\n
+if section_currency:\n
+  precision = context.getQuantityPrecisionFromResource(section_currency, precision)\n
 \n
 search_params = dict(\n
     node_category=(\'account_type/asset/receivable\',\n
