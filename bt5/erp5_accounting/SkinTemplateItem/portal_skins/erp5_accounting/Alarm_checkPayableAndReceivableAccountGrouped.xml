@@ -61,6 +61,7 @@ from Products.CMFActivity.ActiveResult import ActiveResult\n
 active_process = context.newActiveProcess()\n
 \n
 portal = context.getPortalObject()\n
+getObject = portal.portal_catalog.getObject\n
 \n
 # Section category & strict have to be configured on alarm\n
 section_category = context.getProperty(\'section_category\')\n
@@ -85,11 +86,10 @@ search_params = dict(\n
     group_by_node=True,\n
     grouping_reference=None,\n
     )\n
-    \n
 \n
 for brain in portal.portal_simulation.getInventoryList(**search_params):\n
   if round(brain.total_price, precision) == 0:\n
-    print \'%s has a 0 balance but some not grouped transactions.\' % brain.mirror_section_relative_url\n
+    print \'%s has a 0 balance but some not grouped transactions.\' % getObject(brain.mirror_section_uid).getRelativeUrl()\n
     if fixit:\n
       tr = brain.getObject().getParentValue()\n
       grouped_line_list = tr.AccountingTransaction_guessGroupedLines()\n
