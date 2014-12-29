@@ -713,28 +713,18 @@ return context.generatePredicate(
     self.assertEqual(line, sm.getDeliveryValue())
 
   def test_14_indexRelated(self):
-    """Check that simulation is indexed before being updated
+    """Check that simulation can be updated even if a SM is not indexed yet
 
-    It is important that an update of a simulation tree is able to find all
-    related simulation movements, otherwise the following happens:
-        node 1                        node 2
-                                      start first indexing of SM ...
-      change simulation state of PL
-      update simulation (no SM found)
-                                      commit result of indexing
-    -> SM has wrong simulation state
+    This actually tests the zodb-indexing of delivery category.
     """
     root_applied_rule = self._slowReindex()
-    self.portal.portal_activities.distribute()
+    self.portal.cmf_activity_sql_connection.manage_test('delete from message')
     self.pl.updateSimulation(index_related=1)
-    self.commit()
-    # this should distribute nothing as long as the indexing activity
-    # is not processed
-    self.portal.portal_activities.distribute()
-    r, = self.portal.cmf_activity_sql_connection.manage_test(
-      'select * from message_queue')
-    self.assertEqual(r.method_id, '_updateSimulation')
-    self.assertEqual(r.processing_node, -1)
+    self.tic()
+    sm, = root_applied_rule.objectValues()
+    line, = self.pl.getMovementList()
+    self.assertEqual([sm], [x.getObject() for x in self.portal.portal_catalog
+      .unrestrictedSearchResults(delivery_uid=line.getUid())])
 
 
 def test_suite():

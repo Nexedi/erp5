@@ -505,10 +505,7 @@ class SimulableMixin(Base):
             self.activate(
               activity='SQLQueue',
               group_method_id='portal_rules/updateSimulation',
-              tag='expand:' + path,
-              # Now that we don't rely on catalog anymore, this after_tag could
-              # moved to _localBuild, which currently only depends on 'expand:'.
-              after_tag='built:'+ path,
+              tag='build:' + path,
               priority=3,
               )._updateSimulation(**kw)
         del tv[key]
@@ -537,7 +534,7 @@ class SimulableMixin(Base):
       if applied_rule is None:
         applied_rule = self._createRootAppliedRule()
         expand_root = applied_rule is not None
-    activate_kw = {'tag': 'expand:'+self.getPath()}
+    activate_kw = {'tag': 'build:'+self.getPath()}
     if expand_root:
       applied_rule.expand(activate_kw=activate_kw)
     else:

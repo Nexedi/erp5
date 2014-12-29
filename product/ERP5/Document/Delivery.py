@@ -363,8 +363,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       if calculate:
         path = self.getPath()
         self.activate(
-          # after_tag to built: could be removed
-          after_tag=('built:'+path, 'expand:'+path),
+          after_tag='build:'+path,
           after_path_and_method_id=(path, '_localBuild'),
           ).updateCausalityState()
       if kw:
@@ -683,11 +682,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         after_tag = [after_tag]
       else:
         after_tag = list(after_tag) if after_tag else []
-      # Now that 'delivery' category relation are indexed in ZODB, this is the
-      # only method that depends on built: tag (via _updateSimulation), which
-      # is still required because builders only use catalog to find buildable
-      # movements and we don't want to miss any for local building.
-      after_tag.append('expand:' + self.getPath())
+      after_tag.append('build:' + self.getPath())
       sm = getSecurityManager()
       newSecurityManager(None, nobody)
       try:

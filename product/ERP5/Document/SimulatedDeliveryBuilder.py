@@ -141,7 +141,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     """
     delivery = delivery_movement.getExplanationValue()
     simulation_movement.recursiveReindexObject(activate_kw=dict(
-      activate_kw or (), tag='built:'+delivery.getPath()))
+      activate_kw or (), tag='build:'+delivery.getPath()))
     BuilderMixin._setDeliveryMovementProperties(
                             self, delivery_movement,
                             simulation_movement, property_dict,

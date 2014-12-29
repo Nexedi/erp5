@@ -757,6 +757,36 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     finally:
       portal_type.setTypePropertySheetList(original_property_sheet_list)
 
+  def test_08_localBuild(self):
+    sequence = Sequence(context=self)
+    sequence("""
+      Login
+      CreateOrganisation
+      CreateOrganisation
+      CreateResource
+      CreateProject
+      CreateRequirement
+      CreateSimpleTask
+      CreateCurrency
+      FillTaskWithData
+      SetTaskPriceCurrency
+      Tic
+      ConfirmTask
+      """)
+    self.tic(stop_condition=lambda message_list: all(
+      m.method_id != '_updateSimulation' for m in message_list))
+    rar, = sequence['task'].getCausalityRelatedValueList()
+    sm, = rar.objectValues()
+    q = self.portal.cmf_activity_sql_connection.manage_test
+    q('update message set processing_node=-4'
+      ' where method_id="_localBuild" or path=%r' % sm.getPath())
+    self.commit()
+    self.portal.portal_activities.process_timer(None, None)
+    q('update message set processing_node=-1,'
+      ' priority=method_id!="_localBuild"')
+    sequence("Tic SetTaskReport")
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTask))
