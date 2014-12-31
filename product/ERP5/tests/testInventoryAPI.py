@@ -1484,19 +1484,33 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertTrue(hasattr(brain, 'mirror_node_uid'))
     self.assertTrue(hasattr(brain, 'mirror_section_uid'))
 
-    # compatiblity names
     self.assertTrue(hasattr(brain, 'section_title'))
     self.assertEqual(brain.section_title, self.section.getTitle())
     self.assertTrue(hasattr(brain, 'section_relative_url'))
     self.assertEqual(brain.section_relative_url, self.section.getRelativeUrl())
+
+    self.assertTrue(hasattr(brain, 'mirror_section_title'))
+    self.assertEqual(brain.mirror_section_title, self.mirror_section.getTitle())
+    self.assertTrue(hasattr(brain, 'mirror_section_relative_url'))
+    self.assertEqual(brain.mirror_section_relative_url,
+        self.mirror_section.getRelativeUrl())
+
     self.assertTrue(hasattr(brain, 'node_title'))
     self.assertEqual(brain.node_title, self.node.getTitle())
+    self.assertTrue(hasattr(brain, 'node_translated_title'))
+    self.assertEqual(brain.node_title, self.node.getTranslatedTitle())
     self.assertTrue(hasattr(brain, 'node_relative_url'))
     self.assertEqual(brain.node_relative_url, self.node.getRelativeUrl())
+
     self.assertTrue(hasattr(brain, 'resource_title'))
     self.assertEqual(brain.resource_title, self.resource.getTitle())
+    self.assertTrue(hasattr(brain, 'resource_translated_title'))
+    self.assertEqual(brain.resource_title, self.resource.getTranslatedTitle())
+    self.assertTrue(hasattr(brain, 'resource_reference'))
+    self.assertEqual(brain.resource_reference, self.resource.getReference())
     self.assertTrue(hasattr(brain, 'resource_relative_url'))
     self.assertEqual(brain.resource_relative_url, self.resource.getRelativeUrl())
+
 
   def testBrainGetItem(self):
     """Test __getitem__ interface on brains."""

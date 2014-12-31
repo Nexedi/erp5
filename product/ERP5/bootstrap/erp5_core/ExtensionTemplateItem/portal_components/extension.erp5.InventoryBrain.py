@@ -92,7 +92,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return uid_cache[uid]
     except KeyError:
       result_list = self.portal_catalog.unrestrictedSearchResults(uid=uid, limit=1,
-        select_dict=dict(title=None, relative_url=None))
+        select_dict=dict(title=None, relative_url=None, reference=None))
       result = None
       if result_list:
         result = result_list[0]
@@ -123,6 +123,12 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return node.title
   node_title = ComputedAttribute(getNodeTitle, 1)
 
+  def getNodeTranslatedTitle(self):
+    node = self.getNodeValue()
+    if node is not None:
+      return node.getObject().getTranslatedTitle()
+  node_translated_title = ComputedAttribute(getNodeTranslatedTitle, 1)
+
   def getNodeRelativeUrl(self):
     node = self.getNodeValue()
     if node is not None:
@@ -138,6 +144,12 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return resource.title
   resource_title = ComputedAttribute(getResourceTitle, 1)
 
+  def getResourceTranslatedTitle(self):
+    resource = self.getResourceValue()
+    if resource is not None:
+      return resource.getObject().getTranslatedTitle()
+  resource_translated_title = ComputedAttribute(getResourceTranslatedTitle, 1)
+
   def getResourceRelativeUrl(self):
     resource = self.getResourceValue()
     if resource is not None:
@@ -147,7 +159,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
   def getResourceReference(self):
     resource = self.getResourceValue()
     if resource is not None:
-      return resource.getReference()
+      return resource.reference
   resource_reference = ComputedAttribute(getResourceReference, 1)
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
@@ -325,6 +337,21 @@ class MovementHistoryListBrain(InventoryListBrain):
       if explanation is not None:
         return explanation.absolute_url()
     return ''
+
+  def getMirrorSectionValue(self):
+    return self._getObjectByUid(self.mirror_section_uid)
+
+  def getMirrorSectionTitle(self):
+    mirror_section = self.getMirrorSectionValue()
+    if mirror_section is not None:
+      return mirror_section.title
+  mirror_section_title = ComputedAttribute(getMirrorSectionTitle, 1)
+
+  def getMirrorSectionRelativeUrl(self):
+    mirror_section = self.getMirrorSectionValue()
+    if mirror_section is not None:
+      return mirror_section.relative_url
+  mirror_section_relative_url = ComputedAttribute(getMirrorSectionRelativeUrl, 1)
 
   def _debit(self):
     if self.is_cancellation:
