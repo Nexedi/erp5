@@ -167,7 +167,7 @@ def checkPythonSourceCodeAsJSON(self, data):
   else:
     body = data['code']
 
-  message_list = checkPythonSourceCode(body)
+  message_list = checkPythonSourceCode(body.encode('utf8'))
   for message_dict in message_list:
     if is_python_script:
       message_dict['row'] = message_dict['row'] - 2
