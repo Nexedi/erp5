@@ -98,6 +98,7 @@
                         <string>your_currency</string>
                         <string>your_account_type</string>
                         <string>your_simulation_state</string>
+                        <string>your_report_date</string>
                       </list>
                     </value>
                 </item>
