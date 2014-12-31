@@ -92,7 +92,7 @@
                             </table:table-cell>\n
                           </tal:block>\n
                           <tal:block tal:condition="python: column_property is None">\n
-                            <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-colwithdrawnumns-spanned=\'1\' office:value-type=\'string\'>\n
+                            <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\'>\n
                               <text:p tal:content="python: \'\'">\n
                               </text:p>\n
                             </table:table-cell>\n
@@ -129,20 +129,19 @@
             </tal:block>\n
 \n
         <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n
-\n
+        \n
           <table:table-row metal:define-slot="table_bottom_line">\n
-            <tal:block tal:repeat="listboxline python: listboxline_list">\n
-              <tal:block tal:condition="listboxline/isTitleLine">\n
-                <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                  <tal:block tal:define="column_property python: column_item[1]; ">\n
-                    <tal:block tal:condition="python: column_property is not None">\n
-                      <table:table-cell table:style-name=\'table-bottom-line\'/>\n
-                    </tal:block>\n
+            <tal:block tal:define="listboxline python: listboxline_list[0]">\n
+              <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                <tal:block tal:define="column_property python: column_item[1]; ">\n
+                  <tal:block tal:condition="python: column_property is not None">\n
+                    <table:table-cell table:style-name=\'table-bottom-line\'/>\n
                   </tal:block>\n
                 </tal:block>\n
               </tal:block>\n
             </tal:block>\n
           </table:table-row>\n
+          \n
         </tal:block>\n
       </tal:block>\n
   </office:spreadsheet>\n

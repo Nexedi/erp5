@@ -70,9 +70,7 @@ dQEAAAAA</string> </value>
                 <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'\n
                            and field.meta_type == \'OOoChart\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'OOoChart\')">\n
                   <table:table-row table:style-name=\'ro2\'>\n
-                    <table:table-cell table:number-rows-spanned=\'1\'\n
-                                      table:style-name=\'report-column-title\'\n
-                                      table:number-columns-spanned=\'1\'\n
+                    <table:table-cell table:style-name=\'report-column-title\'\n
                                       office:value-type=\'string\'>\n
                       <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')">\n
                       </text:p>\n

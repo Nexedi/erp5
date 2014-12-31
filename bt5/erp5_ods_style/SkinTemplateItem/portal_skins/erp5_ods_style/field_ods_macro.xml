@@ -226,7 +226,7 @@
                         <text:p tal:content="python: field.render_pdf(value)"/>\n
                       </table:table-cell>\n
                     </tal:block>\n
-                    <tal:block tal:condition="python:field.get_value(\'date_only\')==0">\n
+                    <tal:block tal:condition="python:not field.get_value(\'date_only\')">\n
                       <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);\n
                                       table:style-name string:${style_prefix}date_with_time;"\n
                                       table:style-name="date_with_time"\n
@@ -261,8 +261,7 @@
         <tal:block tal:condition="python: value is None">\n
           <table:table-cell office:value-type=\'string\'\n
                             tal:attributes="table:style-name string:${style_prefix}text"\n
-                            table:style-name=\'text\'\n
-                            table:number-columns-spanned=\'1\'>\n
+                            table:style-name=\'text\'>\n
             <text:p tal:content="python: \'\'">\n
             </text:p>\n
           </table:table-cell>\n
