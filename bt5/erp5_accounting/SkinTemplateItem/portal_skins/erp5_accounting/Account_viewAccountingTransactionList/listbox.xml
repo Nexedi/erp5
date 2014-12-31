@@ -182,6 +182,14 @@
                           <string>date</string>
                         </tuple>
                         <tuple>
+                          <string>modification_date</string>
+                          <string>date</string>
+                        </tuple>
+                        <tuple>
+                          <string>grouping_date</string>
+                          <string>date</string>
+                        </tuple>
+                        <tuple>
                           <string>debit_price</string>
                           <string>debit</string>
                         </tuple>

@@ -721,9 +721,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # create some projects
     self.project_1 = self.portal.project_module.newContent(
                           portal_type='Project',
+                          reference='P1',
                           title='Project 1')
     self.project_2 = self.portal.project_module.newContent(
                           portal_type='Project',
+                          reference='P2',
                           title='Project 2')
 
     account_module = self.portal.account_module
@@ -732,6 +734,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               title='Function a Project 1',
               source_reference='1',
               simulation_state='delivered',
+              reference='FaP1',
               destination_section_value=self.organisation_module.client_1,
               source_function_value=self.function_a,
               source_project_value=self.project_1,
@@ -744,6 +747,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Sale Invoice Transaction',
               title='Function b Project 2',
               source_reference='2',
+              reference='FbP2',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               source_function_value=self.function_b,
@@ -757,6 +761,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Sale Invoice Transaction',
               title='No function no project',
               source_reference='3',
+              reference='nono',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 2),
@@ -772,6 +777,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               title='Invoice to a client',
               source_reference='1',
               simulation_state='delivered',
+              reference='Ic',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 2),
               lines=(dict(source_value=account_module.receivable,
@@ -782,6 +788,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Sale Invoice Transaction',
               title='Invoice to a supplier',
               source_reference='2',
+              reference='Is',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.supplier,
               start_date=DateTime(2006, 2, 2),
@@ -1125,6 +1132,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['hide_analytic'] = False
     request_form['gap_list'] = ['my_country/my_accounting_standards/4/41']
     request_form['omit_grouping_reference'] = True
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1139,31 +1147,27 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
 
     # report layout
-    self.assertEqual(['Movement_getSpecificReference',
-        'Movement_getExplanationTitle', 'date',
-        'Movement_getExplanationTranslatedPortalType',
-        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-        'debit_price', 'credit_price', 'running_total_price'],
+    self.assertEqual( ['date', 'Movement_getSpecificReference',
+        'Movement_getExplanationTitleAndAnalytics', 'debit_price',
+        'credit_price', 'running_total_price', 'grouping_reference',
+        'grouping_date', 'modification_date',
+        'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Grouped after period',
+          Movement_getExplanationTitleAndAnalytics='Grouped after period\nref2',
+          grouping_reference='B',
+          grouping_date=DateTime(2006, 3, 2),
           date=DateTime(2006, 2, 3),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getExplanationReference='ref2',
-          Movement_getMirrorSectionTitle='Client 2',
           debit_price=239.20, credit_price=0, running_total_price=239.20, )
 
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
-          Movement_getExplanationTitle=None,
+          Movement_getExplanationTitleAndAnalytics=None,
           date=None,
-          Movement_getExplanationTranslatedPortalType=None,
-          Movement_getExplanationReference=None,
-          Movement_getMirrorSectionTitle=None,
           debit_price=239.20, credit_price=0, )
 
     self.assertEqual('Total', report_section_list[1].getTitle())
@@ -3425,6 +3429,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3454,40 +3459,31 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         AccountModule_viewGeneralLedgerReport.your_currency.get_value('default'))
 
     # report layout
-    self.assertEqual(['Movement_getSpecificReference',
-        'Movement_getExplanationTitle', 'date',
-        'Movement_getExplanationTranslatedPortalType',
-        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-        'debit_price', 'credit_price', 'running_total_price'],
+    self.assertEqual( ['date', 'Movement_getSpecificReference',
+        'Movement_getExplanationTitleAndAnalytics', 'debit_price',
+        'credit_price', 'running_total_price', 'grouping_reference',
+        'grouping_date', 'modification_date',
+        'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Transaction 1',
+          Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
           date=DateTime(2006, 2, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref1',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=100, running_total_price=-100, )
 
     self.checkLineProperties(data_line_list[1],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Transaction 2',
+          Movement_getExplanationTitleAndAnalytics='Transaction 2\nref2',
           date=DateTime(2006, 2, 1, 0, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref2',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
 
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
-          Movement_getExplanationTitle=None,
+          Movement_getExplanationTitleAndAnalytics=None,
           date=None,
-          Movement_getExplanationTranslatedPortalType=None,
-          Movement_getExplanationReference=None,
-          Movement_getMirrorSectionTitle=None,
           debit_price=200, credit_price=100, )
 
     self.assertEqual('41 - Receivable (Client 1)',
@@ -3497,58 +3493,39 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(5, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Transaction 1',
+          Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
           date=DateTime(2006, 2, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref1',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=100, credit_price=0, running_total_price=100, )
 
     self.checkLineProperties(data_line_list[1],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Transaction 2',
+          Movement_getExplanationTitleAndAnalytics='Transaction 2\nref2',
           date=DateTime(2006, 2, 1, 0, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref2',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=200, running_total_price=-100, )
 
     self.checkLineProperties(data_line_list[2],
           Movement_getSpecificReference='3',
-          Movement_getExplanationTitle='Transaction 3',
+          Movement_getExplanationTitleAndAnalytics='Transaction 3\nref3',
           date=DateTime(2006, 2, 2, 0, 2),
-          Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference='ref3',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=300, credit_price=0, running_total_price=200, )
 
     self.checkLineProperties(data_line_list[3],
           Movement_getSpecificReference='6',
-          Movement_getExplanationTitle='Transaction 6',
+          Movement_getExplanationTitleAndAnalytics='Transaction 6\nref6',
           date=DateTime(2006, 2, 2, 0, 5),
-          Movement_getExplanationTranslatedPortalType
-                ='Purchase Invoice Transaction',
-          Movement_getExplanationReference='ref6',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=600, credit_price=0, running_total_price=800, )
 
     self.checkLineProperties(data_line_list[4],
           Movement_getSpecificReference='8',
-          Movement_getExplanationTitle='Transaction 8',
+          Movement_getExplanationTitleAndAnalytics='Transaction 8\nref8',
           date=DateTime(2006, 2, 3),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref8',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=800, credit_price=0, running_total_price=1600, )
 
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
-          Movement_getExplanationTitle=None,
+          Movement_getExplanationTitleAndAnalytics=None,
           date=None,
-          Movement_getExplanationTranslatedPortalType=None,
-          Movement_getExplanationReference=None,
-          Movement_getMirrorSectionTitle=None,
           debit_price=1800, credit_price=200, )
 
     self.assertEqual('41 - Receivable (Client 2)',
@@ -3558,11 +3535,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='4',
-          Movement_getExplanationTitle='Transaction 4',
+          Movement_getExplanationTitleAndAnalytics='Transaction 4\nref4',
           date=DateTime(2006, 2, 2, 0, 3),
-          Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference='ref4',
-          Movement_getMirrorSectionTitle='Client 2',
           debit_price=400, credit_price=0, running_total_price=400, )
 
     self.assertTrue(line_list[-1].isStatLine())
@@ -3575,11 +3549,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='5',
-          Movement_getExplanationTitle='Transaction 5',
+          Movement_getExplanationTitleAndAnalytics='Transaction 5\nref5',
           date=DateTime(2006, 2, 2, 0, 4),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref5',
-          Movement_getMirrorSectionTitle='John Smith',
           debit_price=500, credit_price=0, running_total_price=500, )
 
     self.assertTrue(line_list[-1].isStatLine())
@@ -3592,48 +3563,32 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(5, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
-          Movement_getExplanationTitle='Transaction 3',
+          Movement_getExplanationTitleAndAnalytics='Transaction 3\nref3',
           date=DateTime(2006, 2, 2, 0, 2),
-          Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference='ref3',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=300, running_total_price=-300, )
 
     self.checkLineProperties(data_line_list[1],
           Movement_getSpecificReference='4',
-          Movement_getExplanationTitle='Transaction 4',
+          Movement_getExplanationTitleAndAnalytics='Transaction 4\nref4',
           date=DateTime(2006, 2, 2, 0, 3),
-          Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference='ref4',
-          Movement_getMirrorSectionTitle='Client 2',
           debit_price=0, credit_price=400, running_total_price=-700, )
 
     self.checkLineProperties(data_line_list[2],
           Movement_getSpecificReference='5',
-          Movement_getExplanationTitle='Transaction 5',
+          Movement_getExplanationTitleAndAnalytics='Transaction 5\nref5',
           date=DateTime(2006, 2, 2, 0, 4),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref5',
-          Movement_getMirrorSectionTitle='John Smith',
           debit_price=0, credit_price=500, running_total_price=-1200, )
 
     self.checkLineProperties(data_line_list[3],
           Movement_getSpecificReference='6',
-          Movement_getExplanationTitle='Transaction 6',
+          Movement_getExplanationTitleAndAnalytics='Transaction 6\nref6',
           date=DateTime(2006, 2, 2, 0, 5),
-          Movement_getExplanationTranslatedPortalType
-                              ='Purchase Invoice Transaction',
-          Movement_getExplanationReference='ref6',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=600, running_total_price=-1800, )
 
     self.checkLineProperties(data_line_list[4],
           Movement_getSpecificReference='8',
-          Movement_getExplanationTitle='Transaction 8',
+          Movement_getExplanationTitleAndAnalytics='Transaction 8\nref8',
           date=DateTime(2006, 2, 3),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref8',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=800, running_total_price=-2600, )
 
     self.assertTrue(line_list[-1].isStatLine())
@@ -3662,6 +3617,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3676,30 +3632,21 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Transaction 1',
+          Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
           date=DateTime(2006, 2, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref1',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=100, running_total_price=-100, )
 
     self.checkLineProperties(data_line_list[1],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Transaction 2',
+          Movement_getExplanationTitleAndAnalytics='Transaction 2\nref2',
           date=DateTime(2006, 2, 1, 0, 1),
-          Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='ref2',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
 
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
           Movement_getSpecificReference=None,
-          Movement_getExplanationTitle=None,
+          Movement_getExplanationTitleAndAnalytics=None,
           date=None,
-          Movement_getExplanationTranslatedPortalType=None,
-          Movement_getExplanationReference=None,
-          Movement_getMirrorSectionTitle=None,
           debit_price=200, credit_price=100, )
 
     self.assertEqual('Total', report_section_list[1].getTitle())
@@ -3720,6 +3667,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['function'] = 'function/a'
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3731,10 +3679,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Function a Project 1',
+          Movement_getExplanationTitleAndAnalytics=
+            'Function a Project 1\nFaP1',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=500, credit_price=0, running_total_price=500, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
@@ -3744,10 +3691,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Function a Project 1',
+          Movement_getExplanationTitleAndAnalytics=
+            'Function a Project 1\nFaP1',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=500, running_total_price=-500, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
@@ -3769,6 +3715,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['project'] = 'None'
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3780,10 +3727,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
-          Movement_getExplanationTitle='No function no project',
+          Movement_getExplanationTitleAndAnalytics='No function no project\nnono',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=700, credit_price=0, running_total_price=700, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=0)
@@ -3793,10 +3738,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='3',
-          Movement_getExplanationTitle='No function no project',
+          Movement_getExplanationTitleAndAnalytics='No function no project\nnono',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=700, running_total_price=-700, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=700)
@@ -3819,6 +3762,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['project'] = self.project_1.getRelativeUrl()
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3830,10 +3774,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Function a Project 1',
+          Movement_getExplanationTitleAndAnalytics='Function a Project 1\nFaP1',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=500, credit_price=0, running_total_price=500, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
@@ -3843,10 +3785,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
-          Movement_getExplanationTitle='Function a Project 1',
+          Movement_getExplanationTitleAndAnalytics='Function a Project 1\nFaP1',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=500, running_total_price=-500, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
@@ -3868,6 +3808,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['mirror_section_category_list'] = ['role/supplier']
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3879,10 +3820,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Invoice to a supplier',
+          Movement_getExplanationTitleAndAnalytics='Invoice to a supplier\nIs',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Supplier',
           debit_price=300, credit_price=0, running_total_price=300, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=300, credit_price=0)
@@ -3892,10 +3831,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
-          Movement_getExplanationTitle='Invoice to a supplier',
+          Movement_getExplanationTitleAndAnalytics='Invoice to a supplier\nIs',
           date=DateTime(2006, 2, 2),
-          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
-          Movement_getMirrorSectionTitle='Supplier',
           debit_price=0, credit_price=300, running_total_price=-300, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=300)
@@ -4232,9 +4169,11 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     # create some projects
     self.project_1 = self.portal.project_module.newContent(
                           portal_type='Project',
+                          reference='P1',
                           title='Project 1')
     self.project_2 = self.portal.project_module.newContent(
                           portal_type='Project',
+                          reference='P2',
                           title='Project 2')
 
     preference = self.portal.portal_preferences.getActivePreference()
@@ -4251,6 +4190,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Detailed Transaction',
+              reference='DT',
               source_reference='1',
               simulation_state='delivered',
               destination_section_value=self.portal.organisation_module.client_1,
@@ -4327,21 +4267,21 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              debit=1500,
                              credit=0)
     self.checkLineProperties(data_line_list[1],
-                             project='Project 1',
+                             project='P1 - Project 1',
                              function='a',
                              product_line_translated_title='pl1',
                              node_title='7',
                              debit=0,
                              credit=300)
     self.checkLineProperties(data_line_list[2],
-                             project='Project 1',
+                             project='P1 - Project 1',
                              function='b',
                              product_line_translated_title='pl1',
                              node_title='7',
                              debit=0,
                              credit=500)
     self.checkLineProperties(data_line_list[3],
-                             project='Project 2',
+                             project='P2 - Project 2',
                              function='b',
                              product_line_translated_title=None,
                              node_title='7',
@@ -4422,21 +4362,21 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
          'debit_price', 'credit_price', 'running_total_price'])
 
     self.checkLineProperties(data_line_list[0],
-                             project='Project 1',
+                             project='P1 - Project 1',
                              function='a',
                              product_line_translated_title='pl1',
                              debit_price=0,
                              credit_price=300,
                              running_total_price=-300)
     self.checkLineProperties(data_line_list[1],
-                             project='Project 1',
+                             project='P1 - Project 1',
                              function='b',
                              product_line_translated_title='pl1',
                              debit_price=0,
                              credit_price=500,
                              running_total_price=-800)
     self.checkLineProperties(data_line_list[2],
-                             project='Project 2',
+                             project='P2 - Project 2',
                              function='b',
                              product_line_translated_title=None,
                              debit_price=0,
@@ -4494,6 +4434,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['hide_analytic'] = False
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -4502,33 +4443,29 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    # FIXME: order of columns is inconsistant in GL and Account Statement
-    self.assertEqual(['Movement_getSpecificReference',
-        'Movement_getExplanationTitle', 'date',
-        'Movement_getExplanationTranslatedPortalType',
-        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-        'function', 'project', 'product_line_translated_title',
-        'debit_price', 'credit_price', 'running_total_price'],
+
+    self.assertEqual( ['date', 'Movement_getSpecificReference',
+        'Movement_getExplanationTitleAndAnalytics', 'debit_price',
+        'credit_price', 'running_total_price', 'grouping_reference',
+        'grouping_date', 'modification_date',
+        'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.checkLineProperties(data_line_list[0],
-                             project='Project 1',
-                             function='a',
-                             product_line_translated_title='pl1',
-                             debit_price=0,
-                             credit_price=300,
-                             running_total_price=-300)
+        Movement_getExplanationTitleAndAnalytics='''Detailed Transaction
+DT, a, P1 - Project 1, pl1''',
+        debit_price=0,
+        credit_price=300,
+        running_total_price=-300)
     self.checkLineProperties(data_line_list[1],
-                             project='Project 1',
-                             function='b',
-                             product_line_translated_title='pl1',
-                             debit_price=0,
-                             credit_price=500,
-                             running_total_price=-800)
+        Movement_getExplanationTitleAndAnalytics='''Detailed Transaction
+DT, b, P1 - Project 1, pl1''',
+        debit_price=0,
+        credit_price=500,
+        running_total_price=-800)
     self.checkLineProperties(data_line_list[2],
-                             project='Project 2',
-                             function='b',
-                             product_line_translated_title=None,
+        Movement_getExplanationTitleAndAnalytics='''Detailed Transaction
+DT, b, P2 - Project 2''',
                              debit_price=0,
                              credit_price=700,
                              running_total_price=-1500)
@@ -4553,6 +4490,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['hide_analytic'] = True
+    request_form['export'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -4561,11 +4499,11 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEqual(['Movement_getSpecificReference',
-        'Movement_getExplanationTitle', 'date',
-        'Movement_getExplanationTranslatedPortalType',
-        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
-        'debit_price', 'credit_price', 'running_total_price'],
+    self.assertEqual( ['date', 'Movement_getSpecificReference',
+        'Movement_getExplanationTitleAndAnalytics', 'debit_price',
+        'credit_price', 'running_total_price', 'grouping_reference',
+        'grouping_date', 'modification_date',
+        'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
     # receivable account
     self.assertEqual(1, len(data_line_list))
@@ -4595,6 +4533,165 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              debit_price=1500,
                              credit_price=1500,)
 
+  def testGeneralLedgerExport(self):
+    self.project_1.validate()
+    self.project_2.validate()
+    self.tic()
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = True
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    # There are two report sections, but in reality they are merged into one
+    self.assertEqual(2, len(report_section_list))
+    # because merge_report_section_list is set to true
+    self.assertTrue(self.portal.REQUEST.get('merge_report_section_list'))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+
+    # all the columns configured in AccountModule_getGeneralLedgerColumnItemList
+    # are displayed
+    self.assertEqual(
+        ['Movement_getNodeGapId', 'node_translated_title', 'section_title',
+        'mirror_section_title', 'date', 'modification_date',
+        'Movement_getSpecificReference',
+        'Movement_getExplanationTranslatedPortalType',
+        'Movement_getExplanationTitle', 'Movement_getExplanationReference',
+        # those are analytics columns
+        'function', 'project', 'product_line_translated_title',
+
+        'debit_price', 'credit_price',
+        'total_price', 'Movement_getSectionPriceCurrency', 'debit', 'credit',
+        'total_quantity', 'resource_reference', 'Movement_getPaymentTitle',
+        'payment_mode_translated_title', 'grouping_reference', 'grouping_date',
+        'getTranslatedSimulationStateTitle'],
+        data_line_list[0].column_id_list)
+    self.assertEqual([x[0] for x in
+        self.portal.accounting_module.AccountModule_getGeneralLedgerColumnItemList()],
+        data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0],
+        Movement_getNodeGapId='41',
+        node_translated_title='Receivable',
+        section_title='My Organisation',
+        mirror_section_title='Client 1',
+        date=DateTime(2006, 2, 2),
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTranslatedPortalType=
+            'Sale Invoice Transaction',
+        Movement_getExplanationTitle='Detailed Transaction',
+        Movement_getExplanationReference='DT',
+        function='',
+        project='',
+        product_line_translated_title=None,
+        debit_price=1500,
+        credit_price=0,
+        total_price=1500,
+        Movement_getSectionPriceCurrency='EUR',
+        debit=1500, credit=0, total_quantity=1500,
+        resource_reference='EUR',
+        Movement_getPaymentTitle=None,
+        payment_mode_translated_title=None,
+        grouping_reference=None,
+        grouping_date=None,
+        getTranslatedSimulationStateTitle='Closed')
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(3, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+        Movement_getNodeGapId='7',
+        node_translated_title='Goods Sales',
+        section_title='My Organisation',
+        mirror_section_title='Client 1',
+        date=DateTime(2006, 2, 2),
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTranslatedPortalType=
+            'Sale Invoice Transaction',
+        Movement_getExplanationTitle='Detailed Transaction',
+        Movement_getExplanationReference='DT',
+        function='a',
+        project='P1 - Project 1',
+        product_line_translated_title='pl1',
+        debit_price=0,
+        credit_price=300,
+        total_price=-300,
+        Movement_getSectionPriceCurrency='EUR',
+        debit=0, credit=300, total_quantity=-300,
+        resource_reference='EUR',
+        Movement_getPaymentTitle=None,
+        payment_mode_translated_title=None,
+        grouping_reference=None,
+        grouping_date=None,
+        getTranslatedSimulationStateTitle='Closed')
+
+    self.checkLineProperties(data_line_list[1],
+        Movement_getNodeGapId='7',
+        node_translated_title='Goods Sales',
+        section_title='My Organisation',
+        mirror_section_title='Client 1',
+        date=DateTime(2006, 2, 2),
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTranslatedPortalType=
+            'Sale Invoice Transaction',
+        Movement_getExplanationTitle='Detailed Transaction',
+        Movement_getExplanationReference='DT',
+        function='b',
+        project='P1 - Project 1',
+        product_line_translated_title='pl1',
+        debit_price=0,
+        credit_price=500,
+        total_price=-500,
+        Movement_getSectionPriceCurrency='EUR',
+        debit=0, credit=500, total_quantity=-500,
+        resource_reference='EUR',
+        Movement_getPaymentTitle=None,
+        payment_mode_translated_title=None,
+        grouping_reference=None,
+        grouping_date=None,
+        getTranslatedSimulationStateTitle='Closed')
+
+    self.checkLineProperties(data_line_list[2],
+        Movement_getNodeGapId='7',
+        node_translated_title='Goods Sales',
+        section_title='My Organisation',
+        mirror_section_title='Client 1',
+        date=DateTime(2006, 2, 2),
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTranslatedPortalType=
+            'Sale Invoice Transaction',
+        Movement_getExplanationTitle='Detailed Transaction',
+        Movement_getExplanationReference='DT',
+        function='b',
+        project='P2 - Project 2',
+        product_line_translated_title=None,
+        debit_price=0,
+        credit_price=700,
+        total_price=-700,
+        Movement_getSectionPriceCurrency='EUR',
+        debit=0, credit=700, total_quantity=-700,
+        resource_reference='EUR',
+        Movement_getPaymentTitle=None,
+        payment_mode_translated_title=None,
+        grouping_reference=None,
+        grouping_date=None,
+        getTranslatedSimulationStateTitle='Closed')
+
+    stat_line = line_list[-1]
+    # There is no stat in export mode
+    self.assertFalse(line_list[-1].isStatLine())
+    # There is not stat section either
+
   def testTrialBalanceGroupByProject(self):
     request_form = self.portal.REQUEST.form
     request_form['from_date'] = DateTime(2006, 1, 1)
@@ -4623,13 +4720,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
       'final_balance_if_credit'], data_line_list[0].column_id_list)
 
     self.checkLineProperties(data_line_list[0], node_id='7',
-        node_title='Goods Sales', project_uid='Project 1',
+        node_title='Goods Sales', project_uid='P1 - Project 1',
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=800, final_debit_balance=0, final_credit_balance=800,
         final_balance_if_debit=0, final_balance_if_credit=800)
 
     self.checkLineProperties(data_line_list[1], node_id='7',
-        node_title='Goods Sales', project_uid='Project 2',
+        node_title='Goods Sales', project_uid='P2 - Project 2',
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=700, final_debit_balance=0, final_credit_balance=700,
         final_balance_if_debit=0, final_balance_if_credit=700)
@@ -4713,19 +4810,19 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
       'final_balance_if_credit'], data_line_list[0].column_id_list)
 
     self.checkLineProperties(data_line_list[0], node_id='7',
-        node_title='Goods Sales', function_uid='a', project_uid='Project 1',
+        node_title='Goods Sales', function_uid='a', project_uid='P1 - Project 1',
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=300, final_debit_balance=0, final_credit_balance=300,
         final_balance_if_debit=0, final_balance_if_credit=300)
 
     self.checkLineProperties(data_line_list[1], node_id='7',
-        node_title='Goods Sales', function_uid='b', project_uid='Project 1',
+        node_title='Goods Sales', function_uid='b', project_uid='P1 - Project 1',
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=500, final_debit_balance=0, final_credit_balance=500,
         final_balance_if_debit=0, final_balance_if_credit=500)
 
     self.checkLineProperties(data_line_list[2], node_id='7',
-        node_title='Goods Sales', function_uid='b', project_uid='Project 2',
+        node_title='Goods Sales', function_uid='b', project_uid='P2 - Project 2',
         initial_debit_balance=0, initial_credit_balance=0, debit=0,
         credit=700, final_debit_balance=0, final_credit_balance=700,
         final_balance_if_debit=0, final_balance_if_credit=700)

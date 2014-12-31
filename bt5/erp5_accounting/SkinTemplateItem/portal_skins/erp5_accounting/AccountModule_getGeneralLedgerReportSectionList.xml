@@ -58,6 +58,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
 from Products.ERP5Form.Report import ReportSection\n
 portal   = context.portal_url.getPortalObject()\n
 request  = portal.REQUEST\n
+\n
 cat_tool = portal.portal_categories\n
 Base_translateString = portal.Base_translateString\n
 \n
@@ -77,18 +78,22 @@ for gap in request.get(\'gap_list\', ()):\n
   # XXX the field should maybe use base=1 on the category, but it is also used in other contexts\n
   gap_list.append(\'gap/%s\' % gap)\n
 \n
-display_categories  = request.get(\'display_categories\', False)\n
 period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
           section_category=section_category, date=from_date or at_date)\n
 gap_root = request.get(\'gap_root\')\n
 \n
 \n
+export = request[\'export\']\n
+if export:\n
+  request.set(\'merge_report_section_list\', 1)\n
+\n
 # currency precision\n
 currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
 precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
 request.set(\'precision\', precision)\n
 \n
+# There are some disabled fields in Account_viewAccountingTransactionList based on this condition.\n
 request.other[\'is_accounting_report\'] = True\n
 \n
 params = dict(precision=precision,\n
@@ -151,23 +156,24 @@ if hide_analytic:\n
                                            \'payment_uid\' )\n
 else:\n
   analytic_column_list = context.accounting_module.AccountModule_getAnalyticColumnList()\n
+request.set(\'analytic_column_list\', analytic_column_list) # for Movement_getExplanationTitleAndAnalytics\n
 \n
 account_columns = (\n
-      (\'Movement_getSpecificReference\', \'Reference\'),\n
-      (\'Movement_getExplanationTitle\', \'Title\'),\n
-      (\'date\', \'Date\'),\n
-      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Document Reference\'),\n
-      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),)\n
-if len(simulation_state) > 1:\n
-  account_columns += (\n
-      (\'getTranslatedSimulationStateTitle\', \'State\'),)\n
-account_columns += analytic_column_list\n
-account_columns += (\n
-      (\'debit_price\', \'Debit\'),\n
-      (\'credit_price\', \'Credit\'),\n
-      (\'running_total_price\', \'Net\'), )\n
-\n
+  (\'date\', \'Operation Date\'),\n
+  (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
+  (\'Movement_getExplanationTitleAndAnalytics\', \'Title\\nReference and Analytics\' if analytic_column_list else \'Title\\nReference\'),\n
+  (\'debit_price\', \'Debit\'),\n
+  (\'credit_price\', \'Credit\'),\n
+  (\'running_total_price\', \'Running Balance\'),\n
+  (\'grouping_reference\', \'Grouping Reference\'),\n
+  (\'grouping_date\', \'Grouping Date\'),\n
+  (\'modification_date\', \'Modification Date\'),\n
+  (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+)\n
+# export mode have a different layout\n
+if export:\n
+  account_columns = context.AccountModule_getGeneralLedgerColumnItemList()\n
+  \n
 # utility functions\n
 traverse = portal.restrictedTraverse\n
 account_name_cache = {}\n
@@ -205,7 +211,17 @@ def getFullAccountName(account_info):\n
     account_name = \'%s (%s)\' % (account_name, payment_name)\n
   return account_name\n
 \n
-\n
+def addReportSection(**kw):\n
+  kw.setdefault(\'form_id\', \'Account_viewAccountingTransactionList\')\n
+  kw.setdefault(\'selection_name\', \'account_preference_selection\')\n
+  kw.setdefault(\'selection_columns\', account_columns)\n
+  kw.setdefault(\'listbox_display_mode\', \'FlatListMode\')\n
+  title = kw[\'title\']\n
+  if export: # in export more we do not insert report sections headers and use\n
+             # a list view form\n
+    kw.pop(\'title\')\n
+    kw[\'form_id\'] = \'Account_viewAccountingTransactionListExport\'\n
+  report_section_list.append((title, ReportSection(**kw)))\n
 \n
 # look at inventories to decide which sections will be shown\n
 balance_sheet_account_type_list = [c[0] for c in\n
@@ -264,15 +280,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -297,15 +307,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 \n
 # profit & loss -> same, but from date limited to the current period\n
@@ -327,15 +331,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 # group by mirror_section\n
 # movements in the period\n
@@ -358,15 +356,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -392,16 +384,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
   selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
-\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 # group by payment\n
 # movements in the period\n
@@ -424,15 +409,9 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid or Query(payment_uid=None)\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -457,21 +436,17 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid or Query(payment_uid=None)\n
   selection_params.setdefault(\'mirror_section_uid\', None)\n
-  report_section_list.append(\n
-              ReportSection(\n
-                      path=inventory.node_relative_url,\n
-                      title=getFullAccountName(key),\n
-                      form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'account_preference_selection\',\n
-                      selection_params=selection_params,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_columns=account_columns, ))\n
+  addReportSection(path=inventory.node_relative_url,\n
+                   selection_params=selection_params,\n
+                   title=getFullAccountName(key))\n
 \n
-report_section_list.sort(key=ReportSection.getTitle)\n
 \n
-total_params = default_selection_params.copy()\n
-total_params[\'at_date\'] = at_date\n
-report_section_list.append(ReportSection(\n
+report_section_list = [x[1] for x in sorted(report_section_list, key=lambda x: x[0])]\n
+\n
+if not export:\n
+  total_params = default_selection_params.copy()\n
+  total_params[\'at_date\'] = at_date\n
+  report_section_list.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               title=Base_translateString("Total"),\n
               form_id=\'AccountModule_viewGeneralLedgerSummary\',\n

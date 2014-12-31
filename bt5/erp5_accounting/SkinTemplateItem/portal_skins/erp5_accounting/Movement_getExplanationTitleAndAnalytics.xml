@@ -50,44 +50,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns all validated projects.\n
+            <value> <string>request = container.REQUEST\n
+movement = brain.getObject()\n
 \n
-This script is indented to be used on custom listfields for accounting lines, and on reports.\n
-If this script returns an empty list, it means that reports by project are disabled.\n
-"""\n
-from Products.ERP5Type.Message import translateString\n
-portal = context.getPortalObject()\n
+explanation = movement.getExplanationValue()\n
 \n
-# case 1: script is used for reports, we display all validated projects.\n
-if context.getPortalType() == \'Accounting Transaction Module\':\n
-  project_list = []\n
-  for project in portal.portal_catalog(\n
-                           portal_type=\'Project\',\n
-                           select_list=[\'relative_url\', \'title\', \'reference\'],\n
-                           validation_state=(\'validated\',),\n
-                           sort_on=((\'title\', \'ASC\'),)):\n
-    if project.reference:\n
-      project_list.append((\'%s - %s\' % (project.reference, project.title), project.relative_url,))\n
-    else:\n
-      project_list.append((project.title, project.relative_url,))\n
+if movement.hasTitle():\n
+  title = movement.getTitle()\n
+else:\n
+  title = explanation.getTitle()\n
 \n
-  if not project_list:\n
-    return [] # returning an empty list, not to add project column on reports\n
-  return [(\'\', \'\'), (translateString(\'No Project\'), \'None\')] + project_list\n
-  \n
-# case 2: script is used on custom listfields.\n
-#  for now the script has to be customized in such case.\n
-# [(x.getTitle(), x.getRelativeUrl()) for x in context.project_module.searchFolder()]\n
-return [(\'\', \'\')]\n
+analytic_property_list = [explanation.getReference()]\n
+\n
+for property_name, property_title in request[\'analytic_column_list\']:\n
+  # XXX it would be a little better to reuse editable field\n
+  if property_name == \'project\':\n
+    analytic_property_list.append(brain.Movement_getProjectTitle())\n
+  elif property_name == \'function\':\n
+    analytic_property_list.append(brain.Movement_getFunctionTitle())\n
+  elif property_name == \'funding\':\n
+    analytic_property_list.append(brain.Movement_getFundingTitle())\n
+  else:\n
+    analytic_property_list.append(movement.getProperty(property_name))\n
+\n
+return "%s\\n%s" % (title, \', \'.join([x for x in analytic_property_list if x]))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source=True</string> </value>
+            <value> <string>brain, selection=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_getProjectItemList</string> </value>
+            <value> <string>Movement_getExplanationTitleAndAnalytics</string> </value>
         </item>
       </dictionary>
     </pickle>

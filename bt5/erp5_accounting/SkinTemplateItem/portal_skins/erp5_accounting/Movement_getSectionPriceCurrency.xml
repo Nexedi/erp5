@@ -50,44 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns all validated projects.\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-This script is indented to be used on custom listfields for accounting lines, and on reports.\n
-If this script returns an empty list, it means that reports by project are disabled.\n
-"""\n
-from Products.ERP5Type.Message import translateString\n
-portal = context.getPortalObject()\n
-\n
-# case 1: script is used for reports, we display all validated projects.\n
-if context.getPortalType() == \'Accounting Transaction Module\':\n
-  project_list = []\n
-  for project in portal.portal_catalog(\n
-                           portal_type=\'Project\',\n
-                           select_list=[\'relative_url\', \'title\', \'reference\'],\n
-                           validation_state=(\'validated\',),\n
-                           sort_on=((\'title\', \'ASC\'),)):\n
-    if project.reference:\n
-      project_list.append((\'%s - %s\' % (project.reference, project.title), project.relative_url,))\n
-    else:\n
-      project_list.append((project.title, project.relative_url,))\n
-\n
-  if not project_list:\n
-    return [] # returning an empty list, not to add project column on reports\n
-  return [(\'\', \'\'), (translateString(\'No Project\'), \'None\')] + project_list\n
-  \n
-# case 2: script is used on custom listfields.\n
-#  for now the script has to be customized in such case.\n
-# [(x.getTitle(), x.getRelativeUrl()) for x in context.project_module.searchFolder()]\n
-return [(\'\', \'\')]\n
+accounting_currency_reference_cache = container.REQUEST.get(\'%s.cache\' % script.id, {})\n
+def getAccountingCurrencyReference(section_relative_url):\n
+  try:\n
+    return accounting_currency_reference_cache[section_relative_url]\n
+  except KeyError:\n
+    reference = \'\'\n
+    if section_relative_url:\n
+      section = portal.restrictedTraverse(section_relative_url, None)\n
+      if section is not None:\n
+        reference = section.getProperty(\'price_currency_reference\')\n
+    accounting_currency_reference_cache[section_relative_url] = reference\n
+    return reference\n
+    \n
+return getAccountingCurrencyReference(brain.section_relative_url)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source=True</string> </value>
+            <value> <string>brain, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_getProjectItemList</string> </value>
+            <value> <string>Movement_getSectionPriceCurrency</string> </value>
         </item>
       </dictionary>
     </pickle>
