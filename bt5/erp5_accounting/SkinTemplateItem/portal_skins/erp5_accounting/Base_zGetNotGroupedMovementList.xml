@@ -84,6 +84,7 @@ using this obsolete script.\n
          catalog.uid as uid,\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
+         stock.mirror_section_uid,\n
          stock.date as date_utc,\n
          stock.node_uid as node_uid,\n
          IFNULL(stock.total_price, 0) as total_price,\n
@@ -115,6 +116,7 @@ using this obsolete script.\n
       catalog.uid as uid,\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
+      stock.mirror_section_uid,\n
       stock.date as date_utc,\n
       stock.node_uid as node_uid,\n
       IFNULL(stock.total_price, 0) as total_price,\n
