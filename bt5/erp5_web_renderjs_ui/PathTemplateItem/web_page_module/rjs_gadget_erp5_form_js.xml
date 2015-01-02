@@ -130,7 +130,6 @@
     })\n
 \n
     .declareAcquiredMethod("aq_put", "jio_put")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
       return this.getDeclaredGadget(scope)\n
@@ -271,19 +270,13 @@
 \n
       return queue\n
         .push(function () {\n
-          var temp = document.createElement("div");\n
-          temp.appendChild(parent_element);\n
-          return form_gadget.translateHtml(temp.innerHTML);\n
-        })\n
-        .push(function (my_translated_html) {\n
           var dom_element = form_gadget.props.element\n
             .querySelector(".field_container");\n
           while (dom_element.firstChild) {\n
             dom_element.removeChild(dom_element.firstChild);\n
           }\n
-          dom_element.innerHTML = my_translated_html;\n
+          dom_element.appendChild(parent_element);\n
           // return $(parent_element).trigger("create");\n
-\n
         });\n
     })\n
 \n
@@ -486,7 +479,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.62597.55939.38724</string> </value>
+                <value> <string>940.2226.16128.23057</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -504,7 +497,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419932704.16</float>
+                        <float>1420242897.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
