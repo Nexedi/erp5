@@ -170,16 +170,17 @@
         })\n
         .push(function (all_result) {\n
           var i,\n
+            i_len,\n
             tmp,\n
             document_list = [],\n
-            language_list = JSON.parse(all_result[2]),\n
-            i_len = language_list.length;\n
+            language_list = all_result[2];\n
           \n
           // XXX: Customize panel header!\n
           tmp = panel_template();\n
 \n
-          // XXX: will there be websites without translations/multiple lang?\n
-          if (i_len > 1) {\n
+          // translation list available\n
+          if (language_list) {\n
+            i_len = language_list.length;\n
             for (i = 0; i < i_len; i += 1) {\n
               document_list.push({"count": i, "lang": language_list[i]});\n
             }\n
@@ -188,16 +189,18 @@
               history_href: all_result[1],\n
               document_list: document_list\n
             });\n
-          } else {\n
-            tmp += panel_template_nolang({\n
-              module_href: all_result[0],\n
-              history_href: all_result[1]\n
-            });\n
+            return g.translateHtml(tmp);\n
           }\n
-          return g.translateHtml(tmp);\n
+          \n
+          // no translations available or not loaded when reaching this point\n
+          tmp += panel_template_nolang({\n
+            module_href: all_result[0],\n
+            history_href: all_result[1]\n
+          });\n
+          return tmp;\n
         })\n
-        .push(function (my_translated_html) {\n
-          g.props.jelement.html(my_translated_html);\n
+        .push(function (my_translated_or_plain_html) {\n
+          g.props.jelement.html(my_translated_or_plain_html);\n
           g.props.jelement.trigger("create");\n
         });\n
     })\n
@@ -416,7 +419,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.64379.20572.33536</string> </value>
+                <value> <string>940.1578.52538.48913</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -434,7 +437,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420039467.89</float>
+                        <float>1420204041.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
