@@ -172,14 +172,16 @@
           var i,\n
             i_len,\n
             tmp,\n
+            language_list,\n
             document_list = [],\n
-            language_list = all_result[2];\n
+            raw_language_list = all_result[2];\n
           \n
           // XXX: Customize panel header!\n
           tmp = panel_template();\n
 \n
           // translation list available\n
-          if (language_list) {\n
+          if (raw_language_list) {\n
+            language_list = JSON.parse(raw_language_list);\n
             i_len = language_list.length;\n
             for (i = 0; i < i_len; i += 1) {\n
               document_list.push({"count": i, "lang": language_list[i]});\n
@@ -419,7 +421,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1578.52538.48913</string> </value>
+                <value> <string>940.1635.5936.59528</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -437,7 +439,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420204041.51</float>
+                        <float>1420206973.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
