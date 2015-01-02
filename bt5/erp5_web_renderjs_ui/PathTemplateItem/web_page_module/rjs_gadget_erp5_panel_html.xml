@@ -118,33 +118,69 @@
     <script src="handlebars.js" type="text/javascript"></script>\n
     <script src="gadget_global.js" type="text/javascript"></script>\n
     <script src="jquery.js" type="text/javascript"></script>\n
-    <script src="jquerymobile.js"> type="text/javascript"></script>\n
+    <script src="jquerymobile.js" type="text/javascript"></script>\n
 \n
     <script id="panel-template" type="text/x-handlebars-template">\n
-          \n
-    <div data-role="header" class="ui-bar-inherit">\n
-      <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
-        <div class="ui-controlgroup-controls">\n
-          <form action="#" method="post">\n
-            <input type="submit" data-icon="delete" data-iconpos="notext" value="Close" />\n
-          </form>\n
+      <div data-role="header" class="ui-bar-inherit">\n
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
+          <div class="ui-controlgroup-controls">\n
+            <form action="#" method="post">\n
+              <input type="submit" data-i18n="[value]Close" data-icon="delete" data-iconpos="notext" value="Close" />\n
+            </form>\n
+          </div>\n
+        </div>\n
+        <img class="ui-title" alt="ERP5" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAAA/CAMAAADaDqrIAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMEM5NUE4MzQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowMEM5NUE4NDQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAwQzk1QTgxNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAwQzk1QTgyNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+J9MJsAAAAwBQTFRF///////M//+Z//9m//8z//8A/8z//8zM/8yZ/8xm/8wz/8wA/5n//5nM/5mZ/5lm/5kz/5kA/2b//2bM/2aZ/2Zm/2Yz/2YA/zP//zPM/zOZ/zNm/zMz/zMA/wD//wDM/wCZ/wBm/wAz/wAAzP//zP/MzP+ZzP9mzP8zzP8AzMz/zMzMzMyZzMxmzMwzzMwAzJn/zJnMzJmZzJlmzJkzzJkAzGb/zGbMzGaZzGZmzGYzzGYAzDP/zDPMzDOZzDNmzDMzzDMAzAD/zADMzACZzABmzAAzzAAAmf//mf/Mmf+Zmf9mmf8zmf8Amcz/mczMmcyZmcxmmcwzmcwAmZn/mZnMmZmZmZlmmZkzmZkAmWb/mWbMmWaZmWZmmWYzmWYAmTP/mTPMmTOZmTNmmTMzmTMAmQD/mQDMmQCZmQBmmQAzmQAAZv//Zv/MZv+ZZv9mZv8zZv8AZsz/ZszMZsyZZsxmZswzZswAZpn/ZpnMZpmZZplmZpkzZpkAZmb/ZmbMZmaZZmZmZmYzZmYAZjP/ZjPMZjOZZjNmZjMzZjMAZgD/ZgDMZgCZZgBmZgAzZgAAM///M//MM/+ZM/9mM/8zM/8AM8z/M8zMM8yZM8xmM8wzM8wAM5n/M5nMM5mZM5lmM5kzM5kAM2b/M2bMM2aZM2ZmM2YzM2YAMzP/MzPMMzOZMzNmMzMzMzMAMwD/MwDMMwCZMwBmMwAzMwAAAP//AP/MAP+ZAP9mAP8zAP8AAMz/AMzMAMyZAMxmAMwzAMwAAJn/AJnMAJmZAJlmAJkzAJkAAGb/AGbMAGaZAGZmAGYzAGYAADP/ADPMADOZADNmADMzADMAAAD/AADMAACZAABmAAAzAAAAHHa7K3/AOojESZHJWZvNaKTSd63Whrbblb/fpMjks9Howtrt4e320uTx8Pb6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdfKHSQAAAOh0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ALItoLoAAAJkSURBVHja7NlZsqsgEABQ979C5kGGddxo4os0Q8BAynoFn0nUU23TNGRB9xzLdE3XdE3XdP2fLnIzF2VSrsYvC72HizAh9eZ5DVuOl15S4/jWwC+kDC8HPzCSJVHcRY8QXV2PwQuujUYTsYrvYlBv1yKLrsXHsPghnvR3Lazoip/JKuwpF8sm6/bY01Ow9CBlTXi53PNoRcUktEZT1NV1PIPnXAjtMJIMlzerFIzU1dVWF7aPj3Tetae4gjdxktG2et/qQjJ4kZFrv6ED4bK4eR1qduHzvEi4+PbGwD0EGu9CQQLFrv1F4jBc6BcuW3YhkPiPX1hOfxQvnHfh0HVMRqc4HuqiQf5k3mO6dq1s8Hx0H/Le5kq9YaNcxAcrZLpOvAv+ClcgNcZFtnrucd5Fwx4mXj0drnbBYXMuJmFDAV3Uhm4qlbHh3ddOrmholHNxFTVC+xTl2mf6pI4uVe4LwSp0DPGOmh/hAnM94bKZjkHlWuiLeV+cTab4luMKk82wy/Px2fLJskvKUk03hRf9RZ0wiYiZ4uVwVwTb9E71y0XboTYXGuTaa33Y47W5zBjXM3P11y7TfR2ycFdxyaW7uwSc5m0un9ix91m3TWJfW+1ijfW+wcVAfjS5dOP62LyvZZdcLHnA1MkFAtbgwq+Vm47po8OA1buwyy/a1ec5urzveAes2sV8kfW963mFaHNhlT0b6+Yi5+StchH1CtaK0ThXELDPLiyOPZHldzm/J1z9O/B14g7/K+DtkP7U8ivSeD4xaPCTSQvy+YIfubZWzRgtRe1iMP+3mq7pmq7p6jv+BBgAPrgi/TzwWzkAAAAASUVORK5CYII="/>\n
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+          <div class="ui-controlgroup-controls">\n
+            <a href="#" class="ui-btn ui-btn-icon-notext ui-icon-home" data-i18n="Home">Home</a>\n
+          </div>\n
         </div>\n
       </div>\n
-      <img class="ui-title" alt="ERP5"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAAA/CAMAAADaDqrIAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMEM5NUE4MzQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowMEM5NUE4NDQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAwQzk1QTgxNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAwQzk1QTgyNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+J9MJsAAAAwBQTFRF///////M//+Z//9m//8z//8A/8z//8zM/8yZ/8xm/8wz/8wA/5n//5nM/5mZ/5lm/5kz/5kA/2b//2bM/2aZ/2Zm/2Yz/2YA/zP//zPM/zOZ/zNm/zMz/zMA/wD//wDM/wCZ/wBm/wAz/wAAzP//zP/MzP+ZzP9mzP8zzP8AzMz/zMzMzMyZzMxmzMwzzMwAzJn/zJnMzJmZzJlmzJkzzJkAzGb/zGbMzGaZzGZmzGYzzGYAzDP/zDPMzDOZzDNmzDMzzDMAzAD/zADMzACZzABmzAAzzAAAmf//mf/Mmf+Zmf9mmf8zmf8Amcz/mczMmcyZmcxmmcwzmcwAmZn/mZnMmZmZmZlmmZkzmZkAmWb/mWbMmWaZmWZmmWYzmWYAmTP/mTPMmTOZmTNmmTMzmTMAmQD/mQDMmQCZmQBmmQAzmQAAZv//Zv/MZv+ZZv9mZv8zZv8AZsz/ZszMZsyZZsxmZswzZswAZpn/ZpnMZpmZZplmZpkzZpkAZmb/ZmbMZmaZZmZmZmYzZmYAZjP/ZjPMZjOZZjNmZjMzZjMAZgD/ZgDMZgCZZgBmZgAzZgAAM///M//MM/+ZM/9mM/8zM/8AM8z/M8zMM8yZM8xmM8wzM8wAM5n/M5nMM5mZM5lmM5kzM5kAM2b/M2bMM2aZM2ZmM2YzM2YAMzP/MzPMMzOZMzNmMzMzMzMAMwD/MwDMMwCZMwBmMwAzMwAAAP//AP/MAP+ZAP9mAP8zAP8AAMz/AMzMAMyZAMxmAMwzAMwAAJn/AJnMAJmZAJlmAJkzAJkAAGb/AGbMAGaZAGZmAGYzAGYAADP/ADPMADOZADNmADMzADMAAAD/AADMAACZAABmAAAzAAAAHHa7K3/AOojESZHJWZvNaKTSd63Whrbblb/fpMjks9Howtrt4e320uTx8Pb6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdfKHSQAAAOh0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ALItoLoAAAJkSURBVHja7NlZsqsgEABQ979C5kGGddxo4os0Q8BAynoFn0nUU23TNGRB9xzLdE3XdE3XdP2fLnIzF2VSrsYvC72HizAh9eZ5DVuOl15S4/jWwC+kDC8HPzCSJVHcRY8QXV2PwQuujUYTsYrvYlBv1yKLrsXHsPghnvR3Lazoip/JKuwpF8sm6/bY01Ow9CBlTXi53PNoRcUktEZT1NV1PIPnXAjtMJIMlzerFIzU1dVWF7aPj3Tetae4gjdxktG2et/qQjJ4kZFrv6ED4bK4eR1qduHzvEi4+PbGwD0EGu9CQQLFrv1F4jBc6BcuW3YhkPiPX1hOfxQvnHfh0HVMRqc4HuqiQf5k3mO6dq1s8Hx0H/Le5kq9YaNcxAcrZLpOvAv+ClcgNcZFtnrucd5Fwx4mXj0drnbBYXMuJmFDAV3Uhm4qlbHh3ddOrmholHNxFTVC+xTl2mf6pI4uVe4LwSp0DPGOmh/hAnM94bKZjkHlWuiLeV+cTab4luMKk82wy/Px2fLJskvKUk03hRf9RZ0wiYiZ4uVwVwTb9E71y0XboTYXGuTaa33Y47W5zBjXM3P11y7TfR2ycFdxyaW7uwSc5m0un9ix91m3TWJfW+1ijfW+wcVAfjS5dOP62LyvZZdcLHnA1MkFAtbgwq+Vm47po8OA1buwyy/a1ec5urzveAes2sV8kfW963mFaHNhlT0b6+Yi5+StchH1CtaK0ThXELDPLiyOPZHldzm/J1z9O/B14g7/K+DtkP7U8ivSeD4xaPCTSQvy+YIfubZWzRgtRe1iMP+3mq7pmq7p6jv+BBgAPrgi/TzwWzkAAAAASUVORK5CYII="/>\n
-      <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
-        <div class="ui-controlgroup-controls"></div>\n
+    </script>\n
+    <script id="panel-template-nolang" type="text/x-handlebars-template">\n
+      <div class="ui-content">\n
+        <ul data-role="listview">\n
+          <li><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules">Modules</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-clipboard" data-i18n="Worklists">Worklists</a></li>\n
+          <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history" data-i18n="History">History</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Preference">Preferences</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-comment-o" data-i18n="Language">Language</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout">Logout</a></li>\n
+        </ul>\n
       </div>\n
-    </div>\n
-    <div class="ui-content">\n
-      <ul data-role="listview">\n
-        <li><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece">Modules</a></li>\n
-        <li><a class="ui-btn ui-btn-icon-left ui-icon-clipboard">Worklists</a></li>\n
-        <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history">History</a></li>\n
-        <li><a class="ui-btn ui-btn-icon-left ui-icon-gear">Preferences</a></li>\n
-        <li><a class="ui-btn ui-btn-icon-left ui-icon-comment-o">Language</a></li>\n
-        <li><a class="ui-btn ui-btn-icon-left ui-icon-power-off">Logout</a></li>\n
-      </ul>\n
-    </div>\n
+    </script>\n
+    \n
+    <!-- listview needs to be pre-enhanced for language collapsibe to work -->\n
+    <script id="panel-template-lang" type="text/x-handlebars-template">\n
+      <div class="ui-content">\n
+        <ul data-role="listview" class="ui-listview" data-enhanced="true">\n
+          <li class="ui-first-child"><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules">Modules</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-clipboard" data-i18n="Worklists">Worklists</a></li>\n
+          <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history" data-i18n="History">History</a></li>\n
+          <li><a class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Preference">Preferences</a></li>\n
+          <li data-role="collapsible" data-enhanced="true" data-collapsed="true" data-collapsed-icon="comment-o" class="ui-collapsible ui-collapsible-collapsed">\n
+            <h4 class="ui-collapsible-heading ui-collapsible-heading-collapsed ui-li-divider ui-li-has-icon">\n
+              <a class="ui-collapsible-heading-toggle ui-icon-comment-o ui-btn-icon-left ui-btn-inherit" href="#" data-i18n="[last]Languages">\n
+                <span data-i18n="Click to expand content" class="ui-collapsible-heading-status"></span>Languages\n
+              </a>\n
+            </h4>\n
+            <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">\n
+              <fieldset data-role="controlgroup">\n
+                {{#each document_list}}\n
+                <form method="POST" action="">\n
+                  <div class="ui-btn ui-input-btn ui-corner-all ui-shadow ui-btn-icon-right ui-icon-carat-r" data-i18n="[node]{{lang}}">\n
+                    &nbsp;\n
+                    <input type="submit" data-enhanced="true" name="lang" id="lang-{{count}}" value="{{lang}}" />\n
+                  </div>\n
+                  <label class="ui-hidden-accessible" for="lang-{{count}}" data-i18n="{{lang}}"></label>\n
+                </form>\n
+                {{/each}}\n
+              </fieldset>\n
+            </div>\n
+          </li>\n
+          <li class="ui-last-child"><a class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout">Logout</a></li>\n
+        </ul>\n
+      </div>\n
     </script>\n
 \n
     <!-- custom script -->\n
@@ -279,7 +315,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -293,7 +329,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24764.47660.35054</string> </value>
+                <value> <string>939.64258.51349.15786</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +347,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413816767.6</float>
+                        <float>1420197041.32</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

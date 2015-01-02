@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 /*global window, rJS, Handlebars, jQuery */\n
 (function (window, rJS, Handlebars, $) {\n
   "use strict";\n
@@ -107,12 +109,20 @@
   /////////////////////////////////////////////////////////////////\n
   // Handlebars\n
   /////////////////////////////////////////////////////////////////\n
-  // Precompile the templates while loading the first gadget instance\n
+  // Precompile templates while loading the first gadget instance\n
   var gadget_klass = rJS(window),\n
     source = gadget_klass.__template_element\n
                          .getElementById("panel-template")\n
                          .innerHTML,\n
-    panel_template = Handlebars.compile(source);\n
+    panel_template = Handlebars.compile(source),\n
+    source_content = gadget_klass.__template_element\n
+                         .getElementById("panel-template-lang")\n
+                         .innerHTML,\n
+    panel_template_lang = Handlebars.compile(source_content),\n
+    source_content_no_lang = gadget_klass.__template_element\n
+                         .getElementById("panel-template-nolang")\n
+                         .innerHTML,\n
+    panel_template_nolang = Handlebars.compile(source_content_no_lang);\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -122,6 +132,14 @@
     .ready(function (g) {\n
       g.props = {};\n
     })\n
+    \n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
+    .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
+    .declareAcquiredMethod("whoWantToDisplayThisFrontPage", "whoWantToDisplayThisFrontPage")\n
 \n
     // Assign the element to a variable\n
     .ready(function (g) {\n
@@ -147,18 +165,43 @@
           return RSVP.all([\n
             g.whoWantToDisplayThisFrontPage("front"),\n
             g.whoWantToDisplayThisFrontPage("history"),\n
+            g.getLanguageList()\n
           ]);\n
         })\n
         .push(function (all_result) {\n
-          g.props.jelement.html(panel_template({\n
-            module_href: all_result[0],\n
-            history_href: all_result[1]\n
-          }));\n
+          var i,\n
+            tmp,\n
+            document_list = [],\n
+            language_list = JSON.parse(all_result[2]),\n
+            i_len = language_list.length;\n
+          \n
+          // XXX: Customize panel header!\n
+          tmp = panel_template();\n
+\n
+          // XXX: will there be websites without translations/multiple lang?\n
+          if (i_len > 1) {\n
+            for (i = 0; i < i_len; i += 1) {\n
+              document_list.push({"count": i, "lang": language_list[i]});\n
+            }\n
+            tmp += panel_template_lang({\n
+              module_href: all_result[0],\n
+              history_href: all_result[1],\n
+              document_list: document_list\n
+            });\n
+          } else {\n
+            tmp += panel_template_nolang({\n
+              module_href: all_result[0],\n
+              history_href: all_result[1]\n
+            });\n
+          }\n
+          return g.translateHtml(tmp);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          g.props.jelement.html(my_translated_html);\n
           g.props.jelement.trigger("create");\n
         });\n
     })\n
 \n
-    .declareAcquiredMethod("whoWantToDisplayThisFrontPage", "whoWantToDisplayThisFrontPage")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -200,22 +243,45 @@
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var panel_gadget = this;\n
+      var panel_gadget, \n
+        form_list, \n
+        event_list, \n
+        handler,\n
+        i,\n
+        len;\n
+\n
+      function translate(my_event) {\n
+        return panel_gadget.changeLanguage(my_event.target.lang.value);\n
+      }\n
 \n
       function formSubmit() {\n
         panel_gadget.toggle();\n
       }\n
 \n
-      // Listen to form submit\n
-      return loopEventListener(\n
-        panel_gadget.props.element.querySelector(\'form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
-    })\n
+      panel_gadget = this;\n
+      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
+      event_list = [];\n
+      handler = [formSubmit];\n
 \n
-}(window, rJS, Handlebars, jQuery));</string> </value>
+      // XXX: not robust - Will break when search field is active\n
+      for (i = 0, len = form_list.length; i < len; i += 1) {\n
+        event_list[i] = loopEventListener(\n
+          form_list[i],\n
+          \'submit\',\n
+          false,\n
+          handler[i] || translate\n
+        );\n
+      }\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all(event_list);\n
+        });\n
+    });\n
+\n
+}(window, rJS, Handlebars, jQuery));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -336,7 +402,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -350,7 +416,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.25789.47838.52889</string> </value>
+                <value> <string>939.64379.20572.33536</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +434,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413879105.71</float>
+                        <float>1420039467.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
