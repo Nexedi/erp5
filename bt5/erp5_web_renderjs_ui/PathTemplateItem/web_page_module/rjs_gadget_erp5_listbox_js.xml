@@ -204,7 +204,6 @@
       }).push(function (result) {\n
         var promise_list = [result];\n
         counter = Math.min(result.data.total_rows, lines);\n
-\n
         for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
             gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
@@ -272,6 +271,8 @@
           paging_info = document.createElement("span"),\n
           paging_menu = document.createElement("div"),\n
           paging_wrap = document.createElement("div"),\n
+          temp = document.createElement("div"),\n
+          temp_table = document.createElement("table"),\n
           len;\n
 \n
         th.setAttribute("colspan", field_json.column_list.length);\n
@@ -322,14 +323,18 @@
         for (len = table.children.length; len > 0; len -= 1) {\n
           table.removeChild(table.lastChild);\n
         }\n
-\n
-        table.appendChild(fragment);\n
         \n
-        // XXX: DOM touches\n
-        return gadget.translateHtml(gadget.props.element.innerHTML);\n
+        // NOTE: for passing translations, temp must contain a table\n
+        temp_table.appendChild(fragment);\n
+        temp.appendChild(temp_table);\n
+\n
+        return gadget.translateHtml(temp.innerHTML);\n
       })\n
       .push(function (my_translated_html) {\n
-        gadget.props.element.innerHTML = my_translated_html;\n
+        var temp = document.createElement("div");\n
+\n
+        temp.innerHTML = my_translated_html;\n
+        gadget.props.element.appendChild(temp.firstElementChild);\n
         return gadget;\n
       });\n
     });\n
@@ -471,7 +476,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51316.12701.36232</string> </value>
+                <value> <string>940.2150.5227.15428</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -489,7 +494,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419419239.32</float>
+                        <float>1420237871.41</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

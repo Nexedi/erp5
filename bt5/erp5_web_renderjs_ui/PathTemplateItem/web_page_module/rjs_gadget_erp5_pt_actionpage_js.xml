@@ -147,6 +147,7 @@
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
         erp5_document,\n
+        result_list,\n
         view_list;\n
 \n
       return gadget.jio_get({"_id": options.jio_key})\n
@@ -174,6 +175,8 @@
           var i,\n
             tab_list = [];\n
 \n
+          result_list = all_result;\n
+\n
           for (i = 2; i < all_result.length; i += 1) {\n
             tab_list.push({\n
               title: view_list[i - 2].title,\n
@@ -181,29 +184,22 @@
               i18n: view_list[i - 2].title\n
             });\n
           }\n
-\n
-\n
-          gadget.props.element.innerHTML = table_template({\n
+        \n
+          return gadget.translateHtml(table_template({\n
             definition_title: "Workflow Transitions",\n
             documentlist: tab_list,\n
             definition_i18n: "Workflow-Transitions"\n
-          });\n
-\n
-          return gadget.renderPageHeader({\n
-            back_url: all_result[0],\n
-            page_title: erp5_document.title,\n
-            breadcrumb_url: all_result[1]\n
-          });\n
-        })\n
-        // XXX: DOM touches\n
-        .push(function () {\n
-          return gadget.translateHtml(gadget.props.element.innerHTML);\n
+          }));  \n
         })\n
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
-        });\n
-        \n
 \n
+          return gadget.renderPageHeader({\n
+            back_url: result_list[0],\n
+            page_title: erp5_document.title,\n
+            breadcrumb_url: result_list[1]\n
+          });\n
+        });\n
     });\n
 \n
 }(window, rJS, RSVP, Handlebars));
@@ -343,7 +339,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52883.40109.10154</string> </value>
+                <value> <string>940.2136.15566.12765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -361,7 +357,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419417919.94</float>
+                        <float>1420237984.64</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

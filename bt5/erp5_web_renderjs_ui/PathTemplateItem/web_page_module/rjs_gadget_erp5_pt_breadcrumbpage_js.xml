@@ -198,21 +198,15 @@
           return parent_queue;\n
         })\n
         .push(function () {\n
-          gadget.props.element.innerHTML = table_template({\n
+          return gadget.translateHtml(table_template({\n
             definition_title: "Breadcrumb",\n
             documentlist: parent_list\n
-          });\n
-\n
-          return gadget.renderPageHeader(header_options);\n
-        })\n
-        // XXX: DOM touches\n
-        .push(function () {\n
-          return gadget.translateHtml(gadget.props.element.innerHTML);\n
+          }));\n
         })\n
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
+          return gadget.renderPageHeader(header_options);\n
         });\n
-\n
     });\n
 \n
 }(window, rJS, RSVP, Handlebars, URI));</string> </value>
@@ -350,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52887.29595.20992</string> </value>
+                <value> <string>940.1898.34631.55091</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +362,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419417866.54</float>
+                        <float>1420236895.39</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

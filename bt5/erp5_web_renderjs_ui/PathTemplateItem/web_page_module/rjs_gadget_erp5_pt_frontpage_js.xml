@@ -228,7 +228,8 @@
           return gadget.translateHtml(result_html);\n
         })\n
         .push(function (my_translated_html) {\n
-          gadget.props.element.querySelector(\'.document_list\').innerHTML = my_translated_html;\n
+          gadget.props.element.querySelector(\'.document_list\').innerHTML =\n
+            my_translated_html;\n
         });\n
     });\n
 }(window, rJS, RSVP, Handlebars));
@@ -368,7 +369,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.43978.9403.31744</string> </value>
+                <value> <string>940.1897.57739.49578</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -386,7 +387,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419417516.48</float>
+                        <float>1420236486.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

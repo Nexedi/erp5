@@ -286,10 +286,8 @@
       if (options.hasOwnProperty("breadcrumb_url")) {\n
         title_link.url = options.breadcrumb_url;\n
         promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));\n
-        //gadget.props.title_element.innerHTML = header_title_link_template(title_link);\n
       } else {\n
         promise_list.push(gadget.translateHtml(header_title_template(title_link)));\n
-        //gadget.props.title_element.innerHTML = header_title_template(title_link);\n
       }\n
 \n
       // Handle left link\n
@@ -317,13 +315,10 @@
         }\n
       }\n
       if (left_button !== undefined) {\n
-        //gadget.props.left_link.innerHTML = header_button_template(left_button);\n
         promise_list.push(gadget.translateHtml(header_button_template(left_button)));\n
       } else if (left_link === undefined) {\n
-        //gadget.props.left_link.innerHTML = "";\n
         promise_list.push(gadget.translateHtml(""));\n
       } else {\n
-        // gadget.props.left_link.innerHTML = header_link_template(left_link);\n
         promise_list.push(gadget.translateHtml(header_link_template(left_link)));\n
       }\n
 \n
@@ -373,13 +368,10 @@
       }\n
       if (right_button !== undefined) {\n
         promise_list.push(gadget.translateHtml(header_button_template(right_button)));\n
-        //gadget.props.right_link.innerHTML = header_button_template(right_button);\n
       } else if (right_link !== undefined) {\n
         promise_list.push(gadget.translateHtml(header_link_template(right_link)));\n
-        //gadget.props.right_link.innerHTML = header_link_template(right_link);\n
       } else {\n
         promise_list.push(gadget.translateHtml(""));\n
-        //gadget.props.right_link.innerHTML = "";\n
       }\n
 \n
       // Handle sub header\n
@@ -408,6 +400,7 @@
       //gadget.props.sub_header_ul.innerHTML = sub_header_template({\n
       //  sub_header_list: sub_header_list\n
       //});\n
+\n
       promise_list.push(gadget.translateHtml(sub_header_template({\n
         sub_header_list: sub_header_list\n
       })));\n
@@ -588,7 +581,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1374.53791.13363</string> </value>
+                <value> <string>940.2108.16108.5614</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -606,7 +599,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420191334.15</float>
+                        <float>1420237508.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
