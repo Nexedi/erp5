@@ -169,10 +169,15 @@
       return g.render(g.stats.options);\n
     })\n
 \n
+    //////////////////////////////////////////////\n
+    // acquired methods\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")\n
     .declareAcquiredMethod("triggerPanel", "triggerPanel")\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -185,6 +190,9 @@
         .push(function () {\n
           gadget.stats.error = false;\n
         });\n
+    })\n
+    .declareMethod(\'notifyUpdate\', function () {\n
+      return this.render(this.stats.options);\n
     })\n
     .declareMethod(\'notifyLoading\', function () {\n
       if (this.stats.loaded) {\n
@@ -265,7 +273,9 @@
         default_right_icon = "",\n
         title_link = {title: "ERP5"},\n
         sub_header_list = [],\n
-        alphabet = "abcdefghijklmnopqrstuvwxyz";\n
+        alphabet = "abcdefghijklmnopqrstuvwxyz",\n
+        promise_list = [];\n
+\n
       gadget.stats.options = options;\n
       // Handle main title\n
       if (options.hasOwnProperty("page_title")) {\n
@@ -275,9 +285,11 @@
       document.title = title_link.title;\n
       if (options.hasOwnProperty("breadcrumb_url")) {\n
         title_link.url = options.breadcrumb_url;\n
-        gadget.props.title_element.innerHTML = header_title_link_template(title_link);\n
+        promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));\n
+        //gadget.props.title_element.innerHTML = header_title_link_template(title_link);\n
       } else {\n
-        gadget.props.title_element.innerHTML = header_title_template(title_link);\n
+        promise_list.push(gadget.translateHtml(header_title_template(title_link)));\n
+        //gadget.props.title_element.innerHTML = header_title_template(title_link);\n
       }\n
 \n
       // Handle left link\n
@@ -305,11 +317,14 @@
         }\n
       }\n
       if (left_button !== undefined) {\n
-        gadget.props.left_link.innerHTML = header_button_template(left_button);\n
+        //gadget.props.left_link.innerHTML = header_button_template(left_button);\n
+        promise_list.push(gadget.translateHtml(header_button_template(left_button)));\n
       } else if (left_link === undefined) {\n
-        gadget.props.left_link.innerHTML = "";\n
+        //gadget.props.left_link.innerHTML = "";\n
+        promise_list.push(gadget.translateHtml(""));\n
       } else {\n
-        gadget.props.left_link.innerHTML = header_link_template(left_link);\n
+        // gadget.props.left_link.innerHTML = header_link_template(left_link);\n
+        promise_list.push(gadget.translateHtml(header_link_template(left_link)));\n
       }\n
 \n
       // Handle right link\n
@@ -357,11 +372,14 @@
         }\n
       }\n
       if (right_button !== undefined) {\n
-        gadget.props.right_link.innerHTML = header_button_template(right_button);\n
+        promise_list.push(gadget.translateHtml(header_button_template(right_button)));\n
+        //gadget.props.right_link.innerHTML = header_button_template(right_button);\n
       } else if (right_link !== undefined) {\n
-        gadget.props.right_link.innerHTML = header_link_template(right_link);\n
+        promise_list.push(gadget.translateHtml(header_link_template(right_link)));\n
+        //gadget.props.right_link.innerHTML = header_link_template(right_link);\n
       } else {\n
-        gadget.props.right_link.innerHTML = "";\n
+        promise_list.push(gadget.translateHtml(""));\n
+        //gadget.props.right_link.innerHTML = "";\n
       }\n
 \n
       // Handle sub header\n
@@ -387,9 +405,23 @@
         sub_header_list[sub_header_list.length - 1].class += " ui-last-child";\n
       }\n
       // gadget.props.sub_header_ul.textContent = JSON.stringify(options);\n
-      gadget.props.sub_header_ul.innerHTML = sub_header_template({\n
+      //gadget.props.sub_header_ul.innerHTML = sub_header_template({\n
+      //  sub_header_list: sub_header_list\n
+      //});\n
+      promise_list.push(gadget.translateHtml(sub_header_template({\n
         sub_header_list: sub_header_list\n
-      });\n
+      })));\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all(promise_list);\n
+        })\n
+        .push(function (my_translated_html_list) {\n
+          gadget.props.title_element.innerHTML = my_translated_html_list[0];\n
+          gadget.props.left_link.innerHTML = my_translated_html_list[1];\n
+          gadget.props.right_link.innerHTML = my_translated_html_list[2];\n
+          gadget.props.sub_header_ul.innerHTML = my_translated_html_list[3];\n
+        });\n
     })\n
 \n
     //////////////////////////////////////////////\n
@@ -542,7 +574,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -556,7 +588,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.24670.17693.28962</string> </value>
+                <value> <string>940.1374.53791.13363</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -574,7 +606,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413879432.64</float>
+                        <float>1420191334.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

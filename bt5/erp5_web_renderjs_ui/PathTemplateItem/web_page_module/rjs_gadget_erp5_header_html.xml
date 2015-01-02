@@ -121,20 +121,20 @@
     <!-- custom script -->\n
     <script src="gadget_erp5_header.js" type="text/javascript"></script>\n
 \n
-    <script id="header-title-link-template" type="text/x-handlebars-template"><a class="ui-btn ui-btn-icon-left ui-icon-arrow-down" href="{{url}}">{{title}}</a></script>\n
-    <script id="header-title-template" type="text/x-handlebars-template">{{title}}</script>\n
+    <script id="header-title-link-template" type="text/x-handlebars-template"><a data-i18n="{{title}}" class="ui-btn ui-btn-icon-left ui-icon-arrow-down" href="{{url}}">{{title}}</a></script>\n
+    <script id="header-title-template" type="text/x-handlebars-template"><span data-i18n="{{title}}">{{title}}</span></script>\n
 \n
     <script id="header-link-template" type="text/x-handlebars-template">\n
-       <a role="button" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
+       <a role="button" data-i18n="{{title}}" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
     </script>\n
 \n
     <script id="header-button-template" type="text/x-handlebars-template">\n
-       <form><button name=\'{{name}}\' type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
+       <form><button name=\'{{name}}\' data-i18n="{{title}}" type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
     </script>\n
 \n
     <script id="sub-header-template" type="text/x-handlebars-template">\n
         {{#each sub_header_list}}\n
-          <li class="ui-block-{{block}}"><a href="{{url}}" class="ui-btn ui-btn-icon-top ui-icon-{{icon}} {{class}}">{{title}}</a></li>\n
+          <li class="ui-block-{{block}}"><a href="{{url}}" data-i18n="{{title}}" class="ui-btn ui-btn-icon-top ui-icon-{{icon}} {{class}}">{{title}}</a></li>\n
         {{/each}}\n
     </script>\n
 \n
@@ -148,7 +148,7 @@
       </div>\n
     </div>\n
     \n
-    <h1 class="ui-title">ERP5</h1>\n
+    <h1 class="ui-title"></h1>\n
 \n
     <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
       <div class="ui-controlgroup-controls">\n
@@ -296,7 +296,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -310,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.19002.31422.38075</string> </value>
+                <value> <string>939.61178.21709.2781</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -328,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413471560.4</float>
+                        <float>1419935164.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
