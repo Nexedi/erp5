@@ -241,7 +241,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
-    workflow_list = ()
+    erp5workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -418,10 +418,12 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-        for ERP5Workflow in self.getTypeWorkflowList():
+        ### zwj: checked 31 Dec 2104
+        for ERP5Workflow in self.getTypeERP5WorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
-          ERP5Workflow = workflow_module._getOb(ERP5Workflow)
-          ERP5Workflow.initializeDocument(ob)
+          if workflow_module is not None:
+            ERP5Workflow = workflow_module._getOb(ERP5Workflow)
+            ERP5Workflow.initializeDocument(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
@@ -453,11 +455,12 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
 
+    ### erp5workflow get erp5workflow_list
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeWorkflowList')
-    def getTypeWorkflowList(self):
+                              'getTypeERP5WorkflowList')
+    def getTypeERP5WorkflowList(self):
       """Getter for 'type_workflow' property"""
-      return list(self.workflow_list)
+      return list(self.erp5workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
@@ -584,7 +587,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
-      search_source_list += self.getTypeWorkflowList()
+      search_source_list += self.getTypeERP5WorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declarePrivate('getDefaultViewFor')

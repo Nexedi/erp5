@@ -286,19 +286,21 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     else:
       initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
 
-    portal_type = site.getDefaultModule(portal_type="portal_types")
-    pt = portal_type._getOb(cls.__name__, None)
-    if pt is not None:
-      workflow_list = getattr(pt, 'workflow_list', None)
-      if workflow_list is not None:
-        portal_ERP5Workflow = site.getDefaultModule(portal_type="Workflow")
-        if portal_ERP5Workflow is None:
-          LOG("ERP5Type.Dynamic", WARNING,
+    portal_types = site.getDefaultModule(portal_type="portal_types")
+    object_ptype = portal_types._getOb(cls.__name__, None)
+    if object_ptype is not None:
+      workflow_list = getattr(object_ptype, 'erp5workflow_list', None)
+      try:
+        if workflow_list is not None:
+          portal_ERP5Workflow = site.getDefaultModule(portal_type="Workflow")
+          if portal_ERP5Workflow is None:
+            LOG("ERP5Type.Dynamic", WARNING,
               "no ERP5Workflow methods for %s"
                   % cls.__name__)
-        else:
-          intializePortalTypeERP5WorkflowMethod(cls, portal_ERP5Workflow)
-
+          else:
+            intializePortalTypeERP5WorkflowMethod(cls, portal_ERP5Workflow)
+      except:
+        pass
     # portal type group methods, isNodeType, isResourceType...
     from Products.ERP5Type.ERP5Type import ERP5TypeInformation
     # XXX possible optimization:

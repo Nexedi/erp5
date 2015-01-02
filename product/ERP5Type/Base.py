@@ -120,9 +120,6 @@ def resetRegisteredWorkflowMethod(portal_type=None):
     method.reset(portal_type=portal_type)
 
 def resetRegisteredERP5WorkflowMethod(portal_type=None):
-  """
-    TODO: unwrap workflow methos which were standard methods initially
-  """
   for method in erp5workflow_method_registry:
     method.reset(portal_type=portal_type)
 
@@ -146,11 +143,7 @@ class ERP5WorkflowMethod(Method):
       self._transition_id = method.__name__
     else:
       self._transition_id = id
-    # Only publishable methods can be published as interactions
-    # A pure private method (ex. _doNothing) can not be published
-    # This is intentional to prevent methods such as submit, share to
-    # be called from a URL. If someone can show that this way
-    # is wrong (ex. for remote operation of a site), let us know.
+
     if not method.__name__.startswith('_'):
       self.__name__ = method.__name__
       for func_id in ['func_code', 'func_defaults', 'func_dict', 'func_doc', 'func_globals', 'func_name']:
@@ -206,20 +199,20 @@ class ERP5WorkflowMethod(Method):
     if not candidate_transition_item_list:
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
-    if instance.getTypeInfo().getTypeWorkflowList():
+    if instance.getTypeInfo().getTypeERP5WorkflowList():
       wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
       ### Build the list of method which is call and will be invoked.
       valid_transition_item_list = []
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
+          LOG('Executing %s in %s' %(transition_id, wf_id), WARNING, "lol")
           if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
-          #if wf5_module._getOb(wf_id)._getOb(transition_id) in instance.getCategoryStateValue().getDestinationValueList():
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
-          #else: ### don't do anything if no supported
-            #raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+          else:
+            raise NotImplementedError("The Transition is not supported by current state.")
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
@@ -251,6 +244,17 @@ class ERP5WorkflowMethod(Method):
       Registers the method so that _aq_reset may later reset it
     """
     erp5workflow_method_registry.append(self)
+  
+  def reset(self, portal_type=None):
+    """
+      Reset the list of registered interactions or transitions
+    """
+    if portal_type:
+      self._invoke_once[portal_type] = {}
+      self._invoke_always[portal_type] = {}
+    else:
+      self._invoke_once = {}
+      self._invoke_always = {}
 
 class WorkflowMethod(Method):
 
@@ -664,7 +668,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__)
-  for ERP5Workflow in pt.workflow_list:
+  for ERP5Workflow in pt.erp5workflow_list:
     for tr in wf5_module._getOb(ERP5Workflow).objectValues(portal_type="Transition"):
       tr_id = tr.id
       method_id = convertToMixedCase(tr_id)
@@ -1512,8 +1516,8 @@ class Base( CopyContainer,
     ERP5PropertyManager._setPropValue(self, key, value)
     #except ConflictError:
     #  raise
-    # This should not be there, because this ignore all checks made by
-    # the PropertyManager. If there is problems, please complain to
+    # This should not be there, because this ignores all checks made by
+    # the PropertyManager. If there are problems, please complain to
     # seb@nexedi.com
     #except:
     #  # This should be removed if we want strict property checking
@@ -1612,7 +1616,6 @@ class Base( CopyContainer,
             for method in permissions[1]:
               if method.startswith('set'):
                 restricted_method_set.add(method)
-
     getProperty = self.getProperty
     hasProperty = self.hasProperty
     _setProperty = self._setProperty
