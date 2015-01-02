@@ -115,6 +115,7 @@
     <script src="RSVP.js"></script>\n
     <script src="renderjs.js"></script>\n
     <script src="i18next.js"></script>\n
+    <script src="uritemplate.js"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_translate.js"></script>\n
@@ -258,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.45272.15892.529</string> </value>
+                <value> <string>939.45272.47644.64085</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -276,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418892983.83</float>
+                        <float>1419953317.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

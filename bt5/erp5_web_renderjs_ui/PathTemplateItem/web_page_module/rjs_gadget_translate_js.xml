@@ -102,9 +102,43 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxlen: 80, nomen: true, todo: true */\n
-/*global window, rJS, document, i18n */\n
-(function (window, rJS, i18n) {\n
+/*global window, rJS, document, i18n, UriTemplate */\n
+(function (window, rJS, i18n, UriTemplate) {\n
   "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Some methods\n
+  /////////////////////////////////////////////////////////////////\n
+  function getTranslationDict(my_gadget, my_language) {\n
+    var props = my_gadget.property_dict,\n
+      cookie_lang = fetchLanguage(),\n
+      lang = cookie_lang || props.default_language || my_language,\n
+      path =  props.src + "?language=" + lang + "&namespace=dict";\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return my_gadget.jio_ajax({\n
+          "method": "GET",\n
+          "url": path,\n
+          "xhrFields": {"withCredentials": true}\n
+        });\n
+      })\n
+      .push(function (my_event) {\n
+        return JSON.parse(my_event.target.responseText);\n
+      });\n
+  }\n
+  \n
+  // XXX: language definitions are not standard compliant!\n
+  // "zh-CN" is a language, "zh" is not, browser will return the "zh-CN"\n
+  // on internal i18n methods, which requires this method to "fix"\n
+  function fetchLanguage() {\n
+    var lang = i18n.detectLanguage();\n
+    \n
+    if (lang.length > 2) {\n
+      return lang.substring(0, 2);\n
+    }\n
+    return lang;\n
+  }\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Gadget behaviour\n
@@ -114,95 +148,179 @@
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
-    \n
-    // Init local properties\n
+\n
+    // retrieve initializatin and web site properties\n
+    // XXX: This takes too long for header and sometimes for panel as both\n
+    // run things on .ready() = outside chain (eg. calling header.render() on \n
+    // header .ready())\n
+    // XXX: Header "fixable" by adding notifyUpdate\n
     .ready(function (my_gadget) {\n
       my_gadget.property_dict = {};\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            my_gadget.getSiteRoot(),\n
+            my_gadget.getTranslationMethod()\n
+          ]);\n
+        })\n
+        .push(function (my_config_list) {\n
+          my_gadget.property_dict.src = my_config_list[1];\n
+          return my_gadget.jio_ajax({\n
+            "method": "GET",\n
+            "url": UriTemplate.parse(my_config_list[0]),\n
+            "xhrFields": {"withCredentials": true}\n
+          });\n
+        })\n
+        .push(function (my_hateoas) {\n
+          var url,\n
+            site_hal = JSON.parse(my_hateoas.target.responseText);\n
+            \n
+          // NOTE: at this point createJIO has not been called yet, so allDocs\n
+          // is not available and must be called "manually"\n
+          // XXX: Improve\n
+          url = UriTemplate.parse(site_hal._links.raw_search.href)\n
+            .expand({\n
+              query: \'portal_type: "Web Site" AND title: "\' + site_hal._links.parent.name  + \'"\',\n
+              select_list: [\n
+                "available_language_set",\n
+                "default_available_language"\n
+              ],\n
+              limit: [0,1]\n
+            });\n
+\n
+          return my_gadget.jio_ajax({\n
+            "type": "GET",\n
+            "url": url,\n
+            "xhrFields": {withCredentials: true}\n
+          });\n
+        })\n
+        .push(function (my_site_configuration) {\n
+          var response = JSON.parse(my_site_configuration.target.responseText),\n
+            web_site = response._embedded.contents[0];\n
+\n
+          // set remaining properties\n
+          my_gadget.property_dict.language_list = web_site.available_language_set;\n
+          my_gadget.property_dict.default_language = web_site.default_available_language;\n
+        })\n
+        // XXX: temporary error handler to not break existing sites without\n
+        // translation lookup specified\n
+        .push(undefined, function (error) {\n
+          my_gadget.property_dict = {\n
+            "translation_disabled": true,\n
+            "language_list": []\n
+          };\n
+        });\n
     })\n
+    \n
+    // Fetch first dict here, based on info retrieved from ERP5 website object\n
+    .ready(function (my_gadget) {\n
+      var props = my_gadget.property_dict;\n
+      \n
+      // skip if translations are not available\n
+      if (props.translation_disabled) {\n
+        return my_gadget;\n
+      }\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return getTranslationDict(my_gadget);\n
+        })\n
+        .push(function (my_language_dict) {\n
+          props.current_language_dict = my_language_dict;\n
+\n
+          // initialize i18n\n
+          i18n.init({\n
+            "customLoad": function (my_lng, my_ns, my_option_dict, my_callback) {\n
+              // translations available now\n
+              my_callback(null, props.current_language_dict);\n
+            },\n
+            //"use_browser_language": true,\n
+            "lng": fetchLanguage() || props.default_language,\n
+            "load": "current",\n
+            "fallbackLng": false,\n
+            "ns": \'dict\'\n
+          });\n
+          \n
+          // XXX: To prevent missing translations in header (calls render on \n
+          // ready) retrigger render now that translations are available.\n
+          return my_gadget.notifyUpdate();\n
+        });\n
+        \n
+    })\n
+\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // acquired methods\n
     /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("notifyUpdate", "notifyUpdate")\n
     .declareAcquiredMethod("jio_ajax", "jio_ajax")\n
+    .declareAcquiredMethod("getSiteRoot", "getSiteRoot")\n
+    .declareAcquiredMethod("getTranslationMethod", "getTranslationMethod")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    \n
+    // expose languages to gadget which want to know (eg panel)\n
+    .declareMethod(\'getLanguageList\', function () {\n
+      return JSON.stringify(this.property_dict.language_list);\n
+    })\n
+    \n
     .declareMethod(\'changeLanguage\', function (my_new_language) {\n
-      var translation_gadget = this,\n
-        current_language = i18n.lng();\n
-\n
-      if (current_language !== my_new_language) {\n
+      var gadget = this,\n
+        current_language = fetchLanguage();\n
+      \n
+      // XXX: relies on cookie value set by i18n!\n
+      if (current_language !== my_new_language && gadget.property_dict.translation_disabled === undefined) {\n
+        \n
         return RSVP.Queue()\n
           .push(function () {\n
-            return Promise.resolve(i18n.setLng(my_new_language));\n
+            return getTranslationDict(gadget, my_new_language);\n
           })\n
-          .push(function () {\n
+          .push(function (my_language_dict) {\n
+            gadget.property_dict.current_language_dict = my_language_dict;\n
+            \n
+            i18n.setLng(my_new_language);\n
+\n
             // XXX: for now, reload as the language is stored in cookie\n
             window.location.reload();\n
-            //return translation_gadget.translateElementList();\n
+            //return gadget.translateElementList();\n
           });\n
       }\n
 \n
-      return translation_gadget;\n
-    })\n
-\n
-    // lookup single values\n
-    .declareMethod(\'translateLookup\', function (my_lookup) {\n
-      return i18n.t(my_lookup);\n
-    })\n
-\n
-    // XXX Sven: Not used yet, would allow to translate based on text only\n
-    // so not necessary to use i18n attributes. If it works.\n
-    // translate text snippets in a string (not really verbose)\n
-    .declareMethod(\'translateStringList\', function (my_string) {\n
-        var node_list,\n
-          treeWalker = document.createTreeWalker(\n
-          my_string,\n
-          NodeFilter.SHOW_TEXT,\n
-          { acceptNode: function(node) {\n
-              // Logic to determine whether to accept, reject or skip node\n
-              // In this case, only accept nodes that have content\n
-              // other than whitespace\n
-              if ( ! /^\\s*$/.test(node.data) ) {\n
-                return NodeFilter.FILTER_ACCEPT;\n
-              }\n
-            }\n
-          },\n
-          false\n
-        );\n
-\n
-        // TODO: try to translate instead and insert back into dom\n
-        node_list = [];\n
-\n
-        while(treeWalker.nextNode()) {\n
-          node_list.push(treeWalker.currentNode);\n
-        }\n
-\n
+      return gadget;\n
     })\n
     \n
-    // translate a list of elements\n
-    .declareMethod(\'translateElementList\', function (my_list) {\n
-      var i, l, element, lookup, targets, target, route_text, base, len,\n
-        has_breaks, elements;\n
+    // translate a list of elements passed and returned as string\n
+    .declareMethod(\'translateHtml\', function (my_string) {\n
+      var temp, element_list, i, i_len, element, lookup, translate_list, target,\n
+        route_text, has_breaks, l, l_len, gadget;\n
+      \n
+      gadget = this;\n
 \n
-      if (typeof my_list === "object" && my_list.nodeType && my_list.nodeType === 1) {\n
-        base = my_list;\n
-      } else {\n
-        throw {"error": "translation only possible for html elements"};\n
+      // skip if no translations available\n
+      if (gadget.property_dict.translation_disabled) {\n
+        return my_string;\n
       }\n
 \n
-      elements = base.querySelectorAll("[data-i18n]");\n
+      // NOTE: <div> cannot be used for everything... (like table rows)\n
+      // TODO: currently I only update where needed. Eventually all calls to\n
+      // translateHtml should pass "their" proper wrapping element\n
+      temp = document.createElement("div");\n
+      temp.innerHTML = my_string;\n
 \n
-      for (i = 0, len = elements.length; i < len; i += 1) {\n
-        element = elements[i];\n
+      element_list = temp.querySelectorAll("[data-i18n]");\n
+\n
+      for (i = 0, i_len = element_list.length; i < i_len; i += 1) {\n
+        element = element_list[i];\n
         lookup = element.getAttribute("data-i18n");\n
 \n
         if (lookup) {\n
-          targets = lookup.split(";");\n
+          translate_list = lookup.split(";");\n
 \n
-          for (l = 0; l < targets.length; l += 1) {\n
-            target = targets[l].split("]");\n
+          for (l = 0, l_len = translate_list.length; l < l_len; l += 1) {\n
+            target = translate_list[l].split("]");\n
 \n
             switch (target[0]) {\n
             case "[placeholder":\n
@@ -258,62 +376,12 @@
         }\n
       }\n
       \n
-      return base;\n
-    })\n
-\n
-    // render\n
-    .declareMethod(\'render\', function (my_option_dict) {\n
-      var param,\n
-        lang,\n
-        ns,\n
-        path,\n
-        translation_gadget = this;\n
-\n
-      function parseResponse(my_response) {\n
-        if (typeof my_response === \'string\') {\n
-          return JSON.parse(my_response);\n
-        }\n
-        return my_response;\n
-      }\n
-      \n
-      // TODO: must follow translation plugin API\n
-      i18n.init({\n
-        "customLoad": function (my_lng, my_ns, my_option_dict, my_callback) {\n
-          lang = my_lng || ["zh-CN", "en-EN"][0];\n
-          // XXX: there seems to be a bug in customLoad, set to "translation"\n
-          ns = "dict";\n
-          path = "ERP5Site_getTranslations" + "?language=" + lang + "&namespace=" + ns;\n
-\n
-          return new RSVP.Queue()\n
-            .then(function () {\n
-              return translation_gadget.jio_ajax({\n
-                "method": "GET",\n
-                "url": path,\n
-                "xhrFields": {"withCredentials": true}\n
-              });\n
-            })\n
-            .then(function (my_event) {\n
-              return my_event.target.responseText;\n
-            })\n
-            .then(function (my_translation_dict) {\n
-              return my_callback(null, parseResponse(my_translation_dict));\n
-            })\n
-            .then(function () {\n
-              return translation_gadget;\n
-            });\n
-        },\n
-        "use_browser_language": true,\n
-        "lng": lang,\n
-        "load": "current",\n
-        "fallbackLng": false,\n
-        "ns": ns\n
-      });\n
-\n
-      return translation_gadget;\n
+      // return string\n
+      return temp.innerHTML;\n
     });\n
 \n
 \n
-}(window, rJS, i18n));
+}(window, rJS, i18n, UriTemplate));
 
 ]]></string> </value>
         </item>
@@ -450,7 +518,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52811.45744.46404</string> </value>
+                <value> <string>940.1458.30717.61030</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -468,7 +536,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419345469.91</float>
+                        <float>1420196319.63</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
