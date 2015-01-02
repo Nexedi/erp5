@@ -209,7 +209,6 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {\n
-        frontpage_gadget: "gadget_erp5_pt_frontpage.html",\n
         hateoas_url: "hateoas/",\n
         action_view: "action_object_view",\n
         default_view_reference: "view"\n
@@ -231,16 +230,6 @@
         .push(function (element) {\n
           g.props.element = element;\n
           g.props.article = element.querySelector("article");\n
-        });\n
-    })\n
-\n
-    .ready(function (my_gadget) {\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return my_gadget.getDeclaredGadget("translate");\n
-        })\n
-        .push(function (my_translation_gadget) {\n
-          return my_translation_gadget.render();\n
         });\n
     })\n
 \n
@@ -269,19 +258,19 @@
           );\n
         });\n
     })\n
-    .allowPublicAcquisition("translateStringList", function (param_list) {\n
+    .allowPublicAcquisition("getLanguageList", function (param_list) {\n
       return this.getDeclaredGadget("translate")\n
         .push(function (translation_gadget) {\n
-          return translation_gadget.translateStringList.apply(\n
+          return translation_gadget.getLanguageList.apply(\n
             translation_gadget,\n
             param_list\n
           );\n
         });\n
     })\n
-    .allowPublicAcquisition("translateElementList", function (param_list) {\n
+    .allowPublicAcquisition("translateHtml", function (param_list) {\n
       return this.getDeclaredGadget("translate")\n
         .push(function (translation_gadget) {\n
-          return translation_gadget.translateElementList.apply(\n
+          return translation_gadget.translateHtml.apply(\n
             translation_gadget,\n
             param_list\n
           );\n
@@ -376,7 +365,18 @@
       }\n
       return displayError(this, param_list[0]);\n
     })\n
-\n
+    // XXX translate: while header calls render on ready, this is needed to\n
+    // update the header once translations are available\n
+    .allowPublicAcquisition(\'notifyUpdate\', function () {\n
+      return this.getDeclaredGadget("header")\n
+        .push(\n
+          function (header_gadget) {\n
+            return header_gadget.notifyUpdate();\n
+          },\n
+          function () {\n
+            return;\n
+          });\n
+    })\n
     .allowPublicAcquisition(\'notifySubmitting\', function () {\n
       return this.getDeclaredGadget("header")\n
         .push(function (header_gadget) {\n
@@ -408,10 +408,20 @@
           return panel_gadget.toggle();\n
         });\n
     })\n
+    .allowPublicAcquisition(\'getSiteRoot\', function () {\n
+      return this.getSiteRoot();\n
+    })\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     \n
+    // XXX translate: called before ready(), so props is not available.\n
+    // Needed to lookup to retrieve HAL to fetch site module/runner languages \n
+    .declareMethod(\'getSiteRoot\', function () {\n
+      return "hateoas/";\n
+    })\n
+\n
     // Render the page\n
     .declareMethod(\'configure\', function (options) {\n
       var key;\n
@@ -666,7 +676,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52807.26806.58419</string> </value>
+                <value> <string>940.1446.34871.22050</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -684,7 +694,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419345403.22</float>
+                        <float>1420195841.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

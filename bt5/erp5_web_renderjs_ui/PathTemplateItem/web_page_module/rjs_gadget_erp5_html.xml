@@ -134,24 +134,23 @@
 \n
   </head>\n
   <body>\n
+  <div data-gadget-url="gadget_jio.html"\n
+          data-gadget-scope="jio_gadget"\n
+          data-gadget-sandbox="public"></div>\n
 \n
+  <div data-gadget-sandbox="public" \n
+          data-gadget-url="gadget_translate.html" \n
+          data-gadget-scope="translate"></div>\n
+  \n
   <div data-gadget-url="gadget_erp5_header.html"\n
           data-gadget-scope="header"\n
           data-gadget-sandbox="public"></div>\n
-\n
+  \n
   <div data-gadget-url="gadget_erp5_panel.html"\n
           data-gadget-scope="panel"\n
           data-gadget-sandbox="public"></div>\n
 \n
   <article></article>\n
-\n
-  <section data-gadget-url="gadget_jio.html"\n
-    data-gadget-scope="jio_gadget"\n
-    data-gadget-sandbox="public"></section>\n
-\n
-  <section data-gadget-sandbox="public" \n
-    data-gadget-url="gadget_translate.html" \n
-    data-gadget-scope="translate"></section>\n
           \n
   </body>\n
 </html>
@@ -291,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52806.11840.43758</string> </value>
+                <value> <string>939.54300.9851.50329</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419345029.51</float>
+                        <float>1420034261.32</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
