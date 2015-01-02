@@ -809,6 +809,10 @@ html .ui-listview > li.ui-collapsible {\n
   margin: 0;\n
   padding: 0;\n
 }\n
+/* no padding for header */\n
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading {\n
+  padding: 0;\n
+}\n
 /* format button inside header */\n
 html .ui-listview > li.ui-collapsible .ui-collapsible-heading a {\n
   background: 0 none;\n
@@ -823,7 +827,6 @@ html .ui-listview > li.ui-collapsible .ui-collapsible-heading a {\n
 }\n
 /* icon size */ \n
 html .ui-listview > li.ui-collapsible .ui-collapsible-heading a:after {\n
-  font-size: 1.25em;\n
   background: 0 none;\n
 }\n
 /* remove background on fake caret icon on header */\n
@@ -4682,7 +4685,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52916.16008.10973</string> </value>
+                <value> <string>939.64092.18355.18005</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4700,7 +4703,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419351689.17</float>
+                        <float>1420022281.78</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
