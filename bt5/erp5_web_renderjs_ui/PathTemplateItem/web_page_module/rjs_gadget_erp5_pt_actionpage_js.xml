@@ -137,7 +137,7 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
-    .declareAcquiredMethod("translateElementList", "translateElementList")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
@@ -195,9 +195,14 @@
             breadcrumb_url: all_result[1]\n
           });\n
         })\n
+        // XXX: DOM touches\n
         .push(function () {\n
-          return gadget.translateElementList(gadget.props.element);\n
+          return gadget.translateHtml(gadget.props.element.innerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.props.element.innerHTML = my_translated_html;\n
         });\n
+        \n
 \n
     });\n
 \n
@@ -338,7 +343,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52883.6676.56371</string> </value>
+                <value> <string>939.52883.40109.10154</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -356,7 +361,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419349656.69</float>
+                        <float>1419417919.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

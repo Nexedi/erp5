@@ -120,11 +120,11 @@
     <script src="gadget_erp5_field_list.js" type="text/javascript"></script>\n
 \n
     <script id="option-template" type="text/x-handlebars-template">\n
-      <option value="{{value}}">{{text}}</option>\n
+      <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>\n
     </script>\n
 \n
     <script id="selected-option-template" type="text/x-handlebars-template">\n
-      <option selected="selected" value="{{value}}">{{text}}</option>\n
+      <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>\n
     </script>\n
 \n
   </head>\n
@@ -254,7 +254,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -268,7 +268,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51428.60613.12390</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +286,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411576752.72</float>
+                        <float>1419418540.22</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

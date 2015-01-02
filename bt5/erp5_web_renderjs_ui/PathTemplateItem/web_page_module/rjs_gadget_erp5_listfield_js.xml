@@ -127,12 +127,21 @@
           g.element = element;\n
         });\n
     })\n
+    \n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    \n
     .declareMethod(\'render\', function (options) {\n
-      var select = this.element.querySelector(\'select\'),\n
-        i,\n
+      var i,\n
         template,\n
+        gadget = this,\n
+        select = this.element.querySelector(\'select\'),\n
         field_json = options.field_json,\n
-        tmp = \'\';\n
+        tmp = "",\n
+        wrap = document.createElement("select");\n
+\n
       select.setAttribute(\'name\', field_json.key);\n
       for (i = 0; i < field_json.items.length; i += 1) {\n
         if (field_json.items[i][1] === field_json.default) {\n
@@ -145,16 +154,41 @@
           text: field_json.items[i][0]\n
         });\n
       }\n
-      select.innerHTML += tmp;\n
-      if (field_json.required === 1) {\n
-        select.setAttribute(\'required\', \'required\');\n
-      }\n
-      if (field_json.editable !== 1) {\n
-        select.setAttribute(\'readonly\', \'readonly\');\n
-        select.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
-        // select.setAttribute(\'disabled\', \'disabled\');\n
 \n
-      }\n
+      // need a <select> for transport\n
+      wrap.innerHTML = tmp;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.translateHtml(wrap.outerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          // XXX: no fan...\n
+          var option_list,\n
+            i,\n
+            i_len,\n
+            fragment = document.createDocumentFragment(),\n
+            div = document.createElement("div");\n
+          \n
+          div.innerHTML = my_translated_html;\n
+          option_list = div.querySelectorAll("option");\n
+          for (i = 0, i_len = option_list.length; i < i_len; i += 1) {\n
+            fragment.appendChild(option_list[i]);\n
+          }\n
+          \n
+          select.appendChild(fragment);\n
+          // XXX: no fan end\n
+          \n
+          if (field_json.required === 1) {\n
+            select.setAttribute(\'required\', \'required\');\n
+          }\n
+          if (field_json.editable !== 1) {\n
+            select.setAttribute(\'readonly\', \'readonly\');\n
+            select.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+            // select.setAttribute(\'disabled\', \'disabled\');\n
+    \n
+          }\n
+        });\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -287,7 +321,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -301,7 +335,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.59950.62249.34679</string> </value>
+                <value> <string>939.61577.21369.11400</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +353,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412243487.09</float>
+                        <float>1419871313.56</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

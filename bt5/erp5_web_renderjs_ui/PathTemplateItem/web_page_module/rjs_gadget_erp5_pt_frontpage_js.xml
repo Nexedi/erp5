@@ -137,6 +137,7 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThis",\n
                            "whoWantToDisplayThis")\n
 \n
@@ -224,7 +225,10 @@
 \n
           result_html += \'</div>\';\n
 \n
-          gadget.props.element.querySelector(\'.document_list\').innerHTML = result_html;\n
+          return gadget.translateHtml(result_html);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.props.element.querySelector(\'.document_list\').innerHTML = my_translated_html;\n
         });\n
     });\n
 }(window, rJS, RSVP, Handlebars));
@@ -350,7 +354,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -364,7 +368,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.16182.63738.26641</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -382,7 +386,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413301956.28</float>
+                        <float>1419417516.48</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

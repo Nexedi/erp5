@@ -136,7 +136,7 @@
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("translateElementList", "translateElementList")\n
+    .declareAcquiredMethod("translateHtml", "translateHtmlt")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
@@ -209,9 +209,14 @@
             submit_action: true\n
           });\n
         })\n
+        // XXX: DOM touches\n
         .push(function () {\n
-          return form_gadget.translateElementList(form_gadget.props.element);\n
+          return form_gadget.translateHtml(form_gadget.props.element.innerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          form_gadget.props.element.innerHTML = my_translated_html;\n
         });\n
+        \n
     })\n
 \n
 \n
@@ -412,7 +417,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52858.19121.54596</string> </value>
+                <value> <string>939.52858.22584.102</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -430,7 +435,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419348140.66</float>
+                        <float>1419417804.84</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -122,7 +122,6 @@
 \n
     <!-- XXX widget-status is bad! -->\n
     <script id="panel-template" type="text/x-handlebars-template">\n
-      <form class="save_form document_form">\n
         <div class="center">\n
           <div class="ui-field-contain">\n
             <div class="ui-input-text ui-body-{{widget_theme}} ui-corner-all ui-shadow-inset ui-input-has-clear {{widget_status_class}}">\n
@@ -131,14 +130,14 @@
                 Submit<input data-enhanced="true" type="submit" data-i18n="[value]header-submit" value="Submit" {{widget_status_attribute}} />\n
               </div>\n
             </div>\n
-            <a href="#" data-i18n="header-filter" class="ui-btn ui-btn-{{widget_theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme ui-disabled">Filters</a>\n
+            <a href="#" data-i18n="filter" class="ui-btn ui-btn-{{widget_theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme ui-disabled">Filters</a>\n
           </div>\n
         </div>\n
-      </form>\n
     </script>\n
     \n
   </head>\n
   <body>\n
+    <form class="save_form document_form"></form>\n
   </body>\n
 </html>
 
@@ -277,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.43978.9403.31744</string> </value>
+                <value> <string>939.54156.55991.39765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -295,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419256755.64</float>
+                        <float>1419427478.55</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

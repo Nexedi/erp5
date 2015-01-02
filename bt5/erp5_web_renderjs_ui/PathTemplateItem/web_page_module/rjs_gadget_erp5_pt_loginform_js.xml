@@ -125,7 +125,7 @@
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
-    .declareAcquiredMethod("translateElementList", "translateElementList")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -133,9 +133,13 @@
     .declareMethod("render", function () {\n
       var gadget = this;\n
       \n
+      // XXX: Lot of DOM touches\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return gadget.translateElementList(g.props.element);\n
+          return gadget.translateHtml(gadget.props.element.innerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.props.element.innerHTML = my_translated_html;\n
         });\n
     })\n
 \n
@@ -296,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.43978.9403.31744</string> </value>
+                <value> <string>939.54011.36657.61064</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -314,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419349125.71</float>
+                        <float>1419435753.44</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

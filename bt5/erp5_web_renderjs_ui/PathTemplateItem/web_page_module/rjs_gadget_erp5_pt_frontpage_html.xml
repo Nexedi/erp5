@@ -125,11 +125,11 @@
     <!-- XXX must set theme here! -->\n
     <script id="table-template" type="text/x-handlebars-template">\n
       <div data-role="collapsible">\n
-        <h3 class="ui-bar-inherit">{{definition_title}}</h3>\n
+        <h3 class="ui-bar-inherit" data-i18n="{{definition_title}}">{{definition_title}}</h3>\n
         <ul data-role="listview" data-theme="c" class="document-listview">\n
-          <!--<li data-role="list-divider"><h1>{{definition_title}}</h1></li>-->\n
+          <!--<li data-role="list-divider"><h1 data-i18n="{{definition_title}}">{{definition_title}}</h1></li>-->\n
           {{#each documentlist}}\n
-            <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
+            <li><a class="ui-body-inherit" data-i18n="{{title}}" href="{{link}}">{{title}}</a></li>\n
           {{/each}}\n
         </ul>\n
       </div>\n
@@ -262,7 +262,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.17159.11576.22732</string> </value>
+                <value> <string>939.43978.9403.31744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413363058.89</float>
+                        <float>1419417426.65</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

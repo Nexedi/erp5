@@ -130,6 +130,7 @@
     })\n
 \n
     .declareAcquiredMethod("aq_put", "jio_put")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
       return this.getDeclaredGadget(scope)\n
@@ -208,6 +209,7 @@
 //                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
+                  label_element.setAttribute(\'data-i18n\', renderered_field.title);\n
                   // error_element.setAttribute(\'class\', \'ui-state-error ui-corner-all\');\n
                   label_element.appendChild(error_element);\n
                   if (group[0] !== "bottom") {\n
@@ -269,12 +271,17 @@
 \n
       return queue\n
         .push(function () {\n
+          var temp = document.createElement("div");\n
+          temp.appendChild(parent_element);\n
+          return form_gadget.translateHtml(temp.innerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
           var dom_element = form_gadget.props.element\n
             .querySelector(".field_container");\n
           while (dom_element.firstChild) {\n
             dom_element.removeChild(dom_element.firstChild);\n
           }\n
-          dom_element.appendChild(parent_element);\n
+          dom_element.innerHTML = my_translated_html;\n
           // return $(parent_element).trigger("create");\n
 \n
         });\n
@@ -465,7 +472,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -479,7 +486,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.64346.57999.39918</string> </value>
+                <value> <string>939.62597.55939.38724</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -497,7 +504,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412339249.91</float>
+                        <float>1419932704.16</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

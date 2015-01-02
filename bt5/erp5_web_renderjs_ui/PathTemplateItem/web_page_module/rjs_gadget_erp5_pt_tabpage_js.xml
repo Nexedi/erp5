@@ -138,16 +138,17 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("translateElementList", "translateElementList")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod("render", function (options) {\n
-      var gadget = this,\n
+      var view_list,\n
         matching,\n
-        view_list;\n
+        tab_list = [],\n
+        gadget = this;\n
 \n
       return gadget.jio_get({"_id": options.jio_key})\n
         .push(function (result) {\n
@@ -177,8 +178,7 @@
           return RSVP.all(promise_list);\n
         })\n
         .push(function (all_result) {\n
-          var i,\n
-            tab_list = [];\n
+          var i;\n
 \n
           for (i = 0; i < all_result.length - 1; i += 1) {\n
             tab_list.push({\n
@@ -188,8 +188,7 @@
             });\n
           }\n
 \n
-\n
-          gadget.props.element.innerHTML = table_template({\n
+          return gadget.translateHtml(table_template({\n
             definition_title: "Views",\n
             definition_i18n: "Views",\n
             definition_icon: "eye",\n
@@ -202,16 +201,15 @@
             definition_i18n: "Editables",\n
             definition_icon: "edit",\n
             documentlist: tab_list\n
-          });\n
-\n
+          }));\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.props.element.innerHTML = my_translated_html;\n
+          \n
           return gadget.renderPageHeader({\n
             cancel_url: tab_list[matching].link\n
           });\n
-        })\n
-        .push(function () {\n
-          return gadget.translateElementList(gadget.props.element);\n
         });\n
-\n
     });\n
 \n
 }(window, rJS, RSVP, Handlebars));
@@ -351,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52859.64388.5905</string> </value>
+                <value> <string>939.62551.57559.50790</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -369,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419348765.01</float>
+                        <float>1419929834.4</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

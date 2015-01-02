@@ -131,7 +131,7 @@
       </section>\n
       <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
         {{#each documentlist}}\n
-          <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
+          <li><a data-i18n="{{title}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
         {{/each}}\n
       </ul>\n
     </script>\n
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51478.33243.40192</string> </value>
+                <value> <string>939.51485.40506.26299</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419265777.06</float>
+                        <float>1419930446.08</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

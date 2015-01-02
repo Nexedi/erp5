@@ -134,7 +134,7 @@
     //////////////////////////////////////////////\n
     // acquired method\n
     //////////////////////////////////////////////\n
-    .declareAcquiredMethod("translateElementList", "translateElementList")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
 \n
@@ -153,14 +153,19 @@
         append_attribute = \' disabled="disabled\';\n
       }\n
 \n
-      search_gadget.props.element.innerHTML = panel_template({\n
-        widget_value: option_dict.extended_search || placeholder,\n
-        widget_theme: option_dict.theme || "c",\n
-        widget_status_attribute: append_attribute || placeholder,\n
-        widget_status_class: append_class || placeholder\n
-      });\n
-      \n
-      return search_gadget.translateElementList(search_gadget.props.element);\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return search_gadget.translateHtml(panel_template({\n
+            widget_value: option_dict.extended_search || placeholder,\n
+            widget_theme: option_dict.theme || "c",\n
+            widget_status_attribute: append_attribute || placeholder,\n
+            widget_status_class: append_class || placeholder\n
+          }));\n
+        })\n
+        .push(function (my_translated_html) {\n
+          search_gadget.props.element.querySelector("form").innerHTML = my_translated_html;\n
+          return search_gadget;\n
+        });\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -188,7 +193,6 @@
             return search_form.pleaseRedirectMyHash(url);\n
           });\n
       }\n
-\n
       // Listen to form submit\n
       return loopEventListener(\n
         search_form.props.element.querySelector(\'form\'),\n
@@ -333,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52819.6586.23620</string> </value>
+                <value> <string>939.62632.40457.51063</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +355,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419345824.09</float>
+                        <float>1419934628.57</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
