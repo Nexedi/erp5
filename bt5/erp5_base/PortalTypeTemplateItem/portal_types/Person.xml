@@ -72,6 +72,14 @@
             <value> <string>Persons capture the contact information (ex. name, phone number) and the relation between entities (ex. who is assigned to which function and which organisation). Persons are supported by a standard validation workflow.</string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple>
+                <string>erp5_validation_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addPerson</string> </value>
         </item>
@@ -110,6 +118,14 @@
             <value> <string>Person</string> </value>
         </item>
         <item>
+            <key> <string>type_erp5workflow_list</string> </key>
+            <value>
+              <tuple>
+                <string>erp5_validation_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>type_interface</string> </key>
             <value>
               <tuple/>
@@ -119,38 +135,6 @@
             <key> <string>type_mixin</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_workflow</string> </key>
-            <value>
-              <tuple>
-                <string>wenjie_workflow</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_workflow_list</string> </key>
-            <value>
-              <tuple>
-                <string>wenjie_workflow</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_workflow_list_list</string> </key>
-            <value>
-              <tuple>
-                <string>erp5_standard_workflow</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>workflow_list</string> </key>
-            <value>
-              <tuple>
-                <string>erp5_validation_workflow</string>
-              </tuple>
             </value>
         </item>
       </dictionary>

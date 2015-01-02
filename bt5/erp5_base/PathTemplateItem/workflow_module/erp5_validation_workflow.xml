@@ -13,6 +13,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -33,10 +50,16 @@
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value> <string>Used to replace DC-validation_workflow</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+This validation workflow has the same transitions & states as the DC-validation_workflow.
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
