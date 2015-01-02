@@ -59,14 +59,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
       type_base_category_list=(['category_state',])
       )
 
-    #type_object.setWorkflow5Value(new_workflow)
-    type_object.workflow_list = ('new_workflow',)
-    #type_object.setProperty('Transition_2', new_workflow)
-
-    #self.assertEqual(type_object.getBaseCategoryList(), ['workflow5'])
-    #self.assertEqual(type_object.getWorkflow5(),
-    #  'workflow_module/new_workflow')
-    #self.assertEqual(len(type_object.getWorkflow5ValueList()), 1)
+    type_object.erp5workflow_list = ('new_workflow',)
 
     # create a module
     self.portal.portal_types.newContent(
@@ -87,22 +80,15 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     ### execute transition
     t1.execute(new_object)
-    #new_object.transition1()
     self.assertEqual(new_object.getCategoryStateTitle(), 'validated')
 
     ### call accessor
-    #new_object.quoi() # accessor is not whatever
     new_object.transition2()
-    #from thread import get_ident
-    #raise NotImplementedError (get_ident())
-    #raise NotImplementedError (new_object.transition2().__class__)# <type 'NoneType'>
     self.assertEqual(new_object.getCategoryStateTitle(), 'draft')
 
     new_object.transition1()
     self.assertEqual(new_object.getCategoryStateTitle(), 'validated')
 
-
-    #new_object.set_to_couscous_please()
     new_object.setToCouscousPlease()
     self.assertEqual(new_object.getCategoryStateTitle(), 'couscous')
 
