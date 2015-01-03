@@ -331,10 +331,15 @@
         return gadget.translateHtml(temp.innerHTML);\n
       })\n
       .push(function (my_translated_html) {\n
-        var temp = document.createElement("div");\n
+        var new_body,\n
+          new_foot,\n
+          temp = document.createElement("div");\n
 \n
         temp.innerHTML = my_translated_html;\n
-        gadget.props.element.appendChild(temp.firstElementChild);\n
+        new_body = temp.querySelector("tbody");\n
+        new_foot = temp.querySelector("tfoot");\n
+        table.appendChild(new_body);\n
+        table.appendChild(new_foot);\n
         return gadget;\n
       });\n
     });\n
@@ -476,7 +481,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.2150.5227.15428</string> </value>
+                <value> <string>940.2151.12481.15257</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -494,7 +499,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420237871.41</float>
+                        <float>1420243220.12</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
