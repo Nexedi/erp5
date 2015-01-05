@@ -418,7 +418,6 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-        ### zwj: checked 31 Dec 2104
         for ERP5Workflow in self.getTypeERP5WorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
           if workflow_module is not None:

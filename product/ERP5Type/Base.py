@@ -199,32 +199,19 @@ class ERP5WorkflowMethod(Method):
           method5.execute(instance)
 
   def registerERP5TransitionAlways(self, portal_type, workflow_id, transition_id):
-    """
-      Transitions registered as always will be invoked always
-    """
     transition_list = self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, [])
     if transition_id not in transition_list: transition_list.append(transition_id)
     self.registerERP5()
 
   def registerERP5TransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
-    """
-      Transitions registered as one per transactions will be invoked
-      only once per transaction
-    """
     transition_list = self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, [])
     if transition_id not in transition_list: transition_list.append(transition_id)
     self.registerERP5()
 
   def registerERP5(self):
-    """
-      Registers the method so that _aq_reset may later reset it
-    """
     erp5workflow_method_registry.append(self)
   
   def reset(self, portal_type=None):
-    """
-      Reset the list of registered interactions or transitions
-    """
     if portal_type:
       self._invoke_once[portal_type] = {}
       self._invoke_always[portal_type] = {}
@@ -503,17 +490,17 @@ class PropertyHolder(object):
 
   def registerERP5WorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
     portal_type = self.portal_type
-
     ERP5workflow_method = getattr(self, id, None)
     if ERP5workflow_method is None:
       ERP5workflow_method = ERP5WorkflowMethod(Base._doNothing)
       setattr(self, id, ERP5workflow_method)
-    if once_per_transaction:
-      ERP5workflow_method.registerERP5TransitionOncePerTransaction(portal_type,
+    if ERP5workflow_method.__class__.__name__ == "ERP5WorkflowMethod":
+      if once_per_transaction:
+        ERP5workflow_method.registerERP5TransitionOncePerTransaction(portal_type,
                                                            wf_id,
                                                            tr_id)
-    else:
-      ERP5workflow_method.registerERP5TransitionAlways(portal_type,
+      else:
+        ERP5workflow_method.registerERP5TransitionAlways(portal_type,
                                                wf_id,
                                                tr_id)
 
@@ -642,7 +629,7 @@ def getClassPropertyList(klass):
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
-  pt = portal_type._getOb(ptype_klass.__name__)
+  pt = portal_type._getOb(ptype_klass.__name__, None)
   for ERP5Workflow in pt.erp5workflow_list:
     for tr in wf5_module._getOb(ERP5Workflow).objectValues(portal_type="Transition"):
       tr_id = tr.id
