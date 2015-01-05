@@ -423,6 +423,36 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     # This untranslatable column have not been translated
     self.assertTrue(message not in message_catalog._translated)
 
+  def test_form_view_ZMI(self):
+    """We can edit form_view in the ZMI."""
+    response = self.publish('/%s/form_view/manage_main'
+       % self.portal.getId(), self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertFalse(response.getHeader('content-disposition'))
+    # Simplistic assertion that we are viewing the ODF XML source
+    self.assertTrue('office:document-content' in response.getBody())
+
+  def test_form_list_ZMI(self):
+    """We can edit form_list in the ZMI."""
+    response = self.publish('/%s/form_list/manage_main'
+       % self.portal.getId(), self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertFalse(response.getHeader('content-disposition'))
+    self.assertTrue('office:document-content' in response.getBody())
+
+  def test_report_view_ZMI(self):
+    """We can edit report_view in the ZMI."""
+    response = self.publish('/%s/report_view/manage_main'
+       % self.portal.getId(), self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertFalse(response.getHeader('content-disposition'))
+    self.assertTrue('office:document-content' in response.getBody())
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'

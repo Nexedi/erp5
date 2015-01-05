@@ -443,6 +443,9 @@ class OOoTemplate(ZopePageTemplate):
     return (text, attached_files_dict)
   # Proxy method to PageTemplate
   def pt_render(self, source=0, extra_context={}):
+    if source:
+      return ZopePageTemplate.pt_render(self, source=source,
+                                         extra_context=extra_context)
     # Get request
     request = extra_context.get('REQUEST', self.REQUEST)
     # Get parent object (the one to render this template on)
