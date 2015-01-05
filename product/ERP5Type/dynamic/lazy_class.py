@@ -288,13 +288,21 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
     portal_types = site.getDefaultModule(portal_type="portal_types")
     object_ptype = portal_types._getOb(cls.__name__, None)
+    if hasattr(object_ptype, 'erp5workflow_list'):
+      ERP5Workflow = site._getOb("workflow_module", None)
+      if ERP5Workflow is not None:
+        intializePortalTypeERP5WorkflowMethod(cls, ERP5Workflow)
+
+    """
+    portal_types = site.getDefaultModule(portal_type="portal_types")
+    object_ptype = portal_types._getOb(cls.__name__, None)
     if object_ptype is not None:
       workflow_list = getattr(object_ptype, 'erp5workflow_list', [])
       if workflow_list is not []:
         ERP5Workflow = getattr(site, "workflow_module", None)
         if ERP5Workflow is not None:
           intializePortalTypeERP5WorkflowMethod(cls, ERP5Workflow)
-
+    """
     # portal type group methods, isNodeType, isResourceType...
     from Products.ERP5Type.ERP5Type import ERP5TypeInformation
     # XXX possible optimization:

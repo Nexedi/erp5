@@ -125,19 +125,6 @@ def resetRegisteredERP5WorkflowMethod(portal_type=None):
 
 class ERP5WorkflowMethod(Method):
   def __init__(self, method, id=None, reindex=1):
-    """
-      method - a callable object or a method
-
-      id - the workflow transition id. This is useful
-           to emulate "old" CMF behaviour but is
-           somehow inconsistent with the new registration based
-           approach implemented here.
-
-           We store id as _transition_id and use it
-           to register the transition for each portal
-           type and each workflow for which it is
-           applicable.
-    """
     self._m = method
     if id is None:
       self._transition_id = method.__name__
@@ -157,16 +144,7 @@ class ERP5WorkflowMethod(Method):
     return self._transition_id
 
   def __call__(self, instance, *args, **kw):
-    """
-      Invoke the wrapped method, and deal with the results.
-    """
     if getattr(self, '__name__', None) in ('getPhysicalPath', 'getId'):
-      # To prevent infinite recursion, 2 methods must have special treatment
-      # this is clearly not the best way to implement this but it is
-      # already better than what we had. I (JPS) would prefer to use
-      # critical sections in this part of the code and a
-      # thread variable which tells in which semantic context the code
-      # should be executed. - XXX
       return self._m(instance, *args, **kw)
 
     # Build a list of transitions which may need to be invoked
@@ -193,30 +171,28 @@ class ERP5WorkflowMethod(Method):
     candidate_transition_item_list = valid_invoke_once_item_list + \
                          self._invoke_always.get(portal_type, {}).items()
 
-    #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
-
     # Try to return immediately if there are no transition to invoke
     if not candidate_transition_item_list:
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
     if instance.getTypeInfo().getTypeERP5WorkflowList():
       wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
-      ### Build the list of method which is call and will be invoked.
+      ### zwj: Build the list of method which is call and will be invoked.
       valid_transition_item_list = []
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          LOG('Executing %s in %s' %(transition_id, wf_id), WARNING, "lol")
+          LOG('zwj: Executing %s in %s' %(transition_id, wf_id), WARNING, "lol")
           if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
           else:
-            raise NotImplementedError("The Transition is not supported by current state.")
+            raise UnsupportedWorkflowMethod("The Transition is not supported by current state.")
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
-      ### Execute method
+      ### zwj: Execute method
       for wf_id, transition_list in valid_transition_item_list:
         for tr in transition_list:
           method5 = wf5_module._getOb(wf_id)._getOb(tr)
@@ -530,7 +506,6 @@ class PropertyHolder(object):
 
     ERP5workflow_method = getattr(self, id, None)
     if ERP5workflow_method is None:
-      # XXX: We should pass 'tr_id' as second parameter.
       ERP5workflow_method = ERP5WorkflowMethod(Base._doNothing)
       setattr(self, id, ERP5workflow_method)
     if once_per_transaction:
@@ -674,6 +649,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       method_id = convertToMixedCase(tr_id)
       wf_id = ERP5Workflow
       ptype_klass.registerERP5WorkflowMethod(method_id, wf_id, tr_id, 0)
+      LOG("ERP5Workflow method %s is generated"%tr_id,WARNING," for %s"%wf_id)
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
