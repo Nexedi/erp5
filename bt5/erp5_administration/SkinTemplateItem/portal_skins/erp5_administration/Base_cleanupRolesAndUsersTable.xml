@@ -50,13 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.z_delete_from_roles_and_users(\n
-  uid=context.Base_filterSecurityUidDict(\n
-    context.getPortalObject().portal_catalog.getSQLCatalog(catalog_id).security_uid_dict,\n
-    {x.security_uid for x in context.z_get_referenced_security_uid_set()},\n
-  ),\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+security_uid_field_list = [x + ("_" if x != "" else "") + "security_uid" for x in portal.portal_catalog.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict().keys()]\n
+security_uid_set_list = []\n
+for security_uid_field in security_uid_field_list:\n
+  security_uid_set_list.append({getattr(x, security_uid_field) for x in context.z_get_referenced_security_uid_set_for(security_uid_field=security_uid_field)})\n
+security_uid_set = reduce(lambda p, v: p.union(v), security_uid_set_list)\n
+filtered_set = context.Base_filterSecurityUidDict(\n
+  portal.portal_catalog.getSQLCatalog(catalog_id).security_uid_dict,\n
+  security_uid_set\n
 )\n
-</string> </value>
+if len(filtered_set) > 0:\n
+  context.z_delete_from_roles_and_users(uid=filtered_set)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

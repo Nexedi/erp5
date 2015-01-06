@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string></string> </value>
+            <value> <string>security_uid_field</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_get_referenced_security_uid_set</string> </value>
+            <value> <string>z_get_referenced_security_uid_set_for</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -75,7 +75,11 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>select distinct security_uid from catalog</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+select distinct <dtml-var security_uid_field> from catalog
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
