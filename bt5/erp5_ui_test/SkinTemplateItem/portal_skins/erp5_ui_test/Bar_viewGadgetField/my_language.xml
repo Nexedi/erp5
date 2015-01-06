@@ -137,6 +137,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -161,6 +165,10 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -175,6 +183,10 @@
                 <item>
                     <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

@@ -91,41 +91,167 @@
 \n
 \n
 <!-- Initialize -->\n
-\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'field_my_subject\']</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>test</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id=\'information_area\']</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 \n
-\n
 <tr>\n
-  <td>type</td>\n
-  <td>//input[@title=\'field_my_subject\']</td>\n
-  <td>couscous</td>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name=\'portal_selections/viewSearchRelatedDocumentDialog0:method\']</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n
 <tr>\n
   <td>click</td>\n
+  <td>//input[@type=\'checkbox\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id=\'dialog_submit_button\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>Titl%</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td>relationFieldTest</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
   <td>//button[@title=\'Save\']</td>\n
   <td></td>\n
 </tr>\n
 \n
-\n
 <tr>\n
-  <td>pause</td>\n
-  <td>2000</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyBodyText</td>\n
-  <td>"Error: URL is not a dataURL"</td>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
   <td></td>\n
 </tr>\n
 \n
 \n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td>relationFieldTest</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td>relationFieldTestSuite</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name=\'portal_selections/viewSearchRelatedDocumentDialog0:method\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@name=\'uids:list\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_callDialogMethod:method\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title=\'field_my_description\']</td>\n
+  <td>relationFieldTestSuite</td>\n
+</tr>\n
 \n
 \n
 </tbody></table>\n
@@ -144,7 +270,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testNotDataURLException</string> </value>
+            <value> <string>testSaveAndLoadWithRelationField</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

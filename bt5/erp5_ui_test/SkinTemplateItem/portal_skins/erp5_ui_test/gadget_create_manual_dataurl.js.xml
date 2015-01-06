@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts16394141.44</string> </value>
+            <value> <string>ts20545224.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -47,10 +47,8 @@
         form_gadget = this,\n
         result = {};\n
       if (input.value) {\n
-        result[form_gadget.props.key] = {\'url\': "data:text/plain;base64,"\n
-                                                 + btoa(input.value),\n
-                                         \'type\': \'text/plain\',\n
-                                         \'file_name\': \'test.txt\'};\n
+        result[form_gadget.props.key] = "data:text/plain;base64,"\n
+                                                 + btoa(input.value);\n
       }\n
       return result;\n
     });\n
@@ -63,7 +61,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1093</int> </value>
+            <value> <int>955</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

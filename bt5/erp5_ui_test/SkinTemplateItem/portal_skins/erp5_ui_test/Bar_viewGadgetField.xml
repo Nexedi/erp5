@@ -78,6 +78,7 @@
                         <string>my_title</string>
                         <string>my_description</string>
                         <string>my_language</string>
+                        <string>my_successor_title</string>
                       </list>
                     </value>
                 </item>
@@ -86,7 +87,6 @@
                     <value>
                       <list>
                         <string>my_file</string>
-                        <string>my_subject</string>
                       </list>
                     </value>
                 </item>

@@ -3,6 +3,7 @@ from Products.Formulator import Widget
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
 from zLOG import LOG, ERROR
+from cStringIO import StringIO
 
 class GadgetWidget(Widget.TextWidget):
   """
@@ -40,26 +41,43 @@ class GadgetWidget(Widget.TextWidget):
                       **kw)
 
   def get_javascript_list(self, field, REQUEST=None):
-    """
-    Returns list of javascript needed by the widget
-    """
-    js_list = ['rsvp.js', 'renderjs.js', 'erp5_gadgetfield.js',
-               'jio_sha256.amd.js', 'jio.js']
-    result = []
-    try:
-      for js_file in js_list:
-        result.append(field.restrictedTraverse(js_file).absolute_url()) 
-    except KeyError:
-      LOG('keyError:', ERROR, 'Error Value: %s' % js_file)
-      return []
+     """
+     Returns list of javascript needed by the widget
+     """
+     js_list = ['rsvp.js', 'renderjs.js', 'erp5_gadgetfield.js']
+     result = []
+     try:
+       for js_file in js_list:
+         result.append(field.restrictedTraverse(js_file).absolute_url())
+     except KeyError:
+       LOG('keyError:', ERROR, 'Error Value: %s' % js_file)
+       return []
+     return result
 
-    return result
+class GadgetFieldValidator(Validator.Validator):
+
+    property_names = Validator.Validator.property_names + ['data_url']
+
+    data_url = fields.CheckBoxField('data_url',
+                                title='Data Url',
+                                description=(
+                                  "Checked if gadget return data url."),
+                                default=0)
+
+    def validate(self, field, key, REQUEST):
+        value = REQUEST.get(key, None)
+        if value is not None:
+          if field.get_value('data_url'):
+            value=value.split(",")[1]
+            return StringIO(value.decode('base64'))
+          return value
 
 
 GadgetWidgetInstance = GadgetWidget()
+GadgetFieldValidatorInstance = GadgetFieldValidator()
 
 class GadgetField(ZMIField):
     meta_type = "GadgetField"
 
     widget = GadgetWidgetInstance
-    validator = Validator.FileValidatorInstance
+    validator = GadgetFieldValidatorInstance

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17097929.83</string> </value>
+            <value> <string>ts20545059.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,25 +22,10 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, Blob, Uint8Array, document, FormData, jIO */\n
+/*global window, rJS, RSVP, document*/\n
 /*jslint nomen: true, maxlen:80, indent:2*/\n
-(function (window, rJS, RSVP) {\n
+(function (window, document, rJS, RSVP) {\n
   "use strict";\n
-  function convertDataURL2Blob(url, type) {\n
-    var binary,\n
-      array = [],\n
-      i;\n
-    url = url.split(\',\')[1];\n
-    if (url !== undefined) {\n
-      binary = window.atob(url);\n
-      for (i = 0; i < binary.length; i += 1) {\n
-        array.push(binary.charCodeAt(i));\n
-      }\n
-      return new Blob([new Uint8Array(array)], {type: type});\n
-    }\n
-    throw "Error: URL is not a dataURL";\n
-  }\n
-\n
   function promiseEventListener(target, type, useCapture) {\n
     //////////////////////////\n
     // Resolve the promise as soon as the event is triggered\n
@@ -65,6 +50,7 @@
     }\n
     return new RSVP.Promise(resolver, canceller);\n
   }\n
+\n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
@@ -87,22 +73,29 @@
     .declareService(function () {\n
       var g = this,\n
         i,\n
-        formdata,\n
         list_gadget = document.getElementsByClassName("gadget"),\n
         all_gadget,\n
         list = [],\n
         gadget_attributes = [],\n
+        url,\n
+        form = g.props.element.querySelector("form"),\n
         scope,\n
+        value,\n
+        key,\n
         tmp;\n
       for (i = 0; i < list_gadget.length; i += 1) {\n
-        scope = list_gadget[i].getAttribute("data-gadget-scope");\n
-        if (scope !== undefined) {\n
+        url = list_gadget[i].getAttribute("data-gadget-url");\n
+        key = list_gadget[i].getAttribute("data-gadget-editable");\n
+        value = list_gadget[i].getAttribute("data-gadget-value");\n
+        //renderable \n
+        if (url !== undefined && url !== null) {\n
           tmp = {};\n
+          scope = list_gadget[i].getAttribute("data-gadget-scope");\n
           list.push(g.getDeclaredGadget(scope));\n
           tmp.sandbox = list_gadget[i].getAttribute("data-gadget-sandbox");\n
-          tmp.editable = list_gadget[i].getAttribute("data-gadget-editable");\n
-          tmp.key = tmp.editable;\n
-          tmp.value = list_gadget[i].getAttribute("data-gadget-value");\n
+          tmp.editable = key;\n
+          tmp.key = key;\n
+          tmp.value = value;\n
           gadget_attributes.push(tmp);\n
         }\n
       }\n
@@ -122,15 +115,19 @@
         })\n
         .push(function (elements) {\n
           var iframe,\n
-            j;\n
+            j,\n
+            sub_value,\n
+            sub_key;\n
           list = [];\n
           for (i = 0, j = 0; i < gadget_attributes.length; i += 1) {\n
             if (all_gadget[i].render !== undefined) {\n
+              sub_value = gadget_attributes[i].value;\n
+              sub_key = gadget_attributes[i].key;\n
               list.push(\n
                 all_gadget[i].render(\n
                   {\n
-                    "key": gadget_attributes[i].key,\n
-                    "value": gadget_attributes[i].value\n
+                    "key": sub_key,\n
+                    "value": sub_value\n
                   }\n
                 )\n
               );\n
@@ -151,12 +148,50 @@
           return RSVP.all(list);\n
         })\n
         .push(function () {\n
-          return promiseEventListener(g.props.element,\n
-                            \'submit\', false);\n
+          /*Do not use ajax call but submit an hidden form.\n
+            So in this way, we can use form submit mecanisme\n
+            provided by browser.\n
+            if use ajax, we should get the return page manually\n
+            which is difficult.\n
+            The new hidden fields have been added with the \n
+            gadget values and the submit button which \n
+            has been activated (relation field image, save button, etc).\n
+            This is done by listening the "click" event on the \n
+            submit/image button.\n
+            After all, submit the form manually again.\n
+          */\n
+          var input_images =\n
+            g.props.element.querySelectorAll("input[type=\'image\']"),\n
+            input_submits =\n
+            g.props.element.querySelectorAll("button[type=\'submit\']");\n
+          list = [];\n
+          if (input_images.length || input_submits.length) {\n
+            list.push(promiseEventListener(g.props.element, "submit", false));\n
+            for (i = 0; i < input_images.length; i += 1) {\n
+              list.push(promiseEventListener(input_images[i], "click", false));\n
+            }\n
+            for (i = 0; i < input_submits.length; i += 1) {\n
+              list.push(promiseEventListener(input_submits[i], "click", false));\n
+            }\n
+            return RSVP.any(list);\n
+          }\n
+          return promiseEventListener(g.props.element, "submit", false);\n
         })\n
         .push(function (evt) {\n
+          var input,\n
+            hidden_button,\n
+            target;\n
           list = [];\n
-          formdata = new FormData(evt.target);\n
+          if (evt.type === "click") {\n
+            input = document.createElement("input");\n
+            input.setAttribute("type", "hidden");\n
+            target = evt.currentTarget || evt.target;\n
+            input.setAttribute("name", target.getAttribute("name"));\n
+            form.appendChild(input);\n
+          } else {\n
+            hidden_button = g.props.element.querySelector(".hidden_button");\n
+            hidden_button.setAttribute("type", "hidden");\n
+          }\n
           for (i = 0; i < all_gadget.length; i += 1) {\n
             if (all_gadget[i].getContent !== undefined &&\n
                 gadget_attributes[i].editable !== null) {\n
@@ -166,47 +201,25 @@
           return RSVP.all(list);\n
         })\n
         .push(function (all_content) {\n
-          var key,\n
-            form,\n
-            arg,\n
-            result;\n
+          var input,\n
+            name;\n
           for (i = 0; i < all_content.length; i += 1) {\n
-            for (key in all_content[i]) {\n
-              if (all_content[i].hasOwnProperty(key)) {\n
-                if (typeof all_content[i][key] === "object") {\n
-                  arg = all_content[i][key];\n
-                  result = convertDataURL2Blob(arg.url, arg.type);\n
-                  formdata.append(key, result, arg.file_name);\n
-                } else {\n
-                  formdata.append(key, all_content[i][key]);\n
-                }\n
+            for (name in all_content[i]) {\n
+              if (all_content[i].hasOwnProperty(name)) {\n
+                input = document.createElement("input");\n
+                input.setAttribute("type", "hidden");\n
+                input.setAttribute("name", name);\n
+                input.setAttribute("value", all_content[i][name]);\n
+                form.appendChild(input);\n
               }\n
             }\n
           }\n
-          form = g.props.element.querySelector(\'form\');\n
-          return jIO.util.ajax(\n
-            {\n
-              "type": form.getAttribute("method"),\n
-              "url":  form.getAttribute("action"),\n
-              "data": formdata,\n
-              "xhrFields":\n
-                {\n
-                  withCredentials: true\n
-                }\n
-            }\n
-          );\n
         })\n
-        .push(function (evt) {\n
-         //XXX  WORK ONLY IN ERP5!!!!!\n
-         //In erp5, after form submit, a new page is redirected automatically\n
-         //so get the new url, it should use getResponseHeader(\'Location\')\n
-         //But since the response code is 302, we have no way to get new url\n
-         //with getResponseHeader, that\'s why in this cas, we use responseURL \n
-         //It only works in erp5. \n
-          return window.location.replace(evt.target.responseURL);\n
+        .push(function () {\n
+          form.submit();\n
         });\n
     });\n
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP));
 
 ]]></string> </value>
         </item>
@@ -216,7 +229,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6264</int> </value>
+            <value> <int>7063</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
