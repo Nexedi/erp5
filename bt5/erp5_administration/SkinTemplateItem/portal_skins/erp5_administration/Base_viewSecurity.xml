@@ -53,6 +53,7 @@
             <value> <string>from AccessControl import getSecurityManager\n
 from zExceptions import Unauthorized\n
 u=getSecurityManager().getUser()\n
+\n
 print \'User:\',u\n
 print \'Is owner:\',u.allowed(context,(\'Owner\',))\n
 print \'User roles:\',u.getRoles()\n
