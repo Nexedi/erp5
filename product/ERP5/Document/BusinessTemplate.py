@@ -1088,7 +1088,8 @@ class ObjectTemplateItem(BaseTemplateItem):
             # old widget, thus we can readd them in
             # the right order group
             old_groups[path] = deepcopy(old_obj.groups)
-          subobjects_dict = self._backupObject(action, trashbin,
+          # we force backup since it was an existing object
+          subobjects_dict = self._backupObject('backup', trashbin,
                                                container_path, object_id)
           # in case of portal types, we want to keep some properties
           if interfaces.ITypeProvider.providedBy(container):

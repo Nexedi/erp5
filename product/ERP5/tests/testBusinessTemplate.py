@@ -3142,8 +3142,28 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
                                                                  id=python_script_id)
+    skin_folder[python_script_id].ZPythonScript_edit('param=""', 'return "body"')
     sequence.set('python_script_id', python_script_id)
     sequence.set('skin_folder_id', skin_folder_id)
+
+  def stepModifyFakeZODBScript(self, sequence=None, **kw):
+    script = self.portal.portal_skins[sequence['skin_folder_id']]\
+        [sequence['python_script_id']]
+    script.ZPythonScript_edit('new_param=""', 'return "new body"')
+
+  def stepCheckFakeZODBScriptIsUpdated(self, sequence=None, **kw):
+    script = self.portal.portal_skins[sequence['skin_folder_id']]\
+        [sequence['python_script_id']]
+    self.assertEquals('return "body"\n',
+        script._body)
+
+  def stepCheckFakeZODBScriptIsBackedUp(self, sequence=None, **kw):
+    trash = self.getTrashTool()
+    trash_bin, = trash.objectValues()
+    backup_script = trash_bin.portal_skins_items[sequence['skin_folder_id']]\
+        [sequence['python_script_id']]
+    self.assertEquals('return "new body"\n',
+        backup_script._body)
 
   def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, **kw):
     """
@@ -5545,6 +5565,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
                        Tic \
+                       RemoveAllTrashBins \
                        \
                        CheckFormGroups \
                        \
@@ -5915,6 +5936,59 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        ReinstallBusinessTemplate \
                        Tic \
                        CheckFakeScriptIsDeleted \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_CheckInstallErasingExistingDocument(self):
+    """ Installing a business template containing a path that already exist
+    in the site should overwrite this path after storing it in portal_trash
+    """
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                       RemoveAllTrashBins \
+                       CreateFakeZODBScript \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddCustomSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       ModifyFakeZODBScript \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       InstallCurrentBusinessTemplate Tic \
+                       CheckFakeZODBScriptIsUpdated \
+                       CheckFakeZODBScriptIsBackedUp \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_CheckUpdateErasingExistingDocument(self):
+    """ Updating a business template containing a path that already exist
+    in the site should overwrite this path after storing it in portal_trash
+    """
+    sequence_list = SequenceList()
+
+    sequence_string = '\
+                       RemoveAllTrashBins \
+                       CreateFakeZODBScript \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       InstallCurrentBusinessTemplate Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       AddCustomSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       ModifyFakeZODBScript \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate Tic \
+                       CheckFakeZODBScriptIsUpdated \
+                       CheckFakeZODBScriptIsBackedUp \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
