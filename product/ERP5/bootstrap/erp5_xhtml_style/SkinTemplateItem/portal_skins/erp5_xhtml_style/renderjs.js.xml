@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts16495763.71</string> </value>
+            <value> <string>ts20546947.22</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>74799</int> </value>
+            <value> <int>75348</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -708,6 +708,14 @@
   };\n
 }(DOMParser));\n
 \n
+;// IE does not support have Document.prototype.contains.\n
+if (typeof document.contains !== \'function\') {\n
+  Document.prototype.contains = function(node) {\n
+    if (node === this || node.parentNode === this)\n
+      return true;\n
+    return this.documentElement.contains(node);\n
+ }\n
+}\n
 ;/*! RenderJs */\n
 /*jslint nomen: true*/\n
 \n
@@ -1215,21 +1223,25 @@
     gadget_instance.__chan.bind("declareMethod",\n
                                 function (trans, method_name) {\n
         gadget_instance[method_name] = function () {\n
-          var argument_list = arguments;\n
-          return new RSVP.Promise(function (resolve, reject) {\n
-            gadget_instance.__chan.call({\n
-              method: "methodCall",\n
-              params: [\n
-                method_name,\n
-                Array.prototype.slice.call(argument_list, 0)],\n
-              success: function (s) {\n
-                resolve(s);\n
-              },\n
-              error: function (e) {\n
-                reject(e);\n
-              }\n
+          var argument_list = arguments,\n
+            wait_promise = new RSVP.Promise(function (resolve, reject) {\n
+              gadget_instance.__chan.call({\n
+                method: "methodCall",\n
+                params: [\n
+                  method_name,\n
+                  Array.prototype.slice.call(argument_list, 0)],\n
+                success: function (s) {\n
+                  resolve(s);\n
+                },\n
+                error: function (e) {\n
+                  reject(e);\n
+                }\n
+              });\n
             });\n
-          });\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return wait_promise;\n
+            });\n
         };\n
         return "OK";\n
       });\n
@@ -1615,25 +1627,28 @@
     if (document_element.nodeType === 9) {\n
       settings.title = document_element.title;\n
 \n
-      for (i = 0; i < document_element.head.children.length; i += 1) {\n
-        element = document_element.head.children[i];\n
-        if (element.href !== null) {\n
-          // XXX Manage relative URL during extraction of URLs\n
-          // element.href returns absolute URL in firefox but "" in chrome;\n
-          if (element.rel === "stylesheet") {\n
-            settings.required_css_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
-            );\n
-          } else if (element.nodeName === "SCRIPT" &&\n
-                     (element.type === "text/javascript" ||\n
-                      !element.type)) {\n
-            settings.required_js_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("src"), url)\n
-            );\n
-          } else if (element.rel === "http://www.renderjs.org/rel/interface") {\n
-            settings.interface_list.push(\n
-              renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
-            );\n
+      if (document_element.head !== null) {\n
+        for (i = 0; i < document_element.head.children.length; i += 1) {\n
+          element = document_element.head.children[i];\n
+          if (element.href !== null) {\n
+            // XXX Manage relative URL during extraction of URLs\n
+            // element.href returns absolute URL in firefox but "" in chrome;\n
+            if (element.rel === "stylesheet") {\n
+              settings.required_css_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+              );\n
+            } else if (element.nodeName === "SCRIPT" &&\n
+                       (element.type === "text/javascript" ||\n
+                        !element.type)) {\n
+              settings.required_js_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("src"), url)\n
+              );\n
+            } else if (element.rel ===\n
+                       "http://www.renderjs.org/rel/interface") {\n
+              settings.interface_list.push(\n
+                renderJS.getAbsoluteURL(element.getAttribute("href"), url)\n
+              );\n
+            }\n
           }\n
         }\n
       }\n
