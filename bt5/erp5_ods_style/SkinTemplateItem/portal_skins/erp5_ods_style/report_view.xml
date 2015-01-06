@@ -50,7 +50,7 @@
       <tal:block tal:define="rendered_report_item_list rendered_report_item_list | python:[];\n
                              report_item_list python: rendered_report_item_list or [];\n
                              dummy python: request.set(\'here\', here);\n
-                             global sheet_per_reportsection python: int(request.get(\'sheet_per_report_section\', 0));">\n
+                             global sheet_per_report_section python: request.get(\'sheet_per_report_section\', False); ">\n
         <tal:block tal:condition="not: report_item_list">\n
           <tal:block tal:condition="python: form.meta_type == \'ERP5 Report\'">\n
             <tal:block tal:define="dummy python: report_item_list.extend(report_method())" />\n
@@ -63,7 +63,7 @@
           </tal:block>\n
         </tal:block>\n
         <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
-          <tal:block tal:condition="not: sheet_per_reportsection">\n
+          <tal:block tal:condition="not: sheet_per_report_section">\n
             <table:table tal:attributes="table:name python:unicode(form.getProperty(\'title\'), \'utf8\')" i18n:attributes="table:name">\n
               <!-- at least one table-column element is required for ODF to validate -->\n
               <table:table-column\n
@@ -135,7 +135,7 @@
               </tal:block>\n
             </table:table>\n
           </tal:block>\n
-          <tal:block tal:condition="sheet_per_reportsection">\n
+          <tal:block tal:condition="sheet_per_report_section">\n
             <tal:block tal:repeat="report_item python: report_item_list">\n
               <tal:block tal:condition="python: report_item.getFormId()">\n
                 <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or \'Sheet%s\' % repeat[\'report_item\'].index, \'utf-8\')">\n
