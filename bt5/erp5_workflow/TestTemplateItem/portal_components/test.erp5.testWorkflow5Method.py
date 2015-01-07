@@ -5,6 +5,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
   """
     Tests ERP5 Workflow.
   """
+
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
     return ('erp5_workflow',)
@@ -14,7 +15,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.workflow_module = self.portal.workflow_module
     self.login() # as Manager
 
-  def test_Erp5TransitionMethod(self):
+  def test01_Erp5AccessorMethod(self):
     """Generate Transition Methods and test these methods."""
     # Create base category as the intermidiate
     self.portal.portal_categories.newContent('category_state')
@@ -22,9 +23,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
                                                    id='new_workflow')
-    s1 = new_workflow.newContent(portal_type='State',title='draft')
-    s2 = new_workflow.newContent(portal_type='State',title='validated')
-    s3 = new_workflow.newContent(portal_type='State',title='couscous')
+    s1 = new_workflow.newContent(portal_type='State',title='Draft', id='draft')
+    s2 = new_workflow.newContent(portal_type='State',title='Validated', id='validated')
+    s3 = new_workflow.newContent(portal_type='State',title='Couscous', id='Couscous')
 
     t1 = new_workflow.newContent(
       portal_type='Transition',
@@ -59,8 +60,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
       type_base_category_list=(['category_state',])
       )
 
-    type_object.erp5workflow_list = ('new_workflow',)
-
+    type_object.edit(type_erp5workflow_list=('new_workflow',))
+    #type_object.erp5workflow_list = ('new_workflow',)
     # create a module
     self.portal.portal_types.newContent(
       'Module Type', 'Base Type',
@@ -76,21 +77,35 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     self.assertTrue(new_object is not None)
     self.assertEqual(new_object.getPortalType(), 'Object Type')
-    self.assertEqual(new_object.getCategoryStateTitle(), 'draft')
+    self.assertEqual(new_object.getCategoryState(), 'draft')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'Draft')
 
     ### execute transition
     t1.execute(new_object)
-    self.assertEqual(new_object.getCategoryStateTitle(), 'validated')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'Validated')
 
+    self.portal.Localizer._default_language = 'fr'
     ### call accessor
     new_object.transition2()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'draft')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'Draft')
+    self.assertEqual(new_object.getTranslatedCategoryStateTitle(), 'Brouillon')
 
     new_object.transition1()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'validated')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'Validated')
 
     new_object.setToCouscousPlease()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'couscous')
+    self.assertEqual(new_object.getCategoryStateTitle(), 'Couscous')
+
+    organisationX = self.portal.organisation_module.newContent(
+                                                    portal_type='Organisation',
+                                                    id='orgnisation_x')
+
+    self.portal.Localizer._default_language = 'fr'
+    self.assertEqual(organisationX.getValidationStateTitle(), 'Draft')
+    self.assertEqual(organisationX.getTranslatedValidationStateTitle(), 'Brouillon')
+
+    organisationX.validate()
+    self.assertEqual(organisationX.getValidationStateTitle(), 'Validated')
 
 def test_suite():
   suite = unittest.TestSuite()
