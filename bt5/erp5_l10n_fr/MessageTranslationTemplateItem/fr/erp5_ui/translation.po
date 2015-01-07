@@ -9548,6 +9548,12 @@ msgstr "Tout Montrer"
 msgid "Show History"
 msgstr "Voir historique"
 
+msgid "Show Non Reconcilied Transactions"
+msgstr "Montrer les écritures non rapprochées"
+
+msgid "Show Reconcilied Transactions"
+msgstr "Montrer les écritures rapprochées"
+
 msgid "Show tabs"
 msgstr "Montrer les onglets"
 
