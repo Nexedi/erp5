@@ -72,6 +72,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>your_show_reconcilied</string>
+                        <string>your_show_non_reconcilied</string>
                         <string>your_portal_skin</string>
                         <string>your_format</string>
                         <string>your_deferred_style</string>
