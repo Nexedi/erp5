@@ -630,13 +630,35 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
   wf5_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__, None)
-  for ERP5Workflow in pt.erp5workflow_list:
-    for tr in wf5_module._getOb(ERP5Workflow).objectValues(portal_type="Transition"):
+
+  for ERP5Workflow_id in pt.erp5workflow_list:
+    ERP5Workflow = wf5_module._getOb(ERP5Workflow_id)
+    state_var = ERP5Workflow.getStateBaseCategory()
+
+    ### zwj: generate erp5worflow state var accessor, override base category accessor
+    for method_id, getter in (
+        ('get%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateGetter),
+        ('get%sTitle' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateTitleGetter),
+        ('getTranslated%s' % UpperCase(state_var),
+                                   WorkflowState.ERP5WorkflowStateTranslatedGetter),
+        ('getTranslated%sTitle' % UpperCase(state_var),
+                                   WorkflowState.ERP5WorkflowStateTranslatedTitleGetter),
+        ('serialize%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateSerializeGetter),
+        ):
+      #if not hasattr(ptype_klass, method_id): 
+      ### zwj: shouldn't override the DC accessors or the portal type using DCWorkflow will have problems
+      method = getter(method_id, ERP5Workflow_id)
+      # Attach to portal_type
+      ptype_klass.registerAccessor(method,
+                                     Permissions.AccessContentsInformation)
+      LOG("Register Accessor %s of %s"%(method_id, ERP5Workflow_id), WARNING, "zwj")
+
+    ### zwj: generate erp5workflow mehtods
+    for tr in wf5_module._getOb(ERP5Workflow_id).objectValues(portal_type="Transition"):
       tr_id = tr.id
       method_id = convertToMixedCase(tr_id)
-      wf_id = ERP5Workflow
-      ptype_klass.registerERP5WorkflowMethod(method_id, wf_id, tr_id, 0)
-      LOG("ERP5Workflow method %s is generated"%tr_id,WARNING," for %s"%wf_id)
+      ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
+      LOG("ERP5Workflow method %s is generated"%tr_id,WARNING," for %s"%ERP5Workflow_id)
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
@@ -669,10 +691,10 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                      WorkflowState.TranslatedTitleGetter),
           ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
           ):
-        if not hasattr(ptype_klass, method_id):
-          method = getter(method_id, wf_id)
+        #if not hasattr(ptype_klass, method_id):
+        method = getter(method_id, wf_id)
           # Attach to portal_type
-          ptype_klass.registerAccessor(method,
+        ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
       storage = dc_workflow_dict
