@@ -163,8 +163,9 @@ class LocalRoleAssignorMixIn(object):
     def updateRoleMapping(self, REQUEST=None, form_id='', priority=3):
       """Update the local roles in existing objects.
       """
-      self.getPortalObject().portal_catalog.searchAndActivate(
+      self.getPortalObject().portal_catalog._searchAndActivate(
         'updateLocalRolesOnSecurityGroups',
+        restricted=False,
         method_kw={
           'activate_kw': {
             'priority': priority,
