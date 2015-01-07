@@ -118,14 +118,6 @@
             <value> <string>Person</string> </value>
         </item>
         <item>
-            <key> <string>type_erp5workflow_list</string> </key>
-            <value>
-              <tuple>
-                <string>erp5_validation_workflow</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>type_interface</string> </key>
             <value>
               <tuple/>
