@@ -132,8 +132,8 @@
     <!-- XXX action, method, fieldset -->\n
     <!-- XXX needs a theme -->\n
     <form class="save_form ui-body-c" novalidate>\n
-      <button data-i18n="save" type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
-        ui-icon-edit ui-btn-icon-right ui-screen-hidden">Save</button>\n
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline\n
+        ui-icon-edit ui-btn-icon-right ui-screen-hidden"></button>\n
 \n
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
@@ -264,7 +264,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -278,7 +278,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51440.6706.38775</string> </value>
+                <value> <string>940.10457.48901.33450</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -296,8 +296,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419417591.82</float>
-                        <string>GMT</string>
+                        <float>1420736835.67</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

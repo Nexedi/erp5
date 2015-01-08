@@ -99,9 +99,7 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, RSVP, loopEventListener, URI, document */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener, URI, document */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, loopEventListener, URI) {\n
   "use strict";\n
@@ -191,24 +189,6 @@
             breadcrumb_url: all_result[4],\n
             save_action: true\n
           });\n
-        })\n
-        // XXX: DOM touches\n
-        .push(function () {\n
-          return form_gadget.translateHtml(form_gadget.props.element.innerHTML);\n
-        })\n
-        .push(function (my_translated_html) {\n
-          //Can\'t use form_gadget.props.element.innerHTML = my_translated_html\n
-          // which will change dom then service will not be started\n
-          var temp = document.createElement("div"),\n
-            elements1,\n
-            i,\n
-            elements2;\n
-          temp.innerHTML = my_translated_html;\n
-          elements1 = form_gadget.props.element.querySelectorAll("[data-i18n]");\n
-          elements2 = temp.querySelectorAll("[data-i18n]");\n
-          for (i = 0; i < elements1.length; i += 1) {\n
-            elements1[i].innerHTML = elements2[i].innerHTML;\n
-          }\n
         });\n
     })\n
 \n
@@ -250,9 +230,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, URI));
-
-]]></string> </value>
+}(window, rJS, RSVP, loopEventListener, URI));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -387,7 +365,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.9016.5643.56644</string> </value>
+                <value> <string>940.10421.7831.40686</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -405,7 +383,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420723492.34</float>
+                        <float>1420736076.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
