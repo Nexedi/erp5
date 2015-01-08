@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2015-01-08 09:01+UTC\n"
-"PO-Revision-Date: 2015-01-08 09:01+UTC\n"
+"POT-Creation-Date: 2015-01-08 13:01+UTC\n"
+"PO-Revision-Date: 2015-01-08 13:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -5044,7 +5044,7 @@ msgid "Draft [state in delivery_causality_workflow]"
 msgstr "Brouillon"
 
 msgid "Draft [state in discussion_thread_workflow]"
-msgstr ""
+msgstr "Brouillon"
 
 msgid "Draft [state in document_ingestion_workflow]"
 msgstr "Brouillon"
@@ -5053,7 +5053,7 @@ msgid "Draft [state in document_publication_workflow]"
 msgstr "Brouillon"
 
 msgid "Draft [state in erp5_validation_workflow]"
-msgstr ""
+msgstr "Brouillon"
 
 msgid "Draft [state in event_simulation_workflow]"
 msgstr ""
