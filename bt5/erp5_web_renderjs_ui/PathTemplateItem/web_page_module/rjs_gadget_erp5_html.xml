@@ -138,10 +138,6 @@
           data-gadget-scope="jio_gadget"\n
           data-gadget-sandbox="public"></div>\n
 \n
-  <div data-gadget-sandbox="public" \n
-          data-gadget-url="gadget_translate.html" \n
-          data-gadget-scope="translate"></div>\n
-  \n
   <div data-gadget-url="gadget_erp5_header.html"\n
           data-gadget-scope="header"\n
           data-gadget-sandbox="public"></div>\n
@@ -149,7 +145,7 @@
   <div data-gadget-url="gadget_erp5_panel.html"\n
           data-gadget-scope="panel"\n
           data-gadget-sandbox="public"></div>\n
-\n
+  \n
   <article></article>\n
           \n
   </body>\n
@@ -276,7 +272,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -290,7 +286,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.54300.9851.50329</string> </value>
+                <value> <string>940.10217.40519.44782</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,8 +304,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420034261.32</float>
-                        <string>GMT</string>
+                        <float>1420723516.81</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

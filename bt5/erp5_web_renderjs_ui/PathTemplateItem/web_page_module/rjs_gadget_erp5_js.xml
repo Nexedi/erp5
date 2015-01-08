@@ -209,6 +209,7 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {\n
+        translation_lookup: "",\n
         hateoas_url: "hateoas/",\n
         action_view: "action_object_view",\n
         default_view_reference: "view"\n
@@ -224,7 +225,6 @@
     .ready(function (g) {\n
       return createJio(g);\n
     })\n
-\n
     .ready(function (g) {\n
       return g.getElement()\n
         .push(function (element) {\n
@@ -232,7 +232,6 @@
           g.props.article = element.querySelector("article");\n
         });\n
     })\n
-\n
     .ready(function (g) {\n
       return g.getDeclaredGadget("header")\n
         .push(function (header_gadget) {\n
@@ -242,41 +241,50 @@
           $(element).trigger("create");\n
         });\n
     })\n
-\n
     /////////////////////////////////////////////////////////////////\n
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
 \n
     // bridge translation gadget\n
+    .allowPublicAcquisition("getTranslationMethod", function () {\n
+      return this.props.translation_lookup;\n
+    })\n
     .allowPublicAcquisition("changeLanguage", function (param_list) {\n
-      return this.getDeclaredGadget("translate")\n
-        .push(function (translation_gadget) {\n
-          return translation_gadget.changeLanguage.apply(\n
-            translation_gadget,\n
-            param_list\n
-          );\n
-        });\n
+      if (this.setLanguage) {\n
+        return this.getDeclaredGadget("translate")\n
+          .push(function (translation_gadget) {\n
+            return translation_gadget.changeLanguage.apply(\n
+              translation_gadget,\n
+              param_list\n
+            );\n
+          });\n
+      }\n
     })\n
     .allowPublicAcquisition("getLanguageList", function (param_list) {\n
-      return this.getDeclaredGadget("translate")\n
-        .push(function (translation_gadget) {\n
-          return translation_gadget.getLanguageList.apply(\n
-            translation_gadget,\n
-            param_list\n
-          );\n
-        });\n
+      if (this.setLanguage) {\n
+        return this.getDeclaredGadget("translate")\n
+          .push(function (translation_gadget) {\n
+            return translation_gadget.getLanguageList.apply(\n
+              translation_gadget,\n
+              param_list\n
+            );\n
+          });\n
+      }\n
+      return JSON.stringify([]);\n
     })\n
     .allowPublicAcquisition("translateHtml", function (param_list) {\n
-      return this.getDeclaredGadget("translate")\n
-        .push(function (translation_gadget) {\n
-          return translation_gadget.translateHtml.apply(\n
-            translation_gadget,\n
-            param_list\n
-          );\n
-        });\n
+      if (this.setLanguage) {\n
+        return this.getDeclaredGadget("translate")\n
+          .push(function (translation_gadget) {\n
+            return translation_gadget.translateHtml.apply(\n
+              translation_gadget,\n
+              param_list\n
+            );\n
+          });\n
+      }\n
+      return param_list;\n
     })\n
-\n
     // Bridge to jio gadget\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
@@ -338,7 +346,6 @@
     })\n
 \n
     .allowPublicAcquisition("renderPageHeader", function (param_list) {\n
-      \n
       // XXX Sven hack: number of _url determine padding for subheader on ui-content \n
       function hasSubNavigation(my_param_dict) {\n
         var i,\n
@@ -369,13 +376,9 @@
     // update the header once translations are available\n
     .allowPublicAcquisition(\'notifyUpdate\', function () {\n
       return this.getDeclaredGadget("header")\n
-        .push(\n
-          function (header_gadget) {\n
-            return header_gadget.notifyUpdate();\n
-          },\n
-          function () {\n
-            return;\n
-          });\n
+        .push(function (header_gadget) {\n
+          return header_gadget.notifyUpdate();\n
+        });\n
     })\n
     .allowPublicAcquisition(\'notifySubmitting\', function () {\n
       return this.getDeclaredGadget("header")\n
@@ -415,7 +418,7 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    \n
+\n
     // XXX translate: called before ready(), so props is not available.\n
     // Needed to lookup to retrieve HAL to fetch site module/runner languages \n
     .declareMethod(\'getSiteRoot\', function () {\n
@@ -424,13 +427,39 @@
 \n
     // Render the page\n
     .declareMethod(\'configure\', function (options) {\n
-      var key;\n
+      var gadget = this,\n
+        elements,\n
+        div,\n
+        key;\n
       for (key in options) {\n
         if (options.hasOwnProperty(key)) {\n
-          this.props[key] = options[key];\n
+          if (key === "translation_lookup") {\n
+            gadget.setLanguage = true;\n
+          }\n
+          gadget.props[key] = options[key];\n
         }\n
       }\n
-      return createJio(this);\n
+      if (gadget.setLanguage) {\n
+        elements = gadget.props.element;\n
+        div = document.createElement("div");\n
+        elements.appendChild(div);\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.declareGadget("gadget_translate.html",\n
+                                        {scope: "translate"});\n
+          })\n
+          .push(function () {\n
+            return gadget.dropGadget("panel");\n
+          })\n
+          .push(function () {\n
+            return gadget.declareGadget("gadget_erp5_panel.html",\n
+                                         {scope: "panel",\n
+                                          element: div});\n
+          })\n
+          .push(function () {\n
+            return createJio(gadget);\n
+          });\n
+      }\n
     })\n
 \n
     // Render the page\n
@@ -491,11 +520,9 @@
           if (main_gadget !== undefined) {\n
             return main_gadget.getElement()\n
               .push(function (fragment) {\n
-                 var element = gadget.props.article,\n
-                    content_container = document.createElement("div");\n
-                \n
+                var element = gadget.props.article,\n
+                  content_container = document.createElement("div");\n
                 content_container.className = "ui-content " + (gadget.props.sub_header_class || "");\n
-                \n
                 // reset subheader indicator\n
                 delete gadget.props.sub_header_class;\n
 \n
@@ -662,7 +689,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -676,7 +703,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1446.34871.22050</string> </value>
+                <value> <string>940.10219.33899.48998</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -694,8 +721,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420195841.19</float>
-                        <string>GMT</string>
+                        <float>1420722838.8</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

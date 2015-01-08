@@ -101,8 +101,8 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint indent: 2, maxlen: 80, nomen: true, todo: true */\n
-/*global window, rJS, document, i18n, UriTemplate */\n
+/*jslint indent: 2, maxlen: 80, nomen: true, todo: true, unparam:true*/\n
+/*global window, rJS, document, i18n, UriTemplate, fetchLanguage, RSVP*/\n
 (function (window, rJS, i18n, UriTemplate) {\n
   "use strict";\n
 \n
@@ -127,13 +127,12 @@
         return JSON.parse(my_event.target.responseText);\n
       });\n
   }\n
-  \n
+\n
   // XXX: language definitions are not standard compliant!\n
   // "zh-CN" is a language, "zh" is not, browser will return the "zh-CN"\n
   // on internal i18n methods, which requires this method to "fix"\n
   function fetchLanguage() {\n
     var lang = i18n.detectLanguage();\n
-    \n
     if (lang.length > 2) {\n
       return lang.substring(0, 2);\n
     }\n
@@ -175,18 +174,18 @@
         .push(function (my_hateoas) {\n
           var url,\n
             site_hal = JSON.parse(my_hateoas.target.responseText);\n
-            \n
           // NOTE: at this point createJIO has not been called yet, so allDocs\n
           // is not available and must be called "manually"\n
           // XXX: Improve\n
           url = UriTemplate.parse(site_hal._links.raw_search.href)\n
             .expand({\n
-              query: \'portal_type: "Web Site" AND title: "\' + site_hal._links.parent.name  + \'"\',\n
+              query: \'portal_type: "Web Site" AND title: "\'\n
+                + site_hal._links.parent.name  + \'"\',\n
               select_list: [\n
                 "available_language_set",\n
                 "default_available_language"\n
               ],\n
-              limit: [0,1]\n
+              limit: [0, 1]\n
             });\n
 \n
           return my_gadget.jio_ajax({\n
@@ -198,25 +197,17 @@
         .push(function (my_site_configuration) {\n
           var response = JSON.parse(my_site_configuration.target.responseText),\n
             web_site = response._embedded.contents[0];\n
-\n
           // set remaining properties\n
-          my_gadget.property_dict.language_list = web_site.available_language_set;\n
-          my_gadget.property_dict.default_language = web_site.default_available_language;\n
-        })\n
-        // XXX: temporary error handler to not break existing sites without\n
-        // translation lookup specified\n
-        .push(undefined, function (error) {\n
-          my_gadget.property_dict = {\n
-            "translation_disabled": true,\n
-            "language_list": []\n
-          };\n
+          my_gadget.property_dict.language_list =\n
+            web_site.available_language_set;\n
+          my_gadget.property_dict.default_language =\n
+            web_site.default_available_language;\n
         });\n
     })\n
-    \n
+\n
     // Fetch first dict here, based on info retrieved from ERP5 website object\n
     .ready(function (my_gadget) {\n
       var props = my_gadget.property_dict;\n
-      \n
       // skip if translations are not available\n
       if (props.translation_disabled) {\n
         return my_gadget;\n
@@ -231,7 +222,8 @@
 \n
           // initialize i18n\n
           i18n.init({\n
-            "customLoad": function (my_lng, my_ns, my_option_dict, my_callback) {\n
+            "customLoad": function (my_lng, my_ns,\n
+               my_option_dict, my_callback) {\n
               // translations available now\n
               my_callback(null, props.current_language_dict);\n
             },\n
@@ -241,12 +233,8 @@
             "fallbackLng": false,\n
             "ns": \'dict\'\n
           });\n
-          \n
-          // XXX: To prevent missing translations in header (calls render on \n
-          // ready) retrigger render now that translations are available.\n
           return my_gadget.notifyUpdate();\n
         });\n
-        \n
     })\n
 \n
 \n
@@ -261,28 +249,26 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    \n
+\n
     // expose languages to gadget which want to know (eg panel)\n
     .declareMethod(\'getLanguageList\', function () {\n
       return JSON.stringify(this.property_dict.language_list);\n
     })\n
-    \n
+\n
     .declareMethod(\'changeLanguage\', function (my_new_language) {\n
       var gadget = this,\n
         current_language = fetchLanguage();\n
-      \n
+\n
       // XXX: relies on cookie value set by i18n!\n
-      if (current_language !== my_new_language && gadget.property_dict.translation_disabled === undefined) {\n
-        \n
+      if (current_language !== my_new_language &&\n
+          gadget.property_dict.translation_disabled === undefined) {\n
         return RSVP.Queue()\n
           .push(function () {\n
             return getTranslationDict(gadget, my_new_language);\n
           })\n
           .push(function (my_language_dict) {\n
             gadget.property_dict.current_language_dict = my_language_dict;\n
-            \n
             i18n.setLng(my_new_language);\n
-\n
             // XXX: for now, reload as the language is stored in cookie\n
             window.location.reload();\n
             //return gadget.translateElementList();\n
@@ -291,12 +277,12 @@
 \n
       return gadget;\n
     })\n
-    \n
+\n
     // translate a list of elements passed and returned as string\n
     .declareMethod(\'translateHtml\', function (my_string) {\n
       var temp, element_list, i, i_len, element, lookup, translate_list, target,\n
         route_text, has_breaks, l, l_len, gadget;\n
-      \n
+\n
       gadget = this;\n
 \n
       // skip if no translations available\n
@@ -370,17 +356,15 @@
                 element.removeChild(element.lastChild);\n
               }\n
               element.appendChild(document.createTextNode(i18n.t(target[0])));\n
+              element.appendChild(document.createElement("span"));\n
               break;\n
             }\n
           }\n
         }\n
       }\n
-      \n
       // return string\n
       return temp.innerHTML;\n
     });\n
-\n
-\n
 }(window, rJS, i18n, UriTemplate));
 
 ]]></string> </value>
@@ -504,7 +488,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -518,7 +502,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1458.30717.61030</string> </value>
+                <value> <string>940.10185.20882.26419</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -536,8 +520,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420196319.63</float>
-                        <string>GMT</string>
+                        <float>1420723441.28</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
