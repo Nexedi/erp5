@@ -96,6 +96,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     new_object.setToCouscousPlease()
     self.assertEqual(new_object.getCategoryStateTitle(), 'Couscous')
 
+    """
     organisationX = self.portal.organisation_module.newContent(
                                                     portal_type='Organisation',
                                                     id='orgnisation_x')
@@ -106,6 +107,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     organisationX.validate()
     self.assertEqual(organisationX.getValidationStateTitle(), 'Validated')
+    """
 
 def test_suite():
   suite = unittest.TestSuite()
