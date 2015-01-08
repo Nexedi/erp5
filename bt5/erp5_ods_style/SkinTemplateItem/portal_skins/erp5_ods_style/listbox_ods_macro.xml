@@ -54,7 +54,7 @@
                selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
                untranslatable_columns python: [x[0] for x in listbox.get_value(\'untranslatable_columns\', REQUEST=request)];\n
-               editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
+               editable_fields listbox/Listbox_getEditableFieldDict;\n
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                is_report_tree_mode selection/report_tree_mode | python: 0;\n
                is_domain_tree_mode selection/domain_tree_mode | python: 0;\n
