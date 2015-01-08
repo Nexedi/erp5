@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#                    Wenjie ZHENG <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -65,7 +65,7 @@ class ERP5WorkflowStateGetter(BaseGetter):
       Gets an attribute value. A default value can be
       provided if needed
     """
-    _need__name__= 1
+    _need__name__=1
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
@@ -181,7 +181,6 @@ class ERP5WorkflowStateTranslatedGetter(ERP5WorkflowStateGetter):
 
     psyco.bind(__call__)
 
-### zwj: original version
 class TranslatedTitleGetter(TitleGetter):
     """
       Gets the translated title of the current state
@@ -207,7 +206,6 @@ class TranslatedTitleGetter(TitleGetter):
 
     psyco.bind(__call__)
 
-### zwj coppatible with DCWorkflow
 class ERP5WorkflowStateTranslatedTitleGetter(ERP5WorkflowStateTitleGetter):
     """
       Gets the translated title of the current state
