@@ -18,7 +18,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
   def test01_Erp5AccessorMethod(self):
     """Generate Transition Methods and test these methods."""
     # Create base category as the intermidiate
-    self.portal.portal_categories.newContent('category_state')
+    self.portal.portal_categories.newContent('new_state')
 
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
@@ -50,14 +50,14 @@ class TestERP5Workflow(ERP5TypeTestCase):
     new_workflow.setSourceValue(s1)
 
     # state variable
-    new_workflow.setStateBaseCategory('category_state',)
+    new_workflow.setStateBaseCategory('new_state',)
 
     # create a base type and a portal type based on this base type
     type_object = self.portal.portal_types.newContent(
       portal_type='Base Type',
       id='Object Type',
       type_class='XMLObject',
-      type_base_category_list=(['category_state',])
+      type_base_category_list=(['new_state',])
       )
 
     type_object.edit(type_erp5workflow_list=('new_workflow',))
@@ -77,37 +77,29 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     self.assertTrue(new_object is not None)
     self.assertEqual(new_object.getPortalType(), 'Object Type')
-    self.assertEqual(new_object.getCategoryState(), 'draft')
-    self.assertEqual(new_object.getCategoryStateTitle(), 'Draft')
+
+    self.portal.Localizer._default_language = 'fr' # switch language
+    message_catalog = self.portal.Localizer.erp5_ui
+    message_catalog.message_edit('Draft', 'fr', 'Brouillon', '')
+
+    self.assertEqual(new_object.getNewState(), 'draft')
+    self.assertEqual(new_object.getNewStateTitle(), 'Draft')
+    self.assertEqual(new_object.getTranslatedNewStateTitle(), 'Brouillon')
 
     ### execute transition
     t1.execute(new_object)
-    self.assertEqual(new_object.getCategoryStateTitle(), 'Validated')
+    self.assertEqual(new_object.getNewStateTitle(), 'Validated')
 
-    self.portal.Localizer._default_language = 'fr'
+
     ### call accessor
     new_object.transition2()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'Draft')
-    self.assertEqual(new_object.getTranslatedCategoryStateTitle(), 'Brouillon')
+    self.assertEqual(new_object.getNewStateTitle(), 'Draft')
 
     new_object.transition1()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'Validated')
+    self.assertEqual(new_object.getNewStateTitle(), 'Validated')
 
     new_object.setToCouscousPlease()
-    self.assertEqual(new_object.getCategoryStateTitle(), 'Couscous')
-
-    """
-    organisationX = self.portal.organisation_module.newContent(
-                                                    portal_type='Organisation',
-                                                    id='orgnisation_x')
-
-    self.portal.Localizer._default_language = 'fr'
-    self.assertEqual(organisationX.getValidationStateTitle(), 'Draft')
-    self.assertEqual(organisationX.getTranslatedValidationStateTitle(), 'Brouillon')
-
-    organisationX.validate()
-    self.assertEqual(organisationX.getValidationStateTitle(), 'Validated')
-    """
+    self.assertEqual(new_object.getNewStateTitle(), 'Couscous')
 
 def test_suite():
   suite = unittest.TestSuite()
