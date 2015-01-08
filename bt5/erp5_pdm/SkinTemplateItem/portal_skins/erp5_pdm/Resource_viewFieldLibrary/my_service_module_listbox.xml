@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>selection_name</string>
               </list>
             </value>
         </item>
@@ -62,15 +61,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,10 +78,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Resource_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>service_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

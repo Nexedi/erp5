@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>portal_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -73,11 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_component_module_listbox</string> </value>
+                    <value> <string>my_view_mode_resource_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -93,6 +94,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Components</string> </value>
                 </item>
               </dictionary>
             </value>
