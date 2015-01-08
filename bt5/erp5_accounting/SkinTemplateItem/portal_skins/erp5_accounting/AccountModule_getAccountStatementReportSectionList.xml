@@ -90,6 +90,8 @@ period_start_date = context\\\n
                    section_category=request[\'section_category\'],\n
                    date=from_date or at_date)\n
 \n
+export = request[\'export\']\n
+\n
 # Also get the currency, to know the precision\n
 currency = context.Base_getCurrencyForSection(request[\'section_category\'])\n
 precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
@@ -144,21 +146,27 @@ if hide_analytic:\n
 else:\n
   analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
   params[\'analytic_column_list\'] = analytic_column_list\n
+request.set(\'analytic_column_list\', analytic_column_list) # for Movement_getExplanationTitleAndAnalytics\n
 \n
 selection_columns = (\n
+  (\'date\', \'Operation Date\'),\n
   (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
-  (\'date\', \'Date\'),\n
-  (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'), )\n
+  (\'Movement_getExplanationTitleAndAnalytics\', \'Title\\nReference and Analytics\' if analytic_column_list else \'Title\\nReference\'),\n
+)\n
 if len(section_uid) > 1:\n
-  selection_columns += ( (\'section_title\', \'Section\'), )\n
-selection_columns += analytic_column_list\n
-if not mirror_section:\n
-  selection_columns += ( (\'Movement_getMirrorSectionTitle\', \'Third Party\'), )\n
+  selection_columns += ((\'section_title\', \'Section\'),)\n
 selection_columns += (\n
-  (\'Movement_getExplanationReference\', \'Document Reference\'),\n
   (\'debit_price\', \'Debit\'),\n
   (\'credit_price\', \'Credit\'),\n
-  (\'running_total_price\', \'Net\'),)\n
+  (\'running_total_price\', \'Running Balance\'),\n
+  (\'grouping_reference\', \'Grouping Reference\'),\n
+  (\'grouping_date\', \'Grouping Date\'),\n
+  (\'modification_date\', \'Modification Date\'),\n
+  (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+)\n
+\n
+if export:\n
+  selection_columns = context.AccountModule_getGeneralLedgerColumnItemList()\n
 \n
 report_section_list = []\n
 if from_date and detailed_from_date_summary:\n
@@ -185,7 +193,7 @@ if from_date and detailed_from_date_summary:\n
 report_section_list.append(\n
     ReportSection(\n
             path=node,\n
-            form_id=\'Account_viewAccountingTransactionList\',\n
+            form_id=\'Account_viewAccountingTransactionListExport\' if export else \'Account_viewAccountingTransactionList\',\n
             selection_name=\'account_preference_selection\',\n
             selection_params=params,\n
             selection_columns=selection_columns,\n

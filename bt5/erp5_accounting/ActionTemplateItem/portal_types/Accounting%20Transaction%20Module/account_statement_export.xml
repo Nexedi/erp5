@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -73,7 +75,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/AccountModule_viewAccountStatementReportDialog?your_portal_skin=ODS&your_format=
+string:${object_url}/AccountModule_viewAccountStatementReportDialog?your_portal_skin=ODS&your_format=&field_your_export:int=1
 
 ]]></string> </value>
         </item>
