@@ -65,7 +65,7 @@ class ERP5WorkflowStateGetter(BaseGetter):
       Gets an attribute value. A default value can be
       provided if needed
     """
-    _need__name__=1
+    _need__name__= 1
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
@@ -80,9 +80,14 @@ class ERP5WorkflowStateGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-      wf = erp5Workflow_module._getOb(self._key)
-      return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)
+        return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+      except (KeyError, AttributeError):
+        portal_workflow = instance.getPortalObject().portal_workflow
+        wf = portal_workflow.getWorkflowById(self._key)
+        return wf._getWorkflowStateOf(instance, id_only=1)
 
     psyco.bind(__call__)
 
@@ -130,9 +135,14 @@ class ERP5WorkflowStateTitleGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-      wf = erp5Workflow_module._getOb(self._key)
-      return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)
+        return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+      except (KeyError, AttributeError):
+        portal_workflow = instance.getPortalObject().portal_workflow
+        wf = portal_workflow.getWorkflowById(self._key)
+        return wf._getWorkflowStateOf(instance).title
 
     psyco.bind(__call__)
 
@@ -150,21 +160,28 @@ class TranslatedGetter(Getter):
 
     psyco.bind(__call__)
 
-class ERP5WorkflowStateTranslatedGetter(Getter):
+class ERP5WorkflowStateTranslatedGetter(ERP5WorkflowStateGetter):
     """ returns the workflow state ID transated. DEPRECATED
     """
 
     def __call__(self, instance):
       portal = instance.getPortalObject()
-      erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-      wf = erp5Workflow_module._getOb(self._key)
-      state_id = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)
+        state_id = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+      except (KeyError, AttributeError):
+        portal = instance.getPortalObject()
+        wf = portal.portal_workflow.getWorkflowById(self._key)
+        state_id = wf._getWorkflowStateOf(instance, id_only=1)
+
       warn('Translated workflow state getters, such as %s are deprecated' %
-            self._id, DeprecationWarning)
+              self._id, DeprecationWarning)
       return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
 
     psyco.bind(__call__)
 
+### zwj: original version
 class TranslatedTitleGetter(TitleGetter):
     """
       Gets the translated title of the current state
@@ -174,9 +191,11 @@ class TranslatedTitleGetter(TitleGetter):
       portal = instance.getPortalObject()
       localizer = portal.Localizer
       wf_id = self._key
+
       wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
+
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
                                          lang=selected_language,
@@ -188,7 +207,8 @@ class TranslatedTitleGetter(TitleGetter):
 
     psyco.bind(__call__)
 
-class ERP5WorkflowStateTranslatedTitleGetter(TitleGetter):
+### zwj coppatible with DCWorkflow
+class ERP5WorkflowStateTranslatedTitleGetter(ERP5WorkflowStateTitleGetter):
     """
       Gets the translated title of the current state
     """
@@ -197,10 +217,17 @@ class ERP5WorkflowStateTranslatedTitleGetter(TitleGetter):
       portal = instance.getPortalObject()
       localizer = portal.Localizer
       wf_id = self._key
-      erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-      wf = erp5Workflow_module._getOb(self._key)
-      selected_language = localizer.get_selected_language()
-      state_title = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)
+        selected_language = localizer.get_selected_language()
+        state_title = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+      except (KeyError, AttributeError):
+        wf = portal.portal_workflow.getWorkflowById(wf_id)
+        selected_language = localizer.get_selected_language()
+        state_title = wf._getWorkflowStateOf(instance).title
+
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
                                          lang=selected_language,
