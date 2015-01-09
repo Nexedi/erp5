@@ -119,6 +119,9 @@ for analytic in group_analytic:\n
     extra_columns += ((\'funding_uid\',\n
         context.AccountingTransactionLine_getFundingBaseCategoryTitle()),)\n
     group_analytic_uid += (\'funding_uid\',)\n
+  elif analytic == \'section\':\n
+    extra_columns += ((\'section_uid\', \'Section\'), (\'Movement_getSectionPriceCurrency\', \'Accounting Currency\'))\n
+    group_analytic_uid += (\'section_uid\',)\n
   else:\n
     for analytic_column in possible_analytic_column_list:\n
       if analytic_column[0] == analytic:\n

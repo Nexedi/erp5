@@ -2248,6 +2248,90 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         credit=3600, final_debit_balance=3600, final_credit_balance=3600,
         final_balance_if_debit=3300, final_balance_if_credit=3300)
 
+  def testTrialBalanceMultipleSection(self):
+    account_module = self.portal.account_module
+    t1 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=100.0),
+                     dict(source_value=account_module.payable,
+                          source_credit=100.0)))
+
+    t2 = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 2',
+              source_reference='2',
+              source_section_value=self.main_section,
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 1, 0, 1),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=200.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200.0)))
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = ["section"]
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEqual(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+
+    self.assertEqual(['node_id', 'node_title',
+           'section_uid', 'Movement_getSectionPriceCurrency',
+           'initial_debit_balance', 'initial_credit_balance', 'debit',
+           'credit', 'final_debit_balance', 'final_credit_balance',
+           'final_balance_if_debit', 'final_balance_if_credit'],
+           data_line_list[0].column_id_list)
+
+    self.assertEqual(4, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+        node_id='40', node_title='Payable',
+        section_uid='My Master Organisation', Movement_getSectionPriceCurrency='EUR',
+        initial_debit_balance=0, initial_credit_balance=0,
+        debit=200, credit=0, final_debit_balance=200, final_credit_balance=0,
+        final_balance_if_debit=200, final_balance_if_credit=0)
+    self.checkLineProperties(data_line_list[1],
+        node_id='41', node_title='Receivable',
+        section_uid='My Master Organisation', Movement_getSectionPriceCurrency='EUR',
+        initial_debit_balance=0, initial_credit_balance=0,
+        debit=0, credit=200, final_debit_balance=0, final_credit_balance=200,
+        final_balance_if_debit=0, final_balance_if_credit=200)
+    self.checkLineProperties(data_line_list[2],
+        node_id='40', node_title='Payable',
+        section_uid='My Organisation', Movement_getSectionPriceCurrency='EUR',
+        initial_debit_balance=0, initial_credit_balance=0,
+        debit=0, credit=100, final_debit_balance=0, final_credit_balance=100,
+        final_balance_if_debit=0, final_balance_if_credit=100)
+    self.checkLineProperties(data_line_list[3],
+        node_id='41', node_title='Receivable',
+        section_uid='My Organisation', Movement_getSectionPriceCurrency='EUR',
+        initial_debit_balance=0, initial_credit_balance=0,
+        debit=100, credit=0, final_debit_balance=100, final_credit_balance=0,
+        final_balance_if_debit=100, final_balance_if_credit=0)
+
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=300,
+        credit=300, final_debit_balance=300, final_credit_balance=300,
+        final_balance_if_debit=300, final_balance_if_credit=300)
 
   def testTrialBalanceExpandAccounts(self):
     # Test of "expand accounts" feature of trial balance

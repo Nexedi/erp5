@@ -266,7 +266,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(context.Base_translateString(x[1]), x[0]) for x in context.AccountModule_getAnalyticColumnList()]</string> </value>
+            <value> <string>python: [(context.Base_translateString(x[1]), x[0]) for x in (context.AccountModule_getAnalyticColumnList() + ((\'section\', \'Section\'), )) ]</string> </value>
         </item>
       </dictionary>
     </pickle>
