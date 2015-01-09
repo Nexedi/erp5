@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, RSVP, FormData, jIO, URI, loopEventListener */\n
+/*global window, rJS, RSVP, FormData, jIO, URI, loopEventListener, document */\n
 (function (window, rJS, RSVP, FormData, jIO, URI, loopEventListener) {\n
   "use strict";\n
 \n
@@ -136,10 +136,10 @@
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("translateHtml", "translateHtmlt")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -167,6 +167,7 @@
             i,\n
             icon,\n
             span = document.createElement("span"),\n
+            section = form_gadget.__element.querySelector("section"),\n
             selector = form_gadget.__element.querySelector("h3"),\n
             view_list = erp5_document._links.action_workflow || [];\n
 \n
@@ -175,7 +176,7 @@
               title = view_list[i].title;\n
             }\n
           }\n
-          \n
+\n
           // XXX hardcoded...\n
           switch (title) {\n
             case "Create User": icon = " ui-icon-user"; break;\n
@@ -195,28 +196,27 @@
           form_options.form_definition = options.form_definition;\n
           form_options.view = options.view;\n
 \n
-          return RSVP.all([\n
-            erp5_form.render(form_options),\n
-            form_gadget.whoWantToDisplayThis(options.jio_key),\n
-            form_gadget.whoWantToDisplayThisPage({page: "breadcrumb"})\n
-          ]);\n
-        })\n
-        .push(function (all_result) {\n
-          return form_gadget.renderPageHeader({\n
-            cancel_url: all_result[1],\n
-            page_title: options.erp5_document.title,\n
-            breadcrumb_url: all_result[2],\n
-            submit_action: true\n
-          });\n
-        })\n
-        // XXX: DOM touches\n
-        .push(function () {\n
-          return form_gadget.translateHtml(form_gadget.props.element.innerHTML);\n
-        })\n
-        .push(function (my_translated_html) {\n
-          form_gadget.props.element.innerHTML = my_translated_html;\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return form_gadget.translateHtml(section.innerHTML);\n
+            })\n
+            .push(function (my_translation_html) {\n
+              section.innerHTML = my_translation_html;\n
+              return RSVP.all([\n
+                erp5_form.render(form_options),\n
+                form_gadget.whoWantToDisplayThis(options.jio_key),\n
+                form_gadget.whoWantToDisplayThisPage({page: "breadcrumb"})\n
+              ]);\n
+            })\n
+           .push(function (all_result) {\n
+             return form_gadget.renderPageHeader({\n
+               cancel_url: all_result[1],\n
+               page_title: options.erp5_document.title,\n
+               breadcrumb_url: all_result[2],\n
+               submit_action: true\n
+            });\n
+           });\n
         });\n
-        \n
     })\n
 \n
 \n
@@ -403,7 +403,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -417,7 +417,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.52858.22584.102</string> </value>
+                <value> <string>940.11718.18032.58982</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -435,8 +435,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419417804.84</float>
-                        <string>GMT</string>
+                        <float>1420812706.24</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
