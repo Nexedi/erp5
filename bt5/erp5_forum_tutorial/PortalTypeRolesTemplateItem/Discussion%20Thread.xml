@@ -4,7 +4,7 @@
    <property id='description'>Forum Administrators are allowed to modify any thread and change its status.</property>
    <multi_property id='category'>function/forum/administrator</multi_property>
   </role>
-  <role id='Author'>
+  <role id='Author; Auditor'>
    <property id='title'>User</property>
    <property id='description'>Forum users can reply to thread posts.</property>
    <multi_property id='category'>function/forum/user</multi_property>
