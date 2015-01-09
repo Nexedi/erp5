@@ -119,7 +119,6 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {};\n
-      \n
     })\n
 \n
     // Assign the element to a variable\n
@@ -145,6 +144,7 @@
         thead = gadget.props.element.querySelector(\'thead\'),\n
         field_json = options.field_json,\n
         tr = document.createElement("tr"),\n
+        document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
         i;\n
 \n
@@ -159,6 +159,13 @@
         tr.appendChild(th);\n
       }\n
       thead.appendChild(tr);\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.translateHtml(document_table.innerHTML);\n
+        })\n
+        .push(function (my_translate_html) {\n
+          document_table.innerHTML = my_translate_html;\n
+        });\n
     })\n
 \n
     //////////////////////////////////////////////\n
@@ -282,7 +289,7 @@
 \n
         paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
         paging_prev.textContent = "Previous";\n
-        paging_prev.setAttribute("data-i18n", "previous");\n
+        paging_prev.setAttribute("data-i18n", "Previous");\n
         paging_prev.href = url_list[0];\n
         paging_info.className = "ui-btn ui-disabled";\n
         if ((begin_from === 0) && (counter === 0)) {\n
@@ -300,7 +307,7 @@
         // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
         paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
         paging_next.textContent = "Next";\n
-        paging_next.setAttribute("data-i18n", "next");\n
+        paging_next.setAttribute("data-i18n", "Next");\n
         paging_next.href = url_list[1];\n
 \n
         if (begin_from === 0) {\n
@@ -323,25 +330,22 @@
         for (len = table.children.length; len > 0; len -= 1) {\n
           table.removeChild(table.lastChild);\n
         }\n
-        \n
         // NOTE: for passing translations, temp must contain a table\n
         temp_table.appendChild(fragment);\n
         temp.appendChild(temp_table);\n
-\n
         return gadget.translateHtml(temp.innerHTML);\n
       })\n
-      .push(function (my_translated_html) {\n
-        var new_body,\n
-          new_foot,\n
-          temp = document.createElement("div");\n
-\n
-        temp.innerHTML = my_translated_html;\n
-        new_body = temp.querySelector("tbody");\n
-        new_foot = temp.querySelector("tfoot");\n
-        table.appendChild(new_body);\n
-        table.appendChild(new_foot);\n
-        return gadget;\n
-      });\n
+        .push(function (my_translated_html) {\n
+          var new_body,\n
+            new_foot,\n
+            temp = document.createElement("div");\n
+          temp.innerHTML = my_translated_html;\n
+          new_body = temp.querySelector("tbody");\n
+          new_foot = temp.querySelector("tfoot");\n
+          table.appendChild(new_body);\n
+          table.appendChild(new_foot);\n
+          return gadget;\n
+        });\n
     });\n
 \n
 }(window, document, rJS, URI, RSVP));
@@ -467,7 +471,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -481,7 +485,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.2151.12481.15257</string> </value>
+                <value> <string>940.11535.19754.41932</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -499,8 +503,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420243220.12</float>
-                        <string>GMT</string>
+                        <float>1420800963.59</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
