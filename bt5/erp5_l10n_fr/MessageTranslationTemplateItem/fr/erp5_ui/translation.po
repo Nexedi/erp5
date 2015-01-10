@@ -4705,6 +4705,9 @@ msgstr "Entrez votre nom d'utilisateur et votre mot de passe"
 msgid "Filter"
 msgstr "Filtrer"
 
+msgid "Final Balance"
+msgstr "Solde Final"
+
 msgid "Final Balance (Credit)"
 msgstr "Solde final (crédit)"
 
@@ -5352,6 +5355,9 @@ msgstr "Définition du workflow d'interaction de l'ingestion"
 
 msgid "Inherited Models"
 msgstr "Modèles hérités"
+
+msgid "Initial Balance"
+msgstr "Solde Initial"
 
 msgid "Initial Bank Reconciliation"
 msgstr "Rapprochement bancaire initial"
@@ -9544,6 +9550,9 @@ msgstr "Inclure les comptes non mouvementés"
 
 msgid "Show All"
 msgstr "Tout Montrer"
+
+msgid "Show Detailed Balance Columns"
+msgstr "Montrer les colonnes de soldes détaillés"
 
 msgid "Show History"
 msgstr "Voir historique"
