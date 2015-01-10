@@ -374,6 +374,8 @@ for node in getInventoryList(\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
+  account_props[\'initial_balance\'] = account_props.get(\n
+              \'initial_balance\', 0) + total_price\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
@@ -391,6 +393,8 @@ for node in getInventoryList(\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
+  account_props[\'initial_balance\'] = account_props.get(\n
+              \'initial_balance\', 0) + total_price\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
@@ -679,10 +683,12 @@ for key, data in line_per_account.items():\n
                 node_title=node_title,\n
                 mirror_section_title=mirror_section_title,\n
                 node_relative_url=node_relative_url,\n
+                initial_balance=initial_debit_balance - initial_credit_balance,\n
                 initial_debit_balance=initial_debit_balance,\n
                 initial_credit_balance=initial_credit_balance,\n
                 debit=data[\'debit\'],\n
                 credit=data[\'credit\'],\n
+                final_balance=final_debit_balance - final_credit_balance,\n
                 final_debit_balance=final_debit_balance,\n
                 final_credit_balance=final_credit_balance,\n
                 final_balance_if_debit=max(closing_balance, 0),\n
@@ -774,6 +780,7 @@ for account_class in account_class_list:\n
   # summary\n
   add_line(Object(node_title=Base_translateString(\'Total for class ${account_class}\',\n
                    mapping=dict(account_class=account_class or \'???\')),\n
+          initial_balance=round(initial_debit_balance - initial_credit_balance, precision),\n
           initial_debit_balance=round(initial_debit_balance, precision),\n
           debit=round(debit, precision),\n
           final_debit_balance=round(final_debit_balance, precision),\n
@@ -781,7 +788,8 @@ for account_class in account_class_list:\n
           credit=round(credit, precision),\n
           final_credit_balance=round(final_credit_balance, precision),\n
           final_balance_if_debit=round(final_balance_if_debit, precision),\n
-          final_balance_if_credit=round(final_balance_if_credit, precision),))\n
+          final_balance_if_credit=round(final_balance_if_credit, precision),\n
+          final_balance=round(final_debit_balance - final_credit_balance, precision),))\n
 \n
   add_line(Object(node_title=\' \'))\n
 \n

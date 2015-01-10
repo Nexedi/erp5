@@ -88,6 +88,8 @@
                         <string>listbox_final_debit_balance</string>
                         <string>listbox_final_balance_if_credit</string>
                         <string>listbox_final_balance_if_debit</string>
+                        <string>listbox_final_balance</string>
+                        <string>listbox_initial_balance</string>
                       </list>
                     </value>
                 </item>

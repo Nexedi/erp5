@@ -62,8 +62,10 @@ final_balance_if_credit = request[\'TrialBalance.final_balance_if_credit\']\n
 \n
 return [ Object( initial_debit_balance=initial_debit_balance,\n
                  initial_credit_balance=initial_credit_balance,\n
+                 initial_balance=initial_debit_balance-initial_credit_balance,\n
                  debit=debit,\n
                  credit=credit,\n
+                 final_balance=(initial_debit_balance + debit) - (initial_credit_balance + credit),\n
                  final_debit_balance=initial_debit_balance + debit,\n
                  final_credit_balance=initial_credit_balance + credit,\n
                  final_balance_if_debit=final_balance_if_debit,\n
