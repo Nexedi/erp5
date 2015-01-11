@@ -35,6 +35,7 @@ import sys
 import glob
 import argparse
 import json
+import tempfile
 from slapos import client
 
 MAX_PARTIONS = 10
@@ -256,8 +257,16 @@ class SlapOSControler(object):
     self.log('SlapOSControler, initialize, reset_software: %r' % reset_software)
     config = self.config
     slapos_config_dict = self.config.copy()
+
+    supervisord_socket = os.path.join(self.instance_root, 'supervisord.socket')
+    if len(supervisord_socket) >= 80:
+      # We want to avoid AF_UNIX path too long error.
+      supervisord_socket = '%s-supervisord.socket' % tempfile.mktemp()
+      self.log('Using shorter supervisord_socket %s' % supervisord_socket)
+
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
+                              supervisord_socket=supervisord_socket,
                               proxy_database=self.proxy_database)
     open(self.slapos_config, 'w').write(pkg_resources.resource_string(
          'erp5.util.testnode', 'template/slapos.cfg.in') %
