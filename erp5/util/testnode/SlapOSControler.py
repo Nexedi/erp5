@@ -292,7 +292,7 @@ class SlapOSControler(object):
     except:
         self.log("SlapOSControler.initializeSlapOSControler, \
                  exception in registerSupply", exc_info=sys.exc_info())
-        raise ValueError("Unable to initializeSlapOSControler")
+        raise
     # Reset all previously generated software if needed
     if reset_software:
       self._resetSoftware()
