@@ -716,7 +716,7 @@ fieldset.right {\n
 fieldset.left fieldset.left,\n
 fieldset.right fieldset.left,\n
 fieldset.center fieldset.left,\n
-table.fake > tr > td > fieldset {\n
+table.fake > tbody > tr > td > fieldset {\n
   border-width: 0;\n
   padding: 0;\n
   margin: 0;\n
