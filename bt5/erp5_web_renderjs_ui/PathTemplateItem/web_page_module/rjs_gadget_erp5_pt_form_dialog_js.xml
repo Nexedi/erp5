@@ -102,8 +102,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, RSVP, FormData, jIO, URI, loopEventListener, document */\n
-(function (window, rJS, RSVP, FormData, jIO, URI, loopEventListener) {\n
+/*global window, rJS, RSVP, FormData, URI, loopEventListener, document */\n
+(function (window, rJS, RSVP, FormData, URI, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -246,7 +246,7 @@
               }\n
             }\n
 \n
-            return jIO.util.ajax({\n
+            return form_gadget.jio_ajax({\n
               "type": form_gadget.props.action.method,\n
               "url": form_gadget.props.action.href,\n
               "data": data,\n
@@ -280,7 +280,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, FormData, jIO, URI, loopEventListener));
+}(window, rJS, RSVP, FormData, URI, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -417,7 +417,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11718.18032.58982</string> </value>
+                <value> <string>940.16022.61765.35328</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -435,8 +435,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420812706.24</float>
-                        <string>UTC</string>
+                        <float>1421070245.4</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
