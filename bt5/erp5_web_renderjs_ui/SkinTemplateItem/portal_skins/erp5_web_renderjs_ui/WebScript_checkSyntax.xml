@@ -44,7 +44,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_syntax</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
