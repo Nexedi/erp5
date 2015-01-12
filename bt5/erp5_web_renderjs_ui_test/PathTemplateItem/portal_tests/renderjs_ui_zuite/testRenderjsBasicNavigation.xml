@@ -60,51 +60,56 @@
   <td>Reset Successfully.</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Created Successfully.</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/portal_tests/Zuite_waitForActivities</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Done.</td>\n
-  <td></td>\n
-</tr>\n
 \n
 <!-- Initialize -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#jio_key=bar_module%2F0&view=view</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'ID\']</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Title</td>\n
-   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>link=Edit</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>pause</td>\n
-  <td>3000</td>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Bars\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>link=Bars</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Add\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>link=Add</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//select[@name=\'field_your_portal_type\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name=\'field_your_portal_type\']</td>\n
+  <td>label=Bar</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -121,6 +126,11 @@
   <td>type</td>\n
   <td>name=field_my_title</td>\n
   <td>Test</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>name=field_my_quantity</td>\n
+  <td>42</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
