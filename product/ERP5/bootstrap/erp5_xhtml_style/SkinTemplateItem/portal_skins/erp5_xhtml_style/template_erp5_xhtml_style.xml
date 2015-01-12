@@ -60,6 +60,7 @@ IDEAS:\n
                 tal:attributes="content python:\', \'.join(subject_list)" />\n
           <meta name="robots" content="index, follow" />\n
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">\n
           <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
           <meta http-equiv="Content-Style-Type" content="text/css" />\n
           <title tal:define="title title | string:ERP5;\n
