@@ -179,11 +179,21 @@
 \n
           // XXX hardcoded...\n
           switch (title) {\n
-            case "Create User": icon = " ui-icon-user"; break;\n
-            case "Create Document": icon = " ui-icon-file-o"; break;\n
-            case "Change State": icon = " ui-icon-share-alt"; break;\n
-            case "Submit": icon = " ui-icon-check"; break;\n
-            default: icon = " ui-icon-random"; break;\n
+          case "Create User":\n
+            icon = " ui-icon-user";\n
+            break;\n
+          case "Create Document":\n
+            icon = " ui-icon-file-o";\n
+            break;\n
+          case "Change State":\n
+            icon = " ui-icon-share-alt";\n
+            break;\n
+          case "Submit":\n
+            icon = " ui-icon-check";\n
+            break;\n
+          default:\n
+            icon = " ui-icon-random";\n
+            break;\n
           }\n
           span.className = "ui-icon ui-icon-custom" + icon;\n
           span.textContent = "\\u00A0";\n
@@ -208,14 +218,14 @@
                 form_gadget.whoWantToDisplayThisPage({page: "breadcrumb"})\n
               ]);\n
             })\n
-           .push(function (all_result) {\n
-             return form_gadget.renderPageHeader({\n
-               cancel_url: all_result[1],\n
-               page_title: options.erp5_document.title,\n
-               breadcrumb_url: all_result[2],\n
-               submit_action: true\n
+            .push(function (all_result) {\n
+              return form_gadget.renderPageHeader({\n
+                cancel_url: all_result[1],\n
+                page_title: options.erp5_document.title,\n
+                breadcrumb_url: all_result[2],\n
+                submit_action: true\n
+              });\n
             });\n
-           });\n
         });\n
     })\n
 \n
@@ -417,7 +427,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.16022.61765.35328</string> </value>
+                <value> <string>940.16195.40887.33757</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -435,7 +445,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421070245.4</float>
+                        <float>1421080553.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

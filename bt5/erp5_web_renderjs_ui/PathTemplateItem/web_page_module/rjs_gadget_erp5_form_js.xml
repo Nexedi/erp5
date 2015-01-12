@@ -235,8 +235,8 @@
                   }\n
 \n
                   return field_queue\n
-                   .push(function () {\n
-                       return form_gadget.translateHtml(field_element.innerHTML);\n
+                    .push(function () {\n
+                      return form_gadget.translateHtml(field_element.innerHTML);\n
                     })\n
                     .push(function (my_translate_html) {\n
                       field_element.innerHTML = my_translate_html;\n
@@ -486,7 +486,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.10454.31463.21265</string> </value>
+                <value> <string>940.11553.26313.55261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -504,8 +504,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420736435.02</float>
-                        <string>UTC</string>
+                        <float>1421080954.49</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

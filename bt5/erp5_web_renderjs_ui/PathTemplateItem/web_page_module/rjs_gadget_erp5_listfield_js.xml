@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, Handlebars */\n
+/*global window, rJS, Handlebars, document, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, Handlebars) {\n
+(function (window, rJS, Handlebars, document, RSVP) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -127,12 +127,12 @@
           g.element = element;\n
         });\n
     })\n
-    \n
+\n
     //////////////////////////////////////////////\n
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    \n
+\n
     .declareMethod(\'render\', function (options) {\n
       var i,\n
         template,\n
@@ -165,20 +165,19 @@
         .push(function (my_translated_html) {\n
           // XXX: no fan...\n
           var option_list,\n
-            i,\n
             i_len,\n
             fragment = document.createDocumentFragment(),\n
             div = document.createElement("div");\n
-          \n
+\n
           div.innerHTML = my_translated_html;\n
           option_list = div.querySelectorAll("option");\n
           for (i = 0, i_len = option_list.length; i < i_len; i += 1) {\n
             fragment.appendChild(option_list[i]);\n
           }\n
-          \n
+\n
           select.appendChild(fragment);\n
           // XXX: no fan end\n
-          \n
+\n
           if (field_json.required === 1) {\n
             select.setAttribute(\'required\', \'required\');\n
           }\n
@@ -186,7 +185,7 @@
             select.setAttribute(\'readonly\', \'readonly\');\n
             select.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
             // select.setAttribute(\'disabled\', \'disabled\');\n
-    \n
+\n
           }\n
         });\n
     })\n
@@ -198,7 +197,7 @@
       return result;\n
     });\n
 \n
-}(window, rJS, Handlebars));
+}(window, rJS, Handlebars, document, RSVP));
 
 ]]></string> </value>
         </item>
@@ -321,7 +320,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -335,7 +334,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.61577.21369.11400</string> </value>
+                <value> <string>940.16203.52595.49561</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -353,7 +352,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419871313.56</float>
+                        <float>1421081098.25</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

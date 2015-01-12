@@ -102,8 +102,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery */\n
-(function (window, rJS, Handlebars, $) {\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
+(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -132,7 +132,7 @@
     .ready(function (g) {\n
       g.props = {};\n
     })\n
-    \n
+\n
     //////////////////////////////////////////////\n
     // acquired method\n
     //////////////////////////////////////////////\n
@@ -175,7 +175,7 @@
             language_list,\n
             document_list = [],\n
             raw_language_list = all_result[2];\n
-          \n
+\n
           // XXX: Customize panel header!\n
           tmp = panel_template();\n
 \n
@@ -193,7 +193,7 @@
             });\n
             return g.translateHtml(tmp);\n
           }\n
-          \n
+\n
           // no translations available or not loaded when reaching this point\n
           tmp += panel_template_nolang({\n
             module_href: all_result[0],\n
@@ -213,8 +213,8 @@
     .declareMethod(\'toggle\', function () {\n
       this.props.jelement.panel("toggle");\n
     })\n
-    \n
-    .declareMethod(\'render\', function (option_dict) {\n
+\n
+    .declareMethod(\'render\', function () {\n
       var panel_gadget = this;\n
 \n
       if (panel_gadget.props.set_search === true) {\n
@@ -222,11 +222,11 @@
       }\n
 \n
       return new RSVP.Queue()\n
-        .push(function() {\n
+        .push(function () {\n
           return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {"scope": "search"});\n
         })\n
         .push(function (my_search_gadget) {\n
-          var selector, parent_node, search_option_dict = {};\n
+          var parent_node, search_option_dict = {};\n
 \n
           panel_gadget.props.set_search = true;\n
 \n
@@ -243,14 +243,14 @@
           return panel_gadget;\n
         });\n
     })\n
-    \n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var panel_gadget, \n
-        form_list, \n
-        event_list, \n
+      var panel_gadget,\n
+        form_list,\n
+        event_list,\n
         handler,\n
         i,\n
         len;\n
@@ -284,7 +284,7 @@
         });\n
     });\n
 \n
-}(window, rJS, Handlebars, jQuery));
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -407,7 +407,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -421,7 +421,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1635.5936.59528</string> </value>
+                <value> <string>940.16198.52720.49783</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -439,7 +439,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420206973.03</float>
+                        <float>1421080772.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

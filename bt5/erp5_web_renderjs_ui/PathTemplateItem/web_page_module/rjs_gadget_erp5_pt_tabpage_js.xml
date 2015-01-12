@@ -205,7 +205,7 @@
         })\n
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
-          \n
+\n
           return gadget.renderPageHeader({\n
             cancel_url: tab_list[matching].link\n
           });\n
@@ -335,7 +335,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -349,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.62551.57559.50790</string> </value>
+                <value> <string>940.11553.26313.55261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419929834.4</float>
+                        <float>1421080804.4</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -184,12 +184,12 @@
               i18n: view_list[i - 2].title\n
             });\n
           }\n
-        \n
+\n
           return gadget.translateHtml(table_template({\n
             definition_title: "Workflow Transitions",\n
             documentlist: tab_list,\n
             definition_i18n: "Workflow-Transitions"\n
-          }));  \n
+          }));\n
         })\n
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
@@ -325,7 +325,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -339,7 +339,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.2136.15566.12765</string> </value>
+                <value> <string>940.11553.26313.55261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -357,7 +357,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420237984.64</float>
+                        <float>1421080866.35</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
