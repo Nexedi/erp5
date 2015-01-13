@@ -124,6 +124,19 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
+  elif meta_type == "GadgetField":\n
+    result = {\n
+      "type": meta_type,\n
+      "key": field.generate_field_key(),\n
+      "default": field.get_value("default"),\n
+      "editable": field.get_value("editable"),\n
+      "css_class": field.get_value("css_class"),\n
+      "hidden": field.get_value("hidden"),\n
+      "description": field.get_value("description"),\n
+      "title": field.get_value("title"),\n
+      "url": field.get_value("gadget_url"),\n
+      "sandbox": field.get_value("js_sandbox"),\n
+    }\n
   elif meta_type == "ListBox":\n
     # XXX Not implemented\n
     columns = field.get_value("columns")\n
@@ -341,7 +354,6 @@ sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 \n
 # Calculate the site root to prevent unexpected browsing\n
 is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) or (hasattr(context, \'isWebMode\') and context.isWebMode())\n
-
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
   site_root = context.getWebSectionValue()\n

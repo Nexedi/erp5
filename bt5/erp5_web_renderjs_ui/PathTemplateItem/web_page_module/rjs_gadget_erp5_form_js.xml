@@ -232,6 +232,8 @@
                     field_url = \'gadget_erp5_field_textarea.html\';\n
                     // field_url = \'gadget_codemirror.html\';\n
                     // sandbox = \'iframe\';\n
+                  } else if (renderered_field.type === \'GadgetField\') {\n
+                    field_url = \'gadget_erp5_field_gadget.html\';\n
                   }\n
 \n
                   return field_queue\n
@@ -472,7 +474,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -486,7 +488,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>940.17393.53012.39048</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -504,8 +506,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080954.49</float>
-                        <string>GMT</string>
+                        <float>1421153349.36</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

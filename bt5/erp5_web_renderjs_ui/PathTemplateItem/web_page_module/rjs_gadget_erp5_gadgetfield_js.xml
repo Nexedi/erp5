@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.appcache</string> </value>
+            <value> <string>gadget_erp5_field_gadget.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_appcache</string> </value>
+            <value> <string>rjs_gadget_erp5_gadgetfield_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,109 +99,78 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
-# generated on Mon, 06 Oct 2014 15:03:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
-rsvp.js\n
-URI.js\n
-codemirror.css\n
-codemirror.js\n
-codemirror_addon_dialog.css\n
-codemirror_addon_dialog.js\n
-codemirror_addon_display_fullscreen.css\n
-codemirror_addon_display_fullscreen.js\n
-codemirror_addon_edit_matchbrackets.js\n
-codemirror_addon_searchcursor.js\n
-codemirror_keymap_vim.js\n
-codemirror_mode_clike.js\n
-codemirror_mode_javascript.js\n
-codemirror_theme_solarized.css\n
-dygraph.js\n
-gadget_bin.css\n
-gadget_bin.html\n
-gadget_bin.js\n
-gadget_codemirror.css\n
-gadget_codemirror.html\n
-gadget_codemirror.js\n
-gadget_erp5.css\n
-gadget_erp5.html\n
-gadget_erp5.js\n
-gadget_erp5_field_float.html\n
-gadget_erp5_field_float.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_readonly.html\n
-gadget_erp5_field_readonly.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_erp5_latest.css\n
-gadget_erp5_page_action.html\n
-gadget_erp5_page_action.js\n
-gadget_erp5_page_breadcrumb.html\n
-gadget_erp5_page_breadcrumb.js\n
-gadget_erp5_page_form.html\n
-gadget_erp5_page_form.js\n
-gadget_erp5_page_front.html\n
-gadget_erp5_page_front.js\n
-gadget_erp5_page_login.html\n
-gadget_erp5_page_login.js\n
-gadget_erp5_page_tab.html\n
-gadget_erp5_page_tab.js\n
-gadget_erp5_panel.html\n
-gadget_erp5_panel.js\n
-gadget_erp5_pt_form_dialog.html\n
-gadget_erp5_pt_form_dialog.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_pt_form_view.html\n
-gadget_erp5_pt_form_view.js\n
-gadget_erp5_pt_form_view_editable.html\n
-gadget_erp5_pt_form_view_editable.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_global.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-handlebars.js\n
-jio.js\n
-jio_complex_queries.js\n
-jio_sha1.amd.js\n
-jio_sha2.amd.js\n
-jio_sha256.amd.js\n
-jio_storage_erp5.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
-renderjs.js\n
-uritemplate.js\n
-NETWORK:\n
-*
-
-]]></string> </value>
+            <value> <string>/*global window, rJS, RSVP, document*/\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP) {\n
+  "use strict";\n
+  function createGadget(gadget) {\n
+    var gadget_element = document.createElement("div"),\n
+      suboptions = {},\n
+      field_json = gadget.props.field_json;\n
+    suboptions.value = field_json.default;\n
+    suboptions.key = field_json.key;\n
+    suboptions.editable = field_json.editable;\n
+    gadget.props.element.appendChild(gadget_element);\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.declareGadget(field_json.url, {\n
+          scope: field_json.key,\n
+          sandbox: field_json.sandbox,\n
+          element: gadget_element\n
+        });\n
+      })\n
+      .push(function (field_gadget) {\n
+        gadget.props.field_gadget = field_gadget;\n
+        if (field_gadget.render !== undefined) {\n
+          return field_gadget.render(suboptions);\n
+        }\n
+      });\n
+  }\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this;\n
+      gadget.props.field_json = options.field_json;\n
+      if (gadget.props.field_gadget !== undefined) {\n
+        if (gadget.props.field_gadget.render !== undefined) {\n
+          return gadget.props.field_gadget.render({"key" : options.field_json.key,\n
+                                                   "value" : options.field_json.default,\n
+                                                   "editable" : options.field_json.editable});\n
+        }\n
+      } else if (gadget.props.field_json.sandbox !== "iframe") {\n
+        if (gadget.props.field_json.sandbox === "") {\n
+          gadget.props.field_json.sandbox = "public";\n
+        }\n
+        return createGadget(gadget);\n
+      }\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      if (gadget.props.field_gadget === undefined) {\n
+        return createGadget(gadget);\n
+      }\n
+    })\n
+    .declareMethod("getContent", function () {\n
+      return this.props.field_gadget.getContent();\n
+    });\n
+}(window, document, rJS, RSVP));\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 AppCache</string> </value>
+            <value> <string>Gadget ERP5 gadgetfield JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -238,6 +207,12 @@ NETWORK:\n
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -259,7 +234,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -281,8 +256,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.77</float>
-                        <string>GMT</string>
+                        <float>1421152937.83</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -326,7 +301,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17441.54956.1450</string> </value>
+                <value> <string>940.17406.2535.58641</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +319,64 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421155553.4</float>
+                        <float>1421153187.18</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1421152578.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
