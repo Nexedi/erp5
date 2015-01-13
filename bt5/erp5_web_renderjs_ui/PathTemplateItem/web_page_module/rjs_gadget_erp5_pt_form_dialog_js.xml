@@ -102,8 +102,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, RSVP, FormData, URI, loopEventListener, document */\n
-(function (window, rJS, RSVP, FormData, URI, loopEventListener) {\n
+/*global window, rJS, RSVP, URI, loopEventListener, document */\n
+(function (window, rJS, RSVP, URI, loopEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -242,17 +242,17 @@
             return erp5_form.getContent();\n
           })\n
           .push(function (content_dict) {\n
-            var data = new FormData(),\n
+            var data = {},\n
               key;\n
 \n
-            data.append(form_gadget.props.form_id.key,\n
-                                    form_gadget.props.form_id[\'default\']);\n
+            data[form_gadget.props.form_id.key] =\n
+                                    form_gadget.props.form_id[\'default\'];\n
             // XXX Hardcoded\n
-            data.append("dialog_id",\n
-                                    form_gadget.props.form_id[\'default\']);\n
+            data.dialog_id =\n
+                                    form_gadget.props.form_id[\'default\'];\n
             for (key in content_dict) {\n
               if (content_dict.hasOwnProperty(key)) {\n
-                data.append(key, content_dict[key]);\n
+                data[key] = content_dict[key];\n
               }\n
             }\n
 \n
@@ -290,7 +290,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, FormData, URI, loopEventListener));
+}(window, rJS, RSVP, URI, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -427,7 +427,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.16195.40887.33757</string> </value>
+                <value> <string>940.17478.1208.10666</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -445,7 +445,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080553.89</float>
+                        <float>1421157982.02</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
