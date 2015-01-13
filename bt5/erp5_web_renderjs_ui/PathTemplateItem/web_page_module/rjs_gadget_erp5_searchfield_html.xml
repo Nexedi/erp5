@@ -113,7 +113,7 @@
     <title>ERP5 Search Field</title>\n
 \n
     <!-- renderjs -->\n
-    <script src="RSVP.js"></script>\n
+    <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
     <script src="handlebars.js"></script>\n
 \n

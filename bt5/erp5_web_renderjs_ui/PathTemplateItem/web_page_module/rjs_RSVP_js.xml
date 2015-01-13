@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>RSVP.js</string> </value>
+            <value> <string>rsvp.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -1211,7 +1211,7 @@ window.RSVP = requireModule("rsvp");\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1225,7 +1225,7 @@ window.RSVP = requireModule("rsvp");\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.690.6828.44612</string> </value>
+                <value> <string>940.11490.23964.35481</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1243,7 +1243,7 @@ window.RSVP = requireModule("rsvp");\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1410857997.29</float>
+                        <float>1421142585.57</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

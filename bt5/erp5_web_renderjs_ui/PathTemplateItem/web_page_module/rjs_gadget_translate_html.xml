@@ -112,7 +112,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
     <title>Jio Gadget</title>\n
 \n
-    <script src="RSVP.js"></script>\n
+    <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
     <script src="i18next.js"></script>\n
     <script src="uritemplate.js"></script>\n

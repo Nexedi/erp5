@@ -110,7 +110,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
     <title>Codemirror with vim binding</title>\n
 \n
-    <script src="RSVP.js" type="text/javascript"></script>\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
 \n
   <link rel="stylesheet" href="codemirror.css">\n

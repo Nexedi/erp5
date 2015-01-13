@@ -113,7 +113,7 @@
     <title>ERP5 PT Frontpage</title>\n
 \n
     <!-- renderjs -->\n
-    <script src="RSVP.js" type="text/javascript"></script>\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="handlebars.js" type="text/javascript"></script>\n
 \n
