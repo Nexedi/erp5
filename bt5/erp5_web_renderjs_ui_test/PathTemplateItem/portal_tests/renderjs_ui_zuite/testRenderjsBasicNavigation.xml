@@ -138,8 +138,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>pause</td>\n
+  <td>3000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'ID\']</td>\n
+  <td>//button[@data-i18n=\'Save\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
