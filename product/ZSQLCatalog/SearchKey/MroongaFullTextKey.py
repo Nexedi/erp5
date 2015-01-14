@@ -26,14 +26,14 @@
 #
 ##############################################################################
 
-from DefaultKey import DefaultKey
+from KeywordKey import KeywordKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
 
-class MroongaFullTextKey(DefaultKey):
-  default_comparison_operator = 'mroonga'
+class MroongaFullTextKey(KeywordKey):
+  default_fulltext_comparison_operator = 'mroonga'
 
   def dequoteParsedText(self):
     return False
@@ -44,6 +44,14 @@ class MroongaFullTextKey(DefaultKey):
     # '(a b)' means fulltext search with (a OR b), that is different
     # from fulltext='a b' that means fulltext search with (a AND b).
     return '(%s)' % (value, )
+
+  def _guessComparisonOperator(self, value):
+    if isinstance(value, basestring) and value[:1] in ('+', '-'):
+      operator = self.default_fulltext_comparison_operator
+    else:
+      operator = super(MroongaFullTextKey,
+                       self)._guessComparisonOperator(value)
+    return operator
 
   def _processSearchValue(self, search_value, logical_operator,
                           comparison_operator):
