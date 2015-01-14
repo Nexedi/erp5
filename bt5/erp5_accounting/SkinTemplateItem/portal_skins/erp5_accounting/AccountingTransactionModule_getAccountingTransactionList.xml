@@ -143,9 +143,6 @@ if creation_date_range_min or creation_date_range_max:\n
                 query=(creation_date_range_max, ),\n
                 range=\'max\')\n
 \n
-if stat:\n
-  return context.countFolder(**params)\n
-\n
 select_dict = params.get(\'select_dict\') or {}\n
 select_dict.update(dict(total_debit=None,\n
                         total_credit=None,\n
@@ -166,6 +163,8 @@ params[\'select_dict\'] = select_dict\n
 if not params.get(\'accounting_transaction.section_uid\'):\n
   params.setdefault(\'group_by\', (\'uid\',))\n
 \n
+if stat:\n
+  return context.countFolder(**params)\n
 return context.searchFolder(**params)\n
 </string> </value>
         </item>
