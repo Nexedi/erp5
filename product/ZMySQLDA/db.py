@@ -319,6 +319,7 @@ class DB(TM):
              because they are bound to the connection. This check can be
              overridden by passing force_reconnect with True value.
         """
+        self._count += 1
         try:
             self.db.query(query)
         except OperationalError, m:
@@ -332,6 +333,7 @@ class DB(TM):
                 raise
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
+            self._count += 1
             self.db.query(query)
         except ProgrammingError, exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
@@ -399,6 +401,7 @@ class DB(TM):
 
     def _begin(self, *ignored):
         """Begin a transaction (when TM is enabled)."""
+        self._count = 0
         try:
             self._transaction_begun = True
             # Ping the database to reconnect if connection was closed.
