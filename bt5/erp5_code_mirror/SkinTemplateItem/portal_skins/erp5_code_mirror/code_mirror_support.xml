@@ -64,6 +64,11 @@
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/dep/diff_match_patch.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/merge.js"></script>\n
 \n
+<!-- Lint\n
+     TODO: Only support Python for now -->\n
+<link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/lint/lint.css">\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/lint.js"></script>\n
+\n
 <style type="text/css">\n
  .maximize_fullscreen_message {\n
    display: table;\n
@@ -115,6 +120,17 @@
 \n
  .CodeMirror pre, .CodeMirror span {\n
    font-family: monospace !important;\n
+ }\n
+\n
+ /* Workaround for lint icons "multiple" icons hiding "warning/errors" icons\n
+    because of "background-color: inherit" defined by erp5, and also to fix\n
+    background color of the gutter (cosmetic) */\n
+ .CodeMirror-lint-marker-multiple,\n
+ .CodeMirror-lint-marker-error,\n
+ .CodeMirror-lint-marker-warning,\n
+ .CodeMirror-gutters,\n
+ .CodeMirror-gutter-elt {\n
+   background-color: transparent !important;\n
  }\n
 </style>\n
 \n
@@ -384,6 +400,28 @@
    is_maximized = true;\n
  }\n
 \n
+ function checkPythonSourceCode(cm, updateLinting, options) {\n
+// CodeMirror.registerHelper("lint", "python", function(text) {\n
+   $.post(\n
+     \'&dtml-portal_url;/ERP5Site_checkPythonSourceCodeAsJSON\',\n
+     {\'data\': JSON.stringify({code: cm.getValue()})},\n
+      function(data){\n
+        var messages = data.annotations;\n
+        var found = [];\n
+        for(var i = 0; i < messages.length; i++) {\n
+          message = messages[i];\n
+          found.push({\n
+            from: CodeMirror.Pos(message.row, message.column - 1),\n
+            to: CodeMirror.Pos(message.row, message.column),\n
+            message: message.text,\n
+            severity: message.type\n
+          });\n
+        }\n
+\n
+        updateLinting(cm, found);\n
+   });\n
+ }\n
+\n
  // CodeMirror expects a DOM element, not a JQuery Object\n
  var cm = CodeMirror.fromTextArea(\n
    $(\'#&dtml-field_id;\')[0],\n
@@ -399,8 +437,12 @@
                 "Ctrl-S": function(cm){saveDocument(cm, $.Event(\'click\'))}},\n
     foldGutter: true,\n
     lineWrapping: true,\n
-    gutters: ["CodeMirror-linenumbers",\n
-              "CodeMirror-foldgutter"]});\n
+    gutters: ["CodeMirror-lint-markers",\n
+              "CodeMirror-linenumbers",\n
+              "CodeMirror-foldgutter"],\n
+    lintWith: {"getAnnotations": checkPythonSourceCode,\n
+               "async": true}\n
+    });\n
  //cm.foldCode(CodeMirror.Pos(8, 0));\n
 \n
  updateErrorWarningMessageDivWithJump();\n

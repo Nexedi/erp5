@@ -1,4 +1,7 @@
 2015-01-16 arnaud.fontaine
+* Add linter to check Python syntax in real time and display warnings/errors icons next to the line number (likewise Ace Editor implementation).
+
+2015-01-16 arnaud.fontaine
 * Remove 'title' attribute of editor field.
 
 2014-12-26 arnaud.fontaine
