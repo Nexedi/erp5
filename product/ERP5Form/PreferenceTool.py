@@ -162,15 +162,14 @@ class PreferenceTool(BaseTool):
         user_is_manager = 'Manager' in user.getRolesInContext(self)
         for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
           pref = pref.getObject()
-          if pref is not None and pref.getProperty('preference_state',
-                                    'broken') in ('enabled', 'global'):
-            # XXX quick workaround so that manager only see user preference
-            # they actually own.
-            if user_is_manager and pref.getPriority() == Priority.USER :
-              if pref.getOwnerTuple()[1] == user.getId():
+            # XXX quick workaround so that managers only see user preference
+            #     they actually own.
+          if pref is not None and (not user_is_manager or
+                                   pref.getPriority() != Priority.USER or
+                                   pref.getOwnerTuple()[1] == user.getId()):
+            if pref.getProperty('preference_state',
+                                'broken') in ('enabled', 'global'):
                 prefs.append(pref)
-            else :
-              prefs.append(pref)
         prefs.sort(key=lambda x: x.getPriority(), reverse=True)
         # add system preferences before user preferences
         sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
