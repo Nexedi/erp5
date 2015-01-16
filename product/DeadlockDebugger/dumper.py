@@ -69,7 +69,9 @@ def dump_threads():
           while f is not None:
             code = f.f_code
             if code is DB._query.func_code:
-              mysql_info = "\nMySQL query:\n%s\n" % f.f_locals['query']
+              mysql_info = "\nMySQL query - %s:\n%s\n" % (
+                getattr(f.f_locals['self'], "_start_time", ""),
+                f.f_locals['query'])
               break
             f = f.f_back
         except ImportError:

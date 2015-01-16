@@ -107,6 +107,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR
 from ZODB.POSException import ConflictError
+import time
 
 import sys
 
@@ -321,6 +322,7 @@ class DB(TM):
              because they are bound to the connection. This check can be
              overridden by passing force_reconnect with True value.
         """
+        self._start_time = time.time()
         try:
             self.db.query(query)
         except OperationalError, m:
