@@ -1,3 +1,6 @@
+2015-01-16 arnaud.fontaine
+* Remove 'title' attribute of editor field.
+
 2014-12-26 arnaud.fontaine
 * Saving (Ctrl-s) was not working when using Merge view.
 
