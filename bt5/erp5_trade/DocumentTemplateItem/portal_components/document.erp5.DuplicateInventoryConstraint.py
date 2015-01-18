@@ -105,7 +105,7 @@ class DuplicateInventoryConstraint(ConstraintMixin):
             inventory_list = getCurrentInventoryList(resource=resource,
                                      variation_text=variation_text,
                                      from_date=date, at_date=date,
-                                     default_stock_table='inventory_stock',
+                                     default_stock_table='stock',
                                      node=node)
             for inventory in inventory_list:
               movement = getObjectFromUid(inventory.stock_uid)
