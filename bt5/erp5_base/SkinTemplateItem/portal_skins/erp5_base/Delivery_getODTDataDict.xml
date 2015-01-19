@@ -335,8 +335,11 @@ destination_decision = context.getDestinationDecisionValue()\n
 if destination_decision is None:\n
   destination_decision = EmptyOrganisation()\n
 \n
-report_title = context.getSimulationState() == "draft" and "Draft Order" or "Order"\n
-\n
+if context.getPortalType() in context.getPortalObject().getPortalOrderTypeList():\n
+  report_title = context.getSimulationState() == "draft" and "Draft Order" or "Order"\n
+else:\n
+  report_title = context.getSimulationState() == "draft" and "Draft Packing List" or "Packing List"\n
+  \n
 data_dict = {\n
   \'report_title\' : report_title,\n
   \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
