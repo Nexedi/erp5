@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from Products.DCWorkflow.utils import modifyRolesForPermission
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
@@ -52,6 +53,12 @@ class Workflow(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+
+  ### zwj: for security issue
+  managed_permission = ()
+  role = None
+  group = ()
+  erp5_permission_roles = {} # { permission: [role] or (role,) }
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -127,6 +134,9 @@ class Workflow(XMLObject):
     """
     return DateTime()
 
+  def getManagedPermissionList(self):
+    return self.managed_permission
+
   def getStateChangeInformation(self, document, state, transition=None):
     """
     Return an object used for variable tales expression.
@@ -142,15 +152,73 @@ class Workflow(XMLObject):
 
   def isERP5WorkflowMethodSupported(self, document, transition):
     sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    ### zwj: upper line may meet problems when there are other Base categories.
     if sdef is None:
       return 0
     if transition in sdef.getDestinationValueList():
       return 1
     return 0
 
+  ### zwj: following parts related to the security features
+
+  security.declarePrivate('updateRoleMappingsFor')
+  def updateRoleMappingsFor(self, document):
+    """Changes the object permissions according to the current state.
+    """
+    changed = 0
+    sdef = sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    if sdef is None:
+        return 0
+    """
+    # Update the role -> permission map.
+    if self.permissions:
+        for p in self.permissions:
+            roles = []
+            if sdef.erp5_permission_roles is not None: ### permission is defined in state
+                roles = sdef.erp5_permission_roles.get(p, roles)
+            if modifyRolesForPermission(document, p, roles):
+                changed = 1
+    """
+    ### zwj: get all matrix cell objects
+    permission_role_matrix_cells = sdef.objectValues(portal_type = "PermissionRoles")
+    ### zwj: build a permission roles dict
+    for perm_role in permission_role_matrix_cells:
+      permission,role = perm_role.getPermissionRole()
+      if erp5_permission_roles[permission]:
+        erp5_permission_roles[permission] = erp5_permission_roles[permission] + role
+      else:
+        erp5_permission_roles.update({permission : role})
+    ### zwj: update role list to permission
+    for permission_roles in erp5_permission_roles:
+      if modifyRolesForPermission(document, permission_roles, erp5_permission_roles[permission_roles]):
+        changed = 1
+
+    # Update the group -> role map.
+    groups = self.getGroups()
+    managed_roles = self.getRoles()
+    if groups and managed_roles:
+        for group in groups:
+            roles = ()
+            if sdef.group_roles is not None:
+                roles = sdef.group_roles.get(group, ())
+            if modifyRolesForGroup(document, group, roles, managed_roles):
+                changed = 1
+    return changed
+
+
+  def _checkTransitionGuard(self, t, document, **kw):
+    guard = t.guard
+    if guard is None:
+      return 1
+    if guard.check(getSecurityManager(), self, document, **kw):
+      return 1
+    return
+
+  ### Security feature end
+
   ###########
   ## Graph ##
-  ############
+  ###########
 
   getGraph = getGraph
 

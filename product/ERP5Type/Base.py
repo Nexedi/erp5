@@ -657,6 +657,8 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
     for tr in wf5_module._getOb(ERP5Workflow_id).objectValues(portal_type="Transition"):
       tr_id = tr.id
       method_id = convertToMixedCase(tr_id)
+      ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
+                                              method_id)
       ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
       LOG("ERP5Workflow method %s is generated"%tr_id,WARNING," for %s"%ERP5Workflow_id)
 
@@ -3378,9 +3380,17 @@ class Base( CopyContainer,
     There's no check that the document is actually chained to the workflow,
     it's caller responsability to perform this check.
     """
+
     workflow = self.portal_workflow.getWorkflowById(wf_id)
+    erp5workflow = self.workflow_module._getOb(wf_id, None)
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
+      if changed:
+        self.reindexObjectSecurity(activate_kw={'priority':4})
+
+    ### zwj: update role changed through erp5workflow
+    if erp5workflow is not None:
+      changed = erp5workflow.updateRoleMappingFor(self)
       if changed:
         self.reindexObjectSecurity(activate_kw={'priority':4})
 
