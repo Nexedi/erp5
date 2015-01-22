@@ -74,6 +74,10 @@
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: ()</string> </value>
+        </item>
+        <item>
             <key> <string>select_variable</string> </key>
             <value> <string>getAvailableBaseCategoryList</string> </value>
         </item>
