@@ -189,7 +189,7 @@ class Workflow(XMLObject):
       else:
         erp5_permission_roles.update({permission : role})
     ### zwj: update role list to permission
-    for permission_roles in erp5_permission_roles:
+    for permission_roles in erp5_permission_roles.keys():
       if modifyRolesForPermission(document, permission_roles, erp5_permission_roles[permission_roles]):
         changed = 1
 
