@@ -1,6 +1,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-
+#from Acquisition import aq_inner
+#from Acquisition import aq_parent
 class TestERP5Workflow(ERP5TypeTestCase):
   """
     Tests ERP5 Workflow.
@@ -27,6 +28,11 @@ class TestERP5Workflow(ERP5TypeTestCase):
     s2 = new_workflow.newContent(portal_type='State',title='Validated', id='validated')
     s3 = new_workflow.newContent(portal_type='State',title='Couscous', id='Couscous')
 
+    #raise NotImplementedError(aq_parent(aq_inner(aq_parent(aq_inner(s1)))))### <Workflow Module at workflow_module>
+    #raise NotImplementedError(aq_inner(aq_parent(aq_inner(s1))))### <Workflow at new_workflow>
+    #raise NotImplementedError(aq_parent(aq_inner(s1)))### <Workflow at new_workflow>
+    #raise NotImplementedError(aq_inner(s1))### <State at draft>
+    #raise NotImplementedError(s1)### <State at draft>
     t1 = new_workflow.newContent(
       portal_type='Transition',
       title='Transition 1',
