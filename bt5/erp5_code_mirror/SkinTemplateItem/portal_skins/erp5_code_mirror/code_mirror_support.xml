@@ -128,7 +128,8 @@
  .CodeMirror-lint-marker-error,\n
  .CodeMirror-lint-marker-warning,\n
  .CodeMirror-gutters,\n
- .CodeMirror-gutter-elt {\n
+ .CodeMirror-gutter-elt,\n
+ .CodeMirror-sizer {\n
    background-color: transparent !important;\n
  }\n
 </style>\n
