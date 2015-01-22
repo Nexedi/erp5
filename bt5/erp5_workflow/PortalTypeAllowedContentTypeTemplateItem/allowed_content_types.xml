@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="State">
+  <item>PermissionRoles</item>
+ </portal_type>
  <portal_type id="Transition">
   <item>Transition Variable</item>
  </portal_type>
