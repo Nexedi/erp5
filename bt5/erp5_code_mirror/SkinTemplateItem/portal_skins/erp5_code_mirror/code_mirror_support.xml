@@ -480,11 +480,15 @@
       matchBrackets: true,\n
       /* viewportMargin: Infinity, */\n
       extraKeys: {"Ctrl-Space": "autocomplete",\n
+                  "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},\n
                   "Ctrl-S": function(cm){saveDocument(merge_mode_elem.edit, $.Event(\'click\'))}},\n
       foldGutter: true,\n
       lineWrapping: true,\n
-      gutters: ["CodeMirror-linenumbers",\n
-                "CodeMirror-foldgutter"]});\n
+      gutters: ["CodeMirror-lint-markers",\n
+                "CodeMirror-linenumbers",\n
+                "CodeMirror-foldgutter"],\n
+      lint: {"getAnnotations": checkPythonSourceCode,\n
+             "async": true}});\n
 \n
    $("#merge").keyup(\n
      function(event) {\n
