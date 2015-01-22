@@ -8,19 +8,11 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403074.35</string> </value>
+            <value> <string>ts21897119.52</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
             <value> <string>html-hint.js</string> </value>
-        </item>
-        <item>
-            <key> <string>__propsets__</string> </key>
-            <value>
-              <tuple>
-                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -30,7 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function () {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("./xml-hint"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "./xml-hint"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
   var langs = "ab aa af ak sq am ar an hy as av ae ay az bm ba eu be bn bh bi bs br bg my ca ch ce ny zh cv kw co cr hr cs da dv nl dz en eo et ee fo fj fi fr ff gl ka de el gn gu ht ha he hz hi ho hu ia id ie ga ig ik io is it iu ja jv kl kn kr ks kk km ki rw ky kv kg ko ku kj la lb lg li ln lo lt lu lv gv mk mg ms ml mt mi mr mh mn na nv nb nd ne ng nn no ii nr oc oj cu om or os pa pi fa pl ps pt qu rm rn ro ru sa sc sd se sm sg sr gd sn si sk sl so st es su sw ss sv ta te tg th ti bo tk tl tn to tr ts tt tw ty ug uk ur uz ve vi vo wa cy wo fy xh yi yo za zu".split(" ");\n
   var targets = ["_blank", "_self", "_top", "_parent"];\n
   var charsets = ["ascii", "utf-8", "utf-16", "latin1", "latin1"];\n
@@ -364,9 +368,8 @@
     if (options) for (var opt in options) local[opt] = options[opt];\n
     return CodeMirror.hint.xml(cm, local);\n
   }\n
-  CodeMirror.htmlHint = htmlHint; // deprecated\n
   CodeMirror.registerHelper("hint", "html", htmlHint);\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -377,68 +380,10 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10911</int> </value>
+            <value> <int>11341</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="PropertySheet" module="OFS.PropertySheets"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_md</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>xmlns</string> </key>
-                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <unicode>executable</unicode> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta</string> </key>
-                      <value>
-                        <dictionary>
-                          <item>
-                              <key> <string>__xml_attrs__</string> </key>
-                              <value>
-                                <dictionary/>
-                              </value>
-                          </item>
-                        </dictionary>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>executable</string> </key>
-            <value> <string>T</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

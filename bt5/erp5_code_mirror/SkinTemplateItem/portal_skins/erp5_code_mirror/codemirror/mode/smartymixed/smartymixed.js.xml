@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403087.25</string> </value>
+            <value> <string>ts21897148.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 /**\n
 * @file smartymixed.js\n
 * @brief Smarty Mixed Codemirror mode (Smarty + Mixed HTML)\n
@@ -29,12 +32,25 @@
 * @version 3.0\n
 * @date 05.07.2013\n
 */\n
-CodeMirror.defineMode("smartymixed", function(config) {\n
-  var settings, regs, helpers, parsers,\n
-  htmlMixedMode = CodeMirror.getMode(config, "htmlmixed"),\n
-  smartyMode = CodeMirror.getMode(config, "smarty"),\n
 \n
-  settings = {\n
+// Warning: Don\'t base other modes on this one. This here is a\n
+// terrible way to write a mixed mode.\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../htmlmixed/htmlmixed"), require("../smarty/smarty"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../htmlmixed/htmlmixed", "../smarty/smarty"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+CodeMirror.defineMode("smartymixed", function(config) {\n
+  var htmlMixedMode = CodeMirror.getMode(config, "htmlmixed");\n
+  var smartyMode = CodeMirror.getMode(config, "smarty");\n
+\n
+  var settings = {\n
     rightDelimiter: \'}\',\n
     leftDelimiter: \'{\'\n
   };\n
@@ -46,15 +62,18 @@ CodeMirror.defineMode("smartymixed", function(config) {\n
     settings.rightDelimiter = config.rightDelimiter;\n
   }\n
 \n
-  regs = {\n
-    smartyComment: new RegExp("^" + settings.leftDelimiter + "\\\\*"),\n
-    literalOpen: new RegExp(settings.leftDelimiter + "literal" + settings.rightDelimiter),\n
-    literalClose: new RegExp(settings.leftDelimiter + "\\/literal" + settings.rightDelimiter),\n
-    hasLeftDelimeter: new RegExp(".*" + settings.leftDelimiter),\n
-    htmlHasLeftDelimeter: new RegExp("[^<>]*" + settings.leftDelimiter)\n
+  function reEsc(str) { return str.replace(/[^\\s\\w]/g, "\\\\$&"); }\n
+\n
+  var reLeft = reEsc(settings.leftDelimiter), reRight = reEsc(settings.rightDelimiter);\n
+  var regs = {\n
+    smartyComment: new RegExp("^" + reRight + "\\\\*"),\n
+    literalOpen: new RegExp(reLeft + "literal" + reRight),\n
+    literalClose: new RegExp(reLeft + "\\/literal" + reRight),\n
+    hasLeftDelimeter: new RegExp(".*" + reLeft),\n
+    htmlHasLeftDelimeter: new RegExp("[^<>]*" + reLeft)\n
   };\n
 \n
-  helpers = {\n
+  var helpers = {\n
     chain: function(stream, state, parser) {\n
       state.tokenize = parser;\n
       return parser(stream, state);\n
@@ -80,9 +99,13 @@ CodeMirror.defineMode("smartymixed", function(config) {\n
     }\n
   };\n
 \n
-  parsers = {\n
+  var parsers = {\n
     html: function(stream, state) {\n
-      if (!state.inLiteral && stream.match(regs.htmlHasLeftDelimeter, false) && state.htmlMixedState.htmlState.tagName === null) {\n
+      var htmlTagName = state.htmlMixedState.htmlState.context && state.htmlMixedState.htmlState.context.tagName\n
+        ? state.htmlMixedState.htmlState.context.tagName\n
+        : null;\n
+\n
+      if (!state.inLiteral && stream.match(regs.htmlHasLeftDelimeter, false) && htmlTagName === null) {\n
         state.tokenize = parsers.smarty;\n
         state.localMode = smartyMode;\n
         state.localState = smartyMode.startState(htmlMixedMode.indent(state.htmlMixedState, ""));\n
@@ -190,11 +213,12 @@ CodeMirror.defineMode("smartymixed", function(config) {\n
       };\n
     }\n
   };\n
-},\n
-"htmlmixed");\n
+}, "htmlmixed", "smarty");\n
 \n
 CodeMirror.defineMIME("text/x-smarty", "smartymixed");\n
 // vim: et ts=2 sts=2 sw=2\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -205,7 +229,7 @@ CodeMirror.defineMIME("text/x-smarty", "smartymixed");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5765</int> </value>
+            <value> <int>6638</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

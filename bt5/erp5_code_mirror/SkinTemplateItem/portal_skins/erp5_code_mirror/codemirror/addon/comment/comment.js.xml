@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403075.99</string> </value>
+            <value> <string>ts21897117.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var noOptions = {};\n
@@ -35,8 +45,21 @@
   }\n
 \n
   CodeMirror.commands.toggleComment = function(cm) {\n
-    var from = cm.getCursor("start"), to = cm.getCursor("end");\n
-    cm.uncomment(from, to) || cm.lineComment(from, to);\n
+    var minLine = Infinity, ranges = cm.listSelections(), mode = null;\n
+    for (var i = ranges.length - 1; i >= 0; i--) {\n
+      var from = ranges[i].from(), to = ranges[i].to();\n
+      if (from.line >= minLine) continue;\n
+      if (to.line >= minLine) to = Pos(minLine, 0);\n
+      minLine = from.line;\n
+      if (mode == null) {\n
+        if (cm.uncomment(from, to)) mode = "un";\n
+        else { cm.lineComment(from, to); mode = "line"; }\n
+      } else if (mode == "un") {\n
+        cm.uncomment(from, to);\n
+      } else {\n
+        cm.lineComment(from, to);\n
+      }\n
+    }\n
   };\n
 \n
   CodeMirror.defineExtension("lineComment", function(from, to, options) {\n
@@ -110,7 +133,7 @@
   CodeMirror.defineExtension("uncomment", function(from, to, options) {\n
     if (!options) options = noOptions;\n
     var self = this, mode = self.getModeAt(from);\n
-    var end = Math.min(to.line, self.lastLine()), start = Math.min(from.line, end);\n
+    var end = Math.min(to.ch != 0 || to.line == from.line ? to.line : to.line - 1, self.lastLine()), start = Math.min(from.line, end);\n
 \n
     // Try finding line comments\n
     var lineString = options.lineComment || mode.lineComment, lines = [];\n
@@ -154,6 +177,17 @@
         !/comment/.test(self.getTokenTypeAt(Pos(end, close + 1))))\n
       return false;\n
 \n
+    // Avoid killing block comments completely outside the selection.\n
+    // Positions of the last startString before the start of the selection, and the first endString after it.\n
+    var lastStart = startLine.lastIndexOf(startString, from.ch);\n
+    var firstEnd = lastStart == -1 ? -1 : startLine.slice(0, from.ch).indexOf(endString, lastStart + startString.length);\n
+    if (lastStart != -1 && firstEnd != -1 && firstEnd + endString.length != from.ch) return false;\n
+    // Positions of the first endString after the end of the selection, and the last startString before it.\n
+    firstEnd = endLine.indexOf(endString, to.ch);\n
+    var almostLastStart = endLine.slice(to.ch).lastIndexOf(startString, firstEnd - to.ch);\n
+    lastStart = (firstEnd == -1 || almostLastStart == -1) ? -1 : to.ch + almostLastStart;\n
+    if (firstEnd != -1 && lastStart != -1 && lastStart != to.ch) return false;\n
+\n
     self.operation(function() {\n
       self.replaceRange("", Pos(end, close - (pad && endLine.slice(close - pad.length, close) == pad ? pad.length : 0)),\n
                         Pos(end, close + endString.length));\n
@@ -170,7 +204,7 @@
     });\n
     return true;\n
   });\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -181,7 +215,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6207</int> </value>
+            <value> <int>8008</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

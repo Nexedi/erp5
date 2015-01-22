@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.13</string> </value>
+            <value> <string>ts21897121.84</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var Pos = CodeMirror.Pos;\n
@@ -113,6 +123,24 @@
     return wrapRange(this, Pos(para.from, 0), Pos(para.to - 1), options);\n
   });\n
 \n
+  CodeMirror.commands.wrapLines = function(cm) {\n
+    cm.operation(function() {\n
+      var ranges = cm.listSelections(), at = cm.lastLine() + 1;\n
+      for (var i = ranges.length - 1; i >= 0; i--) {\n
+        var range = ranges[i], span;\n
+        if (range.empty()) {\n
+          var para = findParagraph(cm, range.head, {});\n
+          span = {from: Pos(para.from, 0), to: Pos(para.to - 1)};\n
+        } else {\n
+          span = {from: range.from(), to: range.to()};\n
+        }\n
+        if (span.to.line >= at) continue;\n
+        at = span.from.line;\n
+        wrapRange(cm, span.from, span.to, {});\n
+      }\n
+    });\n
+  };\n
+\n
   CodeMirror.defineExtension("wrapRange", function(from, to, options) {\n
     return wrapRange(this, from, to, options || {});\n
   });\n
@@ -132,7 +160,7 @@
     });\n
     return madeChange;\n
   });\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -143,7 +171,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4229</int> </value>
+            <value> <int>5260</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

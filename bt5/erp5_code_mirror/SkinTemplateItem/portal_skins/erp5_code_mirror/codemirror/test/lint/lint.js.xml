@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403105.16</string> </value>
+            <value> <string>ts21897151.95</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -43,9 +43,10 @@ var topAllowedGlobals = Object.create(null);\n
 ("Error RegExp Number String Array Function Object Math Date undefined " +\n
  "parseInt parseFloat Infinity NaN isNaN " +\n
  "window document navigator prompt alert confirm console " +\n
- "FileReader Worker postMessage importScripts " +\n
+ "screen FileReader Worker postMessage importScripts " +\n
  "setInterval clearInterval setTimeout clearTimeout " +\n
- "CodeMirror test")\n
+ "CodeMirror " +\n
+ "test exports require module define requirejs")\n
   .split(" ").forEach(function(n) { topAllowedGlobals[n] = true; });\n
 \n
 var fs = require("fs"), acorn = require("./acorn.js"), walk = require("./walk.js");\n
@@ -53,6 +54,8 @@ var fs = require("fs"), acorn = require("./acorn.js"), walk = require("./walk.js
 var scopePasser = walk.make({\n
   ScopeBody: function(node, prev, c) { c(node, node.scope); }\n
 });\n
+\n
+var cBlob = /^\\/\\/ CodeMirror, copyright \\(c\\) by Marijn Haverbeke and others\\n\\/\\/ Distributed under an MIT license: http:\\/\\/codemirror.net\\/LICENSE\\n\\n/;\n
 \n
 function checkFile(fileName) {\n
   var file = fs.readFileSync(fileName, "utf8"), notAllowed;\n
@@ -64,6 +67,9 @@ function checkFile(fileName) {\n
     var info = acorn.getLineInfo(file, notAllowed.index);\n
     fail(msg + " at line " + info.line + ", column " + info.column, {source: fileName});\n
   }\n
+\n
+  if (!cBlob.test(file))\n
+    fail("Missing license blob", {source: fileName});\n
   \n
   var globalsSeen = Object.create(null);\n
 \n
@@ -73,7 +79,7 @@ function checkFile(fileName) {\n
       ecmaVersion: 3,\n
       strictSemicolons: true,\n
       allowTrailingCommas: false,\n
-      forbidReserved: true,\n
+      forbidReserved: "everywhere",\n
       sourceFile: fileName\n
     });\n
   } catch (e) {\n
@@ -119,19 +125,40 @@ function checkFile(fileName) {\n
     },\n
     FunctionExpression: function(node) {\n
       if (node.id) fail("Named function expression", node.loc);\n
+    },\n
+    ForStatement: function(node) {\n
+      checkReusedIndex(node);\n
+    },\n
+    MemberExpression: function(node) {\n
+      if (node.object.type == "Identifier" && node.object.name == "console" && !node.computed)\n
+        fail("Found console." + node.property.name, node.loc);\n
+    },\n
+    DebuggerStatement: function(node) {\n
+      fail("Found debugger statement", node.loc);\n
     }\n
   }, scopePasser);\n
 \n
-  if (!globalsSeen.exports) {\n
-    var allowedGlobals = Object.create(topAllowedGlobals), m;\n
-    if (m = file.match(/\\/\\/ declare global:\\s+(.*)/))\n
-      m[1].split(/,\\s*/g).forEach(function(n) { allowedGlobals[n] = true; });\n
-    for (var glob in globalsSeen)\n
-      if (!(glob in allowedGlobals))\n
-        fail("Access to global variable " + glob + ". Add a \'// declare global: " + glob +\n
-             "\' comment or add this variable in test/lint/lint.js.", globalsSeen[glob]);\n
+  function checkReusedIndex(node) {\n
+    if (!node.init || node.init.type != "VariableDeclaration") return;\n
+    var name = node.init.declarations[0].id.name;\n
+    walk.recursive(node.body, null, {\n
+      Function: function() {},\n
+      VariableDeclaration: function(node, st, c) {\n
+        for (var i = 0; i < node.declarations.length; i++)\n
+          if (node.declarations[i].id.name == name)\n
+            fail("redefined loop variable", node.declarations[i].id.loc);\n
+        walk.base.VariableDeclaration(node, st, c);\n
+      }\n
+    });\n
   }\n
 \n
+  var allowedGlobals = Object.create(topAllowedGlobals), m;\n
+  if (m = file.match(/\\/\\/ declare global:\\s+(.*)/))\n
+    m[1].split(/,\\s*/g).forEach(function(n) { allowedGlobals[n] = true; });\n
+  for (var glob in globalsSeen)\n
+    if (!(glob in allowedGlobals))\n
+      fail("Access to global variable " + glob + ". Add a \'// declare global: " + glob +\n
+           "\' comment or add this variable in test/lint/lint.js.", globalsSeen[glob]);\n
 \n
   for (var i = 0; i < scopes.length; ++i) {\n
     var scope = scopes[i];\n
@@ -154,7 +181,7 @@ function checkDir(dir) {\n
   fs.readdirSync(dir).forEach(function(file) {\n
     var fname = dir + "/" + file;\n
     if (/\\.js$/.test(file)) checkFile(fname);\n
-    else if (file != "dep" && fs.lstatSync(fname).isDirectory()) checkDir(fname);\n
+    else if (fs.lstatSync(fname).isDirectory()) checkDir(fname);\n
   });\n
 }\n
 \n
@@ -171,7 +198,7 @@ exports.success = function() { return !failed; };\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4601</int> </value>
+            <value> <int>5742</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403103.74</string> </value>
+            <value> <string>ts21897150.47</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -68,23 +68,25 @@ function testCM(name, run, opts, expectedFail) {\n
 function runTests(callback) {\n
   var totalTime = 0;\n
   function step(i) {\n
-    if (i === tests.length){\n
-      running = false;\n
-      return callback("done");\n
-    } \n
-    var test = tests[i], expFail = test.expectedFail, startTime = +new Date;\n
-    if (filters.length) {\n
-      for (var j = 0; j < filters.length; j++) {\n
-        if (test.name.match(filters[j])) {\n
-          break;\n
-        }\n
+    for (;;) {\n
+      if (i === tests.length) {\n
+        running = false;\n
+        return callback("done");\n
       }\n
-      if (j == filters.length) {      \n
+      var test = tests[i], skip = false;\n
+      if (filters.length) {\n
+        skip = true;\n
+        for (var j = 0; j < filters.length; j++)\n
+          if (test.name.match(filters[j])) skip = false;\n
+      }\n
+      if (skip) {\n
         callback("skipped", test.name, message);\n
-        return step(i + 1);\n
+        i++;\n
+      } else {\n
+        break;\n
       }\n
     }\n
-    var threw = false;\n
+    var expFail = test.expectedFail, startTime = +new Date, threw = false;\n
     try {\n
       var message = test.func();\n
     } catch(e) {\n
@@ -93,6 +95,7 @@ function runTests(callback) {\n
       else if (e instanceof Failure) callback("fail", test.name, e.message);\n
       else {\n
         var pos = /(?:\\bat |@).*?([^\\/:]+):(\\d+)/.exec(e.stack);\n
+        if (pos) console["log"](e.stack);\n
         callback("error", test.name, e.toString() + (pos ? " (" + pos[1] + ":" + pos[2] + ")" : ""));\n
       }\n
     }\n
@@ -122,6 +125,10 @@ function label(str, msg) {\n
 }\n
 function eq(a, b, msg) {\n
   if (a != b) throw new Failure(label(a + " != " + b, msg));\n
+}\n
+function near(a, b, margin, msg) {\n
+  if (Math.abs(a - b) > margin)\n
+    throw new Failure(label(a + " is not close to " + b + " (" + margin + ")", msg));\n
 }\n
 function eqPos(a, b, msg) {\n
   function str(p) { return "{line:" + p.line + ",ch:" + p.ch + "}"; }\n
@@ -163,7 +170,7 @@ function parseTestFilter(s) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3723</int> </value>
+            <value> <int>3963</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

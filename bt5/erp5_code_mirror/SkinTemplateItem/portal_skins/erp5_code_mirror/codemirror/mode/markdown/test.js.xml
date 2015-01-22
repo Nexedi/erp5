@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403087.75</string> </value>
+            <value> <string>ts21897148.27</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   var mode = CodeMirror.getMode({tabSize: 4}, "markdown");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
@@ -75,7 +78,7 @@
      "[link&formatting&formatting-link <][link user@example.com][link&formatting&formatting-link >]");\n
 \n
   FT("formatting_escape",\n
-     "[formatting&formatting-escape \\\\]*");\n
+     "[formatting-escape \\\\*]");\n
 \n
   MT("plainText",\n
      "foo");\n
@@ -112,6 +115,14 @@
      "    [comment bar]",\n
      "        [comment hello]",\n
      "    [comment world]");\n
+\n
+  // Code blocks should end even after extra indented lines\n
+  MT("codeBlocksWithTrailingIndentedLine",\n
+     "    [comment foo]",\n
+     "        [comment bar]",\n
+     "    [comment baz]",\n
+     "    ",\n
+     "hello");\n
 \n
   // Code blocks using 1 tab (regardless of CodeMirror.indentWithTabs value)\n
   MT("codeBlocksUsing1Tab",\n
@@ -745,6 +756,25 @@
      "[comment ```]",\n
      "foo",\n
      "[comment ```]");\n
+\n
+  // Tests that require XML mode\n
+\n
+  MT("xmlMode",\n
+     "[tag&bracket <][tag div][tag&bracket >]",\n
+     "*foo*",\n
+     "[tag&bracket <][tag http://github.com][tag&bracket />]",\n
+     "[tag&bracket </][tag div][tag&bracket >]",\n
+     "[link <http://github.com/>]");\n
+\n
+  MT("xmlModeWithMarkdownInside",\n
+     "[tag&bracket <][tag div] [attribute markdown]=[string 1][tag&bracket >]",\n
+     "[em *foo*]",\n
+     "[link <http://github.com/>]",\n
+     "[tag </div>]",\n
+     "[link <http://github.com/>]",\n
+     "[tag&bracket <][tag div][tag&bracket >]",\n
+     "[tag&bracket </][tag div][tag&bracket >]");\n
+\n
 })();\n
 
 
@@ -756,7 +786,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19952</int> </value>
+            <value> <int>20871</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Sublime Text bindings demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/fold/foldgutter.css">\n
+<link rel="stylesheet" href="../addon/dialog/dialog.css">\n
+<link rel="stylesheet" href="../theme/monokai.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/search/searchcursor.js"></script>\n
+<script src="../addon/search/search.js"></script>\n
+<script src="../addon/dialog/dialog.js"></script>\n
+<script src="../addon/edit/matchbrackets.js"></script>\n
+<script src="../addon/edit/closebrackets.js"></script>\n
+<script src="../addon/comment/comment.js"></script>\n
+<script src="../addon/wrap/hardwrap.js"></script>\n
+<script src="../addon/fold/foldcode.js"></script>\n
+<script src="../addon/fold/brace-fold.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../keymap/sublime.js"></script>\n
+<style type="text/css">\n
+  .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee; line-height: 1.3; height: 500px}\n
+  .CodeMirror-linenumbers { padding: 0 8px; }\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Sublime bindings</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Sublime Text bindings demo</h2>\n
+\n
+<p>The <code>sublime</code> keymap defines many Sublime Text-specific\n
+bindings for CodeMirror. See the code below for an overview.</p>\n
+\n
+<p>Enable the keymap by\n
+loading <a href="../keymap/sublime.js"><code>keymap/sublime.js</code></a>\n
+and setting\n
+the <a href="../doc/manual.html#option_keyMap"><code>keyMap</code></a>\n
+option to <code>"sublime"</code>.</p>\n
+\n
+<p>(A lot of the search functionality is still missing.)\n
+\n
+<script>\n
+  var value = "// The bindings defined specifically in the Sublime Text mode\\nvar bindings = {\\n";\n
+  var map = CodeMirror.keyMap.sublime;\n
+  for (var key in map) {\n
+    var val = map[key];\n
+    if (key != "fallthrough" && val != "..." && (!/find/.test(val) || /findUnder/.test(val)))\n
+      value += "  \\"" + key + "\\": \\"" + val + "\\",\\n";\n
+  }\n
+  value += "}\\n\\n// The implementation of joinLines\\n";\n
+  value += CodeMirror.commands.joinLines.toString().replace(/^function\\s*\\(/, "function joinLines(").replace(/\\n  /g, "\\n") + "\\n";\n
+  var editor = CodeMirror(document.body.getElementsByTagName("article")[0], {\n
+    value: value,\n
+    lineNumbers: true,\n
+    mode: "javascript",\n
+    keyMap: "sublime",\n
+    autoCloseBrackets: true,\n
+    matchBrackets: true,\n
+    showCursorWhenSelecting: true,\n
+    theme: "monokai"\n
+  });\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sublime.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

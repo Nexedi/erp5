@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.03</string> </value>
+            <value> <string>ts21897121.98</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.runMode = function(string, modespec, callback, options) {\n
   var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);\n
   var ie = /MSIE \\d/.test(navigator.userAgent);\n
@@ -71,6 +84,7 @@ CodeMirror.runMode = function(string, modespec, callback, options) {\n
   for (var i = 0, e = lines.length; i < e; ++i) {\n
     if (i) callback("\\n");\n
     var stream = new CodeMirror.StringStream(lines[i]);\n
+    if (!stream.string && mode.blankLine) mode.blankLine(state);\n
     while (!stream.eol()) {\n
       var style = mode.token(stream, state);\n
       callback(stream.current(), style, i, stream.start, state);\n
@@ -78,6 +92,8 @@ CodeMirror.runMode = function(string, modespec, callback, options) {\n
     }\n
   }\n
 };\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -88,7 +104,7 @@ CodeMirror.runMode = function(string, modespec, callback, options) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1975</int> </value>
+            <value> <int>2501</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

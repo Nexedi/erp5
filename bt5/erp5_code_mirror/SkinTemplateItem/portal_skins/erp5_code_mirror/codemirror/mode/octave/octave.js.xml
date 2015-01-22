@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403100.32</string> </value>
+            <value> <string>ts21897134.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("octave", function() {\n
   function wordRegexp(words) {\n
     return new RegExp("^((" + words.join(")|(") + "))\\\\b");\n
@@ -33,7 +46,7 @@ CodeMirror.defineMode("octave", function() {\n
   var doubleDelimiters = new RegExp("^((!=)|(\\\\+=)|(\\\\-=)|(\\\\*=)|(/=)|(&=)|(\\\\|=)|(\\\\^=))");\n
   var tripleDelimiters = new RegExp("^((>>=)|(<<=))");\n
   var expressionEnd = new RegExp("^[\\\\]\\\\)]");\n
-  var identifiers = new RegExp("^[_A-Za-z][_A-Za-z0-9]*");\n
+  var identifiers = new RegExp("^[_A-Za-z\\xa1-\\uffff][_A-Za-z0-9\\xa1-\\uffff]*");\n
 \n
   var builtins = wordRegexp([\n
     \'error\', \'eval\', \'function\', \'abs\', \'acos\', \'atan\', \'asin\', \'cos\',\n
@@ -142,6 +155,8 @@ CodeMirror.defineMode("octave", function() {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-octave", "octave");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -152,7 +167,7 @@ CodeMirror.defineMIME("text/x-octave", "octave");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3980</int> </value>
+            <value> <int>4463</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

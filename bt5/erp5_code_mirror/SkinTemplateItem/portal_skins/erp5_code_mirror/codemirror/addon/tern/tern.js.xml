@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403075.59</string> </value>
+            <value> <string>ts21897117.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Glue code between CodeMirror and Tern.\n
 //\n
 // Create a CodeMirror.TernServer to wrap an actual Tern server,\n
@@ -38,7 +41,7 @@
 //   indicate that a file is not available.\n
 // * fileFilter: A function(value, docName, doc) that will be applied\n
 //   to documents before passing them on to Tern.\n
-// * switchToDoc: A function(name) that should, when providing a\n
+// * switchToDoc: A function(name, doc) that should, when providing a\n
 //   multi-file view, switch the view or focus to the named file.\n
 // * showError: A function(editor, message) that can be used to\n
 //   override the way errors are displayed.\n
@@ -64,7 +67,14 @@
 //   load. Or, if you minified those into a single script and included\n
 //   them in the workerScript, simply leave this undefined.\n
 \n
-(function() {\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
   // declare global: tern\n
 \n
@@ -89,6 +99,9 @@
     this.cachedArgHints = null;\n
     this.activeArgHints = null;\n
     this.jumpStack = [];\n
+\n
+    this.getHint = function(cm, c) { return hint(self, cm, c); };\n
+    this.getHint.async = true;\n
   };\n
 \n
   CodeMirror.TernServer.prototype = {\n
@@ -99,28 +112,27 @@
       return this.docs[name] = data;\n
     },\n
 \n
-    delDoc: function(name) {\n
-      var found = this.docs[name];\n
+    delDoc: function(id) {\n
+      var found = resolveDoc(this, id);\n
       if (!found) return;\n
       CodeMirror.off(found.doc, "change", this.trackChange);\n
-      delete this.docs[name];\n
-      this.server.delFile(name);\n
+      delete this.docs[found.name];\n
+      this.server.delFile(found.name);\n
     },\n
 \n
-    hideDoc: function(name) {\n
+    hideDoc: function(id) {\n
       closeArgHints(this);\n
-      var found = this.docs[name];\n
+      var found = resolveDoc(this, id);\n
       if (found && found.changed) sendDoc(this, found);\n
     },\n
 \n
     complete: function(cm) {\n
-      var self = this;\n
-      CodeMirror.showHint(cm, function(cm, c) { return hint(self, cm, c); }, {async: true});\n
+      cm.showHint({hint: this.getHint});\n
     },\n
 \n
-    getHint: function(cm, c) { return hint(this, cm, c); },\n
+    showType: function(cm, pos, c) { showContextInfo(this, cm, pos, "type", c); },\n
 \n
-    showType: function(cm, pos) { showType(this, cm, pos); },\n
+    showDocs: function(cm, pos, c) { showContextInfo(this, cm, pos, "documentation", c); },\n
 \n
     updateArgHints: function(cm) { updateArgHints(this, cm); },\n
 \n
@@ -129,6 +141,8 @@
     jumpBack: function(cm) { jumpBack(this, cm); },\n
 \n
     rename: function(cm) { rename(this, cm); },\n
+\n
+    selectName: function(cm) { selectName(this, cm); },\n
 \n
     request: function (cm, query, c, pos) {\n
       var self = this;\n
@@ -169,6 +183,12 @@
     return ts.addDoc(name, doc);\n
   }\n
 \n
+  function resolveDoc(ts, id) {\n
+    if (typeof id == "string") return ts.docs[id];\n
+    if (id instanceof CodeMirror) id = id.getDoc();\n
+    if (id instanceof CodeMirror.Doc) return findDoc(ts, id);\n
+  }\n
+\n
   function trackChange(ts, doc, change) {\n
     var data = findDoc(ts, doc);\n
 \n
@@ -191,7 +211,7 @@
 \n
   function sendDoc(ts, doc) {\n
     ts.server.request({files: [{type: "full", name: doc.name, text: docValue(ts, doc)}]}, function(error) {\n
-      if (error) console.error(error);\n
+      if (error) window.console.error(error);\n
       else doc.changed = null;\n
     });\n
   }\n
@@ -245,8 +265,8 @@
 \n
   // Type queries\n
 \n
-  function showType(ts, cm, pos) {\n
-    ts.request(cm, "type", function(error, data) {\n
+  function showContextInfo(ts, cm, pos, queryName, c) {\n
+    ts.request(cm, queryName, function(error, data) {\n
       if (error) return showError(ts, cm, error);\n
       if (ts.options.typeTip) {\n
         var tip = ts.options.typeTip(data);\n
@@ -260,6 +280,7 @@
         }\n
       }\n
       tempTooltip(cm, tip);\n
+      if (c) c();\n
     }, pos);\n
   }\n
 \n
@@ -396,10 +417,10 @@
   }\n
 \n
   function moveTo(ts, curDoc, doc, start, end) {\n
-    doc.doc.setSelection(end, start);\n
+    doc.doc.setSelection(start, end);\n
     if (curDoc != doc && ts.options.switchToDoc) {\n
       closeArgHints(ts);\n
-      ts.options.switchToDoc(doc.name);\n
+      ts.options.switchToDoc(doc.name, doc.doc);\n
     }\n
   }\n
 \n
@@ -444,12 +465,29 @@
 \n
   function rename(ts, cm) {\n
     var token = cm.getTokenAt(cm.getCursor());\n
-    if (!/\\w/.test(token.string)) showError(ts, cm, "Not at a variable");\n
+    if (!/\\w/.test(token.string)) return showError(ts, cm, "Not at a variable");\n
     dialog(cm, "New name for " + token.string, function(newName) {\n
       ts.request(cm, {type: "rename", newName: newName, fullDocs: true}, function(error, data) {\n
         if (error) return showError(ts, cm, error);\n
         applyChanges(ts, data.changes);\n
       });\n
+    });\n
+  }\n
+\n
+  function selectName(ts, cm) {\n
+    var name = findDoc(ts, cm.doc).name;\n
+    ts.request(cm, {type: "refs"}, function(error, data) {\n
+      if (error) return showError(ts, cm, error);\n
+      var ranges = [], cur = 0;\n
+      for (var i = 0; i < data.refs.length; i++) {\n
+        var ref = data.refs[i];\n
+        if (ref.file == name) {\n
+          ranges.push({anchor: ref.start, head: ref.end});\n
+          if (cmpPos(cur, ref.start) >= 0 && cmpPos(cur, ref.end) <= 0)\n
+            cur = ranges.length - 1;\n
+        }\n
+      }\n
+      cm.setSelections(ranges, cur);\n
     });\n
   }\n
 \n
@@ -545,7 +583,7 @@
 \n
   // Generic utilities\n
 \n
-  function cmpPos(a, b) { return a.line - b.line || a.ch - b.ch; }\n
+  var cmpPos = CodeMirror.cmpPos;\n
 \n
   function elt(tagname, cls /*, ... elts*/) {\n
     var e = document.createElement(tagname);\n
@@ -638,7 +676,7 @@
           send({type: "getFile", err: String(err), text: text, id: data.id});\n
         });\n
       } else if (data.type == "debug") {\n
-        console.log(data.message);\n
+        window.console.log(data.message);\n
       } else if (data.id && pending[data.id]) {\n
         pending[data.id](data.err, data.body);\n
         delete pending[data.id];\n
@@ -653,7 +691,7 @@
     this.delFile = function(name) { send({type: "del", name: name}); };\n
     this.request = function(body, c) { send({type: "req", body: body}, c); };\n
   }\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -664,7 +702,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>21996</int> </value>
+            <value> <int>23383</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

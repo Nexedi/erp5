@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403074.08</string> </value>
+            <value> <string>ts21897119.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,13 +22,23 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Because sometimes you need to mark the selected *text*.\n
 //\n
 // Adds an option \'styleSelectedText\' which, when enabled, gives\n
 // selected text the CSS class given as option value, or\n
 // "CodeMirror-selectedtext" when the value is not a string.\n
 \n
-(function() {\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   CodeMirror.defineOption("styleSelectedText", false, function(cm, val, old) {\n
@@ -58,10 +68,7 @@
 \n
   var CHUNK_SIZE = 8;\n
   var Pos = CodeMirror.Pos;\n
-\n
-  function cmp(pos1, pos2) {\n
-    return pos1.line - pos2.line || pos1.ch - pos2.ch;\n
-  }\n
+  var cmp = CodeMirror.cmpPos;\n
 \n
   function coverRange(cm, from, to, addAt) {\n
     if (cmp(from, to) == 0) return;\n
@@ -87,13 +94,16 @@
 \n
   function reset(cm) {\n
     clear(cm);\n
-    var from = cm.getCursor("start"), to = cm.getCursor("end");\n
-    coverRange(cm, from, to);\n
+    var ranges = cm.listSelections();\n
+    for (var i = 0; i < ranges.length; i++)\n
+      coverRange(cm, ranges[i].from(), ranges[i].to());\n
   }\n
 \n
   function update(cm) {\n
+    if (!cm.somethingSelected()) return clear(cm);\n
+    if (cm.listSelections().length > 1) return reset(cm);\n
+\n
     var from = cm.getCursor("start"), to = cm.getCursor("end");\n
-    if (cmp(from, to) == 0) return clear(cm);\n
 \n
     var array = cm.state.markedSelection;\n
     if (!array.length) return coverRange(cm, from, to);\n
@@ -129,7 +139,7 @@
       }\n
     }\n
   }\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -140,7 +150,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3306</int> </value>
+            <value> <int>3781</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

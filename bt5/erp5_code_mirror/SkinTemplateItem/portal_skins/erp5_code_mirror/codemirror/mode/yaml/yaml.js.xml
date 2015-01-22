@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403093.51</string> </value>
+            <value> <string>ts21897141.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("yaml", function() {\n
 \n
   var cons = [\'true\', \'false\', \'on\', \'off\', \'yes\', \'no\'];\n
@@ -34,8 +47,13 @@ CodeMirror.defineMode("yaml", function() {\n
       state.escaped = false;\n
       /* comments */\n
       if (ch == "#" && (stream.pos == 0 || /\\s/.test(stream.string.charAt(stream.pos - 1)))) {\n
-        stream.skipToEnd(); return "comment";\n
+        stream.skipToEnd();\n
+        return "comment";\n
       }\n
+\n
+      if (stream.match(/^(\'([^\']|\\\\.)*\'?|"([^"]|\\\\.)*"?)/))\n
+        return "string";\n
+\n
       if (state.literal && stream.indentation() > state.keyCol) {\n
         stream.skipToEnd(); return "string";\n
       } else if (state.literal) { state.literal = false; }\n
@@ -91,7 +109,7 @@ CodeMirror.defineMode("yaml", function() {\n
       }\n
 \n
       /* pairs (associative arrays) -> key */\n
-      if (!state.pair && stream.match(/^\\s*\\S+(?=\\s*:($|\\s))/i)) {\n
+      if (!state.pair && stream.match(/^\\s*(?:[,\\[\\]{}&*!|>\'"%@`][^\\s\'":]|[^,\\[\\]{}#&*!|>\'"%@`])[^#]*?(?=\\s*:($|\\s))/)) {\n
         state.pair = true;\n
         state.keyCol = stream.indentation();\n
         return "atom";\n
@@ -119,6 +137,8 @@ CodeMirror.defineMode("yaml", function() {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-yaml", "yaml");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -129,7 +149,7 @@ CodeMirror.defineMIME("text/x-yaml", "yaml");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3038</int> </value>
+            <value> <int>3649</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lint</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#!/usr/bin/env node\n
+\n
+var lint = require("../test/lint/lint"),\n
+    path = require("path");\n
+\n
+if (process.argv.length > 2) {\n
+  lint.checkDir(process.argv[2]);\n
+} else {\n
+  process.chdir(path.resolve(__dirname, ".."));\n
+  lint.checkDir("lib");\n
+  lint.checkDir("mode");\n
+  lint.checkDir("addon");\n
+  lint.checkDir("keymap");\n
+}\n
+\n
+process.exit(lint.success() ? 0 : 1);\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

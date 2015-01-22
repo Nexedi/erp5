@@ -37,7 +37,10 @@
 .cm-s-3024-night.CodeMirror {background: #090300; color: #d6d5d4;}\n
 .cm-s-3024-night div.CodeMirror-selected {background: #3a3432 !important;}\n
 .cm-s-3024-night .CodeMirror-gutters {background: #090300; border-right: 0px;}\n
+.cm-s-3024-night .CodeMirror-guttermarker { color: #db2d20; }\n
+.cm-s-3024-night .CodeMirror-guttermarker-subtle { color: #5c5855; }\n
 .cm-s-3024-night .CodeMirror-linenumber {color: #5c5855;}\n
+\n
 .cm-s-3024-night .CodeMirror-cursor {border-left: 1px solid #807d7c !important;}\n
 \n
 .cm-s-3024-night span.cm-comment {color: #cdab53;}\n

@@ -44,22 +44,25 @@
 \n
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <link rel="stylesheet" href="../addon/dialog/dialog.css">\n
+<link rel="stylesheet" href="../addon/search/matchesonscrollbar.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/xml/xml.js"></script>\n
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/search/searchcursor.js"></script>\n
 <script src="../addon/search/search.js"></script>\n
+<script src="../addon/scroll/annotatescrollbar.js"></script>\n
+<script src="../addon/search/matchesonscrollbar.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
       dt {font-family: monospace; color: #666;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Search/Replace</a>\n
@@ -104,7 +107,10 @@
 </textarea></form>\n
 \n
     <script>\n
-var editor = CodeMirror.fromTextArea(document.getElementById("code"), {mode: "text/html", lineNumbers: true});\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  mode: "text/html",\n
+  lineNumbers: true\n
+});\n
 </script>\n
 \n
     <p>Demonstration of primitive search/replace functionality. The\n

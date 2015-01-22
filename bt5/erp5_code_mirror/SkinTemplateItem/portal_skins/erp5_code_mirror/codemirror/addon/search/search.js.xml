@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.35</string> </value>
+            <value> <string>ts21897121.46</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Define search commands. Depends on dialog.js or another\n
 // implementation of the openDialog method.\n
 \n
@@ -30,28 +33,31 @@
 // replace by making sure the match is no longer selected when hitting\n
 // Ctrl-G.\n
 \n
-(function() {\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("./searchcursor"), require("../dialog/dialog"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "./searchcursor", "../dialog/dialog"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
   function searchOverlay(query, caseInsensitive) {\n
-    var startChar;\n
-    if (typeof query == "string") {\n
-      startChar = query.charAt(0);\n
-      query = new RegExp("^" + query.replace(/[\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|]/g, "\\\\$&"),\n
-                         caseInsensitive ? "i" : "");\n
-    } else {\n
-      query = new RegExp("^(?:" + query.source + ")", query.ignoreCase ? "i" : "");\n
-    }\n
-    if (typeof query == "string") return {token: function(stream) {\n
-      if (stream.match(query)) return "searching";\n
-      stream.next();\n
-      stream.skipTo(query.charAt(0)) || stream.skipToEnd();\n
-    }};\n
+    if (typeof query == "string")\n
+      query = new RegExp(query.replace(/[\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|]/g, "\\\\$&"), caseInsensitive ? "gi" : "g");\n
+    else if (!query.global)\n
+      query = new RegExp(query.source, query.ignoreCase ? "gi" : "g");\n
+\n
     return {token: function(stream) {\n
-      if (stream.match(query)) return "searching";\n
-      while (!stream.eol()) {\n
-        stream.next();\n
-        if (startChar)\n
-          stream.skipTo(startChar) || stream.skipToEnd();\n
-        if (stream.match(query, false)) break;\n
+      query.lastIndex = stream.pos;\n
+      var match = query.exec(stream.string);\n
+      if (match && match.index == stream.pos) {\n
+        stream.pos += match[0].length;\n
+        return "searching";\n
+      } else if (match) {\n
+        stream.pos = match.index;\n
+      } else {\n
+        stream.skipToEnd();\n
       }\n
     }};\n
   }\n
@@ -81,15 +87,15 @@
   function parseQuery(query) {\n
     var isRE = query.match(/^\\/(.*)\\/([a-z]*)$/);\n
     if (isRE) {\n
-      query = new RegExp(isRE[1], isRE[2].indexOf("i") == -1 ? "" : "i");\n
-      if (query.test("")) query = /x^/;\n
-    } else if (query == "") {\n
-      query = /x^/;\n
+      try { query = new RegExp(isRE[1], isRE[2].indexOf("i") == -1 ? "" : "i"); }\n
+      catch(e) {} // Not a regular expression after all, do a string search\n
     }\n
+    if (typeof query == "string" ? query == "" : query.test(""))\n
+      query = /x^/;\n
     return query;\n
   }\n
   var queryDialog =\n
-    \'Search: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>\';\n
+    \'Search: <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>\';\n
   function doSearch(cm, rev) {\n
     var state = getSearchState(cm);\n
     if (state.query) return findNext(cm, rev);\n
@@ -98,8 +104,12 @@
         if (!query || state.query) return;\n
         state.query = parseQuery(query);\n
         cm.removeOverlay(state.overlay, queryCaseInsensitive(state.query));\n
-        state.overlay = searchOverlay(state.query);\n
+        state.overlay = searchOverlay(state.query, queryCaseInsensitive(state.query));\n
         cm.addOverlay(state.overlay);\n
+        if (cm.showMatchesOnScrollbar) {\n
+          if (state.annotate) { state.annotate.clear(); state.annotate = null; }\n
+          state.annotate = cm.showMatchesOnScrollbar(state.query, queryCaseInsensitive(state.query));\n
+        }\n
         state.posFrom = state.posTo = cm.getCursor();\n
         findNext(cm, rev);\n
       });\n
@@ -121,13 +131,15 @@
     if (!state.query) return;\n
     state.query = null;\n
     cm.removeOverlay(state.overlay);\n
+    if (state.annotate) { state.annotate.clear(); state.annotate = null; }\n
   });}\n
 \n
   var replaceQueryDialog =\n
-    \'Replace: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>\';\n
-  var replacementQueryDialog = \'With: <input type="text" style="width: 10em"/>\';\n
+    \'Replace: <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>\';\n
+  var replacementQueryDialog = \'With: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>\';\n
   var doReplaceConfirm = "Replace? <button>Yes</button> <button>No</button> <button>Stop</button>";\n
   function replace(cm, all) {\n
+    if (cm.getOption("readOnly")) return;\n
     dialog(cm, replaceQueryDialog, "Replace:", cm.getSelection(), function(query) {\n
       if (!query) return;\n
       query = parseQuery(query);\n
@@ -173,7 +185,7 @@
   CodeMirror.commands.clearSearch = clearSearch;\n
   CodeMirror.commands.replace = replace;\n
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -184,7 +196,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6199</int> </value>
+            <value> <int>7128</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

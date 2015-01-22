@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Panel Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../addon/display/panel.js"></script>\n
+<style type="text/css">\n
+  .border {border: 1px solid black; border-bottom: 1px solid black;}\n
+  .add { background: orange; padding: 1px 3px; color: white !important; border-radius: 4px; }\n
+  .panel {\n
+    background-image: linear-gradient(to bottom, #ffffaa, #ffffdd);\n
+    padding: 3px 7px;\n
+  }\n
+  .panel.top { border-bottom: 1px solid #dd6; }\n
+  .panel.bottom { border-top: 1px solid #dd6; }\n
+  .panel span { cursor: pointer; }\n
+</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Panel</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Panel Demo</h2>\n
+<form><div class="border"><textarea id="code" name="code"></textarea></div></form>\n
+\n
+<script id="localscript">var textarea = document.getElementById("code");\n
+var script = document.getElementById("localscript");\n
+textarea.value = (script.textContent ||\n
+                  script.innerText ||\n
+                  script.innerHTML);\n
+editor = CodeMirror.fromTextArea(textarea, {\n
+  lineNumbers: true\n
+});\n
+\n
+function addPanel(where) {\n
+  var node = document.createElement("div");\n
+  node.className = "panel " + where;\n
+  var close = node.appendChild(document.createElement("span"));\n
+  close.textContent = "â Remove this panel";\n
+  var widget = editor.addPanel(node, {position: where});\n
+  CodeMirror.on(close, "click", function() { widget.clear(); });\n
+}</script>\n
+\n
+<p>The <a href="../doc/manual.html#addon_panel"><code>panel</code></a>\n
+addon allows you to display panels <a class=add\n
+href="javascript:addPanel(\'top\')">above</a> or <a class=add\n
+href="javascript:addPanel(\'bottom\')">below</a> an editor. Click the\n
+links in the previous paragraph to add panels to the editor.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403091.68</string> </value>
+            <value> <string>ts21897143.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   var mode = CodeMirror.getMode({tabSize: 4, indentUnit: 2}, "haml");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
@@ -52,7 +55,7 @@
      "[tag %a]([variable title][operator =][string \\"test\\"]){[atom :title] [operator =>] [string \\"test\\"]}");\n
 \n
   MT("htmlCode",\n
-     "[tag <h1>]Title[tag </h1>]");\n
+     "[tag&bracket <][tag h1][tag&bracket >]Title[tag&bracket </][tag h1][tag&bracket >]");\n
 \n
   MT("rubyBlock",\n
      "[operator =][variable-2 @item]");\n
@@ -74,9 +77,9 @@
       "  [comment -# this is a comment]",\n
       "     [comment and this is a comment too]",\n
       "  Date/Time",\n
-      "  [operator -] [variable now] [operator =] [tag DateTime][operator .][variable now]",\n
+      "  [operator -] [variable now] [operator =] [tag DateTime][operator .][property now]",\n
       "  [tag %strong=] [variable now]",\n
-      "  [operator -] [keyword if] [variable now] [operator >] [tag DateTime][operator .][variable parse]([string \\"December 31, 2006\\"])",\n
+      "  [operator -] [keyword if] [variable now] [operator >] [tag DateTime][operator .][property parse]([string \\"December 31, 2006\\"])",\n
       "     [operator =][string \\"Happy\\"]",\n
       "     [operator =][string \\"Belated\\"]",\n
       "     [operator =][string \\"Birthday\\"]");\n
@@ -126,7 +129,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2826</int> </value>
+            <value> <int>3010</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403093.35</string> </value>
+            <value> <string>ts21897141.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("sparql", function(config) {\n
   var indentUnit = config.indentUnit;\n
   var curPunc;\n
@@ -30,18 +43,28 @@ CodeMirror.defineMode("sparql", function(config) {\n
     return new RegExp("^(?:" + words.join("|") + ")$", "i");\n
   }\n
   var ops = wordRegexp(["str", "lang", "langmatches", "datatype", "bound", "sameterm", "isiri", "isuri",\n
+                        "iri", "uri", "bnode", "count", "sum", "min", "max", "avg", "sample",\n
+                        "group_concat", "rand", "abs", "ceil", "floor", "round", "concat", "substr", "strlen",\n
+                        "replace", "ucase", "lcase", "encode_for_uri", "contains", "strstarts", "strends",\n
+                        "strbefore", "strafter", "year", "month", "day", "hours", "minutes", "seconds",\n
+                        "timezone", "tz", "now", "uuid", "struuid", "md5", "sha1", "sha256", "sha384",\n
+                        "sha512", "coalesce", "if", "strlang", "strdt", "isnumeric", "regex", "exists",\n
                         "isblank", "isliteral", "a"]);\n
   var keywords = wordRegexp(["base", "prefix", "select", "distinct", "reduced", "construct", "describe",\n
                              "ask", "from", "named", "where", "order", "limit", "offset", "filter", "optional",\n
                              "graph", "by", "asc", "desc", "as", "having", "undef", "values", "group",\n
                              "minus", "in", "not", "service", "silent", "using", "insert", "delete", "union",\n
+                             "true", "false", "with",\n
                              "data", "copy", "to", "move", "add", "create", "drop", "clear", "load"]);\n
-  var operatorChars = /[*+\\-<>=&|]/;\n
+  var operatorChars = /[*+\\-<>=&|\\^\\/!\\?]/;\n
 \n
   function tokenBase(stream, state) {\n
     var ch = stream.next();\n
     curPunc = null;\n
     if (ch == "$" || ch == "?") {\n
+      if(ch == "?" && stream.match(/\\s/, false)){\n
+        return "operator";\n
+      }\n
       stream.match(/^[\\w\\d]*/);\n
       return "variable-2";\n
     }\n
@@ -55,7 +78,7 @@ CodeMirror.defineMode("sparql", function(config) {\n
     }\n
     else if (/[{}\\(\\),\\.;\\[\\]]/.test(ch)) {\n
       curPunc = ch;\n
-      return null;\n
+      return "bracket";\n
     }\n
     else if (ch == "#") {\n
       stream.skipToEnd();\n
@@ -63,11 +86,15 @@ CodeMirror.defineMode("sparql", function(config) {\n
     }\n
     else if (operatorChars.test(ch)) {\n
       stream.eatWhile(operatorChars);\n
-      return null;\n
+      return "operator";\n
     }\n
     else if (ch == ":") {\n
       stream.eatWhile(/[\\w\\d\\._\\-]/);\n
       return "atom";\n
+    }\n
+    else if (ch == "@") {\n
+      stream.eatWhile(/[a-z\\d\\-]/i);\n
+      return "meta";\n
     }\n
     else {\n
       stream.eatWhile(/[_\\w\\d]/);\n
@@ -77,7 +104,7 @@ CodeMirror.defineMode("sparql", function(config) {\n
       }\n
       var word = stream.current();\n
       if (ops.test(word))\n
-        return null;\n
+        return "builtin";\n
       else if (keywords.test(word))\n
         return "keyword";\n
       else\n
@@ -166,7 +193,9 @@ CodeMirror.defineMode("sparql", function(config) {\n
   };\n
 });\n
 \n
-CodeMirror.defineMIME("application/x-sparql-query", "sparql");\n
+CodeMirror.defineMIME("application/sparql-query", "sparql");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -177,7 +206,7 @@ CodeMirror.defineMIME("application/x-sparql-query", "sparql");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4835</int> </value>
+            <value> <int>6169</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

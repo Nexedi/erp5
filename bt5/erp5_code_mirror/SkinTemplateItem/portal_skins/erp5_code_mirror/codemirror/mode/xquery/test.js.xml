@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403088.09</string> </value>
+            <value> <string>ts21897147.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Don\'t take these too seriously -- the expected results appear to be\n
 // based on the results of actual runs without any serious manual\n
 // verification. If a change you made causes them to fail, the test is\n
@@ -96,7 +99,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4980</int> </value>
+            <value> <int>5108</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

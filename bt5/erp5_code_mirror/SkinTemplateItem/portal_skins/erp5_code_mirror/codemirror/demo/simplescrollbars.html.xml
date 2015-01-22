@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Simple Scrollbar Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<link rel="stylesheet" href="../addon/scroll/simplescrollbars.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/markdown/markdown.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../addon/scroll/simplescrollbars.js"></script>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Simple Scrollbar</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Simple Scrollbar Demo</h2>\n
+<form><textarea id="code" name="code"># Custom Scrollbars\n
+\n
+This is a piece of text that creates scrollbars\n
+\n
+Lorem ipsum dolor sit amet, turpis nec facilisis neque vestibulum adipiscing, magna nunc est luctus orci a,\n
+aliquam duis ad volutpat nostra. Vestibulum ultricies suspendisse commodo volutpat pede sed. Bibendum odio\n
+dignissim, ad vitae mollis ac sed nibh quis, suspendisse diam, risus quas blandit phasellus luctus nec,\n
+integer nunc vitae posuere scelerisque. Lobortis quam porta conubia nulla. Et nisl ac, imperdiet vitae ac.\n
+Parturient sit. Et vestibulum euismod, rutrum nunc libero mauris purus convallis. Cum id adipiscing et eget\n
+pretium rutrum, ultrices sapien magnis fringilla sit lorem, eu vitae scelerisque ipsum aliquet, magna sed\n
+fusce vel.\n
+\n
+Lectus ultricies libero dolor convallis, sed etiam vel hendrerit egestas viverra, at urna mauris, eget\n
+vulputate dolor voluptatem, nulla eget sollicitudin. Sed tincidunt, elit sociis. Mattis mi tortor dui id\n
+sodales mi, maecenas nam fringilla risus turpis mauris praesent, imperdiet maecenas ultrices nonummy tellus\n
+quis est. Scelerisque nec pharetra quis varius fringilla. Varius vestibulum non dictum pharetra, tincidunt in\n
+vestibulum iaculis molestie, id condimentum blandit elit urna magna pulvinar, quam suspendisse pellentesque\n
+donec. Vel amet ad ac. Nec aut viverra, morbi mi neque massa, turpis enim proin. Tellus eu, fermentum velit\n
+est convallis aliquam velit, rutrum in diam lacus, praesent tempor pellentesque dictum semper augue. Felis\n
+explicabo massa amet lectus phasellus dolor. Ut lorem quis arcu neque felis ultricies, senectus vitae\n
+curabitur sed pellentesque et, id sed risus in sed ac accumsan, blandit arcu quam duis nunc.\n
+\n
+Sed leo sollicitudin odio vitae, purus sit egestas, justo eros inceptos auctor fermentum lectus. Ligula luctus\n
+turpis, quod massa vitae elementum orci, nullam fringilla elit tortor. Justo ante tempor amet quam posuere\n
+volutpat. Facilisis pede erat ut hac ultrices ipsum, wisi duis sit metus. Dolor vitae est sed sed vitae. Sed\n
+eu ligula, morbi vestibulum nunc nibh velit ut taciti, ligula elit semper sagittis in, auctor arcu vel eget.\n
+Mauris at vitae nec suspendisse et, aenean proin blandit suscipit. Morbi quam, dolor ultricies. Viverra\n
+tempus. Suspendisse sit dapibus, ac fuga aenean, magna nisl nonummy augue posuere, dictum ut fuga velit\n
+parturient augue interdum, mattis sit tellus.\n
+\n
+Vehicula commodo tempus curabitur eros, lacinia erat vulputate lorem vel fermentum donec, lectus sed conubia\n
+id pellentesque. Vel senectus donec pede aliquet dolor sit, nec vivamus justo placerat interdum maecenas,\n
+sodales euismod. Quis netus sapien amet, vestibulum quam nec amet lacinia, quis aliquet, tempor vivamus tellus\n
+enim, suscipit quis eleifend. Amet class phasellus orci pretium, risus in nulla. Neque sit ullamcorper,\n
+ultricies platea id nec suspendisse ac. Et elementum. Dictum nam, ut dui fermentum egestas facilisis elit\n
+augue, adipiscing donec ipsum erat nam pellentesque convallis, vestibulum vestibulum risus id nulla ut mauris,\n
+curabitur aute aptent. Ultrices orci wisi dui ipsum praesent, pharetra felis eu quis. Est fringilla etiam,\n
+maxime sem dapibus et eget, mi enim dignissim nec pretium, augue vehicula, volutpat proin. Et occaecati\n
+lobortis viverra, cum in sed, vivamus tellus. Libero at malesuada est vivamus leo tortor.\n
+</textarea></form>\n
+\n
+<p>The <a href="../doc/manual.html#addon_simplescrollbars"><code>simplescrollbars</code></a> addon defines two\n
+styles of non-native scrollbars: <a href="javascript:editor.setOption(\'scrollbarStyle\', \'simple\')"><code>"simple"</code></a> and <a href="javascript:editor.setOption(\'scrollbarStyle\', \'overlay\')"><code>"overlay"</code></a> (click to try), which can be passed to\n
+the <a href="../doc/manual.html#option_scrollbarStyle"><code>scrollbarStyle</code></a> option. These implement\n
+the scrollbar using DOM elements, allowing more control over\n
+its <a href="../addon/scroll/simplescrollbars.css">appearance</a>.</p>\n
+\n
+  <script>\n
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+      lineNumbers: true,\n
+      scrollbarStyle: "simple"\n
+    });\n
+  </script>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>simplescrollbars.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

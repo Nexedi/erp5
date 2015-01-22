@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403089.45</string> </value>
+            <value> <string>ts21897146.34</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../python/python"), require("../stex/stex"), require("../../addon/mode/overlay"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../python/python", "../stex/stex", "../../addon/mode/overlay"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode(\'rst\', function (config, options) {\n
 \n
   var rx_strong = /^\\*\\*[^\\*\\s](?:[^\\*]*[^\\*\\s])?\\*\\*/;\n
@@ -89,19 +102,6 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
     return string.replace(/{(\\d+)}/g, function (match, n) {\n
       return typeof args[n] != \'undefined\' ? args[n] : match;\n
     });\n
-  }\n
-\n
-  function AssertException(message) {\n
-    this.message = message;\n
-  }\n
-\n
-  AssertException.prototype.toString = function () {\n
-    return \'AssertException: \' + this.message;\n
-  };\n
-\n
-  function assert(expression, message) {\n
-    if (!expression) throw new AssertException(message);\n
-    return expression;\n
   }\n
 \n
   ///////////////////////////////////////////////////////////////////////////\n
@@ -196,12 +196,12 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_normal, context(rx_role_pre, 1));\n
-        assert(stream.match(/^:/));\n
+        stream.match(/^:/);\n
         token = \'meta\';\n
         break;\n
       case 1:\n
         change(state, to_normal, context(rx_role_pre, 2));\n
-        assert(stream.match(rx_NAME));\n
+        stream.match(rx_NAME);\n
         token = \'keyword\';\n
 \n
         if (stream.current().match(/^(?:math|latex)/)) {\n
@@ -210,7 +210,7 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         break;\n
       case 2:\n
         change(state, to_normal, context(rx_role_pre, 3));\n
-        assert(stream.match(/^:`/));\n
+        stream.match(/^:`/);\n
         token = \'meta\';\n
         break;\n
       case 3:\n
@@ -232,21 +232,20 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         }\n
 \n
         change(state, to_normal, context(rx_role_pre, 4));\n
-        assert(stream.match(rx_TEXT2));\n
+        stream.match(rx_TEXT2);\n
         token = \'string\';\n
         break;\n
       case 4:\n
         change(state, to_normal, context(rx_role_pre, 5));\n
-        assert(stream.match(/^`/));\n
+        stream.match(/^`/);\n
         token = \'meta\';\n
         break;\n
       case 5:\n
         change(state, to_normal, context(rx_role_pre, 6));\n
-        assert(stream.match(rx_TAIL));\n
+        stream.match(rx_TAIL);\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (phase(state) == rx_role_suf ||\n
                stream.match(rx_role_suf, false)) {\n
@@ -254,62 +253,60 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_normal, context(rx_role_suf, 1));\n
-        assert(stream.match(/^`/));\n
+        stream.match(/^`/);\n
         token = \'meta\';\n
         break;\n
       case 1:\n
         change(state, to_normal, context(rx_role_suf, 2));\n
-        assert(stream.match(rx_TEXT2));\n
+        stream.match(rx_TEXT2);\n
         token = \'string\';\n
         break;\n
       case 2:\n
         change(state, to_normal, context(rx_role_suf, 3));\n
-        assert(stream.match(/^`:/));\n
+        stream.match(/^`:/);\n
         token = \'meta\';\n
         break;\n
       case 3:\n
         change(state, to_normal, context(rx_role_suf, 4));\n
-        assert(stream.match(rx_NAME));\n
+        stream.match(rx_NAME);\n
         token = \'keyword\';\n
         break;\n
       case 4:\n
         change(state, to_normal, context(rx_role_suf, 5));\n
-        assert(stream.match(/^:/));\n
+        stream.match(/^:/);\n
         token = \'meta\';\n
         break;\n
       case 5:\n
         change(state, to_normal, context(rx_role_suf, 6));\n
-        assert(stream.match(rx_TAIL));\n
+        stream.match(rx_TAIL);\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (phase(state) == rx_role || stream.match(rx_role, false)) {\n
 \n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_normal, context(rx_role, 1));\n
-        assert(stream.match(/^:/));\n
+        stream.match(/^:/);\n
         token = \'meta\';\n
         break;\n
       case 1:\n
         change(state, to_normal, context(rx_role, 2));\n
-        assert(stream.match(rx_NAME));\n
+        stream.match(rx_NAME);\n
         token = \'keyword\';\n
         break;\n
       case 2:\n
         change(state, to_normal, context(rx_role, 3));\n
-        assert(stream.match(/^:/));\n
+        stream.match(/^:/);\n
         token = \'meta\';\n
         break;\n
       case 3:\n
         change(state, to_normal, context(rx_role, 4));\n
-        assert(stream.match(rx_TAIL));\n
+        stream.match(rx_TAIL);\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (phase(state) == rx_substitution_ref ||\n
                stream.match(rx_substitution_ref, false)) {\n
@@ -317,7 +314,7 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_normal, context(rx_substitution_ref, 1));\n
-        assert(stream.match(rx_substitution_text));\n
+        stream.match(rx_substitution_text);\n
         token = \'variable-2\';\n
         break;\n
       case 1:\n
@@ -326,7 +323,6 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (stream.match(rx_footnote_ref)) {\n
       change(state, to_normal);\n
@@ -352,21 +348,20 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         break;\n
       case 1:\n
         change(state, to_normal, context(rx_link_ref2, 2));\n
-        assert(stream.match(/^`/));\n
+        stream.match(/^`/);\n
         token = \'link\';\n
         break;\n
       case 2:\n
         change(state, to_normal, context(rx_link_ref2, 3));\n
-        assert(stream.match(rx_TEXT2));\n
+        stream.match(rx_TEXT2);\n
         break;\n
       case 3:\n
         change(state, to_normal, context(rx_link_ref2, 4));\n
-        assert(stream.match(/^`_/));\n
+        stream.match(/^`_/);\n
         token = \'link\';\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (stream.match(rx_verbatim)) {\n
       change(state, to_verbatim);\n
@@ -391,26 +386,25 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_explicit, context(rx_substitution, 1));\n
-        assert(stream.match(rx_substitution_text));\n
+        stream.match(rx_substitution_text);\n
         token = \'variable-2\';\n
         break;\n
       case 1:\n
         change(state, to_explicit, context(rx_substitution, 2));\n
-        assert(stream.match(rx_substitution_sepa));\n
+        stream.match(rx_substitution_sepa);\n
         break;\n
       case 2:\n
         change(state, to_explicit, context(rx_substitution, 3));\n
-        assert(stream.match(rx_substitution_name));\n
+        stream.match(rx_substitution_name);\n
         token = \'keyword\';\n
         break;\n
       case 3:\n
         change(state, to_explicit, context(rx_substitution, 4));\n
-        assert(stream.match(rx_substitution_tail));\n
+        stream.match(rx_substitution_tail);\n
         token = \'meta\';\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (phase(state) == rx_directive ||\n
                stream.match(rx_directive, false)) {\n
@@ -418,7 +412,7 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_explicit, context(rx_directive, 1));\n
-        assert(stream.match(rx_directive_name));\n
+        stream.match(rx_directive_name);\n
         token = \'keyword\';\n
 \n
         if (stream.current().match(/^(?:math|latex)/))\n
@@ -428,7 +422,7 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         break;\n
       case 1:\n
         change(state, to_explicit, context(rx_directive, 2));\n
-        assert(stream.match(rx_directive_tail));\n
+        stream.match(rx_directive_tail);\n
         token = \'meta\';\n
 \n
         if (stream.match(/^latex\\s*$/) || state.tmp_stex) {\n
@@ -447,25 +441,23 @@ CodeMirror.defineMode(\'rst-base\', function (config) {\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (phase(state) == rx_link || stream.match(rx_link, false)) {\n
 \n
       switch (stage(state)) {\n
       case 0:\n
         change(state, to_explicit, context(rx_link, 1));\n
-        assert(stream.match(rx_link_head));\n
-        assert(stream.match(rx_link_name));\n
+        stream.match(rx_link_head);\n
+        stream.match(rx_link_name);\n
         token = \'link\';\n
         break;\n
       case 1:\n
         change(state, to_explicit, context(rx_link, 2));\n
-        assert(stream.match(rx_link_tail));\n
+        stream.match(rx_link_tail);\n
         token = \'meta\';\n
         break;\n
       default:\n
         change(state, to_normal);\n
-        assert(stream.current() == \'\');\n
       }\n
     } else if (stream.match(rx_footnote)) {\n
       change(state, to_normal);\n
@@ -585,6 +577,8 @@ CodeMirror.defineMIME(\'text/x-rst\', \'rst\');\n
 \n
 ///////////////////////////////////////////////////////////////////////////////\n
 ///////////////////////////////////////////////////////////////////////////////\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -595,7 +589,7 @@ CodeMirror.defineMIME(\'text/x-rst\', \'rst\');\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17786</int> </value>
+            <value> <int>17547</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

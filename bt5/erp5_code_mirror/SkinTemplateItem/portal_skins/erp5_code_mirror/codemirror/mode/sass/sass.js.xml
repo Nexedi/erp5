@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403091.19</string> </value>
+            <value> <string>ts21897144.11</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,10 +22,23 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("sass", function(config) {\n
-  var tokenRegexp = function(words){\n
+  function tokenRegexp(words) {\n
     return new RegExp("^" + words.join("|"));\n
-  };\n
+  }\n
 \n
   var keywords = ["true", "false", "null", "auto"];\n
   var keywordsRegexp = new RegExp("^" + keywords.join("|"));\n
@@ -35,246 +48,233 @@ CodeMirror.defineMode("sass", function(config) {\n
 \n
   var pseudoElementsRegexp = /^::?[\\w\\-]+/;\n
 \n
-  var urlTokens = function(stream, state){\n
+  function urlTokens(stream, state) {\n
     var ch = stream.peek();\n
 \n
-    if (ch === ")"){\n
+    if (ch === ")") {\n
       stream.next();\n
       state.tokenizer = tokenBase;\n
       return "operator";\n
-    }else if (ch === "("){\n
+    } else if (ch === "(") {\n
       stream.next();\n
       stream.eatSpace();\n
 \n
       return "operator";\n
-    }else if (ch === "\'" || ch === \'"\'){\n
+    } else if (ch === "\'" || ch === \'"\') {\n
       state.tokenizer = buildStringTokenizer(stream.next());\n
       return "string";\n
-    }else{\n
+    } else {\n
       state.tokenizer = buildStringTokenizer(")", false);\n
       return "string";\n
     }\n
-  };\n
-  var multilineComment = function(stream, state) {\n
-    if (stream.skipTo("*/")){\n
-      stream.next();\n
-      stream.next();\n
-      state.tokenizer = tokenBase;\n
-    }else {\n
-      stream.next();\n
-    }\n
+  }\n
+  function comment(indentation, multiLine) {\n
+    return function(stream, state) {\n
+      if (stream.sol() && stream.indentation() <= indentation) {\n
+        state.tokenizer = tokenBase;\n
+        return tokenBase(stream, state);\n
+      }\n
 \n
-    return "comment";\n
-  };\n
+      if (multiLine && stream.skipTo("*/")) {\n
+        stream.next();\n
+        stream.next();\n
+        state.tokenizer = tokenBase;\n
+      } else {\n
+        stream.next();\n
+      }\n
 \n
-  var buildStringTokenizer = function(quote, greedy){\n
-    if(greedy == null){ greedy = true; }\n
+      return "comment";\n
+    };\n
+  }\n
 \n
-    function stringTokenizer(stream, state){\n
+  function buildStringTokenizer(quote, greedy) {\n
+    if(greedy == null) { greedy = true; }\n
+\n
+    function stringTokenizer(stream, state) {\n
       var nextChar = stream.next();\n
       var peekChar = stream.peek();\n
       var previousChar = stream.string.charAt(stream.pos-2);\n
 \n
       var endingString = ((nextChar !== "\\\\" && peekChar === quote) || (nextChar === quote && previousChar !== "\\\\"));\n
 \n
-      /*\n
-      console.log("previousChar: " + previousChar);\n
-      console.log("nextChar: " + nextChar);\n
-      console.log("peekChar: " + peekChar);\n
-      console.log("ending: " + endingString);\n
-      */\n
-\n
-      if (endingString){\n
+      if (endingString) {\n
         if (nextChar !== quote && greedy) { stream.next(); }\n
         state.tokenizer = tokenBase;\n
         return "string";\n
-      }else if (nextChar === "#" && peekChar === "{"){\n
+      } else if (nextChar === "#" && peekChar === "{") {\n
         state.tokenizer = buildInterpolationTokenizer(stringTokenizer);\n
         stream.next();\n
         return "operator";\n
-      }else {\n
+      } else {\n
         return "string";\n
       }\n
     }\n
 \n
     return stringTokenizer;\n
-  };\n
+  }\n
 \n
-  var buildInterpolationTokenizer = function(currentTokenizer){\n
-    return function(stream, state){\n
-      if (stream.peek() === "}"){\n
+  function buildInterpolationTokenizer(currentTokenizer) {\n
+    return function(stream, state) {\n
+      if (stream.peek() === "}") {\n
         stream.next();\n
         state.tokenizer = currentTokenizer;\n
         return "operator";\n
-      }else{\n
+      } else {\n
         return tokenBase(stream, state);\n
       }\n
     };\n
-  };\n
+  }\n
 \n
-  var indent = function(state){\n
-    if (state.indentCount == 0){\n
+  function indent(state) {\n
+    if (state.indentCount == 0) {\n
       state.indentCount++;\n
       var lastScopeOffset = state.scopes[0].offset;\n
       var currentOffset = lastScopeOffset + config.indentUnit;\n
       state.scopes.unshift({ offset:currentOffset });\n
     }\n
-  };\n
+  }\n
 \n
-  var dedent = function(state){\n
-    if (state.scopes.length == 1) { return; }\n
+  function dedent(state) {\n
+    if (state.scopes.length == 1) return;\n
 \n
     state.scopes.shift();\n
-  };\n
+  }\n
 \n
-  var tokenBase = function(stream, state) {\n
+  function tokenBase(stream, state) {\n
     var ch = stream.peek();\n
 \n
-    // Single line Comment\n
-    if (stream.match(\'//\')) {\n
-      stream.skipToEnd();\n
-      return "comment";\n
+    // Comment\n
+    if (stream.match("/*")) {\n
+      state.tokenizer = comment(stream.indentation(), true);\n
+      return state.tokenizer(stream, state);\n
     }\n
-\n
-    // Multiline Comment\n
-    if (stream.match(\'/*\')){\n
-      state.tokenizer = multilineComment;\n
+    if (stream.match("//")) {\n
+      state.tokenizer = comment(stream.indentation(), false);\n
       return state.tokenizer(stream, state);\n
     }\n
 \n
     // Interpolation\n
-    if (stream.match(\'#{\')){\n
-    state.tokenizer = buildInterpolationTokenizer(tokenBase);\n
+    if (stream.match("#{")) {\n
+      state.tokenizer = buildInterpolationTokenizer(tokenBase);\n
       return "operator";\n
     }\n
 \n
-    if (ch === "."){\n
+    if (ch === ".") {\n
       stream.next();\n
 \n
       // Match class selectors\n
-      if (stream.match(/^[\\w-]+/)){\n
+      if (stream.match(/^[\\w-]+/)) {\n
         indent(state);\n
         return "atom";\n
-      }else if (stream.peek() === "#"){\n
+      } else if (stream.peek() === "#") {\n
         indent(state);\n
         return "atom";\n
-      }else{\n
+      } else {\n
         return "operator";\n
       }\n
     }\n
 \n
-    if (ch === "#"){\n
+    if (ch === "#") {\n
       stream.next();\n
 \n
       // Hex numbers\n
-      if (stream.match(/[0-9a-fA-F]{6}|[0-9a-fA-F]{3}/)){\n
+      if (stream.match(/[0-9a-fA-F]{6}|[0-9a-fA-F]{3}/))\n
         return "number";\n
-      }\n
 \n
       // ID selectors\n
-      if (stream.match(/^[\\w-]+/)){\n
+      if (stream.match(/^[\\w-]+/)) {\n
         indent(state);\n
         return "atom";\n
       }\n
 \n
-      if (stream.peek() === "#"){\n
+      if (stream.peek() === "#") {\n
         indent(state);\n
         return "atom";\n
       }\n
     }\n
 \n
     // Numbers\n
-    if (stream.match(/^-?[0-9\\.]+/)){\n
+    if (stream.match(/^-?[0-9\\.]+/))\n
       return "number";\n
-    }\n
 \n
     // Units\n
-    if (stream.match(/^(px|em|in)\\b/)){\n
+    if (stream.match(/^(px|em|in)\\b/))\n
       return "unit";\n
-    }\n
 \n
-    if (stream.match(keywordsRegexp)){\n
+    if (stream.match(keywordsRegexp))\n
       return "keyword";\n
-    }\n
 \n
-    if (stream.match(/^url/) && stream.peek() === "("){\n
+    if (stream.match(/^url/) && stream.peek() === "(") {\n
       state.tokenizer = urlTokens;\n
       return "atom";\n
     }\n
 \n
     // Variables\n
-    if (ch === "$"){\n
+    if (ch === "$") {\n
       stream.next();\n
       stream.eatWhile(/[\\w-]/);\n
 \n
-      if (stream.peek() === ":"){\n
+      if (stream.peek() === ":") {\n
         stream.next();\n
         return "variable-2";\n
-      }else{\n
+      } else {\n
         return "variable-3";\n
       }\n
     }\n
 \n
-    if (ch === "!"){\n
+    if (ch === "!") {\n
       stream.next();\n
-\n
-      if (stream.match(/^[\\w]+/)){\n
-        return "keyword";\n
-      }\n
-\n
-      return "operator";\n
+      return stream.match(/^[\\w]+/) ? "keyword": "operator";\n
     }\n
 \n
-    if (ch === "="){\n
+    if (ch === "=") {\n
       stream.next();\n
 \n
       // Match shortcut mixin definition\n
-      if (stream.match(/^[\\w-]+/)){\n
+      if (stream.match(/^[\\w-]+/)) {\n
         indent(state);\n
         return "meta";\n
-      }else {\n
+      } else {\n
         return "operator";\n
       }\n
     }\n
 \n
-    if (ch === "+"){\n
+    if (ch === "+") {\n
       stream.next();\n
 \n
       // Match shortcut mixin definition\n
-      if (stream.match(/^[\\w-]+/)){\n
+      if (stream.match(/^[\\w-]+/))\n
         return "variable-3";\n
-      }else {\n
+      else\n
         return "operator";\n
-      }\n
     }\n
 \n
     // Indent Directives\n
-    if (stream.match(/^@(else if|if|media|else|for|each|while|mixin|function)/)){\n
+    if (stream.match(/^@(else if|if|media|else|for|each|while|mixin|function)/)) {\n
       indent(state);\n
       return "meta";\n
     }\n
 \n
     // Other Directives\n
-    if (ch === "@"){\n
+    if (ch === "@") {\n
       stream.next();\n
       stream.eatWhile(/[\\w-]/);\n
       return "meta";\n
     }\n
 \n
     // Strings\n
-    if (ch === \'"\' || ch === "\'"){\n
+    if (ch === \'"\' || ch === "\'") {\n
       stream.next();\n
       state.tokenizer = buildStringTokenizer(ch);\n
       return "string";\n
     }\n
 \n
     // Pseudo element selectors\n
-    if (ch == \':\' && stream.match(pseudoElementsRegexp)){\n
+    if (ch == ":" && stream.match(pseudoElementsRegexp))\n
       return "keyword";\n
-    }\n
 \n
     // atoms\n
-    if (stream.eatWhile(/[\\w-&]/)){\n
+    if (stream.eatWhile(/[\\w-&]/)) {\n
       // matches a property definition\n
       if (stream.peek() === ":" && !stream.match(pseudoElementsRegexp, false))\n
         return "property";\n
@@ -282,43 +282,37 @@ CodeMirror.defineMode("sass", function(config) {\n
         return "atom";\n
     }\n
 \n
-    if (stream.match(opRegexp)){\n
+    if (stream.match(opRegexp))\n
       return "operator";\n
-    }\n
 \n
     // If we haven\'t returned by now, we move 1 character\n
     // and return an error\n
     stream.next();\n
     return null;\n
-  };\n
+  }\n
 \n
-  var tokenLexer = function(stream, state) {\n
-    if (stream.sol()){\n
-      state.indentCount = 0;\n
-    }\n
+  function tokenLexer(stream, state) {\n
+    if (stream.sol()) state.indentCount = 0;\n
     var style = state.tokenizer(stream, state);\n
     var current = stream.current();\n
 \n
-    if (current === "@return"){\n
+    if (current === "@return")\n
       dedent(state);\n
-    }\n
 \n
-    if (style === "atom"){\n
+    if (style === "atom")\n
       indent(state);\n
-    }\n
 \n
-    if (style !== null){\n
+    if (style !== null) {\n
       var startOfToken = stream.pos - current.length;\n
       var withCurrentIndent = startOfToken + (config.indentUnit * state.indentCount);\n
 \n
       var newScopes = [];\n
 \n
-      for (var i = 0; i < state.scopes.length; i++){\n
+      for (var i = 0; i < state.scopes.length; i++) {\n
         var scope = state.scopes[i];\n
 \n
-        if (scope.offset <= withCurrentIndent){\n
+        if (scope.offset <= withCurrentIndent)\n
           newScopes.push(scope);\n
-        }\n
       }\n
 \n
       state.scopes = newScopes;\n
@@ -326,13 +320,14 @@ CodeMirror.defineMode("sass", function(config) {\n
 \n
 \n
     return style;\n
-  };\n
+  }\n
 \n
   return {\n
     startState: function() {\n
       return {\n
         tokenizer: tokenBase,\n
-        scopes: [{offset: 0, type: \'sass\'}],\n
+        scopes: [{offset: 0, type: "sass"}],\n
+        indentCount: 0,\n
         definedVars: [],\n
         definedMixins: []\n
       };\n
@@ -352,6 +347,8 @@ CodeMirror.defineMode("sass", function(config) {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-sass", "sass");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -362,7 +359,7 @@ CodeMirror.defineMIME("text/x-sass", "sass");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7429</int> </value>
+            <value> <int>7831</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

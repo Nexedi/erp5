@@ -45,16 +45,17 @@
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../addon/mode/loadmode.js"></script>\n
+<script src="../mode/meta.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Lazy Mode Loading</a>\n
@@ -63,12 +64,13 @@
 \n
 <article>\n
 <h2>Lazy Mode Loading Demo</h2>\n
+<p style="color: gray">Current mode: <span id="modeinfo">text/plain</span></p>\n
 <form><textarea id="code" name="code">This is the editor.\n
 // It starts out in plain text mode,\n
 #  use the control below to load and apply a mode\n
   "you\'ll see the highlighting of" this text /*change*/.\n
 </textarea></form>\n
-<p><input type=text value=javascript id=mode> <button type=button onclick="change()">change mode</button></p>\n
+<p>Filename, mime, or mode name: <input type=text value=foo.js id=mode> <button type=button onclick="change()">change mode</button></p>\n
 \n
     <script>\n
 CodeMirror.modeURL = "../mode/%N/%N.js";\n
@@ -80,8 +82,29 @@ CodeMirror.on(modeInput, "keypress", function(e) {\n
   if (e.keyCode == 13) change();\n
 });\n
 function change() {\n
-   editor.setOption("mode", modeInput.value);\n
-   CodeMirror.autoLoadMode(editor, modeInput.value);\n
+  var val = modeInput.value, m, mode, spec;\n
+  if (m = /.+\\.([^.]+)$/.exec(val)) {\n
+    var info = CodeMirror.findModeByExtension(m[1]);\n
+    if (info) {\n
+      mode = info.mode;\n
+      spec = info.mime;\n
+    }\n
+  } else if (/\\//.test(val)) {\n
+    var info = CodeMirror.findModeByMIME(val);\n
+    if (info) {\n
+      mode = info.mode;\n
+      spec = val;\n
+    }\n
+  } else {\n
+    mode = spec = val;\n
+  }\n
+  if (mode) {\n
+    editor.setOption("mode", spec);\n
+    CodeMirror.autoLoadMode(editor, mode);\n
+    document.getElementById("modeinfo").textContent = spec;\n
+  } else {\n
+    alert("Could not find a mode corresponding to " + val);\n
+  }\n
 }\n
 </script>\n
   </article>

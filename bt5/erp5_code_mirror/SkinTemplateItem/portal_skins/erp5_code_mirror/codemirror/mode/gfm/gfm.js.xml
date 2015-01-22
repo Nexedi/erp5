@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403096.79</string> </value>
+            <value> <string>ts21897137.84</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../markdown/markdown"), require("../../addon/mode/overlay"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../markdown/markdown", "../../addon/mode/overlay"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
   var codeDepth = 0;\n
   function blankLine(state) {\n
@@ -44,6 +57,8 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
       };\n
     },\n
     token: function(stream, state) {\n
+      state.combineTokens = null;\n
+\n
       // Hack to prevent formatting override inside code blocks (block and inline)\n
       if (state.codeBlock) {\n
         if (stream.match(/^```/)) {\n
@@ -91,19 +106,22 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
           // User/Project@SHA\n
           // User@SHA\n
           // SHA\n
+          state.combineTokens = true;\n
           return "link";\n
         } else if (stream.match(/^(?:[a-zA-Z0-9\\-_]+\\/)?(?:[a-zA-Z0-9\\-_]+)?#[0-9]+\\b/)) {\n
           // User/Project#Num\n
           // User#Num\n
           // #Num\n
+          state.combineTokens = true;\n
           return "link";\n
         }\n
       }\n
-      if (stream.match(/^((?:[a-z][\\w-]+:(?:\\/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]|\\([^\\s()<>]*\\))+(?:\\([^\\s()<>]*\\)|[^\\s`!()\\[\\]{};:\'".,<>?«»“”‘’]))/i) &&\n
+      if (stream.match(/^((?:[a-z][\\w-]+:(?:\\/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]|\\([^\\s()<>]*\\))+(?:\\([^\\s()<>]*\\)|[^\\s`*!()\\[\\]{};:\'".,<>?«»“”‘’]))/i) &&\n
          stream.string.slice(stream.start - 2, stream.start) != "](") {\n
         // URLs\n
         // Taken from http://daringfireball.net/2010/07/improved_regex_for_matching_urls\n
         // And then (issue #1160) simplified to make it not crash the Chrome Regexp engine\n
+        state.combineTokens = true;\n
         return "link";\n
       }\n
       stream.next();\n
@@ -115,7 +133,8 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
   var markdownConfig = {\n
     underscoresBreakWords: false,\n
     taskLists: true,\n
-    fencedCodeBlocks: true\n
+    fencedCodeBlocks: true,\n
+    strikethrough: true\n
   };\n
   for (var attr in modeConfig) {\n
     markdownConfig[attr] = modeConfig[attr];\n
@@ -124,6 +143,8 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
   CodeMirror.defineMIME("gfmBase", markdownConfig);\n
   return CodeMirror.overlayMode(CodeMirror.getMode(config, "gfmBase"), gfmOverlay);\n
 }, "markdown");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -134,7 +155,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3119</int> </value>
+            <value> <int>3875</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

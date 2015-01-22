@@ -47,7 +47,7 @@
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
 <script src="../mode/css/css.js"></script>\n
-<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
+<script src="//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
 <script src="https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script>\n
 <script src="https://rawgithub.com/stubbornella/csslint/master/release/csslint.js"></script>\n
 <script src="../addon/lint/lint.js"></script>\n
@@ -58,12 +58,12 @@
       .CodeMirror {border: 1px solid black;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Linter</a>\n

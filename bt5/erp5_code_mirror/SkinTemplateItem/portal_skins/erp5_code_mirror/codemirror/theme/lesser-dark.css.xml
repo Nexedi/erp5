@@ -31,10 +31,6 @@ Ported to CodeMirror by Peter Kroon\n
 .cm-s-lesser-dark {\n
   line-height: 1.3em;\n
 }\n
-.cm-s-lesser-dark {\n
-  font-family: \'Bitstream Vera Sans Mono\', \'DejaVu Sans Mono\', \'Monaco\', Courier, monospace !important;\n
-}\n
-\n
 .cm-s-lesser-dark.CodeMirror { background: #262626; color: #EBEFE7; text-shadow: 0 -1px 1px #262626; }\n
 .cm-s-lesser-dark div.CodeMirror-selected {background: #45443B !important;} /* 33322B*/\n
 .cm-s-lesser-dark .CodeMirror-cursor { border-left: 1px solid white !important; }\n
@@ -43,6 +39,8 @@ Ported to CodeMirror by Peter Kroon\n
 .cm-s-lesser-dark.CodeMirror span.CodeMirror-matchingbracket { color: #7EFC7E; }/*65FC65*/\n
 \n
 .cm-s-lesser-dark .CodeMirror-gutters { background: #262626; border-right:1px solid #aaa; }\n
+.cm-s-lesser-dark .CodeMirror-guttermarker { color: #599eff; }\n
+.cm-s-lesser-dark .CodeMirror-guttermarker-subtle { color: #777; }\n
 .cm-s-lesser-dark .CodeMirror-linenumber { color: #777; }\n
 \n
 .cm-s-lesser-dark span.cm-keyword { color: #599eff; }\n

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403084.07</string> </value>
+            <value> <string>ts21897129.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,6 +27,7 @@ document.createElement("section");\n
 document.createElement("article");\n
 \n
 (function() {\n
+  if (!window.addEventListener) return;\n
   var pending = false, prevVal = null;\n
 \n
   function updateSoon() {\n
@@ -65,10 +66,18 @@ document.createElement("article");\n
     }\n
   }\n
 \n
-  if (window.addEventListener) {\n
-    window.addEventListener("scroll", updateSoon);\n
-    window.addEventListener("load", updateSoon);\n
-  }\n
+  window.addEventListener("scroll", updateSoon);\n
+  window.addEventListener("load", updateSoon);\n
+  window.addEventListener("hashchange", function() {\n
+    setTimeout(function() {\n
+      var hash = document.location.hash, found = null, m;\n
+      var marks = document.getElementById("nav").getElementsByTagName("a");\n
+      for (var i = 0; i < marks.length; i++)\n
+        if ((m = marks[i].href.match(/(#.*)/)) && m[1] == hash) { found = i; break; }\n
+      if (found != null) for (var i = 0; i < marks.length; i++)\n
+        marks[i].className = i == found ? "active" : "";\n
+    }, 300);\n
+  });\n
 })();\n
 
 
@@ -80,7 +89,7 @@ document.createElement("article");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1412</int> </value>
+            <value> <int>1897</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

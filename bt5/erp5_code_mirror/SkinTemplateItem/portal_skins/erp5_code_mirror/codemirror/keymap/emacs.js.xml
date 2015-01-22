@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403085.31</string> </value>
+            <value> <string>ts21897131.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var Pos = CodeMirror.Pos;\n
@@ -146,8 +156,8 @@
     };\n
   }\n
 \n
-  function findEnd(cm, by, dir) {\n
-    var pos = cm.getCursor(), prefix = getPrefix(cm);\n
+  function findEnd(cm, pos, by, dir) {\n
+    var prefix = getPrefix(cm);\n
     if (prefix < 0) { dir = -dir; prefix = -prefix; }\n
     for (var i = 0; i < prefix; ++i) {\n
       var newPos = by(cm, pos, dir);\n
@@ -159,14 +169,31 @@
 \n
   function move(by, dir) {\n
     var f = function(cm) {\n
-      cm.extendSelection(findEnd(cm, by, dir));\n
+      cm.extendSelection(findEnd(cm, cm.getCursor(), by, dir));\n
     };\n
     f.motion = true;\n
     return f;\n
   }\n
 \n
   function killTo(cm, by, dir) {\n
-    kill(cm, cm.getCursor(), findEnd(cm, by, dir), true);\n
+    var selections = cm.listSelections(), cursor;\n
+    var i = selections.length;\n
+    while (i--) {\n
+      cursor = selections[i].head;\n
+      kill(cm, cursor, findEnd(cm, cursor, by, dir), true);\n
+    }\n
+  }\n
+\n
+  function killRegion(cm) {\n
+    if (cm.somethingSelected()) {\n
+      var selections = cm.listSelections(), selection;\n
+      var i = selections.length;\n
+      while (i--) {\n
+        selection = selections[i];\n
+        kill(cm, selection.anchor, selection.head);\n
+      }\n
+      return true;\n
+    }\n
   }\n
 \n
   function addPrefix(cm, digit) {\n
@@ -198,7 +225,7 @@
     if (dup > 1 && event.origin == "+input") {\n
       var one = event.text.join("\\n"), txt = "";\n
       for (var i = 1; i < dup; ++i) txt += one;\n
-      cm.replaceSelection(txt, "end", "+input");\n
+      cm.replaceSelection(txt);\n
     }\n
   }\n
 \n
@@ -221,7 +248,7 @@
 \n
   function setMark(cm) {\n
     cm.setCursor(cm.getCursor());\n
-    cm.setExtending(true);\n
+    cm.setExtending(!cm.getExtending());\n
     cm.on("change", function() { cm.setExtending(false); });\n
   }\n
 \n
@@ -270,7 +297,7 @@
 \n
   // Actual keymap\n
 \n
-  var keyMap = CodeMirror.keyMap.emacs = {\n
+  var keyMap = CodeMirror.keyMap.emacs = CodeMirror.normalizeKeyMap({\n
     "Ctrl-W": function(cm) {kill(cm, cm.getCursor("start"), cm.getCursor("end"));},\n
     "Ctrl-K": repeated(function(cm) {\n
       var start = cm.getCursor(), end = cm.clipPos(Pos(start.line));\n
@@ -290,16 +317,16 @@
       cm.replaceRange(getFromRing(getPrefix(cm)), start, start, "paste");\n
       cm.setSelection(start, cm.getCursor());\n
     },\n
-    "Alt-Y": function(cm) {cm.replaceSelection(popFromRing());},\n
+    "Alt-Y": function(cm) {cm.replaceSelection(popFromRing(), "around", "paste");},\n
 \n
     "Ctrl-Space": setMark, "Ctrl-Shift-2": setMark,\n
 \n
     "Ctrl-F": move(byChar, 1), "Ctrl-B": move(byChar, -1),\n
     "Right": move(byChar, 1), "Left": move(byChar, -1),\n
     "Ctrl-D": function(cm) { killTo(cm, byChar, 1); },\n
-    "Delete": function(cm) { killTo(cm, byChar, 1); },\n
+    "Delete": function(cm) { killRegion(cm) || killTo(cm, byChar, 1); },\n
     "Ctrl-H": function(cm) { killTo(cm, byChar, -1); },\n
-    "Backspace": function(cm) { killTo(cm, byChar, -1); },\n
+    "Backspace": function(cm) { killRegion(cm) || killTo(cm, byChar, -1); },\n
 \n
     "Alt-F": move(byWord, 1), "Alt-B": move(byWord, -1),\n
     "Alt-D": function(cm) { killTo(cm, byWord, 1); },\n
@@ -323,7 +350,8 @@
     "Ctrl-Alt-F": move(byExpr, 1), "Ctrl-Alt-B": move(byExpr, -1),\n
 \n
     "Shift-Ctrl-Alt-2": function(cm) {\n
-      cm.setSelection(findEnd(cm, byExpr, 1), cm.getCursor());\n
+      var cursor = cm.getCursor();\n
+      cm.setSelection(findEnd(cm, cursor, byExpr, 1), cursor);\n
     },\n
     "Ctrl-Alt-T": function(cm) {\n
       var leftStart = byExpr(cm, cm.getCursor(), -1), leftEnd = byExpr(cm, leftStart, 1);\n
@@ -341,13 +369,7 @@
     },\n
     "Ctrl-O": repeated(function(cm) { cm.replaceSelection("\\n", "start"); }),\n
     "Ctrl-T": repeated(function(cm) {\n
-      var pos = cm.getCursor();\n
-      if (pos.ch < cm.getLine(pos.line).length) pos = Pos(pos.line, pos.ch + 1);\n
-      var from = cm.findPosH(pos, -2, "char");\n
-      var range = cm.getRange(from, pos);\n
-      if (range.length != 2) return;\n
-      cm.setSelection(from, pos);\n
-      cm.replaceSelection(range.charAt(1) + range.charAt(0), "end");\n
+      cm.execCommand("transposeChars");\n
     }),\n
 \n
     "Alt-C": repeated(function(cm) {\n
@@ -373,27 +395,7 @@
     "Alt-/": "autocomplete",\n
     "Ctrl-J": "newlineAndIndent", "Enter": false, "Tab": "indentAuto",\n
 \n
-    "Alt-G": function(cm) {cm.setOption("keyMap", "emacs-Alt-G");},\n
-    "Ctrl-X": function(cm) {cm.setOption("keyMap", "emacs-Ctrl-X");},\n
-    "Ctrl-Q": function(cm) {cm.setOption("keyMap", "emacs-Ctrl-Q");},\n
-    "Ctrl-U": addPrefixMap\n
-  };\n
-\n
-  CodeMirror.keyMap["emacs-Ctrl-X"] = {\n
-    "Tab": function(cm) {\n
-      cm.indentSelection(getPrefix(cm, true) || cm.getOption("indentUnit"));\n
-    },\n
-    "Ctrl-X": function(cm) {\n
-      cm.setSelection(cm.getCursor("head"), cm.getCursor("anchor"));\n
-    },\n
-\n
-    "Ctrl-S": "save", "Ctrl-W": "save", "S": "saveAll", "F": "open", "U": repeated("undo"), "K": "close",\n
-    "Delete": function(cm) { kill(cm, cm.getCursor(), bySentence(cm, cm.getCursor(), 1), true); },\n
-    auto: "emacs", nofallthrough: true, disableInput: true\n
-  };\n
-\n
-  CodeMirror.keyMap["emacs-Alt-G"] = {\n
-    "G": function(cm) {\n
+    "Alt-G G": function(cm) {\n
       var prefix = getPrefix(cm, true);\n
       if (prefix != null && prefix > 0) return cm.setCursor(prefix - 1);\n
 \n
@@ -403,13 +405,24 @@
           cm.setCursor(num - 1);\n
       });\n
     },\n
-    auto: "emacs", nofallthrough: true, disableInput: true\n
-  };\n
 \n
-  CodeMirror.keyMap["emacs-Ctrl-Q"] = {\n
-    "Tab": repeated("insertTab"),\n
-    auto: "emacs", nofallthrough: true\n
-  };\n
+    "Ctrl-X Tab": function(cm) {\n
+      cm.indentSelection(getPrefix(cm, true) || cm.getOption("indentUnit"));\n
+    },\n
+    "Ctrl-X Ctrl-X": function(cm) {\n
+      cm.setSelection(cm.getCursor("head"), cm.getCursor("anchor"));\n
+    },\n
+    "Ctrl-X Ctrl-S": "save",\n
+    "Ctrl-X Ctrl-W": "save",\n
+    "Ctrl-X S": "saveAll",\n
+    "Ctrl-X F": "open",\n
+    "Ctrl-X U": repeated("undo"),\n
+    "Ctrl-X K": "close",\n
+    "Ctrl-X Delete": function(cm) { kill(cm, cm.getCursor(), bySentence(cm, cm.getCursor(), 1), true); },\n
+\n
+    "Ctrl-Q Tab": repeated("insertTab"),\n
+    "Ctrl-U": addPrefixMap\n
+  });\n
 \n
   var prefixMap = {"Ctrl-G": clearPrefix};\n
   function regPrefix(d) {\n
@@ -419,7 +432,7 @@
   }\n
   for (var i = 0; i < 10; ++i) regPrefix(String(i));\n
   regPrefix("-");\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -430,7 +443,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>13044</int> </value>
+            <value> <int>13307</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

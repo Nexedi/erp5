@@ -31,10 +31,6 @@
   font-family: monospace;\n
   height: 300px;\n
 }\n
-.CodeMirror-scroll {\n
-  /* Set scrolling behaviour here */\n
-  overflow: auto;\n
-}\n
 \n
 /* PADDING */\n
 \n
@@ -66,26 +62,54 @@
   box-sizing: content-box;\n
 }\n
 \n
+.CodeMirror-guttermarker { color: black; }\n
+.CodeMirror-guttermarker-subtle { color: #999; }\n
+\n
 /* CURSOR */\n
 \n
 .CodeMirror div.CodeMirror-cursor {\n
   border-left: 1px solid black;\n
-  z-index: 3;\n
 }\n
 /* Shown when moving in bi-directional text */\n
 .CodeMirror div.CodeMirror-secondarycursor {\n
   border-left: 1px solid silver;\n
 }\n
-.CodeMirror.cm-keymap-fat-cursor div.CodeMirror-cursor {\n
+.CodeMirror.cm-fat-cursor div.CodeMirror-cursor {\n
   width: auto;\n
   border: 0;\n
   background: #7e7;\n
+}\n
+.CodeMirror.cm-fat-cursor div.CodeMirror-cursors {\n
   z-index: 1;\n
 }\n
-/* Can style cursor different in overwrite (non-insert) mode */\n
-.CodeMirror div.CodeMirror-cursor.CodeMirror-overwrite {}\n
 \n
-.cm-tab { display: inline-block; }\n
+.cm-animate-fat-cursor {\n
+  width: auto;\n
+  border: 0;\n
+  -webkit-animation: blink 1.06s steps(1) infinite;\n
+  -moz-animation: blink 1.06s steps(1) infinite;\n
+  animation: blink 1.06s steps(1) infinite;\n
+}\n
+@-moz-keyframes blink {\n
+  0% { background: #7e7; }\n
+  50% { background: none; }\n
+  100% { background: #7e7; }\n
+}\n
+@-webkit-keyframes blink {\n
+  0% { background: #7e7; }\n
+  50% { background: none; }\n
+  100% { background: #7e7; }\n
+}\n
+@keyframes blink {\n
+  0% { background: #7e7; }\n
+  50% { background: none; }\n
+  100% { background: #7e7; }\n
+}\n
+\n
+/* Can style cursor different in overwrite (non-insert) mode */\n
+div.CodeMirror-overwrite div.CodeMirror-cursor {}\n
+\n
+.cm-tab { display: inline-block; text-decoration: inherit; }\n
 \n
 .CodeMirror-ruler {\n
   border-left: 1px solid #ccc;\n
@@ -98,11 +122,12 @@
 .cm-s-default .cm-atom {color: #219;}\n
 .cm-s-default .cm-number {color: #164;}\n
 .cm-s-default .cm-def {color: #00f;}\n
-.cm-s-default .cm-variable {color: black;}\n
+.cm-s-default .cm-variable,\n
+.cm-s-default .cm-punctuation,\n
+.cm-s-default .cm-property,\n
+.cm-s-default .cm-operator {}\n
 .cm-s-default .cm-variable-2 {color: #05a;}\n
 .cm-s-default .cm-variable-3 {color: #085;}\n
-.cm-s-default .cm-property {color: black;}\n
-.cm-s-default .cm-operator {color: black;}\n
 .cm-s-default .cm-comment {color: #a50;}\n
 .cm-s-default .cm-string {color: #a11;}\n
 .cm-s-default .cm-string-2 {color: #f50;}\n
@@ -122,12 +147,16 @@
 .cm-header, .cm-strong {font-weight: bold;}\n
 .cm-em {font-style: italic;}\n
 .cm-link {text-decoration: underline;}\n
+.cm-strikethrough {text-decoration: line-through;}\n
 \n
 .cm-s-default .cm-error {color: #f00;}\n
 .cm-invalidchar {color: #f00;}\n
 \n
+/* Default styles for common addons */\n
+\n
 div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}\n
 div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
+.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }\n
 .CodeMirror-activeline-background {background: #e8f2ff;}\n
 \n
 /* STOP */\n
@@ -144,6 +173,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 }\n
 \n
 .CodeMirror-scroll {\n
+  overflow: scroll !important; /* Things will break if this is overridden */\n
   /* 30px is the magic margin used to hide the element\'s real scrollbars */\n
   /* See overflow: hidden in .CodeMirror */\n
   margin-bottom: -30px; margin-right: -30px;\n
@@ -188,7 +218,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 \n
 .CodeMirror-gutters {\n
   position: absolute; left: 0; top: 0;\n
-  padding-bottom: 30px;\n
   z-index: 3;\n
 }\n
 .CodeMirror-gutter {\n
@@ -196,12 +225,16 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
   height: 100%;\n
   -moz-box-sizing: content-box;\n
   box-sizing: content-box;\n
-  padding-bottom: 30px;\n
-  margin-bottom: -32px;\n
   display: inline-block;\n
+  margin-bottom: -30px;\n
   /* Hack to make IE7 behave */\n
   *zoom:1;\n
   *display:inline;\n
+}\n
+.CodeMirror-gutter-wrapper {\n
+  position: absolute;\n
+  z-index: 4;\n
+  height: 100%;\n
 }\n
 .CodeMirror-gutter-elt {\n
   position: absolute;\n
@@ -211,6 +244,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 \n
 .CodeMirror-lines {\n
   cursor: text;\n
+  min-height: 1px; /* prevents collapsing before first draw */\n
 }\n
 .CodeMirror pre {\n
   /* Reset some styles that the rest of the page might have set */\n
@@ -248,10 +282,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 \n
 .CodeMirror-widget {}\n
 \n
-.CodeMirror-wrap .CodeMirror-scroll {\n
-  overflow-x: hidden;\n
-}\n
-\n
 .CodeMirror-measure {\n
   position: absolute;\n
   width: 100%;\n
@@ -263,16 +293,22 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 \n
 .CodeMirror div.CodeMirror-cursor {\n
   position: absolute;\n
-  visibility: hidden;\n
   border-right: none;\n
   width: 0;\n
 }\n
-.CodeMirror-focused div.CodeMirror-cursor {\n
+\n
+div.CodeMirror-cursors {\n
+  visibility: hidden;\n
+  position: relative;\n
+  z-index: 3;\n
+}\n
+.CodeMirror-focused div.CodeMirror-cursors {\n
   visibility: visible;\n
 }\n
 \n
 .CodeMirror-selected { background: #d9d9d9; }\n
 .CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }\n
+.CodeMirror-crosshair { cursor: crosshair; }\n
 \n
 .cm-searching {\n
   background: #ffa;\n
@@ -282,12 +318,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}\n
 /* IE7 hack to prevent it from returning funny offsetTops on the spans */\n
 .CodeMirror span { *vertical-align: text-bottom; }\n
 \n
+/* Used to force a border model for a node */\n
+.cm-force-border { padding-right: .1px; }\n
+\n
 @media print {\n
   /* Hide the cursor when printing */\n
-  .CodeMirror div.CodeMirror-cursor {\n
+  .CodeMirror div.CodeMirror-cursors {\n
     visibility: hidden;\n
   }\n
 }\n
+\n
+/* See issue #2901 */\n
+.cm-tab-wrap-hack:after { content: \'\'; }\n
+\n
+/* Help users use markselection to safely style text background */\n
+span.CodeMirror-selectedtext { background: none; }\n
 </string> </value>
         </item>
       </dictionary>

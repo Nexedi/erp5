@@ -1,3 +1,6 @@
+2015-01-22 arnaud.fontaine
+* Update CodeMirror to 4.11.
+
 2015-01-16 arnaud.fontaine
 * Add linter to check Python syntax in real time and display warnings/errors icons next to the line number (likewise Ace Editor implementation).
 

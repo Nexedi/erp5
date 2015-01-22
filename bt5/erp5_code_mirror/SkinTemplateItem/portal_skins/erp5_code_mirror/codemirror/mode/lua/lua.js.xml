@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403087.04</string> </value>
+            <value> <string>ts21897148.96</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,9 +22,22 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // LUA mode. Ported to CodeMirror 2 from Franciszek Wawrzak\'s\n
 // CodeMirror 1 mode.\n
 // highlights keywords, strings, comments (no leveling supported! ("[==[")), tokens, basic indenting\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
 \n
 CodeMirror.defineMode("lua", function(config, parserConfig) {\n
   var indentUnit = config.indentUnit;\n
@@ -166,6 +179,8 @@ CodeMirror.defineMode("lua", function(config, parserConfig) {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-lua", "lua");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -176,7 +191,7 @@ CodeMirror.defineMIME("text/x-lua", "lua");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5489</int> </value>
+            <value> <int>5950</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

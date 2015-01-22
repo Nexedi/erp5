@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.85</string> </value>
+            <value> <string>ts21897120.75</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,22 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>// Depends on js-yaml.js from https://github.com/nodeca/js-yaml\n
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+// Depends on js-yaml.js from https://github.com/nodeca/js-yaml\n
 \n
 // declare global: jsyaml\n
 \n
@@ -33,8 +48,11 @@ CodeMirror.registerHelper("lint", "yaml", function(text) {\n
   }\n
   return found;\n
 });\n
-CodeMirror.yamlValidator = CodeMirror.lint.yaml; // deprecated\n
-</string> </value>
+\n
+});\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -42,7 +60,7 @@ CodeMirror.yamlValidator = CodeMirror.lint.yaml; // deprecated\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>450</int> </value>
+            <value> <int>848</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

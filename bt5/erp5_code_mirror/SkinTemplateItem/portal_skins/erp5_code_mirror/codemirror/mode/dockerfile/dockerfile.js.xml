@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts21897149.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dockerfile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../../addon/mode/simple"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../../addon/mode/simple"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  // Collect all Dockerfile directives\n
+  var instructions = ["from", "maintainer", "run", "cmd", "expose", "env",\n
+                      "add", "copy", "entrypoint", "volume", "user",\n
+                      "workdir", "onbuild"],\n
+      instructionRegex = "(" + instructions.join(\'|\') + ")",\n
+      instructionOnlyLine = new RegExp(instructionRegex + "\\\\s*$", "i"),\n
+      instructionWithArguments = new RegExp(instructionRegex + "(\\\\s+)", "i");\n
+\n
+  CodeMirror.defineSimpleMode("dockerfile", {\n
+    start: [\n
+      // Block comment: This is a line starting with a comment\n
+      {\n
+        regex: /#.*$/,\n
+        token: "comment"\n
+      },\n
+      // Highlight an instruction without any arguments (for convenience)\n
+      {\n
+        regex: instructionOnlyLine,\n
+        token: "variable-2"\n
+      },\n
+      // Highlight an instruction followed by arguments\n
+      {\n
+        regex: instructionWithArguments,\n
+        token: ["variable-2", null],\n
+        next: "arguments"\n
+      },\n
+      {\n
+        regex: /./,\n
+        token: null\n
+      }\n
+    ],\n
+    arguments: [\n
+      {\n
+        // Line comment without instruction arguments is an error\n
+        regex: /#.*$/,\n
+        token: "error",\n
+        next: "start"\n
+      },\n
+      {\n
+        regex: /[^#]+\\\\$/,\n
+        token: null\n
+      },\n
+      {\n
+        // Match everything except for the inline comment\n
+        regex: /[^#]+/,\n
+        token: null,\n
+        next: "start"\n
+      },\n
+      {\n
+        regex: /$/,\n
+        token: null,\n
+        next: "start"\n
+      },\n
+      // Fail safe return to start\n
+      {\n
+        token: null,\n
+        next: "start"\n
+      }\n
+    ]\n
+  });\n
+\n
+  CodeMirror.defineMIME("text/x-dockerfile", "dockerfile");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2171</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

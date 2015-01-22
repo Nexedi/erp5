@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403087.55</string> </value>
+            <value> <string>ts21897148.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,49 +22,32 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../xml/xml"), require("../meta"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../xml/xml", "../meta"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 \n
   var htmlFound = CodeMirror.modes.hasOwnProperty("xml");\n
   var htmlMode = CodeMirror.getMode(cmCfg, htmlFound ? {name: "xml", htmlMode: true} : "text/plain");\n
-  var aliases = {\n
-    html: "htmlmixed",\n
-    js: "javascript",\n
-    json: "application/json",\n
-    c: "text/x-csrc",\n
-    "c++": "text/x-c++src",\n
-    java: "text/x-java",\n
-    csharp: "text/x-csharp",\n
-    "c#": "text/x-csharp",\n
-    scala: "text/x-scala"\n
-  };\n
 \n
-  var getMode = (function () {\n
-    var i, modes = {}, mimes = {}, mime;\n
-\n
-    var list = [];\n
-    for (var m in CodeMirror.modes)\n
-      if (CodeMirror.modes.propertyIsEnumerable(m)) list.push(m);\n
-    for (i = 0; i < list.length; i++) {\n
-      modes[list[i]] = list[i];\n
+  function getMode(name) {\n
+    if (CodeMirror.findModeByName) {\n
+      var found = CodeMirror.findModeByName(name);\n
+      if (found) name = found.mime || found.mimes[0];\n
     }\n
-    var mimesList = [];\n
-    for (var m in CodeMirror.mimeModes)\n
-      if (CodeMirror.mimeModes.propertyIsEnumerable(m))\n
-        mimesList.push({mime: m, mode: CodeMirror.mimeModes[m]});\n
-    for (i = 0; i < mimesList.length; i++) {\n
-      mime = mimesList[i].mime;\n
-      mimes[mime] = mimesList[i].mime;\n
-    }\n
-\n
-    for (var a in aliases) {\n
-      if (aliases[a] in modes || aliases[a] in mimes)\n
-        modes[a] = aliases[a];\n
-    }\n
-\n
-    return function (lang) {\n
-      return modes[lang] ? CodeMirror.getMode(cmCfg, modes[lang]) : null;\n
-    };\n
-  }());\n
+    var mode = CodeMirror.getMode(cmCfg, name);\n
+    return mode.name == "null" ? null : mode;\n
+  }\n
 \n
   // Should characters that affect highlighting be highlighted separate?\n
   // Does not include characters that will be output (such as `1.` and `-` for lists)\n
@@ -86,6 +69,10 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
   // Turn on task lists? ("- [ ] " and "- [x] ")\n
   if (modeCfg.taskLists === undefined) modeCfg.taskLists = false;\n
 \n
+  // Turn on strikethrough syntax\n
+  if (modeCfg.strikethrough === undefined)\n
+    modeCfg.strikethrough = false;\n
+\n
   var codeDepth = 0;\n
 \n
   var header   = \'header\'\n
@@ -102,7 +89,8 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
   ,   linktext = \'link\'\n
   ,   linkhref = \'string\'\n
   ,   em       = \'em\'\n
-  ,   strong   = \'strong\';\n
+  ,   strong   = \'strong\'\n
+  ,   strikethrough = \'strikethrough\';\n
 \n
   var hrRE = /^([*\\-=_])(?:\\s*\\1){2,}\\s*$/\n
   ,   ulRE = /^[*\\-+]\\s+/\n
@@ -110,7 +98,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
   ,   taskListRE = /^\\[(x| )\\](?=\\s)/ // Must follow ulRE or olRE\n
   ,   atxHeaderRE = /^#+/\n
   ,   setextHeaderRE = /^(?:\\={1,}|-{1,})$/\n
-  ,   textRE = /^[^#!\\[\\]*_\\\\<>` "\'(]+/;\n
+  ,   textRE = /^[^#!\\[\\]*_\\\\<>` "\'(~]+/;\n
 \n
   function switchInline(stream, state, f) {\n
     state.f = state.inline = f;\n
@@ -132,6 +120,8 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
     state.em = false;\n
     // Reset STRONG state\n
     state.strong = false;\n
+    // Reset strikethrough state\n
+    state.strikethrough = false;\n
     // Reset state.quote\n
     state.quote = 0;\n
     if (!htmlFound && state.f == htmlBlock) {\n
@@ -208,11 +198,11 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
       state.f = state.inline;\n
       if (modeCfg.highlightFormatting) state.formatting = ["list", "list-" + listType];\n
       return getType(state);\n
-    } else if (modeCfg.fencedCodeBlocks && stream.match(/^```([\\w+#]*)/, true)) {\n
+    } else if (modeCfg.fencedCodeBlocks && stream.match(/^```[ \\t]*([\\w+#]*)/, true)) {\n
       // try switching mode\n
       state.localMode = getMode(RegExp.$1);\n
       if (state.localMode) state.localState = state.localMode.startState();\n
-      switchBlock(stream, state, local);\n
+      state.f = state.block = local;\n
       if (modeCfg.highlightFormatting) state.formatting = "code-block";\n
       state.code = true;\n
       return getType(state);\n
@@ -223,7 +213,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 \n
   function htmlBlock(stream, state) {\n
     var style = htmlMode.token(stream, state.htmlState);\n
-    if ((htmlFound && !state.htmlState.tagName && !state.htmlState.context) ||\n
+    if ((htmlFound && state.htmlState.tagStart === null && !state.htmlState.context) ||\n
         (state.md_inside && stream.current().indexOf(">") > -1)) {\n
       state.f = inlineNormal;\n
       state.block = blockNormal;\n
@@ -233,21 +223,27 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
   }\n
 \n
   function local(stream, state) {\n
-    if (stream.sol() && stream.match(/^```/, true)) {\n
+    if (stream.sol() && stream.match("```", false)) {\n
       state.localMode = state.localState = null;\n
-      state.f = inlineNormal;\n
-      state.block = blockNormal;\n
-      if (modeCfg.highlightFormatting) state.formatting = "code-block";\n
-      state.code = true;\n
-      var returnType = getType(state);\n
-      state.code = false;\n
-      return returnType;\n
+      state.f = state.block = leavingLocal;\n
+      return null;\n
     } else if (state.localMode) {\n
       return state.localMode.token(stream, state.localState);\n
     } else {\n
       stream.skipToEnd();\n
       return code;\n
     }\n
+  }\n
+\n
+  function leavingLocal(stream, state) {\n
+    stream.match("```");\n
+    state.block = blockNormal;\n
+    state.f = inlineNormal;\n
+    if (modeCfg.highlightFormatting) state.formatting = "code-block";\n
+    state.code = true;\n
+    var returnType = getType(state);\n
+    state.code = false;\n
+    return returnType;\n
   }\n
 \n
   // Inline\n
@@ -294,6 +290,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 \n
     if (state.strong) { styles.push(strong); }\n
     if (state.em) { styles.push(em); }\n
+    if (state.strikethrough) { styles.push(strikethrough); }\n
 \n
     if (state.linkText) { styles.push(linktext); }\n
 \n
@@ -371,15 +368,12 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 \n
     var ch = stream.next();\n
 \n
-    if (state.escape) {\n
-      state.escape = false;\n
-      return getType(state);\n
-    }\n
-\n
     if (ch === \'\\\\\') {\n
-      if (modeCfg.highlightFormatting) state.formatting = "escape";\n
-      state.escape = true;\n
-      return getType(state);\n
+      stream.next();\n
+      if (modeCfg.highlightFormatting) {\n
+        var type = getType(state);\n
+        return type ? type + " formatting-escape" : "formatting-escape";\n
+      }\n
     }\n
 \n
     // Matches link titles present on next line\n
@@ -426,13 +420,13 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
       return image;\n
     }\n
 \n
-    if (ch === \'[\' && stream.match(/.*\\](\\(| ?\\[)/, false)) {\n
+    if (ch === \'[\' && stream.match(/.*\\](\\(.*\\)| ?\\[.*\\])/, false)) {\n
       state.linkText = true;\n
       if (modeCfg.highlightFormatting) state.formatting = "link";\n
       return getType(state);\n
     }\n
 \n
-    if (ch === \']\' && state.linkText) {\n
+    if (ch === \']\' && state.linkText && stream.match(/\\(.*\\)| ?\\[.*\\]/, false)) {\n
       if (modeCfg.highlightFormatting) state.formatting = "link";\n
       var type = getType(state);\n
       state.linkText = false;\n
@@ -521,6 +515,29 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
           return getType(state);\n
         } else { // Not surrounded by spaces, back up pointer\n
           stream.backUp(1);\n
+        }\n
+      }\n
+    }\n
+\n
+    if (modeCfg.strikethrough) {\n
+      if (ch === \'~\' && stream.eatWhile(ch)) {\n
+        if (state.strikethrough) {// Remove strikethrough\n
+          if (modeCfg.highlightFormatting) state.formatting = "strikethrough";\n
+          var t = getType(state);\n
+          state.strikethrough = false;\n
+          return t;\n
+        } else if (stream.match(/^[^\\s]/, false)) {// Add strikethrough\n
+          state.strikethrough = true;\n
+          if (modeCfg.highlightFormatting) state.formatting = "strikethrough";\n
+          return getType(state);\n
+        }\n
+      } else if (ch === \' \') {\n
+        if (stream.match(/^~~/, true)) { // Probably surrounded by space\n
+          if (stream.peek() === \' \') { // Surrounded by spaces, ignore\n
+            return getType(state);\n
+          } else { // Not surrounded by spaces, back up pointer\n
+            stream.backUp(2);\n
+          }\n
         }\n
       }\n
     }\n
@@ -661,7 +678,6 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
         inline: inlineNormal,\n
         text: handleText,\n
 \n
-        escape: false,\n
         formatting: false,\n
         linkText: false,\n
         linkHref: false,\n
@@ -674,7 +690,8 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
         listDepth: 0,\n
         quote: 0,\n
         trailingSpace: 0,\n
-        trailingSpaceNewLine: false\n
+        trailingSpaceNewLine: false,\n
+        strikethrough: false\n
       };\n
     },\n
 \n
@@ -694,11 +711,11 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 \n
         inline: s.inline,\n
         text: s.text,\n
-        escape: false,\n
         formatting: false,\n
         linkTitle: s.linkTitle,\n
         em: s.em,\n
         strong: s.strong,\n
+        strikethrough: s.strikethrough,\n
         header: s.header,\n
         taskList: s.taskList,\n
         list: s.list,\n
@@ -716,21 +733,19 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
       state.formatting = false;\n
 \n
       if (stream.sol()) {\n
-        var forceBlankLine = stream.match(/^\\s*$/, true) || state.header;\n
+        var forceBlankLine = !!state.header;\n
 \n
         // Reset state.header\n
         state.header = 0;\n
 \n
-        if (forceBlankLine) {\n
+        if (stream.match(/^\\s*$/, true) || forceBlankLine) {\n
           state.prevLineHasContent = false;\n
-          return blankLine(state);\n
+          blankLine(state);\n
+          return forceBlankLine ? this.token(stream, state) : null;\n
         } else {\n
           state.prevLineHasContent = state.thisLineHasContent;\n
           state.thisLineHasContent = true;\n
         }\n
-\n
-        // Reset state.escape\n
-        state.escape = false;\n
 \n
         // Reset state.taskList\n
         state.taskList = false;\n
@@ -770,6 +785,8 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {\n
 }, "xml");\n
 \n
 CodeMirror.defineMIME("text/x-markdown", "markdown");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -780,7 +797,7 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>22372</int> </value>
+            <value> <int>23434</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

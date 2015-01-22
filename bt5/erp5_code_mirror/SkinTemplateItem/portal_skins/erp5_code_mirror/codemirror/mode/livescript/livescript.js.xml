@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403094.2</string> </value>
+            <value> <string>ts21897140.55</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,22 +22,35 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 /**\n
  * Link to the project\'s GitHub page:\n
  * https://github.com/duralog/CodeMirror\n
  */\n
-(function() {\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
   CodeMirror.defineMode(\'livescript\', function(){\n
-    var tokenBase, external;\n
-    tokenBase = function(stream, state){\n
-      var next_rule, nr, i$, len$, r, m;\n
-      if (next_rule = state.next || \'start\') {\n
+    var tokenBase = function(stream, state) {\n
+      var next_rule = state.next || "start";\n
+      if (next_rule) {\n
         state.next = state.next;\n
-        if (Array.isArray(nr = Rules[next_rule])) {\n
-          for (i$ = 0, len$ = nr.length; i$ < len$; ++i$) {\n
-            r = nr[i$];\n
+        var nr = Rules[next_rule];\n
+        if (nr.splice) {\n
+          for (var i$ = 0; i$ < nr.length; ++i$) {\n
+            var r = nr[i$], m;\n
             if (r.regex && (m = stream.match(r.regex))) {\n
-              state.next = r.next;\n
+              state.next = r.next || state.next;\n
               return r.token;\n
             }\n
           }\n
@@ -57,7 +70,7 @@
       stream.next();\n
       return \'error\';\n
     };\n
-    external = {\n
+    var external = {\n
       startState: function(){\n
         return {\n
           next: \'start\',\n
@@ -65,8 +78,8 @@
         };\n
       },\n
       token: function(stream, state){\n
-        var style;\n
-        style = tokenBase(stream, state);\n
+        while (stream.pos == stream.start)\n
+          var style = tokenBase(stream, state);\n
         state.lastToken = {\n
           style: style,\n
           indent: stream.indentation(),\n
@@ -75,8 +88,7 @@
         return style.replace(/\\./g, \' \');\n
       },\n
       indent: function(state){\n
-        var indentation;\n
-        indentation = state.lastToken.indent;\n
+        var indentation = state.lastToken.indent;\n
         if (state.lastToken.content.match(indenter)) {\n
           indentation += 2;\n
         }\n
@@ -216,7 +228,7 @@
         next: \'start\'\n
       }, {\n
         token: \'text\',\n
-        regex: \'.\',\n
+        regex: \'\',\n
         next: \'start\'\n
       }\n
     ],\n
@@ -275,20 +287,21 @@
   };\n
   for (var idx in Rules) {\n
     var r = Rules[idx];\n
-    if (Array.isArray(r)) {\n
+    if (r.splice) {\n
       for (var i = 0, len = r.length; i < len; ++i) {\n
         var rr = r[i];\n
-        if (rr.regex) {\n
+        if (typeof rr.regex === \'string\') {\n
           Rules[idx][i].regex = new RegExp(\'^\' + rr.regex);\n
         }\n
       }\n
-    } else if (r.regex) {\n
+    } else if (typeof rr.regex === \'string\') {\n
       Rules[idx].regex = new RegExp(\'^\' + r.regex);\n
     }\n
   }\n
-})();\n
 \n
-CodeMirror.defineMIME(\'text/x-livescript\', \'livescript\');\n
+  CodeMirror.defineMIME(\'text/x-livescript\', \'livescript\');\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -299,7 +312,7 @@ CodeMirror.defineMIME(\'text/x-livescript\', \'livescript\');\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7177</int> </value>
+            <value> <int>7644</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

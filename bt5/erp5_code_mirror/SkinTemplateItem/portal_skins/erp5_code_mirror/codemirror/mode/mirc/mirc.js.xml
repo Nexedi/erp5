@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403089.86</string> </value>
+            <value> <string>ts21897145.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,21 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 //mIRC mode by Ford_Lawnmower :: Based on Velocity mode by Steve O\'Hara\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMIME("text/mirc", "mirc");\n
 CodeMirror.defineMode("mirc", function() {\n
   function parseWords(str) {\n
@@ -199,6 +213,8 @@ CodeMirror.defineMode("mirc", function() {\n
     }\n
   };\n
 });\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -209,7 +225,7 @@ CodeMirror.defineMode("mirc", function() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9620</int> </value>
+            <value> <int>10082</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

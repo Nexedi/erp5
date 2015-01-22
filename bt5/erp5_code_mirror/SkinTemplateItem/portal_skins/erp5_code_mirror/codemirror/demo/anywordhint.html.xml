@@ -49,12 +49,12 @@
 <script src="../addon/hint/anyword-hint.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Any Word Completion</a>\n
@@ -107,7 +107,7 @@ to those.</p>\n
 \n
     <script>\n
       CodeMirror.commands.autocomplete = function(cm) {\n
-        CodeMirror.showHint(cm, CodeMirror.hint.anyword);\n
+        cm.showHint({hint: CodeMirror.hint.anyword});\n
       }\n
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
         lineNumbers: true,\n

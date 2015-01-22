@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403094.69</string> </value>
+            <value> <string>ts21897139.85</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>(function() {\n
+            <value> <string>// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
   var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-scss");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1), "scss"); }\n
 \n
@@ -135,7 +138,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2997</int> </value>
+            <value> <int>3125</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

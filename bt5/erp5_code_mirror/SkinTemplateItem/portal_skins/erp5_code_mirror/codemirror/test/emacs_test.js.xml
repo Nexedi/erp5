@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403104.07</string> </value>
+            <value> <string>ts21897150.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -132,10 +132,10 @@
 \n
   sim("openLine", "foo bar", "Alt-F", "Ctrl-O", txt("foo\\n bar"))\n
 \n
-  sim("transposeChar", "abcd\\n\\ne",\n
-      "Ctrl-F", "Ctrl-T", "Ctrl-T", txt("bcad\\n\\ne"), at(0, 3),\n
-      "Ctrl-F", "Ctrl-T", "Ctrl-T", "Ctrl-T", txt("bcda\\n\\ne"), at(0, 4),\n
-      "Ctrl-F", "Ctrl-T", txt("bcd\\na\\ne"), at(1, 1));\n
+  sim("transposeChar", "abcd\\ne",\n
+      "Ctrl-F", "Ctrl-T", "Ctrl-T", txt("bcad\\ne"), at(0, 3),\n
+      "Ctrl-F", "Ctrl-T", "Ctrl-T", "Ctrl-T", txt("bcda\\ne"), at(0, 4),\n
+      "Ctrl-F", "Ctrl-T", txt("bcde\\na"), at(1, 0));\n
 \n
   sim("manipWordCase", "foo BAR bAZ",\n
       "Alt-C", "Alt-L", "Alt-U", txt("Foo bar BAZ"),\n
@@ -151,6 +151,9 @@
 \n
   sim("clearMark", "abcde", Pos(0, 2), "Ctrl-Space", "Ctrl-F", "Ctrl-F",\n
       "Ctrl-G", "Ctrl-W", txt("abcde"));\n
+\n
+  sim("delRegion", "abcde", "Ctrl-Space", "Ctrl-F", "Ctrl-F", "Delete", txt("cde"));\n
+  sim("backspaceRegion", "abcde", "Ctrl-Space", "Ctrl-F", "Ctrl-F", "Backspace", txt("cde"));\n
 \n
   testCM("save", function(cm) {\n
     var saved = false;\n
@@ -170,7 +173,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5475</int> </value>
+            <value> <int>5647</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

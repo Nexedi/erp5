@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403095.41</string> </value>
+            <value> <string>ts21897139.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   "use strict";\n
 \n
@@ -80,7 +83,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1663</int> </value>
+            <value> <int>1791</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

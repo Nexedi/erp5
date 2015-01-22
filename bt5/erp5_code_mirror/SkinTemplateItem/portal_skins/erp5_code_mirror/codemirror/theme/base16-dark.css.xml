@@ -35,8 +35,10 @@
 */\n
 \n
 .cm-s-base16-dark.CodeMirror {background: #151515; color: #e0e0e0;}\n
-.cm-s-base16-dark div.CodeMirror-selected {background: #202020 !important;}\n
+.cm-s-base16-dark div.CodeMirror-selected {background: #303030 !important;}\n
 .cm-s-base16-dark .CodeMirror-gutters {background: #151515; border-right: 0px;}\n
+.cm-s-base16-dark .CodeMirror-guttermarker { color: #ac4142; }\n
+.cm-s-base16-dark .CodeMirror-guttermarker-subtle { color: #505050; }\n
 .cm-s-base16-dark .CodeMirror-linenumber {color: #505050;}\n
 .cm-s-base16-dark .CodeMirror-cursor {border-left: 1px solid #b0b0b0 !important;}\n
 \n
@@ -56,7 +58,7 @@
 .cm-s-base16-dark span.cm-link {color: #aa759f;}\n
 .cm-s-base16-dark span.cm-error {background: #ac4142; color: #b0b0b0;}\n
 \n
-.cm-s-base16-dark .CodeMirror-activeline-background {background: #2F2F2F !important;}\n
+.cm-s-base16-dark .CodeMirror-activeline-background {background: #202020 !important;}\n
 .cm-s-base16-dark .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}\n
 </string> </value>
         </item>

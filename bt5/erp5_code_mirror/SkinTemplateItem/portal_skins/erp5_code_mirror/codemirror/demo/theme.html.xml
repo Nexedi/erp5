@@ -59,6 +59,7 @@
 <link rel="stylesheet" href="../theme/midnight.css">\n
 <link rel="stylesheet" href="../theme/monokai.css">\n
 <link rel="stylesheet" href="../theme/neat.css">\n
+<link rel="stylesheet" href="../theme/neo.css">\n
 <link rel="stylesheet" href="../theme/night.css">\n
 <link rel="stylesheet" href="../theme/paraiso-dark.css">\n
 <link rel="stylesheet" href="../theme/paraiso-light.css">\n
@@ -66,26 +67,27 @@
 <link rel="stylesheet" href="../theme/rubyblue.css">\n
 <link rel="stylesheet" href="../theme/solarized.css">\n
 <link rel="stylesheet" href="../theme/the-matrix.css">\n
+<link rel="stylesheet" href="../theme/tomorrow-night-bright.css">\n
 <link rel="stylesheet" href="../theme/tomorrow-night-eighties.css">\n
 <link rel="stylesheet" href="../theme/twilight.css">\n
 <link rel="stylesheet" href="../theme/vibrant-ink.css">\n
 <link rel="stylesheet" href="../theme/xq-dark.css">\n
 <link rel="stylesheet" href="../theme/xq-light.css">\n
+<link rel="stylesheet" href="../theme/zenburn.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
-<script src="../keymap/extra.js"></script>\n
 <script src="../addon/selection/active-line.js"></script>\n
 <script src="../addon/edit/matchbrackets.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border: 1px solid black; font-size:13px}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Theme</a>\n
@@ -126,6 +128,7 @@ function findSequence(goal) {\n
     <option>midnight</option>\n
     <option>monokai</option>\n
     <option>neat</option>\n
+    <option>neo</option>\n
     <option>night</option>\n
     <option>paraiso-dark</option>\n
     <option>paraiso-light</option>\n
@@ -134,11 +137,13 @@ function findSequence(goal) {\n
     <option>solarized dark</option>\n
     <option>solarized light</option>\n
     <option>the-matrix</option>\n
+    <option>tomorrow-night-bright</option>\n
     <option>tomorrow-night-eighties</option>\n
     <option>twilight</option>\n
     <option>vibrant-ink</option>\n
     <option>xq-dark</option>\n
     <option>xq-light</option>\n
+    <option>zenburn</option>\n
 </select>\n
 </p>\n
 \n

@@ -27,6 +27,8 @@
             <value> <string>.cm-s-cobalt.CodeMirror { background: #002240; color: white; }\n
 .cm-s-cobalt div.CodeMirror-selected { background: #b36539 !important; }\n
 .cm-s-cobalt .CodeMirror-gutters { background: #002240; border-right: 1px solid #aaa; }\n
+.cm-s-cobalt .CodeMirror-guttermarker { color: #ffee80; }\n
+.cm-s-cobalt .CodeMirror-guttermarker-subtle { color: #d0d0d0; }\n
 .cm-s-cobalt .CodeMirror-linenumber { color: #d0d0d0; }\n
 .cm-s-cobalt .CodeMirror-cursor { border-left: 1px solid white !important; }\n
 \n

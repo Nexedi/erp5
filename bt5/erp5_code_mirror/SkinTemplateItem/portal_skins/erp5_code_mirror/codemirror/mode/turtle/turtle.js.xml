@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403102.45</string> </value>
+            <value> <string>ts21897132.95</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("turtle", function(config) {\n
   var indentUnit = config.indentUnit;\n
   var curPunc;\n
@@ -162,11 +175,15 @@ CodeMirror.defineMode("turtle", function(config) {\n
         return context.col + (closing ? 0 : 1);\n
       else\n
         return context.indent + (closing ? 0 : indentUnit);\n
-    }\n
+    },\n
+\n
+    lineComment: "#"\n
   };\n
 });\n
 \n
 CodeMirror.defineMIME("text/turtle", "turtle");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -177,7 +194,7 @@ CodeMirror.defineMIME("text/turtle", "turtle");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4365</int> </value>
+            <value> <int>4849</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403091.96</string> </value>
+            <value> <string>ts21897143.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("ruby", function(config) {\n
   function wordObj(words) {\n
     var o = {};\n
@@ -57,16 +70,30 @@ CodeMirror.defineMode("ruby", function(config) {\n
     var ch = stream.next(), m;\n
     if (ch == "`" || ch == "\'" || ch == \'"\') {\n
       return chain(readQuoted(ch, "string", ch == \'"\' || ch == "`"), stream, state);\n
-    } else if (ch == "/" && !stream.eol() && stream.peek() != " ") {\n
-      if (stream.eat("=")) return "operator";\n
-      return chain(readQuoted(ch, "string-2", true), stream, state);\n
+    } else if (ch == "/") {\n
+      var currentIndex = stream.current().length;\n
+      if (stream.skipTo("/")) {\n
+        var search_till = stream.current().length;\n
+        stream.backUp(stream.current().length - currentIndex);\n
+        var balance = 0;  // balance brackets\n
+        while (stream.current().length < search_till) {\n
+          var chchr = stream.next();\n
+          if (chchr == "(") balance += 1;\n
+          else if (chchr == ")") balance -= 1;\n
+          if (balance < 0) break;\n
+        }\n
+        stream.backUp(stream.current().length - currentIndex);\n
+        if (balance == 0)\n
+          return chain(readQuoted(ch, "string-2", true), stream, state);\n
+      }\n
+      return "operator";\n
     } else if (ch == "%") {\n
       var style = "string", embed = true;\n
       if (stream.eat("s")) style = "atom";\n
       else if (stream.eat(/[WQ]/)) style = "string";\n
       else if (stream.eat(/[r]/)) style = "string-2";\n
       else if (stream.eat(/[wxq]/)) { style = "string"; embed = false; }\n
-      var delim = stream.eat(/[^\\w\\s]/);\n
+      var delim = stream.eat(/[^\\w\\s=]/);\n
       if (!delim) return "operator";\n
       if (matching.propertyIsEnumerable(delim)) delim = matching[delim];\n
       return chain(readQuoted(delim, style, embed, true), stream, state);\n
@@ -104,16 +131,16 @@ CodeMirror.defineMode("ruby", function(config) {\n
       }\n
 \n
       // Symbols can\'t start by a digit\n
-      if (stream.eat(/[a-zA-Z$@_]/)) {\n
-        stream.eatWhile(/[\\w]/);\n
+      if (stream.eat(/[a-zA-Z$@_\\xa1-\\uffff]/)) {\n
+        stream.eatWhile(/[\\w$\\xa1-\\uffff]/);\n
         // Only one ? ! = is allowed and only as the last character\n
         stream.eat(/[\\?\\!\\=]/);\n
         return "atom";\n
       }\n
       return "operator";\n
-    } else if (ch == "@" && stream.match(/^@?[a-zA-Z_]/)) {\n
+    } else if (ch == "@" && stream.match(/^@?[a-zA-Z_\\xa1-\\uffff]/)) {\n
       stream.eat("@");\n
-      stream.eatWhile(/[\\w]/);\n
+      stream.eatWhile(/[\\w\\xa1-\\uffff]/);\n
       return "variable-2";\n
     } else if (ch == "$") {\n
       if (stream.eat(/[a-zA-Z_]/)) {\n
@@ -124,8 +151,8 @@ CodeMirror.defineMode("ruby", function(config) {\n
         stream.next(); // Must be a special global like $: or $!\n
       }\n
       return "variable-3";\n
-    } else if (/[a-zA-Z_]/.test(ch)) {\n
-      stream.eatWhile(/[\\w]/);\n
+    } else if (/[a-zA-Z_\\xa1-\\uffff]/.test(ch)) {\n
+      stream.eatWhile(/[\\w\\xa1-\\uffff]/);\n
       stream.eat(/[\\?\\!]/);\n
       if (stream.eat(":")) return "atom";\n
       return "ident";\n
@@ -138,24 +165,26 @@ CodeMirror.defineMode("ruby", function(config) {\n
     } else if (ch == "-" && stream.eat(">")) {\n
       return "arrow";\n
     } else if (/[=+\\-\\/*:\\.^%<>~|]/.test(ch)) {\n
-      stream.eatWhile(/[=+\\-\\/*:\\.^%<>~|]/);\n
+      var more = stream.eatWhile(/[=+\\-\\/*:\\.^%<>~|]/);\n
+      if (ch == "." && !more) curPunc = ".";\n
       return "operator";\n
     } else {\n
       return null;\n
     }\n
   }\n
 \n
-  function tokenBaseUntilBrace() {\n
-    var depth = 1;\n
+  function tokenBaseUntilBrace(depth) {\n
+    if (!depth) depth = 1;\n
     return function(stream, state) {\n
       if (stream.peek() == "}") {\n
-        depth--;\n
-        if (depth == 0) {\n
+        if (depth == 1) {\n
           state.tokenize.pop();\n
           return state.tokenize[state.tokenize.length-1](stream, state);\n
+        } else {\n
+          state.tokenize[state.tokenize.length - 1] = tokenBaseUntilBrace(depth - 1);\n
         }\n
       } else if (stream.peek() == "{") {\n
-        depth++;\n
+        state.tokenize[state.tokenize.length - 1] = tokenBaseUntilBrace(depth + 1);\n
       }\n
       return tokenBase(stream, state);\n
     };\n
@@ -229,20 +258,25 @@ CodeMirror.defineMode("ruby", function(config) {\n
     token: function(stream, state) {\n
       if (stream.sol()) state.indented = stream.indentation();\n
       var style = state.tokenize[state.tokenize.length-1](stream, state), kwtype;\n
+      var thisTok = curPunc;\n
       if (style == "ident") {\n
         var word = stream.current();\n
-        style = keywords.propertyIsEnumerable(stream.current()) ? "keyword"\n
+        style = state.lastTok == "." ? "property"\n
+          : keywords.propertyIsEnumerable(stream.current()) ? "keyword"\n
           : /^[A-Z]/.test(word) ? "tag"\n
           : (state.lastTok == "def" || state.lastTok == "class" || state.varList) ? "def"\n
           : "variable";\n
-        if (indentWords.propertyIsEnumerable(word)) kwtype = "indent";\n
-        else if (dedentWords.propertyIsEnumerable(word)) kwtype = "dedent";\n
-        else if ((word == "if" || word == "unless") && stream.column() == stream.indentation())\n
-          kwtype = "indent";\n
-        else if (word == "do" && state.context.indented < state.indented)\n
-          kwtype = "indent";\n
+        if (style == "keyword") {\n
+          thisTok = word;\n
+          if (indentWords.propertyIsEnumerable(word)) kwtype = "indent";\n
+          else if (dedentWords.propertyIsEnumerable(word)) kwtype = "dedent";\n
+          else if ((word == "if" || word == "unless") && stream.column() == stream.indentation())\n
+            kwtype = "indent";\n
+          else if (word == "do" && state.context.indented < state.indented)\n
+            kwtype = "indent";\n
+        }\n
       }\n
-      if (curPunc || (style && style != "comment")) state.lastTok = word || curPunc || style;\n
+      if (curPunc || (style && style != "comment")) state.lastTok = thisTok;\n
       if (curPunc == "|") state.varList = !state.varList;\n
 \n
       if (kwtype == "indent" || /[\\(\\[\\{]/.test(curPunc))\n
@@ -272,6 +306,7 @@ CodeMirror.defineMode("ruby", function(config) {\n
 \n
 CodeMirror.defineMIME("text/x-ruby", "ruby");\n
 \n
+});\n
 
 
 ]]></string> </value>
@@ -282,7 +317,7 @@ CodeMirror.defineMIME("text/x-ruby", "ruby");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9048</int> </value>
+            <value> <int>10445</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

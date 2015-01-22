@@ -49,12 +49,12 @@
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Bi-directional Text</a>\n
@@ -84,7 +84,7 @@
   <dt id=option_theme><code>theme (string)</code></dt>\n
   <dd>ÙÙØ¶ÙØ¹ ÙÙÙØ· Ø§ÙÙØ­Ø±Ø± ÙØ¹. ÙØ¬Øš Ø¹ÙÙÙ Ø§ÙØªØ£ÙØ¯ ÙÙ Ø§ÙÙÙÙ CSS ØªØ­Ø¯ÙØ¯\n
   Ø§ÙÙÙØ§ØšÙØ© <code>.cm-s-[name]</code> ÙØªÙ ØªØ­ÙÙÙ Ø£ÙÙØ§Ø· (Ø§ÙØžØ±\n
-  <a href=../theme/><code>theme</code></a> Ø§ÙØ¯ÙÙÙ ÙÙ Ø§ÙØªÙØ²ÙØ¹).\n
+  <a href="../theme/"><code>theme</code></a> Ø§ÙØ¯ÙÙÙ ÙÙ Ø§ÙØªÙØ²ÙØ¹).\n
   Ø§ÙØ§ÙØªØ±Ø§Ø¶Ù ÙÙ <code>"default"</code> Ø ÙØ§ÙØªÙ ØªÙ ØªØ¶ÙÙÙÙØ§ ÙÙ\n
   Ø§ÙØ£ÙÙØ§Ù <code>codemirror.css</code>. ÙÙÙ Ø§ÙÙÙÙÙ Ø§Ø³ØªØ®Ø¯Ø§Ù ÙØŠØ§Øª ÙØªØ¹Ø¯Ø¯Ø©\n
   ÙÙ ØªØ·ØšÙÙ Ø§ÙØ³ÙØ§Øª ÙØ±Ø© ÙØ§Ø­Ø¯Ø© Ø¹ÙÙ Ø³ØšÙÙ Ø§ÙÙØ«Ø§Ù <code>"foo bar"</code>\n
@@ -105,7 +105,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
   blog post</a> for more background.</p>\n
 \n
   <p><strong>Note:</strong> There is\n
-  a <a href="https://github.com/marijnh/CodeMirror/issues/1757">known\n
+  a <a href="https://github.com/codemirror/CodeMirror/issues/1757">known\n
   bug</a> with cursor motion and mouse clicks in bi-directional lines\n
   that are line wrapped.</p>\n
 \n

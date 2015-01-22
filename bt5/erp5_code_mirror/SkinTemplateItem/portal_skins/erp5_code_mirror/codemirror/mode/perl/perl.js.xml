@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403102.54</string> </value>
+            <value> <string>ts21897132.8</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,8 +22,22 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // CodeMirror2 mode/perl/perl.js (text/x-perl) beta 0.10 (2011-11-08)\n
 // This is a part of CodeMirror from https://github.com/sabaca/CodeMirror_mode_perl (mail@sabaca.com)\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("perl",function(){\n
         // http://perldoc.perl.org\n
         var PERL={                                      //   null - magic touch\n
@@ -533,7 +547,7 @@ CodeMirror.defineMode("perl",function(){\n
                         return tokenSOMETHING(stream,state,\'=cut\');}\n
                 var ch=stream.next();\n
                 if(ch==\'"\'||ch=="\'"){                           // NOTE: \' or " or <<\'SOMETHING\'\\n...\\nSOMETHING\\n or <<"SOMETHING"\\n...\\nSOMETHING\\n\n
-                        if(stream.prefix(3)=="<<"+ch){\n
+                        if(prefix(stream, 3)=="<<"+ch){\n
                                 var p=stream.pos;\n
                                 stream.eatWhile(/\\w/);\n
                                 var n=stream.current().substr(1);\n
@@ -542,94 +556,94 @@ CodeMirror.defineMode("perl",function(){\n
                                 stream.pos=p;}\n
                         return tokenChain(stream,state,[ch],"string");}\n
                 if(ch=="q"){\n
-                        var c=stream.look(-2);\n
+                        var c=look(stream, -2);\n
                         if(!(c&&/\\w/.test(c))){\n
-                                c=stream.look(0);\n
+                                c=look(stream, 0);\n
                                 if(c=="x"){\n
-                                        c=stream.look(1);\n
+                                        c=look(stream, 1);\n
                                         if(c=="("){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[")"],RXstyle,RXmodifiers);}\n
                                         if(c=="["){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["]"],RXstyle,RXmodifiers);}\n
                                         if(c=="{"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["}"],RXstyle,RXmodifiers);}\n
                                         if(c=="<"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[">"],RXstyle,RXmodifiers);}\n
                                         if(/[\\^\'"!~\\/]/.test(c)){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[stream.eat(c)],RXstyle,RXmodifiers);}}\n
                                 else if(c=="q"){\n
-                                        c=stream.look(1);\n
+                                        c=look(stream, 1);\n
                                         if(c=="("){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[")"],"string");}\n
                                         if(c=="["){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["]"],"string");}\n
                                         if(c=="{"){\n
-stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["}"],"string");}\n
                                         if(c=="<"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[">"],"string");}\n
                                         if(/[\\^\'"!~\\/]/.test(c)){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[stream.eat(c)],"string");}}\n
                                 else if(c=="w"){\n
-                                        c=stream.look(1);\n
+                                        c=look(stream, 1);\n
                                         if(c=="("){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[")"],"bracket");}\n
                                         if(c=="["){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["]"],"bracket");}\n
                                         if(c=="{"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["}"],"bracket");}\n
                                         if(c=="<"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[">"],"bracket");}\n
                                         if(/[\\^\'"!~\\/]/.test(c)){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[stream.eat(c)],"bracket");}}\n
                                 else if(c=="r"){\n
-                                        c=stream.look(1);\n
+                                        c=look(stream, 1);\n
                                         if(c=="("){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[")"],RXstyle,RXmodifiers);}\n
                                         if(c=="["){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["]"],RXstyle,RXmodifiers);}\n
                                         if(c=="{"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,["}"],RXstyle,RXmodifiers);}\n
                                         if(c=="<"){\n
-                                                stream.eatSuffix(2);\n
+                                                eatSuffix(stream, 2);\n
                                                 return tokenChain(stream,state,[">"],RXstyle,RXmodifiers);}\n
                                         if(/[\\^\'"!~\\/]/.test(c)){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[stream.eat(c)],RXstyle,RXmodifiers);}}\n
                                 else if(/[\\^\'"!~\\/(\\[{<]/.test(c)){\n
                                         if(c=="("){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[")"],"string");}\n
                                         if(c=="["){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,["]"],"string");}\n
                                         if(c=="{"){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,["}"],"string");}\n
                                         if(c=="<"){\n
-                                                stream.eatSuffix(1);\n
+                                                eatSuffix(stream, 1);\n
                                                 return tokenChain(stream,state,[">"],"string");}\n
                                         if(/[\\^\'"!~\\/]/.test(c)){\n
                                                 return tokenChain(stream,state,[stream.eat(c)],"string");}}}}\n
                 if(ch=="m"){\n
-                        var c=stream.look(-2);\n
+                        var c=look(stream, -2);\n
                         if(!(c&&/\\w/.test(c))){\n
                                 c=stream.eat(/[(\\[{<\\^\'"!~\\/]/);\n
                                 if(c){\n
@@ -644,7 +658,7 @@ stream.eatSuffix(2);\n
                                         if(c=="<"){\n
                                                 return tokenChain(stream,state,[">"],RXstyle,RXmodifiers);}}}}\n
                 if(ch=="s"){\n
-                        var c=/[\\/>\\]})\\w]/.test(stream.look(-2));\n
+                        var c=/[\\/>\\]})\\w]/.test(look(stream, -2));\n
                         if(!c){\n
                                 c=stream.eat(/[(\\[{<\\^\'"!~\\/]/);\n
                                 if(c){\n
@@ -658,7 +672,7 @@ stream.eatSuffix(2);\n
                                                 return tokenChain(stream,state,[")",")"],RXstyle,RXmodifiers);\n
                                         return tokenChain(stream,state,[c,c],RXstyle,RXmodifiers);}}}\n
                 if(ch=="y"){\n
-                        var c=/[\\/>\\]})\\w]/.test(stream.look(-2));\n
+                        var c=/[\\/>\\]})\\w]/.test(look(stream, -2));\n
                         if(!c){\n
                                 c=stream.eat(/[(\\[{<\\^\'"!~\\/]/);\n
                                 if(c){\n
@@ -672,7 +686,7 @@ stream.eatSuffix(2);\n
                                                 return tokenChain(stream,state,[")",")"],RXstyle,RXmodifiers);\n
                                         return tokenChain(stream,state,[c,c],RXstyle,RXmodifiers);}}}\n
                 if(ch=="t"){\n
-                        var c=/[\\/>\\]})\\w]/.test(stream.look(-2));\n
+                        var c=/[\\/>\\]})\\w]/.test(look(stream, -2));\n
                         if(!c){\n
                                 c=stream.eat("r");if(c){\n
                                 c=stream.eat(/[(\\[{<\\^\'"!~\\/]/);\n
@@ -689,7 +703,7 @@ stream.eatSuffix(2);\n
                 if(ch=="`"){\n
                         return tokenChain(stream,state,[ch],"variable-2");}\n
                 if(ch=="/"){\n
-                        if(!/~\\s*$/.test(stream.prefix()))\n
+                        if(!/~\\s*$/.test(prefix(stream)))\n
                                 return "operator";\n
                         else\n
                                 return tokenChain(stream,state,[ch],RXstyle,RXmodifiers);}\n
@@ -701,7 +715,7 @@ stream.eatSuffix(2);\n
                                 stream.pos=p;}\n
                 if(/[$@%]/.test(ch)){\n
                         var p=stream.pos;\n
-                        if(stream.eat("^")&&stream.eat(/[A-Z]/)||!/[@$%&]/.test(stream.look(-2))&&stream.eat(/[=|\\\\\\-#?@;:&`~\\^!\\[\\]*\'"$+.,\\/<>()]/)){\n
+                        if(stream.eat("^")&&stream.eat(/[A-Z]/)||!/[@$%&]/.test(look(stream, -2))&&stream.eat(/[=|\\\\\\-#?@;:&`~\\^!\\[\\]*\'"$+.,\\/<>()]/)){\n
                                 var c=stream.current();\n
                                 if(PERL[c])\n
                                         return "variable-2";}\n
@@ -714,7 +728,7 @@ stream.eatSuffix(2);\n
                                 else\n
                                         return "variable";}}\n
                 if(ch=="#"){\n
-                        if(stream.look(-2)!="$"){\n
+                        if(look(stream, -2)!="$"){\n
                                 stream.skipToEnd();\n
                                 return "comment";}}\n
                 if(/[:+\\-\\^*$&%@=<>!?|\\/~\\.]/.test(ch)){\n
@@ -726,23 +740,23 @@ stream.eatSuffix(2);\n
                                 stream.pos=p;}\n
                 if(ch=="_"){\n
                         if(stream.pos==1){\n
-                                if(stream.suffix(6)=="_END__"){\n
+                                if(suffix(stream, 6)=="_END__"){\n
                                         return tokenChain(stream,state,[\'\\0\'],"comment");}\n
-                                else if(stream.suffix(7)=="_DATA__"){\n
+                                else if(suffix(stream, 7)=="_DATA__"){\n
                                         return tokenChain(stream,state,[\'\\0\'],"variable-2");}\n
-                                else if(stream.suffix(7)=="_C__"){\n
+                                else if(suffix(stream, 7)=="_C__"){\n
                                         return tokenChain(stream,state,[\'\\0\'],"string");}}}\n
                 if(/\\w/.test(ch)){\n
                         var p=stream.pos;\n
-                        if(stream.look(-2)=="{"&&(stream.look(0)=="}"||stream.eatWhile(/\\w/)&&stream.look(0)=="}"))\n
+                        if(look(stream, -2)=="{"&&(look(stream, 0)=="}"||stream.eatWhile(/\\w/)&&look(stream, 0)=="}"))\n
                                 return "string";\n
                         else\n
                                 stream.pos=p;}\n
                 if(/[A-Z]/.test(ch)){\n
-                        var l=stream.look(-2);\n
+                        var l=look(stream, -2);\n
                         var p=stream.pos;\n
                         stream.eatWhile(/[A-Z_]/);\n
-                        if(/[\\da-z]/.test(stream.look(0))){\n
+                        if(/[\\da-z]/.test(look(stream, 0))){\n
                                 stream.pos=p;}\n
                         else{\n
                                 var c=PERL[stream.current()];\n
@@ -766,7 +780,7 @@ stream.eatSuffix(2);\n
                                 else\n
                                         return "meta";}}\n
                 if(/[a-zA-Z_]/.test(ch)){\n
-                        var l=stream.look(-2);\n
+                        var l=look(stream, -2);\n
                         stream.eatWhile(/\\w/);\n
                         var c=PERL[stream.current()];\n
                         if(!c)\n
@@ -798,46 +812,48 @@ stream.eatSuffix(2);\n
                                 style:null,\n
                                 tail:null};},\n
                 token:function(stream,state){\n
-                        return (state.tokenize||tokenPerl)(stream,state);},\n
-                electricChars:"{}"};});\n
+                        return (state.tokenize||tokenPerl)(stream,state);}\n
+                };});\n
+\n
+CodeMirror.registerHelper("wordChars", "perl", /[\\w$]/);\n
 \n
 CodeMirror.defineMIME("text/x-perl", "perl");\n
 \n
 // it\'s like "peek", but need for look-ahead or look-behind if index < 0\n
-CodeMirror.StringStream.prototype.look=function(c){\n
-        return this.string.charAt(this.pos+(c||0));};\n
+function look(stream, c){\n
+  return stream.string.charAt(stream.pos+(c||0));\n
+}\n
 \n
 // return a part of prefix of current stream from current position\n
-CodeMirror.StringStream.prototype.prefix=function(c){\n
-        if(c){\n
-                var x=this.pos-c;\n
-                return this.string.substr((x>=0?x:0),c);}\n
-        else{\n
-                return this.string.substr(0,this.pos-1);}};\n
+function prefix(stream, c){\n
+  if(c){\n
+    var x=stream.pos-c;\n
+    return stream.string.substr((x>=0?x:0),c);}\n
+  else{\n
+    return stream.string.substr(0,stream.pos-1);\n
+  }\n
+}\n
 \n
 // return a part of suffix of current stream from current position\n
-CodeMirror.StringStream.prototype.suffix=function(c){\n
-        var y=this.string.length;\n
-        var x=y-this.pos+1;\n
-        return this.string.substr(this.pos,(c&&c<y?c:x));};\n
-\n
-// return a part of suffix of current stream from current position and change current position\n
-CodeMirror.StringStream.prototype.nsuffix=function(c){\n
-        var p=this.pos;\n
-        var l=c||(this.string.length-this.pos+1);\n
-        this.pos+=l;\n
-        return this.string.substr(p,l);};\n
+function suffix(stream, c){\n
+  var y=stream.string.length;\n
+  var x=y-stream.pos+1;\n
+  return stream.string.substr(stream.pos,(c&&c<y?c:x));\n
+}\n
 \n
 // eating and vomiting a part of stream from current position\n
-CodeMirror.StringStream.prototype.eatSuffix=function(c){\n
-        var x=this.pos+c;\n
-        var y;\n
-        if(x<=0)\n
-                this.pos=0;\n
-        else if(x>=(y=this.string.length-1))\n
-                this.pos=y;\n
-        else\n
-                this.pos=x;};\n
+function eatSuffix(stream, c){\n
+  var x=stream.pos+c;\n
+  var y;\n
+  if(x<=0)\n
+    stream.pos=0;\n
+  else if(x>=(y=stream.string.length-1))\n
+    stream.pos=y;\n
+  else\n
+    stream.pos=x;\n
+}\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -848,7 +864,7 @@ CodeMirror.StringStream.prototype.eatSuffix=function(c){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>56029</int> </value>
+            <value> <int>56126</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

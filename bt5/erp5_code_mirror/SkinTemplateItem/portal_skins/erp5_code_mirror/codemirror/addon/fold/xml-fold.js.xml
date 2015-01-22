@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403076.92</string> </value>
+            <value> <string>ts21897116.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var Pos = CodeMirror.Pos;\n
@@ -160,15 +170,14 @@
       }\n
     }\n
   });\n
-  CodeMirror.tagRangeFinder = CodeMirror.fold.xml; // deprecated\n
-\n
   CodeMirror.findMatchingTag = function(cm, pos, range) {\n
     var iter = new Iter(cm, pos.line, pos.ch, range);\n
     if (iter.text.indexOf(">") == -1 && iter.text.indexOf("<") == -1) return;\n
     var end = toTagEnd(iter), to = end && Pos(iter.line, iter.ch);\n
     var start = end && toTagStart(iter);\n
-    if (!end || end == "selfClose" || !start || cmp(iter, pos) > 0) return;\n
+    if (!end || !start || cmp(iter, pos) > 0) return;\n
     var here = {from: Pos(iter.line, iter.ch), to: to, tag: start[2]};\n
+    if (end == "selfClose") return {open: here, close: null, at: "open"};\n
 \n
     if (start[1]) { // closing tag\n
       return {open: findMatchingOpen(iter, start[2]), close: here, at: "close"};\n
@@ -192,9 +201,9 @@
   // Used by addon/edit/closetag.js\n
   CodeMirror.scanForClosingTag = function(cm, pos, name, end) {\n
     var iter = new Iter(cm, pos.line, pos.ch, end ? {from: 0, to: end} : null);\n
-    return !!findMatchingClose(iter, name);\n
+    return findMatchingClose(iter, name);\n
   };\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -205,7 +214,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6161</int> </value>
+            <value> <int>6570</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

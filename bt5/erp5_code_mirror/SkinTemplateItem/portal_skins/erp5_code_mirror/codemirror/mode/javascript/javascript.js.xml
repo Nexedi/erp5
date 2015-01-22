@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403101.31</string> </value>
+            <value> <string>ts21897133.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,20 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // TODO actually recognize syntax of TypeScript constructs\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
 \n
 CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   var indentUnit = config.indentUnit;\n
@@ -30,6 +43,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   var jsonldMode = parserConfig.jsonld;\n
   var jsonMode = parserConfig.json || jsonldMode;\n
   var isTS = parserConfig.typescript;\n
+  var wordRE = parserConfig.wordCharacters || /[\\w$\\xa1-\\uffff]/;\n
 \n
   // Tokenizer\n
 \n
@@ -143,8 +157,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     } else if (isOperatorChar.test(ch)) {\n
       stream.eatWhile(isOperatorChar);\n
       return ret("operator", "operator", stream.current());\n
-    } else {\n
-      stream.eatWhile(/[\\w\\$_]/);\n
+    } else if (wordRE.test(ch)) {\n
+      stream.eatWhile(wordRE);\n
       var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];\n
       return (known && state.lastType != ".") ? ret(known.type, known.style, word) :\n
                      ret("variable", "variable", word);\n
@@ -213,8 +227,10 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
         if (--depth == 0) break;\n
       } else if (bracket >= 3 && bracket < 6) {\n
         ++depth;\n
-      } else if (/[$\\w]/.test(ch)) {\n
+      } else if (wordRE.test(ch)) {\n
         sawSomething = true;\n
+      } else if (/["\'\\/]/.test(ch)) {\n
+        return;\n
       } else if (sawSomething && !depth) {\n
         ++pos;\n
         break;\n
@@ -249,7 +265,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     var cc = state.cc;\n
     // Communicate our context to the combinators.\n
     // (Less wasteful than consing up a hundred closures on every call.)\n
-    cx.state = state; cx.stream = stream; cx.marked = null, cx.cc = cc;\n
+    cx.state = state; cx.stream = stream; cx.marked = null, cx.cc = cc; cx.style = style;\n
 \n
     if (!state.lexical.hasOwnProperty("align"))\n
       state.lexical.align = true;\n
@@ -309,6 +325,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     var result = function() {\n
       var state = cx.state, indent = state.indented;\n
       if (state.lexical.type == "stat") indent = state.lexical.indented;\n
+      else for (var outer = state.lexical; outer && outer.type == ")" && outer.align; outer = outer.prev)\n
+        indent = outer.indented;\n
       state.lexical = new JSLexical(indent, cx.stream.column(), type, null, state.lexical, info);\n
     };\n
     result.lex = true;\n
@@ -325,11 +343,12 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   poplex.lex = true;\n
 \n
   function expect(wanted) {\n
-    return function(type) {\n
+    function exp(type) {\n
       if (type == wanted) return cont();\n
       else if (wanted == ";") return pass();\n
-      else return cont(arguments.callee);\n
+      else return cont(exp);\n
     };\n
+    return exp;\n
   }\n
 \n
   function statement(type, value) {\n
@@ -338,7 +357,11 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     if (type == "keyword b") return cont(pushlex("form"), statement, poplex);\n
     if (type == "{") return cont(pushlex("}"), block, poplex);\n
     if (type == ";") return cont();\n
-    if (type == "if") return cont(pushlex("form"), expression, statement, poplex, maybeelse);\n
+    if (type == "if") {\n
+      if (cx.state.lexical.info == "else" && cx.state.cc[cx.state.cc.length - 1] == poplex)\n
+        cx.state.cc.pop()();\n
+      return cont(pushlex("form"), expression, statement, poplex, maybeelse);\n
+    }\n
     if (type == "function") return cont(functiondef);\n
     if (type == "for") return cont(pushlex("form"), forspec, statement, poplex);\n
     if (type == "variable") return cont(pushlex("stat"), maybelabel);\n
@@ -349,7 +372,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     if (type == "catch") return cont(pushlex("form"), pushcontext, expect("("), funarg, expect(")"),\n
                                      statement, poplex, popcontext);\n
     if (type == "module") return cont(pushlex("form"), pushcontext, afterModule, popcontext, poplex);\n
-    if (type == "class") return cont(pushlex("form"), className, objlit, poplex);\n
+    if (type == "class") return cont(pushlex("form"), className, poplex);\n
     if (type == "export") return cont(pushlex("form"), afterExport, poplex);\n
     if (type == "import") return cont(pushlex("form"), afterImport, poplex);\n
     return pass(pushlex("stat"), expression, expect(";"), poplex);\n
@@ -369,12 +392,13 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
 \n
     var maybeop = noComma ? maybeoperatorNoComma : maybeoperatorComma;\n
     if (atomicTypes.hasOwnProperty(type)) return cont(maybeop);\n
-    if (type == "function") return cont(functiondef);\n
+    if (type == "function") return cont(functiondef, maybeop);\n
     if (type == "keyword c") return cont(noComma ? maybeexpressionNoComma : maybeexpression);\n
     if (type == "(") return cont(pushlex(")"), maybeexpression, comprehension, expect(")"), poplex, maybeop);\n
     if (type == "operator" || type == "spread") return cont(noComma ? expressionNoComma : expression);\n
     if (type == "[") return cont(pushlex("]"), arrayLiteral, poplex, maybeop);\n
     if (type == "{") return contCommasep(objprop, "}", null, maybeop);\n
+    if (type == "quasi") { return pass(quasi, maybeop); }\n
     return cont();\n
   }\n
   function maybeexpression(type) {\n
@@ -393,38 +417,37 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   function maybeoperatorNoComma(type, value, noComma) {\n
     var me = noComma == false ? maybeoperatorComma : maybeoperatorNoComma;\n
     var expr = noComma == false ? expression : expressionNoComma;\n
-    if (value == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);\n
+    if (type == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);\n
     if (type == "operator") {\n
       if (/\\+\\+|--/.test(value)) return cont(me);\n
       if (value == "?") return cont(expression, expect(":"), expr);\n
       return cont(expr);\n
     }\n
-    if (type == "quasi") { cx.cc.push(me); return quasi(value); }\n
+    if (type == "quasi") { return pass(quasi, me); }\n
     if (type == ";") return;\n
     if (type == "(") return contCommasep(expressionNoComma, ")", "call", me);\n
     if (type == ".") return cont(property, me);\n
     if (type == "[") return cont(pushlex("]"), maybeexpression, expect("]"), poplex, me);\n
   }\n
-  function quasi(value) {\n
-    if (value.slice(value.length - 2) != "${") return cont();\n
+  function quasi(type, value) {\n
+    if (type != "quasi") return pass();\n
+    if (value.slice(value.length - 2) != "${") return cont(quasi);\n
     return cont(expression, continueQuasi);\n
   }\n
   function continueQuasi(type) {\n
     if (type == "}") {\n
       cx.marked = "string-2";\n
       cx.state.tokenize = tokenQuasi;\n
-      return cont();\n
+      return cont(quasi);\n
     }\n
   }\n
   function arrowBody(type) {\n
     findFatArrow(cx.stream, cx.state);\n
-    if (type == "{") return pass(statement);\n
-    return pass(expression);\n
+    return pass(type == "{" ? statement : expression);\n
   }\n
   function arrowBodyNoComma(type) {\n
     findFatArrow(cx.stream, cx.state);\n
-    if (type == "{") return pass(statement);\n
-    return pass(expressionNoComma);\n
+    return pass(type == "{" ? statement : expressionNoComma);\n
   }\n
   function maybelabel(type) {\n
     if (type == ":") return cont(poplex, statement);\n
@@ -434,15 +457,18 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     if (type == "variable") {cx.marked = "property"; return cont();}\n
   }\n
   function objprop(type, value) {\n
-    if (type == "variable") {\n
+    if (type == "variable" || cx.style == "keyword") {\n
       cx.marked = "property";\n
       if (value == "get" || value == "set") return cont(getterSetter);\n
+      return cont(afterprop);\n
     } else if (type == "number" || type == "string") {\n
-      cx.marked = jsonldMode ? "property" : (type + " property");\n
+      cx.marked = jsonldMode ? "property" : (cx.style + " property");\n
+      return cont(afterprop);\n
+    } else if (type == "jsonld-keyword") {\n
+      return cont(afterprop);\n
     } else if (type == "[") {\n
       return cont(expression, expect("]"), afterprop);\n
     }\n
-    if (atomicTypes.hasOwnProperty(type)) return cont(afterprop);\n
   }\n
   function getterSetter(type) {\n
     if (type != "variable") return pass(afterprop);\n
@@ -506,7 +532,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
     if (type == ",") return cont(vardef);\n
   }\n
   function maybeelse(type, value) {\n
-    if (type == "keyword b" && value == "else") return cont(pushlex("form"), statement, poplex);\n
+    if (type == "keyword b" && value == "else") return cont(pushlex("form", "else"), statement, poplex);\n
   }\n
   function forspec(type) {\n
     if (type == "(") return cont(pushlex(")"), forspec1, expect(")"), poplex);\n
@@ -541,11 +567,27 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   function className(type, value) {\n
     if (type == "variable") {register(value); return cont(classNameAfter);}\n
   }\n
-  function classNameAfter(_type, value) {\n
-    if (value == "extends") return cont(expression);\n
+  function classNameAfter(type, value) {\n
+    if (value == "extends") return cont(expression, classNameAfter);\n
+    if (type == "{") return cont(pushlex("}"), classBody, poplex);\n
   }\n
-  function objlit(type) {\n
-    if (type == "{") return contCommasep(objprop, "}");\n
+  function classBody(type, value) {\n
+    if (type == "variable" || cx.style == "keyword") {\n
+      cx.marked = "property";\n
+      if (value == "get" || value == "set") return cont(classGetterSetter, functiondef, classBody);\n
+      return cont(functiondef, classBody);\n
+    }\n
+    if (value == "*") {\n
+      cx.marked = "keyword";\n
+      return cont(classBody);\n
+    }\n
+    if (type == ";") return cont(classBody);\n
+    if (type == "}") return cont();\n
+  }\n
+  function classGetterSetter(type) {\n
+    if (type != "variable") return pass();\n
+    cx.marked = "property";\n
+    return cont();\n
   }\n
   function afterModule(type, value) {\n
     if (type == "string") return cont(statement);\n
@@ -574,7 +616,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   }\n
   function maybeArrayComprehension(type) {\n
     if (type == "for") return pass(comprehension, expect("]"));\n
-    if (type == ",") return cont(commasep(expressionNoComma, "]"));\n
+    if (type == ",") return cont(commasep(maybeexpressionNoComma, "]"));\n
     return pass(commasep(expressionNoComma, "]"));\n
   }\n
   function comprehension(type) {\n
@@ -595,7 +637,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
         context: parserConfig.localVars && {vars: parserConfig.localVars},\n
         indented: 0\n
       };\n
-      if (parserConfig.globalVars) state.globalVars = parserConfig.globalVars;\n
+      if (parserConfig.globalVars && typeof parserConfig.globalVars == "object")\n
+        state.globalVars = parserConfig.globalVars;\n
       return state;\n
     },\n
 \n
@@ -618,7 +661,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
       if (state.tokenize != tokenBase) return 0;\n
       var firstChar = textAfter && textAfter.charAt(0), lexical = state.lexical;\n
       // Kludge to prevent \'maybelse\' from blocking lexical scope pops\n
-      for (var i = state.cc.length - 1; i >= 0; --i) {\n
+      if (!/^\\s*else\\b/.test(textAfter)) for (var i = state.cc.length - 1; i >= 0; --i) {\n
         var c = state.cc[i];\n
         if (c == poplex) lexical = lexical.prev;\n
         else if (c != maybeelse) break;\n
@@ -639,7 +682,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
       else return lexical.indented + (closing ? 0 : indentUnit);\n
     },\n
 \n
-    electricChars: ":{}",\n
+    electricInput: /^\\s*(?:case .*?:|default:|\\{|\\})$/,\n
     blockCommentStart: jsonMode ? null : "/*",\n
     blockCommentEnd: jsonMode ? null : "*/",\n
     lineComment: jsonMode ? null : "//",\n
@@ -651,15 +694,20 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {\n
   };\n
 });\n
 \n
+CodeMirror.registerHelper("wordChars", "javascript", /[\\w$]/);\n
+\n
 CodeMirror.defineMIME("text/javascript", "javascript");\n
 CodeMirror.defineMIME("text/ecmascript", "javascript");\n
 CodeMirror.defineMIME("application/javascript", "javascript");\n
+CodeMirror.defineMIME("application/x-javascript", "javascript");\n
 CodeMirror.defineMIME("application/ecmascript", "javascript");\n
 CodeMirror.defineMIME("application/json", {name: "javascript", json: true});\n
 CodeMirror.defineMIME("application/x-json", {name: "javascript", json: true});\n
 CodeMirror.defineMIME("application/ld+json", {name: "javascript", jsonld: true});\n
 CodeMirror.defineMIME("text/typescript", { name: "javascript", typescript: true });\n
 CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript: true });\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -670,7 +718,7 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>24265</int> </value>
+            <value> <int>26146</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.72</string> </value>
+            <value> <string>ts21898385.1</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,10 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
   var GUTTER_ID = "CodeMirror-lint-markers";\n
-  var SEVERITIES = /^(?:error|warning)$/;\n
 \n
   function showTooltip(e, content) {\n
     var tt = document.createElement("div");\n
@@ -124,7 +133,7 @@
 \n
   function annotationTooltip(ann) {\n
     var severity = ann.severity;\n
-    if (!SEVERITIES.test(severity)) severity = "error";\n
+    if (!severity) severity = "error";\n
     var tip = document.createElement("div");\n
     tip.className = "CodeMirror-lint-message-" + severity;\n
     tip.appendChild(document.createTextNode(ann.message));\n
@@ -133,10 +142,11 @@
 \n
   function startLinting(cm) {\n
     var state = cm.state.lint, options = state.options;\n
+    var passOptions = options.options || options; // Support deprecated passing of `options` property in options\n
     if (options.async)\n
-      options.getAnnotations(cm, updateLinting, options);\n
+      options.getAnnotations(cm.getValue(), updateLinting, passOptions, cm);\n
     else\n
-      updateLinting(cm, options.getAnnotations(cm.getValue(), options.options));\n
+      updateLinting(cm, options.getAnnotations(cm.getValue(), passOptions, cm));\n
   }\n
 \n
   function updateLinting(cm, annotationsNotSorted) {\n
@@ -155,7 +165,7 @@
       for (var i = 0; i < anns.length; ++i) {\n
         var ann = anns[i];\n
         var severity = ann.severity;\n
-        if (!SEVERITIES.test(severity)) severity = "error";\n
+        if (!severity) severity = "error";\n
         maxSeverity = getMaxSeverity(maxSeverity, severity);\n
 \n
         if (options.formatAnnotation) ann = options.formatAnnotation(ann);\n
@@ -185,24 +195,18 @@
     showTooltipFor(e, annotationTooltip(ann), target);\n
   }\n
 \n
-  // When the mouseover fires, the cursor might not actually be over\n
-  // the character itself yet. These pairs of x,y offsets are used to\n
-  // probe a few nearby points when no suitable marked range is found.\n
-  var nearby = [0, 0, 0, 5, 0, -5, 5, 0, -5, 0];\n
-\n
   function onMouseOver(cm, e) {\n
-    if (!/\\bCodeMirror-lint-mark-/.test((e.target || e.srcElement).className)) return;\n
-    for (var i = 0; i < nearby.length; i += 2) {\n
-      var spans = cm.findMarksAt(cm.coordsChar({left: e.clientX + nearby[i],\n
-                                                top: e.clientY + nearby[i + 1]}));\n
-      for (var j = 0; j < spans.length; ++j) {\n
-        var span = spans[j], ann = span.__annotation;\n
-        if (ann) return popupSpanTooltip(ann, e);\n
-      }\n
+    var target = e.target || e.srcElement;\n
+    if (!/\\bCodeMirror-lint-mark-/.test(target.className)) return;\n
+    var box = target.getBoundingClientRect(), x = (box.left + box.right) / 2, y = (box.top + box.bottom) / 2;\n
+    var spans = cm.findMarksAt(cm.coordsChar({left: x, top: y}, "client"));\n
+    for (var i = 0; i < spans.length; ++i) {\n
+      var ann = spans[i].__annotation;\n
+      if (ann) return popupSpanTooltip(ann, e);\n
     }\n
   }\n
 \n
-  function optionHandler(cm, val, old) {\n
+  CodeMirror.defineOption("lint", false, function(cm, val, old) {\n
     if (old && old != CodeMirror.Init) {\n
       clearMarks(cm);\n
       cm.off("change", onChange);\n
@@ -220,11 +224,8 @@
 \n
       startLinting(cm);\n
     }\n
-  }\n
-\n
-  CodeMirror.defineOption("lintWith", false, optionHandler); // deprecated\n
-  CodeMirror.defineOption("lint", false, optionHandler); // deprecated\n
-})();\n
+  });\n
+});\n
 
 
 ]]></string> </value>
@@ -235,7 +236,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6962</int> </value>
+            <value> <int>7036</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

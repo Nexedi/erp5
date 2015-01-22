@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403097.68</string> </value>
+            <value> <string>ts21897136.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("go", function(config) {\n
   var indentUnit = config.indentUnit;\n
 \n
@@ -82,7 +95,7 @@ CodeMirror.defineMode("go", function(config) {\n
       stream.eatWhile(isOperatorChar);\n
       return "operator";\n
     }\n
-    stream.eatWhile(/[\\w\\$_]/);\n
+    stream.eatWhile(/[\\w\\$_\\xa1-\\uffff]/);\n
     var cur = stream.current();\n
     if (keywords.propertyIsEnumerable(cur)) {\n
       if (cur == "case" || cur == "default") curPunc = "case";\n
@@ -183,6 +196,7 @@ CodeMirror.defineMode("go", function(config) {\n
     },\n
 \n
     electricChars: "{}):",\n
+    fold: "brace",\n
     blockCommentStart: "/*",\n
     blockCommentEnd: "*/",\n
     lineComment: "//"\n
@@ -190,6 +204,8 @@ CodeMirror.defineMode("go", function(config) {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-go", "go");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -200,7 +216,7 @@ CodeMirror.defineMIME("text/x-go", "go");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5394</int> </value>
+            <value> <int>5885</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

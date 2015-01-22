@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403086.62</string> </value>
+            <value> <string>ts21897149.26</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../xml/xml"), require("../javascript/javascript"), require("../css/css"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../xml/xml", "../javascript/javascript", "../css/css"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
   var htmlMode = CodeMirror.getMode(config, {name: "xml",\n
                                              htmlMode: true,\n
@@ -41,6 +54,7 @@ CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
 \n
   function html(stream, state) {\n
     var tagName = state.htmlState.tagName;\n
+    if (tagName) tagName = tagName.toLowerCase();\n
     var style = htmlMode.token(stream, state.htmlState);\n
     if (tagName == "script" && /\\btag\\b/.test(style) && stream.current() == ">") {\n
       // Script block: mode to change to depends on type attribute\n
@@ -79,7 +93,7 @@ CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
     if (stream.match(/^<\\/\\s*script\\s*>/i, false)) {\n
       state.token = html;\n
       state.localState = state.localMode = null;\n
-      return html(stream, state);\n
+      return null;\n
     }\n
     return maybeBackup(stream, /<\\/\\s*script\\s*>/,\n
                        state.localMode.token(stream, state.localState));\n
@@ -88,7 +102,7 @@ CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
     if (stream.match(/^<\\/\\s*style\\s*>/i, false)) {\n
       state.token = html;\n
       state.localState = state.localMode = null;\n
-      return html(stream, state);\n
+      return null;\n
     }\n
     return maybeBackup(stream, /<\\/\\s*style\\s*>/,\n
                        cssMode.token(stream, state.localState));\n
@@ -127,6 +141,8 @@ CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
 }, "xml", "javascript", "css");\n
 \n
 CodeMirror.defineMIME("text/html", "htmlmixed");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -137,7 +153,7 @@ CodeMirror.defineMIME("text/html", "htmlmixed");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4388</int> </value>
+            <value> <int>5008</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

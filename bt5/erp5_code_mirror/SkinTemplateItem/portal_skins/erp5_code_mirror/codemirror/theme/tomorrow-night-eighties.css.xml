@@ -37,6 +37,8 @@
 .cm-s-tomorrow-night-eighties.CodeMirror {background: #000000; color: #CCCCCC;}\n
 .cm-s-tomorrow-night-eighties div.CodeMirror-selected {background: #2D2D2D !important;}\n
 .cm-s-tomorrow-night-eighties .CodeMirror-gutters {background: #000000; border-right: 0px;}\n
+.cm-s-tomorrow-night-eighties .CodeMirror-guttermarker { color: #f2777a; }\n
+.cm-s-tomorrow-night-eighties .CodeMirror-guttermarker-subtle { color: #777; }\n
 .cm-s-tomorrow-night-eighties .CodeMirror-linenumber {color: #515151;}\n
 .cm-s-tomorrow-night-eighties .CodeMirror-cursor {border-left: 1px solid #6A6A6A !important;}\n
 \n

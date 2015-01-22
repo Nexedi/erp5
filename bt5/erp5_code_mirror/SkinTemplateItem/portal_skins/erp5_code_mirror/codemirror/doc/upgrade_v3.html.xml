@@ -52,12 +52,12 @@
 <script src="activebookmark.js"></script>\n
 \n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#upgrade">Upgrade guide</a>\n

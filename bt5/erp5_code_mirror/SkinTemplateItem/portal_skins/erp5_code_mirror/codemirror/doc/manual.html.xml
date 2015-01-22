@@ -56,20 +56,24 @@
   dd { margin-left: 1.5em; margin-bottom: 1em; }\n
   dt {margin-top: 1em;}\n
   dd dl, dd dt, dd dd, dd ul { margin-top: 0; margin-bottom: 0; }\n
+  dt + dt { margin-top: 0; }\n
+  dt.command { position: relative; }\n
+  span.keybinding { position: absolute; right: 0; font-size: 80%; color: #555; text-indent: 0; }\n
 </style>\n
 \n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="logo.png"></a>\n
   <ul>\n
     <li><a href="../index.html">Home</a></li>\n
     <li><a href="#overview" class=active data-default="true">Manual</a></li>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a></li>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a></li>\n
   </ul>\n
   <ul>\n
     <li><a href="#usage">Basic Usage</a></li>\n
     <li><a href="#config">Configuration</a></li>\n
     <li><a href="#events">Events</a></li>\n
-    <li><a href="#keymaps">Keymaps</a></li>\n
+    <li><a href="#keymaps">Key maps</a></li>\n
+    <li><a href="#commands">Commands</a></li>\n
     <li><a href="#styling">Customized Styling</a></li>\n
     <li><a href="#api">Programming API</a>\n
       <ul>\n
@@ -95,7 +99,10 @@
 <article>\n
 \n
 <section class=first id=overview>\n
-    <h2>User manual and reference guide</h2>\n
+    <h2 style="position: relative">\n
+      User manual and reference guide\n
+      <span style="color: #888; font-size: 1rem; position: absolute; right: 0; bottom: 0">version 4.11.0</span>\n
+    </h2>\n
 \n
     <p>CodeMirror is a code-editor component that can be embedded in\n
     Web pages. The core library provides <em>only</em> the editor\n
@@ -103,7 +110,7 @@
     functionality. It does provide a rich API on top of which such\n
     functionality can be straightforwardly implemented. See\n
     the <a href="#addons">addons</a> included in the distribution,\n
-    and the <a href="https://github.com/marijnh/CodeMirror/wiki/CodeMirror-addons">list\n
+    and the <a href="https://github.com/codemirror/CodeMirror/wiki/CodeMirror-addons">list\n
     of externally hosted addons</a>, for reusable\n
     implementations of extra features.</p>\n
 \n
@@ -127,6 +134,9 @@
     <pre data-lang="text/html">&lt;script src="lib/codemirror.js">&lt;/script>\n
 &lt;link rel="stylesheet" href="../lib/codemirror.css">\n
 &lt;script src="mode/javascript/javascript.js">&lt;/script></pre>\n
+\n
+    <p>(Alternatively, use a module loader. <a href="#modloader">More\n
+    about that later.</a>)</p>\n
 \n
     <p>Having done this, an editor instance can be created like\n
     this:</p>\n
@@ -172,7 +182,41 @@
     of a form) is submitted. See the <a href="#fromTextArea">API\n
     reference</a> for a full description of this method.</p>\n
 \n
+    <h3 id=modloader>Module loaders</h3>\n
+\n
+    <p>The files in the CodeMirror distribution contain shims for\n
+    loading them (and their dependencies) in AMD or CommonJS\n
+    environments. If the variables <code>exports</code>\n
+    and <code>module</code> exist and have type object, CommonJS-style\n
+    require will be used. If not, but there is a\n
+    function <code>define</code> with an <code>amd</code> property\n
+    present, AMD-style (RequireJS) will be used.</p>\n
+\n
+    <p>It is possible to\n
+    use <a href="http://browserify.org/">Browserify</a> or similar\n
+    tools to statically build modules using CodeMirror. Alternatively,\n
+    use <a href="http://requirejs.org/">RequireJS</a> to dynamically\n
+    load dependencies at runtime. Both of these approaches have the\n
+    advantage that they don\'t use the global namespace and can, thus,\n
+    do things like load multiple versions of CodeMirror alongside each\n
+    other.</p>\n
+\n
+    <p>Here\'s a simple example of using RequireJS to load CodeMirror:</p>\n
+\n
+    <pre data-lang="javascript">require([\n
+  "cm/lib/codemirror", "cm/mode/htmlmixed/htmlmixed"\n
+], function(CodeMirror) {\n
+  CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    mode: "htmlmixed"\n
+  });\n
+});</pre>\n
+\n
+    <p>It will automatically load the modes that the mixed HTML mode\n
+    depends on (XML, JavaScript, and CSS).</p>\n
+\n
 </section>\n
+\n
 <section id=config>\n
     <h2>Configuration</h2>\n
 \n
@@ -267,18 +311,18 @@
       on Windows, and <code>true</code> on other platforms.</dd>\n
 \n
       <dt id="option_keyMap"><code><strong>keyMap</strong>: string</code></dt>\n
-      <dd>Configures the keymap to use. The default\n
-      is <code>"default"</code>, which is the only keymap defined\n
-      in <code>codemirror.js</code> itself. Extra keymaps are found in\n
-      the <a href="../keymap/"><code>keymap</code></a> directory. See\n
-      the <a href="#keymaps">section on keymaps</a> for more\n
+      <dd>Configures the key map to use. The default\n
+      is <code>"default"</code>, which is the only key map defined\n
+      in <code>codemirror.js</code> itself. Extra key maps are found in\n
+      the <a href="../keymap/"><code>key map</code></a> directory. See\n
+      the <a href="#keymaps">section on key maps</a> for more\n
       information.</dd>\n
 \n
       <dt id="option_extraKeys"><code><strong>extraKeys</strong>: object</code></dt>\n
-      <dd>Can be used to specify extra keybindings for the editor,\n
+      <dd>Can be used to specify extra key bindings for the editor,\n
       alongside the ones defined\n
       by <a href="#option_keyMap"><code>keyMap</code></a>. Should be\n
-      either null, or a valid <a href="#keymaps">keymap</a> value.</dd>\n
+      either null, or a valid <a href="#keymaps">key map</a> value.</dd>\n
 \n
       <dt id="option_lineWrapping"><code><strong>lineWrapping</strong>: boolean</code></dt>\n
       <dd>Whether CodeMirror should scroll or wrap for long lines.\n
@@ -312,6 +356,14 @@
       horizontally (false) or whether it stays fixed during horizontal\n
       scrolling (true, the default).</dd>\n
 \n
+      <dt id="option_scrollbarStyle"><code><strong>scrollbarStyle</strong>: string</code></dt>\n
+      <dd>Chooses a scrollbar implementation. The default\n
+      is <code>"native"</code>, showing native scrollbars. The core\n
+      library also provides the <code>"null"</code> style, which\n
+      completely hides the\n
+      scrollbars. <a href="#addon_simplescrollbars">Addons</a> can\n
+      implement additional scrollbar models.</dd>\n
+\n
       <dt id="option_coverGutterNextToScrollbar"><code><strong>coverGutterNextToScrollbar</strong>: boolean</code></dt>\n
       <dd>When <a href="#option_fixedGutter"><code>fixedGutter</code></a>\n
       is on, and there is a horizontal scrollbar, by default the\n
@@ -331,12 +383,13 @@
 \n
       <dt id="option_undoDepth"><code><strong>undoDepth</strong>: integer</code></dt>\n
       <dd>The maximum number of undo levels that the editor stores.\n
-      Defaults to 40.</dd>\n
+      Note that this includes selection change events. Defaults to\n
+      200.</dd>\n
 \n
       <dt id="option_historyEventDelay"><code><strong>historyEventDelay</strong>: integer</code></dt>\n
       <dd>The period of inactivity (in milliseconds) that will cause a\n
       new history event to be started when typing or deleting.\n
-      Defaults to 500.</dd>\n
+      Defaults to 1250.</dd>\n
 \n
       <dt id="option_tabindex"><code><strong>tabindex</strong>: integer</code></dt>\n
       <dd>The <a href="http://www.w3.org/TR/html401/interact/forms.html#adef-tabindex">tab\n
@@ -361,41 +414,10 @@
       <dt id="option_dragDrop"><code><strong>dragDrop</strong>: boolean</code></dt>\n
       <dd>Controls whether drag-and-drop is enabled. On by default.</dd>\n
 \n
-      <dt id="option_onDragEvent"><code><strong>onDragEvent</strong>: function(instance: CodeMirror, event: Event) â boolean</code></dt>\n
-      <dd><em>Deprecated! See <a href="#event_dom">these</a> event\n
-      handlers for the current recommended approach.</em><br>When given,\n
-      this will be called when the editor is handling\n
-      a <code>dragenter</code>, <code>dragover</code>,\n
-      or <code>drop</code> event. It will be passed the editor\n
-      instance and the event object as arguments. The callback can\n
-      choose to handle the event itself, in which case it should\n
-      return <code>true</code> to indicate that CodeMirror should not\n
-      do anything further.</dd>\n
-\n
-      <dt id="option_onKeyEvent"><code><strong>onKeyEvent</strong>: function(instance: CodeMirror, event: Event) â boolean</code></dt>\n
-      <dd><em>Deprecated! See <a href="#event_dom">these</a> event\n
-      handlers for the current recommended approach.</em><br>This\n
-      provides a rather low-level hook into CodeMirror\'s key handling.\n
-      If provided, this function will be called on\n
-      every <code>keydown</code>, <code>keyup</code>,\n
-      and <code>keypress</code> event that CodeMirror captures. It\n
-      will be passed two arguments, the editor instance and the key\n
-      event. This key event is pretty much the raw key event, except\n
-      that a <code>stop()</code> method is always added to it. You\n
-      could feed it to, for example, <code>jQuery.Event</code> to\n
-      further normalize it.<br>This function can inspect the key\n
-      event, and handle it if it wants to. It may return true to tell\n
-      CodeMirror to ignore the event. Be wary that, on some browsers,\n
-      stopping a <code>keydown</code> does not stop\n
-      the <code>keypress</code> from firing, whereas on others it\n
-      does. If you respond to an event, you should probably inspect\n
-      its <code>type</code> property and only do something when it\n
-      is <code>keydown</code> (or <code>keypress</code> for actions\n
-      that need character data).</dd>\n
-\n
       <dt id="option_cursorBlinkRate"><code><strong>cursorBlinkRate</strong>: number</code></dt>\n
       <dd>Half-period in milliseconds used for cursor blinking. The default blink\n
-      rate is 530ms. By setting this to zero, blinking can be disabled.</dd>\n
+      rate is 530ms. By setting this to zero, blinking can be disabled. A\n
+      negative value hides the cursor entirely.</dd>\n
 \n
       <dt id="option_cursorScrollMargin"><code><strong>cursorScrollMargin</strong>: number</code></dt>\n
       <dd>How much extra space to always keep above and below the\n
@@ -414,15 +436,12 @@
       click outside of the current selection, the cursor is moved to\n
       the point of the click. Defaults to <code>true</code>.</dd>\n
 \n
-      <dt id="option_workTime"><code><strong>workTime</strong>, <strong>workDelay</strong>: number</code></dt>\n
+      <dt id="option_workTime"><code id="option_wordkDelay"><strong>workTime</strong>, <strong>workDelay</strong>: number</code></dt>\n
       <dd>Highlighting is done by a pseudo background-thread that will\n
       work for <code>workTime</code> milliseconds, and then use\n
       timeout to sleep for <code>workDelay</code> milliseconds. The\n
       defaults are 200 and 300, you can change these options to make\n
       the highlighting more or less aggressive.</dd>\n
-\n
-      <dt id="option_workDelay"><code><strong>workDelay</strong>: number</code></dt>\n
-      <dd>See <a href="#option_workTime"><code>workTime</code></a>.</dd>\n
 \n
       <dt id="option_pollInterval"><code><strong>pollInterval</strong>: number</code></dt>\n
       <dd>Indicates how quickly CodeMirror should poll its input\n
@@ -497,7 +516,7 @@
       <dt id="event_change"><code><strong>"change"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
       <dd>Fires every time the content of the editor is changed.\n
       The <code>changeObj</code> is a <code>{from, to, text, removed,\n
-      next}</code> object containing information about the changes\n
+      origin}</code> object containing information about the changes\n
       that occurred as second argument. <code>from</code>\n
       and <code>to</code> are the positions (in the pre-change\n
       coordinate system) where the change started and ended (for\n
@@ -506,10 +525,13 @@
       an array of strings representing the text that replaced the\n
       changed range (split by line). <code>removed</code> is the text\n
       that used to be between <code>from</code> and <code>to</code>,\n
-      which is overwritten by this change. If multiple changes\n
-      happened during a single operation, the object will have\n
-      a <code>next</code> property pointing to another change object\n
-      (which may point to another, etc).</dd>\n
+      which is overwritten by this change.</dd>\n
+\n
+      <dt id="event_changes"><code><strong>"changes"</strong> (instance: CodeMirror, changes: array&lt;object&gt;)</code></dt>\n
+      <dd>Like the <a href="#event_change"><code>"change"</code></a>\n
+      event, but batched per <a href="#operation">operation</a>,\n
+      passing an array containing all the changes that happened in the\n
+      operation.</dd>\n
 \n
       <dt id="event_beforeChange"><code><strong>"beforeChange"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
       <dd>This event is fired before a change is applied, and its\n
@@ -517,12 +539,10 @@
       The <code>changeObj</code> object\n
       has <code>from</code>, <code>to</code>, and <code>text</code>\n
       properties, as with\n
-      the <a href="#event_change"><code>"change"</code></a> event, but\n
-      never a <code>next</code> property, since this is fired for each\n
-      individual change, and not batched per operation. It also has\n
-      a <code>cancel()</code> method, which can be called to cancel\n
-      the change, and, <strong>if</strong> the change isn\'t coming\n
-      from an undo or redo event, an <code>update(from, to,\n
+      the <a href="#event_change"><code>"change"</code></a> event. It\n
+      also has a <code>cancel()</code> method, which can be called to\n
+      cancel the change, and, <strong>if</strong> the change isn\'t\n
+      coming from an undo or redo event, an <code>update(from, to,\n
       text)</code> method, which may be used to modify the change.\n
       Undo or redo changes can\'t be modified, because they hold some\n
       metainformation for restoring old marked ranges that is only\n
@@ -542,7 +562,7 @@
 \n
       <dt id="event_keyHandled"><code><strong>"keyHandled"</strong> (instance: CodeMirror, name: string, event: Event)</code></dt>\n
       <dd>Fired after a key is handled through a\n
-      keymap. <code>name</code> is the name of the handled key (for\n
+      key map. <code>name</code> is the name of the handled key (for\n
       example <code>"Ctrl-X"</code> or <code>"\'q\'"</code>),\n
       and <code>event</code> is the DOM <code>keydown</code>\n
       or <code>keypress</code> event.</dd>\n
@@ -551,14 +571,15 @@
       <dd>Fired whenever new input is read from the hidden textarea\n
       (typed or pasted by the user).</dd>\n
 \n
-      <dt id="event_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (instance: CodeMirror, selection: {head, anchor})</code></dt>\n
+      <dt id="event_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (instance: CodeMirror, obj: {ranges, update})</code></dt>\n
       <dd>This event is fired before the selection is moved. Its\n
-      handler may modify the resulting selection head and anchor.\n
-      The <code>selection</code> parameter is an object\n
-      with <code>head</code> and <code>anchor</code> properties\n
-      holding <code>{line, ch}</code> objects, which the handler can\n
-      read and update. Handlers for this event have the same\n
-      restriction\n
+      handler may inspect the set of selection ranges, present as an\n
+      array of <code>{anchor, head}</code> objects in\n
+      the <code>ranges</code> property of the <code>obj</code>\n
+      argument, and optionally change them by calling\n
+      the <code>update</code> method on this object, passing an array\n
+      of ranges in the same format. Handlers for this event have the\n
+      same restriction\n
       as <a href="#event_beforeChange"><code>"beforeChange"</code></a>\n
       handlers â they should not do anything to directly update the\n
       state of the editor.</dd>\n
@@ -601,6 +622,13 @@
       <dt id="event_scroll"><code><strong>"scroll"</strong> (instance: CodeMirror)</code></dt>\n
       <dd>Fires when the editor is scrolled.</dd>\n
 \n
+      <dt id="event_scrollCursorIntoView"><code><strong>"scrollCursorIntoView"</strong> (instance: CodeMirror, event: Event)</code></dt>\n
+      <dd>Fires when the editor tries to scroll its cursor into view.\n
+      Can be hooked into to take care of additional scrollable\n
+      containers around the editor. When the event object has\n
+      its <code>preventDefault</code> method called, CodeMirror will\n
+      not itself try to scroll the window.</dd>\n
+\n
       <dt id="event_update"><code><strong>"update"</strong> (instance: CodeMirror)</code></dt>\n
       <dd>Will be fired whenever CodeMirror updates its DOM display.</dd>\n
 \n
@@ -632,9 +660,7 @@
       document. <code>changeObj</code> has a similar type as the\n
       object passed to the\n
       editor\'s <a href="#event_change"><code>"change"</code></a>\n
-      event, but it never has a <code>next</code> property, because\n
-      document change events are not batched (whereas editor change\n
-      events are).</dd>\n
+      event.</dd>\n
 \n
       <dt id="event_doc_beforeChange"><code><strong>"beforeChange"</strong> (doc: CodeMirror.Doc, change: object)</code></dt>\n
       <dd>See the <a href="#event_beforeChange">description of the\n
@@ -713,11 +739,15 @@
 </section>\n
 \n
 <section id=keymaps>\n
-    <h2>Keymaps</h2>\n
+    <h2>Key Maps</h2>\n
 \n
-    <p>Keymaps are ways to associate keys with functionality. A keymap\n
+    <p>Key maps are ways to associate keys with functionality. A key map\n
     is an object mapping strings that identify the keys to functions\n
     that implement their functionality.</p>\n
+\n
+    <p>The CodeMirror distributions comes\n
+    with <a href="../demo/emacs.html">Emacs</a>, <a href="../demo/vim.html">Vim</a>,\n
+    and <a href="../demo/sublime.html">Sublime Text</a>-style keymaps.</p>\n
 \n
     <p>Keys are identified either by name or by character.\n
     The <code>CodeMirror.keyNames</code> object defines names for\n
@@ -725,65 +755,272 @@
     names defined here are <code>Enter</code>, <code>F5</code>,\n
     and <code>Q</code>. These can be prefixed\n
     with <code>Shift-</code>, <code>Cmd-</code>, <code>Ctrl-</code>,\n
-    and <code>Alt-</code> (in that order!) to specify a modifier. So\n
-    for example, <code>Shift-Ctrl-Space</code> would be a valid key\n
+    and <code>Alt-</code> to specify a modifier. So for\n
+    example, <code>Shift-Ctrl-Space</code> would be a valid key\n
     identifier.</p>\n
 \n
     <p>Common example: map the Tab key to insert spaces instead of a tab\n
     character.</p>\n
 \n
     <pre data-lang="javascript">\n
-{\n
+editor.setOption("extraKeys", {\n
   Tab: function(cm) {\n
     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");\n
-    cm.replaceSelection(spaces, "end", "+input");\n
+    cm.replaceSelection(spaces);\n
   }\n
-}</pre>\n
+});</pre>\n
 \n
     <p>Alternatively, a character can be specified directly by\n
     surrounding it in single quotes, for example <code>\'$\'</code>\n
     or <code>\'q\'</code>. Due to limitations in the way browsers fire\n
     key events, these may not be prefixed with modifiers.</p>\n
 \n
-    <p>The <code>CodeMirror.keyMap</code> object associates keymaps\n
-    with names. User code and keymap definitions can assign extra\n
-    properties to this object. Anywhere where a keymap is expected, a\n
+    <p id="normalizeKeyMap">Multi-stroke key bindings can be specified\n
+    by separating the key names by spaces in the property name, for\n
+    example <code>Ctrl-X Ctrl-V</code>. When a map contains\n
+    multi-stoke bindings or keys with modifiers that are not specified\n
+    in the default order (<code>Shift-Cmd-Ctrl-Alt</code>), you must\n
+    call <code>CodeMirror.normalizeKeyMap</code> on it before it can\n
+    be used. This function takes a keymap and modifies it to normalize\n
+    modifier order and properly recognize multi-stroke bindings. It\n
+    will return the keymap itself.</p>\n
+\n
+    <p>The <code>CodeMirror.keyMap</code> object associates key maps\n
+    with names. User code and key map definitions can assign extra\n
+    properties to this object. Anywhere where a key map is expected, a\n
     string can be given, which will be looked up in this object. It\n
-    also contains the <code>"default"</code> keymap holding the\n
+    also contains the <code>"default"</code> key map holding the\n
     default bindings.</p>\n
 \n
-    <p id="commands">The values of properties in keymaps can be either functions of\n
+    <p>The values of properties in key maps can be either functions of\n
     a single argument (the CodeMirror instance), strings, or\n
-    <code>false</code>. Such strings refer to properties of the\n
-    <code>CodeMirror.commands</code> object, which defines a number of\n
-    common commands that are used by the default keybindings, and maps\n
-    them to functions. If the property is set to <code>false</code>,\n
-    CodeMirror leaves handling of the key up to the browser. A key\n
-    handler function may return <code>CodeMirror.Pass</code> to indicate\n
-    that it has decided not to handle the key, and other handlers (or\n
-    the default behavior) should be given a turn.</p>\n
+    <code>false</code>. Strings refer\n
+    to <a href="#commands">commands</a>, which are described below. If\n
+    the property is set to <code>false</code>, CodeMirror leaves\n
+    handling of the key up to the browser. A key handler function may\n
+    return <code>CodeMirror.Pass</code> to indicate that it has\n
+    decided not to handle the key, and other handlers (or the default\n
+    behavior) should be given a turn.</p>\n
 \n
     <p>Keys mapped to command names that start with the\n
-    characters <code>"go"</code> (which should be used for\n
+    characters <code>"go"</code> or to functions that have a\n
+    truthy <code>motion</code> property (which should be used for\n
     cursor-movement actions) will be fired even when an\n
     extra <code>Shift</code> modifier is present (i.e. <code>"Up":\n
     "goLineUp"</code> matches both up and shift-up). This is used to\n
     easily implement shift-selection.</p>\n
 \n
-    <p>Keymaps can defer to each other by defining\n
+    <p>Key maps can defer to each other by defining\n
     a <code>fallthrough</code> property. This indicates that when a\n
     key is not found in the map itself, one or more other maps should\n
-    be searched. It can hold either a single keymap or an array of\n
-    keymaps.</p>\n
+    be searched. It can hold either a single key map or an array of\n
+    key maps.</p>\n
 \n
-    <p>When a keymap contains a <code>nofallthrough</code> property\n
-    set to <code>true</code>, keys matched against that map will be\n
-    ignored if they don\'t match any of the bindings in the map (no\n
-    further child maps will be tried). When\n
-    the <code>disableInput</code> property is set\n
-    to <code>true</code>, the default effect of inserting a character\n
-    will be suppressed when the keymap is active as the top-level\n
-    map.</p>\n
+    <p>When a key map needs to set something up when it becomes\n
+    active, or tear something down when deactivated, it can\n
+    contain <code>attach</code> and/or <code>detach</code> properties,\n
+    which should hold functions that take the editor instance and the\n
+    next or previous keymap. Note that this only works for the\n
+    <a href="#option_keyMap">top-level keymap</a>, not for fallthrough\n
+    maps or maps added\n
+    with <a href="#option_extraKeys"><code>extraKeys</code></a>\n
+    or <a href="#addKeyMap"><code>addKeyMap</code></a>.</p>\n
+</section>\n
+\n
+<section id=commands>\n
+    <h2>Commands</h2>\n
+\n
+    <p>Commands are parameter-less actions that can be performed on an\n
+    editor. Their main use is for key bindings. Commands are defined by\n
+    adding properties to the <code>CodeMirror.commands</code> object.\n
+    A number of common commands are defined by the library itself,\n
+    most of them used by the default key bindings. The value of a\n
+    command property must be a function of one argument (an editor\n
+    instance).</p>\n
+\n
+    <p>Some of the commands below are referenced in the default\n
+    key map, but not defined by the core library. These are intended to\n
+    be defined by user code or addons.</p>\n
+\n
+    <p>Commands can also be run with\n
+    the <a href="#execCommand"><code>execCommand</code></a>\n
+    method.</p>\n
+\n
+    <dl>\n
+      <dt class=command id=command_selectAll><code><strong>selectAll</strong></code><span class=keybinding>Ctrl-A (PC), Cmd-A (Mac)</span></dt>\n
+      <dd>Select the whole content of the editor.</dd>\n
+\n
+      <dt class=command id=command_singleSelection><code><strong>singleSelection</strong></code><span class=keybinding>Esc</span></dt>\n
+      <dd>When multiple selections are present, this deselects all but\n
+      the primary selection.</dd>\n
+\n
+      <dt class=command id=command_killLine><code><strong>killLine</strong></code><span class=keybinding>Ctrl-K (Mac)</span></dt>\n
+      <dd>Emacs-style line killing. Deletes the part of the line after\n
+      the cursor. If that consists only of whitespace, the newline at\n
+      the end of the line is also deleted.</dd>\n
+\n
+      <dt class=command id=command_deleteLine><code><strong>deleteLine</strong></code><span class=keybinding>Ctrl-D (PC), Cmd-D (Mac)</span></dt>\n
+      <dd>Deletes the whole line under the cursor, including newline at the end.</dd>\n
+\n
+      <dt class=command id=command_delLineLeft><code><strong>delLineLeft</strong></code></dt>\n
+      <dd>Delete the part of the line before the cursor.</dd>\n
+\n
+      <dt class=command id=command_delWrappedLineLeft><code><strong>delWrappedLineLeft</strong></code><span class=keybinding>Cmd-Backspace (Mac)</span></dt>\n
+      <dd>Delete the part of the line from the left side of the visual line the cursor is on to the cursor.</dd>\n
+\n
+      <dt class=command id=command_delWrappedLineRight><code><strong>delWrappedLineRight</strong></code><span class=keybinding>Cmd-Delete (Mac)</span></dt>\n
+      <dd>Delete the part of the line from the cursor to the right side of the visual line the cursor is on.</dd>\n
+\n
+      <dt class=command id=command_undo><code><strong>undo</strong></code><span class=keybinding>Ctrl-Z (PC), Cmd-Z (Mac)</span></dt>\n
+      <dd>Undo the last change.</dd>\n
+\n
+      <dt class=command id=command_redo><code><strong>redo</strong></code><span class=keybinding>Ctrl-Y (PC), Shift-Cmd-Z (Mac), Cmd-Y (Mac)</span></dt>\n
+      <dd>Redo the last undone change.</dd>\n
+\n
+      <dt class=command id=command_undoSelection><code><strong>undoSelection</strong></code><span class=keybinding>Ctrl-U (PC), Cmd-U (Mac)</span></dt>\n
+      <dd>Undo the last change to the selection, or if there are no\n
+      selection-only changes at the top of the history, undo the last\n
+      change.</dd>\n
+\n
+      <dt class=command id=command_redoSelection><code><strong>redoSelection</strong></code><span class=keybinding>Alt-U (PC), Shift-Cmd-U (Mac)</span></dt>\n
+      <dd>Redo the last change to the selection, or the last text change if\n
+      no selection changes remain.</dd>\n
+\n
+      <dt class=command id=command_goDocStart><code><strong>goDocStart</strong></code><span class=keybinding>Ctrl-Up (PC), Cmd-Up (Mac), Cmd-Home (Mac)</span></dt>\n
+      <dd>Move the cursor to the start of the document.</dd>\n
+\n
+      <dt class=command id=command_goDocEnd><code><strong>goDocEnd</strong></code><span class=keybinding>Ctrl-Down (PC), Cmd-End (Mac), Cmd-Down (Mac)</span></dt>\n
+      <dd>Move the cursor to the end of the document.</dd>\n
+\n
+      <dt class=command id=command_goLineStart><code><strong>goLineStart</strong></code><span class=keybinding>Alt-Left (PC), Ctrl-A (Mac)</span></dt>\n
+      <dd>Move the cursor to the start of the line.</dd>\n
+\n
+      <dt class=command id=command_goLineStartSmart><code><strong>goLineStartSmart</strong></code><span class=keybinding>Home</span></dt>\n
+      <dd>Move to the start of the text on the line, or if we are\n
+      already there, to the actual start of the line (including\n
+      whitespace).</dd>\n
+\n
+      <dt class=command id=command_goLineEnd><code><strong>goLineEnd</strong></code><span class=keybinding>Alt-Right (PC), Ctrl-E (Mac)</span></dt>\n
+      <dd>Move the cursor to the end of the line.</dd>\n
+\n
+      <dt class=command id=command_goLineRight><code><strong>goLineRight</strong></code><span class=keybinding>Cmd-Right (Mac)</span></dt>\n
+      <dd>Move the cursor to the right side of the visual line it is on.</dd>\n
+\n
+      <dt class=command id=command_goLineLeft><code><strong>goLineLeft</strong></code><span class=keybinding>Cmd-Left (Mac)</span></dt>\n
+      <dd>Move the cursor to the left side of the visual line it is on. If\n
+      this line is wrapped, that may not be the start of the line.</dd>\n
+\n
+      <dt class=command id=command_goLineLeftSmart><code><strong>goLineLeftSmart</strong></code></dt>\n
+      <dd>Move the cursor to the left side of the visual line it is\n
+      on. If that takes it to the start of the line, behave\n
+      like <a href="#command_goLineStartSmart"><code>goLineStartSmart</code></a>.</dd>\n
+\n
+      <dt class=command id=command_goLineUp><code><strong>goLineUp</strong></code><span class=keybinding>Up, Ctrl-P (Mac)</span></dt>\n
+      <dd>Move the cursor up one line.</dd>\n
+\n
+      <dt class=command id=command_goLineDown><code><strong>goLineDown</strong></code><span class=keybinding>Down, Ctrl-N (Mac)</span></dt>\n
+      <dd>Move down one line.</dd>\n
+\n
+      <dt class=command id=command_goPageUp><code><strong>goPageUp</strong></code><span class=keybinding>PageUp, Shift-Ctrl-V (Mac)</span></dt>\n
+      <dd>Move the cursor up one screen, and scroll up by the same distance.</dd>\n
+\n
+      <dt class=command id=command_goPageDown><code><strong>goPageDown</strong></code><span class=keybinding>PageDown, Ctrl-V (Mac)</span></dt>\n
+      <dd>Move the cursor down one screen, and scroll down by the same distance.</dd>\n
+\n
+      <dt class=command id=command_goCharLeft><code><strong>goCharLeft</strong></code><span class=keybinding>Left, Ctrl-B (Mac)</span></dt>\n
+      <dd>Move the cursor one character left, going to the previous line\n
+      when hitting the start of line.</dd>\n
+\n
+      <dt class=command id=command_goCharRight><code><strong>goCharRight</strong></code><span class=keybinding>Right, Ctrl-F (Mac)</span></dt>\n
+      <dd>Move the cursor one character right, going to the next line\n
+      when hitting the end of line.</dd>\n
+\n
+      <dt class=command id=command_goColumnLeft><code><strong>goColumnLeft</strong></code></dt>\n
+      <dd>Move the cursor one character left, but don\'t cross line boundaries.</dd>\n
+\n
+      <dt class=command id=command_goColumnRight><code><strong>goColumnRight</strong></code></dt>\n
+      <dd>Move the cursor one character right, don\'t cross line boundaries.</dd>\n
+\n
+      <dt class=command id=command_goWordLeft><code><strong>goWordLeft</strong></code><span class=keybinding>Alt-B (Mac)</span></dt>\n
+      <dd>Move the cursor to the start of the previous word.</dd>\n
+\n
+      <dt class=command id=command_goWordRight><code><strong>goWordRight</strong></code><span class=keybinding>Alt-F (Mac)</span></dt>\n
+      <dd>Move the cursor to the end of the next word.</dd>\n
+\n
+      <dt class=command id=command_goGroupLeft><code><strong>goGroupLeft</strong></code><span class=keybinding>Ctrl-Left (PC), Alt-Left (Mac)</span></dt>\n
+      <dd>Move to the left of the group before the cursor. A group is\n
+      a stretch of word characters, a stretch of punctuation\n
+      characters, a newline, or a stretch of <em>more than one</em>\n
+      whitespace character.</dd>\n
+\n
+      <dt class=command id=command_goGroupRight><code><strong>goGroupRight</strong></code><span class=keybinding>Ctrl-Right (PC), Alt-Right (Mac)</span></dt>\n
+      <dd>Move to the right of the group after the cursor\n
+      (see <a href="#command_goGroupLeft">above</a>).</dd>\n
+\n
+      <dt class=command id=command_delCharBefore><code><strong>delCharBefore</strong></code><span class=keybinding>Shift-Backspace, Ctrl-H (Mac)</span></dt>\n
+      <dd>Delete the character before the cursor.</dd>\n
+\n
+      <dt class=command id=command_delCharAfter><code><strong>delCharAfter</strong></code><span class=keybinding>Delete, Ctrl-D (Mac)</span></dt>\n
+      <dd>Delete the character after the cursor.</dd>\n
+\n
+      <dt class=command id=command_delWordBefore><code><strong>delWordBefore</strong></code><span class=keybinding>Alt-Backspace (Mac)</span></dt>\n
+      <dd>Delete up to the start of the word before the cursor.</dd>\n
+\n
+      <dt class=command id=command_delWordAfter><code><strong>delWordAfter</strong></code><span class=keybinding>Alt-D (Mac)</span></dt>\n
+      <dd>Delete up to the end of the word after the cursor.</dd>\n
+\n
+      <dt class=command id=command_delGroupBefore><code><strong>delGroupBefore</strong></code><span class=keybinding>Ctrl-Backspace (PC), Alt-Backspace (Mac)</span></dt>\n
+      <dd>Delete to the left of the <a href="#command_goGroupLeft">group</a> before the cursor.</dd>\n
+\n
+      <dt class=command id=command_delGroupAfter><code><strong>delGroupAfter</strong></code><span class=keybinding>Ctrl-Delete (PC), Ctrl-Alt-Backspace (Mac), Alt-Delete (Mac)</span></dt>\n
+      <dd>Delete to the start of the <a href="#command_goGroupLeft">group</a> after the cursor.</dd>\n
+\n
+      <dt class=command id=command_indentAuto><code><strong>indentAuto</strong></code><span class=keybinding>Shift-Tab</span></dt>\n
+      <dd>Auto-indent the current line or selection.</dd>\n
+\n
+      <dt class=command id=command_indentMore><code><strong>indentMore</strong></code><span class=keybinding>Ctrl-] (PC), Cmd-] (Mac)</span></dt>\n
+      <dd>Indent the current line or selection by one <a href="#option_indentUnit">indent unit</a>.</dd>\n
+\n
+      <dt class=command id=command_indentLess><code><strong>indentLess</strong></code><span class=keybinding>Ctrl-[ (PC), Cmd-[ (Mac)</span></dt>\n
+      <dd>Dedent the current line or selection by one <a href="#option_indentUnit">indent unit</a>.</dd>\n
+\n
+      <dt class=command id=command_insertTab><code><strong>insertTab</strong></code></dt>\n
+      <dd>Insert a tab character at the cursor.</dd>\n
+\n
+      <dt class=command id=command_insertSoftTab><code><strong>insertSoftTab</strong></code></dt>\n
+      <dd>Insert the amount of spaces that match the width a tab at\n
+      the cursor position would have.</dd>\n
+\n
+      <dt class=command id=command_defaultTab><code><strong>defaultTab</strong></code><span class=keybinding>Tab</span></dt>\n
+      <dd>If something is selected, indent it by\n
+      one <a href="#option_indentUnit">indent unit</a>. If nothing is\n
+      selected, insert a tab character.</dd>\n
+\n
+      <dt class=command id=command_transposeChars><code><strong>transposeChars</strong></code><span class=keybinding>Ctrl-T (Mac)</span></dt>\n
+      <dd>Swap the characters before and after the cursor.</dd>\n
+\n
+      <dt class=command id=command_newlineAndIndent><code><strong>newlineAndIndent</strong></code><span class=keybinding>Enter</span></dt>\n
+      <dd>Insert a newline and auto-indent the new line.</dd>\n
+\n
+      <dt class=command id=command_toggleOverwrite><code><strong>toggleOverwrite</strong></code><span class=keybinding>Insert</span></dt>\n
+      <dd>Flip the <a href="#toggleOverwrite">overwrite</a> flag.</dd>\n
+\n
+      <dt class=command id=command_save><code><strong>save</strong></code><span class=keybinding>Ctrl-S (PC), Cmd-S (Mac)</span></dt>\n
+      <dd>Not defined by the core library, only referred to in\n
+      key maps. Intended to provide an easy way for user code to define\n
+      a save command.</dd>\n
+\n
+      <dt class=command id=command_find><code><strong>find</strong></code><span class=keybinding>Ctrl-F (PC), Cmd-F (Mac)</span></dt>\n
+      <dt class=command id=command_findNext><code><strong>findNext</strong></code><span class=keybinding>Ctrl-G (PC), Cmd-G (Mac)</span></dt>\n
+      <dt class=command id=command_findPrev><code><strong>findPrev</strong></code><span class=keybinding>Shift-Ctrl-G (PC), Shift-Cmd-G (Mac)</span></dt>\n
+      <dt class=command id=command_replace><code><strong>replace</strong></code><span class=keybinding>Shift-Ctrl-F (PC), Cmd-Alt-F (Mac)</span></dt>\n
+      <dt class=command id=command_replaceAll><code><strong>replaceAll</strong></code><span class=keybinding>Shift-Ctrl-R (PC), Shift-Cmd-Alt-F (Mac)</span></dt>\n
+      <dd>Not defined by the core library, but defined in\n
+      the <a href="#addon_search">search addon</a> (or custom client\n
+      addons).</dd>\n
+\n
+    </dl>\n
+\n
 </section>\n
 \n
 <section id=styling>\n
@@ -807,16 +1044,12 @@
       <dd>The outer element of the editor. This should be used for the\n
       editor width, height, borders and positioning. Can also be used\n
       to set styles that should hold for everything inside the editor\n
-      (such as font and font size), or to set a background.</dd>\n
-\n
-      <dt id="class_CodeMirror_scroll"><code><strong>CodeMirror-scroll</strong></code></dt>\n
-      <dd>Whether the editor scrolls (<code>overflow: auto</code> +\n
-      fixed height). By default, it does. Setting\n
-      the <code>CodeMirror</code> class to have <code>height:\n
-      auto</code> and giving this class <code>overflow-x: auto;\n
-      overflow-y: hidden;</code> will cause the editor\n
-      to <a href="../demo/resize.html">resize to fit its\n
-      content</a>.</dd>\n
+      (such as font and font size), or to set a background. Setting\n
+      this class\' <code>height</code> style to <code>auto</code> will\n
+      make the editor <a href="../demo/resize.html">resize to fit its\n
+      content</a> (it is recommended to also set\n
+      the <a href="#option_viewportMargin"><code>viewportMargin</code>\n
+      option</a> to <code>Infinity</code> when doing this.</dd>\n
 \n
       <dt id="class_CodeMirror_focused"><code><strong>CodeMirror-focused</strong></code></dt>\n
       <dd>Whenever the editor is focused, the top element gets this\n
@@ -926,19 +1159,20 @@
       should be <code>{line, ch}</code> objects. An optional third\n
       argument can be given to indicate the line separator string to\n
       use (defaults to <code>"\\n"</code>).</dd>\n
-      <dt id="replaceRange"><code><strong>doc.replaceRange</strong>(replacement: string, from: {line, ch}, to: {line, ch})</code></dt>\n
+      <dt id="replaceRange"><code><strong>doc.replaceRange</strong>(replacement: string, from: {line, ch}, to:Â {line,Â ch}, ?origin:Â string)</code></dt>\n
       <dd>Replace the part of the document between <code>from</code>\n
       and <code>to</code> with the given string. <code>from</code>\n
       and <code>to</code> must be <code>{line, ch}</code>\n
       objects. <code>to</code> can be left off to simply insert the\n
-      string at position <code>from</code>.</dd>\n
+      string at position <code>from</code>. When <code>origin</code>\n
+      is given, it will be passed on\n
+      to <a href="#event_change"><code>"change"</code> events</a>, and\n
+      its first letter will be used to determine whether this change\n
+      can be merged with previous history events, in the way described\n
+      for <a href="#selection_origin">selection origins</a>.</dd>\n
 \n
       <dt id="getLine"><code><strong>doc.getLine</strong>(n: integer) â string</code></dt>\n
       <dd>Get the content of line <code>n</code>.</dd>\n
-      <dt id="setLine"><code><strong>doc.setLine</strong>(n: integer, text: string)</code></dt>\n
-      <dd>Set the content of line <code>n</code>.</dd>\n
-      <dt id="removeLine"><code><strong>doc.removeLine</strong>(n: integer)</code></dt>\n
-      <dd>Remove the given line from the document.</dd>\n
 \n
       <dt id="lineCount"><code><strong>doc.lineCount</strong>() â integer</code></dt>\n
       <dd>Get the number of lines in the editor.</dd>\n
@@ -999,56 +1233,128 @@
     <h3 id="api_selection">Cursor and selection methods</h3>\n
 \n
     <dl>\n
-      <dt id="getSelection"><code><strong>doc.getSelection</strong>() â string</code></dt>\n
-      <dd>Get the currently selected code.</dd>\n
-      <dt id="replaceSelection"><code><strong>doc.replaceSelection</strong>(replacement: string, ?collapse: string)</code></dt>\n
-      <dd>Replace the selection with the given string. By default, the\n
-      new selection will span the inserted text. The\n
-      optional <code>collapse</code> argument can be used to change\n
-      thisâpassing <code>"start"</code> or <code>"end"</code> will\n
-      collapse the selection to the start or end of the inserted\n
-      text.</dd>\n
+      <dt id="getSelection"><code><strong>doc.getSelection</strong>(?lineSep: string) â string</code></dt>\n
+      <dd>Get the currently selected code. Optionally pass a line\n
+      separator to put between the lines in the output. When multiple\n
+      selections are present, they are concatenated with instances\n
+      of <code>lineSep</code> in between.</dd>\n
+      <dt id="getSelections"><code><strong>doc.getSelections</strong>(?lineSep: string) â string</code></dt>\n
+      <dd>Returns an array containing a string for each selection,\n
+      representing the content of the selections.</dd>\n
+\n
+      <dt id="replaceSelection"><code><strong>doc.replaceSelection</strong>(replacement: string, ?select: string)</code></dt>\n
+      <dd>Replace the selection(s) with the given string. By default,\n
+      the new selection ends up after the inserted text. The\n
+      optional <code>select</code> argument can be used to change\n
+      thisâpassing <code>"around"</code> will cause the new text to be\n
+      selected, passing <code>"start"</code> will collapse the\n
+      selection to the start of the inserted text.</dd>\n
+      <dt id="replaceSelections"><code><strong>doc.replaceSelections</strong>(replacements: array&lt;string&gt;, ?select: string)</code></dt>\n
+      <dd>The length of the given array should be the same as the\n
+      number of active selections. Replaces the content of the\n
+      selections with the strings in the array.\n
+      The <code>select</code> argument works the same as\n
+      in <a href="#replaceSelection"><code>replaceSelection</code></a>.</dd>\n
 \n
       <dt id="getCursor"><code><strong>doc.getCursor</strong>(?start: string) â {line, ch}</code></dt>\n
-      <dd><code>start</code> is a an optional string indicating which\n
-      end of the selection to return. It may\n
-      be <code>"start"</code>, <code>"end"</code>, <code>"head"</code>\n
+      <dd>Retrieve one end of the <em>primary</em>\n
+      selection. <code>start</code> is a an optional string indicating\n
+      which end of the selection to return. It may\n
+      be <code>"from"</code>, <code>"to"</code>, <code>"head"</code>\n
       (the side of the selection that moves when you press\n
       shift+arrow), or <code>"anchor"</code> (the fixed side of the\n
       selection). Omitting the argument is the same as\n
       passing <code>"head"</code>. A <code>{line, ch}</code> object\n
       will be returned.</dd>\n
+      <dt id="listSelections"><code><strong>doc.listSelections</strong>() â array&lt;{anchor, head}&gt;</code></dt>\n
+      <dd>Retrieves a list of all current selections. These will\n
+      always be sorted, and never overlap (overlapping selections are\n
+      merged). Each object in the array contains <code>anchor</code>\n
+      and <code>head</code> properties referring to <code>{line,\n
+      ch}</code> objects.</dd>\n
+\n
       <dt id="somethingSelected"><code><strong>doc.somethingSelected</strong>() â boolean</code></dt>\n
       <dd>Return true if any text is selected.</dd>\n
-      <dt id="setCursor"><code><strong>doc.setCursor</strong>(pos: {line, ch})</code></dt>\n
+      <dt id="setCursor"><code><strong>doc.setCursor</strong>(pos: {line, ch}|number, ?ch: number, ?options: object)</code></dt>\n
       <dd>Set the cursor position. You can either pass a\n
       single <code>{line, ch}</code> object, or the line and the\n
-      character as two separate parameters.</dd>\n
-      <dt id="setSelection"><code><strong>doc.setSelection</strong>(anchor: {line, ch}, ?head: {line, ch})</code></dt>\n
-      <dd>Set the selection range. <code>anchor</code>\n
+      character as two separate parameters. Will replace all\n
+      selections with a single, empty selection at the given position.\n
+      The supported options are the same as for <a href="#setSelection"><code>setSelection</code></a>.</dd>\n
+\n
+      <dt id="setSelection"><code><strong>doc.setSelection</strong>(anchor: {line, ch}, ?head: {line, ch}, ?options: object)</code></dt>\n
+      <dd>Set a single selection range. <code>anchor</code>\n
       and <code>head</code> should be <code>{line, ch}</code>\n
       objects. <code>head</code> defaults to <code>anchor</code> when\n
-      not given.</dd>\n
-      <dt id="extendSelection"><code><strong>doc.extendSelection</strong>(from: {line, ch}, ?to: {line, ch})</code></dt>\n
+      not given. These options are supported:\n
+      <dl>\n
+        <dt id="selection_scroll"><code><strong>scroll</strong>: boolean</code></dt>\n
+        <dd>Determines whether the selection head should be scrolled\n
+        into view. Defaults to true.</dd>\n
+        <dt id="selection_origin"><code><strong>origin</strong>: string</code></dt>\n
+        <dd>Detemines whether the selection history event may be\n
+        merged with the previous one. When an origin starts with the\n
+        character <code>+</code>, and the last recorded selection had\n
+        the same origin and was similar (close\n
+        in <a href="#option_historyEventDelay">time</a>, both\n
+        collapsed or both non-collapsed), the new one will replace the\n
+        old one. When it starts with <code>*</code>, it will always\n
+        replace the previous event (if that had the same origin).\n
+        Built-in motion uses the <code>"+move"</code> origin.</dd>\n
+        <dt id="selection_bias"><code><strong>bias</strong>: number</code></dt>\n
+        <dd>Determine the direction into which the selection endpoints\n
+        should be adjusted when they fall inside\n
+        an <a href="#mark_atomic">atomic</a> range. Can be either -1\n
+        (backward) or 1 (forward). When not given, the bias will be\n
+        based on the relative position of the old selectionâthe editor\n
+        will try to move further away from that, to prevent getting\n
+        stuck.</dd>\n
+      </dl></dd>\n
+\n
+      <dt id="setSelections"><code><strong>doc.setSelections</strong>(ranges: array&lt;{anchor, head}&gt;, ?primary: integer, ?options: object)</code></dt>\n
+      <dd>Sets a new set of selections. There must be at least one\n
+      selection in the given array. When <code>primary</code> is a\n
+      number, it determines which selection is the primary one. When\n
+      it is not given, the primary index is taken from the previous\n
+      selection, or set to the last range if the previous selection\n
+      had less ranges than the new one. Supports the same options\n
+      as <a href="#setSelection"><code>setSelection</code></a>.</dd>\n
+      <dt id="addSelection"><code><strong>doc.addSelection</strong>(anchor: {line, ch}, ?head: {line, ch})</code></dt>\n
+      <dd>Adds a new selection to the existing set of selections, and\n
+      makes it the primary selection.</dd>\n
+\n
+      <dt id="extendSelection"><code><strong>doc.extendSelection</strong>(from: {line, ch}, ?to: {line, ch}, ?options: object)</code></dt>\n
       <dd>Similar\n
       to <a href="#setSelection"><code>setSelection</code></a>, but\n
       will, if shift is held or\n
       the <a href="#setExtending">extending</a> flag is set, move the\n
       head of the selection while leaving the anchor at its current\n
-      place. <code>to</code> is optional, and can be passed to\n
-      ensure a region (for example a word or paragraph) will end up\n
-      selected (in addition to whatever lies between that region and\n
-      the current anchor).</dd>\n
+      place. <code>to</code> is optional, and can be passed to ensure\n
+      a region (for example a word or paragraph) will end up selected\n
+      (in addition to whatever lies between that region and the\n
+      current anchor). When multiple selections are present, all but\n
+      the primary selection will be dropped by this method.\n
+      Supports the same options as <a href="#setSelection"><code>setSelection</code></a>.</dd>\n
+      <dt id="extendSelections"><code><strong>doc.extendSelections</strong>(heads: array&lt;{line, ch}&gt;, ?options: object)</code></dt>\n
+      <dd>An equivalent\n
+      of <a href="#extendSelection"><code>extendSelection</code></a>\n
+      that acts on all selections at once.</dd>\n
+      <dt id="extendSelectionsBy"><code><strong>doc.extendSelectionsBy</strong>(f: function(range: {anchor, head}) âÂ {anchor,Â head}), ?options: object)</code></dt>\n
+      <dd>Applies the given function to all existing selections, and\n
+      calls <a href="#extendSelections"><code>extendSelections</code></a>\n
+      on the result.</dd>\n
       <dt id="setExtending"><code><strong>doc.setExtending</strong>(value: boolean)</code></dt>\n
       <dd>Sets or clears the \'extending\' flag, which acts similar to\n
       the shift key, in that it will cause cursor movement and calls\n
       to <a href="#extendSelection"><code>extendSelection</code></a>\n
       to leave the selection anchor in place.</dd>\n
+      <dt id="getExtending"><code><strong>doc.getExtending</strong>() â boolean</code></dt>\n
+      <dd>Get the value of the \'extending\' flag.</dd>\n
 \n
       <dt id="hasFocus"><code><strong>cm.hasFocus</strong>() â boolean</code></dt>\n
       <dd>Tells you whether the editor currently has focus.</dd>\n
 \n
-      <dt id="findPosH"><code><strong>cm.findPosH</strong>(start: {line, ch}, amount: integer, unit: string, visually: boolean) â {line, ch, ?hitSide: boolean}</code></dt>\n
+      <dt id="findPosH"><code><strong>cm.findPosH</strong>(start: {line, ch}, amount: integer, unit: string, visually:Â boolean) âÂ {line, ch, ?hitSide: boolean}</code></dt>\n
       <dd>Used to find the target position for horizontal cursor\n
       motion. <code>start</code> is a <code>{line, ch}</code>\n
       object, <code>amount</code> an integer (may be negative),\n
@@ -1067,6 +1373,10 @@
       be <code>"line"</code> or <code>"page"</code>. The other\n
       arguments and the returned value have the same interpretation as\n
       they have in <code>findPosH</code>.</dd>\n
+\n
+      <dt id="findWordAt"><code><strong>cm.findWordAt</strong>(pos: {line, ch}) â {anchor: {line, ch}, head: {line, ch}}</code></dt>\n
+      <dd>Returns the start and end of the \'word\' (the stretch of\n
+      letters, whitespace, or punctuation) at the given position.</dd>\n
     </dl>\n
 \n
     <h3 id="api_configuration">Configuration methods</h3>\n
@@ -1082,7 +1392,7 @@
       editor instance.</dd>\n
 \n
       <dt id="addKeyMap"><code><strong>cm.addKeyMap</strong>(map: object, bottom: boolean)</code></dt>\n
-      <dd>Attach an additional <a href="#keymaps">keymap</a> to the\n
+      <dd>Attach an additional <a href="#keymaps">key map</a> to the\n
       editor. This is mostly useful for addons that need to register\n
       some key handlers without trampling on\n
       the <a href="#option_extraKeys"><code>extraKeys</code></a>\n
@@ -1091,14 +1401,14 @@
       and <a href="#option_keyMap"><code>keyMap</code></a> options,\n
       and between them, the maps added earlier have a lower precedence\n
       than those added later, unless the <code>bottom</code> argument\n
-      was passed, in which case they end up below other keymaps added\n
+      was passed, in which case they end up below other key maps added\n
       with this method.</dd>\n
       <dt id="removeKeyMap"><code><strong>cm.removeKeyMap</strong>(map: object)</code></dt>\n
       <dd>Disable a keymap added\n
       with <a href="#addKeyMap"><code>addKeyMap</code></a>. Either\n
-      pass in the keymap object itself, or a string, which will be\n
+      pass in the key map object itself, or a string, which will be\n
       compared against the <code>name</code> property of the active\n
-      keymaps.</dd>\n
+      key maps.</dd>\n
 \n
       <dt id="addOverlay"><code><strong>cm.addOverlay</strong>(mode: string|object, ?options: object)</code></dt>\n
       <dd>Enable a highlighting overlay. This is a stateless mini-mode\n
@@ -1203,6 +1513,11 @@
       <dt id="redo"><code><strong>doc.redo</strong>()</code></dt>\n
       <dd>Redo one undone edit.</dd>\n
 \n
+      <dt id="undoSelection"><code><strong>doc.undoSelection</strong>()</code></dt>\n
+      <dd>Undo one edit or selection change.</dd>\n
+      <dt id="redoSelection"><code><strong>doc.redoSelection</strong>()</code></dt>\n
+      <dd>Redo one undone edit or selection change.</dd>\n
+\n
       <dt id="historySize"><code><strong>doc.historySize</strong>() â {undo: integer, redo: integer}</code></dt>\n
       <dd>Returns an object with <code>{undo, redo}</code> properties,\n
       both of which hold integers, indicating the amount of stored\n
@@ -1288,6 +1603,8 @@
         is part of the marker.</dd>\n
         <dt id="mark_endStyle"><code><strong>endStyle</strong>: string</code></dt><dd>Equivalent\n
         to <code>startStyle</code>, but for the rightmost span.</dd>\n
+        <dt id="mark_css"><code><strong>css</strong>: string</code></dt>\n
+        <dd>A string of CSS to be applied to the covered text. For example <code>"color: #fe3"</code>.</dd>\n
         <dt id="mark_title"><code><strong>title</strong>:\n
         string</code></dt><dd>When given, will give the nodes created\n
         for this span a HTML <code>title</code> attribute with the\n
@@ -1329,6 +1646,9 @@
         when the cursor is on top of the bookmark will end up to the\n
         right of the bookmark. Set this option to true to make it go\n
         to the left instead.</dd>\n
+        <dt><code><strong>shared</strong>: boolean</code></dt><dd>See\n
+        the corresponding <a href="#mark_shared">option</a>\n
+        to <code>markText</code>.</dd>\n
       </dl></dd>\n
 \n
       <dt id="findMarks"><code><strong>doc.findMarks</strong>(from: {line, ch}, to: {line, ch}) â array&lt;TextMarker&gt;</code></dt>\n
@@ -1357,18 +1677,19 @@
       <dd>Remove all gutter markers in\n
       the <a href="#option_gutters">gutter</a> with the given ID.</dd>\n
 \n
-      <dt id="addLineClass"><code><strong>cm.addLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
+      <dt id="addLineClass"><code><strong>doc.addLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
       <dd>Set a CSS class name for the given line. <code>line</code>\n
       can be a number or a line handle. <code>where</code> determines\n
       to which element this class should be applied, can can be one\n
       of <code>"text"</code> (the text element, which lies in front of\n
       the selection), <code>"background"</code> (a background element\n
-      that will be behind the selection), or <code>"wrap"</code> (the\n
-      wrapper node that wraps all of the line\'s elements, including\n
-      gutter elements). <code>class</code> should be the name of the\n
-      class to apply.</dd>\n
+      that will be behind the selection), <code>"gutter"</code> (the\n
+      line\'s gutter space), or <code>"wrap"</code> (the wrapper node\n
+      that wraps all of the line\'s elements, including gutter\n
+      elements). <code>class</code> should be the name of the class to\n
+      apply.</dd>\n
 \n
-      <dt id="removeLineClass"><code><strong>cm.removeLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
+      <dt id="removeLineClass"><code><strong>doc.removeLineClass</strong>(line: integer|LineHandle, where: string, class: string) â LineHandle</code></dt>\n
       <dd>Remove a CSS class from a line. <code>line</code> can be a\n
       line handle or number. <code>where</code> should be one\n
       of <code>"text"</code>, <code>"background"</code>,\n
@@ -1415,9 +1736,6 @@
           <dt><code><strong>above</strong>: boolean</code></dt>\n
           <dd>Causes the widget to be placed above instead of below\n
           the text of the line.</dd>\n
-          <dt><code><strong>showIfHidden</strong>: boolean</code></dt>\n
-          <dd>When true, will cause the widget to be rendered even if\n
-          the line it is associated with is hidden.</dd>\n
           <dt><code><strong>handleMouseEvents</strong>: boolean</code></dt>\n
           <dd>Determines whether the editor will capture mouse and\n
           drag events occurring in this widget. Default is falseâthe\n
@@ -1575,6 +1893,13 @@
       not specified, the token will use cached state information, which will be faster but might not be accurate if\n
       edits were recently made and highlighting has not yet completed.\n
       </dd>\n
+\n
+      <dt id="getLineTokens"><code><strong>cm.getLineTokens</strong>(line: integer, ?precise: boolean) â array&lt;{start, end, string, type, state}&gt;</code></dt>\n
+      <dd>This is similar\n
+      to <a href="#getTokenAt"><code>getTokenAt</code></a>, but\n
+      collects all tokens for a given line into an array. It is much\n
+      cheaper than repeatedly calling <code>getTokenAt</code>, which\n
+      re-parses the part of the line before the token for every call.</dd>\n
 \n
       <dt id="getTokenTypeAt"><code><strong>cm.getTokenTypeAt</strong>(pos: {line, ch}) â string</code></dt>\n
       <dd>This is a (much) cheaper version\n
@@ -1791,7 +2116,7 @@
 </section>\n
 \n
 <section id=addons>\n
-    <h2>Addons</h2>\n
+    <h2 id="addons">Addons</h2>\n
 \n
     <p>The <code>addon</code> directory in the distribution contains a\n
     number of reusable components that implement extra editor\n
@@ -1803,14 +2128,43 @@
     <dl>\n
       <dt id="addon_dialog"><a href="../addon/dialog/dialog.js"><code>dialog/dialog.js</code></a></dt>\n
       <dd>Provides a very simple way to query users for text input.\n
-      Adds an <strong><code>openDialog</code></strong> method to\n
-      CodeMirror instances, which can be called with an HTML fragment\n
-      or a detached DOM node that provides the prompt (should include\n
-      an <code>input</code> tag), and a callback function that is called\n
-      when text has been entered. Also adds\n
-      an <strong><code>openNotification</code></strong> function that\n
-      simply shows an HTML fragment as a notification. Depends\n
-      on <code>addon/dialog/dialog.css</code>.</dd>\n
+      Adds the <strong><code>openDialog(template, callback, options) â\n
+      closeFunction</code></strong> method to CodeMirror instances,\n
+      which can be called with an HTML fragment or a detached DOM\n
+      node that provides the prompt (should include an <code>input</code>\n
+      or <code>button</code> tag), and a callback function that is called\n
+      when the user presses enter. It returns a function <code>closeFunction</code>\n
+      which, if called, will close the dialog immediately.\n
+      <strong><code>openDialog</code></strong> takes the following options:\n
+        <dl>\n
+          <dt><code><strong>closeOnEnter</strong></code>:</dt>\n
+          <dd>If true, the dialog will be closed when the user presses\n
+          enter in the input. Defaults to <code>true</code>.</dd>\n
+          <dt><code><strong>onKeyDown</strong></code>:</dt>\n
+          <dd>An event handler of the signature <code>(event, value, closeFunction)</code>\n
+          that will be called whenever <code>keydown</code> fires in the\n
+          dialog\'s input. If your callback returns <code>true</code>,\n
+          the dialog will not do any further processing of the event.</dd>\n
+          <dt><code><strong>onKeyUp</strong></code>:</dt>\n
+          <dd>Same as <code>onKeyDown</code> but for the\n
+          <code>keyup</code> event.</dd>\n
+          <dt><code><strong>onInput</strong></code>:</dt>\n
+          <dd>Same as <code>onKeyDown</code> but for the\n
+          <code>input</code> event.</dd>\n
+          <dt><code><strong>onClose</strong></code>:</dt>\n
+          <dd>A callback of the signature <code>(dialogInstance)</code>\n
+          that will be called after the dialog has been closed and\n
+          removed from the DOM. No return value.</dd>\n
+        </dl>\n
+\n
+      <p>Also adds an <strong><code>openNotification(template, options) â\n
+      closeFunction</code></strong> function that simply shows an HTML\n
+      fragment as a notification at the top of the editor. It takes a\n
+      single option: <code>duration</code>, the amount of time after\n
+      which the notification will be automatically closed. If <code>\n
+      duration</code> is zero, the dialog will not be closed automatically.</p>\n
+\n
+      <p>Depends on <code>addon/dialog/dialog.css</code>.</p></dd>\n
 \n
       <dt id="addon_searchcursor"><a href="../addon/search/searchcursor.js"><code>search/searchcursor.js</code></a></dt>\n
       <dd>Adds the <code>getSearchCursor(query, start, caseFold) â\n
@@ -1850,6 +2204,28 @@
       on <code>searchcursor.js</code>, and will make use\n
       of <a href="#addon_dialog"><code>openDialog</code></a> when\n
       available to make prompting for search queries less ugly.</dd>\n
+\n
+      <dt id="addon_matchesonscrollbar"><a href="../addon/search/matchesonscrollbar.js"><code>search/matchesonscrollbar.js</code></a></dt>\n
+      <dd>Adds a <code>showMatchesOnScrollbar</code> method to editor\n
+      instances, which should be given a query (string or regular\n
+      expression), optionally a case-fold flag (only applicable for\n
+      strings), and optionally a class name (defaults\n
+      to <code>CodeMirror-search-match</code>) as arguments. When\n
+      called, matches of the given query will be displayed on the\n
+      editor\'s vertical scrollbar. The method returns an object with\n
+      a <code>clear</code> method that can be called to remove the\n
+      matches. Depends on\n
+      the <a href="#addon_annotatescrollbar"><code>annotatescrollbar</code></a>\n
+      addon, and\n
+      the <a href="../addon/search/matchesonscrollbar.css"><code>matchesonscrollbar.css</code></a>\n
+      file provides a default (transparent yellowish) definition of\n
+      the CSS class applied to the matches. Note that the matches are\n
+      only perfectly aligned if your scrollbar does not have buttons\n
+      at the top and bottom. You can use\n
+      the <a href="#addon_simplescrollbars"><code>simplescrollbar</code></a>\n
+      addon to make sure of this. If this addon is loaded,\n
+      the <a href="#addon_search"><code>search</code></a> addon will\n
+      automatically use it.</dd>\n
 \n
       <dt id="addon_matchbrackets"><a href="../addon/edit/matchbrackets.js"><code>edit/matchbrackets.js</code></a></dt>\n
       <dd>Defines an option <code>matchBrackets</code> which, when set\n
@@ -1927,8 +2303,9 @@
         <dd>Override the <a href="#mode_comment">comment string\n
         properties</a> of the mode with custom comment strings.</dd>\n
         <dt><code><strong>padding</strong>: string</code></dt>\n
-        <dd>A string that will be inserted after opening and before\n
-        closing comment markers. Defaults to a single space.</dd>\n
+        <dd>A string that will be inserted after opening and leading\n
+        markers, and before closing comment markers. Defaults to a\n
+        single space.</dd>\n
         <dt><code><strong>commentBlankLines</strong>: boolean</code></dt>\n
         <dd>Whether, when adding line comments, to also comment lines\n
         that contain only whitespace.</dd>\n
@@ -2024,6 +2401,8 @@
         given, <a href="#helper_fold_auto"><code>CodeMirror.fold.auto</code></a>\n
         will be used as default.</dd>\n
       </dl>\n
+      The <code>foldOptions</code> editor option can be set to an\n
+      object to provide an editor-wide default configuration.\n
       Demo <a href="../demo/folding.html">here</a>.</dd>\n
 \n
       <dt id="addon_runmode"><a href="../addon/runmode/runmode.js"><code>runmode/runmode.js</code></a></dt>\n
@@ -2085,18 +2464,18 @@
 \n
       <dt id="addon_show-hint"><a href="../addon/hint/show-hint.js"><code>hint/show-hint.js</code></a></dt>\n
       <dd>Provides a framework for showing autocompletion hints.\n
-      Defines <code>CodeMirror.showHint</code>, which takes a\n
-      CodeMirror instance, a hinting function, and optionally an\n
+      Defines <code>editor.showHint</code>, which takes an optional\n
       options object, and pops up a widget that allows the user to\n
-      select a completion. Hinting functions are function that take an\n
-      editor instance and an optional options object, and return\n
+      select a completion. Finding hints is done with a hinting\n
+      functions (the <code>hint</code> option), which is a function\n
+      that take an editor instance and options object, and return\n
       a <code>{list, from, to}</code> object, where <code>list</code>\n
       is an array of strings or objects (the completions),\n
       and <code>from</code> and <code>to</code> give the start and end\n
       of the token that is being completed as <code>{line, ch}</code>\n
       objects.</dd>\n
       <dd>If no hinting function is given, the addon will\n
-      use <code>CodeMirror.hint.auto</code>, with\n
+      use <code>CodeMirror.hint.auto</code>, which\n
       calls <a href="#getHelpers"><code>getHelpers</code></a> with\n
       the <code>"hint"</code> type to find applicable hinting\n
       functions, and tries them one by one. If that fails, it looks\n
@@ -2104,9 +2483,8 @@
       completable words for the mode, and\n
       uses <code>CodeMirror.hint.fromList</code> to complete from\n
       those.</dd>\n
-      <dd>When completions\n
-      aren\'t simple strings, they should be objects with the following\n
-      properties:\n
+      <dd>When completions aren\'t simple strings, they should be\n
+      objects with the following properties:\n
       <dl>\n
         <dt><code><strong>text</strong>: string</code></dt>\n
         <dd>The completion text. This is the only required\n
@@ -2133,11 +2511,13 @@
       will also be passed along to the hinting function, which may\n
       understand additional options):\n
       <dl>\n
-        <dt><code><strong>async</strong>: boolean</code></dt>\n
-        <dd>When set to true, the hinting function\'s signature should\n
-        be <code>(cm, callback, ?options)</code>, and the completion\n
-        interface will only be popped up when the hinting function\n
-        calls the callback, passing it the object holding the\n
+        <dt><code><strong>hint</strong>: function</code></dt>\n
+        <dd>A hinting function, as specified above. It is possible to\n
+        set the <code>async</code> property on a hinting function to\n
+        true, in which case it will be called with\n
+        arguments <code>(cm, callback, ?options)</code>, and the\n
+        completion interface will only be popped up when the hinting\n
+        function calls the callback, passing it the object holding the\n
         completions.</dd>\n
         <dt><code><strong>completeSingle</strong>: boolean</code></dt>\n
         <dd>Determines whether, when only a single completion is\n
@@ -2150,7 +2530,7 @@
         <dd>When enabled (which is the default), the pop-up will close\n
         when the editor is unfocused.</dd>\n
         <dt><code><strong>customKeys</strong>: keymap</code></dt>\n
-        <dd>Allows you to provide a custom keymap of keys to be active\n
+        <dd>Allows you to provide a custom key map of keys to be active\n
         when the pop-up is active. The handlers will be called with an\n
         extra argument, a handle to the completion menu, which\n
         has <code>moveFocus(n)</code>, <code>setFocus(n)</code>, <code>pick()</code>,\n
@@ -2175,10 +2555,13 @@
         <dd>Fired when a completion is selected. Passed the completion\n
         value (string or object) and the DOM node that represents it\n
         in the menu.</dd>\n
+        <dt><code><strong>"pick"</strong> (completion)</code></dt>\n
+        <dd>Fired when a completion is picked. Passed the completion value\n
+        (string or object).</dd>\n
         <dt><code><strong>"close"</strong> ()</code></dt>\n
         <dd>Fired when the completion is finished.</dd>\n
       </dl>\n
-      This addon depends styles\n
+      This addon depends on styles\n
       from <code>addon/hint/show-hint.css</code>. Check\n
       out <a href="../demo/complete.html">the demo</a> for an\n
       example.</dd>\n
@@ -2223,10 +2606,6 @@
       <dd>A hinting function for CSS, SCSS, or LESS code.\n
       Defines <code>CodeMirror.hint.css</code>.</dd>\n
 \n
-      <dt id="addon_python-hint"><a href="../addon/hint/python-hint.js"><code>hint/python-hint.js</code></a></dt>\n
-      <dd>A very simple hinting function for Python code.\n
-      Defines <code>CodeMirror.hint.python</code>.</dd>\n
-\n
       <dt id="addon_anyword-hint"><a href="../addon/hint/anyword-hint.js"><code>hint/anyword-hint.js</code></a></dt>\n
       <dd>A very simple hinting function\n
       (<code>CodeMirror.hint.anyword</code>) that simply looks for\n
@@ -2237,10 +2616,11 @@
       should scan when completing (defaults to 500).</dd>\n
 \n
       <dt id="addon_sql-hint"><a href="../addon/hint/sql-hint.js"><code>hint/sql-hint.js</code></a></dt>\n
-      <dd>A simple SQL hinter. Defines <code>CodeMirror.hint.sql</code>.</dd>\n
-\n
-      <dt id="addon_pig-hint"><a href="../addon/hint/pig-hint.js"><code>hint/pig-hint.js</code></a></dt>\n
-      <dd>A simple hinter for <a href="../mode/pig/index.html">Pig Latin</a>. Defines <code>CodeMirror.hint.pig</code>.</dd>\n
+      <dd>A simple SQL hinter. Defines <code>CodeMirror.hint.sql</code>.\n
+      Takes two optional options, <code>tables</code>, a object with\n
+      table names as keys and array of respective column names as values,\n
+      and <code>defaultTable</code>, a string corresponding to a\n
+      table name in <code>tables</code> for autocompletion.</dd>\n
 \n
       <dt id="addon_match-highlighter"><a href="../addon/search/match-highlighter.js"><code>search/match-highlighter.js</code></a></dt>\n
       <dd>Adds a <code>highlightSelectionMatches</code> option that\n
@@ -2298,6 +2678,26 @@
       editor instance to refresh its mode when the loading\n
       succeeded. See the <a href="../demo/loadmode.html">demo</a>.</dd>\n
 \n
+      <dt id="addon_meta"><a href="../mode/meta.js"><code>mode/meta.js</code></a></dt>\n
+      <dd>Provides meta-information about all the modes in the\n
+      distribution in a single file.\n
+      Defines <code>CodeMirror.modeInfo</code>, an array of objects\n
+      with <code>{name, mime, mode}</code> properties,\n
+      where <code>name</code> is the human-readable\n
+      name, <code>mime</code> the MIME type, and <code>mode</code> the\n
+      name of the mode file that defines this MIME. There are optional\n
+      properties <code>mimes</code>, which holds an array of MIME\n
+      types for modes with multiple MIMEs associated,\n
+      and <code>ext</code>, which holds an array of file extensions\n
+      associated with this mode. Three convenience\n
+      functions, <code>CodeMirror.findModeByMIME</code>,\n
+      and <code>CodeMirror.findModeByExtension</code>,\n
+      and <code>CodeMirror.findModeByName</code> are provided, which\n
+      return such an object given a MIME or extension string. Note\n
+      that, for historical reasons, this file resides in the\n
+      top-level <code>mode</code> directory, not\n
+      under <code>addon</code>. <a href="../demo/loadmode.html">Demo</a>.</dd>\n
+\n
       <dt id="addon_continuecomment"><a href="../addon/comment/continuecomment.js"><code>comment/continuecomment.js</code></a></dt>\n
       <dd>Adds a <code>continueComments</code> option, which sets whether the\n
       editor will make the next line continue a comment when you press Enter\n
@@ -2322,15 +2722,51 @@
       on <a href="../addon/display/fullscreen.css"><code>fullscreen.css</code></a>. <a href="../demo/fullscreen.html">Demo\n
       here</a>.</dd>\n
 \n
+      <dt id="addon_simplescrollbars"><a href="../addon/scroll/simplescrollbars.js"><code>scroll/simplescrollbars.js</code></a></dt>\n
+      <dd>Defines two additional scrollbar\n
+      models, <code>"simple"</code> and <code>"overlay"</code>\n
+      (see <a href="../demo/simplescrollbars.html">demo</a>) that can\n
+      be selected with\n
+      the <a href="#option_scrollbarStyle"><code>scrollbarStyle</code></a>\n
+      option. Depends\n
+      on <a href="../addon/scroll/simplescrollbars.css"><code>simplescrollbars.css</code></a>,\n
+      which can be further overridden to style your own\n
+      scrollbars.</dd>\n
+\n
+      <dt id="addon_annotatescrollbar"><a href="../addon/scroll/annotatescrollbar.js"><code>scroll/annotatescrollbar.js</code></a></dt>\n
+      <dd>Provides functionality for showing markers on the scrollbar\n
+      to call out certain parts of the document. Adds a\n
+      method <code>annotateScrollbar</code> to editor instances that\n
+      can be called, with a CSS class name as argument, to create a\n
+      set of annotations. The method returns an object\n
+      whose <code>update</code> method can be called with an array\n
+      of <code>{from: Pos, to: Pos}</code> objects marking the ranges\n
+      to be higlighed. To detach the annotations, call the\n
+      object\'s <code>clear</code> method.</dd>\n
+\n
       <dt id="addon_rulers"><a href="../addon/display/rulers.js"><code>display/rulers.js</code></a></dt>\n
       <dd>Adds a <code>rulers</code> option, which can be used to show\n
       one or more vertical rulers in the editor. The option, if\n
-      defined, should be given an array of <code>{column,\n
-      className}</code> objects or numbers. The ruler will be\n
-      displayed at the column indicated by the number or\n
-      the <code>column</code> property. The <code>className</code>\n
-      property can be used to assign a custom style to a\n
-      ruler. <a href="../demo/rulers.html">Demo here</a>.</dd>\n
+      defined, should be given an array of <code>{column [, className,\n
+      color, lineStyle, width]}</code> objects or numbers (wich\n
+      indicate a column). The ruler will be displayed at the column\n
+      indicated by the number or the <code>column</code> property.\n
+      The <code>className</code> property can be used to assign a\n
+      custom style to a ruler. <a href="../demo/rulers.html">Demo\n
+      here</a>.</dd>\n
+\n
+      <dt id="addon_panel"><a href="../addon/display/panel.js"><code>display/panel.js</code></a></dt>\n
+      <dd>Defines an <code>addPanel</code> method for CodeMirror\n
+      instances, which places a DOM node above or below an editor, and\n
+      shrinks the editor to make room for the node. The method takes\n
+      as first argument as DOM node, and as second an optional options\n
+      object. By default, the panel ends up above the editor. This can\n
+      be changed by passing a <code>position</code> option with the\n
+      value <code>"bottom"</code>. The object returned by this method\n
+      has a <code>clear</code> method that is used to remove the\n
+      panel, and a <code>changed</code> method that can be used to\n
+      notify the addon when the size of the panel\'s DOM node has\n
+      changed.</dd>\n
 \n
       <dt id="addon_hardwrap"><a href="../addon/wrap/hardwrap.js"><code>wrap/hardwrap.js</code></a></dt>\n
       <dd>Addon to perform hard line wrapping/breaking for paragraphs\n
@@ -2371,13 +2807,37 @@
       constructor takes arguments similar to\n
       the <a href="#CodeMirror"><code>CodeMirror</code></a>\n
       constructor, first a node to append the interface to, and then\n
-      an options object. Two extra optional options are\n
-      recognized, <code>origLeft</code> and <code>origRight</code>,\n
-      which may be strings that provide original versions of the\n
-      document, which will be shown to the left and right of the\n
-      editor in non-editable CodeMirror instances. The merge interface\n
-      will highlight changes between the editable document and the\n
-      original(s) (<a href="../demo/merge.html">demo</a>).</dd>\n
+      an options object. Options are passed through to the editors\n
+      inside the view. These extra options are recognized:\n
+        <dl>\n
+          <dt><code><strong>origLeft</strong></code> and <code><strong>origRight</strong>: string</code></dt>\n
+          <dd>If given these provide original versions of the\n
+          document, which will be shown to the left and right of the\n
+          editor in non-editable CodeMirror instances. The merge\n
+          interface will highlight changes between the editable\n
+          document and the original(s). To create a 2-way (as opposed\n
+          to 3-way) merge view, provide only one of them.</dd>\n
+          <dt><code><strong>revertButtons</strong>: boolean</code></dt>\n
+          <dd>Determines whether buttons that allow the user to revert\n
+          changes are shown. Defaults to true.</dd>\n
+          <dt><code><strong>connect</strong>: string</code></dt>\n
+          <dd>Sets the style used to connect changed chunks of code.\n
+          By default, connectors are drawn. When this is set\n
+          to <code>"align"</code>, the smaller chunk is padded to\n
+          align with the bigger chunk instead.</dd>\n
+          <dt><code><strong>collapseIdentical</strong>: boolean|number</code></dt>\n
+          <dd>When true (default is false), stretches of unchanged\n
+          text will be collapsed. When a number is given, this\n
+          indicates the amount of lines to leave visible around such\n
+          stretches (which defaults to 2).</dd>\n
+          <dt><code><strong>allowEditingOriginals</strong>: boolean</code></dt>\n
+          <dd>Determines whether the original editor allows editing.\n
+          Defaults to false.</dd>\n
+          <dt><code><strong>showDifferences</strong>: boolean</code></dt>\n
+          <dd>When true (the default), changed pieces of text are\n
+          highlighted.</dd>\n
+        </dl>\n
+        <a href="../demo/merge.html">Demo here</a>.</dd>\n
 \n
       <dt id="addon_tern"><a href="../addon/tern/tern.js"><code>tern/tern.js</code></a></dt>\n
       <dd>Provides integration with\n
@@ -2401,6 +2861,11 @@
     languageâa function that takes a character stream as input,\n
     advances it past a token, and returns a style for that token. More\n
     advanced modes can also handle indentation for the language.</p>\n
+\n
+    <p>This section describes the low-level mode interface. Many modes\n
+    are written directly against this, since it offers a lot of\n
+    control, but for a quick mode definition, you might want to use\n
+    the <a href="../demo/simplemode.html">simple mode addon</a>.</p>\n
 \n
     <p id="defineMode">The mode script should\n
     call <code><strong>CodeMirror.defineMode</strong></code> to\n
@@ -2574,12 +3039,20 @@
     continued lines in a block comment). All of these are\n
     optional.</p>\n
 \n
-    <p id="electricChars">Finally, a mode may define\n
-    an <code>electricChars</code> property, which should hold a string\n
-    containing all the characters that should trigger the behaviour\n
-    described for\n
+    <p id="electricChars">Finally, a mode may define either\n
+    an <code>electricChars</code> or an <code>electricInput</code>\n
+    property, which are used to automatically reindent the line when\n
+    certain patterns are typed and\n
     the <a href="#option_electricChars"><code>electricChars</code></a>\n
-    option.</p>\n
+    option is enabled. <code>electricChars</code> may be a string, and\n
+    will trigger a reindent whenever one of the characters in that\n
+    string are typed. Often, it is more appropriate to\n
+    use <code>electricInput</code>, which should hold a regular\n
+    expression, and will trigger indentation when the part of the\n
+    line <em>before</em> the cursor matches the expression. It should\n
+    usually end with a <code>$</code> character, so that it only\n
+    matches when the indentation-changing pattern was just typed, not when something was\n
+    typed after the pattern.</p>\n
 \n
     <p>So, to summarize, a mode <em>must</em> provide\n
     a <code>token</code> method, and it <em>may</em>\n

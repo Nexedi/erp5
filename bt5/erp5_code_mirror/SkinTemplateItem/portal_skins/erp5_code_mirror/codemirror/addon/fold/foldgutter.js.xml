@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403077.13</string> </value>
+            <value> <string>ts21897116.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("./foldcode"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "./foldcode"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   CodeMirror.defineOption("foldGutter", false, function(cm, val, old) {\n
@@ -72,7 +82,7 @@
   function marker(spec) {\n
     if (typeof spec == "string") {\n
       var elt = document.createElement("div");\n
-      elt.className = spec;\n
+      elt.className = spec + " CodeMirror-guttermarker-subtle";\n
       return elt;\n
     } else {\n
       return spec.cloneNode(true);\n
@@ -145,7 +155,7 @@
     if (line >= state.from && line < state.to)\n
       updateFoldInfo(cm, line, line + 1);\n
   }\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -156,7 +166,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3874</int> </value>
+            <value> <int>4372</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

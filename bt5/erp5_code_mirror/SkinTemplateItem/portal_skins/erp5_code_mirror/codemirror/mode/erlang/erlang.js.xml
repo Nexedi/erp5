@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403087.35</string> </value>
+            <value> <string>ts21897148.75</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 /*jshint unused:true, eqnull:true, curly:true, bitwise:true */\n
 /*jshint undef:true, latedef:true, trailing:true */\n
 /*global CodeMirror:true */\n
@@ -35,6 +38,16 @@
 //   bit syntax\n
 //   old guard/bif/conversion clashes (e.g. "float/1")\n
 //   type/spec/opaque\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
 \n
 CodeMirror.defineMIME("text/x-erlang", "erlang");\n
 \n
@@ -372,7 +385,7 @@ CodeMirror.defineMode("erlang", function(cmCfg) {\n
     switch (type) {\n
       case "atom":        return "atom";\n
       case "attribute":   return "attribute";\n
-      case "boolean":     return "special";\n
+      case "boolean":     return "atom";\n
       case "builtin":     return "builtin";\n
       case "close_paren": return null;\n
       case "colon":       return null;\n
@@ -629,6 +642,8 @@ CodeMirror.defineMode("erlang", function(cmCfg) {\n
     lineComment: "%"\n
   };\n
 });\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -639,7 +654,7 @@ CodeMirror.defineMode("erlang", function(cmCfg) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18585</int> </value>
+            <value> <int>19043</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

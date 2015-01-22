@@ -47,20 +47,14 @@
 <script src="../addon/display/rulers.js"></script>\n
 <style type="text/css">\n
   .CodeMirror {border-top: 1px solid #888; border-bottom: 1px solid #888;}\n
-  .ruler1 { border-left: 1px solid #fcc; }\n
-  .ruler2 { border-left: 1px solid #f5f577; }\n
-  .ruler3 { border-left: 1px solid #cfc; }\n
-  .ruler4 { border-left: 1px solid #aff; }\n
-  .ruler5 { border-left: 1px solid #ccf; }\n
-  .ruler6 { border-left: 1px solid #fcf; }\n
 </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Ruler demo</a>\n
@@ -72,9 +66,10 @@
 \n
 <script type="text/javascript">\n
   var nums = "0123456789", space = "          ";\n
+  var colors = ["#fcc", "#f5f577", "#cfc", "#aff", "#ccf", "#fcf"];\n
   var rulers = [], value = "";\n
   for (var i = 1; i <= 6; i++) {\n
-    rulers.push({className: "ruler" + i, column: i * 10});\n
+    rulers.push({color: colors[i], column: i * 10, lineStyle: "dashed"});\n
     for (var j = 1; j < i; j++) value += space;\n
     value += nums + "\\n";\n
   }\n

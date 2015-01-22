@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Simple Mode Demo</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../lib/codemirror.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../addon/mode/simple.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<style type="text/css">\n
+  .CodeMirror {border: 1px solid silver; margin-bottom: 1em; }\n
+  dt { text-indent: -2em; padding-left: 2em; margin-top: 1em; }\n
+  dd { margin-left: 1.5em; margin-bottom: 1em; }\n
+  dt {margin-top: 1em;}\n
+</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Simple Mode</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Simple Mode Demo</h2>\n
+\n
+<p>The <a href="../addon/mode/simple.js"><code>mode/simple</code></a>\n
+addon allows CodeMirror modes to be specified using a relatively simple\n
+declarative format. This format is not as powerful as writing code\n
+directly against the <a href="../doc/manual.html#modeapi">mode\n
+interface</a>, but is a lot easier to get started with, and\n
+sufficiently expressive for many simple language modes.</p>\n
+\n
+<p>This interface is still in flux. It is unlikely to be scrapped or\n
+overhauled completely, so do start writing code against it, but\n
+details might change as it stabilizes, and you might have to tweak\n
+your code when upgrading.</p>\n
+\n
+<p>Simple modes (loosely based on\n
+the <a href="https://github.com/mozilla/skywriter/wiki/Common-JavaScript-Syntax-Highlighting-Specification">Common\n
+JavaScript Syntax Highlighting Specification</a>, which never took\n
+off), are state machines, where each state has a number of rules that\n
+match tokens. A rule describes a type of token that may occur in the\n
+current state, and possibly a transition to another state caused by\n
+that token.</p>\n
+\n
+<p>The <code>CodeMirror.defineSimpleMode(name, states)</code> method\n
+takes a mode name and an object that describes the mode\'s states. The\n
+editor below shows an example of such a mode (and is itself\n
+highlighted by the mode shown in it).</p>\n
+\n
+<div id="code"></div>\n
+\n
+<p>Each state is an array of rules. A rule may have the following properties:</p>\n
+\n
+<dl>\n
+  <dt><code><strong>regex</strong>: string | RegExp</code></dt>\n
+  <dd>The regular expression that matches the token. May be a string\n
+  or a regex object. When a regex, the <code>ignoreCase</code> flag\n
+  will be taken into account when matching the token. This regex\n
+  should only capture groups when the <code>token</code> property is\n
+  an array.</dd>\n
+  <dt><code><strong>token</strong></code>: string | null</dt>\n
+  <dd>An optional token style. Multiple styles can be specified by\n
+  separating them with dots or spaces. When the <code>regex</code> for\n
+  this rule captures groups, it must capture <em>all</em> of the\n
+  string (since JS provides no way to find out where a group matched),\n
+  and this property must hold an array of token styles that has one\n
+  style for each matched group.</dd>\n
+  <dt><code><strong>next</strong>: string</code></dt>\n
+  <dd>When a <code>next</code> property is present, the mode will\n
+  transfer to the state named by the property when the token is\n
+  encountered.</dd>\n
+  <dt><code><strong>push</strong>: string</code></dt>\n
+  <dd>Like <code>next</code>, but instead replacing the current state\n
+  by the new state, the current state is kept on a stack, and can be\n
+  returned to with the <code>pop</code> directive.</dd>\n
+  <dt><code><strong>pop</strong>: bool</code></dt>\n
+  <dd>When true, and there is another state on the state stack, will\n
+  cause the mode to pop that state off the stack and transition to\n
+  it.</dd>\n
+  <dt><code><strong>mode</strong>: {spec, end, persistent}</code></dt>\n
+  <dd>Can be used to embed another mode inside a mode. When present,\n
+  must hold an object with a <code>spec</code> property that describes\n
+  the embedded mode, and an optional <code>end</code> end property\n
+  that specifies the regexp that will end the extent of the mode. When\n
+  a <code>persistent</code> property is set (and true), the nested\n
+  mode\'s state will be preserved between occurrences of the mode.</dd>\n
+  <dt><code><strong>indent</strong>: bool</code></dt>\n
+  <dd>When true, this token changes the indentation to be one unit\n
+  more than the current line\'s indentation.</dd>\n
+  <dt><code><strong>dedent</strong>: bool</code></dt>\n
+  <dd>When true, this token will pop one scope off the indentation\n
+  stack.</dd>\n
+  <dt><code><strong>dedentIfLineStart</strong>: bool</code></dt>\n
+  <dd>If a token has its <code>dedent</code> property set, it will, by\n
+  default, cause lines where it appears at the start to be dedented.\n
+  Set this property to false to prevent that behavior.</dd>\n
+</dl>\n
+\n
+<p>The <code>meta</code> property of the states object is special, and\n
+will not be interpreted as a state. Instead, properties set on it will\n
+be set on the mode, which is useful for properties\n
+like <a href="../doc/manual.html#addon_comment"><code>lineComment</code></a>,\n
+which sets the comment style for a mode. The simple mode addon also\n
+recognizes a few such properties:</p>\n
+\n
+<dl>\n
+  <dt><code><strong>dontIndentStates</strong>: array&lt;string&gt;</code></dt>\n
+  <dd>An array of states in which the mode\'s auto-indentation should\n
+  not take effect. Usually used for multi-line comment and string\n
+  states.</dd>\n
+</dl>\n
+\n
+<script id="modecode">/* Example definition of a simple mode that understands a subset of\n
+ * JavaScript:\n
+ */\n
+\n
+CodeMirror.defineSimpleMode("simplemode", {\n
+  // The start state contains the rules that are intially used\n
+  start: [\n
+    // The regex matches the token, the token property contains the type\n
+    {regex: /"(?:[^\\\\]|\\\\.)*?"/, token: "string"},\n
+    // You can match multiple tokens at once. Note that the captured\n
+    // groups must span the whole string in this case\n
+    {regex: /(function)(\\s+)([a-z$][\\w$]*)/,\n
+     token: ["keyword", null, "variable-2"]},\n
+    // Rules are matched in the order in which they appear, so there is\n
+    // no ambiguity between this one and the one above\n
+    {regex: /(?:function|var|return|if|for|while|else|do|this)\\b/,\n
+     token: "keyword"},\n
+    {regex: /true|false|null|undefined/, token: "atom"},\n
+    {regex: /0x[a-f\\d]+|[-+]?(?:\\.\\d+|\\d+\\.?\\d*)(?:e[-+]?\\d+)?/i,\n
+     token: "number"},\n
+    {regex: /\\/\\/.*/, token: "comment"},\n
+    {regex: /\\/(?:[^\\\\]|\\\\.)*?\\//, token: "variable-3"},\n
+    // A next property will cause the mode to move to a different state\n
+    {regex: /\\/\\*/, token: "comment", next: "comment"},\n
+    {regex: /[-+\\/*=<>!]+/, token: "operator"},\n
+    // indent and dedent properties guide autoindentation\n
+    {regex: /[\\{\\[\\(]/, indent: true},\n
+    {regex: /[\\}\\]\\)]/, dedent: true},\n
+    {regex: /[a-z$][\\w$]*/, token: "variable"},\n
+    // You can embed other modes with the mode property. This rule\n
+    // causes all code between << and >> to be highlighted with the XML\n
+    // mode.\n
+    {regex: /<</, token: "meta", mode: {spec: "xml", end: />>/}}\n
+  ],\n
+  // The multi-line comment state.\n
+  comment: [\n
+    {regex: /.*?\\*\\//, token: "comment", next: "start"},\n
+    {regex: /.*/, token: "comment"}\n
+  ],\n
+  // The meta property contains global information about the mode. It\n
+  // can contain properties like lineComment, which are supported by\n
+  // all modes, and also directives like dontIndentStates, which are\n
+  // specific to simple modes.\n
+  meta: {\n
+    dontIndentStates: ["comment"],\n
+    lineComment: "//"\n
+  }\n
+});\n
+</script>\n
+\n
+<script>\n
+var sc = document.getElementById("modecode");\n
+var code = document.getElementById("code");\n
+var editor = CodeMirror(code, {\n
+  value: (sc.textContent || sc.innerText || sc.innerHTML),\n
+  mode: "simplemode"\n
+});\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>simplemode.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts21897118.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>simplescrollbars.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  function Bar(cls, orientation, scroll) {\n
+    this.orientation = orientation;\n
+    this.scroll = scroll;\n
+    this.screen = this.total = this.size = 1;\n
+    this.pos = 0;\n
+\n
+    this.node = document.createElement("div");\n
+    this.node.className = cls + "-" + orientation;\n
+    this.inner = this.node.appendChild(document.createElement("div"));\n
+\n
+    var self = this;\n
+    CodeMirror.on(this.inner, "mousedown", function(e) {\n
+      if (e.which != 1) return;\n
+      CodeMirror.e_preventDefault(e);\n
+      var axis = self.orientation == "horizontal" ? "pageX" : "pageY";\n
+      var start = e[axis], startpos = self.pos;\n
+      function move(e) {\n
+        if (e.which != 1) {\n
+          CodeMirror.off(document, "mousemove", move);\n
+          return;\n
+        }\n
+        self.moveTo(startpos + (e[axis] - start) * (self.total / self.size));\n
+      }\n
+      CodeMirror.on(document, "mousemove", move);\n
+    });\n
+\n
+    CodeMirror.on(this.node, "click", function(e) {\n
+      CodeMirror.e_preventDefault(e);\n
+      var innerBox = self.inner.getBoundingClientRect(), where;\n
+      if (self.orientation == "horizontal")\n
+        where = e.clientX < innerBox.left ? -1 : e.clientX > innerBox.right ? 1 : 0;\n
+      else\n
+        where = e.clientY < innerBox.top ? -1 : e.clientY > innerBox.bottom ? 1 : 0;\n
+      self.moveTo(self.pos + where * self.screen);\n
+    });\n
+\n
+    function onWheel(e) {\n
+      var moved = CodeMirror.wheelEventPixels(e)[self.orientation == "horizontal" ? "x" : "y"];\n
+      var oldPos = self.pos;\n
+      self.moveTo(self.pos + moved);\n
+      if (self.pos != oldPos) CodeMirror.e_preventDefault(e);\n
+    }\n
+    CodeMirror.on(this.node, "mousewheel", onWheel);\n
+    CodeMirror.on(this.node, "DOMMouseScroll", onWheel);\n
+  }\n
+\n
+  Bar.prototype.moveTo = function(pos, update) {\n
+    if (pos < 0) pos = 0;\n
+    if (pos > this.total - this.screen) pos = this.total - this.screen;\n
+    if (pos == this.pos) return;\n
+    this.pos = pos;\n
+    this.inner.style[this.orientation == "horizontal" ? "left" : "top"] =\n
+      (pos * (this.size / this.total)) + "px";\n
+    if (update !== false) this.scroll(pos, this.orientation);\n
+  };\n
+\n
+  Bar.prototype.update = function(scrollSize, clientSize, barSize) {\n
+    this.screen = clientSize;\n
+    this.total = scrollSize;\n
+    this.size = barSize;\n
+\n
+    // FIXME clip to min size?\n
+    this.inner.style[this.orientation == "horizontal" ? "width" : "height"] =\n
+      this.screen * (this.size / this.total) + "px";\n
+    this.inner.style[this.orientation == "horizontal" ? "left" : "top"] =\n
+      this.pos * (this.size / this.total) + "px";\n
+  };\n
+\n
+  function SimpleScrollbars(cls, place, scroll) {\n
+    this.addClass = cls;\n
+    this.horiz = new Bar(cls, "horizontal", scroll);\n
+    place(this.horiz.node);\n
+    this.vert = new Bar(cls, "vertical", scroll);\n
+    place(this.vert.node);\n
+    this.width = null;\n
+  }\n
+\n
+  SimpleScrollbars.prototype.update = function(measure) {\n
+    if (this.width == null) {\n
+      var style = window.getComputedStyle ? window.getComputedStyle(this.horiz.node) : this.horiz.node.currentStyle;\n
+      if (style) this.width = parseInt(style.height);\n
+    }\n
+    var width = this.width || 0;\n
+\n
+    var needsH = measure.scrollWidth > measure.clientWidth + 1;\n
+    var needsV = measure.scrollHeight > measure.clientHeight + 1;\n
+    this.vert.node.style.display = needsV ? "block" : "none";\n
+    this.horiz.node.style.display = needsH ? "block" : "none";\n
+\n
+    if (needsV) {\n
+      this.vert.update(measure.scrollHeight, measure.clientHeight,\n
+                       measure.viewHeight - (needsH ? width : 0));\n
+      this.vert.node.style.display = "block";\n
+      this.vert.node.style.bottom = needsH ? width + "px" : "0";\n
+    }\n
+    if (needsH) {\n
+      this.horiz.update(measure.scrollWidth, measure.clientWidth,\n
+                        measure.viewWidth - (needsV ? width : 0) - measure.barLeft);\n
+      this.horiz.node.style.right = needsV ? width + "px" : "0";\n
+      this.horiz.node.style.left = measure.barLeft + "px";\n
+    }\n
+\n
+    return {right: needsV ? width : 0, bottom: needsH ? width : 0};\n
+  };\n
+\n
+  SimpleScrollbars.prototype.setScrollTop = function(pos) {\n
+    this.vert.moveTo(pos, false);\n
+  };\n
+\n
+  SimpleScrollbars.prototype.setScrollLeft = function(pos) {\n
+    this.horiz.moveTo(pos, false);\n
+  };\n
+\n
+  SimpleScrollbars.prototype.clear = function() {\n
+    var parent = this.horiz.node.parentNode;\n
+    parent.removeChild(this.horiz.node);\n
+    parent.removeChild(this.vert.node);\n
+  };\n
+\n
+  CodeMirror.scrollbarModel.simple = function(place, scroll) {\n
+    return new SimpleScrollbars("CodeMirror-simplescroll", place, scroll);\n
+  };\n
+  CodeMirror.scrollbarModel.overlay = function(place, scroll) {\n
+    return new SimpleScrollbars("CodeMirror-overlayscroll", place, scroll);\n
+  };\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5126</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

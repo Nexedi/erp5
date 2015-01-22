@@ -50,18 +50,14 @@
         border: 1px solid #eee;\n
         height: auto;\n
       }\n
-      .CodeMirror-scroll {\n
-        overflow-y: hidden;\n
-        overflow-x: auto;\n
-      }\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Autoresize</a>\n
@@ -75,13 +71,10 @@
   border: 1px solid #eee;\n
   height: auto;\n
 }\n
-.CodeMirror-scroll {\n
-  overflow-y: hidden;\n
-  overflow-x: auto;\n
-}\n
 </textarea></form>\n
 \n
-<p>By setting a few CSS properties, and giving\n
+<p>By setting an editor\'s <code>height</code> style\n
+to <code>auto</code> and giving\n
 the <a href="../doc/manual.html#option_viewportMargin"><code>viewportMargin</code></a>\n
 a value of <code>Infinity</code>, CodeMirror can be made to\n
 automatically resize to fit its content.</p>\n

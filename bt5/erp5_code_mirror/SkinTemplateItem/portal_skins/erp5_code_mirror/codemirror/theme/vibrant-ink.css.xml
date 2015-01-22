@@ -30,6 +30,8 @@
 .cm-s-vibrant-ink .CodeMirror-selected { background: #35493c !important; }\n
 \n
 .cm-s-vibrant-ink .CodeMirror-gutters { background: #002240; border-right: 1px solid #aaa; }\n
+.cm-s-vibrant-ink .CodeMirror-guttermarker { color: white; }\n
+.cm-s-vibrant-ink .CodeMirror-guttermarker-subtle { color: #d0d0d0; }\n
 .cm-s-vibrant-ink .CodeMirror-linenumber { color: #d0d0d0; }\n
 .cm-s-vibrant-ink .CodeMirror-cursor { border-left: 1px solid white !important; }\n
 \n

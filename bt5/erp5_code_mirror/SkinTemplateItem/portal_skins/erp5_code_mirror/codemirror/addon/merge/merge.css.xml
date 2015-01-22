@@ -88,6 +88,12 @@
   color: #44c;\n
 }\n
 \n
+.CodeMirror-merge-copy-reverse {\n
+  position: absolute;\n
+  cursor: pointer;\n
+  color: #44c;\n
+}\n
+\n
 .CodeMirror-merge-copybuttons-left .CodeMirror-merge-copy { left: 2px; }\n
 .CodeMirror-merge-copybuttons-right .CodeMirror-merge-copy { right: 2px; }\n
 \n
@@ -116,6 +122,20 @@
 .CodeMirror-merge-l-chunk.CodeMirror-merge-r-chunk { background: #dfd; }\n
 .CodeMirror-merge-l-chunk-start.CodeMirror-merge-r-chunk-start { border-top: 1px solid #4e4; }\n
 .CodeMirror-merge-l-chunk-end.CodeMirror-merge-r-chunk-end { border-bottom: 1px solid #4e4; }\n
+\n
+.CodeMirror-merge-collapsed-widget:before {\n
+  content: "(...)";\n
+}\n
+.CodeMirror-merge-collapsed-widget {\n
+  cursor: pointer;\n
+  color: #88b;\n
+  background: #eef;\n
+  border: 1px solid #ddf;\n
+  font-size: 90%;\n
+  padding: 0 3px;\n
+  border-radius: 4px;\n
+}\n
+.CodeMirror-merge-collapsed-line .CodeMirror-gutter-elt { display: none; }\n
 </string> </value>
         </item>
       </dictionary>

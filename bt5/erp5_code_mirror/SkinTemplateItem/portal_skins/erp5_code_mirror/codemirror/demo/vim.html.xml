@@ -48,17 +48,18 @@
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/search/searchcursor.js"></script>\n
 <script src="../mode/clike/clike.js"></script>\n
+<script src="../addon/edit/matchbrackets.js"></script>\n
 <script src="../keymap/vim.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Vim bindings</a>\n
@@ -82,30 +83,54 @@ int getchar(void)\n
   return (--n >= 0) ? (unsigned char) *bufp++ : EOF;\n
 }\n
 </textarea></form>\n
-\n
-    <form><textarea id="code2" name="code2">\n
-        I am another file! You can yank from my neighbor and paste here.\n
-</textarea></form>\n
+<div style="font-size: 13px; width: 300px; height: 30px;">Key buffer: <span id="command-display"></span></div>\n
 \n
 <p>The vim keybindings are enabled by\n
 including <a href="../keymap/vim.js">keymap/vim.js</a> and setting\n
-the <code>keyMap</code> option to <code>"vim"</code>. Because\n
-CodeMirror\'s internal API is quite different from Vim, they are only\n
-a loose approximation of actual vim bindings, though.</p>\n
+the <code>vimMode</code> option to <code>true</code>. This will also\n
+automatically change the <code>keyMap</code> option to <code>"vim"</code>.</p>\n
+\n
+<p><strong>Features</strong></p>\n
+\n
+<ul>\n
+  <li>All common motions and operators, including text objects</li>\n
+  <li>Operator motion orthogonality</li>\n
+  <li>Visual mode - characterwise, linewise, partial support for blockwise</li>\n
+  <li>Full macro support (q, @)</li>\n
+  <li>Incremental highlighted search (/, ?, #, *, g#, g*)</li>\n
+  <li>Search/replace with confirm (:substitute, :%s)</li>\n
+  <li>Search history</li>\n
+  <li>Jump lists (Ctrl-o, Ctrl-i)</li>\n
+  <li>Key/command mapping with API (:map, :nmap, :vmap)</li>\n
+  <li>Sort (:sort)</li>\n
+  <li>Marks (`, \')</li>\n
+  <li>:global</li>\n
+  <li>Insert mode behaves identical to base CodeMirror</li>\n
+  <li>Cross-buffer yank/paste</li>\n
+</ul>\n
+\n
+<p>Note that while the vim mode tries to emulate the most useful features of\n
+vim as faithfully as possible, it does not strive to become a complete vim\n
+implementation</p>\n
 \n
     <script>\n
       CodeMirror.commands.save = function(){ alert("Saving"); };\n
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
         lineNumbers: true,\n
         mode: "text/x-csrc",\n
-        vimMode: true,\n
+        keyMap: "vim",\n
+        matchBrackets: true,\n
         showCursorWhenSelecting: true\n
       });\n
-      var editor2 = CodeMirror.fromTextArea(document.getElementById("code2"), {\n
-        lineNumbers: true,\n
-        mode: "text/x-csrc",\n
-        vimMode: true,\n
-        showCursorWhenSelecting: true\n
+      var commandDisplay = document.getElementById(\'command-display\');\n
+      var keys = \'\';\n
+      CodeMirror.on(editor, \'vim-keypress\', function(key) {\n
+        keys = keys + key;\n
+        commandDisplay.innerHTML = keys;\n
+      });\n
+      CodeMirror.on(editor, \'vim-command-done\', function(e) {\n
+        keys = \'\';\n
+        commandDisplay.innerHTML = keys;\n
       });\n
     </script>\n
 \n

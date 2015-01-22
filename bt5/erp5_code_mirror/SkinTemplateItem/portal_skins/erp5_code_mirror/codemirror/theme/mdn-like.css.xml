@@ -29,13 +29,13 @@
 /*\n
   MDN-LIKE Theme - Mozilla\n
   Ported to CodeMirror by Peter Kroon <plakroon@gmail.com>\n
-  Report bugs/issues here: https://github.com/marijnh/CodeMirror/issues\n
+  Report bugs/issues here: https://github.com/codemirror/CodeMirror/issues\n
   GitHub: @peterkroon\n
 \n
   The mdn-like theme is inspired on the displayed code examples at: https://developer.mozilla.org/en-US/docs/Web/CSS/animation\n
 \n
 */\n
-.cm-s-mdn-like.CodeMirror { color: #999; font-family: monospace; background-color: #fff; }\n
+.cm-s-mdn-like.CodeMirror { color: #999; background-color: #fff; }\n
 .cm-s-mdn-like .CodeMirror-selected { background: #cfc !important; }\n
 \n
 .cm-s-mdn-like .CodeMirror-gutters { background: #f8f8f8; border-left: 6px solid rgba(0,83,159,0.65); color: #333; }\n

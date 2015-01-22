@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403071.91</string> </value>
+            <value> <string>ts21897122.07</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,8 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/* Just enough of CodeMirror to run runMode under node.js */\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
 \n
 window.CodeMirror = {};\n
 \n
@@ -97,7 +98,11 @@ CodeMirror.startState = function (mode, a1, a2) {\n
 };\n
 \n
 var modes = CodeMirror.modes = {}, mimeModes = CodeMirror.mimeModes = {};\n
-CodeMirror.defineMode = function (name, mode) { modes[name] = mode; };\n
+CodeMirror.defineMode = function (name, mode) {\n
+  if (arguments.length > 2)\n
+    mode.dependencies = Array.prototype.slice.call(arguments, 2);\n
+  modes[name] = mode;\n
+};\n
 CodeMirror.defineMIME = function (mime, spec) { mimeModes[mime] = spec; };\n
 CodeMirror.resolveMode = function(spec) {\n
   if (typeof spec == "string" && mimeModes.hasOwnProperty(spec)) {\n
@@ -165,6 +170,7 @@ CodeMirror.runMode = function (string, modespec, callback, options) {\n
   for (var i = 0, e = lines.length; i < e; ++i) {\n
     if (i) callback("\\n");\n
     var stream = new CodeMirror.StringStream(lines[i]);\n
+    if (!stream.string && mode.blankLine) mode.blankLine(state);\n
     while (!stream.eol()) {\n
       var style = mode.token(stream, state);\n
       callback(stream.current(), style, i, stream.start, state);\n
@@ -183,7 +189,7 @@ CodeMirror.runMode = function (string, modespec, callback, options) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5075</int> </value>
+            <value> <int>5302</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

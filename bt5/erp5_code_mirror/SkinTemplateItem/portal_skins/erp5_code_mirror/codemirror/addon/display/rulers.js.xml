@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403076.09</string> </value>
+            <value> <string>ts21897117.47</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   CodeMirror.defineOption("rulers", false, function(cm, val, old) {\n
@@ -48,18 +58,25 @@
     var val = cm.getOption("rulers");\n
     var cw = cm.defaultCharWidth();\n
     var left = cm.charCoords(CodeMirror.Pos(cm.firstLine(), 0), "div").left;\n
-    var bot = -cm.display.scroller.offsetHeight;\n
+    var minH = cm.display.scroller.offsetHeight + 30;\n
     for (var i = 0; i < val.length; i++) {\n
       var elt = document.createElement("div");\n
-      var col, cls = null;\n
-      if (typeof val[i] == "number") {\n
-        col = val[i];\n
+      elt.className = "CodeMirror-ruler";\n
+      var col, cls = null, conf = val[i];\n
+      if (typeof conf == "number") {\n
+        col = conf;\n
       } else {\n
-        col = val[i].column;\n
+        col = conf.column;\n
+        if (conf.className) elt.className += " " + conf.className;\n
+        if (conf.color) elt.style.borderColor = conf.color;\n
+        if (conf.lineStyle) elt.style.borderLeftStyle = conf.lineStyle;\n
+        if (conf.width) elt.style.borderLeftWidth = conf.width;\n
         cls = val[i].className;\n
       }\n
-      elt.className = "CodeMirror-ruler" + (cls ? " " + cls : "");\n
-      elt.style.cssText = "left: " + (left + col * cw) + "px; top: -50px; bottom: " + bot + "px";\n
+      elt.style.left = (left + col * cw) + "px";\n
+      elt.style.top = "-50px";\n
+      elt.style.bottom = "-20px";\n
+      elt.style.minHeight = minH + "px";\n
       cm.display.lineSpace.insertBefore(elt, cm.display.cursorDiv);\n
     }\n
   }\n
@@ -68,7 +85,7 @@
     clearRulers(cm);\n
     setRulers(cm);\n
   }\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -79,7 +96,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1400</int> </value>
+            <value> <int>2134</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

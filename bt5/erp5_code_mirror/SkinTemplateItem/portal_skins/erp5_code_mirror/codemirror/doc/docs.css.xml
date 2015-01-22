@@ -30,7 +30,7 @@
   font-family: \'Source Sans Pro\';\n
   font-style: normal;\n
   font-weight: 400;\n
-  src: local(\'Source Sans Pro\'), local(\'SourceSansPro-Regular\'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format(\'woff\');\n
+  src: local(\'Source Sans Pro\'), local(\'SourceSansPro-Regular\'), url(//themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format(\'woff\');\n
 }\n
 \n
 body, html { margin: 0; padding: 0; height: 100%; }\n
@@ -44,13 +44,22 @@ body {\n
 \n
 p { margin-top: 0; }\n
 \n
-h2, h3 {\n
+h2, h3, h1 {\n
   font-weight: normal;\n
   margin-bottom: .7em;\n
 }\n
+h1 { font-size: 140%; }\n
 h2 { font-size: 120%; }\n
 h3 { font-size: 110%; }\n
 article > h2:first-child, section:first-child > h2 { margin-top: 0; }\n
+\n
+#nav h1 {\n
+  margin-right: 12px;\n
+  margin-top: 0;\n
+  margin-bottom: 2px;\n
+  color: #d30707;\n
+  letter-spacing: .5px;\n
+}\n
 \n
 a, a:visited, a:link, .quasilink {\n
   color: #A21313;\n
@@ -83,10 +92,11 @@ article {\n
   position: fixed;\n
   padding-top: 30px;\n
   max-height: 100%;\n
-  overflow-y:scroll;\n
+  box-sizing: -moz-border-box;\n
+  box-sizing: border-box;\n
+  overflow-y: auto;\n
   left: 0; right: none;\n
   width: 160px;\n
-  padding-right: 350px;\n
   text-align: right;\n
   z-index: 1;\n
 }\n
@@ -98,6 +108,7 @@ article {\n
   #nav {\n
     right: 50%;\n
     width: auto;\n
+    border-right: 349px solid transparent;\n
   }\n
 }\n
 \n
@@ -124,6 +135,7 @@ article {\n
 \n
 #nav li li a {\n
   padding-right: 20px;\n
+  display: inline-block;\n
 }\n
 \n
 #nav ul a {\n
@@ -133,12 +145,13 @@ article {\n
 \n
 #nav ul a.active, #nav ul a:hover {\n
   border-bottom: 1px solid #E30808;\n
+  margin-bottom: -1px;\n
   color: #E30808;\n
 }\n
 \n
 #logo {\n
   border: 0;\n
-  margin-right: 7px;\n
+  margin-right: 12px;\n
   margin-bottom: 25px;\n
 }\n
 \n
@@ -163,7 +176,7 @@ section.first {\n
   z-index: 25;\n
 }\n
 \n
-#bankinfo {\n
+.bankinfo {\n
   text-align: left;\n
   display: none;\n
   padding: 0 .5em;\n
@@ -175,7 +188,7 @@ section.first {\n
   left: 30px;\n
 }\n
 \n
-#bankinfo_close {\n
+.bankinfo_close {\n
   position: absolute;\n
   top: 0; right: 6px;\n
   font-weight: bold;\n

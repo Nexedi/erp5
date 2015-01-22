@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403098.97</string> </value>
+            <value> <string>ts21897135.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,20 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>CodeMirror.defineMode("xml", function(config, parserConfig) {\n
+            <value> <string>// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" \046\046 typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" \046\046 define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+CodeMirror.defineMode("xml", function(config, parserConfig) {\n
   var indentUnit = config.indentUnit;\n
   var multilineTagIndentFactor = parserConfig.multilineTagIndentFactor || 1;\n
   var multilineTagIndentPastTag = parserConfig.multilineTagIndentPastTag;\n
@@ -30,7 +43,7 @@
     autoSelfClosers: {\'area\': true, \'base\': true, \'br\': true, \'col\': true, \'command\': true,\n
                       \'embed\': true, \'frame\': true, \'hr\': true, \'img\': true, \'input\': true,\n
                       \'keygen\': true, \'link\': true, \'meta\': true, \'param\': true, \'source\': true,\n
-                      \'track\': true, \'wbr\': true},\n
+                      \'track\': true, \'wbr\': true, \'menuitem\': true},\n
     implicitlyClosed: {\'dd\': true, \'li\': true, \'optgroup\': true, \'option\': true, \'p\': true,\n
                        \'rp\': true, \'rt\': true, \'tbody\': true, \'td\': true, \'tfoot\': true,\n
                        \'th\': true, \'tr\': true},\n
@@ -56,19 +69,21 @@
     },\n
     doNotIndent: {"pre": true},\n
     allowUnquoted: true,\n
-    allowMissing: true\n
+    allowMissing: true,\n
+    caseFold: true\n
   } : {\n
     autoSelfClosers: {},\n
     implicitlyClosed: {},\n
     contextGrabbers: {},\n
     doNotIndent: {},\n
     allowUnquoted: false,\n
-    allowMissing: false\n
+    allowMissing: false,\n
+    caseFold: false\n
   };\n
   var alignCDATA = parserConfig.alignCDATA;\n
 \n
   // Return variables for tokenizers\n
-  var tagName, type, setStyle;\n
+  var type, setStyle;\n
 \n
   function inText(stream, state) {\n
     function chain(parser) {\n
@@ -95,14 +110,9 @@
         state.tokenize = inBlock("meta", "?\076");\n
         return "meta";\n
       } else {\n
-        var isClose = stream.eat("/");\n
-        tagName = "";\n
-        var c;\n
-        while ((c = stream.eat(/[^\\s\\u00a0=\074\076\\"\\\'\\/?]/))) tagName += c;\n
-        if (!tagName) return "tag error";\n
-        type = isClose ? "closeTag" : "openTag";\n
+        type = stream.eat("/") ? "closeTag" : "openTag";\n
         state.tokenize = inTag;\n
-        return "tag";\n
+        return "tag bracket";\n
       }\n
     } else if (ch == "\046") {\n
       var ok;\n
@@ -127,7 +137,7 @@
     if (ch == "\076" || (ch == "/" \046\046 stream.eat("\076"))) {\n
       state.tokenize = inText;\n
       type = ch == "\076" ? "endTag" : "selfcloseTag";\n
-      return "tag";\n
+      return "tag bracket";\n
     } else if (ch == "=") {\n
       type = "equals";\n
       return null;\n
@@ -136,13 +146,13 @@
       state.state = baseState;\n
       state.tagName = state.tagStart = null;\n
       var next = state.tokenize(stream, state);\n
-      return next ? next + " error" : "error";\n
+      return next ? next + " tag error" : "tag error";\n
     } else if (/[\\\'\\"]/.test(ch)) {\n
       state.tokenize = inAttribute(ch);\n
       state.stringStartCol = stream.column();\n
       return state.tokenize(stream, state);\n
     } else {\n
-      stream.eatWhile(/[^\\s\\u00a0=\074\076\\"\\\']/);\n
+      stream.match(/^[^\\s\\u00a0=\074\076\\"\\\']*[^\\s\\u00a0=\074\076\\"\\\'\\/]/);\n
       return "word";\n
     }\n
   }\n
@@ -211,7 +221,7 @@
       if (!state.context) {\n
         return;\n
       }\n
-      parentTagName = state.context.tagName.toLowerCase();\n
+      parentTagName = state.context.tagName;\n
       if (!Kludges.contextGrabbers.hasOwnProperty(parentTagName) ||\n
           !Kludges.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {\n
         return;\n
@@ -222,26 +232,43 @@
 \n
   function baseState(type, stream, state) {\n
     if (type == "openTag") {\n
-      state.tagName = tagName;\n
       state.tagStart = stream.column();\n
-      return attrState;\n
+      return tagNameState;\n
     } else if (type == "closeTag") {\n
-      var err = false;\n
-      if (state.context) {\n
-        if (state.context.tagName != tagName) {\n
-          if (Kludges.implicitlyClosed.hasOwnProperty(state.context.tagName.toLowerCase()))\n
-            popContext(state);\n
-          err = !state.context || state.context.tagName != tagName;\n
-        }\n
-      } else {\n
-        err = true;\n
-      }\n
-      if (err) setStyle = "error";\n
-      return err ? closeStateErr : closeState;\n
+      return closeTagNameState;\n
     } else {\n
       return baseState;\n
     }\n
   }\n
+  function tagNameState(type, stream, state) {\n
+    if (type == "word") {\n
+      state.tagName = stream.current();\n
+      setStyle = "tag";\n
+      return attrState;\n
+    } else {\n
+      setStyle = "error";\n
+      return tagNameState;\n
+    }\n
+  }\n
+  function closeTagNameState(type, stream, state) {\n
+    if (type == "word") {\n
+      var tagName = stream.current();\n
+      if (state.context \046\046 state.context.tagName != tagName \046\046\n
+          Kludges.implicitlyClosed.hasOwnProperty(state.context.tagName))\n
+        popContext(state);\n
+      if (state.context \046\046 state.context.tagName == tagName) {\n
+        setStyle = "tag";\n
+        return closeState;\n
+      } else {\n
+        setStyle = "tag error";\n
+        return closeStateErr;\n
+      }\n
+    } else {\n
+      setStyle = "error";\n
+      return closeStateErr;\n
+    }\n
+  }\n
+\n
   function closeState(type, _stream, state) {\n
     if (type != "endTag") {\n
       setStyle = "error";\n
@@ -263,10 +290,10 @@
       var tagName = state.tagName, tagStart = state.tagStart;\n
       state.tagName = state.tagStart = null;\n
       if (type == "selfcloseTag" ||\n
-          Kludges.autoSelfClosers.hasOwnProperty(tagName.toLowerCase())) {\n
-        maybePopContext(state, tagName.toLowerCase());\n
+          Kludges.autoSelfClosers.hasOwnProperty(tagName)) {\n
+        maybePopContext(state, tagName);\n
       } else {\n
-        maybePopContext(state, tagName.toLowerCase());\n
+        maybePopContext(state, tagName);\n
         state.context = new Context(state, tagName, tagStart == state.indented);\n
       }\n
       return baseState;\n
@@ -304,7 +331,7 @@
         state.indented = stream.indentation();\n
 \n
       if (stream.eatSpace()) return null;\n
-      tagName = type = null;\n
+      type = null;\n
       var style = state.tokenize(stream, state);\n
       if ((style || type) \046\046 style != "comment") {\n
         setStyle = null;\n
@@ -319,7 +346,10 @@
       var context = state.context;\n
       // Indent multi-line strings (e.g. css).\n
       if (state.tokenize.isInAttribute) {\n
-        return state.stringStartCol + 1;\n
+        if (state.tagStart == state.indented)\n
+          return state.stringStartCol + 1;\n
+        else\n
+          return state.indented + indentUnit;\n
       }\n
       if (context \046\046 context.noIndent) return CodeMirror.Pass;\n
       if (state.tokenize != inTag \046\046 state.tokenize != inText)\n
@@ -332,15 +362,34 @@
           return state.tagStart + indentUnit * multilineTagIndentFactor;\n
       }\n
       if (alignCDATA \046\046 /\074!\\[CDATA\\[/.test(textAfter)) return 0;\n
-      if (context \046\046 /^\074\\//.test(textAfter))\n
-        context = context.prev;\n
+      var tagAfter = textAfter \046\046 /^\074(\\/)?([\\w_:\\.-]*)/.exec(textAfter);\n
+      if (tagAfter \046\046 tagAfter[1]) { // Closing tag spotted\n
+        while (context) {\n
+          if (context.tagName == tagAfter[2]) {\n
+            context = context.prev;\n
+            break;\n
+          } else if (Kludges.implicitlyClosed.hasOwnProperty(context.tagName)) {\n
+            context = context.prev;\n
+          } else {\n
+            break;\n
+          }\n
+        }\n
+      } else if (tagAfter) { // Opening tag spotted\n
+        while (context) {\n
+          var grabbers = Kludges.contextGrabbers[context.tagName];\n
+          if (grabbers \046\046 grabbers.hasOwnProperty(tagAfter[2]))\n
+            context = context.prev;\n
+          else\n
+            break;\n
+        }\n
+      }\n
       while (context \046\046 !context.startOfLine)\n
         context = context.prev;\n
       if (context) return context.indent + indentUnit;\n
       else return 0;\n
     },\n
 \n
-    electricChars: "/",\n
+    electricInput: /\074\\/[\\s\\w:]+\076$/,\n
     blockCommentStart: "\074!--",\n
     blockCommentEnd: "--\076",\n
 \n
@@ -353,6 +402,8 @@ CodeMirror.defineMIME("text/xml", "xml");\n
 CodeMirror.defineMIME("application/xml", "xml");\n
 if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))\n
   CodeMirror.defineMIME("text/html", {name: "xml", htmlMode: true});\n
+\n
+});\n
 </string> </value>
         </item>
         <item>
@@ -361,7 +412,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10915</int> </value>
+            <value> <int>12375</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

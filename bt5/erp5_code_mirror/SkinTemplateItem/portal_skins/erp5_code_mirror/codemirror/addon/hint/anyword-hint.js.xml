@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403075.24</string> </value>
+            <value> <string>ts21897118.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var WORD = /[\\w$]+/, RANGE = 500;\n
@@ -31,8 +41,7 @@
     var word = options && options.word || WORD;\n
     var range = options && options.range || RANGE;\n
     var cur = editor.getCursor(), curLine = editor.getLine(cur.line);\n
-    var start = cur.ch, end = start;\n
-    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;\n
+    var end = cur.ch, start = end;\n
     while (start && word.test(curLine.charAt(start - 1))) --start;\n
     var curWord = start != end && curLine.slice(start, end);\n
 \n
@@ -53,7 +62,7 @@
     }\n
     return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};\n
   });\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -64,7 +73,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1304</int> </value>
+            <value> <int>1653</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

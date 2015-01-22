@@ -45,19 +45,19 @@
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
-<script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
+<script src="//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border: 1px solid black;}\n
       .lint-error {font-family: arial; font-size: 70%; background: #ffa; color: #a00; padding: 2px 5px 3px; }\n
       .lint-error-icon {color: white; background-color: red; font-weight: bold; border-radius: 50%; padding: 0 3px; margin-right: 7px;}\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Inline Widget</a>\n

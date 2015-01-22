@@ -52,12 +52,12 @@
       .CodeMirror { border: 1px solid #eee; }\n
     </style>\n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="../doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">XML Autocomplete</a>\n
@@ -90,6 +90,10 @@
 \n
       var tags = {\n
         "!top": ["top"],\n
+        "!attrs": {\n
+          id: null,\n
+          class: ["A", "B", "C"]\n
+        },\n
         top: {\n
           attrs: {\n
             lang: ["en", "de", "fr", "nl"],\n
@@ -116,7 +120,7 @@
         var cur = cm.getCursor();\n
         if (!pred || pred()) setTimeout(function() {\n
           if (!cm.state.completionActive)\n
-            CodeMirror.showHint(cm, CodeMirror.hint.xml, {schemaInfo: tags, completeSingle: false});\n
+            cm.showHint({completeSingle: false});\n
         }, 100);\n
         return CodeMirror.Pass;\n
       }\n
@@ -145,10 +149,9 @@
           "\'/\'": completeIfAfterLt,\n
           "\' \'": completeIfInTag,\n
           "\'=\'": completeIfInTag,\n
-          "Ctrl-Space": function(cm) {\n
-            CodeMirror.showHint(cm, CodeMirror.hint.xml, {schemaInfo: tags});\n
-          }\n
-        }\n
+          "Ctrl-Space": "autocomplete"\n
+        },\n
+        hintOptions: {schemaInfo: tags}\n
       });\n
     </script>\n
   </article>

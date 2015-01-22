@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403104.33</string> </value>
+            <value> <string>ts21897151.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,6 +20,33 @@
         </item>
         <item>
             <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>74399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 var Pos = CodeMirror.Pos;\n
@@ -27,7 +54,7 @@ var Pos = CodeMirror.Pos;\n
 CodeMirror.defaults.rtlMoveVisually = true;\n
 \n
 function forEach(arr, f) {\n
-  for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);\n
+  for (var i = 0, e = arr.length; i < e; ++i) f(arr[i], i);\n
 }\n
 \n
 function addDoc(cm, width, height) {\n
@@ -51,6 +78,7 @@ function byClassName(elt, cls) {\n
 }\n
 \n
 var ie_lt8 = /MSIE [1-7]\\b/.test(navigator.userAgent);\n
+var ie_lt9 = /MSIE [1-8]\\b/.test(navigator.userAgent);\n
 var mac = /Mac/.test(navigator.platform);\n
 var phantom = /PhantomJS/.test(navigator.userAgent);\n
 var opera = /Opera\\/\\./.test(navigator.userAgent);\n
@@ -111,7 +139,7 @@ testCM("selection", function(cm) {\n
   is(!cm.somethingSelected());\n
   eq(cm.getSelection(), "");\n
   eqPos(cm.getCursor(true), Pos(1, 0));\n
-  cm.replaceSelection("abc");\n
+  cm.replaceSelection("abc", "around");\n
   eq(cm.getSelection(), "abc");\n
   eq(cm.getValue(), "111111\\nabc222222\\n333333");\n
   cm.replaceSelection("def", "end");\n
@@ -156,16 +184,16 @@ testCM("extendSelection", function(cm) {\n
   eqPos(cm.getCursor("anchor"), Pos(4, 5));\n
   cm.setExtending(false);\n
   cm.extendSelection(Pos(0, 3), Pos(0, 4));\n
-  eqPos(cm.getCursor("head"), Pos(0, 4));\n
-  eqPos(cm.getCursor("anchor"), Pos(0, 3));\n
+  eqPos(cm.getCursor("head"), Pos(0, 3));\n
+  eqPos(cm.getCursor("anchor"), Pos(0, 4));\n
 });\n
 \n
 testCM("lines", function(cm) {\n
   eq(cm.getLine(0), "111111");\n
   eq(cm.getLine(1), "222222");\n
   eq(cm.getLine(-1), null);\n
-  cm.removeLine(1);\n
-  cm.setLine(1, "abc");\n
+  cm.replaceRange("", Pos(1, 0), Pos(2, 0))\n
+  cm.replaceRange("abc", Pos(1, 0), Pos(1));\n
   eq(cm.getValue(), "111111\\nabc");\n
 }, {value: "111111\\n222222\\n333333"});\n
 \n
@@ -288,7 +316,7 @@ testCM("posFromIndex", function(cm) {\n
 });\n
 \n
 testCM("undo", function(cm) {\n
-  cm.setLine(0, "def");\n
+  cm.replaceRange("def", Pos(0, 0), Pos(0));\n
   eq(cm.historySize().undo, 1);\n
   cm.undo();\n
   eq(cm.getValue(), "abc");\n
@@ -318,7 +346,7 @@ testCM("undoDepth", function(cm) {\n
   cm.replaceRange("f", Pos(0));\n
   cm.undo(); cm.undo(); cm.undo();\n
   eq(cm.getValue(), "abcd");\n
-}, {value: "abc", undoDepth: 2});\n
+}, {value: "abc", undoDepth: 4});\n
 \n
 testCM("undoDoesntClearValue", function(cm) {\n
   cm.undo();\n
@@ -374,6 +402,22 @@ testCM("undoSelection", function(cm) {\n
   eqPos(cm.getCursor(true), Pos(0, 2));\n
   eqPos(cm.getCursor(false), Pos(0, 2));\n
 }, {value: "abcdefgh\\n"});\n
+\n
+testCM("undoSelectionAsBefore", function(cm) {\n
+  cm.replaceSelection("abc", "around");\n
+  cm.undo();\n
+  cm.redo();\n
+  eq(cm.getSelection(), "abc");\n
+});\n
+\n
+testCM("selectionChangeConfusesHistory", function(cm) {\n
+  cm.replaceSelection("abc", null, "dontmerge");\n
+  cm.operation(function() {\n
+    cm.setCursor(Pos(0, 0));\n
+    cm.replaceSelection("abc", null, "dontmerge");\n
+  });\n
+  eq(cm.historySize().undo, 2);\n
+});\n
 \n
 testCM("markTextSingleLine", function(cm) {\n
   forEach([{a: 0, b: 1, c: "", f: 2, t: 5},\n
@@ -523,6 +567,17 @@ testCM("deleteSpanCollapsedInclusiveLeft", function(cm) {\n
   cm.replaceRange("", from, to);\n
 }, {value: "abc\\nX\\ndef"});\n
 \n
+testCM("markTextCSS", function(cm) {\n
+  function present() {\n
+    var spans = cm.display.lineDiv.getElementsByTagName("span");\n
+    for (var i = 0; i < spans.length; i++)\n
+      if (spans[i].style.color == "cyan" && span[i].textContent == "cdefg") return true;\n
+  }\n
+  var m = cm.markText(Pos(0, 2), Pos(0, 6), {css: "color: cyan"});\n
+  m.clear();\n
+  is(!present());\n
+}, {value: "abcdefgh"});\n
+\n
 testCM("bookmark", function(cm) {\n
   function p(v) { return v && Pos(v[0], v[1]); }\n
   forEach([{a: [1, 0], b: [1, 1], c: "", d: [1, 4]},\n
@@ -565,10 +620,14 @@ testCM("bookmarkCursor", function(cm) {\n
   cm.setBookmark(Pos(3, 0), {widget: document.createTextNode("→")});\n
   var new01 = cm.cursorCoords(Pos(0, 1)), new11 = cm.cursorCoords(Pos(1, 1)),\n
       new20 = cm.cursorCoords(Pos(2, 0)), new30 = cm.cursorCoords(Pos(3, 0));\n
-  is(new01.left == pos01.left && new01.top == pos01.top, "at left, middle of line");\n
-  is(new11.left > pos11.left && new11.top == pos11.top, "at right, middle of line");\n
-  is(new20.left == pos20.left && new20.top == pos20.top, "at left, empty line");\n
-  is(new30.left > pos30.left && new30.top == pos30.top, "at right, empty line");\n
+  near(new01.left, pos01.left, 1);\n
+  near(new01.top, pos01.top, 1);\n
+  is(new11.left > pos11.left, "at right, middle of line");\n
+  near(new11.top == pos11.top, 1);\n
+  near(new20.left, pos20.left, 1);\n
+  near(new20.top, pos20.top, 1);\n
+  is(new30.left > pos30.left, "at right, empty line");\n
+  near(new30.top, pos30, 1);\n
   cm.setBookmark(Pos(4, 0), {widget: document.createTextNode("→")});\n
   is(cm.cursorCoords(Pos(4, 1)).left > pos41.left, "single-char bug");\n
 }, {value: "foo\\nbar\\n\\n\\nx\\ny"});\n
@@ -585,10 +644,10 @@ testCM("multiBookmarkCursor", function(cm) {\n
   }\n
   var base1 = cm.cursorCoords(Pos(0, 1)).left, base4 = cm.cursorCoords(Pos(0, 4)).left;\n
   add(true);\n
-  is(Math.abs(base1 - cm.cursorCoords(Pos(0, 1)).left) < .1);\n
+  near(base1, cm.cursorCoords(Pos(0, 1)).left, 1);\n
   while (m = ms.pop()) m.clear();\n
   add(false);\n
-  is(Math.abs(base4 - cm.cursorCoords(Pos(0, 1)).left) < .1);\n
+  near(base4, cm.cursorCoords(Pos(0, 1)).left, 1);\n
 }, {value: "abcdefg"});\n
 \n
 testCM("getAllMarks", function(cm) {\n
@@ -628,20 +687,40 @@ testCM("scrollSnap", function(cm) {\n
 testCM("scrollIntoView", function(cm) {\n
   if (phantom) return;\n
   var outer = cm.getWrapperElement().getBoundingClientRect();\n
-  function test(line, ch) {\n
+  function test(line, ch, msg) {\n
     var pos = Pos(line, ch);\n
     cm.scrollIntoView(pos);\n
     var box = cm.charCoords(pos, "window");\n
-    is(box.left >= outer.left && box.right <= outer.right &&\n
-       box.top >= outer.top && box.bottom <= outer.bottom);\n
+    is(box.left >= outer.left, msg + " (left)");\n
+    is(box.right <= outer.right, msg + " (right)");\n
+    is(box.top >= outer.top, msg + " (top)");\n
+    is(box.bottom <= outer.bottom, msg + " (bottom)");\n
   }\n
   addDoc(cm, 200, 200);\n
-  test(199, 199);\n
-  test(0, 0);\n
-  test(100, 100);\n
-  test(199, 0);\n
-  test(0, 199);\n
-  test(100, 100);\n
+  test(199, 199, "bottom right");\n
+  test(0, 0, "top left");\n
+  test(100, 100, "center");\n
+  test(199, 0, "bottom left");\n
+  test(0, 199, "top right");\n
+  test(100, 100, "center again");\n
+});\n
+\n
+testCM("scrollBackAndForth", function(cm) {\n
+  addDoc(cm, 1, 200);\n
+  cm.operation(function() {\n
+    cm.scrollIntoView(Pos(199, 0));\n
+    cm.scrollIntoView(Pos(4, 0));\n
+  });\n
+  is(cm.getScrollInfo().top > 0);\n
+});\n
+\n
+testCM("selectAllNoScroll", function(cm) {\n
+  addDoc(cm, 1, 200);\n
+  cm.execCommand("selectAll");\n
+  eq(cm.getScrollInfo().top, 0);\n
+  cm.setCursor(199);\n
+  cm.execCommand("selectAll");\n
+  is(cm.getScrollInfo().top > 0);\n
 });\n
 \n
 testCM("selectionPos", function(cm) {\n
@@ -681,8 +760,8 @@ testCM("selectionPos", function(cm) {\n
 \n
 testCM("restoreHistory", function(cm) {\n
   cm.setValue("abc\\ndef");\n
-  cm.setLine(1, "hello");\n
-  cm.setLine(0, "goop");\n
+  cm.replaceRange("hello", Pos(1, 0), Pos(1));\n
+  cm.replaceRange("goop", Pos(0, 0), Pos(0));\n
   cm.undo();\n
   var storedVal = cm.getValue(), storedHist = cm.getHistory();\n
   if (window.JSON) storedHist = JSON.parse(JSON.stringify(storedHist));\n
@@ -747,11 +826,11 @@ testCM("collapsedLines", function(cm) {\n
   cm.setCursor(Pos(3, 0));\n
   CodeMirror.commands.goLineDown(cm);\n
   eqPos(cm.getCursor(), Pos(5, 0));\n
-  cm.setLine(3, "abcdefg");\n
+  cm.replaceRange("abcdefg", Pos(3, 0), Pos(3));\n
   cm.setCursor(Pos(3, 6));\n
   CodeMirror.commands.goLineDown(cm);\n
   eqPos(cm.getCursor(), Pos(5, 4));\n
-  cm.setLine(3, "ab");\n
+  cm.replaceRange("ab", Pos(3, 0), Pos(3));\n
   cm.setCursor(Pos(3, 2));\n
   CodeMirror.commands.goLineDown(cm);\n
   eqPos(cm.getCursor(), Pos(5, 2));\n
@@ -773,6 +852,31 @@ testCM("collapsedRangeCoordsChar", function(cm) {\n
   var m1 = cm.markText(Pos(0, 0), Pos(1, 6), opts);\n
   eqPos(cm.coordsChar(pos_1_3), Pos(3, 3));\n
 }, {value: "123456\\nabcdef\\nghijkl\\nmnopqr\\n"});\n
+\n
+testCM("collapsedRangeBetweenLinesSelected", function(cm) {\n
+  var widget = document.createElement("span");\n
+  widget.textContent = "\\u2194";\n
+  cm.markText(Pos(0, 3), Pos(1, 0), {replacedWith: widget});\n
+  cm.setSelection(Pos(0, 3), Pos(1, 0));\n
+  var selElts = byClassName(cm.getWrapperElement(), "CodeMirror-selected");\n
+  for (var i = 0, w = 0; i < selElts.length; i++)\n
+    w += selElts[i].offsetWidth;\n
+  is(w > 0);\n
+}, {value: "one\\ntwo"});\n
+\n
+testCM("randomCollapsedRanges", function(cm) {\n
+  addDoc(cm, 20, 500);\n
+  cm.operation(function() {\n
+    for (var i = 0; i < 200; i++) {\n
+      var start = Pos(Math.floor(Math.random() * 500), Math.floor(Math.random() * 20));\n
+      if (i % 4)\n
+        try { cm.markText(start, Pos(start.line + 2, 1), {collapsed: true}); }\n
+        catch(e) { if (!/overlapping/.test(String(e))) throw e; }\n
+      else\n
+        cm.markText(start, Pos(start.line, start.ch + 4), {"className": "foo"});\n
+    }\n
+  });\n
+});\n
 \n
 testCM("hiddenLinesAutoUnfold", function(cm) {\n
   var range = foldLines(cm, 1, 3, true), cleared = 0;\n
@@ -912,6 +1016,15 @@ testCM("nestedFoldOnSide", function(cm) {\n
   is(caught && /overlap/i.test(caught.message));\n
 }, {value: "ab\\ncd\\ef"});\n
 \n
+testCM("editInFold", function(cm) {\n
+  addDoc(cm, 4, 6);\n
+  var m = cm.markText(Pos(1, 2), Pos(3, 2), {collapsed: true});\n
+  cm.replaceRange("", Pos(0, 0), Pos(1, 3));\n
+  cm.replaceRange("", Pos(2, 1), Pos(3, 3));\n
+  cm.replaceRange("a\\nb\\nc\\nd", Pos(0, 1), Pos(1, 0));\n
+  cm.cursorCoords(Pos(0, 0));\n
+});\n
+\n
 testCM("wrappingInlineWidget", function(cm) {\n
   cm.setSize("11em");\n
   var w = document.createElement("span");\n
@@ -928,6 +1041,7 @@ testCM("wrappingInlineWidget", function(cm) {\n
   eq(curR.bottom, cur1.bottom);\n
   cm.replaceRange("", Pos(0, 9), Pos(0));\n
   curR = cm.cursorCoords(Pos(0, 9));\n
+  if (phantom) return;\n
   eq(curR.top, cur1.top);\n
   eq(curR.bottom, cur1.bottom);\n
 }, {value: "1 2 3 xxx 4", lineWrapping: true});\n
@@ -1072,15 +1186,15 @@ testCM("verticalScroll", function(cm) {\n
   cm.setSize(100, 200);\n
   cm.setValue("foo\\nbar\\nbaz\\n");\n
   var sc = cm.getScrollerElement(), baseWidth = sc.scrollWidth;\n
-  cm.setLine(0, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah");\n
+  cm.replaceRange("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah", Pos(0, 0), Pos(0));\n
   is(sc.scrollWidth > baseWidth, "scrollbar present");\n
-  cm.setLine(0, "foo");\n
+  cm.replaceRange("foo", Pos(0, 0), Pos(0));\n
   if (!phantom) eq(sc.scrollWidth, baseWidth, "scrollbar gone");\n
-  cm.setLine(0, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah");\n
-  cm.setLine(1, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbh");\n
+  cm.replaceRange("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah", Pos(0, 0), Pos(0));\n
+  cm.replaceRange("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbh", Pos(1, 0), Pos(1));\n
   is(sc.scrollWidth > baseWidth, "present again");\n
   var curWidth = sc.scrollWidth;\n
-  cm.setLine(0, "foo");\n
+  cm.replaceRange("foo", Pos(0, 0), Pos(0));\n
   is(sc.scrollWidth < curWidth, "scrollbar smaller");\n
   is(sc.scrollWidth > baseWidth, "but still present");\n
 });\n
@@ -1253,23 +1367,26 @@ testCM("rtlMovement", function(cm) {\n
            "<img src=\\"/בדיקה3.jpg\\">"], function(line) {\n
     var inv = line.charAt(0) == "خ";\n
     cm.setValue(line + "\\n"); cm.execCommand(inv ? "goLineEnd" : "goLineStart");\n
-    var cursor = byClassName(cm.getWrapperElement(), "CodeMirror-cursor")[0];\n
+    var cursors = byClassName(cm.getWrapperElement(), "CodeMirror-cursors")[0];\n
+    var cursor = cursors.firstChild;\n
     var prevX = cursor.offsetLeft, prevY = cursor.offsetTop;\n
     for (var i = 0; i <= line.length; ++i) {\n
       cm.execCommand("goCharRight");\n
+      cursor = cursors.firstChild;\n
       if (i == line.length) is(cursor.offsetTop > prevY, "next line");\n
       else is(cursor.offsetLeft > prevX, "moved right");\n
       prevX = cursor.offsetLeft; prevY = cursor.offsetTop;\n
     }\n
     cm.setCursor(0, 0); cm.execCommand(inv ? "goLineStart" : "goLineEnd");\n
-    prevX = cursor.offsetLeft;\n
+    prevX = cursors.firstChild.offsetLeft;\n
     for (var i = 0; i < line.length; ++i) {\n
       cm.execCommand("goCharLeft");\n
+      cursor = cursors.firstChild;\n
       is(cursor.offsetLeft < prevX, "moved left");\n
       prevX = cursor.offsetLeft;\n
     }\n
   });\n
-});\n
+}, null, ie_lt9);\n
 \n
 // Verify that updating a line clears its bidi ordering\n
 testCM("bidiUpdate", function(cm) {\n
@@ -1280,7 +1397,7 @@ testCM("bidiUpdate", function(cm) {\n
 }, {value: "abcd\\n"});\n
 \n
 testCM("movebyTextUnit", function(cm) {\n
-  cm.setValue("בְּרֵאשִ\\ńéée\\n");\n
+  cm.setValue("בְּרֵאשִ\\nééé́\\n");\n
   cm.execCommand("goLineEnd");\n
   for (var i = 0; i < 4; ++i) cm.execCommand("goCharRight");\n
   eqPos(cm.getCursor(), Pos(0, 0));\n
@@ -1288,10 +1405,9 @@ testCM("movebyTextUnit", function(cm) {\n
   eqPos(cm.getCursor(), Pos(1, 0));\n
   cm.execCommand("goCharRight");\n
   cm.execCommand("goCharRight");\n
-  eqPos(cm.getCursor(), Pos(1, 3));\n
+  eqPos(cm.getCursor(), Pos(1, 4));\n
   cm.execCommand("goCharRight");\n
-  cm.execCommand("goCharRight");\n
-  eqPos(cm.getCursor(), Pos(1, 6));\n
+  eqPos(cm.getCursor(), Pos(1, 7));\n
 });\n
 \n
 testCM("lineChangeEvents", function(cm) {\n
@@ -1352,6 +1468,91 @@ testCM("lineWidgetFocus", function(cm) {\n
   }\n
 });\n
 \n
+testCM("lineWidgetCautiousRedraw", function(cm) {\n
+  var node = document.createElement("div");\n
+  node.innerHTML = "hahah";\n
+  var w = cm.addLineWidget(0, node);\n
+  var redrawn = false;\n
+  w.on("redraw", function() { redrawn = true; });\n
+  cm.replaceSelection("0");\n
+  is(!redrawn);\n
+}, {value: "123\\n456"});\n
+\n
+\n
+var knownScrollbarWidth;\n
+function scrollbarWidth(measure) {\n
+  if (knownScrollbarWidth != null) return knownScrollbarWidth;\n
+  var div = document.createElement(\'div\');\n
+  div.style.cssText = "width: 50px; height: 50px; overflow-x: scroll";\n
+  document.body.appendChild(div);\n
+  knownScrollbarWidth = div.offsetHeight - div.clientHeight;\n
+  document.body.removeChild(div);\n
+  return knownScrollbarWidth || 0;\n
+}\n
+\n
+testCM("lineWidgetChanged", function(cm) {\n
+  addDoc(cm, 2, 300);\n
+  var halfScrollbarWidth = scrollbarWidth(cm.display.measure)/2;\n
+  cm.setOption(\'lineNumbers\', true);\n
+  cm.setSize(600, cm.defaultTextHeight() * 50);\n
+  cm.scrollTo(null, cm.heightAtLine(125, "local"));\n
+\n
+  var expectedWidgetHeight = 60;\n
+  var expectedLinesInWidget = 3;\n
+  function w() {\n
+    var node = document.createElement("div");\n
+    // we use these children with just under half width of the line to check measurements are made with correct width\n
+    // when placed in the measure div.\n
+    // If the widget is measured at a width much narrower than it is displayed at, the underHalf children will span two lines and break the test.\n
+    // If the widget is measured at a width much wider than it is displayed at, the overHalf children will combine and break the test.\n
+    // Note that this test only checks widgets where coverGutter is true, because these require extra styling to get the width right.\n
+    // It may also be worthwhile to check this for non-coverGutter widgets.\n
+    // Visually:\n
+    // Good:\n
+    // | ------------- display width ------------- |\n
+    // | ------- widget-width when measured ------ |\n
+    // | | -- under-half -- | | -- under-half -- | | \n
+    // | | --- over-half --- |                     |\n
+    // | | --- over-half --- |                     |\n
+    // Height: measured as 3 lines, same as it will be when actually displayed\n
+\n
+    // Bad (too narrow):\n
+    // | ------------- display width ------------- |\n
+    // | ------ widget-width when measured ----- |  < -- uh oh\n
+    // | | -- under-half -- |                    |\n
+    // | | -- under-half -- |                    |  < -- when measured, shoved to next line\n
+    // | | --- over-half --- |                   |\n
+    // | | --- over-half --- |                   |\n
+    // Height: measured as 4 lines, more than expected . Will be displayed as 3 lines!\n
+\n
+    // Bad (too wide):\n
+    // | ------------- display width ------------- |\n
+    // | -------- widget-width when measured ------- | < -- uh oh\n
+    // | | -- under-half -- | | -- under-half -- |   | \n
+    // | | --- over-half --- | | --- over-half --- | | < -- when measured, combined on one line\n
+    // Height: measured as 2 lines, less than expected. Will be displayed as 3 lines!\n
+\n
+    var barelyUnderHalfWidthHtml = \'<div style="display: inline-block; height: 1px; width: \'+(285 - halfScrollbarWidth)+\'px;"></div>\';\n
+    var barelyOverHalfWidthHtml = \'<div style="display: inline-block; height: 1px; width: \'+(305 - halfScrollbarWidth)+\'px;"></div>\';\n
+    node.innerHTML = new Array(3).join(barelyUnderHalfWidthHtml) + new Array(3).join(barelyOverHalfWidthHtml);\n
+    node.style.cssText = "background: yellow;font-size:0;line-height: " + (expectedWidgetHeight/expectedLinesInWidget) + "px;";\n
+    return node;\n
+  }\n
+  var info0 = cm.getScrollInfo();\n
+  var w0 = cm.addLineWidget(0, w(), { coverGutter: true });\n
+  var w150 = cm.addLineWidget(150, w(), { coverGutter: true });\n
+  var w300 = cm.addLineWidget(300, w(), { coverGutter: true });\n
+  var info1 = cm.getScrollInfo();\n
+  eq(info0.height + (3 * expectedWidgetHeight), info1.height);\n
+  eq(info0.top + expectedWidgetHeight, info1.top);\n
+  expectedWidgetHeight = 12;\n
+  w0.node.style.lineHeight = w150.node.style.lineHeight = w300.node.style.lineHeight = (expectedWidgetHeight/expectedLinesInWidget) + "px";\n
+  w0.changed(); w150.changed(); w300.changed();\n
+  var info2 = cm.getScrollInfo();\n
+  eq(info0.height + (3 * expectedWidgetHeight), info2.height);\n
+  eq(info0.top + expectedWidgetHeight, info2.top);\n
+});\n
+\n
 testCM("getLineNumber", function(cm) {\n
   addDoc(cm, 2, 20);\n
   var h1 = cm.getLineHandle(1);\n
@@ -1363,9 +1564,10 @@ testCM("getLineNumber", function(cm) {\n
 });\n
 \n
 testCM("jumpTheGap", function(cm) {\n
+  if (phantom) return;\n
   var longLine = "abcdef ghiklmnop qrstuvw xyz ";\n
   longLine += longLine; longLine += longLine; longLine += longLine;\n
-  cm.setLine(2, longLine);\n
+  cm.replaceRange(longLine, Pos(2, 0), Pos(2));\n
   cm.setSize("200px", null);\n
   cm.getWrapperElement().style.lineHeight = 2;\n
   cm.refresh();\n
@@ -1393,33 +1595,48 @@ testCM("jumpTheGap", function(cm) {\n
 }, {lineWrapping: true, value: "abc\\ndef\\nghi\\njkl\\n"});\n
 \n
 testCM("addLineClass", function(cm) {\n
-  function cls(line, text, bg, wrap) {\n
+  function cls(line, text, bg, wrap, gutter) {\n
     var i = cm.lineInfo(line);\n
     eq(i.textClass, text);\n
     eq(i.bgClass, bg);\n
     eq(i.wrapClass, wrap);\n
+    if (typeof i.handle.gutterClass !== \'undefined\') {\n
+        eq(i.handle.gutterClass, gutter);\n
+    }\n
   }\n
   cm.addLineClass(0, "text", "foo");\n
   cm.addLineClass(0, "text", "bar");\n
   cm.addLineClass(1, "background", "baz");\n
   cm.addLineClass(1, "wrap", "foo");\n
-  cls(0, "foo bar", null, null);\n
-  cls(1, null, "baz", "foo");\n
+  cm.addLineClass(1, "gutter", "gutter-class");\n
+  cls(0, "foo bar", null, null, null);\n
+  cls(1, null, "baz", "foo", "gutter-class");\n
   var lines = cm.display.lineDiv;\n
   eq(byClassName(lines, "foo").length, 2);\n
   eq(byClassName(lines, "bar").length, 1);\n
   eq(byClassName(lines, "baz").length, 1);\n
+  eq(byClassName(lines, "gutter-class").length, 1);\n
   cm.removeLineClass(0, "text", "foo");\n
-  cls(0, "bar", null, null);\n
+  cls(0, "bar", null, null, null);\n
   cm.removeLineClass(0, "text", "foo");\n
-  cls(0, "bar", null, null);\n
+  cls(0, "bar", null, null, null);\n
   cm.removeLineClass(0, "text", "bar");\n
   cls(0, null, null, null);\n
+\n
   cm.addLineClass(1, "wrap", "quux");\n
-  cls(1, null, "baz", "foo quux");\n
+  cls(1, null, "baz", "foo quux", "gutter-class");\n
   cm.removeLineClass(1, "wrap");\n
-  cls(1, null, "baz", null);\n
-}, {value: "hohoho\\n"});\n
+  cls(1, null, "baz", null, "gutter-class");\n
+  cm.removeLineClass(1, "gutter", "gutter-class");\n
+  eq(byClassName(lines, "gutter-class").length, 0);\n
+  cls(1, null, "baz", null, null);\n
+\n
+  cm.addLineClass(1, "gutter", "gutter-class");\n
+  cls(1, null, "baz", null, "gutter-class");\n
+  cm.removeLineClass(1, "gutter", "gutter-class");\n
+  cls(1, null, "baz", null, null);\n
+\n
+}, {value: "hohoho\\n", lineNumbers: true});\n
 \n
 testCM("atomicMarker", function(cm) {\n
   addDoc(cm, 10, 10);\n
@@ -1469,6 +1686,29 @@ testCM("atomicMarker", function(cm) {\n
   eq(cm.getValue().length, 53, "del chunk");\n
 });\n
 \n
+testCM("selectionBias", function(cm) {\n
+  cm.markText(Pos(0, 1), Pos(0, 3), {atomic: true});\n
+  cm.setCursor(Pos(0, 2));\n
+  eqPos(cm.getCursor(), Pos(0, 3));\n
+  cm.setCursor(Pos(0, 2));\n
+  eqPos(cm.getCursor(), Pos(0, 1));\n
+  cm.setCursor(Pos(0, 2), null, {bias: -1});\n
+  eqPos(cm.getCursor(), Pos(0, 1));\n
+  cm.setCursor(Pos(0, 4));\n
+  cm.setCursor(Pos(0, 2), null, {bias: 1});\n
+  eqPos(cm.getCursor(), Pos(0, 3));\n
+}, {value: "12345"});\n
+\n
+testCM("selectionHomeEnd", function(cm) {\n
+  cm.markText(Pos(1, 0), Pos(1, 1), {atomic: true, inclusiveLeft: true});\n
+  cm.markText(Pos(1, 3), Pos(1, 4), {atomic: true, inclusiveRight: true});\n
+  cm.setCursor(Pos(1, 2));\n
+  cm.execCommand("goLineStart");\n
+  eqPos(cm.getCursor(), Pos(1, 1));\n
+  cm.execCommand("goLineEnd");\n
+  eqPos(cm.getCursor(), Pos(1, 3));\n
+}, {value: "ab\\ncdef\\ngh"});\n
+\n
 testCM("readOnlyMarker", function(cm) {\n
   function mark(ll, cl, lr, cr, at) {\n
     return cm.markText(Pos(ll, cl), Pos(lr, cr),\n
@@ -1480,14 +1720,14 @@ testCM("readOnlyMarker", function(cm) {\n
   eqPos(cm.getCursor(), Pos(0, 2));\n
   eq(cm.getLine(0), "abcde");\n
   cm.execCommand("selectAll");\n
-  cm.replaceSelection("oops");\n
+  cm.replaceSelection("oops", "around");\n
   eq(cm.getValue(), "oopsbcd");\n
   cm.undo();\n
   eqPos(m.find().from, Pos(0, 1));\n
   eqPos(m.find().to, Pos(0, 4));\n
   m.clear();\n
   cm.setCursor(Pos(0, 2));\n
-  cm.replaceSelection("hi");\n
+  cm.replaceSelection("hi", "around");\n
   eq(cm.getLine(0), "abhicde");\n
   eqPos(cm.getCursor(), Pos(0, 4));\n
   m = mark(0, 2, 2, 2, true);\n
@@ -1499,19 +1739,19 @@ testCM("readOnlyMarker", function(cm) {\n
   cm.execCommand("goCharLeft");\n
   eqPos(cm.getCursor(), Pos(0, 2));\n
   cm.setSelection(Pos(0, 1), Pos(0, 3));\n
-  cm.replaceSelection("xx");\n
+  cm.replaceSelection("xx", "around");\n
   eqPos(cm.getCursor(), Pos(0, 3));\n
   eq(cm.getLine(0), "axxhicde");\n
 }, {value: "abcde\\nfghij\\nklmno\\n"});\n
 \n
 testCM("dirtyBit", function(cm) {\n
   eq(cm.isClean(), true);\n
-  cm.replaceSelection("boo");\n
+  cm.replaceSelection("boo", null, "test");\n
   eq(cm.isClean(), false);\n
   cm.undo();\n
   eq(cm.isClean(), true);\n
-  cm.replaceSelection("boo");\n
-  cm.replaceSelection("baz");\n
+  cm.replaceSelection("boo", null, "test");\n
+  cm.replaceSelection("baz", null, "test");\n
   cm.undo();\n
   eq(cm.isClean(), false);\n
   cm.markClean();\n
@@ -1523,15 +1763,15 @@ testCM("dirtyBit", function(cm) {\n
 });\n
 \n
 testCM("changeGeneration", function(cm) {\n
-  cm.replaceSelection("x", null, "+insert");\n
+  cm.replaceSelection("x");\n
   var softGen = cm.changeGeneration();\n
-  cm.replaceSelection("x", null, "+insert");\n
+  cm.replaceSelection("x");\n
   cm.undo();\n
   eq(cm.getValue(), "");\n
   is(!cm.isClean(softGen));\n
-  cm.replaceSelection("x", null, "+insert");\n
+  cm.replaceSelection("x");\n
   var hardGen = cm.changeGeneration(true);\n
-  cm.replaceSelection("x", null, "+insert");\n
+  cm.replaceSelection("x");\n
   cm.undo();\n
   eq(cm.getValue(), "x");\n
   is(cm.isClean(hardGen));\n
@@ -1609,8 +1849,8 @@ testCM("beforeChange", function(cm) {\n
 }, {value: "abcdefghijk"});\n
 \n
 testCM("beforeChangeUndo", function(cm) {\n
-  cm.setLine(0, "hi");\n
-  cm.setLine(0, "bye");\n
+  cm.replaceRange("hi", Pos(0, 0), Pos(0));\n
+  cm.replaceRange("bye", Pos(0, 0), Pos(0));\n
   eq(cm.historySize().undo, 2);\n
   cm.on("beforeChange", function(cm, change) {\n
     is(!change.update);\n
@@ -1627,9 +1867,9 @@ testCM("beforeSelectionChange", function(cm) {\n
     if (!len || pos.ch == len) return Pos(pos.line, pos.ch - 1);\n
     return pos;\n
   }\n
-  cm.on("beforeSelectionChange", function(cm, sel) {\n
-    sel.head = notAtEnd(cm, sel.head);\n
-    sel.anchor = notAtEnd(cm, sel.anchor);\n
+  cm.on("beforeSelectionChange", function(cm, obj) {\n
+    obj.update([{anchor: notAtEnd(cm, obj.ranges[0].anchor),\n
+                 head: notAtEnd(cm, obj.ranges[0].head)}]);\n
   });\n
 \n
   addDoc(cm, 10, 10);\n
@@ -1643,9 +1883,9 @@ testCM("beforeSelectionChange", function(cm) {\n
 testCM("change_removedText", function(cm) {\n
   cm.setValue("abc\\ndef");\n
 \n
-  var removedText;\n
+  var removedText = [];\n
   cm.on("change", function(cm, change) {\n
-    removedText = [change.removed, change.next && change.next.removed];\n
+    removedText.push(change.removed);\n
   });\n
 \n
   cm.operation(function() {\n
@@ -1653,14 +1893,19 @@ testCM("change_removedText", function(cm) {\n
     cm.replaceRange("123", Pos(0,0));\n
   });\n
 \n
+  eq(removedText.length, 2);\n
   eq(removedText[0].join("\\n"), "abc\\nd");\n
   eq(removedText[1].join("\\n"), "");\n
 \n
+  var removedText = [];\n
   cm.undo();\n
+  eq(removedText.length, 2);\n
   eq(removedText[0].join("\\n"), "123");\n
   eq(removedText[1].join("\\n"), "xyz");\n
 \n
+  var removedText = [];\n
   cm.redo();\n
+  eq(removedText.length, 2);\n
   eq(removedText[0].join("\\n"), "abc\\nd");\n
   eq(removedText[1].join("\\n"), "");\n
 });\n
@@ -1676,11 +1921,11 @@ testCM("lineStyleFromMode", function(cm) {\n
   });\n
   cm.setOption("mode", "test_mode");\n
   var bracketElts = byClassName(cm.getWrapperElement(), "brackets");\n
-  eq(bracketElts.length, 1);\n
+  eq(bracketElts.length, 1, "brackets count");\n
   eq(bracketElts[0].nodeName, "PRE");\n
   is(!/brackets.*brackets/.test(bracketElts[0].className));\n
   var parenElts = byClassName(cm.getWrapperElement(), "parens");\n
-  eq(parenElts.length, 1);\n
+  eq(parenElts.length, 1, "parens count");\n
   eq(parenElts[0].nodeName, "DIV");\n
   is(!/parens.*parens/.test(parenElts[0].className));\n
   eq(parenElts[0].parentElement.nodeName, "DIV");\n
@@ -1691,6 +1936,20 @@ testCM("lineStyleFromMode", function(cm) {\n
   eq(spanElts.length, 2);\n
   is(/^\\s*cm-span\\s*$/.test(spanElts[0].className));\n
 }, {value: "line1: [br] [br]\\nline2: (par) (par)\\nline3: <tag> <tag>"});\n
+\n
+testCM("lineStyleFromBlankLine", function(cm) {\n
+  CodeMirror.defineMode("lineStyleFromBlankLine_mode", function() {\n
+    return {token: function(stream) { stream.skipToEnd(); return "comment"; },\n
+            blankLine: function() { return "line-blank"; }};\n
+  });\n
+  cm.setOption("mode", "lineStyleFromBlankLine_mode");\n
+  var blankElts = byClassName(cm.getWrapperElement(), "blank");\n
+  eq(blankElts.length, 1);\n
+  eq(blankElts[0].nodeName, "PRE");\n
+  cm.replaceRange("x", Pos(1, 0));\n
+  blankElts = byClassName(cm.getWrapperElement(), "blank");\n
+  eq(blankElts.length, 0);\n
+}, {value: "foo\\n\\nbar"});\n
 \n
 CodeMirror.registerHelper("xxx", "a", "A");\n
 CodeMirror.registerHelper("xxx", "b", "B");\n
@@ -1710,21 +1969,190 @@ testCM("helpers", function(cm) {\n
   cm.setOption("mode", "javascript");\n
   eq(cm.getHelpers(Pos(0, 0), "xxx").join("/"), "");\n
 });\n
+\n
+testCM("selectionHistory", function(cm) {\n
+  for (var i = 0; i < 3; i++) {\n
+    cm.setExtending(true);\n
+    cm.execCommand("goCharRight");\n
+    cm.setExtending(false);\n
+    cm.execCommand("goCharRight");\n
+    cm.execCommand("goCharRight");\n
+  }\n
+  cm.execCommand("undoSelection");\n
+  eq(cm.getSelection(), "c");\n
+  cm.execCommand("undoSelection");\n
+  eq(cm.getSelection(), "");\n
+  eqPos(cm.getCursor(), Pos(0, 4));\n
+  cm.execCommand("undoSelection");\n
+  eq(cm.getSelection(), "b");\n
+  cm.execCommand("redoSelection");\n
+  eq(cm.getSelection(), "");\n
+  eqPos(cm.getCursor(), Pos(0, 4));\n
+  cm.execCommand("redoSelection");\n
+  eq(cm.getSelection(), "c");\n
+  cm.execCommand("redoSelection");\n
+  eq(cm.getSelection(), "");\n
+  eqPos(cm.getCursor(), Pos(0, 6));\n
+}, {value: "a b c d"});\n
+\n
+testCM("selectionChangeReducesRedo", function(cm) {\n
+  cm.replaceSelection("X");\n
+  cm.execCommand("goCharRight");\n
+  cm.undoSelection();\n
+  cm.execCommand("selectAll");\n
+  cm.undoSelection();\n
+  eq(cm.getValue(), "Xabc");\n
+  eqPos(cm.getCursor(), Pos(0, 1));\n
+  cm.undoSelection();\n
+  eq(cm.getValue(), "abc");\n
+}, {value: "abc"});\n
+\n
+testCM("selectionHistoryNonOverlapping", function(cm) {\n
+  cm.setSelection(Pos(0, 0), Pos(0, 1));\n
+  cm.setSelection(Pos(0, 2), Pos(0, 3));\n
+  cm.execCommand("undoSelection");\n
+  eqPos(cm.getCursor("anchor"), Pos(0, 0));\n
+  eqPos(cm.getCursor("head"), Pos(0, 1));\n
+}, {value: "1234"});\n
+\n
+testCM("cursorMotionSplitsHistory", function(cm) {\n
+  cm.replaceSelection("a");\n
+  cm.execCommand("goCharRight");\n
+  cm.replaceSelection("b");\n
+  cm.replaceSelection("c");\n
+  cm.undo();\n
+  eq(cm.getValue(), "a1234");\n
+  eqPos(cm.getCursor(), Pos(0, 2));\n
+  cm.undo();\n
+  eq(cm.getValue(), "1234");\n
+  eqPos(cm.getCursor(), Pos(0, 0));\n
+}, {value: "1234"});\n
+\n
+testCM("selChangeInOperationDoesNotSplit", function(cm) {\n
+  for (var i = 0; i < 4; i++) {\n
+    cm.operation(function() {\n
+      cm.replaceSelection("x");\n
+      cm.setCursor(Pos(0, cm.getCursor().ch - 1));\n
+    });\n
+  }\n
+  eqPos(cm.getCursor(), Pos(0, 0));\n
+  eq(cm.getValue(), "xxxxa");\n
+  cm.undo();\n
+  eq(cm.getValue(), "a");\n
+}, {value: "a"});\n
+\n
+testCM("alwaysMergeSelEventWithChangeOrigin", function(cm) {\n
+  cm.replaceSelection("U", null, "foo");\n
+  cm.setSelection(Pos(0, 0), Pos(0, 1), {origin: "foo"});\n
+  cm.undoSelection();\n
+  eq(cm.getValue(), "a");\n
+  cm.replaceSelection("V", null, "foo");\n
+  cm.setSelection(Pos(0, 0), Pos(0, 1), {origin: "bar"});\n
+  cm.undoSelection();\n
+  eq(cm.getValue(), "Va");\n
+}, {value: "a"});\n
+\n
+testCM("getTokenAt", function(cm) {\n
+  var tokPlus = cm.getTokenAt(Pos(0, 2));\n
+  eq(tokPlus.type, "operator");\n
+  eq(tokPlus.string, "+");\n
+  var toks = cm.getLineTokens(0);\n
+  eq(toks.length, 3);\n
+  forEach([["number", "1"], ["operator", "+"], ["number", "2"]], function(expect, i) {\n
+    eq(toks[i].type, expect[0]);\n
+    eq(toks[i].string, expect[1]);\n
+  });\n
+}, {value: "1+2", mode: "javascript"});\n
+\n
+testCM("getTokenTypeAt", function(cm) {\n
+  eq(cm.getTokenTypeAt(Pos(0, 0)), "number");\n
+  eq(cm.getTokenTypeAt(Pos(0, 6)), "string");\n
+  cm.addOverlay({\n
+    token: function(stream) {\n
+      if (stream.match("foo")) return "foo";\n
+      else stream.next();\n
+    }\n
+  });\n
+  eq(byClassName(cm.getWrapperElement(), "cm-foo").length, 1);\n
+  eq(cm.getTokenTypeAt(Pos(0, 6)), "string");\n
+}, {value: "1 + \'foo\'", mode: "javascript"});\n
+\n
+testCM("resizeLineWidget", function(cm) {\n
+  addDoc(cm, 200, 3);\n
+  var widget = document.createElement("pre");\n
+  widget.innerHTML = "imwidget";\n
+  widget.style.background = "yellow";\n
+  cm.addLineWidget(1, widget, {noHScroll: true});\n
+  cm.setSize(40);\n
+  is(widget.parentNode.offsetWidth < 42);\n
+});\n
+\n
+testCM("combinedOperations", function(cm) {\n
+  var place = document.getElementById("testground");\n
+  var other = CodeMirror(place, {value: "123"});\n
+  try {\n
+    cm.operation(function() {\n
+      cm.addLineClass(0, "wrap", "foo");\n
+      other.addLineClass(0, "wrap", "foo");\n
+    });\n
+    eq(byClassName(cm.getWrapperElement(), "foo").length, 1);\n
+    eq(byClassName(other.getWrapperElement(), "foo").length, 1);\n
+    cm.operation(function() {\n
+      cm.removeLineClass(0, "wrap", "foo");\n
+      other.removeLineClass(0, "wrap", "foo");\n
+    });\n
+    eq(byClassName(cm.getWrapperElement(), "foo").length, 0);\n
+    eq(byClassName(other.getWrapperElement(), "foo").length, 0);\n
+  } finally {\n
+    place.removeChild(other.getWrapperElement());\n
+  }\n
+}, {value: "abc"});\n
+\n
+testCM("eventOrder", function(cm) {\n
+  var seen = [];\n
+  cm.on("change", function() {\n
+    if (!seen.length) cm.replaceSelection(".");\n
+    seen.push("change");\n
+  });\n
+  cm.on("cursorActivity", function() {\n
+    cm.replaceSelection("!");\n
+    seen.push("activity");\n
+  });\n
+  cm.replaceSelection("/");\n
+  eq(seen.join(","), "change,change,activity,change");\n
+});\n
+\n
+test("core_rmClass", function() {\n
+  var node = document.createElement("div");\n
+  node.className = "foo-bar baz-quux yadda";\n
+  CodeMirror.rmClass(node, "quux");\n
+  eq(node.className, "foo-bar baz-quux yadda");\n
+  CodeMirror.rmClass(node, "baz-quux");\n
+  eq(node.className, "foo-bar yadda");\n
+  CodeMirror.rmClass(node, "yadda");\n
+  eq(node.className, "foo-bar");\n
+  CodeMirror.rmClass(node, "foo-bar");\n
+  eq(node.className, "");\n
+  node.className = " foo ";\n
+  CodeMirror.rmClass(node, "foo");\n
+  eq(node.className, "");\n
+});\n
+\n
+test("core_addClass", function() {\n
+  var node = document.createElement("div");\n
+  CodeMirror.addClass(node, "a");\n
+  eq(node.className, "a");\n
+  CodeMirror.addClass(node, "a");\n
+  eq(node.className, "a");\n
+  CodeMirror.addClass(node, "b");\n
+  eq(node.className, "a b");\n
+  CodeMirror.addClass(node, "a");\n
+  CodeMirror.addClass(node, "b");\n
+  eq(node.className, "a b");\n
+});\n
 
 
 ]]></string> </value>
-        </item>
-        <item>
-            <key> <string>precondition</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>59307</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

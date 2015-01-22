@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403094.79</string> </value>
+            <value> <string>ts21897139.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,9 +22,20 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-CodeMirror.defineMode("css", function(config, parserConfig) {\n
-  "use strict";\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
 \n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+CodeMirror.defineMode("css", function(config, parserConfig) {\n
   if (!parserConfig.propertyKeywords) parserConfig = CodeMirror.resolveMode("text/css");\n
 \n
   var indentUnit = config.indentUnit,\n
@@ -32,6 +43,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       mediaTypes = parserConfig.mediaTypes || {},\n
       mediaFeatures = parserConfig.mediaFeatures || {},\n
       propertyKeywords = parserConfig.propertyKeywords || {},\n
+      nonStandardPropertyKeywords = parserConfig.nonStandardPropertyKeywords || {},\n
       colorKeywords = parserConfig.colorKeywords || {},\n
       valueKeywords = parserConfig.valueKeywords || {},\n
       fontProperties = parserConfig.fontProperties || {},\n
@@ -69,7 +81,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       if (/[\\d.]/.test(stream.peek())) {\n
         stream.eatWhile(/[\\w.%]/);\n
         return ret("number", "unit");\n
-      } else if (stream.match(/^[^-]+-/)) {\n
+      } else if (stream.match(/^\\w+-/)) {\n
         return ret("meta", "meta");\n
       }\n
     } else if (/[,+>*\\/]/.test(ch)) {\n
@@ -107,7 +119,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
 \n
   function tokenParenthesized(stream, state) {\n
     stream.next(); // Must be \'(\'\n
-    if (!stream.match(/\\s*[\\"\\\']/, false))\n
+    if (!stream.match(/\\s*[\\"\\\')]/, false))\n
       state.tokenize = tokenString(")");\n
     else\n
       state.tokenize = null;\n
@@ -179,18 +191,22 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     } else if (type == ":") {\n
       return "pseudo";\n
     } else if (allowNested && type == "(") {\n
-      return pushContext(state, stream, "params");\n
+      return pushContext(state, stream, "parens");\n
     }\n
     return state.context.type;\n
   };\n
 \n
   states.block = function(type, stream, state) {\n
     if (type == "word") {\n
-      if (propertyKeywords.hasOwnProperty(stream.current().toLowerCase())) {\n
+      var word = stream.current().toLowerCase();\n
+      if (propertyKeywords.hasOwnProperty(word)) {\n
         override = "property";\n
         return "maybeprop";\n
+      } else if (nonStandardPropertyKeywords.hasOwnProperty(word)) {\n
+        override = "string-2";\n
+        return "maybeprop";\n
       } else if (allowNested) {\n
-        override = stream.match(/^\\s*:/, false) ? "property" : "tag";\n
+        override = stream.match(/^\\s*:(?:\\s|$)/, false) ? "property" : "tag";\n
         return "block";\n
       } else {\n
         override += " error";\n
@@ -236,6 +252,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   states.parens = function(type, stream, state) {\n
     if (type == "{" || type == "}") return popAndPass(type, stream, state);\n
     if (type == ")") return popContext(state);\n
+    if (type == "(") return pushContext(state, stream, "parens");\n
+    if (type == "word") wordAsValue(stream);\n
     return "parens";\n
   };\n
 \n
@@ -311,13 +329,6 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     return "interpolation";\n
   };\n
 \n
-  states.params = function(type, stream, state) {\n
-    if (type == ")") return popContext(state);\n
-    if (type == "{" || type == "}") return popAndPass(type, stream, state);\n
-    if (type == "word") wordAsValue(stream);\n
-    return "params";\n
-  };\n
-\n
   return {\n
     startState: function(base) {\n
       return {tokenize: null,\n
@@ -340,10 +351,10 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     indent: function(state, textAfter) {\n
       var cx = state.context, ch = textAfter && textAfter.charAt(0);\n
       var indent = cx.indent;\n
-      if (cx.type == "prop" && ch == "}") cx = cx.prev;\n
+      if (cx.type == "prop" && (ch == "}" || ch == ")")) cx = cx.prev;\n
       if (cx.prev &&\n
           (ch == "}" && (cx.type == "block" || cx.type == "top" || cx.type == "interpolation" || cx.type == "font_face") ||\n
-           ch == ")" && (cx.type == "parens" || cx.type == "params" || cx.type == "media_parens") ||\n
+           ch == ")" && (cx.type == "parens" || cx.type == "media_parens") ||\n
            ch == "{" && (cx.type == "at" || cx.type == "media"))) {\n
         indent = cx.indent - indentUnit;\n
         cx = cx.prev;\n
@@ -358,7 +369,6 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   };\n
 });\n
 \n
-(function() {\n
   function keySet(array) {\n
     var keys = {};\n
     for (var i = 0; i < array.length; ++i) {\n
@@ -434,7 +444,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "marker-offset", "marks", "marquee-direction", "marquee-loop",\n
     "marquee-play-count", "marquee-speed", "marquee-style", "max-height",\n
     "max-width", "min-height", "min-width", "move-to", "nav-down", "nav-index",\n
-    "nav-left", "nav-right", "nav-up", "opacity", "order", "orphans", "outline",\n
+    "nav-left", "nav-right", "nav-up", "object-fit", "object-position",\n
+    "opacity", "order", "orphans", "outline",\n
     "outline-color", "outline-offset", "outline-style", "outline-width",\n
     "overflow", "overflow-style", "overflow-wrap", "overflow-x", "overflow-y",\n
     "padding", "padding-bottom", "padding-left", "padding-right", "padding-top",\n
@@ -445,8 +456,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "region-break-before", "region-break-inside", "region-fragment",\n
     "rendering-intent", "resize", "rest", "rest-after", "rest-before", "richness",\n
     "right", "rotation", "rotation-point", "ruby-align", "ruby-overhang",\n
-    "ruby-position", "ruby-span", "shape-inside", "shape-outside", "size",\n
-    "speak", "speak-as", "speak-header",\n
+    "ruby-position", "ruby-span", "shape-image-threshold", "shape-inside", "shape-margin",\n
+    "shape-outside", "size", "speak", "speak-as", "speak-header",\n
     "speak-numeral", "speak-punctuation", "speech-rate", "stress", "string-set",\n
     "tab-size", "table-layout", "target", "target-name", "target-new",\n
     "target-position", "text-align", "text-align-last", "text-decoration",\n
@@ -461,18 +472,26 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "vertical-align", "visibility", "voice-balance", "voice-duration",\n
     "voice-family", "voice-pitch", "voice-range", "voice-rate", "voice-stress",\n
     "voice-volume", "volume", "white-space", "widows", "width", "word-break",\n
-    "word-spacing", "word-wrap", "z-index", "zoom",\n
+    "word-spacing", "word-wrap", "z-index",\n
     // SVG-specific\n
     "clip-path", "clip-rule", "mask", "enable-background", "filter", "flood-color",\n
     "flood-opacity", "lighting-color", "stop-color", "stop-opacity", "pointer-events",\n
-    "color-interpolation", "color-interpolation-filters", "color-profile",\n
+    "color-interpolation", "color-interpolation-filters",\n
     "color-rendering", "fill", "fill-opacity", "fill-rule", "image-rendering",\n
     "marker", "marker-end", "marker-mid", "marker-start", "shape-rendering", "stroke",\n
     "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin",\n
     "stroke-miterlimit", "stroke-opacity", "stroke-width", "text-rendering",\n
     "baseline-shift", "dominant-baseline", "glyph-orientation-horizontal",\n
-    "glyph-orientation-vertical", "kerning", "text-anchor", "writing-mode"\n
+    "glyph-orientation-vertical", "text-anchor", "writing-mode"\n
   ], propertyKeywords = keySet(propertyKeywords_);\n
+\n
+  var nonStandardPropertyKeywords_ = [\n
+    "scrollbar-arrow-color", "scrollbar-base-color", "scrollbar-dark-shadow-color",\n
+    "scrollbar-face-color", "scrollbar-highlight-color", "scrollbar-shadow-color",\n
+    "scrollbar-3d-light-color", "scrollbar-track-color", "shape-inside",\n
+    "searchfield-cancel-button", "searchfield-decoration", "searchfield-results-button",\n
+    "searchfield-results-decoration", "zoom"\n
+  ], nonStandardPropertyKeywords = keySet(nonStandardPropertyKeywords_);\n
 \n
   var colorKeywords_ = [\n
     "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige",\n
@@ -496,8 +515,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered",\n
     "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred",\n
     "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue",\n
-    "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon",\n
-    "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue",\n
+    "purple", "rebeccapurple", "red", "rosybrown", "royalblue", "saddlebrown",\n
+    "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue",\n
     "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan",\n
     "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white",\n
     "whitesmoke", "yellow", "yellowgreen"\n
@@ -593,7 +612,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "font-stretch", "font-weight", "font-style"\n
   ], fontProperties = keySet(fontProperties_);\n
 \n
-  var allWords = mediaTypes_.concat(mediaFeatures_).concat(propertyKeywords_).concat(colorKeywords_).concat(valueKeywords_);\n
+  var allWords = mediaTypes_.concat(mediaFeatures_).concat(propertyKeywords_)\n
+    .concat(nonStandardPropertyKeywords_).concat(colorKeywords_).concat(valueKeywords_);\n
   CodeMirror.registerHelper("hintWords", "css", allWords);\n
 \n
   function tokenCComment(stream, state) {\n
@@ -622,6 +642,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
     propertyKeywords: propertyKeywords,\n
+    nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
     colorKeywords: colorKeywords,\n
     valueKeywords: valueKeywords,\n
     fontProperties: fontProperties,\n
@@ -644,6 +665,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
     propertyKeywords: propertyKeywords,\n
+    nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
     colorKeywords: colorKeywords,\n
     valueKeywords: valueKeywords,\n
     fontProperties: fontProperties,\n
@@ -661,7 +683,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
         }\n
       },\n
       ":": function(stream) {\n
-        if (stream.match(/\\s*{/))\n
+        if (stream.match(/\\s*\\{/))\n
           return [null, "{"];\n
         return false;\n
       },\n
@@ -684,6 +706,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
     propertyKeywords: propertyKeywords,\n
+    nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
     colorKeywords: colorKeywords,\n
     valueKeywords: valueKeywords,\n
     fontProperties: fontProperties,\n
@@ -714,7 +737,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     name: "css",\n
     helperType: "less"\n
   });\n
-})();\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -725,7 +749,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>30365</int> </value>
+            <value> <int>31664</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

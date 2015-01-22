@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403090.93</string> </value>
+            <value> <string>ts21897144.33</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("clike", function(config, parserConfig) {\n
   var indentUnit = config.indentUnit,\n
       statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,\n
@@ -31,7 +44,8 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
       blockKeywords = parserConfig.blockKeywords || {},\n
       atoms = parserConfig.atoms || {},\n
       hooks = parserConfig.hooks || {},\n
-      multiLineStrings = parserConfig.multiLineStrings;\n
+      multiLineStrings = parserConfig.multiLineStrings,\n
+      indentStatements = parserConfig.indentStatements !== false;\n
   var isOperatorChar = /[+\\-*&%=<>!?|\\/]/;\n
 \n
   var curPunc;\n
@@ -68,7 +82,7 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
       stream.eatWhile(isOperatorChar);\n
       return "operator";\n
     }\n
-    stream.eatWhile(/[\\w\\$_]/);\n
+    stream.eatWhile(/[\\w\\$_\\xa1-\\uffff]/);\n
     var cur = stream.current();\n
     if (keywords.propertyIsEnumerable(cur)) {\n
       if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";\n
@@ -162,7 +176,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
         while (ctx.type == "statement") ctx = popContext(state);\n
       }\n
       else if (curPunc == ctx.type) popContext(state);\n
-      else if (((ctx.type == "}" || ctx.type == "top") && curPunc != \';\') || (ctx.type == "statement" && curPunc == "newstatement"))\n
+      else if (indentStatements &&\n
+               (((ctx.type == "}" || ctx.type == "top") && curPunc != \';\') ||\n
+                (ctx.type == "statement" && curPunc == "newstatement")))\n
         pushContext(state, stream.column(), "statement");\n
       state.startOfLine = false;\n
       return style;\n
@@ -187,7 +203,6 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
   };\n
 });\n
 \n
-(function() {\n
   function words(str) {\n
     var obj = {}, words = str.split(" ");\n
     for (var i = 0; i < words.length; ++i) obj[words[i]] = true;\n
@@ -215,6 +230,30 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
     return "meta";\n
   }\n
 \n
+  function cpp11StringHook(stream, state) {\n
+    stream.backUp(1);\n
+    // Raw strings.\n
+    if (stream.match(/(R|u8R|uR|UR|LR)/)) {\n
+      var match = stream.match(/"([^\\s\\\\()]{0,16})\\(/);\n
+      if (!match) {\n
+        return false;\n
+      }\n
+      state.cpp11RawStringDelim = match[1];\n
+      state.tokenize = tokenRawString;\n
+      return tokenRawString(stream, state);\n
+    }\n
+    // Unicode strings/chars.\n
+    if (stream.match(/(u8|u|U|L)/)) {\n
+      if (stream.match(/["\']/, /* eat */ false)) {\n
+        return "string";\n
+      }\n
+      return false;\n
+    }\n
+    // Ignore this hook.\n
+    stream.next();\n
+    return false;\n
+  }\n
+\n
   // C#-style strings where "" escapes a quote.\n
   function tokenAtString(stream, state) {\n
     var next;\n
@@ -227,7 +266,21 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
     return "string";\n
   }\n
 \n
+  // C++11 raw string literal is <prefix>"<delim>( anything )<delim>", where\n
+  // <delim> can be a string up to 16 characters long.\n
+  function tokenRawString(stream, state) {\n
+    // Escape characters that have special regex meanings.\n
+    var delim = state.cpp11RawStringDelim.replace(/[^\\w\\s]/g, \'\\\\$&\');\n
+    var match = stream.match(new RegExp(".*?\\\\)" + delim + \'"\'));\n
+    if (match)\n
+      state.tokenize = null;\n
+    else\n
+      stream.skipToEnd();\n
+    return "string";\n
+  }\n
+\n
   function def(mimes, mode) {\n
+    if (typeof mimes == "string") mimes = [mimes];\n
     var words = [];\n
     function add(obj) {\n
       if (obj) for (var prop in obj) if (obj.hasOwnProperty(prop))\n
@@ -259,13 +312,21 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
     keywords: words(cKeywords + " asm dynamic_cast namespace reinterpret_cast try bool explicit new " +\n
                     "static_cast typeid catch operator template typename class friend private " +\n
                     "this using const_cast inline public throw virtual delete mutable protected " +\n
-                    "wchar_t"),\n
+                    "wchar_t alignas alignof constexpr decltype nullptr noexcept thread_local final " +\n
+                    "static_assert override"),\n
     blockKeywords: words("catch class do else finally for if struct switch try while"),\n
     atoms: words("true false null"),\n
-    hooks: {"#": cppHook},\n
+    hooks: {\n
+      "#": cppHook,\n
+      "u": cpp11StringHook,\n
+      "U": cpp11StringHook,\n
+      "L": cpp11StringHook,\n
+      "R": cpp11StringHook\n
+    },\n
     modeProps: {fold: ["brace", "include"]}\n
   });\n
-  CodeMirror.defineMIME("text/x-java", {\n
+\n
+  def("text/x-java", {\n
     name: "clike",\n
     keywords: words("abstract assert boolean break byte case catch char class const continue default " +\n
                     "do double else enum extends final finally float for goto if implements import " +\n
@@ -282,7 +343,8 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
     },\n
     modeProps: {fold: ["brace", "import"]}\n
   });\n
-  CodeMirror.defineMIME("text/x-csharp", {\n
+\n
+  def("text/x-csharp", {\n
     name: "clike",\n
     keywords: words("abstract as base break case catch checked class const continue" +\n
                     " default delegate do else enum event explicit extern finally fixed for" +\n
@@ -308,7 +370,20 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
       }\n
     }\n
   });\n
-  CodeMirror.defineMIME("text/x-scala", {\n
+\n
+  function tokenTripleString(stream, state) {\n
+    var escaped = false;\n
+    while (!stream.eol()) {\n
+      if (!escaped && stream.match(\'"""\')) {\n
+        state.tokenize = null;\n
+        break;\n
+      }\n
+      escaped = stream.next() != "\\\\" && !escaped;\n
+    }\n
+    return "string";\n
+  }\n
+\n
+  def("text/x-scala", {\n
     name: "clike",\n
     keywords: words(\n
 \n
@@ -333,18 +408,24 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
       "Compiler Double Exception Float Integer Long Math Number Object Package Pair Process " +\n
       "Runtime Runnable SecurityManager Short StackTraceElement StrictMath String " +\n
       "StringBuffer System Thread ThreadGroup ThreadLocal Throwable Triple Void"\n
-\n
-\n
     ),\n
+    multiLineStrings: true,\n
     blockKeywords: words("catch class do else finally for forSome if match switch try while"),\n
     atoms: words("true false null"),\n
+    indentStatements: false,\n
     hooks: {\n
       "@": function(stream) {\n
         stream.eatWhile(/[\\w\\$_]/);\n
         return "meta";\n
+      },\n
+      \'"\': function(stream, state) {\n
+        if (!stream.match(\'""\')) return false;\n
+        state.tokenize = tokenTripleString;\n
+        return state.tokenize(stream, state);\n
       }\n
     }\n
   });\n
+\n
   def(["x-shader/x-vertex", "x-shader/x-fragment"], {\n
     name: "clike",\n
     keywords: words("float int bool void " +\n
@@ -402,7 +483,34 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
     hooks: {"#": cppHook},\n
     modeProps: {fold: ["brace", "include"]}\n
   });\n
-}());\n
+\n
+  def("text/x-nesc", {\n
+    name: "clike",\n
+    keywords: words(cKeywords + "as atomic async call command component components configuration event generic " +\n
+                    "implementation includes interface module new norace nx_struct nx_union post provides " +\n
+                    "signal task uses abstract extends"),\n
+    blockKeywords: words("case do else for if switch while struct"),\n
+    atoms: words("null"),\n
+    hooks: {"#": cppHook},\n
+    modeProps: {fold: ["brace", "include"]}\n
+  });\n
+\n
+  def("text/x-objectivec", {\n
+    name: "clike",\n
+    keywords: words(cKeywords + "inline restrict _Bool _Complex _Imaginery BOOL Class bycopy byref id IMP in " +\n
+                    "inout nil oneway out Protocol SEL self super atomic nonatomic retain copy readwrite readonly"),\n
+    atoms: words("YES NO NULL NILL ON OFF"),\n
+    hooks: {\n
+      "@": function(stream) {\n
+        stream.eatWhile(/[\\w\\$]/);\n
+        return "keyword";\n
+      },\n
+      "#": cppHook\n
+    },\n
+    modeProps: {fold: "brace"}\n
+  });\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -413,7 +521,7 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15517</int> </value>
+            <value> <int>18939</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

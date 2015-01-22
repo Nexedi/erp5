@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403088.96</string> </value>
+            <value> <string>ts21897146.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,22 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>CodeMirror.defineMode("diff", function() {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+CodeMirror.defineMode("diff", function() {\n
 \n
   var TOKEN_NAMES = {\n
     \'+\': \'positive\',\n
@@ -52,7 +67,11 @@
 });\n
 \n
 CodeMirror.defineMIME("text/x-diff", "diff");\n
-</string> </value>
+\n
+});\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -60,7 +79,7 @@ CodeMirror.defineMIME("text/x-diff", "diff");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>677</int> </value>
+            <value> <int>1138</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

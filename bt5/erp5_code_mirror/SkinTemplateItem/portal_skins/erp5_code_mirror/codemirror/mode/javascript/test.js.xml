@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403101.45</string> </value>
+            <value> <string>ts21897133.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   var mode = CodeMirror.getMode({indentUnit: 2}, "javascript");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
@@ -38,9 +41,17 @@
      "  [[[variable-2 c], [variable y] ]] [operator =] [variable-2 c];",\n
      "})();");\n
 \n
+  MT("class_body",\n
+     "[keyword class] [variable Foo] {",\n
+     "  [property constructor]() {}",\n
+     "  [property sayName]() {",\n
+     "    [keyword return] [string-2 `foo${][variable foo][string-2 }oo`];",\n
+     "  }",\n
+     "}");\n
+\n
   MT("class",\n
      "[keyword class] [variable Point] [keyword extends] [variable SuperThing] {",\n
-     "  [[ [string-2 /expr/] ]]: [number 24],",\n
+     "  [property get] [property prop]() { [keyword return] [number 24]; }",\n
      "  [property constructor]([def x], [def y]) {",\n
      "    [keyword super]([string \'something\']);",\n
      "    [keyword this].[property x] [operator =] [variable-2 x];",\n
@@ -74,6 +85,12 @@
      "    [keyword yield] [variable-2 i];",\n
      "}");\n
 \n
+  MT("quotedStringAddition",\n
+     "[keyword let] [variable f] [operator =] [variable a] [operator +] [string \'fatarrow\'] [operator +] [variable c];");\n
+\n
+  MT("quotedFatArrow",\n
+     "[keyword let] [variable f] [operator =] [variable a] [operator +] [string \'=>\'] [operator +] [variable c];");\n
+\n
   MT("fatArrow",\n
      "[variable array].[property filter]([def a] [operator =>] [variable-2 a] [operator +] [number 1]);",\n
      "[variable a];", // No longer in scope\n
@@ -93,6 +110,9 @@
 \n
   MT("quasi",\n
      "[variable re][string-2 `fofdlakj${][variable x] [operator +] ([variable re][string-2 `foo`]) [operator +] [number 1][string-2 }fdsa`] [operator +] [number 2]");\n
+\n
+  MT("quasi_no_function",\n
+     "[variable x] [operator =] [string-2 `fofdlakj${][variable x] [operator +] [string-2 `foo`] [operator +] [number 1][string-2 }fdsa`] [operator +] [number 2]");\n
 \n
   MT("indent_statement",\n
      "[keyword var] [variable x] [operator =] [number 10]",\n
@@ -128,12 +148,41 @@
      "  [keyword debugger];",\n
      "}");\n
 \n
+  MT("indent_else",\n
+     "[keyword for] (;;)",\n
+     "  [keyword if] ([variable foo])",\n
+     "    [keyword if] ([variable bar])",\n
+     "      [number 1];",\n
+     "    [keyword else]",\n
+     "      [number 2];",\n
+     "  [keyword else]",\n
+     "    [number 3];");\n
+\n
+  MT("indent_funarg",\n
+     "[variable foo]([number 10000],",\n
+     "    [keyword function]([def a]) {",\n
+     "  [keyword debugger];",\n
+     "};");\n
+\n
+  MT("indent_below_if",\n
+     "[keyword for] (;;)",\n
+     "  [keyword if] ([variable foo])",\n
+     "    [number 1];",\n
+     "[number 2];");\n
+\n
   MT("multilinestring",\n
      "[keyword var] [variable x] [operator =] [string \'foo\\\\]",\n
      "[string bar\'];");\n
 \n
   MT("scary_regexp",\n
      "[string-2 /foo[[/]]bar/];");\n
+\n
+  MT("indent_strange_array",\n
+     "[keyword var] [variable x] [operator =] [[",\n
+     "  [number 1],,",\n
+     "  [number 2],",\n
+     "]];",\n
+     "[number 10];");\n
 \n
   var jsonld_mode = CodeMirror.getMode(\n
     {indentUnit: 2},\n
@@ -183,7 +232,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5874</int> </value>
+            <value> <int>7449</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

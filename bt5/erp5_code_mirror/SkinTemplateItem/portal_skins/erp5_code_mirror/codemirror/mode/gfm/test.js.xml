@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403097.0</string> </value>
+            <value> <string>ts21897137.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   var mode = CodeMirror.getMode({tabSize: 4}, "gfm");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
@@ -42,6 +45,12 @@
   FT("taskList",\n
      "[variable-2&formatting&formatting-list&formatting-list-ul - ][meta&formatting&formatting-task [ ]]][variable-2  foo]",\n
      "[variable-2&formatting&formatting-list&formatting-list-ul - ][property&formatting&formatting-task [x]]][variable-2  foo]");\n
+\n
+  FT("formatting_strikethrough",\n
+     "[strikethrough&formatting&formatting-strikethrough ~~][strikethrough foo][strikethrough&formatting&formatting-strikethrough ~~]");\n
+\n
+  FT("formatting_strikethrough",\n
+     "foo [strikethrough&formatting&formatting-strikethrough ~~][strikethrough bar][strikethrough&formatting&formatting-strikethrough ~~]");\n
 \n
   MT("emInWordAsterisk",\n
      "foo[em *bar*]hello");\n
@@ -97,6 +106,9 @@
   MT("SHA",\n
      "foo [link be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] bar");\n
 \n
+  MT("SHAEmphasis",\n
+     "[em *foo ][em&link be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");\n
+\n
   MT("shortSHA",\n
      "foo [link be6a8cc] bar");\n
 \n
@@ -112,11 +124,20 @@
   MT("userSHA",\n
      "foo [link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] hello");\n
 \n
+  MT("userSHAEmphasis",\n
+     "[em *foo ][em&link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");\n
+\n
   MT("userProjectSHA",\n
      "foo [link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] world");\n
 \n
+  MT("userProjectSHAEmphasis",\n
+     "[em *foo ][em&link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");\n
+\n
   MT("num",\n
      "foo [link #1] bar");\n
+\n
+  MT("numEmphasis",\n
+     "[em *foo ][em&link #1][em *]");\n
 \n
   MT("badNum",\n
      "foo #1bar hello");\n
@@ -124,8 +145,14 @@
   MT("userNum",\n
      "foo [link bar#1] hello");\n
 \n
+  MT("userNumEmphasis",\n
+     "[em *foo ][em&link bar#1][em *]");\n
+\n
   MT("userProjectNum",\n
      "foo [link bar/hello#1] world");\n
+\n
+  MT("userProjectNumEmphasis",\n
+     "[em *foo ][em&link bar/hello#1][em *]");\n
 \n
   MT("vanillaLink",\n
      "foo [link http://www.example.com/] bar");\n
@@ -135,6 +162,9 @@
 \n
   MT("vanillaLinkExtension",\n
      "foo [link http://www.example.com/index.html] bar");\n
+\n
+  MT("vanillaLinkEmphasis",\n
+     "foo [em *][em&link http://www.example.com/index.html][em *] bar");\n
 \n
   MT("notALink",\n
      "[comment ```css]",\n
@@ -150,6 +180,60 @@
      "[comment `foo]",\n
      "",\n
      "[link http://www.example.com/]");\n
+\n
+  MT("headerCodeBlockGithub",\n
+     "[header&header-1 # heading]",\n
+     "",\n
+     "[comment ```]",\n
+     "[comment code]",\n
+     "[comment ```]",\n
+     "",\n
+     "Commit: [link be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2]",\n
+     "Issue: [link #1]",\n
+     "Link: [link http://www.example.com/]");\n
+\n
+  MT("strikethrough",\n
+     "[strikethrough ~~foo~~]");\n
+\n
+  MT("strikethroughWithStartingSpace",\n
+     "~~ foo~~");\n
+\n
+  MT("strikethroughUnclosedStrayTildes",\n
+    "[strikethrough ~~foo~~~]");\n
+\n
+  MT("strikethroughUnclosedStrayTildes",\n
+     "[strikethrough ~~foo ~~]");\n
+\n
+  MT("strikethroughUnclosedStrayTildes",\n
+    "[strikethrough ~~foo ~~ bar]");\n
+\n
+  MT("strikethroughUnclosedStrayTildes",\n
+    "[strikethrough ~~foo ~~ bar~~]hello");\n
+\n
+  MT("strikethroughOneLetter",\n
+     "[strikethrough ~~a~~]");\n
+\n
+  MT("strikethroughWrapped",\n
+     "[strikethrough ~~foo]",\n
+     "[strikethrough foo~~]");\n
+\n
+  MT("strikethroughParagraph",\n
+     "[strikethrough ~~foo]",\n
+     "",\n
+     "foo[strikethrough ~~bar]");\n
+\n
+  MT("strikethroughEm",\n
+     "[strikethrough ~~foo][em&strikethrough *bar*][strikethrough ~~]");\n
+\n
+  MT("strikethroughEm",\n
+     "[em *][em&strikethrough ~~foo~~][em *]");\n
+\n
+  MT("strikethroughStrong",\n
+     "[strikethrough ~~][strong&strikethrough **foo**][strikethrough ~~]");\n
+\n
+  MT("strikethroughStrong",\n
+     "[strong **][strong&strikethrough ~~foo~~][strong **]");\n
+\n
 })();\n
 
 
@@ -161,7 +245,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4478</int> </value>
+            <value> <int>6922</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

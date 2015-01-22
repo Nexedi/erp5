@@ -50,7 +50,6 @@
  -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/hint/show-hint.css">\n
 <script src="&dtml-portal_url;/codemirror/addon/hint/show-hint.js"></script>\n
-<script src="&dtml-portal_url;/codemirror/addon/hint/python-hint.js"></script>\n
 \n
 <!-- Code folding -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/fold/foldgutter.css">\n
@@ -61,7 +60,7 @@
 \n
 <!-- Merge -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/merge/merge.css">\n
-<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/dep/diff_match_patch.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/merge.js"></script>\n
 \n
 <!-- Lint\n
@@ -400,11 +399,10 @@
    is_maximized = true;\n
  }\n
 \n
- function checkPythonSourceCode(cm, updateLinting, options) {\n
-// CodeMirror.registerHelper("lint", "python", function(text) {\n
+ function checkPythonSourceCode(text, updateLinting, options, cm) {\n
    $.post(\n
      \'&dtml-portal_url;/ERP5Site_checkPythonSourceCodeAsJSON\',\n
-     {\'data\': JSON.stringify({code: cm.getValue()})},\n
+     {\'data\': JSON.stringify({code: text})},\n
       function(data){\n
         var messages = data.annotations;\n
         var found = [];\n
@@ -440,8 +438,8 @@
     gutters: ["CodeMirror-lint-markers",\n
               "CodeMirror-linenumbers",\n
               "CodeMirror-foldgutter"],\n
-    lintWith: {"getAnnotations": checkPythonSourceCode,\n
-               "async": true}\n
+    lint: {"getAnnotations": checkPythonSourceCode,\n
+           "async": true}\n
     });\n
  //cm.foldCode(CodeMirror.Pos(8, 0));\n
 \n

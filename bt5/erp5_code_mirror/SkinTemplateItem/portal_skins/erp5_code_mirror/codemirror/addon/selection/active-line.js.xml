@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403073.85</string> </value>
+            <value> <string>ts21897119.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,13 +22,23 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Because sometimes you need to style the cursor\'s line.\n
 //\n
 // Adds an option \'styleActiveLine\' which, when enabled, gives the\n
 // active line\'s wrapping <div> the CSS class "CodeMirror-activeline",\n
 // and gives its background <div> the class "CodeMirror-activeline-background".\n
 \n
-(function() {\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
   var WRAP_CLASS = "CodeMirror-activeline";\n
   var BACK_CLASS = "CodeMirror-activeline-background";\n
@@ -36,37 +46,53 @@
   CodeMirror.defineOption("styleActiveLine", false, function(cm, val, old) {\n
     var prev = old && old != CodeMirror.Init;\n
     if (val && !prev) {\n
-      updateActiveLine(cm, cm.getCursor().line);\n
+      cm.state.activeLines = [];\n
+      updateActiveLines(cm, cm.listSelections());\n
       cm.on("beforeSelectionChange", selectionChange);\n
     } else if (!val && prev) {\n
       cm.off("beforeSelectionChange", selectionChange);\n
-      clearActiveLine(cm);\n
-      delete cm.state.activeLine;\n
+      clearActiveLines(cm);\n
+      delete cm.state.activeLines;\n
     }\n
   });\n
 \n
-  function clearActiveLine(cm) {\n
-    if ("activeLine" in cm.state) {\n
-      cm.removeLineClass(cm.state.activeLine, "wrap", WRAP_CLASS);\n
-      cm.removeLineClass(cm.state.activeLine, "background", BACK_CLASS);\n
+  function clearActiveLines(cm) {\n
+    for (var i = 0; i < cm.state.activeLines.length; i++) {\n
+      cm.removeLineClass(cm.state.activeLines[i], "wrap", WRAP_CLASS);\n
+      cm.removeLineClass(cm.state.activeLines[i], "background", BACK_CLASS);\n
     }\n
   }\n
 \n
-  function updateActiveLine(cm, selectedLine) {\n
-    var line = cm.getLineHandleVisualStart(selectedLine);\n
-    if (cm.state.activeLine == line) return;\n
+  function sameArray(a, b) {\n
+    if (a.length != b.length) return false;\n
+    for (var i = 0; i < a.length; i++)\n
+      if (a[i] != b[i]) return false;\n
+    return true;\n
+  }\n
+\n
+  function updateActiveLines(cm, ranges) {\n
+    var active = [];\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      var range = ranges[i];\n
+      if (!range.empty()) continue;\n
+      var line = cm.getLineHandleVisualStart(range.head.line);\n
+      if (active[active.length - 1] != line) active.push(line);\n
+    }\n
+    if (sameArray(cm.state.activeLines, active)) return;\n
     cm.operation(function() {\n
-      clearActiveLine(cm);\n
-      cm.addLineClass(line, "wrap", WRAP_CLASS);\n
-      cm.addLineClass(line, "background", BACK_CLASS);\n
-      cm.state.activeLine = line;\n
+      clearActiveLines(cm);\n
+      for (var i = 0; i < active.length; i++) {\n
+        cm.addLineClass(active[i], "wrap", WRAP_CLASS);\n
+        cm.addLineClass(active[i], "background", BACK_CLASS);\n
+      }\n
+      cm.state.activeLines = active;\n
     });\n
   }\n
 \n
   function selectionChange(cm, sel) {\n
-    updateActiveLine(cm, sel.head.line);\n
+    updateActiveLines(cm, sel.ranges);\n
   }\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -77,7 +103,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1490</int> </value>
+            <value> <int>2442</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

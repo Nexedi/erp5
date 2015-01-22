@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403100.42</string> </value>
+            <value> <string>ts21897134.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("puppet", function () {\n
   // Stores the words from the define method\n
   var words = {};\n
@@ -151,11 +164,11 @@ CodeMirror.defineMode("puppet", function () {\n
       return words[word];\n
     }\n
     // Is there a match on a reference?\n
-    if (/(\\s+)?[A-Z]/.test(word)) {\n
+    if (/(^|\\s+)[A-Z][\\w:_]+/.test(word)) {\n
       // Negate the next()\n
       stream.backUp(1);\n
       // Match the full reference\n
-      stream.match(/(\\s+)?[A-Z][\\w:_]+/);\n
+      stream.match(/(^|\\s+)[A-Z][\\w:_]+/);\n
       return \'def\';\n
     }\n
     // Have we matched the prior resource regex?\n
@@ -187,7 +200,7 @@ CodeMirror.defineMode("puppet", function () {\n
     // Match characters that we are going to assume\n
     // are trying to be regex\n
     if (ch == \'/\') {\n
-      stream.match(/.*\\//);\n
+      stream.match(/.*?\\//);\n
       return \'variable-3\';\n
     }\n
     // Match all the numbers\n
@@ -225,7 +238,10 @@ CodeMirror.defineMode("puppet", function () {\n
     }\n
   };\n
 });\n
+\n
 CodeMirror.defineMIME("text/x-puppet", "puppet");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -236,7 +252,7 @@ CodeMirror.defineMIME("text/x-puppet", "puppet");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7102</int> </value>
+            <value> <int>7574</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

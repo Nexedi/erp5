@@ -102,6 +102,7 @@
 \n
 .CodeMirror-Tern-hint-doc {\n
   max-width: 25em;\n
+  margin-top: -3px;\n
 }\n
 \n
 .CodeMirror-Tern-fname { color: black; }\n

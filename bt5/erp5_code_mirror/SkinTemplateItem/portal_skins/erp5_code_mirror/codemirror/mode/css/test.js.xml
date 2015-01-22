@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403095.08</string> </value>
+            <value> <string>ts21897139.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 (function() {\n
   var mode = CodeMirror.getMode({indentUnit: 2}, "css");\n
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
@@ -140,6 +143,19 @@
      "  [property src]: [atom url]([string http://blah]),",\n
      "    [atom url]([string http://foo]);",\n
      "}");\n
+\n
+  MT("empty_url",\n
+     "[def @import] [tag url]() [tag screen];");\n
+\n
+  MT("parens",\n
+     "[qualifier .foo] {",\n
+     "  [property background-image]: [variable fade]([atom #000], [number 20%]);",\n
+     "  [property border-image]: [variable linear-gradient](",\n
+     "    [atom to] [atom bottom],",\n
+     "    [variable fade]([atom #000], [number 20%]) [number 0%],",\n
+     "    [variable fade]([atom #000], [number 20%]) [number 100%]",\n
+     "  );",\n
+     "}");\n
 })();\n
 
 
@@ -151,7 +167,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3644</int> </value>
+            <value> <int>4227</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

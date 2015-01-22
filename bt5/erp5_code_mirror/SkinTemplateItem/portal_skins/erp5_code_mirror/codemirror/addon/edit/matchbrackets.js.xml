@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93404951.7</string> </value>
+            <value> <string>ts21897295.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,76 +22,106 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   var ie_lt8 = /MSIE \\d/.test(navigator.userAgent) &&\n
     (document.documentMode == null || document.documentMode < 8);\n
 \n
   var Pos = CodeMirror.Pos;\n
 \n
   var matching = {"(": ")>", ")": "(<", "[": "]>", "]": "[<", "{": "}>", "}": "{<"};\n
-  function findMatchingBracket(cm, where, strict) {\n
-    var state = cm.state.matchBrackets;\n
-    var maxScanLen = (state && state.maxScanLineLength) || 10000;\n
-    var maxScanLines = (state && state.maxScanLines) || 100;\n
 \n
-    var cur = where || cm.getCursor(), line = cm.getLineHandle(cur.line), pos = cur.ch - 1;\n
+  function findMatchingBracket(cm, where, strict, config) {\n
+    var line = cm.getLineHandle(where.line), pos = where.ch - 1;\n
     var match = (pos >= 0 && matching[line.text.charAt(pos)]) || matching[line.text.charAt(++pos)];\n
     if (!match) return null;\n
-    var forward = match.charAt(1) == ">", d = forward ? 1 : -1;\n
-    if (strict && forward != (pos == cur.ch)) return null;\n
-    var style = cm.getTokenTypeAt(Pos(cur.line, pos + 1));\n
+    var dir = match.charAt(1) == ">" ? 1 : -1;\n
+    if (strict && (dir > 0) != (pos == where.ch)) return null;\n
+    var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));\n
 \n
-    var stack = [line.text.charAt(pos)], re = /[(){}[\\]]/;\n
-    function scan(line, lineNo, start) {\n
-      if (!line.text) return;\n
-      var pos = forward ? 0 : line.text.length - 1, end = forward ? line.text.length : -1;\n
-      if (line.text.length > maxScanLen) return null;\n
-      if (start != null) pos = start + d;\n
-      for (; pos != end; pos += d) {\n
-        var ch = line.text.charAt(pos);\n
-        if (re.test(ch) && cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style) {\n
+    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style || null, config);\n
+    if (found == null) return null;\n
+    return {from: Pos(where.line, pos), to: found && found.pos,\n
+            match: found && found.ch == match.charAt(0), forward: dir > 0};\n
+  }\n
+\n
+  // bracketRegex is used to specify which type of bracket to scan\n
+  // should be a regexp, e.g. /[[\\]]/\n
+  //\n
+  // Note: If "where" is on an open bracket, then this bracket is ignored.\n
+  //\n
+  // Returns false when no bracket was found, null when it reached\n
+  // maxScanLines and gave up\n
+  function scanForBracket(cm, where, dir, style, config) {\n
+    var maxScanLen = (config && config.maxScanLineLength) || 10000;\n
+    var maxScanLines = (config && config.maxScanLines) || 1000;\n
+\n
+    var stack = [];\n
+    var re = config && config.bracketRegex ? config.bracketRegex : /[(){}[\\]]/;\n
+    var lineEnd = dir > 0 ? Math.min(where.line + maxScanLines, cm.lastLine() + 1)\n
+                          : Math.max(cm.firstLine() - 1, where.line - maxScanLines);\n
+    for (var lineNo = where.line; lineNo != lineEnd; lineNo += dir) {\n
+      var line = cm.getLine(lineNo);\n
+      if (!line) continue;\n
+      var pos = dir > 0 ? 0 : line.length - 1, end = dir > 0 ? line.length : -1;\n
+      if (line.length > maxScanLen) continue;\n
+      if (lineNo == where.line) pos = where.ch - (dir < 0 ? 1 : 0);\n
+      for (; pos != end; pos += dir) {\n
+        var ch = line.charAt(pos);\n
+        if (re.test(ch) && (style === undefined || cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style)) {\n
           var match = matching[ch];\n
-          if (match.charAt(1) == ">" == forward) stack.push(ch);\n
-          else if (stack.pop() != match.charAt(0)) return {pos: pos, match: false};\n
-          else if (!stack.length) return {pos: pos, match: true};\n
+          if ((match.charAt(1) == ">") == (dir > 0)) stack.push(ch);\n
+          else if (!stack.length) return {pos: Pos(lineNo, pos), ch: ch};\n
+          else stack.pop();\n
         }\n
       }\n
     }\n
-    for (var i = cur.line, found, e = forward ? Math.min(i + maxScanLines, cm.lineCount()) : Math.max(-1, i - maxScanLines); i != e; i+=d) {\n
-      if (i == cur.line) found = scan(line, i, pos);\n
-      else found = scan(cm.getLineHandle(i), i);\n
-      if (found) break;\n
-    }\n
-    return {from: Pos(cur.line, pos), to: found && Pos(i, found.pos),\n
-            match: found && found.match, forward: forward};\n
+    return lineNo - dir == (dir > 0 ? cm.lastLine() : cm.firstLine()) ? false : null;\n
   }\n
 \n
-  function matchBrackets(cm, autoclear) {\n
+  function matchBrackets(cm, autoclear, config) {\n
     // Disable brace matching in long lines, since it\'ll cause hugely slow updates\n
     var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;\n
-    var found = findMatchingBracket(cm);\n
-    if (!found || cm.getLine(found.from.line).length > maxHighlightLen ||\n
-       found.to && cm.getLine(found.to.line).length > maxHighlightLen)\n
-      return;\n
+    var marks = [], ranges = cm.listSelections();\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, false, config);\n
+      if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {\n
+        var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";\n
+        marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));\n
+        if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)\n
+          marks.push(cm.markText(match.to, Pos(match.to.line, match.to.ch + 1), {className: style}));\n
+      }\n
+    }\n
 \n
-    var style = found.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";\n
-    var one = cm.markText(found.from, Pos(found.from.line, found.from.ch + 1), {className: style});\n
-    var two = found.to && cm.markText(found.to, Pos(found.to.line, found.to.ch + 1), {className: style});\n
-    // Kludge to work around the IE bug from issue #1193, where text\n
-    // input stops going to the textarea whenever this fires.\n
-    if (ie_lt8 && cm.state.focused) cm.display.input.focus();\n
-    var clear = function() {\n
-      cm.operation(function() { one.clear(); two && two.clear(); });\n
-    };\n
-    if (autoclear) setTimeout(clear, 800);\n
-    else return clear;\n
+    if (marks.length) {\n
+      // Kludge to work around the IE bug from issue #1193, where text\n
+      // input stops going to the textare whever this fires.\n
+      if (ie_lt8 && cm.state.focused) cm.display.input.focus();\n
+\n
+      var clear = function() {\n
+        cm.operation(function() {\n
+          for (var i = 0; i < marks.length; i++) marks[i].clear();\n
+        });\n
+      };\n
+      if (autoclear) setTimeout(clear, 800);\n
+      else return clear;\n
+    }\n
   }\n
 \n
   var currentlyHighlighted = null;\n
   function doMatchBrackets(cm) {\n
     cm.operation(function() {\n
       if (currentlyHighlighted) {currentlyHighlighted(); currentlyHighlighted = null;}\n
-      if (!cm.somethingSelected()) currentlyHighlighted = matchBrackets(cm, false);\n
+      currentlyHighlighted = matchBrackets(cm, false, cm.state.matchBrackets);\n
     });\n
   }\n
 \n
@@ -105,10 +135,13 @@
   });\n
 \n
   CodeMirror.defineExtension("matchBrackets", function() {matchBrackets(this, true);});\n
-  CodeMirror.defineExtension("findMatchingBracket", function(pos, strict){\n
-    return findMatchingBracket(this, pos, strict);\n
+  CodeMirror.defineExtension("findMatchingBracket", function(pos, strict, config){\n
+    return findMatchingBracket(this, pos, strict, config);\n
   });\n
-})();\n
+  CodeMirror.defineExtension("scanForBracket", function(pos, dir, style, config){\n
+    return scanForBracket(this, pos, dir, style, config);\n
+  });\n
+});\n
 
 
 ]]></string> </value>
@@ -119,7 +152,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3918</int> </value>
+            <value> <int>5268</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

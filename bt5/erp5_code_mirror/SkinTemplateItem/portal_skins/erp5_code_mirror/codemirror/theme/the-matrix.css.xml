@@ -27,6 +27,8 @@
             <value> <string>.cm-s-the-matrix.CodeMirror { background: #000000; color: #00FF00; }\n
 .cm-s-the-matrix div.CodeMirror-selected { background: #2D2D2D !important; }\n
 .cm-s-the-matrix .CodeMirror-gutters { background: #060; border-right: 2px solid #00FF00; }\n
+.cm-s-the-matrix .CodeMirror-guttermarker { color: #0f0; }\n
+.cm-s-the-matrix .CodeMirror-guttermarker-subtle { color: white; }\n
 .cm-s-the-matrix .CodeMirror-linenumber { color: #FFFFFF; }\n
 .cm-s-the-matrix .CodeMirror-cursor { border-left: 1px solid #00FF00 !important; }\n
 \n

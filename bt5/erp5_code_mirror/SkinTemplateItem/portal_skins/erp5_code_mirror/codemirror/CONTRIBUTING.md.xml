@@ -33,17 +33,17 @@
 ## Getting help\n
 \n
 Community discussion, questions, and informal bug reporting is done on the\n
-[CodeMirror Google group](http://groups.google.com/group/codemirror).\n
+[discuss.CodeMirror forum](http://discuss.codemirror.net).\n
 \n
 ## Submitting bug reports\n
 \n
 The preferred way to report bugs is to use the\n
-[GitHub issue tracker](http://github.com/marijnh/CodeMirror/issues). Before\n
+[GitHub issue tracker](http://github.com/codemirror/CodeMirror/issues). Before\n
 reporting a bug, read these pointers.\n
 \n
 **Note:** The issue tracker is for *bugs*, not requests for help. Questions\n
 should be asked on the\n
-[CodeMirror Google group](http://groups.google.com/group/codemirror) instead.\n
+[discuss.CodeMirror forum](http://discuss.codemirror.net) instead.\n
 \n
 ### Reporting bugs effectively\n
 \n
@@ -74,7 +74,7 @@ should be asked on the\n
 ## Contributing code\n
 \n
 - Make sure you have a [GitHub Account](https://github.com/signup/free)\n
-- Fork [CodeMirror](https://github.com/marijnh/CodeMirror/)\n
+- Fork [CodeMirror](https://github.com/codemirror/CodeMirror/)\n
   ([how to fork a repo](https://help.github.com/articles/fork-a-repo))\n
 - Make your changes\n
 - If your changes are easy to test or likely to regress, add tests.\n
@@ -96,6 +96,10 @@ should be asked on the\n
 - Note that the linter (`bin/lint`) which is run after each commit\n
   complains about unused variables and functions. Prefix their names\n
   with an underscore to muffle it.\n
+\n
+- CodeMirror does *not* follow JSHint or JSLint prescribed style.\n
+  Patches that try to \'fix\' code to pass one of these linters will be\n
+  unceremoniously discarded.\n
 </string> </value>
         </item>
       </dictionary>

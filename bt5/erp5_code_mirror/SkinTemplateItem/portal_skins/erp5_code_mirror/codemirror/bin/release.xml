@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__propsets__</string> </key>
+            <value>
+              <tuple>
+                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+#!/usr/bin/env node\n
+\n
+var fs = require("fs"), child = require("child_process");\n
+\n
+var number, bumpOnly;\n
+\n
+for (var i = 2; i < process.argv.length; i++) {\n
+  if (process.argv[i] == "-bump") bumpOnly = true;\n
+  else if (/^\\d+\\.\\d+\\.\\d+$/.test(process.argv[i])) number = process.argv[i];\n
+  else { console.log("Bogus command line arg: " + process.argv[i]); process.exit(1); }\n
+}\n
+\n
+if (!number) { console.log("Must give a version"); process.exit(1); }\n
+\n
+function rewrite(file, f) {\n
+  fs.writeFileSync(file, f(fs.readFileSync(file, "utf8")), "utf8");\n
+}\n
+\n
+rewrite("lib/codemirror.js", function(lib) {\n
+  return lib.replace(/CodeMirror\\.version = "\\d+\\.\\d+\\.\\d+"/,\n
+                     "CodeMirror.version = \\"" + number + "\\"");\n
+});\n
+function rewriteJSON(pack) {\n
+  return pack.replace(/"version":"\\d+\\.\\d+\\.\\d+"/, "\\"version\\":\\"" + number + "\\"");\n
+}\n
+rewrite("package.json", rewriteJSON);\n
+rewrite("bower.json", rewriteJSON);\n
+rewrite("doc/manual.html", function(manual) {\n
+  return manual.replace(/>version \\d+\\.\\d+\\.\\d+<\\/span>/, ">version " + number + "</span>");\n
+});\n
+\n
+if (bumpOnly) process.exit(0);\n
+\n
+child.exec("bash bin/authors.sh", function(){});\n
+\n
+var simple = number.slice(0, number.lastIndexOf("."));\n
+\n
+rewrite("doc/compress.html", function(cmp) {\n
+  return cmp.replace(/<option value="http:\\/\\/codemirror.net\\/">HEAD<\\/option>/,\n
+                     "<option value=\\"http://codemirror.net/\\">HEAD</option>\\n        <option value=\\"http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=" + number + ";f=\\">" + simple + "</option>");\n
+});\n
+\n
+rewrite("index.html", function(index) {\n
+  return index.replace(/<strong>version \\d+\\.\\d+<\\/strong>/,\n
+                       "<strong>version " + simple + "</strong>");\n
+});
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>release</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PropertySheet" module="OFS.PropertySheets"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_md</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>xmlns</string> </key>
+                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <unicode>executable</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta</string> </key>
+                      <value>
+                        <dictionary>
+                          <item>
+                              <key> <string>__xml_attrs__</string> </key>
+                              <value>
+                                <dictionary/>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>executable</string> </key>
+            <value> <string>T</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403104.53</string> </value>
+            <value> <string>ts21897151.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -344,6 +344,48 @@
     eq(cleared, 1);\n
   });\n
 \n
+  testDoc("sharedMarkerCopy", "A=\'abcde\'", function(a) {\n
+    var shared = a.markText(Pos(0, 1), Pos(0, 3), {shared: true});\n
+    var b = a.linkedDoc();\n
+    var found = b.findMarksAt(Pos(0, 2));\n
+    eq(found.length, 1);\n
+    eq(found[0], shared);\n
+    shared.clear();\n
+    eq(b.findMarksAt(Pos(0, 2)), 0);\n
+  });\n
+\n
+  testDoc("sharedMarkerDetach", "A=\'abcde\' B<A C<B", function(a, b, c) {\n
+    var shared = a.markText(Pos(0, 1), Pos(0, 3), {shared: true});\n
+    a.unlinkDoc(b);\n
+    var inB = b.findMarksAt(Pos(0, 2));\n
+    eq(inB.length, 1);\n
+    is(inB[0] != shared);\n
+    var inC = c.findMarksAt(Pos(0, 2));\n
+    eq(inC.length, 1);\n
+    is(inC[0] != shared);\n
+    inC[0].clear();\n
+    is(shared.find());\n
+  });\n
+\n
+  testDoc("sharedBookmark", "A=\'ab\\ncd\\nef\\ngh\' B<A C<~A/1-2", function(a, b, c) {\n
+    var mark = b.setBookmark(Pos(1, 1), {shared: true});\n
+    var found = a.findMarksAt(Pos(1, 1));\n
+    eq(found.length, 1);\n
+    eq(found[0], mark);\n
+    eq(c.findMarksAt(Pos(1, 1)).length, 1);\n
+    eqPos(mark.find(), Pos(1, 1));\n
+    b.replaceRange("x\\ny\\n", Pos(0, 0));\n
+    eqPos(mark.find(), Pos(3, 1));\n
+    var cleared = 0;\n
+    CodeMirror.on(mark, "clear", function() {++cleared;});\n
+    b.operation(function() {mark.clear();});\n
+    eq(a.findMarks(Pos(0, 0), Pos(5)).length, 0);\n
+    eq(b.findMarks(Pos(0, 0), Pos(5)).length, 0);\n
+    eq(c.findMarks(Pos(0, 0), Pos(5)).length, 0);\n
+    eq(mark.find(), null);\n
+    eq(cleared, 1);\n
+  });\n
+\n
   testDoc("undoInSubview", "A=\'line 0\\nline 1\\nline 2\\nline 3\\nline 4\' B<A/1-4", function(a, b) {\n
     b.replaceRange("x", Pos(2, 0));\n
     a.undo();\n
@@ -361,7 +403,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9894</int> </value>
+            <value> <int>11305</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

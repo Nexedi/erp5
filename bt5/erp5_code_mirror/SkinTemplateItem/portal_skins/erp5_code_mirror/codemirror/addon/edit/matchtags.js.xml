@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93404951.83</string> </value>
+            <value> <string>ts21897296.03</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-(function() {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../fold/xml-fold"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../fold/xml-fold"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   CodeMirror.defineOption("matchTags", false, function(cm, val, old) {\n
@@ -74,10 +84,10 @@
     var found = CodeMirror.findMatchingTag(cm, cm.getCursor());\n
     if (found) {\n
       var other = found.at == "close" ? found.open : found.close;\n
-      if (other) cm.setSelection(other.to, other.from);\n
+      if (other) cm.extendSelection(other.to, other.from);\n
     }\n
   };\n
-})();\n
+});\n
 
 
 ]]></string> </value>
@@ -88,7 +98,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1878</int> </value>
+            <value> <int>2355</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

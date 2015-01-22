@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts21897121.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>matchesonscrollbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("./searchcursor"), require("../scroll/annotatescrollbar"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "./searchcursor", "../scroll/annotatescrollbar"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  CodeMirror.defineExtension("showMatchesOnScrollbar", function(query, caseFold, className) {\n
+    return new SearchAnnotation(this, query, caseFold, className);\n
+  });\n
+\n
+  function SearchAnnotation(cm, query, caseFold, className) {\n
+    this.cm = cm;\n
+    this.annotation = cm.annotateScrollbar(className || "CodeMirror-search-match");\n
+    this.query = query;\n
+    this.caseFold = caseFold;\n
+    this.gap = {from: cm.firstLine(), to: cm.lastLine() + 1};\n
+    this.matches = [];\n
+    this.update = null;\n
+\n
+    this.findMatches();\n
+    this.annotation.update(this.matches);\n
+\n
+    var self = this;\n
+    cm.on("change", this.changeHandler = function(_cm, change) { self.onChange(change); });\n
+  }\n
+\n
+  var MAX_MATCHES = 1000;\n
+\n
+  SearchAnnotation.prototype.findMatches = function() {\n
+    if (!this.gap) return;\n
+    for (var i = 0; i < this.matches.length; i++) {\n
+      var match = this.matches[i];\n
+      if (match.from.line >= this.gap.to) break;\n
+      if (match.to.line >= this.gap.from) this.matches.splice(i--, 1);\n
+    }\n
+    var cursor = this.cm.getSearchCursor(this.query, CodeMirror.Pos(this.gap.from, 0), this.caseFold);\n
+    while (cursor.findNext()) {\n
+      var match = {from: cursor.from(), to: cursor.to()};\n
+      if (match.from.line >= this.gap.to) break;\n
+      this.matches.splice(i++, 0, match);\n
+      if (this.matches.length > MAX_MATCHES) break;\n
+    }\n
+    this.gap = null;\n
+  };\n
+\n
+  function offsetLine(line, changeStart, sizeChange) {\n
+    if (line <= changeStart) return line;\n
+    return Math.max(changeStart, line + sizeChange);\n
+  }\n
+\n
+  SearchAnnotation.prototype.onChange = function(change) {\n
+    var startLine = change.from.line;\n
+    var endLine = CodeMirror.changeEnd(change).line;\n
+    var sizeChange = endLine - change.to.line;\n
+    if (this.gap) {\n
+      this.gap.from = Math.min(offsetLine(this.gap.from, startLine, sizeChange), change.from.line);\n
+      this.gap.to = Math.max(offsetLine(this.gap.to, startLine, sizeChange), change.from.line);\n
+    } else {\n
+      this.gap = {from: change.from.line, to: endLine + 1};\n
+    }\n
+\n
+    if (sizeChange) for (var i = 0; i < this.matches.length; i++) {\n
+      var match = this.matches[i];\n
+      var newFrom = offsetLine(match.from.line, startLine, sizeChange);\n
+      if (newFrom != match.from.line) match.from = CodeMirror.Pos(newFrom, match.from.ch);\n
+      var newTo = offsetLine(match.to.line, startLine, sizeChange);\n
+      if (newTo != match.to.line) match.to = CodeMirror.Pos(newTo, match.to.ch);\n
+    }\n
+    clearTimeout(this.update);\n
+    var self = this;\n
+    this.update = setTimeout(function() { self.updateAfterChange(); }, 250);\n
+  };\n
+\n
+  SearchAnnotation.prototype.updateAfterChange = function() {\n
+    this.findMatches();\n
+    this.annotation.update(this.matches);\n
+  };\n
+\n
+  SearchAnnotation.prototype.clear = function() {\n
+    this.cm.off("change", this.changeHandler);\n
+    this.annotation.clear();\n
+  };\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3420</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

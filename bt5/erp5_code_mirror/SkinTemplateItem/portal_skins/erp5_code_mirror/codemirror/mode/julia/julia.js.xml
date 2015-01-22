@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403098.41</string> </value>
+            <value> <string>ts21897136.09</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
   var ERRORCLASS = \'error\';\n
 \n
@@ -31,7 +44,7 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
 \n
   var operators = parserConf.operators || /^\\.?[|&^\\\\%*+\\-<>!=\\/]=?|\\?|~|:|\\$|\\.[<>]|<<=?|>>>?=?|\\.[<>=]=|->?|\\/\\/|\\bin\\b/;\n
   var delimiters = parserConf.delimiters || /^[;,()[\\]{}]/;\n
-  var identifiers = parserConf.identifiers|| /^[_A-Za-z][_A-Za-z0-9]*!*/;\n
+  var identifiers = parserConf.identifiers|| /^[_A-Za-z\\u00A1-\\uFFFF][_A-Za-z0-9\\u00A1-\\uFFFF]*!*/;\n
   var blockOpeners = ["begin", "function", "type", "immutable", "let", "macro", "for", "while", "quote", "if", "else", "elseif", "try", "finally", "catch", "do"];\n
   var blockClosers = ["end", "else", "elseif", "catch", "finally"];\n
   var keywordList = [\'if\', \'else\', \'elseif\', \'while\', \'for\', \'begin\', \'let\', \'end\', \'do\', \'try\', \'catch\', \'finally\', \'return\', \'break\', \'continue\', \'global\', \'local\', \'const\', \'export\', \'import\', \'importall\', \'using\', \'function\', \'macro\', \'module\', \'baremodule\', \'type\', \'immutable\', \'quote\', \'typealias\', \'abstract\', \'bitstype\', \'ccall\'];\n
@@ -308,6 +321,8 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
 \n
 \n
 CodeMirror.defineMIME("text/x-julia", "julia");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -318,7 +333,7 @@ CodeMirror.defineMIME("text/x-julia", "julia");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7728</int> </value>
+            <value> <int>8215</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

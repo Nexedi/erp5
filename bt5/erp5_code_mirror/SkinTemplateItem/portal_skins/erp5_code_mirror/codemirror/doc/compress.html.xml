@@ -41,14 +41,17 @@
 <title>CodeMirror: Compression Helper</title>\n
 <meta charset="utf-8"/>\n
 <link rel=stylesheet href="docs.css">\n
+<script src="../lib/codemirror.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<link rel=stylesheet href="../lib/codemirror.css">\n
 \n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="logo.png"></a>\n
 \n
   <ul>\n
     <li><a href="../index.html">Home</a>\n
     <li><a href="manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a class=active href="#">Compression helper</a>\n
@@ -67,10 +70,24 @@
     click <strong>Compress</strong> to download the minified script\n
     file.</p>\n
 \n
-    <form id="form" action="http://marijnhaverbeke.nl/uglifyjs" method="post">\n
+    <form id="form" action="http://marijnhaverbeke.nl/uglifyjs" method="post" onsubmit="generateHeader();">\n
       <input type="hidden" id="download" name="download" value="codemirror-compressed.js"/>\n
       <p>Version: <select id="version" onchange="setVersion(this);" style="padding: 1px;">\n
         <option value="http://codemirror.net/">HEAD</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.11.0;f=">4.11</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.10.0;f=">4.10</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.9.0;f=">4.9</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.8.0;f=">4.8</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.7.0;f=">4.7</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.6.0;f=">4.6</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.5.0;f=">4.5</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.4.0;f=">4.4</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.3.0;f=">4.3</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.2.1;f=">4.2</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.2.0;f=">4.2</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.1.0;f=">4.1</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.0.3;f=">4.0</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=3.23.0;f=">3.23</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=3.22.0;f=">3.22</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=3.21.0;f=">3.21</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=3.20.0;f=">3.20</option>\n
@@ -127,9 +144,15 @@
           <option value="http://codemirror.net/mode/coffeescript/coffeescript.js">coffeescript.js</option>\n
           <option value="http://codemirror.net/mode/commonlisp/commonlisp.js">commonlisp.js</option>\n
           <option value="http://codemirror.net/mode/css/css.js">css.js</option>\n
+          <option value="http://codemirror.net/mode/cypher/cypher.js">cypher.js</option>\n
           <option value="http://codemirror.net/mode/d/d.js">d.js</option>\n
+          <option value="http://codemirror.net/mode/dart/dart.js">dart.js</option>\n
           <option value="http://codemirror.net/mode/diff/diff.js">diff.js</option>\n
+          <option value="http://codemirror.net/mode/django/django.js">django.js</option>\n
+          <option value="http://codemirror.net/mode/dockerfile/dockerfile.js">dockerfile.js</option>\n
           <option value="http://codemirror.net/mode/dtd/dtd.js">dtd.js</option>\n
+          <option value="http://codemirror.net/mode/dylan/dylan.js">dylan.js</option>\n
+          <option value="http://codemirror.net/mode/ebnf/ebnf.js">ebnf.js</option>\n
           <option value="http://codemirror.net/mode/ecl/ecl.js">ecl.js</option>\n
           <option value="http://codemirror.net/mode/eiffel/eiffel.js">eiffel.js</option>\n
           <option value="http://codemirror.net/mode/erlang/erlang.js">erlang.js</option>\n
@@ -145,16 +168,18 @@
           <option value="http://codemirror.net/mode/htmlembedded/htmlembedded.js">htmlembedded.js</option>\n
           <option value="http://codemirror.net/mode/htmlmixed/htmlmixed.js">htmlmixed.js</option>\n
           <option value="http://codemirror.net/mode/http/http.js">http.js</option>\n
+          <option value="http://codemirror.net/mode/idl/idl.js">idl.js</option>\n
           <option value="http://codemirror.net/mode/jade/jade.js">jade.js</option>\n
           <option value="http://codemirror.net/mode/javascript/javascript.js">javascript.js</option>\n
           <option value="http://codemirror.net/mode/jinja2/jinja2.js">jinja2.js</option>\n
-          <option value="http://codemirror.net/mode/julia/julia.js">jinja2.js</option>\n
-          <option value="http://codemirror.net/mode/less/less.js">less.js</option>\n
+          <option value="http://codemirror.net/mode/julia/julia.js">julia.js</option>\n
+          <option value="http://codemirror.net/mode/kotlin/kotlin.js">kotlin.js</option>\n
           <option value="http://codemirror.net/mode/livescript/livescript.js">livescript.js</option>\n
           <option value="http://codemirror.net/mode/lua/lua.js">lua.js</option>\n
           <option value="http://codemirror.net/mode/markdown/markdown.js">markdown.js</option>\n
           <option value="http://codemirror.net/mode/mirc/mirc.js">mirc.js</option>\n
           <option value="http://codemirror.net/mode/mllike/mllike.js">mllike.js</option>\n
+          <option value="http://codemirror.net/mode/modelica/modelica.js">modelica.js</option>\n
           <option value="http://codemirror.net/mode/nginx/nginx.js">nginx.js</option>\n
           <option value="http://codemirror.net/mode/ntriples/ntriples.js">ntriples.js</option>\n
           <option value="http://codemirror.net/mode/octave/octave.js">octave.js</option>\n
@@ -168,8 +193,7 @@
           <option value="http://codemirror.net/mode/puppet/puppet.js">puppet.js</option>\n
           <option value="http://codemirror.net/mode/q/q.js">q.js</option>\n
           <option value="http://codemirror.net/mode/r/r.js">r.js</option>\n
-          <option value="http://codemirror.net/mode/rpm/changes/changes.js">rpm/changes.js</option>\n
-          <option value="http://codemirror.net/mode/rpm/spec/spec.js">rpm/spec.js</option>\n
+          <option value="http://codemirror.net/mode/rpm/rpm.js">rpm.js</option>\n
           <option value="http://codemirror.net/mode/rst/rst.js">rst.js</option>\n
           <option value="http://codemirror.net/mode/ruby/ruby.js">ruby.js</option>\n
           <option value="http://codemirror.net/mode/rust/rust.js">rust.js</option>\n
@@ -178,16 +202,22 @@
           <option value="http://codemirror.net/mode/scheme/scheme.js">scheme.js</option>\n
           <option value="http://codemirror.net/mode/shell/shell.js">shell.js</option>\n
           <option value="http://codemirror.net/mode/sieve/sieve.js">sieve.js</option>\n
+          <option value="http://codemirror.net/mode/slim/slim.js">slim.js</option>\n
           <option value="http://codemirror.net/mode/smalltalk/smalltalk.js">smalltalk.js</option>\n
           <option value="http://codemirror.net/mode/smarty/smarty.js">smarty.js</option>\n
           <option value="http://codemirror.net/mode/smartymixed/smartymixed.js">smartymixed.js</option>\n
-          <option value="http://codemirror.net/mode/sql/sql.js">sql.js</option>\n
+          <option value="http://codemirror.net/mode/solr/solr.js">solr.js</option>\n
+          <option value="http://codemirror.net/mode/soy/soy.js">soy.js</option>\n
           <option value="http://codemirror.net/mode/sparql/sparql.js">sparql.js</option>\n
+          <option value="http://codemirror.net/mode/spreadsheet/spreadsheet.js">spreadsheet.js</option>\n
+          <option value="http://codemirror.net/mode/sql/sql.js">sql.js</option>\n
           <option value="http://codemirror.net/mode/stex/stex.js">stex.js</option>\n
           <option value="http://codemirror.net/mode/tcl/tcl.js">tcl.js</option>\n
+          <option value="http://codemirror.net/mode/textile/textile.js">textile.js</option>\n
           <option value="http://codemirror.net/mode/tiddlywiki/tiddlywiki.js">tiddlywiki.js</option>\n
           <option value="http://codemirror.net/mode/tiki/tiki.js">tiki.js</option>\n
           <option value="http://codemirror.net/mode/toml/toml.js">toml.js</option>\n
+          <option value="http://codemirror.net/mode/tornado/tornado.js">tornado.js</option>\n
           <option value="http://codemirror.net/mode/turtle/turtle.js">turtle.js</option>\n
           <option value="http://codemirror.net/mode/vb/vb.js">vb.js</option>\n
           <option value="http://codemirror.net/mode/vbscript/vbscript.js">vbscript.js</option>\n
@@ -230,9 +260,7 @@
           <option value="http://codemirror.net/addon/merge/merge.js">merge.js</option>\n
           <option value="http://codemirror.net/addon/mode/multiplex.js">multiplex.js</option>\n
           <option value="http://codemirror.net/addon/mode/overlay.js">overlay.js</option>\n
-          <option value="http://codemirror.net/addon/hint/pig-hint.js">pig-hint.js</option>\n
           <option value="http://codemirror.net/addon/display/placeholder.js">placeholder.js</option>\n
-          <option value="http://codemirror.net/addon/hint/python-hint.js">python-hint.js</option>\n
           <option value="http://codemirror.net/addon/display/rulers.js">rulers.js</option>\n
           <option value="http://codemirror.net/addon/runmode/runmode.js">runmode.js</option>\n
           <option value="http://codemirror.net/addon/runmode/runmode.node.js">runmode.node.js</option>\n
@@ -240,6 +268,8 @@
           <option value="http://codemirror.net/addon/search/search.js">search.js</option>\n
           <option value="http://codemirror.net/addon/search/searchcursor.js">searchcursor.js</option>\n
           <option value="http://codemirror.net/addon/hint/show-hint.js">show-hint.js</option>\n
+          <option value="http://codemirror.net/addon/mode/simple.js">simple.js</option>\n
+          <option value="http://codemirror.net/addon/scroll/simplescrollbars.js">simplescrollbars.js</option>\n
           <option value="http://codemirror.net/addon/hint/sql-hint.js">sql-hint.js</option>\n
           <option value="http://codemirror.net/addon/edit/trailingspace.js">trailingspace.js</option>\n
           <option value="http://codemirror.net/addon/tern/tern.js">tern.js</option>\n
@@ -249,6 +279,7 @@
         </optgroup>\n
         <optgroup label="Keymaps">\n
           <option value="http://codemirror.net/keymap/emacs.js">emacs.js</option>\n
+          <option value="http://codemirror.net/keymap/sublime.js">sublime.js</option>\n
           <option value="http://codemirror.net/keymap/vim.js">vim.js</option>\n
         </optgroup>\n
       </select>\n
@@ -256,11 +287,13 @@
       <p>\n
         <button type="submit">Compress</button> with <a href="http://github.com/mishoo/UglifyJS/">UglifyJS</a>\n
       </p>\n
-\n
-      <p>Custom code to add to the compressed file:<textarea name="js_code" style="width: 100%; height: 15em;" class="field"></textarea></p>\n
+      <input type="hidden" id="header" name="header">\n
+      <p>Custom code to add to the compressed file:<textarea name="js_code" style="width: 100%; height: 15em;" class="field" id="js_code"></textarea></p>\n
     </form>\n
 \n
     <script type="text/javascript">\n
+      CodeMirror.fromTextArea(document.getElementById("js_code")).getWrapperElement().className += " field";\n
+\n
       function setVersion(ver) {\n
         var urlprefix = ver.options[ver.selectedIndex].value;\n
         var select = document.getElementById("files"), m;\n
@@ -273,6 +306,36 @@
             else if (m = opt.value.match(/http:\\/\\/marijnhaverbeke.nl\\/git\\/codemirror\\?a=blob_plain;hb=[^;]+;f=(.*)$/))\n
               opt.value = urlprefix + m[1];\n
           }\n
+       }\n
+       \n
+       function generateHeader() {\n
+         var versionNode = document.getElementById("version");\n
+         var version = versionNode.options[versionNode.selectedIndex].label\n
+         var filesNode = document.getElementById("files");\n
+         var optGroupHeaderIncluded;\n
+\n
+         // Generate the comment\n
+         var str = "/* CodeMirror - Minified & Bundled\\n";\n
+         str += "   Generated on " + new Date().toLocaleDateString() + " with http://codemirror.net/doc/compress.html\\n";\n
+         str += "   Version: " + version + "\\n\\n";\n
+\n
+         for (var group = filesNode.firstChild; group; group = group.nextSibling) {\n
+           optGroupHeaderIncluded = false;\n
+           for (var option = group.firstChild; option; option = option.nextSibling) {\n
+             if (option.nodeName !== "OPTION") {\n
+               continue;\n
+             } else if (option.selected) {\n
+               if (!optGroupHeaderIncluded) {\n
+                 str += "   " + group.label + ":\\n";\n
+                 optGroupHeaderIncluded = true;\n
+               }\n
+               str += "   - " + option.label + "\\n";\n
+             }\n
+           }\n
+         }\n
+         str += " */\\n\\n";\n
+\n
+         document.getElementById("header").value = str;\n
        }\n
     </script>\n
 \n

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts21897148.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spreadsheet.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  CodeMirror.defineMode("spreadsheet", function () {\n
+    return {\n
+      startState: function () {\n
+        return {\n
+          stringType: null,\n
+          stack: []\n
+        };\n
+      },\n
+      token: function (stream, state) {\n
+        if (!stream) return;\n
+\n
+        //check for state changes\n
+        if (state.stack.length === 0) {\n
+          //strings\n
+          if ((stream.peek() == \'"\') || (stream.peek() == "\'")) {\n
+            state.stringType = stream.peek();\n
+            stream.next(); // Skip quote\n
+            state.stack.unshift("string");\n
+          }\n
+        }\n
+\n
+        //return state\n
+        //stack has\n
+        switch (state.stack[0]) {\n
+        case "string":\n
+          while (state.stack[0] === "string" && !stream.eol()) {\n
+            if (stream.peek() === state.stringType) {\n
+              stream.next(); // Skip quote\n
+              state.stack.shift(); // Clear flag\n
+            } else if (stream.peek() === "\\\\") {\n
+              stream.next();\n
+              stream.next();\n
+            } else {\n
+              stream.match(/^.[^\\\\\\"\\\']*/);\n
+            }\n
+          }\n
+          return "string";\n
+\n
+        case "characterClass":\n
+          while (state.stack[0] === "characterClass" && !stream.eol()) {\n
+            if (!(stream.match(/^[^\\]\\\\]+/) || stream.match(/^\\\\./)))\n
+              state.stack.shift();\n
+          }\n
+          return "operator";\n
+        }\n
+\n
+        var peek = stream.peek();\n
+\n
+        //no stack\n
+        switch (peek) {\n
+        case "[":\n
+          stream.next();\n
+          state.stack.unshift("characterClass");\n
+          return "bracket";\n
+        case ":":\n
+          stream.next();\n
+          return "operator";\n
+        case "\\\\":\n
+          if (stream.match(/\\\\[a-z]+/)) return "string-2";\n
+          else return null;\n
+        case ".":\n
+        case ",":\n
+        case ";":\n
+        case "*":\n
+        case "-":\n
+        case "+":\n
+        case "^":\n
+        case "<":\n
+        case "/":\n
+        case "=":\n
+          stream.next();\n
+          return "atom";\n
+        case "$":\n
+          stream.next();\n
+          return "builtin";\n
+        }\n
+\n
+        if (stream.match(/\\d+/)) {\n
+          if (stream.match(/^\\w+/)) return "error";\n
+          return "number";\n
+        } else if (stream.match(/^[a-zA-Z_]\\w*/)) {\n
+          if (stream.match(/(?=[\\(.])/, false)) return "keyword";\n
+          return "variable-2";\n
+        } else if (["[", "]", "(", ")", "{", "}"].indexOf(peek) != -1) {\n
+          stream.next();\n
+          return "bracket";\n
+        } else if (!stream.eatSpace()) {\n
+          stream.next();\n
+        }\n
+        return null;\n
+      }\n
+    };\n
+  });\n
+\n
+  CodeMirror.defineMIME("text/x-spreadsheet", "spreadsheet");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3084</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -28,6 +28,8 @@
 .cm-s-twilight .CodeMirror-selected { background: #323232 !important; } /**/\n
 \n
 .cm-s-twilight .CodeMirror-gutters { background: #222; border-right: 1px solid #aaa; }\n
+.cm-s-twilight .CodeMirror-guttermarker { color: white; }\n
+.cm-s-twilight .CodeMirror-guttermarker-subtle { color: #aaa; }\n
 .cm-s-twilight .CodeMirror-linenumber { color: #aaa; }\n
 .cm-s-twilight .CodeMirror-cursor { border-left: 1px solid white !important; }\n
 \n

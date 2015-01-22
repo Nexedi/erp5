@@ -59,12 +59,12 @@
 </style>\n
 \n
 <div id=nav>\n
-  <a href="http://codemirror.net"><img id=logo src="doc/logo.png"></a>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="doc/logo.png"></a>\n
 \n
   <ul>\n
     <li><a class=active data-default="true" href="#description">Home</a>\n
     <li><a href="doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
   </ul>\n
   <ul>\n
     <li><a href="#features">Features</a>\n
@@ -78,7 +78,7 @@
 <section id=description class=first>\n
   <p><strong>CodeMirror</strong> is a versatile text editor\n
   implemented in JavaScript for the browser. It is specialized for\n
-  editing code, and comes with a number of language modes and addons\n
+  editing code, and comes with a number of <a href="mode/index.html">language modes</a> and <a href="doc/manual.html#addons">addons</a>\n
   that implement more advanced editing functionality.</p>\n
 \n
   <p>A rich <a href="doc/manual.html#api">programming API</a> and a\n
@@ -95,7 +95,7 @@
 <script src="lib/codemirror.js"></script>\n
 <script>\n
   var editor = CodeMirror.fromTextArea(myTextarea, {\n
-    mode: "text/html"\n
+    lineNumbers: true\n
   });\n
 </script></textarea>\n
   <select id="demolist" onchange="document.location = this.options[this.selectedIndex].value;">\n
@@ -109,9 +109,11 @@
     <option value="demo/search.html">Search interface</option>\n
     <option value="demo/vim.html">Vim bindings</option>\n
     <option value="demo/emacs.html">Emacs bindings</option>\n
+    <option value="demo/sublime.html">Sublime Text bindings</option>\n
     <option value="demo/tern.html">Tern integration</option>\n
     <option value="demo/merge.html">Merge/diff interface</option>\n
     <option value="demo/fullscreen.html">Full-screen editor</option>\n
+    <option value="demo/simplescrollbars.html">Custom scrollbars</option>\n
   </select></form>\n
   <script>\n
     var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {\n
@@ -122,22 +124,27 @@
   </script>\n
   <div style="position: relative; margin: 1em 0;">\n
     <a class="bigbutton left" href="http://codemirror.net/codemirror.zip">DOWNLOAD LATEST RELEASE</a>\n
-    <div><strong>version 3.22</strong> (<a href="doc/releases.html">Release notes</a>)</div>\n
+    <div><strong>version 4.11</strong> (<a href="doc/releases.html">Release notes</a>)</div>\n
     <div>or use the <a href="doc/compress.html">minification helper</a></div>\n
     <div style="position: absolute; top: 0; right: 0; text-align: right">\n
       <span class="bigbutton right" onclick="document.getElementById(\'paypal\').submit();">DONATE WITH PAYPAL</span>\n
       <div style="position: relative">\n
         or <span onclick="document.getElementById(\'bankinfo\').style.display = \'block\';" class=quasilink>Bank</span>,\n
-        <a href="https://www.gittip.com/marijnh">Gittip</a>,\n
-        <a href="https://flattr.com/profile/marijnh">Flattr</a><br>\n
-        <div id=bankinfo>\n
-          <span id=bankinfo_close onclick="document.getElementById(\'bankinfo\').style.display = \'\';">Ã</span>\n
+        <span onclick="document.getElementById(\'bcinfo\').style.display = \'block\';" class=quasilink>Bitcoin</span>,\n
+        <a href="http://www.patreon.com/marijn">Patreon</a><br>\n
+        <a href="https://gratipay.com/marijnh/">Gratipay</a><br>\n
+        <div id=bankinfo class=bankinfo>\n
+          <span class=bankinfo_close onclick="document.getElementById(\'bankinfo\').style.display = \'\';">Ã</span>\n
           Bank: <i>Rabobank</i><br/>\n
           Country: <i>Netherlands</i><br/>\n
           SWIFT: <i>RABONL2U</i><br/>\n
           Account: <i>147850770</i><br/>\n
           Name: <i>Marijn Haverbeke</i><br/>\n
           IBAN: <i>NL26 RABO 0147 8507 70</i>\n
+        </div>\n
+        <div id=bcinfo class=bankinfo>\n
+          <span class=bankinfo_close onclick="document.getElementById(\'bcinfo\').style.display = \'\';">Ã</span>\n
+          Bitcoin address: 1HVnnU8E9yLPeFyNgNtUPB5deXBvUmZ6Nx\n
         </div>\n
         <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal">\n
           <input type="hidden" name="cmd" value="_s-xclick"/>\n
@@ -159,7 +166,7 @@
     <li><a href="doc/manual.html#addon_show-hint">Autocompletion</a> (<a href="demo/xmlcomplete.html">XML</a>)\n
     <li><a href="doc/manual.html#addon_foldcode">Code folding</a>\n
     <li><a href="doc/manual.html#option_extraKeys">Configurable</a> keybindings\n
-    <li><a href="demo/vim.html">Vim</a> and <a href="demo/emacs.html">Emacs</a> bindings\n
+    <li><a href="demo/vim.html">Vim</a>, <a href="demo/emacs.html">Emacs</a>, and <a href="demo/sublime.html">Sublime Text</a> bindings\n
     <li><a href="doc/manual.html#addon_search">Search and replace</a> interface\n
     <li><a href="doc/manual.html#addon_matchbrackets">Bracket</a> and <a href="doc/manual.html#addon_matchtags">tag</a> matching\n
     <li>Support for <a href="demo/buffers.html">split views</a>\n
@@ -188,7 +195,7 @@
   and <a href="doc/realworld.html">many other projects</a>.</p>\n
 \n
   <p>Development and bug tracking happens\n
-  on <a href="https://github.com/marijnh/CodeMirror/">github</a>\n
+  on <a href="https://github.com/codemirror/CodeMirror/">github</a>\n
   (<a href="http://marijnhaverbeke.nl/git/codemirror">alternate git\n
   repository</a>).\n
   Please <a href="http://codemirror.net/doc/reporting.html">read these\n
@@ -197,7 +204,7 @@
   license that CodeMirror uses.</p>\n
 \n
   <p>Discussion around the project is done on\n
-  a <a href="http://groups.google.com/group/codemirror">mailing list</a>.\n
+  a <a href="http://discuss.codemirror.net">discussion forum</a>.\n
   There is also\n
   the <a href="http://groups.google.com/group/codemirror-announce">codemirror-announce</a>\n
   list, which is only used for major announcements (such as new\n
@@ -207,17 +214,17 @@
 \n
   <p>A list of CodeMirror-related software that is not part of the\n
   main distribution is maintained\n
-  on <a href="https://github.com/marijnh/CodeMirror/wiki/CodeMirror-addons">our\n
+  on <a href="https://github.com/codemirror/CodeMirror/wiki/CodeMirror-addons">our\n
   wiki</a>. Feel free to add your project.</p>\n
 </section>\n
 \n
 <section id=browsersupport>\n
   <h2>Browser support</h2>\n
   <p>The <em>desktop</em> versions of the following browsers,\n
-  in <em>standards mode</em> (HTML5 <code>&lt;!doctype html></code>\n
+  in <em>standards mode</em> (HTML5 <code>&lt;!doctypeÂ html></code>\n
   recommended) are supported:</p>\n
   <table style="margin-bottom: 1em">\n
-    <tr><th>Firefox</th><td>version 3 and up</td></tr>\n
+    <tr><th>Firefox</th><td>version 4 and up</td></tr>\n
     <tr><th>Chrome</th><td>any version</td></tr>\n
     <tr><th>Safari</th><td>version 5.2 and up</td></tr>\n
     <tr><th style="padding-right: 1em;">Internet Explorer</th><td>version 8 and up</td></tr>\n

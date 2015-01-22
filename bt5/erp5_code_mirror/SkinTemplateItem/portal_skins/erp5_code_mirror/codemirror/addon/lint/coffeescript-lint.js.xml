@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403072.66</string> </value>
+            <value> <string>ts21897121.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,9 +22,22 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 // Depends on coffeelint.js from http://www.coffeelint.org/js/coffeelint.js\n
 \n
 // declare global: coffeelint\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
 \n
 CodeMirror.registerHelper("lint", "coffeescript", function(text) {\n
   var found = [];\n
@@ -48,7 +61,8 @@ CodeMirror.registerHelper("lint", "coffeescript", function(text) {\n
   }\n
   return found;\n
 });\n
-CodeMirror.coffeeValidator = CodeMirror.lint.coffeescript; // deprecated\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -59,7 +73,7 @@ CodeMirror.coffeeValidator = CodeMirror.lint.coffeescript; // deprecated\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>882</int> </value>
+            <value> <int>1270</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

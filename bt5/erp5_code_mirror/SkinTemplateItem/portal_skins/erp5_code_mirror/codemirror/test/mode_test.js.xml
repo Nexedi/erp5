@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403104.85</string> </value>
+            <value> <string>ts21897151.44</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -76,7 +76,7 @@
           pos = end;\n
         }\n
         text = text.replace(/\\[\\[|\\]\\]/g, function(s) {return s.charAt(0);});\n
-        tokens.push(style, text);\n
+        tokens.push({style: style, text: text});\n
         plain += text;\n
       }\n
     }\n
@@ -91,16 +91,17 @@
   };\n
 \n
   function esc(str) {\n
-    return str.replace(\'&\', \'&amp;\').replace(\'<\', \'&lt;\');\n
+    return str.replace(\'&\', \'&amp;\').replace(\'<\', \'&lt;\').replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/\'/g, "&#039;");\n
+;\n
   }\n
 \n
   function compare(text, expected, mode) {\n
 \n
     var expectedOutput = [];\n
-    for (var i = 0; i < expected.length; i += 2) {\n
-      var sty = expected[i];\n
+    for (var i = 0; i < expected.length; ++i) {\n
+      var sty = expected[i].style;\n
       if (sty && sty.indexOf(" ")) sty = sty.split(\' \').sort().join(\' \');\n
-      expectedOutput.push(sty, expected[i + 1]);\n
+      expectedOutput.push({style: sty, text: expected[i].text});\n
     }\n
 \n
     var observedOutput = highlight(text, mode);\n
@@ -113,7 +114,7 @@
       s +=   \'<div class="cm-s-default">\';\n
       s += \'expected:\';\n
       s +=   prettyPrintOutputTable(expectedOutput, diff);\n
-      s += \'observed:\';\n
+      s += \'observed: [<a onclick="this.parentElement.className+=\\\' mt-state-unhide\\\'">display states</a>]\';\n
       s +=   prettyPrintOutputTable(observedOutput, diff);\n
       s +=   \'</div>\';\n
       s += \'</div>\';\n
@@ -125,8 +126,21 @@
     if (s) throw new Failure(s);\n
   }\n
 \n
+  function stringify(obj) {\n
+    function replacer(key, obj) {\n
+      if (typeof obj == "function") {\n
+        var m = obj.toString().match(/function\\s*[^\\s(]*/);\n
+        return m ? m[0] : "function";\n
+      }\n
+      return obj;\n
+    }\n
+    if (window.JSON && JSON.stringify)\n
+      return JSON.stringify(obj, replacer, 2);\n
+    return "[unsupported]";  // Fail safely if no native JSON.\n
+  }\n
+\n
   function highlight(string, mode) {\n
-    var state = mode.startState()\n
+    var state = mode.startState();\n
 \n
     var lines = string.replace(/\\r\\n/g,\'\\n\').split(\'\\n\');\n
     var st = [], pos = 0;\n
@@ -143,17 +157,21 @@
       if (line == "" && mode.blankLine) mode.blankLine(state);\n
       /* Start copied code from CodeMirror.highlight */\n
       while (!stream.eol()) {\n
-        var compare = mode.token(stream, state), substr = stream.current();\n
+        for (var j = 0; j < 10 && stream.start >= stream.pos; j++)\n
+          var compare = mode.token(stream, state);\n
+        if (j == 10)\n
+          throw new Failure("Failed to advance the stream." + stream.string + " " + stream.pos);\n
+        var substr = stream.current();\n
         if (compare && compare.indexOf(" ") > -1) compare = compare.split(\' \').sort().join(\' \');\n
         stream.start = stream.pos;\n
-        if (pos && st[pos-2] == compare && !newLine) {\n
-          st[pos-1] += substr;\n
+        if (pos && st[pos-1].style == compare && !newLine) {\n
+          st[pos-1].text += substr;\n
         } else if (substr) {\n
-          st[pos++] = compare; st[pos++] = substr;\n
+          st[pos++] = {style: compare, text: substr, state: stringify(state)};\n
         }\n
         // Give up when line is ridiculously long\n
         if (stream.pos > 5000) {\n
-          st[pos++] = null; st[pos++] = this.text.slice(stream.pos);\n
+          st[pos++] = {style: null, text: this.text.slice(stream.pos)};\n
           break;\n
         }\n
         newLine = false;\n
@@ -166,27 +184,33 @@
   function highlightOutputsDifferent(o1, o2) {\n
     var minLen = Math.min(o1.length, o2.length);\n
     for (var i = 0; i < minLen; ++i)\n
-      if (o1[i] != o2[i]) return i >> 1;\n
+      if (o1[i].style != o2[i].style || o1[i].text != o2[i].text) return i;\n
     if (o1.length > minLen || o2.length > minLen) return minLen;\n
   }\n
 \n
   function prettyPrintOutputTable(output, diffAt) {\n
     var s = \'<table class="mt-output">\';\n
     s += \'<tr>\';\n
-    for (var i = 0; i < output.length; i += 2) {\n
-      var style = output[i], val = output[i+1];\n
+    for (var i = 0; i < output.length; ++i) {\n
+      var style = output[i].style, val = output[i].text;\n
       s +=\n
       \'<td class="mt-token"\' + (i == diffAt * 2 ? " style=\'background: pink\'" : "") + \'>\' +\n
         \'<span class="cm-\' + esc(String(style)) + \'">\' +\n
-        esc(val.replace(/ /g,\'\\xb7\')) +\n
+        esc(val.replace(/ /g,\'\\xb7\')) +  // · MIDDLE DOT\n
         \'</span>\' +\n
         \'</td>\';\n
     }\n
     s += \'</tr><tr>\';\n
-    for (var i = 0; i < output.length; i += 2) {\n
-      s += \'<td class="mt-style"><span>\' + (output[i] || null) + \'</span></td>\';\n
+    for (var i = 0; i < output.length; ++i) {\n
+      s += \'<td class="mt-style"><span>\' + (output[i].style || null) + \'</span></td>\';\n
     }\n
-    s += \'</table>\';\n
+    if(output[0].state) {\n
+      s += \'</tr><tr class="mt-state-row" title="State AFTER each token">\';\n
+      for (var i = 0; i < output.length; ++i) {\n
+        s += \'<td class="mt-state"><pre>\' + esc(output[i].state) + \'</pre></td>\';\n
+      }\n
+    }\n
+    s += \'</tr></table>\';\n
     return s;\n
   }\n
 })();\n
@@ -200,7 +224,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5891</int> </value>
+            <value> <int>7021</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

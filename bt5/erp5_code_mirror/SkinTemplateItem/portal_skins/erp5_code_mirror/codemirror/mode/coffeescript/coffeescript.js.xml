@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403101.73</string> </value>
+            <value> <string>ts21897133.52</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,18 +22,31 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 /**\n
  * Link to the project\'s GitHub page:\n
  * https://github.com/pickhardt/coffeescript-codemirror-mode\n
  */\n
-CodeMirror.defineMode("coffeescript", function(conf) {\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
+CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
   var ERRORCLASS = "error";\n
 \n
   function wordRegexp(words) {\n
     return new RegExp("^((" + words.join(")|(") + "))\\\\b");\n
   }\n
 \n
-  var operators = /^(?:->|=>|\\+[+=]?|-[\\-=]?|\\*[\\*=]?|\\/[\\/=]?|[=!]=|<[><]?=?|>>?=?|%=?|&=?|\\|=?|\\^=?|\\~|!|\\?)/;\n
+  var operators = /^(?:->|=>|\\+[+=]?|-[\\-=]?|\\*[\\*=]?|\\/[\\/=]?|[=!]=|<[><]?=?|>>?=?|%=?|&=?|\\|=?|\\^=?|\\~|!|\\?|(or|and|\\|\\||&&|\\?)=)/;\n
   var delimiters = /^(?:[()\\[\\]{},:`=;]|\\.\\.?\\.?)/;\n
   var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;\n
   var properties = /^(@|this\\.)[_A-Za-z$][_A-Za-z$0-9]*/;\n
@@ -45,7 +58,7 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
                         "switch", "try", "catch", "finally", "class"];\n
   var commonKeywords = ["break", "by", "continue", "debugger", "delete",\n
                         "do", "in", "of", "new", "return", "then",\n
-                        "this", "throw", "when", "until"];\n
+                        "this", "@", "throw", "when", "until", "extends"];\n
 \n
   var keywords = wordRegexp(indentKeywords.concat(commonKeywords));\n
 \n
@@ -202,7 +215,7 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
         }\n
       }\n
       if (singleline) {\n
-        if (conf.mode.singleLineStringErrors) {\n
+        if (parserConf.singleLineStringErrors) {\n
           outclass = ERRORCLASS;\n
         } else {\n
           state.tokenize = tokenBase;\n
@@ -228,7 +241,7 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
     type = type || "coffee";\n
     var offset = 0, align = false, alignOffset = null;\n
     for (var scope = state.scope; scope; scope = scope.prev) {\n
-      if (scope.type === "coffee") {\n
+      if (scope.type === "coffee" || scope.type == "}") {\n
         offset = scope.offset + conf.indentUnit;\n
         break;\n
       }\n
@@ -289,7 +302,7 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
 \n
     // Handle scope changes.\n
     if (current === "return") {\n
-      state.dedent += 1;\n
+      state.dedent = true;\n
     }\n
     if (((current === "->" || current === "=>") &&\n
          !state.lambda &&\n
@@ -321,9 +334,10 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
       if (state.scope.type == current)\n
         state.scope = state.scope.prev;\n
     }\n
-    if (state.dedent > 0 && stream.eol() && state.scope.type == "coffee") {\n
-      if (state.scope.prev) state.scope = state.scope.prev;\n
-      state.dedent -= 1;\n
+    if (state.dedent && stream.eol()) {\n
+      if (state.scope.type == "coffee" && state.scope.prev)\n
+        state.scope = state.scope.prev;\n
+      state.dedent = false;\n
     }\n
 \n
     return style;\n
@@ -375,6 +389,8 @@ CodeMirror.defineMode("coffeescript", function(conf) {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-coffeescript", "coffeescript");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -385,7 +401,7 @@ CodeMirror.defineMIME("text/x-coffeescript", "coffeescript");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9647</int> </value>
+            <value> <int>10188</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

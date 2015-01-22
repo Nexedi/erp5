@@ -58,7 +58,7 @@
   cursor: pointer;\n
 }\n
 \n
-.CodeMirror-hint-active {\n
+li.CodeMirror-hint-active {\n
   background: #08f;\n
   color: white;\n
 }\n

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403086.35</string> </value>
+            <value> <string>ts21897149.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("r", function(config) {\n
   function wordObj(str) {\n
     var words = str.split(" "), res = {};\n
@@ -162,11 +175,15 @@ CodeMirror.defineMode("r", function(config) {\n
       if (ctx.type == "block") return ctx.indent + (firstChar == "{" ? 0 : config.indentUnit);\n
       else if (ctx.align) return ctx.column + (closing ? 0 : 1);\n
       else return ctx.indent + (closing ? 0 : config.indentUnit);\n
-    }\n
+    },\n
+\n
+    lineComment: "#"\n
   };\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-rsrc", "r");\n
+\n
+});\n
 
 
 ]]></string> </value>
@@ -177,7 +194,7 @@ CodeMirror.defineMIME("text/x-rsrc", "r");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5138</int> </value>
+            <value> <int>5622</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

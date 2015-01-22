@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93404941.22</string> </value>
+            <value> <string>ts21897285.4</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,20 +22,32 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-CodeMirror.defineOption("showTrailingSpace", false, function(cm, val, prev) {\n
-  if (prev == CodeMirror.Init) prev = false;\n
-  if (prev && !val)\n
-    cm.removeOverlay("trailingspace");\n
-  else if (!prev && val)\n
-    cm.addOverlay({\n
-      token: function(stream) {\n
-        for (var l = stream.string.length, i = l; i && /\\s/.test(stream.string.charAt(i - 1)); --i) {}\n
-        if (i > stream.pos) { stream.pos = i; return null; }\n
-        stream.pos = l;\n
-        return "trailingspace";\n
-      },\n
-      name: "trailingspace"\n
-    });\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  CodeMirror.defineOption("showTrailingSpace", false, function(cm, val, prev) {\n
+    if (prev == CodeMirror.Init) prev = false;\n
+    if (prev && !val)\n
+      cm.removeOverlay("trailingspace");\n
+    else if (!prev && val)\n
+      cm.addOverlay({\n
+        token: function(stream) {\n
+          for (var l = stream.string.length, i = l; i && /\\s/.test(stream.string.charAt(i - 1)); --i) {}\n
+          if (i > stream.pos) { stream.pos = i; return null; }\n
+          stream.pos = l;\n
+          return "trailingspace";\n
+        },\n
+        name: "trailingspace"\n
+      });\n
+  });\n
 });\n
 
 
@@ -47,7 +59,7 @@ CodeMirror.defineOption("showTrailingSpace", false, function(cm, val, prev) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>528</int> </value>
+            <value> <int>1003</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

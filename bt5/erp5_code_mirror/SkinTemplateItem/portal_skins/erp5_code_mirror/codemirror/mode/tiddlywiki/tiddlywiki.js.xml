@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403099.69</string> </value>
+            <value> <string>ts21897134.83</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,9 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
 /***\n
     |\'\'Name\'\'|tiddlywiki.js|\n
     |\'\'Description\'\'|Enables TiddlyWikiy syntax highlighting using CodeMirror|\n
@@ -38,6 +41,17 @@
     CoreVersion parameter is needed for TiddlyWiki only!\n
 ***/\n
 //{{{\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("tiddlywiki", function () {\n
   // Tokenizer\n
   var textwords = {};\n
@@ -374,6 +388,8 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-tiddlywiki", "tiddlywiki");\n
+});\n
+\n
 //}}}\n
 
 
@@ -385,7 +401,7 @@ CodeMirror.defineMIME("text/x-tiddlywiki", "tiddlywiki");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9733</int> </value>
+            <value> <int>10195</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

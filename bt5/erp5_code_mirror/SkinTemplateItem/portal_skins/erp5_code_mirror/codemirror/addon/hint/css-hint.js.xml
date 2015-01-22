@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403074.76</string> </value>
+            <value> <string>ts21897119.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,19 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>(function () {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../../mode/css/css"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../../mode/css/css"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
   var pseudoClasses = {link: 1, visited: 1, active: 1, hover: 1, focus: 1,\n
@@ -32,7 +44,7 @@
     var inner = CodeMirror.innerMode(cm.getMode(), token.state);\n
     if (inner.mode.name != "css") return;\n
 \n
-    var word = token.string, start = token.start, end = token.end;\n
+    var start = token.start, end = cur.ch, word = token.string.slice(0, end - start);\n
     if (/[^\\w$_-]/.test(word)) {\n
       word = ""; start = end = cur.ch;\n
     }\n
@@ -46,7 +58,7 @@
           result.push(name);\n
     }\n
 \n
-    var st = token.state.state;\n
+    var st = inner.state.state;\n
     if (st == "pseudo" || token.type == "variable-3") {\n
       add(pseudoClasses);\n
     } else if (st == "block" || st == "maybeprop") {\n
@@ -65,8 +77,10 @@
       to: CodeMirror.Pos(cur.line, end)\n
     };\n
   });\n
-})();\n
-</string> </value>
+});\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -74,7 +88,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1455</int> </value>
+            <value> <int>1951</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

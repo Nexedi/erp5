@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403097.14</string> </value>
+            <value> <string>ts21897137.56</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,6 +22,19 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+"use strict";\n
+\n
 CodeMirror.defineMode("sql", function(config, parserConfig) {\n
   "use strict";\n
 \n
@@ -224,7 +237,8 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {\n
     while ((ch = stream.next()) != null) {\n
       if (ch == "`" && !stream.eat("`")) return "variable-2";\n
     }\n
-    return null;\n
+    stream.backUp(stream.current().length - 1);\n
+    return stream.eatWhile(/\\w/) ? "variable-2" : null;\n
   }\n
 \n
   // variable token\n
@@ -356,7 +370,20 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {\n
     dateSQL:    set("date time timestamp"),\n
     support:    set("doubleQuote nCharCast zerolessFloat binaryNumber hexNumber")\n
   });\n
+\n
+  // Created to support specific hive keywords\n
+  CodeMirror.defineMIME("text/x-hive", {\n
+    name: "sql",\n
+    keywords: set("select alter $elem$ $key$ $value$ add after all analyze and archive as asc before between binary both bucket buckets by cascade case cast change cluster clustered clusterstatus collection column columns comment compute concatenate continue create cross cursor data database databases dbproperties deferred delete delimited desc describe directory disable distinct distribute drop else enable end escaped exclusive exists explain export extended external false fetch fields fileformat first format formatted from full function functions grant group having hold_ddltime idxproperties if import in index indexes inpath inputdriver inputformat insert intersect into is items join keys lateral left like limit lines load local location lock locks mapjoin materialized minus msck no_drop nocompress not of offline on option or order out outer outputdriver outputformat overwrite partition partitioned partitions percent plus preserve procedure purge range rcfile read readonly reads rebuild recordreader recordwriter recover reduce regexp rename repair replace restrict revoke right rlike row schema schemas semi sequencefile serde serdeproperties set shared show show_database sort sorted ssl statistics stored streamtable table tables tablesample tblproperties temporary terminated textfile then tmp to touch transform trigger true unarchive undo union uniquejoin unlock update use using utc utc_tmestamp view when where while with"),\n
+    builtin: set("bool boolean long timestamp tinyint smallint bigint int float double date datetime unsigned string array struct map uniontype"),\n
+    atoms: set("false true null unknown"),\n
+    operatorChars: /^[*+\\-%<>!=]/,\n
+    dateSQL: set("date timestamp"),\n
+    support: set("ODBCdotTable doubleQuote binaryNumber hexNumber")\n
+  });\n
 }());\n
+\n
+});\n
 \n
 /*\n
   How Properties of Mime Types are used by SQL Mode\n
@@ -364,8 +391,6 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {\n
 \n
   keywords:\n
     A list of keywords you want to be highlighted.\n
-  functions:\n
-    A list of function names you want to be highlighted.\n
   builtin:\n
     A list of builtin types you want to be highlighted (if you want types to be of class "builtin" instead of "keyword").\n
   operatorChars:\n
@@ -398,7 +423,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>23907</int> </value>
+            <value> <int>26276</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

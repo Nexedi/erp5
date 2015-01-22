@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93403105.36</string> </value>
+            <value> <string>ts21897152.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,6 +31,9 @@
   }\n
 \n
   var simpleProg = "function foo() {\\n  return bar;\\n}";\n
+  var inlineBlock = "foo(/* bar */ true);";\n
+  var inlineBlocks = "foo(/* bar */ true, /* baz */ false);";\n
+  var multiLineInlineBlock = ["above();", "foo(/* bar */ true);", "below();"];\n
 \n
   test("block", "javascript", function(cm) {\n
     cm.blockComment(Pos(0, 3), Pos(3, 0), {blockCommentLead: " *"});\n
@@ -40,6 +43,17 @@
     cm.blockComment(Pos(0, 3), Pos(2, 0), {blockCommentLead: " *"});\n
     cm.uncomment(Pos(0, 3), Pos(2, 0), {blockCommentLead: " *"});\n
   }, simpleProg, simpleProg);\n
+\n
+  test("blockToggle2", "javascript", function(cm) {\n
+    cm.setCursor({line: 0, ch: 7 /* inside the block comment */});\n
+    cm.execCommand("toggleComment");\n
+  }, inlineBlock, "foo(bar true);");\n
+\n
+  // This test should work but currently fails.\n
+  // test("blockToggle3", "javascript", function(cm) {\n
+  //   cm.setCursor({line: 0, ch: 7 /* inside the first block comment */});\n
+  //   cm.execCommand("toggleComment");\n
+  // }, inlineBlocks, "foo(bar true, /* baz */ false);");\n
 \n
   test("line", "javascript", function(cm) {\n
     cm.lineComment(Pos(1, 1), Pos(1, 1));\n
@@ -57,6 +71,29 @@
   test("fallbackToLine", "ruby", function(cm) {\n
     cm.blockComment(Pos(0, 0), Pos(1));\n
   }, "def blah()\\n  return hah\\n", "# def blah()\\n#   return hah\\n");\n
+\n
+  test("ignoreExternalBlockComments", "javascript", function(cm) {\n
+    cm.execCommand("toggleComment");\n
+  }, inlineBlocks, "// " + inlineBlocks);\n
+\n
+  test("ignoreExternalBlockComments2", "javascript", function(cm) {\n
+    cm.setCursor({line: 0, ch: null /* eol */});\n
+    cm.execCommand("toggleComment");\n
+  }, inlineBlocks, "// " + inlineBlocks);\n
+\n
+  test("ignoreExternalBlockCommentsMultiLineAbove", "javascript", function(cm) {\n
+    cm.setSelection({line: 0, ch: 0}, {line: 1, ch: 1});\n
+    cm.execCommand("toggleComment");\n
+  }, multiLineInlineBlock.join("\\n"), ["// " + multiLineInlineBlock[0],\n
+                                       "// " + multiLineInlineBlock[1],\n
+                                       multiLineInlineBlock[2]].join("\\n"));\n
+\n
+  test("ignoreExternalBlockCommentsMultiLineBelow", "javascript", function(cm) {\n
+    cm.setSelection({line: 1, ch: 13 /* after end of block comment */}, {line: 2, ch: 1});\n
+    cm.execCommand("toggleComment");\n
+  }, multiLineInlineBlock.join("\\n"), [multiLineInlineBlock[0],\n
+                                       "// " + multiLineInlineBlock[1],\n
+                                       "// " + multiLineInlineBlock[2]].join("\\n"));\n
 \n
   test("commentRange", "javascript", function(cm) {\n
     cm.blockComment(Pos(1, 2), Pos(1, 13), {fullLines: false});\n
@@ -91,7 +128,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2320</int> </value>
+            <value> <int>4149</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

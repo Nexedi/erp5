@@ -67,7 +67,6 @@
 \n
 .cm-s-ambiance.CodeMirror {\n
   line-height: 1.40em;\n
-  font-family: Monaco, Menlo,"Andale Mono","lucida console","Courier New",monospace !important;\n
   color: #E6E1DC;\n
   background-color: #202020;\n
   -webkit-box-shadow: inset 0 0 10px black;\n
@@ -83,9 +82,12 @@
 \n
 .cm-s-ambiance .CodeMirror-linenumber {\n
   text-shadow: 0px 1px 1px #4d4d4d;\n
-  color: #222;\n
+  color: #111;\n
   padding: 0 5px;\n
 }\n
+\n
+.cm-s-ambiance .CodeMirror-guttermarker { color: #aaa; }\n
+.cm-s-ambiance .CodeMirror-guttermarker-subtle { color: #111; }\n
 \n
 .cm-s-ambiance .CodeMirror-lines .CodeMirror-cursor {\n
   border-left: 1px solid #7991E8;\n
