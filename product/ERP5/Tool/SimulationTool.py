@@ -38,8 +38,11 @@ from Products.ERP5 import _dtmldir
 
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
-from Products.ERP5.Capacity.GLPK import solve
-from numpy import zeros, resize
+# XXX: numpy 1.9.1 can't be imported because gcc 4.3 is too old
+#      so always disable it to make sure tests are still passing.
+#from Products.ERP5.Capacity.GLPK import solve
+#from numpy import zeros, resize
+
 from DateTime import DateTime
 
 from Products.ERP5 import DeliverySolver
