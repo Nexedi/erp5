@@ -29,7 +29,7 @@
 
 import os, socket
 from urlparse import urlparse
-from socket import error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
+from socket import gaierror, error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
 from xmlrpclib import Binary
 from cStringIO import StringIO
 from paramiko import Transport, RSAKey, SFTPClient
@@ -93,7 +93,7 @@ class SFTPConnection:
         raise SFTPError("No password or private_key defined")
       # Connect
       self.conn = SFTPClient.from_transport(self.transport)
-    except (socket.gaierror,error), msg:
+    except (gaierror, error), msg:
       raise SFTPError(str(msg) + ' while establishing connection to %s' % (self.url,))
     # Go to specified directory
     try:
