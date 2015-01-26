@@ -86,6 +86,8 @@ class State(XMLObject, XMLMatrix):
       raise StateError
     else:
       transition.execute(document, form_kw=form_kw)
+      ### zwj: update Role mapping, also in Workflow, initialiseDocument()
+      self.getParent().updateRoleMappingsFor(document)
 
   def undoTransition(self, document):
     """

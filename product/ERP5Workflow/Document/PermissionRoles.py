@@ -67,9 +67,12 @@ class PermissionRoles(XMLObject):
     return self.id
 
   def getPermissionRole(self):
+    permission = 'None'
+    role = 'None'
     if self.is_selected == 1:
-      permission_id = self.getId().split('_')[1]
-      role_id = self.getId().split('_')[2]
+      permission_id = int(self.id.split('_')[1])
+      role_id = int(self.id.split('_')[2])
+      LOG('zwj: Assign %s to %s' %(role_id, permission_id), WARNING, "in PermissionRole.")
       permission_list = sorted(self.getParent().getParent().getManagedPermissionList())
       role_list = sorted(["Anonymous", "Assignee", "Assignor", "Associate",
                 "Auditor", "Authenticated", "Author", "Manager",
@@ -77,16 +80,6 @@ class PermissionRoles(XMLObject):
       permission = permission_list[permission_id]
       role = role_list[role_id]
       LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in PermissionRole.")
-      return permission, role
-
-  def setPermissionRoleMap(self):
-    if is_selected == 1:
-      permission_id = self.id.split('_')[1]
-      role_id = self.id.split('_')[2]
-      permission_list = sorted(self.getParent().getParent().getManagedPermissionList())
-      role_list = sorted(["Anonymous", "Assignee", "Assignor", "Associate",
-                "Auditor", "Authenticated", "Author", "Manager",
-                "Member", "Owner", "Reviewer"])
-      permission = permission_list[permission_id]
-      role = role_list[role_id]
-
+    if role == 'None':
+      role = ['Manager']
+    return permission, role

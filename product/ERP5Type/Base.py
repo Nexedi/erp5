@@ -3383,6 +3383,7 @@ class Base( CopyContainer,
 
     workflow = self.portal_workflow.getWorkflowById(wf_id)
     erp5workflow = self.workflow_module._getOb(wf_id, None)
+    LOG('zwj: Loading %s'%erp5workflow.getId(), WARNING,'updating roles')
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
       if changed:
@@ -3390,7 +3391,7 @@ class Base( CopyContainer,
 
     ### zwj: update role changed through erp5workflow
     if erp5workflow is not None:
-      changed = erp5workflow.updateRoleMappingFor(self)
+      changed = erp5workflow.updateRoleMappingsFor(self)
       if changed:
         self.reindexObjectSecurity(activate_kw={'priority':4})
 

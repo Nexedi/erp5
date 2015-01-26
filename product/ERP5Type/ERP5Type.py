@@ -418,10 +418,10 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
-        for ERP5Workflow in self.getTypeERP5WorkflowList():
+        for ERP5Workflow_id in self.getTypeERP5WorkflowList():
           workflow_module = portal.getDefaultModule(portal_type="Workflow")
           if workflow_module is not None:
-            ERP5Workflow = workflow_module._getOb(ERP5Workflow)
+            ERP5Workflow = workflow_module._getOb(ERP5Workflow_id)
             ERP5Workflow.initializeDocument(ob)
 
       if not temp_object:

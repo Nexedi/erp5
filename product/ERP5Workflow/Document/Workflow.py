@@ -42,6 +42,7 @@ from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
 from DateTime import DateTime
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class Workflow(XMLObject):
   """
@@ -56,10 +57,13 @@ class Workflow(XMLObject):
 
   ### zwj: for security issue
   managed_permission = ()
-  role = None
+  managed_role = ()
   group = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
-
+  erp5_role_groups = ()
+  role_list = sorted(["Anonymous", "Assignee", "Assignor", "Associate",
+                "Auditor", "Authenticated", "Author", "Manager",
+                "Member", "Owner", "Reviewer"])
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -88,6 +92,8 @@ class Workflow(XMLObject):
     for variable in variable_list:
       status_dict[variable.getTitle()] = variable.getInitialValue(object=object)
     self._updateWorkflowHistory(document, status_dict)
+    ### zwj: initialize role mappings, also in State.py/executeTransition()
+    self.updateRoleMappingsFor(document)
 
   def _generateHistoryKey(self):
     """
@@ -184,15 +190,18 @@ class Workflow(XMLObject):
     ### zwj: build a permission roles dict
     for perm_role in permission_role_matrix_cells:
       permission,role = perm_role.getPermissionRole()
-      if erp5_permission_roles[permission]:
-        erp5_permission_roles[permission] = erp5_permission_roles[permission] + role
-      else:
-        erp5_permission_roles.update({permission : role})
-    ### zwj: update role list to permission
-    for permission_roles in erp5_permission_roles.keys():
-      if modifyRolesForPermission(document, permission_roles, erp5_permission_roles[permission_roles]):
-        changed = 1
+      LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in Workflow.")
+      if permission != 'None':
+        if self.erp5_permission_roles.has_key(permission):
+          self.erp5_permission_roles[permission] += (role,)
+        else:
+          self.erp5_permission_roles.update({permission : (role,)})
 
+    ### zwj: update role list to permission
+    for permission_roles in self.erp5_permission_roles.keys():
+      if modifyRolesForPermission(document, permission_roles, self.erp5_permission_roles[permission_roles]):
+        changed = 1
+    """
     # Update the group -> role map.
     groups = self.getGroups()
     managed_roles = self.getRoles()
@@ -203,8 +212,11 @@ class Workflow(XMLObject):
                 roles = sdef.group_roles.get(group, ())
             if modifyRolesForGroup(document, group, roles, managed_roles):
                 changed = 1
+    """
     return changed
 
+  def getRoleList(self):
+    return self.role_list
 
   def _checkTransitionGuard(self, t, document, **kw):
     guard = t.guard
