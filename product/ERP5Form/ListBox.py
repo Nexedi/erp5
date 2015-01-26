@@ -1837,10 +1837,7 @@ class ListBoxRenderer:
 
           stat_result = {}
           for index, (k, v) in enumerate(self.getSelectedColumnList()):
-            try:
-              stat_result[k] = stat_brain[0][k]
-            except IndexError:
-              stat_result[k] = ''
+            stat_result[k] = stat_brain[0].get(k, '')
 
           stat_context = report_tree_obj.asContext(**stat_result)
           # XXX yo thinks that this code below is useless, so disabled.
