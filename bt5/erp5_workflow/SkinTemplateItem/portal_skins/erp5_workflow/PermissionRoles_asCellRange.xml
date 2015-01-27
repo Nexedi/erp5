@@ -51,18 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>managed_permissions = sorted(context.getParent().getManagedPermissionList())\n
+available_roles = context.getRoleList()\n
+"""\n
 available_roles = sorted(["Anonymous", "Assignee", "Assignor", "Associate",\n
                 "Auditor", "Authenticated", "Author", "Manager",\n
                 "Member", "Owner", "Reviewer"])\n
+"""\n
 \n
-#arole = context.getPortalObject().getAvailableRoles() ### findout how to do this\n
-\n
+### zwj: build the permission role matrix [[],[],[],[],[],...]\n
 ma_i = []\n
 ma_j = []\n
-\n
-#if matrixbox:\n
-#  return [(\'permission1\', \'Permission1\'), (\'permission2\', \'Permission2\')], [(\'role1\', \'Role1\'), (\'role2\', \'Role2\')], \n
-#return [\'permission1\', \'permission2\'], [\'role1\', \'role2\'],\n
 \n
 if matrixbox:\n
   for perms in managed_permissions:\n
