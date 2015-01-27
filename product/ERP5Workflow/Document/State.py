@@ -52,7 +52,6 @@ class State(XMLObject, XMLMatrix):
   isRADContent = 1
   ###zwj: security features
   erp5_permission_roles = {} # { permission: [role] or (role,) }
-  group_roles = None
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -174,12 +173,6 @@ class State(XMLObject, XMLMatrix):
     if 'base_id' not in kwd:
       kwd['base_id'] = 'movement'
     return XMLMatrix.newCell(self, *kw, **kwd)
-
-
-
-
-  ### matrix method
-
 
   def setPermission(self, permission, acquired, roles, REQUEST=None):
       """Set a permission for this State."""

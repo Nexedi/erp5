@@ -58,9 +58,7 @@ class Workflow(XMLObject):
   ### zwj: for security issue
   managed_permission = ()
   managed_role = ()
-  group = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
-  erp5_role_groups = ()
   role_list = sorted(["Anonymous", "Assignee", "Assignor", "Associate",
                 "Auditor", "Authenticated", "Author", "Manager",
                 "Member", "Owner", "Reviewer"])
@@ -175,22 +173,13 @@ class Workflow(XMLObject):
     sdef = sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
     if sdef is None:
         return 0
-    """
-    # Update the role -> permission map.
-    if self.permissions:
-        for p in self.permissions:
-            roles = []
-            if sdef.erp5_permission_roles is not None: ### permission is defined in state
-                roles = sdef.erp5_permission_roles.get(p, roles)
-            if modifyRolesForPermission(document, p, roles):
-                changed = 1
-    """
     ### zwj: get all matrix cell objects
     permission_role_matrix_cells = sdef.objectValues(portal_type = "PermissionRoles")
     ### zwj: build a permission roles dict
     for perm_role in permission_role_matrix_cells:
       permission,role = perm_role.getPermissionRole()
-      LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in Workflow.")
+      ### zwj: double check the right role and permission are obtained
+      #LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in Workflow.")
       if permission != 'None':
         if self.erp5_permission_roles.has_key(permission):
           self.erp5_permission_roles[permission] += (role,)
@@ -201,23 +190,14 @@ class Workflow(XMLObject):
     for permission_roles in self.erp5_permission_roles.keys():
       if modifyRolesForPermission(document, permission_roles, self.erp5_permission_roles[permission_roles]):
         changed = 1
-    """
-    # Update the group -> role map.
-    groups = self.getGroups()
-    managed_roles = self.getRoles()
-    if groups and managed_roles:
-        for group in groups:
-            roles = ()
-            if sdef.group_roles is not None:
-                roles = sdef.group_roles.get(group, ())
-            if modifyRolesForGroup(document, group, roles, managed_roles):
-                changed = 1
-    """
+
     return changed
 
   def getRoleList(self):
     return self.role_list
 
+  ### zwj: unknown objective function
+  """
   def _checkTransitionGuard(self, t, document, **kw):
     guard = t.guard
     if guard is None:
@@ -225,7 +205,7 @@ class Workflow(XMLObject):
     if guard.check(getSecurityManager(), self, document, **kw):
       return 1
     return
-
+  """
   ### Security feature end
 
   ###########
