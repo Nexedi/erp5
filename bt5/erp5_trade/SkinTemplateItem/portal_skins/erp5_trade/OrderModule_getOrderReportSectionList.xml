@@ -49,6 +49,121 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+from Products.ERP5Type.DateUtils import getIntervalListBetweenDates\n
+from DateTime import DateTime\n
+result=[]\n
+\n
+request = container.REQUEST\n
+# list only if user has a login defined\n
+aggregation_level = request.get(\'aggregation_level\')\n
+from_date = request.get(\'from_date\')\n
+to_date = request.get(\'at_date\')\n
+group_by = request.get(\'group_by\')\n
+quantity_unit = request.get(\'quantity_unit\')\n
+simulation_state = request.get(\'simulation_state\', ())\n
+\n
+# define some parameter dependings on module\n
+if "Sale" in context.getPortalType():\n
+  report_type = "sale"\n
+  line_portal_type = "Sale Order Line"\n
+  doc_portal_type = "Sale Order"\n
+elif "Purchase" in context.getPortalType():\n
+  report_type = "purchase"\n
+  line_portal_type = "Purchase Order Line"\n
+  doc_portal_type = "Purchase Order"\n
+elif request.get(\'order_report_document_portal_type\'):\n
+  doc_portal_type = request.get(\'order_report_document_portal_type\')\n
+  if doc_portal_type == \'Purchase Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'purchase\'\n
+  elif doc_portal_type == \'Sale Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'sale\'\n
+  else:\n
+    raise ValueError, "unknown document portal type for report %s" % doc_portal_type\n
+else:\n
+  raise ValueError, "unknown type for report"\n
+\n
+selection_columns = [(\'group_by\', "Group by")]\n
+if from_date is None:\n
+  # get the minimum start date in catalog\n
+  from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery\n
+  kw = {"delivery.start_date" : None, "key":"DefaultKey"}\n
+  q = NegatedQuery(Query(**kw))\n
+  select_expression = "MIN(delivery.start_date)"\n
+  group_by = "delivery.start_date"\n
+  from_date = DateTime()\n
+  result_list = context.portal_catalog(\n
+                                     select_expression=select_expression,\n
+                                     group_by_expression=group_by,\n
+                                     simulation_state=simulation_state,\n
+                                     portal_type=doc_portal_type,\n
+                                     query=q,\n
+                                     limit=1)\n
+  if result_list:\n
+    from_date = DateTime(result_list[0][2])\n
+\n
+ \n
+# get period list between given date\n
+interval_list_dict = getIntervalListBetweenDates(from_date=from_date, to_date=to_date,\n
+                                            keys={\'year\':aggregation_level=="year",\n
+                                                  \'month\':aggregation_level=="month",\n
+                                                  \'week\' : aggregation_level=="week",\n
+                                                  \'day\':aggregation_level=="day"})\n
+interval_list = interval_list_dict[aggregation_level]\n
+\n
+# FIXME: translate column names\n
+# list columns of the listbox\n
+interval_column_list = []\n
+if group_by == "client":\n
+  interval_column_list.extend([("Amount %s" %x,"Amount %s" %x) for x in interval_list])\n
+  selection_columns = [(\'client\', "Client")]\n
+  stat_columns = [(\'client\', "client")]\n
+  total_column_list = [(\'total amount\', \'Total Amount\'),]\n
+  total_stat_list = [(\'total amount\', \'total amount\'),]\n
+else:\n
+  if group_by == "product":\n
+    selection_columns = [(\'product\', "Product")]\n
+    stat_columns = [(\'product\', "product")]\n
+  elif group_by == "function":\n
+    function_title = context.AccountingTransactionLine_getFunctionBaseCategoryTitle()\n
+    selection_columns = [(\'product\', function_title)]\n
+    stat_columns = [(\'product\', "product")]\n
+  else:\n
+    selection_columns = [(\'client\', "Client"), (\'product\', "Product")]\n
+    stat_columns = [(\'client\', "client"), (\'product\', "product")]\n
+  for x in interval_list:\n
+    interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x)])\n
+    if not quantity_unit:\n
+      interval_column_list.extend([("Quantity Unit %s" %x,"Quantity Unit %s" %x)])\n
+  total_column_list = [(\'total amount\', \'Total Amount\'),(\'total quantity\', \'Total Quantity\')]\n
+  total_stat_list = [(\'total amount\', \'total amount\'),(\'total quantity\', \'total quantity\')]\n
+\n
+selection_columns.extend(interval_column_list)\n
+selection_columns.extend(total_column_list)\n
+\n
+params=dict(period_list=interval_list, report_type=report_type,\n
+            doc_portal_type=doc_portal_type, line_portal_type=line_portal_type,\n
+            simulation_state=simulation_state)\n
+\n
+# stat columns of the listbox\n
+stat_columns = stat_columns + interval_column_list + total_stat_list\n
+context.REQUEST.set(\'stat_columns\', stat_columns)\n
+\n
+result.append(ReportSection(\n
+              path=context.getPhysicalPath(),\n
+              selection_columns=selection_columns,\n
+              listbox_display_mode=\'FlatListMode\',\n
+              selection_params=params,\n
+              form_id=\'OrderModule_viewOrderStatList\'))\n
+\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
