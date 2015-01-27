@@ -54,7 +54,7 @@
 
 current_date=DateTime()\n
 assignment_list = []\n
-for assignment in context.contentValues(portal_type=\'Assignment\', checked_permission="View"):\n
+for assignment in context.contentValues(portal_type=\'Assignment\', checked_permission="Access contents information"):\n
   if assignment.getValidationState() == \'open\':\n
     start_date = assignment.getStartDate()\n
     stop_date = assignment.getStopDate()\n
