@@ -61,6 +61,7 @@ aggregation_level = request.get(\'aggregation_level\')\n
 from_date = request.get(\'from_date\')\n
 to_date = request.get(\'at_date\')\n
 group_by = request.get(\'group_by\')\n
+quantity_unit = request.get(\'quantity_unit\')\n
 simulation_state = request.get(\'simulation_state\', ())\n
 \n
 # define some parameter dependings on module\n
@@ -126,12 +127,17 @@ else:\n
   if group_by == "product":\n
     selection_columns = [(\'product\', "Product")]\n
     stat_columns = [(\'product\', "product")]\n
+  elif group_by == "function":\n
+    function_title = context.AccountingTransactionLine_getFunctionBaseCategoryTitle()\n
+    selection_columns = [(\'product\', function_title)]\n
+    stat_columns = [(\'product\', "product")]\n
   else:\n
     selection_columns = [(\'client\', "Client"), (\'product\', "Product")]\n
     stat_columns = [(\'client\', "client"), (\'product\', "product")]\n
   for x in interval_list:\n
-    interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x),\n
-                                 ("Quantity Unit %s" %x,"Quantity Unit %s" %x)])\n
+    interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x)])\n
+    if not quantity_unit:\n
+      interval_column_list.extend([("Quantity Unit %s" %x,"Quantity Unit %s" %x)])\n
   total_column_list = [(\'total amount\', \'Total Amount\'),(\'total quantity\', \'Total Quantity\')]\n
   total_stat_list = [(\'total amount\', \'total amount\'),(\'total quantity\', \'total quantity\')]\n
 \n
