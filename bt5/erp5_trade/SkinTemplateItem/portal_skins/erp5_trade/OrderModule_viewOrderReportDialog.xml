@@ -112,6 +112,7 @@
                       <list>
                         <string>your_aggregation_level</string>
                         <string>your_group_by</string>
+                        <string>your_quantity_unit</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>

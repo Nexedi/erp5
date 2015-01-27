@@ -94,6 +94,7 @@
                         <string>your_delivery_mode</string>
                         <string>your_from_date</string>
                         <string>your_group_by</string>
+                        <string>your_quantity_unit</string>
                         <string>your_incoterm</string>
                         <string>your_order</string>
                         <string>your_section_category</string>
