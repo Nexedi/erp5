@@ -68,7 +68,8 @@ class Transition(XMLObject):
 
     # Modify the state
     self._changeState(document)
-
+    ### zwj: update Role mapping, also in Workflow, initialiseDocument()
+    self.getParent().updateRoleMappingsFor(document)
     # Get variable values
     status_dict = workflow.getCurrentStatusDict(document)
     status_dict['undo'] = 0

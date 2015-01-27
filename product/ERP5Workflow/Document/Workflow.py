@@ -185,27 +185,17 @@ class Workflow(XMLObject):
           self.erp5_permission_roles[permission] += (role,)
         else:
           self.erp5_permission_roles.update({permission : (role,)})
-
     ### zwj: update role list to permission
     for permission_roles in self.erp5_permission_roles.keys():
       if modifyRolesForPermission(document, permission_roles, self.erp5_permission_roles[permission_roles]):
         changed = 1
-
+        ### zwj: clean Permission Role list for next role mapping
+        del self.erp5_permission_roles[permission_roles]
     return changed
 
   def getRoleList(self):
     return self.role_list
 
-  ### zwj: unknown objective function
-  """
-  def _checkTransitionGuard(self, t, document, **kw):
-    guard = t.guard
-    if guard is None:
-      return 1
-    if guard.check(getSecurityManager(), self, document, **kw):
-      return 1
-    return
-  """
   ### Security feature end
 
   ###########
