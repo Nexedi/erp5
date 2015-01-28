@@ -182,13 +182,13 @@ class ERP5WorkflowMethod(Method):
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          LOG('zwj: Executing %s in %s' %(transition_id, wf_id), WARNING, "lol")
+          LOG('zwj: Executing %s in %s' %(transition_id, wf_id), WARNING, " in Base.py.")
           if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
           else:
-            raise UnsupportedWorkflowMethod("The Transition is not supported by current state.")
+            raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
@@ -3379,6 +3379,8 @@ class Base( CopyContainer,
 
     There's no check that the document is actually chained to the workflow,
     it's caller responsability to perform this check.
+
+    ### zwj: where this function is used?
     """
 
     workflow = self.portal_workflow.getWorkflowById(wf_id)
