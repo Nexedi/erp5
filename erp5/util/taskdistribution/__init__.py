@@ -114,7 +114,10 @@ class RPCRetry(object):
                 self._logger.warning('Got exception, retrying: %s%r '
                     'in %is', func_id, tuple(args), retry_time, exc_info=1)
                 time.sleep(retry_time)
-                retry_time *= 1.5
+                # find a balance between not overloading a server and
+                # getting back working services quickly when rpc calls should
+                # rework (do not wait 2 days if server is back)
+                retry_time = min(retry_time * 1.5, self._retry_time * 10)
 
 class TestResultLineProxy(RPCRetry):
     """
