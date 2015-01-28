@@ -109,11 +109,33 @@ def renderField(field, meta_type=None):\n
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
-  elif meta_type in ("StringField", "FloatField", "RelationStringField",\n
-                     "MultiRelationStringField", "EmailField", "TextAreaField",\n
+  elif meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",\n
                      "LinesField", "ImageField", "FileField", "IntegerField",\n
                      "PasswordField", "EditorField"):\n
     result = {\n
+      "type": meta_type,\n
+      "key": field.generate_field_key(),\n
+      "default": field.get_value("default"),\n
+      "editable": field.get_value("editable"),\n
+      "css_class": field.get_value("css_class"),\n
+      "hidden": field.get_value("hidden"),\n
+      "description": field.get_value("description"),\n
+      "title": field.get_value("title"),\n
+      "required": field.get_value("required"),\n
+    }\n
+  elif meta_type in ("RelationStringField", "MultiRelationStringField"):\n
+    query = url_template_dict["jio_search_template"] % {\n
+      "query": make_query({"query": sql_catalog.buildQuery(\n
+        {"portal_type": [x[0] for x in field.get_value(\'portal_type\')]}\n
+      ).asSearchTextExpression(sql_catalog)})\n
+    }\n
+    result = {\n
+      "portal_types": field.get_value(\'portal_type\')[0],\n
+      #"query": url_template_dict["jio_search_template"],\n
+      "query": query,\n
+      "catalog_index": field.get_value(\'catalog_index\'),\n
+      "allow_jump": field.get_value(\'allow_jump\'),\n
+      "allow_creation": field.get_value(\'allow_creation\'),\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
       "default": field.get_value("default"),\n
