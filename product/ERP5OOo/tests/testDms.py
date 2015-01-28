@@ -1243,7 +1243,7 @@ class TestDocument(TestDocumentMixin):
     # should return all documents matching a word no matter of contributor
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': 'owner',
-          'contributor_title': 'Contributor'}
+          'contributor_title': '%Contributor%'}
     self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
 
     # multiple portal_type specified

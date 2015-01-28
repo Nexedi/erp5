@@ -1,4 +1,4 @@
-item_catalog_title | catalog_full_text/title/z_related_item_catalog
+item_catalog_title | catalog/title/z_related_item_catalog
 item_catalog_portal_type | catalog/portal_type/z_related_item_catalog
 item_catalog_reference | catalog/reference/z_related_item_catalog
 item_catalog_validation_state | catalog/validation_state/z_related_item_catalog

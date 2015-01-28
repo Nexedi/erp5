@@ -1,6 +1,6 @@
-source_organisation_title | category,catalog,catalog_full_text/title/z_related_source_organisation_full_text
-source_person_title | category,catalog,catalog_full_text/title/z_related_source_person_full_text
-destination_person_title | category,catalog,catalog_full_text/title/z_related_destination_person_full_text
+source_organisation_title | category,catalog/title/z_related_source_organisation
+source_person_title | category,catalog/title/z_related_source_person
+destination_person_title | category,catalog/title/z_related_destination_person
 default_email_text | catalog,email/url_string/z_related_default_email
 related_resource_use_uid | category,category,catalog,catalog/uid/z_related_resource_use
 child_address_SearchableText | catalog,full_text/SearchableText/z_related_child_address

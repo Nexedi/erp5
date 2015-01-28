@@ -1,10 +1,8 @@
 <key_list>
- <key>career_skill_title | category,catalog,catalog_full_text/title/z_related_career_skill</key>
- <key>description | catalog_full_text/description/z_related_uid</key>
- <key>parent_description | catalog_full_text/description/z_related_parent</key>
- <key>parent_title | catalog_full_text/title/z_related_parent</key>
- <key>stock_explanation_title | catalog_full_text/title/z_related_explanation_from_stock</key>
- <key>stock_mirror_section_title | catalog_full_text/title/z_related_mirror_section_uid_from_stock</key>
- <key>stock_node_title | catalog_full_text/title/z_related_node_uid_from_stock</key>
- <key>title | catalog_full_text/title/z_related_uid</key>
+ <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>
+ <key>parent_description | catalog/description/z_related_parent</key>
+ <key>parent_title | catalog/title/z_related_parent</key>
+ <key>stock_explanation_title | catalog/title/z_related_explanation_from_stock</key>
+ <key>stock_mirror_section_title | catalog/title/z_related_mirror_section_uid_from_stock</key>
+ <key>stock_node_title | catalog/title/z_related_node_uid_from_stock</key>
 </key_list>

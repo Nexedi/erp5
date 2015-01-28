@@ -881,10 +881,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       by looking at the category tree.
 
       For exemple it will generate:
-      destination_reference | category,catalog/reference/z_related_destination
-      default_destination_reference | category,catalog/reference/z_related_destination
-      strict_destination_reference | category,catalog/reference/z_related_strict_destination
-      destination_title | category,catalog_full_text/title/z_related_destination
+      destination_title | category,catalog/title/z_related_destination
+      default_destination_title | category,catalog/title/z_related_destination
+      strict_destination_title | category,catalog/title/z_related_strict_destination
 
       strict_ related keys only returns documents which are strictly member of
       the category.
@@ -918,18 +917,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             if related:
               end_key = end_key[len(related_string):]
             # XXX: joining with non-catalog tables is not trivial and requires
-            # ZSQLCatalog's ColumnMapper cooperation, so only allow columns in
-            # catalog or catalog_full_text tables.
-            if end_key != 'uid' and 'catalog_full_text' in column_map.get(end_key, ()):
-              related_key_list.append(
-                prefix + key + ' | category,catalog_full_text/' +
-                end_key +
-                '/z_related_' +
-                ('strict_' if strict else '') +
-                expected_base_cat_id +
-                ('_related' if related else '')
-              )
-            elif 'catalog' in column_map.get(end_key, ()):
+            # ZSQLCatalog's ColumnMapper cooperation, so only allow catalog
+            # columns.
+            if 'catalog' in column_map.get(end_key, ()):
               is_uid = end_key == 'uid'
               if is_uid:
                 end_key = 'uid' if related else 'category_uid'

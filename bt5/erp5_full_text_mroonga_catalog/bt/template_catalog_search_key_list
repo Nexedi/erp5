@@ -1,6 +1,4 @@
 SearchableText | MroongaBooleanFullTextKey
 catalog_full_text.description | MroongaBooleanFullTextKey
 catalog_full_text.title | MroongaBooleanFullTextKey
-description | MroongaBooleanFullTextKey
 full_text.SearchableText | MroongaBooleanFullTextKey
-title | MroongaBooleanFullTextKey

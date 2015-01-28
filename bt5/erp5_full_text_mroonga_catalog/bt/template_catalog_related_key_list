@@ -1,8 +1,6 @@
-career_skill_title | category,catalog,catalog_full_text/title/z_related_career_skill
-description | catalog_full_text/description/z_related_uid
-parent_description | catalog_full_text/description/z_related_parent
-parent_title | catalog_full_text/title/z_related_parent
-stock_explanation_title | catalog_full_text/title/z_related_explanation_from_stock
-stock_mirror_section_title | catalog_full_text/title/z_related_mirror_section_uid_from_stock
-stock_node_title | catalog_full_text/title/z_related_node_uid_from_stock
-title | catalog_full_text/title/z_related_uid
+career_skill_title | category,catalog,catalog/title/z_related_career_skill
+parent_description | catalog/description/z_related_parent
+parent_title | catalog/title/z_related_parent
+stock_explanation_title | catalog/title/z_related_explanation_from_stock
+stock_mirror_section_title | catalog/title/z_related_mirror_section_uid_from_stock
+stock_node_title | catalog/title/z_related_node_uid_from_stock
