@@ -40,6 +40,8 @@ from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 
+import pdb
+
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
   """
@@ -50,7 +52,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_workflow', 'erp5_base',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -496,7 +498,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # any member can add organisations
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
-
+### zwj : pdb
+    pdb.set_trace()
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
@@ -511,6 +514,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    #pdb.set_trace()
     """Called before teardown."""
     # clear base categories
     self.person.getParentValue().manage_delObjects([self.person.getId()])
@@ -543,7 +547,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
+    return ('erp5_workflow', 'erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
