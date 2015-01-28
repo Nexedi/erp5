@@ -382,7 +382,7 @@ html body section ~ .ui-content-section .ui-content-header-inline {\n
 \n
 /*\n
    -------------------------------------------------------------------------\n
-   ------------------------------- Form ------------------------------------\n
+   ---------------------- Form Field Positioning ---------------------------\n
    -------------------------------------------------------------------------\n
 */\n
 /* form validation (assuming label>span is used) */\n
@@ -461,53 +461,40 @@ html.ui-mobile head + body .ui-field-contain > :first-child:nth-last-child(2) ~ 
 }\n
 \n
 \n
-\n
-/* indent all field-containers so they could hold right hand icons */\n
-html.ui-mobile head + body .left div.ui-field-contain,\n
-html.ui-mobile head + body .right div.ui-field-contain,\n
-html.ui-mobile head + body .center div.ui-field-contain {\n
-  padding-right: 2em; /* used to be 2.375em */\n
-}\n
-\n
-/* labels field  (leaving space right side of input for button) */\n
+/* labels width */\n
 html.ui-mobile head + body label:not(.ui-btn),\n
 html.ui-mobile head + body fieldset div.ui-controlgroup-label {\n
   max-width: 31%;\n
   min-width: 31%;\n
 }\n
-/* label for textarea has double space, so needs half of the above */\n
+/* label center/bottom has double space, so needs half of the above */\n
 html.ui-mobile head + body .center label:not(.ui-btn),\n
 html.ui-mobile head + body .center fieldset div.ui-controlgroup-label,\n
 html.ui-mobile head + body .bottom label:not(.ui-btn),\n
 html.ui-mobile head + body .bottom fieldset div.ui-controlgroup-label {\n
-  max-width: 13.5%;\n
-  min-width: 13.5%;\n
-  margin-right: 1%;\n
+  max-width: 15%;\n
+  min-width: 15%;\n
+  margin-right: 0.5%; /* not perfetct, redo, this should be 1% */\n
 }\n
 \n
-/* input width depending on number of inputs (makes 3 selects side-by-side) */\n
-/* <label><input> */\n
+/* input width depending on number of inputs (allow 3 selects side-by-side) */\n
+/* <label><div.gadget> */\n
 html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
 html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
   width: 67%;\n
 }\n
-/* <label><input><icon> !!!! */\n
-html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(3) ~ div,\n
-html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(3) ~ div {\n
-  width: 67%;\n
-}\n
-/*\n
-<label><input><label><input> not tried\n
+/* <label><div.gadget><label><div.gadget>\n
 html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,\n
 html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(4) ~ div {\n
   width: 50%;\n
 }\n
 */\n
-/* <label><input><label><input><label><input> */\n
+/* <label><div.gadget><label><div.gadget><label><div.gadget> \n
 html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,\n
 html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {\n
   width: 32.99%;\n
 }\n
+*/\n
 /* reset for collections of checkbox/radio (up to 6) */\n
 html.ui-mobile head + body .ui-field-contain > div:first-of-type + div,\n
 html.ui-mobile head + body .ui-field-contain > div:first-of-type + div + div,\n
@@ -528,6 +515,28 @@ html.ui-mobile head + body .field_container .center div.ui-field-contain label ~
 html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div textarea,\n
 html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div textarea {\n
   width: 100%;\n
+}\n
+\n
+/* input vs side icon dimensions */\n
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {\n
+  width: 79%;\n
+  display: inline-block;\n
+  -webkit-box-sizing: content-box;\n
+  -moz-box-sizing: content-box;\n
+  box-sizing: content-box;\n
+  padding-right: 9%;\n
+  vertical-align: middle;\n
+}\n
+/* icon next to input */\n
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+  margin-right: 0;\n
+  margin-top: 0;\n
+  margin-bottom: 0;\n
+  -webkit-border-radius: .325em;\n
+  padding: .2em .5%;\n
+  border-radius: .325em;\n
+  width: 8%;\n
+  vertical-align: middle;\n
 }\n
 \n
 /* remove duplicate border on fieldset and set corners XXX IE8*/\n
@@ -622,29 +631,27 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     max-width: none;\n
   }\n
 \n
-  /* <label><input> */\n
+  /* <label><div.gadget> */\n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
   html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
     width: 78%;\n
   }\n
-  /* <label><input><icon> !!!! */\n
-  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(3) ~ div,\n
-  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(3) ~ div {\n
-    width: 78%;\n
-  }\n
-  /* <label><input><label><input><label><input> */\n
+  /* <label><div.gadget><label><div.gadget> \n
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,\n
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroupcontrols :first-child:nth-last-child(4) ~ div {\n
+    width: 46%;\n
+  } */\n
+  /* <label><div.gadget><label><div.gadget><label><div.gadget> \n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,\n
   html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {\n
     width: 32.99%;\n
-  }\n
+  }*/\n
 \n
 \n
   /* bottom/center > 94.4% + 2x2% padding + 2x.25padding */\n
   /* extend textarea and fullwidth element container */\n
   html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
   html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,\n
-  \n
-  /* include gadget */\n
   html.ui-mobile head + body .field_container .bottom div.ui-field-contain label + div,\n
   html.ui-mobile head + body .field_container .center div.ui-field-contain label + div {\n
     width: 78.4%;\n
@@ -656,7 +663,17 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   html.ui-mobile head + body div.ui-field-contain div.ui-field-contain label {\n
     max-width: 20%;\n
     min-width: 20%;\n
-    margin-right: 1%;\n
+    margin-right: 1.6%; /* no good either, should be 2% */\n
+  }\n
+  \n
+  /* input vs side icon dimensions */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {\n
+    width: 84.5%;\n
+    padding-right: 9%;\n
+  }\n
+  /* icon next to input */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+    width: 4%;\n
   }\n
 }\n
 \n
@@ -674,28 +691,28 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     box-sizing: border-box;\n
   }\n
 \n
-  /* <label><input> */\n
+  /* <label><div.gadget> */\n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
   html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
     max-width: 88%;\n
   }\n
-  /* <label><input><icon> !!!! */\n
-  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(3) ~ div,\n
-  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(3) ~ div {\n
+  /* <label><div.gadget><label><div.gadget> \n
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,\n
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(4) ~ div {\n
     max-width: 88%;\n
-  }\n
-  /* <label><input><label><input><label><input> */\n
+  }*/\n
+  /* <label><div.gadget><label><div.gadget><label><div.gadget> \n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,\n
   html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {\n
     width: 32.99%;\n
-  }\n
+  }*/\n
 \n
   /* bottom/center > 94.4% + 2x2% padding + 2x.25padding */\n
-  /* extend textarea and fullwidth element container */\n
+  /* extend textarea and fullwidth element container \n
   html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,\n
   html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text {\n
     max-width: 90%;\n
-  }\n
+  }*/\n
 \n
   /* and textarea/other elements in center/bottom */\n
   html.ui-mobile head + body .center textarea,\n
@@ -705,10 +722,14 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     max-width: 100%;\n
   }\n
 \n
-  /* XXX BAD: right side icon need positioning now */\n
-  html.ui-mobile head + body .ui-field-contain > a.ui-btn {\n
-    height: 2.35em;\n
-    right: 0.35em;\n
+  /* input vs side icon dimensions */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {\n
+    width: 83%;\n
+    padding-right: 7%;\n
+  }\n
+  /* icon next to input */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+    width: 6%;\n
   }\n
 \n
   /* extend textarea and fullwidth element container */\n
@@ -748,7 +769,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     top: 22%;\n
   }\n
 \n
-  /* <label><input> */\n
+  /* <label><div.gadget> */\n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
   html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
     width: 100%;\n
@@ -756,11 +777,6 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     -webkit-box-sizing: border-box;\n
     -moz-box-sizing: border-box;\n
     box-sizing: border-box;\n
-  }\n
-  /* <label><input><icon> !!!! */\n
-  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(3) ~ div,\n
-  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(3) ~ div {\n
-    width: 100%;\n
   }\n
 \n
   /* and textarea/other elements in center/bottom */\n
@@ -772,11 +788,14 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
     width: 100%;\n
   }\n
 \n
-  /* XXX BAD: right side icon need positioning now */\n
-  html.ui-mobile head + body .ui-field-contain > a.ui-btn {\n
-    height: 2.2em;\n
-    right: 0;\n
-    top: 2.15em;\n
+  /* input vs side icon dimensions */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {\n
+    width: 81%;\n
+    padding-right: 7%;\n
+  }\n
+  /* icon next to input */\n
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+    width: 8%;\n
   }\n
   \n
   /* extend textarea and fullwidth element container */\n
@@ -1381,6 +1400,44 @@ html .ui-table-header:before {\n
     padding-left: 0;\n
     padding-right: 0;\n
 }\n
+/* correctly display loader TODO: REMOVE */\n
+html body .ui-input-has-clear .ui-icon-spinner:after {\n
+    font-size: 1.5em;\n
+}\n
+/* disable spinner href */\n
+html body .ui-input-has-clear .ui-icon-spinner {\n
+\tcursor: default !important;\n
+\tpointer-events: none;\n
+}\n
+/* autocomplete font-size TODO: Verify absolute works... */\n
+html body .ui-input-has-clear ul.ui-listview {\n
+  position: absolute;\n
+  margin: .5em 0 0 0;\n
+  width: 100%;\n
+  z-index: 501;\n
+}\n
+/* add side borders to results */\n
+html body .ui-input-has-clear ul.ui-listview li.ui-li-static,\n
+html body .ui-input-has-clear ul.ui-listview li.ui-li-divider {\n
+  border-left-width: 1px;\n
+  border-right-width: 1px;\n
+}\n
+/* font size should not be set here */\n
+html body .ui-input-has-clear ul.ui-listview li.ui-li-static {\n
+  font-size: .85em;\n
+  cursor: pointer;\n
+}\n
+/* borders, TODO: no font size here, TODO: theme this! */\n
+html body .ui-input-has-clear ul.ui-listview li.ui-li-divider {\n
+  font-size: .7em;\n
+  color: #777;\n
+  text-align: center;\n
+}\n
+\n
+/* hide background on search icon */\n
+html body .ui-input-has-clear .ui-listview li.ui-btn-icon-right:after {\n
+  background: 0 none;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    --------------------------- Inputs:readonly -----------------------------\n
@@ -1737,11 +1794,41 @@ html body .ui-controlgroup-horizontal .ui-btn ~ .ui-btn-icon-notext {\n
 }\n
 /* set all paddings */\n
 html body .ui-tag-list .ui-controlgroup-horizontal .ui-btn {\n
-  font-size: .9em;\n
+  font-size: .85em;\n
   padding-top: .4em;\n
   padding-bottom: .4em;\n
 }\n
-\n
+/*inset tag list */\n
+html body .ui-tag-list-inset {\n
+  position: absolute;\n
+  top: 0;\n
+  right: 0;\n
+}\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls {\n
+  margin-top: .2em;\n
+  margin-bottom: .2em;\n
+  margin-right: .2em;\n
+  width: 100%;\n
+}\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn {\n
+  font-size: .75em;\n
+  border-right-width: 1px;\n
+}\n
+/* position input so events can be detected, does not work with label for unknown reason */\n
+/* TODO not sure if this is so smart*/\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox input {\n
+  top: 0;\n
+  left: 9px;\n
+  padding: 0;\n
+  z-index: 505;\n
+}\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox label {\n
+  cursor: pointer;\n
+}\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox .ui-btn-active {\n
+  text-shadow: none;\n
+  color: black;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    -------------------------------- Button ---------------------------------\n
@@ -2115,7 +2202,7 @@ html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-first-child:befo
 .ui-btn-icon-notext:after,\n
 .ui-btn-icon-left:after,\n
 .ui-btn-icon-right:after {\n
-    margin-top: -9px;\n
+    margin-top: -8px;\n
 }\n
 \n
 /* overwrite JQM icons and clear :before for double border */\n
@@ -2435,15 +2522,15 @@ html head + body .ui-group-theme-a .ui-btn:hover,\n
 html head + body .ui-group-theme-a .ui-btn.ui-btn-a:hover,\n
 html head + body .ui-group-theme-a .ui-btn.ui-btn-a:active,\n
 \n
-/* Button Active */\n
+/* Button Active (JQM overwrite requires double classes)*/\n
 html head + body .ui-bar-a .ui-btn:active,\n
 html head + body .ui-body-a .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-a:active,\n
 html head + body .ui-group-theme-a .ui-btn:active,\n
 html head + body .ui-group-theme-a .ui-btn-a:active,\n
 \n
-html head + body .ui-bar-a .ui-btn-active,\n
-html head + body .ui-body-a .ui-btn-active,\n
+html head + body .ui-bar-a .ui-btn.ui-btn-active,\n
+html head + body .ui-body-a .ui-btn.ui-btn-active,\n
 html head + body .ui-btn.ui-btn-a.ui-btn-active,\n
 html head + body .ui-group-theme-a .ui-btn-active,\n
 html head + body .ui-group-theme-a .ui-btn-a.ui-btn-active {\n
@@ -2660,15 +2747,15 @@ html head + body .ui-btn.ui-btn-c:hover,\n
 html head + body .ui-group-theme-c .ui-btn:hover,\n
 html head + body .ui-group-theme-c .ui-btn.ui-btn-c:hover,\n
 \n
-/* Button Active */\n
+/* Button Active (JQM overwrite requires double classes)*/\n
 html head + body .ui-bar-c .ui-btn:active,\n
 html head + body .ui-body-c .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-c:active,\n
 html head + body .ui-group-theme-c .ui-btn:active,\n
 html head + body .ui-group-theme-c .ui-btn-c:active\n
 \n
-html head + body .ui-bar-c .ui-btn-active,\n
-html head + body .ui-body-c .ui-btn-active,\n
+html head + body .ui-bar-c .ui-btn.ui-btn-active,\n
+html head + body .ui-body-c .ui-btn.ui-btn-active,\n
 html head + body .ui-btn.ui-btn-c.ui-btn-active,\n
 html head + body .ui-group-theme-c .ui-btn-active,\n
 html head + body .ui-group-theme-c .ui-btn-c.ui-btn-active {\n
@@ -2849,15 +2936,15 @@ html head + body .ui-btn.ui-btn-d:hover,\n
 html head + body .ui-group-theme-d .ui-btn:hover,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-d:hover,\n
 \n
-/* Button Active */\n
+/* Button Active (JQM overwrite requires double classes)*/\n
 html head + body .ui-bar-d .ui-btn:active,\n
 html head + body .ui-body-d .ui-btn:active,\n
 html head + body .ui-btn.ui-btn-d:active,\n
 html head + body .ui-group-theme-d .ui-btn:active,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-d:active,\n
 \n
-html head + body .ui-bar-d .ui-btn-active,\n
-html head + body .ui-body-d .ui-btn-active,\n
+html head + body .ui-bar-d .ui-btn.ui-btn-active,\n
+html head + body .ui-body-d .ui-btn.ui-btn-active,\n
 html head + body .ui-btn.ui-btn-d.ui-btn-active,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-active,\n
 html head + body .ui-group-theme-d .ui-btn.ui-btn-d.ui-btn-active {\n
@@ -4685,7 +4772,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.64092.18355.18005</string> </value>
+                <value> <string>940.38971.30865.62105</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4703,7 +4790,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420022281.78</float>
+                        <float>1422462300.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
