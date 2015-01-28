@@ -220,8 +220,8 @@
                     field_url = \'gadget_erp5_field_list.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
                     field_url = \'gadget_erp5_field_string.html\';\n
-                  // } else if (renderered_field.type === \'RelationStringField\') {\n
-                  //  field_url = \'gadget_erp5_field_relation_string.html\';\n
+                  } else if (renderered_field.type === \'RelationStringField\') {\n
+                    field_url = \'gadget_erp5_field_relationstring.html\';\n
                   } else if (renderered_field.type === \'TextAreaField\') {\n
                     field_url = \'gadget_erp5_field_textarea.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
@@ -474,7 +474,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>super_sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -488,7 +488,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17393.53012.39048</string> </value>
+                <value> <string>940.28668.29547.7765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -506,8 +506,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421153349.36</float>
-                        <string>UTC</string>
+                        <float>1421829262.31</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

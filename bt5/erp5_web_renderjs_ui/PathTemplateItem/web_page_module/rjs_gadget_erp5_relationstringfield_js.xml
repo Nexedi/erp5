@@ -1,0 +1,823 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_field_relationstring.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_relationstringfield_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, document, rJS, RSVP, URI, loopEventListener,\n
+promiseEventListener */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP, URI, loopEventListener,\n
+  promiseEventListener) {\n
+  "use strict";\n
+\n
+  ////////////////////////////////////\n
+  // Some methods\n
+  ////////////////////////////////////\n
+\n
+  // XXX: re-factor.\n
+  // clear the autocomplete options, reset the plane tag and remove the create\n
+  // new tag. Since plane and new tag sometimes need to stay, "override_tag"\n
+  // can be set to something arbitrary to prevent removal of the respective\n
+  // element.\n
+  function clearResults(my_gadget, my_override_tag) {\n
+    var props = my_gadget.property_dict;\n
+\n
+    function dump(my_parent, my_tag_name) {\n
+      var child_list = my_parent.children,\n
+        i,\n
+        i_len,\n
+        child;\n
+\n
+      // XXX: now that link ("A") stays, rewrite the whole element clearing!\n
+      for (i = 0, i_len = child_list.length; i < i_len; i += 1) {\n
+        child = child_list[i];\n
+        if (child && child.tagName === my_tag_name) {\n
+          if (my_tag_name === "A") {\n
+            props.plane.href = "#";\n
+            props.plane.className += " ui-disabled";\n
+          } else {\n
+            my_parent.removeChild(child);\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    // always clear autocomplete results (UL), the create new record input (DIV)\n
+    // will only be removed on new searches, while the plane (A) is disabled\n
+    dump(props.wrapper, "UL");\n
+    dump(props.wrapper, my_override_tag || "DIV");\n
+    dump(my_gadget.element, my_override_tag || "A");\n
+  }\n
+\n
+  // creates a tag indicating the value entered will be added as new object\n
+  // of displayed type when the form is submitted. Clicking the tag will\n
+  // reset the field, because otherwise accidentially typing something always\n
+  // requires to reselect and manually backspace the value. Click to reset is\n
+  // much easier/faster\n
+  function createNewTag(my_gadget) {\n
+    var props = my_gadget.property_dict,\n
+      field_json = props.field_json,\n
+      tag,\n
+      group,\n
+      controls,\n
+      subfield,\n
+      info,\n
+      link,\n
+      default_subfield;\n
+\n
+    // unique values only... changes ERP5 ["foo", "foo"] to ["foo"] to "foo"\n
+    info = field_json.portal_types.filter(function (item, pos, self) {\n
+      return self.indexOf(item) === pos;\n
+    }).join("");\n
+\n
+    link = document.createElement("a");\n
+    link.setAttribute("href", "#");\n
+    link.className = "ui-first-child ui-last-child ui-btn ui-corner-all " +\n
+      "ui-btn-inherit ui-btn-active ui-btn-icon-right ui-icon-delete";\n
+    link.textContent = "Create: " + info;\n
+\n
+    subfield = document.createElement("input");\n
+    subfield.setAttribute("type", "hidden");\n
+    subfield.setAttribute("name", "subfield_" + field_json.key + "_relation");\n
+    subfield.setAttribute("value", "_newContent_" + info);\n
+\n
+    default_subfield = document.createElement("input");\n
+    default_subfield.setAttribute("type", "hidden");\n
+    default_subfield.setAttribute(\n
+      "name",\n
+      "default_subfield_" + field_json.key + "_relation"\n
+    );\n
+    default_subfield.setAttribute("value", 0);\n
+\n
+    controls = document.createElement("div");\n
+    controls.className = "ui-controlgroup-controls";\n
+    controls.appendChild(link);\n
+    controls.appendChild(subfield);\n
+    controls.appendChild(default_subfield);\n
+\n
+    group = document.createElement("div");\n
+    group.className = "ui-controlgroup ui-controlgroup-horizontal " +\n
+      "ui-corner-all";\n
+    group.appendChild(controls);\n
+\n
+    tag = document.createElement("div");\n
+    tag.className = "ui-tag-list ui-tag-list-inset";\n
+    tag.appendChild(group);\n
+\n
+    return tag;\n
+  }\n
+\n
+  // creates a set of autocomplete suggestings. Currently this is only a plain\n
+  // list of elements. The list will display the number of results (>10 or \n
+  // exact). Clicking on an option will set this option as field value\n
+  function createResults(my_result_list) {\n
+    var list = document.createElement("ul"),\n
+      head = document.createElement("li"),\n
+      str = "ui-li-static ui-body-inherit ui-icon-mail-forward " +\n
+        "ui-btn-icon-right",\n
+      len = my_result_list.length,\n
+      prefix = "",\n
+      item,\n
+      result,\n
+      i,\n
+      j,\n
+      content;\n
+\n
+    if (len === 11) {\n
+      prefix = ">";\n
+      len = 10;\n
+    }\n
+\n
+    head.className = "ui-autocomplete ui-li ui-li-divider ui-bar-inherit";\n
+    head.setAttribute("role", "heading");\n
+    head.textContent = prefix + " " + len + " Result(s)";\n
+    list.appendChild(head);\n
+\n
+    for (i = 0; i < len; i += 1) {\n
+      content = "";\n
+      result = my_result_list[i].value;\n
+      item = document.createElement("li");\n
+      item.className = str;\n
+\n
+      // NOTE: gadget does not properties it gets here, so just concat\n
+      // NOTE: if doing more complex UI, beware the textContent value won\'t\n
+      // work, because currently it\'s used to retrieve the link from\n
+      // the last autocomplete query results!\n
+      for (j in result) {\n
+        if (result.hasOwnProperty(j) && j.indexOf("_") !== 0) {\n
+          content += result[j];\n
+        }\n
+      }\n
+      item.textContent = content;\n
+      list.appendChild(item);\n
+    }\n
+\n
+    list.className = "ui-listview ui-corner-all";\n
+    list.firstChild.className += " ui-first-child";\n
+    list.lastChild.className += " ui-last-child";\n
+\n
+    return list;\n
+  }\n
+  \n
+  ////////////////////////////////////\n
+  // Promise methods\n
+  ////////////////////////////////////\n
+\n
+  // notify change of field value, done here, since called from multiple sources\n
+  function notifyChange(my_gadget) {\n
+    return RSVP.all([\n
+      my_gadget.checkValidity(),\n
+      my_gadget.notifyChange()\n
+    ]);\n
+  }\n
+\n
+  // trigger autocomplete for field value, on render() with value only sets link\n
+  function triggerAutocomplete(my_gadget, my_value, my_initial_call) {\n
+    var props = my_gadget.property_dict,\n
+      field_json = props.field_json,\n
+      index = [].concat(field_json.catalog_index),\n
+      begin_from = props.begin_from || 0,\n
+      lines = field_json.lines || 11,\n
+      select_list = index,\n
+      value = \':"\' + my_value + \'" OR \',\n
+      value_query = \'(\' + index.join(value) + value.replace(" OR ", "") + \')\',\n
+      query_string = " AND " + value_query,\n
+      result_dict;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+      \n
+        // new search, clear all, show spinner. set last_value to catch dups\n
+        clearResults(my_gadget);\n
+        props.last_value = my_value;\n
+        props.spinner.className = "ui-btn ui-corner-all ui-btn-icon-notext" +\n
+          " ui-input-clear ui-icon-spinner ui-icon-spin";\n
+      \n
+        return my_gadget.jio_allDocs({\n
+          "query": new URI(field_json.query).query(true).query + query_string,\n
+          "limit": [begin_from, begin_from + lines],\n
+          "select_list": select_list\n
+        });\n
+      }).push(function (my_result) {\n
+        result_dict = my_result.data;\n
+        props.spinner.className = "ui-hidden-accessible";\n
+\n
+        // skip showing single result on render(), only set link\n
+        if (my_initial_call) {\n
+          return {"target": {"textContent": my_value}};\n
+        }\n
+\n
+        // show "new" tag if no results and creation allowed\n
+        if (result_dict.total_rows === 0 && field_json.allow_creation) {\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              props.wrapper.appendChild(createNewTag(my_gadget));\n
+              return notifyChange(my_gadget);\n
+            })\n
+            .push(function () {\n
+              var tag = props.wrapper.querySelector(".ui-tag-list .ui-btn");\n
+              return RSVP.any([\n
+                promiseEventListener(tag, "click", true),\n
+                promiseEventListener(tag, "tap", true)\n
+              ]);\n
+            })\n
+            .push(function () {\n
+              var original_value = field_json.value || field_json.default || "";\n
+              clearResults(my_gadget);\n
+              props.wrapper.querySelector("input").value = original_value;\n
+              return triggerAutocomplete(my_gadget, original_value, true);\n
+            });\n
+        }\n
+\n
+        // default autocomplete\n
+        // XXX: on small displays JQM will toggle headers, find way to prevent!\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            var list;\n
+            props.wrapper.appendChild(createResults(result_dict.rows));\n
+            list = props.wrapper.querySelector("ul");\n
+          \n
+            return RSVP.any([\n
+              promiseEventListener(list, "click", true),\n
+              promiseEventListener(list, "touchend", true)\n
+            ]);\n
+          });\n
+      }).push(undefined, function (my_error) {\n
+        if (my_error instanceof RSVP.CancellationError) {\n
+          props.spinner.className = "ui-hidden-accessible";\n
+          clearResults(my_gadget, "skip");\n
+        }\n
+        throw my_error;\n
+      }).push(function (my_selection_event) {\n
+        var selected_value,\n
+          record,\n
+          i,\n
+          prop;\n
+  \n
+        if (my_selection_event) {\n
+          \n
+          // take entered text, set to input and clear list options\n
+          selected_value = my_selection_event.target.textContent;\n
+          props.wrapper.querySelector("input").value = selected_value;\n
+          clearResults(my_gadget, "skip");\n
+  \n
+          // retrieve url if "allow_jump" is set\n
+          if (props.field_json.allow_jump) {\n
+            for (i = 0; i < result_dict.total_rows; i += 1) {\n
+              record = result_dict.rows[i].value;\n
+              for (prop in record) {\n
+                if (record.hasOwnProperty(prop) &&\n
+                    record[prop] === selected_value) {\n
+                  return my_gadget.whoWantToDisplayThis(result_dict.rows[i].id);\n
+                }\n
+              }\n
+            }\n
+          }\n
+        }\n
+      }).push(function (my_url) {\n
+        if (my_url) {\n
+          props.plane.href = my_url;\n
+          props.plane.className = "ui-btn ui-corner-all ui-btn-icon-notext " +\n
+            "ui-icon-plane ui-shadow-inset ui-btn-inline";\n
+          if (my_initial_call === undefined) {\n
+            return notifyChange(my_gadget);\n
+          }\n
+        }\n
+      });\n
+  }\n
+\n
+  rJS(window)\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (my_gadget) {\n
+      my_gadget.property_dict = {};\n
+    })\n
+\n
+    .ready(function (my_gadget) {\n
+      return my_gadget.getElement()\n
+        .push(function (element) {\n
+          my_gadget.element = element;\n
+          my_gadget.property_dict.wrapper =\n
+            element.querySelector("div.ui-input-text");\n
+          my_gadget.property_dict.spinner = element.querySelector("a");\n
+          my_gadget.property_dict.plane = element.querySelectorAll("a")[1];\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("notifyValid", "notifyValid")\n
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
+    .declareAcquiredMethod("notifyChange", "notifyChange")\n
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var field_gadget = this,\n
+        input = field_gadget.element.querySelector(\'input\'),\n
+        field_json = options.field_json || {},\n
+        value = field_json.value || field_json.default;\n
+\n
+      // expose field_json and keep last value to prevent trigger on no-change\n
+      field_gadget.property_dict.field_json = field_json;\n
+      field_gadget.property_dict.last_value = value || "";\n
+\n
+      input.setAttribute(\'value\', value || "");\n
+      input.setAttribute(\'name\', field_json.key);\n
+      input.setAttribute(\'title\', field_json.title);\n
+      \n
+      if (field_json.required === 1) {\n
+        input.setAttribute(\'required\', \'required\');\n
+      }\n
+      if (field_json.editable !== 1) {\n
+        input.setAttribute(\'readonly\', \'readonly\');\n
+        input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+        // input.setAttribute(\'disabled\', \'disabled\');\n
+      }\n
+\n
+      // set relation field links (without showing 1 autocomplete result)\n
+      if (value) {\n
+        return triggerAutocomplete(field_gadget, value, true);\n
+      }\n
+    })\n
+\n
+    // get content (needs hidden fields, too, when creating new records)\n
+    .declareMethod(\'getContent\', function () {\n
+      var input_list = this.element.querySelectorAll(\'input\'),\n
+        result = {},\n
+        i,\n
+        i_len,\n
+        input;\n
+\n
+      for (i = 0, i_len = input_list.length; i < i_len; i += 1) {\n
+        input = input_list[i];\n
+        result[input.getAttribute(\'name\')] = input.value;\n
+      }\n
+\n
+      return result;\n
+    })\n
+\n
+    .declareMethod(\'checkValidity\', function () {\n
+      var result;\n
+      result = this.element.querySelector(\'input\').checkValidity();\n
+      if (result) {\n
+        return this.notifyValid()\n
+          .push(function () {\n
+            return result;\n
+          });\n
+      }\n
+      return result;\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var field_gadget = this,\n
+        props = field_gadget.property_dict,\n
+        element = field_gadget.element.querySelector(\'input\');\n
+\n
+      // prevent unselecting on focus\n
+      function stop(e) {\n
+        e.preventDefault();\n
+        return false;\n
+      }\n
+\n
+      // trigger autocomplete\n
+      function handler(my_event) {\n
+        var value = my_event.target.value,\n
+          pending_promise;\n
+\n
+        // field value unchanged (tab-bing)\n
+        if (props.last_value === value) {\n
+          return;\n
+        }\n
+\n
+        // empty value, do nothing but notify\n
+        if (value === "") {\n
+          return notifyChange(field_gadget);\n
+        }\n
+\n
+        // replace existing promise in case it has not triggered\n
+        pending_promise = props.pending_promise;\n
+        if (pending_promise) {\n
+          pending_promise.cancel();\n
+        }\n
+\n
+        // create a new queue, expose it to replace it with trailing events\n
+        pending_promise = new RSVP.Queue()\n
+          .push(function () {\n
+            return RSVP.delay(200);\n
+          })\n
+          .push(function () {\n
+            return triggerAutocomplete(field_gadget, value);\n
+          });\n
+\n
+          field_gadget.property_dict.pending_promise = pending_promise;\n
+          return pending_promise;\n
+      }\n
+\n
+      // Listen to all necessary events (blur not needed currently)\n
+      return RSVP.all([\n
+        loopEventListener(element, \'onmouseout\', false, stop),\n
+        loopEventListener(element, \'keyup\', false, handler),\n
+        loopEventListener(element, \'input\', false, handler)\n
+      ]);\n
+    })\n
+\n
+    .declareService(function () {\n
+      var field_gadget = this;\n
+\n
+      function notifyInvalid(evt) {\n
+        return field_gadget.notifyInvalid(evt.target.validationMessage);\n
+      }\n
+\n
+      // Listen to input change\n
+      return loopEventListener(\n
+        field_gadget.element.querySelector(\'input\'),\n
+        \'invalid\',\n
+        false,\n
+        notifyInvalid\n
+      );\n
+    });\n
+\n
+}(window, document, rJS, RSVP, URI, loopEventListener, promiseEventListener));\n
+\n
+\n
+/*\n
+  Todos\n
+  - OK trigger with delay on input/keyup\n
+  - OK autocomplete makes portal catalog query instead of notifyloading\n
+  - OK too many events triggering\n
+  - OK 10 results shown, \n
+  - OK delete optionlist on focusout!\n
+  - OK use icon in optionlist\n
+  - OK user can pick one, whose value will be set to field\n
+  - OK existing selected entry should allow to plane if option is set\n
+  - OK loading with a preset value should query and activate plane if allowed\n
+  - OK no hardcoded "title" use anywhere, make generic\n
+  - OK remove plane on new search, don\'t make airport\n
+  - OK add results info\n
+  - OK non existing entry should allow to create new if option set\n
+  - OK selecting from options clears taglist, too\n
+  - OK update query\n
+  - OK fix broken links\n
+  - OK remove % from query syntax... ui downgrade, %% works, too\n
+  - OK don\'t trigger on tab-through of existing and new values\n
+  - OK don\'t autocomplete on empty string, clear values, too\n
+  - OK loader and planes tabindex =-1\n
+  - OK save custom entry\n
+  - OK should not work when not in editable mode, seems ok now\n
+  - OK fix CSS form spacing ---> not trivial\n
+  - OK implement deactivated plane icon until set, never hide icon!\n
+  - OK prevent multiple autocomplete elements when keyboard searching\n
+  - OK either add some functionality to "create element" or delete on click\n
+  - OK fix double trigger, multiple list\n
+  - OK fix value settings should notifychange!\n
+  - OK fix plane positioning in FF\n
+  - OK fix CSS element theming\n
+  - OK create button should rest when clicked in case user triggered to fast\n
+  - OK fix double list because not clearing what previous chain appended to DOM\n
+  - OK cleanup\n
+  - OK fix textinput css, not generic enough\n
+  - fix broken promise chain\n
+  - test\n
+  - keyboard speed test\n
+  - add generic text and translations\n
+  - do multiRelationfield\n
+  - find way to digest response of erp5? submit should clean input\n
+  - add column_list parameter to pass more than title = "John Smith", render?\n
+\n
+\n
+\n
+\n
+*/\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Relationstringfield JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>super_sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1421676901.71</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>super_sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>940.39166.48303.39133</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1422461235.64</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>super_sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1421676714.29</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
