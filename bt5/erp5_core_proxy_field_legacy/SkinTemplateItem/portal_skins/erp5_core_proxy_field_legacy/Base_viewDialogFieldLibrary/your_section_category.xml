@@ -271,7 +271,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredSectionCategory</string> </value>
+            <value> <string>python: preferences.getPreferredSectionCategory() in [x[1] for x in field.get_value(\'items\')] and preferences.getPreferredSectionCategory() or None</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -284,7 +284,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getPreferredCategoryChildItemList(here.portal_categories.group, base=True)</string> </value>
+            <value> <string>context/Base_getSectionCategoryItemListForReport</string> </value>
         </item>
       </dictionary>
     </pickle>
