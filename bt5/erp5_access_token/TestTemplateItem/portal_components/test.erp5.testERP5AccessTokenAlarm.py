@@ -22,7 +22,7 @@ class TestERP5AccessTokenAlarm(ERP5TypeTestCase):
         }]
     self.portal.portal_workflow._jumpToStateFor(access_token, 'validated')
     self.tic()
-    
+
     self.portal.portal_alarms.\
       erp5_garbage_collect_one_time_restricted_access_token.activeSense()
     self.tic()
@@ -38,7 +38,7 @@ class TestERP5AccessTokenAlarm(ERP5TypeTestCase):
     )
     self.portal.portal_workflow._jumpToStateFor(access_token, 'validated')
     self.tic()
-    
+
     self.portal.portal_alarms.\
       erp5_garbage_collect_one_time_restricted_access_token.activeSense()
     self.tic()
@@ -58,7 +58,7 @@ class TestERP5AccessTokenAlarm(ERP5TypeTestCase):
         'action': 'foo_action'
         }]
     self.tic()
-    
+
     self.portal.portal_alarms.\
       erp5_garbage_collect_one_time_restricted_access_token.activeSense()
     self.tic()
