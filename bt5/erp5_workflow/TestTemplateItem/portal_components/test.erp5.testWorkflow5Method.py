@@ -24,9 +24,23 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # Create a workflow
     new_workflow = self.workflow_module.newContent(portal_type='Workflow',
                                                    id='new_workflow')
+
+    new_workflow.managed_permission_list = ['P1']# add workflow managed_permission
+
     s1 = new_workflow.newContent(portal_type='State',title='Draft', id='draft')
     s2 = new_workflow.newContent(portal_type='State',title='Validated', id='validated')
     s3 = new_workflow.newContent(portal_type='State',title='Couscous', id='Couscous')
+
+    ### generate permission role mapping matrix
+    s1_p1_r1 = s1.newContent(portal_type='PermissionRoles',id = 'cell_0_0')
+    s1_p1_r2 = s1.newContent(portal_type='PermissionRoles',id = 'cell_0_1')
+    s1_p1_r2 = s2.newContent(portal_type='PermissionRoles',id = 'cell_0_0')
+    s2_p1_r2 = s2.newContent(portal_type='PermissionRoles',id = 'cell_0_1')
+
+    s1_p1_r1.is_selected = 1 # assign r1 (Anonymous) to p1 for state 1
+    s1_p1_r2.is_selected = 0
+    s1_p1_r2.is_selected = 0 
+    s2_p1_r2.is_selected = 1 # assign r2 (Assignee) to p1 for state 2
 
     #raise NotImplementedError(aq_parent(aq_inner(aq_parent(aq_inner(s1)))))### <Workflow Module at workflow_module>
     #raise NotImplementedError(aq_inner(aq_parent(aq_inner(s1))))### <Workflow at new_workflow>
@@ -81,6 +95,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     new_object = self.portal.new_module.newContent(portal_type='Object Type',
                                                     id='new_object')
 
+
     self.assertTrue(new_object is not None)
     self.assertEqual(new_object.getPortalType(), 'Object Type')
 
@@ -91,6 +106,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(new_object.getNewState(), 'draft')
     self.assertEqual(new_object.getNewStateTitle(), 'Draft')
     self.assertEqual(new_object.getTranslatedNewStateTitle(), 'Brouillon')
+    permission_role = getattr(new_object,'_P1_Permission',())
+    self.assertEqual(permission_role[0], 'Anonymous')
 
     ### execute transition
     t1.execute(new_object)
@@ -103,6 +120,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     new_object.transition1()
     self.assertEqual(new_object.getNewStateTitle(), 'Validated')
+    permission_role = getattr(new_object,'_P1_Permission',())
+    self.assertEqual(permission_role[0], 'Assignee')
 
     new_object.setToCouscousPlease()
     self.assertEqual(new_object.getNewStateTitle(), 'Couscous')

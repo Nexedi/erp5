@@ -50,27 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>managed_permissions = sorted(context.getParent().getManagedPermissionList())\n
-available_roles = context.getRoleList()\n
-\n
-ma_i = []\n
-ma_j = []\n
-\n
-if matrixbox:\n
-  for perms in managed_permissions:\n
-    ma_i.append([perms,perms])\n
-  for roles in available_roles:\n
-    ma_j.append([roles, roles])\n
-  return [ma_i, ma_j]\n
+            <value> <string>context.getParentValue().deleteContent(context.getId())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox, base_id=\'cell\'</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PermissionRoles_asCellRange</string> </value>
+            <value> <string>dlt_object</string> </value>
         </item>
       </dictionary>
     </pickle>
