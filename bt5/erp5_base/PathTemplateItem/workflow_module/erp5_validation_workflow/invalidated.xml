@@ -29,7 +29,7 @@
             <value>
               <tuple>
                 <string>destination/workflow_module/erp5_validation_workflow/validate</string>
-                <string>destination/workflow_module/erp5_validation_workflow/delete</string>
+                <string>destination/workflow_module/erp5_validation_workflow/dlt</string>
               </tuple>
             </value>
         </item>

@@ -36,6 +36,26 @@
                       <value> <string>lines</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>workflow_managed_permission</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>workflow_managed_permission_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -76,11 +96,11 @@ This validation workflow has the same transitions & states as the DC-validation_
             <value> <string>erp5_validation_workflow</string> </value>
         </item>
         <item>
-            <key> <string>managed_permission</string> </key>
+            <key> <string>managed_permission_list</string> </key>
             <value>
               <tuple>
-                <string>Add portal content</string>
                 <string>Access contents information</string>
+                <string>Add portal content</string>
                 <string>Modify portal content</string>
                 <string>View</string>
               </tuple>
