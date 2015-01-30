@@ -56,12 +56,10 @@ class Workflow(XMLObject):
   isRADContent = 1
 
   ### zwj: for security issue
-  managed_permission = ()
+  managed_permission_list = ()
   managed_role = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
-  role_list = sorted(["Anonymous", "Assignee", "Assignor", "Associate",
-                "Auditor", "Authenticated", "Author", "Manager",
-                "Member", "Owner", "Reviewer"])
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -81,7 +79,6 @@ class Workflow(XMLObject):
     """
     state_bc_id = self.getStateBaseCategory()
     document.setCategoryMembership(state_bc_id, self.getSource())
-
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
@@ -139,7 +136,7 @@ class Workflow(XMLObject):
     return DateTime()
 
   def getManagedPermissionList(self):
-    return self.managed_permission
+    return self.managed_permission_list
 
   def getStateChangeInformation(self, document, state, transition=None):
     """
@@ -170,7 +167,8 @@ class Workflow(XMLObject):
     """Changes the object permissions according to the current state.
     """
     changed = 0
-    sdef = sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    managed_permission = self.getManagedPermissionList()
     if sdef is None:
         return 0
     ### zwj: get all matrix cell objects
@@ -179,7 +177,6 @@ class Workflow(XMLObject):
     for perm_role in permission_role_matrix_cells:
       permission,role = perm_role.getPermissionRole()
       ### zwj: double check the right role and permission are obtained
-      #LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in Workflow.")
       if permission != 'None':
         if self.erp5_permission_roles.has_key(permission):
           self.erp5_permission_roles[permission] += (role,)
@@ -194,7 +191,7 @@ class Workflow(XMLObject):
     return changed
 
   def getRoleList(self):
-    return self.role_list
+    return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
 
   ### Security feature end
 
