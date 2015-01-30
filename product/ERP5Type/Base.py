@@ -144,6 +144,11 @@ class ERP5WorkflowMethod(Method):
     return self._transition_id
 
   def __call__(self, instance, *args, **kw):
+    erp5workflow_engaged = 0
+
+    if instance.getTypeInfo().getTypeERP5WorkflowList():
+      erp5workflow_engaged = 1
+
     if getattr(self, '__name__', None) in ('getPhysicalPath', 'getId'):
       return self._m(instance, *args, **kw)
 
@@ -175,14 +180,14 @@ class ERP5WorkflowMethod(Method):
     if not candidate_transition_item_list:
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
-    if instance.getTypeInfo().getTypeERP5WorkflowList():
+    if erp5workflow_engaged == 1:
       wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
       ### zwj: Build the list of method which is call and will be invoked.
       valid_transition_item_list = []
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          LOG('zwj: Executing %s in %s' %(transition_id, wf_id), WARNING, " in Base.py.")
+          LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py ERP5Workflow.")
           if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
@@ -192,11 +197,32 @@ class ERP5WorkflowMethod(Method):
         if valid_list:
           valid_transition_item_list.append((wf_id, valid_list))
 
+      result = apply(self.__dict__['_m'], (instance,) + args, kw)
+
+      """
+      # Change the state of statefull workflows
+      for wf_id, transition_list in valid_transition_item_list:
+        try:
+          wf[wf_id].notifyWorkflowMethod(instance, transition_list, args=args, kw=kw)
+        except ObjectDeleted:
+      # Re-raise with a different result.
+          raise ObjectDeleted(result)
+        except ObjectMoved, ex:
+      # Re-raise with a different result.
+          raise ObjectMoved(ex.getNewObject(), result)
+      """
+
       ### zwj: Execute method
       for wf_id, transition_list in valid_transition_item_list:
-        for tr in transition_list:
-          method5 = wf5_module._getOb(wf_id)._getOb(tr)
-          method5.execute(instance)
+        try:
+          for tr in transition_list:
+            method5 = wf5_module._getOb(wf_id)._getOb(tr)
+            method5.execute(instance)
+        except ObjectDeleted:
+          raise ObjectDeleted(result)
+        except ObjectMoved, ex:
+          raise ObjectMoved(ex.getNewObject(), result)
+
 
   def registerERP5TransitionAlways(self, portal_type, workflow_id, transition_id):
     transition_list = self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, [])
@@ -318,6 +344,7 @@ class WorkflowMethod(Method):
       candidate_workflow = wf[wf_id]
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+          LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py DCWorkflow.")
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
@@ -634,7 +661,6 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
   for ERP5Workflow_id in pt.erp5workflow_list:
     ERP5Workflow = wf5_module._getOb(ERP5Workflow_id)
     state_var = ERP5Workflow.getStateBaseCategory()
-
     ### zwj: generate erp5worflow state var accessor, override base category accessor
     for method_id, getter in (
         ('get%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateGetter),
@@ -649,10 +675,13 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       ### zwj: shouldn't override the DC accessors or the portal type using DCWorkflow will have problems
       method = getter(method_id, ERP5Workflow_id)
       # Attach to portal_type
+      ### zwj: if ERP5 Accessor has the same name as a defined DC accessor,
+      ### it can't tell which accessor to execute,
+      ### it will always check DC accessor first and ignore ERP5 accessor.
+      ### thus it should register 2 types of accessor in different folder ???
       ptype_klass.registerAccessor(method,
                                      Permissions.AccessContentsInformation)
-      LOG("Register Accessor %s of %s"%(method_id, ERP5Workflow_id), WARNING, "zwj")
-
+      LOG("zwj: Register Accessor %s of %s"%(method_id, ERP5Workflow_id), WARNING, " in Base.py.")
     ### zwj: generate erp5workflow mehtods
     for tr in wf5_module._getOb(ERP5Workflow_id).objectValues(portal_type="Transition"):
       tr_id = tr.id
@@ -660,7 +689,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
                                               method_id)
       ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
-      LOG("ERP5Workflow method %s is generated"%tr_id,WARNING," for %s"%ERP5Workflow_id)
+      LOG("zwj:ERP5Workflow method %s is generated for %s "%(tr_id,ERP5Workflow_id),WARNING," in Base.py")
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
@@ -2858,6 +2887,15 @@ class Base( CopyContainer,
         return True
     return False
 
+  def isERP5WorkflowDeleted(self):
+    ### zwj: deal with the deleted object
+    for wf_id in self.getTypeERP5WorkflowList():
+      wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id)
+      state = self._getDefaultAcquiredValue(wf.getStateBaseCategory())
+      if state is not None and state.getId() == 'deleted':
+        return True
+    return False
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRelationCountForDeletion')
   def getRelationCountForDeletion(self):
@@ -2880,7 +2918,7 @@ class Base( CopyContainer,
           if related_path[:len(ignored)] == ignored:
             break
         else:
-          if related.isDeleted():
+          if related.isDeleted() or related.isERP5WorkflowDeleted():
             ignored = related_path
           else:
             ignored = None
