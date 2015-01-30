@@ -372,10 +372,13 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_DeletedPersonIsNotUser(self):
     p = self._makePerson(reference='the_user', password='secret')
     self._assertUserExists('the_user', 'secret')
-
-    p.delete()
+    if not p.getTypeInfo().getTypeERP5WorkflowList():
+      p.delete()
+    else:
+      p.dlt()
     self.commit()
 
+    ### zwj: even the user has been delete, the information exist? why this test?
     self._assertUserDoesNotExists('the_user', 'secret')
 
   def test_ReallyDeletedPersonIsNotUser(self):
@@ -498,8 +501,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # any member can add organisations
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
-### zwj : pdb
-    #pdb.set_trace()
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
@@ -514,7 +515,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
-    #pdb.set_trace()
     """Called before teardown."""
     # clear base categories
     self.person.getParentValue().manage_delObjects([self.person.getId()])
@@ -526,7 +526,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       ti.manage_delObjects([x.id for x in ti.getRoleInformationList()])
     # clear modules
     for module in self.portal.objectValues():
-      if module.getId().endswith('_module'):
+      if module.getId().endswith('_module') and module.getId() != 'workflow_module':
         module.manage_delObjects(list(module.objectIds()))
     # commit this
     self.tic()
