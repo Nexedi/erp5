@@ -73,14 +73,14 @@ class PermissionRoles(XMLObject):
       permission_id = int(self.id.split('_')[1])
       role_id = int(self.id.split('_')[2])
       ### zwj: make sure here gets the right coordinates
-      # LOG('zwj: Assign %s to %s' %(role_id, permission_id), WARNING, "in PermissionRole.")
+      LOG('zwj: Assign %s to %s' %(role_id, permission_id), WARNING, "in PermissionRole.")
       erp5workflow = self.getParent().getParent()
       permission_list = sorted(erp5workflow.getManagedPermissionList())
       role_list = erp5workflow.getRoleList()
       permission = permission_list[permission_id]
       role = role_list[role_id]
       ### zwj: check the name of the role and permission is the ones we want
-      #LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in PermissionRole.")
+      LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in PermissionRole.")
     if role == 'None':
       role = ['Manager']
     return permission, role
