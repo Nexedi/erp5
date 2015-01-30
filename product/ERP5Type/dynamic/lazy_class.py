@@ -164,6 +164,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
     cls.workflow_method_registry = {}
+    cls.erp5workflow_method_registry = {}
 
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
@@ -242,12 +243,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                         '__doc__',
                         '__setstate__',
                         'workflow_method_registry',
+                        'erp5workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
       ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
       cls.workflow_method_registry.clear()
+      #cls.erp5workflow_method_registry.clear()
       cls.__bases__ = (ghostbase,)
       cls.__isghost__ = True
       cls.resetAcquisition()
