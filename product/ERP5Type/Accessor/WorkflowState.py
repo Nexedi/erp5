@@ -30,7 +30,8 @@ from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
-
+from zLOG import LOG, INFO, ERROR, WARNING
+import pdb
 # Creation of default constructor
 class func_code: pass
 
@@ -56,12 +57,15 @@ class Getter(BaseGetter):
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
-      return wf._getWorkflowStateOf(instance, id_only=1)
+      state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for state %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
+      return state_id
 
     psyco.bind(__call__)
 
 class ERP5WorkflowStateGetter(BaseGetter):
     """
+      ERPWorkflow getter has the compability for both workflows
       Gets an attribute value. A default value can be
       provided if needed
     """
@@ -81,13 +85,19 @@ class ERP5WorkflowStateGetter(BaseGetter):
 
     def __call__(self, instance):
       try:
+        ### zwj: erp5_workflow accessor
         erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
         wf = erp5Workflow_module._getOb(self._key)
-        return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+        state_id = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+        #LOG("zwj: ERP5 Workflow: %s  | Object: %s Type: %s call for state %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
       except (KeyError, AttributeError):
+        #pdb.set_trace()
+        ### DCworkflow accessor
         portal_workflow = instance.getPortalObject().portal_workflow
         wf = portal_workflow.getWorkflowById(self._key)
-        return wf._getWorkflowStateOf(instance, id_only=1)
+        state_id = wf._getWorkflowStateOf(instance, id_only=1)
+        #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for state %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
+      return state_id
 
     psyco.bind(__call__)
 
@@ -112,7 +122,9 @@ class TitleGetter(BaseGetter):
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
-      return wf._getWorkflowStateOf(instance).title
+      state_title = wf._getWorkflowStateOf(instance).title
+      #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, " in WorkflowState.py")
+      return state_title
 
     psyco.bind(__call__)
 
@@ -138,11 +150,14 @@ class ERP5WorkflowStateTitleGetter(BaseGetter):
       try:
         erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
         wf = erp5Workflow_module._getOb(self._key)
-        return instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+        state_title = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+        #LOG("zwj: ERP5Workflow: %s  | Object: %s Type: %s call for state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, " in WorkflowState.py")
       except (KeyError, AttributeError):
         portal_workflow = instance.getPortalObject().portal_workflow
         wf = portal_workflow.getWorkflowById(self._key)
-        return wf._getWorkflowStateOf(instance).title
+        state_title = wf._getWorkflowStateOf(instance).title
+        #LOG("zwj: DC5Workflow: %s  | Object: %s Type: %s call for state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, "  in WorkflowState.py")
+      return state_title
 
     psyco.bind(__call__)
 
@@ -154,6 +169,7 @@ class TranslatedGetter(Getter):
       portal = instance.getPortalObject()
       wf = portal.portal_workflow.getWorkflowById(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for translated state id %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
       return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
@@ -170,11 +186,12 @@ class ERP5WorkflowStateTranslatedGetter(ERP5WorkflowStateGetter):
         erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
         wf = erp5Workflow_module._getOb(self._key)
         state_id = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getId()
+        #LOG("zwj: ERP5Workflow: %s  | Object: %s Type: %s call for translated state id %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
       except (KeyError, AttributeError):
         portal = instance.getPortalObject()
         wf = portal.portal_workflow.getWorkflowById(self._key)
         state_id = wf._getWorkflowStateOf(instance, id_only=1)
-
+        #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for translated state id %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_id), WARNING, " in WorkflowState.py")
       warn('Translated workflow state getters, such as %s are deprecated' %
               self._id, DeprecationWarning)
       return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
@@ -194,6 +211,7 @@ class TranslatedTitleGetter(TitleGetter):
       wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
+      #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for translated state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, " in WorkflowState.py")
 
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
@@ -221,10 +239,12 @@ class ERP5WorkflowStateTranslatedTitleGetter(ERP5WorkflowStateTitleGetter):
         wf = erp5Workflow_module._getOb(self._key)
         selected_language = localizer.get_selected_language()
         state_title = instance._getDefaultAcquiredValue(wf.getStateBaseCategory()).getTitle()
+        #LOG("zwj: ERP5Workflow: %s  | Object: %s Type: %s call for translated state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, " in WorkflowState.py")
       except (KeyError, AttributeError):
         wf = portal.portal_workflow.getWorkflowById(wf_id)
         selected_language = localizer.get_selected_language()
         state_title = wf._getWorkflowStateOf(instance).title
+        #LOG("zwj: DCWorkflow: %s  | Object: %s Type: %s call for translated state title %s"%(wf.getId(), instance.getId(), instance.getPortalType(), state_title), WARNING, " in WorkflowState.py")
 
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
