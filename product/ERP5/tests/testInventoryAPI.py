@@ -840,6 +840,61 @@ class TestInventoryList(InventoryAPITestCase):
     # The total price of grouped movements without price is 0
     self.assertEqual(0, inventory_list[0].total_price)
 
+  def testBrainClass(self):
+    """Inventory List uses InventoryListBrain for brains"""
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r)
+    r_bases = getInventoryList()._class.__bases__
+    brain_class = r_bases[2].__name__
+    self.assertEqual('InventoryListBrain', brain_class,
+      "unexpected brain class for InventoryListBrain"
+      " != %s (bases %s)" % (brain_class, r_bases))
+
+  def testBrainAttribute(self):
+    """Test attributes exposed on brains."""
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=100)
+    brain = getInventoryList(section_uid=self.section.getUid())[0]
+    self.assertTrue(hasattr(brain, 'node_uid'))
+    self.assertTrue(hasattr(brain, 'resource_uid'))
+    self.assertTrue(hasattr(brain, 'section_uid'))
+    self.assertTrue(hasattr(brain, 'date'))
+    self.assertTrue(hasattr(brain, 'function_uid'))
+    self.assertTrue(hasattr(brain, 'payment_uid'))
+    self.assertTrue(hasattr(brain, 'project_uid'))
+    self.assertTrue(hasattr(brain, 'funding_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_node_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_section_uid'))
+
+    self.assertTrue(hasattr(brain, 'section_title'))
+    self.assertEqual(brain.section_title, self.section.getTitle())
+    self.assertTrue(hasattr(brain, 'section_relative_url'))
+    self.assertEqual(brain.section_relative_url, self.section.getRelativeUrl())
+
+    self.assertTrue(hasattr(brain, 'mirror_section_title'))
+    self.assertEqual(brain.mirror_section_title, self.mirror_section.getTitle())
+    self.assertTrue(hasattr(brain, 'mirror_section_relative_url'))
+    self.assertEqual(brain.mirror_section_relative_url,
+        self.mirror_section.getRelativeUrl())
+
+    self.assertTrue(hasattr(brain, 'node_title'))
+    self.assertEqual(brain.node_title, self.node.getTitle())
+    self.assertTrue(hasattr(brain, 'node_translated_title'))
+    self.assertEqual(brain.node_title, self.node.getTranslatedTitle())
+    self.assertTrue(hasattr(brain, 'node_relative_url'))
+    self.assertEqual(brain.node_relative_url, self.node.getRelativeUrl())
+
+    self.assertTrue(hasattr(brain, 'resource_title'))
+    self.assertEqual(brain.resource_title, self.resource.getTitle())
+    self.assertTrue(hasattr(brain, 'resource_translated_title'))
+    self.assertEqual(brain.resource_title, self.resource.getTranslatedTitle())
+    self.assertTrue(hasattr(brain, 'resource_reference'))
+    self.assertEqual(brain.resource_reference, self.resource.getReference())
+    self.assertTrue(hasattr(brain, 'resource_relative_url'))
+    self.assertEqual(brain.resource_relative_url, self.resource.getRelativeUrl())
+
+
   def test_GroupByNode(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=100)
@@ -1458,7 +1513,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(2, len(getMovementHistoryList()))
 
   def testBrainClass(self):
-    """Movement History List uses InventoryListBrain for brains"""
+    """Movement History List uses MovementHistoryListBrain for brains"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
     # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r)

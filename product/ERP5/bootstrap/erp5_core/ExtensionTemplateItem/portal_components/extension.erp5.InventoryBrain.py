@@ -114,6 +114,21 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return section.relative_url
   section_relative_url = ComputedAttribute(getSectionRelativeUrl, 1)
 
+  def getMirrorSectionValue(self):
+    return self._getObjectByUid(self.mirror_section_uid)
+
+  def getMirrorSectionTitle(self):
+    mirror_section = self.getMirrorSectionValue()
+    if mirror_section is not None:
+      return mirror_section.title
+  mirror_section_title = ComputedAttribute(getMirrorSectionTitle, 1)
+
+  def getMirrorSectionRelativeUrl(self):
+    mirror_section = self.getMirrorSectionValue()
+    if mirror_section is not None:
+      return mirror_section.relative_url
+  mirror_section_relative_url = ComputedAttribute(getMirrorSectionRelativeUrl, 1)
+
   def getNodeValue(self):
     return self._getObjectByUid(self.node_uid)
 
@@ -337,21 +352,6 @@ class MovementHistoryListBrain(InventoryListBrain):
       if explanation is not None:
         return explanation.absolute_url()
     return ''
-
-  def getMirrorSectionValue(self):
-    return self._getObjectByUid(self.mirror_section_uid)
-
-  def getMirrorSectionTitle(self):
-    mirror_section = self.getMirrorSectionValue()
-    if mirror_section is not None:
-      return mirror_section.title
-  mirror_section_title = ComputedAttribute(getMirrorSectionTitle, 1)
-
-  def getMirrorSectionRelativeUrl(self):
-    mirror_section = self.getMirrorSectionValue()
-    if mirror_section is not None:
-      return mirror_section.relative_url
-  mirror_section_relative_url = ComputedAttribute(getMirrorSectionRelativeUrl, 1)
 
   def _debit(self):
     if self.is_cancellation:
