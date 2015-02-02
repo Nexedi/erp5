@@ -117,6 +117,7 @@ for message in bug_message_list:\n
             message.getStartDate(),  text )\n
 \n
 recipient_list = bug_message.BugLine_getRecipientValueList()\n
+if not recipient_list: return\n
 \n
 portal = bug_message.getPortalObject()\n
 portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
