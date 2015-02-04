@@ -11,6 +11,12 @@
             <value> <int>3</int> </value>
         </item>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -52,10 +58,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from zExceptions import Unauthorized\n
-from AccessControl import getSecurityManager\n
 from ZTUtils import make_query\n
-from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery\n
 import json\n
 from DateTime import DateTime\n
 if REQUEST is None:\n
@@ -66,6 +69,8 @@ if response is None:\n
 \n
 url_template_dict = {\n
   "form_action": "%(traversed_document_url)s/%(action_id)s",\n
+  "traverse_generator": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
+                       "&relative_url=%(relative_url)s&view=%(view)s",\n
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                        "{&relative_url,view}",\n
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
@@ -269,7 +274,6 @@ def renderForm(form, response_dict):\n
     \'name\': form.id\n
   }\n
 \n
-  group_list = []\n
   for group in form.Form_getGroupTitleAndId():\n
 \n
     if group[\'gid\'].find(\'hidden\') < 0:\n
@@ -379,8 +383,10 @@ is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) o
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
   site_root = context.getWebSectionValue()\n
+  view_action_type = site_root.getLayoutProperty("view_action_category", default=\'object_view\')\n
 else:\n
   site_root = portal\n
+  view_action_type = "object_view"\n
 \n
 # Check if traversed_document is the site_root\n
 if relative_url:\n
@@ -471,7 +477,6 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
     portal.portal_actions.listFilteredActionsFor(traversed_document))\n
 \n
   embedded_url = None\n
-  embedded_action_key = None\n
   # XXX See ERP5Type.getDefaultViewFor\n
   for erp5_action_key in erp5_action_dict.keys():\n
     erp5_action_list = []\n
@@ -485,11 +490,23 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
       # Try to embed the form in the result\n
       if (view == view_action[\'id\']):\n
         embedded_url = \'%s\' % view_action[\'url\']\n
-        embedded_action_key = "action_" + erp5_action_key\n
+        \n
+      if (erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action")):\n
+        erp5_action_list[-1][\'href\'] = url_template_dict["traverse_generator"] % {\n
+              "root_url": site_root.absolute_url(),\n
+              "script_id": script.id,\n
+              "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
+              "view": erp5_action_list[-1][\'name\']\n
+            }\n
 \n
     if erp5_action_list:\n
       if len(erp5_action_list) == 1:\n
         erp5_action_list = erp5_action_list[0]\n
+        \n
+      if erp5_action_key == view_action_type:\n
+        # Configure view tabs on server level\n
+        result_dict[\'_links\']["view"] = erp5_action_list\n
+        \n
       # XXX Put a prefix to prevent conflict\n
       result_dict[\'_links\']["action_" + erp5_action_key] = erp5_action_list\n
 \n
@@ -564,6 +581,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
   ##############\n
   if is_site_root:\n
 \n
+    result_dict[\'default_view\'] = \'view\'\n
     # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
     response.setHeader("Cache-Control", "public, max-age=1800")\n
     response.setHeader("Vary", "Cookie")\n
@@ -773,7 +791,7 @@ elif mode == \'form\':\n
 #   renderFormDefinition(form, result_dict)\n
 \n
 else:\n
-  raise NotImplementedError, "Unsupported mode %s" % mode\n
+  raise NotImplementedError("Unsupported mode %s" % mode)\n
 \n
 response.setHeader(\'Content-Type\', mime_type)\n
 return json.dumps(result_dict, indent=2)\n

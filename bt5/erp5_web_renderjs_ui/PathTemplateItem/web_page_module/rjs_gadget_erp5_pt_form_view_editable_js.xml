@@ -128,7 +128,7 @@
         });\n
     })\n
 \n
-    .declareAcquiredMethod("aq_put", "jio_put")\n
+    .declareAcquiredMethod("aq_putAttachment", "aq_putAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
@@ -148,6 +148,8 @@
 \n
       form_gadget.props.id = erp5_document._id;\n
       form_gadget.props.view = options.view;\n
+      form_gadget.props.action = erp5_document._embedded._view._actions.put;\n
+      form_gadget.props.form_id = erp5_document._embedded._view.form_id;\n
 \n
       return form_gadget.getDeclaredGadget("erp5_form")\n
         .push(function (erp5_form) {\n
@@ -210,10 +212,17 @@
             if (validity) {\n
               return erp5_form.getContent()\n
                 .push(function (data) {\n
-                  data._id = form_gadget.props.id;\n
+\n
+                  data[form_gadget.props.form_id.key] =\n
+                                          form_gadget.props.form_id[\'default\'];\n
+\n
                   return RSVP.all([\n
                     form_gadget.notifySubmitting(),\n
-                    form_gadget.aq_put(data, {"_view": form_gadget.props.view})\n
+                    form_gadget.aq_putAttachment({\n
+                      "_id": form_gadget.props.id,\n
+                      "_attachment": form_gadget.props.action.href,\n
+                      "_data": data\n
+                    })\n
                   ]);\n
                 })\n
                 .push(form_gadget.notifySubmitted.bind(form_gadget));\n
@@ -351,7 +360,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -365,7 +374,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.10421.7831.40686</string> </value>
+                <value> <string>940.49128.62667.58914</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -383,8 +392,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420736076.72</float>
-                        <string>UTC</string>
+                        <float>1423066195.91</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

@@ -136,7 +136,7 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
@@ -150,12 +150,12 @@
         tab_list = [],\n
         gadget = this;\n
 \n
-      return gadget.jio_get({"_id": options.jio_key})\n
+      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"})\n
         .push(function (result) {\n
           var erp5_document = result.data,\n
             i,\n
             promise_list = [];\n
-          view_list = erp5_document._links[options.action_view];\n
+          view_list = erp5_document._links.view;\n
 \n
           // All ERP5 document should at least have one view.\n
           // So, no need normally to test undefined\n
@@ -164,16 +164,16 @@
           }\n
 \n
           for (i = 0; i < view_list.length; i += 1) {\n
-            if (options.view === view_list[i].name) {\n
+            if (options.view === view_list[i].href) {\n
               matching = i;\n
             }\n
             promise_list.push(gadget.whoWantToDisplayThisPage({\n
-              name: view_list[i].name,\n
+              name: view_list[i].href,\n
               editable: true\n
             }));\n
           }\n
           promise_list.push(gadget.whoWantToDisplayThisPage({\n
-            name: view_list[0].name\n
+            name: "view"\n
           }));\n
           return RSVP.all(promise_list);\n
         })\n
@@ -206,9 +206,19 @@
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
 \n
-          return gadget.renderPageHeader({\n
-            cancel_url: tab_list[matching].link\n
-          });\n
+          if (matching !== undefined) {\n
+            return gadget.renderPageHeader({\n
+              cancel_url: tab_list[matching].link\n
+            });\n
+          }\n
+          return gadget.whoWantToDisplayThisPage({\n
+            name: "view",\n
+            editable: true\n
+          })\n
+            .push(function (url) {\n
+              return gadget.renderPageHeader({cancel_url: url});\n
+            });\n
+\n
         });\n
     });\n
 \n
@@ -335,7 +345,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -349,7 +359,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>940.49264.57640.4352</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +377,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080804.4</float>
+                        <float>1423065230.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -127,7 +127,7 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -145,11 +145,11 @@
         erp5_form,\n
         form_gadget;\n
 \n
-      return gadget.jio_get({"_id": options.jio_key}, {"_view": options.view})\n
+      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view})\n
         .push(function (result) {\n
           var uri = new URI(result.data._embedded._view._links.form_definition.href);\n
           erp5_document = result.data;\n
-          return gadget.jio_get({"_id": uri.segment(2)}, {"_view": "view"});\n
+          return gadget.jio_getAttachment({"_id": uri.segment(2), "_attachment": "view"});\n
         })\n
         .push(function (result) {\n
           erp5_form = result.data;\n
@@ -312,7 +312,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.19043.60684.21452</string> </value>
+                <value> <string>940.49122.12001.41540</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413473559.42</float>
+                        <float>1423065965.58</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

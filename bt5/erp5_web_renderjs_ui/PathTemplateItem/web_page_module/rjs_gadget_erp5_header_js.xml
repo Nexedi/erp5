@@ -174,7 +174,6 @@
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")\n
     .declareAcquiredMethod("triggerPanel", "triggerPanel")\n
 \n
@@ -581,7 +580,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.10099.40468.62378</string> </value>
+                <value> <string>940.17574.28685.15906</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -599,7 +598,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080897.75</float>
+                        <float>1421681794.02</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -129,7 +129,6 @@
         });\n
     })\n
 \n
-    .declareAcquiredMethod("aq_put", "jio_put")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
       return this.getDeclaredGadget(scope)\n
@@ -474,7 +473,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -488,7 +487,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.28668.29547.7765</string> </value>
+                <value> <string>940.21870.34932.42444</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -506,7 +505,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421829262.31</float>
+                        <float>1423061410.81</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

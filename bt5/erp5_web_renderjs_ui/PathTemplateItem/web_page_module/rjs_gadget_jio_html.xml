@@ -114,17 +114,7 @@
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
 \n
-    <script src="uritemplate.js" type="text/javascript"></script>\n
-    <script src="URI.js" type="text/javascript"></script>\n
-\n
-    <script src="jio_sha1.amd.js" type="text/javascript"></script>\n
-    <script src="jio_sha2.amd.js" type="text/javascript"></script>\n
-    <script src="jio_sha256.amd.js" type="text/javascript"></script>\n
-    <script src="jio.js" type="text/javascript"></script>\n
-    <script src="jio_complex_queries.js" type="text/javascript"></script>\n
-    <script src="jio_storage_erp5.js" type="text/javascript"></script>\n
-\n
-\n
+    <script src="jiodev.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
     <script src="gadget_jio.js" type="text/javascript"></script>\n
@@ -255,7 +245,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>tb</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -269,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.39262.40401.22254</string> </value>
+                <value> <string>940.49251.5828.61098</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406908734.53</float>
+                        <float>1423064264.23</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

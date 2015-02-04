@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 06 Oct 2014 15:03:33 +0000\n
+# generated on Wed, 04 Feb 2015 16:31:07 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -112,8 +112,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
-rsvp.js\n
-URI.js\n
 codemirror.css\n
 codemirror.js\n
 codemirror_addon_dialog.css\n
@@ -138,6 +136,8 @@ gadget_erp5.html\n
 gadget_erp5.js\n
 gadget_erp5_field_float.html\n
 gadget_erp5_field_float.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
 gadget_erp5_field_list.html\n
 gadget_erp5_field_list.js\n
 gadget_erp5_field_listbox.html\n
@@ -148,8 +148,6 @@ gadget_erp5_field_string.html\n
 gadget_erp5_field_string.js\n
 gadget_erp5_field_textarea.html\n
 gadget_erp5_field_textarea.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
 gadget_erp5_form.html\n
 gadget_erp5_form.js\n
 gadget_erp5_header.html\n
@@ -182,18 +180,16 @@ gadget_erp5_searchfield.js\n
 gadget_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
 handlebars.js\n
-jio.js\n
-jio_complex_queries.js\n
-jio_sha1.amd.js\n
-jio_sha2.amd.js\n
-jio_sha256.amd.js\n
-jio_storage_erp5.js\n
+i18next.js\n
+jiodev.js\n
 jquery.js\n
 jquerymobile.css\n
 jquerymobile.js\n
 renderjs.js\n
-uritemplate.js\n
+rsvp.js\n
 NETWORK:\n
 *
 
@@ -259,7 +255,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -281,7 +277,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.77</float>
+                        <float>1421252934.14</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -312,7 +308,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +322,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17441.54956.1450</string> </value>
+                <value> <string>940.30209.53658.33979</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,8 +340,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421155553.4</float>
-                        <string>UTC</string>
+                        <float>1423067467.33</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

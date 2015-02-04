@@ -136,7 +136,7 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
@@ -150,7 +150,7 @@
         result_list,\n
         view_list;\n
 \n
-      return gadget.jio_get({"_id": options.jio_key})\n
+      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"})\n
         .push(function (result) {\n
           var i,\n
             promise_list = [\n
@@ -166,7 +166,7 @@
 \n
           for (i = 0; i < view_list.length; i += 1) {\n
             promise_list.push(gadget.whoWantToDisplayThisPage({\n
-              name: view_list[i].name\n
+              name: view_list[i].href\n
             }));\n
           }\n
           return RSVP.all(promise_list);\n
@@ -325,7 +325,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -339,7 +339,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>940.49126.4849.49664</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -357,7 +357,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080866.35</float>
+                        <float>1423066988.75</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

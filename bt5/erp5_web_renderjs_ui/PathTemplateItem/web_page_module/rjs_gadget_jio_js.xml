@@ -103,7 +103,7 @@
 
 /*global window, rJS, jIO, FormData */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, FormData) {\n
+(function (window, rJS, jIO) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -116,58 +116,34 @@
     .declareMethod(\'createJio\', function (jio_options) {\n
       this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
     })\n
-    .declareMethod(\'ajax\', function (options) {\n
-      var key,\n
-        form_data = new FormData();\n
-      if (options.data !== undefined) {\n
-        for (key in options.data) {\n
-          if (options.data.hasOwnProperty(key)) {\n
-            form_data.append(key, options.data[key]);\n
-          }\n
-        }\n
-        options.data = form_data;\n
-      }\n
-      return jIO.util.ajax(options);\n
-    })\n
     .declareMethod(\'allDocs\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.allDocs.apply(storage, arguments);\n
     })\n
     .declareMethod(\'get\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.get.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.remove.apply(storage, arguments);\n
+      return storage.get.apply(storage, arguments)\n
+        .push(function (result) {\n
+          return {data: result};\n
+        });\n
     })\n
     .declareMethod(\'getAttachment\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.getAttachment.apply(storage, arguments)\n
         // XXX Where to put this &@! blob reading\n
         .then(function (response) {\n
-          return jIO.util.readBlobAsText(response.data);\n
+          return jIO.util.readBlobAsText(response);\n
         })\n
-        .then(function (lala) {\n
-          return lala.target.result;\n
+        .then(function (evt) {\n
+          return {data: JSON.parse(evt.target.result)};\n
         });\n
     })\n
     .declareMethod(\'putAttachment\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.putAttachment.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      // XXX set modified value\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.put.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      // XXX set modified value\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.post.apply(storage, arguments);\n
     });\n
 \n
-}(window, rJS, jIO, FormData));
+}(window, rJS, jIO));
 
 ]]></string> </value>
         </item>
@@ -290,7 +266,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -304,7 +280,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17512.23099.38434</string> </value>
+                <value> <string>940.46046.3030.52343</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -322,7 +298,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421162230.18</float>
+                        <float>1423064556.21</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

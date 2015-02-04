@@ -101,10 +101,12 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener */\n
+/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener, URI, location */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener) {\n
+(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener, URI, location) {\n
   "use strict";\n
+\n
+  var DEFAULT_VIEW_REFERENCE = "view";\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Desactivate jQuery Mobile URL management\n
@@ -122,8 +124,17 @@
       .push(function (jio_gadget) {\n
         return jio_gadget.createJio({\n
           type: "erp5",\n
-          url: gadget.props.hateoas_url\n
+          url: (new URI("hateoas/")).absoluteTo(location.href).toString()\n
         });\n
+        /*\n
+        return jio_gadget.createJio({\n
+          type: "restattachment",\n
+          sub_storage: {\n
+            type: "erp5",\n
+            url: (new URI("hateoas/")).absoluteTo(location.href).toString()\n
+          }\n
+        });\n
+        */\n
       });\n
   }\n
 \n
@@ -154,7 +165,7 @@
     // Do not break the application in case of errors.\n
     // Display it to the user for now, and allow user to go back to the frontpage\n
     var error_text = "";\n
-    if (error.status === 401) {\n
+    if ((error.target !== undefined) && (error.target.status === 401)) {\n
       // Redirect to the login view\n
       return gadget.aq_pleasePublishMyState({page: "login"})\n
         .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
@@ -210,9 +221,7 @@
     .ready(function (g) {\n
       g.props = {\n
         translation_lookup: "",\n
-        hateoas_url: "hateoas/",\n
-        action_view: "action_object_view",\n
-        default_view_reference: "view"\n
+        hateoas_url: "hateoas/"\n
       };\n
 //      return g.getDeclaredGadget("breadcrumb")\n
 //        .push(function (sub_gadget) {\n
@@ -292,16 +301,14 @@
           return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
         });\n
     })\n
-    .allowPublicAcquisition("jio_ajax", function (param_list) {\n
+    .allowPublicAcquisition("aq_putAttachment", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.ajax.apply(jio_gadget, param_list);\n
-        });\n
-    })\n
-    .allowPublicAcquisition("jio_put", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.put.apply(jio_gadget, param_list);\n
+          return jio_gadget.putAttachment({\n
+            "_id": param_list[0]._id,\n
+            "_attachment": param_list[0]._attachment,\n
+            "_data": JSON.stringify(param_list[0]._data)\n
+          });\n
         });\n
     })\n
     .allowPublicAcquisition("jio_get", function (param_list) {\n
@@ -310,11 +317,17 @@
           return jio_gadget.get.apply(jio_gadget, param_list);\n
         });\n
     })\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("jio_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
       // Hey, I want to display some URL\n
       var options = {\n
         jio_key: param_list[0],\n
-        view: this.props.default_view_reference\n
+        view: DEFAULT_VIEW_REFERENCE\n
       };\n
       if (param_list[1] !== undefined) {\n
         if (param_list[1].editable !== undefined) {\n
@@ -327,7 +340,7 @@
       // Hey, I want to display some URL\n
       var options = {\n
         jio_key: this.state_parameter_dict.jio_key,\n
-        view: param_list[0].name || this.props.default_view_reference\n
+        view: param_list[0].name || DEFAULT_VIEW_REFERENCE\n
       };\n
       if (param_list[0].editable !== undefined) {\n
         options.editable = param_list[0].editable;\n
@@ -491,7 +504,6 @@
             panel_action: true\n
           }];\n
 \n
-          options.action_view = gadget.props.action_view;\n
           gadget.state_parameter_dict = {\n
             jio_key: options.jio_key,\n
             view: options.view\n
@@ -499,6 +511,7 @@
 \n
           if ((options.jio_key !== undefined) && (options.page === undefined)) {\n
             options.page = "form";\n
+            options.view = options.view || DEFAULT_VIEW_REFERENCE;\n
           }\n
           if (options.page === undefined) {\n
             // Not rendering a jio document and not page requested.\n
@@ -566,7 +579,7 @@
       );\n
     });\n
 \n
-}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener));
+}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, URI, location));
 
 ]]></string> </value>
         </item>
@@ -689,7 +702,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -703,7 +716,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.10219.33899.48998</string> </value>
+                <value> <string>940.49304.32028.23995</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -721,8 +734,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420722838.8</float>
-                        <string>UTC</string>
+                        <float>1423067269.03</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

@@ -134,7 +134,7 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_get", "jio_get")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
@@ -172,7 +172,7 @@
                     title: parent_link.name,\n
                     link: parent_href\n
                   });\n
-                  return gadget.jio_get({"_id": jio_key});\n
+                  return gadget.jio_getAttachment({"_id": jio_key, "_attachment": "links"});\n
                 })\n
                 .push(function (result) {\n
                   handleParent(result.data._links.parent || "#");\n
@@ -186,7 +186,7 @@
       return gadget.whoWantToDisplayThisPage({name: options.view, editable: options.editable})\n
         .push(function (back_url) {\n
           header_options.back_url = back_url;\n
-          return gadget.jio_get({"_id": options.jio_key});\n
+          return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"});\n
         })\n
         .push(function (result) {\n
           erp5_document = result.data;\n
@@ -330,7 +330,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -344,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1898.34631.55091</string> </value>
+                <value> <string>940.49124.20596.60757</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +362,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420236895.39</float>
+                        <float>1423066901.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
