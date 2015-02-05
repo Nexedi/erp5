@@ -7,8 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>jquery-ui.min.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_cache_namespace_keys</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>_vars</string> </key>
