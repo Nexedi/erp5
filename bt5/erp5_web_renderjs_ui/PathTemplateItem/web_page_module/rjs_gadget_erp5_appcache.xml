@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Wed, 04 Feb 2015 16:31:07 +0000\n
+# generated on Thu, 05 Feb 2015 08:24:38 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -112,6 +112,7 @@ https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
 https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
+URI.js\n
 codemirror.css\n
 codemirror.js\n
 codemirror_addon_dialog.css\n
@@ -322,7 +323,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.30209.53658.33979</string> </value>
+                <value> <string>940.49311.8017.44834</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -340,7 +341,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423067467.33</float>
+                        <float>1423124678.61</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
