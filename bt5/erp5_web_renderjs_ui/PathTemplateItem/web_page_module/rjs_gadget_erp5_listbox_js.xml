@@ -108,8 +108,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP */\n
-(function (window, document, rJS, URI, RSVP) {\n
+/*global window, document, rJS, URI, RSVP, UriTemplate */\n
+(function (window, document, rJS, URI, RSVP, UriTemplate) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -133,6 +133,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
@@ -185,8 +186,10 @@
         select_list = [],\n
         dataset,\n
         counter,\n
-        i;\n
-\n
+        i,\n
+        list_method_promise = function () {\n
+          return gadget.jio_allDocs.apply(gadget, arguments);\n
+        };\n
       if (field_json.query === undefined) {\n
         original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
         return;\n
@@ -204,7 +207,43 @@
         select_list.push(field_json.column_list[i][0]);\n
       }\n
 \n
-      return gadget.jio_allDocs({\n
+      if (field_json.list_method_template !== undefined) {\n
+        list_method_promise = function (option_dict) {\n
+          return gadget.jio_getAttachment({\n
+            // XXX Ugly hardcoded meaningless id...\n
+            "_id": "erp5",\n
+            "_attachment": new UriTemplate.parse(field_json.list_method_template)\n
+                                      .expand(option_dict)\n
+          })\n
+            .push(function (catalog_json) {\n
+              catalog_json = catalog_json.data;\n
+              var data = catalog_json._embedded.contents,\n
+                count = data.length,\n
+                k,\n
+                uri,\n
+                item,\n
+                result = [];\n
+              for (k = 0; k < count; k += 1) {\n
+                item = data[k];\n
+                uri = new URI(item._links.self.href);\n
+                delete item._links;\n
+                result.push({\n
+                  id: uri.segment(2),\n
+                  doc: {},\n
+                  value: item\n
+                });\n
+              }\n
+              return {\n
+                data: {\n
+                  rows: result,\n
+                  total_rows: result.length\n
+                }\n
+              };\n
+            });\n
+        };\n
+      }\n
+\n
+      return list_method_promise({\n
         "query": new URI(field_json.query).query(true).query + query_string,\n
         "limit": [begin_from, begin_from + lines + 1],\n
         "select_list": select_list\n
@@ -348,7 +387,7 @@
         });\n
     });\n
 \n
-}(window, document, rJS, URI, RSVP));
+}(window, document, rJS, URI, RSVP, UriTemplate));
 
 ]]></string> </value>
         </item>
@@ -471,7 +510,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -485,7 +524,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11535.19754.41932</string> </value>
+                <value> <string>940.50579.22253.1297</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -503,8 +542,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420800963.59</float>
-                        <string>UTC</string>
+                        <float>1423143600.86</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

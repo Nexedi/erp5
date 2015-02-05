@@ -75,12 +75,16 @@ url_template_dict = {\n
                        "{&relative_url,view}",\n
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "{&query,select_list*,limit*}",\n
+  "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
+                     "&relative_url=%(relative_url)s" \\\n
+                     "&list_method=%(list_method)s" \\\n
+                     "{&query,select_list*,limit*}",\n
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   # XXX View is set by default to empty\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                   "&relative_url=%(relative_url)s",\n
   "jio_get_template": "urn:jio:get:%(relative_url)s",\n
-  "jio_search_template": "urn:jio:allDocs?%(query)s",\n
+  "jio_search_template": "urn:jio:allDocs?%(query)s"\n
 }\n
 \n
 default_document_uri_template = url_template_dict["jio_get_template"]\n
@@ -180,13 +184,19 @@ def renderField(field, meta_type=None):\n
     list_method_query_dict = dict(\n
       portal_type=[x[1] for x in portal_types], **default_params\n
     )\n
+    list_method_custom = None\n
 \n
     if (list_method_name == "portal_catalog"):\n
       pass\n
     elif (list_method_name in ("searchFolder", "objectValues")):\n
       list_method_query_dict["parent_uid"] = traversed_document.getUid()\n
     else:\n
-      list_method_query_dict = None\n
+      list_method_custom = url_template_dict["custom_search_template"] % {\n
+        "root_url": site_root.absolute_url(),\n
+        "script_id": script.id,\n
+        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
+        "list_method": list_method_name\n
+      }\n
 \n
 \n
 #     row_list = list_method(limit=lines, portal_type=portal_types,\n
@@ -221,12 +231,14 @@ def renderField(field, meta_type=None):\n
       "default_params": default_params,\n
       "list_method": list_method_name\n
     }\n
-    if (list_method_query_dict is not None):\n
-      result["query"] = url_template_dict["jio_search_template"] % {\n
-          "query": make_query({"query": sql_catalog.buildQuery(\n
-            list_method_query_dict\n
-          ).asSearchTextExpression(sql_catalog)})\n
-        }\n
+    if (list_method_custom is not None):\n
+      result["list_method_template"] = list_method_custom\n
+\n
+    result["query"] = url_template_dict["jio_search_template"] % {\n
+        "query": make_query({"query": sql_catalog.buildQuery(\n
+          list_method_query_dict\n
+        ).asSearchTextExpression(sql_catalog)})\n
+      }\n
   else:\n
     # XXX Not implemented\n
     result = {\n
@@ -682,10 +694,14 @@ elif mode == \'search\':\n
 #   length = len(\'/%s/\' % portal.getId())\n
 #   # context.log(portal.portal_catalog(full_text=query, limit=limit, src__=1))\n
 #   context.log(query)\n
-    if query:\n
-      sql_list = portal.portal_catalog(full_text=query, limit=limit)\n
+    if (list_method is None):\n
+      callable_list_method = portal.portal_catalog\n
     else:\n
-      sql_list = portal.portal_catalog(limit=limit)\n
+      callable_list_method = getattr(traversed_document, list_method)\n
+    if query:\n
+      sql_list = callable_list_method(full_text=query, limit=limit)\n
+    else:\n
+      sql_list = callable_list_method(limit=limit)\n
 \n
   result_list = []\n
 \n
@@ -801,7 +817,7 @@ return json.dumps(result_dict, indent=2)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None, restricted=0</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None, restricted=0, list_method=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
