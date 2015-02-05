@@ -114,17 +114,15 @@
       cookie_lang = fetchLanguage(),\n
       lang = cookie_lang || props.default_language || my_language,\n
       path =  props.src + "?language=" + lang + "&namespace=dict";\n
-\n
     return new RSVP.Queue()\n
       .push(function () {\n
-        return my_gadget.jio_ajax({\n
-          "method": "GET",\n
-          "url": path,\n
-          "xhrFields": {"withCredentials": true}\n
+        return my_gadget.jio_getAttachment({\n
+          "_id": "erp5",\n
+          "_attachment": path\n
         });\n
       })\n
       .push(function (my_event) {\n
-        return JSON.parse(my_event.target.responseText);\n
+        return my_event.data;\n
       });\n
   }\n
 \n
@@ -164,23 +162,23 @@
           ]);\n
         })\n
         .push(function (my_config_list) {\n
+          var url;\n
+          url = my_config_list[0]\n
           my_gadget.property_dict.src = my_config_list[1];\n
-          return my_gadget.jio_ajax({\n
-            "method": "GET",\n
-            "url": UriTemplate.parse(my_config_list[0]),\n
-            "xhrFields": {"withCredentials": true}\n
+          return my_gadget.jio_getAttachment({\n
+            "_id": "erp5",\n
+            "_attachment": url\n
           });\n
         })\n
         .push(function (my_hateoas) {\n
-          var url,\n
-            site_hal = JSON.parse(my_hateoas.target.responseText);\n
+          var url;\n
           // NOTE: at this point createJIO has not been called yet, so allDocs\n
           // is not available and must be called "manually"\n
           // XXX: Improve\n
-          url = UriTemplate.parse(site_hal._links.raw_search.href)\n
+          url = UriTemplate.parse(my_hateoas.data._links.raw_search.href)\n
             .expand({\n
               query: \'portal_type: "Web Site" AND title: "\'\n
-                + site_hal._links.parent.name  + \'"\',\n
+                + my_hateoas.data._links.parent.name  + \'"\',\n
               select_list: [\n
                 "available_language_set",\n
                 "default_available_language"\n
@@ -188,15 +186,13 @@
               limit: [0, 1]\n
             });\n
 \n
-          return my_gadget.jio_ajax({\n
-            "type": "GET",\n
-            "url": url,\n
-            "xhrFields": {withCredentials: true}\n
+          return my_gadget.jio_getAttachment({\n
+            "_id": "erp5",\n
+            "_attachment": url\n
           });\n
         })\n
         .push(function (my_site_configuration) {\n
-          var response = JSON.parse(my_site_configuration.target.responseText),\n
-            web_site = response._embedded.contents[0];\n
+          var web_site = my_site_configuration.data._embedded.contents[0];\n
           // set remaining properties\n
           my_gadget.property_dict.language_list =\n
             web_site.available_language_set;\n
@@ -242,7 +238,7 @@
     // acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("notifyUpdate", "notifyUpdate")\n
-    .declareAcquiredMethod("jio_ajax", "jio_ajax")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("getSiteRoot", "getSiteRoot")\n
     .declareAcquiredMethod("getTranslationMethod", "getTranslationMethod")\n
 \n
@@ -502,7 +498,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.10185.20882.26419</string> </value>
+                <value> <string>940.50431.23564.44151</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -520,7 +516,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420723441.28</float>
+                        <float>1423134793.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

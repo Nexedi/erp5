@@ -103,7 +103,7 @@
 
 /*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener, URI, location */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener, URI, location) {\n
+(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener, location) {\n
   "use strict";\n
 \n
   var DEFAULT_VIEW_REFERENCE = "view";\n
@@ -257,7 +257,8 @@
 \n
     // bridge translation gadget\n
     .allowPublicAcquisition("getTranslationMethod", function () {\n
-      return this.props.translation_lookup;\n
+      var root = (new URI("hateoas/")).absoluteTo(location.href).toString();\n
+      return root + this.props.translation_lookup;\n
     })\n
     .allowPublicAcquisition("changeLanguage", function (param_list) {\n
       if (this.setLanguage) {\n
@@ -435,7 +436,7 @@
     // XXX translate: called before ready(), so props is not available.\n
     // Needed to lookup to retrieve HAL to fetch site module/runner languages \n
     .declareMethod(\'getSiteRoot\', function () {\n
-      return "hateoas/";\n
+      return (new URI("hateoas/")).absoluteTo(location.href).toString();\n
     })\n
 \n
     // Render the page\n
@@ -579,7 +580,7 @@
       );\n
     });\n
 \n
-}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, URI, location));
+}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, location));
 
 ]]></string> </value>
         </item>
@@ -702,7 +703,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -716,7 +717,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49304.32028.23995</string> </value>
+                <value> <string>940.50639.33715.55517</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -734,8 +735,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423067269.03</float>
-                        <string>GMT</string>
+                        <float>1423147262.73</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
