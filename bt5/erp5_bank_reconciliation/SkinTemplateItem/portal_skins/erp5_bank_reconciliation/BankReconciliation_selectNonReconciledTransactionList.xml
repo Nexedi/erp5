@@ -57,14 +57,14 @@ tag = script.getId()\n
 context.serialize()\n
 if context.getPortalObject().portal_activities.countMessageWithTag(tag):\n
   return context.Base_redirect(form_id,\n
-                  keep_items={\'portal_status_message\': translateString("Initial bank reconciliation already in progress"),})\n
+                  keep_items={\'portal_status_message\': translateString("Reconciliation already in progress"),})\n
 \n
-context.activate(tag=tag).BankReconciliation_initialReconciliationActive(tag=tag)\n
+context.activate(tag=tag).BankReconciliation_selectNonReconciledTransactionListActive(tag=tag)\n
 \n
-context.activate(after_tag=tag, activity=\'SQLQueue\').BankReconciliation_notifyInitialReconciliationFinished()\n
+context.activate(after_tag=tag, activity=\'SQLQueue\').BankReconciliation_notifySelectNonReconciledFinished()\n
 \n
 return context.Base_redirect(form_id,\n
-                  keep_items={\'portal_status_message\': translateString("Initial bank reconciliation in progress"),})\n
+                  keep_items={\'portal_status_message\': translateString("Reconciliation in progress"),})\n
 </string> </value>
         </item>
         <item>
@@ -73,7 +73,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_initialReconciliation</string> </value>
+            <value> <string>BankReconciliation_selectNonReconciledTransactionList</string> </value>
         </item>
       </dictionary>
     </pickle>

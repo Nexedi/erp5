@@ -464,7 +464,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(data_line_list[0],
                              debit=200, credit=0)
 
-  def test_BankReconciliation_initialReconciliation(self):
+  def test_BankReconciliation_selectNonReconciled(self):
     account_module = self.account_module
     payment1 = self._makeOne(
               portal_type='Payment Transaction',
@@ -496,8 +496,8 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.tic()
 
     # we can display the dialog without error
-    bank_reconciliation.BankReconciliation_viewInitialBankReconciliationDialog()
-    bank_reconciliation.BankReconciliation_initialReconciliation()
+    bank_reconciliation.BankReconciliation_viewSelectNonReconciledTransactionListDialog()
+    bank_reconciliation.BankReconciliation_selectNonReconciledTransactionList()
     self.tic()
 
     # All lines with date < stop_date are reconciled

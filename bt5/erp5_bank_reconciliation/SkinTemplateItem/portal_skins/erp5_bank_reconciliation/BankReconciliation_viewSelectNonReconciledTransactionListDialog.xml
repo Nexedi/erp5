@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BankReconciliation_initialReconciliation</string> </value>
+            <value> <string>BankReconciliation_selectNonReconciledTransactionList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_viewInitialBankReconciliationDialog</string> </value>
+            <value> <string>BankReconciliation_viewSelectNonReconciledTransactionListDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -135,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Initial Bank Reconciliation</string> </value>
+            <value> <string>Select Non Reconciled Transactions</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

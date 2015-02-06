@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>initial_reconciliation</string> </value>
+            <value> <string>select_non_reconcilied_transaction_list</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Initial Bank Reconciliation</string> </value>
+            <value> <string>Select Non Reconciled Transactions</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BankReconciliation_viewInitialBankReconciliationDialog</string> </value>
+            <value> <string>string:${object_url}/BankReconciliation_viewSelectNonReconciledTransactionListDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

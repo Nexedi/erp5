@@ -58,7 +58,7 @@ context.getPortalObject().setPlacelessDefaultReindexParameters(activate_kw=dict(
 # At the moment we cannot use searchAndActivate from Inventory API query\n
 for line in context.BankReconciliation_getAccountingTransactionLineList():\n
   line.AccountingTransactionLine_setBankReconciliation(context, \n
-      message=translateString("Initial Bank Reconciliation"))\n
+      message=translateString("Select Non Reconciled Transactions"))\n
 </string> </value>
         </item>
         <item>
@@ -67,7 +67,7 @@ for line in context.BankReconciliation_getAccountingTransactionLineList():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_initialReconciliationActive</string> </value>
+            <value> <string>BankReconciliation_selectNonReconciledTransactionListActive</string> </value>
         </item>
       </dictionary>
     </pickle>

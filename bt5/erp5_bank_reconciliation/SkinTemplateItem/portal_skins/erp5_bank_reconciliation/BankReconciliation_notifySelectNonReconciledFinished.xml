@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 context.getPortalObject().portal_workflow.doActionFor(\n
-  context, \'edit_action\', comment=translateString(\'Initial bank reconciliation finished\'))\n
+  context, \'edit_action\', comment=translateString(\'Select non reconciled transcations finished\'))\n
 </string> </value>
         </item>
         <item>
@@ -61,7 +61,7 @@ context.getPortalObject().portal_workflow.doActionFor(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliation_notifyInitialReconciliationFinished</string> </value>
+            <value> <string>BankReconciliation_notifySelectNonReconciledFinished</string> </value>
         </item>
       </dictionary>
     </pickle>
