@@ -1314,6 +1314,15 @@ msgstr "Date du relevé"
 msgid "Bank account must be defined for bank type accounts"
 msgstr "Le compte en banque doit être spécifié pour les lignes mouvementant des comptes de type Banque"
 
+msgid "Bank reconciliation already in progress"
+msgstr "Rapprochement bancaire déjà en cours"
+
+msgid "Bank reconciliation finished"
+msgstr "Rapprochement bancaire terminée"
+
+msgid "Bank reconciliation in progress"
+msgstr "Rapprochement bancaire en cours"
+
 msgid "Bank statement balance does not match reconciled balance"
 msgstr "Le solde du relevé ne correspond pas à au solde rapproché"
 
@@ -5359,9 +5368,6 @@ msgstr "Modèles hérités"
 msgid "Initial Balance"
 msgstr "Solde Initial"
 
-msgid "Initial Bank Reconciliation"
-msgstr "Rapprochement bancaire initial"
-
 msgid "Initial Begin Date"
 msgstr "Date de début initiale"
 
@@ -5379,15 +5385,6 @@ msgstr "Solde débiteur initial"
 
 msgid "Initial End Date"
 msgstr "Date de fin initiale"
-
-msgid "Initial bank reconciliation already in progress"
-msgstr "Réconciliation bancaire initiale déjà en cours"
-
-msgid "Initial bank reconciliation finished"
-msgstr "Réconciliation bancaire initiale terminée"
-
-msgid "Initial bank reconciliation in progress"
-msgstr "Réconciliation bancaire initiale en cours"
 
 msgid "Initialised by Delivery Builder."
 msgstr "Initialisé par le système."
@@ -9302,6 +9299,9 @@ msgstr "Méthode de sélection"
 msgid "Select Module"
 msgstr "Sélectionner un module"
 
+msgid "Select Non Reconciled Transactions"
+msgstr "Sélectionner les écritures non rapprochées"
+
 msgid "Select Print"
 msgstr "Type d'impression"
 
@@ -9319,6 +9319,9 @@ msgstr "Variantes à commander"
 
 msgid "Select appropriate document in the list."
 msgstr "Sélectionnez le document approprié dans la liste."
+
+msgid "Select non reconciled transcations finished"
+msgstr "Selection des écritures non rapprochées terminée"
 
 msgid "Sell"
 msgstr "Conclure la vente"
@@ -12659,3 +12662,6 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
+
+msgid "Reconciled Transactions"
+msgstr "Écritures rapprochées"
