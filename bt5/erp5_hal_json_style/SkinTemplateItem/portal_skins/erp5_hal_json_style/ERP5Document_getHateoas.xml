@@ -132,9 +132,33 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
+\n
+  elif meta_type == "DateTimeField":\n
+    result = {\n
+      "type": meta_type,\n
+      "key": field.generate_field_key(),\n
+      "editable": field.get_value("editable"),\n
+      "css_class": field.get_value("css_class"),\n
+      "hidden": field.get_value("hidden"),\n
+      "description": field.get_value("description"),\n
+      "title": field.get_value("title"),\n
+      "required": field.get_value("required"),\n
+      "date_only": field.get_value("date_only"),\n
+      "ampm_time_style": field.get_value("ampm_time_style"),\n
+      "timezone_style": field.get_value("timezone_style"),\n
+    }\n
+    date_value = field.get_value("default")\n
+    if same_type(date_value, DateTime()):\n
+      # Serialize DateTime\n
+      date_value = date_value.rfc822()\n
+    result["default"] = date_value\n
+    for subkey in ("year", "month", "day", "hour", "minute", "ampm", "timezone"):\n
+      result["subfield_%s_key" % subkey] = traversed_document.Field_getSubFieldKeyDict(field, subkey, key=result["key"])\n
+\n
+\n
   elif meta_type in ("RelationStringField", "MultiRelationStringField"):\n
     \n
-    portal_type_list = field.get_value(\'portal_type\');\n
+    portal_type_list = field.get_value(\'portal_type\')\n
     if len(portal_type_list) > 0:\n
       portal_types = portal_type_list[0]\n
     else:\n

@@ -8,3 +8,6 @@ def Listbox_getListMethodName(self, field):
 
   return list_method_name
 
+def Field_getSubFieldKeyDict(self, field, id, key=None):
+  """XXX"""
+  return field.generate_subfield_key(id, key=key)
