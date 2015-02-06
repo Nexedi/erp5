@@ -162,7 +162,7 @@
 \n
           new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = form_gadget.whoWantToDisplayThisPage({name: new_content_action.name, editable: true});\n
+            new_content_action = form_gadget.whoWantToDisplayThisPage({name: new_content_action.href, editable: true});\n
           } else {\n
             new_content_action = "";\n
           }\n
@@ -374,7 +374,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49128.62667.58914</string> </value>
+                <value> <string>940.49289.61084.65194</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -392,7 +392,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423066195.91</float>
+                        <float>1423215734.45</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
