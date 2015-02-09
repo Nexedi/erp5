@@ -5041,6 +5041,9 @@ msgstr "Groupe:"
 msgid "Grouping"
 msgstr "Lettrage"
 
+msgid "Grouping Date"
+msgstr "Date lettrage"
+
 msgid "Grouping Reference"
 msgstr "Lettrage"
 
@@ -11577,6 +11580,15 @@ msgstr "Libellé"
 msgid "Transaction Currency"
 msgstr "Devise de l'écriture"
 
+msgid "Transaction Currency Balance"
+msgstr "Solde dans la devise de l'écriture"
+
+msgid "Transaction Currency Credit"
+msgstr "Crédit dans la devise de l'écriture"
+
+msgid "Transaction Currency Debit"
+msgstr "Débit dans la devise de l'écriture"
+
 msgid "Transaction Reference"
 msgstr "N° d'écriture"
 
@@ -12662,6 +12674,3 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
-msgid "Reconciled Transactions"
-msgstr "Écritures rapprochées"
