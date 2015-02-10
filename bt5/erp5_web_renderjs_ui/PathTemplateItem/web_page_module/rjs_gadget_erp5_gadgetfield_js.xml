@@ -120,7 +120,16 @@
         });\n
       })\n
       .push(function (field_gadget) {\n
+        var iframe;\n
         gadget.props.field_gadget = field_gadget;\n
+        if (field_json.css_class) {\n
+          gadget_element.setAttribute("class", field_json.css_class);\n
+        }\n
+        if (field_json.sandbox === "iframe") {\n
+          iframe = gadget_element.querySelector("iframe");\n
+          iframe.style.width = "100%";\n
+          iframe.style.height = "100%";\n
+        }\n
         if (field_gadget.render !== undefined) {\n
           return field_gadget.render(suboptions);\n
         }\n
@@ -163,7 +172,9 @@
       }\n
     })\n
     .declareMethod("getContent", function () {\n
-      return this.props.field_gadget.getContent();\n
+      if (this.props.field_gadget.getContent) {\n
+        return this.props.field_gadget.getContent();\n
+      }\n
     });\n
 }(window, document, rJS, RSVP));\n
 </string> </value>
@@ -301,7 +312,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17406.2535.58641</string> </value>
+                <value> <string>940.57981.32712.11997</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +330,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421153187.18</float>
+                        <float>1423588896.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
