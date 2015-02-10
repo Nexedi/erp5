@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
-#
+#                    Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet
 from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject
@@ -109,7 +109,12 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       override to call ZopePythonScript methods to force compiling code
       """
+      if value is None:
+        value = ''
       self._baseSetParameterSignature(value)
+      if self._params is None or '':
+        ### zwj: avoid NoneType parameters from generating in ZHtml edit page
+        delattr(self, "_params")
       self._compile()
 
     def _setProxyRoleList(self, value):
@@ -127,3 +132,5 @@ class PythonScript(XMLObject, ZopePythonScript):
     # We need to take __setstate__ from ZopePythonScript in order to
     # generate _v_ft attributes which is necessary to run the script
     __setstate__ = ZopePythonScript.__setstate__
+
+InitializeClass(PythonScript)
