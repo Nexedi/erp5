@@ -9,6 +9,7 @@
   <item>State</item>
   <item>Transition</item>
   <item>Variable</item>
+  <item>Workflow Script</item>
   <item>Worklist</item>
  </portal_type>
  <portal_type id="Workflow Module">

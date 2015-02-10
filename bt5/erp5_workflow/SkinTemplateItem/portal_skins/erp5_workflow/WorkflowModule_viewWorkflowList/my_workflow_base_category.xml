@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_before_script_id</string> </value>
+            <value> <string>my_workflow_base_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,6 +26,14 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <unicode>required_not_found</unicode> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <unicode>unknown_selection</unicode> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -84,7 +92,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_parallel_list_field</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -102,7 +110,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Before Script</string> </value>
+                    <value> <string>Workflow Name</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -118,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getId()) for x in here.getParent().contentValues(portal_type=\'Workflow Script\')]</string> </value>
+            <value> <string>python: [(x.getTitleOrId(), x.getId()) for x in here.portal_categories.contentValues()]</string> </value>
         </item>
       </dictionary>
     </pickle>

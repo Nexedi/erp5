@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -90,6 +90,14 @@
                         <tuple>
                           <string>destination_title</string>
                           <string>Destination State</string>
+                        </tuple>
+                        <tuple>
+                          <string>before_script_id</string>
+                          <string>Before Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>after_script_id</string>
+                          <string>After Script</string>
                         </tuple>
                       </list>
                     </value>
