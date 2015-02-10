@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>parameter_signature_property</string> </value>
+            <value> <string>body_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -48,14 +48,8 @@
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
-            <key> <string>property_default</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>storage_id</string> </key>
-            <value> <string>_params</string> </value>
+            <value> <string>_body</string> </value>
         </item>
       </dictionary>
     </pickle>
