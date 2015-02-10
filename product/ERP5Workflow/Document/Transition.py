@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class Transition(XMLObject):
   """
@@ -64,7 +65,7 @@ class Transition(XMLObject):
       form_kw = {}
     workflow = self.getParentValue()
     # Call the before script
-    self._executeBeforeScript(document)
+    self._executeBeforeScript(document, form_kw=form_kw)
 
     # Modify the state
     self._changeState(document)
@@ -121,8 +122,12 @@ class Transition(XMLObject):
       form_kw = {}
     script_id = self.getAfterScriptId()
     if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
+
+      script = self.getParent()._getOb(script_id)
+      if script is not None:
+        LOG("zwj: Executing after script %s for %s"%(script_id,self.getId()),WARNING,"in Transition.py.")
+        #script(**form_kw) ### zwj: call the name of script to execute itself
+        script.execute()
 
   def _executeBeforeScript(self, document, form_kw=None):
     """
@@ -132,8 +137,13 @@ class Transition(XMLObject):
       form_kw = {}
     script_id = self.getBeforeScriptId()
     if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
+      script = self.getParent()._getOb(script_id)
+      #script = getattr(document, script_id)
+      #script(**form_kw)
+      if script is not None:
+        LOG("zwj: Executing before script %s for %s"%(script_id,self.getId()),WARNING,"in Transition.py.")
+        #script(**form_kw) ### zwj: call the name of script to execute itself
+        script.execute()
 
   def _checkPermission(self, document):
     """
