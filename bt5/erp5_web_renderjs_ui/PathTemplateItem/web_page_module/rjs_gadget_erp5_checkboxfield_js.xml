@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.appcache</string> </value>
+            <value> <string>gadget_erp5_field_checkbox.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_appcache</string> </value>
+            <value> <string>rjs_gadget_erp5_checkboxfield_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,110 +99,48 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
-# generated on Fri, 06 Feb 2015 15:31:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
-URI.js\n
-codemirror.css\n
-codemirror.js\n
-codemirror_addon_dialog.css\n
-codemirror_addon_dialog.js\n
-codemirror_addon_display_fullscreen.css\n
-codemirror_addon_display_fullscreen.js\n
-codemirror_addon_edit_matchbrackets.js\n
-codemirror_addon_searchcursor.js\n
-codemirror_keymap_vim.js\n
-codemirror_mode_clike.js\n
-codemirror_mode_javascript.js\n
-codemirror_theme_solarized.css\n
-dygraph.js\n
-gadget_bin.css\n
-gadget_bin.html\n
-gadget_bin.js\n
-gadget_codemirror.css\n
-gadget_codemirror.html\n
-gadget_codemirror.js\n
-gadget_erp5.css\n
-gadget_erp5.html\n
-gadget_erp5.js\n
-gadget_erp5_field_datetime.html\n
-gadget_erp5_field_datetime.js\n
-gadget_erp5_field_float.html\n
-gadget_erp5_field_float.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_readonly.html\n
-gadget_erp5_field_readonly.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_checkbox.html\n
-gadget_erp5_field_checkbox.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_erp5_latest.css\n
-gadget_erp5_page_action.html\n
-gadget_erp5_page_action.js\n
-gadget_erp5_page_breadcrumb.html\n
-gadget_erp5_page_breadcrumb.js\n
-gadget_erp5_page_form.html\n
-gadget_erp5_page_form.js\n
-gadget_erp5_page_front.html\n
-gadget_erp5_page_front.js\n
-gadget_erp5_page_login.html\n
-gadget_erp5_page_login.js\n
-gadget_erp5_page_tab.html\n
-gadget_erp5_page_tab.js\n
-gadget_erp5_panel.html\n
-gadget_erp5_panel.js\n
-gadget_erp5_pt_form_dialog.html\n
-gadget_erp5_pt_form_dialog.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_pt_form_view.html\n
-gadget_erp5_pt_form_view.js\n
-gadget_erp5_pt_form_view_editable.html\n
-gadget_erp5_pt_form_view_editable.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_global.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
-handlebars.js\n
-i18next.js\n
-jiodev.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
-renderjs.js\n
-rsvp.js\n
-NETWORK:\n
-*
-
-]]></string> </value>
+            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, loopEventListener) {\n
+  "use strict";\n
+\n
+  rJS(window)\n
+    .ready(function (gadget) {\n
+      return gadget.getElement()\n
+        .push(function (element) {\n
+          gadget.element = element;\n
+        });\n
+    })\n
+\n
+    .declareMethod(\'render\', function (options) {\n
+      var input = this.element.querySelector(\'input\'),\n
+        field_json = options.field_json || {};\n
+      input.editable = field_json.editable;\n
+      input.checked = field_json.value || field_json.default;\n
+      input.setAttribute(\'name\', field_json.key);\n
+      input.setAttribute(\'title\', field_json.title);\n
+    })\n
+\n
+    .declareMethod(\'getContent\', function () {\n
+      var input = this.element.querySelector(\'input\'),\n
+        result = {};\n
+      result[input.getAttribute(\'name\')] = (input.checked ? 1 : 0);\n
+      return result;\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        input = gadget.element.querySelector(\'input\');\n
+      if (input.editable === 0) {\n
+        return loopEventListener(input, "click", false, function () {\n
+          return;\n
+        });\n
+      }\n
+    });\n
+}(window, rJS, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 AppCache</string> </value>
+            <value> <string>Gadget ERP5 CheckBoxField JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -239,6 +177,12 @@ NETWORK:\n
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -260,7 +204,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -282,8 +226,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421252934.14</float>
-                        <string>GMT</string>
+                        <float>1423475696.47</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -327,7 +271,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.56086.25956.64870</string> </value>
+                <value> <string>940.57489.27228.34747</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +289,66 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423560460.16</float>
+                        <float>1423558237.8</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>xiaowu</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1423475665.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

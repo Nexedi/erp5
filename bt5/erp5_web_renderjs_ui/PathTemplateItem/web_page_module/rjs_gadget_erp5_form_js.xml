@@ -217,6 +217,8 @@
 //                      (renderered_field.type === \'ParallelListField\') ||\n
 //                      (renderered_field.type === \'MultiListField\')) {\n
                     field_url = \'gadget_erp5_field_list.html\';\n
+                  } else if (renderered_field.type === \'CheckBoxField\') {\n
+                    field_url = \'gadget_erp5_field_checkbox.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
                     field_url = \'gadget_erp5_field_string.html\';\n
                   } else if (renderered_field.type === \'RelationStringField\') {\n
@@ -475,7 +477,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -489,7 +491,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49210.11818.8857</string> </value>
+                <value> <string>940.57523.59171.13568</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -507,8 +509,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423153240.08</float>
-                        <string>GMT</string>
+                        <float>1423560248.21</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
