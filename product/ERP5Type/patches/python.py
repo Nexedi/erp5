@@ -30,7 +30,7 @@ import os, re, sys
 
 if sys.version_info[:3] < (2, 7, 9):
     # Speed up email parsing (see also http://bugs.python.org/issue1243730)
-    from email import parser, feedparser
+    from email import feedparser
 
     NLCRE_crack_split = feedparser.NLCRE_crack.split
     def push(self, data):
@@ -61,7 +61,9 @@ if sys.version_info[:3] < (2, 7, 9):
         self.pushlines(lines)
     feedparser.BufferedSubFile.push = push
 
-    FeedParser = feedparser.FeedParser
+if 1:
+    from email import parser
+    from email.feedparser import FeedParser
     def parse(self, fp, headersonly=False):
         """Create a message structure from the data in a file.
 
