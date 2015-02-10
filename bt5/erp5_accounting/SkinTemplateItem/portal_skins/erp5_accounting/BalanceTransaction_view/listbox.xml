@@ -14,6 +14,7 @@
                 <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
+                <string>stat_columns</string>
                 <string>stat_method</string>
               </list>
             </value>
@@ -107,6 +108,14 @@
                           <string>destination_credit</string>
                           <string>Credit</string>
                         </tuple>
+                        <tuple>
+                          <string>destination_asset_debit</string>
+                          <string>Converted Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_asset_credit</string>
+                          <string>Converted Credit</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -121,6 +130,14 @@
                         <tuple>
                           <string>destination_credit</string>
                           <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_asset_debit</string>
+                          <string>Converted Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_asset_credit</string>
+                          <string>Converted Credit</string>
                         </tuple>
                         <tuple>
                           <string>destination</string>
@@ -150,6 +167,29 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>balance_transaction_line_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>destination_asset_debit</string>
+                          <string>AccountingTransactionLine_statDestinationAssetDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_asset_credit</string>
+                          <string>AccountingTransactionLine_statDestinationAssetCredit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_credit</string>
+                          <string>AccountingTransactionLine_statSourceDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_debit</string>
+                          <string>AccountingTransactionLine_statSourceCredit</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
