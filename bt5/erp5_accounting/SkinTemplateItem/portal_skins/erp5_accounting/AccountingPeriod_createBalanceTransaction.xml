@@ -167,6 +167,7 @@ for section in section_list:\n
     **inventory_param_dict)\n
   selected_profit_and_loss_account_balance = portal.portal_simulation.getInventoryAssetPrice(\n
     node=profit_and_loss_account,\n
+    resource=section_currency,\n
     **inventory_param_dict)\n
   \n
   section_currency_uid = context.getParentValue().getPriceCurrencyUid()\n
@@ -189,10 +190,8 @@ for section in section_list:\n
     \n
     line_count += 1\n
     if inventory.resource_uid != section_currency_uid:\n
-      if inventory.node_relative_url == profit_and_loss_account:\n
-        raise ValueError(\'Using multiple currencies on profit and loss account \'\n
-                         \'is not supported\')\n
       profit_and_loss_quantity += total_price\n
+      \n
       if balance_transaction is None:\n
         balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n

@@ -1852,6 +1852,82 @@ class TestClosingPeriod(AccountingTestCase):
     balance_transaction.reindexObject()
     self.tic()
 
+  def test_ProfitAndLossUsedInPeriodWithMultipleCurrency(self):
+    """When the profit and loss account has a non zero balance at the end of
+    the period, AccountingPeriod_createBalanceTransaction script should add
+    a line for each currency used.
+    """
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    pl_account = self.portal.account_module.newContent(
+                    portal_type='Account',
+                    account_type='equity',
+                    gap='my_country/my_accounting_standards/1',
+                    title='Profit & Loss')
+    pl_account.validate()
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Accounting Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_purchase,
+                    source_debit=400),
+               dict(source_value=pl_account,
+                    source_debit=100),
+               dict(source_value=self.account_module.stocks,
+                    source_credit=500)))
+    self.assertEqual([], transaction1.checkConsistency())
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Accounting Transaction',
+        resource_value=self.portal.currency_module.yen,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_purchase,
+                    source_debit=9000,
+                    source_asset_debit=90),
+               dict(source_value=pl_account,
+                    source_debit=1000,
+                    source_asset_debit=10),
+               dict(source_value=self.account_module.stocks,
+                    source_credit=10000,
+                    source_asset_credit=100)))
+    self.assertEqual([], transaction2.checkConsistency())
+
+    period.AccountingPeriod_createBalanceTransaction(
+                  profit_and_loss_account=pl_account.getRelativeUrl())
+
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEqual(1, len(balance_transaction_list))
+    balance_transaction = balance_transaction_list[0]
+    balance_transaction.alternateReindexObject()
+    movement_list = balance_transaction.getMovementList()
+
+    pl_movement_list = [m for m in movement_list
+                      if m.getDestinationValue() == pl_account]
+    self.assertEqual(2, len(pl_movement_list))
+    # This is a 400 + 90 loss, plus the 100 using EUR
+    self.assertEqual(sorted([
+        (
+         100 + 490.,
+         None,
+         self.portal.currency_module.euro, ),
+        (
+         1000.,
+         10.,
+         self.portal.currency_module.yen, ),
+        ]), sorted([(
+            m.getQuantity(),
+            m.getDestinationTotalAssetPrice(),
+            m.getResourceValue(),
+            ) for m in pl_movement_list]))
+
+    self.tic()
+    balance_transaction.reindexObject()
+    self.tic()
+
   def test_BalanceTransactionWhenProfitAndLossBalanceIsZero(self):
     # The case of a balance transaction after all accounts have a 0 balance.
     period1 = self.section.newContent(portal_type='Accounting Period')
