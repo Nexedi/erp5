@@ -214,9 +214,10 @@
                     field_element.appendChild(label_element);\n
                   }\n
                   if (renderered_field.type === \'ListField\') {\n
-//                      (renderered_field.type === \'ParallelListField\') ||\n
-//                      (renderered_field.type === \'MultiListField\')) {\n
                     field_url = \'gadget_erp5_field_list.html\';\n
+                  } else if ((renderered_field.type === \'ParallelListField\') ||\n
+                             (renderered_field.type === \'MultiListField\')) {\n
+                    field_url = \'gadget_erp5_field_multilist.html\';\n
                   } else if (renderered_field.type === \'CheckBoxField\') {\n
                     field_url = \'gadget_erp5_field_checkbox.html\';\n
                   } else if (renderered_field.type === \'StringField\') {\n
@@ -509,7 +510,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423560248.21</float>
+                        <float>1423565705.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
