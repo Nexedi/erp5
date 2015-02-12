@@ -107,6 +107,7 @@
                         <string>my_purchase_supply_line_base_unit_price</string>
                         <string>my_purchase_supply_line_price_currency</string>
                         <string>my_purchase_supply_line_destination_account</string>
+                        <string>my_purchase_supply_line_destination_function</string>
                         <string>my_purchase_supply_line_priced_quantity</string>
                         <string>my_purchase_supply_line_start_date_range_min</string>
                         <string>my_purchase_supply_line_start_date_range_max</string>
