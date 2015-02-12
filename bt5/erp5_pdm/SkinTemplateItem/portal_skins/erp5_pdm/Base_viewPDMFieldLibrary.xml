@@ -227,6 +227,8 @@
                         <string>matrixbox_for_max_order_quantity</string>
                         <string>my_view_mode_target_delivery</string>
                         <string>my_base_price_per_slice</string>
+                        <string>my_destination_function</string>
+                        <string>my_source_function</string>
                       </list>
                     </value>
                 </item>
