@@ -230,6 +230,8 @@
                     field_url = \'gadget_erp5_field_datetime.html\';\n
                   } else if (renderered_field.type === \'FloatField\') {\n
                     field_url = \'gadget_erp5_field_float.html\';\n
+                  } else if (renderered_field.type === \'IntegerField\') {\n
+                    field_url = \'gadget_erp5_field_integer.html\';\n
                   } else if (renderered_field.type === \'ListBox\') {\n
                     field_url = \'gadget_erp5_field_listbox.html\';\n
                   } else if (renderered_field.type === \'EditorField\') {\n
@@ -492,7 +494,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.57523.59171.13568</string> </value>
+                <value> <string>940.60735.27223.48179</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -510,7 +512,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423565705.92</float>
+                        <float>1423755151.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
