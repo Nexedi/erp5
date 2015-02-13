@@ -693,7 +693,7 @@ class ODFStrategy(Implicit):
         newtable.append(row)
         is_top = False
       elif listboxline.isStatLine() or (index is last_index and listboxline.isDataLine()):
-        row = deepcopy(row_bottom)
+        row = deepcopy(style_name_row_dictionary.get(row_style_name, row_bottom))
         self._updateColumnStatValue(row, listbox_column_list, row_middle)
         newtable.append(row)
       elif index > 0 and listboxline.isDataLine():
