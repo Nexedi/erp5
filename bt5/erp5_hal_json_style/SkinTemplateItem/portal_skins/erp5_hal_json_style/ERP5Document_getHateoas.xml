@@ -162,6 +162,9 @@ def renderField(field, meta_type=None):\n
       "date_only": field.get_value("date_only"),\n
       "ampm_time_style": field.get_value("ampm_time_style"),\n
       "timezone_style": field.get_value("timezone_style"),\n
+      "allow_empty_time": field.get_value(\'allow_empty_time\'),\n
+      "hide_day": field.get_value(\'hide_day\'),\n
+      "hidden_day_is_last_day": field.get_value(\'hidden_day_is_last_day\'),\n
     }\n
     date_value = field.get_value("default")\n
     if same_type(date_value, DateTime()):\n

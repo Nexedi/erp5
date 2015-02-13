@@ -99,9 +99,11 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS */\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS) {\n
+(function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -112,19 +114,28 @@
           gadget.props = {};\n
         });\n
     })\n
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
+        date,\n
+        time = "",\n
         field_json = options.field_json || {},\n
         value = field_json.value || field_json.default || "";\n
       this.props.field_json = field_json;\n
+\n
+      //Change type to datetime/datetime local if configured in the field\n
       if (value !== "") {\n
+        value = new Date(value).toISOString();\n
         // XXX Ensure the timezone is not lost\n
-        value = new Date(value).toISOString().substring(0, 10);\n
+        date = value.substring(0, 10);\n
+        if (field_json.date_only === 0) {\n
+          time = value.substring(10, 19);\n
+          input.setAttribute("type", "datetime-local");\n
+        }\n
       }\n
-      // XXX Change type to datetime/datetime local if configured in the field\n
       input.setAttribute(\n
         \'value\',\n
-        value\n
+        date + time\n
       );\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
@@ -138,26 +149,79 @@
 \n
       }\n
     })\n
-\n
-    .declareMethod(\'getContent\', function () {\n
+    .declareMethod(\'getDateTime\', function () {\n
       var input = this.element.querySelector(\'input\'),\n
         result = {},\n
+        year,\n
+        month,\n
+        field_json = this.props.field_json,\n
+        date,\n
+        hour,\n
+        minute,\n
         value = input.value;\n
       if (value) {\n
         value = new Date(value);\n
+        year = value.getFullYear();\n
+        month = value.getMonth() + 1;\n
+        if (field_json.hide_day === 1) {\n
+          date = 1;\n
+        } else {\n
+          date = value.getDate();\n
+        }\n
+        if (field_json.date_only === 0) {\n
+          if (field_json.allow_empty_time === 1) {\n
+            hour = 0;\n
+            minute = 0;\n
+          } else {\n
+            hour = value.getUTCHours();\n
+            minute = value.getMinutes();\n
+          }\n
+          if (field_json.ampm_time_style === 1) {\n
+            if (hour > 12) {\n
+              result[field_json.subfield_ampm_key] = "pm";\n
+              hour -= 12;\n
+            } else {\n
+              result[field_json.subfield_ampm_key] = "am";\n
+            }\n
+          }\n
+          result[field_json.subfield_hour_key] = hour;\n
+          result[field_json.subfield_minute_key] = minute;\n
+        }\n
+        if (field_json.hidden_day_is_last_day === 1) {\n
+          if (month === 12) {\n
+            year += 1;\n
+            month = 1;\n
+          } else {\n
+            month += 1;\n
+          }\n
+        }\n
+        result[field_json.subfield_year_key] = year;\n
+        result[field_json.subfield_month_key] = month;\n
+        result[field_json.subfield_day_key] = date;\n
+\n
         // XXX Ensure the timezone is not lost\n
-        result[this.props.field_json.subfield_year_key] = value.getFullYear();\n
-        result[this.props.field_json.subfield_month_key] = value.getMonth() + 1;\n
-        result[this.props.field_json.subfield_day_key] = value.getDate();\n
-        // result[this.props.subfield_hour_key] = value.getDate();\n
-        // result[this.props.subfield_minute_key] = value.getDate();\n
-        // result[this.props.subfield_ampm_key] = value.getDate();\n
-        // result[this.props.subfield_timezone_key] = value.getDate();\n
+        // result[field_json.subfield_timezone_key] = value.getDate();\n
       }\n
       return result;\n
+    })\n
+    .declareMethod(\'checkValidity\', function () {\n
+     //xxx check time range (start_datetime, end_datetime)\n
+      return true;\n
+    })\n
+    .declareMethod(\'getContent\', function () {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.getDateTime();\n
+        })\n
+        .push(function (result) {\n
+          return result;\n
+        });\n
     });\n
 \n
-}(window, rJS));</string> </value>
+}(window, rJS, RSVP));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -278,7 +342,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -292,7 +356,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.52111.6434.35515</string> </value>
+                <value> <string>940.62359.8275.23142</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -310,8 +374,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423235934.98</float>
-                        <string>GMT</string>
+                        <float>1423850641.53</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
