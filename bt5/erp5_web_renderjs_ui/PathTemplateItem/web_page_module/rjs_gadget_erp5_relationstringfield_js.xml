@@ -173,7 +173,7 @@ promiseEventListener */\n
 \n
     subfield = document.createElement("input");\n
     subfield.setAttribute("type", "hidden");\n
-    subfield.setAttribute("name", "subfield_" + field_json.key + "_relation");\n
+    subfield.setAttribute("name", field_json.relation_item_key);\n
     subfield.setAttribute("value", "_newContent_" + info);\n
 \n
     default_subfield = document.createElement("input");\n
@@ -205,7 +205,7 @@ promiseEventListener */\n
   // creates a set of autocomplete suggestings. Currently this is only a plain\n
   // list of elements. The list will display the number of results (>10 or \n
   // exact). Clicking on an option will set this option as field value\n
-  function createResults(my_result_list) {\n
+  function createResults(my_result_list, index) {\n
     var list = document.createElement("ul"),\n
       head = document.createElement("li"),\n
       str = "ui-li-static ui-body-inherit ui-icon-mail-forward " +\n
@@ -238,12 +238,8 @@ promiseEventListener */\n
       // NOTE: if doing more complex UI, beware the textContent value won\'t\n
       // work, because currently it\'s used to retrieve the link from\n
       // the last autocomplete query results!\n
-      for (j in result) {\n
-        if (result.hasOwnProperty(j) && j.indexOf("_") !== 0) {\n
-          content += result[j];\n
-        }\n
-      }\n
-      item.textContent = content;\n
+      item.textContent = result[index];\n
+      item.setAttribute("name", result["uid"]);\n
       list.appendChild(item);\n
     }\n
 \n
@@ -270,15 +266,15 @@ promiseEventListener */\n
   function triggerAutocomplete(my_gadget, my_value, my_initial_call) {\n
     var props = my_gadget.property_dict,\n
       field_json = props.field_json,\n
-      index = [].concat(field_json.catalog_index),\n
+      index = field_json.catalog_index,\n
       begin_from = props.begin_from || 0,\n
       lines = field_json.lines || 11,\n
-      select_list = index,\n
-      value = \':"\' + my_value + \'" OR \',\n
-      value_query = \'(\' + index.join(value) + value.replace(" OR ", "") + \')\',\n
-      query_string = " AND " + value_query,\n
+      select_list = [index, "uid"],\n
+      query_string = " AND (" + index + \':"\' + my_value + \'")\',\n
       result_dict;\n
 \n
+    delete props.selected_uid;\n
+    \n
     return new RSVP.Queue()\n
       .push(function () {\n
       \n
@@ -298,9 +294,9 @@ promiseEventListener */\n
         props.spinner.className = "ui-hidden-accessible";\n
 \n
         // skip showing single result on render(), only set link\n
-        if (my_initial_call) {\n
-          return {"target": {"textContent": my_value}};\n
-        }\n
+        // if (my_initial_call) {\n
+        //   return {"target": {"textContent": my_value}};\n
+        // }\n
 \n
         // show "new" tag if no results and creation allowed\n
         if (result_dict.total_rows === 0 && field_json.allow_creation) {\n
@@ -329,7 +325,7 @@ promiseEventListener */\n
         return new RSVP.Queue()\n
           .push(function () {\n
             var list;\n
-            props.wrapper.appendChild(createResults(result_dict.rows));\n
+            props.wrapper.appendChild(createResults(result_dict.rows, index));\n
             list = props.wrapper.querySelector("ul");\n
           \n
             return RSVP.any([\n
@@ -353,9 +349,11 @@ promiseEventListener */\n
           \n
           // take entered text, set to input and clear list options\n
           selected_value = my_selection_event.target.textContent;\n
+          props.selected_uid = my_selection_event.target.getAttribute("name");\n
+          props.valid = true;\n
           props.wrapper.querySelector("input").value = selected_value;\n
           clearResults(my_gadget, "skip");\n
-  \n
+\n
           // retrieve url if "allow_jump" is set\n
           if (props.field_json.allow_jump) {\n
             for (i = 0; i < result_dict.total_rows; i += 1) {\n
@@ -425,6 +423,7 @@ promiseEventListener */\n
       // expose field_json and keep last value to prevent trigger on no-change\n
       field_gadget.property_dict.field_json = field_json;\n
       field_gadget.property_dict.last_value = value || "";\n
+      field_gadget.property_dict.valid = true;\n
 \n
       input.setAttribute(\'value\', value || "");\n
       input.setAttribute(\'name\', field_json.key);\n
@@ -439,10 +438,10 @@ promiseEventListener */\n
         // input.setAttribute(\'disabled\', \'disabled\');\n
       }\n
 \n
-      // set relation field links (without showing 1 autocomplete result)\n
+      /* // set relation field links (without showing 1 autocomplete result)\n
       if (value) {\n
         return triggerAutocomplete(field_gadget, value, true);\n
-      }\n
+      } */\n
     })\n
 \n
     // get content (needs hidden fields, too, when creating new records)\n
@@ -457,13 +456,18 @@ promiseEventListener */\n
         input = input_list[i];\n
         result[input.getAttribute(\'name\')] = input.value;\n
       }\n
+      \n
+      // Always return the document UID if value has been modified\n
+      if (this.property_dict.selected_uid !== undefined) {\n
+        result[this.property_dict.field_json.relation_field_id] = this.property_dict.selected_uid;\n
+      }\n
 \n
       return result;\n
     })\n
 \n
     .declareMethod(\'checkValidity\', function () {\n
       var result;\n
-      result = this.element.querySelector(\'input\').checkValidity();\n
+      result = (this.element.querySelector(\'input\').checkValidity()) && (this.property_dict.valid);\n
       if (result) {\n
         return this.notifyValid()\n
           .push(function () {\n
@@ -499,8 +503,11 @@ promiseEventListener */\n
 \n
         // empty value, do nothing but notify\n
         if (value === "") {\n
+          field_gadget.property_dict.valid = true;\n
           return notifyChange(field_gadget);\n
         }\n
+\n
+        field_gadget.property_dict.valid = false;\n
 \n
         // replace existing promise in case it has not triggered\n
         pending_promise = props.pending_promise;\n
@@ -719,7 +726,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -733,7 +740,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.39166.48303.39133</string> </value>
+                <value> <string>940.60782.50245.64187</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -751,7 +758,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1422461235.64</float>
+                        <float>1423756466.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

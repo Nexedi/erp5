@@ -175,22 +175,22 @@ def renderField(field, meta_type=None):\n
   elif meta_type in ("RelationStringField", "MultiRelationStringField"):\n
     \n
     portal_type_list = field.get_value(\'portal_type\')\n
-    if len(portal_type_list) > 0:\n
-      portal_types = portal_type_list[0]\n
-    else:\n
-      portal_types = []\n
-    \n
+    if portal_type_list:\n
+      portal_type_list = [x[0] for x in portal_type_list]\n
+\n
     query = url_template_dict["jio_search_template"] % {\n
       "query": make_query({"query": sql_catalog.buildQuery(\n
-        {"portal_type": [x[0] for x in portal_types]}\n
+        {"portal_type": portal_type_list}\n
       ).asSearchTextExpression(sql_catalog)})\n
     }\n
     result = {\n
-      "portal_types": portal_types,\n
+      "portal_types": portal_type_list,\n
       "query": query,\n
       "catalog_index": field.get_value(\'catalog_index\'),\n
-      "allow_jump": field.get_value(\'allow_jump\'),\n
-      "allow_creation": field.get_value(\'allow_creation\'),\n
+      # "allow_jump": field.get_value(\'allow_jump\'),\n
+      "allow_jump": 0,\n
+      # "allow_creation": field.get_value(\'allow_creation\'),\n
+      "allow_creation": 0,\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
       "default": field.get_value("default"),\n
@@ -199,8 +199,11 @@ def renderField(field, meta_type=None):\n
       "hidden": field.get_value("hidden"),\n
       "description": field.get_value("description"),\n
       "title": field.get_value("title"),\n
-      "required": field.get_value("required"),\n
+      "required": field.get_value("required")\n
     }\n
+    result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(field, "relation", key=result["key"])\n
+    result["relation_item_key"] = traversed_document.Field_getSubFieldKeyDict(field, "item", key=result["key"])\n
+\n
   elif meta_type == "CheckBoxField":\n
     result = {\n
       "type": meta_type,\n
