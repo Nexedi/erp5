@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS) {\n
+(function (window, rJS, RSVP, loopEventListener) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -111,13 +111,21 @@
           gadget.element = element;\n
         });\n
     })\n
+    .declareAcquiredMethod("notifyValid", "notifyValid")\n
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
+    .declareAcquiredMethod("notifyChange", "notifyChange")\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
+        step = 0.00000001,\n
         field_json = options.field_json || {};\n
       input.setAttribute(\n
         \'value\',\n
         field_json.value || field_json.default || ""\n
       );\n
+      if (field_json.precision !== "") {\n
+        step = 1 / Math.pow(10, field_json.precision);\n
+      }\n
+      input.setAttribute("step", step);\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
       if (field_json.required === 1) {\n
@@ -136,9 +144,61 @@
         result = {};\n
       result[input.getAttribute(\'name\')] = input.value;\n
       return result;\n
+    })\n
+    .declareMethod(\'checkValidity\', function () {\n
+      var result;\n
+      result = this.element.querySelector(\'input\').checkValidity();\n
+      if (result) {\n
+        return this.notifyValid()\n
+          .push(function () {\n
+            return result;\n
+          });\n
+      }\n
+      return result;\n
+    })\n
+\n
+    .declareService(function () {\n
+      ////////////////////////////////////\n
+      // Check field validity when the value changes\n
+      ////////////////////////////////////\n
+      var field_gadget = this;\n
+\n
+      function notifyChange() {\n
+        return RSVP.all([\n
+          field_gadget.checkValidity(),\n
+          field_gadget.notifyChange()\n
+        ]);\n
+      }\n
+\n
+      // Listen to input change\n
+      return loopEventListener(\n
+        field_gadget.element.querySelector(\'input\'),\n
+        \'change\',\n
+        false,\n
+        notifyChange\n
+      );\n
+    })\n
+\n
+    .declareService(function () {\n
+      ////////////////////////////////////\n
+      // Inform when the field input is invalid\n
+      ////////////////////////////////////\n
+      var field_gadget = this;\n
+\n
+      function notifyInvalid(evt) {\n
+        return field_gadget.notifyInvalid(evt.target.validationMessage);\n
+      }\n
+\n
+      // Listen to input change\n
+      return loopEventListener(\n
+        field_gadget.element.querySelector(\'input\'),\n
+        \'invalid\',\n
+        false,\n
+        notifyInvalid\n
+      );\n
     });\n
 \n
-}(window, rJS));</string> </value>
+}(window, rJS, RSVP, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -259,7 +319,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -273,7 +333,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51520.38687.48861</string> </value>
+                <value> <string>940.63306.33653.13909</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,8 +351,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412082125.19</float>
-                        <string>GMT</string>
+                        <float>1423907635.25</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -148,7 +148,8 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
-\n
+    if meta_type == "FloatField":\n
+      result["precision"] = field.get_value("precision")\n
   elif meta_type == "DateTimeField":\n
     result = {\n
       "type": meta_type,\n

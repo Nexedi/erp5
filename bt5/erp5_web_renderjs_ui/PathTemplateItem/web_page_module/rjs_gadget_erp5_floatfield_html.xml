@@ -120,7 +120,7 @@
 \n
   </head>\n
   <body>\n
-    <input type=\'number\' step="0.00000001" />\n
+    <input type=\'number\' />\n
   </body>\n
 </html>
 
@@ -245,7 +245,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -259,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.51521.250.37802</string> </value>
+                <value> <string>940.63282.44183.51353</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,8 +277,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411576768.35</float>
-                        <string>GMT</string>
+                        <float>1423905795.16</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
