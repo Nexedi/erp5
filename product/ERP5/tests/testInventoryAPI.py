@@ -2381,19 +2381,26 @@ class TestNextNegativeInventoryDate(InventoryAPITestCase):
                          simulation_state='planned')
     node_uid = self.node.getUid()
     date = DateTime(DateTime().strftime('%Y/%m/%d'))
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), None)
     makeMovement(quantity=1, change_way=1, start_date=date)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), None)
     makeMovement(quantity=3, change_way=0, start_date=date+2)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+2)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), date+2)
     makeMovement(quantity=5, change_way=1, start_date=date+1)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), None)
     makeMovement(quantity=7, change_way=0, start_date=date+5)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+5)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), date+5)
     makeMovement(quantity=7, change_way=1, start_date=date+4)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), None)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), None)
     makeMovement(quantity=7, change_way=0, start_date=date+3)
-    self.assertEqual(getNextNegativeInventoryDate(node_uid=node_uid), date+3)
+    self.assertEqual(getNextNegativeInventoryDate(
+                     from_date=date, node_uid=node_uid), date+3)
 
 class TestInventoryStat(InventoryAPITestCase):
   """Tests Inventory Stat methods.
