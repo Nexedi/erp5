@@ -214,9 +214,7 @@ promiseEventListener */\n
       prefix = "",\n
       item,\n
       result,\n
-      i,\n
-      j,\n
-      content;\n
+      i;\n
 \n
     if (len === 11) {\n
       prefix = ">";\n
@@ -229,7 +227,6 @@ promiseEventListener */\n
     list.appendChild(head);\n
 \n
     for (i = 0; i < len; i += 1) {\n
-      content = "";\n
       result = my_result_list[i].value;\n
       item = document.createElement("li");\n
       item.className = str;\n
@@ -239,7 +236,7 @@ promiseEventListener */\n
       // work, because currently it\'s used to retrieve the link from\n
       // the last autocomplete query results!\n
       item.textContent = result[index];\n
-      item.setAttribute("name", result["uid"]);\n
+      item.setAttribute("name", result.uid);\n
       list.appendChild(item);\n
     }\n
 \n
@@ -249,7 +246,7 @@ promiseEventListener */\n
 \n
     return list;\n
   }\n
-  \n
+\n
   ////////////////////////////////////\n
   // Promise methods\n
   ////////////////////////////////////\n
@@ -274,16 +271,16 @@ promiseEventListener */\n
       result_dict;\n
 \n
     delete props.selected_uid;\n
-    \n
+\n
     return new RSVP.Queue()\n
       .push(function () {\n
-      \n
+\n
         // new search, clear all, show spinner. set last_value to catch dups\n
         clearResults(my_gadget);\n
         props.last_value = my_value;\n
         props.spinner.className = "ui-btn ui-corner-all ui-btn-icon-notext" +\n
           " ui-input-clear ui-icon-spinner ui-icon-spin";\n
-      \n
+\n
         return my_gadget.jio_allDocs({\n
           "query": new URI(field_json.query).query(true).query + query_string,\n
           "limit": [begin_from, begin_from + lines],\n
@@ -327,7 +324,7 @@ promiseEventListener */\n
             var list;\n
             props.wrapper.appendChild(createResults(result_dict.rows, index));\n
             list = props.wrapper.querySelector("ul");\n
-          \n
+\n
             return RSVP.any([\n
               promiseEventListener(list, "click", true),\n
               promiseEventListener(list, "touchend", true)\n
@@ -344,9 +341,9 @@ promiseEventListener */\n
           record,\n
           i,\n
           prop;\n
-  \n
+\n
         if (my_selection_event) {\n
-          \n
+\n
           // take entered text, set to input and clear list options\n
           selected_value = my_selection_event.target.textContent;\n
           props.selected_uid = my_selection_event.target.getAttribute("name");\n
@@ -428,7 +425,7 @@ promiseEventListener */\n
       input.setAttribute(\'value\', value || "");\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
-      \n
+\n
       if (field_json.required === 1) {\n
         input.setAttribute(\'required\', \'required\');\n
       }\n
@@ -456,10 +453,11 @@ promiseEventListener */\n
         input = input_list[i];\n
         result[input.getAttribute(\'name\')] = input.value;\n
       }\n
-      \n
+\n
       // Always return the document UID if value has been modified\n
       if (this.property_dict.selected_uid !== undefined) {\n
-        result[this.property_dict.field_json.relation_field_id] = this.property_dict.selected_uid;\n
+        result[this.property_dict.field_json.relation_field_id] =\n
+          this.property_dict.selected_uid;\n
       }\n
 \n
       return result;\n
@@ -467,7 +465,8 @@ promiseEventListener */\n
 \n
     .declareMethod(\'checkValidity\', function () {\n
       var result;\n
-      result = (this.element.querySelector(\'input\').checkValidity()) && (this.property_dict.valid);\n
+      result = (this.element.querySelector(\'input\').checkValidity()) &&\n
+        (this.property_dict.valid);\n
       if (result) {\n
         return this.notifyValid()\n
           .push(function () {\n
@@ -524,8 +523,8 @@ promiseEventListener */\n
             return triggerAutocomplete(field_gadget, value);\n
           });\n
 \n
-          field_gadget.property_dict.pending_promise = pending_promise;\n
-          return pending_promise;\n
+        field_gadget.property_dict.pending_promise = pending_promise;\n
+        return pending_promise;\n
       }\n
 \n
       // Listen to all necessary events (blur not needed currently)\n
@@ -598,10 +597,6 @@ promiseEventListener */\n
   - do multiRelationfield\n
   - find way to digest response of erp5? submit should clean input\n
   - add column_list parameter to pass more than title = "John Smith", render?\n
-\n
-\n
-\n
-\n
 */\n
 
 
@@ -726,7 +721,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -740,7 +735,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.60782.50245.64187</string> </value>
+                <value> <string>941.663.47886.51865</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -758,7 +753,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423756466.29</float>
+                        <float>1424080843.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
