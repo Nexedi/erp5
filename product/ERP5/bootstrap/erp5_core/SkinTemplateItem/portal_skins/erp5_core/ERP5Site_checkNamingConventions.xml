@@ -68,7 +68,7 @@ ABBREVIATION_WORD_SET = ((\n
   "FAX", "GAP", "HTML", "IBAN", "ID", "KM", "MIME", "NVP", "ODT", "PDF",\n
   "PDM", "PO", "RAM", "RSS", "SMS", "SQL", "SVN", "TALES", "TSV", "UBM",\n
   "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "ZODB",\n
-  "DNS", "IP", "CSS", "IMAP", "XML", "GPG", "GID", "TCP", "SOAP",\n
+  "DNS", "IP", "CSS", "IMAP", "XML", "GPG", "GID", "TCP", "SOAP", "MRP",\n
 ))\n
 \n
 # List of words that do not need to be titlecased\n
