@@ -169,6 +169,7 @@
         })\n
         .push(function (translated_htmls) {\n
           var select_div,\n
+            wrapper_class_string,\n
             div = document.createElement("div");\n
           for (i = 0; i < translated_htmls.length; i += 1) {\n
             div.innerHTML = translated_htmls[i];\n
@@ -176,7 +177,21 @@
             selects[i].innerHTML = select_div.innerHTML;\n
             if (field_json.editable !== 1) {\n
               selects[i].setAttribute(\'readonly\', \'readonly\');\n
-              selects[i].setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+              wrapper_class_string = wrapper_class_string || "";\n
+              wrapper_class_string += \'ui-state-readonly \';\n
+            }\n
+            // XXX add first + last class, needs to be improved\n
+            if (i === 0) {\n
+              wrapper_class_string = wrapper_class_string || ""; \n
+              wrapper_class_string += \'ui-first-child\';\n
+            }\n
+            if (i === translated_htmls.length - 1) {\n
+              wrapper_class_string = wrapper_class_string || ""; \n
+              wrapper_class_string += \'ui-last-child\';\n
+            }\n
+            if (wrapper_class_string) {\n
+              selects[i].setAttribute(\'data-wrapper-class\', wrapper_class_string);\n
+              wrapper_class_string = undefined;\n
             }\n
           }\n
         });\n
@@ -315,7 +330,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -329,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.58254.30018.38519</string> </value>
+                <value> <string>941.1091.39269.24183</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -347,8 +362,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423644326.02</float>
-                        <string>UTC</string>
+                        <float>1424106460.96</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

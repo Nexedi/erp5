@@ -127,7 +127,7 @@
     </script>\n
   </head>\n
   <body>\n
-   <fieldset class="ui-controlgroup ui-corner-all">\n
+   <fieldset class="ui-controlgroup ui-corner-all ui-controlgroup-vertical">\n
      <div class="ui-controlgroup-controls">\n
      </div>\n
   </fieldset>\n
@@ -255,7 +255,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -269,7 +269,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.57847.24942.44731</string> </value>
+                <value> <string>940.61935.4199.24456</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,8 +287,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423579715.15</float>
-                        <string>UTC</string>
+                        <float>1424105340.28</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

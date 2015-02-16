@@ -390,17 +390,18 @@ form label span {\n
   color: red;\n
 }\n
 \n
-\n
-/* layout form with left|right|center|bottom XXX: One big mess to re-factor!!!\n
-.center {\n
+/* stretch controlgroup controls in case they don\'t */\n
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls {\n
   width: 100%;\n
-  padding: 0 .5em;\n
-  -webkit-box-sizing: border-box;\n
-  -moz-box-sizing: border-box;\n
-  box-sizing: border-box;\n
-  text-align: left;\n
 }\n
- */\n
+/* remove double borders on vertical fieldsets TODO: no pseudo, not generic! */\n
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup-vertical .ui-controlgroup-controls > * .ui-btn {\n
+  border-bottom-width: 0;\n
+}\n
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup-vertical .ui-controlgroup-controls > *:last-child .ui-btn {\n
+  border-bottom-width: 1px;\n
+}\n
+\n
 .left,\n
 .right,\n
 .center,\n
@@ -1395,6 +1396,10 @@ html .ui-table-header:before {\n
    ----------------------------- Textinput ---------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
+/* remove JQM icons */\n
+.ui-input-search:after {\n
+  background-image: none;\n
+}\n
 /* pre-enhanced clear button padding */\n
 .ui-input-has-clear .ui-btn input {\n
     padding-left: 0;\n
@@ -1829,6 +1834,7 @@ html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox .ui-btn-ac
   text-shadow: none;\n
   color: black;\n
 }\n
+\n
 /*\n
    -------------------------------------------------------------------------\n
    -------------------------------- Button ---------------------------------\n
@@ -4634,7 +4640,6 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
   background-image: url(images/icons-png/user-white.png);\n
 }\n
 \n
-\n
 
 
 ]]></string> </value>
@@ -4758,7 +4763,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -4772,7 +4777,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.38971.30865.62105</string> </value>
+                <value> <string>941.1077.23453.57702</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4790,7 +4795,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1422462300.89</float>
+                        <float>1424105668.83</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
