@@ -1206,23 +1206,6 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
 
     sequence_list.play(self)
 
-  def test_50_testCopyPaste(self, quiet=0, run=run_all_test):
-    """
-    Check that relation are changed when doing a copy/paste,
-    on supply chain
-    """
-    if not run: return
-    sequence_list = SequenceList()
-    sequence_string = '\
-            CreateProductionOrganisation1 \
-            CreateProductionSC \
-            CopyPasteSupplyChain \
-            Tic \
-            CheckPastedSupplyChain \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
   def stepCreateEmptySC(self, sequence=None, sequence_list=None, **kw):
     """
       Create a empty Supply Chain
@@ -1261,46 +1244,6 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
     supply_link = supply_chain.contentValues(portal_type='Supply Link')[0]
     self.assertEqual(supply_node.getRelativeUrl(),
                       supply_link.getDestination())
-
-  def test_51_testCutPasteInAnotherContainer(self, quiet=0, run=run_all_test):
-    """
-    Check that relations are changed when doing a copy/paste,
-    on a supply chain.
-
-    The point in this test is that internal relations should be updated
-    when copying an object. Suppose that a document D1 contains sub-objects
-    S1_1 and S1_2, and S1_1 is related to S1_2. When copying D1 to D2,
-    S2_1 and S2_2 are also copied from S1_1 and S1_2. Now S2_1 should be
-    related to S2_2, instead of S1_2.
-
-    Good:
-
-    D1 -+- S1_1          D1 -+- S1_1   D2 -+- S2_1
-        |    |      =>       |    |        |    |
-        |    v               |    v        |    v
-        +- S1_2              +- S1_2       +- S2_2
-
-    Bad:
-
-    D1 -+- S1_1          D1 -+- S1_1   D2 -+- S2_1
-        |    |      =>       |    |      __|_/
-        |    v               |    v     /  |
-        +- S1_2              +- S1_2<--/   +- S2_2
-
-    """
-    if not run: return
-    sequence_list = SequenceList()
-    sequence_string = '\
-            CreateProductionOrganisation1 \
-            CreateProductionSC \
-            CreateEmptySC \
-            Tic \
-            CutPasteSupplyNodeInAnotherContainer \
-            Tic \
-            CheckPastedSupplyNode \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
