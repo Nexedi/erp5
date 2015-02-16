@@ -1738,126 +1738,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG('SQL Query was : ', 0, str(simulation.getInventoryList(src__=1, **kw)))
       self.assertTrue(len(expected), 0)
 
-
-  def stepTestGetNextNegativeInventoryDate(self, sequence=None, sequence_list=None, **kw):
-    """
-      Test getNextNegativeInventoryDate
-    """
-    expected_negative_date = addToDate(DateTime())
-    base_category_list = ['size', 'colour', 'morphology']
-    variation_categories = ['size/Baby', '1', '5'] # size, colour, morphology
-    node = 3
-    # Set some new deliveries to reach a negative inventory
-    # Resource and variation MUST be the same on each new delivery
-    data_list = [
-      { 'source':node, 'destination':9, 'source_section':0, 'destination_section':7,
-        'source_payment':1, 'destination_payment':8, 'start_date':expected_negative_date, 'lines':[
-           {'resource':0, 'cells': [
-               {'variation':variation_categories, 'quantity':100000.},
-             ]
-           }, # line end
-        ]
-      }, # packing list end
-      { 'source':6, 'destination':node, 'source_section':4, 'destination_section':0,
-        'source_payment':5, 'destination_payment':1, 'start_date':expected_negative_date+5, 'lines':[
-           {'resource':0, 'cells': [
-               {'variation':variation_categories, 'quantity':100000.},
-             ]
-           }, # line end
-        ]
-      }, # packing list end
-    ]
-
-    portal = self.getPortal()
-    simulation = portal.portal_simulation
-    packing_list_module = portal.getDefaultModule(self.packing_list_portal_type)
-    packing_list_list = sequence.get('packing_list_list')
-    organisation_list = sequence.get('organisation_list')
-    resource_list = sequence.get('resource_list')
-    delivery_line_list = []
-
-    for data in data_list:
-      # Create Packing List
-      packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
-      packing_list_list.append(packing_list)
-      # Add properties
-      property_list = [x for x in data.items() if x[0] not in ('lines','start_date')]
-      property_list = [(x[0], organisation_list[x[1]].getRelativeUrl()) for x in property_list] + \
-                      [x for x in data.items() if x[0] in ('start_date',)]
-      property_dict = {}
-      for (id, value) in property_list: property_dict[id] = value
-      packing_list.edit(**property_dict)
-      for line in data['lines']:
-        # Create Packing List Line
-        packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
-        delivery_line_list.append(packing_list_line)
-        resource_value = resource_list[line['resource']]
-        resource_value.setVariationBaseCategoryList(base_category_list)
-        category_list = packing_list_line.getCategoryList()
-        variation_category_list = resource_value.getVariationRangeCategoryList(base_category_list=['size']) + \
-            ['colour/' + x.getRelativeUrl() for x in resource_value.objectValues(portal_type='Apparel Model Colour Variation')] + \
-            ['morphology/' + x.getRelativeUrl() for x in resource_value.objectValues(portal_type='Apparel Model Morphology Variation')]
-
-        packing_list_line.edit(
-            resource_value=resource_value,
-            variation_category_list=variation_category_list,
-        )
-
-        # Set cell range
-        base_category_dict = {}
-        for i in range(len(base_category_list)):
-          base_category_dict[base_category_list[i]] = i
-
-        # Set cells
-        for cell in line['cells']:
-          variation = cell['variation']
-          for i in range(len(variation)):
-            c = variation[i]
-            if len(c.split('/')) == 1:
-              variation[i] = '%s/%s' % (base_category_list[i], resource_value[c].getRelativeUrl())
-          new_variation = []
-          for bc in packing_list_line.getVariationBaseCategoryList():
-            new_variation.append(variation[base_category_dict[bc]])
-          variation = new_variation
-          packing_list_cell = packing_list_line.newCell(base_id='movement', *variation)
-          packing_list_cell.edit(
-              quantity = cell['quantity'],
-              predicate_category_list = variation,
-              variation_category_list = variation,
-              mapped_value_property_list = ['quantity'],
-              )
-      sequence.edit(packing_list_list = packing_list_list)
-
-    self.tic()
-
-    # Then test the next negative date
-    next_date = simulation.getNextNegativeInventoryDate(
-                      resource=resource_value.getRelativeUrl(),
-                      node=organisation_list[node].getRelativeUrl(),
-                      variation_category=variation_categories)
-
-    if type(next_date) == type(''):
-      next_date = DateTime(next_date)
-    next_date = next_date.strftime('%Y-%m-%d %H:%M:%S')
-    expected_negative_date = '%.4d-%.2d-%.2d %.2d:%.2d:%.2d' % (
-                            expected_negative_date.year(),
-                            expected_negative_date.month(),
-                            expected_negative_date.day(),
-                            expected_negative_date.hour(),
-                            expected_negative_date.minute(),
-                            expected_negative_date.second())
-    if next_date != expected_negative_date:
-      LOG('TEST ERROR : Next negative date is not the expected one.', 0,
-          'calculated : %s, expected : %s' % (
-           repr(next_date), repr(expected_negative_date)))
-      LOG('SQL Query was ', 0,
-          simulation.getNextNegativeInventoryDate(
-                    resource=resource_value.getRelativeUrl(),
-                    node=organisation_list[node].getRelativeUrl(),
-                    variation_category=variation_categories, src__=1))
-    self.assertEqual(next_date, expected_negative_date)
-
-
   def checkVariatedInventory(self, sequence=None, sequence_list=None,
                              variation_category_list=None,
                              quantity=None,**kw):
@@ -2763,7 +2643,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                    stepTestGetInventoryListWithOmitInput \
                                    stepTestGetInventoryListWithOmitOutput \
                                    stepTestGetInventoryListWithGroupBy \
-                                   stepTestGetNextNegativeInventoryDate \
                                   '
 
     sequence_string = 'stepCreateOrganisationList \
