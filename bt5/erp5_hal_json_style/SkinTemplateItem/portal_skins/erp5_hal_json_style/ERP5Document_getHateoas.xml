@@ -176,11 +176,23 @@ def renderField(field, meta_type=None):\n
       result["subfield_%s_key" % subkey] = traversed_document.Field_getSubFieldKeyDict(field, subkey, key=result["key"])\n
 \n
 \n
-  elif meta_type in ("RelationStringField", "MultiRelationStringField"):\n
-    \n
+  elif meta_type in ("RelationStringField"):\n
     portal_type_list = field.get_value(\'portal_type\')\n
     if portal_type_list:\n
       portal_type_list = [x[0] for x in portal_type_list]\n
+\n
+      # ported from Base_jumpToRelatedDocument\\n\n
+      base_category = field.get_value(\'base_category\')\n
+      kw = {}\n
+      for k, v in field.get_value(\'parameter_list\'):\n
+        kw[k] = v\n
+\n
+      accessor_name = \'get%sValue\' % \\\n
+        \'\'.join([part.capitalize() for part in base_category.split(\'_\')])\n
+      jump_reference = getattr(traversed_document, accessor_name)(\n
+        portal_type=map(lambda x:x[0], field.get_value(\'portal_type\')),\n
+        filter=kw\n
+      )\n
 \n
     query = url_template_dict["jio_search_template"] % {\n
       "query": make_query({"query": sql_catalog.buildQuery(\n
@@ -191,8 +203,7 @@ def renderField(field, meta_type=None):\n
       "portal_types": portal_type_list,\n
       "query": query,\n
       "catalog_index": field.get_value(\'catalog_index\'),\n
-      # "allow_jump": field.get_value(\'allow_jump\'),\n
-      "allow_jump": 0,\n
+      "allow_jump": field.get_value(\'allow_jump\'),\n
       # "allow_creation": field.get_value(\'allow_creation\'),\n
       "allow_creation": 0,\n
       "type": meta_type,\n
@@ -205,8 +216,18 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required")\n
     }\n
-    result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(field, "relation", key=result["key"])\n
-    result["relation_item_key"] = traversed_document.Field_getSubFieldKeyDict(field, "item", key=result["key"])\n
+    result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(\n
+      field,\n
+      "relation",\n
+      key=result["key"]\n
+    )\n
+    result["relation_item_key"] = traversed_document.Field_getSubFieldKeyDict(\n
+      field,\n
+      "item", key=result["key"]\n
+    )\n
+\n
+    if jump_reference:\n
+      result["relation_item_relative_url"] = jump_reference.getRelativeUrl()\n
 \n
   elif meta_type == "CheckBoxField":\n
     result = {\n
