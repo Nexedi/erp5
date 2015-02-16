@@ -173,14 +173,14 @@ promiseEventListener */\n
 \n
     subfield = document.createElement("input");\n
     subfield.setAttribute("type", "hidden");\n
-    subfield.setAttribute("name", field_json.relation_item_key);\n
+    subfield.setAttribute("name", field_json.relation_field_id);\n
     subfield.setAttribute("value", "_newContent_" + info);\n
 \n
     default_subfield = document.createElement("input");\n
     default_subfield.setAttribute("type", "hidden");\n
     default_subfield.setAttribute(\n
       "name",\n
-      "default_subfield_" + field_json.key + "_relation"\n
+      "default_subfield_" + field_json.key + "_relation:int"\n
     );\n
     default_subfield.setAttribute("value", 0);\n
 \n
@@ -319,11 +319,13 @@ promiseEventListener */\n
         props.spinner.className = "ui-hidden-accessible";\n
         no_results = result_dict.total_rows === 0;\n
 \n
-        // show "new" tag\n
+        // show "new" tag, clicking it will remove it and reset the field!\n
+        // XXX Not active - reset should be handled by a generic reset method!\n
         if (no_results && field_json.allow_creation) {\n
           return new RSVP.Queue()\n
             .push(function () {\n
               props.wrapper.appendChild(createNewTag(my_gadget));\n
+              my_gadget.property_dict.valid = true;\n
               return notifyChange(my_gadget);\n
             })\n
             .push(function () {\n
@@ -333,12 +335,19 @@ promiseEventListener */\n
                 promiseEventListener(tag, "tap", true)\n
               ]);\n
             })\n
-            .push(function () {\n
-              var original_value = field_json.value || field_json.default || "";\n
-              clearResults(my_gadget);\n
-              props.wrapper.querySelector("input").value = original_value;\n
-              return triggerAutocomplete(my_gadget, original_value);\n
-            });\n
+            .push(function (my_event_to_clear) {\n
+              var wrapper,\n
+                tag_list,\n
+                original_value;\n
+\n
+              my_event_to_clear.preventDefault();\n
+              original_value = field_json.value || field_json.default || "";\n
+              wrapper = props.wrapper;\n
+              wrapper.querySelector("input").value = original_value;\n
+              tag_list = wrapper.querySelector(".ui-tag-list");\n
+              tag_list.parentNode.removeChild(tag_list);\n
+              return setRelationJump(my_gadget, undefined);\n
+            })\n
         }\n
 \n
         // default autocomplete\n
@@ -367,9 +376,8 @@ promiseEventListener */\n
         var element,\n
           jump_url;\n
 \n
-        if (my_selection_event) {\n
-\n
-          // take entered text, set to input and clear list options\n
+        // take entered text, set to input and clear list options\n
+        if (my_selection_event && my_selection_event.target) {\n
           element = my_selection_event.target;\n
           jump_url = element.getAttribute("data-relative-url");\n
           props.selected_uid = element.getAttribute("name");\n
@@ -745,7 +753,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.954.47433.61593</string> </value>
+                <value> <string>941.1041.20854.22596</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -763,7 +771,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1424099091.91</float>
+                        <float>1424104195.48</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
