@@ -2059,6 +2059,8 @@ class SimulationTool(BaseTool):
       result = None
       # First look at current inventory, we might have already an inventory
       # lower than reference_quantity
+      if from_date is None:
+        from_date = DateTime()
       current_inventory = self.getInventory(at_date=from_date, **kw)
       if current_inventory < reference_quantity:
         result = DateTime()
