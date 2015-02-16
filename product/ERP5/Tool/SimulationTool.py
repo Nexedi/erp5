@@ -2063,7 +2063,7 @@ class SimulationTool(BaseTool):
         from_date = DateTime()
       current_inventory = self.getInventory(at_date=from_date, **kw)
       if current_inventory < reference_quantity:
-        result = DateTime()
+        result = from_date
       else:
         inventory_list = self.getInventoryList(src__=src__, from_date=from_date,
             sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
