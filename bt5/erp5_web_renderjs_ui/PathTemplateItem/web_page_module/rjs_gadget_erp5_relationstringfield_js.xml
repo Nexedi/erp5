@@ -213,6 +213,7 @@ promiseEventListener */\n
       len = my_result_list.length,\n
       prefix = "",\n
       item,\n
+      value_dict,\n
       result,\n
       i;\n
 \n
@@ -227,7 +228,8 @@ promiseEventListener */\n
     list.appendChild(head);\n
 \n
     for (i = 0; i < len; i += 1) {\n
-      result = my_result_list[i].value;\n
+      result = my_result_list[i];\n
+      value_dict = result.value;\n
       item = document.createElement("li");\n
       item.className = str;\n
 \n
@@ -235,8 +237,9 @@ promiseEventListener */\n
       // NOTE: if doing more complex UI, beware the textContent value won\'t\n
       // work, because currently it\'s used to retrieve the link from\n
       // the last autocomplete query results!\n
-      item.textContent = result[index];\n
-      item.setAttribute("name", result.uid);\n
+      item.textContent = value_dict[index];\n
+      item.setAttribute("data-relative-url", result.id);\n
+      item.setAttribute("name", value_dict.uid);\n
       list.appendChild(item);\n
     }\n
 \n
@@ -259,8 +262,32 @@ promiseEventListener */\n
     ]);\n
   }\n
 \n
+  // set the link to jump to\n
+  function setRelationJump(my_gadget, my_initial_call, my_selected_value) {\n
+    var props = my_gadget.property_dict,\n
+      field_json = props.field_json,\n
+      target_url = my_selected_value || field_json.relation_item_relative_url,\n
+      is_init = my_initial_call === true;\n
+\n
+    if (target_url && field_json.allow_jump) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return my_gadget.whoWantToDisplayThis(target_url);\n
+        })\n
+        .push(function (my_url) {\n
+          var plane = props.plane;\n
+          plane.href = my_url;\n
+          plane.className = "ui-btn ui-corner-all ui-btn-icon-notext " +\n
+            "ui-icon-plane ui-shadow-inset ui-btn-inline";\n
+          if (is_init === false) {\n
+            return notifyChange(my_gadget);\n
+          }\n
+        });\n
+    }\n
+  }\n
+\n
   // trigger autocomplete for field value, on render() with value only sets link\n
-  function triggerAutocomplete(my_gadget, my_value, my_initial_call) {\n
+  function triggerAutocomplete(my_gadget, my_value) {\n
     var props = my_gadget.property_dict,\n
       field_json = props.field_json,\n
       index = field_json.catalog_index,\n
@@ -268,7 +295,8 @@ promiseEventListener */\n
       lines = field_json.lines || 11,\n
       select_list = [index, "uid"],\n
       query_string = " AND (" + index + \':"\' + my_value + \'")\',\n
-      result_dict;\n
+      result_dict,\n
+      no_results;\n
 \n
     delete props.selected_uid;\n
 \n
@@ -289,14 +317,10 @@ promiseEventListener */\n
       }).push(function (my_result) {\n
         result_dict = my_result.data;\n
         props.spinner.className = "ui-hidden-accessible";\n
+        no_results = result_dict.total_rows === 0;\n
 \n
-        // skip showing single result on render(), only set link\n
-        // if (my_initial_call) {\n
-        //   return {"target": {"textContent": my_value}};\n
-        // }\n
-\n
-        // show "new" tag if no results and creation allowed\n
-        if (result_dict.total_rows === 0 && field_json.allow_creation) {\n
+        // show "new" tag\n
+        if (no_results && field_json.allow_creation) {\n
           return new RSVP.Queue()\n
             .push(function () {\n
               props.wrapper.appendChild(createNewTag(my_gadget));\n
@@ -313,23 +337,26 @@ promiseEventListener */\n
               var original_value = field_json.value || field_json.default || "";\n
               clearResults(my_gadget);\n
               props.wrapper.querySelector("input").value = original_value;\n
-              return triggerAutocomplete(my_gadget, original_value, true);\n
+              return triggerAutocomplete(my_gadget, original_value);\n
             });\n
         }\n
 \n
         // default autocomplete\n
-        // XXX: on small displays JQM will toggle headers, find way to prevent!\n
         return new RSVP.Queue()\n
           .push(function () {\n
             var list;\n
-            props.wrapper.appendChild(createResults(result_dict.rows, index));\n
-            list = props.wrapper.querySelector("ul");\n
 \n
-            return RSVP.any([\n
-              promiseEventListener(list, "click", true),\n
-              promiseEventListener(list, "touchend", true)\n
-            ]);\n
+            if (no_results === false) {\n
+              props.wrapper.appendChild(createResults(result_dict.rows, index));\n
+              list = props.wrapper.querySelector("ul");\n
+\n
+              return RSVP.any([\n
+                promiseEventListener(list, "click", true),\n
+                promiseEventListener(list, "touchend", true)\n
+              ]);\n
+            }\n
           });\n
+\n
       }).push(undefined, function (my_error) {\n
         if (my_error instanceof RSVP.CancellationError) {\n
           props.spinner.className = "ui-hidden-accessible";\n
@@ -337,41 +364,20 @@ promiseEventListener */\n
         }\n
         throw my_error;\n
       }).push(function (my_selection_event) {\n
-        var selected_value,\n
-          record,\n
-          i,\n
-          prop;\n
+        var element,\n
+          jump_url;\n
 \n
         if (my_selection_event) {\n
 \n
           // take entered text, set to input and clear list options\n
-          selected_value = my_selection_event.target.textContent;\n
-          props.selected_uid = my_selection_event.target.getAttribute("name");\n
+          element = my_selection_event.target;\n
+          jump_url = element.getAttribute("data-relative-url");\n
+          props.selected_uid = element.getAttribute("name");\n
           props.valid = true;\n
-          props.wrapper.querySelector("input").value = selected_value;\n
+          props.wrapper.querySelector("input").value = element.textContent;\n
           clearResults(my_gadget, "skip");\n
 \n
-          // retrieve url if "allow_jump" is set\n
-          if (props.field_json.allow_jump) {\n
-            for (i = 0; i < result_dict.total_rows; i += 1) {\n
-              record = result_dict.rows[i].value;\n
-              for (prop in record) {\n
-                if (record.hasOwnProperty(prop) &&\n
-                    record[prop] === selected_value) {\n
-                  return my_gadget.whoWantToDisplayThis(result_dict.rows[i].id);\n
-                }\n
-              }\n
-            }\n
-          }\n
-        }\n
-      }).push(function (my_url) {\n
-        if (my_url) {\n
-          props.plane.href = my_url;\n
-          props.plane.className = "ui-btn ui-corner-all ui-btn-icon-notext " +\n
-            "ui-icon-plane ui-shadow-inset ui-btn-inline";\n
-          if (my_initial_call === undefined) {\n
-            return notifyChange(my_gadget);\n
-          }\n
+          return setRelationJump(my_gadget, undefined, jump_url);\n
         }\n
       });\n
   }\n
@@ -435,10 +441,9 @@ promiseEventListener */\n
         // input.setAttribute(\'disabled\', \'disabled\');\n
       }\n
 \n
-      /* // set relation field links (without showing 1 autocomplete result)\n
       if (value) {\n
-        return triggerAutocomplete(field_gadget, value, true);\n
-      } */\n
+        return setRelationJump(field_gadget, true);\n
+      }\n
     })\n
 \n
     // get content (needs hidden fields, too, when creating new records)\n
@@ -590,6 +595,8 @@ promiseEventListener */\n
   - OK fix double list because not clearing what previous chain appended to DOM\n
   - OK cleanup\n
   - OK fix textinput css, not generic enough\n
+  - OK reimplement setting link without calling allDocs\n
+  - on small displays JQM will toggle headers, find way to prevent!\n
   - fix broken promise chain\n
   - test\n
   - keyboard speed test\n
@@ -597,6 +604,9 @@ promiseEventListener */\n
   - do multiRelationfield\n
   - find way to digest response of erp5? submit should clean input\n
   - add column_list parameter to pass more than title = "John Smith", render?\n
+ \n
+ \n
+  \n
 */\n
 
 
@@ -735,7 +745,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.663.47886.51865</string> </value>
+                <value> <string>941.954.47433.61593</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -753,7 +763,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1424080843.6</float>
+                        <float>1424099091.91</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
