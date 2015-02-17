@@ -63,6 +63,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     Make sure to not use special apparel setting from TestOrderMixin
     """
     self.createCategories()
+    self.validateRules()
 
   def stepSetMaxDelayOnResource(self, sequence):
     """
