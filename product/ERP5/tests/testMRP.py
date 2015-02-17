@@ -131,17 +131,6 @@ class TestMRPMixin(TestBPMMixin):
                                       resource=transformation.getResource(),
                                       specialise_value=transformation)
     return order
-<<<<<<< HEAD
-
-  @reindex
-  def createDefaultTransformation(self):
-    resource1 = self.createProduct(id='1', quantity_unit_list=['weight/kg'])
-    resource2 = self.createProduct(id='2', quantity_unit_list=['weight/kg'])
-    resource3 = self.createProduct(id='3', quantity_unit_list=['weight/kg'])
-    resource4 = self.createProduct(id='4', quantity_unit_list=['weight/kg'])
-    resource5 = self.createProduct(id='5', quantity_unit_list=['weight/kg'])
-=======
->>>>>>> f2130ed... Reimplement MRP for new simulation
 
   def createDefaultTransformation(self):
     resource = lambda: self.createProduct(quantity_unit_list=['weight/kg'])
