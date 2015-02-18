@@ -212,7 +212,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>bank_reconciliation_transaction_selection</string> </value>
+                    <value> <string>bank_reconciliation_reconciled_transaction_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
