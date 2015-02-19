@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2015-01-23 03:01+UTC\n"
-"PO-Revision-Date: 2015-01-23 03:01+UTC\n"
+"POT-Creation-Date: 2015-02-19 18:02+CET\n"
+"PO-Revision-Date: 2015-02-19 18:02+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -518,6 +518,9 @@ msgstr "该模板使用的已注册皮肤选项列表"
 
 msgid "A list of registered version priority used by this template"
 msgstr "该模板使用的已注册版本优先项"
+
+msgid "A list of role names defined by this Role Information"
+msgstr ""
 
 msgid "A list of workflow chains of portal types used by this template"
 msgstr "该模板使用的门户类型的流程链列表"
@@ -1212,10 +1215,106 @@ msgstr ""
 msgid "Amount"
 msgstr "金额"
 
+msgid "Amount 2015-01"
+msgstr ""
+
+msgid "Amount 2015-01-01"
+msgstr ""
+
+msgid "Amount 2015-01-02"
+msgstr ""
+
+msgid "Amount 2015-01-03"
+msgstr ""
+
+msgid "Amount 2015-01-04"
+msgstr ""
+
+msgid "Amount 2015-01-05"
+msgstr ""
+
+msgid "Amount 2015-01-06"
+msgstr ""
+
+msgid "Amount 2015-01-07"
+msgstr ""
+
+msgid "Amount 2015-01-08"
+msgstr ""
+
+msgid "Amount 2015-01-09"
+msgstr ""
+
+msgid "Amount 2015-01-10"
+msgstr ""
+
+msgid "Amount 2015-01-11"
+msgstr ""
+
+msgid "Amount 2015-01-12"
+msgstr ""
+
+msgid "Amount 2015-01-13"
+msgstr ""
+
+msgid "Amount 2015-01-14"
+msgstr ""
+
+msgid "Amount 2015-01-15"
+msgstr ""
+
+msgid "Amount 2015-01-16"
+msgstr ""
+
+msgid "Amount 2015-01-17"
+msgstr ""
+
+msgid "Amount 2015-01-18"
+msgstr ""
+
 msgid "Amount 2015-01-19"
 msgstr ""
 
 msgid "Amount 2015-01-20"
+msgstr ""
+
+msgid "Amount 2015-01-21"
+msgstr ""
+
+msgid "Amount 2015-01-22"
+msgstr ""
+
+msgid "Amount 2015-01-23"
+msgstr ""
+
+msgid "Amount 2015-01-24"
+msgstr ""
+
+msgid "Amount 2015-01-25"
+msgstr ""
+
+msgid "Amount 2015-01-26"
+msgstr ""
+
+msgid "Amount 2015-01-27"
+msgstr ""
+
+msgid "Amount 2015-01-28"
+msgstr ""
+
+msgid "Amount 2015-01-29"
+msgstr ""
+
+msgid "Amount 2015-02"
+msgstr ""
+
+msgid "Amount 2015-03"
+msgstr ""
+
+msgid "Amount 2015-04"
+msgstr ""
+
+msgid "Amount 2015-05"
 msgstr ""
 
 msgid "Amount Limit"
@@ -1525,6 +1624,9 @@ msgid "Applied Model Lines"
 msgstr "已应用模式明细"
 
 msgid "Applied Rule"
+msgstr ""
+
+msgid "Apply Changes to Skins"
 msgstr ""
 
 msgid "Apply Pay Sheet Model"
@@ -1866,6 +1968,9 @@ msgstr ""
 msgid "Balance at Stop Date (${date})"
 msgstr ""
 
+msgid "Balanced Accounts"
+msgstr ""
+
 msgid "Balboa"
 msgstr ""
 
@@ -1953,6 +2058,9 @@ msgstr "会计交易明细分析基本类别"
 msgid "Base Category"
 msgstr "基础类别"
 
+msgid "Base Category Script"
+msgstr ""
+
 msgid "Base Category for Function on Accounting Transaction Lines"
 msgstr "会计交易明细功能基本类别"
 
@@ -1990,6 +2098,9 @@ msgid "Base Type"
 msgstr ""
 
 msgid "Base Variant Movement Group"
+msgstr ""
+
+msgid "Base categories to use in order to retrieve dynamic security categories"
 msgstr ""
 
 msgid "Base categories to use to specify analytics on accounting lines. Those categories will be used by direct category membership"
@@ -2045,6 +2156,9 @@ msgstr ""
 
 msgid "Billing Supplier"
 msgstr "发票开票人"
+
+msgid "Binary data can't be displayed"
+msgstr ""
 
 msgid "Birth Date"
 msgstr ""
@@ -2140,7 +2254,7 @@ msgid "Budget Module"
 msgstr ""
 
 msgid "Budget Section"
-msgstr ""
+msgstr "预算科"
 
 msgid "Budget Situation"
 msgstr ""
@@ -2193,7 +2307,13 @@ msgstr ""
 msgid "Bug"
 msgstr "错误"
 
+msgid "Bug Difficulty"
+msgstr ""
+
 msgid "Bug Event workflow"
+msgstr ""
+
+msgid "Bug Group"
 msgstr ""
 
 msgid "Bug Line"
@@ -2203,6 +2323,15 @@ msgid "Bug Lines to Send"
 msgstr "待发送错误明细"
 
 msgid "Bug Module"
+msgstr ""
+
+msgid "Bug Priority"
+msgstr ""
+
+msgid "Bug Severity"
+msgstr ""
+
+msgid "Bug Type"
 msgstr ""
 
 msgid "Bug Workflow"
@@ -2568,6 +2697,9 @@ msgstr ""
 msgid "Cancel Order [transition in order_workflow]"
 msgstr ""
 
+msgid "Cancel Order and Return"
+msgstr "取消销售单并返回"
+
 msgid "Cancel Packing List"
 msgstr "取消装箱单"
 
@@ -2761,7 +2893,7 @@ msgid "Cash"
 msgstr ""
 
 msgid "Cash (if not only Credit Card)"
-msgstr ""
+msgstr "现金支付金额（不只用银行卡和信用卡支付）"
 
 msgid "Cash Classification"
 msgstr ""
@@ -3014,6 +3146,9 @@ msgstr ""
 
 msgid "Checking this will produce a detailed beginning balance with all lines without a letter"
 msgstr ""
+
+msgid "Cheque (if not only Credit Card)"
+msgstr "支票支付金额（不只用银行卡和信用卡支付）"
 
 msgid "Children"
 msgstr ""
@@ -3369,6 +3504,9 @@ msgstr ""
 msgid "Conceptual Id Generator"
 msgstr ""
 
+msgid "Condition"
+msgstr ""
+
 msgid "Configuration After Script Id"
 msgstr ""
 
@@ -3462,6 +3600,9 @@ msgstr ""
 msgid "Confirm Order [transition in order_workflow]"
 msgstr ""
 
+msgid "Confirm Order and Return"
+msgstr "确认销售单并返回"
+
 msgid "Confirm Packing List"
 msgstr "确认装箱单"
 
@@ -3544,6 +3685,9 @@ msgid "Constraint"
 msgstr ""
 
 msgid "Constraint Type"
+msgstr ""
+
+msgid "Constraint View"
 msgstr ""
 
 msgid "Constraints"
@@ -3816,6 +3960,9 @@ msgstr ""
 msgid "Copy Apparel Colour Range Variation"
 msgstr ""
 
+msgid "Copy Roles"
+msgstr ""
+
 msgid "Copy or cut one or more items to paste first."
 msgstr ""
 
@@ -3921,6 +4068,9 @@ msgstr "创建新网页"
 msgid "Create Pay Sheet Line"
 msgstr "创建工资单明细"
 
+msgid "Create Purchase Order"
+msgstr ""
+
 msgid "Create Related Event"
 msgstr "创建相关事件"
 
@@ -3990,10 +4140,16 @@ msgstr "创建早于"
 msgid "Created Clone ${portal_type}."
 msgstr "已创建复制 ${portal_type}."
 
+msgid "Created after"
+msgstr ""
+
 msgid "Created and associated ${count} new events to the selected ticket."
 msgstr ""
 
 msgid "Created and associated a new ${portal_type} to the ticket."
+msgstr ""
+
+msgid "Created before"
 msgstr ""
 
 msgid "Created by"
@@ -4282,7 +4438,7 @@ msgid "Date Format"
 msgstr "日期格式"
 
 msgid "Date Order"
-msgstr ""
+msgstr "订单日期"
 
 msgid "Date Time"
 msgstr ""
@@ -4331,6 +4487,9 @@ msgstr ""
 
 msgid "DateTime Keys"
 msgstr "日期和时间密钥"
+
+msgid "Datetime Keys"
+msgstr ""
 
 msgid "Day"
 msgstr ""
@@ -4518,6 +4677,9 @@ msgstr ""
 msgid "Define Sort Order"
 msgstr ""
 
+msgid "Define Supplier as Unknown"
+msgstr ""
+
 msgid "Define a Sale Opportunity as not processed in time, and therefore lost."
 msgstr "标明一个销售机会因没有及时处理从而失去"
 
@@ -4528,6 +4690,9 @@ msgid "Define list of property Ids which will be used by catalog to generate sea
 msgstr ""
 
 msgid "Define some global preferences for your ERP5 application."
+msgstr ""
+
+msgid "Defined Property IDs"
 msgstr ""
 
 msgid "Defined Property Ids"
@@ -5200,6 +5365,9 @@ msgid "Developper Mode"
 msgstr "开发者模式"
 
 msgid "Dialog is not updated."
+msgstr ""
+
+msgid "Dict"
 msgstr ""
 
 msgid "Diff"
@@ -7047,6 +7215,9 @@ msgstr ""
 msgid "Historical Comparision"
 msgstr ""
 
+msgid "Historical Comparison"
+msgstr ""
+
 msgid "History"
 msgstr "历史记录"
 
@@ -7078,7 +7249,7 @@ msgid "I"
 msgstr ""
 
 msgid "I forgot my password!"
-msgstr "我忘记密码了！"
+msgstr ""
 
 msgid "IAS-IFRS Compliant"
 msgstr ""
@@ -7162,6 +7333,9 @@ msgid "If a document is missing in order to process an action, ERP5 will warn th
 msgstr "如果要一项运作程序缺少了一个文件，ERP5就会向告知用户有文件缺失。"
 
 msgid "If checked, accounting lines that have been split for analytic detail will be aggregated together."
+msgstr ""
+
+msgid "If checked, existing document will be updated even if some properties or categories in this movement group differ."
 msgstr ""
 
 msgid "If checked, only organisations strictly member of the category will be used."
@@ -7336,7 +7510,7 @@ msgid "Indicate if we display link to translation system in interface or not"
 msgstr ""
 
 msgid "Indicate if we display useful link for developer in interface or not"
-msgstr ""
+msgstr "开发员模式"
 
 msgid "Indicate when the periodic event will start"
 msgstr ""
@@ -7447,16 +7621,16 @@ msgid "Initialized by Delivery Builder."
 msgstr ""
 
 msgid "Input Loyalty Number if exist."
-msgstr ""
+msgstr "输入会员号"
 
 msgid "Input data has errors. Please look at error messages below."
 msgstr ""
 
 msgid "Input data has errors. Please look at the error messages below."
-msgstr "录入数据有误，请看下方错误信息提示。"
+msgstr ""
 
 msgid "Input is required but no input given."
-msgstr "此处为必填栏。"
+msgstr ""
 
 msgid "Inspect Object"
 msgstr ""
@@ -7782,6 +7956,9 @@ msgstr "发票明细"
 msgid "Invoice Movement Group"
 msgstr ""
 
+msgid "Invoice No"
+msgstr ""
+
 msgid "Invoice Number"
 msgstr "发票号码"
 
@@ -7881,10 +8058,19 @@ msgstr ""
 msgid "Item Module"
 msgstr ""
 
+msgid "Item Reference"
+msgstr ""
+
 msgid "Item Reference List"
 msgstr ""
 
+msgid "Item Title"
+msgstr ""
+
 msgid "Item Tracking"
+msgstr ""
+
+msgid "Item Type"
 msgstr ""
 
 msgid "Item Type List"
@@ -7901,6 +8087,9 @@ msgstr "可以聚合到本文件的项目门户类型"
 
 msgid "Items"
 msgstr "项目"
+
+msgid "Items aggregated"
+msgstr ""
 
 msgid "Items copied."
 msgstr "项目已复制"
@@ -7973,6 +8162,9 @@ msgstr "跳至激活偏好"
 
 msgid "Jump to Bank Accounts"
 msgstr "跳至银行账户"
+
+msgid "Jump to Current Day"
+msgstr ""
 
 msgid "Jump to Related Payment"
 msgstr "跳至相关支付"
@@ -8301,6 +8493,9 @@ msgstr "本地角色密钥"
 msgid "Local Roles"
 msgstr "本地角色"
 
+msgid "Local Roles Group"
+msgstr ""
+
 msgid "Location"
 msgstr "地点"
 
@@ -8359,7 +8554,7 @@ msgid "Loti"
 msgstr ""
 
 msgid "Loyalty Number or Email"
-msgstr ""
+msgstr "会员号或邮箱"
 
 msgid "MIME Type"
 msgstr ""
@@ -8405,6 +8600,9 @@ msgstr ""
 
 msgid "Manage Business Templates"
 msgstr "管理业务模板"
+
+msgid "Manage Components"
+msgstr ""
 
 msgid "Manage Field Library"
 msgstr ""
@@ -8727,6 +8925,9 @@ msgstr ""
 msgid "Mobile Telephone"
 msgstr "手机号码"
 
+msgid "Mode"
+msgstr ""
+
 msgid "Model"
 msgstr "模式"
 
@@ -8859,6 +9060,9 @@ msgstr ""
 msgid "Movement Date"
 msgstr ""
 
+msgid "Movement Group"
+msgstr ""
+
 msgid "Movement Groups"
 msgstr ""
 
@@ -8929,6 +9133,9 @@ msgid "Name of the method used to display information about the result of the al
 msgstr ""
 
 msgid "Name of the script called to generate temporary domains"
+msgstr ""
+
+msgid "Name of the script which is called before building a delivery"
 msgstr ""
 
 msgid "Name of the script which is called on each newly delivery created"
@@ -9102,6 +9309,12 @@ msgstr "无相关 ${portal_type}。"
 msgid "No Apparel Model Colour Variation found."
 msgstr ""
 
+msgid "No Payment Transaction Related"
+msgstr ""
+
+msgid "No Purchase Packing List Related"
+msgstr ""
+
 msgid "No Sale Invoice Transaction Related"
 msgstr "无相关销售发票交易"
 
@@ -9160,7 +9373,7 @@ msgid "No result."
 msgstr "无记录。"
 
 msgid "No such document was found."
-msgstr "系统中未发现该文件。"
+msgstr ""
 
 msgid "No trade condition."
 msgstr ""
@@ -9414,6 +9627,9 @@ msgstr ""
 msgid "Omit Balanced Account"
 msgstr ""
 
+msgid "Omit Balanced Accounts"
+msgstr ""
+
 msgid "Omit Empty Accounts"
 msgstr ""
 
@@ -9576,11 +9792,14 @@ msgstr "订单生成器"
 msgid "Order Date"
 msgstr "订单日期"
 
+msgid "Order Fast Input"
+msgstr ""
+
 msgid "Order Index"
 msgstr "订单索引"
 
 msgid "Order Information"
-msgstr ""
+msgstr "销售信息"
 
 msgid "Order Interaction Workflow"
 msgstr "订单交互流程"
@@ -9604,7 +9823,7 @@ msgid "Order Movement Interaction Workflow"
 msgstr "订单运作交互流程"
 
 msgid "Order Number"
-msgstr ""
+msgstr "收据号"
 
 msgid "Order Placed"
 msgstr "订单已下"
@@ -9814,10 +10033,10 @@ msgid "PPL"
 msgstr ""
 
 msgid "PRICE"
-msgstr ""
+msgstr "价格"
 
 msgid "PROD"
-msgstr ""
+msgstr "产品"
 
 msgid "Pa'Anga"
 msgstr ""
@@ -10128,10 +10347,16 @@ msgstr ""
 msgid "People"
 msgstr ""
 
+msgid "Per Function"
+msgstr ""
+
 msgid "Per Product"
 msgstr ""
 
 msgid "Per Third Party"
+msgstr ""
+
+msgid "Per Third Party/Product"
 msgstr ""
 
 msgid "Percentage"
@@ -10163,6 +10388,9 @@ msgstr "周期开始日期"
 
 msgid "Periodicity Stop Date"
 msgstr "周期停止日期"
+
+msgid "Permission"
+msgstr ""
 
 msgid "Permission Configurator Item"
 msgstr ""
@@ -10333,7 +10561,7 @@ msgid "Plans of purchase orders"
 msgstr ""
 
 msgid "Please Update Preview to show the Receipt"
-msgstr ""
+msgstr "预览小票请点更新"
 
 msgid "Please be patient and do not move from current page until you get confirmation that the installation is over. It will last approximately 5 to 10 minutes."
 msgstr ""
@@ -10345,6 +10573,12 @@ msgid "Please click link below. You will be redirected to a form in which you ca
 msgstr ""
 
 msgid "Please proceed using Install button below. In the next page you will receive automatically updated installation status report."
+msgstr ""
+
+msgid "Please provide at least one Item or Product  Reference or Unlabelled Price."
+msgstr ""
+
+msgid "Please provide at least one Item or Product Reference or Unlabelled Price."
 msgstr ""
 
 msgid "Please select one (or more) object."
@@ -10702,7 +10936,7 @@ msgid "Price for one unit."
 msgstr "单位产品的价格"
 
 msgid "Price of items without label"
-msgstr ""
+msgstr "没有标签产品的单价"
 
 msgid "Priced"
 msgstr ""
@@ -10723,7 +10957,7 @@ msgid "Print"
 msgstr ""
 
 msgid "Print Invoice"
-msgstr ""
+msgstr "打印发票"
 
 msgid "Print Mode"
 msgstr ""
@@ -10741,10 +10975,13 @@ msgid "Print Payslip"
 msgstr ""
 
 msgid "Print Receipt"
-msgstr ""
+msgstr "打印收据"
 
 msgid "Print Style"
 msgstr ""
+
+msgid "Print by Epson"
+msgstr "打印"
 
 msgid "Printed by %(user)s at %(date)s"
 msgstr ""
@@ -10763,6 +11000,9 @@ msgstr "打印输出"
 
 msgid "Priority"
 msgstr "优先性"
+
+msgid "Priority of the current action"
+msgstr ""
 
 msgid "Private"
 msgstr "私人的"
@@ -10837,7 +11077,7 @@ msgid "Products"
 msgstr "产品"
 
 msgid "Products details"
-msgstr ""
+msgstr "产品明细"
 
 msgid "Products the person is interested in."
 msgstr "该人感兴趣的产品"
@@ -10930,7 +11170,7 @@ msgid "Projects"
 msgstr "项目"
 
 msgid "Promotional Code"
-msgstr ""
+msgstr "优惠折扣"
 
 msgid "Properties"
 msgstr "属性"
@@ -10981,6 +11221,9 @@ msgid "Property Tester"
 msgstr ""
 
 msgid "Property Type Validity Constraint"
+msgstr ""
+
+msgid "Property used to Test"
 msgstr ""
 
 msgid "Propose"
@@ -11296,7 +11539,7 @@ msgid "Python Script"
 msgstr ""
 
 msgid "QTY"
-msgstr ""
+msgstr "数量"
 
 msgid "Qatari Riyal"
 msgstr ""
@@ -11316,10 +11559,106 @@ msgstr ""
 msgid "Quantity"
 msgstr "数量"
 
+msgid "Quantity 2015-01"
+msgstr ""
+
+msgid "Quantity 2015-01-01"
+msgstr ""
+
+msgid "Quantity 2015-01-02"
+msgstr ""
+
+msgid "Quantity 2015-01-03"
+msgstr ""
+
+msgid "Quantity 2015-01-04"
+msgstr ""
+
+msgid "Quantity 2015-01-05"
+msgstr ""
+
+msgid "Quantity 2015-01-06"
+msgstr ""
+
+msgid "Quantity 2015-01-07"
+msgstr ""
+
+msgid "Quantity 2015-01-08"
+msgstr ""
+
+msgid "Quantity 2015-01-09"
+msgstr ""
+
+msgid "Quantity 2015-01-10"
+msgstr ""
+
+msgid "Quantity 2015-01-11"
+msgstr ""
+
+msgid "Quantity 2015-01-12"
+msgstr ""
+
+msgid "Quantity 2015-01-13"
+msgstr ""
+
+msgid "Quantity 2015-01-14"
+msgstr ""
+
+msgid "Quantity 2015-01-15"
+msgstr ""
+
+msgid "Quantity 2015-01-16"
+msgstr ""
+
+msgid "Quantity 2015-01-17"
+msgstr ""
+
+msgid "Quantity 2015-01-18"
+msgstr ""
+
 msgid "Quantity 2015-01-19"
 msgstr ""
 
 msgid "Quantity 2015-01-20"
+msgstr ""
+
+msgid "Quantity 2015-01-21"
+msgstr ""
+
+msgid "Quantity 2015-01-22"
+msgstr ""
+
+msgid "Quantity 2015-01-23"
+msgstr ""
+
+msgid "Quantity 2015-01-24"
+msgstr ""
+
+msgid "Quantity 2015-01-25"
+msgstr ""
+
+msgid "Quantity 2015-01-26"
+msgstr ""
+
+msgid "Quantity 2015-01-27"
+msgstr ""
+
+msgid "Quantity 2015-01-28"
+msgstr ""
+
+msgid "Quantity 2015-01-29"
+msgstr ""
+
+msgid "Quantity 2015-02"
+msgstr ""
+
+msgid "Quantity 2015-03"
+msgstr ""
+
+msgid "Quantity 2015-04"
+msgstr ""
+
+msgid "Quantity 2015-05"
 msgstr ""
 
 msgid "Quantity < ${max_quantity}"
@@ -11358,10 +11697,106 @@ msgstr "数量区间"
 msgid "Quantity Unit"
 msgstr "数量单位"
 
+msgid "Quantity Unit 2015-01"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-01"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-02"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-03"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-04"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-05"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-06"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-07"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-08"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-09"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-10"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-11"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-12"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-13"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-14"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-15"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-16"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-17"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-18"
+msgstr ""
+
 msgid "Quantity Unit 2015-01-19"
 msgstr ""
 
 msgid "Quantity Unit 2015-01-20"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-21"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-22"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-23"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-24"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-25"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-26"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-27"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-28"
+msgstr ""
+
+msgid "Quantity Unit 2015-01-29"
+msgstr ""
+
+msgid "Quantity Unit 2015-02"
+msgstr ""
+
+msgid "Quantity Unit 2015-03"
+msgstr ""
+
+msgid "Quantity Unit 2015-04"
+msgstr ""
+
+msgid "Quantity Unit 2015-05"
 msgstr ""
 
 msgid "Quantity Unit Conversion Definition"
@@ -11442,7 +11877,13 @@ msgstr ""
 msgid "Quoting"
 msgstr ""
 
+msgid "RPO"
+msgstr ""
+
 msgid "RPPL"
+msgstr ""
+
+msgid "RSO"
 msgstr ""
 
 msgid "RSPL"
@@ -11524,7 +11965,7 @@ msgid "Rebuild Business Template [transition in business_template_building_workf
 msgstr ""
 
 msgid "Receipt"
-msgstr ""
+msgstr "收据"
 
 msgid "Receivable"
 msgstr ""
@@ -11707,6 +12148,12 @@ msgid "Region Strict"
 msgstr ""
 
 msgid "Register"
+msgstr ""
+
+msgid "Register New Skin if Present?"
+msgstr ""
+
+msgid "Register or not a new skin if business template defines it"
 msgstr ""
 
 msgid "Registered Capital"
@@ -12012,6 +12459,9 @@ msgstr ""
 msgid "Reopens a document that would have been closed previously, in order to modify it, such as an accounting period"
 msgstr ""
 
+msgid "Reorder Skin Selection?"
+msgstr ""
+
 msgid "Replace Business Template [transition in business_template_installation_workflow]"
 msgstr ""
 
@@ -12097,6 +12547,9 @@ msgid "Request Processing Action [transition in event_workflow]"
 msgstr ""
 
 msgid "Request Processing [transition in event_workflow]"
+msgstr ""
+
+msgid "Request Shipment"
 msgstr ""
 
 msgid "Request Subscription"
@@ -12300,7 +12753,13 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
+msgid "Return"
+msgstr ""
+
 msgid "Return Workflow History"
+msgstr ""
+
+msgid "Returned Items"
 msgstr ""
 
 msgid "Returned Purchase Order"
@@ -12310,6 +12769,9 @@ msgid "Returned Purchase Order Cell"
 msgstr ""
 
 msgid "Returned Purchase Order Line"
+msgstr ""
+
+msgid "Returned Purchase Order Lines"
 msgstr ""
 
 msgid "Returned Purchase Order Module"
@@ -12349,6 +12811,9 @@ msgid "Returned Sale Order Cell"
 msgstr ""
 
 msgid "Returned Sale Order Line"
+msgstr ""
+
+msgid "Returned Sale Order Lines"
 msgstr ""
 
 msgid "Returned Sale Order Module"
@@ -12786,6 +13251,12 @@ msgstr ""
 msgid "Script Constraint"
 msgstr ""
 
+msgid "Script ID to use in order retrieve dynamic security categories"
+msgstr ""
+
+msgid "Script to Call on Delivery Module before Building"
+msgstr ""
+
 msgid "Script to Call on Delivery after Generation"
 msgstr ""
 
@@ -12876,6 +13347,9 @@ msgstr ""
 msgid "Security Question"
 msgstr ""
 
+msgid "Security UID Columns"
+msgstr ""
+
 msgid "Security Uid Columns"
 msgstr "安全Uid列"
 
@@ -12895,12 +13369,15 @@ msgid "Select Exchange"
 msgstr ""
 
 msgid "Select Fast Input"
-msgstr ""
+msgstr "选择快速输入"
 
 msgid "Select Favorite"
 msgstr ""
 
 msgid "Select Favourite"
+msgstr ""
+
+msgid "Select Items"
 msgstr ""
 
 msgid "Select Language"
@@ -12951,8 +13428,14 @@ msgstr "销售"
 msgid "Sell Action [transition in sale_opportunity_workflow]"
 msgstr ""
 
+msgid "Sell Items"
+msgstr "销售"
+
+msgid "Sell Items by Reference"
+msgstr "销售单"
+
 msgid "Sell Itens"
-msgstr ""
+msgstr "销售产品"
 
 msgid "Sell [transition in sale_opportunity_workflow]"
 msgstr ""
@@ -13266,6 +13749,9 @@ msgstr "模拟运作"
 msgid "Simulation Movement Interaction Workflow"
 msgstr ""
 
+msgid "Simulation Movements and Applied Rules"
+msgstr ""
+
 msgid "Simulation Select Method"
 msgstr ""
 
@@ -13393,7 +13879,7 @@ msgid "Sold"
 msgstr "已销售"
 
 msgid "Sold Items or Products"
-msgstr ""
+msgstr "销售产品编码或条码"
 
 msgid "Sold [state in sale_opportunity_workflow]"
 msgstr ""
@@ -13443,6 +13929,9 @@ msgstr ""
 msgid "Solver"
 msgstr ""
 
+msgid "Solver Configuration"
+msgstr ""
+
 msgid "Solver Configurator Item"
 msgstr ""
 
@@ -13462,6 +13951,9 @@ msgid "Solver Tool"
 msgstr ""
 
 msgid "Solver Type"
+msgstr ""
+
+msgid "Solvers"
 msgstr ""
 
 msgid "Solving"
@@ -13550,6 +14042,9 @@ msgstr "排序索引"
 
 msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
 msgstr "排序索引在包含许多文件的列表中进行计算排序或分类排序"
+
+msgid "Sort skin folders by priority"
+msgstr ""
 
 msgid "Source"
 msgstr "来源"
@@ -13901,6 +14396,9 @@ msgstr ""
 
 msgid "States"
 msgstr "状态"
+
+msgid "Static definition of the security categories"
+msgstr ""
 
 msgid "Statistics"
 msgstr ""
@@ -14256,6 +14754,9 @@ msgstr "供应条件明细"
 msgid "Supply Lines"
 msgstr ""
 
+msgid "Supply Title"
+msgstr ""
+
 msgid "Support Request"
 msgstr "客户支持请求"
 
@@ -14353,6 +14854,18 @@ msgid "TALES Constraint"
 msgstr ""
 
 msgid "TALES Expression"
+msgstr ""
+
+msgid "TALES Expression to define the URL of the action"
+msgstr ""
+
+msgid "TALES Expression to define the URL of the icon of the action"
+msgstr ""
+
+msgid "TALES Expression to define the applicability of the action"
+msgstr ""
+
+msgid "TALES Expression to define the applicability of the role"
 msgstr ""
 
 msgid "TAX"
@@ -14566,7 +15079,7 @@ msgid "Technical drawing type"
 msgstr ""
 
 msgid "Tel"
-msgstr ""
+msgstr "电话号码"
 
 msgid "Telephone"
 msgstr "电话号码"
@@ -15891,6 +16404,9 @@ msgstr ""
 msgid "The working copies"
 msgstr ""
 
+msgid "There is already an inventory for $resource_title on this node and date"
+msgstr ""
+
 msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
 msgstr ""
 
@@ -15906,6 +16422,9 @@ msgstr "第三方"
 msgid "Third Party (with Link)"
 msgstr ""
 
+msgid "Third Party / Product"
+msgstr "第三方 / 产品"
+
 msgid "Third Party Account"
 msgstr "第三方账户"
 
@@ -15920,6 +16439,9 @@ msgstr ""
 
 msgid "Third Party Transaction Reference"
 msgstr ""
+
+msgid "Third Party/Product"
+msgstr "第三方/产品"
 
 msgid "Third party ${third_party_name} is invalid."
 msgstr ""
@@ -16042,7 +16564,7 @@ msgid "Ticket Interaction Workflow"
 msgstr ""
 
 msgid "Ticket Preview"
-msgstr ""
+msgstr "票据预览"
 
 msgid "Ticket Type"
 msgstr "集合类型"
@@ -16210,7 +16732,7 @@ msgid "Total Excluding VAT"
 msgstr ""
 
 msgid "Total Including Tax"
-msgstr ""
+msgstr "含税总价"
 
 msgid "Total Including VAT"
 msgstr ""
@@ -16237,7 +16759,7 @@ msgid "Total Selected Amount"
 msgstr ""
 
 msgid "Total With Discount"
-msgstr ""
+msgstr "折后总价"
 
 msgid "Total for class ${account_class}"
 msgstr ""
@@ -16819,7 +17341,7 @@ msgid "Use Line Title"
 msgstr ""
 
 msgid "Use Loyalty Reward"
-msgstr ""
+msgstr "会员积分返惠"
 
 msgid "Use Negated Quantities"
 msgstr ""
@@ -16988,6 +17510,9 @@ msgstr "验证"
 
 msgid "Validate Account"
 msgstr "验证账户"
+
+msgid "Validate Account Action"
+msgstr ""
 
 msgid "Validate Account Action [transition in account_workflow]"
 msgstr ""
@@ -17220,6 +17745,9 @@ msgstr "浏览表格ID"
 msgid "View Mode Listbox"
 msgstr ""
 
+msgid "View Old Revision"
+msgstr ""
+
 msgid "View Planning Report"
 msgstr "浏览计划报告"
 
@@ -17258,6 +17786,9 @@ msgstr ""
 
 msgid "View report"
 msgstr "浏览报告"
+
+msgid "Visibility of the current action"
+msgstr ""
 
 msgid "Visible"
 msgstr "可见"
@@ -17514,6 +18045,9 @@ msgstr ""
 msgid "Workflow of a user preference"
 msgstr "用户偏好设置的流程"
 
+msgid "Workflow state may have been updated by other user. Please try again."
+msgstr ""
+
 msgid "Workflow that defines the steps of a career for a person"
 msgstr "定义一个人的事业阶段的流程"
 
@@ -17620,7 +18154,7 @@ msgid "You did not enter a floating point number."
 msgstr ""
 
 msgid "You did not enter a valid date and time."
-msgstr "你输入的日期时间无法验证。"
+msgstr ""
 
 msgid "You did not enter an email address."
 msgstr ""
@@ -17781,6 +18315,9 @@ msgstr ""
 msgid "built"
 msgstr ""
 
+msgid "built [state in business_template_building_workflow]"
+msgstr ""
+
 msgid "calculating"
 msgstr ""
 
@@ -17875,6 +18412,9 @@ msgid "diverged"
 msgstr ""
 
 msgid "draft"
+msgstr ""
+
+msgid "draft [state in business_template_building_workflow]"
 msgstr ""
 
 msgid "efines whether the crawling process should be local to a single domain or IP host. If so, crawling will not try to access links outside the initial host."
@@ -18009,10 +18549,16 @@ msgstr ""
 msgid "modified"
 msgstr ""
 
+msgid "modified [state in business_template_building_workflow]"
+msgstr ""
+
 msgid "new"
 msgstr ""
 
 msgid "not_installed"
+msgstr ""
+
+msgid "not_installed [state in business_template_installation_workflow]"
 msgstr ""
 
 msgid "number of line displayed by a ListBox when used in list mode (in a module for example)"
@@ -18069,10 +18615,16 @@ msgstr "门户类型"
 msgid "portal_alarms"
 msgstr ""
 
+msgid "portal_caches"
+msgstr ""
+
 msgid "portal_categories"
 msgstr ""
 
 msgid "portal_deliveries"
+msgstr ""
+
+msgid "portal_orders"
 msgstr ""
 
 msgid "portal_property_sheets"
