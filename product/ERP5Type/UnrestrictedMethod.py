@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from contextlib import contextmanager
 from AccessControl.User import UnrestrictedUser
 from AccessControl.SpecialUsers import system
 from AccessControl.SecurityManagement import getSecurityManager, \
@@ -73,6 +74,17 @@ def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
     docstring for more information. Never use this, until you are 100% certain
     that you have no other way.
     """
+    with unrestricted_contextmanager():
+      return apply(function, args, kw)
+
+@contextmanager
+def unrestricted_contextmanager():
+    """Function to bypass all security checks
+
+    This function is as dangerous as 'UnrestrictedMethod' decorator. Read its
+    docstring for more information. Never use this, until you are 100% certain
+    that you have no other way.
+    """
     security_manager = getSecurityManager()
     user = security_manager.getUser()
     anonymous = (user.getUserName() == 'Anonymous User')
@@ -99,7 +111,7 @@ def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
                                   role_list, user.getDomains()).__of__(uf)
     newSecurityManager(None, super_user)
     try:
-      return apply(function, args, kw)
+      yield
     finally:
       # Make sure that the original user is back.
       setSecurityManager(security_manager)
