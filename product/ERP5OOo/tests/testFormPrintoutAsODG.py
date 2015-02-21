@@ -325,16 +325,18 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Pictures/0.png") > 0)
+    content = etree.XML(content_xml)
+    image_element_list = content.xpath('//draw:image', namespaces=content.nsmap)
+    self.assertTrue(len(image_element_list) > 0)
 
     # check the image is in the odg file
     try:
-      image_data = builder.extract("Pictures/0.png")
+      image_path = image_element_list[0].get('{http://www.w3.org/1999/xlink}href')
+      image_data = builder.extract(image_path)
     except KeyError:
-      self.fail('image "Pictures/0.png" not found in odg document')
+      self.fail('image %r not found in odg document' % image_path)
     self.assertEqual(image.getData(), image_data,
                       '%s != %s' % (len(image.getData()), len(image_data)))
-    content = etree.XML(content_xml)
     image_frame_xpath = '//draw:frame[@draw:name="image_view"]'
     image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
     self.assertTrue(len(image_frame_list) > 0)
@@ -355,7 +357,9 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
-    self.assertFalse(content_xml.find("Pictures/0.png") > 0)
+    content = etree.XML(content_xml)
+    image_element_list = content.xpath('//draw:image', namespaces=content.nsmap)
+    self.assertFalse(len(image_element_list) > 0)
     self._validate(odf_document)
 
   def test_04_ProxyField(self):

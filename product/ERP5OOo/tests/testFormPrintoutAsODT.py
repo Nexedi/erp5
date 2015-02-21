@@ -534,8 +534,12 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     content_tree = etree.XML(content_xml)
     #Check that foo_1 is inside table, with the same style
-    xpath_style_name_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p[@text:style-name="P4"]/text()'
-    self.assertEqual(['foo_1', 'foo_2'], content_tree.xpath(xpath_style_name_expression, namespaces=content_tree.nsmap))
+    xpath_style_name_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p[starts-with(@text:style-name, "P")]'
+    element_list = content_tree.xpath(xpath_style_name_expression, namespaces=content_tree.nsmap)
+    self.assertEqual(len(element_list), 2)
+    self.assertEqual(element_list[0].get('{%s}style-name' % content_tree.nsmap['text']),
+                     element_list[1].get('{%s}style-name' % content_tree.nsmap['text']))
+    self.assertEqual(['foo_1', 'foo_2'], [x.text for x in element_list])
     #Check that each listbox values are inside ODT table cells
     xpath_result_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p/text()'
     self.assertEqual(['foo_1', 'foo_title_5', '0.0', 'foo_2', 'foo_2', '0.0', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
