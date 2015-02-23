@@ -294,6 +294,9 @@ class BigFile(File):
 
     if data is None:
       return ''
+    if isinstance(data, str):
+      RESPONSE.setBase(None)
+      return data
     for chunk in data.iterate():
       RESPONSE.write(chunk)
     return ''
