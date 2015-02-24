@@ -24,8 +24,8 @@ from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
 from webdav.common import rfc1123_date
 from mimetools import choose_boundary
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
-    _ViewEmulator
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
+from DateTime import DateTime
 import re
 
 class BigFile(File):
@@ -353,8 +353,6 @@ class BigFile(File):
                                 '(?P<last_byte>[0-9]+)/' \
                                 '(?P<total_content_length>[0-9]+)')
       if query_range.match(content_range):
-        data = self._baseGetData()
-
         RESPONSE.setHeader('X-Explanation', 'Resume incomplete')
         RESPONSE.setHeader('Range', 'bytes 0-%s' % (current_size-1))
         RESPONSE.setStatus(308)
