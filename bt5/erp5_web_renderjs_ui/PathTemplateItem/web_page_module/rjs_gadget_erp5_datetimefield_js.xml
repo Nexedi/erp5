@@ -101,11 +101,10 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP */\n
-/*jslint indent: 2, maxerr: 3 */\n
+/*global window, rJS, RSVP, document, loopEventListener */\n
+/*jslint indent: 2 */\n
 (function (window, rJS, RSVP) {\n
   "use strict";\n
-\n
   rJS(window)\n
     .ready(function (gadget) {\n
       return gadget.getElement()\n
@@ -115,28 +114,106 @@
         });\n
     })\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
+    .declareAcquiredMethod("notifyValid", "notifyValid")\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
         date,\n
+        tmp,\n
+        timezone,\n
+        tmp_year,\n
+        tmp_month,\n
+        tmp_date,\n
+        tmp_hour,\n
+        tmp_minute,\n
+        select,\n
         time = "",\n
+        leapyear,\n
+        i,\n
         field_json = options.field_json || {},\n
+        lastDateOfMonth = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],\n
+                           [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]],//leapyear\n
+        select_options = ["GMT-12", "GMT-11", "GMT-10", "GMT-9", "GMT-8", "GMT-7", "GMT-6",\n
+                   "GMT-5", "GMT-4", "GMT-3", "GMT-2", "GMT-1", "GMT", "GMT+1",\n
+                   "GMT+2", "GMT+3", "GMT+4", "GMT+5", "GMT+6", "GMT+7", "GMT+8",\n
+                   "GMT+9", "GMT+10", "GMT+11", "GMT+12"],\n
+        select_option,\n
         value = field_json.value || field_json.default || "";\n
       this.props.field_json = field_json;\n
 \n
+\n
+      if (field_json.timezone_style) {\n
+        //change date to local\n
+        select = document.createElement("select");\n
+        for (i = 0; i < select_options.length; i += 1) {\n
+          select_option = document.createElement("option");\n
+          select_option.value = select_options[i];\n
+          select_option.innerHTML = select_options[i];\n
+          select.appendChild(select_option);\n
+        }\n
+        select.setAttribute("class", "gmt_select");\n
+        select.selectedIndex = 12;\n
+        this.element.appendChild(select);\n
+      }\n
+      if (field_json.date_only === 0) {\n
+        input.setAttribute("type", "datetime-local");\n
+      }\n
       //Change type to datetime/datetime local if configured in the field\n
       if (value !== "") {\n
-        value = new Date(value).toISOString();\n
-        // XXX Ensure the timezone is not lost\n
-        date = value.substring(0, 10);\n
+        tmp = new Date(value);\n
+        //get date without timezone\n
+        tmp_date = tmp.getUTCDate();\n
+        tmp_month = tmp.getUTCMonth() + 1;\n
+        tmp_year = tmp.getUTCFullYear();\n
+\n
         if (field_json.date_only === 0) {\n
-          time = value.substring(10, 19);\n
-          input.setAttribute("type", "datetime-local");\n
+          tmp_hour = tmp.getUTCHours();\n
+          tmp_minute = tmp.getUTCMinutes();\n
+\n
+          //timezone required\n
+          //convert time to GMT\n
+          timezone = parseInt(value.slice(-5), 10) / 100;\n
+\n
+          if (field_json.timezone_style) {\n
+            select.selectedIndex = timezone + 12;\n
+          }\n
+          leapyear = (tmp_year % 4 === 0 && tmp_year % 100 !== 0) ? 1 : 0;\n
+          if (timezone !== 0) {\n
+            tmp_hour += timezone;\n
+            if (tmp_hour < 0) {\n
+              tmp_hour += 24;\n
+              tmp_date -= 1;\n
+              if (tmp_date === 0) {\n
+                tmp_month -= 1;\n
+                if (tmp_month === 0) {\n
+                  tmp_month = 12;\n
+                  tmp_year -= 1;\n
+                }\n
+                tmp_date = lastDateOfMonth[leapyear][tmp_month - 1];\n
+              }\n
+            } else if (tmp_hour > 23) {\n
+              tmp_hour -= 24;\n
+              tmp_date += 1;\n
+              if (tmp_date > lastDateOfMonth[leapyear][tmp_month - 1]) {\n
+                tmp_date = 1;\n
+                tmp_month += 1;\n
+                if (tmp_month > 12) {\n
+                  tmp_month = 1;\n
+                  tmp_year += 1;\n
+                }\n
+              }\n
+            }\n
+          }\n
+          time = "T" + Math.floor(tmp_hour / 10) + tmp_hour % 10 + ":"\n
+              + Math.floor(tmp_minute / 10) +  (tmp_minute % 10) + ":00";\n
         }\n
+        date = tmp_year + "-" + Math.floor(tmp_month / 10) + (tmp_month % 10) + "-"\n
+               +  Math.floor(tmp_date / 10) + (tmp_date % 10);\n
+\n
+        input.setAttribute(\n
+          \'value\',\n
+          date + time\n
+        );\n
       }\n
-      input.setAttribute(\n
-        \'value\',\n
-        date + time\n
-      );\n
       input.setAttribute(\'name\', field_json.key);\n
       input.setAttribute(\'title\', field_json.title);\n
       if (field_json.required === 1) {\n
@@ -146,12 +223,12 @@
         input.setAttribute(\'readonly\', \'readonly\');\n
         input.setAttribute(\'data-wrapper-class\', \'ui-state-disabled ui-state-readonly\');\n
         input.setAttribute(\'disabled\', \'disabled\');\n
-\n
       }\n
     })\n
-    .declareMethod(\'getDateTime\', function () {\n
+    .declareMethod(\'getContent\', function () {\n
       var input = this.element.querySelector(\'input\'),\n
         result = {},\n
+        select,\n
         year,\n
         month,\n
         field_json = this.props.field_json,\n
@@ -159,22 +236,23 @@
         hour,\n
         minute,\n
         value = input.value;\n
-      if (value) {\n
+      if (value !== "") {\n
+        value += "+0000";\n
         value = new Date(value);\n
-        year = value.getFullYear();\n
-        month = value.getMonth() + 1;\n
+        year = value.getUTCFullYear();\n
+        month = value.getUTCMonth() + 1;\n
+        date = value.getUTCDate();\n
         if (field_json.hide_day === 1) {\n
           date = 1;\n
-        } else {\n
-          date = value.getDate();\n
         }\n
+        //get time\n
         if (field_json.date_only === 0) {\n
           if (field_json.allow_empty_time === 1) {\n
             hour = 0;\n
             minute = 0;\n
           } else {\n
             hour = value.getUTCHours();\n
-            minute = value.getMinutes();\n
+            minute = value.getUTCMinutes();\n
           }\n
           if (field_json.ampm_time_style === 1) {\n
             if (hour > 12) {\n
@@ -187,6 +265,7 @@
           result[field_json.subfield_hour_key] = hour;\n
           result[field_json.subfield_minute_key] = minute;\n
         }\n
+\n
         if (field_json.hidden_day_is_last_day === 1) {\n
           if (month === 12) {\n
             year += 1;\n
@@ -198,25 +277,95 @@
         result[field_json.subfield_year_key] = year;\n
         result[field_json.subfield_month_key] = month;\n
         result[field_json.subfield_day_key] = date;\n
-\n
-        // XXX Ensure the timezone is not lost\n
-        // result[field_json.subfield_timezone_key] = value.getDate();\n
+        if (field_json.timezone_style) {\n
+          //set timezone\n
+          select = this.element.querySelector("select");\n
+          result[field_json.subfield_timezone_key] = select.options[select.selectedIndex].value;\n
+        }\n
       }\n
       return result;\n
     })\n
     .declareMethod(\'checkValidity\', function () {\n
-     //xxx check time range (start_datetime, end_datetime)\n
-      return true;\n
-    })\n
-    .declareMethod(\'getContent\', function () {\n
-      var gadget = this;\n
+      var gadget = this,\n
+        valide = true,\n
+        start_datetime = false,\n
+        end_datetime = false,\n
+        datetime_string,\n
+        select = gadget.element.querySelector("select"),\n
+        datetime,\n
+        input = gadget.element.querySelector(\'input\'),\n
+        field_json = gadget.props.field_json;\n
+      if (!input.checkValidity()) {\n
+        return false;\n
+      }\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return gadget.getDateTime();\n
+          return gadget.notifyValid();\n
+        })\n
+        .push(function () {\n
+          return gadget.getContent();\n
         })\n
         .push(function (result) {\n
-          return result;\n
+          datetime_string = result[field_json.subfield_month_key];\n
+          datetime_string += "," + result[field_json.subfield_day_key];\n
+          datetime_string += "," + result[field_json.subfield_year_key];\n
+          if (field_json.date_only === 0) {\n
+            if (result[field_json.subfield_ampm_key] === "pm") {\n
+              result[field_json.subfield_hour_key] += 12;\n
+            }\n
+            datetime_string += " " + result[field_json.subfield_hour_key];\n
+            datetime_string += ":" + result[field_json.subfield_minute_key] + ":00";\n
+            datetime_string += "+0000";\n
+          }\n
+          if (datetime_string.indexOf("NaN") !== -1) {\n
+            valide = false;\n
+            return gadget.notifyInvalid("Invalide DateTime");\n
+          }\n
+          if (field_json.start_datetime) {\n
+            start_datetime = Date.parse(field_json.start_datetime);\n
+          }\n
+          if (field_json.end_datetime) {\n
+            end_datetime = Date.parse(field_json.end_datetime);\n
+          }\n
+          if ((start_datetime === false) && (end_datetime === false)) {\n
+            return;\n
+          }\n
+          datetime = Date.parse(datetime_string);\n
+          datetime -= (select.selectedIndex - 12) * 60 * 60 * 1000;\n
+          if (start_datetime) {\n
+            if (start_datetime > datetime) {\n
+              valide = false;\n
+              return gadget.notifyInvalid("The date and time you entered earlier than the start time");\n
+            }\n
+          }\n
+          if (end_datetime) {\n
+            if (end_datetime <= datetime) {\n
+              valide = false;\n
+              return gadget.notifyInvalid("The date and time you entered later than the end time");\n
+            }\n
+          }\n
+        })\n
+        .push(function () {\n
+          return valide;\n
         });\n
+    })\n
+     .declareService(function () {\n
+      ////////////////////////////////////\n
+      // Inform when the field input is invalid\n
+      ////////////////////////////////////\n
+      var field_gadget = this;\n
+\n
+      function notifyInvalid(evt) {\n
+        return field_gadget.notifyInvalid(evt.target.validationMessage);\n
+      }\n
+\n
+      // Listen to input change\n
+      return loopEventListener(\n
+        field_gadget.element.querySelector(\'input\'),\n
+        \'invalid\',\n
+        false,\n
+        notifyInvalid\n
+      );\n
     });\n
 \n
 }(window, rJS, RSVP));
@@ -356,7 +505,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.62359.8275.23142</string> </value>
+                <value> <string>941.11170.29635.26282</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -374,7 +523,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423850641.53</float>
+                        <float>1424711511.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

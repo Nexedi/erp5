@@ -2,6 +2,7 @@ Bar Module | view
 Bar | list
 Bar | performance
 Bar | view
+Bar | view_datetime_field
 Foo Bar Module | view
 Foo Line | view
 Foo Module | list
