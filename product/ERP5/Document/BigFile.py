@@ -32,6 +32,34 @@ class BigFile(File):
   """
   Support storing huge file.
   No convertion is allowed for now.
+
+
+  NOTE BigFile maintains the following invariant:
+
+    data property is either
+
+      - BTreeData instance,  or
+      - str(*),  or
+      - None.
+
+    (*) str has to be supported because '' is a default value for `data` field
+        from Data property sheet.
+
+        Even more - for
+
+            a) compatibility reasons, and
+            b) desire to support automatic migration of File-based documents
+               from document_module to BigFiles
+
+        non-empty str for data also have to be supported.
+
+        XXX(kirr) I'm not sure supporting non-empty str is a good idea (it
+            would be simpler if .data could be either BTreeData or "empty"),
+            but neither I'm experienced enough in erp5 nor know what are
+            appropriate compatibility requirements.
+
+            We discussed with Romain and settled on "None or str or BTreeData"
+            invariant for now.
   """
 
   meta_type = 'ERP5 Big File'
@@ -98,6 +126,11 @@ class BigFile(File):
 
     if data is None:
       btree = BTreeData()
+    elif isinstance(data, str):
+      # we'll want to append content to this file -
+      # - automatically convert str (empty or not) to BTreeData
+      btree = BTreeData()
+      btree.write(data, 0)
     else:
       btree = data
     seek(0)
@@ -118,13 +151,10 @@ class BigFile(File):
 
   def _data_mtime(self):
     """get .data mtime if present and fallback to self._p_mtime"""
-    # there is no data._p_mtime when data is None.
+    # there is no data._p_mtime when data is None or str.
     # so try and fallback to self._p_mtime
     data = self._baseGetData()
-    if data is not None:
-      mtime = data._p_mtime
-    else:
-      mtime = self._p_mtime
+    mtime = getattr(data, '_p_mtime', self._p_mtime)
     return mtime
 
   def _range_request_handler(self, REQUEST, RESPONSE):
@@ -201,6 +231,7 @@ class BigFile(File):
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
 
+          # NOTE data cannot be None here (if it is - ranges are not satisfiable)
           if isinstance(data, str):
             RESPONSE.write(data[start:end])
             return True
@@ -243,6 +274,7 @@ class BigFile(File):
                 'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
                     start, end - 1, self.getSize()))
 
+            # NOTE data cannot be None here (if it is - ranges are not satisfiable)
             if isinstance(data, str):
               RESPONSE.write(data[start:end])
 
@@ -279,7 +311,7 @@ class BigFile(File):
     data = self._baseGetData()
     mime = self.getContentType()
 
-    RESPONSE.setHeader('Content-Length', len(data))
+    RESPONSE.setHeader('Content-Length', data is not None and  len(data)  or  0)
     RESPONSE.setHeader('Content-Type', mime)
     if inline is _MARKER:
       # by default, use inline for text and image formats
