@@ -151,6 +151,11 @@ class DateTimeField(ZMIField):
       assert 0, "Unknown input_style."
     self.on_value_css_class_changed(self.values['css_class'])
 
+  def on_value_timezone_style_changed(self, value):
+    if value:
+      input_style = self.get_value('input_style')
+      self.on_value_input_style_changed(input_style)
+
   def on_value_css_class_changed(self, value):
     for field in self.sub_form.get_fields():
       field.values['css_class'] = value
