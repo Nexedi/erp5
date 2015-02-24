@@ -344,7 +344,8 @@ class BigFile(File):
 
     content_range = REQUEST.get_header('Content-Range', None)
     if content_range is None:
-      btree = None
+      # truncate the file
+      self._baseSetData(None)
     else:
       current_size = int(self.getSize())
       query_range = re.compile('bytes \*/\*')
@@ -380,23 +381,28 @@ class BigFile(File):
           RESPONSE.setStatus(400)
           return RESPONSE
 
-        else:
-
-          btree = self._baseGetData()
-
       else:
         RESPONSE.setHeader('X-Explanation', 'Can not parse range')
         RESPONSE.setStatus(400) # Partial content
         return RESPONSE
 
-    data, size = self._read_data(file, data=btree)
-
-    content_type=self._get_content_type(file, data, self.__name__,
-                                        type or self.content_type)
-    self.update_data(data, content_type, size)
+    self._appendData(file, content_type=type)
 
     RESPONSE.setStatus(204)
     return RESPONSE
+
+
+  def _appendData(self, data_chunk, content_type=None):
+    """append data chunk to the end of the file
+
+       NOTE if content_type is specified, it will change content_type for the
+            whole file.
+    """
+    data, size = self._read_data(data_chunk, data=self._baseGetData())
+    content_type=self._get_content_type(data_chunk, data, self.__name__,
+                                        content_type or self.content_type)
+    self.update_data(data, content_type, size)
+
 
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(BigFile)
