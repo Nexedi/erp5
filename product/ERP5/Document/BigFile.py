@@ -352,8 +352,6 @@ class BigFile(File):
         else:
 
           btree = self._baseGetData()
-          if btree is None:
-            btree = BTreeData()
 
       else:
         RESPONSE.setHeader('X-Explanation', 'Can not parse range')
