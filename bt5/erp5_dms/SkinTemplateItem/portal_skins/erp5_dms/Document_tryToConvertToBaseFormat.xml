@@ -57,7 +57,7 @@ from xmlrpclib import Fault\n
 from socket import error as SocketError\n
 \n
 message = None\n
-if context.getExternalProcessingState()!=\'converted\':\n
+if context.getExternalProcessingState() not in (\'converted\', \'empty\'):\n
   # try to convert to base format only if not already done\n
   try:\n
     return context.convertToBaseFormat()\n
