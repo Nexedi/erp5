@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>renderjs_ui_datetimefield_zuite</string> </value>
+            <value> <string>datetimefield_zuite</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
