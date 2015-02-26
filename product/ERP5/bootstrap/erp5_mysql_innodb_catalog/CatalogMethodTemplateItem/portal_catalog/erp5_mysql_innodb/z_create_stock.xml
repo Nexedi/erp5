@@ -88,6 +88,7 @@ CREATE TABLE `stock` (\n
   KEY `node_uid` (`node_uid`),\n
   KEY `payment_uid` (`payment_uid`),\n
   KEY `function_uid` (`function_uid`),\n
+  KEY `payment_request_uid` (`payment_request_uid`),\n
   KEY `project_uid` (`project_uid`),\n
   KEY `funding_uid` (`funding_uid`),\n
   KEY `explanation_uid` (`explanation_uid`),\n
