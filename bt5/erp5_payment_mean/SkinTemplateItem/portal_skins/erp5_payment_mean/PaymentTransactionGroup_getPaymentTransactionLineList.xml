@@ -56,7 +56,6 @@ search_kw = dict(\n
   parent_portal_type=\'Payment Transaction\',\n
   section_uid=context.getSourceSectionUid(),\n
   default_aggregate_uid=context.getUid(),\n
-  node_category=\'account_type/asset/cash/bank\',\n
 )\n
 \n
 if context.getSourcePayment():\n
