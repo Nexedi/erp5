@@ -12,4 +12,8 @@
       </description>
     </key>
   </sectiontype>
+  <sectiontype name="loggerstorage" datatype="Products.ERP5Type.LoggerStorage.LoggerStorageConfig"
+               implements="ZODB.storage">
+    <section type="ZODB.storage" name="*" attribute="base" required="yes" />
+  </sectiontype>
 </component>
