@@ -109,7 +109,7 @@
     <meta charset="utf-8">\n
     <title>Connection</title>\n
 \n
-    <script src="RSVP.js"></script>\n
+    <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
     <script src="strophe.js"></script>\n
     <script src="gadget_global.js" ></script>\n
