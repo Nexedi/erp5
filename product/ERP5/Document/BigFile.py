@@ -116,6 +116,17 @@ class BigFile(File):
       self.serialize()
     return btree, len(btree)
 
+  def _data_mtime(self):
+    """get .data mtime if present and fallback to self._p_mtime"""
+    # there is no data._p_mtime when data is None.
+    # so try and fallback to self._p_mtime
+    data = self._baseGetData()
+    if data is not None:
+      mtime = data._p_mtime
+    else:
+      mtime = self._p_mtime
+    return mtime
+
   def _range_request_handler(self, REQUEST, RESPONSE):
     # HTTP Range header handling: return True if we've served a range
     # chunk out of our data.
@@ -147,13 +158,10 @@ class BigFile(File):
           try: mod_since=long(DateTime(date).timeTime())
           except: mod_since=None
           if mod_since is not None:
-            if data is not None:
-              last_mod = long(data._p_mtime)
-            else:
-              if self._p_mtime:
-                last_mod = long(self._p_mtime)
-              else:
-                last_mod = long(0)
+            last_mod = self._data_mtime()
+            if last_mod is None:
+                last_mod = 0
+            last_mod = long(last_mod)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
               # the ranges, which causes us to skip to the 200
@@ -172,10 +180,7 @@ class BigFile(File):
           RESPONSE.setHeader('Content-Range',
               'bytes */%d' % self.getSize())
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          if data is not None:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
-          else:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
+          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', self.getSize())
           RESPONSE.setStatus(416)
@@ -188,10 +193,7 @@ class BigFile(File):
           start, end = ranges[0]
           size = end - start
 
-          if data is not None:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
-          else:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
+          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
@@ -227,10 +229,7 @@ class BigFile(File):
 
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          if data is not None:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
-          else:
-            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
+          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
           RESPONSE.setHeader('Content-Type',
               'multipart/%sbyteranges; boundary=%s' % (
                   draftprefix, boundary))
