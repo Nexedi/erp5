@@ -327,7 +327,7 @@
           return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
         })\n
         .push(function (response) {\n
-          return jIO.util.readBlobAsText(response);\n
+          return jIO.util.readBlobAsText(response.data);\n
         })\n
         .push(function (event) {\n
           return {data: JSON.parse(event.target.result)};\n
@@ -726,7 +726,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.25415.51811.22323</string> </value>
+                <value> <string>941.25428.15657.11059</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -744,7 +744,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425307454.32</float>
+                        <float>1425307985.31</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
