@@ -432,7 +432,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'category': metadata['action_box_category']})
   return action_list
 
-def WorkflowTool_listActions(self, info=None, object=None, src__=False):
+def WorkflowTool_listActions(self, info=None, object=None, include_worklist=False, src__=False):
   """
     Returns a list of actions to be displayed to the user.
 
@@ -478,7 +478,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         if a is not None:
           worklist_dict[wf_id] = a
 
-  if worklist_dict:
+  if include_worklist and worklist_dict:
     portal = self.getPortalObject()
     portal_url = portal.portal_url()
     def _getWorklistActionList():
