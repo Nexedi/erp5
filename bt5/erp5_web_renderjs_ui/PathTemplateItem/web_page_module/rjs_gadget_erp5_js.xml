@@ -315,14 +315,23 @@
     .allowPublicAcquisition("jio_get", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.get.apply(jio_gadget, param_list);\n
+          return jio_gadget.get.apply(jio_gadget, param_list)\n
+        })\n
+        .push(function (result) {\n
+          return {data: result};\n
         });\n
     })\n
     .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
           return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
-        });\n
+        })\n
+        .push(function (response) {\n
+          return jIO.util.readBlobAsText(response);\n
+        })\n
+        .push(function (event) {\n
+          return {data: JSON.parse(event.target.result)};\n
+        })\n
     })\n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
       // Hey, I want to display some URL\n
@@ -717,7 +726,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.50639.33715.55517</string> </value>
+                <value> <string>941.25415.51811.22323</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -735,8 +744,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423147262.73</float>
-                        <string>UTC</string>
+                        <float>1425307454.32</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
