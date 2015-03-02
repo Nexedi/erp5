@@ -79,7 +79,6 @@ url_template_dict = {\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "{&query,select_list*,limit*}",\n
-  "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   # XXX View is set by default to empty\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                   "&relative_url=%(relative_url)s",\n
@@ -708,14 +707,6 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
       \'name\': \'Traverse\',\n
       \'templated\': True\n
     }\n
-    action_dict[\'add\'] = {\n
-      "href": url_template_dict["new_content_action"] % {\n
-        "root_url": site_root.absolute_url(),\n
-        "script_id": script.id\n
-      },\n
-      \'method\': \'POST\',\n
-      \'name\': \'New Content\',\n
-    }\n
 \n
     # Handle also other kind of users: instance, computer, master\n
     person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
@@ -841,55 +832,6 @@ elif mode == \'search\':\n
   result_dict[\'_query\'] = query\n
   result_dict[\'_limit\'] = limit\n
   result_dict[\'_select_list\'] = select_list\n
-\n
-\n
-elif mode == \'newContent\':\n
-  #################################################\n
-  # Create new document\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "POST":\n
-    response.setStatus(405)\n
-    return ""\n
-  portal_type = REQUEST.form["portal_type"]\n
-  module = portal.getDefaultModule(portal_type=portal_type)\n
-  document = module.newContent(\n
-    portal_type=portal_type\n
-  )\n
-  # http://en.wikipedia.org/wiki/Post/Redirect/Get\n
-  response.setStatus(201)\n
-  response.setHeader("X-Location",\n
-    default_document_uri_template % {\n
-      "root_url": site_root.absolute_url(),\n
-      "relative_url": document.getRelativeUrl(),\n
-      "script_id": script.id\n
-    })\n
-  return \'\'\n
-\n
-elif mode == \'form\':\n
-  #################################################\n
-  # Calculate form value\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "GET":\n
-    response.setStatus(405)\n
-    return ""\n
-\n
-  # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
-  response.setHeader("Cache-Control", "public, max-age=1800")\n
-  response.setHeader("Vary", "Cookie")\n
-\n
-  renderForm(form, result_dict)\n
-\n
-\n
-# elif mode == \'form_definition\':\n
-#   #################################################\n
-#   # Get raw form definitions\n
-#   #################################################\n
-#   if REQUEST.other[\'method\'] != "GET":\n
-#     response.setStatus(405)\n
-#     return ""\n
-# \n
-#   form = getattr(portal, skin_id)\n
-#   renderFormDefinition(form, result_dict)\n
 \n
 else:\n
   raise NotImplementedError("Unsupported mode %s" % mode)\n
