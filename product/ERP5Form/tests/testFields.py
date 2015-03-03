@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import unittest
 
 # Initialize ERP5Form Product to load monkey patches
-from Testing import ZopeTestCase
 
 from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
@@ -48,7 +47,6 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
-from Products.ERP5Form import Form
 from Products.ERP5Form import ProxyField
 from DateTime import DateTime
 

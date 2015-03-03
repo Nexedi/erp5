@@ -35,7 +35,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 
 class TestImmobilisationMixin(ERP5TypeTestCase):

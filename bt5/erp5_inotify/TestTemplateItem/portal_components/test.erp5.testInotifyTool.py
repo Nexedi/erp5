@@ -28,7 +28,6 @@
 
 import os, shutil, tempfile, unittest
 from Acquisition import aq_base
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.ERP5Site import addERP5Tool
 

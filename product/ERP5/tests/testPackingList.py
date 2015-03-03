@@ -35,7 +35,6 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from DateTime import DateTime
-from Products.ERP5Type.Globals import PersistentMapping
 
 class TestPackingListMixin(TestOrderMixin):
   """
@@ -2021,11 +2020,9 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
 
   def test_subcontent_reindexing_packing_list_container_line_cell(self):
     """No need to check Containers in Purchase Packing List"""
-    pass
 
   def test_subcontent_reindexing_container_line_cell(self):
     """No need to check Containers in Purchase Packing List"""
-    pass
 
 class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
   """Tests for purchase packing list.

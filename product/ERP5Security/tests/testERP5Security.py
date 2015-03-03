@@ -35,7 +35,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
-from zLOG import LOG
 from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime

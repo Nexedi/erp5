@@ -30,12 +30,10 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import FileUpload
 
-from zLOG import LOG
 import os
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_data')

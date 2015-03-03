@@ -28,7 +28,6 @@
 import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 
 class TestApparelModel(ERP5TypeTestCase):
 
@@ -170,7 +169,6 @@ class TestApparelModel(ERP5TypeTestCase):
     Check that it's possible to copy colour range variation from a model, and
     that cells are well created.
     '''
-    pass
 
 
 def test_suite():

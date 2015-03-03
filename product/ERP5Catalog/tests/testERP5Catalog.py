@@ -30,7 +30,6 @@
 import unittest
 import sys
 from unittest import expectedFailure
-from _mysql_exceptions import ProgrammingError
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

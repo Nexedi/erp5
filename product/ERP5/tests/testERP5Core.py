@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-from hashlib import md5
 import pprint
 
 from AccessControl.SecurityManagement import newSecurityManager

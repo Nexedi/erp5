@@ -32,9 +32,8 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import createZODBPythonScript, reindex
+from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import todo_erp5
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""

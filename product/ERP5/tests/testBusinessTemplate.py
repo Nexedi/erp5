@@ -41,7 +41,6 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
-from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
 import gc

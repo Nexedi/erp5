@@ -6,8 +6,6 @@ import Zope2
 # can we fake this? should we do this?
 from Testing import makerequest
 
-from Products.Formulator.Form import ZMIForm
-from Products.Formulator.Errors import ValidationError, FormValidationError
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 

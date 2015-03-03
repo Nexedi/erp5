@@ -31,7 +31,6 @@
 
 import unittest
 from unittest import skip
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
@@ -770,7 +769,6 @@ for n in xrange(6, 0, -1):
     """
     Frame not tested yet
     """
-    pass
 
   def test_04_Iteration(self):
     """
@@ -1095,13 +1093,11 @@ return []
     """
     styles.xml not tested yet
     """
-    pass
 
   def _test_06_Meta(self):
     """
     meta.xml not supported yet
     """
-    pass
 
   def test_07_Image(self):
     """

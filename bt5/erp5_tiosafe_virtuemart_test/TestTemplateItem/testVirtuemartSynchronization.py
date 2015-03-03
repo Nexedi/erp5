@@ -32,7 +32,6 @@ from unittest import expectedFailure
 from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-import os
 
 class TestVirtuemartSynchronization(ERP5TypeTestCase):
   """

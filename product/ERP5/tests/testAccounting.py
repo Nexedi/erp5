@@ -31,7 +31,6 @@
 """
 
 import unittest
-import os
 
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission

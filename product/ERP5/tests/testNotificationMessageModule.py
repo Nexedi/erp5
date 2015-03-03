@@ -31,9 +31,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.utils import DummyMailHost
 
 class TestNotificationMessageModule(ERP5TypeTestCase):

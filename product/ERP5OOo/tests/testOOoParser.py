@@ -28,7 +28,6 @@
 
 import unittest
 import os
-from DateTime import DateTime
 
 from Products.ERP5OOo.OOoUtils import OOoParser
 

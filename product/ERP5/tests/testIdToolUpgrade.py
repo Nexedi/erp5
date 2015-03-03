@@ -34,7 +34,6 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
-from zLOG import LOG
 
 
 class TestIdToolUpgrade(ERP5TypeTestCase):

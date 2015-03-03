@@ -1,5 +1,4 @@
 
-from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from zope.interface import implements
@@ -8,7 +7,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
 import urllib
-import time
 import re
 
 class BaseTransform:

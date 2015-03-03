@@ -18,11 +18,7 @@ import urllib
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
-from zExceptions.unauthorized import Unauthorized
 from AccessControl.User import UserFolder
-from AccessControl.SecurityManagement import noSecurityManager
-from ZPublisher.HTTPRequest import HTTPRequest
-from ZPublisher.HTTPResponse import HTTPResponse
 
 from Products.CMFCore.CookieCrumbler \
      import CookieCrumbler, manage_addCC, Redirect

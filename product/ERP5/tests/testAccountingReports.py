@@ -30,7 +30,6 @@
 """
 
 import unittest
-import os
 
 from DateTime import DateTime
 

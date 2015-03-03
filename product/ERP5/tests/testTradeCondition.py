@@ -31,7 +31,6 @@ import unittest
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ZSQLCatalog.SQLCatalog import Catalog
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 
 class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):

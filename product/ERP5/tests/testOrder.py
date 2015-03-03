@@ -1363,7 +1363,6 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       Not yet tested....
     """
     if not run: return
-    pass
 
   def test_04_OrderLine_getVariationCategoryItemList(self, quiet=0,
                                                      run=run_all_test):

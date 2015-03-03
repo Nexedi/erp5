@@ -29,7 +29,6 @@
 This test is experimental for new simulation implementation.
 """
 
-import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList

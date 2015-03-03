@@ -36,7 +36,6 @@ from Testing import ZopeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from AccessControl.SecurityManagement import newSecurityManager
 
 class ResourceVariationTestCase(ERP5TypeTestCase):
   """Tests starts with a preference activated for self.my_organisation, logged in

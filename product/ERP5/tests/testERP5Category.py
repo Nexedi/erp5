@@ -28,7 +28,6 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager
 
 class TestERP5Category(ERP5TypeTestCase):

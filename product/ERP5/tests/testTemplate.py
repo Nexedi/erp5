@@ -33,7 +33,6 @@ import unittest
 from unittest import expectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type import Permissions
 from Products.ERP5Form.PreferenceTool import Priority
 
 

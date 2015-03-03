@@ -50,7 +50,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from Products.ERP5Form.Selection import DomainSelection
 from Products.ERP5Type.tests.utils import createZODBPythonScript

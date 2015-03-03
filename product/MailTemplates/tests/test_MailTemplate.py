@@ -16,7 +16,6 @@ from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import system as SystemUser, SimpleUser
 from cStringIO import StringIO
 from difflib import unified_diff
-from OFS.Folder import Folder
 from Products.MailHost.MailHost import MailHost
 from Testing.makerequest import makerequest
 from unittest import TestCase,TestSuite,makeSuite,main

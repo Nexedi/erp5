@@ -149,7 +149,6 @@ class TestSpellChecking(ERP5TypeTestCase):
       Make sure that we have installed on this test all public
       business template which has WorkflowTemplateItem.
     """
-    pass
 
   def test_spell_check_workflow_states(self):
     """

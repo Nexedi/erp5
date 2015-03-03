@@ -8,9 +8,7 @@ import os
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import system as SystemUser,SimpleUser
-from cStringIO import StringIO
 from OFS.Folder import Folder
-from Products.MailHost.MailHost import MailHost
 from test_MailTemplate import DummyMailHost,Zope,get_transaction
 from Testing.makerequest import makerequest
 from unittest import TestCase,TestSuite,makeSuite,main
@@ -24,7 +22,6 @@ except ImportError:
 else:
     from Products.CMFCore.DirectoryView import addDirectoryViews
     from Products.CMFCore.tests.base.testcase import FSDVTest
-    from Products.CMFCore.tests.base.dummy import DummyFolder
     from AccessControl import ClassSecurityInfo
     from App.class_init import default__class_init__ as InitializeClass
     

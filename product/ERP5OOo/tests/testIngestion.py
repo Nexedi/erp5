@@ -30,19 +30,15 @@
 ##############################################################################
 
 import unittest
-import os, cStringIO, zipfile
+import os
 from lxml import etree
-from Testing import ZopeTestCase
 from DateTime import DateTime
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
-from Products.ERP5OOo.Document.OOoDocument import ConversionError
 from Products.ERP5OOo.OOoUtils import OOoBuilder
-from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
 from unittest import expectedFailure

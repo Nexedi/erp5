@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import urllib
 import transaction
 import ZODB
 from ZODB.DemoStorage import DemoStorage

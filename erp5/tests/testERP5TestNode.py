@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 from erp5.util.testnode.testnode import TestNode
-from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
+from erp5.util.testnode.NodeTestSuite import SlapOSInstance
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 from erp5.util.testnode.Updater import Updater
 

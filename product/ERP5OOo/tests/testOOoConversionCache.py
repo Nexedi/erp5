@@ -29,16 +29,10 @@
 
 
 import unittest
-import time
 from DateTime import DateTime
 
-from Testing import ZopeTestCase
 from testDms import TestDocumentMixin
 from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5Type.tests.utils import DummyLocalizer
-from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
-from zLOG import LOG
 import os
 
 try:

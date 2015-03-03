@@ -26,11 +26,9 @@
 #
 ##############################################################################
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import getSecurityManager
 from Products.ERP5Type.tests.utils import DummyMailHost
-from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.Sequence import Step, Sequence, SequenceList
 from zLOG import LOG

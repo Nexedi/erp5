@@ -27,12 +27,9 @@
 #
 ##############################################################################
 
-import unittest
-import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
-from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
 import random
 import string

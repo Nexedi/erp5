@@ -28,15 +28,12 @@
 ##############################################################################
 
 import os
-import sys
 import unittest
 from cStringIO import StringIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import DummyLocalizer
-from zLOG import LOG
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 

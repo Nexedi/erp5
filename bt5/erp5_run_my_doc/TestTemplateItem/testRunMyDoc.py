@@ -59,7 +59,6 @@ class TestRunMyDoc(ERP5TypeTestCase):
     This is ran before anything, used to set the environment
     """
     # here, you can create the categories and objects your test will depend on
-    pass
 
   website_id = "test_page_web_site"
 

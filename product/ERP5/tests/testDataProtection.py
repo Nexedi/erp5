@@ -29,7 +29,7 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 clear_module_name_list = """

@@ -33,7 +33,6 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from _mysql_exceptions import ProgrammingError
-from BTrees.OOBTree import OOBTree
 
 class TestIdTool(ERP5TypeTestCase):
 

@@ -30,11 +30,11 @@
   Tests invoice creation from simulation.
 
 """
-import sys, zipfile, xml.dom.minidom
-import StringIO
+import xml.dom.minidom
+import zipfile
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload, DummyMailHost
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5OOo.OOoUtils import OOoParser
 from AccessControl.SecurityManagement import newSecurityManager
@@ -908,7 +908,6 @@ class TestInvoiceMixin(TestPackingListMixin):
       start_date=self.datetime + 15,
       stop_date=self.datetime + 25,
       **kw)
-    pass
 
   def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
                                             sequence_list=None):

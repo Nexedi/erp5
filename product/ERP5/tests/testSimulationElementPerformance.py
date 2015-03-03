@@ -73,7 +73,6 @@ import unittest
 from time import time
 import gc
 import subprocess
-import hotshot
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

@@ -28,16 +28,13 @@
 ##############################################################################
 
 import random
-import unittest
 import time
-import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import\
                                               DistributedRamCache
 from Products.ERP5Type.CachePlugins.BaseCache import CacheEntry
-from Products.ERP5Type.Tool.CacheTool import CacheTool
 
 
 class Foo:

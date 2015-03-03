@@ -50,7 +50,6 @@ class TestInternalOrder(TestPurchaseOrder):
     """
     No Payment conditions for Internal Orders
     """
-    pass
 
 def test_suite():
   suite = unittest.TestSuite()

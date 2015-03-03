@@ -821,7 +821,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # If address not available on one organisation
       # it is found on the mapping related organisation
       # which is one step higher in the site
-      pass
 
     def test_15_DefaultValue(self):
       """

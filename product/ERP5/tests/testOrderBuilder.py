@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestOrderBuilderMixin(TestOrderMixin):
 

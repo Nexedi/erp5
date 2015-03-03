@@ -33,10 +33,8 @@ import unittest
 
 import transaction
 from persistent import Persistent
-from unittest import expectedFailure, skip
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 
 from zope.interface import Interface, implementedBy
 
@@ -1284,7 +1282,6 @@ class _TestZodbComponent(SecurityTestCase):
     """
     Abstract method defining ZODB Component top-level package name
     """
-    pass
 
   def _getComponentFullModuleName(self, module_name):
     return self._getComponentModuleName() + '.' + module_name

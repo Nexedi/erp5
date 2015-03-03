@@ -1,9 +1,5 @@
-from PIL import Image
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
-from zLOG import LOG,INFO,ERROR
-import json
-from cStringIO import StringIO
 import os
 
 

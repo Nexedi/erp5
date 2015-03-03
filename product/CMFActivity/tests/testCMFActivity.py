@@ -32,7 +32,6 @@ import unittest
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Base import Base
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -2083,7 +2082,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     self.tic()
     activity_tool = self.getActivityTool()
-    from Shared.DC.ZRDB.TM import TM
     try:
       Organisation.registerFailingTransactionManager = registerFailingTransactionManager
       obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')

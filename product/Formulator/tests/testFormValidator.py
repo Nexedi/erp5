@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import unittest
-import ZODB
-import OFS.Application
 from Products.Formulator import Validator
 from Products.Formulator.StandardFields import DateTimeField
 from Testing import ZopeTestCase

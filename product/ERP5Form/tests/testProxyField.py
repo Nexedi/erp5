@@ -26,13 +26,10 @@
 #
 ##############################################################################
 
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
-import unittest
 from lxml import etree
 from unittest import expectedFailure
 

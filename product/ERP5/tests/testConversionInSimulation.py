@@ -30,7 +30,6 @@ import unittest
 
 from DateTime import DateTime
 from zLOG import LOG
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Testing import ZopeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager

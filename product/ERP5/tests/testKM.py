@@ -29,11 +29,10 @@
 
 import unittest
 from unittest import expectedFailure
-from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Base import TempBase
-from Products.ERP5OOo.tests.testDms import makeFileUpload,TestDocumentMixin, TestDocument
+from Products.ERP5OOo.tests.testDms import makeFileUpload
+from Products.ERP5OOo.tests.testDms import TestDocumentMixin
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""

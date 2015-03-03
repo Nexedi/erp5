@@ -1,7 +1,5 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG,INFO,ERROR 
 import json 
-from Products.ERP5Type.Log import log
 from time import sleep
 
 class TestTaskDistribution(ERP5TypeTestCase):

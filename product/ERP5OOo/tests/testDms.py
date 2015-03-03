@@ -53,7 +53,6 @@ from cgi import FieldStorage
 from unittest import expectedFailure
 
 import ZPublisher.HTTPRequest
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
@@ -62,7 +61,6 @@ from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
-from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript

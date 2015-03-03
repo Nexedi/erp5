@@ -30,13 +30,11 @@
 import time
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
 from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Cache import CachingMethod, DEFAULT_CACHE_SCOPE
-from zLOG import LOG
 
 class TestingCache(DummyCache):
   """A dummy cache that mark cache miss, so that you can later count access

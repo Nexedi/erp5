@@ -30,7 +30,6 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """

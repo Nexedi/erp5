@@ -27,11 +27,8 @@
 ##############################################################################
 
 import unittest
-import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.CMFCore.utils import getToolByName
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 
 class TestFieldLibraryGuideline(ERP5TypeTestCase):
