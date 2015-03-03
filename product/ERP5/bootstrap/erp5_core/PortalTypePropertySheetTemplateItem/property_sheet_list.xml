@@ -48,6 +48,9 @@
   <item>ScriptConstraint</item>
   <item>SimpleItem</item>
  </portal_type>
+ <portal_type id="Simulation Movement">
+  <item>SortIndex</item>
+ </portal_type>
  <portal_type id="String Attribute Match Constraint">
   <item>ConstraintType</item>
  </portal_type>
