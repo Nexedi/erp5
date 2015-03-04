@@ -1417,10 +1417,6 @@ class DateTimeWidget(Widget):
   def render(self, field, key, value, REQUEST, render_prefix=None):
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
-    # FIXME: backwards compatibility hack:
-    if not hasattr(field, 'sub_form'):
-      from StandardFields import create_datetime_text_sub_form
-      field.sub_form = create_datetime_text_sub_form()
 
     # Is it still usefull to test the None value,
     # as DateTimeField should be considerer as the other field
@@ -1428,8 +1424,7 @@ class DateTimeWidget(Widget):
     # XXX hasattr(REQUEST, 'form') seems useless,
     # because REQUEST always has a form property
     if (value in (None, '')) and (field.get_value('default_now')) and \
-        ((REQUEST is None) or (not hasattr(REQUEST, 'form')) or \
-        (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
+        ((REQUEST is None) or (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
       value = DateTime()
     year   = None
     month  = None
@@ -1449,48 +1444,64 @@ class DateTimeWidget(Widget):
       minute = "%02d" % value.minute()
       ampm = value.ampm()
       timezone = value.timezone()
+    elif REQUEST is not None:
+      year = REQUEST.get(field.generate_subfield_key("year", key=key))
+      month = REQUEST.get(field.generate_subfield_key("month", key=key))
+      day = REQUEST.get(field.generate_subfield_key("day", key=key))
+      hour = REQUEST.get(field.generate_subfield_key("hour", key=key))
+      minute = REQUEST.get(field.generate_subfield_key("minute", key=key))
+      ampm = REQUEST.get(field.generate_subfield_key("ampm", key=key))
+      timezone = REQUEST.get(field.generate_subfield_key("timezone", key=key))
     input_order = self.getInputOrder(field)
     if input_order == 'ymd':
-      order = [('year', year),
-                ('month', month),
-                ('day', day)]
+      order = [['year', year, 4, 4],
+                ['month', month, 2, 2],
+                ['day', day, 2, 2]]
     elif input_order == 'dmy':
-      order = [('day', day),
-                ('month', month),
-                ('year', year)]
+      order = [['day', day, 2, 2],
+                ['month', month, 2, 2],
+                ['year', year, 4, 4]]
     elif input_order == 'mdy':
-      order = [('month', month),
-                ('day', day),
-                ('year', year)]
+      order = [['month', month, 2, 2],
+                ['day', day, 2, 2],
+                ['year', year, 4, 4]]
     elif input_order == 'my':
-      order = [('month', month),
-                ('year', year)]
+      order = [['month', month, 2, 2],
+                ['year', year, 4, 4]]
     elif input_order == 'ym':
-      order = [('year', year),
-                ('month', month)]
+      order = [['year', year, 4, 4],
+                ['month', month, 2, 2]]
     else:
-      order = [('year', year),
-                ('month', month),
-                ('day', day)]
+      order = [['year', year, 4 ,4],
+                ['month', month, 2, 2],
+                ['day', day, 2, 2]]
     result = []
-    for sub_field_name, sub_field_value in order:
-      result.append(field.render_sub_field(sub_field_name,
-                                            sub_field_value, REQUEST, key=key))
+    for sub_field_name, sub_field_value, size, maxlength in order:
+      result.append(self.render_sub_field(field, key, sub_field_name,
+                                            sub_field_value, size, maxlength, REQUEST))
     date_result = string.join(result, field.get_value('date_separator'))
     if not field.get_value('date_only'):
-      time_result = (field.render_sub_field('hour', hour, REQUEST, key=key) +
+      time_result = (self.render_sub_field(field, key, 'hour', hour, 2, 2, REQUEST) +
                       field.get_value('time_separator') +
-                      field.render_sub_field('minute', minute, REQUEST, key=key))
+                      self.render_sub_field(field, key, 'minute', minute, 2, 2, REQUEST))
 
       if use_ampm:
-        time_result += '&nbsp;' + field.render_sub_field('ampm',
-                                                      ampm, REQUEST, key=key)
+        time_result += '&nbsp;' + self.render_sub_field(field, key, 'ampm',
+                                                        ampm, 2, 2, REQUEST)
+      """
       if use_timezone:
         time_result += '&nbsp;' + field.render_sub_field('timezone',
                                                       timezone, REQUEST, key=key)
+      """
       return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
     else:
       return date_result
+  def render_sub_field(self, field, key, name, value, size, maxlength, REQUEST):
+    if value is None:
+      value = ""
+    return render_element("input", type="text",
+                           name= field.generate_subfield_key(name, key=key),
+                           value=value, size=size, maxlength=maxlength)
 
   def format_value(self, field, value, mode='html'):
     # Is it still usefull to test the None value,

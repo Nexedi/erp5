@@ -127,6 +127,7 @@ class DateTimeField(ZMIField):
   widget = Widget.DateTimeWidgetInstance
   validator = Validator.DateTimeValidatorInstance
 
+  """
   def __init__(self, id, **kw):
     # icky but necessary...
     apply(ZMIField.__init__, (self, id), kw)
@@ -160,10 +161,7 @@ class DateTimeField(ZMIField):
     for field in self.sub_form.get_fields():
       field.values['css_class'] = value
       field._p_changed = 1
-
   def override_year_items(self):
-    """The method gets called to get the right amount of years.
-    """
     start_datetime = self.get_value('start_datetime')
     end_datetime = self.get_value('end_datetime')
     current_year = DateTime().year()
@@ -176,7 +174,7 @@ class DateTimeField(ZMIField):
     else:
       last_year = first_year + 11
     return create_items(first_year, last_year, digits=4)
-
+  """
   def _get_user_input_value(self, key, REQUEST):
     """
     Try to get a value of the field from the REQUEST

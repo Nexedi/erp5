@@ -278,9 +278,12 @@ class IntegerValidator(StringBaseValidator):
         value = int(value)
       except ValueError:
         self.raise_error('not_integer', field)
-
-      start = field.get_value('start')
-      end = field.get_value('end')
+      start = ""
+      end = ""
+      if hasattr(field, start):
+        start = field.get_value('start')
+      if hasattr(field, end):
+        end = field.get_value('end')
       if start != "" and value < start:
         self.raise_error('integer_out_of_range', field)
       if end != "" and value >= end:
@@ -734,29 +737,33 @@ class DateTimeValidator(Validator):
   not_datetime = 'You did not enter a valid date and time.'
   datetime_out_of_range = 'The date and time you entered were out of range.'
 
+  def validate_sub_field(self, field, key, name, REQUEST):
+    id = field.generate_subfield_key(name, validation = 1, key = key)
+    return IntegerValidatorInstance.validate(field, id, REQUEST)
+
   def validate(self, field, key, REQUEST):
     try:
-      year = field.validate_sub_field('year', REQUEST, key=key)
-      month = field.validate_sub_field('month', REQUEST, key=key)
+      year = self.validate_sub_field(field, key, 'year', REQUEST)
+      month = self.validate_sub_field(field, key, 'month', REQUEST)
       if field.get_value('hide_day'):
         day = 1
       else:
-        day = field.validate_sub_field('day', REQUEST, key=key)
+        day = self.validate_sub_field(field, key, 'day', REQUEST)
 
       if field.get_value('date_only'):
         hour = 0
         minute = 0
       elif field.get_value('allow_empty_time'):
-          hour = field.validate_sub_field('hour', REQUEST, key=key)
-          minute = field.validate_sub_field('minute', REQUEST, key=key)
+          hour = self.validate_sub_field(field, key, 'hour', REQUEST)
+          minute = self.validate_sub_field(field, key, 'minute', REQUEST)
           if hour == '' and minute == '':
             hour = 0
             minute = 0
           elif hour == '' or minute == '':
             raise ValidationError('not_datetime', field)
       else:
-        hour = field.validate_sub_field('hour', REQUEST, key=key)
-        minute = field.validate_sub_field('minute', REQUEST, key=key)
+        hour = self.validate_sub_field(field, key, 'hour', REQUEST)
+        minute = self.validate_sub_field(field, key, 'minute', REQUEST)
     except ValidationError:
       self.raise_error('not_datetime', field)
 
@@ -778,7 +785,7 @@ class DateTimeValidator(Validator):
       self.raise_error('not_datetime', field)
 
     if field.get_value('ampm_time_style'):
-      ampm = field.validate_sub_field('ampm', REQUEST, key=key)
+      ampm = self.validate_sub_field(field, key, 'ampm', REQUEST)
       if field.get_value('allow_empty_time'):
         if ampm == '':
           ampm = 'am'
@@ -794,9 +801,10 @@ class DateTimeValidator(Validator):
 
     # handle possible timezone input
     timezone = ''
+    """
     if field.get_value('timezone_style'):
       timezone =  field.validate_sub_field('timezone', REQUEST, key=key)
-
+    """
     try:
       # handling of hidden day, which can be first or last day of the month:
       if field.get_value('hidden_day_is_last_day'):
