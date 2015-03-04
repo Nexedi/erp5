@@ -247,5 +247,6 @@ class Workflow(XMLObject):
           out.append('%s -> %s [label="%s"];' % (k[0], k[1],
                                                  ',\\n'.join(v)))
 
+
       out.append('}')
       return '\n'.join(out)

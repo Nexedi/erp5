@@ -52,13 +52,15 @@ class WorkflowScript(PythonScript):
 
   def __init__(self, *args, **kw):
     PythonScript.__init__(self, *args, **kw)
-    LOG('zwj: Init _params = %s'%self._params, WARNING, ' in WorkflowScript.py')
 
-  ### zwj: override __call__ to access view page instead of executing script
+
   def __call__(self):
     r_url = self.REQUEST.get('URL')
     return self.REQUEST.RESPONSE.redirect(r_url+'/view')
 
   execute = PythonScript.__call__
 
+  # We need to take __setstate__ from PythonScript in order to
+  # generate _v_ft attributes which is necessary to run the script
+  __setstate__ = PythonScript.__setstate__
 InitializeClass(WorkflowScript)

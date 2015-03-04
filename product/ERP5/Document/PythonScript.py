@@ -109,12 +109,7 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       override to call ZopePythonScript methods to force compiling code
       """
-      if value is None:
-        value = ''
       self._baseSetParameterSignature(value)
-      if self._params is None or '':
-        ### zwj: avoid NoneType parameters from generating in ZHtml edit page
-        delattr(self, "_params")
       self._compile()
 
     def _setProxyRoleList(self, value):
@@ -128,9 +123,6 @@ class PythonScript(XMLObject, ZopePythonScript):
 
     def edit(self, **kw):
       XMLObject.edit(self, **kw)
-
     # We need to take __setstate__ from ZopePythonScript in order to
     # generate _v_ft attributes which is necessary to run the script
     __setstate__ = ZopePythonScript.__setstate__
-
-InitializeClass(PythonScript)

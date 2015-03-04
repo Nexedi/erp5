@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from Products.DCWorkflow.Expression import StateChangeInfo
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class Transition(XMLObject):
@@ -64,22 +65,23 @@ class Transition(XMLObject):
     if form_kw is None:
       form_kw = {}
     workflow = self.getParentValue()
+    # Get variable values
+    state_bc_id = workflow.getStateBaseCategory()
+    status_dict = workflow.getCurrentStatusDict(document)
+    state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
     # Call the before script
-    self._executeBeforeScript(document, form_kw=form_kw)
+    self._executeBeforeScript(document, workflow, state_object, form_kw=form_kw)
 
     # Modify the state
     self._changeState(document)
     ### zwj: update Role mapping, also in Workflow, initialiseDocument()
     self.getParent().updateRoleMappingsFor(document)
-    # Get variable values
-    status_dict = workflow.getCurrentStatusDict(document)
+
+
     status_dict['undo'] = 0
 
     # Modify workflow history
-    state_bc_id = workflow.getStateBaseCategory()
     status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
-
-    state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
     # Update all variables
@@ -102,7 +104,7 @@ class Transition(XMLObject):
     workflow._updateWorkflowHistory(document, status_dict)
 
     # Call the after script
-    self._executeAfterScript(document, form_kw=form_kw)
+    self._executeAfterScript(document, workflow, state_object, form_kw=form_kw)
 
   def _changeState(self, document):
     """
@@ -114,25 +116,36 @@ class Transition(XMLObject):
       state_bc_id = self.getParentValue().getStateBaseCategory()
       document.setCategoryMembership(state_bc_id, state)
 
-  def _executeAfterScript(self, document, form_kw=None):
+  def _executeAfterScript(self, document, workflow, state_object, form_kw=None):
     """
     Execute post transition script.
     """
+    former_status = state_object.getId()
+    old_sdef = state_object
+    new_sdef = document.unrestrictedTraverse(self.getDestination())
+    kwargs = form_kw
+    sci = StateChangeInfo(
+            document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
     if form_kw is None:
       form_kw = {}
     script_id = self.getAfterScriptId()
     if script_id is not None:
-
       script = self.getParent()._getOb(script_id)
       if script is not None:
         LOG("zwj: Executing after script %s for %s"%(script_id,self.getId()),WARNING,"in Transition.py.")
         #script(**form_kw) ### zwj: call the name of script to execute itself
-        script.execute()
+        script.execute(sci)
 
-  def _executeBeforeScript(self, document, form_kw=None):
+  def _executeBeforeScript(self, document, workflow, state_object, form_kw=None):
     """
     Execute pre transition script.
     """
+    former_status = state_object.getId()
+    old_sdef = state_object
+    new_sdef = document.unrestrictedTraverse(self.getDestination())
+    kwargs = form_kw
+    sci = StateChangeInfo(
+            document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
     if form_kw is None:
       form_kw = {}
     script_id = self.getBeforeScriptId()
@@ -143,7 +156,8 @@ class Transition(XMLObject):
       if script is not None:
         LOG("zwj: Executing before script %s for %s"%(script_id,self.getId()),WARNING,"in Transition.py.")
         #script(**form_kw) ### zwj: call the name of script to execute itself
-        script.execute()
+        script.execute(sci)
+
 
   def _checkPermission(self, document):
     """
