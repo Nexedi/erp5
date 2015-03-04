@@ -377,7 +377,11 @@ def renderForm(form, response_dict):\n
       for field in form.get_fields_in_group(group[\'goid\']):\n
 #         field_list.append((field.id, renderRawField(field)))\n
         if field.get_value("enabled"):\n
-          response_dict[field.id] = renderField(field)\n
+          try:\n
+            response_dict[field.id] = renderField(field)\n
+          except AttributeError:\n
+            # Do not crash if field configuration is wrong.\n
+            pass\n
 \n
   #       for field_group in field.form.get_groups():\n
   #         traversed_document.log("Field group: " + field_group)\n
@@ -658,6 +662,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
 \n
       # Include properties in document JSON\n
       # XXX Extract from renderer form?\n
+      """\n
       for group in renderer_form.Form_getGroupTitleAndId():\n
         for field in renderer_form.get_fields_in_group(group[\'goid\']):\n
           field_id = field.id\n
@@ -671,6 +676,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
                 # Serialize DateTime\n
                 property_value = property_value.rfc822()\n
               result_dict[property_name] = property_value \n
+              """\n
 \n
   ##############\n
   # XXX Custom slapos code\n
@@ -797,7 +803,9 @@ elif mode == \'search\':\n
 #   else:\n
 \n
   # Cast to list if only one element is provided\n
-  if same_type(select_list, ""):\n
+  if select_list is None:\n
+    select_list = []\n
+  elif same_type(select_list, ""):\n
     select_list = [select_list]\n
 \n
   for sql_document in sql_list:\n
@@ -844,7 +852,7 @@ return json.dumps(result_dict, indent=2)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None, restricted=0, list_method=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

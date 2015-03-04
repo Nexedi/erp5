@@ -149,7 +149,8 @@
 \n
       return gadget.jio_allDocs({\n
         "query": \'meta_type:"ERP5 Folder" AND id:"%_module"\',\n
-        "select_list": ["title", "business_application_title"]\n
+        "select_list": ["title", "business_application_title"],\n
+        "limit": 1000\n
       })\n
         .push(function (result) {\n
           var result_list = [],\n
@@ -355,7 +356,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -369,7 +370,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.1897.57739.49578</string> </value>
+                <value> <string>940.11553.26313.55261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,7 +388,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1420236486.36</float>
+                        <float>1425475569.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

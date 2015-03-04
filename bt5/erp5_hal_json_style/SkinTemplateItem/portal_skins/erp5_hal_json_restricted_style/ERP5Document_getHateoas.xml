@@ -76,7 +76,7 @@ return context.ERP5Document_getHateoas(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=None, form=None, relative_url=None, list_method=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, list_method=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
