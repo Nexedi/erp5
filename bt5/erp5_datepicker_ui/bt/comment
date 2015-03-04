@@ -1,0 +1,2 @@
+To enable date picker you must extend your ERP5Site_getJavaScriptRelativeUrlList!
+See 	README_HOWTO_CUSTOMISE@@@ERP5Site_getJavaScriptRelativeUrlList.
