@@ -202,9 +202,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         movement = newTempMovement(self.getPortalObject(),
                                    str(id_count))
         id_count += 1
-        resource_portal_type = self.getResourcePortalType()
+        resource_portal_type_list = self.getResourcePortalTypeList()
         resource = portal.portal_catalog.getObject(inventory_item.resource_uid)
-        assert resource.getPortalType() == resource_portal_type
+        resource_portal_type = resource.getPortalType()
+        assert resource_portal_type in (resource_portal_type_list), \
+          "Builder %r does not support resource of type : %r" % (
+          self.getRelativeUrl(), resource_portal_type)
         movement.edit(
             resource=inventory_item.resource_relative_url,
             variation_category_list=dumb_movement.getVariationCategoryList(),
