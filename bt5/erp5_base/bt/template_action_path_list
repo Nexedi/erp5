@@ -24,6 +24,9 @@ Delivery Builder | view_predicate_group
 Delivery Builder | view_profile
 Delivery Causality Assignment Movement Group | view
 Delivery Tool | view
+Document | view
+ERP5Workflow Test Module | view
+ERP5Workflow Test Object | view
 Email | change_function
 Email | view
 Embedded File | download

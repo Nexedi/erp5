@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getId()) for x in here.getParent().contentValues(portal_type=\'Workflow Script\')]</string> </value>
+            <value> <string>python: [(x.getId(), x.getId()) for x in here.getParent().contentValues(portal_type=\'Workflow Script\') and here.getParent().objectValues(id=here.getDestinationTitle())]</string> </value>
         </item>
       </dictionary>
     </pickle>

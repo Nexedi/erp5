@@ -104,18 +104,7 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Python Script</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-              <string>ERP5 Workflow Script</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -124,66 +113,6 @@
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>55</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>82</string>
-              <int>1</int>
-              <string>83</string>
-              <int>1</int>
-              <string>84</string>
-              <int>1</int>
-              <string>85</string>
-              <int>1</int>
-              <string>86</string>
-              <int>1</int>
-              <string>87</string>
-              <int>1</int>
-              <string>88</string>
-              <int>1</int>
-              <string>89</string>
-              <int>1</int>
-              <string>90</string>
-              <int>1</int>
-              <string>91</string>
-              <int>1</int>
-              <string>92</string>
-              <int>1</int>
-              <string>93</string>
-              <int>1</int>
-              <string>94</string>
-              <int>1</int>
-              <string>95</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
     </pickle>
   </record>
 </ZopeData>

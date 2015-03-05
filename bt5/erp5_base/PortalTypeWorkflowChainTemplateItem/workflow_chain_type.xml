@@ -36,6 +36,14 @@
   <workflow>currency_exchange_line_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>ERP5Workflow Test Object</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Email</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -69,11 +77,11 @@
  </chain>
  <chain>
   <type>Organisation</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Person</type>
-  <workflow>edit_workflow, person_interaction_workflow, user_account_workflow</workflow>
+  <workflow>edit_workflow, person_interaction_workflow, user_account_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Query</type>

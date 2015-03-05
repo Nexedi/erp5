@@ -71,7 +71,6 @@ class PythonScript(XMLObject, ZopePythonScript):
     meta_type = 'ERP5 Python Script'
     portal_type = 'Python Script'
     add_permission = Permissions.AddPortalContent
-
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)

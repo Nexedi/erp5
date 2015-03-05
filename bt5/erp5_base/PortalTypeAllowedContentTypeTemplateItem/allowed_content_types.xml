@@ -44,6 +44,10 @@
  <portal_type id="Delivery Tool">
   <item>Delivery Builder</item>
  </portal_type>
+ <portal_type id="ERP5Workflow Test Module">
+  <item>DCWorkflow Test Object</item>
+  <item>ERP5Workflow Test Object</item>
+ </portal_type>
  <portal_type id="Embedded Folder">
   <item>Embedded File</item>
  </portal_type>

@@ -2,10 +2,11 @@ Currency Exchange Cell | currency_exchange_type
 Currency Exchange Cell | price_currency
 Currency Exchange Line | price_currency
 Currency Module | business_application
+ERP5Workflow Test Module | business_application
 Notification Message Module | business_application
 Notification Message | specialise
 Organisation Module | business_application
+Organisation | validation_state
 Person Module | business_application
-Person | validation_state
 Query Module | business_application
 Query | agent

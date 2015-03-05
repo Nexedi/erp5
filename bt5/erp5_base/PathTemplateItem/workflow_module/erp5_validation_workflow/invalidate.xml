@@ -15,7 +15,9 @@
         <item>
             <key> <string>before_script_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>before_script</string>
+              </tuple>
             </value>
         </item>
         <item>

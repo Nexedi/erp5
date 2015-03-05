@@ -9,7 +9,9 @@
         <item>
             <key> <string>after_script_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>after_script</string>
+              </tuple>
             </value>
         </item>
         <item>

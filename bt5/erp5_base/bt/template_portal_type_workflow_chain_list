@@ -13,6 +13,8 @@ Currency Exchange Line | edit_workflow
 Currency Exchange Line | validation_workflow
 Currency | edit_workflow
 Currency | validation_workflow
+Document | edit_workflow
+ERP5Workflow Test Object | edit_workflow
 Email | edit_workflow
 Embedded File | document_conversion_interaction_workflow
 Embedded File | edit_workflow
@@ -33,10 +35,10 @@ Notification Message | edit_workflow
 Notification Message | notification_message_workflow
 Notification Message | processing_status_workflow
 Organisation | edit_workflow
-Organisation | validation_workflow
 Person | edit_workflow
 Person | person_interaction_workflow
 Person | user_account_workflow
+Person | validation_workflow
 Query | edit_workflow
 Query | query_workflow
 Role Definition | edit_workflow

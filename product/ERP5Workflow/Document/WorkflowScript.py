@@ -53,7 +53,6 @@ class WorkflowScript(PythonScript):
   def __init__(self, *args, **kw):
     PythonScript.__init__(self, *args, **kw)
 
-
   def __call__(self):
     r_url = self.REQUEST.get('URL')
     return self.REQUEST.RESPONSE.redirect(r_url+'/view')
