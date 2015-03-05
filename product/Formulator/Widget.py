@@ -1390,6 +1390,17 @@ class DateTimeWidget(Widget):
         input_order = 'my'
     return input_order
 
+  def create_items(self, start, end, digits=0):
+    result = [("-", "")]
+    if digits:
+      format_string = "%0" + str(digits) + "d"
+    else:
+      format_string = "%s"
+    for i in range(start, end):
+      s = format_string % i
+      result.append((s, s))
+    return result
+
   def render_dict(self, field, value, render_prefix=None):
     """
       This is yet another field rendering. It is designed to allow code to
@@ -1426,13 +1437,13 @@ class DateTimeWidget(Widget):
     if (value in (None, '')) and (field.get_value('default_now')) and \
         ((REQUEST is None) or (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
       value = DateTime()
-    year   = None
-    month  = None
-    day    = None
-    hour   = None
-    minute = None
-    ampm   = None
-    timezone = None
+    year   = ""
+    month  = ""
+    day    = ""
+    hour   = ""
+    minute = ""
+    ampm   = ""
+    timezone = ""
     if isinstance(value, DateTime):
       year = "%04d" % value.year()
       month = "%02d" % value.month()
@@ -1498,27 +1509,47 @@ class DateTimeWidget(Widget):
       return date_result
 
   def render_sub_field(self, field, key, name, value, size, maxlength, REQUEST):
-    if value is None:
-      value = ""
-    if name in ('year', 'month', 'day', 'hour', 'minute', 'ampm'):
-      return render_element("input", type="text",
-                             name= field.generate_subfield_key(name, key=key),
-                             value=value, size=size, maxlength=maxlength)
-    else:
-      gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
-                  + [('GMT', 'GMT',),] \
-                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
-      rendered_items = self.render_sub_list(field, value, gmt_timezones, REQUEST)
+    if name in ('hour', 'minute'):
+       return render_element("input", type="text",
+                               name= field.generate_subfield_key(name, key=key),
+                               value=value, size=size, maxlength=maxlength)
+
+    if name in ('year', 'month', 'day', 'ampm'):
+      style = field.get_value('input_style')
+
+      if style == 'text':
+        return render_element("input", type="text",
+                               name= field.generate_subfield_key(name, key=key),
+                               value=value, size=size, maxlength=maxlength)
+
+      if name == 'year':
+        items = self.create_items(int(value)-5, int(value)+5, digits=4)
+      elif name == 'month':
+        items = self.create_items(1, 13, digits=2)
+      elif name == 'day':
+        items = self.create_items(1, 32, digits=2)
+      else:
+        items =[("am","am"), ("pm","pm")]
+      rendered_items = self.render_sub_list(field, value, items, REQUEST)
       return render_element('select',
                              name= field.generate_subfield_key(name, key=key),
                              css_class=field.get_value('css_class', REQUEST=REQUEST),
                              size=1,
                              contents=string.join(rendered_items, "\n"))
 
+    gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
+                   + [('GMT', 'GMT',),] \
+                   + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
+    value = value.replace("UTC", "GMT")
+    rendered_items = self.render_sub_list(field, value, gmt_timezones, REQUEST)
+    return render_element('select',
+                           name= field.generate_subfield_key(name, key=key),
+                           css_class=field.get_value('css_class', REQUEST=REQUEST),
+                           size=1,
+                           contents=string.join(rendered_items, "\n"))
   def render_sub_list(self, field, value, items, REQUEST):
     selected_found = 0
     rendered_items = []
-    value = value.replace("UTC", "GMT")
     for item in items:
       try:
         item_text, item_value = item
@@ -1532,7 +1563,6 @@ class DateTimeWidget(Widget):
         rendered_item = render_element('option', contents=item_text, value=item_value)
 
       rendered_items.append(rendered_item)
-
     return rendered_items
 
   def format_value(self, field, value, mode='html'):
