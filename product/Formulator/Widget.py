@@ -1464,6 +1464,7 @@ class DateTimeWidget(Widget):
       ampm = REQUEST.get(field.generate_subfield_key("ampm", key=key))
       timezone = REQUEST.get(field.generate_subfield_key("timezone", key=key))
     input_order = self.getInputOrder(field)
+
     if input_order == 'ymd':
       order = [['year', year, 4, 4],
                 ['month', month, 2, 2],
@@ -1509,8 +1510,11 @@ class DateTimeWidget(Widget):
       return date_result
 
   def render_sub_field(self, field, key, name, value, size, maxlength, REQUEST):
+    if value is None:
+      value = ""
     if name in ('hour', 'minute'):
        return render_element("input", type="text",
+                               css_class=field.get_value('css_class'),
                                name= field.generate_subfield_key(name, key=key),
                                value=value, size=size, maxlength=maxlength)
 
@@ -1519,11 +1523,16 @@ class DateTimeWidget(Widget):
 
       if style == 'text':
         return render_element("input", type="text",
+                               css_class=field.get_value('css_class'),
                                name= field.generate_subfield_key(name, key=key),
                                value=value, size=size, maxlength=maxlength)
 
       if name == 'year':
-        items = self.create_items(int(value)-5, int(value)+5, digits=4)
+        if value == "":
+          tmp = 2000
+        else:
+          tmp = int(value)
+        items = self.create_items(tmp-5, tmp+5, digits=4)
       elif name == 'month':
         items = self.create_items(1, 13, digits=2)
       elif name == 'day':
