@@ -755,8 +755,6 @@ class TestProxyField(ERP5TypeTestCase):
     self.assertEqual('Other', proxy_field.get_value('title'))
 
   def test_proxy_to_date_time_field(self):
-    # date time fields are specific, because they use a 'sub_form', we must
-    # make sure this works as expected
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_date', 'Date', 'DateTimeField')
     original_field.manage_edit_xmlrpc(dict(required=0))
@@ -764,9 +762,7 @@ class TestProxyField(ERP5TypeTestCase):
                                 'my_date', 'Date', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_date',))
-    self.assertTrue(hasattr(proxy_field, 'sub_form'))
-    self.assertTrue(aq_base(proxy_field.sub_form) is
-                      aq_base(original_field.sub_form))
+
     # we can render
     proxy_field.render()
     # and validate

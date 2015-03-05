@@ -116,18 +116,6 @@ class FormTestCase(unittest.TestCase):
         self.assertEqual({'int_field': 3}, result)
 
 
-    def test_datetime_timezone_rendering(self):
-        self.form.manage_addProduct['Formulator']\
-                 .manage_addField('date_time','Test Field','DateTimeField')
-        field = self.form.date_time
-        sub_form = field.sub_form
-        if sub_form.has_field('timezone'):
-          del sub_form.fields['timezone']
-        #now timezone is not presented
-        self.assertFalse(self.form.date_time.sub_form.has_field('timezone'))
-        field._edit({'timezone_style': 1})
-        #test if timezone's presented
-        self.assertTrue(self.form.date_time.sub_form.has_field('timezone'))
 
 
     def test_datetime_css_class_rendering(self):
