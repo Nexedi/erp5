@@ -1488,20 +1488,52 @@ class DateTimeWidget(Widget):
       if use_ampm:
         time_result += '&nbsp;' + self.render_sub_field(field, key, 'ampm',
                                                         ampm, 2, 2, REQUEST)
-      """
+
       if use_timezone:
-        time_result += '&nbsp;' + field.render_sub_field('timezone',
-                                                      timezone, REQUEST, key=key)
-      """
+        time_result += '&nbsp;' + self.render_sub_field(field, key, 'timezone',
+                                                      timezone, 2, 2, REQUEST)
+
       return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
     else:
       return date_result
+
   def render_sub_field(self, field, key, name, value, size, maxlength, REQUEST):
     if value is None:
       value = ""
-    return render_element("input", type="text",
-                           name= field.generate_subfield_key(name, key=key),
-                           value=value, size=size, maxlength=maxlength)
+    if name in ('year', 'month', 'day', 'hour', 'minute', 'ampm'):
+      return render_element("input", type="text",
+                             name= field.generate_subfield_key(name, key=key),
+                             value=value, size=size, maxlength=maxlength)
+    else:
+      gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
+                  + [('GMT', 'GMT',),] \
+                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
+      rendered_items = self.render_sub_list(field, value, gmt_timezones, REQUEST)
+      return render_element('select',
+                             name= field.generate_subfield_key(name, key=key),
+                             css_class=field.get_value('css_class', REQUEST=REQUEST),
+                             size=1,
+                             contents=string.join(rendered_items, "\n"))
+
+  def render_sub_list(self, field, value, items, REQUEST):
+    selected_found = 0
+    rendered_items = []
+    value = value.replace("UTC", "GMT")
+    for item in items:
+      try:
+        item_text, item_value = item
+      except ValueError:
+        item_text = item
+        item_value = item
+      if item_value == value and not selected_found:
+        rendered_item = render_element('option', contents=item_text, value=item_value, selected=1)
+        selected_found = 1
+      else:
+        rendered_item = render_element('option', contents=item_text, value=item_value)
+
+      rendered_items.append(rendered_item)
+
+    return rendered_items
 
   def format_value(self, field, value, mode='html'):
     # Is it still usefull to test the None value,

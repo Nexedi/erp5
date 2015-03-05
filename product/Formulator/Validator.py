@@ -739,6 +739,8 @@ class DateTimeValidator(Validator):
 
   def validate_sub_field(self, field, key, name, REQUEST):
     id = field.generate_subfield_key(name, validation = 1, key = key)
+    if name == "timezone":
+      return REQUEST.get(id)
     return IntegerValidatorInstance.validate(field, id, REQUEST)
 
   def validate(self, field, key, REQUEST):
@@ -801,10 +803,10 @@ class DateTimeValidator(Validator):
 
     # handle possible timezone input
     timezone = ''
-    """
+
     if field.get_value('timezone_style'):
-      timezone =  field.validate_sub_field('timezone', REQUEST, key=key)
-    """
+      timezone =  self.validate_sub_field(field, key, 'timezone', REQUEST)
+
     try:
       # handling of hidden day, which can be first or last day of the month:
       if field.get_value('hidden_day_is_last_day'):
