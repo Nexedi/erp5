@@ -82,7 +82,9 @@ class Workflow(XMLObject):
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
-    status_dict = {state_bc_id: self.getSource()}
+    status_dict = {state_bc_id: document.unrestrictedTraverse(self.getSource()).getId()}
+    status_dict['time'] = self.getDateTime()
+    status_dict['action'] = None
     variable_list = self.contentValues(portal_type='Variable')
     for variable in variable_list:
       status_dict[variable.getTitle()] = variable.getInitialValue(object=object)
@@ -94,7 +96,8 @@ class Workflow(XMLObject):
     """
     Generate a key used in the workflow history.
     """
-    return self.getRelativeUrl()
+    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
+    return history_key
 
   def _updateWorkflowHistory(self, document, status_dict):
     """
@@ -112,7 +115,8 @@ class Workflow(XMLObject):
       document.workflow_history[workflow_key] = ()
 
     # Update history
-    document.workflow_history[workflow_key] += (status_dict, )
+    status_dict['time'] = self.getDateTime()
+    document.workflow_history[workflow_key] += (status_dict,)
     # XXX this _p_changed marks the document modified, but the
     # only the PersistentMapping is modified
     document._p_changed = 1
