@@ -250,17 +250,23 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
 
     self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "http://nohost/erp5/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "http://nohost/erp5/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "http://nohost/erp5/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
@@ -272,7 +278,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], document.getPortalObject().getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "http://nohost/erp5/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['name'], "create_a_document")
 
@@ -303,17 +311,23 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
 
     self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=embed_action" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=embed_action" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Embed")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "embed_action")
 
@@ -324,7 +338,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], document.getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['name'], "create_a_document")
 
@@ -332,12 +348,12 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['_links']['raw_search']['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*}")
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*}" % self.portal.getId())
     self.assertEqual(result_dict['_links']['raw_search']['templated'], True)
     self.assertEqual(result_dict['_links']['raw_search']['name'], "Raw Search")
 
     self.assertEqual(result_dict['_links']['traverse']['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse{&relative_url,view}")
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse{&relative_url,view}" % self.portal.getId())
     self.assertEqual(result_dict['_links']['traverse']['templated'], True)
     self.assertEqual(result_dict['_links']['traverse']['name'], "Traverse")
 
@@ -381,17 +397,23 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
 
     self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
@@ -402,7 +424,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['name'], "create_a_document")
 
@@ -433,17 +457,23 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
 
     self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "View")
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
@@ -454,7 +484,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % urllib.quote_plus(document.getRelativeUrl()))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                       self.portal.getId(),
+                       urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['name'], "create_a_document")
 
@@ -484,12 +516,16 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['name'], document.getRelativeUrl())
     self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
 
-    self.assertEqual(result_dict['_embedded']['_view']['_links']['self']['href'], "http://nohost/erp5/%s/Foo_view" % document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['self']['href'], "http://nohost/%s/%s/Foo_view" % (
+                                                                                    self.portal.getId(),
+                                                                                    document.getRelativeUrl()))
 
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_ui_test/Foo_view')
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['name'], 'Foo_view')
 
-    self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['href'], 'http://nohost/erp5/web_site_module/hateoas/%s/Base_edit' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['href'], 'http://nohost/%s/web_site_module/hateoas/%s/Base_edit' % (
+                                                                                     self.portal.getId(),
+                                                                                     document.getRelativeUrl()))
     self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['method'], 'POST')
 
 
@@ -512,12 +548,16 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
                     {"href": "urn:jio:get:", "name": self.portal.getTitle()})
 
     self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view"))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
+                       self.portal.getId(),
+                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
     self.assertEqual(result_dict['_links']['view'][0]['title'], "Consistency")
     self.assertEqual(result_dict['_links']['view'][0]['name'], "consistency")
 
     self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "http://nohost/erp5/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view"))
+                     "http://nohost/%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
+                       self.portal.getId(),
+                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
     self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "Consistency")
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "consistency")
 
