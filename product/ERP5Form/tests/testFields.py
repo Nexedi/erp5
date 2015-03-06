@@ -938,8 +938,6 @@ class TestFieldValueCache(ERP5TypeTestCase):
     addField(DateTimeField('datetime_field'))
     form.datetime_field._p_oid = makeDummyOid()
     form.datetime_field._edit(dict(input_style='list'))
-    for i in form.datetime_field.sub_form.fields.values():
-      i._p_oid = makeDummyOid()
 
   def test_method_field(self):
     field = self.root.form.field
@@ -985,39 +983,21 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def test_datetime_field(self):
     field_value_cache.clear()
-
-    # make sure that boundmethod must not be cached.
-    year_field = self.root.form.datetime_field.sub_form.get_field('year', include_disabled=1)
-    self.assertEqual(True, type(year_field.overrides['items']) is BoundMethod)
-
     cache_size = len(field_value_cache)
-    year_field.get_value('items')
-
-    # See Formulator/StandardFields.py(line:174)
-    # there are two get_value, start_datetime and end_datetime
-    cache_size += 2
-
-    # make sure that boundmethod is not cached(cache size does not change)
-    self.assertEqual(True, ('Form.get_value',
+    #since datetimefield do not use sub form in initialization
+    #start_datetime and end_datetime will not be cached
+    self.assertEqual(False, ('Form.get_value',
                             self.root.form.datetime_field._p_oid,
                             self.root.form.datetime_field._p_oid,
                             'start_datetime'
                             ) in field_value_cache)
-    self.assertEqual(True, ('Form.get_value',
+    self.assertEqual(False, ('Form.get_value',
                             self.root.form.datetime_field._p_oid,
                             self.root.form.datetime_field._p_oid,
                             'end_datetime'
                             ) in field_value_cache)
-    self.assertEqual(False, ('Form.get_value',
-                            year_field._p_oid,
-                            year_field._p_oid,
-                            'items'
-                            ) in field_value_cache)
+    #ensure len is not changed
     self.assertEqual(cache_size, len(field_value_cache))
-
-    year_field.get_value('size')
-    year_field.get_value('default')
-    self.assertEqual(cache_size+2, len(field_value_cache))
 
 def makeDummyOid():
   import time, random
