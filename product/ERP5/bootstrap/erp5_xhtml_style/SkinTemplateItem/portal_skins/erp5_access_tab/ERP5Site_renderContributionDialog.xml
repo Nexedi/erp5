@@ -61,13 +61,13 @@
       </select>\n
     </div>\n
     <div>\n
-      <label for="source_project" \n
+      <label for="follow_up_list" \n
              value="" \n
              i18n:translate="" \n
              i18n:domain="ui">Project</label>\n
       <select size="1" \n
-              id="source_project" \n
-              name="source_project"\n
+              id="follow_up_list" \n
+              name="follow_up_list"\n
               tal:define="ticket_module nocall:here/ticket_module|nothing;\n
                           project_module nocall:here/project_module|nothing;">\n
         <option value=""\n
