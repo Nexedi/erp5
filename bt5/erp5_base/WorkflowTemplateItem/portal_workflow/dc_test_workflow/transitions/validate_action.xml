@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>after_script</string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
