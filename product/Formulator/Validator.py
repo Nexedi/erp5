@@ -280,9 +280,9 @@ class IntegerValidator(StringBaseValidator):
         self.raise_error('not_integer', field)
       start = ""
       end = ""
-      if hasattr(field, start):
+      if field.has_value('start'):
         start = field.get_value('start')
-      if hasattr(field, end):
+      if field.has_value('end'):
         end = field.get_value('end')
       if start != "" and value < start:
         self.raise_error('integer_out_of_range', field)
@@ -739,13 +739,11 @@ class DateTimeValidator(Validator):
 
   def validate_sub_field(self, field, key, name, REQUEST):
     id = field.generate_subfield_key(name, validation = 1, key = key)
-    if name == "timezone":
-      return REQUEST.get(id)
-    if name == "ampm":
-      ampm = REQUEST.get(id)
-      if ampm in ('am', 'pm'):
-        return ampm
-      raise ValidationError('not_datetime', field)
+    if name in ('timezone', 'ampm'):
+      value = REQUEST.get(id)
+      if value is None:
+        raise KeyError, 'Field %s is not present in request object.' % (repr(id), )
+      return value
     return IntegerValidatorInstance.validate(field, id, REQUEST)
 
   def validate(self, field, key, REQUEST):
@@ -792,22 +790,19 @@ class DateTimeValidator(Validator):
       self.raise_error('not_datetime', field)
 
     if field.get_value('ampm_time_style'):
-      try:
-        ampm = self.validate_sub_field(field, key, 'ampm', REQUEST)
-        if field.get_value('allow_empty_time'):
-          if ampm == '':
-            ampm = 'am'
-        hour = int(hour)
-        # handling not am or pm
-        # handling hour > 12
-        if ((ampm != 'am') and (ampm != 'pm')) or (hour > 12):
-          self.raise_error('not_datetime', field)
-        if (ampm == 'pm') and (hour == 0):
-          self.raise_error('not_datetime', field)
-        elif ampm == 'pm' and hour < 12:
-          hour += 12
-      except ValidationError:
-         self.raise_error('not_datetime', field)
+      ampm = self.validate_sub_field(field, key, 'ampm', REQUEST)
+      if field.get_value('allow_empty_time'):
+        if ampm == '':
+          ampm = 'am'
+      hour = int(hour)
+      # handling not am or pm
+      # handling hour > 12
+      if ((ampm != 'am') and (ampm != 'pm')) or (hour > 12):
+        self.raise_error('not_datetime', field)
+      if (ampm == 'pm') and (hour == 0):
+        self.raise_error('not_datetime', field)
+      elif ampm == 'pm' and hour < 12:
+        hour += 12
     # handle possible timezone input
     timezone = ''
 
