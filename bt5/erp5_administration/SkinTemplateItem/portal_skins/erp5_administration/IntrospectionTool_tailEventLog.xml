@@ -73,7 +73,7 @@
         if (timer == "stop") {\n
           stopTail();\n
         } else {\n
-          t= setTimeout("getLog()",4000);\n
+          t= setTimeout("getLog()",500);\n
         }\n
       }\n
 \n
@@ -86,20 +86,22 @@
       }\n
 \n
       function updatePage() {\n
+        var logDiv = document.getElementById("log"), logLine; today = new Date();\n
+        var message_div = document.getElementById("message");\n
         if (request.readyState == 4) {\n
           if (request.status == 200) {\n
             var currentLogValue = request.responseText.split("\\n");\n
-            eval(currentLogValue);\n
-            logDiv = document.getElementById("log");\n
             var logLine = \' \';\n
             for (i=0; i < currentLogValue.length - 1; i++) {\n
-              logLine += currentLogValue[i] + \'<br/>\\n\';\n
+              logLine += currentLogValue[i] + \'\\n\';\n
             }\n
             logDiv.innerHTML=logLine;\n
+            logDiv.scrollTop = logDiv.scrollHeight;\n
+            message_div.innerHTML="Date : " + today.toTimeString();\n
           } else {\n
-            logDiv = document.getElementById("log");\n
             logLine = "Error! Request status is " + request.status;\n
-            logDiv.innerHTML=logLine;\n
+            message_div.innerHTML=logLine;\n
+            \n
             }\n
         }\n
       }\n
@@ -107,17 +109,19 @@
    </head>\n
   <span tal:define="global tailer python:context.getPortalObject().portal_introspections.absolute_url()+\'/tailEventLog\'">\n
   <body tal:attributes="onload string:init(\'$tailer\')">\n
+    <div id="toolbar">\n
       <button tal:attributes="onclick string:getLog(\'start\')">Start Log</button>\n
       <button onclick="stopTail();">Stop Log</button>\n
-    <div id="log" style="border:solid 1px #dddddd; margin-left:25px; font-size:9px;\n
-                         padding-left:5px; padding-right:10px; padding-top:10px; padding-bottom:20px;\n
-                         margin-top:10px; margin-bottom:10px; width:90%; text-align:left;">\n
-      This is the Event Log Viewer. To begin viewing the log live in this window, click Start Viewer. To stop the window refreshes, click Pause Viewer.\n
+      <span id="message">Press Start...</span>\n
     </div>\n
+    <textarea id="log" style="border:solid 1px #dddddd; margin-left:25px; font-size:9px;\n
+                         padding-left:5px; padding-right:10px; padding-top:10px; padding-bottom:20px;\n
+                         margin-top:10px; margin-bottom:10px; height:90%; width:90%; text-align:left;">\n
+      This is the Event Log Viewer. To begin viewing the log live in this window, click Start Viewer. To stop the window refreshes, click Pause Viewer.\n
+    </textarea>\n
   </body>\n
   </span>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
