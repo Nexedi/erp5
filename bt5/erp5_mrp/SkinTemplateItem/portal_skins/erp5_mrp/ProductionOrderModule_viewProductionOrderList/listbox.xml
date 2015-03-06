@@ -10,15 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -204,45 +202,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
-                          <string>Supply Chain</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>production_order_module_selection</string> </value>
                 </item>
@@ -253,45 +212,6 @@
                         <tuple>
                           <string>title</string>
                           <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
-                          <string>Supply Chain</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
