@@ -12,7 +12,6 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
-                <string>default_params</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -65,12 +64,6 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -193,17 +186,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>checked_permission</string>
-                          <string>View</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -229,7 +211,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -259,26 +241,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'source_project_uid\', here.getUid())]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>Base_getRelatedObjectList</string> </value>
         </item>
       </dictionary>
     </pickle>
