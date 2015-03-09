@@ -2049,7 +2049,7 @@ class SimulationTool(BaseTool):
       return inventory_list[0]
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getNextDeficientInventoryDate')
+                              'getNextAlertInventoryDate')
     def getNextAlertInventoryDate(self, reference_quantity=0, src__=0,
                        simulation_period='Future',from_date=None, **kw):
       """
