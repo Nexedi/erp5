@@ -443,21 +443,21 @@ table.listbox tr.listbox-search-line {\n
 \n
 div.listbox-head{\n
   color:#9D968D;\n
-  margin-left:-1px;\n
 }\n
 \n
 div.listbox-head-spacer{\n
-  background:transparent url("images/tab_left_selected.png") no-repeat scroll left top;\n
-  height:36px;\n
-  width:10px;\n
-  float:left;\n
+  display: none;\n
 }\n
 \n
 div.listbox-head-content{\n
   border-right:1px solid #3D6474;\n
   border-top:1px solid #3D6474;\n
+  border-left:1px solid #3D6474;\n
+  border-top-left-radius: 10px;\n
+  -moz-border-top-left-radius: 10px;\n
+  -webkit-border-top-left-radius: 10px;\n
   height:25px;\n
-  margin-left:10px;\n
+  padding-left:10px;\n
   padding-top:10px;\n
   padding-right: 5px;\n
   width:auto;\n

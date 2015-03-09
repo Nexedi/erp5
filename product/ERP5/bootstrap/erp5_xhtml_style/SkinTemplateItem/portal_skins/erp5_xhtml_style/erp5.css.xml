@@ -1143,34 +1143,37 @@ span.search button .image {\n
 \n
 .document .actions li {\n
   float: left;\n
+  border: 1px solid <dtml-var document_border_color>;\n
+  border-bottom-color: transparent;\n
+  border-radius: 10px 10px 0 0;\n
+  -moz-border-radius: 10px 10px 0 0;\n
+  -webkit-border-top-left-radius: 10px;\n
+  -webkit-border-top-right-radius: 10px;\n
+}\n
+\n
+.document .actions li.selected {\n
+  border-bottom-color: <dtml-var background_color>;\n
 }\n
 \n
 .document .actions li a {\n
   display: block;\n
   color: inherit;\n
-  background: url(\'images/tab_left.png\') top left no-repeat;\n
   margin: 0;\n
-  padding: 0 0 0 10px;\n
+  padding: 0 0 0 9px;\n
   line-height: 1.2em;\n
-}\n
-\n
-.document .actions li.selected a {\n
-  background: url(\'images/tab_left_selected.png\') top left no-repeat;\n
 }\n
 \n
 .document .actions li a span {\n
   display: block;\n
-  padding: 5px 10px 4px 0;\n
+  padding: 4px 9px 4px 0;\n
   color: inherit;\n
   background-color: inherit;\n
-  background: url(\'images/tab_right.png\') top right no-repeat;\n
 /*   font-size: 90%; */\n
 }\n
 \n
 .document .actions li.selected a span {\n
   font-weight: bold;\n
-  padding-bottom: 5px;\n
-  background: url(\'images/tab_right_selected.png\') top right no-repeat;\n
+  padding-bottom: 4px;\n
 }\n
 \n
 .document .actions li a:hover {\n

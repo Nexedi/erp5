@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts29466233.61</string> </value>
+            <value> <string>ts25913313.34</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -77,18 +77,20 @@ div.pad-actions{\n
 }\n
 h3.handle {\n
   margin: 0;\n
-  padding: 0 0 0 10px;\n
+  padding: 0 0 0 9px;\n
   font-size: 14px;\n
   color: #fff;\n
-  background: transparent url(images/tab_left_selected.png) no-repeat scroll left top;\n
-  border-bottom: 1px solid #3D6474;\n
+  border-radius: 10px 10px 0 0;\n
+  -moz-border-radius: 10px 10px 0 0;\n
+  -webkit-border-top-left-radius: 10px;\n
+  -webkit-border-top-right-radius: 10px;\n
+  border: 1px solid #3D6474;\n
 }\n
 \n
 h3.handle span.handle {\n
   display: block;\n
   min-height:20px;\n
-  padding: 5px 5px 0 0;\n
-  background: transparent url(images/tab_right_selected.png) no-repeat scroll right top;\n
+  padding: 4px 4px 0 0;\n
 }\n
 \n
 div.block h3 span.gadget_title{\n
@@ -345,6 +347,9 @@ div.block div.listbox-head-content {\n
   border: none;\n
   margin-left:0;\n
   padding-left: 10px;\n
+  border-top-left-radius: 0;\n
+  -moz-border-top-left-radius: 0;\n
+  -webkit-border-top-left-radius: 0;\n
 }\n
 div.block table.listbox tr{\n
   margin-top:2px;\n
@@ -501,7 +506,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8337</int> </value>
+            <value> <int>8403</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
