@@ -75,6 +75,8 @@ elif (portal_type == "Web Manifest"):\n
   response.setHeader(\'Content-Type\', \'text/cache-manifest\')\n
 \n
 else:\n
+  if (mapping_dict is not None):\n
+    web_content = web_page.TextDocument_substituteTextContent(web_page, web_content, mapping_dict=mapping_dict)\n
   # Do not allow to put inside an iframe\n
   response.setHeader("X-Frame-Options", "SAMEORIGIN")\n
   response.setHeader("X-Content-Type-Options", "nosniff")\n
@@ -89,7 +91,7 @@ return web_content\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None</string> </value>
+            <value> <string>REQUEST=None, response=None, mapping_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

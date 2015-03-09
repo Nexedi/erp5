@@ -270,7 +270,7 @@
         right_button,\n
         default_right_text,\n
         default_right_icon = "",\n
-        title_link = {title: "ERP5"},\n
+        title_link = {},\n
         sub_header_list = [],\n
         alphabet = "abcdefghijklmnopqrstuvwxyz",\n
         promise_list = [];\n
@@ -279,9 +279,9 @@
       // Handle main title\n
       if (options.hasOwnProperty("page_title")) {\n
         title_link.title = options.page_title;\n
+        // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now\n
+        document.title = title_link.title;\n
       }\n
-      // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now\n
-      document.title = title_link.title;\n
       if (options.hasOwnProperty("breadcrumb_url")) {\n
         title_link.url = options.breadcrumb_url;\n
         promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));\n
@@ -580,7 +580,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17574.28685.15906</string> </value>
+                <value> <string>941.35154.28208.61184</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -598,7 +598,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421681794.02</float>
+                        <float>1425891407.82</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

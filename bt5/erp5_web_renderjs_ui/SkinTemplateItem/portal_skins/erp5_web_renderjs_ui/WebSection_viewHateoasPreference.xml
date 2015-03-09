@@ -72,8 +72,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_default_view_action_reference</string>
-                        <string>my_view_action_category</string>
+                        <string>my_configuration_default_view_action_reference</string>
+                        <string>my_configuration_view_action_category</string>
+                        <string>my_configuration_frontpage_gadget_url</string>
+                        <string>my_configuration_application_title</string>
+                        <string>my_configuration_hateoas_url</string>
                       </list>
                     </value>
                 </item>

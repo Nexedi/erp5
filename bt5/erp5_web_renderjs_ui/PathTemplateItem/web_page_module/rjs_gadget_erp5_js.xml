@@ -124,7 +124,7 @@
       .push(function (jio_gadget) {\n
         return jio_gadget.createJio({\n
           type: "erp5",\n
-          url: (new URI("hateoas/")).absoluteTo(location.href).toString()\n
+          url: (new URI(gadget.props.hateoas_url)).absoluteTo(location.href).toString()\n
         });\n
         /*\n
         return jio_gadget.createJio({\n
@@ -139,7 +139,7 @@
   }\n
 \n
   function renderPage(gadget, page_name, options) {\n
-    return gadget.declareGadget("gadget_erp5_page_" + page_name + ".html", {\n
+    return gadget.declareGadget(page_name, {\n
       scope: "pg"\n
     })\n
       .push(function (page_gadget) {\n
@@ -220,8 +220,7 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {\n
-        translation_lookup: "",\n
-        hateoas_url: "hateoas/"\n
+        translation_lookup: ""\n
       };\n
 //      return g.getDeclaredGadget("breadcrumb")\n
 //        .push(function (sub_gadget) {\n
@@ -229,17 +228,31 @@
 //        });\n
     })\n
 \n
-    // Configure jIO to use localstorage\n
-    // And load configuration from server\n
-    .ready(function (g) {\n
-      return createJio(g);\n
-    })\n
     .ready(function (g) {\n
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
           g.props.article = element.querySelector("article");\n
+\n
+          // XXX Will work only if top gadget...\n
+          var element_list = document.querySelectorAll("[data-renderjs-configuration]"),\n
+            len = element_list.length,\n
+            key,\n
+            value,\n
+            i;\n
+          for (i = 0; i < len; i += 1) {\n
+            key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
+            value = element_list[i].textContent;\n
+            if (value !== "") {\n
+              g.props[key] = value;\n
+            }\n
+          }\n
         });\n
+    })\n
+    // Configure jIO to use localstorage\n
+    // And load configuration from server\n
+    .ready(function (g) {\n
+      return createJio(g);\n
     })\n
     .ready(function (g) {\n
       return g.getDeclaredGadget("header")\n
@@ -257,7 +270,7 @@
 \n
     // bridge translation gadget\n
     .allowPublicAcquisition("getTranslationMethod", function () {\n
-      var root = (new URI("hateoas/")).absoluteTo(location.href).toString();\n
+      var root = (new URI(this.props.hateoas_url)).absoluteTo(location.href).toString();\n
       return root + this.props.translation_lookup;\n
     })\n
     .allowPublicAcquisition("changeLanguage", function (param_list) {\n
@@ -315,7 +328,7 @@
     .allowPublicAcquisition("jio_get", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.get.apply(jio_gadget, param_list)\n
+          return jio_gadget.get.apply(jio_gadget, param_list);\n
         })\n
         .push(function (result) {\n
           return {data: result};\n
@@ -331,7 +344,7 @@
         })\n
         .push(function (event) {\n
           return {data: JSON.parse(event.target.result)};\n
-        })\n
+        });\n
     })\n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
       // Hey, I want to display some URL\n
@@ -445,7 +458,7 @@
     // XXX translate: called before ready(), so props is not available.\n
     // Needed to lookup to retrieve HAL to fetch site module/runner languages \n
     .declareMethod(\'getSiteRoot\', function () {\n
-      return (new URI("hateoas/")).absoluteTo(location.href).toString();\n
+      return (new URI(this.props.hateoas_url)).absoluteTo(location.href).toString();\n
     })\n
 \n
     // Render the page\n
@@ -511,7 +524,8 @@
         .push(function () {\n
           // By default, init the header options to be empty (ERP5 title by default + sidebar)\n
           gadget.props.header_argument_list = [{\n
-            panel_action: true\n
+            panel_action: true,\n
+            page_title: gadget.props.application_title || "ERP5"\n
           }];\n
 \n
           gadget.state_parameter_dict = {\n
@@ -526,11 +540,15 @@
           if (options.page === undefined) {\n
             // Not rendering a jio document and not page requested.\n
             // URL is probably empty: redirect to the frontpage\n
-            return gadget.aq_pleasePublishMyState({page: \'front\'})\n
-              .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+            // Check if a custom frontpage is defined\n
+            if (!gadget.props.frontpage_gadget) {\n
+              return gadget.aq_pleasePublishMyState({page: \'front\'})\n
+                .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+            }\n
+            return renderPage(gadget, gadget.props.frontpage_gadget, options);\n
           }\n
 \n
-          return renderPage(gadget, options.page, options);\n
+          return renderPage(gadget, "gadget_erp5_page_" + options.page + ".html", options);\n
         })\n
 \n
         .push(function (result) {\n
@@ -726,7 +744,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.25428.15657.11059</string> </value>
+                <value> <string>941.35159.4940.27904</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -744,7 +762,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425307985.31</float>
+                        <float>1425893558.44</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

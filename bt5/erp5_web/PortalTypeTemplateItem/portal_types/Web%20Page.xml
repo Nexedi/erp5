@@ -78,7 +78,7 @@
             <key> <string>searchable_text_method_id</string> </key>
             <value>
               <tuple>
-                <string>asRawText</string>
+                <string>getTextContent</string>
               </tuple>
             </value>
         </item>

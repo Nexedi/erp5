@@ -156,6 +156,53 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_hateoas_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_application_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_view_action_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_default_view_action_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
@@ -190,6 +237,22 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_application_title</string> </key>
+            <value> <string>ERP5</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_default_view_action_reference</string> </key>
+            <value> <string>view</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hateoas_url</string> </key>
+            <value> <string>hateoas/</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_view_action_category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
             <key> <string>container_layout</string> </key>
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
@@ -213,9 +276,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WebSection_viewHateoasPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -422,7 +483,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.22999.3755.45004</string> </value>
+                <value> <string>941.35235.58430.32802</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -440,7 +501,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405933462.45</float>
+                        <float>1425895920.4</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
