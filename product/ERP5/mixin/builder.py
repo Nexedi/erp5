@@ -228,17 +228,17 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                variation_text=movement.getVariationText(),
                                from_date=DateTime(),
                                **kw)
-          assert stop_date is not None
-          max_delay = resource.getMaxDelay(0)
-          movement.edit(
-            start_date=DateTime(((stop_date-max_delay).Date())),
-            stop_date=DateTime(stop_date.Date()),
-            quantity=max(min_flow, -inventory_item.inventory),
-            quantity_unit=resource.getQuantityUnit()
-            # XXX FIXME define on a supply line
-            # quantity_unit
-          )
-          movement_list.append(movement)
+          if stop_date != None:
+            max_delay = resource.getMaxDelay(0)
+            movement.edit(
+              start_date=DateTime(((stop_date-max_delay).Date())),
+              stop_date=DateTime(stop_date.Date()),
+              quantity=max(min_flow, -inventory_item.inventory),
+              quantity_unit=resource.getQuantityUnit()
+              # XXX FIXME define on a supply line
+              # quantity_unit
+            )
+            movement_list.append(movement)
     return movement_list
 
   def _searchMovementList(self, **kw):
