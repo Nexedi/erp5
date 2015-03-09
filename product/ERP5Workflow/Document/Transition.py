@@ -27,15 +27,17 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.DCWorkflow.Expression import StateChangeInfo
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from copy import deepcopy
+from Persistence import Persistent
 
 class Transition(XMLObject):
   """
@@ -119,15 +121,16 @@ class Transition(XMLObject):
 
     # Do not proceed in case of failure of before script
     if not before_script_success:
-        former_status = old_state # Remain in state
-        sci = StateChangeInfo(
-            document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
+      former_status = old_state # Remain in state
+      self.setStatusOf(workflow.getId(), document, status_dict)
+      sci = StateChangeInfo(
+        document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
         # put the error message in the workflow history
-        sci.setWorkflowVariable(error_message=before_script_error_message)
-        if validation_exc :
-            # reraise validation failed exception
-            raise validation_exc, None, validation_exc_traceback
-        return new_sdef
+      sci.setWorkflowVariable(error_message=before_script_error_message)
+      if validation_exc :
+        # reraise validation failed exception
+        raise validation_exc, None, validation_exc_traceback
+      return new_sdef
 
     # update state
     self._changeState(document)
@@ -160,7 +163,8 @@ class Transition(XMLObject):
     for variable in self.contentValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
-    workflow._updateWorkflowHistory(document, status_dict)
+    #workflow._updateWorkflowHistory(document, status_dict)
+    self.setStatusOf(workflow.getId(), document, status_dict)
     # Execute the "after" script.
     script_id = self.getAfterScriptId()
     if script_id is not None:
@@ -205,3 +209,109 @@ class Transition(XMLObject):
       value = True
     #print "CALC", expr_value, '-->', value
     return value
+
+  def setStatusOf(self, wf_id, ob, status):
+    """ Append an entry to the workflow history.
+
+    o Invoked by transition execution.
+    """
+    wfh = None
+    has_history = 0
+    if getattr(aq_base(ob), 'workflow_history', None) is not None:
+        history = ob.workflow_history
+        if history is not None:
+            has_history = 1
+            wfh = history.get(wf_id, None)
+            if wfh is not None and not isinstance(wfh, WorkflowHistoryList):
+                wfh = WorkflowHistoryList(list(wfh))
+                ob.workflow_history[wf_id] = wfh
+    if wfh is None:
+        wfh = WorkflowHistoryList()
+        if not has_history:
+            ob.workflow_history = PersistentMapping()
+        ob.workflow_history[wf_id] = wfh
+    wfh.append(status)
+
+class WorkflowHistoryList(Persistent):
+  _bucket_size = 16
+
+  def __init__(self, iterable=None, prev=None):
+    self._prev = prev
+    self._slots = []
+    if iterable is not None:
+      for x in iterable:
+        self.append(x)
+
+  def __add__(self, iterable):
+    return self.__class__(tuple(self) + tuple(iterable))
+
+  def __contains__(self, item):
+    return item in tuple(self)
+
+  def __eq__(self, other):
+    return tuple(self) == tuple(other)
+
+  def __getitem__(self, index):
+    if index == -1:
+      return self._slots[-1]
+    elif isinstance(index, (int, long)):
+      if index < 0:
+        # XXX this implementation is not so good, but rarely used.
+        index += len(self)
+      iterator = self.__iter__()
+      for i in xrange(index):
+        iterator.next()
+      return iterator.next()
+    elif isinstance(index, slice):
+      return self.__class__((self[x] for x in
+                                   xrange(*index.indices(len(self)))))
+    else:
+      raise TypeError, 'tuple indices must be integers'
+
+  def __getslice__(self, start, end):
+    return self.__getitem__(slice(start, end))
+
+  def __getstate__(self):
+    return (self._prev, self._slots)
+
+  def __iter__(self):
+    bucket = self
+    stack = []
+    while bucket is not None:
+      stack.append(bucket)
+      bucket = bucket._prev
+    for i in reversed(stack):
+      for j in i._slots:
+        yield j
+
+  def __len__(self):
+    length = len(self._slots)
+    bucket = self._prev
+    while bucket is not None:
+      length += len(bucket._slots)
+      bucket = bucket._prev
+    return length
+
+  def __mul__(self, x):
+    return self.__class__(tuple(self) * x)
+
+  def __nonzero__(self):
+    return len(self._slots) != 0 or self._prev is not None
+
+  def __repr__(self):
+    #return '%s' % repr(tuple(self.__iter__()))
+    return '<%s object at 0x%x %r>' % (self.__class__.__name__, id(self), tuple(self))
+
+  def __rmul__(self, x):
+    return self.__class__(x * tuple(self))
+
+  def __setstate__(self, state):
+    self._prev, self._slots = state
+
+  def append(self, value):
+    if len(self._slots) < self._bucket_size:
+      self._slots.append(value)
+      self._p_changed = 1
+    else:
+      self._prev = self.__class__(self._slots, prev=self._prev)
+      self._slots = [value]
