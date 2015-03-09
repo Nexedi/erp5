@@ -40,10 +40,6 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>ERP5Workflow Test Object</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Email</type>
   <workflow>edit_workflow</workflow>
  </chain>

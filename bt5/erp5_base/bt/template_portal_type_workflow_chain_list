@@ -14,7 +14,6 @@ Currency Exchange Line | validation_workflow
 Currency | edit_workflow
 Currency | validation_workflow
 Document | edit_workflow
-ERP5Workflow Test Object | edit_workflow
 Email | edit_workflow
 Embedded File | document_conversion_interaction_workflow
 Embedded File | edit_workflow
