@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testERP5andDCWorkflow</string> </value>
+            <value> <string>testWorkflowAndDCWorkflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testerp5anddcworkflow</string> </value>
+            <value> <string>test.erp5.testWorkflowAndDCWorkflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

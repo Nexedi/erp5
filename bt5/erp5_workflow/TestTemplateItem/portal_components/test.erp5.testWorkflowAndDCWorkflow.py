@@ -6,8 +6,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def getTestObject(self):
     self.portal = self.getPortal()
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Object')
-    test_object = self.portal.erp5workflow_test_module.newContent(portal_type='ERP5Workflow Test Object')
+    test_object = self.portal.erp5workflow_test_module.newContent(portal_type='ERP5Workflow Test Document')
     return test_object
 
   def doActionFor():
@@ -82,10 +81,10 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Object'], ())
+    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
     self.workflow_module = self.portal.workflow_module
     self.wf = self.workflow_module._getOb('erp5_validation_workflow')
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Object')
+    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_base_category_list=('validation_state',))
     type_test_object.edit(type_erp5workflow_list=('erp5_validation_workflow',))
     self.resetComponentTool()
@@ -95,6 +94,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     # check dc_test_workflow is not in use
     self.assertFalse('dc_test_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
     getattr(document, convertToMixedCase(action))()
+    #self.wf.doActionFor(document, action)
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
@@ -107,9 +107,9 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     # make sure erp5 workflow list is empty
     self.portal = self.getPortal()
     self.workflow_module = self.portal.portal_workflow
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Object'], ('dc_test_workflow'))
+    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ('dc_test_workflow'))
     self.wf = self.workflow_module._getOb('dc_test_workflow')
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Object')
+    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_base_category_list=())
     type_test_object.edit(type_erp5workflow_list=())
     self.resetComponentTool()
