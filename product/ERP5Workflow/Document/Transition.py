@@ -37,7 +37,7 @@ from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from copy import deepcopy
-from Persistence import Persistent
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 
 class Transition(XMLObject):
   """
@@ -163,7 +163,6 @@ class Transition(XMLObject):
     for variable in self.contentValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
-    #workflow._updateWorkflowHistory(document, status_dict)
     self.setStatusOf(workflow.getId(), document, status_dict)
     # Execute the "after" script.
     script_id = self.getAfterScriptId()
@@ -231,87 +230,3 @@ class Transition(XMLObject):
             ob.workflow_history = PersistentMapping()
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
-
-class WorkflowHistoryList(Persistent):
-  _bucket_size = 16
-
-  def __init__(self, iterable=None, prev=None):
-    self._prev = prev
-    self._slots = []
-    if iterable is not None:
-      for x in iterable:
-        self.append(x)
-
-  def __add__(self, iterable):
-    return self.__class__(tuple(self) + tuple(iterable))
-
-  def __contains__(self, item):
-    return item in tuple(self)
-
-  def __eq__(self, other):
-    return tuple(self) == tuple(other)
-
-  def __getitem__(self, index):
-    if index == -1:
-      return self._slots[-1]
-    elif isinstance(index, (int, long)):
-      if index < 0:
-        # XXX this implementation is not so good, but rarely used.
-        index += len(self)
-      iterator = self.__iter__()
-      for i in xrange(index):
-        iterator.next()
-      return iterator.next()
-    elif isinstance(index, slice):
-      return self.__class__((self[x] for x in
-                                   xrange(*index.indices(len(self)))))
-    else:
-      raise TypeError, 'tuple indices must be integers'
-
-  def __getslice__(self, start, end):
-    return self.__getitem__(slice(start, end))
-
-  def __getstate__(self):
-    return (self._prev, self._slots)
-
-  def __iter__(self):
-    bucket = self
-    stack = []
-    while bucket is not None:
-      stack.append(bucket)
-      bucket = bucket._prev
-    for i in reversed(stack):
-      for j in i._slots:
-        yield j
-
-  def __len__(self):
-    length = len(self._slots)
-    bucket = self._prev
-    while bucket is not None:
-      length += len(bucket._slots)
-      bucket = bucket._prev
-    return length
-
-  def __mul__(self, x):
-    return self.__class__(tuple(self) * x)
-
-  def __nonzero__(self):
-    return len(self._slots) != 0 or self._prev is not None
-
-  def __repr__(self):
-    #return '%s' % repr(tuple(self.__iter__()))
-    return '<%s object at 0x%x %r>' % (self.__class__.__name__, id(self), tuple(self))
-
-  def __rmul__(self, x):
-    return self.__class__(x * tuple(self))
-
-  def __setstate__(self, state):
-    self._prev, self._slots = state
-
-  def append(self, value):
-    if len(self._slots) < self._bucket_size:
-      self._slots.append(value)
-      self._p_changed = 1
-    else:
-      self._prev = self.__class__(self._slots, prev=self._prev)
-      self._slots = [value]
