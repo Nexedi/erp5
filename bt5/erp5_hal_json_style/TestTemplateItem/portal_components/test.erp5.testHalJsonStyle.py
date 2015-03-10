@@ -547,19 +547,19 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['parent'],
                     {"href": "urn:jio:get:", "name": self.portal.getTitle()})
 
-    self.assertEqual(result_dict['_links']['view'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
-                       self.portal.absolute_url(),
-                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
-    self.assertEqual(result_dict['_links']['view'][0]['title'], "Consistency")
-    self.assertEqual(result_dict['_links']['view'][0]['name'], "consistency")
+#    self.assertEqual(result_dict['_links']['view'][0]['href'],
+#                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
+#                       self.portal.absolute_url(),
+#                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
+#    self.assertEqual(result_dict['_links']['view'][0]['title'], "Consistency")
+#    self.assertEqual(result_dict['_links']['view'][0]['name'], "consistency")
 
-    self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
-                       self.portal.absolute_url(),
-                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
-    self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "Consistency")
-    self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "consistency")
+#    self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
+#                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
+#                       self.portal.absolute_url(),
+#                       urllib.quote_plus("portal_skins/erp5_ui_test/Foo_view")))
+#    self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "Consistency")
+#    self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "consistency")
 
     self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % self.portal.getId())
     self.assertEqual(result_dict['_links']['portal']['name'], self.portal.getTitle())
