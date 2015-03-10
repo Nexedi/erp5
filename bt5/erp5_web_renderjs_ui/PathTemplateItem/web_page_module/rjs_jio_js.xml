@@ -5659,19 +5659,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
   util.readBlobAsArrayBuffer = readBlobAsArrayBuffer;\n
 \n
-//   function readBlobAsDataURL(blob) {\n
-//     var fr = new FileReader();\n
-//     return new RSVP.Promise(function (resolve, reject, notify) {\n
-//       fr.addEventListener("load", resolve);\n
-//       fr.addEventListener("error", reject);\n
-//       fr.addEventListener("progress", notify);\n
-//       fr.readAsDataURL(blob);\n
-//     }, function () {\n
-//       fr.abort();\n
-//     });\n
-//   }\n
-//   util.readBlobAsDataURL = readBlobAsDataURL;\n
-\n
 \n
 \n
 \n
@@ -6018,19 +6005,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   function MemoryStorage() {\n
     this._database = {};\n
   }\n
-\n
-  MemoryStorage.prototype.post = function (metadata) {\n
-    var doc_id = metadata._id;\n
-    if (doc_id === undefined) {\n
-      doc_id = jIO.util.generateUuid();\n
-    }\n
-    if (this._database.hasOwnProperty(doc_id)) {\n
-      // the document already exists\n
-      throw new jIO.util.jIOError("Cannot create a new document", 409);\n
-    }\n
-    metadata._id = doc_id;\n
-    return this.put(metadata);\n
-  };\n
 \n
   MemoryStorage.prototype.put = function (metadata) {\n
     if (!this._database.hasOwnProperty(metadata._id)) {\n
@@ -6940,16 +6914,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   QueryStorage.prototype.get = function () {\n
     return this._sub_storage.get.apply(this._sub_storage, arguments);\n
   };\n
-  QueryStorage.prototype.post = function (metadata) {\n
-//     return this._sub_storage.post.apply(this._sub_storage, arguments);\n
-\n
-    var doc_id = metadata._id;\n
-    if (doc_id === undefined) {\n
-      doc_id = jIO.util.generateUuid();\n
-    }\n
-    metadata._id = doc_id;\n
-    // Ensure there is no conflict?\n
-    return this.put(metadata);\n
+  QueryStorage.prototype.post = function () {\n
+    return this._sub_storage.post.apply(this._sub_storage, arguments);\n
   };\n
   QueryStorage.prototype.put = function () {\n
     return this._sub_storage.put.apply(this._sub_storage, arguments);\n
@@ -7142,15 +7108,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                                  DOCUMENT_EXTENSION + "$"),\n
     DOCUMENT_KEY = "/.jio_documents/",\n
     ROOT = "/";\n
-\n
-  FileSystemBridgeStorage.prototype.post = function (metadata) {\n
-    var doc_id = metadata._id;\n
-    if (doc_id === undefined) {\n
-      doc_id = jIO.util.generateUuid();\n
-    }\n
-    metadata._id = doc_id;\n
-    return this.put(metadata);\n
-  };\n
 \n
   FileSystemBridgeStorage.prototype.get = function (param) {\n
     var context = this,\n
@@ -7579,9 +7536,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  */\n
 \n
 /*jslint nomen: true */\n
-/*global indexedDB, jIO, RSVP, Blob, Math*/\n
+/*global indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange*/\n
 \n
-(function (indexedDB, jIO, RSVP, Blob, Math) {\n
+(function (indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange) {\n
   "use strict";\n
 \n
   // Read only as changing it can lead to data corruption\n
@@ -7770,7 +7727,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         return RSVP.all([\n
           handleGet(transaction.objectStore("metadata").get(param._id)),\n
           handleCursor(transaction.objectStore("attachment").index("_id")\n
-                       .openCursor(), addEntry)\n
+                       .openCursor(IDBKeyRange.only(param._id)), addEntry)\n
         ]);\n
       })\n
       .push(function (result_list) {\n
@@ -7814,9 +7771,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                         .objectStore("metadata")["delete"](param._id)),\n
           // XXX Why not possible to delete with KeyCursor?\n
           handleCursor(transaction.objectStore("attachment").index("_id")\n
-                       .openCursor(), deleteEntry),\n
+                       .openCursor(IDBKeyRange.only(param._id)), deleteEntry),\n
           handleCursor(transaction.objectStore("blob").index("_id")\n
-                       .openCursor(), deleteEntry)\n
+                       .openCursor(IDBKeyRange.only(param._id)), deleteEntry)\n
         ]);\n
       });\n
   };\n
@@ -7889,7 +7846,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         buildKeyPath([param._id, param._attachment])\n
       )),\n
       handleCursor(transaction.objectStore("blob").index("_id_attachment")\n
-                   .openCursor(), deleteEntry)\n
+                   .openCursor(IDBKeyRange.only(\n
+          [param._id, param._attachment]\n
+        )),\n
+          deleteEntry\n
+        )\n
     ]);\n
   }\n
 \n
@@ -7963,7 +7924,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   jIO.addStorage("indexeddb", IndexedDBStorage);\n
-}(indexedDB, jIO, RSVP, Blob, Math));\n
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));\n
 
 
 ]]></string> </value>
@@ -8087,7 +8048,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -8119,7 +8080,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425307870.56</float>
+                        <float>1426000157.13</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
