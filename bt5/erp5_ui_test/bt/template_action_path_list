@@ -3,6 +3,7 @@ Bar | list
 Bar | performance
 Bar | view
 Bar | view_datetime_field
+Bar | view_gadget_field
 Foo Bar Module | view
 Foo Line | view
 Foo Module | list
