@@ -30,7 +30,7 @@
 # TODO: Some tests from this file can be merged into Formulator
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import unittest
+import unittest,re
 
 # Initialize ERP5Form Product to load monkey patches
 
@@ -758,14 +758,27 @@ class TestProxyField(ERP5TypeTestCase):
     original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
                                    'my_date', 'Date', 'DateTimeField')
     original_field.manage_edit_xmlrpc(dict(required=0))
+    original_field.manage_edit_xmlrpc(dict(input_style='text'))
     proxy_field = self.addField(self.container.Base_view,
                                 'my_date', 'Date', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_date',))
 
+    select_matcher = re.compile('select name="([^"]*)"')
     # we can render
-    proxy_field.render()
-    # and validate
+    result=proxy_field.render()
+    #have 0 selects
+    self.assertEqual(0, len(select_matcher.findall(result)))
+
+    #change input style
+    proxy_field.manage_edit_surcharged_xmlrpc(dict(input_style='list'))
+    # we can render
+    result=proxy_field.render()
+    #we can change input style
+    #have 3 selects, for year, month, day
+    self.assertEqual(3, len(select_matcher.findall(result)))
+
+    #we can validate
     self.container.Base_view.validate_all_to_request(self.portal.REQUEST)
 
   def test_manage_edit_surcharged_xmlrpc(self):
