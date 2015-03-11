@@ -39,7 +39,10 @@ import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
-from zLOG import LOG, INFO, WARNING, ERROR
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from string import join
 import os
 import warnings
@@ -1996,7 +1999,6 @@ class ERP5Generator(PortalGenerator):
     """
     ERP5 is not a CMS
     """
-    pass
 
   # this lists only the skin layers of Products.CMFDefault we are actually
   # interested in.

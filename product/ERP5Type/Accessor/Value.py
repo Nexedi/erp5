@@ -27,7 +27,12 @@
 ##############################################################################
 
 from operator import methodcaller
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
+from Base import ATTRIBUTE_PREFIX
+from Base import Getter as BaseGetter
+from Base import Setter as BaseSetter
+from Base import func_code
+from Base import list_types
+from Base import type_definition
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.Utils import convertToUpperCase

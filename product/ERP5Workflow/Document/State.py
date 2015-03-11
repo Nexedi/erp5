@@ -30,13 +30,15 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from zLOG import LOG, ERROR, DEBUG, WARNING
+from zLOG import DEBUG
+from zLOG import ERROR
+from zLOG import LOG
+from zLOG import WARNING
 
 class StateError(Exception):
   """
   Must call only an available transition
   """
-  pass
 
 class State(XMLObject):
   """

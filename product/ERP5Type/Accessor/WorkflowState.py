@@ -28,7 +28,8 @@
 
 from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
-from Base import Getter as BaseGetter, Setter as BaseSetter
+from Base import Getter as BaseGetter
+from Base import Setter as BaseSetter
 from warnings import warn
 
 # Creation of default constructor

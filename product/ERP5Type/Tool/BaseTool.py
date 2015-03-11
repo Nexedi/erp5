@@ -26,14 +26,15 @@
 #
 ##############################################################################
 
-import os
 from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions, _dtmldir
-from zLOG import LOG, INFO, WARNING
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 
 class BaseTool (UniqueObject, Folder):
     """

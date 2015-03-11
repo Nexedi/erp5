@@ -63,7 +63,6 @@ class Session(UserDict):
   def _updatecontext(self, aq_context):
     """ Update current aquisition context.
          This makes only sense for local RAM Session."""
-    pass
 
   def _updateSessionDuration(self, session_duration):
     self.session_duration = int(session_duration)

@@ -33,7 +33,6 @@ import os
 import logging
 import random
 import socket
-import sys
 import unittest
 import ZODB
 import zLOG

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-import base64, errno, os, select, socket, sys, time
+import errno
+import os
+import select
+import sys
+import time
 from threading import Thread
 from UserDict import IterableUserDict
 import Lifetime

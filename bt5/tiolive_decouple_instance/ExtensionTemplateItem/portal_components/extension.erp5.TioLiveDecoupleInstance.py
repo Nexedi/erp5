@@ -1,4 +1,5 @@
-from zLOG import LOG, WARNING
+from zLOG import LOG
+from zLOG import WARNING
 
 def Alarm_updatePersonModulePasswordInformation(self, **kw):
   """

@@ -27,13 +27,17 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import Message, registerActivity
-import sys
 #from time import time
 from SQLBase import SQLBase, sort_message_key
 
 import transaction
 
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PANIC
+from zLOG import TRACE
+from zLOG import WARNING
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000

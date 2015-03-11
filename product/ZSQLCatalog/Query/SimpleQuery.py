@@ -32,7 +32,8 @@ from Query import Query
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
-from zLOG import LOG, WARNING
+from zLOG import LOG
+from zLOG import WARNING
 
 NULL_SEARCH_TEXT_OPERATOR_DICT = {
   '=': 'is',

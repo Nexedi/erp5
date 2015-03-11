@@ -21,9 +21,9 @@ from cStringIO import StringIO
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile
 from pickle import Pickler, EMPTY_DICT, MARK, DICT
-from cPickle import loads, dumps
+from cPickle import dumps
+from cPickle import loads
 from types import TupleType
-from types import StringType
 from types import DictionaryType
 from OFS import ObjectManager, XMLExportImport
 
@@ -59,7 +59,11 @@ class OrderedPickler(Pickler):
         dispatch[PyStringMap] = save_dict
 
 def reorderPickle(jar, p):
-    from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
+    from ZODB.ExportImport import Ghost
+    from ZODB.ExportImport import Pickler
+    from ZODB.ExportImport import StringIO
+    from ZODB.ExportImport import Unpickler
+    from ZODB.ExportImport import persistent_id
 
     oids = {}
     storage = jar._storage

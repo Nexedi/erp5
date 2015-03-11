@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Delivery import Delivery
-from warnings import warn
 
 class PackingList(Delivery):
     """

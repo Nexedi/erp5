@@ -32,8 +32,8 @@ from Products.ERP5TioSafe.Utils import EchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
-from zLOG import LOG, ERROR
-from urllib2 import URLError, HTTPError
+from zLOG import ERROR
+from zLOG import LOG
 
 _MARKER = []
 

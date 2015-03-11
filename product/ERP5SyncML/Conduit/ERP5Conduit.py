@@ -684,7 +684,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def afterNewObject(self, object):
     """Overloadable method
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                             'getStatusFromXml')

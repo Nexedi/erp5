@@ -31,7 +31,7 @@ can download docutils at http://docutils.sourceforge.net/#download.
 """ % {'version' : docutils.__version__, 'path' : docutils.__path__[0] }
 
 
-import sys, os, locale
+import locale
 ##from App.config import getConfiguration
 from docutils.core import publish_parts
 

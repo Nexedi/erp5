@@ -32,7 +32,10 @@
 from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from zLOG import LOG, INFO, ERROR, WARNING
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 

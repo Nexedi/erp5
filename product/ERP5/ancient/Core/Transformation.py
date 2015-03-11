@@ -30,4 +30,3 @@ class Transformation:
   """
     Collection of transformed resources
   """
-  pass

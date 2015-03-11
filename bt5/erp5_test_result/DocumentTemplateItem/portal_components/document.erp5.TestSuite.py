@@ -1,6 +1,8 @@
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
-from zLOG import LOG,INFO,ERROR
+from zLOG import LOG
+from zLOG import ERROR
+from zLOG import INFO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 

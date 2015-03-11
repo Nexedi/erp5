@@ -28,11 +28,14 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5TioSafe.Utils import EchoDictTarget, NewEchoDictTarget
+from Products.ERP5TioSafe.Utils import EchoDictTarget
+from Products.ERP5TioSafe.Utils import NewEchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
-from zLOG import LOG, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
 from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
 from Products.ERP5Type.Cache import CachingMethod
 

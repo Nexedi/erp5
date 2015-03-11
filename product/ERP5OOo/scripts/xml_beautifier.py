@@ -29,7 +29,6 @@
 ##############################################################################
 
 import sys, os
-from xml.dom import Node
 from xml.dom.ext import PrettyPrint
 from xml.dom.ext.reader import PyExpat
 

@@ -108,7 +108,6 @@ class ISendable(Interface):
 
       **kw -- optional parameters
     """
-    pass
 
   def asMIMEMultipart(from_url, to_url,
                       cc_url=None, bcc_url=None,
@@ -125,10 +124,8 @@ class ISendable(Interface):
       must be provided explicitely. Actual MIMEMultipart generation
       uses mailtemplates.
     """
-    pass
 
   def getMIMEMultipartLogList(mime_sender=None):
     """
       Retrieve the list of messages sent based on the current document
     """
-    pass

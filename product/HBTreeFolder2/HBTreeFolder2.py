@@ -14,17 +14,18 @@
 
 import sys
 from cgi import escape
-from itertools import chain, islice
+from itertools import chain
+from itertools import islice
 from urllib import quote
 from random import randint
-from types import StringType
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile
 from Persistence import Persistent, PersistentMapping
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-from BTrees.OIBTree import OIBTree, union
+from BTrees.OIBTree import OIBTree
+from BTrees.OIBTree import union
 from BTrees.Length import Length
 from ZODB.POSException import ConflictError
 from OFS.ObjectManager import BadRequestException, BeforeDeleteException

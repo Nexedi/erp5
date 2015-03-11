@@ -28,7 +28,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.Document.TextDocument import TextDocument
 

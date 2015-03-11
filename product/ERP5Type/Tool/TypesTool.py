@@ -15,7 +15,8 @@
 #
 ##############################################################################
 
-import imp, sys, warnings
+import imp
+import sys
 import inspect
 from itertools import chain
 import zope.interface
@@ -28,7 +29,9 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from zLOG import LOG, WARNING, PANIC
+from zLOG import LOG
+from zLOG import PANIC
+from zLOG import WARNING
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable

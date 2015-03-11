@@ -6,7 +6,7 @@ __revision__ = '$Id: xml.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
 from os.path import join, dirname, exists
 import re
-from os import popen3, popen4, system
+from os import system
 from cStringIO import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform

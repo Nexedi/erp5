@@ -14,7 +14,9 @@ except ImportError:
 import string
 
 from Shared.DC.ZRDB import Aqueduct
-from Shared.DC.ZRDB.Aqueduct import parse, decodestring, default_input_form
+from Shared.DC.ZRDB.Aqueduct import decodestring
+from Shared.DC.ZRDB.Aqueduct import default_input_form
+from Shared.DC.ZRDB.Aqueduct import parse
 from Shared.DC.ZRDB.Results import Results
 import Acquisition, AccessControl.Role, OFS.SimpleItem
 from App.special_dtml import HTMLFile
@@ -113,7 +115,6 @@ class Filter(DocumentTemplate.HTML):
     any (like ldapvar or ldaptest or whatever), we don't have to worry.
     It's just nice to have a nice name that reflects what this is. :)
     """
-    pass
 
 class nvLDIF(DocumentTemplate.HTML):
     # Non-validating Ldif Template for use by LDIFFiles.

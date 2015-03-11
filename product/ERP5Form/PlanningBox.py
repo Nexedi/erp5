@@ -285,7 +285,6 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # The validation update process is canceled, and the error is reported
         err = ValidationError(StandardError,activity_object)
         errors_list.append(err)
-        pass
       else:
         # no error : continue
         # recovering new activity bounds

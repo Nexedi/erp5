@@ -32,7 +32,8 @@ import weakref
 
 from SOAPpy.wstools import WSDLTools
 from SOAPpy.Client  import SOAPProxy
-from SOAPpy.Types   import headerType, faultType
+from SOAPpy.Types   import faultType
+from SOAPpy.Types   import headerType
 
 ##
 ## Hierarchy of the WSDL elements and how the elements relate to each other

@@ -28,10 +28,8 @@
 #
 ##############################################################################
 
-from types import ModuleType
 
 import transaction
-import sys
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -40,7 +38,9 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
-from zLOG import LOG, INFO, WARNING
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 
 global_stream = None
 
@@ -105,7 +105,6 @@ class ComponentTool(BaseTool):
 
     XXX-arnau: Only bt5 items for now
     """
-    pass
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self,

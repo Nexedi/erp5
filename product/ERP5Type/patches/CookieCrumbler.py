@@ -41,7 +41,6 @@ class PatchedCookieCrumbler(CookieCrumbler):
   """
     This class is only for backward compatibility.
   """
-  pass
 
 def getLoginURL(self):
     '''

@@ -41,7 +41,8 @@ def ERP5Site_updateModuleScribus(self,
   context = self
 
   # IMPORTING MODULES
-  from Products.Formulator.Errors import ValidationError, FormValidationError
+  from Products.Formulator.Errors import FormValidationError
+  from Products.Formulator.Errors import ValidationError
   from Products.ERP5Form.ScribusUtils import ScribusParser
   from Products.ERP5Form.ScribusUtils import ManageModule
   from Products.ERP5Form.ScribusUtils import ManageFiles
@@ -51,7 +52,11 @@ def ERP5Site_updateModuleScribus(self,
   # needed to be able to list the objects in 'list_object_view' form
   from Products.ERP5.ERP5Site import ERP5Site
   from Products.CMFCore.utils import getToolByName
-  from zLOG import LOG, TRACE, WARNING, ERROR, INFO
+  from zLOG import ERROR
+  from zLOG import INFO
+  from zLOG import LOG
+  from zLOG import TRACE
+  from zLOG import WARNING
 
   # CREATING MODULES INSTANCES
   ScribusParser = ScribusParser()
@@ -182,7 +187,6 @@ def ERP5Site_updateModuleScribus(self,
   if xml_string == None:
     LOG('ERP5Site_updateModuleScribus', WARNING,
         'no field was defined in the Scribus file')
-    pass
   else:
 
     # GETTING FULL SCRIBUS DOCUMENT PROPERTIES

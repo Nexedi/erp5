@@ -25,14 +25,20 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from PIL import ImageFont, Image, ImageDraw, ImageFilter
-from random import randrange, uniform
-from string import zfill
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFilter
+from PIL import ImageFont
+from random import uniform
 from hashlib import md5
 from tempfile import NamedTemporaryFile
-import sys, os
+import os
 import commands
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import TRACE
+from zLOG import WARNING
 
 FONT_FILE = '/usr/share/fonts/TTF/dejavu/DejaVuSansMono.ttf'
 INITIAL_FONT_SIZE = 250

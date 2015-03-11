@@ -713,7 +713,6 @@ PythonField = ZMIField # NOTE: for backwards compatibility
 class ZClassField(Field):
     """Base class for a field implemented as a ZClass.
     """
-    pass
 
 
 

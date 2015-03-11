@@ -24,7 +24,9 @@
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Acquisition import aq_base, aq_inner, aq_parent
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 import Products
 from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.Expression import Expression
@@ -44,8 +46,8 @@ ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
 from TranslationProviderBase import TranslationProviderBase
 
-from sys import exc_info
-from zLOG import LOG, ERROR
+from zLOG import ERROR
+from zLOG import LOG
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 def getCurrentUserIdOrAnonymousToken():

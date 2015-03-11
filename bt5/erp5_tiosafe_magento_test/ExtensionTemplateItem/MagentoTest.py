@@ -27,7 +27,8 @@
 
 from lxml import etree
 from cStringIO import StringIO
-from zLOG import LOG, ERROR
+from zLOG import ERROR
+from zLOG import LOG
 from Acquisition import aq_base
 import transaction 
 from DateTime import DateTime
@@ -53,7 +54,10 @@ class MagentoTestConnector:
     return root
 
   def getPropertySheetDefinitionList(self, object):
-    from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
+    from Products.ERP5Type import Constraint
+    from Products.ERP5Type import Permissions
+    from Products.ERP5Type import PropertySheet
+    from Products.ERP5Type import interfaces
     prop_list = []
     for property_sheet_name in object.getTypeInfo().getTypePropertySheetList():
       if "Magento" in property_sheet_name:

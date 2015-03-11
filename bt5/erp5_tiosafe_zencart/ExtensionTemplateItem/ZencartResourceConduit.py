@@ -32,7 +32,8 @@ from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5TioSafe.Conduit.TioSafeResourceConduit import TioSafeResourceConduit
 from Products.ERP5SyncML.Document.Conflict import Conflict
 from lxml import etree
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 
 class ZencartResourceConduit(TioSafeResourceConduit):
   """

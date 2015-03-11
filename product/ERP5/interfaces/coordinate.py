@@ -44,14 +44,12 @@ class ICoordinate(Interface):
     This method usually tries to lookup a skin named ${PortalType}_asText and
     to use this script to display the coordinate text.
     """
-    pass
 
   def standardTextFormat():
     """
       returns a string which defines the standard
       string format for that coordinate
     """
-    pass
 
   def isDetailed():
     """return True if one of detailed properties is defined

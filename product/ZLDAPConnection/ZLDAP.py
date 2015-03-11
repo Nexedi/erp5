@@ -9,7 +9,9 @@
 
 __version__ = "$Revision: 1.11 $"[11:-2]
 
-import Acquisition, AccessControl, OFS, string
+import AccessControl
+import Acquisition
+import OFS
 from Acquisition import aq_base
 from App.special_dtml import HTMLFile
 from App.Dialogs import MessageDialog

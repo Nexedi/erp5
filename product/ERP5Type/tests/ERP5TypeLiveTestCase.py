@@ -34,7 +34,8 @@ import re
 import thread
 
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.ZopeTestCase import PortalTestCase
+from Testing.ZopeTestCase import user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
@@ -43,7 +44,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import \
 from glob import glob
 import transaction
 
-from zLOG import LOG, DEBUG, INFO
+from zLOG import DEBUG
+from zLOG import INFO
+from zLOG import LOG
 
 # Disable patching of activity tool,
 # Tic doesn't need help as TimerService is running
@@ -157,7 +160,6 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       '''Called after setUp() has completed. This is
          far and away the most useful hook.
       '''
-      pass
 
 from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader

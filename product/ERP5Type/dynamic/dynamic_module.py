@@ -109,7 +109,8 @@ def initializeDynamicModules():
   erp5.document = ModuleType("erp5.document")
 
   # Portal types as classes
-  from accessor_holder import AccessorHolderType, AccessorHolderModuleType
+  from accessor_holder import AccessorHolderModuleType
+  from accessor_holder import AccessorHolderType
 
   erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
   erp5.accessor_holder.__path__ = []

@@ -206,7 +206,6 @@ class ProcessManager(object):
         os.kill(supervisor_pid, signal.SIGTERM)
     except:
       self.log('ProcessManager killPreviousRun, exception when killing supervisor')
-      pass
     self.process_pid_set.clear()
 
   def sigterm_handler(self, signal, frame):

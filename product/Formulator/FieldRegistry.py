@@ -41,7 +41,6 @@ class FieldRegistry:
         """XXX: this is a quick fix to avoid bloating the ZODB.
            Proper fix should only add FieldHelp when it's missing.
         """
-        pass
 
     def initializeFields(self):
         """Initialize all field classes in field forms to use actual field

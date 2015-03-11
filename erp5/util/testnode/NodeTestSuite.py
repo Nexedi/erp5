@@ -24,21 +24,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from datetime import datetime,timedelta
 import os
-import subprocess
-import sys
-import time
-import glob
 import SlapOSControler
-import json
-import time
-import shutil
-import logging
 import string
 import random
-from ProcessManager import SubprocessError, ProcessManager, CancellationError
-from subprocess import CalledProcessError
+from ProcessManager import CancellationError
+from ProcessManager import ProcessManager
+from ProcessManager import SubprocessError
 from Updater import Updater
 from erp5.util import taskdistribution
 

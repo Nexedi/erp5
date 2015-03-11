@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import random
-import time
-import string
 from utils import *
 
 PREFIX_TITLE = ""

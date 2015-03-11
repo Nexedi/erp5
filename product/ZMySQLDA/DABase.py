@@ -87,7 +87,7 @@ __doc__='''Database Connection
 $Id: DABase.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.5 $'[11:-2]
 
-import Shared.DC.ZRDB.Connection, sys
+import Shared.DC.ZRDB.Connection
 from App.special_dtml import HTMLFile
 from ExtensionClass import Base
 import Acquisition

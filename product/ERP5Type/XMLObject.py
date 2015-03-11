@@ -96,7 +96,6 @@ class XMLObject( Folder ):
       """
           Update a document by providing an xupdate XML file
       """
-      pass
 
 
     security.declareProtected( Permissions.ModifyPortalContent, 'fromXML' )

@@ -38,7 +38,8 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase, checkPythonSourceCode

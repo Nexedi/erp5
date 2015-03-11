@@ -28,11 +28,15 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import getToolByName
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 
 class IdGenerator(Base):
   """

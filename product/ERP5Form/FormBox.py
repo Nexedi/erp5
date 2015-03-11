@@ -39,11 +39,14 @@ from Products.ERP5Type.Globals import get_request
 from Products.PythonScripts.Utility import allow_class
 
 from Products.PythonScripts.standard import url_quote_plus
-from Products.Formulator.Errors import FormValidationError, ValidationError
+from Products.Formulator.Errors import FormValidationError
+from Products.Formulator.Errors import ValidationError
 
-import string
 
-from zLOG import LOG, WARNING, DEBUG, PROBLEM
+from zLOG import DEBUG
+from zLOG import LOG
+from zLOG import PROBLEM
+from zLOG import WARNING
 
 class FormBoxWidget(Widget.Widget):
   """

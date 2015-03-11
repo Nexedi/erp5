@@ -30,7 +30,7 @@ from Products.ERP5Type.Globals import InitializeClass, Persistent
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 if 1: # BBB
-  import zLOG, sys
+  import zLOG
   zLOG.LOG('Products.ERP5Type.Messages',
       zLOG.INFO,
       'Products.PageTemplates.GlobalTranslationService has been removed. '

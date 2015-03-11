@@ -60,4 +60,3 @@ class IndependentCapacity(Capacity):
       """
       #return additiveCartesianProduct(DependentCapacity.asCapacityItemList(self))
       #return map(lambda capacity: ((capacity, self.getQuantity())), self.getResourceList())
-      pass

@@ -27,7 +27,6 @@
 ##############################################################################
 
 from scribus import * # XXX: extremely dangerous
-import re
 
 TITLE = "Mayoro: Modifing Styles of text fields"
 BUTTON_OK = 1

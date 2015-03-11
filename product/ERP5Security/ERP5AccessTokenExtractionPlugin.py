@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG
+from zLOG import PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
 
 from AccessControl import ClassSecurityInfo

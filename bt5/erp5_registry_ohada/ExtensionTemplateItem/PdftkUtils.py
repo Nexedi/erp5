@@ -26,7 +26,11 @@
 #
 ##############################################################################
 
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import TRACE
+from zLOG import WARNING
 import commands
 from tempfile import NamedTemporaryFile
 from Products.ERP5.Document.File import _unpackData

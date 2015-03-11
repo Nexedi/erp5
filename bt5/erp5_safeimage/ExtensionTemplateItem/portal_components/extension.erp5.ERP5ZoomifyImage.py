@@ -16,17 +16,21 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##############################################################################
 
-import os, sys, shutil, tempfile
+import os
+import tempfile
 from cStringIO import StringIO
-from zLOG import LOG,ERROR,INFO,WARNING
+from zLOG import LOG
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import WARNING
 from OFS.Image import File, Image
 import os, transaction
-from AccessControl import getSecurityManager, ClassSecurityInfo
+from AccessControl import ClassSecurityInfo
+from AccessControl import getSecurityManager
 from Globals import package_home
 import PIL.Image as PIL_Image
 import thread
 import random
-import base64
 from OFS.Folder import Folder 
 
 class ZoomifyBase:
@@ -45,7 +49,6 @@ class ZoomifyBase:
   def openImage(self):
     """ load the image data """
 
-    pass
     return
 
   def getImageInfo(self):
@@ -92,7 +95,6 @@ class ZoomifyBase:
   def createDataContainer(self, imageName):
     """ create a container for tile groups and tile metadata """
 
-    pass
     return
 
   def getAssignedTileContainerName(self, tileFileName=None):
@@ -113,7 +115,6 @@ class ZoomifyBase:
   def createTileContainer(self, tileContainerName=None):
     """ create a container for the next group of tiles within the data container """
 
-    pass
     return
 
   def getTileFileName(self, scaleNumber, columnNumber, rowNumber):
@@ -124,7 +125,6 @@ class ZoomifyBase:
   def getFileReference(self, scaleNumber, columnNumber, rowNumber):
     """ get the full path of the file the tile will be saved as """
 
-    pass
     return
 
   def getNumberOfTiles(self):
@@ -147,13 +147,11 @@ class ZoomifyBase:
   def saveXMLOutput(self):
     """ save xml metadata about the tiles """
 
-    pass
     return
 
   def saveTile(self, image, scaleNumber, column, row):
     """ save the cropped region """
 
-    pass
     return
 
   def processImage(self):
@@ -272,7 +270,6 @@ class ZoomifyBase:
   def ZoomifyProcess(self, imageNames):
     """ the method the client calls to generate zoomify metadata """
 
-    pass
     return
 
   def preProcess(self):
@@ -455,7 +452,6 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     return
 
   def saveTransformedFile(self):
-    pass
     return
 
   def _ZoomifyProcess(self):
@@ -495,12 +491,10 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
 
   def createDefaultViewer(self):
     """ add the default Zoomify viewer to the Zoomify metadata """
-    pass
     return
 
   def createDataContainer(self, imageName="None"):
     """Creates nothing coz we are already in the container"""
-    pass
     return
 
   def _updateTransformedFile(self,tile_group_id,tile_title):

@@ -256,7 +256,6 @@ class Queue(object):
     """
       delay is provided in fractions of day
     """
-    pass
 
   def getPriority(self, activity_tool):
     """

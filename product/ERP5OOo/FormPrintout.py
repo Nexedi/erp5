@@ -44,7 +44,10 @@ from OFS.PropertyManager import PropertyManager
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
-from zLOG import LOG, DEBUG, INFO, WARNING
+from zLOG import DEBUG
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
 from decimal import Decimal

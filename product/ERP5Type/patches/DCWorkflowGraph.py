@@ -63,7 +63,6 @@ if os.name == 'nt':
         except:
             if key: win32api.RegCloseKey(key)
             # key doesn't exist
-            pass
     except ImportError:
         # win32 may be not installed...
         pass
@@ -124,7 +123,8 @@ def getObjectTitle(obj, REQUEST=None):
 from Products.DCWorkflowGraph import DCWorkflowGraph
 DCWorkflowGraph.getObjectTitle = getObjectTitle
 
-from Products.DCWorkflowGraph.config import bin_search_path, DOT_EXE
+from Products.DCWorkflowGraph.config import DOT_EXE
+from Products.DCWorkflowGraph.config import bin_search_path
 from zLOG import LOG, WARNING
 import subprocess
 

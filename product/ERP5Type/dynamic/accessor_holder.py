@@ -44,7 +44,10 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Accessor import Related, RelatedValue
 from AccessControl import ClassSecurityInfo
 
-from zLOG import LOG, ERROR, INFO, WARNING
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 
 class AccessorHolderType(type):
   _skip_permission_tuple = (Permissions.AccessContentsInformation,

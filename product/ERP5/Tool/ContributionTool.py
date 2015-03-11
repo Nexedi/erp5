@@ -29,7 +29,6 @@
 
 import cStringIO
 import re
-import socket
 import urllib2, urllib
 import urlparse
 from cgi import parse_header
@@ -292,7 +291,6 @@ class ContributionTool(BaseTool):
       Create a new content based on XML data. This is intended for contributing
       to ERP5 from another application.
     """
-    pass
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getMatchedFilenamePatternDict')

@@ -29,7 +29,9 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin

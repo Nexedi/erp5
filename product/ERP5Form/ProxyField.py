@@ -46,8 +46,14 @@ from Products.PythonScripts.standard import url_quote_plus
 from AccessControl import ClassSecurityInfo
 from MethodObject import Method
 
-from zLOG import LOG, WARNING, DEBUG, PROBLEM
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
+from zLOG import DEBUG
+from zLOG import LOG
+from zLOG import PROBLEM
+from zLOG import WARNING
+from Acquisition import aq_acquire
+from Acquisition import aq_base
+from Acquisition import aq_chain
+from Acquisition import aq_inner
 from Products.ERP5Type.Globals import DTMLFile
 
 from Products.Formulator.TALESField import TALESMethod

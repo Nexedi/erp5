@@ -174,7 +174,6 @@ class Amount(Base, VariatedMixin):
     """Do nothing in the case of an amount, because variation base category
     list are set on the resource.
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryItemList')

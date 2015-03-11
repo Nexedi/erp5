@@ -2,12 +2,13 @@
 import pywintypes
 import pythoncom
 
-import os.path
 
-import win32com, sys, string, win32api, traceback, re, tempfile, os
+import win32api
+import win32com
 import win32com.client
 from win32com.client import gencache
-from win32com.client import constants, Dispatch
+from win32com.client import Dispatch
+from win32com.client import constants
 
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML

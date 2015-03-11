@@ -30,7 +30,6 @@
 # Required modules - some modules are imported later to prevent circular deadlocks
 import os
 import re
-import string
 import time
 import warnings
 import sys
@@ -102,7 +101,12 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO, TRACE
+from zLOG import BLATHER
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PROBLEM
+from zLOG import TRACE
+from zLOG import WARNING
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -624,7 +628,8 @@ from App.config import getConfiguration
 
 from Products.ERP5Type.Globals import InitializeClass
 from Accessor.Base import func_code
-from Products.CMFCore.utils import manage_addContentForm, manage_addContent
+from Products.CMFCore.utils import manage_addContent
+from Products.CMFCore.utils import manage_addContentForm
 from AccessControl.PermissionRole import PermissionRole
 
 python_file_parser = re.compile('^(.*)\.py$')
@@ -1608,7 +1613,6 @@ except ImportError:
   warnings.warn("urlnorm lib is not installed", DeprecationWarning)
   urlnorm = None
 import urlparse
-import urllib
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')

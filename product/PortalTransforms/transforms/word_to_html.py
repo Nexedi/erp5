@@ -28,7 +28,6 @@ else:
     except:
         from office_com import document
 
-import os.path
 
 class word_to_html:
     implements(ITransform)

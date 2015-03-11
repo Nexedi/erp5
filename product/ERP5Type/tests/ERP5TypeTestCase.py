@@ -811,7 +811,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       '''Called after setUp() has completed. This is
          far and away the most useful hook.
       '''
-      pass
 
     def getBusinessTemplateList(self):
       """

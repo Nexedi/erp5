@@ -31,7 +31,9 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
-from zLOG import LOG, WARNING, INFO
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from Products.ERP5Type.Accessor import Base, List, Alias, Translation
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition, list_types
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext, \

@@ -5,7 +5,6 @@ import os
 import shutil
 import time
 import sys
-import multiprocessing
 import subprocess
 import signal
 import errno
@@ -127,7 +126,6 @@ def getCreatedDocumentNumberFromERP5(erp5_url, log):
 import product.ERP5Type.tests.ERP5TypeTestSuite
 
 
-from subprocess import call
 
 LOG_FILE_PREFIX = "performance_tester_erp5"
 # Duration of a test case

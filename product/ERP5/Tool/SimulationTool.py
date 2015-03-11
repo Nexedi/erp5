@@ -2255,7 +2255,6 @@ class SimulationTool(BaseTool):
         if o.isCapacity():
           # Do whatever is needed
           capacity_item_list += o.asCapacityItemList()
-          pass
       # Do whatever with capacity_item_list
       # and store the resulting new capacity in node
       node._capacity_item_list = capacity_item_list

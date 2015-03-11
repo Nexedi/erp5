@@ -38,7 +38,6 @@ import sys
 import tempfile
 import zipfile
 import popen2
-import urllib2
 from cStringIO import StringIO
 
 try:

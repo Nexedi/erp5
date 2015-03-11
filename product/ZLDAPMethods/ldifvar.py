@@ -59,7 +59,8 @@
 #__version__='$Revision: 1.14.10.2 $'[11:-2]
 
 from DocumentTemplate.DT_Util import ParseError, parse_params, name_param
-from string import find, split, join, atoi, atof
+from string import atof
+from string import atoi
 StringType=type('')
 
 str=__builtins__['str']

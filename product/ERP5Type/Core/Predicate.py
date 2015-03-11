@@ -606,7 +606,6 @@ class Predicate(XMLObject):
 
       TO BE IMPLEMENTED using portal_catalog(**kw)
     """
-    pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMembershipCriterionCategoryList')

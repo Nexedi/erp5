@@ -1,4 +1,3 @@
-import string
 from DummyField import fields
 import Widget, Validator
 from Persistence import Persistent

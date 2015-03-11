@@ -30,7 +30,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from zLOG import LOG, WARNING
+from zLOG import LOG
+from zLOG import WARNING
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 

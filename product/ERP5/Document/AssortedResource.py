@@ -28,7 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine

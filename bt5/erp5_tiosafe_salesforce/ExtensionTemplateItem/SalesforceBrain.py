@@ -90,7 +90,6 @@ class SalesforceNodeBrain(SalesforceBrain):
     check_list = [getattr(self, tag, None) for tag in tag_list]
     if None in check_list:
       LOG("Can not set address, %s doesn't provided full elements" % self.title, 300, "")
-      pass
     else:
       address = etree.SubElement(node, 'address')
       self._setTagList(self, address, tag_list)

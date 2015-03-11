@@ -43,7 +43,8 @@ from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.mixin.rule import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
     unrestricted_apply
-from zLOG import LOG, PROBLEM
+from zLOG import LOG
+from zLOG import PROBLEM
 
 class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                CompositionMixin, AmountGeneratorMixin):
@@ -735,7 +736,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
       This is a hack
       """
-      pass
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getParentExplanationValue')
@@ -755,7 +755,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
       This is a hack
       """
-      pass
 
     def getBuilderList(self):
       """Returns appropriate builder list."""

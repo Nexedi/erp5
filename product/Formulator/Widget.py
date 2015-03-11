@@ -170,7 +170,6 @@ class Widget:
       Should return valid css code as string.
       The value returned by this method will be used as inline style for a field.
     """
-    pass
 
   def get_css_list(self, field, REQUEST):
     """

@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-import imp, re, sys
+import imp
+import re
 from AccessControl import ClassSecurityInfo
 from ZODB.broken import Broken
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter

@@ -28,7 +28,10 @@
 
 import random
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from zLOG import LOG

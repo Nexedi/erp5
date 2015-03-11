@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from logging import DEBUG
 
 from persistent.list import PersistentList
 from zope.interface import implements

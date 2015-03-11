@@ -21,7 +21,8 @@ from types import StringTypes
 
 from AccessControl import Unauthorized
 from Products.CMFCore.WorkflowTool import WorkflowTool
-from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
+from Products.CMFCore.WorkflowCore import ObjectDeleted
+from Products.CMFCore.WorkflowCore import ObjectMoved
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
@@ -76,13 +77,11 @@ def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=N
     a notifySuccess() or notifyException() can be expected later on.
     The action usually corresponds to a method name.
     '''
-    pass
 
 def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     '''
     Notifies this workflow that an action has taken place.
     '''
-    pass
 
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
@@ -99,7 +98,6 @@ class ExclusionList(list):
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
 
 class ExclusionTuple(tuple):
   """
@@ -108,7 +106,6 @@ class ExclusionTuple(tuple):
     It is not to be used outside of the scope of this document nor outside
     of the scope of worklist criterion handling.
   """
-  pass
 
 def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):

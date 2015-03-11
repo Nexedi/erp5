@@ -11,10 +11,7 @@ import getopt
 import glob
 import cgi
 import mimetools
-import urllib
 import urlparse
-import multifile
-import StringIO
 
 _TEST_CASE_HEADER = """\
 <html>

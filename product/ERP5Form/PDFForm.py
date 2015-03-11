@@ -28,7 +28,8 @@
 
 from OFS.Image import File
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from Products.PageTemplates.Expressions import getEngine, SafeMapping
 
 from urllib import quote

@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import string
 from contextlib import contextmanager
 from time import time
 from AccessControl import allow_class, ClassSecurityInfo

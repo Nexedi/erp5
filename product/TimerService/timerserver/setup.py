@@ -17,7 +17,6 @@ web = ""
 ftp = ""
 mailing_list = ""
 
-import sys
 try:
   from setuptools import setup
 except ImportError:

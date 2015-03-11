@@ -36,10 +36,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
 from Products.Formulator.TALESField import TALESField
 import CaptchasDotNet
-import string
 import random
 from hashlib import md5
-import time
 from zope.interface import Interface
 from zope.interface import implements
 

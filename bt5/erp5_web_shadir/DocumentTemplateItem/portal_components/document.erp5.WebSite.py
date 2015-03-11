@@ -34,4 +34,3 @@ class WebSite(VirtualFolderMixin, SimpleWebSite):
   """
     XXX
   """
-  pass

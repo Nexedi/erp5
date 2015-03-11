@@ -1,8 +1,3 @@
-import sys
-import json
-import shutil
-import string
-from random import choice
 
 def deunicodeData(data):
   if isinstance(data, list):

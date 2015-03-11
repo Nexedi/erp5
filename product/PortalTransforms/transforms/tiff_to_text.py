@@ -5,7 +5,6 @@ from Products.PortalTransforms.libtransforms.commandtransform \
     import commandtransform
 import os
 import subprocess
-import tempfile
 from zope.interface import implements
 
 class tiff_to_text(commandtransform):

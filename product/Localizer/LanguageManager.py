@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from urlparse import urlparse
 
 # Import from itools
 from .itools.i18n import get_language_name, get_languages

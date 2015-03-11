@@ -26,10 +26,14 @@
 #
 ##############################################################################
 
-import sys, os
+import os
 import commands
 from tempfile import NamedTemporaryFile
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import TRACE
+from zLOG import WARNING
 
 def printFile(printer_name, file_path_to_print, use_ps_file=True, nb_copy=1):
   '''

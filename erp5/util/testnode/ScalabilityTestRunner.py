@@ -26,21 +26,15 @@
 ##############################################################################
 import datetime
 import os
-import subprocess
-import sys
 import time
-import glob
 import SlapOSControler
 import SlapOSMasterCommunicator
 import json
 import time
-import shutil
-import logging
-import string
-import random
 import Utils
-from ProcessManager import SubprocessError, ProcessManager, CancellationError
-from subprocess import CalledProcessError
+from ProcessManager import CancellationError
+from ProcessManager import ProcessManager
+from ProcessManager import SubprocessError
 from Updater import Updater
 from erp5.util import taskdistribution
 # for dummy slapos answer

@@ -33,7 +33,12 @@ from zExceptions import ExceptionFormatter
 
 import transaction
 
-from zLOG import LOG, WARNING, ERROR, INFO, PANIC, TRACE
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PANIC
+from zLOG import TRACE
+from zLOG import WARNING
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000

@@ -39,7 +39,10 @@ from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
+from Acquisition import aq_acquire
+from Acquisition import aq_base
+from Acquisition import aq_chain
+from Acquisition import aq_inner
 from DateTime import DateTime
 import OFS.History
 from OFS.SimpleItem import SimpleItem
@@ -51,11 +54,15 @@ from ZopePatch import ERP5PropertyManager
 
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.utils import _ViewEmulator
+from Products.CMFCore.utils import _checkConditionalGET
+from Products.CMFCore.utils import _setCacheHeaders
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
+from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
@@ -71,7 +78,9 @@ from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import clearCache
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -90,19 +99,21 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zope.interface import classImplementsOnly, implementedBy
 
 from string import join
-import sys, re
+import re
 
 from cStringIO import StringIO
 from socket import gethostname, gethostbyaddr
 import random
 
-import inspect
 from pprint import pformat
 
 import zope.interface
 
 from ZODB.POSException import ConflictError
-from zLOG import LOG, INFO, ERROR, WARNING
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 
 _MARKER = []
 
@@ -1773,7 +1784,6 @@ class Base( CopyContainer,
       to make sure it is compatible with the latest
       version of a class
     """
-    pass
 
   # For Debugging
   security.declareProtected( Permissions.ManagePortal, 'showDict' )

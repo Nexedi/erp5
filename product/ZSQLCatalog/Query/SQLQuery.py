@@ -59,7 +59,6 @@ class SQLQuery(Query):
     """
       There is nothing to register for this type of Query subclass.
     """
-    pass
 
   def __repr__(self):
     return '<%s (%r)>' % (self.__class__.__name__, self.payload)

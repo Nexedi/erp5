@@ -2,8 +2,6 @@
 
 import datetime
 import random
-import time
-import string
 from utils import *
 
 TMIN_SLEEP = 2

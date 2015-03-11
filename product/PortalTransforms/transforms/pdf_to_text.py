@@ -5,7 +5,8 @@ Uses the xpdf (www.foolabs.com/xpdf)
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 from Products.PortalTransforms.libtransforms.commandtransform import subprocesstransform

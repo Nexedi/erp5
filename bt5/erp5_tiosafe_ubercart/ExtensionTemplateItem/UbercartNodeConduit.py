@@ -36,8 +36,9 @@ from Products.ERP5SyncML.SyncMLConstant import XUPDATE_ELEMENT,\
      XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE
 from DateTime import DateTime
 from lxml import etree
-from zLOG import LOG, INFO, ERROR
-from base64 import b16encode
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
 
 DEBUG=False
 

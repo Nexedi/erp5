@@ -32,7 +32,8 @@ from Acquisition import aq_base
 from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import ZMIForm
-from zLOG import LOG, WARNING
+from zLOG import LOG
+from zLOG import WARNING
 
 from urllib import quote
 from warnings import warn

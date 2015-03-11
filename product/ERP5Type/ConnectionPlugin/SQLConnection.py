@@ -54,7 +54,6 @@ class SQLConnection:
 
   def __init__(self, *args, **kw):
     """ Do nothing """
-    pass
 
   def connect(self):
     """Get a handle to a remote connection."""

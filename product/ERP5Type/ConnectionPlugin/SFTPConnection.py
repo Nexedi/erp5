@@ -39,7 +39,6 @@ class SFTPError(Exception):
   """
   Default exception for the connection
   """
-  pass
 
 class SFTPConnection:
   """

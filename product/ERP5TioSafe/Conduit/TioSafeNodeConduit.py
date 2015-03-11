@@ -86,7 +86,6 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
 
   def _deleteContent(self, object=None, object_id=None, **kw):
     """ We do not delete nodes """
-    pass
 
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):

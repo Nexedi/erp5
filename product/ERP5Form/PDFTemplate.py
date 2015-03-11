@@ -36,8 +36,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 
 from urllib import quote
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
-from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
+from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.Globals import get_request
+from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
+from AccessControl import getSecurityManager
 import urllib2
 from ZODB.POSException import ConflictError
 
@@ -222,7 +227,6 @@ if ReportTool:
   from Products.PageTemplates.Expressions import boboAwareZopeTraverse
   from StringIO import StringIO
   import xml.dom.minidom
-  import urllib,os.path
 
 
   if HAS_ZODB_RESOURCE_HANDLER:

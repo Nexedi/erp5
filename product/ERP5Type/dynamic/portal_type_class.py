@@ -28,7 +28,6 @@
 ##############################################################################
 
 import sys
-import os
 import inspect
 import transaction
 
@@ -41,7 +40,11 @@ from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type.dynamic.accessor_holder import createAllAccessorHolderList
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
-from zLOG import LOG, ERROR, INFO, WARNING, PANIC
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PANIC
+from zLOG import WARNING
 
 def _importClass(classpath):
   try:

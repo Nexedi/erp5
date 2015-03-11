@@ -5,7 +5,8 @@ from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from oood_commandtransform import includeMetaContentType
 from zLOG import LOG
 from lxml import etree, html
-from lxml.etree import Element, SubElement
+from lxml.etree import Element
+from lxml.etree import SubElement
 
 html_parser = etree.HTMLParser(remove_blank_text=True, encoding='utf-8')
 

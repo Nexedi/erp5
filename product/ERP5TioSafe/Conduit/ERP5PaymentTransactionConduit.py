@@ -32,9 +32,8 @@
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from Products.ERP5TioSafe.Conduit.ERP5TransactionConduit import ERP5TransactionConduit
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST
-from base64 import b16encode
-from zLOG import LOG, WARNING
-from copy import deepcopy
+from zLOG import LOG
+from zLOG import WARNING
 
 class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
   """

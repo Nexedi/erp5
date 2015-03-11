@@ -4,12 +4,10 @@
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
-import os
 import rfc822
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
 from App.class_init import default__class_init__ as InitializeClass

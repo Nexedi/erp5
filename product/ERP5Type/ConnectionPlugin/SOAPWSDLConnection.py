@@ -28,7 +28,8 @@
 
 import SOAPpy
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
-from AccessControl.SecurityInfo import allow_class, allow_module
+from AccessControl.SecurityInfo import allow_class
+from AccessControl.SecurityInfo import allow_module
 import threading
 
 # Exception class.
@@ -87,13 +88,11 @@ class AuthenticationBase(object):
       This hook is called upon connection. It can be used to exchange
       credentials with remote server.
     """
-    pass
 
 class NullAuthentication(AuthenticationBase):
   """
     NO-OP authentication.
   """
-  pass
 
 class HeaderAuthentication(AuthenticationBase):
   """

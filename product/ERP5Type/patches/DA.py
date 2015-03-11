@@ -16,13 +16,15 @@
 import re
 try: from IOBTree import Bucket
 except: Bucket=lambda:{}
-from Shared.DC.ZRDB.Aqueduct import decodestring, parse
+from Shared.DC.ZRDB.Aqueduct import decodestring
+from Shared.DC.ZRDB.Aqueduct import parse
 from Shared.DC.ZRDB.DA import DA, DatabaseError, SQLMethodTracebackSupplement
 from Shared.DC.ZRDB import RDB
 from Shared.DC.ZRDB.Results import Results
 from App.Extensions import getBrain
 from AccessControl import getSecurityManager
-from Acquisition import aq_base, aq_parent
+from Acquisition import aq_base
+from Acquisition import aq_parent
 from zLOG import LOG, INFO, ERROR
 from string import find
 from cStringIO import StringIO

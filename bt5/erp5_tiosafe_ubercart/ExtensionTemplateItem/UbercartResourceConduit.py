@@ -28,7 +28,8 @@
 from Products.ERP5TioSafe.Conduit.TioSafeResourceConduit import TioSafeResourceConduit
 from Products.ERP5Type.Utils import cartesianProduct
 from lxml import etree
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 
 class UbercartResourceConduit(TioSafeResourceConduit):
   """

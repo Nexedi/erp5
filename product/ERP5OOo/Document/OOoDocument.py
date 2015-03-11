@@ -27,7 +27,10 @@
 #
 ##############################################################################
 
-import xmlrpclib, base64, re, zipfile, cStringIO
+import base64
+import cStringIO
+import re
+import zipfile
 from warnings import warn
 from xmlrpclib import Fault, ServerProxy, ProtocolError
 from AccessControl import ClassSecurityInfo
@@ -43,7 +46,8 @@ from Products.ERP5.Document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
-from zLOG import LOG, ERROR
+from zLOG import ERROR
+from zLOG import LOG
 
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin

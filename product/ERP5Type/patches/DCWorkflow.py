@@ -728,7 +728,6 @@ class ERP5TransitionDefinition (TransitionDefinition):
   """
     This class is only for backward compatibility.
   """
-  pass
 
 def getAvailableScriptIds(self):
   return self.getWorkflow().scripts.keys() + \

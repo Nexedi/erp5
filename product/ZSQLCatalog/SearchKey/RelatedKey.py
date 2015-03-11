@@ -36,7 +36,9 @@ from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.TableDefinition import TableAlias, InnerJoin, LeftJoin
+from Products.ZSQLCatalog.TableDefinition import InnerJoin
+from Products.ZSQLCatalog.TableDefinition import LeftJoin
+from Products.ZSQLCatalog.TableDefinition import TableAlias
 
 from logging import getLogger
 log = getLogger(__name__)

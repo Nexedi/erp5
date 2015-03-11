@@ -32,7 +32,6 @@ import time
 import xml_marshaller
 import shutil
 import sys
-import glob
 import argparse
 import json
 from slapos import client

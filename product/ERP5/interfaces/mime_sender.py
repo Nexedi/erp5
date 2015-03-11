@@ -42,16 +42,13 @@ class IMimeSender(Interface):
     """
       Send a MIMEMultipart.
     """
-    pass
 
   def logMIMEMultipart(message, document):
     """
       Log a MIMEMultipart message for a given document
     """
-    pass
 
   def getMIMEMultipartLogList(document=None):
     """
       Retrieve the list of messages sent using with this sender
     """
-    pass

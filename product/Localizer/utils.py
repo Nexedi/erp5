@@ -16,7 +16,8 @@
 
 # Import from itools
 from .itools.utils import get_abspath
-from .itools.i18n import AcceptLanguageType, init_language_selector
+from .itools.i18n import AcceptLanguageType
+from .itools.i18n import init_language_selector
 
 # Import from Zope
 from App.Common import package_home

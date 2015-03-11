@@ -33,7 +33,8 @@
 
 # Globals.InitializeClass a.k.a. default__class_init__. This import location
 # has not changed since 2.8 and still works on 2.12
-from App.class_init import default__class_init__, ApplicationDefaultPermissions
+from App.class_init import ApplicationDefaultPermissions
+from App.class_init import default__class_init__
 
 # Nicer alias for class initializer.
 InitializeClass = default__class_init__
@@ -56,8 +57,11 @@ except (ImportError, AttributeError):
 # "Persistence" module remains there for ancient backward compatibility.
 # let's try using the new 'persistence' implementation only and see how far we
 # can get. This might not be enough for content in old ZODBs, though...
-from Persistence import Persistent, PersistentMapping
-from App.special_dtml import HTML, HTMLFile, DTMLFile
+from Persistence import Persistent
+from Persistence import PersistentMapping
+from App.special_dtml import DTMLFile
+from App.special_dtml import HTML
+from App.special_dtml import HTMLFile
 from App.Common import package_home
 from App.Dialogs import MessageDialog
 

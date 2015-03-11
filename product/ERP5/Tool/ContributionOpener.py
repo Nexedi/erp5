@@ -15,7 +15,9 @@
 #
 ##############################################################################
 
-import urllib2, os, dircache, urllib
+import dircache
+import os
+import urllib
 from StringIO import StringIO
 from urllib2 import FileHandler, url2pathname, addinfourl, URLError
 import mimetypes, mimetools

@@ -31,7 +31,8 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Base import Method, func_code
-from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
+from Products.ERP5Type.Utils import convertToMixedCase
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Globals import InitializeClass
 
 class BaobabGetter(Method):

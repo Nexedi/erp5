@@ -1,7 +1,6 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from reStructuredText import HTML
-import sys
 
 class rest:
     r"""Converts from reST to HTML.

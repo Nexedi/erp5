@@ -37,7 +37,7 @@ from OFS.XMLExportImport import importXML
 if int(os.environ.get('erp5_report_new_simulation_failures') or 0):
   newSimulationExpectedFailure = lambda test: test
 else:
-  from unittest import expectedFailure as newSimulationExpectedFailure
+  pass
 
 # Keep a global reference to a ZODB storage so that we can import business
 # template xml files. XXX this connection will remain open.

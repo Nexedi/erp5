@@ -28,7 +28,9 @@ import traceback
 import time
 from cStringIO import StringIO
 
-from zLOG import LOG, DEBUG, ERROR
+from zLOG import DEBUG
+from zLOG import ERROR
+from zLOG import LOG
 from App.config import getConfiguration
 
 def dump_threads():

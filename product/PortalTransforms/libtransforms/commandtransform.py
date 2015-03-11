@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 import tempfile
 import re
 import shutil
@@ -8,7 +7,9 @@ from os.path import join, basename
 
 from zope.interface import implements
 
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import getShortPathName
+from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.interfaces import ITransform
 
 class commandtransform:

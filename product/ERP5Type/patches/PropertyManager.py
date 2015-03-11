@@ -27,7 +27,6 @@ class ERP5PropertyManager(PropertyManager):
   """
     This class is only for backward compatibility.
   """
-  pass
 
 PropertyManager_manage_propertiesForm=DTMLFile('properties',
                                                _dtmldir,

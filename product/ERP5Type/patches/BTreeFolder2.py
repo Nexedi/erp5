@@ -18,9 +18,11 @@ import sys
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-from BTrees.OIBTree import OIBTree, union
+from BTrees.OIBTree import OIBTree
+from BTrees.OIBTree import union
 from BTrees.Length import Length
-from OFS.ObjectManager import BadRequestException, BeforeDeleteException
+from OFS.ObjectManager import BadRequestException
+from OFS.ObjectManager import BeforeDeleteException
 from Products.ZCatalog.Lazy import LazyMap
 from zLOG import LOG, WARNING, ERROR, INFO
 
@@ -28,7 +30,6 @@ class ERP5BTreeFolder2Base(BTreeFolder2Base):
   """
     This class is only for backward compatibility.
   """
-  pass
 
 def _cleanup(self):
     """Cleans up errors in the BTrees.

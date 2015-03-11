@@ -33,7 +33,6 @@ from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
-import string
 
 class GeographicAddress(Coordinate):
   """

@@ -29,9 +29,12 @@
 ##############################################################################
 
 from App.Extensions import getBrain
-from Acquisition import Explicit, aq_base
+from Acquisition import Explicit
+from Acquisition import aq_base
 from lxml import etree
-from zLOG import LOG, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
 from base64 import b16encode, b16decode
 
 SEPARATOR = '\n'

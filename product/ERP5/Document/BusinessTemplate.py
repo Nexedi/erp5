@@ -895,7 +895,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       Called right at the begining of "install" method.
       Can be overridden by subclasses.
     """
-    pass
 
   def afterInstall(self):
     """
@@ -903,7 +902,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       Called right before returning in "install" method.
       Can be overridden by subclasses.
     """
-    pass
 
   def onNewObject(self, obj):
     """
@@ -913,7 +911,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       `obj` parameter is the newly created object in its acquisition context.
       Can be overridden by subclasses.
     """
-    pass
 
   def setSafeReindexationMode(self, context):
     """
@@ -3685,7 +3682,6 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     """
     Hook called after uninstall
     """
-    pass
 
   def uninstall(self, *args, **kw):
     # Only for uninstall, the path of objects can be given as a

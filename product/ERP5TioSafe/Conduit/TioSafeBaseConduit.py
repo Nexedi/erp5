@@ -269,7 +269,6 @@ class TioSafeBaseConduit(ERP5Conduit):
     """ This method is for actions that has to be done just after object
     update and which required to have synchronization parameters
     """
-    pass
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
     """

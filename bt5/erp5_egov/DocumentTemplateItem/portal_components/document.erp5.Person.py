@@ -33,7 +33,9 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 #from Products.ERP5.Core.Node import Node
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 
 class Person(Person):
     """

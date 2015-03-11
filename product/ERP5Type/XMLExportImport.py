@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
-from Acquisition import aq_base, aq_inner
+from Acquisition import aq_base
+from Acquisition import aq_inner
 
 from cStringIO import StringIO
 from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
-from xml.sax.saxutils import escape, unescape
+from xml.sax.saxutils import escape
 from lxml import etree
 from lxml.etree import Element, SubElement
 from xml_marshaller.xml_marshaller import Marshaller

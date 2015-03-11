@@ -34,15 +34,17 @@ from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
-from xml.dom import Node
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, get_request
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import get_request
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO, DEBUG
+from zLOG import DEBUG
+from zLOG import INFO
+from zLOG import LOG
 
 from OFS.Image import Pdata
 

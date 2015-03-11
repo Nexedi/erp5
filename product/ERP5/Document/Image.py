@@ -30,7 +30,6 @@
 #
 ##############################################################################
 
-import string
 import struct
 import subprocess
 from cStringIO import StringIO

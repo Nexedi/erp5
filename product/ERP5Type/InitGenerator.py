@@ -29,9 +29,11 @@
 ##############################################################################
 
 
-import os, re, string, sys
+import os
+import sys
 from Products.ERP5Type import document_class_registry
-from Products.ERP5Type.Globals import package_home, InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import package_home
 
 from zLOG import LOG
 

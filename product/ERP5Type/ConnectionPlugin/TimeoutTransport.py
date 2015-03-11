@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from xmlrpclib import Fault, ProtocolError
+from xmlrpclib import ProtocolError
 from xmlrpclib import Transport
 from xmlrpclib import SafeTransport
 import socket

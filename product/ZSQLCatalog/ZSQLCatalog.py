@@ -34,7 +34,9 @@ import time
 import urllib
 from ZODB.POSException import ConflictError
 
-from zLOG import LOG, ERROR, INFO
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
 
 _marker = object()
 
@@ -887,7 +889,6 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   def beforeCatalogClear(self):
     """ allow to override this method """
-    pass
 
   def catalogTranslationList(self, object_list, sql_catalog_id=None):
     """Catalog translations.

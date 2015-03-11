@@ -11,7 +11,6 @@ from OFS.PropertyManager import PropertyManager
 from OFS.SimpleItem import Item
 import Acquisition
 from urllib import quote
-import os
 import string
 from StringIO import StringIO
 
@@ -242,14 +241,12 @@ class Form:
         """Check whether the form has a field of a certain id.
         """
         # define in subclass
-        pass
 
     security.declareProtected('View', 'get_field')
     def get_field(self, id):
         """Get a field of a certain id.
         """
         # define in subclass
-        pass
 
     security.declareProtected('View', 'get_groups')
     def get_groups(self, include_empty=False):

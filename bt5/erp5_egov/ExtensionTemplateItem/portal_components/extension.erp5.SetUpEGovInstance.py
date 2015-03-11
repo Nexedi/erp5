@@ -31,7 +31,9 @@
 from Testing import ZopeTestCase
 from Products import ERP5Security
 from Products import PluggableAuthService
-from zLOG import LOG, WARNING, INFO
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from Products.ERP5eGovSecurity.EGOVUserManager import addEGOVUserManager
 from Products.ERP5eGovSecurity.EGOVGroupManager import addEGOVGroupManager
 

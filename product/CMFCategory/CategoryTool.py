@@ -47,7 +47,6 @@ from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCategory.Category import Category, BaseCategory
 from OFS.Traversable import NotFound
-import types
 
 import re
 

@@ -28,7 +28,8 @@
 
 import transaction
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
 from Acquisition import aq_base

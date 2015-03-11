@@ -32,10 +32,9 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
 
-from tempfile import mktemp
-import os
 from Products.DCWorkflowGraph.config import DOT_EXE
-from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
+from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search
+from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
 from Acquisition import aq_base
 

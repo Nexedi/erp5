@@ -1,4 +1,3 @@
-import re, os, tempfile
 import uno
 import unohelper
 from com.sun.star.beans import PropertyValue

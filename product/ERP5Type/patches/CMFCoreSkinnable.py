@@ -13,7 +13,8 @@
 ##############################################################################
 
 from Products.CMFCore import Skinnable
-from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
+from Products.CMFCore.Skinnable import SKINDATA
+from Products.CMFCore.Skinnable import SkinnableObjectManager
 
 from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG

@@ -32,7 +32,9 @@ import threading
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions

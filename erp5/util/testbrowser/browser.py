@@ -654,7 +654,6 @@ class LoginError(Exception):
   """
   Exception raised when login fails
   """
-  pass
 
 class MainForm(Form):
   """

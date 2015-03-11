@@ -27,7 +27,6 @@
 
 import os
 from string import zfill
-from urllib import urlencode
 import tempfile
 from DateTime import DateTime
 from zLOG import LOG

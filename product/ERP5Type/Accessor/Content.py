@@ -26,7 +26,11 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import ATTRIBUTE_PREFIX
+from Base import Method
+from Base import func_code
+from Base import list_types
+from Base import type_definition
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 

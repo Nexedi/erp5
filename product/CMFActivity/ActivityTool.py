@@ -30,7 +30,6 @@ import socket
 import urllib
 import threading
 import sys
-from types import StringType
 from collections import defaultdict
 from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
@@ -626,7 +625,8 @@ class ActivityTool (Folder, UniqueObject):
 
     def initialize(self):
       global is_initialized
-      from Activity import SQLQueue, SQLDict
+      from Activity import SQLDict
+      from Activity import SQLQueue
       # Initialize each queue
       for activity in activity_dict.itervalues():
         activity.initialize(self)

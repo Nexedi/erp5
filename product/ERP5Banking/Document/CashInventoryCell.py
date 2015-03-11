@@ -27,7 +27,10 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5.Document.InventoryCell import InventoryCell
 from Products.ERP5Banking.Document.CashDeliveryCell import CashDeliveryCell
 from zope.interface import implements

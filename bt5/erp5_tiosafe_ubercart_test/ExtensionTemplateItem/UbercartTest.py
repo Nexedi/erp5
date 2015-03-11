@@ -27,7 +27,9 @@
 
 from lxml import etree
 from cStringIO import StringIO
-from zLOG import LOG, INFO, ERROR
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
 from Acquisition import aq_base
 import transaction 
 from DateTime import DateTime

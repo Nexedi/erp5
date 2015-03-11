@@ -11,7 +11,6 @@
 #
 ##############################################################################
 
-import sys
 
 from RestrictedPython.RestrictionMutator import RestrictionMutator
 
@@ -23,7 +22,9 @@ RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
 
 from Acquisition import aq_acquire
 from AccessControl import getSecurityManager
-from AccessControl import allow_module, allow_class, allow_type
+from AccessControl import allow_class
+from AccessControl import allow_module
+from AccessControl import allow_type
 from AccessControl import ModuleSecurityInfo
 from AccessControl.ZopeGuards import (safe_builtins, _marker, Unauthorized,
     aq_validate, guard, guarded_getattr, guarded_iter, SafeIter, NullIter,

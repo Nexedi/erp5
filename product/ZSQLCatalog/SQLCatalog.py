@@ -1070,7 +1070,6 @@ class Catalog(Folder,
       raise
     except:
       LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
-      pass
     return tuple(result_list)
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',

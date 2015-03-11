@@ -28,10 +28,13 @@
 ##############################################################################
 
 from App.Extensions import getBrain
-from Acquisition import Explicit, aq_base
+from Acquisition import Explicit
+from Acquisition import aq_base
 from lxml import etree
-from zLOG import LOG, ERROR, INFO
-from base64 import b16encode, b16decode
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from base64 import b16encode
 
 SEPARATOR = '\n'
 
@@ -223,7 +226,6 @@ class MagentoTransaction(MagentoBrain):
                   300,
                   'resource_id = %s, remains %s' % (resource_id, resource_gid),
               )
-              pass
             # through the type render the delivery or the discount
             if line_type == 'Discount':
               resource = integration_site.getSourceCarrierValue()

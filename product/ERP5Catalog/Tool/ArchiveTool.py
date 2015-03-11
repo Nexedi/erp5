@@ -31,9 +31,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Cache import CachingMethod, clearCache
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import clearCache
 from Products.ERP5Catalog import _dtmldir
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 
 class ArchiveTool(BaseTool):
   """

@@ -24,7 +24,6 @@ PageTemplateFile.
 """
 
 # Import from the Standard Library
-import os
 
 # Import Zope modules
 from App.special_dtml import DTMLFile

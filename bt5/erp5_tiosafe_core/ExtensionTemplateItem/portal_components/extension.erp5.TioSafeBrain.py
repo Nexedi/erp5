@@ -682,7 +682,6 @@ class Transaction(TioSafeBrain):
                   300,
                   'resource_id = %s, remains %s' % (resource_id, resource_gid),
               )
-              pass
             # through the type render the delivery or the discount
             if line_type == 'Discount':
               resource = integration_site.getSourceCarrierValue()

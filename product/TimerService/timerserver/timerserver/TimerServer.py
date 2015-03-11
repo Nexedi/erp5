@@ -3,11 +3,12 @@
 # Authors: Nik Kim <fafhrd@legco.biz>
 __version__ = 'TimerServer for Zope 0.1'
 
-import traceback
 
 import thread
 import re
-import sys, os, errno, time, socket
+import errno
+import socket
+import time
 from StringIO import StringIO
 from zLOG import LOG, INFO
 

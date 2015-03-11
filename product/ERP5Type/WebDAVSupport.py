@@ -15,9 +15,13 @@
 
 import re
 import transaction
-from Acquisition import aq_parent, aq_inner, aq_base
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from Products.CMFCore.PortalContent import ResourceLockedError
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody

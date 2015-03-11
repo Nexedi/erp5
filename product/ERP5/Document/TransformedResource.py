@@ -31,7 +31,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
 
 

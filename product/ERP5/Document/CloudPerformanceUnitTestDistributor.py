@@ -26,7 +26,9 @@
 ##############################################################################
 from ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
 import json
-from zLOG import LOG,INFO,ERROR
+from zLOG import LOG
+from zLOG import ERROR
+from zLOG import INFO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
@@ -43,7 +45,6 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     all test nodes runs all test suites, this is not a problem to keep
     configuration
     """
-    pass
 
   security.declarePublic("optimizeConfiguration")
   def optimizeConfiguration(self):

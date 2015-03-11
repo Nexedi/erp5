@@ -30,7 +30,8 @@
 from zLOG import LOG, BLATHER
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.mixin.builder import BuilderMixin, SelectMethodError
+from Products.ERP5.mixin.builder import BuilderMixin
+from Products.ERP5.mixin.builder import SelectMethodError
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
@@ -98,7 +99,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       Redefine this method, because it seems nothing interesting can be
       done before building Delivery.
     """
-    pass
 
   @UnrestrictedMethod
   def searchMovementList(self, applied_rule_uid=None, **kw):

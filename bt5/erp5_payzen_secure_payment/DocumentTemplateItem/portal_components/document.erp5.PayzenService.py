@@ -184,7 +184,6 @@ class PayzenService(XMLObject, PayzenSOAP):
                     )
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
-    pass
 
   def _getSignature(self, ob, sorted_key_list):
     """Calculates signature from ob

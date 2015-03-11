@@ -27,10 +27,10 @@
 #
 ##############################################################################
 
-import re, types
-from email.utils import formataddr
+import re
 from DateTime import DateTime
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet
@@ -510,7 +510,6 @@ class EmailDocument(TextDocument):
       to extract content information from this mail
       message.
     """
-    pass
 
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html

@@ -28,7 +28,6 @@
 from DateTime import DateTime
 import urllib2
 from lxml import etree
-import re
 from zLOG import LOG
 
 

@@ -23,7 +23,10 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_parent
 from App.class_init import InitializeClass
 from OFS.Folder import Folder
-from zLOG import LOG, ERROR, INFO, PROBLEM
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PROBLEM
 from zope.interface import implements
 from zope.i18n import translate
 from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
@@ -32,7 +35,8 @@ from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
 # Import Localizer modules
 from interfaces import ILocalizer
 from LocalFiles import LocalDTMLFile
-from MessageCatalog import MessageCatalog, to_unicode
+from MessageCatalog import MessageCatalog
+from MessageCatalog import to_unicode
 from utils import lang_negotiator
 from LanguageManager import LanguageManager
 

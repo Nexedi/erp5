@@ -478,7 +478,6 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           # We only need to be aware of data fusion between the previous and the current representation
           # So we don't need to do something because the information fusion process take place below
           LOG("The structure is the same. don't do anything >>>>>>>>",0,'')
-          pass
 
       LOG("Person object >>>>>>>>",0,repr(person_object))
       LOG("Organisation object >>>>>>>>",0,repr(org_object))

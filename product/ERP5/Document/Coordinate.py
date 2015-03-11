@@ -183,7 +183,6 @@ class Coordinate(Base):
       """
       Returns the standard text formats for telephone numbers
       """
-      pass
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
     def isDetailed(self):

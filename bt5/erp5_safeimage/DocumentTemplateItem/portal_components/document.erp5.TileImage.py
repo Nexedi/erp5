@@ -1,5 +1,8 @@
 from Products.ERP5.Document.Image import Image
-from zLOG import LOG,INFO,ERROR,WARNING
+from zLOG import LOG
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import WARNING
 
 class TileImage(Image):
   """

@@ -6,7 +6,6 @@ It provides a wrapping around Formulator.BasicForm, allowing it
 to be created inside a product but used outside it.
 """
 
-import string
 
 from AccessControl import ClassSecurityInfo
 from App.class_init import default__class_init__ as InitializeClass

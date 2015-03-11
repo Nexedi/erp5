@@ -39,7 +39,6 @@ from Products.ERP5Form.MultiRelationField import MAX_SELECT, \
                                             NEW_CONTENT_PREFIX, \
                                             SUB_FIELD_ID, ITEM_ID, \
                                             NO_VALUE
-from types import StringType
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 

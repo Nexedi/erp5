@@ -27,13 +27,9 @@
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Tool.TaskDistributionTool import TaskDistributionTool
 from DateTime import DateTime
-from datetime import datetime
 import json
-import sys
 import itertools
-from copy import deepcopy
 import random
-import string
 from zLOG import LOG,INFO,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions

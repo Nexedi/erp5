@@ -41,7 +41,6 @@ GIT_ASKPASS = os.path.join(os.path.dirname(__file__), 'bin', 'git_askpass')
 
 class GitInstallationError(EnvironmentError):
   """Raised when an installation is broken"""
-  pass
 
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):

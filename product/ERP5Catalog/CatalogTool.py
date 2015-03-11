@@ -49,7 +49,10 @@ from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Utils import sqlquote
 
 import warnings
-from zLOG import LOG, PROBLEM, WARNING, INFO
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PROBLEM
+from zLOG import WARNING
 from _mysql_exceptions import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 

@@ -92,5 +92,4 @@ class BaseConduit(object):
     Method called when update command is received
     XXX It should returns the list of conflicts ?
     """
-    pass
 

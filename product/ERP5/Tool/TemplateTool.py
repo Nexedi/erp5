@@ -34,7 +34,8 @@ import os
 import shutil
 import sys
 
-from Acquisition import Implicit, Explicit
+from Acquisition import Explicit
+from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
@@ -73,17 +74,14 @@ class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
       is impossible to find in the repositories
   """
-  pass
 
 class UnsupportedComparingOperator(Exception):
   """ Exception when the comparing string is unsupported
   """
-  pass
 
 class BusinessTemplateIsMeta(Exception):
   """ Exception when the business template is provided by another one
   """
-  pass
 
 ModuleSecurityInfo(__name__).declarePublic('BusinessTemplateUnknownError')
 

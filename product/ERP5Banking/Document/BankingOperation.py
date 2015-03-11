@@ -27,14 +27,18 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Constraint
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5.Document.Delivery import Delivery
 from Products.ERP5.Document.InventoryLine import InventoryLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Container import Container
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 from AccessControl.PermissionRole import PermissionRole
-from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
+from Products.ERP5Type.Utils import convertToMixedCase
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
 
 # Import classes to monkey-patch

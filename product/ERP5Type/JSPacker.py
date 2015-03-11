@@ -7,7 +7,7 @@
 ##
 ##  Ported to Python by Florian Schulze
 
-import os, re
+import re
 
 # a multi-pattern parser
 

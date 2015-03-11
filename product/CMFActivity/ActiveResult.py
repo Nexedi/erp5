@@ -27,7 +27,8 @@
 ##############################################################################
 
 from Products.ERP5Type.Utils import getPath
-from zLOG import LOG, INFO
+from zLOG import INFO
+from zLOG import LOG
 from Products.PythonScripts.Utility import allow_class
 
 class ActiveResult:

@@ -36,7 +36,6 @@ from BaseCache import BaseCache
 from BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
-from base64 import encodestring
 
 try:
   from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict, SharedDict
@@ -67,7 +66,6 @@ class DistributedRamCache(BaseCache):
   def initCacheStorage(self):
     """ Init cache storage """
     ## cache storage is a memcached server and no need to init it
-    pass
 
   def _getMemcachedDict(self):
     """return a threading safe MemcachedDict instance
@@ -131,7 +129,6 @@ class DistributedRamCache(BaseCache):
     ## but that's too much overhead or create a new connection when cache is to be expired.
     ## This way we can catch memcached server failures. BTW: This hack is forced by the lack functionality in python-memcached
     #self._cache = memcache.Client(self._servers.split('\n'), debug=self._debug_level)
-    pass
 
   def delete(self, cache_id, scope):
     cache_storage = self.getCacheStorage()

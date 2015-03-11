@@ -30,7 +30,8 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from lxml import etree
-from zLOG import LOG,INFO
+from zLOG import LOG
+from zLOG import INFO
 class ScribusParser:
   """
     Scribus parser API provide methods wich allow to parse a scribus file.

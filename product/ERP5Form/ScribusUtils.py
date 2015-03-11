@@ -29,17 +29,17 @@
 
 from Products.PythonScripts.Utility import allow_class
 from ZPublisher.HTTPRequest import FileUpload
-from xml.dom.ext.reader import PyExpat
-from xml.dom import Node, minidom
+from xml.dom import minidom
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, get_request
-from zipfile import ZipFile, ZIP_DEFLATED
-from StringIO import StringIO
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO
-import imghdr
-import random
-import getopt, sys, os, re
-from urllib import quote
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import get_request
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import TRACE
+from zLOG import WARNING
+import os
+import re
 
 from Products.ERP5.ERP5Site import ERP5Site
 from Products.Formulator.TALESField import TALESMethod

@@ -32,7 +32,8 @@ from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from zLOG import LOG, PROBLEM
+from zLOG import LOG
+from zLOG import PROBLEM
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool

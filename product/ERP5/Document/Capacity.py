@@ -50,7 +50,6 @@ class Capacity(XMLObject):
       """
         Returns an association list of points and capacity values
       """
-      pass
 
 
     security.declarePublic('reindexObject')

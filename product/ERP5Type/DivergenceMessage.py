@@ -29,7 +29,9 @@ import zope.interface
 
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
-from zLOG import LOG, PROBLEM, INFO
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import PROBLEM
 from Products.ERP5Type import interfaces
 
 class DivergenceMessage(ObjectMessage):

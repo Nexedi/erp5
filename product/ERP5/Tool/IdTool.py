@@ -35,7 +35,10 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMappi
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type import Permissions, interfaces
-from zLOG import LOG, WARNING, INFO, ERROR
+from zLOG import ERROR
+from zLOG import INFO
+from zLOG import LOG
+from zLOG import WARNING
 from Products.ERP5 import _dtmldir
 
 from BTrees.Length import Length

@@ -37,7 +37,9 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Globals import get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder

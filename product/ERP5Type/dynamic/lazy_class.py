@@ -15,7 +15,9 @@ from ExtensionClass import ExtensionClass, pmc_init_of
 from zope.interface import classImplements
 from ZODB.broken import Broken, PersistentBroken
 from AccessControl import ClassSecurityInfo
-from zLOG import LOG, WARNING, BLATHER
+from zLOG import BLATHER
+from zLOG import LOG
+from zLOG import WARNING
 
 from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType

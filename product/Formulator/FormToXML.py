@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from cgi import escape
 from lxml import etree
-from lxml.etree import Element, SubElement, CDATA
+from lxml.etree import CDATA
+from lxml.etree import Element
+from lxml.etree import SubElement
 from lxml.builder import E
 
 def formToXML(form, prologue=1):
