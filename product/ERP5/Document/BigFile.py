@@ -24,42 +24,14 @@ from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
 from webdav.common import rfc1123_date
 from mimetools import choose_boundary
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from DateTime import DateTime
+from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
+    _ViewEmulator
 import re
 
 class BigFile(File):
   """
   Support storing huge file.
   No convertion is allowed for now.
-
-
-  NOTE BigFile maintains the following invariant:
-
-    data property is either
-
-      - BTreeData instance,  or
-      - str(*),  or
-      - None.
-
-    (*) str has to be supported because '' is a default value for `data` field
-        from Data property sheet.
-
-        Even more - for
-
-            a) compatibility reasons, and
-            b) desire to support automatic migration of File-based documents
-               from document_module to BigFiles
-
-        non-empty str for data also have to be supported.
-
-        XXX(kirr) I'm not sure supporting non-empty str is a good idea (it
-            would be simpler if .data could be either BTreeData or "empty"),
-            but neither I'm experienced enough in erp5 nor know what are
-            appropriate compatibility requirements.
-
-            We discussed with Romain and settled on "None or str or BTreeData"
-            invariant for now.
   """
 
   meta_type = 'ERP5 Big File'
@@ -126,11 +98,6 @@ class BigFile(File):
 
     if data is None:
       btree = BTreeData()
-    elif isinstance(data, str):
-      # we'll want to append content to this file -
-      # - automatically convert str (empty or not) to BTreeData
-      btree = BTreeData()
-      btree.write(data, 0)
     else:
       btree = data
     seek(0)
@@ -148,14 +115,6 @@ class BigFile(File):
     if serialize:
       self.serialize()
     return btree, len(btree)
-
-  def _data_mtime(self):
-    """get .data mtime if present and fallback to self._p_mtime"""
-    # there is no data._p_mtime when data is None or str.
-    # so try and fallback to self._p_mtime
-    data = self._baseGetData()
-    mtime = getattr(data, '_p_mtime', self._p_mtime)
-    return mtime
 
   def _range_request_handler(self, REQUEST, RESPONSE):
     # HTTP Range header handling: return True if we've served a range
@@ -188,10 +147,13 @@ class BigFile(File):
           try: mod_since=long(DateTime(date).timeTime())
           except: mod_since=None
           if mod_since is not None:
-            last_mod = self._data_mtime()
-            if last_mod is None:
-                last_mod = 0
-            last_mod = long(last_mod)
+            if data is not None:
+              last_mod = long(data._p_mtime)
+            else:
+              if self._p_mtime:
+                last_mod = long(self._p_mtime)
+              else:
+                last_mod = long(0)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
               # the ranges, which causes us to skip to the 200
@@ -210,7 +172,10 @@ class BigFile(File):
           RESPONSE.setHeader('Content-Range',
               'bytes */%d' % self.getSize())
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', self.getSize())
           RESPONSE.setStatus(416)
@@ -223,7 +188,10 @@ class BigFile(File):
           start, end = ranges[0]
           size = end - start
 
-          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
@@ -231,7 +199,6 @@ class BigFile(File):
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
 
-          # NOTE data cannot be None here (if it is - ranges are not satisfiable)
           if isinstance(data, str):
             RESPONSE.write(data[start:end])
             return True
@@ -260,7 +227,10 @@ class BigFile(File):
 
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          RESPONSE.setHeader('Last-Modified', rfc1123_date(self._data_mtime()))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type',
               'multipart/%sbyteranges; boundary=%s' % (
                   draftprefix, boundary))
@@ -274,7 +244,6 @@ class BigFile(File):
                 'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
                     start, end - 1, self.getSize()))
 
-            # NOTE data cannot be None here (if it is - ranges are not satisfiable)
             if isinstance(data, str):
               RESPONSE.write(data[start:end])
 
@@ -311,7 +280,7 @@ class BigFile(File):
     data = self._baseGetData()
     mime = self.getContentType()
 
-    RESPONSE.setHeader('Content-Length', data is not None and  len(data)  or  0)
+    RESPONSE.setHeader('Content-Length', len(data))
     RESPONSE.setHeader('Content-Type', mime)
     if inline is _MARKER:
       # by default, use inline for text and image formats
@@ -344,8 +313,7 @@ class BigFile(File):
 
     content_range = REQUEST.get_header('Content-Range', None)
     if content_range is None:
-      # truncate the file
-      self._baseSetData(None)
+      btree = None
     else:
       current_size = int(self.getSize())
       query_range = re.compile('bytes \*/\*')
@@ -353,6 +321,8 @@ class BigFile(File):
                                 '(?P<last_byte>[0-9]+)/' \
                                 '(?P<total_content_length>[0-9]+)')
       if query_range.match(content_range):
+        data = self._baseGetData()
+
         RESPONSE.setHeader('X-Explanation', 'Resume incomplete')
         RESPONSE.setHeader('Range', 'bytes 0-%s' % (current_size-1))
         RESPONSE.setStatus(308)
@@ -379,28 +349,25 @@ class BigFile(File):
           RESPONSE.setStatus(400)
           return RESPONSE
 
+        else:
+
+          btree = self._baseGetData()
+          if btree is None:
+            btree = BTreeData()
+
       else:
         RESPONSE.setHeader('X-Explanation', 'Can not parse range')
         RESPONSE.setStatus(400) # Partial content
         return RESPONSE
 
-    self._appendData(file, content_type=type)
+    data, size = self._read_data(file, data=btree)
+
+    content_type=self._get_content_type(file, data, self.__name__,
+                                        type or self.content_type)
+    self.update_data(data, content_type, size)
 
     RESPONSE.setStatus(204)
     return RESPONSE
-
-
-  def _appendData(self, data_chunk, content_type=None):
-    """append data chunk to the end of the file
-
-       NOTE if content_type is specified, it will change content_type for the
-            whole file.
-    """
-    data, size = self._read_data(data_chunk, data=self._baseGetData())
-    content_type=self._get_content_type(data_chunk, data, self.__name__,
-                                        content_type or self.content_type)
-    self.update_data(data, content_type, size)
-
 
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(BigFile)
