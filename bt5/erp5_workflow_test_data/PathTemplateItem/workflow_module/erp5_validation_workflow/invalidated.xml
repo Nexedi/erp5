@@ -29,7 +29,9 @@
             <value>
               <tuple>
                 <string>destination/workflow_module/erp5_validation_workflow/validate</string>
+                <string>destination/workflow_module/erp5_validation_workflow/validate_action</string>
                 <string>destination/workflow_module/erp5_validation_workflow/delete</string>
+                <string>destination/workflow_module/erp5_validation_workflow/delete_action</string>
               </tuple>
             </value>
         </item>

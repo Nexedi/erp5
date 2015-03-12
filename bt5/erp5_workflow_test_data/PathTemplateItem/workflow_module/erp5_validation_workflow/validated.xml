@@ -29,6 +29,7 @@
             <value>
               <tuple>
                 <string>destination/workflow_module/erp5_validation_workflow/invalidate</string>
+                <string>destination/workflow_module/erp5_validation_workflow/invalidate_action</string>
               </tuple>
             </value>
         </item>
