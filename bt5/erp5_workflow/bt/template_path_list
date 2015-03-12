@@ -1,0 +1,4 @@
+workflow_module/erp5_validation_workflow
+workflow_module/erp5_validation_workflow/**
+workflow_module/testing_workflow
+workflow_module/testing_workflow/**

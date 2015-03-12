@@ -1,6 +1,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
@@ -55,7 +56,11 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     self.doActionFor(new_object, "validate")
     #print new_object.workflow_history
-    raise NotImplementedError (new_object.workflow_history)
+    history_list = new_object.workflow_history["testing_workflow"]
+    self.assertEqual(3, len(history_list))### creat->validation_action->validate
+    last_history = history_list[-1]
+    self.assertEqual(last_history.get("action", None), "validate")
+    #raise NotImplementedError (new_object.workflow_history)
 
   def test_06_testCheckPermissionAreWellSet(self):
     new_object = self.getTestObject()
@@ -63,13 +68,20 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.doActionFor(new_object, "validate")
     self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Manager'))
 
+  def test_07_testUserTransitionRaiseValidationFailed(self):
+    new_object = self.getTestObject()
+    exception_raised = False
+    try:
+      self.doActionFor(new_object, "fail") ### perform a fail_action which does nothing but add an error message in the workflow history
+    except ValidationFailed:
+      exception_raised = True
+    self.assertEqual(True, exception_raised)
+    history_list = new_object.workflow_history["testing_workflow"]
+    self.assertEqual(2, len(history_list))
+    last_history = history_list[-1]
+    self.assertEqual(last_history.get("error_message", None), "foo error")
+
   ### Doesn't exist yet
-  def _testUserAction(self):
-    organisation = self.getOrganisation()
-    self.doActionFor(organisation, "validate_action")
-    self.assertEqual(organisation.getDescription(), "before script has been called")
-  def checkRaiseValidationFailed(self):
-    pass
   def _testSimpleWorklist(self):
     pass
   def _testWorklistWithAnAssignee(self):
@@ -83,16 +95,16 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     self.portal = self.getPortal()
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
     self.workflow_module = self.portal.workflow_module
-    self.wf = self.workflow_module._getOb('erp5_validation_workflow')
+    self.wf = self.workflow_module._getOb('testing_workflow')
     type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_base_category_list=('validation_state',))
-    type_test_object.edit(type_erp5workflow_list=('erp5_validation_workflow',))
+    type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
     self.resetComponentTool()
     self.login() # as Manager
 
   def doActionFor(self, document, action):
-    # check dc_test_workflow is not in use
-    self.assertFalse('dc_test_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
+    # check testing_workflow is not in use
+    self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
     #getattr(document, convertToMixedCase(action))()
     user_action = action + '_action'
     self.wf.doActionFor(document, user_action)
@@ -108,8 +120,8 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     # make sure erp5 workflow list is empty
     self.portal = self.getPortal()
     self.workflow_module = self.portal.portal_workflow
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ('dc_test_workflow'))
-    self.wf = self.workflow_module._getOb('dc_test_workflow')
+    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ('testing_workflow'))
+    self.wf = self.workflow_module._getOb('testing_workflow')
     type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_base_category_list=())
     type_test_object.edit(type_erp5workflow_list=())
