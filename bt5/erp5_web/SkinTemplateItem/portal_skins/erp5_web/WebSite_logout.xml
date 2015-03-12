@@ -177,6 +177,10 @@ website = context.getWebSiteValue()\n
 REQUEST = context.REQUEST\n
 if REQUEST.has_key(\'portal_skin\'):\n
    context.portal_skins.clearSkinCookie()\n
+\n
+balancer_cookie = REQUEST.getHeader(\'HTTP_X_BALANCER_CURRENT_COOKIE\', \'\')\n
+if balancer_cookie:\n
+  REQUEST.RESPONSE.expireCookie(balancer_cookie, path=\'/\')\n
 REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
 msg = context.Base_translateString(\'You have been logged out. Thank you for using this website.\')\n
 return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
