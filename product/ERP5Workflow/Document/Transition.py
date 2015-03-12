@@ -36,7 +36,9 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
 from copy import deepcopy
+import sys
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 #from Products.ERP5Workflow.Document.Guard import Guard
 from Products.DCWorkflow.Guard import Guard
@@ -187,6 +189,7 @@ class Transition(XMLObject):
         document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
         # put the error message in the workflow history
       sci.setWorkflowVariable(error_message=before_script_error_message)
+      status_dict['error_message'] = before_script_error_message
       if validation_exc :
         # reraise validation failed exception
         raise validation_exc, None, validation_exc_traceback
