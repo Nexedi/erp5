@@ -38,6 +38,12 @@ from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from copy import deepcopy
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+#from Products.ERP5Workflow.Document.Guard import Guard
+from Products.DCWorkflow.Guard import Guard
+
+TRIGGER_AUTOMATIC = 0
+TRIGGER_USER_ACTION = 1
+TRIGGER_WORKFLOW_METHOD = 2
 
 class Transition(XMLObject):
   """
@@ -49,6 +55,13 @@ class Transition(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
+  guard = None
+  actbox_name = ''
+  actbox_url = ''
+  actbox_icon = ''
+  actbox_category = 'workflow'
+  var_exprs = None  # A mapping.
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -63,6 +76,47 @@ class Transition(XMLObject):
              PropertySheet.Transition,
   )
 
+  def getGuardSummary(self):
+    res = None
+    if self.guard is not None:
+      res = self.guard.getSummary()
+    return res
+
+  def getGuard(self):
+    if self.guard is not None:
+      return self.guard
+    else:
+      self.generateGuard()
+      return self.guard ### only generate gurad when self is a User Action
+      #return Guard().__of__(self)  # Create a temporary guard.
+
+  def getVarExprText(self, id):
+    if not self.var_exprs:
+      return ''
+    else:
+      expr = self.var_exprs.get(id, None)
+      if expr is not None:
+        return expr.text
+      else:
+        return ''
+
+  def generateGuard(self):
+    if self.trigger_type == TRIGGER_USER_ACTION:
+      if self.guard == None:
+        self.guard = Guard(permissions=self.getPermissionList(),
+                      roles=self.getRoleList(),
+                      groups=self.getGroupList(),
+                      expr=self.getExpression())
+
+      if self.guard.roles != self.getRoleList():
+        self.guard.roles = self.getRoleList()
+      elif self.guard.permissions != self.getPermissionList():
+        self.guard.permissions = self.getPermissionList()
+      elif self.guard.groups != self.getGroupList():
+        self.guard.groups = self.getGroupList()
+      elif self.guard.expr != self.getExpression():
+        self.guard.expr = self.getExpression()
+
   def execute(self, document, form_kw=None):
     """
     Execute transition.
@@ -76,16 +130,22 @@ class Transition(XMLObject):
     if form_kw is None:
       form_kw = {}
     workflow = self.getParentValue()
-    # Get variable values
+
+    ### get related history
     state_bc_id = workflow.getStateBaseCategory()
     status_dict = workflow.getCurrentStatusDict(document)
-    state_object = workflow._getOb(status_dict[state_bc_id])
+    state_object = workflow._getOb(status_dict[state_bc_id], None)
+
+    if state_object == None:
+      state_object = workflow.getSourceValue()
 
     old_state = state_object.getId()
-    new_state = document.unrestrictedTraverse(self.getDestination()).getId()
+    old_sdef = state_object
+
+    new_state = self.getDestinationId()
 
     if new_state is None:
-        new_state = document.unrestrictedTraverse(workflow.getSource()).getId()
+        new_state = workflow.getSourceId()
         if not new_state:
             # Do nothing if there is no initial state. We may want to create
             # workflows with no state at all, only for worklists.
@@ -93,9 +153,9 @@ class Transition(XMLObject):
         former_status = {}
     else:
         former_status = state_object.getId()
-    old_sdef = state_object
+
     try:
-        new_sdef = document.unrestrictedTraverse(self.getDestination())
+        new_sdef = self.getDestinationValue()
     except KeyError:
         raise WorkflowException('Destination state undefined: ' + new_state)
 
@@ -130,10 +190,15 @@ class Transition(XMLObject):
       if validation_exc :
         # reraise validation failed exception
         raise validation_exc, None, validation_exc_traceback
-      return new_sdef
+      return old_state
 
     # update state
-    self._changeState(document)
+    state = self.getDestination()
+    if state is None:
+      state = old_sdef
+    state_bc_id = self.getParentValue().getStateBaseCategory()
+    document.setCategoryMembership(state_bc_id, state)
+
     ### zwj: update Role mapping, also in Workflow, initialiseDocument()
     self.getParent().updateRoleMappingsFor(document)
 
@@ -141,7 +206,6 @@ class Transition(XMLObject):
     status_dict['action'] = self.getId()
 
     # Modify workflow history
-    #status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
     status_dict[state_bc_id] = new_state
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
@@ -163,37 +227,31 @@ class Transition(XMLObject):
     for variable in self.contentValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
+    # Generate Workflow History List
     self.setStatusOf(workflow.getId(), document, status_dict)
+
     # Execute the "after" script.
     script_id = self.getAfterScriptId()
     if script_id is not None:
       kwargs = form_kw
       # Script can be either script or workflow method
-      if script_id in old_sdef.getDestinationTitleList():
+      if script_id in old_sdef.getDestinationIdList():
         getattr(workflow, convertToMixedCase(script_id)).execute(document)
       else:
         script = self.getParent()._getOb(script_id)
         # Pass lots of info to the script in a single parameter.
-        sci = StateChangeInfo(
-            document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
-        script.execute(sci)  # May throw an exception.
-
+        if script.getTypeInfo().getId() == 'Workflow Script':
+          sci = StateChangeInfo(
+              document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
+          script.execute(sci)  # May throw an exception.
+        else:
+          raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getId()))
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
         raise moved_exc
     else:
         return new_sdef
-
-  def _changeState(self, document):
-    """
-    Change the state of the object.
-    """
-    state = self.getDestination()
-    if state is not None:
-      # Some transitions don't update the state
-      state_bc_id = self.getParentValue().getStateBaseCategory()
-      document.setCategoryMembership(state_bc_id, state)
 
   def _checkPermission(self, document):
     """
@@ -227,6 +285,6 @@ class Transition(XMLObject):
     if wfh is None:
         wfh = WorkflowHistoryList()
         if not has_history:
-            ob.workflow_history = PersistentMapping()
+          ob.workflow_history = PersistentMapping()
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
