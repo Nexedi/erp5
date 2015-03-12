@@ -93,8 +93,9 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
   def doActionFor(self, document, action):
     # check dc_test_workflow is not in use
     self.assertFalse('dc_test_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
-    getattr(document, convertToMixedCase(action))()
-    #self.wf.doActionFor(document, action)
+    #getattr(document, convertToMixedCase(action))()
+    user_action = action + '_action'
+    self.wf.doActionFor(document, user_action)
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()

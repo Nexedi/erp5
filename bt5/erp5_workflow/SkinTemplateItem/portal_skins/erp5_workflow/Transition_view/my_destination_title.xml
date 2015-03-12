@@ -388,14 +388,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -479,6 +481,16 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>

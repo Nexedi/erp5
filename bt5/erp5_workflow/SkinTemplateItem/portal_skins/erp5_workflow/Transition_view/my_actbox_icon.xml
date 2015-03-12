@@ -10,17 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>editable_columns</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_actbox_icon</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,73 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>trigger_type</string>
-                          <string>Trigger</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination State</string>
-                        </tuple>
-                        <tuple>
-                          <string>role_list</string>
-                          <string>Required Roles</string>
-                        </tuple>
-                        <tuple>
-                          <string>before_script_id</string>
-                          <string>Before Script</string>
-                        </tuple>
-                        <tuple>
-                          <string>after_script_id</string>
-                          <string>After Script</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The icon of the transition displayed in action box.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Transition</string>
-                          <string>Transition</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_transition_selection</string> </value>
+                    <value> <string>BaseWorkflow_FieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -150,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transitions</string> </value>
+                    <value> <string>Display in Action Box Icon</string> </value>
                 </item>
               </dictionary>
             </value>

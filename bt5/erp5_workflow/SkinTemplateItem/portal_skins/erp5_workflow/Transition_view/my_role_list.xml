@@ -10,17 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>editable_columns</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>items</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_role_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -65,7 +62,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -76,73 +83,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>trigger_type</string>
-                          <string>Trigger</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination State</string>
-                        </tuple>
-                        <tuple>
-                          <string>role_list</string>
-                          <string>Required Roles</string>
-                        </tuple>
-                        <tuple>
-                          <string>before_script_id</string>
-                          <string>Before Script</string>
-                        </tuple>
-                        <tuple>
-                          <string>after_script_id</string>
-                          <string>After Script</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_parallel_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Transition</string>
-                          <string>Transition</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_transition_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -150,10 +102,23 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transitions</string> </value>
+                    <value> <string>Required Role (s)</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x, x) for x in here.getParent().getRoleList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

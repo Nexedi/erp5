@@ -10,17 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>editable_columns</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>items</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_trigger_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -68,6 +65,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -76,73 +77,31 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>trigger_type</string>
-                          <string>Trigger</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination State</string>
-                        </tuple>
-                        <tuple>
-                          <string>role_list</string>
-                          <string>Required Roles</string>
-                        </tuple>
-                        <tuple>
-                          <string>before_script_id</string>
-                          <string>Before Script</string>
-                        </tuple>
-                        <tuple>
-                          <string>after_script_id</string>
-                          <string>After Script</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Transition</string>
-                          <string>Transition</string>
+                          <string>Automatic</string>
+                          <string>0</string>
+                        </tuple>
+                        <tuple>
+                          <string>User_Action</string>
+                          <string>1</string>
+                        </tuple>
+                        <tuple>
+                          <string>Workflow_Method</string>
+                          <string>2</string>
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_transition_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -150,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transitions</string> </value>
+                    <value> <string>Trigger Type</string> </value>
                 </item>
               </dictionary>
             </value>
