@@ -14,7 +14,9 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Delete</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -26,7 +28,7 @@
             <key> <string>after_script_id</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
+                <string>after_script</string>
               </tuple>
             </value>
         </item>
@@ -39,7 +41,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>destination/workflow_module/testing_workflow/validated</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -54,7 +58,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -63,20 +67,16 @@
         <item>
             <key> <string>role</string> </key>
             <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delete Action</string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>

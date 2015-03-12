@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Delete</string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -26,7 +26,7 @@
             <key> <string>after_script_id</string> </key>
             <value>
               <tuple>
-                <string>delete</string>
+                <string>validate</string>
               </tuple>
             </value>
         </item>
@@ -49,12 +49,20 @@
             </value>
         </item>
         <item>
+            <key> <string>groups</string> </key>
+            <value> <string>()</string> </value>
+        </item>
+        <item>
             <key> <string>guard_expression</string> </key>
             <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>validate_action</string> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value> <string>()</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -64,15 +72,24 @@
             <key> <string>role</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Assignee</string>
                 <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>role_list</string> </key>
+            <value>
+              <tuple>
+                <string>Associate</string>
+                <string>Author</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Delete Action</string> </value>
+            <value> <string>Validate Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
