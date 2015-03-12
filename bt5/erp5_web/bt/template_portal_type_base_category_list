@@ -4,5 +4,7 @@ Web Page | publication_section
 Web Page | similar
 Web Page | successor
 Web Section | aggregate
+Web Section | caching_policy
 Web Site Module | business_application
 Web Site | aggregate
+Web Site | caching_policy

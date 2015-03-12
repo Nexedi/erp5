@@ -10,9 +10,11 @@
  </portal_type>
  <portal_type id="Web Section">
   <item>aggregate</item>
+  <item>caching_policy</item>
  </portal_type>
  <portal_type id="Web Site">
   <item>aggregate</item>
+  <item>caching_policy</item>
  </portal_type>
  <portal_type id="Web Site Module">
   <item>business_application</item>

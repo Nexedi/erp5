@@ -16,7 +16,9 @@
             <key> <string>_policy_ids</string> </key>
             <value>
               <tuple>
-                <string>unauthenticated web pages</string>
+                <string>no-cache</string>
+                <string>one-day-max-modification-date</string>
+                <string>unauthenticated no language</string>
                 <string>unauthenticated</string>
                 <string>authenticated</string>
               </tuple>
@@ -126,6 +128,14 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_vary</string> </key>
                                 <value> <string></string> </value>
                             </item>
@@ -135,7 +145,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated</string> </key>
+                    <key> <string>no-cache</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -144,7 +154,7 @@
                           <dictionary>
                             <item>
                                 <key> <string>_enable_304s</string> </key>
-                                <value> <int>1</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_etag_func</string> </key>
@@ -154,11 +164,11 @@
                             </item>
                             <item>
                                 <key> <string>_last_modified</string> </key>
-                                <value> <int>1</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>3600</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
@@ -172,7 +182,7 @@
                             </item>
                             <item>
                                 <key> <string>_no_cache</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_no_store</string> </key>
@@ -184,7 +194,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated</string> </value>
+                                <value> <string>no-cache</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
@@ -214,7 +224,7 @@
                             </item>
                             <item>
                                 <key> <string>_public</string> </key>
-                                <value> <int>1</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_s_max_age_secs</string> </key>
@@ -223,8 +233,16 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Accept-Language, Cookie</string> </value>
+                                <value> <string></string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -232,7 +250,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated web pages</string> </key>
+                    <key> <string>one-day-max-modification-date</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -255,7 +273,7 @@
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>300</int> </value>
+                                <value> <int>600</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
@@ -281,7 +299,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated web pages</string> </value>
+                                <value> <string>one-day-max-modification-date</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
@@ -320,8 +338,226 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>360000</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Accept-Language, Cookie</string> </value>
+                                <value> <string>Cookie, Authorization, Accept-Encoding</string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>unauthenticated</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>600</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>unauthenticated</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>360000</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string>Accept-Language, Cookie, Authorization, Accept-Encoding</string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>unauthenticated no language</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>600</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>unauthenticated no language</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>360000</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string>Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -394,7 +630,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
+            <value> <string>object/modified</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -407,7 +643,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None</string> </value>
+            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'no-cache\')(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -433,7 +669,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
+            <value> <string>python: max(getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)(), DateTime().earliestTime())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -446,7 +682,85 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and object.getPortalType() in ("Web Page", "Web Section", "Web Site")</string> </value>
+            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'one-day-max-modification-date\')(object.getWebSectionValue())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="12" aka="AAAAAAAAAAw=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="13" aka="AAAAAAAAAA0=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="14" aka="AAAAAAAAAA4=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is None</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="15" aka="AAAAAAAAAA8=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="16" aka="AAAAAAAAABA=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="17" aka="AAAAAAAAABE=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is None and object.getWebSiteValue() is not None and ( len(object.getWebSiteValue().getAvailableLanguageSet()) == 1 or object.getWebSiteValue().getStaticLanguageSelection() )</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -434,6 +434,8 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = document_module.newContent(portal_type=document_portal_type,
                                           reference='NXD-Document-TEXT.Cache')
     document.publish()
+    # Evaluation of last modification date for the site is cached
+    self.portal.portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
     self.tic()
     response = self.publish(website_url + '/NXD-Document-TEXT.Cache')
     last_modified_header = response.getHeader('Last-Modified')
@@ -450,13 +452,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     reference = 'P-DMS-Presentation.3.Pages'
     document.edit(reference=reference)
     document.publish()
+    self.portal.portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
     self.tic()
     # Check we can access to the 3 drawings converted into images.
     # Those images can be accessible through extensible content
     # url : path-of-document + '/' + 'img' + page-index + '.png'
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
-                if policy[0] == 'unauthenticated'][0]
+                if policy[0] == 'unauthenticated no language'][0]
     for i in xrange(3):
       path = '/'.join((website_url,
                        reference,
@@ -464,10 +467,15 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       response = self.publish(path)
       policy_list = self.portal.caching_policy_manager.listPolicies()
       policy = [policy for policy in policy_list\
-                                          if policy[0] == 'unauthenticated'][0]
+                                          if policy[0] == 'unauthenticated no language'][0]
       self.assertEquals(response.getHeader('Content-Type'), 'image/png')
-      self.assertEquals(response.getHeader('Cache-Control'),
-                        'max-age=%s, public' % policy[1].getMaxAgeSecs())
+      self.assertEquals(
+        response.getHeader('Cache-Control'),
+        'max-age=%s, stale-while-revalidate=%s, public' % (
+          policy[1].getMaxAgeSecs(),
+          policy[1].getStaleWhileRevalidateSecs(),
+        )
+      )
 
   def test_07_TestDocumentViewBehaviour(self):
     """All Documents shared the same downloading behaviour
@@ -590,6 +598,8 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = document_module.newContent(portal_type=document_portal_type,
                                           reference='NXD-Document-1-TEXT.Cache')
     document.publish()
+    # Evaluation of last modification date for the site is cached
+    self.portal.portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
     self.tic()
     response = self.publish(website_url + '/NXD-Document-1-TEXT.Cache')
     last_modified_header = response.getHeader('Last-Modified')
@@ -606,20 +616,21 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     reference = 'P-DMS-Presentation-001-.3.Pages'
     document.edit(reference=reference)
     document.publish()
+    self.portal.portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
     self.tic()
     # Check we can access to the 3 drawings converted into images.
     # Those images can be accessible through extensible content
     # url : path-of-document + '/' + 'img' + page-index + '.png'
     # Update policy to have stale values
     self.portal.caching_policy_manager._updatePolicy(
-      "unauthenticated", "python: member is None",
+      "unauthenticated no language", "python: member is None",
       "python: getattr(object, 'getModificationDate', object.modified)()",
       1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
       0, 1, 0, 0, 1, 1, None, None)
     self.tic()
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
-                if policy[0] == 'unauthenticated'][0]
+                if policy[0] == 'unauthenticated no language'][0]
     # Check policy has been updated
     self.assertEquals(policy.getMaxAgeSecs(), 1200)
     self.assertEquals(policy.getStaleWhileRevalidateSecs(), 30)
