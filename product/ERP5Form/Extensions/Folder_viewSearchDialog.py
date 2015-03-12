@@ -1,4 +1,4 @@
-#############################################################################
+############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
@@ -70,8 +70,8 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/%s_relative_url | '
-              'here/portal_selections/%s/strict_%s_relative_url | nothing'
+              'here/portal_selections/%s/dialog_%s_relative_url | '
+              'here/portal_selections/%s/dialog_strict_%s_relative_url | nothing'
                                     % (selection_name, request_key,
                                        selection_name, request_key)),
             items=TALESMethod('python: getattr(here.portal_categories["%s"],'
@@ -94,9 +94,27 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/strict_%s_relative_url | nothing'
+              'here/portal_selections/%s/dialog_strict_%s_relative_url | nothing'
                                     % (selection_name, request_key,))),
         ['title', 'default'])
+
+    field_id = 'your_%s_relative_url_is_excluded_' % request_key
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    field = temp_form._getOb(field_id)
+    field.manage_edit_xmlrpc(dict(
+        form_id='Base_viewFieldLibrary',
+        field_id='your_checkbox'))
+    field._surcharged_edit(dict(title='%s Excluded' % field_title), ['title'])
+    from zLOG import LOG
+    LOG("selection_name %r, request_key %r" %(selection_name, request_key), 300, field_id)
+    field._surcharged_tales(
+        dict(
+            default=TALESMethod(
+              'here/portal_selections/%s/dialog_excluded_%s_relative_url | nothing'
+                                    % (selection_name, request_key,))),
+        ['title', 'default'])
+
 
 
   def addFloatField(field_id, field_title):

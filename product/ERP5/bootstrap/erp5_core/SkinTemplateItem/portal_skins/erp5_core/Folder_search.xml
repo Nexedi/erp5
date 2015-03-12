@@ -54,6 +54,8 @@
 
 request = container.REQUEST\n
 \n
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery\n
+\n
 def sorted(seq):\n
   seq = [x for x in seq]\n
   seq.sort()\n
@@ -73,10 +75,11 @@ usage_map = dict(min=\'>=\',\n
                  nlt=\'>\',)\n
 \n
 new_mapping = dict(ignore_hide_rows=1)\n
+query_list = []\n
+left_join_list = []\n
 for key in sorted(request.form.keys()):\n
   # we use sorted to make sure x_search_key appears before x\n
   value = request.form[key]\n
-\n
   # to remove unnecessary None value\n
   if value is None:\n
     request.form.pop(key)\n
@@ -106,10 +109,27 @@ for key in sorted(request.form.keys()):\n
     new_mapping[real_key] = \'%s %s\' % (usage_map[value], new_mapping[real_key])\n
 \n
   else:\n
-    if request.form.get(\'%s_is_strict_\' % key):\n
-      new_mapping[\'strict_%s\' % key] = value\n
+    if request.form.get(\'%s_is_excluded_\' % key):\n
+      # Build a negated query\n
+      nq_kw = {\'strict_%s\' % key : value}\n
+      q_kw = {key : None}\n
+      left_join_list.append(key) \n
+      left_join_list.append(\'strict_%s\' % key)\n
+      query_list.append(ComplexQuery(NegatedQuery(Query(**nq_kw)), Query(**q_kw), operator="OR"))\n
+      new_mapping[key] = ""\n
+      new_mapping["dialog_%s" %(key,)] = value\n
+      new_mapping["dialog_excluded_%s" %(key,)] = True\n
     else:\n
-      new_mapping[key] = value\n
+      if request.form.get(\'%s_is_strict_\' % key):\n
+        new_mapping[\'strict_%s\' % key] = value\n
+        new_mapping[\'dialog_strict_%s\' % key] = value\n
+      else:\n
+        new_mapping[key] = value\n
+        new_mapping[\'dialog_%s\' % key] = value\n
+\n
+      \n
+new_mapping["query"] = ComplexQuery(query_list)\n
+new_mapping[\'left_join_list\'] = left_join_list\n
 \n
 # set selection parameters\n
 container.portal_selections.setSelectionParamsFor(selection_name, new_mapping)\n

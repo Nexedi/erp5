@@ -195,6 +195,178 @@ commands from selenium 0.8\n
   <td>0 records</td>\n
 </tr>\n
 \n
+<!-- test selection and exclusion of category -->\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>name=Folder_show:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>addSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=a</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>0 records</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>name=field_your_foo_category_relative_url_is_excluded_</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>removeSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=a</td>\n
+</tr>\n
+<tr>\n
+\t<td>addSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=b</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>name=field_your_foo_category_relative_url_is_excluded_</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>addSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=a</td>\n
+</tr>\n
+<tr>\n
+\t<td>removeSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=b</td>\n
+</tr>\n
+<tr>\n
+\t<td>addSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=b</td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>name=field_your_foo_category_relative_url_is_excluded_</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>name=Folder_show:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>addSelection</td>\n
+\t<td>name=field_your_foo_category_relative_url</td>\n
+\t<td>label=a</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>name=field_your_title</td>\n
+\t<td>Title 1</td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>name=field_your_foo_category_relative_url_is_excluded_</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>id=dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+\n
 </body>\n
 </html>
 
