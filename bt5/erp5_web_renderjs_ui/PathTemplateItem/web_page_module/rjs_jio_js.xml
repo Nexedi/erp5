@@ -6727,6 +6727,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                           "which contains more than one character.");\n
     }\n
     this._url = spec.url;\n
+    this._default_view_reference = spec.default_view_reference;\n
   }\n
 \n
   ERP5Storage.prototype.get = function (param) {\n
@@ -6761,7 +6762,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     var action = param._attachment;\n
 \n
     if (action === "view") {\n
-      return getDocumentAndHateoas(this, param, {"_view": param._attachment})\n
+      return getDocumentAndHateoas(this, param,\n
+                                   {"_view": this._default_view_reference})\n
         .push(function (response) {\n
           var result = JSON.parse(response.target.responseText);\n
           result._id = param._id;\n
@@ -8062,7 +8064,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.25435.3378.34969</string> </value>
+                <value> <string>941.36973.18728.63624</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -8080,7 +8082,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1426000157.13</float>
+                        <float>1426154290.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -483,7 +483,7 @@ is_web_mode = (context.REQUEST.get(\'current_web_section\', None) is not None) o
 # is_web_mode =  traversed_document.isWebMode()\n
 if is_web_mode:\n
   site_root = context.getWebSectionValue()\n
-  view_action_type = site_root.getLayoutProperty("view_action_category", default=\'object_view\')\n
+  view_action_type = site_root.getLayoutProperty("configuration_view_action_category", default=\'object_view\')\n
 else:\n
   site_root = portal\n
   view_action_type = "object_view"\n

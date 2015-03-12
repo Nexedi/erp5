@@ -61,8 +61,8 @@ default_web_page = web_section.getDefaultDocumentValue()\n
 return default_web_page.WebPage_viewAsWeb(mapping_dict={\n
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default=""),\n
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),\n
-  "action_view": web_section.getLayoutProperty("configuration_action_view", default="object_view"),\n
-  "default_view_reference": web_section.getLayoutProperty("configuration_default_view_reference", default="view"),\n
+  "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),\n
+  "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),\n
   "hateoas_url": web_section.getLayoutProperty("configuration_hateoas_url", default="hateoas/")\n
 })\n
 </string> </value>

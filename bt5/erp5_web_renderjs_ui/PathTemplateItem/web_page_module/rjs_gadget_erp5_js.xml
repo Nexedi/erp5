@@ -124,7 +124,8 @@
       .push(function (jio_gadget) {\n
         return jio_gadget.createJio({\n
           type: "erp5",\n
-          url: (new URI(gadget.props.hateoas_url)).absoluteTo(location.href).toString()\n
+          url: (new URI(gadget.props.hateoas_url)).absoluteTo(location.href).toString(),\n
+          default_view_reference: gadget.props.default_view_reference\n
         });\n
         /*\n
         return jio_gadget.createJio({\n
@@ -730,7 +731,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -744,7 +745,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.35159.4940.27904</string> </value>
+                <value> <string>941.39539.39866.22681</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -762,7 +763,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425893558.44</float>
+                        <float>1426155464.07</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
