@@ -27,9 +27,12 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.unauthorized import Unauthorized
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Products.DCWorkflow.utils import modifyRolesForPermission
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition as DCWorkflow
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
@@ -37,8 +40,16 @@ from Products.ERP5Type.Accessor import WorkflowState
 from Products.ERP5Type import Permissions
 from tempfile import mktemp
 import os
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC
+from Products.ERP5Workflow.Document.Transition import TRIGGER_USER_ACTION
+from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
 from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
+from Products.DCWorkflow.States import StateDefinition as DCWorkflowState
+from Products.CMFCore.WorkflowCore import ObjectDeleted
+from Products.CMFCore.WorkflowCore import ObjectMoved
+from Products.DCWorkflow.utils import Message as _
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -59,6 +70,7 @@ class Workflow(XMLObject):
   managed_permission_list = ()
   managed_role = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
+  manager_bypass = 0
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -160,9 +172,47 @@ class Workflow(XMLObject):
     ### zwj: upper line may meet problems when there are other Base categories.
     if sdef is None:
       return 0
-    if transition in sdef.getDestinationValueList():
+    if (transition in sdef.getDestinationValueList() and
+        self._checkTransitionGuard(transition, document) and
+        transition.trigger_type == TRIGGER_WORKFLOW_METHOD
+        ):
       return 1
     return 0
+
+  security.declarePrivate('isActionSupported')
+  def isActionSupported(self, document, action, **kw):
+    '''
+    Returns a true value if the given action name
+    is possible in the current state.
+    '''
+    sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    if sdef is None:
+      return 0
+    if action in sdef.getDestinationValueList():
+      tdef = self._getOb(action, None)
+      if (tdef is not None and
+        tdef.trigger_type == TRIGGER_USER_ACTION and
+        self._checkTransitionGuard(tdef, document, **kw)):
+        return 1
+    return 0
+
+  def _checkTransitionGuard(self, tdef, document, **kw):
+    guard = tdef.getGuard()
+    if guard is None:
+      return 1
+    if guard.check(getSecurityManager(), self, document, **kw):
+      return 1
+    return 0
+
+  def _findAutomaticTransition(self, document, sdef):
+    tdef = None
+    for tid in sdef.getDestinationIdList():
+      t = self._getOb(id=tid)
+      if t is not None and t.trigger_type == TRIGGER_AUTOMATIC:
+        if self._checkTransitionGuard(t, document):
+          tdef = t
+          break
+    return tdef
 
   ### zwj: following parts related to the security features
 
@@ -197,6 +247,55 @@ class Workflow(XMLObject):
   def getRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
 
+  security.declarePrivate('doActionFor')
+  def doActionFor(self, document, action, *args, **kw):
+    sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
+    if sdef is None:
+      raise WorkflowException(_(u'Object is in an undefined state.'))
+    if self.isActionSupported(document, action, **kw):
+      wf_id = self.getId()
+      if wf_id is None:
+        raise WorkflowException(
+            _(u'Requested workflow definition not found.'))
+    tdef = self._getOb(id=action)
+    ### check again the action object is available
+    if tdef not in self.objectValues(portal_type='Transition'):
+      raise Unauthorized(action)
+    if tdef is None or tdef.trigger_type != TRIGGER_USER_ACTION:
+      msg = _(u"Transition '${action_id}' is not triggered by a user "
+        u"action.", mapping={'action_id': action})
+      raise WorkflowException(msg)
+    if not self._checkTransitionGuard(tdef, document, **kw):
+      raise Unauthorized(action)
+    ### execute action
+    self._changeStateOf(document, tdef)
+
+  def _changeStateOf(self, document, tdef=None, kwargs=None):
+    '''
+    Changes state.  Can execute multiple transitions if there are
+    automatic transitions.  tdef set to None means the object
+    was just created.
+    '''
+    moved_exc = None
+    while 1:
+      try:
+        sdef = tdef.execute(document, kwargs)
+      except ObjectMoved, moved_exc:
+        document = moved_exc.getNewObject()
+        state_bc_id = self.getStateBaseCategory()
+        status_dict = self.getCurrentStatusDict(document)
+        sdef = self._getOb(status_dict[state_bc_id])
+        # Re-raise after all transitions.
+      if sdef is None:
+        break
+      tdef = self._findAutomaticTransition(document, sdef)
+      if tdef is None:
+        # No more automatic transitions.
+        break
+      # Else continue.
+    if moved_exc is not None:
+        # Re-raise.
+      raise moved_exc
   ### Security feature end
 
   ###########
