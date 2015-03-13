@@ -3,7 +3,6 @@ Business Link | view
 Business Process Module | view
 Business Process | trade_model_path_view
 Business Process | view
-Component Module | jump_to_related_sale_packing_list
 Container Line | view
 Container Line | view_quantity
 Container | view
@@ -69,7 +68,6 @@ Person | jump_to_purchase_order
 Person | jump_to_purchase_packing_list
 Person | jump_to_sale_order
 Person | jump_to_sale_packing_list
-Product Module | jump_to_related_sale_packing_list
 Purchase Order Cell | view
 Purchase Order Line | price_view
 Purchase Order Line | profile_view
@@ -194,7 +192,6 @@ Sale Trade Condition | view
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_trade_model_line_list
-Service Module | jump_to_related_sale_packing_list
 System Preference | pricing_preference
 System Preference | trade_preference
 Trade Model Line Cell Consistency Constraint | predicate
