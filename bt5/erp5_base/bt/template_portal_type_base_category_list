@@ -5,7 +5,6 @@ Currency Module | business_application
 Notification Message Module | business_application
 Notification Message | specialise
 Organisation Module | business_application
-Organisation | validation_state
 Person Module | business_application
 Query Module | business_application
 Query | agent

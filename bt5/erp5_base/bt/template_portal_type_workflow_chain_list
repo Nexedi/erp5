@@ -34,6 +34,7 @@ Notification Message | edit_workflow
 Notification Message | notification_message_workflow
 Notification Message | processing_status_workflow
 Organisation | edit_workflow
+Organisation | validation_workflow
 Person | edit_workflow
 Person | person_interaction_workflow
 Person | user_account_workflow

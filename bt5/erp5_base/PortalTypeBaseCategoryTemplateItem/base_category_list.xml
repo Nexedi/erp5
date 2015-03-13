@@ -15,9 +15,6 @@
  <portal_type id="Notification Message Module">
   <item>business_application</item>
  </portal_type>
- <portal_type id="Organisation">
-  <item>validation_state</item>
- </portal_type>
  <portal_type id="Organisation Module">
   <item>business_application</item>
  </portal_type>
