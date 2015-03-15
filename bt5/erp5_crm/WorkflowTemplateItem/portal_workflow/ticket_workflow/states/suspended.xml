@@ -28,6 +28,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>create_response_and_invalidate_action</string>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
                 <string>validate</string>
