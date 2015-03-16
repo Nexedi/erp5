@@ -52,7 +52,7 @@
     <title>Receipt</title>\n
     <script type="text/javascript" tal:attributes=\'src python:"%s/jquery/core/jquery.js" % portal_url\'></script>\n
     <script type="text/javascript" tal:attributes=\'src python:"%s/epos-print-4.1.0.js" % portal_url\' ></script>\n
-    <script type="text/javascript" tal:attributes=\'src python:"%s/erp5_epson_printout.js" % portal_url\' ></script>\n
+    <script type="text/javascript" tal:attributes=\'src python:"%s/erp5_epson_canvas_printout.js" % portal_url\' ></script>\n
     <link rel="license" href="http://www.opensource.org/licenses/mit-license/">\n
   </head>\n
   <body style="background:white">\n
