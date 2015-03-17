@@ -31,9 +31,9 @@
 DELETE FROM roles_and_users\n
 <dtml-var sql_delimiter>\n
 INSERT INTO roles_and_users (uid, allowedRolesAndUsers) VALUES\n
-<dtml-in expr="role" expr="getPortalObject().portal_catalog.getSQLCatalog().getRoleAndSecurityUidList()">\n
-(<dtml-sqlvar expr="role_item[0]" type="int">, <dtml-sqlvar expr="role_item[1]" type="string">, <dtml-sqlvar expr="role_item[2]" type="string">)<dtml-if sequence-end><dtml-else>,</dtml-if>\n
-\n
+<dtml-in prefix="role" expr="getPortalObject().portal_catalog.getSQLCatalog().getRoleAndSecurityUidList()">\n
+(<dtml-sqlvar expr="role_item[2]" type="int">, <dtml-sqlvar expr="role_item[1]" type="string">)<dtml-if sequence-end><dtml-else>,\n
+</dtml-if>\n
 </dtml-in>
 
 ]]></string> </value>

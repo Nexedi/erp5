@@ -889,14 +889,19 @@ class Catalog(Folder,
 
   def getRoleAndSecurityUidList(self):
     """
-      Return a list of 2-tuples, suitable for direct use in a zsqlmethod.
+      Return a list of 3-tuples, suitable for direct use in a zsqlmethod.
       Goal: make it possible to regenerate a table containing this data.
     """
     result = []
-    extend = result.extend
     for role_list, security_uid in getattr(
             aq_base(self), 'security_uid_dict', {}).iteritems():
-      extend([(role, security_uid) for role in role_list])
+      if role_list:
+        if isinstance(role_list[-1], tuple):
+          local_role_group_id, role_list = role_list
+        else:
+          local_role_group_id = ''
+        result += [(local_role_group_id, role, security_uid)
+                  for role in role_list]
     return result
 
   security.declarePrivate('getSubjectSetUid')
