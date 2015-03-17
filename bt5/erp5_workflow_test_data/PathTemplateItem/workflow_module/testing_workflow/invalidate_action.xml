@@ -18,9 +18,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python:${object_url}/Base_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>
@@ -40,6 +38,12 @@
             <key> <string>description</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -71,6 +75,25 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </list>
+            </value>
         </item>
       </dictionary>
     </pickle>

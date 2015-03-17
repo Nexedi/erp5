@@ -81,11 +81,29 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     last_history = history_list[-1]
     self.assertEqual(last_history.get("error_message", None), "foo error")
 
+  def test_08_testUserActionDisplay(self):
+    new_object = self.getTestObject()
+    object_pt = new_object.getTypeInfo()
+    self.assertTrue(hasattr(object_pt, 'validate'))
+    self.doActionFor(new_object, "validate")
+    self.assertTrue(hasattr(object_pt, 'invalidate'))
+
   ### Doesn't exist yet
   def _testSimpleWorklist(self):
     pass
   def _testWorklistWithAnAssignee(self):
     pass
+
+  def beforeTearDown(self):
+    self.portal = self.getPortal()
+    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
+    self.workflow_module = self.portal.workflow_module
+    self.wf = self.workflow_module._getOb('testing_workflow')
+    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
+    type_test_object.edit(type_base_category_list=('validation_state',))
+    type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
+    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
+
 
 class TestERP5Workflow(TestERP5WorkflowMixin):
   """
