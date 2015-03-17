@@ -458,6 +458,32 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   actions = []
   worklist_dict = {}
 
+  document = info.object
+  #LOG('zwj: Object is %s'%document.getId(), WARNING, ' in Workflow tool.')
+  #LOG('zwj: Object url is %s'%info.object_url, WARNING, ' in Workflow tool.')
+  #LOG('zwj: Context is %s'%self.getId(), WARNING, ' in Workflow tool.')
+  #LOG('zwj: folder url is %s'%info.portal_url, WARNING, ' in Workflow tool.')
+
+  if document is not None:
+    document_pt = document.getTypeInfo()
+    if document_pt is not None:
+      LOG('zwj: document is %s, pt is %s'%(document.getId(), document_pt.getId()), WARNING, ' in WorkflowTool.py.')
+      workflow_list = document_pt.getTypeERP5WorkflowList()
+      if (workflow_list is not None) and (workflow_list is not []):
+        LOG('zwj: ERP5Workflow_list is %s'%str(workflow_list), WARNING, ' in Workflow tool.')
+        for wf_id in workflow_list:
+          did[wf_id] = None
+          wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
+          if wf is None:
+            raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
+          a = wf.listObjectActions(info)
+          if a is not None:
+            #LOG('zwj: action is %s'%a.get('id', None), WARNING, ' in Workflow tool.')
+            actions.extend(a)
+          a = wf.getWorklistVariableMatchDict(info)
+          if a is not None:
+            worklist_dict[wf_id] = a
+
   for wf_id in chain:
     did[wf_id] = None
     wf = self.getWorkflowById(wf_id)
@@ -468,6 +494,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       a = wf.getWorklistVariableMatchDict(info)
       if a is not None:
         worklist_dict[wf_id] = a
+
 
   wf_ids = self.getWorkflowIds()
   for wf_id in wf_ids:
@@ -934,5 +961,33 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
       return True
   return False
 
+def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
+    """ Perform the given workflow action on 'ob'.
+    """
+    ###raise NotImplementedError ("Redefine doActionFor") ###zwj: it workfs!
+    wfs = self.getWorkflowsFor(ob)
+    if wfs is None:
+        wfs = ()
+    if wf_id is None:
+        if not wfs:
+            raise WorkflowException(_(u'No workflows found.'))
+        found = 0
+        for wf in wfs:
+            if wf.isActionSupported(ob, action, **kw):
+                found = 1
+                break
+        if not found:
+            msg = _(u"No workflow provides the '${action_id}' action.",
+                    mapping={'action_id': action})
+            raise WorkflowException(msg)
+    else:
+        wf = self.getWorkflowById(wf_id)
+        if wf is None:
+            raise WorkflowException(
+                _(u'Requested workflow definition not found.'))
+    return self._invokeWithNotification(
+        wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
+
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
+WorkflowTool.doActionFor = _doActionFor
