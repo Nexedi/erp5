@@ -25,7 +25,7 @@ from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-
+from Products.CMFCore.utils import Message as _
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
@@ -961,32 +961,49 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
       return True
   return False
 
+
 def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    """ Perform the given workflow action on 'ob'.
-    """
-    ###raise NotImplementedError ("Redefine doActionFor") ###zwj: it workfs!
-    wfs = self.getWorkflowsFor(ob)
-    if wfs is None:
-        wfs = ()
-    if wf_id is None:
-        if not wfs:
-            raise WorkflowException(_(u'No workflows found.'))
-        found = 0
-        for wf in wfs:
-            if wf.isActionSupported(ob, action, **kw):
-                found = 1
-                break
-        if not found:
-            msg = _(u"No workflow provides the '${action_id}' action.",
-                    mapping={'action_id': action})
-            raise WorkflowException(msg)
+  ###raise NotImplementedError ("Redefine doActionFor") ###zwj: it workfs!
+  wfs = self.getWorkflowsFor(ob)
+  workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
+  case = 1
+
+  if wfs is None:
+    wfs = ()
+    case = 2
+
+  if wf_id is None:
+    if wfs == () and workflow_list == []:
+      raise WorkflowException(_(u'No workflows found.'))
+    found = 0
+    for wf in wfs:
+      if wf.isActionSupported(ob, action, **kw):
+        found = 1
+        case = 1
+        break
+    for workflow_id in workflow_list:
+      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+      if workflow.isActionSupported(ob, action, **kw):
+        found = 1
+        case = 2
+        break
+    if not found:
+      msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
+      raise WorkflowException(msg)
+
+  else:
+    if case == 1:
+      wf = self.getWorkflowById(wf_id)
+      #wf = getattr(self, 'getWorkflowById', None)(wf_id)
     else:
-        wf = self.getWorkflowById(wf_id)
-        if wf is None:
-            raise WorkflowException(
-                _(u'Requested workflow definition not found.'))
-    return self._invokeWithNotification(
-        wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
+      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
+    if wf is None and workflow is None:
+      raise WorkflowException(_(u'Requested workflow definition not found.'))
+
+  if case == 1:
+    return self._invokeWithNotification(wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
+  else:
+    return workflow.doActionFor(ob, action)
 
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
