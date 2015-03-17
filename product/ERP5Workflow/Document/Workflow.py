@@ -50,10 +50,12 @@ from Products.DCWorkflow.States import StateDefinition as DCWorkflowState
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Products.CMFCore.WorkflowCore import ObjectMoved
 from Products.DCWorkflow.utils import Message as _
+from DocumentTemplate.DT_Util import TemplateDict
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base
 from DateTime import DateTime
 from zLOG import LOG, ERROR, DEBUG, WARNING
+from Products.CMFCore.Expression import Expression
 
 class Workflow(XMLObject):
   """
@@ -243,6 +245,10 @@ class Workflow(XMLObject):
         ### zwj: clean Permission Role list for next role mapping
       del self.erp5_permission_roles[permission_roles]
     return changed
+  ### Security feature end
+
+
+
 
   def getRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
@@ -296,7 +302,121 @@ class Workflow(XMLObject):
     if moved_exc is not None:
         # Re-raise.
       raise moved_exc
-  ### Security feature end
+
+  def listObjectActions(self, info):
+      fmt_data = None
+      document = info.object
+      state_bc_id = self.getStateBaseCategory()
+      status_dict = self.getCurrentStatusDict(document)
+      sdef = self._getOb(status_dict[state_bc_id])
+      if sdef is None:
+          return None
+      res = []
+
+      for tid in sdef.getDestinationIdList():
+        tdef = self._getOb(id=tid)
+        LOG('zwj: Action is %s'%tid, WARNING, ' in Workflow.py.')
+        if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
+                tdef.actbox_name and self._checkTransitionGuard(tdef, document):
+            if fmt_data is None:
+                fmt_data = TemplateDict()
+                fmt_data._push(info)
+            fmt_data._push({'transition_id': tid})
+            res.append((tid, {
+                'id': tid,
+                'name': tdef.actbox_name % fmt_data,
+                'url': str(tdef.actbox_url) % fmt_data,
+                'icon': str(tdef.actbox_icon) % fmt_data,
+                'permissions': (),  # Predetermined.
+                'category': tdef.actbox_category,
+                'transition': tdef}))
+            fmt_data._pop()
+      res.sort()
+
+      return [ result[1] for result in res ]
+
+  from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
+  def getWorklistVariableMatchDict(self, info, check_guard=True):
+    """
+      Return a dict which has an entry per worklist definition
+      (worklist id as key) and which value is a dict composed of
+      variable matches.
+    """
+    if not self.objectValues(portal_type='Worklist'):
+      return None
+
+    portal = self.getPortalObject()
+    def getPortalTypeListForWorkflow(workflow_id):
+        workflow_tool = portal.portal_workflow
+        result = []
+        append = result.append
+        for type_info in workflow_tool._listTypeInfo():
+          portal_type = type_info.id
+          if workflow_id in workflow_tool.getChainFor(portal_type):
+            append(portal_type)
+        return result
+
+    _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
+                              id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
+    portal_type_list = _getPortalTypeListForWorkflow(self.id)
+    if not portal_type_list:
+      return None
+    variable_match_dict = {}
+    security_manager = getSecurityManager()
+    workflow_id = self.id
+    workflow_title = self.title
+    for worklist_id, worklist_definition in self.worklists.items():
+      action_box_name = worklist_definition.actbox_name
+      guard = worklist_definition.guard
+      if action_box_name:
+        variable_match = {}
+        for key in worklist_definition.getVarMatchKeys():
+          var = worklist_definition.getVarMatch(key)
+          if isinstance(var, Expression):
+            evaluated_value = var(createExprContext(StateChangeInfo(portal,
+                                  self, kwargs=info.__dict__.copy())))
+            if isinstance(evaluated_value, (str, int, long)):
+              evaluated_value = [str(evaluated_value)]
+          else:
+            evaluated_value = [x % info for x in var]
+          variable_match[key] = evaluated_value
+        if 'portal_type' in variable_match and len(variable_match['portal_type']):
+          portal_type_intersection = set(variable_match['portal_type'])\
+              .intersection(portal_type_list)
+          # in case the current workflow is not associated with portal_types
+          # defined on the worklist, don't display the worklist for this
+          # portal_type.
+          variable_match['portal_type'] = list(portal_type_intersection)
+        variable_match.setdefault('portal_type', portal_type_list)
+
+        if len(variable_match.get('portal_type', [])) == 0:
+          continue
+        is_permitted_worklist = 0
+        if guard is None:
+          is_permitted_worklist = 1
+        elif (not check_guard) or \
+            Guard_checkWithoutRoles(guard, security_manager, self, portal):
+          is_permitted_worklist = 1
+          variable_match[SECURITY_PARAMETER_ID] = guard.roles
+
+        if is_permitted_worklist:
+          format_data = TemplateDict()
+          format_data._push(info)
+          variable_match.setdefault(SECURITY_PARAMETER_ID, ())
+          format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
+                                             k, v in variable_match.iteritems()))
+          variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
+                                                   'worklist_title': action_box_name,
+                                                   'worklist_id': worklist_id,
+                                                   'workflow_title': workflow_title,
+                                                   'workflow_id': workflow_id,
+                                                   'action_box_url': worklist_definition.actbox_url,
+                                                   'action_box_category': worklist_definition.actbox_category}
+          variable_match_dict[worklist_id] = variable_match
+
+    if len(variable_match_dict) == 0:
+      return None
+    return variable_match_dict
 
   ###########
   ## Graph ##
