@@ -14,15 +14,11 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Failure</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=fail_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>

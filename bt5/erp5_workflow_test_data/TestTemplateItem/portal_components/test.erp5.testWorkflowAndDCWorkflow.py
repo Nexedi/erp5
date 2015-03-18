@@ -125,7 +125,8 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
     #getattr(document, convertToMixedCase(action))()
     user_action = action + '_action'
-    self.wf.doActionFor(document, user_action)
+    self.getWorkflowTool().doActionFor(document, user_action)
+    #self.wf.doActionFor(document, user_action)
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
