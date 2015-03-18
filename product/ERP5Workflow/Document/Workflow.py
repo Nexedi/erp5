@@ -190,7 +190,8 @@ class Workflow(XMLObject):
     sdef = document._getDefaultAcquiredValue(self.getStateBaseCategory())
     if sdef is None:
       return 0
-    if action in sdef.getDestinationValueList():
+
+    if action in sdef.getDestinationIdList():
       tdef = self._getOb(action, None)
       if (tdef is not None and
         tdef.trigger_type == TRIGGER_USER_ACTION and
@@ -246,9 +247,6 @@ class Workflow(XMLObject):
       del self.erp5_permission_roles[permission_roles]
     return changed
   ### Security feature end
-
-
-
 
   def getRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
@@ -315,7 +313,7 @@ class Workflow(XMLObject):
 
       for tid in sdef.getDestinationIdList():
         tdef = self._getOb(id=tid)
-        LOG('zwj: Action is %s'%tid, WARNING, ' in Workflow.py.')
+        #LOG('zwj: Action is %s'%tid, WARNING, ' in Workflow.py.')
         if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
                 tdef.actbox_name and self._checkTransitionGuard(tdef, document):
             if fmt_data is None:
