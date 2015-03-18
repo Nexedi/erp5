@@ -88,6 +88,7 @@
                         <string>your_depth</string>
                         <string>your_update_existing</string>
                         <string>your_remove_missing</string>
+                        <string>your_generate_nice_id</string>
                       </list>
                     </value>
                 </item>

@@ -60,13 +60,13 @@
   category -- the category to use\n
 """\n
 from ZODB.POSException import ConflictError\n
-\n
+portal = context.getPortalObject()\n
 translateString = context.Base_translateString\n
 category_tool = context.portal_categories\n
 global section_count\n
 section_count = 0\n
 failed_list = []\n
-\n
+portal_type_list = portal.getPortalDocumentTypeList()\n
 valid_char = "abcdefghijklmnopqrstuvwxyz0123456789-_"\n
 \n
 def getNiceID(s):\n
@@ -125,7 +125,9 @@ def createWebSectionFromCategoryValue(container, category, depth, section_id=Non
                                         , visible     = True\n
                                         , membership_criterion_base_category = (base_category_id,)\n
                                         , membership_criterion_category      = (category_url,)\n
+                                        , criterion_property_list = [\'portal_type\']\n
                                         )\n
+      new_section.setCriterion(\'portal_type\', identity=portal_type_list)\n
       new_section.updateLocalRolesOnSecurityGroups()\n
     except ConflictError:\n
       raise\n
@@ -145,7 +147,9 @@ def createWebSectionFromCategoryValue(container, category, depth, section_id=Non
                      , visible     = True\n
                      , membership_criterion_base_category = (base_category_id,)\n
                      , membership_criterion_category      = (category_url,)\n
+                     , criterion_property_list = [\'portal_type\']\n
                      )\n
+      new_section.setCriterion(\'portal_type\', identity=portal_type_list)\n
       new_section.updateLocalRolesOnSecurityGroups()\n
   # Call the function recursively\n
   if new_section is not None:\n
@@ -173,7 +177,10 @@ if update_existing:\n
     # use the base category as a category to select all\n
     category_url = \'%s/%s\' % (category, category) \n
   section_value.edit(membership_criterion_base_category = (base_category_id,),\n
-                     membership_criterion_category = (category_url,))\n
+                     membership_criterion_category = (category_url,),\n
+                     criterion_property_list = [\'portal_type\'])\n
+  section_value.setCriterion(\'portal_type\', identity=portal_type_list)\n
+\n
   section_value.updateLocalRolesOnSecurityGroups()\n
 \n
 \n
