@@ -963,7 +963,6 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
 
 
 def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
-  ###raise NotImplementedError ("Redefine doActionFor") ###zwj: it workfs!
   wfs = self.getWorkflowsFor(ob)
   workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
   case = 1
@@ -994,7 +993,6 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
   else:
     if case == 1:
       wf = self.getWorkflowById(wf_id)
-      #wf = getattr(self, 'getWorkflowById', None)(wf_id)
     else:
       workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
     if wf is None and workflow is None:
