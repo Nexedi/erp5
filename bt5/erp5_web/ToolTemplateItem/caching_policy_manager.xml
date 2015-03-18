@@ -7,20 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_cache</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="CPMCache" module="Products.CMFCore.CachingPolicyManager"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary/>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_policies</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -32,7 +18,6 @@
               <tuple>
                 <string>unauthenticated web pages</string>
                 <string>unauthenticated</string>
-                <string>authenticated_hateoas</string>
                 <string>authenticated</string>
               </tuple>
             </value>
@@ -150,7 +135,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>authenticated_hateoas</string> </key>
+                    <key> <string>unauthenticated</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -199,111 +184,6 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>authenticated_hateoas</string> </value>
-                            </item>
-                            <item>
-                                <key> <string>_post_check</string> </key>
-                                <value>
-                                  <none/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_pre_check</string> </key>
-                                <value>
-                                  <none/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_predicate</string> </key>
-                                <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_private</string> </key>
-                                <value> <int>1</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_proxy_revalidate</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_public</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_s_max_age_secs</string> </key>
-                                <value>
-                                  <none/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_stale_if_error_secs</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_stale_while_revalidate_secs</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_vary</string> </key>
-                                <value> <string>Cookie</string> </value>
-                            </item>
-                          </dictionary>
-                        </state>
-                      </object>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>unauthenticated</string> </key>
-                    <value>
-                      <object>
-                        <klass> <reference id="2.1"/> </klass>
-                        <tuple/>
-                        <state>
-                          <dictionary>
-                            <item>
-                                <key> <string>_enable_304s</string> </key>
-                                <value> <int>1</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_etag_func</string> </key>
-                                <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_last_modified</string> </key>
-                                <value> <int>1</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_max_age_secs</string> </key>
-                                <value> <int>3600</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_mtime_func</string> </key>
-                                <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>_must_revalidate</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_no_cache</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_no_store</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_no_transform</string> </key>
-                                <value> <int>0</int> </value>
-                            </item>
-                            <item>
-                                <key> <string>_policy_id</string> </key>
                                 <value> <string>unauthenticated</string> </value>
                             </item>
                             <item>
@@ -321,7 +201,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -366,7 +246,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -380,7 +260,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -418,7 +298,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -514,7 +394,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>time</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -527,7 +407,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: (member is not None) and (request.get("X-HATEOAS-CACHE", 0))</string> </value>
+            <value> <string>python: member is None</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -559,45 +439,6 @@
     </pickle>
   </record>
   <record id="11" aka="AAAAAAAAAAs=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: member is None</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="12" aka="AAAAAAAAAAw=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="13" aka="AAAAAAAAAA0=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
       <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
