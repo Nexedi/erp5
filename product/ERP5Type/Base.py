@@ -2925,6 +2925,7 @@ class Base( CopyContainer,
             related_count += 1
     return related_count
 
+
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
   def getWorkflowStateItemList(self):
@@ -2934,6 +2935,10 @@ class Base( CopyContainer,
     result = []
     for wf in self.portal_workflow.getWorkflowsFor(self):
       result += [(wf.id, wf._getWorkflowStateOf(self, id_only=1))]
+    for workflow_id in self.getTypeInfo().getTypeERP5WorkflowList():
+      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+      sdef = self._getDefaultAcquiredValue(workflow.getStateBaseCategory())
+      result += [(workflow_id, sdef.getId())]
     return result
 
   security.declarePublic('getWorkflowInfo')
