@@ -110,6 +110,24 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkExpectedDict({"category": "workflow", "name": "Invalidate"},
                       action)
 
+  def test_09_testBaseGetWorkflowHistoryItemListScript(self):
+    """
+    Base_getWorkflowHistoryItemList is used for user interface, make sure it is still
+    working fine
+    """
+    new_object = self.getTestObject()
+    self.doActionFor(new_object, "validate")
+    item_list = new_object.Base_getWorkflowHistoryItemList("testing_workflow", display=0)
+    self.assertEqual(3, len(item_list))
+    def checkLine(expected_data, index):
+      line = item_list[index]
+      for key in expected_data.keys():
+        self.assertEqual(expected_data[key], line.getProperty(key))
+    checkLine({'state': 'draft'}, 0)
+    checkLine({'state': 'draft'}, 1)
+    checkLine({'state': 'validated'}, 2)
+  
+
   ### Doesn't exist yet
   def _testSimpleWorklist(self):
     pass
