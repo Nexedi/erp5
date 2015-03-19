@@ -42,37 +42,49 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
   def test_03_testChangeOfState(self):
     new_object = self.getTestObject()
     self.doActionFor(new_object, "validate")
+    self.assertEqual(self.getStateFor(new_object), 'validated')
     self.doActionFor(new_object, "invalidate")
     self.assertEqual(self.getStateFor(new_object), 'invalidated')
 
   def test_04_testDoWorkflowMethodTransition(self):
+    """
+    Check if workflow methods allows to change of state
+    """
     new_object = self.getTestObject()
     self.assertEqual(self.getStateFor(new_object), 'draft')
-    # change state through a workflow method
-    getattr(new_object, 'validate')()
+    new_object.validate()
     self.assertEqual(self.getStateFor(new_object), 'validated')
 
-  def test_05_testCheckHistoryForASingleTransition(self):
+  def test_05_testCheckHistoryStateAndActionForASingleTransition(self):
+    """
+    Basic checking of workflow history, only check that state and actions
+    are available
+    """
     new_object = self.getTestObject()
     self.doActionFor(new_object, "validate")
-    #print new_object.workflow_history
     history_list = new_object.workflow_history["testing_workflow"]
-    self.assertEqual(3, len(history_list))### creat->validation_action->validate
+    # 3 history lines are expected : draft->validation_action->validate
+    self.assertEqual(3, len(history_list))
     last_history = history_list[-1]
     self.assertEqual(last_history.get("action", None), "validate")
-    #raise NotImplementedError (new_object.workflow_history)
+    self.assertEqual(last_history.get("validation_state", None), "validated")
 
   def test_06_testCheckPermissionAreWellSet(self):
     new_object = self.getTestObject()
-    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
+    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
+      'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
     self.doActionFor(new_object, "validate")
-    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Manager'))
+    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
+      'Associate', 'Auditor', 'Manager'))
 
   def test_07_testUserTransitionRaiseValidationFailed(self):
+    """
+    perform a fail_action which does nothing but add an error message in the workflow history
+    """
     new_object = self.getTestObject()
     exception_raised = False
     try:
-      self.doActionFor(new_object, "fail") ### perform a fail_action which does nothing but add an error message in the workflow history
+      self.doActionFor(new_object, "fail")
     except ValidationFailed:
       exception_raised = True
     self.assertEqual(True, exception_raised)
