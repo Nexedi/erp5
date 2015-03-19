@@ -38,6 +38,8 @@ from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
 from DateTime import DateTime
 
+_marker = []  # Create a new marker object.
+
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
     Allows the system to request a workflow action.  This method
@@ -961,7 +963,6 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
       return True
   return False
 
-
 def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
   wfs = self.getWorkflowsFor(ob)
   workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
@@ -1003,6 +1004,56 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
   else:
     return workflow.doActionFor(ob, action)
 
+def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
+    wfs = self.getWorkflowsFor(ob)
+    workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
+    case = 1
+    if wfs is None:
+        case = 2
+
+    if wf_id is None:
+        if wfs is None and workflow_list == []:
+            if default is _marker:
+                raise WorkflowException(_(u'No workflows found.'))
+            else:
+                return default
+        found = 0
+        for wf in wfs:
+            if wf.isInfoSupported(ob, name):
+                found = 1
+                case = 1
+                break
+        for workflow_id in workflow_list:
+            workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+            if workflow.isInfoSuported(ob, name):
+              found = 1
+              case = 2
+              break
+        if not found:
+            if default is _marker:
+                msg = _(u"No workflow provides '${name}' information.",
+                        mapping={'name': name})
+                raise WorkflowException(msg)
+            else:
+                return default
+    else:
+        if case == 1:
+            wf = self.getWorkflowById(wf_id)
+        else:
+            wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id)
+        if wf is None:
+            if default is _marker:
+                raise WorkflowException(
+                    _(u'Requested workflow definition not found.'))
+            else:
+                return default
+    res = wf.getInfoFor(ob, name, default, *args, **kw)
+    if res is _marker:
+        msg = _(u'Could not get info: ${name}', mapping={'name': name})
+        raise WorkflowException(msg)
+    return res
+
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
 WorkflowTool.doActionFor = _doActionFor
+WorkflowTool.getInfoFor = _getInfoFor
