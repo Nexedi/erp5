@@ -78,12 +78,13 @@ for line in line_list:\n
   line.setQuantity(line_quantity)\n
   total_quantity += line_quantity\n
 \n
+abs_total_quantity = abs(round(total_quantity, precision))\n
 # The total quantity should be zero with a little error, if simulation has been\n
 # completely applied, because the debit and the credit must be balanced. However,\n
 # this is not the case, if the delivery is divergent, as the builder does not\n
 # adopt prevision automatically, when a conflict happens between the simulation\n
 # and user-entered values.\n
-if abs(round(total_quantity, precision)) > 2 * resource.getBaseUnitQuantity():\n
+if abs_total_quantity > 2 * resource.getBaseUnitQuantity():\n
   return\n
 \n
 total_price = round(context.getTotalPrice(), precision)\n
@@ -98,14 +99,15 @@ for line in line_list:\n
 account_type = context.getPortalObject().portal_categories.account_type\n
 receivable_type = account_type.asset.receivable\n
 payable_type = account_type.liability.payable\n
-abs_total_quantity = abs(round(total_quantity, precision))\n
 line_to_adjust = None\n
 \n
 asset_line = None\n
 for line, account_type_list in account_type_dict.iteritems():\n
   if receivable_type in account_type_list or payable_type in account_type_list:\n
-    asset_line = line\n
-    break\n
+    if line.getSourceSection() == context.getSourceSection() and \\\n
+        line.getDestinationSection() == context.getDestinationSection():\n
+      asset_line = line\n
+      break\n
 \n
 if not asset_line:\n
   assert total_price == 0.0 and total_quantity == 0.0, \\\n
