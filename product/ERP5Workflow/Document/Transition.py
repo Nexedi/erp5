@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
@@ -40,7 +40,6 @@ from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
 from copy import deepcopy
 import sys
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
-#from Products.ERP5Workflow.Document.Guard import Guard
 from Products.DCWorkflow.Guard import Guard
 
 TRIGGER_AUTOMATIC = 0
@@ -212,6 +211,52 @@ class Transition(XMLObject):
     status_dict[state_bc_id] = new_state
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
+    """
+    # Update all variables
+    state_values = None
+    if new_sdef is not None:
+      state_values = new_sdef.objectValues(portal_type="Variable")
+    if state_values is None: state_values = {}
+    tdef_exprs = self.getGuardExpression()
+    if tdef_exprs is None or 'python: True': tdef_exprs = {}
+    #status = {}
+    for variable in workflow.objectValues(portal_type="Variable"):
+        if not variable.for_status:
+            continue
+        expr = None
+        if state_values.has_key(id):
+            value = state_values[id]
+        elif tdef_exprs.has_key(id):
+            expr = tdef_exprs[id]
+        elif not variable.update_always and former_status.has_key(id):
+            # Preserve former value
+            value = former_status[id]
+        else:
+            if variable.default_expr is not None:
+                expr = variable.default_expr
+            else:
+                value = variable.default_value
+        if expr is not None:
+            # Evaluate an expression.
+            if econtext is None:
+                # Lazily create the expression context.
+                if sci is None:
+                    kwargs = form_kw
+                    sci = StateChangeInfo(
+                        document, self, former_status, self,
+                        old_sdef, new_sdef, kwargs)
+                econtext = createExprContext(sci)
+            value = expr(econtext)
+        status_dict[id] = value
+
+    """
+    # Update all transition variables
+    if form_kw is not None:
+      object.REQUEST.other.update(form_kw)
+    # zwj: The transition variable is replaced by a base category; thus this part is not in use.
+    for variable in self.contentValues(portal_type='Transition Variable'):
+      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
+
     # Update all variables
     for variable in workflow.contentValues(portal_type='Variable'):
       if variable.getAutomaticUpdate():
@@ -222,13 +267,6 @@ class Transition(XMLObject):
            status_dict[variable_title] = form_kw[variable_title]
         else:
           status_dict[variable_title] = variable.getInitialValue(object=object)
-
-    # Update all transition variables
-    if form_kw is not None:
-      object.REQUEST.other.update(form_kw)
-    # zwj: The transition variable is replaced by a base category; thus this part is not in use.
-    for variable in self.contentValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
     # Generate Workflow History List
     self.setStatusOf(workflow.getId(), document, status_dict)
@@ -291,3 +329,6 @@ class Transition(XMLObject):
           ob.workflow_history = PersistentMapping()
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
+    if not has_history:
+        ob.workflow_history = PersistentMapping()
+    ob.workflow_history[wf_id] = tuple(wfh)
