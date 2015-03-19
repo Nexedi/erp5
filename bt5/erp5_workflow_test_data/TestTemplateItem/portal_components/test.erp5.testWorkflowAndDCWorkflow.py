@@ -95,10 +95,20 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def test_08_testUserActionDisplay(self):
     new_object = self.getTestObject()
-    object_pt = new_object.getTypeInfo()
-    self.assertTrue(hasattr(object_pt, 'validate'))
+    action_list = self.getWorkflowTool().listActions(object=new_object)
+    self.assertEqual(1, len(action_list))
+    action = action_list[0]
+    def checkExpectedDict(expected_dict, action):
+      for key in expected_dict.keys():
+        self.assertEqual(expected_dict[key], action.get(key))
+    checkExpectedDict({"category": "workflow", "name": "Validate"},
+                      action)
     self.doActionFor(new_object, "validate")
-    self.assertTrue(hasattr(object_pt, 'invalidate'))
+    action_list = self.getWorkflowTool().listActions(object=new_object)
+    self.assertEqual(1, len(action_list))
+    action = action_list[0]
+    checkExpectedDict({"category": "workflow", "name": "Invalidate"},
+                      action)
 
   ### Doesn't exist yet
   def _testSimpleWorklist(self):
