@@ -104,6 +104,10 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
 
+  def doActionFor(self, document, action):
+    user_action = action + '_action'
+    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
+    #getattr(document, convertToMixedCase(action))()
 
 class TestERP5Workflow(TestERP5WorkflowMixin):
   """
@@ -118,15 +122,8 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     type_test_object.edit(type_base_category_list=('validation_state',))
     type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
     self.resetComponentTool()
+    self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
     self.login() # as Manager
-
-  def doActionFor(self, document, action):
-    # check testing_workflow is not in use
-    self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
-    #getattr(document, convertToMixedCase(action))()
-    user_action = action + '_action'
-    self.getWorkflowTool().doActionFor(document, user_action)
-    #self.wf.doActionFor(document, user_action)
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
@@ -141,19 +138,13 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     self.workflow_module = self.portal.portal_workflow
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ('testing_workflow'))
     self.wf = self.workflow_module._getOb('testing_workflow')
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
+    type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     type_test_object.edit(type_base_category_list=())
     type_test_object.edit(type_erp5workflow_list=())
     self.resetComponentTool()
+    self.assertTrue(self.wf.getId() in self.getWorkflowTool().getChainFor(type_test_object.getId()))
+    self.assertEqual(type_test_object.getTypeErp5workflowList(), [])
     self.login()
-
-  def doActionFor(self, document, action):
-    self.assertTrue(self.wf.getId() in self.getWorkflowTool().getChainFor(document.getTypeInfo().getId()))
-    # check erp5workflow is not in use
-    self.assertEqual(document.getTypeInfo().getTypeErp5workflowList(), [])
-    user_action = action + '_action'
-    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = self.wf.getId())
-    #getattr(document, convertToMixedCase(action))()
 
   def getStateFor(self, document):
     return self.wf._getWorkflowStateOf(document, id_only=True)
