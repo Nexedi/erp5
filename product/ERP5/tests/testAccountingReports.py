@@ -1619,7 +1619,11 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(data_line_list[0],
         Movement_getSpecificReference='Previous Balance',
         date=DateTime(2006, 2, 2),
+        section_title='My Organisation',
         Movement_getExplanationTitleAndAnalytics=None,
+        grouping_date=None,
+        grouping_reference=None,
+        modification_date='',
         debit_price=300,
         credit_price=21,
         running_total_price=279)
