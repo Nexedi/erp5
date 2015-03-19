@@ -56,6 +56,7 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.Cache import CachingMethod
 
 class Workflow(XMLObject):
   """
@@ -198,6 +199,18 @@ class Workflow(XMLObject):
         self._checkTransitionGuard(tdef, document, **kw)):
         return 1
     return 0
+
+  security.declarePrivate('isInfoSupported')
+  def isInfoSupported(self, ob, name):
+      '''
+      Returns a true value if the given info name is supported.
+      '''
+      if name == self.getStateBaseCategory():
+          return 1
+      vdef = self.contentValues(portal_type='Variable').get(name, None)
+      if vdef is None:
+          return 0
+      return 1
 
   def _checkTransitionGuard(self, tdef, document, **kw):
     guard = tdef.getGuard()
