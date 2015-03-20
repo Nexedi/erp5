@@ -10,12 +10,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     test_object = self.portal.erp5workflow_test_module.newContent(portal_type='ERP5Workflow Test Document')
     return test_object
 
-  def doActionFor():
-    """
-    Needs to be overidden
-    """
-    raise NotImplemented
-
   def getStateFor():
     """
     Needs to be overidden
@@ -128,7 +122,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkLine({'state': 'validated'}, 2)
   
 
-  ### Doesn't exist yet
   def _testSimpleWorklist(self):
     pass
   def _testWorklistWithAnAssignee(self):
