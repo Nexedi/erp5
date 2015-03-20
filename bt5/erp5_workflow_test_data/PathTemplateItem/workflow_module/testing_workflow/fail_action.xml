@@ -18,7 +18,9 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=fail_action</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>
@@ -37,6 +39,12 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>Fail action does nothing but put an error message into workflow history</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>guard_expression</string> </key>
@@ -67,6 +75,25 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </list>
+            </value>
         </item>
       </dictionary>
     </pickle>
