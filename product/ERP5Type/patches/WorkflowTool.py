@@ -995,14 +995,14 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
     if case == 1:
       wf = self.getWorkflowById(wf_id)
     else:
-      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
-    if wf is None and workflow is None:
+      wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
+    if wf is None:
       raise WorkflowException(_(u'Requested workflow definition not found.'))
 
   if case == 1:
     return self._invokeWithNotification(wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
   else:
-    return workflow.doActionFor(ob, action)
+    return wf.doActionFor(ob, action)
 
 def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
     wfs = self.getWorkflowsFor(ob)
