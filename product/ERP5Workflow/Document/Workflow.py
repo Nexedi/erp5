@@ -98,11 +98,11 @@ class Workflow(XMLObject):
 
     # Initialize workflow history
     status_dict = {state_bc_id: document.unrestrictedTraverse(self.getSource()).getId()}
-    status_dict['time'] = self.getDateTime()
-    status_dict['action'] = None
+    #status_dict['time'] = self.getDateTime()
+    #status_dict['action'] = None
     variable_list = self.contentValues(portal_type='Variable')
     for variable in variable_list:
-      status_dict[variable.getTitle()] = variable.getInitialValue(object=object)
+      status_dict[variable.getId()] = variable.getInitialValue(object=object)
     self._updateWorkflowHistory(document, status_dict)
     ### zwj: initialize role mappings, also in State.py/executeTransition()
     self.updateRoleMappingsFor(document)
@@ -130,7 +130,7 @@ class Workflow(XMLObject):
       document.workflow_history[workflow_key] = ()
 
     # Update history
-    status_dict['time'] = self.getDateTime()
+    #status_dict['time'] = self.getDateTime()
     document.workflow_history[workflow_key] += (status_dict,)
     # XXX this _p_changed marks the document modified, but the
     # only the PersistentMapping is modified
