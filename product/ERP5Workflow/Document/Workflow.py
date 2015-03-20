@@ -57,6 +57,8 @@ from DateTime import DateTime
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.DCWorkflow.Expression import StateChangeInfo
 
 class Workflow(XMLObject):
   """
@@ -102,6 +104,8 @@ class Workflow(XMLObject):
     #status_dict['action'] = None
     variable_list = self.contentValues(portal_type='Variable')
     for variable in variable_list:
+      if variable.for_status == 0:
+        continue
       status_dict[variable.getId()] = variable.getInitialValue(object=object)
     self._updateWorkflowHistory(document, status_dict)
     ### zwj: initialize role mappings, also in State.py/executeTransition()
@@ -384,7 +388,7 @@ class Workflow(XMLObject):
         for key in worklist_definition.getVarMatchKeys():
           var = worklist_definition.getVarMatch(key)
           if isinstance(var, Expression):
-            evaluated_value = var(createExprContext(StateChangeInfo(portal,
+            evaluated_value = var(Expression_createExprContext(StateChangeInfo(portal,
                                   self, kwargs=info.__dict__.copy())))
             if isinstance(evaluated_value, (str, int, long)):
               evaluated_value = [str(evaluated_value)]
@@ -428,6 +432,45 @@ class Workflow(XMLObject):
     if len(variable_match_dict) == 0:
       return None
     return variable_match_dict
+
+  security.declarePrivate('getInfoFor')
+  def getInfoFor(self, ob, name, default):
+      '''
+      Allows the user to request information provided by the
+      workflow.  This method must perform its own security checks.
+      '''
+      LOG('zwj: ob is %s, name is %s'%(ob.getId(),name), WARNING, ' in Workflow.py.')
+      state_bc_id = self.getStateBaseCategory()
+      if name == state_bc_id:
+          #return self._getWorkflowStateOf(ob, 1)
+          return ob._getDefaultAcquiredValue(self.getStateBaseCategory()).getId()
+
+      vdef = self._getOb(name)
+      LOG('zwj: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')
+
+      status_dict = self.getCurrentStatusDict(ob)
+      former_status = self._getOb(status_dict[state_bc_id], None)
+      if former_status == None:
+        former_status = self.getSourceValue()
+
+      if vdef.info_guard is not None and not vdef.info_guard.check(
+          getSecurityManager(), self, ob):
+          return default
+      LOG('zwj: Pass Info guard', WARNING, ' in Workflow.py.')
+
+      if status_dict is not None and name in status_dict:
+          value = status_dict[name]
+      # Not set yet.  Use a default.
+      if vdef.default_expr is not None:
+          LOG('zwj: executing default_expr ', WARNING, ' in Workflow.py.')
+          ec = Expression_createExprContext(StateChangeInfo(ob, self, former_status))
+          expr = Expression(vdef.default_expr)
+          value = expr(ec)
+      else:
+          value = vdef.default_value
+      LOG('zwj: generated value successfully ', WARNING, ' in Workflow.py.')
+      return value
+
 
   ###########
   ## Graph ##
