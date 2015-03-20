@@ -17,6 +17,7 @@
 
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from BTrees.Length import Length
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
@@ -87,7 +88,7 @@ class ERP5GroupManager(BasePlugin):
       return ()
 
     @UnrestrictedMethod
-    def _getGroupsForPrincipal(user_id, path):
+    def _getGroupsForPrincipal(user_id, path, security_configuration_id):
       security_category_dict = {} # key is the base_category_list,
                                   # value is the list of fetched categories
       security_group_list = []
@@ -184,8 +185,20 @@ class ERP5GroupManager(BasePlugin):
 
     return _getGroupsForPrincipal(
                 user_id=principal.getId(),
-                path=self.getPhysicalPath())
+                path=self.getPhysicalPath(),
+                security_configuration_id=self.getSecurityConfigurationId())
 
+  def updateSecurityConfigurationId(self):
+    try:
+      self.aq_explicit._tsxx_security_configuration_id.change(1)
+    except AttributeError:
+      self._tsxx_security_configuration_id = Length()
+
+  def getSecurityConfigurationId(self):
+    try:
+      return self.aq_explicit._tsxx_security_configuration_id()
+    except AttributeError:
+      return 0
 
 classImplements( ERP5GroupManager
                , IGroupsPlugin
