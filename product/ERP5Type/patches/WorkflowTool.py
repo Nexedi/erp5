@@ -469,7 +469,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   if document is not None:
     document_pt = document.getTypeInfo()
     if document_pt is not None:
-      LOG('zwj: document is %s, pt is %s'%(document.getId(), document_pt.getId()), WARNING, ' in WorkflowTool.py.')
+      #LOG('zwj: document is %s, pt is %s'%(document.getId(), document_pt.getId()), WARNING, ' in WorkflowTool.py.')
       workflow_list = document_pt.getTypeERP5WorkflowList()
       if (workflow_list is not None) and (workflow_list is not []):
         LOG('zwj: ERP5Workflow_list is %s'%str(workflow_list), WARNING, ' in Workflow tool.')
@@ -968,7 +968,7 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
   workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
   case = 1
 
-  if wfs is None:
+  if wfs is None or wf_id in workflow_list:
     wfs = ()
     case = 2
 
@@ -1008,7 +1008,7 @@ def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
     wfs = self.getWorkflowsFor(ob)
     workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
     case = 1
-    if wfs is None:
+    if wfs is None or wf_id in workflow_list:
         case = 2
 
     if wf_id is None:
@@ -1047,6 +1047,7 @@ def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
                     _(u'Requested workflow definition not found.'))
             else:
                 return default
+
     res = wf.getInfoFor(ob, name, default, *args, **kw)
     if res is _marker:
         msg = _(u'Could not get info: ${name}', mapping={'name': name})
