@@ -982,8 +982,8 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
         case = 1
         break
     for workflow_id in workflow_list:
-      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
-      if workflow.isActionSupported(ob, action, **kw):
+      wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+      if wf.isActionSupported(ob, action, **kw):
         found = 1
         case = 2
         break
