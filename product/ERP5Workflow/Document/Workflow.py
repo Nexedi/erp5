@@ -100,15 +100,21 @@ class Workflow(XMLObject):
 
     # Initialize workflow history
     status_dict = {state_bc_id: document.unrestrictedTraverse(self.getSource()).getId()}
-    #status_dict['time'] = self.getDateTime()
-    #status_dict['action'] = None
     variable_list = self.contentValues(portal_type='Variable')
+    former_status = self._getOb(status_dict[state_bc_id], None)
+    ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
+
     for variable in variable_list:
       if variable.for_status == 0:
         continue
-      status_dict[variable.getId()] = variable.getInitialValue(object=object)
+      if variable.default_expr is not None:
+        expr = Expression(variable.default_expr)
+        value = expr(ec)
+      else:
+        value = variable.getInitialValue(object=object)
+      status_dict[variable.getId()] = value
+
     self._updateWorkflowHistory(document, status_dict)
-    ### zwj: initialize role mappings, also in State.py/executeTransition()
     self.updateRoleMappingsFor(document)
 
   def _generateHistoryKey(self):
@@ -134,13 +140,12 @@ class Workflow(XMLObject):
       document.workflow_history[workflow_key] = ()
 
     # Update history
-    #status_dict['time'] = self.getDateTime()
     document.workflow_history[workflow_key] += (status_dict,)
     # XXX this _p_changed marks the document modified, but the
     # only the PersistentMapping is modified
-    document._p_changed = 1
+    #document._p_changed = 1
     # XXX this _p_changed is apparently not necessary
-    document.workflow_history._p_changed = 1
+    #document.workflow_history._p_changed = 1
 
   def getCurrentStatusDict(self, document):
     """
