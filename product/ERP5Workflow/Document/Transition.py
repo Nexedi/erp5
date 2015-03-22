@@ -268,19 +268,6 @@ class Transition(XMLObject):
     for variable in self.contentValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
-    """
-    # Update all variables
-    for variable in workflow.contentValues(portal_type='Variable'):
-      if variable.getAutomaticUpdate() == 1:
-        # if we have it in form get it from there
-        # otherwise use default
-        variable_id = variable.getId()
-        if variable_id in form_kw:
-           status_dict[variable_id] = form_kw[variable_id]
-        else:
-          status_dict[variable_id] = variable.getInitialValue(object=object)
-    """
-
     # Generate Workflow History List
     self.setStatusOf(workflow.getId(), document, status_dict)
 
