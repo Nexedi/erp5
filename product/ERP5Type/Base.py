@@ -2889,7 +2889,7 @@ class Base( CopyContainer,
 
   def isERP5WorkflowDeleted(self):
     ### zwj: deal with the deleted object
-    for wf_id in self.getTypeERP5WorkflowList():
+    for wf_id in self.getTypeInfo().getTypeERP5WorkflowList():
       wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id)
       state = self._getDefaultAcquiredValue(wf.getStateBaseCategory())
       if state is not None and state.getId() == 'deleted':
