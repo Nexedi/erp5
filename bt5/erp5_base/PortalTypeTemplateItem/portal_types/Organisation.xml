@@ -44,9 +44,7 @@
         <item>
             <key> <string>erp5workflow_list</string> </key>
             <value>
-              <tuple>
-                <string>erp5_validation_workflow</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
