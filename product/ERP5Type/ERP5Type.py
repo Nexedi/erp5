@@ -131,7 +131,7 @@ class LocalRoleAssignorMixIn(object):
       ## Make sure that the object is reindexed if modified
       # XXX: Document modification detection assumes local roles are always
       # part of ob and not separate persistent objects.
-      if reindex and ob._p_changed:
+      if reindex:# and ob._p_changed:
         ob.reindexObjectSecurity(activate_kw=dict(activate_kw))
 
     security.declarePrivate('getFilteredRoleListFor')
