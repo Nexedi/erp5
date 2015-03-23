@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-# Copyright (c) 2002,2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2005,2015 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
@@ -461,15 +461,11 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   worklist_dict = {}
 
   document = info.object
-  #LOG('zwj: Object is %s'%document.getId(), WARNING, ' in Workflow tool.')
-  #LOG('zwj: Object url is %s'%info.object_url, WARNING, ' in Workflow tool.')
-  #LOG('zwj: Context is %s'%self.getId(), WARNING, ' in Workflow tool.')
-  #LOG('zwj: folder url is %s'%info.portal_url, WARNING, ' in Workflow tool.')
 
+  ### zwj: following part is for ERP5Workflow actions
   if document is not None:
     document_pt = document.getTypeInfo()
     if document_pt is not None:
-      #LOG('zwj: document is %s, pt is %s'%(document.getId(), document_pt.getId()), WARNING, ' in WorkflowTool.py.')
       workflow_list = document_pt.getTypeERP5WorkflowList()
       if (workflow_list is not None) and (workflow_list is not []):
         LOG('zwj: ERP5Workflow_list is %s'%str(workflow_list), WARNING, ' in Workflow tool.')
@@ -480,12 +476,21 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
             raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
           a = wf.listObjectActions(info)
           if a is not None:
-            #LOG('zwj: action is %s'%a.get('id', None), WARNING, ' in Workflow tool.')
             actions.extend(a)
-          a = wf.getWorklistVariableMatchDict(info)
+          """
+          a = wf.listGlobalActions(info)
+          if a is not None:
+              actions.extend(a)
+          """
+          a = wf.getWorklistVariableMatchDict(info) ### zwj: replace listGlobalActions(info)
+          if a is not None:
+              actions.extend(a)
+          ### zwj: ???
           if a is not None:
             worklist_dict[wf_id] = a
+  ### ==========================================================================
 
+  ### zwj: following part is for DCWorkflow actions
   for wf_id in chain:
     did[wf_id] = None
     wf = self.getWorkflowById(wf_id)
@@ -506,6 +511,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         a = wf.getWorklistVariableMatchDict(info)
         if a is not None:
           worklist_dict[wf_id] = a
+  ### ==========================================================================
 
   if worklist_dict:
     portal = self.getPortalObject()
