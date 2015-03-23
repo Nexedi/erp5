@@ -5633,13 +5633,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
 \n
 \n
-  function readBlobAsText(blob) {\n
+  function readBlobAsText(blob, encoding) {\n
     var fr = new FileReader();\n
     return new RSVP.Promise(function (resolve, reject, notify) {\n
       fr.addEventListener("load", resolve);\n
       fr.addEventListener("error", reject);\n
       fr.addEventListener("progress", notify);\n
-      fr.readAsText(blob);\n
+      fr.readAsText(blob, encoding);\n
     }, function () {\n
       fr.abort();\n
     });\n
@@ -5658,6 +5658,19 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
   }\n
   util.readBlobAsArrayBuffer = readBlobAsArrayBuffer;\n
+\n
+  function readBlobAsDataURL(blob) {\n
+    var fr = new FileReader();\n
+    return new RSVP.Promise(function (resolve, reject, notify) {\n
+      fr.addEventListener("load", resolve);\n
+      fr.addEventListener("error", reject);\n
+      fr.addEventListener("progress", notify);\n
+      fr.readAsDataURL(blob);\n
+    }, function () {\n
+      fr.abort();\n
+    });\n
+  }\n
+  util.readBlobAsDataURL = readBlobAsDataURL;\n
 \n
 \n
 \n
@@ -5808,7 +5821,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     if (!(param._blob instanceof Blob) &&\n
         typeof param._data === \'string\') {\n
       param._blob = new Blob([param._data], {\n
-        "type": param._content_type || param._mimetype || ""\n
+        "type": param._content_type || param._mimetype || "text/plain;charset=utf-8"\n
       });\n
       delete param._data;\n
       delete param._mimetype;\n
@@ -6122,8 +6135,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  * http://www.gnu.org/licenses/lgpl.html\n
  */\n
 \n
-/*jslint nomen: true */\n
-/*global jIO, sessionStorage, localStorage, Blob, RSVP */\n
+/*jslint nomen: true*/\n
+/*global jIO, sessionStorage, localStorage, Blob, RSVP, atob,\n
+         ArrayBuffer, Uint8Array*/\n
 \n
 /**\n
  * JIO Local Storage. Type = \'local\'.\n
@@ -6139,7 +6153,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  * @class LocalStorage\n
  */\n
 \n
-(function (jIO, sessionStorage, localStorage, Blob, RSVP) {\n
+(function (jIO, sessionStorage, localStorage, Blob, RSVP,\n
+           atob, ArrayBuffer, Uint8Array) {\n
   "use strict";\n
 \n
   function LocalStorage(spec) {\n
@@ -6177,6 +6192,23 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return doc;\n
   };\n
 \n
+  // https://gist.github.com/davoclavo/4424731\n
+  function dataURItoBlob(dataURI) {\n
+    // convert base64 to raw binary data held in a string\n
+    var byteString = atob(dataURI.split(\',\')[1]),\n
+      // separate out the mime component\n
+      mimeString = dataURI.split(\',\')[0].split(\':\')[1],\n
+      // write the bytes of the string to an ArrayBuffer\n
+      arrayBuffer = new ArrayBuffer(byteString.length),\n
+      _ia = new Uint8Array(arrayBuffer),\n
+      i;\n
+    mimeString = mimeString.slice(0, mimeString.length - ";base64".length);\n
+    for (i = 0; i < byteString.length; i += 1) {\n
+      _ia[i] = byteString.charCodeAt(i);\n
+    }\n
+    return new Blob([arrayBuffer], {type: mimeString});\n
+  }\n
+\n
   LocalStorage.prototype.getAttachment = function (param) {\n
     restrictDocumentId(param._id);\n
 \n
@@ -6188,7 +6220,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         404\n
       );\n
     }\n
-    return {data: new Blob([textstring])};\n
+    return {data: dataURItoBlob(textstring)};\n
   };\n
 \n
   LocalStorage.prototype.putAttachment = function (param) {\n
@@ -6199,7 +6231,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     // download data\n
     return new RSVP.Queue()\n
       .push(function () {\n
-        return jIO.util.readBlobAsText(param._blob);\n
+        return jIO.util.readBlobAsDataURL(param._blob);\n
       })\n
       .push(function (e) {\n
         context._storage.setItem(param._attachment, e.target.result);\n
@@ -6225,7 +6257,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   jIO.addStorage(\'local\', LocalStorage);\n
 \n
-}(jIO, sessionStorage, localStorage, Blob, RSVP));\n
+}(jIO, sessionStorage, localStorage, Blob, RSVP,\n
+  atob, ArrayBuffer, Uint8Array));\n
 ;/*\n
  * Copyright 2013, Nexedi SA\n
  * Released under the LGPL license.\n
@@ -8064,7 +8097,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.36973.18728.63624</string> </value>
+                <value> <string>941.55610.36294.45499</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -8082,7 +8115,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1426154290.54</float>
+                        <float>1427118780.26</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
