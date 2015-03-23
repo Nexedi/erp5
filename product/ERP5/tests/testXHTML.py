@@ -355,10 +355,10 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_core_proxy_field_legacy',
       'erp5_base',
       'erp5_simulation',
+      'erp5_pdm',
       'erp5_trade',
 
       'erp5_pdf_editor',
-      'erp5_pdm',
       'erp5_accounting',
       'erp5_invoicing',
 

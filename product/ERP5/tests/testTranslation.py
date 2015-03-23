@@ -37,10 +37,10 @@ from Products.ERP5Type.Utils import getMessageIdWithContext
 target_business_templates = (
   'erp5_base',
   'erp5_simulation',
+  'erp5_pdm',
   'erp5_trade',
 
   'erp5_pdf_editor',
-  'erp5_pdm',
   'erp5_accounting',
   'erp5_invoicing',
 
