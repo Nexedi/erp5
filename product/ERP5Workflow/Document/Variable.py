@@ -91,7 +91,8 @@ class Variable(XMLObject):
         if self.info_guard is not None:
             return self.info_guard
         else:
-            return Guard().__of__(self)  # Create a temporary guard.
+            self.generateGuard()
+            return self.guard
 
     def getInfoGuardSummary(self):
         res = None
@@ -99,6 +100,7 @@ class Variable(XMLObject):
             res = self.info_guard.getSummary()
         return res
 
+    ### zwj: originated from DC workflow; seems useless here?
     def setProperties(self, description,
                       default_value='', default_expr='',
                       for_catalog=0, for_status=0,
