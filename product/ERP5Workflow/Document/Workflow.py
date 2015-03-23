@@ -362,9 +362,10 @@ class Workflow(XMLObject):
       (worklist id as key) and which value is a dict composed of
       variable matches.
     """
-    if not self.objectValues(portal_type='Worklist'):
+    if not self.contentValues(portal_type='Worklist'):
       return None
 
+    ### zwj: for DC workflow
     portal = self.getPortalObject()
     def getPortalTypeListForWorkflow(workflow_id):
         workflow_tool = portal.portal_workflow
@@ -384,12 +385,14 @@ class Workflow(XMLObject):
     variable_match_dict = {}
     security_manager = getSecurityManager()
     workflow_id = self.id
-    workflow_title = self.title
-    for worklist_id, worklist_definition in self.worklists.items():
+    workflow_title = self.getTitle()
+    for worklist_definition in self.objectValues(portal_type='Worklist'):
+      worklist_id = worklist_definition.getId()
       action_box_name = worklist_definition.actbox_name
-      guard = worklist_definition.guard
+      guard = worklist_definition.getGuard()
       if action_box_name:
         variable_match = {}
+
         for key in worklist_definition.getVarMatchKeys():
           var = worklist_definition.getVarMatch(key)
           if isinstance(var, Expression):
@@ -400,6 +403,7 @@ class Workflow(XMLObject):
           else:
             evaluated_value = [x % info for x in var]
           variable_match[key] = evaluated_value
+
         if 'portal_type' in variable_match and len(variable_match['portal_type']):
           portal_type_intersection = set(variable_match['portal_type'])\
               .intersection(portal_type_list)
@@ -425,18 +429,20 @@ class Workflow(XMLObject):
           variable_match.setdefault(SECURITY_PARAMETER_ID, ())
           format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
                                              k, v in variable_match.iteritems()))
-          variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
-                                                   'worklist_title': action_box_name,
-                                                   'worklist_id': worklist_id,
-                                                   'workflow_title': workflow_title,
-                                                   'workflow_id': workflow_id,
-                                                   'action_box_url': worklist_definition.actbox_url,
-                                                   'action_box_category': worklist_definition.actbox_category}
+          variable_match[WORKLIST_METADATA_KEY] = {
+                                'name': worklist_definition.actbox_name % fmt_data,
+                                'url': '%s/%s' % (str(portal_url), str(worklist_definition.actbox_url) % fmt_data),
+                                'worklist_id': worklist_id,
+                                'workflow_title': self.getTitle(),
+                                'workflow_id': self.getId(),
+                                'permissions': (),  # Predetermined.
+                                'category': worklist_definition.actbox_category}
           variable_match_dict[worklist_id] = variable_match
 
     if len(variable_match_dict) == 0:
       return None
     return variable_match_dict
+  # ============================================================================
 
   security.declarePrivate('getInfoFor')
   def getInfoFor(self, ob, name, default):
