@@ -58,7 +58,9 @@ from zLOG import LOG, ERROR, DEBUG, WARNING
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.DCWorkflow import Guard_checkWithoutRoles
 from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
 
 class Workflow(XMLObject):
   """
@@ -100,7 +102,7 @@ class Workflow(XMLObject):
 
     # Initialize workflow history
     status_dict = {state_bc_id: document.unrestrictedTraverse(self.getSource()).getId()}
-    variable_list = self.contentValues(portal_type='Variable')
+    variable_list = self.objectValues(portal_type='Variable')
     former_status = self._getOb(status_dict[state_bc_id], None)
     ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
 
@@ -216,7 +218,7 @@ class Workflow(XMLObject):
       '''
       if name == self.getStateBaseCategory():
           return 1
-      vdef = self.contentValues(portal_type='Variable').get(name, None)
+      vdef = self.objectValues(portal_type='Variable').get(name, None)
       if vdef is None:
           return 0
       return 1
@@ -355,31 +357,29 @@ class Workflow(XMLObject):
 
       return [ result[1] for result in res ]
 
-  from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
+
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     """
       Return a dict which has an entry per worklist definition
       (worklist id as key) and which value is a dict composed of
       variable matches.
     """
-    if not self.contentValues(portal_type='Worklist'):
+    if not self.objectValues(portal_type='Worklist'):
       return None
 
+    LOG('%s Worklists found!'%len(self.objectValues(portal_type='Worklist')), WARNING, 'in Workflow.py')
     ### zwj: for DC workflow
     portal = self.getPortalObject()
     def getPortalTypeListForWorkflow(workflow_id):
         workflow_tool = portal.portal_workflow
         result = []
         append = result.append
-        for type_info in workflow_tool._listTypeInfo():
-          portal_type = type_info.id
-          if workflow_id in workflow_tool.getChainFor(portal_type):
-            append(portal_type)
+        for workflow_id in info.object.getTypeInfo().getTypeERP5WorkflowList():
+            append(info.object.getTypeInfo().getId())
+        #LOG ('Supported portal types are: %s'%result, WARNING, ' in Workflow.py')
         return result
 
-    _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
-                              id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
-    portal_type_list = _getPortalTypeListForWorkflow(self.id)
+    portal_type_list = getPortalTypeListForWorkflow(self.id)
     if not portal_type_list:
       return None
     variable_match_dict = {}
@@ -388,33 +388,38 @@ class Workflow(XMLObject):
     workflow_title = self.getTitle()
     for worklist_definition in self.objectValues(portal_type='Worklist'):
       worklist_id = worklist_definition.getId()
-      action_box_name = worklist_definition.actbox_name
+      action_box_name = worklist_definition.getActboxName()
       guard = worklist_definition.getGuard()
       if action_box_name:
         variable_match = {}
-
         for key in worklist_definition.getVarMatchKeys():
           var = worklist_definition.getVarMatch(key)
           if isinstance(var, Expression):
+            LOG('var %s is an Expression'%var,WARNING, 'in Workflow.py 398')
             evaluated_value = var(Expression_createExprContext(StateChangeInfo(portal,
                                   self, kwargs=info.__dict__.copy())))
             if isinstance(evaluated_value, (str, int, long)):
               evaluated_value = [str(evaluated_value)]
+              LOG('evaluated_value %s is a str in long'%var, WARNING, 'in Workflow.py 403')
           else:
             evaluated_value = [x % info for x in var]
           variable_match[key] = evaluated_value
 
         if 'portal_type' in variable_match and len(variable_match['portal_type']):
-          portal_type_intersection = set(variable_match['portal_type'])\
-              .intersection(portal_type_list)
+          #raise NotImplementedError (variable_match['portal_type'])
+          portal_type_intersection = set(variable_match['portal_type']).intersection(portal_type_list)
           # in case the current workflow is not associated with portal_types
           # defined on the worklist, don't display the worklist for this
           # portal_type.
+          LOG ('portal type list are: %s'%portal_type_list, WARNING, ' in Workflow.py')
+          LOG ('matched portal type are: %s'%variable_match['portal_type'], WARNING, ' in Workflow.py')
+          LOG ('len of intersection portal type are: %s'%len(portal_type_intersection), WARNING, ' in Workflow.py')
           variable_match['portal_type'] = list(portal_type_intersection)
         variable_match.setdefault('portal_type', portal_type_list)
 
         if len(variable_match.get('portal_type', [])) == 0:
           continue
+
         is_permitted_worklist = 0
         if guard is None:
           is_permitted_worklist = 1
@@ -422,21 +427,23 @@ class Workflow(XMLObject):
             Guard_checkWithoutRoles(guard, security_manager, self, portal):
           is_permitted_worklist = 1
           variable_match[SECURITY_PARAMETER_ID] = guard.roles
-
+        LOG('Worklist permission = %s'%is_permitted_worklist, WARNING, 'in Workflow.py')
         if is_permitted_worklist:
-          format_data = TemplateDict()
-          format_data._push(info)
+          fmt_data = TemplateDict()
+          fmt_data._push(info)
           variable_match.setdefault(SECURITY_PARAMETER_ID, ())
-          format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
+          fmt_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
                                              k, v in variable_match.iteritems()))
+
           variable_match[WORKLIST_METADATA_KEY] = {
-                                'name': worklist_definition.actbox_name % fmt_data,
-                                'url': '%s/%s' % (str(portal_url), str(worklist_definition.actbox_url) % fmt_data),
-                                'worklist_id': worklist_id,
-                                'workflow_title': self.getTitle(),
-                                'workflow_id': self.getId(),
-                                'permissions': (),  # Predetermined.
-                                'category': worklist_definition.actbox_category}
+                                                'format_data': fmt_data,
+                                                 'worklist_title': action_box_name,
+                                                 'worklist_id': worklist_id,
+                                                 'workflow_title': workflow_title,
+                                                 'workflow_id': workflow_id,
+                                                 'action_box_url': worklist_definition.actbox_url,
+                                                 'action_box_category': worklist_definition.actbox_category}
+
           variable_match_dict[worklist_id] = variable_match
 
     if len(variable_match_dict) == 0:
@@ -499,7 +506,7 @@ class Workflow(XMLObject):
       transition_dict = {}
       out.append('digraph "%s" {' % self.getTitle())
       transition_with_init_state_list = []
-      for state in self.contentValues(portal_type='State'):
+      for state in self.objectValues(portal_type='State'):
         out.append('%s [shape=box,label="%s",' \
                      'style="filled",fillcolor="#ffcc99"];' % \
                      (state.getId(), state.getTitle()))
@@ -517,7 +524,7 @@ class Workflow(XMLObject):
           transition_dict[key] = value
 
       # iterate also on transitions, and add transitions with no initial state
-      for transition in self.contentValues(portal_type='Transition'):
+      for transition in self.objectValues(portal_type='Transition'):
         trans_id = transition.getId()
         if trans_id not in transition_with_init_state_list:
           destination_state = transition.getDestinationValue()
