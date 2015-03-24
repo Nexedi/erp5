@@ -22,21 +22,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>actbox_url_property</string> </value>
+            <value> <string>matched_validation_state_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
-            <key> <string>property_default</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>storage_id</string> </key>
-            <value> <string>actbox_url</string> </value>
+            <value> <string>matched_validation_state</string> </value>
         </item>
       </dictionary>
     </pickle>
