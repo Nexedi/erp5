@@ -26,7 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
+import re
+from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_inner
 from Acquisition import aq_parent
@@ -39,6 +40,8 @@ from Products.DCWorkflow.Guard import Guard
 from Products.DCWorkflow.permissions import ManagePortal
 from Persistence import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+
+tales_re = re.compile(r'(\w+:)?(.*)')
 
 class Worklist(XMLObject):
     """
@@ -53,6 +56,11 @@ class Worklist(XMLObject):
 
     description = ''
     var_matches = None  # Compared with catalog when set.
+    ### zwj: following 3 variables take place var_matches for this moment
+    matched_portal_type = ''
+    matched_validation_state = ''
+    matched_simulation_state = ''
+
     actbox_name = ''
     actbox_url = ''
     actbox_icon = ''
@@ -73,16 +81,34 @@ class Worklist(XMLObject):
     )
 
     def getGuard(self):
-        if self.guard is not None:
-            return self.guard
-        else:
-            return Guard().__of__(self)  # Create a temporary guard.
+        if self.guard is None:
+            self.generateGuard()
+        return self.guard ### only generate gurad when self is a User Action
+      #return Guard().__of__(self)  # Create a temporary guard.
 
     def getGuardSummary(self):
         res = None
         if self.guard is not None:
             res = self.guard.getSummary()
         return res
+
+    def generateGuard(self):
+      if self.getRoleList() is not None or self.getGroupList() is not None:
+        if self.guard == None:
+          self.guard = Guard(permissions=self.getPermissionList(),
+                        roles=self.getRoleList(),
+                        groups=self.getGroupList(),
+                        expr=self.getExpression())
+
+        if self.guard.roles != self.getRoleList():
+          self.guard.roles = self.getRoleList()
+        elif self.guard.permissions != self.getPermissionList():
+          self.guard.permissions = self.getPermissionList()
+        elif self.guard.groups != self.getGroupList():
+          self.guard.groups = self.getGroupList()
+        elif self.guard.expr != self.getExpression():
+          self.guard.expr = self.getExpression()
+
 
     def getAvailableCatalogVars(self):
         res = []
@@ -94,22 +120,45 @@ class Worklist(XMLObject):
         res.sort()
         return res
 
+    ### zwj: this function has been modified from original one
     def getVarMatchKeys(self):
-        if self.var_matches:
-            return self.var_matches.keys()
-        else:
-            return []
+        key_list = []
+        if self.getMatchedSimulationState() is not None:
+          key_list.append('portal_type')
+          key_list.append('simulation_state')
+        if self.getMatchedValidationState() is not None:
+          key_list.append('portal_type')
+          key_list.append('validation_state')
+        if self.getMatchedSimulationState() is not None and self.getMatchedValidationState() is not None:
+          raise NotImplementedError(' Please only fill the field of the state variable defined in this workflow.')
+        return key_list
 
+    ### zwj: this function has been modified from original one
     def getVarMatch(self, id):
-        if self.var_matches:
-            matches = self.var_matches.get(id, ())
-            if not isinstance(matches, (tuple, Expression)):
-                # Old version, convert it.
-                matches = (matches,)
-                self.var_matches[id] = matches
-            return matches
+        self.var_matches = {}
+        matches = ''
+        if id == 'portal_type':
+          v = ''.join(self.getMatchedPortalTypeList())
+          LOG(' v is %s'%v, WARNING, 'in Worklist.py')
+          if tales_re.match(v).group(1):
+            matches = Expression(v)
+          else:
+            v = [ var.strip() for var in self.getMatchedPortalTypeList() ]
+            matches = tuple(v)
+        elif id == 'validation_state':
+          matches = tuple(self.getMatchedValidationState())
+        elif id == 'simulation_stae':
+          matches = tuple(Expression(self.getMatchedSimulationState()))
         else:
-            return ()
+          raise NotImplementedError ("Cataloged variable matching error in Worklist.py")
+        if matches is not None:
+          if not isinstance(matches, (tuple, Expression)):
+            # Old version, convert it.
+            matches = (matches,)
+            self.var_matches[id] = str(matches)
+          return matches
+        else:
+          return ()
 
     def getVarMatchText(self, id):
         values = self.getVarMatch(id)
