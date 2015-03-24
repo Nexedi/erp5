@@ -89,10 +89,8 @@ class Variable(XMLObject):
 
     def getInfoGuard(self):
         if self.info_guard is not None:
-            return self.info_guard
-        else:
             self.generateGuard()
-            return self.guard
+        return self.info_guard
 
     def getInfoGuardSummary(self):
         res = None
