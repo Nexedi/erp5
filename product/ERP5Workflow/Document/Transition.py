@@ -86,11 +86,9 @@ class Transition(XMLObject):
     return res
 
   def getGuard(self):
-    if self.guard is not None:
-      return self.guard
-    else:
+    if self.guard is None:
       self.generateGuard()
-      return self.guard ### only generate gurad when self is a User Action
+    return self.guard ### only generate gurad when self is a User Action
       #return Guard().__of__(self)  # Create a temporary guard.
 
   def getVarExprText(self, id):
@@ -265,7 +263,7 @@ class Transition(XMLObject):
     if form_kw is not None:
       object.REQUEST.other.update(form_kw)
     # zwj: The transition variable is replaced by a base category; thus this part is not in use.
-    for variable in self.contentValues(portal_type='Transition Variable'):
+    for variable in self.objectValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
     # Generate Workflow History List
