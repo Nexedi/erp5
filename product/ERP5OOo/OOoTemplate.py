@@ -421,7 +421,7 @@ class OOoTemplate(ZopePageTemplate):
       return replacement
 
     xml_doc = etree.XML(text)
-    for office_include in xml_doc.xpath('//*[name() = "office:include"]'):
+    for office_include in xml_doc.xpath('//office:include', namespaces=xml_doc.nsmap):
       marshal_list = office_include.xpath('./marshal')
       if marshal_list:
         from xml.marshal.generic import loads
