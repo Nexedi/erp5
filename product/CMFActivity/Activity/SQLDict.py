@@ -191,29 +191,6 @@ class SQLDict(SQLBase):
       return None, original_uid, [uid]
     return load
 
-  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
-    hasMessage = getattr(activity_tool, 'SQLDict_hasMessage', None)
-    if hasMessage is not None:
-      if object is None:
-        my_object_path = None
-      else:
-        my_object_path = '/'.join(object.getPhysicalPath())
-      result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid, active_process_uid=active_process_uid)
-      if len(result) > 0:
-        return result[0].message_count > 0
-    return 0
-
-  def dumpMessageList(self, activity_tool):
-    # Dump all messages in the table.
-    message_list = []
-    dumpMessageList = getattr(activity_tool, 'SQLDict_dumpMessageList', None)
-    if dumpMessageList is not None:
-      result = dumpMessageList()
-      for line in result:
-        m = Message.load(line.message, uid=line.uid, line=line)
-        message_list.append(m)
-    return message_list
-
   def distribute(self, activity_tool, node_count):
     offset = 0
     assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
@@ -288,73 +265,5 @@ class SQLDict(SQLBase):
             if validated_count >= MAX_VALIDATED_LIMIT:
               return
         offset += READ_MESSAGE_LIMIT
-
-  # Validation private methods
-  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
-                serialization_tag=None):
-    if isinstance(method_id, str):
-      method_id = [method_id]
-    if isinstance(path, str):
-      path = [path]
-    if isinstance(tag, str):
-      tag = [tag]
-
-    if method_id or message_uid or path or tag or serialization_tag:
-      validateMessageList = activity_tool.SQLDict_validateMessageList
-      result = validateMessageList(method_id=method_id,
-                                   message_uid=message_uid,
-                                   path=path,
-                                   tag=tag,
-                                   count=False,
-                                   serialization_tag=serialization_tag)
-      message_list = []
-      for line in result:
-        m = Message.load(line.message,
-                             line=line,
-                             uid=line.uid,
-                             date=line.date,
-                             processing_node=line.processing_node)
-        if not hasattr(m, 'order_validation_text'): # BBB
-          m.order_validation_text = line.order_validation_text
-        message_list.append(m)
-      return message_list
-    else:
-      return []
-
-  def countMessage(self, activity_tool, tag=None, path=None,
-                   method_id=None, message_uid=None, **kw):
-    """Return the number of messages which match the given parameters.
-    """
-    if isinstance(tag, str):
-      tag = [tag]
-    if isinstance(path, str):
-      path = [path]
-    if isinstance(method_id, str):
-      method_id = [method_id]
-    result = activity_tool.SQLDict_validateMessageList(method_id=method_id,
-                                                       path=path,
-                                                       message_uid=message_uid,
-                                                       tag=tag,
-                                                       serialization_tag=None,
-                                                       count=1)
-    return result[0].uid_count
-
-  def countMessageWithTag(self, activity_tool, value):
-    """Return the number of messages which match the given tag.
-    """
-    return self.countMessage(activity_tool, tag=value)
-
-  # Required for tests (time shift)
-  def timeShift(self, activity_tool, delay, processing_node=None, retry=None):
-    """
-      To simulate timeShift, we simply substract delay from
-      all dates in SQLDict message table
-    """
-    activity_tool.SQLDict_timeShift(delay=delay, processing_node=processing_node,retry=retry)
-
-  def getPriority(self, activity_tool):
-    method = activity_tool.SQLDict_getPriority
-    default =  SQLBase.getPriority(self, activity_tool)
-    return self._getPriority(activity_tool, method, default)
 
 registerActivity(SQLDict)

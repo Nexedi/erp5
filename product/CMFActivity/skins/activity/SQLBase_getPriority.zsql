@@ -7,10 +7,10 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>
+<params>table
 </params>
 SELECT `priority` FROM
-  message
+  <dtml-var table>
 WHERE
   processing_node = 0
   AND date <= UTC_TIMESTAMP()

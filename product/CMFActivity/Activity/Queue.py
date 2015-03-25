@@ -227,7 +227,9 @@ class Queue(object):
     return 0
 
   def countMessageWithTag(self, activity_tool,value):
-    return 0
+    """Return the number of messages which match the given tag.
+    """
+    return self.countMessage(activity_tool, tag=value)
 
   # Transaction Management
   def prepareQueueMessageList(self, activity_tool, message_list):

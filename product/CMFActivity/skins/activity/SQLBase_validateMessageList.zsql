@@ -7,7 +7,8 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>method_id
+<params>table
+method_id
 message_uid
 path
 tag
@@ -21,7 +22,7 @@ SELECT
     *
 </dtml-if>
 FROM
-    message_queue
+    <dtml-var table>
 WHERE
     processing_node > -10
 <dtml-if expr="method_id is not None">
@@ -31,7 +32,7 @@ WHERE
 </dtml-if>
 <dtml-if expr="message_uid is not None">AND uid = <dtml-sqlvar message_uid type="int"> </dtml-if>
 <dtml-if expr="path is not None">
-    AND path IN ( 
+    AND path IN (
 <dtml-in path><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>

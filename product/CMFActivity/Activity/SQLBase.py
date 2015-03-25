@@ -130,12 +130,50 @@ class SQLBase(Queue):
                              processing=line.processing)
       for line in result]
 
-  def _getPriority(self, activity_tool, method, default):
-    result = method()
-    if not result:
-      return default
-    assert len(result) == 1, len(result)
-    return result[0]['priority']
+  def countMessage(self, activity_tool, tag=None, path=None,
+                   method_id=None, message_uid=None, **kw):
+    """Return the number of messages which match the given parameters.
+    """
+    if isinstance(tag, str):
+      tag = [tag]
+    if isinstance(path, str):
+      path = [path]
+    if isinstance(method_id, str):
+      method_id = [method_id]
+    result = activity_tool.SQLBase_validateMessageList(table=self.sql_table,
+                                                       method_id=method_id,
+                                                       path=path,
+                                                       message_uid=message_uid,
+                                                       tag=tag,
+                                                       serialization_tag=None,
+                                                       count=1)
+    return result[0].uid_count
+
+  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None,
+                  active_process_uid=None):
+    hasMessage = getattr(activity_tool, 'SQLBase_hasMessage', None)
+    if hasMessage is not None:
+      if object is None:
+        path = None
+      else:
+        path = '/'.join(object.getPhysicalPath())
+      result = hasMessage(table=self.sql_table, path=path, method_id=method_id,
+        only_valid=only_valid, active_process_uid=active_process_uid)
+      if result:
+        return result[0].message_count > 0
+    return 0
+
+  def dumpMessageList(self, activity_tool):
+    # Dump all messages in the table.
+    return [Message.load(line.message, uid=line.uid, line=line)
+      for line in activity_tool.SQLBase_dumpMessageList(table=self.sql_table)]
+
+  def getPriority(self, activity_tool):
+    result = activity_tool.SQLBase_getPriority(table=self.sql_table)
+    if result:
+      assert len(result) == 1, len(result)
+      return result[0]['priority']
+    return Queue.getPriority(self, activity_tool)
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
@@ -145,6 +183,36 @@ class SQLBase(Queue):
         # Note that this code assumes that a database adapter translates
         # a lock error into a conflict error.
         LOG('SQLBase', INFO, 'Got a lock error, retrying...')
+
+  # Validation private methods
+  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
+                serialization_tag=None):
+    if isinstance(method_id, str):
+      method_id = [method_id]
+    if isinstance(path, str):
+      path = [path]
+    if isinstance(tag, str):
+      tag = [tag]
+
+    if method_id or message_uid or path or tag or serialization_tag:
+      result = activity_tool.SQLBase_validateMessageList(table=self.sql_table,
+          method_id=method_id,
+          message_uid=message_uid,
+          path=path,
+          tag=tag,
+          count=False,
+          serialization_tag=serialization_tag)
+      message_list = []
+      for line in result:
+        m = Message.load(line.message,
+                         line=line,
+                         uid=line.uid,
+                         date=line.date,
+                         processing_node=line.processing_node)
+        if not hasattr(m, 'order_validation_text'): # BBB
+          m.order_validation_text = self.getOrderValidationText(m)
+        message_list.append(m)
+      return message_list
 
   def _validate_after_method_id(self, activity_tool, message, value):
     return self._validate(activity_tool, method_id=value)
@@ -565,3 +633,12 @@ class SQLBase(Queue):
         invoke(Message.load(line.message, uid=line.uid, line=line))
     if uid_list:
       activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
+
+  # Required for tests
+  def timeShift(self, activity_tool, delay, processing_node=None):
+    """
+      To simulate time shift, we simply substract delay from
+      all dates in message(_queue) table
+    """
+    activity_tool.SQLBase_timeShift(table=self.sql_table, delay=delay,
+                                    processing_node=processing_node)

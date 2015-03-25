@@ -7,8 +7,9 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
+<params>table
+</params>
 SELECT * FROM
-  message_queue
+  <dtml-var table>
 ORDER BY
   uid

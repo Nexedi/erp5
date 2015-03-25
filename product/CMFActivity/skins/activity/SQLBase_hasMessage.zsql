@@ -7,12 +7,13 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path
+<params>table
+path
 method_id
 active_process_uid
 only_valid</params>
 SELECT count(path) as message_count FROM
-  message
+  <dtml-var table>
 WHERE 1 = 1
 <dtml-if expr="path is not None">AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if expr="method_id is not None">AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
