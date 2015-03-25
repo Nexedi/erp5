@@ -16,6 +16,33 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     """
     raise NotImplemented
 
+  def getWorklistDocumentCountFromActionName(self, action_name):
+    self.assertEqual(action_name[-1], ')')
+    left_parenthesis_offset = action_name.rfind('(')
+    self.assertNotEquals(left_parenthesis_offset, -1)
+    return int(action_name[left_parenthesis_offset + 1:-1])
+
+  def checkWorklist(self, result, name, count, url_parameter_dict=None):
+    entry_list = [x for x in result if x['name'].startswith(name)]
+    #raise NotImplementedError (result)
+    self.assertEqual(len(entry_list), count and 1)
+    if count:
+      self.assertEqual(count,
+        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']))
+    if not entry_list:
+      return
+    url = entry_list[0].get('url')
+    if url_parameter_dict:
+      self.assertTrue(url, 'Can not check url parameters without url')
+      url = '%s%s' % (self.portal.getId(), url[len(self.portal.absolute_url()):])
+      # Touch URL to save worklist parameters in listbox selection
+      self.publish(url, 'manager:') # XXX which user ?
+      selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(
+                                                    self.module_selection_name)
+      for parameter, value in url_parameter_dict.iteritems():
+        self.assertTrue(parameter in selection_parameter_dict)
+        self.assertEqual(value, selection_parameter_dict[parameter])
+
   def resetComponentTool(self):
     # Force reset of portal_components to regenerate accessors
     # Since it is already handled by interactions, we only need to commit
@@ -122,10 +149,20 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkLine({'state': 'validated'}, 2)
   
 
-  def _testSimpleWorklist(self):
-    pass
-  def _testWorklistWithAnAssignee(self):
-    pass
+  def test_10_testSimpleWorklist(self):
+    """
+    check the counter from worklist action_name.
+    """
+    self.portal = self.getPortal()
+    new_object = self.getTestObject()
+    workflow_tool = self.portal.portal_workflow
+
+    result = workflow_tool.listActions(object=new_object)
+
+    self.logout()
+    self.login('test_user_workflow')
+    self.checkWorklist(result, 'Document', 1)
+
 
   def beforeTearDown(self):
     self.portal = self.getPortal()
@@ -156,7 +193,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
-    self.login() # as Manager
+    self.login()
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
