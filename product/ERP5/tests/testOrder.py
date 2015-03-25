@@ -566,19 +566,6 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     vrcil = order_line.getVariationRangeCategoryItemList()
     self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
 
-  def stepCheckOrderLineVCIL(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if getVariationCategoryItemList returns the good result.
-      Does not test display...
-      Item are left display.
-    """
-    order_line = sequence.get('order_line')
-    vcl = order_line.getVariationCategoryList()
-    vcil = order_line.getVariationCategoryItemList()
-    LOG('stepCheckOrderLineVCIL', 0, 'vcl: %s\n' % str(vcl))
-    LOG('stepCheckOrderLineVCIL', 0, 'vcil: %s\n' % str(vcil))
-    self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
-
   def stepSetOrderLineDefaultValues(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
@@ -1356,34 +1343,79 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_03_OrderLine_getVariationCategoryList(self, quiet=0,
-                                                 run=run_all_test):
-    """
-      Test order line getVariationCategoryList.
-      Not yet tested....
-    """
-    if not run: return
+  def test_OrderLine_getVariationCategoryList(self):
+    order_module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
+    order = order_module.newContent(portal_type=self.order_portal_type,
+                                    specialise=self.business_process)
 
-  def test_04_OrderLine_getVariationCategoryItemList(self, quiet=0,
-                                                     run=run_all_test):
-    """
-      Test order line getVariationCategoryItemList.
-    """
-    if not run: return
-    sequence_list = SequenceList()
-    # Test when resource has variation
-    sequence_string = 'stepCreateOrder \
-                       stepCreateOrderLine \
-                       stepCheckOrderLineVCIL \
-                       stepCreateVariatedResource \
-                       stepTic \
-                       stepSetOrderLineResource \
-                       stepSetOrderLineHalfVCL \
-                       stepTic \
-                       stepCheckOrderLineVCIL \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+    resource_module = self.portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      industrial_phase_list=["phase1", "phase2"],
+      size_list=['Baby', 'Woman']
+    )
+    order_line = order.newContent(
+        portal_type=self.order_line_portal_type,
+        resource_value=resource)
+
+    order_line.setVariationCategoryList(['size/Baby'])
+    self.assertEqual(['size/Baby'], order_line.getVariationCategoryList())
+    self.assertEqual(sorted(['size']),
+        sorted(order_line.getVariationBaseCategoryList()))
+
+    order_line.setVariationCategoryList(['size/Baby', 'industrial_phase/phase1'])
+    self.assertEqual(sorted(['size/Baby', 'industrial_phase/phase1']),
+        sorted(order_line.getVariationCategoryList()))
+    self.assertEqual(sorted(['industrial_phase', 'size']),
+        sorted(order_line.getVariationBaseCategoryList()))
+
+    self.assertEqual(['size/Baby'],
+        order_line.getVariationCategoryList(base_category_list=('size',)))
+    self.assertEqual([],
+        order_line.getVariationCategoryList(base_category_list=('other',)))
+
+
+  def test_OrderLine_getVariationCategoryItemList(self):
+    order_module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
+    order = order_module.newContent(portal_type=self.order_portal_type,
+                                    specialise=self.business_process)
+
+    resource_module = self.portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      industrial_phase_list=["phase1", "phase2"],
+      size_list=['Baby', 'Woman']
+    )
+    self.assertEqual(sorted([
+        ['Industrial Phase/phase1', 'industrial_phase/phase1'],
+        ['Industrial Phase/phase2', 'industrial_phase/phase2'],
+        ['Size/Baby', 'size/Baby'],
+        ['Size/Woman', 'size/Woman'], ]),
+        sorted(resource.getVariationCategoryItemList()))
+
+    order_line = order.newContent(
+        portal_type=self.order_line_portal_type,
+        resource_value=resource)
+
+    order_line.setVariationCategoryList(['size/Baby'])
+    self.assertEqual(
+        [['Baby', 'size/Baby']],
+        order_line.getVariationCategoryItemList())
+
+    self.assertEqual(sorted(['size']),
+        sorted(order_line.getVariationBaseCategoryList()))
+
+    order_line.setVariationCategoryList(['size/Baby', 'industrial_phase/phase1'])
+    self.assertEqual(sorted([
+        ['Baby', 'size/Baby'],
+        ['phase1', 'industrial_phase/phase1'], ]),
+        sorted(order_line.getVariationCategoryItemList()))
+    self.assertEqual(sorted(['size', 'industrial_phase']),
+        sorted(order_line.getVariationBaseCategoryList()))
+    self.assertEqual([['Baby', 'size/Baby']],
+        order_line.getVariationCategoryItemList(base_category_list=('size',)))
+    self.assertEqual([],
+        order_line.getVariationCategoryItemList(base_category_list=('other',)))
 
   def test_05_OrderLine_Matrix(self, quiet=0, run=run_all_test):
     """
