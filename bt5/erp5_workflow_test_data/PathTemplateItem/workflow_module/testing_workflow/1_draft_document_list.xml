@@ -78,12 +78,7 @@ erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&l
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>validation_state</string> </key>
-                    <value> <string>draft</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

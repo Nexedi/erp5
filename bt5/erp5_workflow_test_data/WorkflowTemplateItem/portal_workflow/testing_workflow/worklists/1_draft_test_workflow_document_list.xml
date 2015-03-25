@@ -11,20 +11,24 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase Supplies to Validate (%(count)s)</string> </value>
+            <value> <string>Workflow Test Document to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_supply_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Purchase Supplies to Validate</string> </value>
+            <value> <string>Persons to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,7 +38,7 @@ purchase_supply_module/view?validation_state=draft&local_roles:list=Assignee&loc
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>9_draft_purchase_supply_list</string> </value>
+            <value> <string>1_draft_test_workflow_document_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -77,7 +81,7 @@ purchase_supply_module/view?validation_state=draft&local_roles:list=Assignee&loc
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Purchase Supply</string>
+                        <string>ERP5Workflow Test Document</string>
                       </tuple>
                     </value>
                 </item>
