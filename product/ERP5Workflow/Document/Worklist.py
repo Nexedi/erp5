@@ -146,9 +146,9 @@ class Worklist(XMLObject):
             v = [ var.strip() for var in self.getMatchedPortalTypeList() ]
             matches = tuple(v)
         elif id == 'validation_state':
-          matches = tuple(self.getMatchedValidationState())
+          matches = tuple([self.getMatchedValidationStateList()])
         elif id == 'simulation_stae':
-          matches = tuple(Expression(self.getMatchedSimulationState()))
+          matches = tuple([self.getMatchedSimulationStateList()])
         else:
           raise NotImplementedError ("Cataloged variable matching error in Worklist.py")
         if matches is not None:
