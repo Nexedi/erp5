@@ -796,7 +796,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           if tmp_object_list:
             for x in object_list:
               if x[0] in tmp_object_list:
-                del object_list[3] # no result means failed
+                del x[3] # no result means failed
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
