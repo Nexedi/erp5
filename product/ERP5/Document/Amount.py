@@ -127,6 +127,8 @@ class Amount(Base, VariatedMixin):
       kw['display_id'] = 'title'
       for base_category, (object_list,
                           category_list) in variation_dict.iteritems():
+        if base_category_list and base_category not in base_category_list:
+          continue
         variation_category_item_list += render_category_list(category_list)
         variation_category_item_list += Renderer(base_category=base_category,
                                                  **kw).render(object_list)
