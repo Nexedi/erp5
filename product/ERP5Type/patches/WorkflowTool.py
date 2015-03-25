@@ -477,15 +477,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           a = wf.listObjectActions(info)
           if a is not None:
             actions.extend(a)
-          """
-          a = wf.listGlobalActions(info)
-          if a is not None:
-              actions.extend(a)
-          """
           a = wf.getWorklistVariableMatchDict(info) ### zwj: replace listGlobalActions(info)
-          if a is not None:
-              actions.extend(a)
-          ### zwj: ???
           if a is not None:
             worklist_dict[wf_id] = a
   ### ==========================================================================
