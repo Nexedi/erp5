@@ -43,6 +43,9 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
         self.assertTrue(parameter in selection_parameter_dict)
         self.assertEqual(value, selection_parameter_dict[parameter])
 
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
+
   def resetComponentTool(self):
     # Force reset of portal_components to regenerate accessors
     # Since it is already handled by interactions, we only need to commit
@@ -153,14 +156,16 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     """
     check the counter from worklist action_name.
     """
+    self.login('test_user_workflow')
     self.portal = self.getPortal()
     new_object = self.getTestObject()
     workflow_tool = self.portal.portal_workflow
+    self.clearCache()
+
+    new_object.reindexObject()
+    self.clearCache()
 
     result = workflow_tool.listActions(object=new_object)
-
-    self.logout()
-    self.login('test_user_workflow')
     self.checkWorklist(result, 'Document', 1)
 
 
@@ -193,7 +198,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
-    self.login()
+    self.login() # as Manager
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
