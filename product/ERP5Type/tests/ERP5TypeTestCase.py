@@ -1027,7 +1027,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               portal.portal_catalog.manage_hotReindexAll()
 
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
-            self.commit()
             self.tic(not quiet)
 
             # Log out

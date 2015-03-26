@@ -91,7 +91,6 @@ class TestCopySupport(ERP5TypeTestCase):
     self.tic()
     person.recursiveReindexObject()
     person.default_address.setId('old_address')
-    self.commit()
     self.tic()
 
   def test_03_unindexObjectGrouping(self):
