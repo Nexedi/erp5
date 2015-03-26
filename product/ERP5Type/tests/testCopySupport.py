@@ -89,9 +89,13 @@ class TestCopySupport(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   address_city='Lille')
     self.tic()
+    getPath = self.portal.portal_catalog.getPath
+    address = person.default_address
+    self.assertEqual(address.getPath(), getPath(address.getUid()))
     person.recursiveReindexObject()
-    person.default_address.setId('old_address')
+    address.setId('old_address')
     self.tic()
+    self.assertEqual(address.getPath(), getPath(address.getUid()))
 
   def test_03_unindexObjectGrouping(self):
     person = self.portal.person_module.newContent(portal_type='Person',
