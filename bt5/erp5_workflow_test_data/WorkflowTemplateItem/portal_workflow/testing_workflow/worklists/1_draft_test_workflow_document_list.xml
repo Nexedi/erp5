@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Workflow Test Document to Validate (%(count)s)</string> </value>
+            <value> <string>Document to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
