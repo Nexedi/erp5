@@ -923,14 +923,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       objects on which the uid was restored: previous object was deleted,
       hence the "deleted" path, and new object does have the same uid.
     """
-    original_reindex_parameters = context.getPlacelessDefaultReindexParameters()
-    if original_reindex_parameters is None:
-      original_reindex_parameters = {}
-    activate_kw = original_reindex_parameters.get('activate_kw', {}).copy()
-    activate_kw['after_method_id'] = 'unindexObject'
-    context.setPlacelessDefaultReindexParameters(activate_kw=activate_kw, \
-                                                 **original_reindex_parameters)
-    return original_reindex_parameters
+    kw = context.getPlacelessDefaultReindexParameters()
+    if kw is None:
+      kw = {}
+    context.setPlacelessDefaultReindexParameters(**dict(kw,
+      activate_kw=dict(kw.get('activate_kw', ()),
+                       after_method_id='unindexObject')))
+    return kw
 
   def _getObjectKeyList(self):
     # sort to add objects before their subobjects
