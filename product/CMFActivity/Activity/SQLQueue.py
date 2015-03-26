@@ -26,14 +26,12 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import Message, registerActivity
+from Products.CMFActivity.ActivityTool import Message
 from ZODB.POSException import ConflictError
 from SQLBase import SQLBase, sort_message_key
 from zExceptions import ExceptionFormatter
 
 import transaction
-
-from zLOG import LOG, WARNING, ERROR, INFO, PANIC, TRACE
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -135,5 +133,3 @@ class SQLQueue(SQLBase):
             if validated_count >= MAX_VALIDATED_LIMIT:
               return
         offset += READ_MESSAGE_LIMIT
-
-registerActivity(SQLQueue)

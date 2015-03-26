@@ -1077,7 +1077,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             if m.processing_node < -1:
               self.abort()
               count = portal_activities.countMessage()
-              portal_activities.manageClearActivities(keep=False)
+              portal_activities.manageClearActivities()
               self.commit()
               ZopeTestCase._print(' (dropped %d left-over activity messages) '
                                   % count)

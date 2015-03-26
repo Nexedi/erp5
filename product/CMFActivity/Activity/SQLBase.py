@@ -28,6 +28,8 @@
 
 import sys
 import transaction
+from _mysql_exceptions import ProgrammingError
+from MySQLdb.constants.ER import NO_SUCH_TABLE
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
@@ -90,6 +92,33 @@ class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
+  def initialize(self, activity_tool, clear):
+    folder = activity_tool.getPortalObject().portal_skins.activity
+    try:
+      createMessageTable = getattr(folder,
+        self.__class__.__name__ + '_createMessageTable')
+    except AttributeError:
+      return
+    if clear:
+      folder.SQLBase_dropMessageTable(table=self.sql_table)
+    else:
+      column_list = []
+      try:
+        src = createMessageTable._upgradeSchema(added_list=column_list,
+                                                modified_list=column_list)
+      except ProgrammingError, e:
+        if e[0] != NO_SUCH_TABLE:
+          raise
+      else:
+        if column_list and self._getMessageList(activity_tool, count=1):
+          LOG('CMFActivity', ERROR, "Non-empty %r table upgraded."
+              " The following added columns could not be initialized: %s\n%s"
+              % (self.sql_table, ", ".join(column_list), src))
+        elif src:
+          LOG('CMFActivity', INFO, "%r table upgraded\n%s"
+              % (self.sql_table, src))
+        return
+    createMessageTable()
 
   def getNow(self, context):
     """
@@ -162,11 +191,6 @@ class SQLBase(Queue):
       if result:
         return result[0].message_count > 0
     return 0
-
-  def dumpMessageList(self, activity_tool):
-    # Dump all messages in the table.
-    return [Message.load(line.message, uid=line.uid, line=line)
-      for line in activity_tool.SQLBase_dumpMessageList(table=self.sql_table)]
 
   def getPriority(self, activity_tool):
     result = activity_tool.SQLBase_getPriority(table=self.sql_table)

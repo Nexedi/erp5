@@ -345,6 +345,14 @@ def synchronizeDynamicModules(context, force=False):
             continue
           tool._bootstrap()
           tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
+        # TODO: Create portal_activities here, and even before portal_types:
+        #       - all code in ActiveObject could assume that it always exists
+        #       - currently, some objects created very early are not indexed
+        #         and this would fix this issue
+        try:
+          portal.portal_activities.initialize()
+        except AttributeError:
+          pass # no Activity Tool yet
 
         if migrate:
           portal.migrateToPortalTypeClass()
@@ -358,8 +366,8 @@ def synchronizeDynamicModules(context, force=False):
       except:
         # Required because the exception may be silently dropped by the caller.
         transaction.doom()
-        LOG('ERP5Site', PANIC, "Automatic migration of type and"
-            " property sheet tool failed", error=sys.exc_info())
+        LOG('ERP5Site', PANIC, "Automatic migration of core tools failed",
+            error=sys.exc_info())
         raise
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")

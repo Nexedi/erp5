@@ -7,5 +7,5 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
-DROP TABLE IF EXISTS message_queue
+<params>table</params>
+DROP TABLE IF EXISTS <dtml-var table>

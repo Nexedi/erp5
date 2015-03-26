@@ -275,7 +275,8 @@ def _getTableSchema(query, name,
 _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+', re.I).search
 _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
 
-def DA_upgradeSchema(self, connection_id=None, src__=0):
+def DA_upgradeSchema(self, connection_id=None, added_list=None,
+                           modified_list=None, src__=0):
     query = self.getPortalObject()[connection_id or self.connection_id]().query
     src = self(src__=1)
     m = _create_search(src)
@@ -313,15 +314,22 @@ def DA_upgradeSchema(self, connection_id=None, src__=0):
       else:
           q("DROP KEY " + _key_search(key).group(1))
 
+    added = str if added_list is None else added_list.append
+    modified = str if modified_list is None else modified_list.append
     pos = 0
     where = "FIRST"
     for column, spec in new_list:
         try:
-            if  old_dict[column] != (pos, spec):
-                q("MODIFY COLUMN %s %s %s" % (column, spec, where))
-            pos += 1
+            old = old_dict[column]
         except KeyError:
             q("ADD COLUMN %s %s %s" % (column, spec, where))
+            added(column)
+        else:
+            if old != (pos, spec):
+                q("MODIFY COLUMN %s %s %s" % (column, spec, where))
+                if old[1] != spec:
+                    modified(column)
+            pos += 1
         where = "AFTER " + column
 
     for key in new_set - old_set:

@@ -2176,7 +2176,7 @@ class ERP5Generator(PortalGenerator):
       assert not p.hasObject('portal_activities')
       addERP5Tool(p, 'portal_activities', 'Activity Tool')
       # Initialize Activities
-      p.portal_activities.manageClearActivities(keep=0)
+      p.portal_activities.manageClearActivities()
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)

@@ -83,7 +83,6 @@ from traceback import format_list, extract_stack
 # to prevent from storing a state in the ZODB (and allows to restart...)
 active_threads = 0
 max_active_threads = 1 # 2 will cause more bug to appear (he he)
-is_initialized = False
 tic_lock = threading.Lock() # A RAM based lock to prevent too many concurrent tic() calls
 timerservice_lock = threading.Lock() # A RAM based lock to prevent TimerService spamming when busy
 is_running_lock = threading.Lock()
@@ -91,9 +90,6 @@ currentNode = None
 _server_address = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
-
-# Activity Registration
-activity_dict = {}
 
 # Logging channel definitions
 import logging
@@ -135,13 +131,6 @@ def activity_timing_method(method, args, kw):
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
 global_activity_buffer = defaultdict(dict)
 from thread import get_ident
-
-def registerActivity(activity):
-  # Must be rewritten to register
-  # class and create instance for each activity
-  #LOG('Init Activity', 0, str(activity.__name__))
-  activity_instance = activity()
-  activity_dict[activity.__name__] = activity_instance
 
 MESSAGE_NOT_EXECUTED = 0
 MESSAGE_EXECUTED = 1
@@ -439,6 +428,14 @@ Named Parameters: %r
   def getExecutionState(self):
     return self.is_executed
 
+
+# Activity Registration
+def activity_dict():
+  from Activity import SQLDict, SQLQueue
+  return {k: getattr(v, k)() for k, v in locals().iteritems()}
+activity_dict = activity_dict()
+
+
 class Method(object):
   __slots__ = (
     '_portal_activities',
@@ -624,30 +621,24 @@ class ActivityTool (Folder, UniqueObject):
                                                 sql_connection.connection_string)
         parent._setObject(connection_id, new_sql_connection)
 
+    security.declarePrivate('initialize')
     def initialize(self):
-      global is_initialized
-      from Activity import SQLQueue, SQLDict
-      # Initialize each queue
-      for activity in activity_dict.itervalues():
-        activity.initialize(self)
       self.maybeMigrateConnectionClass()
-      is_initialized = True
+      for activity in activity_dict.itervalues():
+        activity.initialize(self, clear=False)
 
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
     def isSubscribed(self):
-        """
-        return True, if we are subscribed to TimerService.
-        Otherwise return False.
-        """
-        service = getTimerService(self)
-        if not service:
-            LOG('ActivityTool', INFO, 'TimerService not available')
-            return False
-
+      """
+      return True, if we are subscribed to TimerService.
+      Otherwise return False.
+      """
+      service = getTimerService(self)
+      if service:
         path = '/'.join(self.getPhysicalPath())
-        if path in service.lisSubscriptions():
-            return True
-        return False
+        return path in service.lisSubscriptions()
+      LOG('ActivityTool', INFO, 'TimerService not available')
+      return False
 
     security.declareProtected(Permissions.manage_properties, 'subscribe')
     def subscribe(self, REQUEST=None, RESPONSE=None):
@@ -1027,10 +1018,6 @@ class ActivityTool (Folder, UniqueObject):
       """
         Distribute load
       """
-      # Initialize if needed
-      if not is_initialized:
-        self.initialize()
-
       # Call distribute on each queue
       for activity in activity_dict.itervalues():
         activity.distribute(aq_inner(self), node_count)
@@ -1053,10 +1040,6 @@ class ActivityTool (Folder, UniqueObject):
         tic_lock.release()
         raise RuntimeError, 'Too many threads'
       tic_lock.release()
-
-      # Initialize if needed
-      if not is_initialized:
-        self.initialize()
 
       inner_self = aq_inner(self)
 
@@ -1135,8 +1118,6 @@ class ActivityTool (Folder, UniqueObject):
         return buffer
 
     def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
-      if not is_initialized:
-        self.initialize()
       if active_process is None:
         active_process_uid = None
       elif isinstance(active_process, str):
@@ -1177,8 +1158,6 @@ class ActivityTool (Folder, UniqueObject):
       return activity.unregisterMessage(activity_buffer, aq_inner(self), message)
 
     def flush(self, obj, invoke=0, **kw):
-      if not is_initialized:
-        self.initialize()
       self.getActivityBuffer()
       if isinstance(obj, tuple):
         object_path = obj
@@ -1366,8 +1345,6 @@ class ActivityTool (Folder, UniqueObject):
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
-      if not is_initialized:
-        self.initialize()
       self.getActivityBuffer()
       activity_dict[activity].queueMessage(aq_inner(self),
         Message(path, active_process, activity_kw, method_id, args, kw,
@@ -1427,68 +1404,16 @@ class ActivityTool (Folder, UniqueObject):
 
     security.declareProtected( CMFCorePermissions.ManagePortal,
                                'manageClearActivities' )
-    def manageClearActivities(self, keep=1, REQUEST=None):
+    def manageClearActivities(self, keep=1, RESPONSE=None):
       """
-        Clear all activities and recreate tables.
+        Recreate tables, clearing all activities
       """
-      folder = self.getPortalObject().portal_skins.activity
+      for activity in activity_dict.itervalues():
+        activity.initialize(self, clear=True)
 
-      # Obtain all pending messages.
-      message_list_dict = {}
-      if keep:
-        for activity in activity_dict.itervalues():
-          if hasattr(activity, 'dumpMessageList'):
-            try:
-              message_list_dict[activity.__class__.__name__] =\
-                                    activity.dumpMessageList(self)
-            except ConflictError:
-              raise
-            except:
-              LOG('ActivityTool', WARNING,
-                  'could not dump messages from %s' %
-                  (activity,), error=sys.exc_info())
-
-      if getattr(folder, 'SQLDict_createMessageTable', None) is not None:
-        try:
-          folder.SQLDict_dropMessageTable()
-        except ConflictError:
-          raise
-        except:
-          LOG('CMFActivity', WARNING,
-              'could not drop the message table',
-              error=sys.exc_info())
-        folder.SQLDict_createMessageTable()
-
-      if getattr(folder, 'SQLQueue_createMessageTable', None) is not None:
-        try:
-          folder.SQLQueue_dropMessageTable()
-        except ConflictError:
-          raise
-        except:
-          LOG('CMFActivity', WARNING,
-              'could not drop the message queue table',
-              error=sys.exc_info())
-        folder.SQLQueue_createMessageTable()
-
-      # Reactivate the messages.
-      for activity, message_list in message_list_dict.iteritems():
-        for m in message_list:
-          try:
-            m.reactivate(aq_inner(self), activity=activity)
-          except ConflictError:
-            raise
-          except:
-            LOG('ActivityTool', WARNING,
-                'could not reactivate the message %r, %r' %
-                (m.object_path, m.method_id), error=sys.exc_info())
-
-      if REQUEST is not None:
-        message = 'Activities%20Cleared'
-        if keep:
-          message = 'Tables%20Recreated'
-        return REQUEST.RESPONSE.redirect(
-            '%s/manageActivitiesAdvanced?manage_tabs_message=%s' % (
-              self.absolute_url(), message))
+      if RESPONSE is not None:
+        return RESPONSE.redirect(self.absolute_url_path() +
+          '/manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')
 
     security.declarePublic('getMessageTempObjectList')
     def getMessageTempObjectList(self, **kw):
@@ -1508,9 +1433,6 @@ class ActivityTool (Folder, UniqueObject):
       """
         List messages waiting in queues
       """
-      # Initialize if needed
-      if not is_initialized:
-        self.initialize()
       if activity:
         return activity_dict[activity].getMessageList(aq_inner(self), **kw)
 
@@ -1566,8 +1488,6 @@ class ActivityTool (Folder, UniqueObject):
 
     security.declarePrivate('getDependentMessageList')
     def getDependentMessageList(self, message, validator_id, validation_value):
-      if not is_initialized:
-        self.initialize()
       message_list = []
       method_id = "_validate_" + validator_id
       for activity in activity_dict.itervalues():
@@ -1580,8 +1500,6 @@ class ActivityTool (Folder, UniqueObject):
 
     # Required for tests (time shift)
     def timeShift(self, delay):
-      if not is_initialized:
-        self.initialize()
       for activity in activity_dict.itervalues():
         activity.timeShift(aq_inner(self), delay)
 

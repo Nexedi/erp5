@@ -539,37 +539,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEqual(o.getTitle(), 'last')
 
-  def CheckClearActivities(self, activity, activity_count=1):
-    """
-      Check if active objects are held even after clearing the tables.
-    """
-    portal = self.getPortal()
-    organisation_module = self.getOrganisationModule()
-    if not organisation_module.hasContent(self.company_id):
-      organisation_module.newContent(id=self.company_id)
-    self.tic()
-
-    def check(o):
-      message_list = portal.portal_activities.getMessageList()
-      self.assertEqual(len(message_list), activity_count)
-      m = message_list[0]
-      self.assertEqual(m.object_path, o.getPhysicalPath())
-      self.assertEqual(m.method_id, '_setTitle')
-
-    o = portal.organisation._getOb(self.company_id)
-    for i in range(activity_count):
-      o.activate(activity=activity)._setTitle('foo')
-    self.commit()
-    check(o)
-
-    portal.portal_activities.manageClearActivities()
-    self.commit()
-    check(o)
-
-    self.tic()
-
-    self.assertEqual(o.getTitle(), 'foo')
-
   def CheckCountMessageWithTag(self, activity):
     """
       Check countMessageWithTag function.
@@ -596,7 +565,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     while validating, and check if they are still executed."""
     # Make sure that no active object is installed.
     activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
 
     # Need an object.
     organisation_module = self.getOrganisationModule()
@@ -639,7 +608,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     while validating, and check if they are still executed."""
     # Make sure that no active object is installed.
     activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
 
     # Need an object.
     organisation_module = self.getOrganisationModule()
@@ -685,7 +654,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     if not object_a.hasContent(self.company_id):
       object_a.newContent(id=self.company_id)
     object_b = object_a._getOb(self.company_id)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
     # First case: creating the same activity twice must only register one.
     self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
@@ -693,7 +662,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     object_a.activate(activity=activity).getId()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 1)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
     # Second case: creating activity with same tag must only register one.
     # This behaviour is actually the same as the no-tag behaviour.
@@ -702,7 +671,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     object_a.activate(activity=activity, tag='foo').getId()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 1)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
     # Third case: creating activities with different tags must register both.
     self.assertEqual(len(activity_tool.getMessageList()), 0) # Sanity check
@@ -710,7 +679,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     object_a.activate(activity=activity, tag='bar').getId()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 2)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
     # Fourth case: creating activities on different objects must register
     # both.
@@ -719,7 +688,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     object_b.activate(activity=activity).getId()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 2)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
     # Fifth case: creating activities with different method must register
     # both.
@@ -728,7 +697,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     object_a.activate(activity=activity).getTitle()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 2)
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
     self.commit()
 
   def test_01_DeferredSetTitleSQLDict(self, quiet=0, run=run_all_test):
@@ -1057,24 +1026,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.CheckSchedulingAfterTagList('SQLQueue')
 
-  def test_63_CheckClearActivitiesWithSQLDict(self, quiet=0, run=run_all_test):
-    # Test if clearing tables does not remove active objects with SQLDict
-    if not run: return
-    if not quiet:
-      message = '\nCheck Clearing Activities With SQL Dict'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CheckClearActivities('SQLDict')
-
-  def test_64_CheckClearActivitiesWithSQLQueue(self, quiet=0, run=run_all_test):
-    # Test if clearing tables does not remove active objects with SQLQueue
-    if not run: return
-    if not quiet:
-      message = '\nCheck Clearing Activities With SQL Queue'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CheckClearActivities('SQLQueue', activity_count=2)
-
   def flushAllActivities(self, silent=0, loop_size=1000):
     """Executes all messages until the queue only contains failed
     messages.
@@ -1127,7 +1078,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_list = ['SQLQueue', 'SQLDict', ]
     for activity in activity_list:
       # reset
-      activity_tool.manageClearActivities(keep=0)
+      activity_tool.manageClearActivities()
       obj.setTitle(original_title)
       self.commit()
 
@@ -1184,7 +1135,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ', 0, message)
     activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
 
     original_title = 'something'
     obj = self.getPortal().organisation_module.newContent(
@@ -3020,7 +2971,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises(self, activity):
     # Make sure that no active object is installed.
     activity_tool = self.getPortal().portal_activities
-    activity_tool.manageClearActivities(keep=0)
+    activity_tool.manageClearActivities()
 
     # Need an object.
     organisation_module = self.getOrganisationModule()
@@ -3104,7 +3055,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.tic()
       message_list = activity_tool.getMessageList()
       self.assertEqual(['doSomething'],[x.method_id for x in message_list])
-      activity_tool.manageClearActivities(keep=0)
+      activity_tool.manageClearActivities()
     finally:
       SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
 
@@ -3177,9 +3128,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     )
     oldconn = portal.cmf_activity_sql_connection
     self.assertEqual(oldconn.meta_type, 'Z MySQL Database Connection')
-    # de-initialize and check that migration of the connection happens
+    # force rebootstrap and check that migration of the connection happens
     # automatically
-    Products.CMFActivity.ActivityTool.is_initialized = False
+    from Products.ERP5Type.dynamic import portal_type_class
+    portal_type_class._bootstrapped.clear()
+    portal_type_class.synchronizeDynamicModules(activity_tool, True)
     activity_tool.activate(activity='SQLQueue').getId()
     self.tic()
     newconn = portal.cmf_activity_sql_connection

@@ -77,22 +77,10 @@
 </tr>
 <tr>
   <td align="left" valign="top">
-  <p class="form-help">Recreate activity tables, preserving existing messages.</p>
-  </td>
-  <td align="right" valign="top">
-<form action="&dtml-URL1;">
-<input class="form-element" type="submit"
- name="manageClearActivities:method" value=" Recreate Tables ">
-</form>
-  </td>
-</tr>
-<tr>
-  <td align="left" valign="top">
   <p class="form-help">Recreate activity tables, throwing away all contained messages.</p>
   </td>
   <td align="right" valign="top">
   <form action="&dtml-URL1;">
-<input type="hidden" name="keep:int" value="0">
 <input class="form-element" type="submit"
  name="manageClearActivities:method" value=" Clear Activities " style="background-color: #F00">
 </form>

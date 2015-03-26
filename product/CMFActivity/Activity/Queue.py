@@ -80,15 +80,8 @@ class Queue(object):
 
   #scriptable_method_id_list = ['appendMessage', 'nextMessage', 'delMessage']
 
-  def __init__(self):
-    self.is_initialized = 0
-
-  def initialize(self, activity_tool):
-    # This is the only moment when
-    # we can set some global variables related
-    # to the ZODB context
-    if not self.is_initialized:
-      self.is_initialized = 1
+  def initialize(self, activity_tool, clear):
+    pass
 
   def deleteMessage(self, activity_tool, m):
     if not getattr(m, 'is_deleted', 0):

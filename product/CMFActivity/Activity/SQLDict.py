@@ -26,14 +26,14 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import Message, registerActivity
+from Products.CMFActivity.ActivityTool import Message
 import sys
 #from time import time
 from SQLBase import SQLBase, sort_message_key
 
 import transaction
 
-from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
+from zLOG import TRACE, WARNING
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -265,5 +265,3 @@ class SQLDict(SQLBase):
             if validated_count >= MAX_VALIDATED_LIMIT:
               return
         offset += READ_MESSAGE_LIMIT
-
-registerActivity(SQLDict)
