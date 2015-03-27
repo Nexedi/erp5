@@ -462,13 +462,11 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 
   document = info.object
 
-  ### zwj: following part is for ERP5Workflow actions
   if document is not None:
     document_pt = document.getTypeInfo()
     if document_pt is not None:
       workflow_list = document_pt.getTypeERP5WorkflowList()
       if (workflow_list is not None) and (workflow_list is not []):
-        LOG('zwj: ERP5Workflow_list is %s'%str(workflow_list), WARNING, ' in Workflow tool.')
         for wf_id in workflow_list:
           did[wf_id] = None
           wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
@@ -477,12 +475,10 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           a = wf.listObjectActions(info)
           if a is not None:
             actions.extend(a)
-          a = wf.getWorklistVariableMatchDict(info) ### zwj: replace listGlobalActions(info)
+          a = wf.getWorklistVariableMatchDict(info)
           if a is not None:
             worklist_dict[wf_id] = a
-  ### ==========================================================================
 
-  ### zwj: following part is for DCWorkflow actions
   for wf_id in chain:
     did[wf_id] = None
     wf = self.getWorkflowById(wf_id)
@@ -494,7 +490,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       if a is not None:
         worklist_dict[wf_id] = a
 
-
   wf_ids = self.getWorkflowIds()
   for wf_id in wf_ids:
     if not did.has_key(wf_id):
@@ -503,7 +498,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         a = wf.getWorklistVariableMatchDict(info)
         if a is not None:
           worklist_dict[wf_id] = a
-  ### ==========================================================================
 
   if worklist_dict:
     portal = self.getPortalObject()
@@ -617,6 +611,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
         )
       return action_list
+
     user = str(_getAuthenticatedUser(self))
     if src__:
       actions = _getWorklistActionList()
