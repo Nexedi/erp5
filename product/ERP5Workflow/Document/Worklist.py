@@ -83,8 +83,7 @@ class Worklist(XMLObject):
     def getGuard(self):
         if self.guard is None:
             self.generateGuard()
-        return self.guard ### only generate gurad when self is a User Action
-      #return Guard().__of__(self)  # Create a temporary guard.
+        return self.guard
 
     def getGuardSummary(self):
         res = None
@@ -120,7 +119,6 @@ class Worklist(XMLObject):
         res.sort()
         return res
 
-    ### zwj: this function has been modified from original one
     def getVarMatchKeys(self):
         key_list = []
         if self.getMatchedSimulationState() is not None:
@@ -133,7 +131,6 @@ class Worklist(XMLObject):
           raise NotImplementedError(' Please only fill the field of the state variable defined in this workflow.')
         return key_list
 
-    ### zwj: this function has been modified from original one
     def getVarMatch(self, id):
         self.var_matches = {}
         matches = ''
@@ -234,4 +231,3 @@ class Worklist(XMLObject):
         criteria.update(kw)
 
         return catalog.searchResults(**criteria)
-
