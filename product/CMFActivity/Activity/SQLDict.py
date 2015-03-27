@@ -40,8 +40,6 @@ MAX_VALIDATED_LIMIT = 1000
 # Read up to this number of messages to validate.
 READ_MESSAGE_LIMIT = 1000
 
-MAX_MESSAGE_LIST_SIZE = 100
-
 class SQLDict(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
@@ -49,48 +47,7 @@ class SQLDict(SQLBase):
     because use of OOBTree.
   """
   sql_table = 'message'
-
-  # Transaction commit methods
-  def prepareQueueMessageList(self, activity_tool, message_list):
-    registered_message_list = [m for m in message_list if m.is_registered]
-    for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
-      message_list = registered_message_list[i:i + MAX_MESSAGE_LIST_SIZE]
-      path_list = ['/'.join(m.object_path) for m in message_list]
-      active_process_uid_list = [m.active_process_uid for m in message_list]
-      method_id_list = [m.method_id for m in message_list]
-      priority_list = [m.activity_kw.get('priority', 1) for m in message_list]
-      date_list = [m.activity_kw.get('at_date') for m in message_list]
-      group_method_id_list = [m.getGroupId() for m in message_list]
-      tag_list = [m.activity_kw.get('tag', '') for m in message_list]
-      serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
-                                for m in message_list]
-      order_validation_text_list = []
-      processing_node_list = []
-      for m in message_list:
-        m.order_validation_text = x = self.getOrderValidationText(m)
-        # BBB: 'order_validation_text' SQL column is now useless.
-        #      If we remove it, 'message' & 'message_queue'  can have the same
-        #      schema, and much code can be merged into SQLBase.
-        order_validation_text_list.append(x)
-        processing_node_list.append(0 if x == 'none' else -1)
-      dumped_message_list = map(Message.dump, message_list)
-      # The uid_list also is store in the ZODB
-      uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
-        id_generator='uid', id_group='portal_activity',
-        id_count=len(message_list))
-      activity_tool.SQLDict_writeMessageList(
-        uid_list=uid_list,
-        path_list=path_list,
-        active_process_uid_list=active_process_uid_list,
-        method_id_list=method_id_list,
-        priority_list=priority_list,
-        message_list=dumped_message_list,
-        date_list=date_list,
-        group_method_id_list=group_method_id_list,
-        tag_list=tag_list,
-        serialization_tag_list=serialization_tag_list,
-        processing_node_list=processing_node_list,
-        order_validation_text_list=order_validation_text_list)
+  uid_group = 'portal_activity'
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))

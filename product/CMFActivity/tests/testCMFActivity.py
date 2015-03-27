@@ -2682,56 +2682,29 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       DB.query = DB.original_query
       del DB.original_query
 
-  def test_MAX_MESSAGE_LIST_SIZE_SQLQueue(self):
-    from Products.CMFActivity.Activity import SQLQueue
-    old_MAX_MESSAGE_LIST_SIZE = SQLQueue.MAX_MESSAGE_LIST_SIZE
-    SQLQueue.MAX_MESSAGE_LIST_SIZE = 3
-
+  def test_MAX_MESSAGE_LIST_SIZE(self):
+    from Products.CMFActivity.Activity import SQLBase
+    MAX_MESSAGE_LIST_SIZE = SQLBase.MAX_MESSAGE_LIST_SIZE
     try:
-      global call_count
-      call_count = 0
-      def dummy_counter(self):
-        global call_count
-        call_count += 1
+      SQLBase.MAX_MESSAGE_LIST_SIZE = 3
+      def dummy_counter(o):
+        self.__call_count += 1
+      o = self.portal.organisation_module.newContent(portal_type='Organisation')
 
-      Organisation.dummy_counter = dummy_counter
-      o = self.portal.organisation_module.newContent(portal_type='Organisation',)
-
-      for i in range(10):
-        o.activate(activity='SQLQueue').dummy_counter()
-
-      self.flushAllActivities()
-      self.assertEqual(call_count, 10)
+      for activity in "SQLDict", "SQLQueue":
+        self.__call_count = 0
+        try:
+          for i in xrange(10):
+            method_name = 'dummy_counter_%s' % i
+            getattr(o.activate(activity=activity), method_name)()
+            setattr(Organisation, method_name, dummy_counter)
+          self.flushAllActivities()
+        finally:
+          for i in xrange(10):
+            delattr(Organisation, 'dummy_counter_%s' % i)
+        self.assertEqual(self.__call_count, 10)
     finally:
-      SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
-      del Organisation.dummy_counter
-
-  def test_MAX_MESSAGE_LIST_SIZE_SQLDict(self):
-    from Products.CMFActivity.Activity import SQLDict
-    old_MAX_MESSAGE_LIST_SIZE = SQLDict.MAX_MESSAGE_LIST_SIZE
-    SQLDict.MAX_MESSAGE_LIST_SIZE = 3
-
-    try:
-      global call_count
-      call_count = 0
-      def dummy_counter(self):
-        global call_count
-        call_count += 1
-
-      o = self.portal.organisation_module.newContent(portal_type='Organisation',)
-
-      for i in range(10):
-        method_name = 'dummy_counter_%s' % i
-        setattr(Organisation, method_name, dummy_counter)
-        getattr(o.activate(activity='SQLDict'), method_name)()
-
-      self.flushAllActivities()
-      self.assertEqual(call_count, 10)
-    finally:
-      SQLDict.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
-      for i in range(10):
-        method_name = 'dummy_counter_%s' % i
-        delattr(Organisation, method_name)
+      SQLBase.MAX_MESSAGE_LIST_SIZE = MAX_MESSAGE_LIST_SIZE
 
   def test_115_TestSerializationTagSQLDictPreventsParallelExecution(self, quiet=0, run=run_all_test):
     """
@@ -3032,10 +3005,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     When an activity creates several activities, make sure that all newly
     created activities are not commited if there is ZODB Conflict error
     """
-    from Products.CMFActivity.Activity import SQLQueue
-    old_MAX_MESSAGE_LIST_SIZE = SQLQueue.MAX_MESSAGE_LIST_SIZE
-    SQLQueue.MAX_MESSAGE_LIST_SIZE = 1
+    from Products.CMFActivity.Activity import SQLBase
+    MAX_MESSAGE_LIST_SIZE = SQLBase.MAX_MESSAGE_LIST_SIZE
     try:
+      SQLBase.MAX_MESSAGE_LIST_SIZE = 1
       activity_tool = self.getPortal().portal_activities
       def doSomething(self):
         self.serialize()
@@ -3057,7 +3030,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(['doSomething'],[x.method_id for x in message_list])
       activity_tool.manageClearActivities()
     finally:
-      SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
+      SQLBase.MAX_MESSAGE_LIST_SIZE = MAX_MESSAGE_LIST_SIZE
 
   def test_125_CheckDistributeWithSerializationTagAndGroupMethodId(self):
     activity_tool = self.portal.portal_activities

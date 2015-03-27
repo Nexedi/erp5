@@ -7,7 +7,8 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>uid_list
+<params>table
+uid_list
 path_list
 active_process_uid_list
 method_id_list
@@ -19,7 +20,7 @@ group_method_id_list
 tag_list
 serialization_tag_list
 </params>
-INSERT INTO message_queue
+INSERT INTO <dtml-var table>
 (uid, path, active_process_uid, date, method_id, processing_node, processing, priority, group_method_id, tag, serialization_tag, message)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(path_list))">

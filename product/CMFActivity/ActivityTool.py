@@ -583,7 +583,7 @@ class ActivityTool (Folder, UniqueObject):
     distributingNode = ''
     _nodes = ()
     activity_creation_trace = False
-    activity_tracking = False
+    activity_tracking = True
     activity_timing_log = False
     cancel_and_invoke_links_hidden = False
 

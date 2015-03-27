@@ -42,6 +42,9 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
 from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
 from Products.CMFActivity.Errors import ActivityFlushError
 
+# TODO: Limit by size in bytes instead of number of rows.
+MAX_MESSAGE_LIST_SIZE = 100
+
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
   return message.line.priority, message.line.date, message.uid
@@ -95,8 +98,7 @@ class SQLBase(Queue):
   def initialize(self, activity_tool, clear):
     folder = activity_tool.getPortalObject().portal_skins.activity
     try:
-      createMessageTable = getattr(folder,
-        self.__class__.__name__ + '_createMessageTable')
+      createMessageTable = folder.SQLBase_createMessageTable
     except AttributeError:
       return
     if clear:
@@ -105,7 +107,8 @@ class SQLBase(Queue):
       column_list = []
       try:
         src = createMessageTable._upgradeSchema(added_list=column_list,
-                                                modified_list=column_list)
+                                                modified_list=column_list,
+                                                table=self.sql_table)
       except ProgrammingError, e:
         if e[0] != NO_SUCH_TABLE:
           raise
@@ -118,7 +121,41 @@ class SQLBase(Queue):
           LOG('CMFActivity', INFO, "%r table upgraded\n%s"
               % (self.sql_table, src))
         return
-    createMessageTable()
+    createMessageTable(table=self.sql_table)
+
+  def prepareQueueMessageList(self, activity_tool, message_list):
+    registered_message_list = [m for m in message_list if m.is_registered]
+    portal = activity_tool.getPortalObject()
+    for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
+      message_list = registered_message_list[i:i+MAX_MESSAGE_LIST_SIZE]
+      uid_list = portal.portal_ids.generateNewIdList(self.uid_group,
+        id_count=len(message_list), id_generator='uid')
+      path_list = ['/'.join(m.object_path) for m in message_list]
+      active_process_uid_list = [m.active_process_uid for m in message_list]
+      method_id_list = [m.method_id for m in message_list]
+      priority_list = [m.activity_kw.get('priority', 1) for m in message_list]
+      date_list = [m.activity_kw.get('at_date') for m in message_list]
+      group_method_id_list = [m.getGroupId() for m in message_list]
+      tag_list = [m.activity_kw.get('tag', '') for m in message_list]
+      serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
+                                for m in message_list]
+      processing_node_list = []
+      for m in message_list:
+        m.order_validation_text = x = self.getOrderValidationText(m)
+        processing_node_list.append(0 if x == 'none' else -1)
+      portal.SQLBase_writeMessageList(
+        table=self.sql_table,
+        uid_list=uid_list,
+        path_list=path_list,
+        active_process_uid_list=active_process_uid_list,
+        method_id_list=method_id_list,
+        priority_list=priority_list,
+        message_list=map(Message.dump, message_list),
+        group_method_id_list=group_method_id_list,
+        date_list=date_list,
+        tag_list=tag_list,
+        processing_node_list=processing_node_list,
+        serialization_tag_list=serialization_tag_list)
 
   def getNow(self, context):
     """

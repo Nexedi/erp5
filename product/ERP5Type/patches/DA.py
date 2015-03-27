@@ -276,9 +276,9 @@ _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+', re.I).search
 _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
 
 def DA_upgradeSchema(self, connection_id=None, added_list=None,
-                           modified_list=None, src__=0):
+                           modified_list=None, src__=0, **kw):
     query = self.getPortalObject()[connection_id or self.connection_id]().query
-    src = self(src__=1)
+    src = self(src__=1, **kw)
     m = _create_search(src)
     if m is None:
         return

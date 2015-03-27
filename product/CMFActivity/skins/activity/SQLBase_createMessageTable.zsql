@@ -7,8 +7,8 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
-CREATE TABLE `message_queue` (
+<params>table</params>
+CREATE TABLE <dtml-var table> (
   `uid` INT UNSIGNED NOT NULL,
   `date` DATETIME NOT NULL,
   `path` VARCHAR(255) NOT NULL,
