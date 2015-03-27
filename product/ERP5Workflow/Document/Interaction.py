@@ -53,6 +53,17 @@ class Interaction(XMLObject):
   managed_role = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
   manager_bypass = 0
+  trigger_type = TRIGGER_WORKFLOW_METHOD
+  script_name = ()  # Executed before transition
+  after_script_name = ()  # Executed after transition
+  before_commit_script_name = () #Executed Before Commit Transaction
+  activate_script_name = ()  # Executed as activity
+  portal_type_filter = None
+  portal_type_group_filter = None
+  once_per_transaction = False
+  temporary_document_disallowed = False
+  var_exprs = None  # A mapping.
+
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -66,3 +77,54 @@ class Interaction(XMLObject):
     PropertySheet.DublinCore,
     PropertySheet.Interaction,
   )
+
+  def getGuardSummary(self):
+    res = None
+    if self.guard is not None:
+      res = self.guard.getSummary()
+    return res
+
+  def getGuard(self):
+    if self.guard is None:
+      self.generateGuard()
+    return self.guard
+
+  def getVarExprText(self, id):
+    if not self.var_exprs:
+      return ''
+    else:
+      expr = self.var_exprs.get(id, None)
+      if expr is not None:
+        return expr.text
+      else:
+        return ''
+
+  def generateGuard(self):
+    if self.trigger_type == TRIGGER_USER_ACTION:
+      if self.guard == None:
+        self.guard = Guard(permissions=self.getPermissionList(),
+                      roles=self.getRoleList(),
+                      groups=self.getGroupList(),
+                      expr=self.getExpression())
+
+      if self.guard.roles != self.getRoleList():
+        self.guard.roles = self.getRoleList()
+      elif self.guard.permissions != self.getPermissionList():
+        self.guard.permissions = self.getPermissionList()
+      elif self.guard.groups != self.getGroupList():
+        self.guard.groups = self.getGroupList()
+      elif self.guard.expr != self.getExpression():
+        self.guard.expr = self.getExpression()
+
+  def getVarExprText(self, id):
+    if not self.var_exprs:
+      return ''
+    else:
+      expr = self.var_exprs.get(id, None)
+      if expr is not None:
+        return expr.text
+      else:
+        return ''
+
+  def getWorkflow(self):
+      return aq_parent(aq_inner(aq_parent(aq_inner(self))))
