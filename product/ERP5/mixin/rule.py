@@ -526,8 +526,8 @@ class SimulableMixin(Base):
       create_root    -- if a root applied rule is missing, create and expand it
       expand_root    -- expand related root applied rule,
                         create it before if missing
-      expand_related -- reindex related simulation movements (recursively)
-      index_related  -- expand related simulation movements
+      expand_related -- expand related simulation movements
+      index_related  -- reindex related simulation movements (recursively)
     """
     if create_root or expand_root:
       applied_rule = self._getRootAppliedRule()
