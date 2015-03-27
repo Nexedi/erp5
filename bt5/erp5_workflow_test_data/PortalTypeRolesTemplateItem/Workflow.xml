@@ -1,0 +1,5 @@
+<type_roles>
+  <role id='Assignor; Assignee; Auditor'>
+   <property id='description'>group/test_group</property>
+  </role>
+</type_roles>

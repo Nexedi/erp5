@@ -3,4 +3,8 @@
   <type>ERP5Workflow Test Document</type>
   <workflow>edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Embedded File</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, embedded_workflow</workflow>
+ </chain>
 </workflow_chain>

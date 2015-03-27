@@ -1,4 +1,29 @@
 ERP5Workflow Test Document | view
 ERP5Workflow Test Module | view
+Embedded File | download
+Embedded File | export
+Embedded File | file_upload
+Embedded File | fullsize_view
+Embedded File | view
+Embedded File | web_view
+PermissionRoles | view
+State | permission
+State | view
+Transition Variable | view
+Transition | view
 Variable | view
+Workflow Module | view
+Workflow Script | proxy_role_view
+Workflow Script | repository_history_view
+Workflow Script | view
+Workflow | configurator_settings
+Workflow | launch_configuration
+Workflow | permission_view
+Workflow | script_view
+Workflow | state_view
+Workflow | transition_view
+Workflow | variable_view
+Workflow | view
+Workflow | view_graph
+Workflow | worklist_view
 Worklist | view

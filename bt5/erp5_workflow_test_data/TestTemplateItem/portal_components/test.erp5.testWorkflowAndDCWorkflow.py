@@ -16,6 +16,11 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     """
     raise NotImplemented
 
+  def doActionFor(self, document, action):
+    user_action = action + '_action'
+    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
+    #getattr(document, convertToMixedCase(action))()
+
   def getWorklistDocumentCountFromActionName(self, action_name):
     self.assertEqual(action_name[-1], ')')
     left_parenthesis_offset = action_name.rfind('(')
@@ -151,7 +156,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkLine({'state': 'draft'}, 1)
     checkLine({'state': 'validated'}, 2)
   
-
   def test_10_testSimpleWorklist(self):
     """
     check the counter from worklist action_name.
@@ -161,28 +165,18 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     workflow_tool = self.portal.portal_workflow
     self.clearCache()
-
     new_object.reindexObject()
     self.clearCache()
-
     result = workflow_tool.listActions(object=new_object)
     self.checkWorklist(result, 'Document', 1)
-
 
   def beforeTearDown(self):
     self.portal = self.getPortal()
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
-    self.workflow_module = self.portal.workflow_module
-    self.wf = self.workflow_module._getOb('testing_workflow')
     type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_base_category_list=('validation_state',))
     type_test_object.edit(type_erp5workflow_list=('testing_workflow',))
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
-
-  def doActionFor(self, document, action):
-    user_action = action + '_action'
-    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
-    #getattr(document, convertToMixedCase(action))()
+    #self.commit()
 
 class TestERP5Workflow(TestERP5WorkflowMixin):
   """
