@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#               2014 Wenjie Zheng <wenjie.zheng@tiolive.com>      
+#               2014 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -395,12 +395,10 @@ class Workflow(XMLObject):
         for key in worklist_definition.getVarMatchKeys():
           var = worklist_definition.getVarMatch(key)
           if isinstance(var, Expression):
-            LOG('var %s is an Expression'%var,WARNING, 'in Workflow.py 398')
             evaluated_value = var(Expression_createExprContext(StateChangeInfo(portal,
                                   self, kwargs=info.__dict__.copy())))
             if isinstance(evaluated_value, (str, int, long)):
               evaluated_value = [str(evaluated_value)]
-              LOG('evaluated_value %s is a str in long'%var, WARNING, 'in Workflow.py 403')
           else:
             evaluated_value = [x % info for x in var]
           variable_match[key] = evaluated_value
@@ -449,7 +447,6 @@ class Workflow(XMLObject):
     if len(variable_match_dict) == 0:
       return None
     return variable_match_dict
-  # ============================================================================
 
   security.declarePrivate('getInfoFor')
   def getInfoFor(self, ob, name, default):
