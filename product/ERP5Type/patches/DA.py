@@ -299,9 +299,11 @@ def DA_upgradeSchema(self, connection_id=None, src__=0):
 
     old_dict = {}
     new = {column[0] for column in new_list}
-    for pos, (column, spec) in enumerate(old_list):
+    pos = 0
+    for column, spec in old_list:
       if column in new:
           old_dict[column] = pos, spec
+          pos += 1
       else:
           q("DROP COLUMN " + column)
 
