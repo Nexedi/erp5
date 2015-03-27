@@ -181,14 +181,14 @@ class ERP5WorkflowMethod(Method):
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
     if erp5workflow_engaged == 1:
-      wf5_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
+      wf_module = instance.getPortalObject().getDefaultModule(portal_type="Workflow")
       ### zwj: Build the list of method which is call and will be invoked.
       valid_transition_item_list = []
       for wf_id, transition_list in candidate_transition_item_list:
         valid_list = []
         for transition_id in transition_list:
-          LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py ERP5Workflow.")
-          if wf5_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf5_module._getOb(wf_id)._getOb(transition_id)):
+          #LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py ERP5Workflow.")
+          if wf_module._getOb(wf_id).isERP5WorkflowMethodSupported(instance, wf_module._getOb(wf_id)._getOb(transition_id)):
             valid_list.append(transition_id)
             once_transition_key = once_transition_dict.get((wf_id, transition_id))
             transactional_variable[once_transition_key] = 1
@@ -216,7 +216,7 @@ class ERP5WorkflowMethod(Method):
       for wf_id, transition_list in valid_transition_item_list:
         try:
           for tr in transition_list:
-            method5 = wf5_module._getOb(wf_id)._getOb(tr)
+            method5 = wf_module._getOb(wf_id)._getOb(tr)
             method5.execute(instance)
         except ObjectDeleted:
           raise ObjectDeleted(result)
@@ -344,7 +344,7 @@ class WorkflowMethod(Method):
       candidate_workflow = wf[wf_id]
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
-          LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py DCWorkflow.")
+          #LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py DCWorkflow.")
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
@@ -654,42 +654,47 @@ def getClassPropertyList(klass):
   return ps_list
 
 def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
-  wf5_module = aq_inner(portal_ERP5Workflow)
+  wf_module = aq_inner(portal_ERP5Workflow)
   portal_type = portal_ERP5Workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   pt = portal_type._getOb(ptype_klass.__name__, None)
+  workflow_dict = {}
+  interaction_workflow_dict = {}
 
   for ERP5Workflow_id in pt.erp5workflow_list:
-    ERP5Workflow = wf5_module._getOb(ERP5Workflow_id)
-    state_var = ERP5Workflow.getStateBaseCategory()
-    ### zwj: generate erp5worflow state var accessor, override base category accessor
-    for method_id, getter in (
-        ('get%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateGetter),
-        ('get%sTitle' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateTitleGetter),
-        ('getTranslated%s' % UpperCase(state_var),
-                                   WorkflowState.ERP5WorkflowStateTranslatedGetter),
-        ('getTranslated%sTitle' % UpperCase(state_var),
-                                   WorkflowState.ERP5WorkflowStateTranslatedTitleGetter),
-        ('serialize%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateSerializeGetter),
-        ):
-      #if not hasattr(ptype_klass, method_id): 
-      ### zwj: shouldn't override the DC accessors or the portal type using DCWorkflow will have problems
-      method = getter(method_id, ERP5Workflow_id)
-      # Attach to portal_type
-      ### zwj: if ERP5 Accessor has the same name as a defined DC accessor,
-      ### it can't tell which accessor to execute,
-      ### it will always check DC accessor first and ignore ERP5 accessor.
-      ### thus it should register 2 types of accessor in different folder ???
-      ptype_klass.registerAccessor(method,
-                                     Permissions.AccessContentsInformation)
-      LOG("zwj: Register Accessor %s of %s"%(method_id, ERP5Workflow_id), WARNING, " in Base.py.")
-    ### zwj: generate erp5workflow mehtods
-    for tr in wf5_module._getOb(ERP5Workflow_id).objectValues(portal_type="Transition"):
-      tr_id = tr.id
-      method_id = convertToMixedCase(tr_id)
-      ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-                                              method_id)
-      ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
-      LOG("zwj:ERP5Workflow method %s is generated for %s "%(tr_id,ERP5Workflow_id),WARNING," in Base.py")
+    ERP5Workflow = wf_module._getOb(ERP5Workflow_id)
+    wf_type = ERP5Workflow.getTypeInfo().getId()
+    if wf_type == 'Workflow':
+      state_var = ERP5Workflow.getStateBaseCategory()
+      ### zwj: generate erp5worflow state var accessor, override base category accessor
+      for method_id, getter in (
+          ('get%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateGetter),
+          ('get%sTitle' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateTitleGetter),
+          ('getTranslated%s' % UpperCase(state_var),
+                                     WorkflowState.ERP5WorkflowStateTranslatedGetter),
+          ('getTranslated%sTitle' % UpperCase(state_var),
+                                     WorkflowState.ERP5WorkflowStateTranslatedTitleGetter),
+          ('serialize%s' % UpperCase(state_var), WorkflowState.ERP5WorkflowStateSerializeGetter),
+          ):
+        method = getter(method_id, ERP5Workflow_id)
+        ptype_klass.registerAccessor(method,
+                                       Permissions.AccessContentsInformation)
+
+      transition_list = ERP5Workflow.objectValues(portal_type="Transition")
+      storage = workflow_dict
+    elif wf_type == 'Interaction Workflow':
+      transition_list = ERP5Workflow.objectValues(portal_type='Interaction')
+      storage = interaction_workflow_dict
+    else:
+      continue
+
+    ### zwj: geranrate workflow methods
+    for tr in transition_list:
+      if tr.trigger_type == TRIGGER_WORKFLOW_METHOD:
+        tr_id = tr.getId()
+        method_id = convertToMixedCase(tr_id)
+        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
+                                                method_id)
+        ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
@@ -3428,7 +3433,7 @@ class Base( CopyContainer,
 
     workflow = self.portal_workflow.getWorkflowById(wf_id)
     erp5workflow = self.workflow_module._getOb(wf_id, None)
-    LOG('zwj: Loading %s'%erp5workflow.getId(), WARNING,'updating roles')
+    #LOG('zwj: Loading %s'%erp5workflow.getId(), WARNING,'updating roles')
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
       if changed:
