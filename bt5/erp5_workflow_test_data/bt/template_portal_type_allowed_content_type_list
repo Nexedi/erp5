@@ -1,7 +1,8 @@
 ERP5Workflow Test Module | ERP5Workflow Test Document
 Interaction Workflow | Interaction
 Interaction Workflow | Variable
-Interaction | Variable
+Interaction Workflow | Workflow Script
+Interaction | Transition Variable
 State | PermissionRoles
 Transition | Transition Variable
 Workflow Module | Interaction Workflow

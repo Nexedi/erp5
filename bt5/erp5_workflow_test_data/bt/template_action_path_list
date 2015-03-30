@@ -6,6 +6,9 @@ Embedded File | file_upload
 Embedded File | fullsize_view
 Embedded File | view
 Embedded File | web_view
+Interaction Workflow | interaction_view
+Interaction Workflow | view
+Interaction | view
 PermissionRoles | view
 State | permission
 State | view
