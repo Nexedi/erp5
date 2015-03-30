@@ -46,7 +46,7 @@ from Products.ERP5Type.patches.Expression import Expression_createExprContext
 
 _MARKER = []
 
-class InteractionWorkflow(Workflow, XMLObject):
+class InteractionWorkflow(XMLObject):
   """
   An ERP5 Interaction Workflow.
   """
@@ -187,3 +187,6 @@ class InteractionWorkflow(Workflow, XMLObject):
           return 0
 
     return Workflow._checkTransitionGuard(self, t, ob, **kw)
+
+  def getValidRoleList(self):
+    return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
