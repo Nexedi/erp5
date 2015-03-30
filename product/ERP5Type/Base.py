@@ -686,7 +686,16 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       storage = interaction_workflow_dict
     else:
       continue
+  ### zwj: compatibility for Interaction Workflow and Workflow
+    transition_id_set = set(x.getId() for x in transition_list)
+    trigger_dict = {}
+    for tr_id in transition_id_set:
+      tdef = ERP5Workflow._getOb(tr_id)
+      if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+        trigger_dict[tr_id] = tdef
 
+    storage[ERP5Workflow_id] = (transition_id_set, trigger_dict)
+    """
     ### zwj: geranrate workflow methods
     for tr in transition_list:
       if tr.trigger_type == TRIGGER_WORKFLOW_METHOD:
@@ -695,6 +704,40 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
         ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
                                                 method_id)
         ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
+    """
+  ### zwj: generate Workflow methods
+  for ERP5Workflow_id, v in workflow_dict.iteritems():
+    transition_id_set, trigger_dict = v
+    for tr_id, tdef in trigger_dict.iteritems():
+      method_id = convertToMixedCase(tr_id)
+      try:
+        method = getattr(ptype_klass, method_id)
+      except AttributeError:
+        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
+                                                method_id)
+        ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
+        continue
+
+      #Wrap method
+      if not callable(method):
+        LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+            'WARNING! Can not initialize %s on %s' % \
+              (method_id, portal_type))
+        continue
+
+      if not isinstance(method, WorkflowMethod):
+        method = WorkflowMethod(method)
+        setattr(ptype_klass, method_id, method)
+      else:
+        transition_id = method.getTransitionId()
+        if transition_id in transition_id_set:
+          method.registerTransitionAlways(portal_type, ERP5Workflow_id, transition_id)
+      method.registerTransitionAlways(portal_type, ERP5Workflow_id, tr_id)
+
+  ### zwj: should also generate interaction workflow methods
+
+  ### ==========================================================================
+
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
