@@ -242,6 +242,7 @@ class ERP5TypeInformation(XMLObject,
     property_sheet_list = ()
     base_category_list = ()
     erp5workflow_list = ()
+    interaction_workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -424,6 +425,12 @@ class ERP5TypeInformation(XMLObject,
             ERP5Workflow = workflow_module._getOb(ERP5Workflow_id)
             ERP5Workflow.initializeDocument(ob)
 
+        for Workflow_id in self.getTypeInteractionWorkflowList():
+          workflow_module = portal.getDefaultModule(portal_type="Workflow")
+          if workflow_module is not None:
+            ERP5Workflow = workflow_module._getOb(Workflow_id)
+            ERP5Workflow.initializeDocument(ob)
+
       if not temp_object:
         init_script = self.getTypeInitScriptId()
         if init_script:
@@ -460,6 +467,12 @@ class ERP5TypeInformation(XMLObject,
     def getTypeERP5WorkflowList(self):
       """Getter for 'type_workflow' property"""
       return list(self.erp5workflow_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInteractionWorkflowList')
+    def getTypeInteractionWorkflowList(self):
+      """Getter for 'type_workflow' property"""
+      return list(self.interaction_workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
