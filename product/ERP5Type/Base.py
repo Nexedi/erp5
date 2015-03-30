@@ -686,7 +686,8 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       storage = interaction_workflow_dict
     else:
       continue
-  ### zwj: compatibility for Interaction Workflow and Workflow
+
+### zwj: compatibility for Interaction Workflow and Workflow ===================
     transition_id_set = set(x.getId() for x in transition_list)
     trigger_dict = {}
     for tr_id in transition_id_set:
@@ -735,8 +736,82 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
       method.registerTransitionAlways(portal_type, ERP5Workflow_id, tr_id)
 
   ### zwj: should also generate interaction workflow methods
+  if not interaction_workflow_dict:
+    return
 
-  ### ==========================================================================
+  class_method_id_list = ptype_klass.getClassMethodIdList(ptype_klass)
+
+  interaction_queue = []
+
+  for wf_id, v in interaction_workflow_dict.iteritems():
+    transition_id_set, trigger_dict = v
+    for tr_id, tdef in trigger_dict.iteritems():
+      # check portal type filter
+      if (tdef.portal_type_filter is not None and portal_type not in tdef.portal_type_filter):
+        continue
+
+      #check portal type group filter
+      if tdef.portal_type_group_filter is not None:
+        getPortalGroupedTypeSet = portal_workflow.getPortalObject()._getPortalGroupedTypeSet
+        if not any(portal_type in getPortalGroupedTypeSet(portal_type_group) for
+                  portal_type_group in tdef.portal_type_group_filter):
+          continue
+
+      for imethod_id in tdef.method_id:
+        if wildcard_interaction_method_id_match(imethod_id):
+          method_id_mathcer = re.compile(imethod_id).match
+          # queue transitions using regexps for later examination
+          interaction_queue.append((wf_id, tr_id, transition_id_set,
+                                    tdef.once_per_transaction,
+                                    method_id_matcher))
+
+          method_id_list = filter(method_id_matcher, class_method_id_list)
+        else:
+          method_id_list = [imethod_id]
+      for method_id in method_id_list:
+        method = getattr(ptype_klass, method_id, _MARKER)
+        if method is _MARKER:
+          if method_id not in ptype_klass.security.names:
+            ptype_klass.security.declareProtected(
+                  Permissions.AccessContentsInformation, method_id)
+          ptype_klass.registerERP5WorkflowMethod(method_id, wf_id, tr_id, tdef.once_per_transaction)
+          continue
+
+      # wrap method
+      if not callable(method):
+        LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+                 'WARNING! Can not initialize %s on %s' % \
+                   (method_id, portal_type))
+        continue
+      if not isinstance(method, WorkflowMethod):
+        method = WorkflowMethod(method)
+        setattr(ptype_klass, method_id, method)
+      else:
+        transition_id = method.getTransitionId()
+        if transition_id in transition_id_set:
+          method.registerTransitionAlways(portal_type, wf_id, transition_id)
+      if tdef.once_per_transaction:
+        method.registerTransitionOncePerTransaction(portal_type, wf_id, tr_id)
+      else:
+        method.registerTransitionAlways(portal_type, wf_id, tr_id)
+
+  if not interaction_queue:
+    return
+
+  new_method_set = set(ptype_klass.getWorkflowMethodIdList())
+  added_method_set = new_method_set.difference(class_method_id_list)
+  for wf_id, tr_id, transition_id_set, once, method_id_matcher in interaction_queue:
+    for method_id in filter(method_id_matcher, added_method_set):
+      # method must already exist and be a workflow method
+      method = getattr(ptype_klass, method_id)
+      transition_id = method.getTransitionId()
+      if transition_id in transition_id_set:
+        method.registerTransitionAlways(portal_type, wf_id, transition_id)
+      if once:
+        method.registerTransitionOncePerTransaction(portal_type, wf_id, tr_id)
+      else:
+        method.registerTransitionAlways(portal_type, wf_id, tr_id)
+### ===================================  compatibility for interaction workflow
 
 
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
