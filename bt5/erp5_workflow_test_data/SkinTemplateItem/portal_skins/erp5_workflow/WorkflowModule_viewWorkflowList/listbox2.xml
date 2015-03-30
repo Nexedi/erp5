@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox2</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -529,8 +529,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Workflow</string>
-                          <string>Workflow</string>
+                          <string>Interaction Workflow</string>
+                          <string>Interaction Workflow</string>
                         </tuple>
                       </list>
                     </value>
@@ -565,7 +565,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_module_selection</string> </value>
+                    <value> <string>interaction_workflow_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -602,7 +602,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Workflows</string> </value>
+                    <value> <string>Interaction Workflows</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>

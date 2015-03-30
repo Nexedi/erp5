@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -43,7 +22,9 @@
         </item>
         <item>
             <key> <string>edit_order</string> </key>
-            <value> <string>[]</string> </value>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -57,6 +38,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
               </list>
@@ -69,18 +53,41 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                        <string>listbox2</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
                       <list>
-                        <string>listbox_title</string>
-                        <string>listbox2_title</string>
+                        <string>my_id</string>
+                        <string>my_title</string>
+                        <string>my_comment</string>
+                        <string>my_description</string>
+                        <string>my_manager_bypass</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_group_list</string>
+                        <string>my_expression</string>
+                        <string>my_permission_list</string>
+                        <string>my_role_list</string>
                       </list>
                     </value>
                 </item>
@@ -89,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WorkflowModule_viewWorkflowList</string> </value>
+            <value> <string>InteractionWorkflow_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -97,11 +104,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WorkflowModule_viewWorkflowList</string> </value>
+            <value> <string>InteractionWorkflow_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -113,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Workflows</string> </value>
+            <value> <string>Interaction Workflow</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
