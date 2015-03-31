@@ -571,7 +571,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                   reference_quantity=0, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getNextNegativeInventoryDate')
+                              'getNextAlertInventoryDate')
     def getNextAlertInventoryDate(self, reference_quantity=0, **kw):
       """
       Returns next date where the inventory will be below reference
