@@ -696,16 +696,7 @@ def intializePortalTypeERP5WorkflowMethod(ptype_klass, portal_ERP5Workflow):
         trigger_dict[tr_id] = tdef
 
     storage[ERP5Workflow_id] = (transition_id_set, trigger_dict)
-    """
-    ### zwj: geranrate workflow methods
-    for tr in transition_list:
-      if tr.trigger_type == TRIGGER_WORKFLOW_METHOD:
-        tr_id = tr.getId()
-        method_id = convertToMixedCase(tr_id)
-        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-                                                method_id)
-        ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
-    """
+
   ### zwj: generate Workflow methods
   for ERP5Workflow_id, v in workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
