@@ -42,12 +42,6 @@
             <value> <string>Organisations capture the contact information (ex. name, phone number) and their classification (ex. site, group, function etc.). Organisations are supported by a standard validation workflow.</string> </value>
         </item>
         <item>
-            <key> <string>erp5workflow_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>factory</string> </key>
             <value> <string>addOrganisation</string> </value>
         </item>
@@ -93,26 +87,6 @@
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_workflow</string> </key>
-            <value>
-              <tuple>
-                <string>erp5_standard_workflow</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_workflow_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>workflow_list</string> </key>
             <value>
               <tuple/>
             </value>

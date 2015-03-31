@@ -48,12 +48,6 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_icon</string> </key>
             <value> <string>person_icon.gif</string> </value>
         </item>
@@ -62,20 +56,8 @@
             <value> <string>ERP5 Person</string> </value>
         </item>
         <item>
-            <key> <string>contributor_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Persons capture the contact information (ex. name, phone number) and the relation between entities (ex. who is assigned to which function and which organisation). Persons are supported by a standard validation workflow.</string> </value>
-        </item>
-        <item>
-            <key> <string>erp5workflow_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
