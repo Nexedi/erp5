@@ -25,7 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
+import transaction
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -128,15 +128,31 @@ class Interaction(XMLObject):
     workflow = self.getParent()
     assert self.trigger_type == TRIGGER_WORKFLOW_METHOD
 
+    status = workflow.getCurrentStatusDict(ob)
+    # execute before script
+    for script_name in self.script_name:
+      script = workflow._getOb(script_name)
+      # Pass lots of info to the script in a single parameter.
+      script(sci)
+
     # Initialize variables
-    former_status = workflow._getStatusOf(ob)
+    former_status = None
     econtext = None
     sci = None
+    sci = StateChangeInfo(
+          ob, worfklow, former_status, self, None, None, kwargs=kw)
+
+    # Execute before script
+    before_script_success = 1
+    for script_name in self.getBeforeScriptName():
+      script = workflow._getOb(script_name)
+      # Pass lots of info to the script in a single parameter.
+      script(sci)
 
     # Update variables.
     tdef_exprs = self.var_exprs
     if tdef_exprs is None: tdef_exprs = {}
-    status = {}
+
     for vdef in workflow.objectValues(portal_type='Variable'):
       id = vdef.getId()
       if not vdef.for_status:
@@ -160,26 +176,26 @@ class Interaction(XMLObject):
             sci = StateChangeInfo(
                 ob, workflow, former_status, self,
                 None, None, None)
-          econtext = createExprContext(sci)
+          econtext = Expression_createExprContext(sci)
         value = expr(econtext)
       status[id] = value
 
-    sci = StateChangeInfo(
-          ob, worfklow, former_status, self, None, None, kwargs=kw)
+    self.setStatusOf(workflow.getId(), ob, status)
+
     # Execute the "after" script.
-    for script_name in self.after_script_name:
+    for script_name in self.getAfterScriptName():
       script = workflow._getOb(script_name)
       # Pass lots of info to the script in a single parameter.
       script(sci)  # May throw an exception
 
     # Queue the "Before Commit" scripts
     sm = getSecurityManager()
-    for script_name in self.before_commit_script_name:
+    for script_name in self.getBeforeCommitScriptName():
       transaction.get().addBeforeCommitHook(self._before_commit,
                                             (sci, script_name, sm))
 
     # Execute "activity" scripts
-    for script_name in self.activate_script_name:
+    for script_name in self.getActivityScriptName():
       workflow.activate(activity='SQLQueue')\
           .activeScript(script_name, ob.getRelativeUrl(),
                         status, self.getId())
@@ -222,3 +238,30 @@ class Interaction(XMLObject):
 
   def getWorkflow(self):
       return aq_parent(aq_inner(aq_parent(aq_inner(self))))
+
+  def setStatusOf(self, wf_id, ob, status):
+    """ Append an entry to the workflow history.
+
+    o Invoked by transition execution.
+    """
+    wfh = None
+    has_history = 0
+    if getattr(aq_base(ob), 'workflow_history', None) is not None:
+        history = ob.workflow_history
+        if history is not None:
+            has_history = 1
+            wfh = history.get(wf_id, None)
+            if wfh is not None and not isinstance(wfh, WorkflowHistoryList):
+                wfh = WorkflowHistoryList(list(wfh))
+                ob.workflow_history[wf_id] = wfh
+    if wfh is None:
+        wfh = WorkflowHistoryList()
+        if not has_history:
+          ob.workflow_history = PersistentMapping()
+        ob.workflow_history[wf_id] = wfh
+    wfh.append(status)
+    """
+    if not has_history:
+        ob.workflow_history = PersistentMapping()
+    ob.workflow_history[wf_id] = tuple(wfh)
+    """
