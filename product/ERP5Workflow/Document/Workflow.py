@@ -425,7 +425,6 @@ class Workflow(XMLObject):
             Guard_checkWithoutRoles(guard, security_manager, self, portal):
           is_permitted_worklist = 1
           variable_match[SECURITY_PARAMETER_ID] = guard.roles
-        LOG('Worklist permission = %s'%is_permitted_worklist, WARNING, 'in Workflow.py')
         if is_permitted_worklist:
           fmt_data = TemplateDict()
           fmt_data._push(info)
