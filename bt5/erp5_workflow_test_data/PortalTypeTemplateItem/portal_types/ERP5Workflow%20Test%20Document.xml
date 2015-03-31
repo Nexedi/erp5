@@ -41,6 +41,12 @@
             </value>
         </item>
         <item>
+            <key> <string>interaction_workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>permission</string> </key>
             <value>
               <none/>
