@@ -28,8 +28,6 @@
 
 import sys
 import transaction
-from _mysql_exceptions import ProgrammingError
-from MySQLdb.constants.ER import NO_SUCH_TABLE
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
@@ -103,25 +101,19 @@ class SQLBase(Queue):
       return
     if clear:
       folder.SQLBase_dropMessageTable(table=self.sql_table)
+      createMessageTable(table=self.sql_table)
     else:
-      column_list = []
-      try:
-        src = createMessageTable._upgradeSchema(added_list=column_list,
-                                                modified_list=column_list,
-                                                table=self.sql_table)
-      except ProgrammingError, e:
-        if e[0] != NO_SUCH_TABLE:
-          raise
-      else:
-        if column_list and self._getMessageList(activity_tool, count=1):
-          LOG('CMFActivity', ERROR, "Non-empty %r table upgraded."
-              " The following added columns could not be initialized: %s\n%s"
-              % (self.sql_table, ", ".join(column_list), src))
-        elif src:
-          LOG('CMFActivity', INFO, "%r table upgraded\n%s"
-              % (self.sql_table, src))
-        return
-    createMessageTable(table=self.sql_table)
+      src = createMessageTable._upgradeSchema(create_if_not_exists=1,
+                                              initialize=self._initialize,
+                                              table=self.sql_table)
+      if src:
+        LOG('CMFActivity', INFO, "%r table upgraded\n%s"
+            % (self.sql_table, src))
+
+  def _initialize(self, db, column_list):
+      LOG('CMFActivity', ERROR, "Non-empty %r table upgraded."
+          " The following added columns could not be initialized: %s"
+          % (self.sql_table, ", ".join(column_list)))
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     registered_message_list = [m for m in message_list if m.is_registered]

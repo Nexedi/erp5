@@ -87,9 +87,11 @@
 __version__='$Revision: 1.20 $'[11:-2]
 
 import os
+import re
 import _mysql
 import MySQLdb
 import warnings
+from contextlib import contextmanager, nested
 from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
 MySQLdb_version_required = (0,9,2)
 
@@ -433,6 +435,117 @@ class DB(TM):
             self._query("ROLLBACK")
         else:
             LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
+
+    @contextmanager
+    def lock(self):
+        """Lock for the connected DB"""
+        db = self._kw_args.get('db', '')
+        lock = "SELECT GET_LOCK('ZMySQLDA(%s)', 5)" % db
+        unlock = "SELECT RELEASE_LOCK('ZMySQLDA(%s)')" % db
+        try:
+            while not self.query(lock, 0)[1][0][0]: pass
+            yield
+        finally:
+            self.query(unlock, 0)
+
+    def _getTableSchema(self, name,
+            create_lstrip = re.compile(r"[^(]+\(\s*").sub,
+            create_rmatch = re.compile(r"(.*\S)\s*\)[^)]+\s"
+              "(DEFAULT(\s+(CHARSET|COLLATE)=\S+)+).*$", re.DOTALL).match,
+            create_split  = re.compile(r",\n\s*").split,
+            column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
+            ):
+        (_, schema), = self.query("SHOW CREATE TABLE " + name)[1]
+        column_list = []
+        key_set = set()
+        m = create_rmatch(create_lstrip("", schema, 1))
+        for spec in create_split(m.group(1)):
+            if "KEY" in spec:
+                key_set.add(spec)
+            else:
+                column_list.append(column_match(spec).groups())
+        return column_list, key_set, m.group(2)
+
+    _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+',
+                                re.I).search
+    _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
+
+    def upgradeSchema(self, create_sql, create_if_not_exists=False,
+                            initialize=None, src__=0):
+        m = self._create_search(create_sql)
+        if m is None:
+            return
+        name = m.group(2)
+        # Lock automaticaly unless src__ is True, because the caller may have
+        # already done it (in case that it plans to execute the returned query).
+        with (nested if src__ else self.lock)():
+            try:
+                old_list, old_set, old_default = self._getTableSchema(name)
+            except ProgrammingError, e:
+                if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
+                    raise
+                if not src__:
+                    self.query(create_sql)
+                return create_sql
+
+            name_new = '_%s_new' % name
+            self.query('CREATE TEMPORARY TABLE %s %s'
+                % (name_new, create_sql[m.end():]))
+            try:
+                new_list, new_set, new_default = self._getTableSchema(name_new)
+            finally:
+                self.query("DROP TEMPORARY TABLE " + name_new)
+
+            src = []
+            q = src.append
+            if old_default != new_default:
+              q(new_default)
+
+            old_dict = {}
+            new = {column[0] for column in new_list}
+            pos = 0
+            for column, spec in old_list:
+              if column in new:
+                  old_dict[column] = pos, spec
+                  pos += 1
+              else:
+                  q("DROP COLUMN " + column)
+
+            for key in old_set - new_set:
+              if "PRIMARY" in key:
+                  q("DROP PRIMARY KEY")
+              else:
+                  q("DROP KEY " + self._key_search(key).group(1))
+
+            column_list = []
+            pos = 0
+            where = "FIRST"
+            for column, spec in new_list:
+                try:
+                    old = old_dict[column]
+                except KeyError:
+                    q("ADD COLUMN %s %s %s" % (column, spec, where))
+                    column_list.append(column)
+                else:
+                    if old != (pos, spec):
+                        q("MODIFY COLUMN %s %s %s" % (column, spec, where))
+                        if old[1] != spec:
+                            column_list.append(column)
+                    pos += 1
+                where = "AFTER " + column
+
+            for key in new_set - old_set:
+                q("ADD " + key)
+
+            if src:
+                src = "ALTER TABLE %s%s" % (name, ','.join("\n  " + q
+                                                           for q in src))
+                if not src__:
+                    self.query(src)
+                    if column_list and initialize and self.query(
+                            "SELECT 1 FROM " + name, 1)[1]:
+                        initialize(self, column_list)
+                return src
 
 
 class DeferredDB(DB):
