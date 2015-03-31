@@ -43,6 +43,7 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.Globals import PersistentMapping
 
 _MARKER = []
 
@@ -78,6 +79,32 @@ class InteractionWorkflow(XMLObject):
     PropertySheet.DublinCore,
     PropertySheet.InteractionWorkflow,
   )
+
+  def initializeDocument(self, document):
+    """
+    Set initial state on the Document
+    zwj:is Interaction Workflow called during the intialization of the object?
+    """
+    state_bc_id = 'state'
+    # document.setCategoryMembership(state_bc_id, self.getSource())
+    object = self.getStateChangeInformation(document, self.getSourceValue())
+
+    # Initialize workflow history
+    status_dict = {state_bc_id: 'current'}
+    variable_list = self.objectValues(portal_type='Variable')
+    former_status = None
+    ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
+
+    for variable in variable_list:
+      if variable.for_status == 0:
+        continue
+      if variable.default_expr is not None:
+        expr = Expression(variable.default_expr)
+        value = expr(ec)
+      else:
+        value = variable.getInitialValue(object=object)
+      status_dict[variable.getId()] = value
+    self._updateWorkflowHistory(document, status_dict)
 
   security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
   def getChainedPortalTypeList(self):
@@ -146,9 +173,6 @@ class InteractionWorkflow(XMLObject):
     tdef = self._getOb(method_id, None)
     return tdef is not None and self._checkTransitionGuard(tdef, ob)
 
-  def execute(self): ### zwj: execute interaction, check Transition.py/execute
-    pass
-
   def _before_commit(self, sci, script_name, security_manager):
     # check the object still exists before calling the script
     ob = sci.object
@@ -190,3 +214,21 @@ class InteractionWorkflow(XMLObject):
 
   def getValidRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
+
+  def _updateWorkflowHistory(self, document, status_dict):
+    """
+    Change the state of the object.
+    """
+    # Create history attributes if needed
+    if getattr(aq_base(document), 'workflow_history', None) is None:
+      document.workflow_history = PersistentMapping()
+      # XXX this _p_changed is apparently not necessary
+      document._p_changed = 1
+
+    # Add an entry for the workflow in the history
+    workflow_key = self._generateHistoryKey()
+    if not document.workflow_history.has_key(workflow_key):
+      document.workflow_history[workflow_key] = ()
+
+    # Update history
+    document.workflow_history[workflow_key] += (status_dict,)
