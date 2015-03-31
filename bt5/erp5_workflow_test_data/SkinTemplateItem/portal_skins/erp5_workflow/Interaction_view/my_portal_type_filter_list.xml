@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_before_commit_script_name</string> </value>
+            <value> <string>my_portal_type_filter_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -102,7 +102,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Script (end of transaction)</string> </value>
+                    <value> <string>Portal type filter</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getId()) for x in here.getParent().contentValues(portal_type=\'Workflow Script\')]</string> </value>
+            <value> <string>python: [(x.getId(), x.getId()) for x in here.getPortalObject().portal_types.objectValues()]</string> </value>
         </item>
       </dictionary>
     </pickle>
