@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#                    Wenjie ZHENG <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -30,7 +30,8 @@ from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
-
+from zLOG import LOG, INFO, ERROR, WARNING
+import pdb
 # Creation of default constructor
 class func_code: pass
 
@@ -54,8 +55,12 @@ class Getter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      portal_workflow = instance.getPortalObject().portal_workflow
-      wf = portal_workflow.getWorkflowById(self._key)
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
+      except:
+        portal_workflow = instance.getPortalObject().portal_workflow
+        wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance, id_only=1)
 
     psyco.bind(__call__)
@@ -79,9 +84,13 @@ class TitleGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      portal_workflow = instance.getPortalObject().portal_workflow
-      wf = portal_workflow.getWorkflowById(self._key)
-      return wf._getWorkflowStateOf(instance).title
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
+      except:
+        portal_workflow = instance.getPortalObject().portal_workflow
+        wf = portal_workflow.getWorkflowById(self._key)
+      return wf._getWorkflowStateOf(instance).getTitle()
 
     psyco.bind(__call__)
 
@@ -90,8 +99,12 @@ class TranslatedGetter(Getter):
     """
 
     def __call__(self, instance):
-      portal = instance.getPortalObject()
-      wf = portal.portal_workflow.getWorkflowById(self._key)
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
+      except:
+        portal = instance.getPortalObject()
+        wf = portal.portal_workflow.getWorkflowById(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
@@ -108,9 +121,14 @@ class TranslatedTitleGetter(TitleGetter):
       portal = instance.getPortalObject()
       localizer = portal.Localizer
       wf_id = self._key
-      wf = portal.portal_workflow.getWorkflowById(wf_id)
+      try:
+        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
+        wf = erp5Workflow_module._getOb(self._key) ### _getObjectByRef
+      except:
+        wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
+
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
                                          lang=selected_language,

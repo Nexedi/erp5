@@ -430,6 +430,7 @@ def checkPythonSourceCode(source_code_str):
               allow passing a string) and this should probably return a proper
               ERP5 object rather than a dict...
   """
+
   if not source_code_str:
     return []
 

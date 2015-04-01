@@ -13,6 +13,26 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>select_variable</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>label</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>mode</string> </value>
                   </item>
                   <item>
@@ -27,17 +47,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/multiple selection</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Defines the script called after a transition.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>after_script_id_property</string> </value>
+        </item>
+        <item>
+            <key> <string>label</string> </key>
+            <value> <string>Base Categories</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -46,6 +72,20 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: ()</string> </value>
+        </item>
+        <item>
+            <key> <string>select_variable</string> </key>
+            <value> <string>getAvailableBaseCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

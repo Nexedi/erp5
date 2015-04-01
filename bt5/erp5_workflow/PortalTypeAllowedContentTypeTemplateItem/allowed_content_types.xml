@@ -1,4 +1,19 @@
 <allowed_content_type_list>
+ <portal_type id="ERP5 Workflow Tool">
+  <item>Interaction Workflow</item>
+  <item>Workflow</item>
+ </portal_type>
+ <portal_type id="Interaction">
+  <item>Transition Variable</item>
+ </portal_type>
+ <portal_type id="Interaction Workflow">
+  <item>Interaction</item>
+  <item>Variable</item>
+  <item>Workflow Script</item>
+ </portal_type>
+ <portal_type id="State">
+  <item>PermissionRoles</item>
+ </portal_type>
  <portal_type id="Transition">
   <item>Transition Variable</item>
  </portal_type>
@@ -6,9 +21,11 @@
   <item>State</item>
   <item>Transition</item>
   <item>Variable</item>
+  <item>Workflow Script</item>
   <item>Worklist</item>
  </portal_type>
  <portal_type id="Workflow Module">
+  <item>Interaction Workflow</item>
   <item>Workflow</item>
  </portal_type>
 </allowed_content_type_list>

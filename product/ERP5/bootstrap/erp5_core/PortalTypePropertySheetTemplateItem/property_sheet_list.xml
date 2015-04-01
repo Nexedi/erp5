@@ -35,6 +35,9 @@
  <portal_type id="Extension Component">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Preference">
+  <item>TelephonePreference</item>
+ </portal_type>
  <portal_type id="Property Existence Constraint">
   <item>ConstraintType</item>
  </portal_type>
@@ -64,5 +67,8 @@
   <item>Base</item>
   <item>SimpleItem</item>
   <item>Task</item>
+ </portal_type>
+ <portal_type id="Workflow Script">
+  <item>WorkflowScript</item>
  </portal_type>
 </property_sheet_list>

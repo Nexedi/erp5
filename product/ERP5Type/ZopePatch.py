@@ -70,6 +70,7 @@ from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
 from Products.ERP5Type.patches import ExternalMethod
 from Products.ERP5Type.patches import User
+from Products.ERP5Type.patches import utils
 from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transition" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>actbox_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Invalidate</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_id</string> </key>
+            <value>
+              <tuple>
+                <string>invalidate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_script_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>invalidate_action</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Transition</string> </value>
+        </item>
+        <item>
+            <key> <string>ref</string> </key>
+            <value> <string>invalidate_action</string> </value>
+        </item>
+        <item>
+            <key> <string>role</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Invalidate Action</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -187,6 +187,8 @@ VcsPreference
 WebSection
 WebSite
 Workflow
+WorkflowScript
+Worklist
 XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference

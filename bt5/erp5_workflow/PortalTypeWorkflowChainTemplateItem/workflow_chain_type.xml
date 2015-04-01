@@ -1,0 +1,50 @@
+<workflow_chain>
+ <chain>
+  <type>ERP5 Workflow Tool</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Interaction</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Interaction Workflow</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>PermissionRoles</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>State</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transition</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transition Variable</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Variable</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Workflow</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Workflow Module</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Workflow Script</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Worklist</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+</workflow_chain>

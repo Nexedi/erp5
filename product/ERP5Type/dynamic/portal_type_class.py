@@ -33,7 +33,7 @@ import inspect
 import transaction
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
-from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
+from Products.ERP5Type.Base import resetRegisteredWorkflowMethod, resetRegisteredERP5WorkflowMethod
 from . import aq_method_lock
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
@@ -396,6 +396,7 @@ def synchronizeDynamicModules(context, force=False):
     # methods adds/registers/wraps existing methods, but does not
     # remove old chains. Do it now.
     resetRegisteredWorkflowMethod()
+    resetRegisteredERP5WorkflowMethod()
 
     # Some method generations are based on portal methods, and portal
     # methods cache results. So it is safer to invalidate the cache.

@@ -1,8 +1,23 @@
+ERP5 Workflow Tool | view
+Interaction Workflow | interaction_view
+Interaction Workflow | script_view
+Interaction Workflow | variable_view
+Interaction Workflow | view
+Interaction | view
+PermissionRoles | view
+State | permission
 State | view
 Transition Variable | view
 Transition | view
 Variable | view
-Workflow Module | view
+Workflow Module | contents
+Workflow Script | proxy_role_view
+Workflow Script | repository_history_view
+Workflow Script | view
+Workflow | configurator_settings
+Workflow | launch_configuration
+Workflow | permission_view
+Workflow | script_view
 Workflow | state_view
 Workflow | transition_view
 Workflow | variable_view

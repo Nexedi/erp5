@@ -37,7 +37,7 @@ def setWorkflowVariable(self, **kw):
   """
   history = self.object.workflow_history[self.workflow.id]
   history[-1].update(kw)
-  history._p_changed = 1
+  #history._p_changed = 1
 
 StateChangeInfo.setWorkflowVariable = setWorkflowVariable
 

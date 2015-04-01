@@ -4,7 +4,7 @@
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#               2014 Wenjie.Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -20,7 +20,6 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -48,6 +47,7 @@ from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TR
 from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
+from types import NoneType
 
 def getCurrentUserIdOrAnonymousToken():
   """Return connected user_id or simple token for
@@ -133,7 +133,7 @@ class LocalRoleAssignorMixIn(object):
       ## Make sure that the object is reindexed if modified
       # XXX: Document modification detection assumes local roles are always
       # part of ob and not separate persistent objects.
-      if reindex and ob._p_changed:
+      if reindex:# and ob._p_changed:
         ob.reindexObjectSecurity(activate_kw=dict(activate_kw))
 
     security.declarePrivate('getFilteredRoleListFor')
@@ -244,6 +244,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
+    erp5workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -420,6 +421,12 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
+        for ERP5Workflow_id in self.getTypeERP5WorkflowList():
+          workflow_module = portal.getDefaultModule(portal_type="Workflow")
+          if workflow_module is not None:
+            ERP5Workflow = workflow_module._getOb(ERP5Workflow_id)
+            ERP5Workflow.initializeDocument(ob)
+
       if not temp_object:
         init_script = self.getTypeInitScriptId()
         if init_script:
@@ -449,6 +456,12 @@ class ERP5TypeInformation(XMLObject,
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeERP5WorkflowList')
+    def getTypeERP5WorkflowList(self):
+      """Getter for 'type_workflow' property"""
+      return list(self.erp5workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
@@ -586,6 +599,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
+      search_source_list += self.getTypeERP5WorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declareProtected(Permissions.AccessContentsInformation,

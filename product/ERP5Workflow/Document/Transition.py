@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,10 +27,27 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.DCWorkflow.Expression import StateChangeInfo
+from zLOG import LOG, ERROR, DEBUG, WARNING
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
+from copy import deepcopy
+import sys
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.DCWorkflow.Guard import Guard
+from Products.CMFCore.Expression import Expression
+
+TRIGGER_AUTOMATIC = 0
+TRIGGER_USER_ACTION = 1
+TRIGGER_WORKFLOW_METHOD = 2
 
 class Transition(XMLObject):
   """
@@ -42,6 +59,13 @@ class Transition(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
+  guard = None
+  actbox_name = ''
+  actbox_url = ''
+  actbox_icon = ''
+  actbox_category = 'workflow'
+  var_exprs = None  # A mapping.
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -56,81 +80,219 @@ class Transition(XMLObject):
              PropertySheet.Transition,
   )
 
+  def _getObjectByRef(self, ref):
+    for ob in self:
+      if wf.getRef() == ref:
+        return ob
+    return None
+
+  def getGuardSummary(self):
+    res = None
+    if self.guard is not None:
+      res = self.guard.getSummary()
+    return res
+
+  def getGuard(self):
+    if self.guard is None:
+      self.generateGuard()
+    return self.guard ### only generate gurad when self is a User Action
+      #return Guard().__of__(self)  # Create a temporary guard.
+
+  def getVarExprText(self, id):
+    if not self.var_exprs:
+      return ''
+    else:
+      expr = self.var_exprs.get(id, None)
+      if expr is not None:
+        return expr.text
+      else:
+        return ''
+
+  def generateGuard(self):
+    if self.trigger_type == TRIGGER_USER_ACTION:
+      if self.guard == None:
+        self.guard = Guard(permissions=self.getPermissionList(),
+                      roles=self.getRoleList(),
+                      groups=self.getGroupList(),
+                      expr=self.getExpression())
+      else:
+        if self.guard.roles != self.getRoleList():
+          self.guard.roles = self.getRoleList()
+        if self.guard.permissions != self.getPermissionList():
+          self.guard.permissions = self.getPermissionList()
+        if self.guard.groups != self.getGroupList():
+          self.guard.groups = self.getGroupList()
+        if self.guard.expr != self.getExpression():
+          self.guard.expr = self.getExpression()
+
   def execute(self, document, form_kw=None):
     """
     Execute transition.
     """
+    sci = None
+    econtext = None
+    moved_exc = None
+    validation_exc = None
+    tool = getToolByName(self, 'portal_workflow')
+
+    # Figure out the old and new states.
+    if form_kw is None:
+      form_kw = {}
     workflow = self.getParentValue()
-    # Call the before script
-    self._executeBeforeScript(document)
 
-    # Modify the state
-    self._changeState(document)
-
-    # Get variable values
+    ### get related history
+    state_var = workflow.getStateVariable()
     status_dict = workflow.getCurrentStatusDict(document)
+    state_object = workflow._getWorkflowStateOf(document, id_only=0)
+
+    if state_object == None:
+      state_object = workflow.getSourceValue()
+
+    old_state = state_object.getId() ### getRef
+    old_sdef = state_object
+
+    new_state = self.getDestinationId()
+
+    if new_state is None:
+        #new_state = workflow.getSourceId()
+        new_state = old_state
+        if not new_state:
+            # Do nothing if there is no initial state. We may want to create
+            # workflows with no state at all, only for worklists.
+            return
+        former_status = {}
+    else:
+        former_status = state_object.getId() ### getRef
+
+    try:
+        new_sdef = self.getDestinationValue()
+    except KeyError:
+        raise WorkflowException('Destination state undefined: ' + new_state)
+
+    # Execute the "before" script.
+    before_script_success = 1
+    script_id = self.getBeforeScriptId()
+    if script_id:
+      script = self.getParent()._getOb(script_id) ### _getObjectByRef
+      # Pass lots of info to the script in a single parameter.
+      kwargs = form_kw
+      sci = StateChangeInfo(
+            document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
+      try:
+        #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
+        script.execute(sci)  # May throw an exception.
+      except ValidationFailed, validation_exc:
+        before_script_success = 0
+        before_script_error_message = deepcopy(validation_exc.msg)
+        validation_exc_traceback = sys.exc_traceback
+      except ObjectMoved, moved_exc:
+        ob = moved_exc.getNewObject()
+        # Re-raise after transition
+
+    # Do not proceed in case of failure of before script
+    if not before_script_success:
+      former_status = old_state # Remain in state
+      tool.setStatusOf(workflow.getId(), document, status_dict) ### getRef
+      sci = StateChangeInfo(
+        document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
+        # put the error message in the workflow history
+      sci.setWorkflowVariable(error_message=before_script_error_message)
+      if validation_exc :
+        # reraise validation failed exception
+        raise validation_exc, None, validation_exc_traceback
+      return old_state
+
+    # update state
+    state = self.getDestination()
+    if state is None:
+      state = old_sdef
+    state_var = workflow.getStateVariable()
+    #document.setCategoryMembership(state_var, state)
+
     status_dict['undo'] = 0
 
     # Modify workflow history
-    state_bc_id = workflow.getStateBaseCategory()
-    status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
-
-    state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
+    status_dict[state_var] = new_state
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
-    # Update all variables
-    for variable in workflow.contentValues(portal_type='Variable'):
-      if variable.getAutomaticUpdate():
-        # if we have it in form get it from there
-        # otherwise use default
-        variable_title = variable.getTitle()
-        if variable_title in form_kw:
-           status_dict[variable_title] = form_kw[variable_title]
+    # update variables =========================================================
+    state_values = None
+
+    if new_sdef is not None:
+      state_values = new_sdef.objectValues(portal_type='Variable')
+    if state_values is None:
+      state_values = {}
+
+    tdef_exprs = self.objectValues(portal_type='Variable')
+    if tdef_exprs is None:
+      tdef_exprs = {}
+
+    for vdef in workflow.objectValues(portal_type='Variable'):
+      id = vdef.getId() ### getRef
+      if vdef.for_status == 0:
+        continue
+      expr = None
+      if id in state_values:
+        value = state_values[id]
+      elif id in tdef_exprs:
+        expr = tdef_exprs[id]
+      elif not vdef.update_always and id in former_status:
+        # Preserve former value
+        value = former_status[id]
+      else:
+        if vdef.default_expr is not None:
+          expr = vdef.default_expr
         else:
-          status_dict[variable_title] = variable.getInitialValue(object=object)
+          value = vdef.default_value
+      if expr is not None:
+        # Evaluate an expression.
+        if econtext is None:
+          # Lazily create the expression context.
+          if sci is None:
+            kwargs = form_kw
+            sci = StateChangeInfo(
+                document, workflow, former_status, self,
+                old_sdef, new_sdef, kwargs)
+          econtext = Expression_createExprContext(sci)
+        expr = Expression(expr)
+        value = expr(econtext)
+      status_dict[id] = value
 
     # Update all transition variables
     if form_kw is not None:
       object.REQUEST.other.update(form_kw)
-    for variable in self.contentValues(portal_type='Transition Variable'):
+
+    for variable in self.objectValues(portal_type='Transition Variable'):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
-    workflow._updateWorkflowHistory(document, status_dict)
+    # Generate Workflow History List
+    tool.setStatusOf(workflow.getId(), document, status_dict) ### getRef
 
-    # Call the after script
-    self._executeAfterScript(document, form_kw=form_kw)
+    ### zwj: update Role mapping, also in Workflow, initialiseDocument()
+    workflow.updateRoleMappingsFor(document)
 
-  def _changeState(self, document):
-    """
-    Change the state of the object.
-    """
-    state = self.getDestination()
-    if state is not None:
-      # Some transitions don't update the state
-      state_bc_id = self.getParentValue().getStateBaseCategory()
-      document.setCategoryMembership(state_bc_id, state)
-
-  def _executeAfterScript(self, document, form_kw=None):
-    """
-    Execute post transition script.
-    """
-    if form_kw is None:
-      form_kw = {}
+    # Execute the "after" script.
     script_id = self.getAfterScriptId()
     if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
-
-  def _executeBeforeScript(self, document, form_kw=None):
-    """
-    Execute pre transition script.
-    """
-    if form_kw is None:
-      form_kw = {}
-    script_id = self.getBeforeScriptId()
-    if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
+      kwargs = form_kw
+      # Script can be either script or workflow method
+      if script_id in old_sdef.getDestinationIdList():
+        getattr(workflow, convertToMixedCase(script_id)).execute(document)
+      else:
+        script = self.getParent()._getOb(script_id) ### _getObjectByRef
+        # Pass lots of info to the script in a single parameter.
+        if script.getTypeInfo().getId() == 'Workflow Script':
+          sci = StateChangeInfo(
+              document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
+          script.execute(sci)  # May throw an exception.
+        else:
+          raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getId())) ### getRef
+    # Return the new state object.
+    if moved_exc is not None:
+        # Propagate the notification that the object has moved.
+        raise moved_exc
+    else:
+        return new_sdef
 
   def _checkPermission(self, document):
     """

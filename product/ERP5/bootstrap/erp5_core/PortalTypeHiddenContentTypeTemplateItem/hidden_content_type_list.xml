@@ -1,0 +1,11 @@
+<hidden_content_type_list>
+ <portal_type id="Preference">
+  <item>Accounting Transaction</item>
+  <item>Knowledge Pad</item>
+  <item>Payment Transaction</item>
+  <item>Purchase Invoice Transaction</item>
+  <item>Sale Invoice Transaction</item>
+  <item>Sale Order</item>
+  <item>Support Request</item>
+ </portal_type>
+</hidden_content_type_list>

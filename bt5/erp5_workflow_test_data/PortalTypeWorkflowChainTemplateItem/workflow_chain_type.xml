@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>ERP5Workflow Test Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

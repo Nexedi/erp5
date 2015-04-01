@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 
@@ -61,6 +61,7 @@ class TranslatedPropertyGetter(BaseGetter):
     if self._warning:
       LOG("ERP5Type Deprecated Getter Id:",0, self._id)
     domain = instance.getProperty('%s_translation_domain' % self._property_id)
+    LOG("A. instance is '%s' _property_id is '%s' domain is '%s'"%(instance.getId(),self._property_id,domain), WARNING, ' in Translation.py')
 
     if domain==TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
       if len(args) > 0:
@@ -80,10 +81,13 @@ class TranslatedPropertyGetter(BaseGetter):
         return default
     else:
       value = instance.getProperty(self._property_id)
+      LOG("B. instance is '%s' _property_id is '%s' value is '%s'"%(instance.getId(),self._property_id, value), WARNING, ' in Translation.py')
       if domain == '' or (value in ('', None)):
         return value
       localizer = instance.getPortalObject().Localizer
-      message_catalog = getattr(localizer, domain, None)
+      if domain is not None:
+        message_catalog = getattr(localizer, domain, None)
+      else: message_catalog = None
       if message_catalog is not None:
         return message_catalog.gettext(unicode(value, 'utf8'), lang=self._language).encode('utf8')
       else:

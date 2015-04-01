@@ -29,6 +29,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.DCWorkflow.Guard import Guard
+from Products.CMFCore.Expression import Expression
 
 class Variable(XMLObject):
     """
@@ -40,6 +42,15 @@ class Variable(XMLObject):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+
+    info_guard = None
+    description = ''
+    for_catalog = 1
+    for_status = 1
+    default_value = ''
+    default_expr = None  # Overrides default_value if set
+    info_guard = None
+    update_always = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -53,3 +64,62 @@ class Variable(XMLObject):
                PropertySheet.DublinCore,
                PropertySheet.Variable,
     )
+
+    def getDefaultExprText(self):
+        if not self.default_expr:
+            return ''
+        else:
+            return self.default_expr.text
+
+    def generateInfoGuard(self):
+        if self.info_guard == None:
+          self.info_guard = Guard(permissions=self.getPermissionList(),
+                        roles=self.getRoleList(),
+                        groups=self.getGroupList(),
+                        expr=self.getExpression())
+
+        if self.info_guard.roles != self.getRoleList():
+          self.info_guard.roles = self.getRoleList()
+        elif self.info_guard.permissions != self.getPermissionList():
+          self.info_guard.permissions = self.getPermissionList()
+        elif self.info_guard.groups != self.getGroupList():
+          self.info_guard.groups = self.getGroupList()
+        elif self.info_guard.expr != self.getExpression():
+          self.info_guard.expr = self.getExpression()
+
+    def getInfoGuard(self):
+        if self.info_guard is not None:
+            self.generateGuard()
+        return self.info_guard
+
+    def getInfoGuardSummary(self):
+        res = None
+        if self.info_guard is not None:
+            res = self.info_guard.getSummary()
+        return res
+
+    ### zwj: originated from DC workflow; seems useless here?
+    def setProperties(self, description,
+                      default_value='', default_expr='',
+                      for_catalog=0, for_status=0,
+                      update_always=0,
+                      props=None, REQUEST=None):
+        '''
+        '''
+        self.description = str(description)
+        self.default_value = str(default_value)
+        if default_expr:
+            self.default_expr = Expression(default_expr)
+        else:
+            self.default_expr = None
+
+        g = Guard()
+        if g.changeFromProperties(props or REQUEST):
+            self.info_guard = g
+        else:
+            self.info_guard = None
+        self.for_catalog = bool(for_catalog)
+        self.for_status = bool(for_status)
+        self.update_always = bool(update_always)
+        if REQUEST is not None:
+            return self.manage_properties(REQUEST, 'Properties changed.')

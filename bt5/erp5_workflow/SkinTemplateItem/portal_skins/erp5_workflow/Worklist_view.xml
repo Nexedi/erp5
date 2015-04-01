@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -85,15 +85,29 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_ref</string>
                         <string>my_title</string>
+                        <string>my_id</string>
                         <string>my_description</string>
+                        <string>my_matched_portal_type_list</string>
+                        <string>my_matched_validation_state_list</string>
+                        <string>my_matched_simulation_state_list</string>
+                        <string>my_actbox_name</string>
+                        <string>my_actbox_url</string>
+                        <string>my_actbox_icon</string>
+                        <string>my_actbox_category</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_group_list</string>
+                        <string>my_expression</string>
+                        <string>my_permission_list</string>
+                        <string>my_role_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

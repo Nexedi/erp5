@@ -1,0 +1,13 @@
+<property_sheet_list>
+ <portal_type id="Interaction Workflow">
+  <item>DefaultImage</item>
+  <item>WorkflowConfigurator</item>
+ </portal_type>
+ <portal_type id="Workflow">
+  <item>DefaultImage</item>
+  <item>WorkflowConfigurator</item>
+ </portal_type>
+ <portal_type id="Workflow Script">
+  <item>WorkflowScript</item>
+ </portal_type>
+</property_sheet_list>

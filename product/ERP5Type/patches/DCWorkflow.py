@@ -38,6 +38,8 @@ from copy import deepcopy
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
 from Products.DCWorkflow.Guard import Guard, _checkPermission
 
+from zLOG import LOG, WARNING
+
 ACTIVITY_GROUPING_COUNT = 100
 
 def WorkflowUIMixin_setProperties( self, title
@@ -718,6 +720,10 @@ def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
 
 DCWorkflowDefinition.getFutureStateSet = DCWorkflowDefinition_getFutureStateSet
 
+def DCWorkflowDefinition_getStateVariable(self):
+  ### return state variable name, for ERP5 compatibility
+  return self.state_var
+DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD

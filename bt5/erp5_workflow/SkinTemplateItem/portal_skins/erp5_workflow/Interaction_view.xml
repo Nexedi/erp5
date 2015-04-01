@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_ref</string>
+                        <string>my_id</string>
+                        <string>my_title</string>
+                        <string>my_description</string>
+                        <string>my_trigger_method_id</string>
+                        <string>my_portal_type_filter_list</string>
+                        <string>my_portal_type_group_filter_list</string>
+                        <string>my_trigger_once_per_transaction</string>
+                        <string>my_temporary_document_disallowed</string>
+                        <string>my_before_script_name</string>
+                        <string>my_after_script_name</string>
+                        <string>my_before_commit_script_name</string>
+                        <string>my_activate_script_name</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_expression</string>
+                        <string>my_group_list</string>
+                        <string>my_permission_list</string>
+                        <string>my_role_list</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Interaction_view</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>InteractionWorkflow_viewInteraction</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

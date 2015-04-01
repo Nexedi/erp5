@@ -51,7 +51,8 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
                  AcknowledgementTool, SolverTool, SolverProcessTool,\
                  ConversionTool, RoundingTool, UrlRegistryTool, InterfaceTool,\
-                 CertificateAuthorityTool, InotifyTool, TaskDistributionTool
+                 CertificateAuthorityTool, InotifyTool, TaskDistributionTool, \
+                 ERP5WorkflowTool
 import ERP5Site
 from Document import PythonScript
 object_classes = ( ERP5Site.ERP5Site,
@@ -84,6 +85,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  InotifyTool.InotifyTool,
                  TaskDistributionTool.TaskDistributionTool,
                  InterfaceTool.InterfaceTool,
+                 ERP5WorkflowTool.ERP5WorkflowTool
                 )
 content_classes = ()
 content_constructors = ()

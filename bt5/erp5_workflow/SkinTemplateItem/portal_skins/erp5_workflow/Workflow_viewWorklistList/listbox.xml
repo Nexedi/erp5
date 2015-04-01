@@ -10,11 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -80,12 +81,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>ref</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                       </list>
                     </value>
@@ -93,12 +98,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -123,6 +123,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>workflow_worklist_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ref</string>
+                          <string>Reference</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

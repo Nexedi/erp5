@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>view</string> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>View</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/ERP5WorkflowTestDocument_view</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

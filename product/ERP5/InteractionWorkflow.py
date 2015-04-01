@@ -32,6 +32,8 @@ from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type import Permissions
 
+from zLOG import LOG, WARNING
+
 _MARKER = []
 
 class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):

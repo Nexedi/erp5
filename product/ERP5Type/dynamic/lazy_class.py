@@ -1,5 +1,25 @@
 # -*- coding: utf-8 -*-
-
+##############################################################################
+#
+# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#               2014 Wenjie.Zheng <wenjie.zheng@tiolive.com>
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE
+#
+##############################################################################
 import sys
 
 from Products.ERP5Type import Permissions
@@ -7,7 +27,7 @@ from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from . import aq_method_lock
-from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
+from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods, initializePortalTypeERP5WorkflowMethod
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
@@ -144,6 +164,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
     cls.workflow_method_registry = {}
+    cls.erp5workflow_method_registry = {}
 
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
@@ -222,12 +243,14 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                         '__doc__',
                         '__setstate__',
                         'workflow_method_registry',
+                        'erp5workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
       ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
       cls.workflow_method_registry.clear()
+      #cls.erp5workflow_method_registry.clear()
       cls.__bases__ = (ghostbase,)
       cls.__isghost__ = True
       cls.resetAcquisition()
@@ -257,14 +280,34 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                                                        category_id,
                                                        category_tool)
 
-    portal_workflow = getattr(site, 'portal_workflow', None)
-    if portal_workflow is None:
+
+    ###= Compatibility mode ====================================================
+
+    if hasattr(site, 'portal_workflow'):
+      portal_workflow = site.portal_workflow
+    elif hasattr(site, 'portal_workflow_old'):
+      portal_workflow = site.portal_workflow_old
+    else:
+      portal_workflow = None
+
+    #portal_workflow = site.portal_workflow
+    workflow_module = getattr(site, 'workflow_module', None)
+    portal_types = site.getDefaultModule(portal_type="portal_types")
+    object_ptype = portal_types._getOb(cls.__name__, None)
+
+    if portal_workflow is None and workflow_module is None:
       if not getattr(site, '_v_bootstrapping', False):
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not generate workflow methods for %s"
             % cls.__name__)
     else:
       initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
+      ### it seems at the creation, classes that don't belong to ERP5 object could
+      # be loaded, thus only erp5 object types can be initialized.
+      if object_ptype is not None and workflow_module is not None:
+        if object_ptype.getTypeERP5WorkflowList() != []:
+          initializePortalTypeERP5WorkflowMethod(cls, workflow_module)
+    ### =================================================== Compatibility Mode =
 
     # portal type group methods, isNodeType, isResourceType...
     from Products.ERP5Type.ERP5Type import ERP5TypeInformation

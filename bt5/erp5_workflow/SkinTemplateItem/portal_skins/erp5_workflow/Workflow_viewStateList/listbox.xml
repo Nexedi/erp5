@@ -15,6 +15,7 @@
                 <string>editable_columns</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -81,8 +82,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>ref</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -138,6 +139,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>workflow_state_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ref</string>
+                          <string>Reference</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

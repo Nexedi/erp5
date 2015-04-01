@@ -14,6 +14,7 @@ Alarm | solve
 Alarm | standard_report
 Alarm | view
 Application Id Generator | view
+Applied Rule | view
 Attribute Blacklisted Constraint | predicate
 Attribute Blacklisted Constraint | view
 Attribute Equality Constraint | predicate
@@ -23,20 +24,29 @@ Attribute Unicity Constraint | view
 Base Category | view
 Base Domain | view
 Base Type | action_view
+Base Type | copy_roles
 Base Type | role_view
 Base Type | translation_view
 Base Type | update_local_roles
 Base Type | view
+Business Template | clean_vcs_bt
+Business Template | conflicted_files
+Business Template | create_report
+Business Template | create_working_copy
 Business Template | export
 Business Template | get_portal_type_properties
+Business Template | git_commit
 Business Template | guess_portal_types
 Business Template | jump_trash_bin
+Business Template | manage_field_library
 Business Template | migrate_component_from_filesystem
+Business Template | rename_proxy_field
 Business Template | save
 Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
+Business Template | view_svn_repos_info
 Cache Bag | view
 Cache Factory | statistics
 Cache Factory | view
@@ -57,6 +67,7 @@ Category Related Membership State Constraint | predicate
 Category Related Membership State Constraint | view
 Category Tool | export_category_list
 Category Tool | fast_input
+Category Tool | generate_translation_file
 Category Tool | view
 Category | view
 Component Tool | run_live_test
@@ -66,6 +77,7 @@ Content Existence Constraint | predicate
 Content Existence Constraint | view
 Contribution Predicate | view
 Contribution Registry Tool | view
+Delivery Tool | view
 Distributed Ram Cache | view
 Document Component | view
 Document | view
@@ -78,6 +90,7 @@ Folder | view
 Id Tool | view
 Memcached Plugin | view
 Memcached Tool | view
+Order Tool | view
 Predicate | view
 Preference Tool Type | view
 Preference Tool | advanced
@@ -87,9 +100,12 @@ Preference Type | role_view
 Preference Type | translation_view
 Preference Type | update_local_roles
 Preference Type | view
+Preference | base_preference
 Preference | change_password
 Preference | html_style_preferences
+Preference | vcs
 Preference | view
+Preference | view_accounting
 Preference | view_template
 Property Existence Constraint | predicate
 Property Existence Constraint | view
@@ -108,13 +124,22 @@ Rule Tool | view
 SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
 Script Constraint | view
+Simulation Movement | view
+Simulation Tool | view
 Standard Property | view
 String Attribute Match Constraint | predicate
 String Attribute Match Constraint | view
+System Preference | accounting_preference
 System Preference | captcha
+System Preference | crm_preference
+System Preference | dms_preference
+System Preference | pdm_preference
+System Preference | pricing_preference
+System Preference | trade_preference
 System Preference | view
 TALES Constraint | predicate
 TALES Constraint | view
+Template Tool | bt_vcs_history
 Template Tool | detailed_diff
 Template Tool | diff
 Template Tool | download
@@ -122,6 +147,7 @@ Template Tool | download_from_repository
 Template Tool | import
 Template Tool | install_from_repository
 Template Tool | jump_trash_bins
+Template Tool | search_portal_type
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
@@ -130,7 +156,11 @@ Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
 Trash Tool | view
+Types Tool | role_information_list_view
 Types Tool | view
+Workflow Script | proxy_role_view
+Workflow Script | repository_history_view
+Workflow Script | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | category_tool

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Worklist" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>actbox_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Document to Validate (%(count)s)</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Document to Validate</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>5</string> </value>
+        </item>
+        <item>
+            <key> <string>matched_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>ERP5Workflow Test Document</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>matched_simulation_state</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>matched_validation_state</string> </key>
+            <value>
+              <tuple>
+                <string>draft</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Worklist</string> </value>
+        </item>
+        <item>
+            <key> <string>ref</string> </key>
+            <value> <string>1_draft_document_list</string> </value>
+        </item>
+        <item>
+            <key> <string>role</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>1_draft_document_list</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

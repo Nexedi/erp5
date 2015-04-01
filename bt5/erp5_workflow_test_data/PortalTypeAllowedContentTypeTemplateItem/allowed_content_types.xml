@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="ERP5Workflow Test Module">
+  <item>ERP5Workflow Test Document</item>
+ </portal_type>
+</allowed_content_type_list>

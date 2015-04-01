@@ -4,6 +4,7 @@ Alarm | edit_workflow
 Attribute Blacklisted Constraint | dynamic_class_generation_interaction_workflow
 Attribute Equality Constraint | dynamic_class_generation_interaction_workflow
 Attribute Unicity Constraint | dynamic_class_generation_interaction_workflow
+Base Category | category_publication_workflow
 Base Category | dynamic_class_generation_interaction_workflow
 Base Category | edit_workflow
 Base Type | base_type_interaction_workflow
@@ -18,6 +19,7 @@ Category Property | dynamic_class_generation_interaction_workflow
 Category Related Membership Arity Constraint | dynamic_class_generation_interaction_workflow
 Category Related Membership State Constraint | dynamic_class_generation_interaction_workflow
 Category Tool | dynamic_class_generation_interaction_workflow
+Category | category_publication_workflow
 Category | edit_workflow
 Content Existence Constraint | dynamic_class_generation_interaction_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
@@ -39,6 +41,7 @@ Property Existence Constraint | dynamic_class_generation_interaction_workflow
 Property Sheet Tool | dynamic_class_generation_interaction_workflow
 Property Sheet | dynamic_class_generation_interaction_workflow
 Property Type Validity Constraint | dynamic_class_generation_interaction_workflow
+Simulation Movement | simulation_movement_causality_interaction_workflow
 Standard Property | dynamic_class_generation_interaction_workflow
 String Attribute Match Constraint | dynamic_class_generation_interaction_workflow
 System Preference | edit_workflow

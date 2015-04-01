@@ -10,11 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -80,16 +81,32 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>ref</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>trigger_type</string>
+                          <string>Trigger</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Destination State</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_list</string>
+                          <string>Required Roles</string>
+                        </tuple>
+                        <tuple>
+                          <string>before_script_id</string>
+                          <string>Before Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>after_script_id</string>
+                          <string>After Script</string>
                         </tuple>
                       </list>
                     </value>
@@ -127,6 +144,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>workflow_transition_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ref</string>
+                          <string>Reference</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

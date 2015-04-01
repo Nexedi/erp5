@@ -27,7 +27,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/boolean</string>
+                <string>elementary_type/int</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +46,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value> <string>update_always</string> </value>
         </item>
       </dictionary>
     </pickle>

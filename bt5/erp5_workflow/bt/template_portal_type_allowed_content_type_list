@@ -1,6 +1,15 @@
+ERP5 Workflow Tool | Interaction Workflow
+ERP5 Workflow Tool | Workflow
+Interaction Workflow | Interaction
+Interaction Workflow | Variable
+Interaction Workflow | Workflow Script
+Interaction | Transition Variable
+State | PermissionRoles
 Transition | Transition Variable
+Workflow Module | Interaction Workflow
 Workflow Module | Workflow
 Workflow | State
 Workflow | Transition
 Workflow | Variable
+Workflow | Workflow Script
 Workflow | Worklist
