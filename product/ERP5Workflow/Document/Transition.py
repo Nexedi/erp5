@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -26,13 +26,30 @@
 #
 ##############################################################################
 
+import sys
+
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_base
+from copy import deepcopy
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.utils import getToolByName
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
+from Products.DCWorkflow.Guard import Guard
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.XMLObject import XMLObject
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
-class Transition(XMLObject):
+TRIGGER_AUTOMATIC = 0
+TRIGGER_USER_ACTION = 1
+TRIGGER_WORKFLOW_METHOD = 2
+
+class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
   """
   A ERP5 Transition.
   """
@@ -42,7 +59,14 @@ class Transition(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-
+  trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
+  guard = None
+  actbox_name = ''
+  actbox_url = ''
+  actbox_icon = ''
+  actbox_category = 'workflow'
+  var_exprs = None  # A mapping.
+  default_reference = ''
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -53,95 +77,36 @@ class Transition(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.Transition,
   )
 
-  def execute(self, document, form_kw=None):
-    """
-    Execute transition.
-    """
-    workflow = self.getParentValue()
-    # Call the before script
-    self._executeBeforeScript(document)
+  def getGuardSummary(self):
+    res = None
+    if self.getGuard() is not None:
+      res = self.guard.getSummary()
+    return res
 
-    # Modify the state
-    self._changeState(document)
-
-    # Get variable values
-    status_dict = workflow.getCurrentStatusDict(document)
-    status_dict['undo'] = 0
-
-    # Modify workflow history
-    state_bc_id = workflow.getStateBaseCategory()
-    status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
-
-    state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
-    object = workflow.getStateChangeInformation(document, state_object, transition=self)
-
-    # Update all variables
-    for variable in workflow.contentValues(portal_type='Variable'):
-      if variable.getAutomaticUpdate():
-        # if we have it in form get it from there
-        # otherwise use default
-        variable_title = variable.getTitle()
-        if variable_title in form_kw:
-           status_dict[variable_title] = form_kw[variable_title]
-        else:
-          status_dict[variable_title] = variable.getInitialValue(object=object)
-
-    # Update all transition variables
-    if form_kw is not None:
-      object.REQUEST.other.update(form_kw)
-    for variable in self.contentValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
-
-    workflow._updateWorkflowHistory(document, status_dict)
-
-    # Call the after script
-    self._executeAfterScript(document, form_kw=form_kw)
-
-  def _changeState(self, document):
-    """
-    Change the state of the object.
-    """
-    state = self.getDestination()
-    if state is not None:
-      # Some transitions don't update the state
-      state_bc_id = self.getParentValue().getStateBaseCategory()
-      document.setCategoryMembership(state_bc_id, state)
-
-  def _executeAfterScript(self, document, form_kw=None):
-    """
-    Execute post transition script.
-    """
-    if form_kw is None:
-      form_kw = {}
-    script_id = self.getAfterScriptId()
-    if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
-
-  def _executeBeforeScript(self, document, form_kw=None):
-    """
-    Execute pre transition script.
-    """
-    if form_kw is None:
-      form_kw = {}
-    script_id = self.getBeforeScriptId()
-    if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
-
-  def _checkPermission(self, document):
-    """
-    Check if transition is allowed.
-    """
-    expr_value = self.getGuardExpression(evaluate=0)
-    if expr_value is not None:
-      # do not use 'getGuardExpression' to calculate tales because
-      # it caches value which is bad. Instead do it manually
-      value = _evaluateTales(document, expr_value)
+  def getGuard(self):
+    if self.getRoleList() is None and\
+        self.getPermissionList() is None and\
+        self.getGroupList() is None and\
+        self.getExpression() is None and\
+        self.guard is None:
+      return None
     else:
-      value = True
-    #print "CALC", expr_value, '-->', value
-    return value
+      self.generateGuard()
+    return self.guard
+
+  def generateGuard(self):
+    if self.guard is None:
+      self.guard = Guard().__of__(self)
+    if self.getRoleList() is not None:
+      self.guard.roles = self.getRoleList()
+    if self.getPermissionList() is not None:
+      self.guard.permissions = self.getPermissionList()
+    if self.getGroupList() is not None:
+      self.guard.groups = self.getGroupList()
+    if self.getExpression() is not None:
+      self.guard.expr = Expression(self.getExpression())
+

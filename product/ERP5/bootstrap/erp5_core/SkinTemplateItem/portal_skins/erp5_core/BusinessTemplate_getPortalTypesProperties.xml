@@ -50,13 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalTypesProperties()\n
-\n
-REQUEST = context.REQUEST\n
+            <value> <string>REQUEST = context.REQUEST\n
+result, message =  context.getPortalTypesProperties()  \n
+ret_url = context.absolute_url() + \'/\' + REQUEST.get(\'form_id\', \'view\')\n
 \n
 if REQUEST is not None:\n
   ret_url = context.absolute_url() + \'/\' + REQUEST.get(\'form_id\', \'view\')\n
-  REQUEST.RESPONSE.redirect("%s?portal_status_message=Portal+Types+Properties+Updated"% ret_url)\n
+  if not result:\n
+    message = context.Base_translateString("Portal type properties have been updated.")\n
+  REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"% (ret_url, message))\n
 </string> </value>
         </item>
         <item>

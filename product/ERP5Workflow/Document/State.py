@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie ZHENG <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,8 +27,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_inner, aq_parent
+from Persistence import PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
@@ -38,7 +41,7 @@ class StateError(Exception):
   """
   pass
 
-class State(XMLObject):
+class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   """
   A ERP5 State.
   """
@@ -47,7 +50,9 @@ class State(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-
+  erp5_permission_roles = {} # { permission: [role] or (role,) }
+  default_reference = ''
+  type_list = ()
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -58,65 +63,45 @@ class State(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.State,)
 
-  def getAvailableTransitionList(self, document):
-    """
-    Return available transitions only if they are accessible for document.
-    """
-    transition_list = self.getDestinationValueList(portal_type = 'Transition')
-    result_list = []
-    for transition in transition_list:
-      value = transition._checkPermission(document)
-      if value:
-        result_list.append(transition)
-    return result_list
+  def addPossibleTransition(self, tr_ref):
+    possible_transition_list = self.getCategoryList()
+    transition = self.getParent()._getOb('transition_'+tr_ref, None)
+    if transition is not None:
+      tr_path = 'destination/' + '/'.join(transition.getPath().split('/')[2:])
+      possible_transition_list.append(tr_path)
+      self.setCategoryList(possible_transition_list)
 
-  def executeTransition(self, transition, document, form_kw=None):
-    """
-    Execute transition on the object.
-    """
-    if transition not in self.getAvailableTransitionList(document):
-      raise StateError
-    else:
-      transition.execute(document, form_kw=form_kw)
+  def setPermission(self, permission, acquired, roles, REQUEST=None):
+      """Set a permission for this State."""
+      permission_role = self.erp5_permission_roles
+      if permission_role is None:
+          self.erp5_permission_roles = permission_role = PersistentMapping()
+      if acquired:
+          roles = list(roles)
+      else:
+          roles = tuple(roles)
+      permission_role[permission] = roles
 
-  def undoTransition(self, document):
-    """
-    Reverse previous transition
-    """
-    wh = self.getWorkflowHistory(document, remove_undo=1)
-    status_dict = wh[-2]
-    # Update workflow state
-    state_bc_id = self.getParentValue().getStateBaseCategory()
-    document.setCategoryMembership(state_bc_id, status_dict[state_bc_id])
-    # Update workflow history
-    status_dict['undo'] = 1
-    self.getParentValue()._updateWorkflowHistory(document, status_dict)
-    # XXX
-    LOG("State, undo", ERROR, "Variable (like DateTime) need to be updated!")
+  def getPermissionRoleList(self):
+    return self.erp5_permission_roles
 
-  def getWorkflowHistory(self, document, remove_undo=0, remove_not_displayed=0):
-    """
-    Return history tuple
-    """
-    wh = document.workflow_history[self.getParentValue()._generateHistoryKey()]
-    result = []
-    # Remove undo
-    if not remove_undo:
-      result = [x.copy() for x in wh]
-    else:
-      result = []
-      for x in wh:
-        if x.has_key('undo') and x['undo'] == 1:
-          result.pop()
-        else:
-          result.append(x.copy())
-    return result
+  def getDestinationReferenceList(self):
+    ref_list = []
+    for tr in self.getDestinationValueList():
+      ref_list.append(tr.getReference())
+    return ref_list
 
-  def getVariableValue(self, document, variable_name):
+  def getAvailableTypeList(self):
+    """This is a method specific to ERP5. This returns a list of state types, which are used for portal methods.
     """
-    Get current value of the variable from the object
-    """
-    status_dict = self.getParentValue().getCurrentStatusDict(document)
-    return status_dict[variable_name]
+    return (
+            'draft_order',
+            'planned_order',
+            'future_inventory',
+            'reserved_inventory',
+            'transit_inventory',
+            'current_inventory',
+            )

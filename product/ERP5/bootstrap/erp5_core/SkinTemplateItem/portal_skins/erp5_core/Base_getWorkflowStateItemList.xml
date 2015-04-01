@@ -63,12 +63,12 @@ state_dict = {}\n
 item_list = []\n
 for workflow_id in workflow_id_list:\n
   workflow = getToolByName(context, \'portal_workflow\')[workflow_id]\n
-  for state in workflow.states.objectValues():\n
-    if state.title and state.id!=\'deleted\':\n
-      if not state_dict.has_key(state.id):\n
+  for state_id, state in workflow.getStateValueList().items():\n
+    if state.title and state_id!=\'deleted\':\n
+      if not state_dict.has_key(state_id):\n
         # we hide states without titles\n
-        item_list.append((state.title, state.id))\n
-        state_dict[state.id] = None\n
+        item_list.append((state.title, state_id))\n
+        state_dict[state_id] = None\n
 return item_list\n
 </string> </value>
         </item>

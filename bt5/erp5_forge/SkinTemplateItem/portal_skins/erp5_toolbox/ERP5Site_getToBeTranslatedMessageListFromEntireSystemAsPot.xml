@@ -92,7 +92,8 @@ iterate(context.portal_skins)\n
 \n
 # Collect python script from workflow objects.\n
 for workflow in context.portal_workflow.objectValues():\n
-  for i in workflow.scripts.objectValues():\n
+  script_value_dict = workflow.getScriptValueList()\n
+  for i_id, i in script_value_dict.items():\n
     if i.meta_type==\'Script (Python)\':\n
       python_script_list.append(i)\n
 \n
@@ -159,21 +160,22 @@ for i in page_template_list:\n
 s_title_list = []\n
 for i in context.portal_workflow.objectValues():\n
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))\n
-  \n
-  if not i.states:\n
+  state_value_dict = i.getStateValueList()\n
+  if not state_value_dict:\n
     continue\n
-  for s in i.states.values():\n
-     s_title = s.title\n
-     if s_title:\n
-       # adding a context in msg_id for more precise translation\n
-       msg_id = getMessageIdWithContext(s_title,\'state\',i.id)      \n
-       add_message(msg_id, portal_url.getRelativeContentURL(s))\n
-       # also use state title as msg_id for compatibility\n
-       add_message(s_title, portal_url.getRelativeContentURL(s))\n
+  for s_id, s in state_value_dict.items():\n
+    s_title = s.title\n
+    if s_title:\n
+      # adding a context in msg_id for more precise translation\n
+      msg_id = getMessageIdWithContext(s_title,\'state\',i.id)      \n
+      add_message(msg_id, portal_url.getRelativeContentURL(s))\n
+      # also use state title as msg_id for compatibility\n
+      add_message(s_title, portal_url.getRelativeContentURL(s))\n
   \n
-  if not i.transitions:\n
+  transition_value_dict = i.getTransitionValueList()\n
+  if not transition_value_dict:\n
     continue\n
-  for t in i.transitions.values():\n
+  for t_id, t in transition_value_dict.items():\n
     if t.actbox_name:\n
       #adding a context in msg_id for more precise translation\n
       msg_id = getMessageIdWithContext(t.actbox_name,\'transition\',i.id)\n
@@ -186,7 +188,7 @@ for i in context.portal_workflow.objectValues():\n
       add_message(msg_id, portal_url.getRelativeContentURL(t))\n
       # also use transition title as msg_id for compatibility\n
       add_message(t.title, portal_url.getRelativeContentURL(t))\n
-  for worklist in i.worklists.objectValues():\n
+  for worklist_id, worklist in i.getWorklistValueList().items():\n
     add_message(worklist.actbox_name, portal_url.getRelativeContentURL(worklist))\n
 \n
 \n

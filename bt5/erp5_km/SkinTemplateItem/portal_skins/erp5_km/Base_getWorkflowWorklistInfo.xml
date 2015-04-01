@@ -57,7 +57,7 @@
 \n
 portal_workflow = context.getPortalObject().portal_workflow\n
 workflow = getattr(portal_workflow, workflow_id)\n
-worklist = getattr(workflow.worklists, worklist_id)\n
+worklist = getattr(workflow.getWorklistValueList(), worklist_id)\n
 roles = worklist.getGuard().getRolesText().split(\';\')\n
 return roles\n
 </string> </value>

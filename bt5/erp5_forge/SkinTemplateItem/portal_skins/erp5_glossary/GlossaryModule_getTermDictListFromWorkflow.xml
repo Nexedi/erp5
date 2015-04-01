@@ -68,9 +68,9 @@ for bt_id in template_list:\n
     wf = getattr(context.portal_workflow, wf_id)\n
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?\n
       term_dict[(wf_id, bt_id, wf.title, wf.description)] = wf_id\n
-      for state_id, state in wf.states.items():\n
+      for state_id, state in wf.getStateValueList().items():\n
         term_dict[(state_id, bt_id, state.title, state.description)] = wf_id\n
-      for trans_id, trans in wf.transitions.items():\n
+      for trans_id, trans in wf.getTransitionValueList().items():\n
         term_dict[(trans_id, bt_id, trans.title, trans.description)] = wf_id\n
         if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION\n
           term_dict[(\'%s_actbox_name\' % trans_id, bt_id, trans.actbox_name, \'\')] = wf_id\n

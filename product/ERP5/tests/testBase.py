@@ -216,6 +216,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       Check if there is no activity in activity queue.
     """
     portal = self.getPortal()
+    self.tic()
     message_list = portal.portal_activities.getMessageList()
     self.assertEqual(len(message_list), 0)
 

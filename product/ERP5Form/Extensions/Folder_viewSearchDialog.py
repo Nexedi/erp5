@@ -320,16 +320,16 @@ def getSearchDialog(self, REQUEST=None):
   workflow_set = set()
   # possible workflow states
   for type_name in allowed_content_types:
-    for workflow_id in workflow_tool.getChainFor(type_name):
-      workflow = workflow_tool.getWorkflowById(workflow_id)
-      state_var = workflow.variables.getStateVar()
+    for workflow in workflow_tool.getWorkflowsFor(type_name):
+      workflow_id = workflow.getId()
+      state_var = workflow.getStateVariable()
 
       if state_var in workflow_set:
         continue
 
       workflow_set.add(state_var)
-      if workflow.states is None or \
-                len(workflow.states.objectIds()) <= 1:
+      if workflow.getStateValueList() is None or \
+                len(workflow.getStateValueList()) <= 1:
         continue
 
       field_id = 'your_%s' % state_var
@@ -339,8 +339,8 @@ def getSearchDialog(self, REQUEST=None):
       field.manage_edit_xmlrpc(dict(
           form_id='Base_viewDialogFieldLibrary',
           field_id='your_category_list'))
-      items = sorted([(translateString(x.title), x.id) for x
-                         in workflow.states.objectValues()],
+      items = sorted([(translateString(x.title), x.id) for x_ref, x
+                         in workflow.getStateValueList().items()],
                          key=lambda x:str(x[0]))
       field._surcharged_edit(
               dict(title=translateString(workflow.title),

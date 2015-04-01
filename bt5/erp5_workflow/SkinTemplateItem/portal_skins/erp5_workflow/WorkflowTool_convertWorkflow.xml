@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import url_quote\n
+\n
+REQUEST = container.REQUEST\n
+RESPONSE = REQUEST.RESPONSE\n
+workflow_list = kw.get(\'workflow_list\')\n
+selected_workflow_list = []\n
+selected_workflow_id_list = []\n
+\n
+if batch_mode == False and workflow_id_list is None:\n
+  if workflow_list:\n
+    for workflow in workflow_list:\n
+      if workflow.get(\'listbox_selected\'):\n
+        selected_workflow_list.append(context.getObjectFromPath(workflow.get(\'listbox_key\')))\n
+  \n
+  if len(selected_workflow_list) == 0:\n
+    return context.REQUEST.RESPONSE.redirect(\n
+             \'%s/WorkflowTool_viewWorkflowConversion?\'\n
+             \'portal_status_message=%s\' % ( context.absolute_url(),\n
+                                 url_quote(\'No Workflow Selected.\')))\n
+else:\n
+  for workflow_id in workflow_id_list:\n
+    selected_workflow_list.append(getattr(context, workflow_id))\n
+\n
+for workflow in selected_workflow_list:\n
+  if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() == \'Workflow\':\n
+    return context.REQUEST.RESPONSE.redirect(\n
+             \'%s/WorkflowTool_viewWorkflowConversion?\'\n
+             \'portal_status_message=%s\' % ( context.absolute_url(),\n
+                                 url_quote(\'workflow(s) is already exist.\')))\n
+  if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() == \'Interaction Workflow\':\n
+    return context.REQUEST.RESPONSE.redirect(\n
+             \'%s/WorkflowTool_viewWorkflowConversion?\'\n
+             \'portal_status_message=%s\' % ( context.absolute_url(),\n
+                                 url_quote(\'workflow(s) is already exist.\')))\n
+\n
+  # conversion\n
+  dc_workflow_xml = workflow.showAsXML()\n
+  new_workflow = context.dc_workflow_asERP5Object(context, workflow, temp=0)\n
+  selected_workflow_id_list.append(workflow.id)\n
+  #assert new_workflow.showAsXML() == dc_workflow_xml\n
+\n
+  type_workflow_dict = context.getChainsByType()\n
+  for ptype_id in type_workflow_dict:\n
+    ptype = getattr(context.getPortalObject().portal_types, ptype_id, None)\n
+    if ptype is not None and workflow.id in context.getChainsByType()[ptype_id]:\n
+      # 1. clean DC workflow assignement:\n
+      context.delTypeCBT(ptype.id, workflow.id)\n
+      # 2. assign ERP5 Workflow to portal type:\n
+      type_workflow_list = ptype.getTypeWorkflowList()\n
+      if new_workflow.getId() not in type_workflow_list:\n
+        ptype.addTypeWorkflowList(new_workflow.getId())\n
+\n
+if batch_mode:\n
+  return\n
+\n
+return RESPONSE.redirect("%s/view?portal_status_message=Workflow+%s+converted"\n
+                         %(context.absolute_url(), \',+\'.join(selected_workflow_id_list)))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>batch_mode=False, workflow_id_list=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WorkflowTool_convertWorkflow</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

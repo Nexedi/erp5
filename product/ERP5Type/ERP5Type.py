@@ -4,7 +4,7 @@
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#               2014 Wenjie.Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -46,6 +46,8 @@ from TranslationProviderBase import TranslationProviderBase
 from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
 
 from sys import exc_info
+from TranslationProviderBase import TranslationProviderBase
+from types import NoneType
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
@@ -244,6 +246,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
+    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -415,7 +418,7 @@ class ERP5TypeInformation(XMLObject,
       if notify_workflow:
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        workflow_tool = getToolByName(portal, 'portal_workflow', None)
+        workflow_tool = portal.portal_workflow
         if workflow_tool is not None:
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
@@ -449,6 +452,20 @@ class ERP5TypeInformation(XMLObject,
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeWorkflowList')
+    def getTypeWorkflowList(self):
+      """Getter for 'type_workflow' property"""
+      return list(self.workflow_list)
+
+    def delTypeWorkflowList(self, wf_id):
+      """ allow to modify workflow assignment from script. """
+      self.workflow_list = tuple(wf for wf in self.workflow_list if wf != wf_id)
+
+    def addTypeWorkflowList(self, wf_id):
+      """ allow to modify workflow assignment from script. """
+      self.workflow_list = self.workflow_list + (wf_id, )
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
@@ -586,6 +603,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
+      search_source_list += self.getTypeWorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declareProtected(Permissions.AccessContentsInformation,

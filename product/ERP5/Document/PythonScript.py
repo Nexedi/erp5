@@ -27,7 +27,6 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet
 from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject

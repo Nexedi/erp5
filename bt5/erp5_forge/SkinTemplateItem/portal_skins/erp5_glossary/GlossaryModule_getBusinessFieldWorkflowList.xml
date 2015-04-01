@@ -78,9 +78,9 @@ def get_obj_and_reference_list(business_field):\n
     wf = getattr(portal_workflow, wf_id)\n
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?\n
       result.append((wf, wf_id, \'workflow\'))\n
-      for state_id, state in wf.states.items():\n
+      for state_id, state in wf.getStateValueList().items():\n
         result.append((state, state_id, \'state\'))\n
-      for trans_id, trans in wf.transitions.items():\n
+      for trans_id, trans in wf.getTransitionValueList().items():\n
         result.append((trans, trans_id, \'transition\'))\n
         if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION\n
           result.append((trans, "%s_actbox_name" % trans_id, \'action\'))\n

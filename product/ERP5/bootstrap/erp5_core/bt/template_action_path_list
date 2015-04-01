@@ -131,6 +131,9 @@ Trash Bin | view
 Trash Folder | view
 Trash Tool | view
 Types Tool | view
+Workflow Script | proxy_role_view
+Workflow Script | repository_history_view
+Workflow Script | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | category_tool

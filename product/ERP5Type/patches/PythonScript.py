@@ -50,3 +50,14 @@ PythonScript.manage = manage_editForm
 PythonScript.manage_main = manage_editForm
 PythonScript.manage_editDocument = manage_editForm
 PythonScript.manage_editForm = manage_editForm
+
+# following methods are necessary for showAsXML function:
+def pyscript_getBody(self):
+  return self._body
+def pyscript_getParams(self):
+  return self._params
+def pyscript_getProxyRole(self):
+  return self._proxy_roles
+PythonScript.getBody = pyscript_getBody
+PythonScript.getParams = pyscript_getParams
+PythonScript.getProxyRole = pyscript_getProxyRole

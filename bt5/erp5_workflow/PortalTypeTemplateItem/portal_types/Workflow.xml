@@ -42,6 +42,12 @@
             <value> <string>An ERP5 Workflow.</string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addWorkflow</string> </value>
         </item>
@@ -61,7 +67,13 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Workflow_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -70,6 +82,24 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>Workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

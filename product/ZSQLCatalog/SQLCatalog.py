@@ -2122,7 +2122,7 @@ class Catalog(Folder,
       result = script(value)
     return result
 
-  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap, ignore_unknown_columns):
+  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap):
     """
     node
       Abstract syntax tree node (see SearchText/AdvancedSearchTextParser.py,

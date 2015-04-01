@@ -42,6 +42,12 @@
             <value> <string>Business Configuration is used to represent the highest level of configuration of "something" - like ERP5 Site. Additional documents (deliveries) are used to "glue" all information together.</string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addBusinessConfiguration</string> </value>
         </item>
@@ -89,6 +95,12 @@
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
             <value>
               <tuple/>
             </value>
