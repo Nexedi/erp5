@@ -794,9 +794,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      # install business template and its dependencies
-      for x, y in (("erp5_workflow", "erp5_base"),
-                   ("erp5_core_proxy_field_legacy", "erp5_base"),
+      for x, y in (("erp5_core_proxy_field_legacy", "erp5_base"),
                    ("erp5_stock_cache", "erp5_pdm")):
         if x not in template_list:
           try:
