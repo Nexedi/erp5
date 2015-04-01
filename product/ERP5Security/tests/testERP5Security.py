@@ -40,8 +40,6 @@ from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 
-import pdb
-
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
   """
@@ -52,7 +50,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_workflow', 'erp5_base',)
+    return ('erp5_base',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -372,13 +370,10 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_DeletedPersonIsNotUser(self):
     p = self._makePerson(reference='the_user', password='secret')
     self._assertUserExists('the_user', 'secret')
-    if not p.getTypeInfo().getTypeERP5WorkflowList():
-      p.delete()
-    else:
-      p.dlt()
+
+    p.delete()
     self.commit()
 
-    ### zwj: even the user has been delete, the information exist? why this test?
     self._assertUserDoesNotExists('the_user', 'secret')
 
   def test_ReallyDeletedPersonIsNotUser(self):
@@ -501,6 +496,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # any member can add organisations
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
+
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
@@ -526,7 +522,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       ti.manage_delObjects([x.id for x in ti.getRoleInformationList()])
     # clear modules
     for module in self.portal.objectValues():
-      if module.getId().endswith('_module') and module.getId() != 'workflow_module':
+      if module.getId().endswith('_module'):
         module.manage_delObjects(list(module.objectIds()))
     # commit this
     self.tic()
@@ -547,7 +543,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_workflow', 'erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
