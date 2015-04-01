@@ -47,7 +47,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/multiple_selection</string>
+                <string>elementary_type/multiple selection</string>
               </tuple>
             </value>
         </item>
