@@ -65,7 +65,10 @@ def UnrestrictedMethod(function):
 
   This method is dangerous. Enough said. Be careful.
   """
-  return lambda *args, **kw: unrestricted_apply(function, args, kw)
+  def unrestricted_apply(*args, **kw):
+    with super_user():
+      return function(*args, **kw)
+  return unrestricted_apply
 
 def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
     """Function to bypass all security checks
@@ -74,12 +77,12 @@ def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
     docstring for more information. Never use this, until you are 100% certain
     that you have no other way.
     """
-    with unrestricted_contextmanager():
-      return apply(function, args, kw)
+    with super_user():
+      return function(*args, **kw)
 
 @contextmanager
-def unrestricted_contextmanager():
-    """Function to bypass all security checks
+def super_user():
+    """Context manager to bypass all security checks
 
     This function is as dangerous as 'UnrestrictedMethod' decorator. Read its
     docstring for more information. Never use this, until you are 100% certain
