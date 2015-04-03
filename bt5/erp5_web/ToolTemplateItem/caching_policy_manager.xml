@@ -16,8 +16,8 @@
             <key> <string>_policy_ids</string> </key>
             <value>
               <tuple>
+                <string>unauthenticated web pages no language</string>
                 <string>unauthenticated web pages</string>
-                <string>unauthenticated</string>
                 <string>authenticated</string>
               </tuple>
             </value>
@@ -47,7 +47,7 @@
                           <dictionary>
                             <item>
                                 <key> <string>_enable_304s</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_etag_func</string> </key>
@@ -61,7 +61,7 @@
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>600</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
@@ -71,7 +71,7 @@
                             </item>
                             <item>
                                 <key> <string>_must_revalidate</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_no_cache</string> </key>
@@ -79,7 +79,7 @@
                             </item>
                             <item>
                                 <key> <string>_no_store</string> </key>
-                                <value> <int>1</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_no_transform</string> </key>
@@ -109,7 +109,7 @@
                             </item>
                             <item>
                                 <key> <string>_private</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_proxy_revalidate</string> </key>
@@ -126,8 +126,16 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>360000</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string></string> </value>
+                                <value> <string>Accept-Language, Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -135,7 +143,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated</string> </key>
+                    <key> <string>unauthenticated web pages</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -158,7 +166,7 @@
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
-                                <value> <int>3600</int> </value>
+                                <value> <int>600</int> </value>
                             </item>
                             <item>
                                 <key> <string>_mtime_func</string> </key>
@@ -184,7 +192,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated</string> </value>
+                                <value> <string>unauthenticated web pages</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
@@ -223,8 +231,16 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>360000</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Accept-Language, Cookie</string> </value>
+                                <value> <string>Accept-Language, Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -232,7 +248,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated web pages</string> </key>
+                    <key> <string>unauthenticated web pages no language</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -281,7 +297,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated web pages</string> </value>
+                                <value> <string>unauthenticated web pages no language</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
@@ -325,11 +341,11 @@
                             </item>
                             <item>
                                 <key> <string>_stale_while_revalidate_secs</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>360000</int> </value>
                             </item>
                             <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Accept-Language, Cookie</string> </value>
+                                <value> <string>Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -402,7 +418,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
+            <value> <string>python: getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -454,7 +470,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and object.getPortalType() in ("Web Page", "Web Section", "Web Site")</string> </value>
+            <value> <string>python: member is None and object.getWebSiteValue() is not None and ( len(object.getWebSiteValue().getAvailableLanguageSet()) == 1 or object.getWebSiteValue().getStaticLanguageSelection() )</string> </value>
         </item>
       </dictionary>
     </pickle>
