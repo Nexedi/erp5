@@ -16,8 +16,8 @@
             <key> <string>_policy_ids</string> </key>
             <value>
               <tuple>
-                <string>unauthenticated web pages no language</string>
-                <string>unauthenticated web pages</string>
+                <string>unauthenticated no language</string>
+                <string>unauthenticated</string>
                 <string>authenticated</string>
               </tuple>
             </value>
@@ -143,7 +143,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated web pages</string> </key>
+                    <key> <string>unauthenticated</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -192,7 +192,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated web pages</string> </value>
+                                <value> <string>unauthenticated</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
@@ -248,7 +248,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>unauthenticated web pages no language</string> </key>
+                    <key> <string>unauthenticated no language</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -297,7 +297,7 @@
                             </item>
                             <item>
                                 <key> <string>_policy_id</string> </key>
-                                <value> <string>unauthenticated web pages no language</string> </value>
+                                <value> <string>unauthenticated no language</string> </value>
                             </item>
                             <item>
                                 <key> <string>_post_check</string> </key>
