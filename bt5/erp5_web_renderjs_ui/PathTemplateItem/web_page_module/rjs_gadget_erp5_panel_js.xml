@@ -107,22 +107,18 @@
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
-  // Handlebars\n
+  // temlates\n
   /////////////////////////////////////////////////////////////////\n
   // Precompile templates while loading the first gadget instance\n
   var gadget_klass = rJS(window),\n
-    source = gadget_klass.__template_element\n
-                         .getElementById("panel-template")\n
+    source_header = gadget_klass.__template_element\n
+                         .getElementById("panel-template-header")\n
                          .innerHTML,\n
-    panel_template = Handlebars.compile(source),\n
-    source_content = gadget_klass.__template_element\n
-                         .getElementById("panel-template-lang")\n
+    panel_template_header = Handlebars.compile(source_header),\n
+    source_body = gadget_klass.__template_element\n
+                         .getElementById("panel-template-body")\n
                          .innerHTML,\n
-    panel_template_lang = Handlebars.compile(source_content),\n
-    source_content_no_lang = gadget_klass.__template_element\n
-                         .getElementById("panel-template-nolang")\n
-                         .innerHTML,\n
-    panel_template_nolang = Handlebars.compile(source_content_no_lang);\n
+    panel_template_body = Handlebars.compile(source_body);\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -139,7 +135,10 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
     .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
-    .declareAcquiredMethod("whoWantToDisplayThisFrontPage", "whoWantToDisplayThisFrontPage")\n
+    .declareAcquiredMethod(\n
+      "whoWantToDisplayThisFrontPage",\n
+      "whoWantToDisplayThisFrontPage"\n
+    )\n
 \n
     // Assign the element to a variable\n
     .ready(function (g) {\n
@@ -169,35 +168,28 @@
           ]);\n
         })\n
         .push(function (all_result) {\n
-          var i,\n
+          var raw_language_list = JSON.parse(all_result[2]),\n
+            len = raw_language_list.length,\n
+            i,\n
             i_len,\n
-            tmp,\n
             language_list,\n
-            document_list = [],\n
-            raw_language_list = all_result[2];\n
+            tmp;\n
 \n
           // XXX: Customize panel header!\n
-          tmp = panel_template();\n
+          tmp = panel_template_header();\n
 \n
-          // translation list available\n
-          if (raw_language_list) {\n
-            language_list = JSON.parse(raw_language_list);\n
-            i_len = language_list.length;\n
-            for (i = 0; i < i_len; i += 1) {\n
-              document_list.push({"count": i, "lang": language_list[i]});\n
+          // languages\n
+          if (len > 0) {\n
+            language_list = [];\n
+            for (i = 0, i_len = len; i < i_len; i += 1) {\n
+              language_list.push({"count": i, "lang": language_list[i]});\n
             }\n
-            tmp += panel_template_lang({\n
-              module_href: all_result[0],\n
-              history_href: all_result[1],\n
-              document_list: document_list\n
-            });\n
-            return g.translateHtml(tmp);\n
           }\n
 \n
-          // no translations available or not loaded when reaching this point\n
-          tmp += panel_template_nolang({\n
-            module_href: all_result[0],\n
-            history_href: all_result[1]\n
+          tmp += panel_template_body({\n
+            "module_href": all_result[0],\n
+            "history_href": all_result[1],\n
+            "language_list": language_list\n
           });\n
           return tmp;\n
         })\n
@@ -407,7 +399,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -421,7 +413,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.16198.52720.49783</string> </value>
+                <value> <string>942.11711.24841.37034</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -439,7 +431,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080772.85</float>
+                        <float>1428416611.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
