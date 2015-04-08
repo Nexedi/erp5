@@ -117,10 +117,10 @@
 \n
     <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">${application_title}</script>\n
     <script data-renderjs-configuration="frontpage_gadget" type="text/x-renderjs-configuration">${frontpage_gadget}</script>\n
+    <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">${panel_gadget}</script>\n
     <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">${action_view}</script>\n
     <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">${default_view_reference}</script>\n
     <script data-renderjs-configuration="hateoas_url" type="text/x-renderjs-configuration">${hateoas_url}</script>\n
-\n
 \n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
@@ -132,6 +132,7 @@
 \n
   </head>\n
   <body>\n
+\n
   <div data-gadget-url="gadget_jio.html"\n
           data-gadget-scope="jio_gadget"\n
           data-gadget-sandbox="public"></div>\n
@@ -140,7 +141,7 @@
           data-gadget-scope="header"\n
           data-gadget-sandbox="public"></div>\n
   \n
-  <div data-gadget-url="gadget_erp5_panel.html"\n
+  <div data-gadget-url="${panel_gadget}"\n
           data-gadget-scope="panel"\n
           data-gadget-sandbox="public"></div>\n
   \n
@@ -274,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -288,7 +289,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.31252.46674.14728</string> </value>
+                <value> <string>942.12881.1847.42734</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425659919.68</float>
+                        <float>1428487030.04</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -241,6 +241,7 @@
             key,\n
             value,\n
             i;\n
+\n
           for (i = 0; i < len; i += 1) {\n
             key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
             value = element_list[i].textContent;\n
@@ -489,7 +490,7 @@
             return gadget.dropGadget("panel");\n
           })\n
           .push(function () {\n
-            return gadget.declareGadget("gadget_erp5_panel.html",\n
+            return gadget.declareGadget(g.props.panel_gadget,\n
                                          {scope: "panel",\n
                                           element: div});\n
           })\n
@@ -731,7 +732,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -745,7 +746,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.39539.39866.22681</string> </value>
+                <value> <string>942.12884.35349.45585</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -763,7 +764,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1426155464.07</float>
+                        <float>1428487042.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
