@@ -806,7 +806,7 @@ class DateTimeValidator(Validator):
     # handle possible timezone input
     timezone = ''
 
-    if field.get_value('timezone_style'):
+    if (not field.get_value('date_only')) and field.get_value('timezone_style'):
       timezone =  self.validate_sub_field(field, key, 'timezone', REQUEST)
 
     try:
