@@ -112,22 +112,29 @@ if context.getPortalType() == \'Web Message\' and\\\n
     person = None\n
     organisation = None\n
     if context.getSourcePersonFirstName() or context.getSourcePersonLastName():\n
-      person_email = portal.portal_catalog.getResultValue(\n
+      for validation_state in (\'validated\', \'!= deleted\'):\n
+        person_email = portal.portal_catalog.getResultValue(\n
                           url_string={\'query\': email_text, \'key\':\'ExactMatch\'},\n
                           portal_type=\'Email\',\n
                           parent_portal_type=person_portal_type,\n
+                          validation_state=validation_state,\n
                           parent_title=\'%s %s\' % (context.getSourcePersonFirstName(\'\'),\n
                                                   context.getSourcePersonLastName(\'\')))\n
-      if person_email is not None:\n
-        person = person_email.getParentValue()\n
+        if person_email is not None:\n
+          person = person_email.getParentValue()\n
+          break\n
     if context.getSourceOrganisationTitle():\n
-      organisation_email = portal.portal_catalog.getResultValue(\n
+      for validation_state in (\'validated\', \'!= deleted\'):\n
+        organisation_email = portal.portal_catalog.getResultValue(\n
                           url_string={\'query\': email_text, \'key\':\'ExactMatch\'},\n
                           portal_type=\'Email\',\n
                           parent_portal_type=organisation_portal_type,\n
+                          validation_state=validation_state,\n
                           parent_title=context.getSourceOrganisationTitle(\'\'))\n
-      if organisation_email is not None:\n
-        organisation = organisation_email.getParentValue()\n
+        if organisation_email is not None:\n
+          organisation = organisation_email.getParentValue()\n
+          break\n
+\n
     if person is None and (context.getSourcePersonFirstName() or context.getSourcePersonLastName()):\n
       person_module = portal.getDefaultModule(person_portal_type)\n
       person = person_module.newContent(portal_type=person_portal_type,\n
