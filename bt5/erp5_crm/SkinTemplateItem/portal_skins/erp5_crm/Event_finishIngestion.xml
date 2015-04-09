@@ -57,6 +57,7 @@
   The default behaviour is to receive messages so that they\n
   are marked as \'New\' and appear in the worklist.\n
 """\n
+from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
 portal_workflow = portal.portal_workflow\n
 \n
@@ -135,6 +136,7 @@ if context.getPortalType() == \'Web Message\' and\\\n
           organisation = organisation_email.getParentValue()\n
           break\n
 \n
+    # XXX do we really want to create a person so easily ? Isn\'t it better to just setSourceFreeText on the event ?\n
     if person is None and (context.getSourcePersonFirstName() or context.getSourcePersonLastName()):\n
       person_module = portal.getDefaultModule(person_portal_type)\n
       person = person_module.newContent(portal_type=person_portal_type,\n
@@ -153,9 +155,9 @@ if context.getPortalType() == \'Web Message\' and\\\n
       subordination_list.append(organisation.getRelativeUrl())\n
       person.setDefaultCareerSubordinationList(subordination_list)\n
     if person is not None and portal_workflow.isTransitionPossible(person, \'validate\'):\n
-      person.validate()\n
+      person.validate(comment=translateString("Validated when ingesting ${event_reference}", mapping={"event_reference": context.getReference()}))\n
     if organisation is not None and portal_workflow.isTransitionPossible(organisation, \'validate\'):\n
-      organisation.validate()\n
+      organisation.validate(translateString("Validated when ingesting ${event_reference}", mapping={"event_reference": context.getReference()}))\n
     if person is not None:\n
       context.setSourceValue(person)\n
     elif organisation is not None:\n
