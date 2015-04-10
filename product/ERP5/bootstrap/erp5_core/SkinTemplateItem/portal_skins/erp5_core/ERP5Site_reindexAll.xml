@@ -172,7 +172,7 @@ object_priority = 2 + additional_priority\n
 tool_list = [x for x in portal.objectValues() if \\\n
              x.getUid != portal.getUid and \\\n
              x.meta_type != \'ERP5 Folder\' and \\\n
-             x.id not in (\'portal_alarms\', \'portal_activities\', \'portal_preferences\', \'portal_simulation\', \'portal_uidhandler\')]\n
+             x.id not in (\'portal_alarms\', \'portal_activities\', \'portal_classes\', \'portal_preferences\', \'portal_simulation\', \'portal_uidhandler\')]\n
 \n
 for folder in tool_list:\n
   folder.activate(\n
