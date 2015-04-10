@@ -66,9 +66,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -879,7 +877,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.15802.51997.34560</string> </value>
+                <value> <string>942.15804.3325.32187</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -897,7 +895,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428662162.99</float>
+                        <float>1428663088.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
