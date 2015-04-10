@@ -172,7 +172,7 @@
       <div class="ui-grid-b ui-responsive">\n
         <div class="ui-block-a"></div>\n
         <div class="ui-block-b">\n
-          <h2>Jabber Client (without history)</h2>\n
+          <h2>Jabber Client</h2>\n
           <form class="login-form">\n
             <div class="ui-field-contain">\n
               <label>Server URL</label>\n
@@ -382,7 +382,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.1666.29972.41045</string> </value>
+                <value> <string>942.15924.54448.8823</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -400,7 +400,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427926413.61</float>
+                        <float>1428669417.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
