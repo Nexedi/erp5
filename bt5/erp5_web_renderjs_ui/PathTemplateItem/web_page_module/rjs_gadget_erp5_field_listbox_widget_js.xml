@@ -243,7 +243,7 @@
             "listbox_title": my_option_dict.gadget_title,\n
             "right_link_list": [{\n
               "link_title": "All",\n
-              "link_href": "#jio_key=project_module&view=view"\n
+              "link_href": gadget.property_dict.option_dict.gadget_portal_link\n
             }]\n
           });\n
           content += listbox_widget_table({\n
@@ -402,7 +402,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11691.47092.9608</string> </value>
+                <value> <string>942.13003.56057.11144</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -420,7 +420,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428415724.77</float>
+                        <float>1428494195.33</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
