@@ -64,6 +64,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -103,6 +111,7 @@
 
 /*globals window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
           loopEventListener, jQuery*/\n
+/*jslint indent: 2*/\n
 (function (window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
            loopEventListener, $) {\n
   "use strict";\n
@@ -115,10 +124,16 @@
   var PAGE_CONTACT = "contact",\n
     PAGE_CONNECTION = "connect",\n
     PAGE_DIALOG = "dialog",\n
+    PAGE_HISTORY = "history",\n
     PAGE_NEW_CONTACT = "subscribe",\n
     DEFAULT_PAGE = PAGE_CONTACT,\n
     CONNECTION_GADGET_URL = "./gadget_jabberconnection.html",\n
-    CONNECTION_GADGET_SCOPE = "connection";\n
+    CONNECTION_GADGET_SCOPE = "connection",\n
+    ATTACHMENT_ID = "enclosure",\n
+    JIO_STORAGE_TYPE = "indexeddb",\n
+    DAV_URL = "",\n
+    DAV_USER = "",\n
+    DAV_PASSWORD = "";\n
 \n
   function compareContact(a, b) {\n
     var result;\n
@@ -148,6 +163,125 @@
         "listview"\n
       );\n
     }\n
+  }\n
+\n
+  //////////////////////////////////////////\n
+  // History Support with Jio\n
+  //////////////////////////////////////////\n
+  function createJio_indexeddb(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "indexeddb",\n
+          database: "jabberclient"\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio_local(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "query",\n
+          sub_storage: {\n
+            type: "document",\n
+            document_id: "/",\n
+            sub_storage: { type: "local" }\n
+          }\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio_dav(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "drivetojiomapping",\n
+          sub_storage: {\n
+            type: "dav",\n
+            url: DAV_URL,\n
+            basic_login: btoa(DAV_USER + ":" + DAV_PASSWORD)\n
+          }\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio(gadget) {\n
+    switch (JIO_STORAGE_TYPE) {\n
+    case "indexeddb":\n
+      return createJio_indexeddb(gadget);\n
+    case "local":\n
+      return createJio_local(gadget);\n
+    case "dav":\n
+      return createJio_dav(gadget);\n
+    }\n
+  }\n
+\n
+  function zfill(s, size) {\n
+    s = String(s);\n
+    while (s.length < size) {\n
+      s = "0" + s;\n
+    }\n
+    return s;\n
+  }\n
+\n
+  function getLogString(text, is_incomming) {\n
+    var prefix,\n
+      date = new Date(),\n
+      timestamp = date.getFullYear() + "-" +\n
+        zfill(date.getMonth(), 2) + "-" +\n
+        zfill(date.getDate(), 2) + " " +\n
+        date.toTimeString();\n
+    if (is_incomming) {\n
+      prefix = \'<\';\n
+    } else {\n
+      prefix = \'>\';\n
+    }\n
+    return "[" + timestamp + "] " + prefix + " " + text + "\\n";\n
+  }\n
+\n
+  function getStorageIdFromJid(gadget, jid) {\n
+    return gadget.props.my_jid + \'-\' + jid;\n
+  }\n
+\n
+  function loadHistory(gadget, jid) {\n
+    var jio;\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        jio = jio_gadget;\n
+        return jio.getAttachment(getStorageIdFromJid(gadget, jid), ATTACHMENT_ID);\n
+      })\n
+      .push(function (attachment) {\n
+        return jIO.util.readBlobAsText(attachment);\n
+      })\n
+      .push(\n
+        function (e) {\n
+          return {\n
+            \'history\': e.target.result,\n
+            \'jio\': jio\n
+          };\n
+        },\n
+        function (error) {\n
+          var my_message = "Cannot find ";\n
+          if ((error instanceof Error) &&\n
+              (error.message.substring(0, my_message.length) === my_message)) {\n
+            return {\n
+              \'history\': \'\',\n
+              \'jio\': jio\n
+            };\n
+          }\n
+          throw error;\n
+        }\n
+      );\n
+  }\n
+\n
+  function addLog(gadget, jid, text, is_incomming) {\n
+    return loadHistory(gadget, jid)\n
+      .push(function (result) {\n
+        var id = getStorageIdFromJid(gadget, jid),\n
+          new_history = result.history + getLogString(text, is_incomming);\n
+        return result.jio.putAttachment(id, ATTACHMENT_ID, new_history);\n
+      });\n
   }\n
 \n
   //////////////////////////////////////////\n
@@ -234,27 +368,65 @@
       document.querySelector(".ui-last-child").scrollIntoView();\n
     }\n
 \n
-    if ((gadget.props.options !== undefined) &&\n
-        (gadget.props.options.page === PAGE_CONTACT)) {\n
-      return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE)\n
-        .push(function (connection_gadget) {\n
-          return renderContactPage(gadget, connection_gadget);\n
+    return RSVP.all([\n
+      function () {\n
+        if ((gadget.props.options !== undefined) &&\n
+            (gadget.props.options.page === PAGE_CONTACT)) {\n
+          return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE)\n
+            .push(function (connection_gadget) {\n
+              return renderContactPage(gadget, connection_gadget);\n
+            });\n
+        }\n
+      }(),\n
+      addLog(gadget, jid, text, is_incoming)\n
+    ]);\n
+  }\n
+\n
+  function renderHistoryPage(gadget) {\n
+    var jid,\n
+      dialog_url;\n
+    return RSVP.Queue()\n
+      .push(function () {\n
+        jid = gadget.props.options.jid;\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_DIALOG, jid: jid});\n
+      })\n
+      .push(function (dialog) {\n
+        dialog_url = dialog;\n
+        return loadHistory(gadget, jid);\n
+      })\n
+      .push(function (result) {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: dialog_url,\n
+          left_title: "Back",\n
+          title: "History of " + jid\n
         });\n
-    }\n
+        gadget.props.content_element.innerHTML = gadget.props.history_template({\n
+          text: result.history\n
+        });\n
+        $(gadget.props.element).trigger("create");\n
+      });\n
   }\n
 \n
   function renderDialogPage(gadget, connection_gadget) {\n
+    var jid,\n
+      contact_url;\n
     return RSVP.Queue()\n
       .push(function () {\n
         return gadget.aq_pleasePublishMyState({page: PAGE_CONTACT});\n
       })\n
-      .push(function (contact_url) {\n
-        var jid = gadget.props.options.jid,\n
-          last_child;\n
+      .push(function (contact) {\n
+        jid = gadget.props.options.jid;\n
+        contact_url = contact;\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_HISTORY, jid: jid});\n
+      })\n
+      .push(function (history_url) {\n
+        var last_child;\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: contact_url,\n
           left_title: "Back",\n
-          title: jid\n
+          title: jid,\n
+          right_url: history_url,\n
+          right_title: "History"\n
         });\n
         gadget.props.content_element.innerHTML =\n
           gadget.props.dialog_template({});\n
@@ -292,6 +464,7 @@
   function renderConnectPage(gadget) {\n
     // Always flush the contact list\n
     gadget.props.contact_dict = {};\n
+    gadget.props.my_jid = \'\';\n
     // Always kill the previous connection gadget to ensure disconnection\n
     gadget.props.connection_element.innerHTML = "";\n
     return gadget.dropGadget(CONNECTION_GADGET_SCOPE)\n
@@ -334,6 +507,7 @@
       .push(function (result_list) {\n
         var connection_gadget = result_list[0],\n
           submit_event = result_list[1];\n
+        gadget.props.my_jid = submit_event.target[1].value;\n
         return connection_gadget.connect(\n
           submit_event.target[0].value,\n
           submit_event.target[1].value,\n
@@ -400,6 +574,9 @@
           g.props.dialog_template = Handlebars.compile(\n
             document.querySelector(".dialog-template").innerHTML\n
           );\n
+          g.props.history_template = Handlebars.compile(\n
+            document.querySelector(".history-template").innerHTML\n
+          );\n
           g.props.message_template = Handlebars.compile(\n
             document.querySelector(".message-template").innerHTML\n
           );\n
@@ -407,6 +584,10 @@
             document.querySelector(".header-template").innerHTML\n
           );\n
         });\n
+    })\n
+    // Configure jIO storage\n
+    .ready(function (g) {\n
+      return createJio(g);\n
     })\n
 \n
     //////////////////////////////////////////\n
@@ -488,8 +669,7 @@
         if (!document.hasFocus()) {\n
           // Only notify when page has no focused.\n
           // It simplifies a lot notification status\n
-          $("#favicon").attr("href",  \n
-                                             "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");\n
+          $("#favicon").attr("href",  "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");\n
         }\n
         return updateConversation(this, argument_list[0],\n
                                   argument_list[2], true);\n
@@ -535,6 +715,8 @@
           method = renderNewContactPage;\n
         } else if (options.page === PAGE_DIALOG) {\n
           method = renderDialogPage;\n
+        } else if (options.page === PAGE_HISTORY) {\n
+          method = renderHistoryPage;\n
         } else {\n
           throw new Error("not implemented page " + options.page);\n
         }\n
@@ -683,7 +865,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>klaus.woelfel</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -697,7 +879,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.42421.62935.47718</string> </value>
+                <value> <string>942.15802.51997.34560</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -715,8 +897,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418722252.34</float>
-                        <string>GMT</string>
+                        <float>1428662162.99</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -202,6 +208,8 @@
     </script>\n
 \n
     <script class="message-template" type="text/x-handlebars-template"><li data-theme="{{theme}}" style="{{style}}"><pre style="white-space: pre-wrap;">{{text}}</pre></li></script>\n
+    \n
+    <script class="history-template" type="text/x-handlebars-template"><pre style="white-space: pre-wrap;">{{text}}</pre></script>\n
 \n
     <script class="header-template" type="text/x-handlebars-template">\n
       {{#if left_url}}\n
@@ -222,6 +230,9 @@
       <div data-role="header" data-position="fixed" class="gadget-header" data-theme="b">\n
         <h1></h1>\n
       </div>\n
+      <div data-gadget-url="gadget_jio.html"\n
+          data-gadget-scope="jio_gadget"\n
+          data-gadget-sandbox="public"></div>\n
 \n
       <div role="main" class="ui-content gadget-content"></div>\n
     </div>\n
@@ -357,7 +368,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>klaus.woelfel</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -371,7 +382,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.33990.61359.38570</string> </value>
+                <value> <string>942.1666.29972.41045</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -389,8 +400,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418720455.63</float>
-                        <string>GMT</string>
+                        <float>1427926413.61</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
