@@ -5479,9 +5479,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     MSEC: MSEC\n
   };\n
 }(window, moment));\n
-;/*jslint maxlen: 200*/\n
-/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, console, FileReader */\n
-(function (window, RSVP, Blob, QueryFactory, Query, FileReader) {\n
+;/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, FileReader */\n
+(function (window, RSVP, Blob, QueryFactory, Query,\n
+           FileReader) {\n
   "use strict";\n
 \n
   var util = {},\n
@@ -5500,8 +5500,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   /**\n
    * Send request with XHR and return a promise. xhr.onload: The promise is\n
-   * resolved when the status code is lower than 400 with the xhr object as first\n
-   * parameter. xhr.onerror: reject with xhr object as first\n
+   * resolved when the status code is lower than 400 with the xhr object as\n
+   * first parameter. xhr.onerror: reject with xhr object as first\n
    * parameter. xhr.onprogress: notifies the xhr object.\n
    *\n
    * @param  {Object} param The parameters\n
@@ -5509,8 +5509,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
    * @param  {String} [param.dataType=""] The data type to retrieve\n
    * @param  {String} param.url The url\n
    * @param  {Any} [param.data] The data to send\n
-   * @param  {Function} [param.beforeSend] A function called just before the send\n
-   *   request. The first parameter of this function is the XHR object.\n
+   * @param  {Function} [param.beforeSend] A function called just before the\n
+   *    send request. The first parameter of this function is the XHR object.\n
    * @return {Promise} The promise\n
    */\n
   function ajax(param) {\n
@@ -5558,8 +5558,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
    * It can also clone object which are serializable, like Date.\n
    *\n
    * To make a class serializable, you need to implement the `toJSON` function\n
-   * which returns a JSON representation of the object. The returned value is used\n
-   * as first parameter of the object constructor.\n
+   * which returns a JSON representation of the object. The returned value is\n
+   * used as first parameter of the object constructor.\n
    *\n
    * @param  {A} object The object to clone\n
    * @return {A} The cloned object\n
@@ -5590,10 +5590,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         // XXX this block is to enable phantomjs and browsers compatibility with\n
         // Date.prototype.toJSON when it is an invalid date. In phantomjs, it\n
         // returns `"Invalid Date"` but in browsers it returns `null`. In\n
-        // browsers, giving `null` as parameter to `new Date()` doesn\'t return an\n
-        // invalid date.\n
+        // browsers, giving `null` as parameter to `new Date()` doesn\'t return\n
+        // an invalid date.\n
 \n
-        // Cloning a date with `return new Date(object)` has problems on Firefox.\n
+        // Cloning a date with `return new Date(object)` has problems on\n
+        // Firefox.\n
         // I don\'t know why...  (Tested on Firefox 23)\n
 \n
         if (isFinite(object.getTime())) {\n
@@ -5611,25 +5612,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return object;\n
   }\n
   util.deepClone = deepClone;\n
-\n
-  /**\n
-   * An Universal Unique ID generator\n
-   *\n
-   * @return {String} The new UUID.\n
-   */\n
-  function generateUuid() {\n
-    function S4() {\n
-      return (\'0000\' + Math.floor(\n
-        Math.random() * 0x10000 /* 65536 */\n
-      ).toString(16)).slice(-4);\n
-    }\n
-    return S4() + S4() + "-" +\n
-      S4() + "-" +\n
-      S4() + "-" +\n
-      S4() + "-" +\n
-      S4() + S4() + S4();\n
-  }\n
-  util.generateUuid = generateUuid;\n
 \n
 \n
 \n
@@ -5672,67 +5654,22 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
   util.readBlobAsDataURL = readBlobAsDataURL;\n
 \n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-//\n
-// //   // XXX What is "jio"?\n
-// //   var rest_method_names = [\n
-// //     "remove",\n
-// //     "allDocs",\n
-// //     "removeAttachment",\n
-// //     "check",\n
-// //     "repair"\n
-// //   ],\n
-// //     i,\n
-// //     len = rest_method_names.length;\n
-// //\n
-// //   for (i = 0; i < len; i += 1) {\n
-// //     declareMethod(rest_method_names[i]);\n
-// //   }\n
-\n
-// //   ["removeAttachment"].forEach(function (method) {\n
-// //     shared.on(method, function (param) {\n
-// //       if (!checkId(param)) {\n
-// //         checkAttachmentId(param);\n
-// //       }\n
-// //     });\n
-// //   });\n
-// //\n
-// //\n
-// //   ["check", "repair"].forEach(function (method) {\n
-// //     shared.on(method, function (param) {\n
-// //       if (param.kwargs._id !== undefined) {\n
-// //         if (!checkId(param)) {\n
-// //           return;\n
-// //         }\n
-// //       }\n
-// //     });\n
-// //   });\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
   // tools\n
-  function checkId(param, storage, method_name) {\n
-    if (typeof param._id !== \'string\' || param._id === \'\') {\n
-      throw new jIO.util.jIOError("Document id must be a non empty string on \'" + storage.__type + "." + method_name + "\'.",\n
-                                  400);\n
+  function checkId(argument_list, storage, method_name) {\n
+    if (typeof argument_list[0] !== \'string\' || argument_list[0] === \'\') {\n
+      throw new jIO.util.jIOError(\n
+        "Document id must be a non empty string on \'" + storage.__type +\n
+          "." + method_name + "\'.",\n
+        400\n
+      );\n
     }\n
   }\n
 \n
-  function checkAttachmentId(param, storage, method_name) {\n
-    if (typeof param._attachment !== \'string\' || param._attachment === \'\') {\n
+  function checkAttachmentId(argument_list, storage, method_name) {\n
+    if (typeof argument_list[1] !== \'string\' || argument_list[1] === \'\') {\n
       throw new jIO.util.jIOError(\n
-        "Attachment id must be a non empty string on \'" + storage.__type + "." + method_name + "\'.",\n
+        "Attachment id must be a non empty string on \'" + storage.__type +\n
+          "." + method_name + "\'.",\n
         400\n
       );\n
     }\n
@@ -5748,7 +5685,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           if (precondition_function !== undefined) {\n
             return precondition_function.apply(\n
               context.__storage,\n
-              [argument_list[0], context, name]\n
+              [argument_list, context, name]\n
             );\n
           }\n
         })\n
@@ -5756,7 +5693,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           var storage_method = context.__storage[name];\n
           if (storage_method === undefined) {\n
             throw new jIO.util.jIOError(\n
-              "Capacity \'" + name + "\' is not implemented on \'" + context.__type + "\'",\n
+              "Capacity \'" + name + "\' is not implemented on \'" +\n
+                context.__type + "\'",\n
               501\n
             );\n
           }\n
@@ -5795,63 +5733,60 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
 \n
   declareMethod(JioProxyStorage, "put", checkId, function (argument_list) {\n
-    return argument_list[0]._id;\n
+    return argument_list[0];\n
   });\n
-  declareMethod(JioProxyStorage, "get", checkId, function (argument_list, result) {\n
-    // XXX Drop all _ properties\n
-    // Put _id properties to the result\n
-    result._id = argument_list[0]._id;\n
-    return result;\n
-  });\n
+  declareMethod(JioProxyStorage, "get", checkId);\n
   declareMethod(JioProxyStorage, "remove", checkId, function (argument_list) {\n
-    return argument_list[0]._id;\n
+    return argument_list[0];\n
   });\n
 \n
-  // listeners\n
-  declareMethod(JioProxyStorage, "post", function (param, storage, method_name) {\n
-    if (param._id !== undefined) {\n
-      return checkId(param, storage, method_name);\n
-    }\n
-  });\n
-\n
-  declareMethod(JioProxyStorage, \'putAttachment\', function (param, storage, method_name) {\n
-    checkId(param, storage, method_name);\n
-    checkAttachmentId(param, storage, method_name);\n
-\n
-    if (!(param._blob instanceof Blob) &&\n
-        typeof param._data === \'string\') {\n
-      param._blob = new Blob([param._data], {\n
-        "type": param._content_type || param._mimetype || "text/plain;charset=utf-8"\n
+  JioProxyStorage.prototype.post = function () {\n
+    var context = this,\n
+      argument_list = arguments;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        var storage_method = context.__storage.post;\n
+        if (storage_method === undefined) {\n
+          throw new jIO.util.jIOError(\n
+            "Capacity \'post\' is not implemented on \'" + context.__type + "\'",\n
+            501\n
+          );\n
+        }\n
+        return context.__storage.post.apply(context.__storage, argument_list);\n
       });\n
-      delete param._data;\n
-      delete param._mimetype;\n
-      delete param._content_type;\n
-    } else if (param._blob instanceof Blob) {\n
-      delete param._data;\n
-      delete param._mimetype;\n
-      delete param._content_type;\n
-    } else if (param._data instanceof Blob) {\n
-      param._blob = param._data;\n
-      delete param._data;\n
-      delete param._mimetype;\n
-      delete param._content_type;\n
-    } else {\n
+  };\n
+\n
+  declareMethod(JioProxyStorage, \'putAttachment\', function (argument_list,\n
+                                                            storage,\n
+                                                            method_name) {\n
+    checkId(argument_list, storage, method_name);\n
+    checkAttachmentId(argument_list, storage, method_name);\n
+\n
+    var options = argument_list[3] || {};\n
+\n
+    if (typeof argument_list[2] === \'string\') {\n
+      argument_list[2] = new Blob([argument_list[2]], {\n
+        "type": options._content_type || options._mimetype ||\n
+                "text/plain;charset=utf-8"\n
+      });\n
+    } else if (!(argument_list[2] instanceof Blob)) {\n
       throw new jIO.util.jIOError(\n
-        \'Attachment information must be like {"_id": document id, \' +\n
-          \'"_attachment": attachment name, "_data": string, ["_mimetype": \' +\n
-          \'content type]} or {"_id": document id, "_attachment": \' +\n
-          \'attachment name, "_blob": Blob}\',\n
+        \'Attachment content is not a blob\',\n
         400\n
       );\n
     }\n
   });\n
 \n
-  declareMethod(JioProxyStorage, \'removeAttachment\', function (param, storage, method_name) {\n
-    checkId(param, storage, method_name);\n
-    checkAttachmentId(param, storage, method_name);\n
+  declareMethod(JioProxyStorage, \'removeAttachment\', function (argument_list,\n
+                                                               storage,\n
+                                                               method_name) {\n
+    checkId(argument_list, storage, method_name);\n
+    checkAttachmentId(argument_list, storage, method_name);\n
   });\n
 \n
-  declareMethod(JioProxyStorage, \'getAttachment\', function (param, storage, method_name) {\n
+  declareMethod(JioProxyStorage, \'getAttachment\', function (argument_list,\n
+                                                            storage,\n
+                                                            method_name) {\n
 //     if (param.storage_spec.type !== "indexeddb" &&\n
 //         param.storage_spec.type !== "dav" &&\n
 //         (param.kwargs._start !== undefined\n
@@ -5863,12 +5798,14 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 //       ]);\n
 //       return false;\n
 //     }\n
-    checkId(param, storage, method_name);\n
-    checkAttachmentId(param, storage, method_name);\n
+    checkId(argument_list, storage, method_name);\n
+    checkAttachmentId(argument_list, storage, method_name);\n
   }, function (argument_list, result) {\n
-    if (!(result.data instanceof Blob)) {\n
+    if (!(result instanceof Blob)) {\n
       throw new jIO.util.jIOError(\n
-        "\'getAttachment\' (" + argument_list[0]._id + " , " + argument_list[0]._attachment + ") on \'" + this.__type + "\' does not return a Blob.",\n
+        "\'getAttachment\' (" + argument_list[0] + " , " +\n
+          argument_list[1] + ") on \'" + this.__type +\n
+          "\' does not return a Blob.",\n
         501\n
       );\n
     }\n
@@ -5896,7 +5833,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   JioProxyStorage.prototype.hasCapacity = function (name) {\n
     var storage_method = this.__storage.hasCapacity;\n
-    if ((storage_method === undefined) || !storage_method.apply(this.__storage, arguments)) {\n
+    if ((storage_method === undefined) ||\n
+        !storage_method.apply(this.__storage, arguments)) {\n
       throw new jIO.util.jIOError(\n
         "Capacity \'" + name + "\' is not implemented on \'" + this.__type + "\'",\n
         501\n
@@ -5915,8 +5853,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         if (context.hasCapacity("list") &&\n
             ((options.query === undefined) || context.hasCapacity("query")) &&\n
             ((options.sort_on === undefined) || context.hasCapacity("sort")) &&\n
-            ((options.select_list === undefined) || context.hasCapacity("select")) &&\n
-            ((options.include_docs === undefined) || context.hasCapacity("include")) &&\n
+            ((options.select_list === undefined) ||\n
+             context.hasCapacity("select")) &&\n
+            ((options.include_docs === undefined) ||\n
+             context.hasCapacity("include")) &&\n
             ((options.limit === undefined) || context.hasCapacity("limit"))) {\n
           return context.buildQuery(options);\n
         }\n
@@ -5930,6 +5870,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         };\n
       });\n
   };\n
+\n
+  declareMethod(JioProxyStorage, "allAttachments", checkId);\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Storage builder\n
@@ -5984,6 +5926,69 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   window.jIO = jIO;\n
 \n
 }(window, RSVP, Blob, QueryFactory, Query, FileReader));\n
+;/*jslint nomen: true*/\n
+(function (jIO) {\n
+  "use strict";\n
+\n
+  /**\n
+   * The jIO UUIDStorage extension\n
+   *\n
+   * @class UUIDStorage\n
+   * @constructor\n
+   */\n
+  function UUIDStorage(spec) {\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+  }\n
+\n
+  UUIDStorage.prototype.get = function () {\n
+    return this._sub_storage.get.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.post = function (param) {\n
+\n
+    function S4() {\n
+      return (\'0000\' + Math.floor(\n
+        Math.random() * 0x10000 /* 65536 */\n
+      ).toString(16)).slice(-4);\n
+    }\n
+\n
+    var id = S4() + S4() + "-" +\n
+      S4() + "-" +\n
+      S4() + "-" +\n
+      S4() + "-" +\n
+      S4() + S4() + S4();\n
+\n
+    return this.put(id, param);\n
+  };\n
+  UUIDStorage.prototype.put = function () {\n
+    return this._sub_storage.put.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.remove = function () {\n
+    return this._sub_storage.remove.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.getAttachment = function () {\n
+    return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.putAttachment = function () {\n
+    return this._sub_storage.putAttachment.apply(this._sub_storage, arguments);\n
+  };\n
+  UUIDStorage.prototype.removeAttachment = function () {\n
+    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
+                                                    arguments);\n
+  };\n
+  UUIDStorage.prototype.hasCapacity = function (name) {\n
+    return this._sub_storage.hasCapacity(name);\n
+  };\n
+  UUIDStorage.prototype.buildQuery = function () {\n
+    return this._sub_storage.buildQuery.apply(this._sub_storage,\n
+                                              arguments);\n
+  };\n
+\n
+  jIO.addStorage(\'uuid\', UUIDStorage);\n
+\n
+}(jIO));\n
 ;/*\n
  * Copyright 2013, Nexedi SA\n
  * Released under the LGPL license.\n
@@ -6019,59 +6024,70 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     this._database = {};\n
   }\n
 \n
-  MemoryStorage.prototype.put = function (metadata) {\n
-    if (!this._database.hasOwnProperty(metadata._id)) {\n
-      this._database[metadata._id] = {\n
+  MemoryStorage.prototype.put = function (id, metadata) {\n
+    if (!this._database.hasOwnProperty(id)) {\n
+      this._database[id] = {\n
         attachments: {}\n
       };\n
     }\n
-    this._database[metadata._id].doc = JSON.stringify(metadata);\n
-    return metadata._id;\n
+    this._database[id].doc = JSON.stringify(metadata);\n
+    return id;\n
   };\n
 \n
-  MemoryStorage.prototype.get = function (param) {\n
-    var doc,\n
-      key,\n
-      found = false,\n
+  MemoryStorage.prototype.get = function (id) {\n
+    try {\n
+      return JSON.parse(this._database[id].doc);\n
+    } catch (error) {\n
+      if (error instanceof TypeError) {\n
+        throw new jIO.util.jIOError(\n
+          "Cannot find document: " + id,\n
+          404\n
+        );\n
+      }\n
+      throw error;\n
+    }\n
+  };\n
+\n
+  MemoryStorage.prototype.allAttachments = function (id) {\n
+    var key,\n
       attachments = {};\n
-\n
     try {\n
-      doc = JSON.parse(this._database[param._id].doc);\n
+      for (key in this._database[id].attachments) {\n
+        if (this._database[id].attachments.hasOwnProperty(key)) {\n
+          attachments[key] = {};\n
+        }\n
+      }\n
     } catch (error) {\n
       if (error instanceof TypeError) {\n
         throw new jIO.util.jIOError(\n
-          "Cannot find document: " + param._id,\n
+          "Cannot find document: " + id,\n
           404\n
         );\n
       }\n
       throw error;\n
     }\n
-\n
-    // XXX NotImplemented: list all attachments\n
-    for (key in this._database[param._id].attachments) {\n
-      if (this._database[param._id].attachments.hasOwnProperty(key)) {\n
-        found = true;\n
-        attachments[key] = {};\n
-      }\n
-    }\n
-    if (found) {\n
-      doc._attachments = attachments;\n
-    }\n
-    return doc;\n
+    return attachments;\n
   };\n
 \n
-  MemoryStorage.prototype.remove = function (param) {\n
-    delete this._database[param._id];\n
-    return param._id;\n
+  MemoryStorage.prototype.remove = function (id) {\n
+    delete this._database[id];\n
+    return id;\n
   };\n
 \n
-  MemoryStorage.prototype.getAttachment = function (param) {\n
+  MemoryStorage.prototype.getAttachment = function (id, name) {\n
     try {\n
-      return {data: this._database[param._id].attachments[param._attachment]};\n
+      var result = this._database[id].attachments[name];\n
+      if (result === undefined) {\n
+        throw new jIO.util.jIOError(\n
+          "Cannot find attachment: " + id + " , " + name,\n
+          404\n
+        );\n
+      }\n
+      return result;\n
     } catch (error) {\n
       if (error instanceof TypeError) {\n
         throw new jIO.util.jIOError(\n
-          "Cannot find attachment: " + param._id + " , " + param._attachment,\n
+          "Cannot find attachment: " + id + " , " + name,\n
           404\n
         );\n
       }\n
@@ -6079,26 +6095,26 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     }\n
   };\n
 \n
-  MemoryStorage.prototype.putAttachment = function (param) {\n
+  MemoryStorage.prototype.putAttachment = function (id, name, blob) {\n
     var attachment_dict;\n
     try {\n
-      attachment_dict = this._database[param._id].attachments;\n
+      attachment_dict = this._database[id].attachments;\n
     } catch (error) {\n
       if (error instanceof TypeError) {\n
-        throw new jIO.util.jIOError("Cannot find document: " + param._id, 404);\n
+        throw new jIO.util.jIOError("Cannot find document: " + id, 404);\n
       }\n
       throw error;\n
     }\n
-    attachment_dict[param._attachment] = param._blob;\n
+    attachment_dict[name] = blob;\n
   };\n
 \n
-  MemoryStorage.prototype.removeAttachment = function (param) {\n
+  MemoryStorage.prototype.removeAttachment = function (id, name) {\n
     try {\n
-      delete this._database[param._id].attachments[param._attachment];\n
+      delete this._database[id].attachments[name];\n
     } catch (error) {\n
       if (error instanceof TypeError) {\n
         throw new jIO.util.jIOError(\n
-          "Cannot find document: " + param._id,\n
+          "Cannot find document: " + id,\n
           404\n
         );\n
       }\n
@@ -6172,24 +6188,23 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     }\n
   }\n
 \n
-  LocalStorage.prototype.get = function (param) {\n
-    restrictDocumentId(param._id);\n
+  LocalStorage.prototype.get = function (id) {\n
+    restrictDocumentId(id);\n
+    return {};\n
+  };\n
 \n
-    var doc = {},\n
-      attachments = {},\n
-      found = false,\n
+  LocalStorage.prototype.allAttachments = function (id) {\n
+    restrictDocumentId(id);\n
+\n
+    var attachments = {},\n
       key;\n
 \n
     for (key in this._storage) {\n
       if (this._storage.hasOwnProperty(key)) {\n
         attachments[key] = {};\n
-        found = true;\n
       }\n
     }\n
-    if (found) {\n
-      doc._attachments = attachments;\n
-    }\n
-    return doc;\n
+    return attachments;\n
   };\n
 \n
   // https://gist.github.com/davoclavo/4424731\n
@@ -6209,38 +6224,38 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return new Blob([arrayBuffer], {type: mimeString});\n
   }\n
 \n
-  LocalStorage.prototype.getAttachment = function (param) {\n
-    restrictDocumentId(param._id);\n
+  LocalStorage.prototype.getAttachment = function (id, name) {\n
+    restrictDocumentId(id);\n
 \n
-    var textstring = this._storage.getItem(param._attachment);\n
+    var textstring = this._storage.getItem(name);\n
 \n
     if (textstring === null) {\n
       throw new jIO.util.jIOError(\n
-        "Cannot find attachment " + param._attachment,\n
+        "Cannot find attachment " + name,\n
         404\n
       );\n
     }\n
-    return {data: dataURItoBlob(textstring)};\n
+    return dataURItoBlob(textstring);\n
   };\n
 \n
-  LocalStorage.prototype.putAttachment = function (param) {\n
+  LocalStorage.prototype.putAttachment = function (id, name, blob) {\n
     var context = this;\n
-    restrictDocumentId(param._id);\n
+    restrictDocumentId(id);\n
 \n
     // the document already exists\n
     // download data\n
     return new RSVP.Queue()\n
       .push(function () {\n
-        return jIO.util.readBlobAsDataURL(param._blob);\n
+        return jIO.util.readBlobAsDataURL(blob);\n
       })\n
       .push(function (e) {\n
-        context._storage.setItem(param._attachment, e.target.result);\n
+        context._storage.setItem(name, e.target.result);\n
       });\n
   };\n
 \n
-  LocalStorage.prototype.removeAttachment = function (param) {\n
-    restrictDocumentId(param._id);\n
-    return this._storage.removeItem(param._attachment);\n
+  LocalStorage.prototype.removeAttachment = function (id, name) {\n
+    restrictDocumentId(id);\n
+    return this._storage.removeItem(name);\n
   };\n
 \n
 \n
@@ -6342,11 +6357,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   }\n
 \n
-  DavStorage.prototype.put = function (param) {\n
-    var id = restrictDocumentId(param._id);\n
-    delete param._id;\n
+  DavStorage.prototype.put = function (id, param) {\n
+    id = restrictDocumentId(id);\n
     if (Object.getOwnPropertyNames(param).length > 0) {\n
-      // Reject if param has other properties than _id\n
+      // Reject if param has some properties\n
       throw new jIO.util.jIOError("Can not store properties: " +\n
                                   Object.getOwnPropertyNames(param), 400);\n
     }\n
@@ -6356,18 +6370,45 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
   };\n
 \n
-  DavStorage.prototype.remove = function (param) {\n
-    var id = restrictDocumentId(param._id);\n
+  DavStorage.prototype.remove = function (id) {\n
+    id = restrictDocumentId(id);\n
     return ajax(this, {\n
       type: "DELETE",\n
       url: this._url + id\n
     });\n
   };\n
 \n
-  DavStorage.prototype.get = function (param) {\n
+  DavStorage.prototype.get = function (id) {\n
+    var context = this;\n
+    id = restrictDocumentId(id);\n
 \n
-    var id = restrictDocumentId(param._id),\n
-      context = this;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return ajax(context, {\n
+          type: "PROPFIND",\n
+          url: context._url + id,\n
+          dataType: "text",\n
+          headers: {\n
+            // Increasing this value is a performance killer\n
+            Depth: "1"\n
+          }\n
+        });\n
+      })\n
+      .push(function () {\n
+        return {};\n
+      }, function (error) {\n
+        if ((error.target !== undefined) &&\n
+            (error.target.status === 404)) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+        throw error;\n
+      });\n
+  };\n
+\n
+  DavStorage.prototype.allAttachments = function (id) {\n
+\n
+    var context = this;\n
+    id = restrictDocumentId(id);\n
 \n
     return new RSVP.Queue()\n
       .push(function () {\n
@@ -6387,7 +6428,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         // Extract all meta informations and return them to JSON\n
 \n
         var i,\n
-          result = {},\n
           attachment = {},\n
           id,\n
           attachment_list = new DOMParser().parseFromString(\n
@@ -6407,10 +6447,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             attachment[id] = {};\n
           }\n
         }\n
-        if (Object.getOwnPropertyNames(attachment).length > 0) {\n
-          result._attachments = attachment;\n
-        }\n
-        return result;\n
+        return attachment;\n
 \n
       }, function (error) {\n
         if ((error.target !== undefined) &&\n
@@ -6423,40 +6460,40 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
 \n
-  DavStorage.prototype.putAttachment = function (param) {\n
-    var id = restrictDocumentId(param._id);\n
-    restrictAttachmentId(param._attachment);\n
+  DavStorage.prototype.putAttachment = function (id, name, blob) {\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
     return ajax(this, {\n
       type: "PUT",\n
-      url: this._url + id + param._attachment,\n
-      data: param._blob\n
+      url: this._url + id + name,\n
+      data: blob\n
     });\n
   };\n
 \n
-  DavStorage.prototype.getAttachment = function (param) {\n
-    var id = restrictDocumentId(param._id),\n
-      context = this;\n
-    restrictAttachmentId(param._attachment);\n
+  DavStorage.prototype.getAttachment = function (id, name) {\n
+    var context = this;\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
 \n
     return new RSVP.Queue()\n
       .push(function () {\n
         return ajax(context, {\n
           type: "GET",\n
-          url: context._url + id + param._attachment,\n
+          url: context._url + id + name,\n
           dataType: "blob"\n
         });\n
       })\n
       .push(function (response) {\n
-        return {data: new Blob(\n
+        return new Blob(\n
           [response.target.response || response.target.responseText],\n
           {"type": response.target.getResponseHeader(\'Content-Type\') ||\n
                    "application/octet-stream"}\n
-        )};\n
+        );\n
       }, function (error) {\n
         if ((error.target !== undefined) &&\n
             (error.target.status === 404)) {\n
           throw new jIO.util.jIOError("Cannot find attachment: "\n
-                                      + param._id + " , " + param._attachment,\n
+                                      + id + " , " + name,\n
                                       404);\n
         }\n
         throw error;\n
@@ -6464,23 +6501,23 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   };\n
 \n
-  DavStorage.prototype.removeAttachment = function (param) {\n
-    var id = restrictDocumentId(param._id),\n
-      context = this;\n
-    restrictAttachmentId(param._attachment);\n
+  DavStorage.prototype.removeAttachment = function (id, name) {\n
+    var context = this;\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
 \n
     return new RSVP.Queue()\n
       .push(function () {\n
         return ajax(context, {\n
           type: "DELETE",\n
-          url: context._url + id + param._attachment\n
+          url: context._url + id + name\n
         });\n
       })\n
       .push(undefined, function (error) {\n
         if ((error.target !== undefined) &&\n
             (error.target.status === 404)) {\n
           throw new jIO.util.jIOError("Cannot find attachment: "\n
-                                      + param._id + " , " + param._attachment,\n
+                                      + id + " , " + name,\n
                                       404);\n
         }\n
         throw error;\n
@@ -6606,6 +6643,20 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   /*\n
+   * Get attachments list\n
+   * Try on each substorage on after the other\n
+   */\n
+  UnionStorage.prototype.allAttachments = function () {\n
+    var argument_list = arguments,\n
+      context = this;\n
+    return this._getWithStorageIndex.apply(this, arguments)\n
+      .push(function (result) {\n
+        var sub_storage = context._storage_list[result[0]];\n
+        return sub_storage.allAttachments.apply(sub_storage, argument_list);\n
+      });\n
+  };\n
+\n
+  /*\n
    * Post a document\n
    * Simply store on the first substorage\n
    */\n
@@ -6620,7 +6671,15 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   UnionStorage.prototype.put = function () {\n
     var arg = arguments,\n
       context = this;\n
-    return this._getWithStorageIndex({"_id": arg[0]._id})\n
+    return this._getWithStorageIndex(arg[0])\n
+      .push(undefined, function (error) {\n
+        if ((error instanceof jIO.util.jIOError) &&\n
+            (error.status_code === 404)) {\n
+          // Document does not exist, create in first substorage\n
+          return [0];\n
+        }\n
+        throw error;\n
+      })\n
       .push(function (result) {\n
         // Storage found, modify in it directly\n
         var sub_storage = context._storage_list[result[0]];\n
@@ -6635,7 +6694,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   UnionStorage.prototype.remove = function () {\n
     var arg = arguments,\n
       context = this;\n
-    return this._getWithStorageIndex({"_id": arg[0]._id})\n
+    return this._getWithStorageIndex(arg[0])\n
       .push(function (result) {\n
         // Storage found, remove from it directly\n
         var sub_storage = context._storage_list[result[0]];\n
@@ -6710,7 +6769,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 //   url: {string}\n
 // }\n
 \n
-/*jslint nomen: true */\n
+/*jslint nomen: true, unparam: true */\n
 /*global jIO, UriTemplate, FormData, RSVP, URI, Blob*/\n
 \n
 (function (jIO, UriTemplate, FormData, RSVP, URI, Blob) {\n
@@ -6732,7 +6791,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       });\n
   }\n
 \n
-  function getDocumentAndHateoas(storage, param, options) {\n
+  function getDocumentAndHateoas(storage, id, options) {\n
     if (options === undefined) {\n
       options = {};\n
     }\n
@@ -6743,7 +6802,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           "type": "GET",\n
           "url": UriTemplate.parse(site_hal._links.traverse.href)\n
                             .expand({\n
-              relative_url: param._id,\n
+              relative_url: id,\n
               view: options._view\n
             }),\n
           "xhrFields": {\n
@@ -6763,17 +6822,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     this._default_view_reference = spec.default_view_reference;\n
   }\n
 \n
-  ERP5Storage.prototype.get = function (param) {\n
-    return getDocumentAndHateoas(this, param)\n
+  ERP5Storage.prototype.get = function (id) {\n
+    return getDocumentAndHateoas(this, id)\n
       .push(function (response) {\n
         var result = JSON.parse(response.target.responseText),\n
-          attachments = {\n
-            view: {},\n
-            links: {}\n
-          },\n
           key;\n
           // action_type;\n
-        result._id = param._id;\n
         result.portal_type = result._links.type.name;\n
 \n
         // Remove all ERP5 hateoas links / convert them into jIO ID\n
@@ -6785,21 +6839,28 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           }\n
         }\n
 \n
-        result._attachments = attachments;\n
-\n
         return result;\n
       });\n
   };\n
 \n
-  ERP5Storage.prototype.getAttachment = function (param) {\n
-    var action = param._attachment;\n
+  ERP5Storage.prototype.allAttachments = function (id) {\n
+    return getDocumentAndHateoas(this, id)\n
+      .push(function () {\n
+        return {\n
+          view: {},\n
+          links: {}\n
+        };\n
+      });\n
+  };\n
+\n
+  ERP5Storage.prototype.getAttachment = function (id, action) {\n
 \n
     if (action === "view") {\n
-      return getDocumentAndHateoas(this, param,\n
+      return getDocumentAndHateoas(this, id,\n
                                    {"_view": this._default_view_reference})\n
         .push(function (response) {\n
           var result = JSON.parse(response.target.responseText);\n
-          result._id = param._id;\n
+          result._id = id;\n
           result.portal_type = result._links.type.name;\n
           // Remove all ERP5 hateoas links / convert them into jIO ID\n
 \n
@@ -6807,19 +6868,19 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           // if Base_edit, do put URN\n
           // if others, do post URN (ie, unique new attachment name)\n
           // XXX Except this attachment name should be generated when\n
-          return {data: new Blob(\n
+          return new Blob(\n
             [JSON.stringify(result)],\n
             {"type": \'application/hal+json\'}\n
-          )};\n
+          );\n
         });\n
     }\n
     if (action === "links") {\n
-      return getDocumentAndHateoas(this, param)\n
+      return getDocumentAndHateoas(this, id)\n
         .push(function (response) {\n
-          return {data: new Blob(\n
+          return new Blob(\n
             [JSON.stringify(JSON.parse(response.target.responseText))],\n
             {"type": \'application/hal+json\'}\n
-          )};\n
+          );\n
         });\n
     }\n
     if (action.indexOf(this._url) === 0) {\n
@@ -6835,27 +6896,27 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         })\n
         .push(function (evt) {\n
           var result = JSON.parse(evt.target.responseText);\n
-          result._id = param._id;\n
-          return {data: new Blob(\n
+          result._id = id;\n
+          return new Blob(\n
             [JSON.stringify(result)],\n
             {"type": evt.target.getResponseHeader("Content-Type")}\n
-          )};\n
+          );\n
         });\n
     }\n
     throw new jIO.util.jIOError("ERP5: not support get attachment: " + action,\n
                                 400);\n
   };\n
 \n
-  ERP5Storage.prototype.putAttachment = function (metadata) {\n
+  ERP5Storage.prototype.putAttachment = function (id, name, blob) {\n
     // Assert we use a callable on a document from the ERP5 site\n
-    if (metadata._attachment.indexOf(this._url) !== 0) {\n
+    if (name.indexOf(this._url) !== 0) {\n
       throw new jIO.util.jIOError("Can not store outside ERP5: " +\n
-                                  metadata._attachment, 400);\n
+                                  name, 400);\n
     }\n
 \n
     return new RSVP.Queue()\n
       .push(function () {\n
-        return jIO.util.readBlobAsText(metadata._blob);\n
+        return jIO.util.readBlobAsText(blob);\n
       })\n
       .push(function (evt) {\n
         var form_data = JSON.parse(evt.target.result),\n
@@ -6868,7 +6929,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         }\n
         return jIO.util.ajax({\n
           "type": "POST",\n
-          "url": metadata._attachment,\n
+          "url": name,\n
           "data": data,\n
           "xhrFields": {\n
             withCredentials: true\n
@@ -6948,6 +7009,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   QueryStorage.prototype.get = function () {\n
     return this._sub_storage.get.apply(this._sub_storage, arguments);\n
+  };\n
+  QueryStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);\n
   };\n
   QueryStorage.prototype.post = function () {\n
     return this._sub_storage.post.apply(this._sub_storage, arguments);\n
@@ -7033,8 +7097,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             i;\n
 \n
           function safeGet(j) {\n
-            return substorage.get({"_id": result[j].id})\n
-              .push(undefined, function (error) {\n
+            var id = result[j].id;\n
+            return substorage.get(id)\n
+              .push(function (doc) {\n
+                // XXX Can delete user data!\n
+                doc._id = id;\n
+                return doc;\n
+              }, function (error) {\n
                 // Document may have been dropped after listing\n
                 if ((error instanceof jIO.util.jIOError) &&\n
                     (error.status_code === 404)) {\n
@@ -7144,88 +7213,93 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     DOCUMENT_KEY = "/.jio_documents/",\n
     ROOT = "/";\n
 \n
-  FileSystemBridgeStorage.prototype.get = function (param) {\n
-    var context = this,\n
-      json_document,\n
-      explicit_document = false;\n
+  FileSystemBridgeStorage.prototype.get = function (id) {\n
+    var context = this;\n
     return new RSVP.Queue()\n
 \n
       // First, try to get explicit reference to the document\n
 \n
       .push(function () {\n
         // First get the document itself if it exists\n
-        return context._sub_storage.getAttachment({\n
-          "_id": DOCUMENT_KEY,\n
-          "_attachment": param._id + DOCUMENT_EXTENSION\n
-        });\n
+        return context._sub_storage.getAttachment(\n
+          DOCUMENT_KEY,\n
+          id + DOCUMENT_EXTENSION\n
+        );\n
       })\n
       .push(function (blob) {\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            return jIO.util.readBlobAsText(blob.data);\n
+            return jIO.util.readBlobAsText(blob);\n
           })\n
           .push(function (text) {\n
-            explicit_document = true;\n
             return JSON.parse(text.target.result);\n
           });\n
       }, function (error) {\n
         if ((error instanceof jIO.util.jIOError) &&\n
             (error.status_code === 404)) {\n
-          return {};\n
+\n
+          // Second, try to get default attachment\n
+          return context._sub_storage.allAttachments(ROOT)\n
+            .push(function (attachment_dict) {\n
+              if (attachment_dict.hasOwnProperty(id)) {\n
+                return {};\n
+              }\n
+              throw new jIO.util.jIOError("Cannot find document " + id,\n
+                                          404);\n
+            });\n
         }\n
         throw error;\n
-      })\n
+      });\n
+  };\n
 \n
-      // Second, try to get default attachment\n
-\n
-      .push(function (result) {\n
-        json_document = result;\n
-\n
-        return context._sub_storage.get({\n
-          "_id": ROOT\n
-        });\n
-      })\n
-\n
-      .push(function (directory_document) {\n
-        if ((directory_document.hasOwnProperty("_attachments")) &&\n
-            (directory_document._attachments.hasOwnProperty(param._id))) {\n
-          json_document._attachments = {\n
+  FileSystemBridgeStorage.prototype.allAttachments = function (id) {\n
+    var context = this;\n
+    return context._sub_storage.allAttachments(ROOT)\n
+      .push(function (attachment_dict) {\n
+        if (attachment_dict.hasOwnProperty(id)) {\n
+          return {\n
             enclosure: {}\n
           };\n
-        } else {\n
-          if (!explicit_document) {\n
-            throw new jIO.util.jIOError("Cannot find document " + param._id,\n
-                                        404);\n
-          }\n
         }\n
-        return json_document;\n
+        // Second get the document itself if it exists\n
+        return context._sub_storage.getAttachment(\n
+          DOCUMENT_KEY,\n
+          id + DOCUMENT_EXTENSION\n
+        )\n
+          .push(function () {\n
+            return {};\n
+          }, function (error) {\n
+            if ((error instanceof jIO.util.jIOError) &&\n
+                (error.status_code === 404)) {\n
+              throw new jIO.util.jIOError("Cannot find document " + id,\n
+                                          404);\n
+            }\n
+            throw error;\n
+          });\n
       });\n
 \n
   };\n
 \n
-  FileSystemBridgeStorage.prototype.put = function (param) {\n
-    var context = this,\n
-      doc_id = param._id;\n
+  FileSystemBridgeStorage.prototype.put = function (doc_id, param) {\n
+    var context = this;\n
     // XXX Handle conflict!\n
 \n
-    return context._sub_storage.putAttachment({\n
-      "_id": DOCUMENT_KEY,\n
-      "_attachment": doc_id + DOCUMENT_EXTENSION,\n
-      "_blob": new Blob([JSON.stringify(param)], {type: "application/json"})\n
-    })\n
+    return context._sub_storage.putAttachment(\n
+      DOCUMENT_KEY,\n
+      doc_id + DOCUMENT_EXTENSION,\n
+      new Blob([JSON.stringify(param)], {type: "application/json"})\n
+    )\n
       .push(undefined, function (error) {\n
         if ((error instanceof jIO.util.jIOError) &&\n
             (error.status_code === 404)) {\n
-          return context._sub_storage.put({\n
-            "_id": DOCUMENT_KEY\n
-          })\n
+          return context._sub_storage.put(DOCUMENT_KEY, {})\n
             .push(function () {\n
-              return context._sub_storage.putAttachment({\n
-                "_id": DOCUMENT_KEY,\n
-                "_attachment": doc_id + DOCUMENT_EXTENSION,\n
-                "_blob": new Blob([JSON.stringify(param)],\n
-                                  {type: "application/json"})\n
-              });\n
+              return context._sub_storage.putAttachment(\n
+                DOCUMENT_KEY,\n
+                doc_id + DOCUMENT_EXTENSION,\n
+                new Blob([JSON.stringify(param)],\n
+                         {type: "application/json"})\n
+              );\n
             });\n
         }\n
         throw error;\n
@@ -7236,18 +7310,17 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   };\n
 \n
-  FileSystemBridgeStorage.prototype.remove = function (param) {\n
+  FileSystemBridgeStorage.prototype.remove = function (doc_id) {\n
     var context = this,\n
-      got_error = false,\n
-      doc_id = param._id;\n
+      got_error = false;\n
     return new RSVP.Queue()\n
 \n
       // First, try to remove enclosure\n
       .push(function () {\n
-        return context._sub_storage.removeAttachment({\n
-          "_id": ROOT,\n
-          "_attachment": doc_id\n
-        });\n
+        return context._sub_storage.removeAttachment(\n
+          ROOT,\n
+          doc_id\n
+        );\n
       })\n
 \n
       .push(undefined, function (error) {\n
@@ -7261,10 +7334,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
       // Second, try to remove explicit doc\n
       .push(function () {\n
-        return context._sub_storage.removeAttachment({\n
-          "_id": DOCUMENT_KEY,\n
-          "_attachment": doc_id + DOCUMENT_EXTENSION\n
-        });\n
+        return context._sub_storage.removeAttachment(\n
+          DOCUMENT_KEY,\n
+          doc_id + DOCUMENT_EXTENSION\n
+        );\n
       })\n
 \n
       .push(undefined, function (error) {\n
@@ -7289,14 +7362,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       // First, get list of explicit documents\n
 \n
       .push(function () {\n
-        return context._sub_storage.get({\n
-          "_id": DOCUMENT_KEY\n
-        });\n
+        return context._sub_storage.allAttachments(DOCUMENT_KEY);\n
       })\n
       .push(function (result) {\n
         var key;\n
-        for (key in result._attachments) {\n
-          if (result._attachments.hasOwnProperty(key)) {\n
+        for (key in result) {\n
+          if (result.hasOwnProperty(key)) {\n
             if (DOCUMENT_REGEXP.test(key)) {\n
               result_dict[DOCUMENT_REGEXP.exec(key)[1]] = null;\n
             }\n
@@ -7313,14 +7384,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       // Second, get list of enclosure\n
 \n
       .push(function () {\n
-        return context._sub_storage.get({\n
-          "_id": ROOT\n
-        });\n
+        return context._sub_storage.allAttachments(ROOT);\n
       })\n
       .push(function (result) {\n
         var key;\n
-        for (key in result._attachments) {\n
-          if (result._attachments.hasOwnProperty(key)) {\n
+        for (key in result) {\n
+          if (result.hasOwnProperty(key)) {\n
             result_dict[key] = null;\n
           }\n
         }\n
@@ -7344,41 +7413,35 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   };\n
 \n
-  FileSystemBridgeStorage.prototype.getAttachment = function (param) {\n
-    if (param._attachment !== "enclosure") {\n
+  FileSystemBridgeStorage.prototype.getAttachment = function (id, name) {\n
+    if (name !== "enclosure") {\n
       throw new jIO.util.jIOError("Only support \'enclosure\' attachment",\n
                                   400);\n
     }\n
 \n
-    return this._sub_storage.getAttachment({\n
-      "_id": ROOT,\n
-      "_attachment": param._id\n
-    });\n
+    return this._sub_storage.getAttachment(ROOT, id);\n
   };\n
 \n
-  FileSystemBridgeStorage.prototype.putAttachment = function (param) {\n
-    if (param._attachment !== "enclosure") {\n
+  FileSystemBridgeStorage.prototype.putAttachment = function (id, name, blob) {\n
+    if (name !== "enclosure") {\n
       throw new jIO.util.jIOError("Only support \'enclosure\' attachment",\n
                                   400);\n
     }\n
 \n
-    return this._sub_storage.putAttachment({\n
-      "_id": ROOT,\n
-      "_attachment": param._id,\n
-      "_blob": param._blob\n
-    });\n
+    return this._sub_storage.putAttachment(\n
+      ROOT,\n
+      id,\n
+      blob\n
+    );\n
   };\n
 \n
-  FileSystemBridgeStorage.prototype.removeAttachment = function (param) {\n
-    if (param._attachment !== "enclosure") {\n
+  FileSystemBridgeStorage.prototype.removeAttachment = function (id, name) {\n
+    if (name !== "enclosure") {\n
       throw new jIO.util.jIOError("Only support \'enclosure\' attachment",\n
                                   400);\n
     }\n
 \n
-    return this._sub_storage.removeAttachment({\n
-      "_id": ROOT,\n
-      "_attachment": param._id\n
-    });\n
+    return this._sub_storage.removeAttachment(ROOT, id);\n
   };\n
 \n
   jIO.addStorage(\'drivetojiomapping\', FileSystemBridgeStorage);\n
@@ -7405,43 +7468,38 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                                  DOCUMENT_EXTENSION + "$"),\n
     ATTACHMENT_REGEXP = new RegExp("^jio_attachment/([\\\\w=]+)/([\\\\w=]+)$");\n
 \n
-  function getSubAttachmentIdFromParam(param) {\n
-    if (param._attachment === undefined) {\n
-      return \'jio_document/\' + btoa(param._id) + DOCUMENT_EXTENSION;\n
+  function getSubAttachmentIdFromParam(id, name) {\n
+    if (name === undefined) {\n
+      return \'jio_document/\' + btoa(id) + DOCUMENT_EXTENSION;\n
     }\n
-    return \'jio_attachment/\' + btoa(param._id) + "/" + btoa(param._attachment);\n
+    return \'jio_attachment/\' + btoa(id) + "/" + btoa(name);\n
   }\n
 \n
-  DocumentStorage.prototype.get = function (param) {\n
-\n
-    var result,\n
-      context = this;\n
-    return this._sub_storage.getAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param)\n
-    })\n
+  DocumentStorage.prototype.get = function (id) {\n
+    return this._sub_storage.getAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(id)\n
+    )\n
       .push(function (blob) {\n
-        return jIO.util.readBlobAsText(blob.data);\n
+        return jIO.util.readBlobAsText(blob);\n
       })\n
       .push(function (text) {\n
         return JSON.parse(text.target.result);\n
-      })\n
-      .push(function (json) {\n
-        result = json;\n
-        return context._sub_storage.get({\n
-          "_id": context._document_id\n
-        });\n
-      })\n
-      .push(function (document) {\n
+      });\n
+  };\n
+\n
+  DocumentStorage.prototype.allAttachments = function (id) {\n
+    return this._sub_storage.allAttachments(this._document_id)\n
+      .push(function (result) {\n
         var attachments = {},\n
           exec,\n
           key;\n
-        for (key in document._attachments) {\n
-          if (document._attachments.hasOwnProperty(key)) {\n
+        for (key in result) {\n
+          if (result.hasOwnProperty(key)) {\n
             if (ATTACHMENT_REGEXP.test(key)) {\n
               exec = ATTACHMENT_REGEXP.exec(key);\n
               try {\n
-                if (atob(exec[1]) === param._id) {\n
+                if (atob(exec[1]) === id) {\n
                   attachments[atob(exec[2])] = {};\n
                 }\n
               } catch (error) {\n
@@ -7453,34 +7511,29 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             }\n
           }\n
         }\n
-        if (Object.getOwnPropertyNames(attachments).length > 0) {\n
-          result._attachments = attachments;\n
-        }\n
-        return result;\n
+        return attachments;\n
       });\n
   };\n
 \n
-  DocumentStorage.prototype.put = function (param) {\n
-    var doc_id = param._id;\n
-\n
-    return this._sub_storage.putAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param),\n
-      "_blob": new Blob([JSON.stringify(param)], {type: "application/json"})\n
-    })\n
+  DocumentStorage.prototype.put = function (doc_id, param) {\n
+    return this._sub_storage.putAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(doc_id),\n
+      new Blob([JSON.stringify(param)], {type: "application/json"})\n
+    )\n
       .push(function () {\n
         return doc_id;\n
       });\n
 \n
   };\n
 \n
-  DocumentStorage.prototype.remove = function (param) {\n
-    return this._sub_storage.removeAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param)\n
-    })\n
+  DocumentStorage.prototype.remove = function (id) {\n
+    return this._sub_storage.removeAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(id)\n
+    )\n
       .push(function () {\n
-        return param._id;\n
+        return id;\n
       });\n
   };\n
 \n
@@ -7489,14 +7542,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   DocumentStorage.prototype.buildQuery = function () {\n
-    return this._sub_storage.get({\n
-      "_id": this._document_id\n
-    })\n
-      .push(function (document) {\n
+    return this._sub_storage.allAttachments(this._document_id)\n
+      .push(function (attachment_dict) {\n
         var result = [],\n
           key;\n
-        for (key in document._attachments) {\n
-          if (document._attachments.hasOwnProperty(key)) {\n
+        for (key in attachment_dict) {\n
+          if (attachment_dict.hasOwnProperty(key)) {\n
             if (DOCUMENT_REGEXP.test(key)) {\n
               try {\n
                 result.push({\n
@@ -7516,26 +7567,26 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       });\n
   };\n
 \n
-  DocumentStorage.prototype.getAttachment = function (param) {\n
-    return this._sub_storage.getAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param)\n
-    });\n
+  DocumentStorage.prototype.getAttachment = function (id, name) {\n
+    return this._sub_storage.getAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(id, name)\n
+    );\n
   };\n
 \n
-  DocumentStorage.prototype.putAttachment = function (param) {\n
-    return this._sub_storage.putAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param),\n
-      "_blob": param._blob\n
-    });\n
+  DocumentStorage.prototype.putAttachment = function (id, name, blob) {\n
+    return this._sub_storage.putAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(id, name),\n
+      blob\n
+    );\n
   };\n
 \n
-  DocumentStorage.prototype.removeAttachment = function (param) {\n
-    return this._sub_storage.removeAttachment({\n
-      "_id": this._document_id,\n
-      "_attachment": getSubAttachmentIdFromParam(param)\n
-    });\n
+  DocumentStorage.prototype.removeAttachment = function (id, name) {\n
+    return this._sub_storage.removeAttachment(\n
+      this._document_id,\n
+      getSubAttachmentIdFromParam(id, name)\n
+    );\n
   };\n
 \n
   jIO.addStorage(\'document\', DocumentStorage);\n
@@ -7748,7 +7799,19 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return new RSVP.Promise(resolver);\n
   }\n
 \n
-  IndexedDBStorage.prototype.get = function (param) {\n
+  IndexedDBStorage.prototype.get = function (id) {\n
+    return openIndexedDB(this)\n
+      .push(function (db) {\n
+        var transaction = openTransaction(db, ["metadata"],\n
+                                          "readonly");\n
+        return handleGet(transaction.objectStore("metadata").get(id));\n
+      })\n
+      .push(function (result) {\n
+        return result.doc;\n
+      });\n
+  };\n
+\n
+  IndexedDBStorage.prototype.allAttachments = function (id) {\n
     var attachment_dict = {};\n
 \n
     function addEntry(cursor) {\n
@@ -7760,17 +7823,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         var transaction = openTransaction(db, ["metadata", "attachment"],\n
                                           "readonly");\n
         return RSVP.all([\n
-          handleGet(transaction.objectStore("metadata").get(param._id)),\n
+          handleGet(transaction.objectStore("metadata").get(id)),\n
           handleCursor(transaction.objectStore("attachment").index("_id")\n
-                       .openCursor(IDBKeyRange.only(param._id)), addEntry)\n
+                       .openCursor(IDBKeyRange.only(id)), addEntry)\n
         ]);\n
       })\n
-      .push(function (result_list) {\n
-        var result = result_list[0];\n
-        if (Object.getOwnPropertyNames(attachment_dict).length > 0) {\n
-          result._attachments = attachment_dict;\n
-        }\n
-        return result;\n
+      .push(function () {\n
+        return attachment_dict;\n
       });\n
   };\n
 \n
@@ -7784,11 +7843,14 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return new RSVP.Promise(resolver);\n
   }\n
 \n
-  IndexedDBStorage.prototype.put = function (metadata) {\n
+  IndexedDBStorage.prototype.put = function (id, metadata) {\n
     return openIndexedDB(this)\n
       .push(function (db) {\n
         var transaction = openTransaction(db, ["metadata"], "readwrite");\n
-        return handleRequest(transaction.objectStore("metadata").put(metadata));\n
+        return handleRequest(transaction.objectStore("metadata").put({\n
+          "_id": id,\n
+          "doc": metadata\n
+        }));\n
       });\n
   };\n
 \n
@@ -7796,33 +7858,36 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     cursor["delete"]();\n
   }\n
 \n
-  IndexedDBStorage.prototype.remove = function (param) {\n
+  IndexedDBStorage.prototype.remove = function (id) {\n
     return openIndexedDB(this)\n
       .push(function (db) {\n
         var transaction = openTransaction(db, ["metadata", "attachment",\n
                                           "blob"], "readwrite");\n
         return RSVP.all([\n
           handleRequest(transaction\n
-                        .objectStore("metadata")["delete"](param._id)),\n
+                        .objectStore("metadata")["delete"](id)),\n
           // XXX Why not possible to delete with KeyCursor?\n
           handleCursor(transaction.objectStore("attachment").index("_id")\n
-                       .openCursor(IDBKeyRange.only(param._id)), deleteEntry),\n
+                       .openCursor(IDBKeyRange.only(id)), deleteEntry),\n
           handleCursor(transaction.objectStore("blob").index("_id")\n
-                       .openCursor(IDBKeyRange.only(param._id)), deleteEntry)\n
+                       .openCursor(IDBKeyRange.only(id)), deleteEntry)\n
         ]);\n
       });\n
   };\n
 \n
-  IndexedDBStorage.prototype.getAttachment = function (param) {\n
+  IndexedDBStorage.prototype.getAttachment = function (id, name, options) {\n
     var transaction,\n
       start,\n
       end;\n
+    if (options === undefined) {\n
+      options = {};\n
+    }\n
     return openIndexedDB(this)\n
       .push(function (db) {\n
         transaction = openTransaction(db, ["attachment", "blob"], "readonly");\n
         // XXX Should raise if key is not good\n
         return handleGet(transaction.objectStore("attachment")\n
-                         .get(buildKeyPath([param._id, param._attachment])));\n
+                         .get(buildKeyPath([id, name])));\n
       })\n
       .push(function (attachment) {\n
         var total_length = attachment.info.length,\n
@@ -7832,8 +7897,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           start_index,\n
           end_index;\n
 \n
-        start = param._start || 0;\n
-        end = param._end || total_length;\n
+        start = options.start || 0;\n
+        end = options.end || total_length;\n
         if (end > total_length) {\n
           end = total_length;\n
         }\n
@@ -7855,8 +7920,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
         for (i = start_index; i <= end_index; i += 1) {\n
           promise_list.push(\n
-            handleGet(store.get(buildKeyPath([param._id,\n
-                                param._attachment, i])))\n
+            handleGet(store.get(buildKeyPath([id,\n
+                                name, i])))\n
           );\n
         }\n
         return RSVP.all(promise_list);\n
@@ -7870,26 +7935,26 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           array_buffer_list.push(result_list[i].blob);\n
         }\n
         blob = new Blob(array_buffer_list, {type: "application/octet-stream"});\n
-        return {data: blob.slice(start, end)};\n
+        return blob.slice(start, end);\n
       });\n
   };\n
 \n
-  function removeAttachment(transaction, param) {\n
+  function removeAttachment(transaction, id, name) {\n
     return RSVP.all([\n
       // XXX How to get the right attachment\n
       handleRequest(transaction.objectStore("attachment")["delete"](\n
-        buildKeyPath([param._id, param._attachment])\n
+        buildKeyPath([id, name])\n
       )),\n
       handleCursor(transaction.objectStore("blob").index("_id_attachment")\n
                    .openCursor(IDBKeyRange.only(\n
-          [param._id, param._attachment]\n
+          [id, name]\n
         )),\n
           deleteEntry\n
         )\n
     ]);\n
   }\n
 \n
-  IndexedDBStorage.prototype.putAttachment = function (metadata) {\n
+  IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {\n
     var blob_part = [],\n
       transaction,\n
       db;\n
@@ -7899,11 +7964,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         db = database;\n
 \n
         // Split the blob first\n
-        return jIO.util.readBlobAsArrayBuffer(metadata._blob);\n
+        return jIO.util.readBlobAsArrayBuffer(blob);\n
       })\n
       .push(function (event) {\n
         var array_buffer = event.target.result,\n
-          total_size = metadata._blob.size,\n
+          total_size = blob.size,\n
           handled_size = 0;\n
 \n
         while (handled_size < total_size) {\n
@@ -7914,18 +7979,18 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
         // Remove previous attachment\n
         transaction = openTransaction(db, ["attachment", "blob"], "readwrite");\n
-        return removeAttachment(transaction, metadata);\n
+        return removeAttachment(transaction, id, name);\n
       })\n
       .push(function () {\n
 \n
         var promise_list = [\n
             handleRequest(transaction.objectStore("attachment").put({\n
-              "_key_path": buildKeyPath([metadata._id, metadata._attachment]),\n
-              "_id": metadata._id,\n
-              "_attachment": metadata._attachment,\n
+              "_key_path": buildKeyPath([id, name]),\n
+              "_id": id,\n
+              "_attachment": name,\n
               "info": {\n
-                "content_type": metadata._blob.type,\n
-                "length": metadata._blob.size\n
+                "content_type": blob.type,\n
+                "length": blob.size\n
               }\n
             }))\n
           ],\n
@@ -7935,10 +8000,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         for (i = 0; i < len; i += 1) {\n
           promise_list.push(\n
             handleRequest(blob_store.put({\n
-              "_key_path": buildKeyPath([metadata._id, metadata._attachment,\n
+              "_key_path": buildKeyPath([id, name,\n
                                          i]),\n
-              "_id" : metadata._id,\n
-              "_attachment" : metadata._attachment,\n
+              "_id" : id,\n
+              "_attachment" : name,\n
               "_part" : i,\n
               "blob": blob_part[i]\n
             }))\n
@@ -7949,12 +8014,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       });\n
   };\n
 \n
-  IndexedDBStorage.prototype.removeAttachment = function (param) {\n
+  IndexedDBStorage.prototype.removeAttachment = function (id, name) {\n
     return openIndexedDB(this)\n
       .push(function (db) {\n
         var transaction = openTransaction(db, ["attachment", "blob"],\n
                                           "readwrite");\n
-        return removeAttachment(transaction, param);\n
+        return removeAttachment(transaction, id, name);\n
       });\n
   };\n
 \n
@@ -8097,7 +8162,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.55610.36294.45499</string> </value>
+                <value> <string>941.55617.298.51882</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -8115,7 +8180,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427118780.26</float>
+                        <float>1428655194.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

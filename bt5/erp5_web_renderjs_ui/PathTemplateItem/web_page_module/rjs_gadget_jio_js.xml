@@ -118,6 +118,10 @@
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.allDocs.apply(storage, arguments);\n
     })\n
+    .declareMethod(\'allAttachments\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.allAttachments.apply(storage, arguments);\n
+    })\n
     .declareMethod(\'get\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.get.apply(storage, arguments);\n
@@ -268,7 +272,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -282,7 +286,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.52129.46198.31044</string> </value>
+                <value> <string>941.55610.36294.45499</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -300,7 +304,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425049350.7</float>
+                        <float>1428655701.93</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

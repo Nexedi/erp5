@@ -320,17 +320,17 @@
     .allowPublicAcquisition("aq_putAttachment", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.putAttachment({\n
-            "_id": param_list[0]._id,\n
-            "_attachment": param_list[0]._attachment,\n
-            "_data": JSON.stringify(param_list[0]._data)\n
-          });\n
+          return jio_gadget.putAttachment(\n
+            param_list[0]._id,\n
+            param_list[0]._attachment,\n
+            JSON.stringify(param_list[0]._data)\n
+          );\n
         });\n
     })\n
     .allowPublicAcquisition("jio_get", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.get.apply(jio_gadget, param_list);\n
+          return jio_gadget.get(param_list[0]._id);\n
         })\n
         .push(function (result) {\n
           return {data: result};\n
@@ -339,10 +339,13 @@
     .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
       return this.getDeclaredGadget("jio_gadget")\n
         .push(function (jio_gadget) {\n
-          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+          return jio_gadget.getAttachment(\n
+            param_list[0]._id,\n
+            param_list[0]._attachment\n
+          );\n
         })\n
         .push(function (response) {\n
-          return jIO.util.readBlobAsText(response.data);\n
+          return jIO.util.readBlobAsText(response);\n
         })\n
         .push(function (event) {\n
           return {data: JSON.parse(event.target.result)};\n
@@ -732,7 +735,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -746,7 +749,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.12884.35349.45585</string> </value>
+                <value> <string>942.15701.13180.42427</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +767,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428487042.05</float>
+                        <float>1428656180.86</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
