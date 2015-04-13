@@ -69,9 +69,16 @@ with portal.Localizer.translationContext(localizer_language):\n
   def dummyReportMethod():\n
     return report_section_list\n
 \n
+  def decodeReportSection(data):\n
+    # BBB We use to encode in zlib\n
+    try:\n
+      return data.decode(\'bz2\')\n
+    except IOError:\n
+      return data.decode(\'zlib\')\n
+\n
   report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
       extra_context=dict(options={\'format\': format},\n
-                         rendered_report_item_list=(r[1].decode(\'zlib\') for r in report_section_list),\n
+                         rendered_report_item_list=(decodeReportSection(r[1]) for r in report_section_list),\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n

@@ -77,7 +77,7 @@ with portal.Localizer.translationContext(localizer_language):\n
 \n
   report_section.popReport(portal, render_prefix=render_prefix)\n
 \n
-return report_section_idx, data.encode(\'utf8\').encode(\'zlib\')\n
+return report_section_idx, data.encode(\'utf8\').encode(\'bz2\')\n
 </string> </value>
         </item>
         <item>
