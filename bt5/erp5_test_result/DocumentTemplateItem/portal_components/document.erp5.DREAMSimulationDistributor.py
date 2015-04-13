@@ -213,7 +213,7 @@ class DREAMSimulationDistributor(ERP5ProjectUnitTestDistributor):
     dream_repo = {'branch': 'dream',
                   'buildout_section_id': 'slapos',
                   'url': 'http://git.erp5.org/repos/slapos.git',
-                  'profile_path': 'software/dream/software.cfg'}
+                  'profile_path': 'software/dream/software_testnode.cfg'}
 
     result_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
                          portal_type="Test Result",
