@@ -28,14 +28,12 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
 
 class TestAlarm(ERP5TypeTestCase):
@@ -52,14 +50,6 @@ class TestAlarm(ERP5TypeTestCase):
   - every 1st day of every 2 month, at 6
   """
 
-  # Different variables used for this test
-  run_all_test = 1
-  source_company_id = 'Nexedi'
-  destination_company_id = 'Coramy'
-  component_id = 'brick'
-  sales_order_id = '1'
-  quantity = 10
-  base_price = 0.7832
   # year/month/day hour:minute:second
   date_format = '%i/%i/%i %i:%i:%d GMT+0100'
 
@@ -87,31 +77,15 @@ class TestAlarm(ERP5TypeTestCase):
     a_tool = self.getAlarmTool()
     return a_tool.newContent(**kw)
 
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
-
-
-  def test_01_HasEverything(self, quiet=0, run=run_all_test):
+  def test_01_HasEverything(self):
     # Test if portal_alarms was created
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
-      LOG('Testing... ',0,'testHasEverything')
     self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
     self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
 
-  def test_02_Initialization(self, quiet=0, run=run_all_test):
+  def test_02_Initialization(self):
     """
     Test some basic things right after the creation
     """
-    if not run: return
-    if not quiet:
-      message = 'Test Initialization'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
     alarm = self.newAlarm()
     self.tic()
     now = DateTime()
@@ -123,12 +97,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=now) # This should not do change the alarm date
     self.assertEqual(alarm.getAlarmDate(),date)
 
-  def test_03_EveryHour(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Every Hour'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_03_EveryHour(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime()
     date = addToDate(now, day=2)
@@ -137,9 +106,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEqual(alarm.getAlarmDate(), date)
-    LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
-    LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=1)
     self.assertEqual(alarm.getAlarmDate(),next_date)
@@ -151,12 +118,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.activeSense()
     self.assertEqual(alarm.getAlarmDate(),next_date)
 
-  def test_04_Every3Hours(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Every 3 Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_04_Every3Hours(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime().toZone('UTC')
     hour_to_remove = now.hour() % 3
@@ -167,9 +129,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEqual(alarm.getAlarmDate(),date)
-    LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
-    LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,hour=3)
     self.assertEqual(alarm.getAlarmDate(),next_date)
@@ -178,13 +138,7 @@ class TestAlarm(ERP5TypeTestCase):
     next_date = addToDate(next_date,hour=3)
     self.assertEqual(alarm.getAlarmDate(),next_date)
 
-  def test_05_SomeHours(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Some Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
+  def test_05_SomeHours(self):
     right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
     now = DateTime(self.date_format               % (2006,10,6,15,00,00))
     right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
@@ -203,13 +157,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
-  def test_06_EveryDayOnce(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Every Day Once'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
+  def test_06_EveryDayOnce(self):
     now = DateTime(self.date_format               % (2006,10,6,10,00,00))
     right_first_date = DateTime(self.date_format  % (2006,10,6,10,00,00))
     right_second_date = DateTime(self.date_format % (2006,10,7,10,00,00))
@@ -225,14 +173,8 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=right_second_date)
     self.assertEqual(alarm.getAlarmDate(),right_third_date)
 
-  def test_07_Every3DaysSomeHours(self, quiet=0, run=run_all_test):
+  def test_07_Every3DaysSomeHours(self):
     """- every 3 days at 14 and 15 and 17"""
-    if not run: return
-    if not quiet:
-      message = 'Every 3 Days Some Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
     right_first_date = DateTime(self.date_format % (2006,10,6,14,00,00))
     right_second_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,6,17,00,00))
@@ -250,14 +192,8 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
 
-  def test_07a_Every4DaysSomeHours(self, quiet=0, run=run_all_test):
+  def test_07a_Every4DaysSomeHours(self):
     """- every 4 days at 14 and 15 and 17"""
-    if not run: return
-    if not quiet:
-      message = 'Every 4 Days Some Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
     right_first_date = DateTime(self.date_format % (2006,10,7,13,00,00))
     right_second_date = DateTime(self.date_format  % (2006,10,8,14,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,8,15,00,00))
@@ -278,14 +214,8 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=right_fourth_date)
     self.assertEqual(alarm.getAlarmDate(),right_fifth_date)
 
-  def test_08_SomeWeekDaysSomeHours(self, quiet=0, run=run_all_test):
+  def test_08_SomeWeekDaysSomeHours(self):
     """- every monday and friday, at 6 and 15"""
-    if not run: return
-    if not quiet:
-      message = 'Some Week Days Some Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
     right_first_date = DateTime(self.date_format  % (2006,9,27,6,00,00))
     right_second_date = DateTime(self.date_format  % (2006,9,29,6,00,00))
     right_third_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
@@ -303,19 +233,12 @@ class TestAlarm(ERP5TypeTestCase):
     the basic test
     """
     for date in args[:-1]:
-      LOG('checkDate, checking date...:',0,date)
       self.assertEqual(alarm.getAlarmDate(),date)
       alarm.setNextAlarmDate(current_date=date)
     self.assertEqual(alarm.getAlarmDate(),args[-1])
 
-  def test_09_SomeMonthDaysSomeHours(self, quiet=0, run=run_all_test):
+  def test_09_SomeMonthDaysSomeHours(self):
     """- every 1st and 15th every month, at 12 and 14"""
-    if not run: return
-    if not quiet:
-      message = 'Some Month Days Some Hours'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
     right_first_date = DateTime(self.date_format  % (2006,10,01,12,00,00))
     right_second_date = DateTime(self.date_format  % (2006,10,01,14,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
@@ -327,14 +250,8 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
 
-  def test_10_OnceEvery2Month(self, quiet=0, run=run_all_test):
+  def test_10_OnceEvery2Month(self):
     """- every 1st day of every 2 month, at 6"""
-    if not run: return
-    if not quiet:
-      message = 'Once Every 2 Month'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
     right_first_date = DateTime(self.date_format  % (2006,10,01,6,00,00))
     right_second_date = DateTime(self.date_format  % (2006,12,01,6,00,00))
     right_third_date = DateTime(self.date_format  % (2007,2,01,6,00,00))
@@ -346,13 +263,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date)
 
-  def test_11_EveryDayOnceWeek41And42(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Every Day Once Week 41 And 43'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
-
+  def test_11_EveryDayOnceWeek41And42(self):
     right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
     right_second_date = DateTime(self.date_format  % (2006,10,9,6,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,10,6,00,00))
@@ -364,12 +275,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
 
-  def test_12_Every5Minutes(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Every 5 Minutes'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_12_Every5Minutes(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime()
     minute_to_remove = now.minute() % 5
@@ -380,9 +286,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEqual(alarm.getAlarmDate(),date)
-    LOG(message + ' now :',0,now)
     now = addToDate(now,day=2)
-    LOG(message + ' now :',0,now)
     alarm.setNextAlarmDate(current_date=now)
     next_date = addToDate(date,minute=5)
     self.assertEqual(alarm.getAlarmDate(),next_date)
@@ -391,12 +295,7 @@ class TestAlarm(ERP5TypeTestCase):
     next_date = addToDate(next_date,minute=5)
     self.assertEqual(alarm.getAlarmDate(),next_date)
 
-  def test_13_EveryMinute(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Every Minute'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_13_EveryMinute(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime()
     date = addToDate(now,hour=2)
@@ -406,12 +305,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setNextAlarmDate(current_date=date)
     self.assertEqual(alarm.getAlarmDate(),date)
 
-  def test_14_NewActiveProcess(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test New Active Process'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_14_NewActiveProcess(self):
     alarm = self.newAlarm(enabled=True)
     active_process = alarm.newActiveProcess()
     self.assertEqual('Active Process', active_process.getPortalType())
@@ -419,12 +313,7 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(active_process, alarm.getLastActiveProcess())
 
-  def test_15_FailedAlarmsDoNotBlockFutureAlarms(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Failed Alarms Do Not Block Future Alarms'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
+  def test_15_FailedAlarmsDoNotBlockFutureAlarms(self):
     try:
       sense_method_id = 'Alarm_testSenseMethod'
       skin_folder_id = 'custom'
@@ -468,15 +357,10 @@ class TestAlarm(ERP5TypeTestCase):
     finally:
       self.portal.portal_activities.manageClearActivities(keep=0)
 
-  def test_16_uncatalog(self, quiet=0, run=run_all_test):
+  def test_16_uncatalog(self):
     """
     Check that deleting an alarm uncatalogs it.
     """
-    if not run: return
-    if not quiet:
-      message = 'Test Uncatalog'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     alarm = self.newAlarm(enabled=True)
     self.tic()
 
@@ -502,15 +386,10 @@ class TestAlarm(ERP5TypeTestCase):
     result = sql_connection.manage_test(sql)
     self.assertEqual(0, len(result))
 
-  def test_17_tic(self, quiet=0, run=run_all_test):
+  def test_17_tic(self):
     """
     Make sure that the tic method on alarm is working
     """
-    if not run: return
-    if not quiet:
-      message = 'Test AlarmTool Tic'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     alarm = self.newAlarm()
     alarm.setEnabled(True)
     self.tic()
@@ -540,16 +419,10 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(alarm.getDescription(), 'a')
 
-  def test_18_alarm_activities_execution_order(self, quiet=0, run=run_all_test):
+  def test_18_alarm_activities_execution_order(self):
     """
     Make sure active process created by an alarm get the right tag
     """
-    if not run: return
-    if not quiet:
-      message = 'Test Activities execution order'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
     alarm = self.newAlarm()
     # Create script that generate active process
     sense_method_id = 'Alarm_createActiveProcessSenseMethod'
@@ -590,17 +463,11 @@ class TestAlarm(ERP5TypeTestCase):
         self.fail(m.method_id)
     self.tic()
 
-  def test_19_ManualInvocation(self, quiet=0, run=run_all_test):
+  def test_19_ManualInvocation(self):
     """
     test if an alarm can be invoked directly by the user securely,
     and if the results are identical when allowed.
     """
-    if not run: return
-    if not quiet:
-      message = 'Test manual invocation'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
     alarm = self.newAlarm()
     # Create script that generate active process
     sense_method_id = 'Alarm_setBogusLocalProperty'
@@ -678,15 +545,10 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setProperty('bogus', None)
     self.assertEqual(alarm.getProperty('bogus', None), None)
 
-  def test_20_UndefinedPeriodicityStartDate(self, quiet=0, run=run_all_test):
+  def test_20_UndefinedPeriodicityStartDate(self):
     """
     Test that getAlarmDate does not crash when PeriodicityStartDate is not set.
     """
-    if not run: return
-    if not quiet:
-      message = 'Test undefined PeriodicityStartDate'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ',0,message)
     alarm = self.newAlarm(enabled=True)
     # Test sanity check.
     self.assertEqual(alarm.getPeriodicityStartDate(), None)
