@@ -419,6 +419,28 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(alarm.getDescription(), 'a')
 
+  def test_automatic_solve(self):
+    alarm = self.newAlarm()
+    alarm.setEnabled(True)
+    alarm.setAutomaticSolve(True)
+    alarm.setPeriodicityStartDate(addToDate(DateTime(), day=-1))
+    alarm.setPeriodicityMinuteFrequency(1)
+
+    sense_method_id = 'Alarm_testSenseMethodWithAutomaticSolve'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts']\
+        .manage_addPythonScript(id=sense_method_id)
+    skin_folder[sense_method_id].ZPythonScript_edit('fixit=0, *args,**kw',
+          'if fixit: context.setDescription("fixed")')
+    alarm.setActiveSenseMethodId(sense_method_id)
+    self.tic()
+
+    self.portal.portal_alarms.tic()
+    self.tic()
+
+    self.assertEqual(alarm.getDescription(), 'fixed')
+
   def test_18_alarm_activities_execution_order(self):
     """
     Make sure active process created by an alarm get the right tag

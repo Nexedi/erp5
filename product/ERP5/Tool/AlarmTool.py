@@ -139,7 +139,10 @@ class AlarmTool(TimerServiceMixin, BaseTool):
           if alarm.isActive() or not alarm.isEnabled():
             # do nothing if already active, or not enabled
             continue
-          alarm.activeSense()
+          if alarm.isAutomaticSolve():
+            alarm.solve()
+          else:
+            alarm.activeSense()
     finally:
       setSecurityManager(security_manager)
 
