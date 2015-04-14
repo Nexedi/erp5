@@ -493,7 +493,7 @@
             return gadget.dropGadget("panel");\n
           })\n
           .push(function () {\n
-            return gadget.declareGadget(g.props.panel_gadget,\n
+            return gadget.declareGadget(gadget.props.panel_gadget,\n
                                          {scope: "panel",\n
                                           element: div});\n
           })\n
@@ -735,7 +735,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -749,7 +749,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.15701.13180.42427</string> </value>
+                <value> <string>942.21393.17345.64221</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -767,8 +767,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428656180.86</float>
-                        <string>GMT</string>
+                        <float>1428997594.5</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
