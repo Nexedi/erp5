@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>closed</string> </value>
+            <value> <string>delivering</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,18 +22,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed</string> </value>
+            <value> <string>Delivering</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>begin_delivery</string>
-                <string>cancel</string>
-                <string>cancel_action</string>
-                <string>deliver_action</string>
-                <string>open</string>
-                <string>open_action</string>
+                <string>deliver</string>
               </tuple>
             </value>
         </item>
@@ -87,7 +82,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
