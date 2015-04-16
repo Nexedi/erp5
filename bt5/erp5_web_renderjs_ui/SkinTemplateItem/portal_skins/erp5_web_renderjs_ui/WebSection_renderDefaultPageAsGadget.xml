@@ -55,8 +55,9 @@
 if response is None:\n
   response = REQUEST.RESPONSE\n
 \n
-web_section = context\n
-default_web_page = web_section.getDefaultDocumentValue()\n
+default_web_page = context\n
+web_section = REQUEST.get("current_web_section")\n
+\n
 \n
 return default_web_page.WebPage_viewAsWeb(mapping_dict={\n
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default=""),\n
