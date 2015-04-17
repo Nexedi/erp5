@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Default state of the document</string> </value>
+            <value> <string>Packing List is being planned by simulation. It can not be edited by human in this state.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>planned</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Planned</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -32,9 +32,12 @@
                 <string>cancel_action</string>
                 <string>confirm</string>
                 <string>confirm_action</string>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>plan</string>
+                <string>set_ready</string>
+                <string>set_ready_action</string>
+                <string>start</string>
+                <string>start_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
@@ -66,7 +69,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -74,11 +76,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -86,11 +84,7 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -98,11 +92,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -115,7 +105,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
