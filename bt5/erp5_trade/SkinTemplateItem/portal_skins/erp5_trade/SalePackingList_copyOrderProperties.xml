@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.PackingList_copyOrderProperties()\n
-context.Delivery_confirm()\n
+context.Delivery_confirmIfCompleteOrPlan()\n
 </string> </value>
         </item>
         <item>
