@@ -50,17 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.PackingList_copyOrderProperties()\n
-context.Delivery_confirmIfCompleteOrPlan()\n
+            <value> <string>portal_type = context.getDeliveryPortalType()\n
+# make sure that the result of the simulation state is update to date, so check getSimulationState manually\n
+return [x.getObject() for x in context.portal_catalog(portal_type=portal_type,simulation_state=\'confirmed\') \n
+            if x.getObject().getSimulationState()==\'planned\']\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>related_simulation_movement_path_list</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchasePackingList_copyOrderProperties</string> </value>
+            <value> <string>DeliveryBuilder_selectPlannedDeliveryList</string> </value>
         </item>
       </dictionary>
     </pickle>

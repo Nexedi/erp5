@@ -49,6 +49,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>context.PackingList_copyOrderProperties()\n
+context.Delivery_confirmIfCompleteOrPlan()\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>related_simulation_movement_path_list</string> </value>
         </item>
