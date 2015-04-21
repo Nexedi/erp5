@@ -53,7 +53,12 @@
             <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
 portal = sci[\'object\'].getPortalObject()\n
-portal.portal_catalog.searchAndActivate(\n
+\n
+# We activate after BankReconciliation_selectNonReconciledTransactionList, in\n
+# case the user cancels just after using this action. \n
+portal.portal_catalog.activate(\n
+  queue=\'SQLQueue\', after_tag=\'BankReconciliation_selectNonReconciledTransactionList\'\n
+).searchAndActivate(\n
   portal_type=portal.getPortalAccountingMovementTypeList(),\n
   default_aggregate_uid=sci[\'object\'].getUid(),\n
   method_args=(None, translateString(\'Cancelling bank reconciliation\')),\n
