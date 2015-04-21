@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts58329250.86</string> </value>
+            <value> <string>ts29605246.93</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>267320</int> </value>
+            <value> <int>268381</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>jquery-1.9.0.js</string> </value>
+            <value> <string>jquery-1.9.1.js</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -54,7 +54,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*!\n
- * jQuery JavaScript Library v1.9.0\n
+ * jQuery JavaScript Library v1.9.1\n
  * http://jquery.com/\n
  *\n
  * Includes Sizzle.js\n
@@ -64,16 +64,25 @@
  * Released under the MIT license\n
  * http://jquery.org/license\n
  *\n
- * Date: 2013-1-14\n
+ * Date: 2013-2-4\n
  */\n
 (function( window, undefined ) {\n
-"use strict";\n
+\n
+// Can\'t do this because several apps including ASP.NET trace\n
+// the stack via arguments.caller.callee and Firefox dies if\n
+// you try to trace through "use strict" call chains. (#13335)\n
+// Support: Firefox 18+\n
+//"use strict";\n
 var\n
+\t// The deferred used on DOM ready\n
+\treadyList,\n
+\n
 \t// A central reference to the root jQuery(document)\n
 \trootjQuery,\n
 \n
-\t// The deferred used on DOM ready\n
-\treadyList,\n
+\t// Support: IE<9\n
+\t// For `typeof node.method` instead of `node.method !== undefined`\n
+\tcore_strundefined = typeof undefined,\n
 \n
 \t// Use the correct document accordingly with window argument (sandbox)\n
 \tdocument = window.document,\n
@@ -91,7 +100,7 @@ var\n
 \t// List of deleted data cache ids, so we can reuse them\n
 \tcore_deletedIds = [],\n
 \n
-\tcore_version = "1.9.0",\n
+\tcore_version = "1.9.1",\n
 \n
 \t// Save a reference to some core methods\n
 \tcore_concat = core_deletedIds.concat,\n
@@ -140,16 +149,24 @@ var\n
 \t\treturn letter.toUpperCase();\n
 \t},\n
 \n
-\t// The ready event handler and self cleanup method\n
-\tDOMContentLoaded = function() {\n
+\t// The ready event handler\n
+\tcompleted = function( event ) {\n
+\n
+\t\t// readyState === "complete" is good enough for us to call the dom ready in oldIE\n
+\t\tif ( document.addEventListener || event.type === "load" || document.readyState === "complete" ) {\n
+\t\t\tdetach();\n
+\t\t\tjQuery.ready();\n
+\t\t}\n
+\t},\n
+\t// Clean-up method for dom ready events\n
+\tdetach = function() {\n
 \t\tif ( document.addEventListener ) {\n
-\t\t\tdocument.removeEventListener( "DOMContentLoaded", DOMContentLoaded, false );\n
-\t\t\tjQuery.ready();\n
-\t\t} else if ( document.readyState === "complete" ) {\n
-\t\t\t// we\'re here because readyState === "complete" in oldIE\n
-\t\t\t// which is good enough for us to call the dom ready!\n
-\t\t\tdocument.detachEvent( "onreadystatechange", DOMContentLoaded );\n
-\t\t\tjQuery.ready();\n
+\t\t\tdocument.removeEventListener( "DOMContentLoaded", completed, false );\n
+\t\t\twindow.removeEventListener( "load", completed, false );\n
+\n
+\t\t} else {\n
+\t\t\tdocument.detachEvent( "onreadystatechange", completed );\n
+\t\t\twindow.detachEvent( "onload", completed );\n
 \t\t}\n
 \t};\n
 \n
@@ -354,7 +371,7 @@ jQuery.fn = jQuery.prototype = {\n
 jQuery.fn.init.prototype = jQuery.fn;\n
 \n
 jQuery.extend = jQuery.fn.extend = function() {\n
-\tvar options, name, src, copy, copyIsArray, clone,\n
+\tvar src, copyIsArray, copy, name, options, clone,\n
 \t\ttarget = arguments[0] || {},\n
 \t\ti = 1,\n
 \t\tlength = arguments.length,\n
@@ -836,7 +853,7 @@ jQuery.extend({\n
 \t// Bind a function to a context, optionally partially applying any\n
 \t// arguments.\n
 \tproxy: function( fn, context ) {\n
-\t\tvar tmp, args, proxy;\n
+\t\tvar args, proxy, tmp;\n
 \n
 \t\tif ( typeof context === "string" ) {\n
 \t\t\ttmp = fn[ context ];\n
@@ -935,18 +952,18 @@ jQuery.ready.promise = function( obj ) {\n
 \t\t// Standards-based browsers support DOMContentLoaded\n
 \t\t} else if ( document.addEventListener ) {\n
 \t\t\t// Use the handy event callback\n
-\t\t\tdocument.addEventListener( "DOMContentLoaded", DOMContentLoaded, false );\n
+\t\t\tdocument.addEventListener( "DOMContentLoaded", completed, false );\n
 \n
 \t\t\t// A fallback to window.onload, that will always work\n
-\t\t\twindow.addEventListener( "load", jQuery.ready, false );\n
+\t\t\twindow.addEventListener( "load", completed, false );\n
 \n
 \t\t// If IE event model is used\n
 \t\t} else {\n
 \t\t\t// Ensure firing before onload, maybe late but safe also for iframes\n
-\t\t\tdocument.attachEvent( "onreadystatechange", DOMContentLoaded );\n
+\t\t\tdocument.attachEvent( "onreadystatechange", completed );\n
 \n
 \t\t\t// A fallback to window.onload, that will always work\n
-\t\t\twindow.attachEvent( "onload", jQuery.ready );\n
+\t\t\twindow.attachEvent( "onload", completed );\n
 \n
 \t\t\t// If IE and not a frame\n
 \t\t\t// continually check to see if the document is ready\n
@@ -967,6 +984,9 @@ jQuery.ready.promise = function( obj ) {\n
 \t\t\t\t\t\t} catch(e) {\n
 \t\t\t\t\t\t\treturn setTimeout( doScrollCheck, 50 );\n
 \t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// detach all dom ready events\n
+\t\t\t\t\t\tdetach();\n
 \n
 \t\t\t\t\t\t// and execute any waiting functions\n
 \t\t\t\t\t\tjQuery.ready();\n
@@ -1044,18 +1064,18 @@ jQuery.Callbacks = function( options ) {\n
 \t\t( optionsCache[ options ] || createOptions( options ) ) :\n
 \t\tjQuery.extend( {}, options );\n
 \n
-\tvar // Last fire value (for non-forgettable lists)\n
+\tvar // Flag to know if list is currently firing\n
+\t\tfiring,\n
+\t\t// Last fire value (for non-forgettable lists)\n
 \t\tmemory,\n
 \t\t// Flag to know if list was already fired\n
 \t\tfired,\n
-\t\t// Flag to know if list is currently firing\n
-\t\tfiring,\n
-\t\t// First callback to fire (used internally by add and fireWith)\n
-\t\tfiringStart,\n
 \t\t// End of the loop when firing\n
 \t\tfiringLength,\n
 \t\t// Index of currently firing callback (modified by remove if needed)\n
 \t\tfiringIndex,\n
+\t\t// First callback to fire (used internally by add and fireWith)\n
+\t\tfiringStart,\n
 \t\t// Actual callback list\n
 \t\tlist = [],\n
 \t\t// Stack of fire calls for repeatable lists\n
@@ -1141,9 +1161,10 @@ jQuery.Callbacks = function( options ) {\n
 \t\t\t\t}\n
 \t\t\t\treturn this;\n
 \t\t\t},\n
-\t\t\t// Control if a given callback is in the list\n
+\t\t\t// Check if a given callback is in the list.\n
+\t\t\t// If no argument is given, return whether or not list has callbacks attached.\n
 \t\t\thas: function( fn ) {\n
-\t\t\t\treturn jQuery.inArray( fn, list ) > -1;\n
+\t\t\t\treturn fn ? jQuery.inArray( fn, list ) > -1 : !!( list && list.length );\n
 \t\t\t},\n
 \t\t\t// Remove all callbacks from the list\n
 \t\t\tempty: function() {\n
@@ -1340,7 +1361,9 @@ jQuery.extend({\n
 });\n
 jQuery.support = (function() {\n
 \n
-\tvar support, all, a, select, opt, input, fragment, eventName, isSupported, i,\n
+\tvar support, all, a,\n
+\t\tinput, select, fragment,\n
+\t\topt, eventName, isSupported, i,\n
 \t\tdiv = document.createElement("div");\n
 \n
 \t// Setup\n
@@ -1541,7 +1564,7 @@ jQuery.support = (function() {\n
 \t\t\t\t!parseFloat( ( window.getComputedStyle( marginDiv, null ) || {} ).marginRight );\n
 \t\t}\n
 \n
-\t\tif ( typeof div.style.zoom !== "undefined" ) {\n
+\t\tif ( typeof div.style.zoom !== core_strundefined ) {\n
 \t\t\t// Support: IE<8\n
 \t\t\t// Check if natively block-level elements act like inline-block\n
 \t\t\t// elements when setting their display to \'inline\' and giving\n
@@ -1557,9 +1580,12 @@ jQuery.support = (function() {\n
 \t\t\tdiv.firstChild.style.width = "5px";\n
 \t\t\tsupport.shrinkWrapBlocks = ( div.offsetWidth !== 3 );\n
 \n
-\t\t\t// Prevent IE 6 from affecting layout for positioned elements #11048\n
-\t\t\t// Prevent IE from shrinking the body in IE 7 mode #12869\n
-\t\t\tbody.style.zoom = 1;\n
+\t\t\tif ( support.inlineBlockNeedsLayout ) {\n
+\t\t\t\t// Prevent IE 6 from affecting layout for positioned elements #11048\n
+\t\t\t\t// Prevent IE from shrinking the body in IE 7 mode #12869\n
+\t\t\t\t// Support: IE<8\n
+\t\t\t\tbody.style.zoom = 1;\n
+\t\t\t}\n
 \t\t}\n
 \n
 \t\tbody.removeChild( container );\n
@@ -1576,7 +1602,7 @@ jQuery.support = (function() {\n
 \n
 var rbrace = /(?:\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])$/,\n
 \trmultiDash = /([A-Z])/g;\n
-\t\n
+\n
 function internalData( elem, name, data, pvt /* Internal Use Only */ ){\n
 \tif ( !jQuery.acceptData( elem ) ) {\n
 \t\treturn;\n
@@ -1671,13 +1697,12 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ){\n
 \treturn ret;\n
 }\n
 \n
-function internalRemoveData( elem, name, pvt /* For internal use only */ ){\n
+function internalRemoveData( elem, name, pvt ) {\n
 \tif ( !jQuery.acceptData( elem ) ) {\n
 \t\treturn;\n
 \t}\n
 \n
-\tvar thisCache, i, l,\n
-\n
+\tvar i, l, thisCache,\n
 \t\tisNode = elem.nodeType,\n
 \n
 \t\t// See jQuery.data for more information\n
@@ -1781,24 +1806,29 @@ jQuery.extend({\n
 \t},\n
 \n
 \tdata: function( elem, name, data ) {\n
-\t\treturn internalData( elem, name, data, false );\n
+\t\treturn internalData( elem, name, data );\n
 \t},\n
 \n
 \tremoveData: function( elem, name ) {\n
-\t\treturn internalRemoveData( elem, name, false );\n
+\t\treturn internalRemoveData( elem, name );\n
 \t},\n
 \n
 \t// For internal use only.\n
 \t_data: function( elem, name, data ) {\n
 \t\treturn internalData( elem, name, data, true );\n
 \t},\n
-\t\n
+\n
 \t_removeData: function( elem, name ) {\n
 \t\treturn internalRemoveData( elem, name, true );\n
 \t},\n
 \n
 \t// A method for determining if a DOM node can handle the data expando\n
 \tacceptData: function( elem ) {\n
+\t\t// Do not set data on non-element because it will not be cleared (#8335).\n
+\t\tif ( elem.nodeType && elem.nodeType !== 1 && elem.nodeType !== 9 ) {\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
 \t\tvar noData = elem.nodeName && jQuery.noData[ elem.nodeName.toLowerCase() ];\n
 \n
 \t\t// nodes accept data unless otherwise specified; rejection can be conditional\n
@@ -1824,7 +1854,7 @@ jQuery.fn.extend({\n
 \t\t\t\t\t\tname = attrs[i].name;\n
 \n
 \t\t\t\t\t\tif ( !name.indexOf( "data-" ) ) {\n
-\t\t\t\t\t\t\tname = jQuery.camelCase( name.substring(5) );\n
+\t\t\t\t\t\t\tname = jQuery.camelCase( name.slice(5) );\n
 \n
 \t\t\t\t\t\t\tdataAttr( elem, name, data[ name ] );\n
 \t\t\t\t\t\t}\n
@@ -1875,12 +1905,12 @@ function dataAttr( elem, key, data ) {\n
 \t\tif ( typeof data === "string" ) {\n
 \t\t\ttry {\n
 \t\t\t\tdata = data === "true" ? true :\n
-\t\t\t\tdata === "false" ? false :\n
-\t\t\t\tdata === "null" ? null :\n
-\t\t\t\t// Only convert to a number if it doesn\'t change the string\n
-\t\t\t\t+data + "" === data ? +data :\n
-\t\t\t\trbrace.test( data ) ? jQuery.parseJSON( data ) :\n
-\t\t\t\t\tdata;\n
+\t\t\t\t\tdata === "false" ? false :\n
+\t\t\t\t\tdata === "null" ? null :\n
+\t\t\t\t\t// Only convert to a number if it doesn\'t change the string\n
+\t\t\t\t\t+data + "" === data ? +data :\n
+\t\t\t\t\trbrace.test( data ) ? jQuery.parseJSON( data ) :\n
+\t\t\t\t\t\tdata;\n
 \t\t\t} catch( e ) {}\n
 \n
 \t\t\t// Make sure we set the data so it isn\'t changed later\n
@@ -2196,7 +2226,7 @@ jQuery.fn.extend({\n
 \t\t\t\t}\n
 \n
 \t\t\t// Toggle whole class name\n
-\t\t\t} else if ( type === "undefined" || type === "boolean" ) {\n
+\t\t\t} else if ( type === core_strundefined || type === "boolean" ) {\n
 \t\t\t\tif ( this.className ) {\n
 \t\t\t\t\t// store className if set\n
 \t\t\t\t\tjQuery._data( this, "__className__", this.className );\n
@@ -2225,7 +2255,7 @@ jQuery.fn.extend({\n
 \t},\n
 \n
 \tval: function( value ) {\n
-\t\tvar hooks, ret, isFunction,\n
+\t\tvar ret, hooks, isFunction,\n
 \t\t\telem = this[0];\n
 \n
 \t\tif ( !arguments.length ) {\n
@@ -2349,7 +2379,7 @@ jQuery.extend({\n
 \t},\n
 \n
 \tattr: function( elem, name, value ) {\n
-\t\tvar ret, hooks, notxml,\n
+\t\tvar hooks, notxml, ret,\n
 \t\t\tnType = elem.nodeType;\n
 \n
 \t\t// don\'t get/set attributes on text, comment and attribute nodes\n
@@ -2358,7 +2388,7 @@ jQuery.extend({\n
 \t\t}\n
 \n
 \t\t// Fallback to prop when attributes are not supported\n
-\t\tif ( typeof elem.getAttribute === "undefined" ) {\n
+\t\tif ( typeof elem.getAttribute === core_strundefined ) {\n
 \t\t\treturn jQuery.prop( elem, name, value );\n
 \t\t}\n
 \n
@@ -2391,7 +2421,7 @@ jQuery.extend({\n
 \n
 \t\t\t// In IE9+, Flash objects don\'t have .getAttribute (#12945)\n
 \t\t\t// Support: IE9+\n
-\t\t\tif ( typeof elem.getAttribute !== "undefined" ) {\n
+\t\t\tif ( typeof elem.getAttribute !== core_strundefined ) {\n
 \t\t\t\tret =  elem.getAttribute( name );\n
 \t\t\t}\n
 \n
@@ -2667,7 +2697,15 @@ if ( !jQuery.support.style ) {\n
 \t\t\t// .cssText, that would destroy case senstitivity in URL\'s, like in "background"\n
 \t\t\treturn elem.style.cssText || undefined;\n
 \t\t},\n
-\t\tset: function( elem, valu
+\t\tset: function( elem, value ) {\n
+\t\t\treturn ( elem.style.cssText = value + "" );\n
+\t\t}\n
+\t};\n
+}\n
+\n
+// Safari mis-reports the default selected property of an option\n
+// Accessing the parent\'s selectedIndex property fixes it\n
+i
 
 ]]></string> </value>
         </item>
@@ -2690,15 +2728,7 @@ if ( !jQuery.support.style ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-e ) {\n
-\t\t\treturn ( elem.style.cssText = value + "" );\n
-\t\t}\n
-\t};\n
-}\n
-\n
-// Safari mis-reports the default selected property of an option\n
-// Accessing the parent\'s selectedIndex property fixes it\n
-if ( !jQuery.support.optSelected ) {\n
+f ( !jQuery.support.optSelected ) {\n
 \tjQuery.propHooks.selected = jQuery.extend( jQuery.propHooks.selected, {\n
 \t\tget: function( elem ) {\n
 \t\t\tvar parent = elem.parentNode;\n
@@ -2764,13 +2794,12 @@ jQuery.event = {\n
 \tglobal: {},\n
 \n
 \tadd: function( elem, types, handler, data, selector ) {\n
+\t\tvar tmp, events, t, handleObjIn,\n
+\t\t\tspecial, eventHandle, handleObj,\n
+\t\t\thandlers, type, namespaces, origType,\n
+\t\t\telemData = jQuery._data( elem );\n
 \n
-\t\tvar handleObjIn, eventHandle, tmp,\n
-\t\t\tevents, t, handleObj,\n
-\t\t\tspecial, handlers, type, namespaces, origType,\n
-\t\t\t// Don\'t attach events to noData or text/comment nodes (but allow plain objects)\n
-\t\t\telemData = elem.nodeType !== 3 && elem.nodeType !== 8 && jQuery._data( elem );\n
-\n
+\t\t// Don\'t attach events to noData or text/comment nodes (but allow plain objects)\n
 \t\tif ( !elemData ) {\n
 \t\t\treturn;\n
 \t\t}\n
@@ -2795,7 +2824,7 @@ jQuery.event = {\n
 \t\t\teventHandle = elemData.handle = function( e ) {\n
 \t\t\t\t// Discard the second event of a jQuery.event.trigger() and\n
 \t\t\t\t// when an event is called after a page has unloaded\n
-\t\t\t\treturn typeof jQuery !== "undefined" && (!e || jQuery.event.triggered !== e.type) ?\n
+\t\t\t\treturn typeof jQuery !== core_strundefined && (!e || jQuery.event.triggered !== e.type) ?\n
 \t\t\t\t\tjQuery.event.dispatch.apply( eventHandle.elem, arguments ) :\n
 \t\t\t\t\tundefined;\n
 \t\t\t};\n
@@ -2875,10 +2904,10 @@ jQuery.event = {\n
 \n
 \t// Detach an event or set of events from an element\n
 \tremove: function( elem, types, handler, selector, mappedTypes ) {\n
-\n
-\t\tvar j, origCount, tmp,\n
-\t\t\tevents, t, handleObj,\n
-\t\t\tspecial, handlers, type, namespaces, origType,\n
+\t\tvar j, handleObj, tmp,\n
+\t\t\torigCount, t, events,\n
+\t\t\tspecial, handlers, type,\n
+\t\t\tnamespaces, origType,\n
 \t\t\telemData = jQuery.hasData( elem ) && jQuery._data( elem );\n
 \n
 \t\tif ( !elemData || !(events = elemData.events) ) {\n
@@ -2948,11 +2977,11 @@ jQuery.event = {\n
 \t},\n
 \n
 \ttrigger: function( event, data, elem, onlyHandlers ) {\n
-\n
-\t\tvar i, cur, tmp, bubbleType, ontype, handle, special,\n
+\t\tvar handle, ontype, cur,\n
+\t\t\tbubbleType, special, tmp, i,\n
 \t\t\teventPath = [ elem || document ],\n
-\t\t\ttype = event.type || event,\n
-\t\t\tnamespaces = event.namespace ? event.namespace.split(".") : [];\n
+\t\t\ttype = core_hasOwn.call( event, "type" ) ? event.type : event,\n
+\t\t\tnamespaces = core_hasOwn.call( event, "namespace" ) ? event.namespace.split(".") : [];\n
 \n
 \t\tcur = tmp = elem = elem || document;\n
 \n
@@ -3086,7 +3115,7 @@ jQuery.event = {\n
 \t\t// Make a writable jQuery.Event from the native event object\n
 \t\tevent = jQuery.event.fix( event );\n
 \n
-\t\tvar i, j, ret, matched, handleObj,\n
+\t\tvar i, ret, handleObj, matched, j,\n
 \t\t\thandlerQueue = [],\n
 \t\t\targs = core_slice.call( arguments ),\n
 \t\t\thandlers = ( jQuery._data( this, "events" ) || {} )[ event.type ] || [],\n
@@ -3141,7 +3170,7 @@ jQuery.event = {\n
 \t},\n
 \n
 \thandlers: function( event, handlers ) {\n
-\t\tvar i, matches, sel, handleObj,\n
+\t\tvar sel, handleObj, matches, i,\n
 \t\t\thandlerQueue = [],\n
 \t\t\tdelegateCount = handlers.delegateCount,\n
 \t\t\tcur = event.target;\n
@@ -3153,8 +3182,9 @@ jQuery.event = {\n
 \n
 \t\t\tfor ( ; cur != this; cur = cur.parentNode || this ) {\n
 \n
+\t\t\t\t// Don\'t check non-elements (#13208)\n
 \t\t\t\t// Don\'t process clicks on disabled elements (#6911, #8165, #11382, #11764)\n
-\t\t\t\tif ( cur.disabled !== true || event.type !== "click" ) {\n
+\t\t\t\tif ( cur.nodeType === 1 && (cur.disabled !== true || event.type !== "click") ) {\n
 \t\t\t\t\tmatches = [];\n
 \t\t\t\t\tfor ( i = 0; i < delegateCount; i++ ) {\n
 \t\t\t\t\t\thandleObj = handlers[ i ];\n
@@ -3192,10 +3222,18 @@ jQuery.event = {\n
 \t\t}\n
 \n
 \t\t// Create a writable copy of the event object and normalize some properties\n
-\t\tvar i, prop,\n
+\t\tvar i, prop, copy,\n
+\t\t\ttype = event.type,\n
 \t\t\toriginalEvent = event,\n
-\t\t\tfixHook = jQuery.event.fixHooks[ event.type ] || {},\n
-\t\t\tcopy = fixHook.props ? this.props.concat( fixHook.props ) : this.props;\n
+\t\t\tfixHook = this.fixHooks[ type ];\n
+\n
+\t\tif ( !fixHook ) {\n
+\t\t\tthis.fixHooks[ type ] = fixHook =\n
+\t\t\t\trmouseEvent.test( type ) ? this.mouseHooks :\n
+\t\t\t\trkeyEvent.test( type ) ? this.keyHooks :\n
+\t\t\t\t{};\n
+\t\t}\n
+\t\tcopy = fixHook.props ? this.props.concat( fixHook.props ) : this.props;\n
 \n
 \t\tevent = new jQuery.Event( originalEvent );\n
 \n
@@ -3245,7 +3283,7 @@ jQuery.event = {\n
 \tmouseHooks: {\n
 \t\tprops: "button buttons clientX clientY fromElement offsetX offsetY pageX pageY screenX screenY toElement".split(" "),\n
 \t\tfilter: function( event, original ) {\n
-\t\t\tvar eventDoc, doc, body,\n
+\t\t\tvar body, eventDoc, doc,\n
 \t\t\t\tbutton = original.button,\n
 \t\t\t\tfromElement = original.fromElement;\n
 \n
@@ -3361,7 +3399,7 @@ jQuery.removeEvent = document.removeEventListener ?\n
 \n
 \t\t\t// #8545, #7054, preventing memory leaks for custom events in IE6-8\n
 \t\t\t// detachEvent needed property on element, by name of that event, to properly expose it to GC\n
-\t\t\tif ( typeof elem[ name ] === "undefined" ) {\n
+\t\t\tif ( typeof elem[ name ] === core_strundefined ) {\n
 \t\t\t\telem[ name ] = null;\n
 \t\t\t}\n
 \n
@@ -3610,7 +3648,7 @@ if ( !jQuery.support.focusinBubbles ) {\n
 jQuery.fn.extend({\n
 \n
 \ton: function( types, selector, data, fn, /*INTERNAL*/ one ) {\n
-\t\tvar origFn, type;\n
+\t\tvar type, origFn;\n
 \n
 \t\t// Types can be a map of types/handlers\n
 \t\tif ( typeof types === "object" ) {\n
@@ -3722,30 +3760,6 @@ jQuery.fn.extend({\n
 \t\tif ( elem ) {\n
 \t\t\treturn jQuery.event.trigger( type, data, elem, true );\n
 \t\t}\n
-\t},\n
-\n
-\thover: function( fnOver, fnOut ) {\n
-\t\treturn this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );\n
-\t}\n
-});\n
-\n
-jQuery.each( ("blur focus focusin focusout load resize scroll unload click dblclick " +\n
-\t"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +\n
-\t"change select submit keydown keypress keyup error contextmenu").split(" "), function( i, name ) {\n
-\n
-\t// Handle event binding\n
-\tjQuery.fn[ name ] = function( data, fn ) {\n
-\t\treturn arguments.length > 0 ?\n
-\t\t\tthis.on( name, null, data, fn ) :\n
-\t\t\tthis.trigger( name );\n
-\t};\n
-\n
-\tif ( rkeyEvent.test( name ) ) {\n
-\t\tjQuery.event.fixHooks[ name ] = jQuery.event.keyHooks;\n
-\t}\n
-\n
-\tif ( rmouseEvent.test( name ) ) {\n
-\t\tjQuery.event.fixHooks[ name ] = jQuery.event.mouseHooks;\n
 \t}\n
 });\n
 /*!\n
@@ -3859,7 +3873,7 @@ var i,\n
 \n
 \trsibling = /[\\x20\\t\\r\\n\\f]*[+~]/,\n
 \n
-\trnative = /\\{\\s*\\[native code\\]\\s*\\}/,\n
+\trnative = /^[^{]+\\{\\s*\\[native code/,\n
 \n
 \t// Easily-parseable/retrievable ID or TAG or CLASS selectors\n
 \trquickExpr = /^(?:#([\\w-]+)|(\\w+)|\\.([\\w-]+))$/,\n
@@ -3886,12 +3900,12 @@ var i,\n
 \n
 // Use a stripped-down slice if we can\'t use a native one\n
 try {\n
-\tslice.call( docElem.childNodes, 0 )[0].nodeType;\n
+\tslice.call( preferredDoc.documentElement.childNodes, 0 )[0].nodeType;\n
 } catch ( e ) {\n
 \tslice = function( i ) {\n
 \t\tvar elem,\n
 \t\t\tresults = [];\n
-\t\tfor ( ; (elem = this[i]); i++ ) {\n
+\t\twhile ( (elem = this[i++]) ) {\n
 \t\t\tresults.push( elem );\n
 \t\t}\n
 \t\treturn results;\n
@@ -4210,7 +4224,7 @@ setDocument = Sizzle.setDocument = function( node ) {\n
 \n
 \t\t\t// Filter out possible comments\n
 \t\t\tif ( tag === "*" ) {\n
-\t\t\t\tfor ( ; (elem = results[i]); i++ ) {\n
+\t\t\t\twhile ( (elem = results[i++]) ) {\n
 \t\t\t\t\tif ( elem.nodeType === 1 ) {\n
 \t\t\t\t\t\ttmp.push( elem );\n
 \t\t\t\t\t}\n
@@ -4368,14 +4382,10 @@ setDocument = Sizzle.setDocument = function( node ) {\n
 \t\t\tap = [ a ],\n
 \t\t\tbp = [ b ];\n
 \n
-\t\t// The nodes are identical, we can exit early\n
+\t\t// Exit early if the nodes are identical\n
 \t\tif ( a === b ) {\n
 \t\t\thasDuplicate = true;\n
 \t\t\treturn 0;\n
-\n
-\t\t// Fallback to using sourceIndex (in IE) if it\'s available on both nodes\n
-\t\t} else if ( a.sourceIndex && b.sourceIndex ) {\n
-\t\t\treturn ( ~b.sourceIndex || MAX_NEGATIVE ) - ( contains( preferredDoc, a ) && ~a.sourceIndex || MAX_NEGATIVE );\n
 \n
 \t\t// Parentless nodes are either documents or disconnected\n
 \t\t} else if ( !aup || !bup ) {\n
@@ -4515,11 +4525,20 @@ Sizzle.uniqueSort = function( results ) {\n
 };\n
 \n
 function siblingCheck( a, b ) {\n
-\tvar cur = a && b && a.nextSibling;\n
+\tvar cur = b && a,\n
+\t\tdiff = cur && ( ~b.sourceIndex || MAX_NEGATIVE ) - ( ~a.sourceIndex || MAX_NEGATIVE );\n
 \n
-\tfor ( ; cur; cur = cur.nextSibling ) {\n
-\t\tif ( cur === b ) {\n
-\t\t\treturn -1;\n
+\t// Use IE sourceIndex if available on both nodes\n
+\tif ( diff ) {\n
+\t\treturn diff;\n
+\t}\n
+\n
+\t// Check if b follows a\n
+\tif ( cur ) {\n
+\t\twhile ( (cur = cur.nextSibling) ) {\n
+\t\t\tif ( cur === b ) {\n
+\t\t\t\treturn -1;\n
+\t\t\t}\n
 \t\t}\n
 \t}\n
 \n
@@ -4729,9 +4748,9 @@ Expr = Sizzle.selectors = {\n
 \t\t\t\t\toperator === "!=" ? result !== check :\n
 \t\t\t\t\toperator === "^=" ? check && result.indexOf( check ) === 0 :\n
 \t\t\t\t\toperator === "*=" ? check && result.indexOf( check ) > -1 :\n
-\t\t\t\t\toperator === "$=" ? check && result.substr( result.length - check.length ) === check :\n
+\t\t\t\t\toperator === "$=" ? check && result.slice( -check.length ) === check :\n
 \t\t\t\t\toperator === "~=" ? ( " " + result + " " ).indexOf( check ) > -1 :\n
-\t\t\t\t\toperator === "|=" ? result === check || result.substr( 0, check.length + 1 ) === check + "-" :\n
+\t\t\t\t\toperator === "|=" ? result === check || result.slice( 0, check.length + 1 ) === check + "-" :\n
 \t\t\t\t\tfalse;\n
 \t\t\t};\n
 \t\t},\n
@@ -4928,30 +4947,7 @@ Expr = Sizzle.selectors = {\n
 \t\t\t\t\t\telemLang = elemLang.toLowerCase();\n
 \t\t\t\t\t\treturn elemLang === lang || elemLang.indexOf( lang + "-" ) === 0;\n
 \t\t\t\t\t}\n
-\t\t\t\t} while ( (elem = elem.parent
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-Node) && elem.nodeType === 1 );\n
+\t\t\t\t} while ( (elem = elem.parentNode) && elem.nodeType === 1 );\n
 \t\t\t\treturn false;\n
 \t\t\t};\n
 \t\t}),\n
@@ -4980,7 +4976,30 @@ Node) && elem.nodeType === 1 );\n
 \t\t},\n
 \n
 \t\t"checked": function( elem ) {\n
-\t\t\t// In CSS3, :checked should return both checked and selected elements\n
+\t\t\t// In CSS3, :checked should return both check
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+ed and selected elements\n
 \t\t\t// http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked\n
 \t\t\tvar nodeName = elem.nodeName.toLowerCase();\n
 \t\t\treturn (nodeName === "input" && !!elem.checked) || (nodeName === "option" && !!elem.selected);\n
@@ -5172,7 +5191,7 @@ function toSelector( tokens ) {\n
 \n
 function addCombinator( matcher, combinator, base ) {\n
 \tvar dir = combinator.dir,\n
-\t\tcheckNonElements = base && combinator.dir === "parentNode",\n
+\t\tcheckNonElements = base && dir === "parentNode",\n
 \t\tdoneName = done++;\n
 \n
 \treturn combinator.first ?\n
@@ -5415,8 +5434,8 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {\n
 \t\t\t\tcontextBackup = outermostContext,\n
 \t\t\t\t// We must always have either seed elements or context\n
 \t\t\t\telems = seed || byElement && Expr.find["TAG"]( "*", expandContext && context.parentNode || context ),\n
-\t\t\t\t// Nested matchers should use non-integer dirruns\n
-\t\t\t\tdirrunsUnique = (dirruns += contextBackup == null ? 1 : Math.E);\n
+\t\t\t\t// Use integer dirruns iff this is the outermost matcher\n
+\t\t\t\tdirrunsUnique = (dirruns += contextBackup == null ? 1 : Math.random() || 0.1);\n
 \n
 \t\t\tif ( outermost ) {\n
 \t\t\t\toutermostContext = context !== document && context;\n
@@ -5424,9 +5443,11 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {\n
 \t\t\t}\n
 \n
 \t\t\t// Add elements passing elementMatchers directly to results\n
+\t\t\t// Keep `i` a string if there are no elements so `matchedCount` will be "00" below\n
 \t\t\tfor ( ; (elem = elems[i]) != null; i++ ) {\n
 \t\t\t\tif ( byElement && elem ) {\n
-\t\t\t\t\tfor ( j = 0; (matcher = elementMatchers[j]); j++ ) {\n
+\t\t\t\t\tj = 0;\n
+\t\t\t\t\twhile ( (matcher = elementMatchers[j++]) ) {\n
 \t\t\t\t\t\tif ( matcher( elem, context, xml ) ) {\n
 \t\t\t\t\t\t\tresults.push( elem );\n
 \t\t\t\t\t\t\tbreak;\n
@@ -5453,10 +5474,10 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {\n
 \t\t\t}\n
 \n
 \t\t\t// Apply set filters to unmatched elements\n
-\t\t\t// `i` starts as a string, so matchedCount would equal "00" if there are no elements\n
 \t\t\tmatchedCount += i;\n
 \t\t\tif ( bySet && i !== matchedCount ) {\n
-\t\t\t\tfor ( j = 0; (matcher = setMatchers[j]); j++ ) {\n
+\t\t\t\tj = 0;\n
+\t\t\t\twhile ( (matcher = setMatchers[j++]) ) {\n
 \t\t\t\t\tmatcher( unmatched, setMatched, context, xml );\n
 \t\t\t\t}\n
 \n
@@ -5558,7 +5579,8 @@ function select( selector, context, results, seed ) {\n
 \t\t\t}\n
 \n
 \t\t\t// Fetch a seed set for right-to-left matching\n
-\t\t\tfor ( i = matchExpr["needsContext"].test( selector ) ? -1 : tokens.length - 1; i >= 0; i-- ) {\n
+\t\t\ti = matchExpr["needsContext"].test( selector ) ? 0 : tokens.length;\n
+\t\t\twhile ( i-- ) {\n
 \t\t\t\ttoken = tokens[i];\n
 \n
 \t\t\t\t// Abort if we hit a combinator\n
@@ -5636,12 +5658,13 @@ var runtil = /Until$/,\n
 \n
 jQuery.fn.extend({\n
 \tfind: function( selector ) {\n
-\t\tvar i, ret, self;\n
+\t\tvar i, ret, self,\n
+\t\t\tlen = this.length;\n
 \n
 \t\tif ( typeof selector !== "string" ) {\n
 \t\t\tself = this;\n
 \t\t\treturn this.pushStack( jQuery( selector ).filter(function() {\n
-\t\t\t\tfor ( i = 0; i < self.length; i++ ) {\n
+\t\t\t\tfor ( i = 0; i < len; i++ ) {\n
 \t\t\t\t\tif ( jQuery.contains( self[ i ], this ) ) {\n
 \t\t\t\t\t\treturn true;\n
 \t\t\t\t\t}\n
@@ -5650,12 +5673,12 @@ jQuery.fn.extend({\n
 \t\t}\n
 \n
 \t\tret = [];\n
-\t\tfor ( i = 0; i < this.length; i++ ) {\n
+\t\tfor ( i = 0; i < len; i++ ) {\n
 \t\t\tjQuery.find( selector, this[ i ], ret );\n
 \t\t}\n
 \n
 \t\t// Needed because $( selector, context ) becomes $( context ).find( selector )\n
-\t\tret = this.pushStack( jQuery.unique( ret ) );\n
+\t\tret = this.pushStack( len > 1 ? jQuery.unique( ret ) : ret );\n
 \t\tret.selector = ( this.selector ? this.selector + " " : "" ) + selector;\n
 \t\treturn ret;\n
 \t},\n
@@ -6167,15 +6190,9 @@ jQuery.fn.extend({\n
 \t\t\tvar next = this.nextSibling,\n
 \t\t\t\tparent = this.parentNode;\n
 \n
-\t\t\tif ( parent && this.nodeType === 1 || this.nodeType === 11 ) {\n
-\n
+\t\t\tif ( parent ) {\n
 \t\t\t\tjQuery( this ).remove();\n
-\n
-\t\t\t\tif ( next ) {\n
-\t\t\t\t\tnext.parentNode.insertBefore( elem, next );\n
-\t\t\t\t} else {\n
-\t\t\t\t\tparent.appendChild( elem );\n
-\t\t\t\t}\n
+\t\t\t\tparent.insertBefore( elem, next );\n
 \t\t\t}\n
 \t\t});\n
 \t},\n
@@ -6189,7 +6206,8 @@ jQuery.fn.extend({\n
 \t\t// Flatten any nested arrays\n
 \t\targs = core_concat.apply( [], args );\n
 \n
-\t\tvar fragment, first, scripts, hasScripts, node, doc,\n
+\t\tvar first, node, hasScripts,\n
+\t\t\tscripts, doc, fragment,\n
 \t\t\ti = 0,\n
 \t\t\tl = this.length,\n
 \t\t\tset = this,\n
@@ -6340,7 +6358,7 @@ function cloneCopyEvent( src, dest ) {\n
 }\n
 \n
 function fixCloneNodeIssues( src, dest ) {\n
-\tvar nodeName, data, e;\n
+\tvar nodeName, e, data;\n
 \n
 \t// We do not need to do anything for non-Elements\n
 \tif ( dest.nodeType !== 1 ) {\n
@@ -6435,8 +6453,8 @@ jQuery.each({\n
 function getAll( context, tag ) {\n
 \tvar elems, elem,\n
 \t\ti = 0,\n
-\t\tfound = typeof context.getElementsByTagName !== "undefined" ? context.getElementsByTagName( tag || "*" ) :\n
-\t\t\ttypeof context.querySelectorAll !== "undefined" ? context.querySelectorAll( tag || "*" ) :\n
+\t\tfound = typeof context.getElementsByTagName !== core_strundefined ? context.getElementsByTagName( tag || "*" ) :\n
+\t\t\ttypeof context.querySelectorAll !== core_strundefined ? context.querySelectorAll( tag || "*" ) :\n
 \t\t\tundefined;\n
 \n
 \tif ( !found ) {\n
@@ -6463,7 +6481,7 @@ function fixDefaultChecked( elem ) {\n
 \n
 jQuery.extend({\n
 \tclone: function( elem, dataAndEvents, deepDataAndEvents ) {\n
-\t\tvar destElements, srcElements, node, i, clone,\n
+\t\tvar destElements, node, clone, i, srcElements,\n
 \t\t\tinPage = jQuery.contains( elem.ownerDocument, elem );\n
 \n
 \t\tif ( jQuery.support.html5Clone || jQuery.isXMLDoc(elem) || !rnoshimcache.test( "<" + elem.nodeName + ">" ) ) {\n
@@ -6518,7 +6536,8 @@ jQuery.extend({\n
 \t},\n
 \n
 \tbuildFragment: function( elems, context, scripts, selection ) {\n
-\t\tvar contains, elem, tag, tmp, wrap, tbody, j,\n
+\t\tvar j, elem, contains,\n
+\t\t\ttmp, tag, tbody, wrap,\n
 \t\t\tl = elems.length,\n
 \n
 \t\t\t// Ensure a safe fragment\n
@@ -6644,7 +6663,7 @@ jQuery.extend({\n
 \t},\n
 \n
 \tcleanData: function( elems, /* internal */ acceptData ) {\n
-\t\tvar data, id, elem, type,\n
+\t\tvar elem, type, id, data,\n
 \t\t\ti = 0,\n
 \t\t\tinternalKey = jQuery.expando,\n
 \t\t\tcache = jQuery.cache,\n
@@ -6682,7 +6701,7 @@ jQuery.extend({\n
 \t\t\t\t\t\tif ( deleteExpando ) {\n
 \t\t\t\t\t\t\tdelete elem[ internalKey ];\n
 \n
-\t\t\t\t\t\t} else if ( typeof elem.removeAttribute !== "undefined" ) {\n
+\t\t\t\t\t\t} else if ( typeof elem.removeAttribute !== core_strundefined ) {\n
 \t\t\t\t\t\t\telem.removeAttribute( internalKey );\n
 \n
 \t\t\t\t\t\t} else {\n
@@ -6696,7 +6715,7 @@ jQuery.extend({\n
 \t\t}\n
 \t}\n
 });\n
-var curCSS, getStyles, iframe,\n
+var iframe, getStyles, curCSS,\n
 \tralpha = /alpha\\([^)]*\\)/i,\n
 \tropacity = /opacity\\s*=\\s*([^)]*)/,\n
 \trposition = /^(top|right|bottom|left)$/,\n
@@ -6749,7 +6768,7 @@ function isHidden( elem, el ) {\n
 }\n
 \n
 function showHide( elements, show ) {\n
-\tvar elem,\n
+\tvar display, elem, hidden,\n
 \t\tvalues = [],\n
 \t\tindex = 0,\n
 \t\tlength = elements.length;\n
@@ -6759,11 +6778,13 @@ function showHide( elements, show ) {\n
 \t\tif ( !elem.style ) {\n
 \t\t\tcontinue;\n
 \t\t}\n
+\n
 \t\tvalues[ index ] = jQuery._data( elem, "olddisplay" );\n
+\t\tdisplay = elem.style.display;\n
 \t\tif ( show ) {\n
 \t\t\t// Reset the inline display of this element to learn if it is\n
 \t\t\t// being hidden by cascaded rules or not\n
-\t\t\tif ( !values[ index ] && elem.style.display === "none" ) {\n
+\t\t\tif ( !values[ index ] && display === "none" ) {\n
 \t\t\t\telem.style.display = "";\n
 \t\t\t}\n
 \n
@@ -6773,8 +6794,15 @@ function showHide( elements, show ) {\n
 \t\t\tif ( elem.style.display === "" && isHidden( elem ) ) {\n
 \t\t\t\tvalues[ index ] = jQuery._data( elem, "olddisplay", css_defaultDisplay(elem.nodeName) );\n
 \t\t\t}\n
-\t\t} else if ( !values[ index ] && !isHidden( elem ) ) {\n
-\t\t\tjQuery._data( elem, "olddisplay", jQuery.css( elem, "display" ) );\n
+\t\t} else {\n
+\n
+\t\t\tif ( !values[ index ] ) {\n
+\t\t\t\thidden = isHidden( elem );\n
+\n
+\t\t\t\tif ( display && display !== "none" || !hidden ) {\n
+\t\t\t\t\tjQuery._data( elem, "olddisplay", hidden ? display : jQuery.css( elem, "display" ) );\n
+\t\t\t\t}\n
+\t\t\t}\n
 \t\t}\n
 \t}\n
 \n
@@ -6796,7 +6824,7 @@ function showHide( elements, show ) {\n
 jQuery.fn.extend({\n
 \tcss: function( name, value ) {\n
 \t\treturn jQuery.access( this, function( elem, name, value ) {\n
-\t\t\tvar styles, len,\n
+\t\t\tvar len, styles,\n
 \t\t\t\tmap = {},\n
 \t\t\t\ti = 0;\n
 \n
@@ -6937,7 +6965,7 @@ jQuery.extend({\n
 \t},\n
 \n
 \tcss: function( elem, name, extra, styles ) {\n
-\t\tvar val, num, hooks,\n
+\t\tvar num, val, hooks,\n
 \t\t\torigName = jQuery.camelCase( name );\n
 \n
 \t\t// Make sure that we\'re working with the right name\n
@@ -6963,7 +6991,7 @@ jQuery.extend({\n
 \t\t}\n
 \n
 \t\t// Return, converting to number if forced or a qualifier was provided and val looks numeric\n
-\t\tif ( extra ) {\n
+\t\tif ( extra === "" || extra ) {\n
 \t\t\tnum = parseFloat( val );\n
 \t\t\treturn extra === true || jQuery.isNumeric( num ) ? num || 0 : val;\n
 \t\t}\n
@@ -7296,7 +7324,21 @@ jQuery(function() {\n
 \t\tjQuery.cssHooks.marginRight = {\n
 \t\t\tget: function( elem, computed ) {\n
 \t\t\t\tif ( computed ) {\n
-\t\t\t\t\t// WebKit Bug 13343 -
+\t\t\t\t\t// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right\n
+\t\t\t\t\t// Work around by temporarily setting element display to inline-block\n
+\t\t\t\t\treturn jQuery.swap( elem, { "display": "inline-block" },\n
+\t\t\t\t\t\tcurCSS, [ elem, "marginRight" ] );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\t// Webkit bug: https://bugs.webkit.org/show_bug.cgi?id=29084\n
+\t// getComputedStyle returns percent when specified for top/left/bottom/right\n
+\t// rather than make the css module depend on the offset module, we just check for it here\n
+\tif ( !jQuery.support.pixelPosition && jQuery.fn.position ) {\n
+\t\tjQuery.each( [ "top", "left" ], function( i, prop ) {\n
+\t\t\tjQuery.cssHooks[ prop
 
 ]]></string> </value>
         </item>
@@ -7319,21 +7361,7 @@ jQuery(function() {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- getComputedStyle returns wrong value for margin-right\n
-\t\t\t\t\t// Work around by temporarily setting element display to inline-block\n
-\t\t\t\t\treturn jQuery.swap( elem, { "display": "inline-block" },\n
-\t\t\t\t\t\tcurCSS, [ elem, "marginRight" ] );\n
-\t\t\t\t}\n
-\t\t\t}\n
-\t\t};\n
-\t}\n
-\n
-\t// Webkit bug: https://bugs.webkit.org/show_bug.cgi?id=29084\n
-\t// getComputedStyle returns percent when specified for top/left/bottom/right\n
-\t// rather than make the css module depend on the offset module, we just check for it here\n
-\tif ( !jQuery.support.pixelPosition && jQuery.fn.position ) {\n
-\t\tjQuery.each( [ "top", "left" ], function( i, prop ) {\n
-\t\t\tjQuery.cssHooks[ prop ] = {\n
+ ] = {\n
 \t\t\t\tget: function( elem, computed ) {\n
 \t\t\t\t\tif ( computed ) {\n
 \t\t\t\t\t\tcomputed = curCSS( elem, prop );\n
@@ -7351,7 +7379,10 @@ jQuery(function() {\n
 \n
 if ( jQuery.expr && jQuery.expr.filters ) {\n
 \tjQuery.expr.filters.hidden = function( elem ) {\n
-\t\treturn ( elem.offsetWidth === 0 && elem.offsetHeight === 0 ) || (!jQuery.support.reliableHiddenOffsets && ((elem.style && elem.style.display) || jQuery.css( elem, "display" )) === "none");\n
+\t\t// Support: Opera <= 12.12\n
+\t\t// Opera reports offsetWidths and offsetHeights less than zero on some elements\n
+\t\treturn elem.offsetWidth <= 0 && elem.offsetHeight <= 0 ||\n
+\t\t\t(!jQuery.support.reliableHiddenOffsets && ((elem.style && elem.style.display) || jQuery.css( elem, "display" )) === "none");\n
 \t};\n
 \n
 \tjQuery.expr.filters.visible = function( elem ) {\n
@@ -7389,7 +7420,7 @@ jQuery.each({\n
 var r20 = /%20/g,\n
 \trbracket = /\\[\\]$/,\n
 \trCRLF = /\\r?\\n/g,\n
-\trsubmitterTypes = /^(?:submit|button|image|reset)$/i,\n
+\trsubmitterTypes = /^(?:submit|button|image|reset|file)$/i,\n
 \trsubmittable = /^(?:input|select|textarea|keygen)/i;\n
 \n
 jQuery.fn.extend({\n
@@ -7485,11 +7516,25 @@ function buildParams( prefix, obj, traditional, add ) {\n
 \t\tadd( prefix, obj );\n
 \t}\n
 }\n
+jQuery.each( ("blur focus focusin focusout load resize scroll unload click dblclick " +\n
+\t"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +\n
+\t"change select submit keydown keypress keyup error contextmenu").split(" "), function( i, name ) {\n
+\n
+\t// Handle event binding\n
+\tjQuery.fn[ name ] = function( data, fn ) {\n
+\t\treturn arguments.length > 0 ?\n
+\t\t\tthis.on( name, null, data, fn ) :\n
+\t\t\tthis.trigger( name );\n
+\t};\n
+});\n
+\n
+jQuery.fn.hover = function( fnOver, fnOut ) {\n
+\treturn this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );\n
+};\n
 var\n
 \t// Document location\n
 \tajaxLocParts,\n
 \tajaxLocation,\n
-\t\n
 \tajax_nonce = jQuery.now(),\n
 \n
 \tajax_rquery = /\\?/,\n
@@ -7602,7 +7647,7 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 // that takes "flat" options (not to be deep extended)\n
 // Fixes #9887\n
 function ajaxExtend( target, src ) {\n
-\tvar key, deep,\n
+\tvar deep, key,\n
 \t\tflatOptions = jQuery.ajaxSettings.flatOptions || {};\n
 \n
 \tfor ( key in src ) {\n
@@ -7622,7 +7667,7 @@ jQuery.fn.load = function( url, params, callback ) {\n
 \t\treturn _load.apply( this, arguments );\n
 \t}\n
 \n
-\tvar selector, type, response,\n
+\tvar selector, response, type,\n
 \t\tself = this,\n
 \t\toff = url.indexOf(" ");\n
 \n
@@ -7803,20 +7848,23 @@ jQuery.extend({\n
 \t\t// Force options to be an object\n
 \t\toptions = options || {};\n
 \n
-\t\tvar transport,\n
-\t\t\t// URL without anti-cache param\n
-\t\t\tcacheURL,\n
-\t\t\t// Response headers\n
-\t\t\tresponseHeadersString,\n
-\t\t\tresponseHeaders,\n
-\t\t\t// timeout handle\n
-\t\t\ttimeoutTimer,\n
-\t\t\t// Cross-domain detection vars\n
+\t\tvar // Cross-domain detection vars\n
 \t\t\tparts,\n
-\t\t\t// To know if global events are to be dispatched\n
-\t\t\tfireGlobals,\n
 \t\t\t// Loop variable\n
 \t\t\ti,\n
+\t\t\t// URL without anti-cache param\n
+\t\t\tcacheURL,\n
+\t\t\t// Response headers as string\n
+\t\t\tresponseHeadersString,\n
+\t\t\t// timeout handle\n
+\t\t\ttimeoutTimer,\n
+\n
+\t\t\t// To know if global events are to be dispatched\n
+\t\t\tfireGlobals,\n
+\n
+\t\t\ttransport,\n
+\t\t\t// Response headers\n
+\t\t\tresponseHeaders,\n
 \t\t\t// Create the final options object\n
 \t\t\ts = jQuery.ajaxSetup( {}, options ),\n
 \t\t\t// Callbacks context\n
@@ -8111,12 +8159,17 @@ jQuery.extend({\n
 \t\t\t\t\t}\n
 \t\t\t\t}\n
 \n
-\t\t\t\t// If not modified\n
-\t\t\t\tif ( status === 304 ) {\n
+\t\t\t\t// if no content\n
+\t\t\t\tif ( status === 204 ) {\n
+\t\t\t\t\tisSuccess = true;\n
+\t\t\t\t\tstatusText = "nocontent";\n
+\n
+\t\t\t\t// if not modified\n
+\t\t\t\t} else if ( status === 304 ) {\n
 \t\t\t\t\tisSuccess = true;\n
 \t\t\t\t\tstatusText = "notmodified";\n
 \n
-\t\t\t\t// If we have data\n
+\t\t\t\t// If we have data, let\'s convert it\n
 \t\t\t\t} else {\n
 \t\t\t\t\tisSuccess = ajaxConvert( s, response );\n
 \t\t\t\t\tstatusText = isSuccess.state;\n
@@ -8186,8 +8239,7 @@ jQuery.extend({\n
  * - returns the corresponding response\n
  */\n
 function ajaxHandleResponses( s, jqXHR, responses ) {\n
-\n
-\tvar ct, type, finalDataType, firstDataType,\n
+\tvar firstDataType, ct, finalDataType, type,\n
 \t\tcontents = s.contents,\n
 \t\tdataTypes = s.dataTypes,\n
 \t\tresponseFields = s.responseFields;\n
@@ -8248,8 +8300,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {\n
 \n
 // Chain conversions given the request and the original response\n
 function ajaxConvert( s, response ) {\n
-\n
-\tvar conv, conv2, current, tmp,\n
+\tvar conv2, current, conv, tmp,\n
 \t\tconverters = {},\n
 \t\ti = 0,\n
 \t\t// Work with a copy of dataTypes in case we need to modify it for conversion\n
@@ -8600,12 +8651,7 @@ if ( xhrSupported ) {\n
 \n
 \t\t\t\t\t// Listener\n
 \t\t\t\t\tcallback = function( _, isAbort ) {\n
-\n
-\t\t\t\t\t\tvar status,\n
-\t\t\t\t\t\t\tstatusText,\n
-\t\t\t\t\t\t\tresponseHeaders,\n
-\t\t\t\t\t\t\tresponses,\n
-\t\t\t\t\t\t\txml;\n
+\t\t\t\t\t\tvar status, responseHeaders, statusText, responses;\n
 \n
 \t\t\t\t\t\t// Firefox throws exceptions when accessing properties\n
 \t\t\t\t\t\t// of an xhr when a network error occurred\n
@@ -8635,13 +8681,7 @@ if ( xhrSupported ) {\n
 \t\t\t\t\t\t\t\t} else {\n
 \t\t\t\t\t\t\t\t\tresponses = {};\n
 \t\t\t\t\t\t\t\t\tstatus = xhr.status;\n
-\t\t\t\t\t\t\t\t\txml = xhr.responseXML;\n
 \t\t\t\t\t\t\t\t\tresponseHeaders = xhr.getAllResponseHeaders();\n
-\n
-\t\t\t\t\t\t\t\t\t// Construct response list\n
-\t\t\t\t\t\t\t\t\tif ( xml && xml.documentElement /* #4958 */ ) {\n
-\t\t\t\t\t\t\t\t\t\tresponses.xml = xml;\n
-\t\t\t\t\t\t\t\t\t}\n
 \n
 \t\t\t\t\t\t\t\t\t// When requesting binary data, IE6-9 will throw an exception\n
 \t\t\t\t\t\t\t\t\t// on any attempt to access responseText (#11426)\n
@@ -8892,7 +8932,7 @@ function Animation( elem, properties, options ) {\n
 }\n
 \n
 function propFilter( props, specialEasing ) {\n
-\tvar index, name, easing, value, hooks;\n
+\tvar value, name, index, easing, hooks;\n
 \n
 \t// camelCase, specialEasing and expand cssHook pass\n
 \tfor ( index in props ) {\n
@@ -8960,7 +9000,9 @@ jQuery.Animation = jQuery.extend( Animation, {\n
 \n
 function defaultPrefilter( elem, props, opts ) {\n
 \t/*jshint validthis:true */\n
-\tvar index, prop, value, length, dataShow, toggle, tween, hooks, oldfire,\n
+\tvar prop, index, length,\n
+\t\tvalue, dataShow, toggle,\n
+\t\ttween, hooks, oldfire,\n
 \t\tanim = this,\n
 \t\tstyle = elem.style,\n
 \t\torig = {},\n
@@ -9020,7 +9062,7 @@ function defaultPrefilter( elem, props, opts ) {\n
 \tif ( opts.overflow ) {\n
 \t\tstyle.overflow = "hidden";\n
 \t\tif ( !jQuery.support.shrinkWrapBlocks ) {\n
-\t\t\tanim.done(function() {\n
+\t\t\tanim.always(function() {\n
 \t\t\t\tstyle.overflow = opts.overflow[ 0 ];\n
 \t\t\t\tstyle.overflowX = opts.overflow[ 1 ];\n
 \t\t\t\tstyle.overflowY = opts.overflow[ 2 ];\n
@@ -9144,11 +9186,11 @@ Tween.propHooks = {\n
 \t\t\t\treturn tween.elem[ tween.prop ];\n
 \t\t\t}\n
 \n
-\t\t\t// passing a non empty string as a 3rd parameter to .css will automatically\n
+\t\t\t// passing an empty string as a 3rd parameter to .css will automatically\n
 \t\t\t// attempt a parseFloat and fallback to a string if the parse fails\n
 \t\t\t// so, simple values such as "10px" are parsed to Float.\n
 \t\t\t// complex values such as "rotate(1rad)" are returned as is.\n
-\t\t\tresult = jQuery.css( tween.elem, tween.prop, "auto" );\n
+\t\t\tresult = jQuery.css( tween.elem, tween.prop, "" );\n
 \t\t\t// Empty strings, null, undefined and "auto" are converted to 0.\n
 \t\t\treturn !result || result === "auto" ? 0 : result;\n
 \t\t},\n
@@ -9470,7 +9512,7 @@ jQuery.fn.offset = function( options ) {\n
 \n
 \t// If we don\'t have gBCR, just use 0,0 rather than error\n
 \t// BlackBerry 5, iOS 3 (original iPhone)\n
-\tif ( typeof elem.getBoundingClientRect !== "undefined" ) {\n
+\tif ( typeof elem.getBoundingClientRect !== core_strundefined ) {\n
 \t\tbox = elem.getBoundingClientRect();\n
 \t}\n
 \twin = getWindow( doc );\n
