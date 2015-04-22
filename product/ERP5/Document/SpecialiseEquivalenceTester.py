@@ -43,6 +43,10 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
   movement_specialise_type = ()
   movement_exclude_specialise_type = ()
 
+  def _compare(self, prevision_movement, decision_movement, sorted=lambda x:x):
+    return super(SpecialiseEquivalenceTester, self)._compare(
+      prevision_movement, decision_movement, sorted)
+
   def _getTestedPropertyValue(self, movement, property):
     if movement.getPortalType() == 'Simulation Movement':
       return movement.getCategoryMembershipList(property)
