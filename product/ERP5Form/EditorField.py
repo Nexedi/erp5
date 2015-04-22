@@ -126,7 +126,8 @@ class EditorWidget(Widget.TextAreaWidget):
         return code_mirror_support(field=field,
                                    content=value,
                                    field_id=key,
-                                   portal_url=site_root.absolute_url())
+                                   portal_url=site_root.absolute_url(),
+                                   mode='python')
     elif text_editor != 'text_area':
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {

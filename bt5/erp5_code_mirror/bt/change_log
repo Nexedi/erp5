@@ -1,3 +1,6 @@
+2015-04-23 arnaud.fontaine
+* Add support for the ZMI.
+
 2015-01-22 arnaud.fontaine
 * Gutter and source code separator line was not displayed because of erp5.css (df7eb0f).
 

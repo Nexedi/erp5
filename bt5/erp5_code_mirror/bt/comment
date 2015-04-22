@@ -3,3 +3,9 @@ http://codemirror.net
 
 diff_match_patch (used by CodeMirror Merge addon):
 https://code.google.com/p/google-diff-match-patch
+
+jshint.js (used by CodeMirror Javascript lint addon):
+http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js
+
+csslint.js (used by CodeMirror CSS lint addon):
+https://rawgit.com/stubbornella/csslint/master/release/csslint.js
