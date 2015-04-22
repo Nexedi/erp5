@@ -18,7 +18,6 @@ Component Tool | Document Component
 Component Tool | Extension Component
 Component Tool | Test Component
 Contribution Registry Tool | Contribution Predicate
-Delivery Tool | Delivery Builder
 Domain Tool | Base Domain
 Domain | Domain
 Domain | Domain Generator
@@ -27,23 +26,13 @@ Id Tool | Conceptual Id Generator
 Id Tool | SQL Non Continuous Increasing Id Generator
 Id Tool | ZODB Continuous Increasing Id Generator
 Memcached Tool | Memcached Plugin
-Order Tool | Order Builder
 Preference Tool Type | Action Information
 Preference Tool Type | Role Information
 Preference Tool | Preference
 Preference Tool | System Preference
 Preference Type | Action Information
 Preference Type | Role Information
-Preference | Accounting Transaction
-Preference | Knowledge Pad
-Preference | Payment Transaction
-Preference | Purchase Invoice Transaction
-Preference | Sale Invoice Transaction
-Preference | Sale Order
-Preference | Support Request
 Property Sheet Tool | Property Sheet
-Property Sheet | Account Type Constraint
-Property Sheet | Accounting Transaction Balance Constraint
 Property Sheet | Acquired Property
 Property Sheet | Attribute Blacklisted Constraint
 Property Sheet | Attribute Equality Constraint
@@ -59,25 +48,12 @@ Property Sheet | Content Existence Constraint
 Property Sheet | Dynamic Category Property
 Property Sheet | Property Existence Constraint
 Property Sheet | Property Type Validity Constraint
-Property Sheet | Resource Measures Consistency Constraint
 Property Sheet | Script Constraint
 Property Sheet | Standard Property
 Property Sheet | String Attribute Match Constraint
 Property Sheet | TALES Constraint
-Property Sheet | Trade Model Line Cell Consistency Constraint
-Rule Tool | Accounting Transaction Root Simulation Rule
-Rule Tool | Delivery Root Simulation Rule
-Rule Tool | Delivery Simulation Rule
-Rule Tool | Invoice Root Simulation Rule
-Rule Tool | Invoice Simulation Rule
-Rule Tool | Invoice Transaction Simulation Rule
-Rule Tool | Order Root Simulation Rule
-Rule Tool | Payment Simulation Rule
-Rule Tool | Trade Model Simulation Rule
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
-System Preference | Knowledge Pad
 Template Tool | Business Template
+Trash Tool | Base Type
 Trash Tool | Trash Bin
-Types Tool | Base Type
-Types Tool | Gadget Type
