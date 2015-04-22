@@ -406,9 +406,16 @@ class ERP5TypeTestLoader(unittest.TestLoader):
             instancehome = getConfiguration().instancehome
             bt5_path_list.append(os.path.join(instancehome, 'bt5'))
 
-          bt5_path_list = [bt5_path for bt5_path in bt5_path_list
-                           if os.path.exists(bt5_path)]
-          template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
+          valid_bt5_path_list = []
+          for bt5_path in bt5_path_list:
+            if bt5_path:
+              bt5_path = os.path.expanduser(bt5_path)
+              if not os.path.exists(bt5_path):
+                _print("Ignoring non existant bt5 path %s\n" % bt5_path)
+              else:
+                valid_bt5_path_list.append(bt5_path)
+
+          template_tool.updateRepositoryBusinessTemplateList(valid_bt5_path_list)
 
           url_bt_tuple_list = [
             ('%s/%s' % (repository, bt_title), bt_title) for repository, bt_title in
