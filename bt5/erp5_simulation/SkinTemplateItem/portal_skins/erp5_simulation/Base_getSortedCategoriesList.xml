@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>categories_list = context.getCategoriesList()\n
-categories_list.sort()\n
+categories_list.sort(key=lambda x: x.split("/", 1)[0])\n
 return categories_list\n
 </string> </value>
         </item>
