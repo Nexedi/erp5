@@ -96,9 +96,12 @@ class PropertySheetTestCase(ERP5TypeTestCase):
 
       self.assertTrue('portal_type' in kw, "You need to specify the portal_type"
           " you want to use to create that new property")
-      property = getattr(ps, property_id, None)
+
+      suffix = ps.newContent(temp_object=1, **kw).getIdAsReferenceSuffix()
+      property_id_as_reference = property_id + suffix
+      property = getattr(ps, property_id_as_reference, None)
       if property is not None:
-        ps._delObject(property_id)
+        ps._delObject(property_id_as_reference)
 
       property = ps.newContent(reference=property_id, **kw)
     if commit:

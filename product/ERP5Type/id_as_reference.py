@@ -77,4 +77,11 @@ def IdAsReferenceMixin(suffix):
       except AttributeError:
         return getattr(aq_base(self), 'default_reference', (args or [None])[0])
 
+    def _setReference(self, value):
+      self.__dict__.pop('default_reference', None) # BBB
+      self.setId(value + suffix)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
+    setReference = _setReference
+
   return IdAsReferenceMixin

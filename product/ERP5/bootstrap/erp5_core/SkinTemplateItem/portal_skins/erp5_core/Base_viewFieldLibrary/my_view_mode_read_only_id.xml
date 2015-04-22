@@ -9,7 +9,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>editable</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -22,7 +25,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_id</string> </value>
+            <value> <string>my_view_mode_read_only_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -30,7 +33,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The property id must have a \'_category\' suffix</string> </value>
+                    <value> <string>The provided id must have the right suffix for its type.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -78,8 +81,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_read_only_id</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -88,6 +95,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>ID</string> </value>
                 </item>
               </dictionary>
             </value>

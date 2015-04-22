@@ -84,11 +84,11 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_view_mode_reference_as_name</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
