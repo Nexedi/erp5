@@ -6,3 +6,9 @@ Copyright (c) 2014 by Marijn Haverbeke <marijnh@gmail.com> and others
 
 diff_match_patch (under Apache 2.0 license)
 Copyright (c) 2006 Google Inc.
+
+jshint.js (under modified MIT license):
+Copyright (c) 2002 Douglas Crockford  (www.JSLint.com)
+
+csslint.js (under MIT license):
+Copyright (c) 2009-2011 Nicholas C. Zakas. All rights reserved.

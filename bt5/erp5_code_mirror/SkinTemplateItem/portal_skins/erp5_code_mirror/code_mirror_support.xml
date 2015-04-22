@@ -28,7 +28,7 @@
 
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/lib/codemirror.js"></script>\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/lib/codemirror.css">\n
-<script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/python/python.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/&dtml-mode;/&dtml-mode;.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/edit/matchbrackets.js"></script>\n
 \n
 <!-- Trailing spaces -->\n
@@ -50,6 +50,7 @@
  -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/hint/show-hint.css">\n
 <script src="&dtml-portal_url;/codemirror/addon/hint/show-hint.js"></script>\n
+<script src="&dtml-portal_url;/codemirror/addon/hint/anyword-hint.js"></script>\n
 \n
 <!-- Code folding -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/fold/foldgutter.css">\n
@@ -63,10 +64,17 @@
 <script type="text/javascript" src="&dtml-portal_url;/diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/merge.js"></script>\n
 \n
-<!-- Lint\n
-     TODO: Only support Python for now -->\n
+<!-- Linter -->\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/lint/lint.css">\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/lint.js"></script>\n
+\n
+<dtml-if expr="mode == \'javascript\'">\n
+<script type="text/javascript" src="&dtml-portal_url;/jshint.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/javascript-lint.js"></script>\n
+<dtml-elif expr="mode == \'css\'">\n
+<script type="text/javascript" src="&dtml-portal_url;/csslint.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/css-lint.js"></script>\n
+</dtml-if>\n
 \n
 <style type="text/css">\n
  .maximize_fullscreen_message {\n
@@ -134,6 +142,8 @@
  }\n
 </style>\n
 \n
+<!-- TODO: Only supported for ZODB Components -->\n
+<dtml-unless bound_names>\n
 <input type="button" value="Maximize" onclick="maximize()"\n
        class="editor_action_button" />\n
 <input type="button" value="Fullscreen" onclick="switchToFullScreen(cm)"\n
@@ -141,11 +151,8 @@
 \n
 <div id="merge" style="height: 100%; width: 100%">\n
   <div id="view" style="display: none;"></div>\n
-\n
-<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;">\n
-<dtml-var content>\n
-</textarea>\n
 </div>\n
+</dtml-unless>\n
 \n
 <script type="text/javascript">\n
  error_element = $(\'div.input > .error\');\n
@@ -155,6 +162,29 @@
  merge_mode_elem = null;\n
 \n
  maximize_mode_message = $(\'<span id="maximize_message">Press ESC to leave maximize mode</span>\');\n
+\n
+ function getTextareaField() {\n
+   // When the textarea does not exist yet (eg ERP5Form EditorField)\n
+<dtml-if field_id>\n
+   textarea = $(\'#&dtml-field_id;\');\n
+   if(!textarea.length) {\n
+     $(\'#merge\').append(\n
+       \'<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;">\' + \n
+       `&dtml-content;` +\n
+       \'</textarea>\');\n
+\n
+     textarea = $(\'#&dtml-field_id;\');\n
+   }\n
+<dtml-elif textarea_selector>\n
+   textarea = $(\'<dtml-var name="textarea_selector">\');\n
+<dtml-else>\n
+   <dtml-raise NameError>\n
+     Either \'textarea_selector\' or \'field_id\' (ID of the textarea field to be\n
+     created) must be passed.\n
+   </dtml-raise>\n
+</dtml-if>\n
+  return textarea;\n
+ }\n
 \n
  function maximizeFullscreenRemoveSaveMessage() {\n
    $(\'.maximize_fullscreen_message\').remove();\n
@@ -291,7 +321,7 @@
 \n
    if(merge_mode_elem)\n
      // TODO: Hack, \'cm\' should work!\n
-     $(\'#&dtml-field_id;\').val(merge_mode_elem.edit.getValue());\n
+     getTextareaField().val(merge_mode_elem.edit.getValue());\n
    else\n
      cm.save();\n
 \n
@@ -401,9 +431,14 @@
  }\n
 \n
  function checkPythonSourceCode(text, updateLinting, options, cm) {\n
+   checker_parameters = {code: text};\n
+<dtml-if bound_names>\n
+   checker_parameters[\'bound_names\'] = <dtml-var name="bound_names">;\n
+   checker_parameters[\'params\'] = $(\'input[name="params"]\').val();\n
+</dtml-if>\n
    $.post(\n
      \'&dtml-portal_url;/ERP5Site_checkPythonSourceCodeAsJSON\',\n
-     {\'data\': JSON.stringify({code: text})},\n
+     {\'data\': JSON.stringify(checker_parameters)},\n
       function(data){\n
         var messages = data.annotations;\n
         var found = [];\n
@@ -421,10 +456,19 @@
    });\n
  }\n
 \n
+<dtml-if expr="mode == \'python\'">\n
+ lint_option = {"getAnnotations": checkPythonSourceCode,\n
+                "async": true};\n
+<dtml-elif expr="mode in (\'css\', \'javascript\')">\n
+ lint_option = true;\n
+<dtml-else>\n
+ lint_option = false;\n
+</dtml-if>\n
+\n
  // CodeMirror expects a DOM element, not a JQuery Object\n
  var cm = CodeMirror.fromTextArea(\n
-   $(\'#&dtml-field_id;\')[0],\n
-   {mode: "python",\n
+   getTextareaField()[0],\n
+   {mode: "&dtml-mode;",\n
     lineNumbers: true,\n
     showTrailingSpace: true,\n
     tabSize: 2,\n
@@ -439,8 +483,7 @@
     gutters: ["CodeMirror-lint-markers",\n
               "CodeMirror-linenumbers",\n
               "CodeMirror-foldgutter"],\n
-    lint: {"getAnnotations": checkPythonSourceCode,\n
-           "async": true}\n
+    lint: lint_option\n
     });\n
  //cm.foldCode(CodeMirror.Pos(8, 0));\n
 \n
@@ -475,7 +518,7 @@
      {value: cm.getValue(),\n
       orig: data,\n
       highlightDifferences: true,\n
-      mode: "python",\n
+      mode: "&dtml-mode;",\n
       lineNumbers: true,\n
       showTrailingSpace: true,\n
       matchBrackets: true,\n
@@ -630,7 +673,10 @@
          success: successHandler});\n
  }\n
 \n
+<dtml-unless bound_names>\n
+ <!-- TODO: Not supported for Python Scripts yet -->\n
  generateHistorySelectElement();\n
+</dtml-unless>\n
 </script>\n
 
 

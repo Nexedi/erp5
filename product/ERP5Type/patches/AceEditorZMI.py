@@ -19,7 +19,7 @@ def manage_page_footer(self):
   except:
     editor = None
 
-  if editor != 'ace':
+  if editor not in ('ace', 'codemirror'):
     return default
 
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
@@ -67,14 +67,28 @@ def manage_page_footer(self):
     textarea_selector = 'textarea[name="template:text"]'
   elif document.meta_type in ('Page Template', 'ERP5 OOo Template', ):
     if 'html' in document.content_type:
-      mode = 'html'
+      if editor == 'codemirror':
+        mode = 'htmlmixed'
+      else:
+        mode = 'html'
     else:
       mode = 'xml'
     textarea_selector = 'textarea[name="text:text"]'
 
   if not textarea_selector:
     return default
-  return '''
+
+  if editor == 'codemirror' and getattr(portal, 'code_mirror_support', None) is not None:
+    return '''<script type="text/javascript" src="%s/jquery/core/jquery.min.js"></script>
+              %s
+              </body>
+            </html>''' % (portal_url,
+                          portal.code_mirror_support(textarea_selector=textarea_selector,
+                                                     portal_url=portal_url,
+                                                     bound_names=bound_names,
+                                                     mode=mode))
+  else:
+    return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
 <script type="text/javascript" src="%(portal_url)s/ace/ace.js"></script>
 <script type="text/javascript" src="%(portal_url)s/ace/mode-%(mode)s.js"></script>
