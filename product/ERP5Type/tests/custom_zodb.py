@@ -39,10 +39,6 @@ if save_mysql:
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
     # faster, so this produce somewhat not nice to read sql
-    if os.path.exists(dump_sql_path):
-      _print("About to overwrite mysqldump at %s (press Ctrl+C to abort)" %
-             dump_sql_path)
-      time.sleep(5)
     command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
       _print('Dumping MySQL database with %s ...' % command)
