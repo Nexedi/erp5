@@ -2137,7 +2137,7 @@ class Base( CopyContainer,
     """
       Returns the list of workflows
     """
-    return self.portal_workflow.getWorkflowIds()
+    return self.getPortalObject().portal_workflow.getWorkflowIds()
 
   # Object Database Management
   security.declareProtected( Permissions.ManagePortal, 'upgrade' )
