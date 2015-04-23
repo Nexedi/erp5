@@ -389,6 +389,12 @@ class BigFile(File):
     RESPONSE.setStatus(204)
     return RESPONSE
 
+  security.declareProtected(Permissions.ModifyPortalContent,'appendData')
+  def appendData(self, data_chunk, content_type=None):
+    """
+    append data chunk to the end of the file, available in restricted environment.
+    """
+    self._appendData(data_chunk, content_type)
 
   def _appendData(self, data_chunk, content_type=None):
     """append data chunk to the end of the file
