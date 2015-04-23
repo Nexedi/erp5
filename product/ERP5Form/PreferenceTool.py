@@ -42,6 +42,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 
 _marker = object()
 
@@ -159,31 +160,26 @@ class PreferenceTool(BaseTool):
         newSecurityManager(None, actual_user.__of__(acl_users))
       tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
                                                                   sql_catalog_id)
-      if tv.get(tv_key, None) is None:
-        prefs = []
-        # XXX will also cause problems with Manager (too long)
-        # XXX For manager, create a manager specific preference
-        #                  or better solution
-        user_is_manager = 'Manager' in user.getRolesInContext(self)
-        for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
+      try:
+        return tv[tv_key]
+      except KeyError:
+        kw = {'validation_state': ('enabled', 'global'),
+              # system preferences before user preferences
+              'sort_on': (('portal_type', 'DESC'), ('int_index', 'DESC'))}
+        if 'Manager' in user.getRolesInContext(self):
+          kw['query'] = ComplexQuery(
+            SimpleQuery(portal_type='System Preference'),
+            SimpleQuery(int_index=Priority.USER, comparison_operator='!='),
+            SimpleQuery(owner=user.getId()),
+            operator='OR')
+        tv[tv_key] = preference_list = []
+        for pref in self.searchFolder(sql_catalog_id=sql_catalog_id, **kw):
           pref = pref.getObject()
-          if pref is not None and pref.getProperty('preference_state',
-                                    'broken') in ('enabled', 'global'):
-            # XXX quick workaround so that manager only see user preference
-            # they actually own.
-            if user_is_manager and pref.getPriority() == Priority.USER :
-              if pref.getOwnerTuple()[1] == user.getId():
-                prefs.append(pref)
-            else :
-              prefs.append(pref)
-        prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-        # add system preferences before user preferences
-        sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
-                     if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
-        sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-        preference_list = sys_prefs + prefs
-        tv[tv_key] = preference_list
-      return tv[tv_key]
+          if pref is not None:
+            preference_list.append(pref)
+        if not preference_list: # BBB maybe not migrated yet
+          pass
+        return preference_list
     finally:
       setSecurityManager(security_manager)
 

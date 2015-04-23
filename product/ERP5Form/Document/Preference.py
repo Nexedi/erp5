@@ -60,6 +60,7 @@ class Preference( Folder ):
                     , PropertySheet.XMLObject
                     , PropertySheet.DublinCore
                     , PropertySheet.Preference
+                    , PropertySheet.SortIndex
                     )
 
   # Declarative security
