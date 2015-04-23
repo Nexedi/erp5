@@ -1646,21 +1646,24 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     if hasattr(self, 'portal_workflow_old'):
       tool = self.portal_workflow_old
-      if hasattr(self, 'portal_workflow'):
-        self.manage_delObjects(['portal_workflow'])
-    else:
-      tool = self.portal_workflow
-      self.manage_renameObject(tool.id, 'portal_workflow_old')
-      LOG(' ERP5Site.py', WARNING, ' rename portal_workflow to %s'%tool.id)
 
-    new_tool = self.newContent(id='portal_workflow', portal_type='ERP5 Workflow Tool')
-    LOG(' ERP5Site.py', WARNING, ' create %s '%new_tool.id)
     object_id_list = tool.objectIds()
     object_clipboard = tool.manage_copyObjects(object_id_list)
+
+    new_tool = self.newContent(id='portal_workflow_new', portal_type='ERP5 Workflow Tool')
+    LOG(' ERP5Site.py', WARNING, ' create %s '%new_tool.id)
+
     new_tool.manage_pasteObjects(object_clipboard)
     new_tool._chains_by_type = tool._chains_by_type
     LOG(' ERP5Site.py', WARNING, ' copy objects to %s from %s.'%(new_tool.id, tool.id))
 
+    if hasattr(self, 'portal_workflow_old'):
+      self.manage_delObjects(['portal_workflow'])
+    else:
+      self.manage_renameObject(tool.id, 'portal_workflow_old')
+
+
+    self.manage_renameObject(new_tool.id, 'portal_workflow')
 
 Globals.InitializeClass(ERP5Site)
 
