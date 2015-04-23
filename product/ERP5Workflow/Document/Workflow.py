@@ -61,8 +61,9 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Tool import ERP5WorkflowTool
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Workflow(XMLObject):
+class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
   """
   A ERP5 Workflow.
   """

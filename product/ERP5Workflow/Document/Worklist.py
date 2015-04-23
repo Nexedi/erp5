@@ -40,10 +40,11 @@ from Products.DCWorkflow.Guard import Guard
 from Products.DCWorkflow.permissions import ManagePortal
 from Persistence import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(XMLObject):
+class Worklist(IdAsReferenceMixin('worklist_'), XMLObject):
     """
     A ERP5 Worklist.
     """

@@ -45,11 +45,11 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.patches.Expression import Expression_createExprContext
 from Products.ERP5Type.Globals import PersistentMapping
 from zLOG import LOG, ERROR, WARNING
-
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 _MARKER = []
 
-class InteractionWorkflow(XMLObject):
+class InteractionWorkflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
   """
   An ERP5 Interaction Workflow.
   """

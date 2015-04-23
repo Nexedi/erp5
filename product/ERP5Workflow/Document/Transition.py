@@ -44,12 +44,13 @@ from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 from Products.ERP5Type.patches.Expression import Expression_createExprContext
 from Products.DCWorkflow.Guard import Guard
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 TRIGGER_AUTOMATIC = 0
 TRIGGER_USER_ACTION = 1
 TRIGGER_WORKFLOW_METHOD = 2
 
-class Transition(XMLObject):
+class Transition(IdAsReferenceMixin('transition_'), XMLObject):
   """
   A ERP5 Transition.
   """

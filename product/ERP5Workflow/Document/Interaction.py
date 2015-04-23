@@ -38,8 +38,9 @@ from Products.DCWorkflow.Expression import Expression
 from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
 from zLOG import LOG, INFO, ERROR, WARNING
 from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Interaction(XMLObject):
+class Interaction(IdAsReferenceMixin('interaction_'), XMLObject):
   """
   An ERP5 Interaction.
   """

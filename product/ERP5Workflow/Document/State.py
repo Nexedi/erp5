@@ -34,6 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 class StateError(Exception):
   """
@@ -41,7 +42,7 @@ class StateError(Exception):
   """
   pass
 
-class State(XMLObject, XMLMatrix):
+class State(IdAsReferenceMixin('state_'), XMLObject, XMLMatrix):
   """
   A ERP5 State.
   """

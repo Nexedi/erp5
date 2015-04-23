@@ -31,8 +31,9 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.DCWorkflow.Guard import Guard
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Variable(XMLObject):
+class Variable(IdAsReferenceMixin('variable_'), XMLObject):
     """
     A ERP5 Variable.
     """
