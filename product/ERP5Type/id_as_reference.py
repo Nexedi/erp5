@@ -68,4 +68,11 @@ def IdAsReferenceMixin(suffix):
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference
 
+    def _setRef(self, value):
+      self.__dict__.pop('ref', None) # BBB
+      self.setId(suffix + value)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setRef')
+    setRef = _setRef
+
   return IdAsReferenceMixin
