@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+      <global name="Action Information" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,8 +13,20 @@
             </value>
         </item>
         <item>
-            <key> <string>category</string> </key>
-            <value> <string>user</string> </value>
+            <key> <string>action_permission</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/user</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -27,24 +39,16 @@
             <value> <string>Click here to logout</string> </value>
         </item>
         <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
+            <key> <string>float_index</string> </key>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
+            <value> <string>action_logout</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
             <value> <string>logout</string> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>View</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

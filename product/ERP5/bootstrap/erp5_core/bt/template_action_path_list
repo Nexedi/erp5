@@ -1,5 +1,6 @@
 Acquired Property | view
 Action Information | view
+Actions Tool | view
 Active Process | view
 Activity Tool | view
 Activity Tool | watch_report
@@ -135,22 +136,3 @@ Trash Folder | view
 Trash Tool | view
 Types Tool | view
 ZODB Continuous Increasing Id Generator | view
-portal_actions | bt_tool
-portal_actions | category_tool
-portal_actions | component_tool
-portal_actions | create_module
-portal_actions | history
-portal_actions | list_ui
-portal_actions | make_template
-portal_actions | mass_workflow
-portal_actions | metadata
-portal_actions | module_view
-portal_actions | portal_alarms_action
-portal_actions | property_sheet_tool
-portal_actions | search
-portal_actions | sort_on
-portal_actions | types_tool
-portal_membership | login
-portal_membership | logout
-portal_membership | preferences
-portal_undo | undo

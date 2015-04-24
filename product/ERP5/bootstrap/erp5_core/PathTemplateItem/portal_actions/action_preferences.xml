@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+      <global name="Action Information" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,8 +13,20 @@
             </value>
         </item>
         <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_action</string> </value>
+            <key> <string>action_permission</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/user</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -24,31 +36,23 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Change your user preferences</string> </value>
         </item>
         <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
+            <key> <string>float_index</string> </key>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>make_template</string> </value>
+            <value> <string>action_preferences</string> </value>
         </item>
         <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>View</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <float>101.0</float> </value>
+            <key> <string>reference</string> </key>
+            <value> <string>preferences</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Make a Template</string> </value>
+            <value> <string>Preferences</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -65,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_makeTemplateFromDocument</string> </value>
+            <value> <string>string:${portal_url}/personalize_form</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -78,7 +82,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.portal_type in portal.portal_types.Preference.allowed_content_types</string> </value>
+            <value> <string>member</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -20,6 +20,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from Products.ERP5Type.ActionProviderBase import ActionProviderBase
 
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
@@ -35,7 +36,6 @@ from Products.ERP5Type.Base import getClassPropertyList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
     getAccessorHolderList
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -212,6 +212,7 @@ class LocalRoleAssignorMixIn(object):
 InitializeClass(LocalRoleAssignorMixIn)
 
 class ERP5TypeInformation(XMLObject,
+                          ActionProviderBase,
                           FactoryTypeInformation,
                           LocalRoleAssignorMixIn,
                           TranslationProviderBase):
@@ -647,44 +648,6 @@ class ERP5TypeInformation(XMLObject,
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
 
-    security.declarePrivate('getCacheableActionList')
-    def getCacheableActionList(self):
-      """Return a cacheable list of enabled actions"""
-      return [action.getCacheableAction()
-              for action in self.getActionInformationList()
-              if action.isVisible()]
-
-    def _getActionList(self):
-      action_list = self.getCacheableActionList()
-      # This sort is a duplicate of calculation with what is done
-      # on portal_actions.listFilteredActionsFor . But getDefaultViewFor
-      # needs the sort here. This needs to be reviewed, because it is possible
-      # to define in portal_actions some actions that will have higher
-      # priorities than actions defined on portal types
-      action_list.sort(key=lambda x:x['priority'])
-      return action_list
-    _getActionList = CachingMethod(_getActionList,
-      id='getActionList',
-      cache_factory='erp5_content_long',
-      cache_id_generator=lambda method_id, *args: method_id)
-
-    security.declarePrivate('getActionList')
-    def getActionList(self):
-      """Return the list of enabled actions from cache, sorted by priority"""
-      return self._getActionList(self, scope=self.id)
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'clearGetActionListCache')
-    def clearGetActionListCache(self):
-      """Clear a cache of _getRawActionInformationList."""
-      self._getActionList.delete(scope=self.id)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getActionInformationList')
-    def getActionInformationList(self):
-      """Return all Action Information objects stored on this portal type"""
-      return self.objectValues(meta_type='ERP5 Action Information')
-
     def getIcon(self):
       try:
         return self.getTypeIcon()
@@ -740,86 +703,5 @@ class ERP5TypeInformation(XMLObject,
     @deprecated
     def getHiddenContentTypeList(self):
       return self.getTypeHiddenContentTypeList(())
-
-    # Compatibitility code for actions
-
-    security.declareProtected(Permissions.AddPortalContent, 'addAction')
-    @deprecated
-    def addAction(self, id, name, action, condition, permission, category,
-                  icon=None, visible=1, priority=1.0, REQUEST=None,
-                  description=None):
-      if isinstance(permission, basestring):
-        permission = permission,
-      if isinstance(action, str) and action[:7] not in ('string:', 'python:'):
-        value = 'string:${object_url}/' + value
-      self.newContent(portal_type='Action Information',
-                      reference=id,
-                      title=name,
-                      action=action,
-                      condition=condition,
-                      permission_list=permission,
-                      action_type=category,
-                      icon=icon,
-                      visible=visible,
-                      float_index=priority,
-                      description=description)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'deleteActions')
-    @deprecated
-    def deleteActions(self, selections=(), REQUEST=None):
-      action_list = self.listActions()
-      self.manage_delObjects([action_list[x].id for x in selections])
-
-    security.declarePrivate('listActions')
-    @deprecated
-    def listActions(self, info=None, object=None):
-      """ List all the actions defined by a provider."""
-      return sorted(self.getActionInformationList(),
-                    key=lambda x: (x.getFloatIndex(), x.getId()))
-
-    def _importOldAction(self, old_action):
-      """Convert a CMF action to an ERP5 action
-
-      This is used to update an existing site or to import a BT.
-      """
-      import erp5.portal_type
-      ActionInformation = getattr(erp5.portal_type, 'Action Information')
-      old_action = old_action.__getstate__()
-      action_type = old_action.pop('category', None)
-      action = ActionInformation(self.generateNewId())
-      for k, v in old_action.iteritems():
-        if k in ('action', 'condition', 'icon'):
-          if not v:
-            continue
-          v = v.__class__(v.text)
-        setattr(action, {'id': 'reference',
-                         'priority': 'float_index',
-                         'permissions': 'action_permission',
-                        }.get(k, k), v)
-      action.uid = None
-      action = self[self._setObject(action.id, action, set_owner=0)]
-      if action_type:
-        action._setCategoryMembership('action_type', action_type)
-      return action
-
-    def _exportOldAction(self, action):
-      """Convert an ERP5 action to a CMF action
-
-      This is used to export a BT.
-      """
-      from Products.CMFCore.ActionInformation import ActionInformation
-      old_action = ActionInformation(action.reference,
-        category=action.getActionType(),
-        priority=action.getFloatIndex(),
-        permissions=tuple(action.getActionPermissionList()))
-      for k, v in action.__dict__.iteritems():
-        if k in ('action', 'condition', 'icon'):
-          if not v:
-            continue
-          v = v.__class__(v.text)
-        elif k in ('id', 'float_index', 'action_permission', 'reference'):
-          continue
-        setattr(old_action, k, v)
-      return old_action
 
 InitializeClass( ERP5TypeInformation )
