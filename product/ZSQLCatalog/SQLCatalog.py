@@ -78,11 +78,9 @@ def noReadOnlyTransactionCache():
   yield
 try:
   from Products.ERP5Type.Cache import \
-    readOnlyTransactionCache, caching_instance_method
+    readOnlyTransactionCache
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import caching_instance_method, expect slowness.')
-  def caching_instance_method(*args, **kw):
-    return lambda method: method
   readOnlyTransactionCache = noReadOnlyTransactionCache
 
 try:
@@ -1078,10 +1076,7 @@ class Catalog(Folder,
       pass
     return tuple(result_list)
 
-  @caching_instance_method(id='SQLCatalog.getColumnIds',
-    cache_factory='erp5_content_long',
-    cache_id_generator=generateCatalogCacheId,
-  )
+  @transactional_cache_decorator('SQLCatalog.getColumnIds')
   def _getColumnIds(self):
     keys = set()
     add_key = keys.add
@@ -1106,10 +1101,6 @@ class Catalog(Folder,
     return self._getColumnIds()[:]
 
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
-  @caching_instance_method(id='SQLCatalog.getColumnMap',
-    cache_factory='erp5_content_long',
-    cache_id_generator=generateCatalogCacheId,
-  )
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1123,10 +1114,6 @@ class Catalog(Folder,
     return result
 
   @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
-  @caching_instance_method(id='SQLCatalog.getResultColumnIds',
-    cache_factory='erp5_content_long',
-    cache_id_generator=generateCatalogCacheId,
-  )
   def getResultColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1142,10 +1129,6 @@ class Catalog(Folder,
     return keys
 
   @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
-  @caching_instance_method(id='SQLCatalog.getSortColumnIds',
-      cache_factory='erp5_content_long',
-      cache_id_generator=generateCatalogCacheId,
-  )
   def getSortColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1968,10 +1951,7 @@ class Catalog(Folder,
     """
     return self.sql_catalog_scriptable_keys
 
-  @caching_instance_method(id='SQLCatalog.getTableIndex',
-    cache_factory='erp5_content_long',
-    cache_id_generator=generateCatalogCacheId,
-  )
+  @transactional_cache_decorator('SQLCatalog.getTableIndex')
   def _getTableIndex(self, table):
     table_index = {}
     method = getattr(self, self.sql_catalog_index, '')
@@ -2420,10 +2400,6 @@ class Catalog(Folder,
   buildSqlQuery = buildSQLQuery
 
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
-  @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
-    cache_factory='erp5_content_long',
-    cache_id_generator=generateCatalogCacheId,
-  )
   def _getSearchKeyDict(self):
     result = {}
     search_key_column_dict = {
