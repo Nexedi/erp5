@@ -40,9 +40,10 @@ from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.gen_id_from_reference import GenerateIdFromReferenceMixin
 
 
-class RoleInformation(XMLObject):
+class RoleInformation(GenerateIdFromReferenceMixin('role'), XMLObject):
   """ Represent a role definition.
 
   Roles definitions defines local roles on ERP5Type documents. They are
