@@ -118,6 +118,7 @@
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
+          document.cookie = "__ac=" + \'=;expires=Thu, 01 Jan 1970 00:00:01 GMT;\';\n
         });\n
     })\n
 \n
@@ -286,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -300,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>942.20332.24952.65262</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,8 +319,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080830.84</float>
-                        <string>GMT</string>
+                        <float>1429862553.03</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -167,7 +167,7 @@
               </div>\n
             </li>\n
           {{/if}}\n
-          <li class="ui-last-child"><a class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout">Logout</a></li>\n
+          <li class="ui-last-child"><a href="{{logout_href}}" class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout">Logout</a></li>\n
         </ul>\n
       </div>\n
     </script>\n
@@ -304,7 +304,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -318,7 +318,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11707.40779.32529</string> </value>
+                <value> <string>942.20332.24952.65262</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -336,8 +336,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428416647.44</float>
-                        <string>GMT</string>
+                        <float>1429861586.7</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -164,7 +164,8 @@
           return RSVP.all([\n
             g.whoWantToDisplayThisFrontPage("front"),\n
             g.whoWantToDisplayThisFrontPage("history"),\n
-            g.getLanguageList()\n
+            g.getLanguageList(),\n
+            g.whoWantToDisplayThisFrontPage("login")\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -189,7 +190,8 @@
           tmp += panel_template_body({\n
             "module_href": all_result[0],\n
             "history_href": all_result[1],\n
-            "language_list": language_list\n
+            "language_list": language_list,\n
+            "logout_href": all_result[3]\n
           });\n
           return tmp;\n
         })\n
@@ -373,7 +375,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -387,7 +389,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.34814.2083.30532</string> </value>
+                <value> <string>942.35795.13990.52787</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -405,8 +407,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432629724.1</float>
-                        <string>GMT</string>
+                        <float>1429862098.61</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
