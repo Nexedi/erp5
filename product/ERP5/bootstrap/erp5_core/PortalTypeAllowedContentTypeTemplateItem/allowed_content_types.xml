@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Actions Tool">
+  <item>Action Information</item>
+ </portal_type>
  <portal_type id="Activity Tool">
   <item>Active Process</item>
  </portal_type>

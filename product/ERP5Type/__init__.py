@@ -89,7 +89,7 @@ def initialize( context ):
   # Import Product Components
   from Tool import (CacheTool, MemcachedTool, SessionTool,
                     TypesTool, WebServiceTool, PropertySheetTool,
-                    ComponentTool)
+                    ComponentTool, ActionsTool)
   import Document
   from Base import Base
   import XMLObject
@@ -107,7 +107,8 @@ def initialize( context ):
                    TypesTool.TypesTool,
                    WebServiceTool.WebServiceTool,
                    PropertySheetTool.PropertySheetTool,
-                   ComponentTool.ComponentTool
+                   ComponentTool.ComponentTool,
+                   ActionsTool.ActionsTool,
                   )
   # Do initialization step
   initializeProduct(context, this_module, globals(),

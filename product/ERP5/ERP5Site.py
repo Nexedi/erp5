@@ -1632,6 +1632,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
           if tool_id in ('portal_categories', ):
             tool = tool.activate()
           tool.migrateToPortalTypeClass(tool_id not in (
+            'portal_actions',
             'portal_activities', 'portal_simulation', 'portal_templates',
             'portal_trash'))
           if tool_id in ('portal_trash',):
@@ -1671,7 +1672,6 @@ class PortalGenerator:
         """Set up initial tools"""
 
         addCMFCoreTool = p.manage_addProduct['CMFCore'].manage_addTool
-        addCMFCoreTool('CMF Actions Tool', None)
         addCMFCoreTool('CMF Catalog', None)
         addCMFCoreTool('CMF Member Data Tool', None)
         addCMFCoreTool('CMF Skins Tool', None)
@@ -1849,7 +1849,7 @@ class ERP5Generator(PortalGenerator):
     """
     Set up initial tools.
     """
-    if not 'portal_actions' in p.objectIds():
+    if not 'portal_skins' in p.objectIds():
       PortalGenerator.setupTools(self, p)
 
     # It is better to remove portal_catalog
@@ -1883,6 +1883,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_password', 'Password Tool')
     addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
     addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
+    addERP5Tool(p, 'portal_actions', 'Actions Tool')
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
@@ -1984,8 +1985,6 @@ class ERP5Generator(PortalGenerator):
     removeActionsFromTool(p.portal_membership,
                           ('addFavorite', 'mystuff', 'favorites', 'logged_in',
                            'manage_members'))
-    # actions tool
-    removeActionsFromTool(p.portal_actions, ('folderContents',))
     # properties tool
     removeActionsFromTool(p.portal_properties, ('configPortal',))
     # remove unused action providers

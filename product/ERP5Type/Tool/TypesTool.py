@@ -18,6 +18,7 @@
 import imp, sys, warnings
 import inspect
 from itertools import chain
+from Products.ERP5Type.Tool.ActionsTool import checkAndCreateActionToolBaseCategory
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -367,12 +368,7 @@ class OldTypesTool(OFSFolder):
     del parent.portal_types
     _eventLessSetObject(parent)(TypesTool.id, types_tool, set_owner=0)
     types_tool = types_tool.__of__(parent)
-    if not parent.portal_categories.hasObject('action_type'):
-      # Required to generate ActionInformation.getActionType accessor.
-      import erp5
-      action_type = getattr(erp5.portal_type, 'Base Category')('action_type')
-      action_type.uid = None
-      parent.portal_categories._setObject(action_type.id, action_type)
+    checkAndCreateActionToolBaseCategory(parent)
     for type_info in self.objectValues():
       self._migratePortalType(types_tool, type_info)
     types_tool.activate()._finalizeMigration()

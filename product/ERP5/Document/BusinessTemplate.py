@@ -29,6 +29,7 @@
 
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
+from Products.CMFCore.interfaces import IActionsTool
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -2916,7 +2917,8 @@ class ActionTemplateItem(ObjectTemplateItem):
     Gets action copy from action provider given the action id or reference
     """
     # Several tools still use CMF actions
-    if interfaces.ITypeProvider.providedBy(obj.getParentValue()):
+    if interfaces.ITypeProvider.providedBy(obj.getParentValue()) \
+        or IActionsTool.providedBy(obj):
       return self._getPortalTypeActionCopy(obj, value)
     else:
       return self._getPortalToolActionCopy(obj, context, value)
@@ -2962,7 +2964,8 @@ class ActionTemplateItem(ObjectTemplateItem):
         path, id = id.rsplit('/', 1)
         container = p.unrestrictedTraverse(path)
 
-        if interfaces.ITypeProvider.providedBy(aq_parent(aq_inner(container))):
+        if interfaces.ITypeProvider.providedBy(aq_parent(aq_inner(container)))\
+           or IActionsTool.providedBy(container):
           # XXX future BT should use 'reference' instead of 'id'
           reference = getattr(obj, 'reference', None) or obj.id
           portal_type_dict.setdefault(path, {})[reference] = obj
@@ -3040,7 +3043,8 @@ class ActionTemplateItem(ObjectTemplateItem):
         obj = p.unrestrictedTraverse(relative_url, None)
         # Several tools still use CMF actions
         if obj is not None:
-          is_new_action = interfaces.ITypeProvider.providedBy(obj.getParentValue())
+          is_new_action = interfaces.ITypeProvider.providedBy(obj.getParentValue()) or \
+                          IActionsTool.providedBy(obj)
           key = is_new_action and 'reference' or 'id'
       else:
         relative_url, key, value = self._splitPath(id)

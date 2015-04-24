@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+      <global name="Action Information" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,40 +13,40 @@
             </value>
         </item>
         <item>
-            <key> <string>category</string> </key>
-            <value> <string>global</string> </value>
+            <key> <string>action_permission</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
         </item>
         <item>
-            <key> <string>condition</string> </key>
-            <value> <string></string> </value>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_view</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
+            <key> <string>float_index</string> </key>
+            <value> <float>99.0</float> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>portal_alarms_action</string> </value>
+            <value> <string>action_history</string> </value>
         </item>
         <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>Manage portal</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <float>6.5</float> </value>
+            <key> <string>reference</string> </key>
+            <value> <string>history</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure Alarms</string> </value>
+            <value> <string>History</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -63,7 +63,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${portal_url}/portal_alarms/view</string> </value>
+            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
         </item>
       </dictionary>
     </pickle>

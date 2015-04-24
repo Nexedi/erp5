@@ -1,3 +1,4 @@
+portal_actions/action_check_site_consistency
 portal_alarms/promise_certificate_autority_tool
 portal_alarms/promise_conversion_server
 portal_alarms/promise_install_bt5
