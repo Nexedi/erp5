@@ -35,9 +35,10 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.gen_id_from_reference import GenerateIdFromReferenceMixin
 
 
-class ActionInformation(XMLObject):
+class ActionInformation(GenerateIdFromReferenceMixin('action'), XMLObject):
   """
   ActionInformation is an ERP5 type which will eventually replace respective ActionInformation from CMF.
   """

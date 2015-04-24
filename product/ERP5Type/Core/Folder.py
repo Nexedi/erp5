@@ -161,7 +161,7 @@ class FolderMixIn(ExtensionClass.Base):
                            temp_object=temp_object or temp_container,
                            **kw)
     if temp_container:
-      container._setObject(new_id, new_instance.aq_base)
+      container._setObject(new_instance.id, new_instance.aq_base)
     return new_instance
 
   security.declareProtected(

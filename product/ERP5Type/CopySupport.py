@@ -580,8 +580,9 @@ class CopyContainer:
         ob=ob._getCopy(self)
         orig_id=ob.getId()
         id=self._get_id(ob.getId())
-        result.append({'id':orig_id, 'new_id':id})
         ob._setId(id)
+        id = ob.id
+        result.append({'id':orig_id, 'new_id':id})
         if not is_indexable:
           ob._setNonIndexable()
         self._setObject(id, ob)
@@ -616,9 +617,10 @@ class CopyContainer:
         ob = aq_base(ob)
         orig_id=id
         id=self._get_id(id)
-        result.append({'id':orig_id, 'new_id':id })
 
         ob._setId(id)
+        id = ob.id
+        result.append({'id':orig_id, 'new_id':id })
         if not is_indexable:
           ob._setNonIndexable()
         self._setObject(id, ob, set_owner=0)

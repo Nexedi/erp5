@@ -399,7 +399,7 @@ class ERP5TypeInformation(XMLObject,
           ob.setDefaultReindexParameterDict(reindex_kw)
         if is_indexable is not None:
           base_ob.isIndexable = is_indexable
-        container._setObject(id, base_ob)
+        container._setObject(base_ob.id, base_ob)
         # if no activity tool, the object has already an uid
         if getattr(base_ob, 'uid', None) is None:
           ob.uid = portal.portal_catalog.newUid()

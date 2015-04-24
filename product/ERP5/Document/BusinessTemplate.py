@@ -5816,20 +5816,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
       bt_portal_type_roles_list = list(self.getTemplatePortalTypeRoleList())
       bt_wf_chain_list = list(self.getTemplatePortalTypeWorkflowChainList())
+      bt_path_list = list(self.getTemplatePathList())
 
       for id in bt_portal_types_id_list:
         portal_type = ttool.getTypeInfo(id)
         if portal_type is None:
           continue
-        if portal_type.getRoleInformationList():
-          if id not in bt_portal_type_roles_list:
-            bt_portal_type_roles_list.append(id)
 
         allowed_content_type_list = []
         hidden_content_type_list = []
         property_sheet_list = []
         base_category_list = []
-        action_list = []
         if hasattr(portal_type, 'allowed_content_types'):
           allowed_content_type_list = portal_type.allowed_content_types
         if hasattr(portal_type, 'hidden_content_type_list'):
@@ -5838,8 +5835,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           property_sheet_list = portal_type.property_sheet_list
         if hasattr(portal_type, 'base_category_list'):
           base_category_list = portal_type.base_category_list
-        for action in portal_type.getActionInformationList():
-          action_list.append(action.getReference())
 
         for a_id in allowed_content_type_list:
           allowed_id = id+' | '+a_id
@@ -5861,10 +5856,29 @@ Business Template is a set of definitions, such as skins, portal types and categ
           if base_cat_id not in bt_base_category_list:
             bt_base_category_list.append(base_cat_id)
 
-        for act_id in action_list:
-          action_id = id+' | '+act_id
-          if action_id not in bt_action_list:
-            bt_action_list.append(action_id)
+        for action in portal_type.getActionInformationList():
+          act_id = action.getId()
+          act_ref = action.getReference()
+          try:
+            bt_action_list.remove(id + ' | ' + act_id)
+          except ValueError:
+            pass
+          try:
+            bt_action_list.remove(id + ' | ' + act_ref)
+          except ValueError:
+            pass
+          action_path = "portal_types/" + id + "/" + act_id
+          if action_path not in bt_path_list:
+            bt_path_list.append(action_path)
+
+        for role in portal_type.getRoleInformationList():
+          role_path = "portal_types/" + id + "/" + role.getId()
+          if role_path not in bt_path_list:
+            bt_path_list.append(role_path)
+        try:
+          bt_portal_type_roles_list.remove(id)
+        except ValueError:
+          pass
 
         for workflow_id in [chain for chain in wtool.getChainFor(id)
                                     if chain != '(Default)']:
@@ -5878,6 +5892,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_base_category_list.sort()
       bt_action_list.sort()
       bt_wf_chain_list.sort()
+      bt_path_list.sort()
 
       self.setTemplatePortalTypeWorkflowChainList(bt_wf_chain_list)
       self.setTemplatePortalTypeRoleList(bt_portal_type_roles_list)
@@ -5886,6 +5901,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplatePortalTypePropertySheetList(bt_property_sheet_list)
       self.setTemplatePortalTypeBaseCategoryList(bt_base_category_list)
       self.setTemplateActionPathList(bt_action_list)
+      self.setTemplatePathList(bt_path_list)
 
 
     def guessPortalTypes(self, **kw):
