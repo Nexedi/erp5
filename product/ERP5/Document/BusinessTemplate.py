@@ -5027,6 +5027,25 @@ Business Template is a set of definitions, such as skins, portal types and categ
             for path in new_item._objects.keys():
               modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
 
+      # XXX
+      # to avoid deletion of actions (should be done for any objects?)
+      # which have 2 presentation of link to them inside the bt
+      # it happens when object in the bt is installed and removed at same time
+      # analogue filter should be done when the object is moving from one bt to another
+      modified_object_list_filter = []
+      for path, action in modified_object_list.iteritems():
+        if action[0] == 'Removed' and action[1] == "Action":
+          if path.startswith('portal_types/portal_actions/'):
+            if path.replace('portal_types/portal_actions/', 'portal_actions/action_', 1) in modified_object_list:
+              modified_object_list_filter.append(path)
+          else:
+            fix_path, ob_id = posixpath.split(path)
+            fix_path = posixpath.join('portal_types', fix_path, 'action_' + ob_id)
+            if fix_path in modified_object_list:
+              modified_object_list_filter.append(path)
+      for path in modified_object_list_filter:
+        del modified_object_list[path]
+
       if reinstall:
         self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])
 
