@@ -75,7 +75,9 @@ else:
         data_kw = dict(data)
         for k in data_kw.keys():
           v = data_kw[k]
-          if not isinstance(v, str):
+          if isinstance(v, suds.sax.text.Text):
+            data_kw[k] = v.encode('UTF-8')
+          elif not isinstance(v, str):
             data_kw[k] = str(v)
       except Exception:
         data_kw = {}
@@ -208,6 +210,8 @@ class PayzenService(XMLObject, PayzenSOAP):
       if v is None:
         # empty or not transmitted -- add as empty
         v = ''
+      elif isinstance(v, suds.sax.text.Text):
+        v = v.encode('UTF-8')
       elif isinstance(v, datetime.datetime):
         # for sure date
         v = v.strftime('%Y%m%d')
