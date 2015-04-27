@@ -351,7 +351,7 @@
               while (element.hasChildNodes()) {\n
                 element.removeChild(element.lastChild);\n
               }\n
-              element.appendChild(document.createTextNode(i18n.t(target[0])));\n
+              element.appendChild(document.createTextNode(i18n.t(translate_list[l])));\n
               element.appendChild(document.createElement("span"));\n
               break;\n
             }\n
@@ -484,7 +484,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -498,7 +498,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.50431.23564.44151</string> </value>
+                <value> <string>942.40436.35446.62327</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -516,7 +516,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423134793.61</float>
+                        <float>1430140853.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
