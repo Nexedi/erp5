@@ -235,7 +235,8 @@
         is_custom_dialog = false,\n
         tmp,\n
         generic_dialog_id_list = ["Base_configureUI", "Base_configureSortOn", "Workflow_statusModify",\n
-                                  "Base_editRelation", "Base_createRelation", "Folder_delete"];\n
+                                  "Base_editRelation", "Base_createRelation", "Folder_delete",\n
+                                  "Base_newContentFromJS"];\n
 \n
       function formSubmit() {\n
         return form_gadget.notifySubmitting()\n
@@ -436,7 +437,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.35941.31227.49152</string> </value>
+                <value> <string>942.35946.42655.6161</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -454,7 +455,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1429870719.03</float>
+                        <float>1430120185.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
