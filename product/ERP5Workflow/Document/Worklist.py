@@ -44,7 +44,7 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(IdAsReferenceMixin('worklist_'), XMLObject):
+class Worklist(IdAsReferenceMixin('_worklist'), XMLObject):
     """
     A ERP5 Worklist.
     """
@@ -67,7 +67,7 @@ class Worklist(IdAsReferenceMixin('worklist_'), XMLObject):
     actbox_icon = ''
     actbox_category = 'global'
     guard = None
-
+    default_reference = ''
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -78,6 +78,7 @@ class Worklist(IdAsReferenceMixin('worklist_'), XMLObject):
                PropertySheet.XMLObject,
                PropertySheet.CategoryCore,
                PropertySheet.DublinCore,
+               PropertySheet.Reference,
                PropertySheet.Worklist,
     )
 
@@ -114,7 +115,7 @@ class Worklist(IdAsReferenceMixin('worklist_'), XMLObject):
         res = []
         res.append(self.getParentValue().getStateVariable())
         for vdef in self.getParentValue().contentValues(portal_type="Variable"):
-            id = vdef.getId()### getRef
+            id = vdef.getId()
             if vdef.for_catalog:
                 res.append(id)
         res.sort()
