@@ -63,17 +63,18 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Tool import ERP5WorkflowTool
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
+class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
   """
   A ERP5 Workflow.
   """
 
   meta_type = 'ERP5 Workflow'
   portal_type = 'Workflow'
+  _isAWorkflow = True # DCWorkflow Tool compatibility
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-
+  default_reference = ''
   ### zwj: for security issue
   managed_permission_list = ()
   managed_role = ()
@@ -90,6 +91,7 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     PropertySheet.XMLObject,
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
+    PropertySheet.Reference,
     PropertySheet.Workflow,
   )
 
@@ -104,7 +106,7 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     # Initialize workflow history
     status_dict = {state_var: self.getSourceId()}
     variable_list = self.objectValues(portal_type='Variable')
-    former_status = self._getOb(status_dict[state_var], None) ### _getObjectByRef
+    former_status = self._getOb(status_dict[state_var], None)
     ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
 
     for variable in variable_list:
@@ -115,7 +117,7 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
         value = expr(ec)
       else:
         value = variable.getInitialValue(object=object)
-      status_dict[variable.getId()] = value ### getRef
+      status_dict['_'.join(variable.getId().split('_')[:-1])] = value # remove suffix
 
     self._updateWorkflowHistory(document, status_dict)
     self.updateRoleMappingsFor(document)
@@ -124,7 +126,7 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     """
     Generate a key used in the workflow history.
     """
-    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()### getRef
+    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
     return history_key
 
   def _updateWorkflowHistory(self, document, status_dict):
@@ -149,13 +151,6 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     #document._p_changed = 1
     # XXX this _p_changed is apparently not necessary
     #document.workflow_history._p_changed = 1
-
-  ### a getter for Workflow. For other objects, this is not recommended.
-  def _getObjectByRef(self, ref):
-    for ob in self:
-      if wf.getRef() == ref:
-        return ob
-    return None
 
   def getCurrentStatusDict(self, document):
     """
@@ -212,8 +207,8 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     if sdef is None:
       return 0
 
-    if action in sdef.getDestinationIdList():### getRef, for id in sdef.getDestinationIdList: tdef = sdef._getOb(id) if ob.getRef == action ....
-      tdef = self._getOb(action, None) ### _getObjectByRef
+    if action in sdef.getDestinationIdList():
+      tdef = self._getOb(action, None)
       if (tdef is not None and
         tdef.trigger_type == TRIGGER_USER_ACTION and
         self._checkTransitionGuard(tdef, document, **kw)):
@@ -242,8 +237,8 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
 
   def _findAutomaticTransition(self, document, sdef):
     tdef = None
-    for tid in sdef.getDestinationIdList():### getRef
-      t = self._getOb(id=tid) ### getObjectByRef
+    for tid in sdef.getDestinationIdList():
+      t = self._getOb(id=tid)
       if t is not None and t.trigger_type == TRIGGER_AUTOMATIC:
         if self._checkTransitionGuard(t, document):
           tdef = t
@@ -289,11 +284,11 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     if sdef is None:
       raise WorkflowException(_(u'Object is in an undefined state.'))
     if self.isActionSupported(document, action, **kw):
-      wf_id = self.getId()### getRef
+      wf_id = self.getId()
       if wf_id is None:
         raise WorkflowException(
-            _(u'Requested workflow definition not found.'))
-    tdef = self._getOb(id=action)### _getObjectByRef
+            _(u'Requested workflow not found.'))
+    tdef = self._getOb(id=action)
 
     if tdef not in self.objectValues(portal_type='Transition'):
       raise Unauthorized(action)
@@ -308,10 +303,9 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
 
     workflow_list = document.getTypeInfo().getTypeERP5WorkflowList()
     for interaction_workflow in self.getParent().objectValues(portal_type='Interaction Workflow'):
-      if interaction_workflow.getId() in workflow_list:### getRef
+      if interaction_workflow.getId() in workflow_list:
         for interaction in interaction_workflow.objectValues(portal_type='Interaction'):
-          LOG('looking for interaction trigger method %s'%str(action.split('_')[0]), WARNING, 'in WorkflowTool.py')
-          if str(action.split('_')[0]) in interaction.getMethodId():
+          if '_'.join(action.split('_')[0:-1]) in interaction.getMethodId():
             interaction.execute(document)
 
   def _changeStateOf(self, document, tdef=None, kwargs=None):
@@ -347,8 +341,8 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
           return None
       res = []
 
-      for tid in sdef.getDestinationIdList():### getRef, keep tid for following codes
-        tdef = self._getOb(id=tid)### _getObjectByRef
+      for tid in sdef.getDestinationIdList():
+        tdef = self._getOb(id=tid)
         if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
                 tdef.actbox_name and self._checkTransitionGuard(tdef, document):
             if fmt_data is None:
@@ -375,6 +369,10 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
       (worklist id as key) and which value is a dict composed of
       variable matches.
     """
+    if not info.object.getPortalType() in ['Workflow', 'Interaction Workflow']:
+      # avoid getting DC workflow
+      return
+
     if not self.objectValues(portal_type='Worklist'):
       return None
 
@@ -390,15 +388,15 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
         #LOG ('Supported portal types are: %s'%result, WARNING, ' in Workflow.py')
         return result
 
-    portal_type_list = getPortalTypeListForWorkflow(self.id)### getRef
+    portal_type_list = getPortalTypeListForWorkflow(self.id)
     if not portal_type_list:
       return None
     variable_match_dict = {}
     security_manager = getSecurityManager()
-    workflow_id = self.id### getRef, don't use id anymore, but keep workflow_id for following codes
+    workflow_id = self.id
     workflow_title = self.getTitle()
     for worklist_definition in self.objectValues(portal_type='Worklist'):
-      worklist_id = worklist_definition.getId() ### getRef
+      worklist_id = worklist_definition.getId()
       action_box_name = worklist_definition.getActboxName()
       guard = worklist_definition.getGuard()
       if action_box_name:
@@ -449,7 +447,7 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,
                                                  'workflow_title': workflow_title,
-                                                 'workflow_id': workflow_id,### see line 397 redefine reference as id
+                                                 'workflow_id': workflow_id,
                                                  'action_box_url': worklist_definition.actbox_url,
                                                  'action_box_category': worklist_definition.actbox_category}
 
@@ -468,15 +466,14 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
       LOG('464 zwj: ob is %s, name is %s'%(ob.getId(),name), WARNING, ' in Workflow.py.')
       state_var = self.getStateVariable()
       if name == state_var:
-          #return self._getWorkflowStateOf(ob, 1)
-          LOG ('468 State = : %s'%ob._getDefaultAcquiredValue(state_var).getId(), WARNING, ' in Workflow.py')### getRef
-          return ob._getDefaultAcquiredValue(state_var).getId()### getRef
+          LOG ('468 State = : %s'%ob._getDefaultAcquiredValue(state_var).getId(), WARNING, ' in Workflow.py')
+          return ob._getDefaultAcquiredValue(state_var).getId()
 
-      vdef = self._getOb(name)### _getObjectByRef
-      LOG('zwj: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')### getRef
+      vdef = self._getOb(name)
+      LOG('zwj: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')
 
       status_dict = self.getCurrentStatusDict(ob)
-      former_status = self._getOb(status_dict[state_var], None) ### _getObjectByRef
+      former_status = self._getOb(status_dict[state_var], None)
       if former_status == None:
         former_status = self.getSourceValue()
 
@@ -500,17 +497,17 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
 
   def _getWorkflowStateOf(self, ob, id_only=0):
       tool = getToolByName(self, 'portal_workflow')
-      status = tool.getStatusOf(self.id, ob)### at tool level has to use id, not ref
+      status = tool.getStatusOf(self.id, ob)
       if status is None:
-          state = self.getSourceId()### getSource, getRef,
+          state = self.getSourceId()
       else:
           state = status.get(self.getStateVariable(), None)
           if state is None:
-              state = self.getSourceId()### getSource, getRef,
+              state = self.getSourceId()
       if id_only:
           return state
       else:
-          return self._getOb(state, None)### _getObjectByRef
+          return self._getOb(state, None)
 
   ###########
   ## Graph ##
@@ -531,29 +528,29 @@ class Workflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
       for state in self.objectValues(portal_type='State'):
         out.append('%s [shape=box,label="%s",' \
                      'style="filled",fillcolor="#ffcc99"];' % \
-                     (state.getId(), state.getTitle())) ### getRef
+                     (state.getId(), state.getTitle()))
         # XXX Use API instead of getDestinationValueList
         for available_transition in state.getDestinationValueList():
-          transition_with_init_state_list.append(available_transition.getId()) ### getRef
+          transition_with_init_state_list.append(available_transition.getId())
           destination_state = available_transition.getDestinationValue()
           if destination_state is None:
             # take care of 'remain in state' transitions
             destination_state = state
           #
-          key = (state.getId(), destination_state.getId()) ### getRef
+          key = (state.getId(), destination_state.getId())
           value = transition_dict.get(key, [])
           value.append(available_transition.getTitle())
           transition_dict[key] = value
 
       # iterate also on transitions, and add transitions with no initial state
       for transition in self.objectValues(portal_type='Transition'):
-        trans_id = transition.getId() ### getRef
+        trans_id = transition.getId()
         if trans_id not in transition_with_init_state_list:
           destination_state = transition.getDestinationValue()
           if destination_state is None:
             dest_state_id = None
           else:
-            dest_state_id = destination_state.getId() ### getRef
+            dest_state_id = destination_state.getId()
 
           key = (None, dest_state_id)
           value = transition_dict.get(key, [])
