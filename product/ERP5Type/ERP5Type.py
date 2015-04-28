@@ -422,7 +422,7 @@ class ERP5TypeInformation(XMLObject,
             workflow.notifyCreated(ob)
 
         for ERP5Workflow_id in self.getTypeERP5WorkflowList():
-          workflow_module = portal.getDefaultModule(portal_type="Workflow")
+          workflow_module = portal.portal_workflow
           if workflow_module is not None:
             ERP5Workflow = workflow_module._getOb(ERP5Workflow_id)
             ERP5Workflow.initializeDocument(ob)
