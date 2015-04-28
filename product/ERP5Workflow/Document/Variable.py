@@ -33,7 +33,7 @@ from Products.DCWorkflow.Guard import Guard
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Variable(IdAsReferenceMixin('variable_'), XMLObject):
+class Variable(IdAsReferenceMixin('_variable'), XMLObject):
     """
     A ERP5 Variable.
     """
@@ -52,7 +52,7 @@ class Variable(IdAsReferenceMixin('variable_'), XMLObject):
     default_expr = None  # Overrides default_value if set
     info_guard = None
     update_always = 1
-
+    default_reference = ''
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -63,6 +63,7 @@ class Variable(IdAsReferenceMixin('variable_'), XMLObject):
                PropertySheet.XMLObject,
                PropertySheet.CategoryCore,
                PropertySheet.DublinCore,
+               PropertySheet.Reference,
                PropertySheet.Variable,
     )
 
