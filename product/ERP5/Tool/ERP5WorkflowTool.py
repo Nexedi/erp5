@@ -185,7 +185,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
           case = 1
           break
       for workflow_id in workflow_list:
-        wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id) ### _getObjectByRef
+        wf = self.getPortalObject().portal_workflow._getOb(workflow_id) ### _getObjectByRef
         if wf.isActionSupported(ob, action, **kw):
           found = 1
           case = 2
@@ -198,7 +198,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       if case == 1:
         wf = self.getWorkflowById(wf_id)
       else:
-        wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)### _getObjectByRef
+        wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)### _getObjectByRef
       if wf is None:
         raise WorkflowException(_(u'Requested workflow definition not found.'))
 
@@ -227,7 +227,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
                   case = 1
                   break
           for workflow_id in workflow_list:
-              workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)### _getObjectByRef
+              workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)### _getObjectByRef
               if workflow.isInfoSuported(ob, name):
                 found = 1
                 case = 2
@@ -243,7 +243,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
           if case == 1:
               wf = self.getWorkflowById(wf_id)
           else:
-              wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id)### _getObjectByRef
+              wf = self.getPortalObject().portal_workflow._getOb(wf_id)### _getObjectByRef
           if wf is None:
               if default is _marker:
                   raise WorkflowException(
@@ -262,8 +262,8 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
     """
     temp_workflow_list = []
     temp_workflow_id_list = []
-    for dc_workflow_id in self.getPortalObject().portal_erp5workflow:
-      dc_workflow = self.getPortalObject().portal_erp5workflow.get(dc_workflow_id)
+    for dc_workflow_id in self.getPortalObject().portal_workflow:
+      dc_workflow = self.getPortalObject().portal_workflow.get(dc_workflow_id)
       workflow_type = dc_workflow.__class__.__name__
       if workflow_type == 'Workflow' or workflow_type == 'Interaction Workflow':
         continue
@@ -273,18 +273,14 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       temp_workflow_id_list.append(temp_workflow.getTitle())
     return temp_workflow_list
 
-  def migrateWorkflow(self, workflow_id):
-    """ Launch manually the migration of DCWorkflow.
-    """
-    pass
-
   def getWorkflowValueListFor(self, portal_type):
     """ Return a list of workflows bound to selected portal_type.
+        Caution: this method will convert DC workflow.
     """
     workflow_list = []
     if portal_type is None:
       return workflow_list
-    workflow_module = self.getPortalObject().getDefaultModule('Workflow')
+    workflow_module = self.getPortalObject().portal_workflow
     for workflow_id in portal_type.getTypeERP5WorkflowList():
       workflow_list.append(workflow_module._getOb(workflow_id)) ### _getObjectByRef
 
@@ -293,12 +289,10 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
     if dc_workflow_list is None:
       return workflow_list
 
-    temporary_conversion = 1
-
     for dc_workflow_id in dc_workflow_list:
       duplicated_wf = 0
       for wf in workflow_module.objectValues():
-        if dc_workflow_id == wf.getRef() or dc_workflow_id == wf.getTitle():
+        if dc_workflow_id == wf.getId():
           duplicated_wf = 1
       if getattr(workflow_module, dc_workflow_id, None) is not None:
         duplicated_wf = 1
@@ -307,8 +301,10 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         continue
 
       dc_workflow = self.getWorkflowById(dc_workflow_id)
-      workflow = self.dc_workflow_asERP5Object(workflow_module, dc_workflow, temporary_conversion)
-      workflow_list.extend(workflow)
+      #temporary_conversion = 1
+      #workflow = self.dc_workflow_asERP5Object(workflow_module, dc_workflow, temporary_conversion)
+      #workflow_list.extend(workflow)
+      workflow_list.extend(dc_workflow)
     return workflow_list
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
@@ -325,7 +321,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       workflow = container.newContent(portal_type='Interaction Workflow', temp_object=temp)
       workflow.setManagerBypass(dc_workflow.manager_bypass)
 
-    workflow.setId(dc_workflow.id)
+    workflow.setId(dc_workflow.id+'_converted')
     workflow.edit(title=dc_workflow.title)
     workflow.edit(description=dc_workflow.description)
 
@@ -336,7 +332,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.1 Convert transition '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         transition = workflow.newContent(portal_type='Transition', temp_object=temp)
         transition.edit(title=tdef.title)
-        transition.setId(tdef.id)
+        transition.setId(tdef.id+'_transition')
         transition.setTriggerType(tdef.trigger_type)
         transition.setActboxCategory(tdef.actbox_category)
         transition.setActboxIcon(tdef.actbox_icon)
@@ -352,7 +348,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         state = workflow.newContent(portal_type='State', temp_object=temp)
         state.edit(title=sdef.title)
-        state.setId(sdef.id)
+        state.setId(sdef.id+'_state')
         state.setStatePermissionRoles(sdef.permission_roles)
         state.setDestinationList(sdef.transitions)
       ### create worklists (portal_type = Worklist)
@@ -361,7 +357,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
         worklist.edit(title=qdef.title)
-        worklist.setId(qdef.id)
+        worklist.setId(qdef.id+'_worklist')
         for key, values in qdef.var_matches.items():
           if key == 'portal_type':
             worklist.setMatchedPortalTypeList(values)
@@ -380,7 +376,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         tdef = dc_workflow.interactions.get(tid)
         LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         interaction.edit(title=tdef.title)
-        interaction.setId(tdef.id)
+        interaction.setId(tdef.id+'_interaction')
         interaction.setActivateScriptName(tdef.activate_script_name)
         interaction.setAfterScriptName(tdef.after_script_name)
         interaction.setBeforeCommitScriptName(tdef.before_commit_script_name)
@@ -411,7 +407,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       variable = workflow.newContent(portal_type='Variable', temp_object=temp)
       LOG("2.6 Convert variable '%s' of workflow '%s'"%(vdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
       variable.edit(title=vdef.title)
-      variable.setId(vdef.id)
+      variable.setId(vdef.id+'_variable')
       variable.setAutomaticUpdate(vdef.update_always)
       variable.setDefaultExpr(vdef.default_expr)
       variable.info_guard = vdef.info_guard
@@ -451,7 +447,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       if state and transition_id in state.transitions:
           return 1
     for workflow_id in ob.getTypeInfo().getTypeERP5WorkflowList():
-      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id) ### _getObjectByRef
+      workflow = self.getPortalObject().portal_workflow._getOb(workflow_id) ### _getObjectByRef
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationIdList():
         return 1
@@ -616,7 +612,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         if (workflow_list is not None) and (workflow_list is not []):
           for wf_id in workflow_list:
             did[wf_id] = None
-            wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None) ### getObjectByRef
+            wf = self.getPortalObject().portal_workflow._getOb(wf_id, None) ### getObjectByRef
             if wf is None:
               raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
             a = wf.listObjectActions(info)
