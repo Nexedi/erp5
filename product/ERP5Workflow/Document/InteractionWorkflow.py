@@ -49,17 +49,18 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 _MARKER = []
 
-class InteractionWorkflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
+class InteractionWorkflow(IdAsReferenceMixin('_interactionworkflow'), XMLObject):
   """
   An ERP5 Interaction Workflow.
   """
 
   meta_type = 'ERP5 Workflow'
   portal_type = 'Interaction Workflow'
+  _isAWorkflow = True # DCWorkflow Tool compatibility
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-
+  default_reference = ''
   ### zwj: for security issue
   managed_permission_list = ()
   managed_role = ()
@@ -79,6 +80,7 @@ class InteractionWorkflow(IdAsReferenceMixin('erp5workflow_'), XMLObject):
     PropertySheet.XMLObject,
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
+    PropertySheet.Reference,
     PropertySheet.InteractionWorkflow,
   )
 
