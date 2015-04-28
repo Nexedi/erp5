@@ -78,17 +78,10 @@ def IdAsReferenceMixin(suffix):
         return getattr(aq_base(self), 'default_reference', (args or [None])[0])
 
     def _setReference(self, value):
-      self.__dict__.pop('default_reference', None) # BBB
+      self.__dict__.pop('default_reference', None)
       self.setId(value + suffix)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference
-
-    def _setRef(self, value):
-      self.__dict__.pop('ref', None) # BBB
-      self.setId(suffix + value)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setRef')
-    setRef = _setRef
 
   return IdAsReferenceMixin
