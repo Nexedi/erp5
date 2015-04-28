@@ -40,7 +40,7 @@ from zLOG import LOG, INFO, ERROR, WARNING
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Interaction(IdAsReferenceMixin('interaction_'), XMLObject):
+class Interaction(IdAsReferenceMixin('_interaction'), XMLObject):
   """
   An ERP5 Interaction.
   """
@@ -68,7 +68,7 @@ class Interaction(IdAsReferenceMixin('interaction_'), XMLObject):
   temporary_document_disallowed = False
   var_exprs = None  # A mapping.
   guard = None
-
+  default_reference = ''
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -80,6 +80,7 @@ class Interaction(IdAsReferenceMixin('interaction_'), XMLObject):
     PropertySheet.XMLObject,
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
+    PropertySheet.Reference,
     PropertySheet.Interaction,
   )
 
