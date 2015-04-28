@@ -50,6 +50,22 @@ def IdAsReferenceMixin(suffix):
     def getIdAsReferenceSuffix():
       return suffix
 
+    def __migrate(self):
+      if self.id[suffix_index:] != suffix:
+        new_id = self.__dict__.get('default_reference') + suffix
+        parent = self.getParentValue()
+        if parent.has_key(new_id):
+          LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
+              " property sheet, due to ID conflict" % (new_id, parent.getId()))
+        else:
+          try:
+            self.setId(new_id)
+            del self.default_reference
+          except ActivityPendingError:
+            LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
+              " property sheet, due to pending activities" %
+               (new_id, parent.getId()))
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
     def getReference(self, *args):

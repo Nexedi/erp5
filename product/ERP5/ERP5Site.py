@@ -1644,26 +1644,28 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """ manually called function to migrate dcworkflow to erp5workflow.
         only for the specific case of workflow migration.
     """
-    if hasattr(self, 'portal_workflow_old'):
-      tool = self.portal_workflow_old
-
+    tool = self.portal_workflow
     object_id_list = tool.objectIds()
     object_clipboard = tool.manage_copyObjects(object_id_list)
-
     new_tool = self.newContent(id='portal_workflow_new', portal_type='ERP5 Workflow Tool')
-    LOG(' ERP5Site.py', WARNING, ' create %s '%new_tool.id)
-
     new_tool.manage_pasteObjects(object_clipboard)
     new_tool._chains_by_type = tool._chains_by_type
-    LOG(' ERP5Site.py', WARNING, ' copy objects to %s from %s.'%(new_tool.id, tool.id))
-
-    if hasattr(self, 'portal_workflow_old'):
-      self.manage_delObjects(['portal_workflow'])
-    else:
-      self.manage_renameObject(tool.id, 'portal_workflow_old')
-
-
+    self.manage_delObjects(['portal_workflow'])
     self.manage_renameObject(new_tool.id, 'portal_workflow')
+
+  security.declareProtected(Permissions.ManagePortal,
+                            'migrateWorkflowModuleToPortalWorkflow')
+  def migrateWorkflowModuleToPortalWorkflow(self):
+    """ manually called function to migrate dcworkflow to erp5workflow.
+        only for the specific case of workflow migration.
+    """
+    tool = self.workflow_module
+    object_id_list = tool.objectIds()
+    new_tool = self.portal_workflow
+    object_clipboard = tool.manage_copyObjects(object_id_list)
+    new_tool = self.portal_workflow
+    new_tool.manage_pasteObjects(object_clipboard)
+
 
 Globals.InitializeClass(ERP5Site)
 
