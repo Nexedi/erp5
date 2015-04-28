@@ -55,13 +55,13 @@ class Getter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      try:
-        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
-      except:
-        portal_workflow = instance.getPortalObject().portal_workflow
-        wf = portal_workflow.getWorkflowById(self._key)
-      return wf._getWorkflowStateOf(instance, id_only=1)
+      portal_workflow = instance.getPortalObject().portal_workflow
+      wf = portal_workflow.getWorkflowById(self._key)
+      if wf.getPortalType() in ['Workflow', 'Interaction Workflow']:
+        # remove id suffix for workflow and interaction workflow
+        return '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[0:-1])
+      else:
+        return wf._getWorkflowStateOf(instance, id_only=1)
 
     psyco.bind(__call__)
 
@@ -84,12 +84,8 @@ class TitleGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      try:
-        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
-      except:
-        portal_workflow = instance.getPortalObject().portal_workflow
-        wf = portal_workflow.getWorkflowById(self._key)
+      portal_workflow = instance.getPortalObject().portal_workflow
+      wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance).getTitle()
 
     psyco.bind(__call__)
@@ -99,13 +95,12 @@ class TranslatedGetter(Getter):
     """
 
     def __call__(self, instance):
-      try:
-        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-        wf = erp5Workflow_module._getOb(self._key)### _getObjectByRef
-      except:
-        portal = instance.getPortalObject()
-        wf = portal.portal_workflow.getWorkflowById(self._key)
-      state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      portal = instance.getPortalObject()
+      wf = portal.portal_workflow.getWorkflowById(self._key)
+      if wf.getPortalType() in ['Workflow','Interaction Workflow']:
+        state_id = '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[0:-1])
+      else:
+        state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
       return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
@@ -121,11 +116,7 @@ class TranslatedTitleGetter(TitleGetter):
       portal = instance.getPortalObject()
       localizer = portal.Localizer
       wf_id = self._key
-      try:
-        erp5Workflow_module = instance.getPortalObject()._getOb("workflow_module", None)
-        wf = erp5Workflow_module._getOb(self._key) ### _getObjectByRef
-      except:
-        wf = portal.portal_workflow.getWorkflowById(wf_id)
+      wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
 
