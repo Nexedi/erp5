@@ -50,7 +50,7 @@ TRIGGER_AUTOMATIC = 0
 TRIGGER_USER_ACTION = 1
 TRIGGER_WORKFLOW_METHOD = 2
 
-class Transition(IdAsReferenceMixin('transition_'), XMLObject):
+class Transition(IdAsReferenceMixin('_transition'), XMLObject):
   """
   A ERP5 Transition.
   """
@@ -67,7 +67,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
   actbox_icon = ''
   actbox_category = 'workflow'
   var_exprs = None  # A mapping.
-
+  default_reference = ''
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -78,14 +78,9 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.Transition,
   )
-
-  def _getObjectByRef(self, ref):
-    for ob in self:
-      if wf.getRef() == ref:
-        return ob
-    return None
 
   def getGuardSummary(self):
     res = None
@@ -149,7 +144,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
     if state_object == None:
       state_object = workflow.getSourceValue()
 
-    old_state = state_object.getId() ### getRef
+    old_state = state_object.getId()
     old_sdef = state_object
 
     new_state = self.getDestinationId()
@@ -163,7 +158,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
             return
         former_status = {}
     else:
-        former_status = state_object.getId() ### getRef
+        former_status = state_object.getId()
 
     try:
         new_sdef = self.getDestinationValue()
@@ -174,7 +169,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
     before_script_success = 1
     script_id = self.getBeforeScriptId()
     if script_id:
-      script = self.getParent()._getOb(script_id) ### _getObjectByRef
+      script = self.getParent()._getOb(script_id)
       # Pass lots of info to the script in a single parameter.
       kwargs = form_kw
       sci = StateChangeInfo(
@@ -193,7 +188,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
     # Do not proceed in case of failure of before script
     if not before_script_success:
       former_status = old_state # Remain in state
-      tool.setStatusOf(workflow.getId(), document, status_dict) ### getRef
+      tool.setStatusOf(workflow.getId(), document, status_dict)
       sci = StateChangeInfo(
         document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
         # put the error message in the workflow history
@@ -229,7 +224,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
       tdef_exprs = {}
 
     for vdef in workflow.objectValues(portal_type='Variable'):
-      id = vdef.getId() ### getRef
+      id = vdef.getId()
       if vdef.for_status == 0:
         continue
       expr = None
@@ -267,7 +262,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
     # Generate Workflow History List
-    tool.setStatusOf(workflow.getId(), document, status_dict) ### getRef
+    tool.setStatusOf(workflow.getId(), document, status_dict)
 
     ### zwj: update Role mapping, also in Workflow, initialiseDocument()
     workflow.updateRoleMappingsFor(document)
@@ -280,7 +275,7 @@ class Transition(IdAsReferenceMixin('transition_'), XMLObject):
       if script_id in old_sdef.getDestinationIdList():
         getattr(workflow, convertToMixedCase(script_id)).execute(document)
       else:
-        script = self.getParent()._getOb(script_id) ### _getObjectByRef
+        script = self.getParent()._getOb(script_id)
         # Pass lots of info to the script in a single parameter.
         if script.getTypeInfo().getId() == 'Workflow Script':
           sci = StateChangeInfo(
