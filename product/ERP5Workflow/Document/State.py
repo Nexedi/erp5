@@ -42,7 +42,7 @@ class StateError(Exception):
   """
   pass
 
-class State(IdAsReferenceMixin('state_'), XMLObject, XMLMatrix):
+class State(IdAsReferenceMixin('_state'), XMLObject, XMLMatrix):
   """
   A ERP5 State.
   """
@@ -53,7 +53,7 @@ class State(IdAsReferenceMixin('state_'), XMLObject, XMLMatrix):
   isRADContent = 1
   ###zwj: security features
   erp5_permission_roles = {} # { permission: [role] or (role,) }
-
+  default_reference = ''
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -64,6 +64,7 @@ class State(IdAsReferenceMixin('state_'), XMLObject, XMLMatrix):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.State,)
 
   def getAvailableTransitionList(self, document):
