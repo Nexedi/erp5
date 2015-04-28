@@ -85,9 +85,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_ref</string>
-                        <string>my_title</string>
                         <string>my_id</string>
+                        <string>my_reference</string>
+                        <string>my_title</string>
                         <string>my_destination_title_list</string>
                       </list>
                     </value>

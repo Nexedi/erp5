@@ -87,8 +87,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_ref</string>
                         <string>my_id</string>
+                        <string>my_reference</string>
                         <string>my_title</string>
                         <string>my_destination_title</string>
                         <string>my_guard_expression</string>
@@ -104,7 +104,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_transition_form_id</string>
                         <string>my_permission_list</string>
                         <string>my_role_list</string>
                         <string>my_group_list</string>

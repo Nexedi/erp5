@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getRef(), x.getRef()) for x in here.getParent().objectValues(portal_type=\'State\')]</string> </value>
+            <value> <string>python: [(x.getTitle(), x.getId()) for x in here.getParent().objectValues(portal_type=\'State\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

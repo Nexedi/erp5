@@ -104,7 +104,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ref</string>
+                          <string>id</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -160,7 +160,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ref</string>
+                          <string>id</string>
                           <string>Reference</string>
                         </tuple>
                       </list>
@@ -179,7 +179,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ref</string>
+                          <string>id</string>
                           <string>WorkflowScript_getListBoxURL</string>
                         </tuple>
                         <tuple>

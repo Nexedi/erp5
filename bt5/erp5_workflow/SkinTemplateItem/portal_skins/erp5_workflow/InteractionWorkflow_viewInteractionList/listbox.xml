@@ -80,7 +80,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ref</string>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -146,7 +146,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ref</string>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                       </list>

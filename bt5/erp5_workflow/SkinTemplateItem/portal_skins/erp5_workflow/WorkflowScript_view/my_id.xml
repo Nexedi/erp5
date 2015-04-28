@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>ID</string> </value>
+                    <value> <string>Reference</string> </value>
                 </item>
               </dictionary>
             </value>

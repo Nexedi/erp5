@@ -53,7 +53,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>workflows</string>
+                        <string>interaction_workflows</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -71,10 +74,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>workflows</string>
-                        <string>interaction_workflows</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

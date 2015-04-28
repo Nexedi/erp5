@@ -74,7 +74,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_ref</string>
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_callable_type</string>

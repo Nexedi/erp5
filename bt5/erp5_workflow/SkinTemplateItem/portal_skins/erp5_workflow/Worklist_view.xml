@@ -85,9 +85,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_ref</string>
-                        <string>my_title</string>
                         <string>my_id</string>
+                        <string>my_reference</string>
+                        <string>my_title</string>
                         <string>my_description</string>
                         <string>my_matched_portal_type_list</string>
                         <string>my_matched_validation_state_list</string>

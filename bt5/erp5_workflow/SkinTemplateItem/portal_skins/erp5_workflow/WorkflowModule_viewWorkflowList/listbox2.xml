@@ -408,7 +408,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>ref</string>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
