@@ -26,8 +26,8 @@
             <key> <string>erp5workflow_list</string> </key>
             <value>
               <tuple>
-                <string>testing_workflow</string>
-                <string>testing_interaction_workflow</string>
+                <string>testing_ingeraction_workflow_interactionworkflow</string>
+                <string>testing_workflow_workflow</string>
               </tuple>
             </value>
         </item>
