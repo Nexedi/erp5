@@ -282,31 +282,16 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
 
     ###= Compatibility mode ====================================================
+    portal_workflow = getattr(site, 'portal_workflow', None)
 
-    if hasattr(site, 'portal_workflow'):
-      portal_workflow = site.portal_workflow
-    elif hasattr(site, 'portal_workflow_old'):
-      portal_workflow = site.portal_workflow_old
-    else:
-      portal_workflow = None
-
-    #portal_workflow = site.portal_workflow
-    workflow_module = getattr(site, 'workflow_module', None)
-    portal_types = site.getDefaultModule(portal_type="portal_types")
-    object_ptype = portal_types._getOb(cls.__name__, None)
-
-    if portal_workflow is None and workflow_module is None:
+    if portal_workflow is None:
       if not getattr(site, '_v_bootstrapping', False):
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not generate workflow methods for %s"
             % cls.__name__)
     else:
       initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
-      ### it seems at the creation, classes that don't belong to ERP5 object could
-      # be loaded, thus only erp5 object types can be initialized.
-      if object_ptype is not None and workflow_module is not None:
-        if object_ptype.getTypeERP5WorkflowList() != []:
-          initializePortalTypeERP5WorkflowMethod(cls, workflow_module)
+      initializePortalTypeERP5WorkflowMethod(cls, portal_workflow)
     ### =================================================== Compatibility Mode =
 
     # portal type group methods, isNodeType, isResourceType...
