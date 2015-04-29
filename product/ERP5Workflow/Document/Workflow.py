@@ -104,7 +104,8 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
-    status_dict = {state_var: self.getSourceId()}
+    state_id = '_'.join(self.getSourceId().split('_')[:-1])
+    status_dict = {state_var: state_id}
     variable_list = self.objectValues(portal_type='Variable')
     former_status = self._getOb(status_dict[state_var], None)
     ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
@@ -127,7 +128,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     Generate a key used in the workflow history.
     """
     history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
-    return history_key
+    return '_'.join(history_key.split('_')[:-1])
 
   def _updateWorkflowHistory(self, document, status_dict):
     """
@@ -470,34 +471,37 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
           return ob._getDefaultAcquiredValue(state_var).getId()
 
       vdef = self._getOb(name)
-      LOG('zwj: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')
+      LOG('474: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')
 
       status_dict = self.getCurrentStatusDict(ob)
       former_status = self._getOb(status_dict[state_var], None)
+
       if former_status == None:
         former_status = self.getSourceValue()
 
       if vdef.info_guard is not None and not vdef.info_guard.check(
           getSecurityManager(), self, ob):
           return default
-      LOG('zwj: Pass Info guard', WARNING, ' in Workflow.py.')
+      LOG('484: Pass Info guard', WARNING, ' in Workflow.py.')
 
       if status_dict is not None and name in status_dict:
           value = status_dict[name]
       # Not set yet.  Use a default.
       if vdef.default_expr is not None:
-          LOG('zwj: executing default_expr ', WARNING, ' in Workflow.py.')
+          LOG('490: executing default_expr ', WARNING, ' in Workflow.py.')
           ec = Expression_createExprContext(StateChangeInfo(ob, self, former_status))
           expr = Expression(vdef.default_expr)
           value = expr(ec)
       else:
           value = vdef.default_value
-      LOG('zwj: generated value successfully ', WARNING, ' in Workflow.py.')
+      LOG('496: generated value successfully ', WARNING, ' in Workflow.py.')
       return value
 
   def _getWorkflowStateOf(self, ob, id_only=0):
       tool = getToolByName(self, 'portal_workflow')
-      status = tool.getStatusOf(self.id, ob)
+      id_no_suffix = '_'.join(self.id.split('_')[:-1])
+      status = tool.getStatusOf(id_no_suffix, ob)
+      LOG("502 tool is '%s' type, status is '%s'"%(tool.getPortalType(), status),WARNING, " in Workflow.py")
       if status is None:
           state = self.getSourceId()
       else:
@@ -505,7 +509,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
           if state is None:
               state = self.getSourceId()
       if id_only:
-          return state
+          return '_'.join(state.split('_')[:-1])
       else:
           return self._getOb(state, None)
 
