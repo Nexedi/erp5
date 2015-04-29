@@ -89,9 +89,29 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
+  <td>//input[@value=\'Logout\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>pause</td>\n
+  <td>3000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@value=\'Logout\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
   <td>//input[@value=\'Login\']</td>\n
   <td></td>\n
 </tr>\n
+\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Login</td>\n
