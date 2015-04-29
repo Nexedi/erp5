@@ -118,7 +118,6 @@
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
-          document.cookie = "__ac=" + \'=;expires=Thu, 01 Jan 1970 00:00:01 GMT;\';\n
         });\n
     })\n
 \n
@@ -301,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.20332.24952.65262</string> </value>
+                <value> <string>942.35810.36101.14694</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1429862553.03</float>
+                        <float>1430143960.53</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

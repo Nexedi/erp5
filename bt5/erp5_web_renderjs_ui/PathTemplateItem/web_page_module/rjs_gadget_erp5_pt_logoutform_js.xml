@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_panel.js</string> </value>
+            <value> <string>gadget_erp5_page_logout.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_panel_js</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_logoutform_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,28 +99,12 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
-(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+            <value> <string>/*global window, document, rJS, RSVP, promiseEventListener */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, document, rJS, RSVP, promiseEventListener) {\n
   "use strict";\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // temlates\n
-  /////////////////////////////////////////////////////////////////\n
-  // Precompile templates while loading the first gadget instance\n
-  var gadget_klass = rJS(window),\n
-    source_header = gadget_klass.__template_element\n
-                         .getElementById("panel-template-header")\n
-                         .innerHTML,\n
-    panel_template_header = Handlebars.compile(source_header),\n
-    source_body = gadget_klass.__template_element\n
-                         .getElementById("panel-template-body")\n
-                         .innerHTML,\n
-    panel_template_body = Handlebars.compile(source_body);\n
-\n
-  gadget_klass\n
+  rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
@@ -129,136 +113,59 @@
       g.props = {};\n
     })\n
 \n
-    //////////////////////////////////////////////\n
-    // acquired method\n
-    //////////////////////////////////////////////\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
-    .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
-    .declareAcquiredMethod(\n
-      "whoWantToDisplayThisFrontPage",\n
-      "whoWantToDisplayThisFrontPage"\n
-    )\n
-\n
     // Assign the element to a variable\n
     .ready(function (g) {\n
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
-          g.props.jelement = $(element.querySelector("div"));\n
         });\n
     })\n
-\n
-    .ready(function (g) {\n
-      g.props.jelement.panel({\n
-        display: "overlay",\n
-        position: "left",\n
-        theme: "d"\n
-        // animate: false\n
-      });\n
-    })\n
-\n
-    .ready(function (g) {\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all([\n
-            g.whoWantToDisplayThisFrontPage("front"),\n
-            g.whoWantToDisplayThisFrontPage("history"),\n
-            g.getLanguageList(),\n
-            g.whoWantToDisplayThisFrontPage("logout")\n
-          ]);\n
-        })\n
-        .push(function (all_result) {\n
-          var raw_language_list = JSON.parse(all_result[2]),\n
-            len = raw_language_list.length,\n
-            i,\n
-            i_len,\n
-            language_list,\n
-            tmp;\n
-\n
-          // XXX: Customize panel header!\n
-          tmp = panel_template_header();\n
-\n
-          // languages\n
-          if (len > 0) {\n
-            language_list = [];\n
-            for (i = 0, i_len = len; i < i_len; i += 1) {\n
-              language_list.push({"count": i, "lang": language_list[i]});\n
-            }\n
-          }\n
-\n
-          tmp += panel_template_body({\n
-            "module_href": all_result[0],\n
-            "history_href": all_result[1],\n
-            "language_list": language_list,\n
-            "logout_href": all_result[3]\n
-          });\n
-          return tmp;\n
-        })\n
-        .push(function (my_translated_or_plain_html) {\n
-          g.props.jelement.html(my_translated_or_plain_html);\n
-          g.props.jelement.trigger("create");\n
-        });\n
-    })\n
+    /////////////////////////////////////////////////////////////////\n
+    // handle acquisition\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("whoWantToDisplayThisFrontPage",\n
+      "whoWantToDisplayThisFrontPage")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod(\'toggle\', function () {\n
-      this.props.jelement.panel("toggle");\n
-    })\n
-\n
-    .declareMethod(\'render\', function () {\n
-      return;\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared services\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareService(function () {\n
-      var panel_gadget,\n
-        form_list,\n
-        event_list,\n
-        handler,\n
-        i,\n
-        len;\n
-\n
-      function translate(my_event) {\n
-        return panel_gadget.changeLanguage(my_event.target.lang.value);\n
-      }\n
-\n
-      function formSubmit() {\n
-        panel_gadget.toggle();\n
-      }\n
-\n
-      panel_gadget = this;\n
-      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
-      event_list = [];\n
-      handler = [formSubmit];\n
-\n
-      // XXX: not robust - Will break when search field is active\n
-      for (i = 0, len = form_list.length; i < len; i += 1) {\n
-        event_list[i] = loopEventListener(\n
-          form_list[i],\n
-          \'submit\',\n
-          false,\n
-          handler[i] || translate\n
-        );\n
-      }\n
-\n
+     .declareMethod("render", function () {\n
+      var gadget = this,\n
+        a;\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return RSVP.all(event_list);\n
+          return gadget.translateHtml(gadget.props.element.innerHTML);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.props.element.innerHTML = my_translated_html;\n
+        });\n
+    })\n
+    .declareService(function () {\n
+      var form_gadget = this;\n
+      // Listen to form submit\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return promiseEventListener(\n
+            form_gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            false\n
+          );\n
+        })\n
+        .push(function (evt) {\n
+          document.cookie = "__ac=" + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";\n
+          return form_gadget.whoWantToDisplayThisFrontPage("login");\n
+        })\n
+        .push(function (url) {\n
+          return form_gadget.pleaseRedirectMyHash(url);\n
         });\n
     });\n
-\n
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
-
-]]></string> </value>
+}(window, document, rJS, RSVP, promiseEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Panel JS</string> </value>
+            <value> <string>Gadget ERP5 Logout Form JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -322,7 +229,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -344,8 +251,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412350102.01</float>
-                        <string>GMT</string>
+                        <float>1430146541.64</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -389,7 +296,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.40517.64847.10325</string> </value>
+                <value> <string>942.40612.39127.41710</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -407,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430146351.8</float>
+                        <float>1430152079.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -430,11 +337,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -446,7 +355,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -464,8 +373,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1412350078.95</float>
-                        <string>GMT</string>
+                        <float>1430146508.69</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
