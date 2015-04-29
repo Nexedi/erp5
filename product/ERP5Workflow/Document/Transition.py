@@ -165,6 +165,8 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
     except KeyError:
         raise WorkflowException('Destination state undefined: ' + new_state)
 
+    LOG(" 168 object '%s' will change from state '%s' to '%s'"%(document.getId(), old_state, new_state), WARNING, " in Transition.py")
+
     # Execute the "before" script.
     before_script_success = 1
     script_id = self.getBeforeScriptId()
@@ -188,7 +190,7 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
     # Do not proceed in case of failure of before script
     if not before_script_success:
       former_status = old_state # Remain in state
-      tool.setStatusOf(workflow.getId(), document, status_dict)
+      tool.setStatusOf('_'.join(workflow.getId().split('_')[:-1]), document, status_dict)
       sci = StateChangeInfo(
         document, workflow, former_status, self, old_sdef, new_sdef, kwargs)
         # put the error message in the workflow history
@@ -208,7 +210,7 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
     status_dict['undo'] = 0
 
     # Modify workflow history
-    status_dict[state_var] = new_state
+    status_dict[state_var] = '_'.join(new_state.split('_')[:-1]) # remove suffix
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
     # update variables =========================================================
@@ -225,11 +227,12 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
 
     for vdef in workflow.objectValues(portal_type='Variable'):
       id = vdef.getId()
+      id_no_suffix = '_'.join(id.split('_')[:-1])
       if vdef.for_status == 0:
         continue
       expr = None
-      if id in state_values:
-        value = state_values[id]
+      if id_no_suffix in state_values:
+        value = state_values[id_no_suffix]
       elif id in tdef_exprs:
         expr = tdef_exprs[id]
       elif not vdef.update_always and id in former_status:
@@ -252,7 +255,7 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
           econtext = Expression_createExprContext(sci)
         expr = Expression(expr)
         value = expr(econtext)
-      status_dict[id] = value
+      status_dict[id_no_suffix] = value
 
     # Update all transition variables
     if form_kw is not None:
@@ -262,11 +265,10 @@ class Transition(IdAsReferenceMixin('_transition'), XMLObject):
       status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
     # Generate Workflow History List
-    tool.setStatusOf(workflow.getId(), document, status_dict)
+    tool.setStatusOf('_'.join(workflow.getId().split('_')[:-1]), document, status_dict)
 
     ### zwj: update Role mapping, also in Workflow, initialiseDocument()
     workflow.updateRoleMappingsFor(document)
-
     # Execute the "after" script.
     script_id = self.getAfterScriptId()
     if script_id is not None:
