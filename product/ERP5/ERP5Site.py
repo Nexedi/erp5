@@ -760,10 +760,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList(group):
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'states', None):
-          for state in wf.states.objectValues():
+        if wf.__class__.__name__ == 'Workflow':
+          for state in wf.objectValues(portal_type='State'):
             if group in getattr(state, 'type_list', ()):
-              state_dict[state.getId()] = None
+              state_dict['_'.join(state.getId().split('_')[:-1])] = None
+        else:
+          if getattr(wf, 'states', None):
+            for state in wf.states.objectValues():
+              if group in getattr(state, 'type_list', ()):
+                state_dict[state.getId()] = None
       return tuple(state_dict.keys())
 
     getStateList = CachingMethod(getStateList,
@@ -1283,12 +1288,20 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList():
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'variables', None) and \
-           wf.variables.getStateVar() == 'simulation_state':
-          if getattr(wf, 'states', None):
-            for state in wf.states.objectValues():
-              if getattr(state, 'type_list', None):
-                state_dict[state.getId()] = None
+        if wf.__class__.__name__ == 'Workflow':
+          if wf.objectValues(portal_type='Variable') and \
+              wf.getStateVariable() == 'simulation_state':
+            if wf.objectValues(portal_type='State'):
+              for state in wf.objectValues(portal_type='State'):
+                if getattr(state, 'type_list', None):
+                  state_dict['_'.join(state.getId().split('_')[:-1])] = None
+        else:
+          if getattr(wf, 'variables', None) and \
+             wf.variables.getStateVar() == 'simulation_state':
+            if getattr(wf, 'states', None):
+              for state in wf.states.objectValues():
+                if getattr(state, 'type_list', None):
+                  state_dict[state.getId()] = None
       return tuple(sorted(state_dict.keys()))
 
     getStateList = CachingMethod(getStateList,
