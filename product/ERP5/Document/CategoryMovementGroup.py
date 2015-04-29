@@ -34,6 +34,10 @@ class CategoryMovementGroup(PropertyMovementGroup):
 
   This movement group is used to group movements that have the same
   categories (eg. source, destination, etc.).
+
+  Like for equivalence tester, 'specialise' categories aren't sorted
+  alphabetically because the original order is important (see for example
+  CompositionMixin, and how Amount Generator Lines can override others).
   """
   meta_type = 'ERP5 Category Movement Group'
   portal_type = 'Category Movement Group'
@@ -42,8 +46,9 @@ class CategoryMovementGroup(PropertyMovementGroup):
     property_dict = {}
     getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)
     for prop in self.getTestedPropertyList():
-      list_prop = '%s_list' % prop
-      property_dict[list_prop] = sorted(getProperty(list_prop) or ())
+      list_prop = prop + '_list'
+      property_dict[list_prop] = (list if prop == 'specialise' else
+                                  sorted)(getProperty(list_prop) or ())
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -56,7 +61,8 @@ class CategoryMovementGroup(PropertyMovementGroup):
       target_property_list = self.getTestedPropertyList()
     getProperty = document.getProperty
     for prop in target_property_list:
-      list_prop = '%s_list' % prop
-      if property_dict[list_prop] != sorted(getProperty(list_prop)):
+      list_prop = prop + '_list'
+      if property_dict[list_prop] != (list if prop == 'specialise' else
+                                      sorted)(getProperty(list_prop)):
         return False, property_dict
     return True, property_dict
