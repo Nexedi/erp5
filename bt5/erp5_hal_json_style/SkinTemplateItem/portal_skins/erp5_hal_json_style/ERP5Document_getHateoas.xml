@@ -493,7 +493,7 @@ def renderFormDefinition(form, response_dict):\n
     if group[\'gid\'].find(\'hidden\') < 0:\n
       field_list = []\n
 \n
-      for field in form.get_fields_in_group(group[\'goid\']):\n
+      for field in form.get_fields_in_group(group[\'goid\'], include_disabled=1):\n
         field_list.append((field.id, renderRawField(field)))\n
 \n
       group_list.append((group[\'gid\'], field_list))\n
