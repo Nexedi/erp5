@@ -33,7 +33,7 @@ from Products.DCWorkflow.Guard import Guard
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Variable(IdAsReferenceMixin('_variable'), XMLObject):
+class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
     """
     A ERP5 Variable.
     """
