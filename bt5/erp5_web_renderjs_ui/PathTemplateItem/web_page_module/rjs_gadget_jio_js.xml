@@ -149,6 +149,10 @@
     .declareMethod(\'removeAttachment\', function () {\n
       var storage = this.state_parameter_dict.jio_storage;\n
       return storage.removeAttachment.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'repair\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.repair.apply(storage, arguments);\n
     });\n
 \n
 }(window, rJS, jIO));</string> </value>
@@ -286,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.55610.36294.45499</string> </value>
+                <value> <string>942.15696.23962.61542</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -304,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428655701.93</float>
+                        <float>1429085619.37</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

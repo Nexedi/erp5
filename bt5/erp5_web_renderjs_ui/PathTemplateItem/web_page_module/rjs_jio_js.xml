@@ -5678,7 +5678,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   function declareMethod(klass, name, precondition_function, post_function) {\n
     klass.prototype[name] = function () {\n
       var argument_list = arguments,\n
-        context = this;\n
+        context = this,\n
+        precondition_result;\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -5689,8 +5690,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             );\n
           }\n
         })\n
-        .push(function () {\n
+        .push(function (result) {\n
           var storage_method = context.__storage[name];\n
+          precondition_result = result;\n
           if (storage_method === undefined) {\n
             throw new jIO.util.jIOError(\n
               "Capacity \'" + name + "\' is not implemented on \'" +\n
@@ -5708,7 +5710,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             return post_function.call(\n
               context,\n
               argument_list,\n
-              result\n
+              result,\n
+              precondition_result\n
             );\n
           }\n
           return result;\n
@@ -5787,6 +5790,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   declareMethod(JioProxyStorage, \'getAttachment\', function (argument_list,\n
                                                             storage,\n
                                                             method_name) {\n
+    var result = "blob";\n
 //     if (param.storage_spec.type !== "indexeddb" &&\n
 //         param.storage_spec.type !== "dav" &&\n
 //         (param.kwargs._start !== undefined\n
@@ -5800,13 +5804,61 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 //     }\n
     checkId(argument_list, storage, method_name);\n
     checkAttachmentId(argument_list, storage, method_name);\n
-  }, function (argument_list, result) {\n
-    if (!(result instanceof Blob)) {\n
+    // Drop optional parameters, which are only used in postfunction\n
+    if (argument_list[2] !== undefined) {\n
+      result = argument_list[2].format || result;\n
+      delete argument_list[2].format;\n
+    }\n
+    return result;\n
+  }, function (argument_list, blob, convert) {\n
+    var result;\n
+    if (!(blob instanceof Blob)) {\n
       throw new jIO.util.jIOError(\n
         "\'getAttachment\' (" + argument_list[0] + " , " +\n
           argument_list[1] + ") on \'" + this.__type +\n
           "\' does not return a Blob.",\n
         501\n
+      );\n
+    }\n
+    if (convert === "blob") {\n
+      result = blob;\n
+    } else if (convert === "data_url") {\n
+      result = new RSVP.Queue()\n
+        .push(function () {\n
+          return jIO.util.readBlobAsDataURL(blob);\n
+        })\n
+        .push(function (evt) {\n
+          return evt.target.result;\n
+        });\n
+    } else if (convert === "array_buffer") {\n
+      result = new RSVP.Queue()\n
+        .push(function () {\n
+          return jIO.util.readBlobAsArrayBuffer(blob);\n
+        })\n
+        .push(function (evt) {\n
+          return evt.target.result;\n
+        });\n
+    } else if (convert === "text") {\n
+      result = new RSVP.Queue()\n
+        .push(function () {\n
+          return jIO.util.readBlobAsText(blob);\n
+        })\n
+        .push(function (evt) {\n
+          return evt.target.result;\n
+        });\n
+    } else if (convert === "json") {\n
+      result = new RSVP.Queue()\n
+        .push(function () {\n
+          return jIO.util.readBlobAsText(blob);\n
+        })\n
+        .push(function (evt) {\n
+          return JSON.parse(evt.target.result);\n
+        });\n
+    } else {\n
+      throw new jIO.util.jIOError(\n
+        this.__type + ".getAttachment format: \'" + convert +\n
+          "\' is not supported",\n
+        400\n
       );\n
     }\n
     return result;\n
@@ -5872,6 +5924,20 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   declareMethod(JioProxyStorage, "allAttachments", checkId);\n
+  declareMethod(JioProxyStorage, "repair");\n
+\n
+  JioProxyStorage.prototype.repair = function () {\n
+    var context = this,\n
+      argument_list = arguments;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        var storage_method = context.__storage.repair;\n
+        if (storage_method !== undefined) {\n
+          return context.__storage.repair.apply(context.__storage,\n
+                                                argument_list);\n
+        }\n
+      });\n
+  };\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Storage builder\n
@@ -5926,6 +5992,838 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   window.jIO = jIO;\n
 \n
 }(window, RSVP, Blob, QueryFactory, Query, FileReader));\n
+;/*\n
+ * Rusha, a JavaScript implementation of the Secure Hash Algorithm, SHA-1,\n
+ * as defined in FIPS PUB 180-1, tuned for high performance with large inputs.\n
+ * (http://github.com/srijs/rusha)\n
+ *\n
+ * Inspired by Paul Johnstons implementation (http://pajhome.org.uk/crypt/md5).\n
+ *\n
+ * Copyright (c) 2013 Sam Rijs (http://awesam.de).\n
+ * Released under the terms of the MIT license as follows:\n
+ *\n
+ * Permission is hereby granted, free of charge, to any person obtaining a\n
+ * copy of this software and associated documentation files (the "Software"),\n
+ * to deal in the Software without restriction, including without limitation\n
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,\n
+ * and/or sell copies of the Software, and to permit persons to whom the\n
+ * Software is furnished to do so, subject to the following conditions:\n
+ *\n
+ * The above copyright notice and this permission notice shall be included in\n
+ * all copies or substantial portions of the Software.\n
+ *\n
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\n
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS\n
+ * IN THE SOFTWARE.\n
+ */\n
+(function () {\n
+    // If we\'e running in Node.JS, export a module.\n
+    if (typeof module !== \'undefined\') {\n
+        module.exports = Rusha;\n
+    } else if (typeof window !== \'undefined\') {\n
+        window.Rusha = Rusha;\n
+    }\n
+    // If we\'re running in a webworker, accept\n
+    // messages containing a jobid and a buffer\n
+    // or blob object, and return the hash result.\n
+    if (typeof FileReaderSync !== \'undefined\') {\n
+        var reader = new FileReaderSync(), hasher = new Rusha(4 * 1024 * 1024);\n
+        self.onmessage = function onMessage(event) {\n
+            var hash, data = event.data.data;\n
+            try {\n
+                hash = hasher.digest(data);\n
+                self.postMessage({\n
+                    id: event.data.id,\n
+                    hash: hash\n
+                });\n
+            } catch (e) {\n
+                self.postMessage({\n
+                    id: event.data.id,\n
+                    error: e.name\n
+                });\n
+            }\n
+        };\n
+    }\n
+    var util = {\n
+            getDataType: function (data) {\n
+                if (typeof data === \'string\') {\n
+                    return \'string\';\n
+                }\n
+                if (data instanceof Array) {\n
+                    return \'array\';\n
+                }\n
+                if (typeof global !== \'undefined\' && global.Buffer && global.Buffer.isBuffer(data)) {\n
+                    return \'buffer\';\n
+                }\n
+                if (data instanceof ArrayBuffer) {\n
+                    return \'arraybuffer\';\n
+                }\n
+                if (data.buffer instanceof ArrayBuffer) {\n
+                    return \'view\';\n
+                }\n
+                if (data instanceof Blob) {\n
+                    return \'blob\';\n
+                }\n
+                throw new Error(\'Unsupported data type.\');\n
+            }\n
+        };\n
+    // The Rusha object is a wrapper around the low-level RushaCore.\n
+    // It provides means of converting different inputs to the\n
+    // format accepted by RushaCore as well as other utility methods.\n
+    function Rusha(chunkSize) {\n
+        \'use strict\';\n
+        // Private object structure.\n
+        var self$2 = { fill: 0 };\n
+        // Calculate the length of buffer that the sha1 routine uses\n
+        // including the padding.\n
+        var padlen = function (len) {\n
+            for (len += 9; len % 64 > 0; len += 1);\n
+            return len;\n
+        };\n
+        var padZeroes = function (bin, len) {\n
+            for (var i = len >> 2; i < bin.length; i++)\n
+                bin[i] = 0;\n
+        };\n
+        var padData = function (bin, chunkLen, msgLen) {\n
+            bin[chunkLen >> 2] |= 128 << 24 - (chunkLen % 4 << 3);\n
+            bin[((chunkLen >> 2) + 2 & ~15) + 14] = msgLen >> 29;\n
+            bin[((chunkLen >> 2) + 2 & ~15) + 15] = msgLen << 3;\n
+        };\n
+        // Convert a binary string and write it to the heap.\n
+        // A binary string is expected to only contain char codes < 256.\n
+        var convStr = function (H8, H32, start, len, off) {\n
+            var str = this, i, om = off % 4, lm = len % 4, j = len - lm;\n
+            if (j > 0) {\n
+                switch (om) {\n
+                case 0:\n
+                    H8[off + 3 | 0] = str.charCodeAt(start);\n
+                case 1:\n
+                    H8[off + 2 | 0] = str.charCodeAt(start + 1);\n
+                case 2:\n
+                    H8[off + 1 | 0] = str.charCodeAt(start + 2);\n
+                case 3:\n
+                    H8[off | 0] = str.charCodeAt(start + 3);\n
+                }\n
+            }\n
+            for (i = om; i < j; i = i + 4 | 0) {\n
+                H32[off + i >> 2] = str.charCodeAt(start + i) << 24 | str.charCodeAt(start + i + 1) << 16 | str.charCodeAt(start + i + 2) << 8 | str.charCodeAt(start + i + 3);\n
+            }\n
+            switch (lm) {\n
+            case 3:\n
+                H8[off + j + 1 | 0] = str.charCodeAt(start + j + 2);\n
+            case 2:\n
+                H8[off + j + 2 | 0] = str.charCodeAt(start + j + 1);\n
+            case 1:\n
+                H8[off + j + 3 | 0] = str.charCodeAt(start + j);\n
+            }\n
+        };\n
+        // Convert a buffer or array and write it to the heap.\n
+        // The buffer or array is expected to only contain elements < 256.\n
+        var convBuf = function (H8, H32, start, len, off) {\n
+            var buf = this, i, om = off % 4, lm = len % 4, j = len - lm;\n
+            if (j > 0) {\n
+                switch (om) {\n
+                case 0:\n
+                    H8[off + 3 | 0] = buf[start];\n
+                case 1:\n
+                    H8[off + 2 | 0] = buf[start + 1];\n
+                case 2:\n
+                    H8[off + 1 | 0] = buf[start + 2];\n
+                case 3:\n
+                    H8[off | 0] = buf[start + 3];\n
+                }\n
+            }\n
+            for (i = 4 - om; i < j; i = i += 4 | 0) {\n
+                H32[off + i >> 2] = buf[start + i] << 24 | buf[start + i + 1] << 16 | buf[start + i + 2] << 8 | buf[start + i + 3];\n
+            }\n
+            switch (lm) {\n
+            case 3:\n
+                H8[off + j + 1 | 0] = buf[start + j + 2];\n
+            case 2:\n
+                H8[off + j + 2 | 0] = buf[start + j + 1];\n
+            case 1:\n
+                H8[off + j + 3 | 0] = buf[start + j];\n
+            }\n
+        };\n
+        var convBlob = function (H8, H32, start, len, off) {\n
+            var blob = this, i, om = off % 4, lm = len % 4, j = len - lm;\n
+            var buf = new Uint8Array(reader.readAsArrayBuffer(blob.slice(start, start + len)));\n
+            if (j > 0) {\n
+                switch (om) {\n
+                case 0:\n
+                    H8[off + 3 | 0] = buf[0];\n
+                case 1:\n
+                    H8[off + 2 | 0] = buf[1];\n
+                case 2:\n
+                    H8[off + 1 | 0] = buf[2];\n
+                case 3:\n
+                    H8[off | 0] = buf[3];\n
+                }\n
+            }\n
+            for (i = 4 - om; i < j; i = i += 4 | 0) {\n
+                H32[off + i >> 2] = buf[i] << 24 | buf[i + 1] << 16 | buf[i + 2] << 8 | buf[i + 3];\n
+            }\n
+            switch (lm) {\n
+            case 3:\n
+                H8[off + j + 1 | 0] = buf[j + 2];\n
+            case 2:\n
+                H8[off + j + 2 | 0] = buf[j + 1];\n
+            case 1:\n
+                H8[off + j + 3 | 0] = buf[j];\n
+            }\n
+        };\n
+        var convFn = function (data) {\n
+            switch (util.getDataType(data)) {\n
+            case \'string\':\n
+                return convStr.bind(data);\n
+            case \'array\':\n
+                return convBuf.bind(data);\n
+            case \'buffer\':\n
+                return convBuf.bind(data);\n
+            case \'arraybuffer\':\n
+                return convBuf.bind(new Uint8Array(data));\n
+            case \'view\':\n
+                return convBuf.bind(new Uint8Array(data.buffer, data.byteOffset, data.byteLength));\n
+            case \'blob\':\n
+                return convBlob.bind(data);\n
+            }\n
+        };\n
+        var slice = function (data, offset) {\n
+            switch (util.getDataType(data)) {\n
+            case \'string\':\n
+                return data.slice(offset);\n
+            case \'array\':\n
+                return data.slice(offset);\n
+            case \'buffer\':\n
+                return data.slice(offset);\n
+            case \'arraybuffer\':\n
+                return data.slice(offset);\n
+            case \'view\':\n
+                return data.buffer.slice(offset);\n
+            }\n
+        };\n
+        // Convert an ArrayBuffer into its hexadecimal string representation.\n
+        var hex = function (arrayBuffer) {\n
+            var i, x, hex_tab = \'0123456789abcdef\', res = [], binarray = new Uint8Array(arrayBuffer);\n
+            for (i = 0; i < binarray.length; i++) {\n
+                x = binarray[i];\n
+                res[i] = hex_tab.charAt(x >> 4 & 15) + hex_tab.charAt(x >> 0 & 15);\n
+            }\n
+            return res.join(\'\');\n
+        };\n
+        var ceilHeapSize = function (v) {\n
+            // The asm.js spec says:\n
+            // The heap object\'s byteLength must be either\n
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.\n
+            // Also, byteLengths smaller than 2^16 are deprecated.\n
+            var p;\n
+            // If v is smaller than 2^16, the smallest possible solution\n
+            // is 2^16.\n
+            if (v <= 65536)\n
+                return 65536;\n
+            // If v < 2^24, we round up to 2^n,\n
+            // otherwise we round up to 2^24 * n.\n
+            if (v < 16777216) {\n
+                for (p = 1; p < v; p = p << 1);\n
+            } else {\n
+                for (p = 16777216; p < v; p += 16777216);\n
+            }\n
+            return p;\n
+        };\n
+        // Initialize the internal data structures to a new capacity.\n
+        var init = function (size) {\n
+            if (size % 64 > 0) {\n
+                throw new Error(\'Chunk size must be a multiple of 128 bit\');\n
+            }\n
+            self$2.maxChunkLen = size;\n
+            self$2.padMaxChunkLen = padlen(size);\n
+            // The size of the heap is the sum of:\n
+            // 1. The padded input message size\n
+            // 2. The extended space the algorithm needs (320 byte)\n
+            // 3. The 160 bit state the algoritm uses\n
+            self$2.heap = new ArrayBuffer(ceilHeapSize(self$2.padMaxChunkLen + 320 + 20));\n
+            self$2.h32 = new Int32Array(self$2.heap);\n
+            self$2.h8 = new Int8Array(self$2.heap);\n
+            self$2.core = RushaCore({\n
+                Int32Array: Int32Array,\n
+                DataView: DataView\n
+            }, {}, self$2.heap);\n
+            self$2.buffer = null;\n
+        };\n
+        // Iinitializethe datastructures according\n
+        // to a chunk siyze.\n
+        init(chunkSize || 64 * 1024);\n
+        var initState = function (heap, padMsgLen) {\n
+            var io = new Int32Array(heap, padMsgLen + 320, 5);\n
+            io[0] = 1732584193;\n
+            io[1] = -271733879;\n
+            io[2] = -1732584194;\n
+            io[3] = 271733878;\n
+            io[4] = -1009589776;\n
+        };\n
+        var padChunk = function (chunkLen, msgLen) {\n
+            var padChunkLen = padlen(chunkLen);\n
+            var view = new Int32Array(self$2.heap, 0, padChunkLen >> 2);\n
+            padZeroes(view, chunkLen);\n
+            padData(view, chunkLen, msgLen);\n
+            return padChunkLen;\n
+        };\n
+        // Write data to the heap.\n
+        var write = function (data, chunkOffset, chunkLen) {\n
+            convFn(data)(self$2.h8, self$2.h32, chunkOffset, chunkLen, 0);\n
+        };\n
+        // Initialize and call the RushaCore,\n
+        // assuming an input buffer of length len * 4.\n
+        var coreCall = function (data, chunkOffset, chunkLen, msgLen, finalize) {\n
+            var padChunkLen = chunkLen;\n
+            if (finalize) {\n
+                padChunkLen = padChunk(chunkLen, msgLen);\n
+            }\n
+            write(data, chunkOffset, chunkLen);\n
+            self$2.core.hash(padChunkLen, self$2.padMaxChunkLen);\n
+        };\n
+        var getRawDigest = function (heap, padMaxChunkLen) {\n
+            var io = new Int32Array(heap, padMaxChunkLen + 320, 5);\n
+            var out = new Int32Array(5);\n
+            var arr = new DataView(out.buffer);\n
+            arr.setInt32(0, io[0], false);\n
+            arr.setInt32(4, io[1], false);\n
+            arr.setInt32(8, io[2], false);\n
+            arr.setInt32(12, io[3], false);\n
+            arr.setInt32(16, io[4], false);\n
+            return out;\n
+        };\n
+        // Calculate the hash digest as an array of 5 32bit integers.\n
+        var rawDigest = this.rawDigest = function (str) {\n
+                var msgLen = str.byteLength || str.length || str.size || 0;\n
+                initState(self$2.heap, self$2.padMaxChunkLen);\n
+                var chunkOffset = 0, chunkLen = self$2.maxChunkLen, last;\n
+                for (chunkOffset = 0; msgLen > chunkOffset + chunkLen; chunkOffset += chunkLen) {\n
+                    coreCall(str, chunkOffset, chunkLen, msgLen, false);\n
+                }\n
+                coreCall(str, chunkOffset, msgLen - chunkOffset, msgLen, true);\n
+                return getRawDigest(self$2.heap, self$2.padMaxChunkLen);\n
+            };\n
+        // The digest and digestFrom* interface returns the hash digest\n
+        // as a hex string.\n
+        this.digest = this.digestFromString = this.digestFromBuffer = this.digestFromArrayBuffer = function (str) {\n
+            return hex(rawDigest(str).buffer);\n
+        };\n
+    }\n
+    ;\n
+    // The low-level RushCore module provides the heart of Rusha,\n
+    // a high-speed sha1 implementation working on an Int32Array heap.\n
+    // At first glance, the implementation seems complicated, however\n
+    // with the SHA1 spec at hand, it is obvious this almost a textbook\n
+    // implementation that has a few functions hand-inlined and a few loops\n
+    // hand-unrolled.\n
+    function RushaCore(stdlib, foreign, heap) {\n
+        \'use asm\';\n
+        var H = new stdlib.Int32Array(heap);\n
+        function hash(k, x) {\n
+            // k in bytes\n
+            k = k | 0;\n
+            x = x | 0;\n
+            var i = 0, j = 0, y0 = 0, z0 = 0, y1 = 0, z1 = 0, y2 = 0, z2 = 0, y3 = 0, z3 = 0, y4 = 0, z4 = 0, t0 = 0, t1 = 0;\n
+            y0 = H[x + 320 >> 2] | 0;\n
+            y1 = H[x + 324 >> 2] | 0;\n
+            y2 = H[x + 328 >> 2] | 0;\n
+            y3 = H[x + 332 >> 2] | 0;\n
+            y4 = H[x + 336 >> 2] | 0;\n
+            for (i = 0; (i | 0) < (k | 0); i = i + 64 | 0) {\n
+                z0 = y0;\n
+                z1 = y1;\n
+                z2 = y2;\n
+                z3 = y3;\n
+                z4 = y4;\n
+                for (j = 0; (j | 0) < 64; j = j + 4 | 0) {\n
+                    t1 = H[i + j >> 2] | 0;\n
+                    t0 = ((y0 << 5 | y0 >>> 27) + (y1 & y2 | ~y1 & y3) | 0) + ((t1 + y4 | 0) + 1518500249 | 0) | 0;\n
+                    y4 = y3;\n
+                    y3 = y2;\n
+                    y2 = y1 << 30 | y1 >>> 2;\n
+                    y1 = y0;\n
+                    y0 = t0;\n
+                    ;\n
+                    H[k + j >> 2] = t1;\n
+                }\n
+                for (j = k + 64 | 0; (j | 0) < (k + 80 | 0); j = j + 4 | 0) {\n
+                    t1 = (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) << 1 | (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) >>> 31;\n
+                    t0 = ((y0 << 5 | y0 >>> 27) + (y1 & y2 | ~y1 & y3) | 0) + ((t1 + y4 | 0) + 1518500249 | 0) | 0;\n
+                    y4 = y3;\n
+                    y3 = y2;\n
+                    y2 = y1 << 30 | y1 >>> 2;\n
+                    y1 = y0;\n
+                    y0 = t0;\n
+                    ;\n
+                    H[j >> 2] = t1;\n
+                }\n
+                for (j = k + 80 | 0; (j | 0) < (k + 160 | 0); j = j + 4 | 0) {\n
+                    t1 = (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) << 1 | (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) >>> 31;\n
+                    t0 = ((y0 << 5 | y0 >>> 27) + (y1 ^ y2 ^ y3) | 0) + ((t1 + y4 | 0) + 1859775393 | 0) | 0;\n
+                    y4 = y3;\n
+                    y3 = y2;\n
+                    y2 = y1 << 30 | y1 >>> 2;\n
+                    y1 = y0;\n
+                    y0 = t0;\n
+                    ;\n
+                    H[j >> 2] = t1;\n
+                }\n
+                for (j = k + 160 | 0; (j | 0) < (k + 240 | 0); j = j + 4 | 0) {\n
+                    t1 = (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) << 1 | (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) >>> 31;\n
+                    t0 = ((y0 << 5 | y0 >>> 27) + (y1 & y2 | y1 & y3 | y2 & y3) | 0) + ((t1 + y4 | 0) - 1894007588 | 0) | 0;\n
+                    y4 = y3;\n
+                    y3 = y2;\n
+                    y2 = y1 << 30 | y1 >>> 2;\n
+                    y1 = y0;\n
+                    y0 = t0;\n
+                    ;\n
+                    H[j >> 2] = t1;\n
+                }\n
+                for (j = k + 240 | 0; (j | 0) < (k + 320 | 0); j = j + 4 | 0) {\n
+                    t1 = (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) << 1 | (H[j - 12 >> 2] ^ H[j - 32 >> 2] ^ H[j - 56 >> 2] ^ H[j - 64 >> 2]) >>> 31;\n
+                    t0 = ((y0 << 5 | y0 >>> 27) + (y1 ^ y2 ^ y3) | 0) + ((t1 + y4 | 0) - 899497514 | 0) | 0;\n
+                    y4 = y3;\n
+                    y3 = y2;\n
+                    y2 = y1 << 30 | y1 >>> 2;\n
+                    y1 = y0;\n
+                    y0 = t0;\n
+                    ;\n
+                    H[j >> 2] = t1;\n
+                }\n
+                y0 = y0 + z0 | 0;\n
+                y1 = y1 + z1 | 0;\n
+                y2 = y2 + z2 | 0;\n
+                y3 = y3 + z3 | 0;\n
+                y4 = y4 + z4 | 0;\n
+            }\n
+            H[x + 320 >> 2] = y0;\n
+            H[x + 324 >> 2] = y1;\n
+            H[x + 328 >> 2] = y2;\n
+            H[x + 332 >> 2] = y3;\n
+            H[x + 336 >> 2] = y4;\n
+        }\n
+        return { hash: hash };\n
+    }\n
+}());;/*\n
+ * JIO extension for resource replication.\n
+ * Copyright (C) 2013, 2015  Nexedi SA\n
+ *\n
+ *   This library is free software: you can redistribute it and/or modify\n
+ *   it under the terms of the GNU Lesser General Public License as published by\n
+ *   the Free Software Foundation, either version 3 of the License, or\n
+ *   (at your option) any later version.\n
+ *\n
+ *   This library is distributed in the hope that it will be useful,\n
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+ *   GNU Lesser General Public License for more details.\n
+ *\n
+ *   You should have received a copy of the GNU Lesser General Public License\n
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.\n
+ */\n
+\n
+/*jslint nomen: true*/\n
+/*global jIO, RSVP, Rusha*/\n
+\n
+(function (jIO, RSVP, Rusha) {\n
+  "use strict";\n
+\n
+  var rusha = new Rusha();\n
+\n
+  /****************************************************\n
+   Use a local jIO to read/write/search documents\n
+   Synchronize in background those document with a remote jIO.\n
+   Synchronization status is stored for each document as an local attachment.\n
+  ****************************************************/\n
+\n
+  function generateHash(content) {\n
+    // XXX Improve performance by moving calculation to WebWorker\n
+    return rusha.digestFromString(content);\n
+  }\n
+\n
+  function ReplicateStorage(spec) {\n
+    this._query_options = spec.query || {};\n
+\n
+    this._local_sub_storage = jIO.createJIO(spec.local_sub_storage);\n
+    this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);\n
+\n
+    this._signature_hash = "_replicate_" + generateHash(\n
+      JSON.stringify(spec.local_sub_storage) +\n
+        JSON.stringify(spec.remote_sub_storage) +\n
+        JSON.stringify(this._query_options)\n
+    );\n
+    this._signature_sub_storage = jIO.createJIO({\n
+      type: "document",\n
+      document_id: this._signature_hash,\n
+      sub_storage: spec.local_sub_storage\n
+    });\n
+\n
+    this._use_remote_post = spec.use_remote_post || false;\n
+  }\n
+\n
+  ReplicateStorage.prototype.remove = function (id) {\n
+    if (id === this._signature_hash) {\n
+      throw new jIO.util.jIOError(this._signature_hash + " is frozen",\n
+                                  403);\n
+    }\n
+    return this._local_sub_storage.remove.apply(this._local_sub_storage,\n
+                                                arguments);\n
+  };\n
+  ReplicateStorage.prototype.post = function () {\n
+    return this._local_sub_storage.post.apply(this._local_sub_storage,\n
+                                              arguments);\n
+  };\n
+  ReplicateStorage.prototype.put = function (id) {\n
+    if (id === this._signature_hash) {\n
+      throw new jIO.util.jIOError(this._signature_hash + " is frozen",\n
+                                  403);\n
+    }\n
+    return this._local_sub_storage.put.apply(this._local_sub_storage,\n
+                                             arguments);\n
+  };\n
+  ReplicateStorage.prototype.get = function () {\n
+    return this._local_sub_storage.get.apply(this._local_sub_storage,\n
+                                             arguments);\n
+  };\n
+  ReplicateStorage.prototype.hasCapacity = function () {\n
+    return this._local_sub_storage.hasCapacity.apply(this._local_sub_storage,\n
+                                                     arguments);\n
+  };\n
+  ReplicateStorage.prototype.buildQuery = function () {\n
+    // XXX Remove signature document?\n
+    return this._local_sub_storage.buildQuery.apply(this._local_sub_storage,\n
+                                                    arguments);\n
+  };\n
+\n
+  ReplicateStorage.prototype.repair = function () {\n
+    var context = this,\n
+      argument_list = arguments,\n
+      skip_document_dict = {};\n
+\n
+    // Do not sync the signature document\n
+    skip_document_dict[context._signature_hash] = null;\n
+\n
+    function propagateModification(destination, doc, hash, id, options) {\n
+      var result,\n
+        to_skip = true;\n
+      if (options === undefined) {\n
+        options = {};\n
+      }\n
+      if (options.use_post) {\n
+        result = destination.post(doc)\n
+          .push(function () {\n
+            to_skip = false;\n
+          });\n
+      } else {\n
+        result = destination.put(id, doc);\n
+      }\n
+      return result\n
+        .push(function () {\n
+          return context._signature_sub_storage.put(id, {\n
+            "hash": hash\n
+          });\n
+        })\n
+        .push(function () {\n
+          if (to_skip) {\n
+            skip_document_dict[id] = null;\n
+          }\n
+        });\n
+    }\n
+\n
+    function checkLocalCreation(queue, source, destination, id, options) {\n
+      var remote_doc;\n
+      queue\n
+        .push(function () {\n
+          return destination.get(id);\n
+        })\n
+        .push(function (doc) {\n
+          remote_doc = doc;\n
+        }, function (error) {\n
+          if ((error instanceof jIO.util.jIOError) &&\n
+              (error.status_code === 404)) {\n
+            // This document was never synced.\n
+            // Push it to the remote storage and store sync information\n
+            return;\n
+          }\n
+          throw error;\n
+        })\n
+        .push(function () {\n
+          // This document was never synced.\n
+          // Push it to the remote storage and store sync information\n
+          return source.get(id);\n
+        })\n
+        .push(function (doc) {\n
+          var local_hash = generateHash(JSON.stringify(doc)),\n
+            remote_hash;\n
+          if (remote_doc === undefined) {\n
+            return propagateModification(destination, doc, local_hash, id,\n
+                                         options);\n
+          }\n
+\n
+          remote_hash = generateHash(JSON.stringify(remote_doc));\n
+          if (local_hash === remote_hash) {\n
+            // Same document\n
+            return context._signature_sub_storage.put(id, {\n
+              "hash": local_hash\n
+            })\n
+              .push(function () {\n
+                skip_document_dict[id] = null;\n
+              });\n
+          }\n
+          // Already exists on destination\n
+          throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
+                                      409);\n
+        });\n
+    }\n
+\n
+    function checkLocalDeletion(queue, destination, id, source) {\n
+      var status_hash;\n
+      queue\n
+        .push(function () {\n
+          return context._signature_sub_storage.get(id);\n
+        })\n
+        .push(function (result) {\n
+          status_hash = result.hash;\n
+          return destination.get(id)\n
+            .push(function (doc) {\n
+              var remote_hash = generateHash(JSON.stringify(doc));\n
+              if (remote_hash === status_hash) {\n
+                return destination.remove(id)\n
+                  .push(function () {\n
+                    return context._signature_sub_storage.remove(id);\n
+                  })\n
+                  .push(function () {\n
+                    skip_document_dict[id] = null;\n
+                  });\n
+              }\n
+              // Modifications on remote side\n
+              // Push them locally\n
+              return propagateModification(source, doc, remote_hash, id);\n
+            }, function (error) {\n
+              if ((error instanceof jIO.util.jIOError) &&\n
+                  (error.status_code === 404)) {\n
+                return context._signature_sub_storage.remove(id)\n
+                  .push(function () {\n
+                    skip_document_dict[id] = null;\n
+                  });\n
+              }\n
+              throw error;\n
+            });\n
+        });\n
+    }\n
+\n
+    function checkSignatureDifference(queue, source, destination, id) {\n
+      queue\n
+        .push(function () {\n
+          return RSVP.all([\n
+            source.get(id),\n
+            context._signature_sub_storage.get(id)\n
+          ]);\n
+        })\n
+        .push(function (result_list) {\n
+          var doc = result_list[0],\n
+            local_hash = generateHash(JSON.stringify(doc)),\n
+            status_hash = result_list[1].hash;\n
+\n
+          if (local_hash !== status_hash) {\n
+            // Local modifications\n
+            return destination.get(id)\n
+              .push(function (remote_doc) {\n
+                var remote_hash = generateHash(JSON.stringify(remote_doc));\n
+                if (remote_hash !== status_hash) {\n
+                  // Modifications on both sides\n
+                  if (local_hash === remote_hash) {\n
+                    // Same modifications on both side \\o/\n
+                    return context._signature_sub_storage.put(id, {\n
+                      "hash": local_hash\n
+                    })\n
+                      .push(function () {\n
+                        skip_document_dict[id] = null;\n
+                      });\n
+                  }\n
+                  throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
+                                              409);\n
+                }\n
+                return propagateModification(destination, doc, local_hash, id);\n
+              }, function (error) {\n
+                if ((error instanceof jIO.util.jIOError) &&\n
+                    (error.status_code === 404)) {\n
+                  // Document has been deleted remotely\n
+                  return propagateModification(destination, doc, local_hash,\n
+                                               id);\n
+                }\n
+                throw error;\n
+              });\n
+          }\n
+        });\n
+    }\n
+\n
+    function pushStorage(source, destination, options) {\n
+      var queue = new RSVP.Queue();\n
+      if (!options.hasOwnProperty("use_post")) {\n
+        options.use_post = false;\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return RSVP.all([\n
+            source.allDocs(context._query_options),\n
+            context._signature_sub_storage.allDocs()\n
+          ]);\n
+        })\n
+        .push(function (result_list) {\n
+          var i,\n
+            local_dict = {},\n
+            signature_dict = {},\n
+            key;\n
+          for (i = 0; i < result_list[0].data.total_rows; i += 1) {\n
+            if (!skip_document_dict.hasOwnProperty(\n
+                result_list[0].data.rows[i].id\n
+              )) {\n
+              local_dict[result_list[0].data.rows[i].id] = i;\n
+            }\n
+          }\n
+          for (i = 0; i < result_list[1].data.total_rows; i += 1) {\n
+            if (!skip_document_dict.hasOwnProperty(\n
+                result_list[1].data.rows[i].id\n
+              )) {\n
+              signature_dict[result_list[1].data.rows[i].id] = i;\n
+            }\n
+          }\n
+          for (key in local_dict) {\n
+            if (local_dict.hasOwnProperty(key)) {\n
+              if (!signature_dict.hasOwnProperty(key)) {\n
+                checkLocalCreation(queue, source, destination, key, options);\n
+              }\n
+            }\n
+          }\n
+          for (key in signature_dict) {\n
+            if (signature_dict.hasOwnProperty(key)) {\n
+              if (local_dict.hasOwnProperty(key)) {\n
+                checkSignatureDifference(queue, source, destination, key);\n
+              } else {\n
+                checkLocalDeletion(queue, destination, key, source);\n
+              }\n
+            }\n
+          }\n
+        });\n
+    }\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        // Ensure that the document storage is usable\n
+        return context._signature_sub_storage.__storage._sub_storage.get(\n
+          context._signature_hash\n
+        );\n
+      })\n
+      .push(undefined, function (error) {\n
+        if ((error instanceof jIO.util.jIOError) &&\n
+            (error.status_code === 404)) {\n
+          return context._signature_sub_storage.__storage._sub_storage.put(\n
+            context._signature_hash,\n
+            {}\n
+          );\n
+        }\n
+        throw error;\n
+      })\n
+\n
+      .push(function () {\n
+        return RSVP.all([\n
+// Don\'t repair local_sub_storage twice\n
+//           context._signature_sub_storage.repair.apply(\n
+//             context._signature_sub_storage,\n
+//             argument_list\n
+//           ),\n
+          context._local_sub_storage.repair.apply(\n
+            context._local_sub_storage,\n
+            argument_list\n
+          ),\n
+          context._remote_sub_storage.repair.apply(\n
+            context._remote_sub_storage,\n
+            argument_list\n
+          )\n
+        ]);\n
+      })\n
+\n
+      .push(function () {\n
+        return pushStorage(context._local_sub_storage,\n
+                           context._remote_sub_storage,\n
+                           {use_post: context._use_remote_post});\n
+      })\n
+      .push(function () {\n
+        return pushStorage(context._remote_sub_storage,\n
+                           context._local_sub_storage, {});\n
+      });\n
+  };\n
+\n
+  jIO.addStorage(\'replicate\', ReplicateStorage);\n
+\n
+}(jIO, RSVP, Rusha));\n
+;/*\n
+ * Copyright 2015, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+\n
+/*jslint nomen: true*/\n
+/*global Rusha*/\n
+\n
+/**\n
+ * JIO Sha Storage. Type = \'sha\'.\n
+ */\n
+\n
+(function (Rusha) {\n
+  "use strict";\n
+\n
+  var rusha = new Rusha();\n
+\n
+  function ShaStorage(spec) {\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+  }\n
+\n
+  ShaStorage.prototype.post = function (param) {\n
+    return this._sub_storage.put(\n
+      rusha.digestFromString(JSON.stringify(param)),\n
+      param\n
+    );\n
+  };\n
+\n
+  ShaStorage.prototype.get = function () {\n
+    return this._sub_storage.get.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.remove = function () {\n
+    return this._sub_storage.remove.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.hasCapacity = function () {\n
+    return this._sub_storage.hasCapacity.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.buildQuery = function () {\n
+    return this._sub_storage.buildQuery.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.getAttachment = function () {\n
+    return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.putAttachment = function () {\n
+    return this._sub_storage.putAttachment.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.removeAttachment = function () {\n
+    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
+                                                    arguments);\n
+  };\n
+  ShaStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);\n
+  };\n
+  ShaStorage.prototype.repair = function () {\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
+  };\n
+\n
+  jIO.addStorage(\'sha\', ShaStorage);\n
+\n
+}(Rusha));\n
 ;/*jslint nomen: true*/\n
 (function (jIO) {\n
   "use strict";\n
@@ -5977,6 +6875,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   UUIDStorage.prototype.removeAttachment = function () {\n
     return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
                                                     arguments);\n
+  };\n
+  UUIDStorage.prototype.repair = function () {\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
   };\n
   UUIDStorage.prototype.hasCapacity = function (name) {\n
     return this._sub_storage.hasCapacity(name);\n
@@ -6755,6 +7656,48 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return false;\n
   };\n
 \n
+  UnionStorage.prototype.repair = function () {\n
+    var i,\n
+      promise_list = [];\n
+    for (i = 0; i < this._storage_list.length; i += 1) {\n
+      promise_list.push(this._storage_list[i].repair.apply(\n
+        this._storage_list[i],\n
+        arguments\n
+      ));\n
+    }\n
+    return RSVP.all(promise_list);\n
+  };\n
+\n
+  UnionStorage.prototype.getAttachment = function () {\n
+    var argument_list = arguments,\n
+      context = this;\n
+    return this._getWithStorageIndex.apply(this, arguments)\n
+      .push(function (result) {\n
+        var sub_storage = context._storage_list[result[0]];\n
+        return sub_storage.getAttachment.apply(sub_storage, argument_list);\n
+      });\n
+  };\n
+\n
+  UnionStorage.prototype.putAttachment = function () {\n
+    var argument_list = arguments,\n
+      context = this;\n
+    return this._getWithStorageIndex.apply(this, arguments)\n
+      .push(function (result) {\n
+        var sub_storage = context._storage_list[result[0]];\n
+        return sub_storage.putAttachment.apply(sub_storage, argument_list);\n
+      });\n
+  };\n
+\n
+  UnionStorage.prototype.removeAttachment = function () {\n
+    var argument_list = arguments,\n
+      context = this;\n
+    return this._getWithStorageIndex.apply(this, arguments)\n
+      .push(function (result) {\n
+        var sub_storage = context._storage_list[result[0]];\n
+        return sub_storage.removeAttachment.apply(sub_storage, argument_list);\n
+      });\n
+  };\n
+\n
   jIO.addStorage(\'union\', UnionStorage);\n
 \n
 }(jIO, RSVP));\n
@@ -6798,17 +7741,80 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return getSiteDocument(storage)\n
       .push(function (site_hal) {\n
         // XXX need to get modified metadata\n
-        return jIO.util.ajax({\n
-          "type": "GET",\n
-          "url": UriTemplate.parse(site_hal._links.traverse.href)\n
-                            .expand({\n
-              relative_url: id,\n
-              view: options._view\n
-            }),\n
-          "xhrFields": {\n
-            withCredentials: true\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return jIO.util.ajax({\n
+              "type": "GET",\n
+              "url": UriTemplate.parse(site_hal._links.traverse.href)\n
+                                .expand({\n
+                  relative_url: id,\n
+                  view: options._view\n
+                }),\n
+              "xhrFields": {\n
+                withCredentials: true\n
+              }\n
+            });\n
+          })\n
+          .push(undefined, function (error) {\n
+            if ((error.target !== undefined) &&\n
+                (error.target.status === 404)) {\n
+              throw new jIO.util.jIOError("Cannot find document: " + id, 404);\n
+            }\n
+            throw error;\n
+          });\n
+      });\n
+  }\n
+\n
+  var allowed_field_dict = {\n
+    "StringField": null,\n
+    "IntegerField": null,\n
+    "FloatField": null,\n
+    "TextAreaField": null\n
+  };\n
+\n
+  function extractPropertyFromForm(context, id) {\n
+    return context.getAttachment(id, "view")\n
+      .push(function (blob) {\n
+        return jIO.util.readBlobAsText(blob);\n
+      })\n
+      .push(function (evt) {\n
+        return JSON.parse(evt.target.result);\n
+      })\n
+      .push(function (json) {\n
+        var form = json._embedded._view,\n
+          converted_json = {\n
+            portal_type: json.portal_type\n
+          },\n
+          form_data_json = {},\n
+          field,\n
+          key;\n
+\n
+        form_data_json.form_id = {\n
+          "key": [form.form_id.key],\n
+          "default": form.form_id["default"]\n
+        };\n
+        // XXX How to store datetime\n
+        for (key in form) {\n
+          if (form.hasOwnProperty(key)) {\n
+            field = form[key];\n
+            if ((key.indexOf(\'my_\') === 0) &&\n
+                (field.editable) &&\n
+                (allowed_field_dict.hasOwnProperty(field.type))) {\n
+\n
+              form_data_json[key.substring(3)] = {\n
+                "default": field["default"],\n
+                "key": field.key\n
+              };\n
+              converted_json[key.substring(3)] = field["default"];\n
+            }\n
           }\n
-        });\n
+        }\n
+\n
+        return {\n
+          action_href: form._actions.put.href,\n
+          data: converted_json,\n
+          form_data: form_data_json\n
+        };\n
       });\n
   }\n
 \n
@@ -6823,29 +7829,98 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
 \n
   ERP5Storage.prototype.get = function (id) {\n
-    return getDocumentAndHateoas(this, id)\n
-      .push(function (response) {\n
-        var result = JSON.parse(response.target.responseText),\n
-          key;\n
-          // action_type;\n
-        result.portal_type = result._links.type.name;\n
-\n
+    return extractPropertyFromForm(this, id)\n
+      .push(function (result) {\n
+        var key;\n
+        result = result.data;\n
         // Remove all ERP5 hateoas links / convert them into jIO ID\n
         for (key in result) {\n
           if (result.hasOwnProperty(key)) {\n
-            if (key.indexOf("_") === 0) {\n
+            if (!result[key]) {\n
               delete result[key];\n
             }\n
           }\n
         }\n
-\n
         return result;\n
       });\n
   };\n
 \n
+  ERP5Storage.prototype.post = function (data) {\n
+    var context = this,\n
+      new_id;\n
+\n
+    return getSiteDocument(this)\n
+      .push(function (site_hal) {\n
+        var form_data = new FormData();\n
+        form_data.append("portal_type", data.portal_type);\n
+        form_data.append("parent_relative_url", data.parent_relative_url);\n
+        return jIO.util.ajax({\n
+          type: "POST",\n
+          url: site_hal._actions.add.href,\n
+          data: form_data,\n
+          xhrFields: {\n
+            withCredentials: true\n
+          }\n
+        });\n
+      })\n
+      .push(function (evt) {\n
+        var location = evt.target.getResponseHeader("X-Location"),\n
+          uri = new URI(location);\n
+        new_id = uri.segment(2);\n
+        return context.put(new_id, data);\n
+      })\n
+      .push(function () {\n
+        return new_id;\n
+      });\n
+  };\n
+\n
+  ERP5Storage.prototype.put = function (id, data) {\n
+    var context = this;\n
+\n
+    return extractPropertyFromForm(context, id)\n
+      .push(function (result) {\n
+        var key,\n
+          json = result.form_data,\n
+          form_data = {};\n
+        form_data[json.form_id.key] = json.form_id["default"];\n
+\n
+        // XXX How to store datetime:!!!!!\n
+        for (key in data) {\n
+          if (data.hasOwnProperty(key)) {\n
+            if (key === "form_id") {\n
+              throw new jIO.util.jIOError(\n
+                "ERP5: forbidden property: " + key,\n
+                400\n
+              );\n
+            }\n
+            if ((key !== "portal_type") && (key !== "parent_relative_url")) {\n
+              if (!json.hasOwnProperty(key)) {\n
+                throw new jIO.util.jIOError(\n
+                  "ERP5: can not store property: " + key,\n
+                  400\n
+                );\n
+              }\n
+              form_data[json[key].key] = data[key];\n
+            }\n
+          }\n
+        }\n
+        return context.putAttachment(\n
+          id,\n
+          result.action_href,\n
+          new Blob([JSON.stringify(form_data)], {type: "application/json"})\n
+        );\n
+      });\n
+  };\n
+\n
   ERP5Storage.prototype.allAttachments = function (id) {\n
+    var context = this;\n
     return getDocumentAndHateoas(this, id)\n
       .push(function () {\n
+        if (context._default_view_reference === undefined) {\n
+          return {\n
+            links: {}\n
+          };\n
+        }\n
         return {\n
           view: {},\n
           links: {}\n
@@ -6856,6 +7931,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   ERP5Storage.prototype.getAttachment = function (id, action) {\n
 \n
     if (action === "view") {\n
+      if (this._default_view_reference === undefined) {\n
+        throw new jIO.util.jIOError(\n
+          "Cannot find attachment view for: " + id,\n
+          404\n
+        );\n
+      }\n
       return getDocumentAndHateoas(this, id,\n
                                    {"_view": this._default_view_reference})\n
         .push(function (response) {\n
@@ -7031,6 +8112,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   QueryStorage.prototype.removeAttachment = function () {\n
     return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
                                                     arguments);\n
+  };\n
+  QueryStorage.prototype.repair = function () {\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
   };\n
 \n
   QueryStorage.prototype.hasCapacity = function (name) {\n
@@ -7208,10 +8292,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     this._sub_storage = jIO.createJIO(spec.sub_storage);\n
   }\n
   var DOCUMENT_EXTENSION = ".json",\n
-    DOCUMENT_REGEXP = new RegExp("^([\\\\w=]+)" +\n
-                                 DOCUMENT_EXTENSION + "$"),\n
     DOCUMENT_KEY = "/.jio_documents/",\n
     ROOT = "/";\n
+\n
+  function endsWith(str, suffix) {\n
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;\n
+  }\n
 \n
   FileSystemBridgeStorage.prototype.get = function (id) {\n
     var context = this;\n
@@ -7223,18 +8309,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         // First get the document itself if it exists\n
         return context._sub_storage.getAttachment(\n
           DOCUMENT_KEY,\n
-          id + DOCUMENT_EXTENSION\n
+          id + DOCUMENT_EXTENSION,\n
+          {format: "json"}\n
         );\n
       })\n
-      .push(function (blob) {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return jIO.util.readBlobAsText(blob);\n
-          })\n
-          .push(function (text) {\n
-            return JSON.parse(text.target.result);\n
-          });\n
-      }, function (error) {\n
+      .push(undefined, function (error) {\n
         if ((error instanceof jIO.util.jIOError) &&\n
             (error.status_code === 404)) {\n
 \n
@@ -7368,8 +8447,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         var key;\n
         for (key in result) {\n
           if (result.hasOwnProperty(key)) {\n
-            if (DOCUMENT_REGEXP.test(key)) {\n
-              result_dict[DOCUMENT_REGEXP.exec(key)[1]] = null;\n
+            if (endsWith(key, DOCUMENT_EXTENSION)) {\n
+              result_dict[key.substring(\n
+                0,\n
+                key.length - DOCUMENT_EXTENSION.length\n
+              )] = null;\n
             }\n
           }\n
         }\n
@@ -7444,6 +8526,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return this._sub_storage.removeAttachment(ROOT, id);\n
   };\n
 \n
+  FileSystemBridgeStorage.prototype.repair = function () {\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
+  };\n
+\n
   jIO.addStorage(\'drivetojiomapping\', FileSystemBridgeStorage);\n
 \n
 }(jIO, RSVP, Blob));\n
@@ -7478,14 +8564,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   DocumentStorage.prototype.get = function (id) {\n
     return this._sub_storage.getAttachment(\n
       this._document_id,\n
-      getSubAttachmentIdFromParam(id)\n
-    )\n
-      .push(function (blob) {\n
-        return jIO.util.readBlobAsText(blob);\n
-      })\n
-      .push(function (text) {\n
-        return JSON.parse(text.target.result);\n
-      });\n
+      getSubAttachmentIdFromParam(id),\n
+      {format: "json"}\n
+    );\n
   };\n
 \n
   DocumentStorage.prototype.allAttachments = function (id) {\n
@@ -7535,6 +8616,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       .push(function () {\n
         return id;\n
       });\n
+  };\n
+\n
+  DocumentStorage.prototype.repair = function () {\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
   };\n
 \n
   DocumentStorage.prototype.hasCapacity = function (capacity) {\n
@@ -7877,6 +8962,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   IndexedDBStorage.prototype.getAttachment = function (id, name, options) {\n
     var transaction,\n
+      type,\n
       start,\n
       end;\n
     if (options === undefined) {\n
@@ -7897,6 +8983,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           start_index,\n
           end_index;\n
 \n
+        type = attachment.info.content_type;\n
         start = options.start || 0;\n
         end = options.end || total_length;\n
         if (end > total_length) {\n
@@ -7934,8 +9021,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         for (i = 0; i < len; i += 1) {\n
           array_buffer_list.push(result_list[i].blob);\n
         }\n
+        if ((options.start === undefined) && (options.end === undefined)) {\n
+          return new Blob(array_buffer_list, {type: type});\n
+        }\n
         blob = new Blob(array_buffer_list, {type: "application/octet-stream"});\n
-        return blob.slice(start, end);\n
+        return blob.slice(start, end, "application/octet-stream");\n
       });\n
   };\n
 \n
@@ -8162,7 +9252,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.55617.298.51882</string> </value>
+                <value> <string>942.40553.20339.32529</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -8180,7 +9270,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428655194.19</float>
+                        <float>1430410922.96</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
