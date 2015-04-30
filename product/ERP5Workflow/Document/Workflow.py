@@ -63,7 +63,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Tool import ERP5WorkflowTool
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
+class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
   A ERP5 Workflow.
   """
@@ -104,7 +104,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
-    state_id = '_'.join(self.getSourceId().split('_')[:-1])
+    state_id = '_'.join(self.getSourceId().split('_')[1:])
     status_dict = {state_var: state_id}
     variable_list = self.objectValues(portal_type='Variable')
     former_status = self._getOb(status_dict[state_var], None)
@@ -118,7 +118,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
         value = expr(ec)
       else:
         value = variable.getInitialValue(object=object)
-      status_dict['_'.join(variable.getId().split('_')[:-1])] = value # remove suffix
+      status_dict['_'.join(variable.getId().split('_')[1:])] = value # remove suffix
 
     self._updateWorkflowHistory(document, status_dict)
     self.updateRoleMappingsFor(document)
@@ -128,7 +128,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     Generate a key used in the workflow history.
     """
     history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
-    return '_'.join(history_key.split('_')[:-1])
+    return '_'.join(history_key.split('_')[1:])
 
   def _updateWorkflowHistory(self, document, status_dict):
     """
@@ -186,9 +186,8 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
                           state=state)
 
   def isERP5WorkflowMethodSupported(self, document, transition):
-    #sdef = document._getDefaultAcquiredValue(self.getStateVariable())
     sdef = self._getWorkflowStateOf(document, id_only=0)
-    ### zwj: upper line may meet problems when there are other Base categories.
+    LOG(" 190 is transition '%s' supported by workflow '%s'"%(transition.getReference(), self.getReference()), WARNING, " in Workflow.py")
     if sdef is None:
       return 0
     if (transition in sdef.getDestinationValueList() and
@@ -306,7 +305,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     for interaction_workflow in self.getParent().objectValues(portal_type='Interaction Workflow'):
       if interaction_workflow.getId() in workflow_list:
         for interaction in interaction_workflow.objectValues(portal_type='Interaction'):
-          if '_'.join(action.split('_')[0:-1]) in interaction.getMethodId():
+          if action in interaction.getMethodId():
             interaction.execute(document)
 
   def _changeStateOf(self, document, tdef=None, kwargs=None):
@@ -377,7 +376,7 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
     if not self.objectValues(portal_type='Worklist'):
       return None
 
-    LOG('%s Worklists found!'%len(self.objectValues(portal_type='Worklist')), WARNING, 'in Workflow.py')
+    LOG("380 '%s' Worklists found!"%len(self.objectValues(portal_type='Worklist')), WARNING, "in Workflow.py")
     ### zwj: for DC workflow
     portal = self.getPortalObject()
     def getPortalTypeListForWorkflow(workflow_id):
@@ -499,17 +498,17 @@ class Workflow(IdAsReferenceMixin('_workflow'), XMLObject):
 
   def _getWorkflowStateOf(self, ob, id_only=0):
       tool = getToolByName(self, 'portal_workflow')
-      id_no_suffix = '_'.join(self.id.split('_')[:-1])
+      id_no_suffix = '_'.join(self.id.split('_')[1:])
       status = tool.getStatusOf(id_no_suffix, ob)
       LOG("502 tool is '%s' type, status is '%s'"%(tool.getPortalType(), status),WARNING, " in Workflow.py")
       if status is None:
           state = self.getSourceId()
       else:
-          state = status.get(self.getStateVariable(), None)
+          state = 'state_' + status.get(self.getStateVariable(), None)
           if state is None:
               state = self.getSourceId()
       if id_only:
-          return '_'.join(state.split('_')[:-1])
+          return '_'.join(state.split('_')[1:])
       else:
           return self._getOb(state, None)
 
