@@ -50,7 +50,7 @@ from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Products.ERP5.genbt5list import generateInformation
-from Products.CMFCore.WorkflowTool import WorkflowTool as original_WorkflowTool
+from Products.CMFCore.WorkflowTool import WorkflowTool as OriginalWorkflowTool
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
@@ -87,7 +87,7 @@ Most of the codes in this file are copy-pasted from patches/WorkflowTool.py.
 
 _marker = []  # Create a new marker object.
 
-class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
+class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
   """
   A new container for DC workflow and workflow;
   inherits methods from original WorkflowTool.py;
@@ -99,7 +99,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
   meta_type     = 'ERP5 Workflow Tool'
   portal_type   = 'ERP5 Workflow Tool'
   allowed_types = ('Workflow', 'Interaction Workflow', )
-  all_meta_types = original_WorkflowTool.all_meta_types
+  all_meta_types = OriginalWorkflowTool.all_meta_types
 
   # This stores information on repositories.
   repository_dict = {}
@@ -107,11 +107,11 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  manage_options = original_WorkflowTool.manage_options
+  manage_options = OriginalWorkflowTool.manage_options
 
-  manage_overview = original_WorkflowTool.manage_overview
+  manage_overview = OriginalWorkflowTool.manage_overview
 
-  _manage_selectWorkflows = original_WorkflowTool._manage_selectWorkflows
+  _manage_selectWorkflows = OriginalWorkflowTool._manage_selectWorkflows
 
     # Declarative properties
   property_sheets = (
@@ -282,7 +282,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       return workflow_list
     workflow_module = self.getPortalObject().portal_workflow
     for workflow_id in portal_type.getTypeERP5WorkflowList():
-      workflow_list.append(workflow_module._getOb(workflow_id)) ### _getObjectByRef
+      workflow_list.append(workflow_module._getOb(workflow_id))
 
     ### zwj: get DCWorkflow
     dc_workflow_list = self._chains_by_type.get(portal_type.getId())
@@ -301,9 +301,9 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         continue
 
       dc_workflow = self.getWorkflowById(dc_workflow_id)
-      #temporary_conversion = 1
-      #workflow = self.dc_workflow_asERP5Object(workflow_module, dc_workflow, temporary_conversion)
-      #workflow_list.extend(workflow)
+      temporary_conversion = 1
+      workflow = self.dc_workflow_asERP5Object(workflow_module, dc_workflow, temporary_conversion)
+      workflow_list.extend(workflow)
       workflow_list.extend(dc_workflow)
     return workflow_list
 
@@ -321,7 +321,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       workflow = container.newContent(portal_type='Interaction Workflow', temp_object=temp)
       workflow.setManagerBypass(dc_workflow.manager_bypass)
 
-    workflow.setId(dc_workflow.id+'_converted')
+    workflow.setReference(dc_workflow.id)
     workflow.edit(title=dc_workflow.title)
     workflow.edit(description=dc_workflow.description)
 
@@ -332,7 +332,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.1 Convert transition '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         transition = workflow.newContent(portal_type='Transition', temp_object=temp)
         transition.edit(title=tdef.title)
-        transition.setId(tdef.id+'_transition')
+        transition.setReference(tdef.id)
         transition.setTriggerType(tdef.trigger_type)
         transition.setActboxCategory(tdef.actbox_category)
         transition.setActboxIcon(tdef.actbox_icon)
@@ -348,7 +348,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         state = workflow.newContent(portal_type='State', temp_object=temp)
         state.edit(title=sdef.title)
-        state.setId(sdef.id+'_state')
+        state.setReference(sdef.id)
         state.setStatePermissionRoles(sdef.permission_roles)
         state.setDestinationList(sdef.transitions)
       ### create worklists (portal_type = Worklist)
@@ -357,7 +357,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
         worklist.edit(title=qdef.title)
-        worklist.setId(qdef.id+'_worklist')
+        worklist.setReference(qdef.id)
         for key, values in qdef.var_matches.items():
           if key == 'portal_type':
             worklist.setMatchedPortalTypeList(values)
@@ -376,7 +376,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         tdef = dc_workflow.interactions.get(tid)
         LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
         interaction.edit(title=tdef.title)
-        interaction.setId(tdef.id+'_interaction')
+        interaction.setReference(tdef.id)
         interaction.setActivateScriptName(tdef.activate_script_name)
         interaction.setAfterScriptName(tdef.after_script_name)
         interaction.setBeforeCommitScriptName(tdef.before_commit_script_name)
@@ -407,7 +407,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
       variable = workflow.newContent(portal_type='Variable', temp_object=temp)
       LOG("2.6 Convert variable '%s' of workflow '%s'"%(vdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
       variable.edit(title=vdef.title)
-      variable.setId(vdef.id+'_variable')
+      variable.setReference(vdef.id)
       variable.setAutomaticUpdate(vdef.update_always)
       variable.setDefaultExpr(vdef.default_expr)
       variable.info_guard = vdef.info_guard
@@ -477,7 +477,7 @@ class ERP5WorkflowTool(BaseTool, original_WorkflowTool):
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
 
-  getWorkflowIds = original_WorkflowTool.getWorkflowIds
+  getWorkflowIds = OriginalWorkflowTool.getWorkflowIds
 
   def refreshWorklistCache(self):
     """
