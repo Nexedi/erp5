@@ -59,7 +59,7 @@ class Getter(BaseGetter):
       wf = portal_workflow.getWorkflowById(self._key)
       if wf.getPortalType() in ['Workflow', 'Interaction Workflow']:
         # remove id suffix for workflow and interaction workflow
-        return '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[0:-1])
+        return '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[1:])
       else:
         return wf._getWorkflowStateOf(instance, id_only=1)
 
@@ -98,7 +98,7 @@ class TranslatedGetter(Getter):
       portal = instance.getPortalObject()
       wf = portal.portal_workflow.getWorkflowById(self._key)
       if wf.getPortalType() in ['Workflow','Interaction Workflow']:
-        state_id = '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[0:-1])
+        state_id = '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[1:])
       else:
         state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
