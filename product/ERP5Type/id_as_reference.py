@@ -33,26 +33,25 @@ from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
 from Acquisition import aq_base
 
-def IdAsReferenceMixin(suffix):
-  suffix_index = - len(suffix)
+def IdAsReferenceMixin(extra_string, string_type="suffix"):
+
+  extra_string_index = -len(extra_string)
 
   class IdAsReferenceMixin(object):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
     def cb_isMoveable(self):
       return self.cb_userHasCopyOrMovePermission()
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getIdAsReferenceSuffix')
     @staticmethod
     def getIdAsReferenceSuffix():
-      return suffix
+      return extra_string
 
     def __migrate(self):
-      if self.id[suffix_index:] != suffix:
-        new_id = self.__dict__.get('default_reference') + suffix
+      if self.id[extra_string_index:] != extra_string:
+        new_id = self.__dict__.get('default_reference') + extra_string
         parent = self.getParentValue()
         if parent.has_key(new_id):
           LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
@@ -70,16 +69,27 @@ def IdAsReferenceMixin(suffix):
                               'getReference')
     def getReference(self, *args):
       id = self.id
-      if id[suffix_index:] == suffix:
-        return id[:suffix_index]
-      try:
-        return self._baseGetReference(*args)
-      except AttributeError:
-        return getattr(aq_base(self), 'default_reference', (args or [None])[0])
+      if string_type == "suffix":
+        if id[extra_string_index:] == extra_string:
+          return id[:extra_string_index]
+        try:
+          return self._baseGetReference(*args)
+        except AttributeError:
+          return getattr(aq_base(self), 'default_reference', (args or [None])[0])
+      elif string_type == "prefix":
+        if id[:extra_string_index] == extra_string:
+          return id[extra_string_index:]
+        try:
+          return self._baseGetReference(*args)
+        except AttributeError:
+          return getattr(aq_base(self), 'default_reference', (args or [None])[0])
 
     def _setReference(self, value):
       self.__dict__.pop('default_reference', None)
-      self.setId(value + suffix)
+      if string_type == "prefix":
+        self.setId(extra_string + value)
+      elif string_type == "suffix":
+        self.setId(value + extra_string)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference
