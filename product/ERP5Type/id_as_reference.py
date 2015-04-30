@@ -85,11 +85,24 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
           return getattr(aq_base(self), 'default_reference', (args or [None])[0])
 
     def _setReference(self, value):
+      parent = self.getParentValue()
       self.__dict__.pop('default_reference', None)
       if string_type == "prefix":
-        self.setId(extra_string + value)
+        new_id = extra_string + value
+        if parent.has_key(new_id):
+          LOG("IdAsReferenceMixin", WARNING, "Skipping adding of %r in %r"
+              " property sheet, due to ID conflict" % (new_id, parent.getId()))
+        else:
+          self.setId(new_id)
+          self.default_reference = value # to save reference in workflow tool.
       elif string_type == "suffix":
-        self.setId(value + extra_string)
+        new_id = value + extra_string
+        if parent.has_key(new_id):
+          LOG("IdAsReferenceMixin", WARNING, "Skipping adding of %r in %r"
+              " property sheet, due to ID conflict" % (new_id, parent.getId()))
+        else:
+          self.setId(new_id)
+          self.default_reference = value
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference
