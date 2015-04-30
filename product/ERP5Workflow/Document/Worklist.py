@@ -44,7 +44,7 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(IdAsReferenceMixin('_worklist'), XMLObject):
+class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
     """
     A ERP5 Worklist.
     """
