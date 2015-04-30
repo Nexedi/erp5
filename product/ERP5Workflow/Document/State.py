@@ -42,7 +42,7 @@ class StateError(Exception):
   """
   pass
 
-class State(IdAsReferenceMixin('_state'), XMLObject, XMLMatrix):
+class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   """
   A ERP5 State.
   """
