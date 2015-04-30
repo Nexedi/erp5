@@ -763,7 +763,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         if wf.__class__.__name__ == 'Workflow':
           for state in wf.objectValues(portal_type='State'):
             if group in getattr(state, 'type_list', ()):
-              state_dict['_'.join(state.getId().split('_')[:-1])] = None
+              state_dict['_'.join(state.getId().split('_')[1:])] = None
         else:
           if getattr(wf, 'states', None):
             for state in wf.states.objectValues():
@@ -1294,7 +1294,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             if wf.objectValues(portal_type='State'):
               for state in wf.objectValues(portal_type='State'):
                 if getattr(state, 'type_list', None):
-                  state_dict['_'.join(state.getId().split('_')[:-1])] = None
+                  state_dict['_'.join(state.getId().split('_')[1:])] = None
         else:
           if getattr(wf, 'variables', None) and \
              wf.variables.getStateVar() == 'simulation_state':
@@ -1719,7 +1719,7 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
-        addCMFCoreTool('CMF Workflow Tool', None)
+        #addCMFCoreTool('CMF Workflow Tool', None) # taken place by ERP5 Workflow Tool
 
         addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
         addCMFDefaultTool('Default Discussion Tool', None)
@@ -1925,6 +1925,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_password', 'Password Tool')
     addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
     addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
+    addERP5Tool(p, 'portal_workflow', 'ERP5 Workflow Tool')
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
