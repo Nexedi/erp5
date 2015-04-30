@@ -1,3 +1,5 @@
 person_module/18
+workflow_module/testing_interaction_workflow
+workflow_module/testing_interaction_workflow/**
 workflow_module/testing_workflow
 workflow_module/testing_workflow/**

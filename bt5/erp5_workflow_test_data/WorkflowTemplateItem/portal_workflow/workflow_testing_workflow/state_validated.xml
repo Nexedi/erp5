@@ -25,6 +25,19 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/workflow_testing_workflow/transition_invalidate</string>
+                <string>destination/portal_workflow/workflow_testing_workflow/transition_invalidate_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>validated</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -32,7 +45,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deleted_state</string> </value>
+            <value> <string>state_validated</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -46,11 +59,11 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>deleted</string> </value>
+            <value> <string>validated</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deleted</string> </value>
+            <value> <string>Validated</string> </value>
         </item>
       </dictionary>
     </pickle>

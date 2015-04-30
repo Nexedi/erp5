@@ -14,7 +14,9 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Failure</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -25,25 +27,33 @@
         <item>
             <key> <string>after_script_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>after_script</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>before_script_id</string> </key>
             <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
               <tuple>
-                <string>fail_message</string>
+                <string>destination/portal_workflow/workflow_testing_workflow/state_validated</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value> <string>Fail action does nothing but put an error message into workflow history</string> </value>
+            <key> <string>default_reference</string> </key>
+            <value> <string>validate</string> </value>
         </item>
         <item>
-            <key> <string>guard</string> </key>
+            <key> <string>description</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -52,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fail_action_transition</string> </value>
+            <value> <string>transition_validate</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -60,44 +70,21 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>fail_action</string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
             <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Fail Action</string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <list>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </list>
-            </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>

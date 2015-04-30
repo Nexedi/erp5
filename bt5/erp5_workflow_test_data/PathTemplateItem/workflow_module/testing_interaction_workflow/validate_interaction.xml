@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>activate_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value>
+              <tuple>
+                <string>afterValidate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>test validate interaction, set title after validate.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validate_interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>method_id</string> </key>
+            <value>
+              <tuple>
+                <string>validate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>protal_type_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>ref</string> </key>
+            <value> <string>validate_interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>role</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Validate Interaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>error_message</string> </value>
+        </item>
+        <item>
             <key> <string>default_value</string> </key>
             <value> <string>python: None</string> </value>
         </item>
@@ -22,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>error_message_variable</string> </value>
+            <value> <string>variable_error_message</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

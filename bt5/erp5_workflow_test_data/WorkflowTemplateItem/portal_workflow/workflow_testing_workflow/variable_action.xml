@@ -7,8 +7,16 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>automatic_update</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>default_expr</string> </key>
-            <value> <string>state_change/getDateTime</string> </value>
+            <value> <string>transition/getId|nothing</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>default_value</string> </key>
@@ -25,8 +33,16 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>for_status</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>time_variable</string> </value>
+            <value> <string>variable_action</string> </value>
+        </item>
+        <item>
+            <key> <string>initial_value</string> </key>
+            <value> <string>python: None</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -34,7 +50,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>time</string> </value>
+            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -44,7 +60,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Time</string> </value>
+            <value> <string>Action</string> </value>
         </item>
       </dictionary>
     </pickle>

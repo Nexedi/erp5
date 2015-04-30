@@ -8,7 +8,11 @@
       <dictionary>
         <item>
             <key> <string>default_expr</string> </key>
-            <value> <string>python:state_change.kwargs.get(\'comment\',\'\')</string> </value>
+            <value> <string>user/getUserName</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>actor</string> </value>
         </item>
         <item>
             <key> <string>default_value</string> </key>
@@ -26,7 +30,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>comment_variable</string> </value>
+            <value> <string>variable_actor</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -34,7 +38,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>comment</string> </value>
+            <value> <string>actor</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -44,7 +48,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Comment</string> </value>
+            <value> <string>Actor</string> </value>
         </item>
       </dictionary>
     </pickle>

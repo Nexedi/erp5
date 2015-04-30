@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Worklist" module="erp5.portal_type"/>
+      <global name="Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14,19 +14,35 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Document to Validate (%(count)s)</string> </value>
+            <value> <string>Failure</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
-
-]]></string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>after_script_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_script_id</string> </key>
+            <value>
+              <tuple>
+                <string>fail_message</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>fail_action</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Document to Validate</string> </value>
+            <value> <string>Fail action does nothing but put an error message into workflow history</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -35,38 +51,20 @@ erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&l
             </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>1_draft_document_list_worklist</string> </value>
-        </item>
-        <item>
-            <key> <string>matched_portal_type</string> </key>
-            <value>
-              <tuple>
-                <string>ERP5Workflow Test Document</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>matched_simulation_state</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>matched_validation_state</string> </key>
-            <value>
-              <tuple>
-                <string>draft_state</string>
-              </tuple>
-            </value>
+            <value> <string>transition_fail_action</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Worklist</string> </value>
+            <value> <string>Transition</string> </value>
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>1_draft_document_list</string> </value>
+            <value> <string>fail_action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -74,18 +72,17 @@ erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&l
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft Documents</string> </value>
+            <value> <string>Fail Action</string> </value>
         </item>
         <item>
-            <key> <string>var_matches</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -102,6 +99,7 @@ erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&l
               <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Manager</string>
               </list>
             </value>
         </item>

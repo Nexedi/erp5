@@ -33,18 +33,20 @@
         <item>
             <key> <string>before_script_id</string> </key>
             <value>
-              <tuple>
-                <string>before_script</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/testing_workflow_workflow/invalidated_state</string>
+                <string>destination/portal_workflow/workflow_testing_workflow/state_deleted</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -58,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>invalidate_transition</string> </value>
+            <value> <string>transition_delete</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -66,7 +68,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>invalidate</string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -76,7 +78,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Invalidate</string> </value>
+            <value> <string>Delete</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -14,19 +14,17 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Delete</string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=validate_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>
             <value>
               <tuple>
-                <string>delete_transition</string>
+                <string>transition_validate</string>
               </tuple>
             </value>
         </item>
@@ -43,10 +41,18 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>validate_action</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value> <string>()</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -60,7 +66,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delete_action_transition</string> </value>
+            <value> <string>transition_validate_action</string> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value> <string>()</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -68,21 +78,30 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>delete_action</string> </value>
+            <value> <string>validate_action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Assignee</string>
                 <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>role_list</string> </key>
+            <value>
+              <tuple>
+                <string>Associate</string>
+                <string>Author</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Delete Action</string> </value>
+            <value> <string>Validate Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -101,8 +120,8 @@
             <key> <string>roles</string> </key>
             <value>
               <list>
-                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Assignee</string>
                 <string>Manager</string>
               </list>
             </value>

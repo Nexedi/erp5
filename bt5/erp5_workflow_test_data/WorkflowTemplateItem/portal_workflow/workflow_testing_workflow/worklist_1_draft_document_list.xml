@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Transition" module="erp5.portal_type"/>
+      <global name="Worklist" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14,31 +14,23 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Invalidate</string> </value>
+            <value> <string>Document to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+erp5workflow_test_module/view?validation_state=draft&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+
+]]></string> </value>
         </item>
         <item>
-            <key> <string>after_script_id</string> </key>
-            <value>
-              <tuple>
-                <string>invalidate_transition</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>before_script_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>default_reference</string> </key>
+            <value> <string>1_draft_document_list</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Document to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -47,20 +39,38 @@
             </value>
         </item>
         <item>
-            <key> <string>guard_expression</string> </key>
-            <value> <string>python: True</string> </value>
+            <key> <string>id</string> </key>
+            <value> <string>worklist_1_draft_document_list</string> </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>invalidate_action_transition</string> </value>
+            <key> <string>matched_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>ERP5Workflow Test Document</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>matched_simulation_state</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>matched_validation_state</string> </key>
+            <value>
+              <tuple>
+                <string>draft_state</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Transition</string> </value>
+            <value> <string>Worklist</string> </value>
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>invalidate_action</string> </value>
+            <value> <string>1_draft_document_list</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -68,17 +78,18 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Invalidate Action</string> </value>
+            <value> <string>Draft Documents</string> </value>
         </item>
         <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -95,7 +106,6 @@
               <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
               </list>
             </value>
         </item>

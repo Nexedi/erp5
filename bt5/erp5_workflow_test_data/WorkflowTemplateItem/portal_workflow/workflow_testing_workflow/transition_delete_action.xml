@@ -14,17 +14,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate</string> </value>
+            <value> <string>Delete</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=validate_action</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>
             <value>
               <tuple>
-                <string>validate_transition</string>
+                <string>transition_delete</string>
               </tuple>
             </value>
         </item>
@@ -41,14 +43,14 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>delete_action</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>groups</string> </key>
-            <value> <string>()</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -62,11 +64,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validate_action_transition</string> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value> <string>()</string> </value>
+            <value> <string>transition_delete_action</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -74,30 +72,21 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>validate_action</string> </value>
+            <value> <string>delete_action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>role_list</string> </key>
-            <value>
-              <tuple>
-                <string>Associate</string>
-                <string>Author</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate Action</string> </value>
+            <value> <string>Delete Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -116,8 +105,8 @@
             <key> <string>roles</string> </key>
             <value>
               <list>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </list>
             </value>

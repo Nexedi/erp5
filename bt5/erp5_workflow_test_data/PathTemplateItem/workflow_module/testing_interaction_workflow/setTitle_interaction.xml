@@ -16,7 +16,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <tuple>
-                <string>afterValidate</string>
+                <string>afterSetTitle</string>
               </tuple>
             </value>
         </item>
@@ -34,17 +34,17 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>test validate interaction, set title after validate.</string> </value>
+            <value> <string>An interaction for accessor setTitle.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validate_interaction_interaction</string> </value>
+            <value> <string>setTitle_interaction</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <tuple>
-                <string>validate</string>
+                <string>setTitle</string>
               </tuple>
             </value>
         </item>
@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>validate_interaction</string> </value>
+            <value> <string>setTitle_interaction</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -70,7 +70,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate Interaction</string> </value>
+            <value> <string>Set Title Interaction</string> </value>
         </item>
       </dictionary>
     </pickle>

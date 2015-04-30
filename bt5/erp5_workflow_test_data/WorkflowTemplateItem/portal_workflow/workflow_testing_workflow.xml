@@ -45,9 +45,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/portal_workflow/testing_workflow_workflow/draft_state</string>
+                <string>source/portal_workflow/workflow_testing_workflow/state_draft</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>testing_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -55,7 +59,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testing_workflow_workflow</string> </value>
+            <value> <string>workflow_testing_workflow</string> </value>
         </item>
         <item>
             <key> <string>managed_permission_list</string> </key>

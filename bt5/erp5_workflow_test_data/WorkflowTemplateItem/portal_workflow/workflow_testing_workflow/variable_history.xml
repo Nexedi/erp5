@@ -8,7 +8,11 @@
       <dictionary>
         <item>
             <key> <string>default_expr</string> </key>
-            <value> <string>user/getUserName</string> </value>
+            <value> <string>state_change/getHistory</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>history</string> </value>
         </item>
         <item>
             <key> <string>default_value</string> </key>
@@ -25,8 +29,12 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>for_status</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>actor_variable</string> </value>
+            <value> <string>variable_history</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -34,7 +42,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>actor</string> </value>
+            <value> <string>history</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -44,7 +52,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Actor</string> </value>
+            <value> <string>History</string> </value>
         </item>
       </dictionary>
     </pickle>

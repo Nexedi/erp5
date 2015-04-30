@@ -7,12 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>automatic_update</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>default_expr</string> </key>
-            <value> <string>transition/getId|nothing</string> </value>
+            <key> <string>default_reference</string> </key>
+            <value> <string>portal_type</string> </value>
         </item>
         <item>
             <key> <string>default_value</string> </key>
@@ -25,20 +21,12 @@
             </value>
         </item>
         <item>
-            <key> <string>for_catalog</string> </key>
+            <key> <string>for_status</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>for_status</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>action</string> </value>
-        </item>
-        <item>
-            <key> <string>initial_value</string> </key>
-            <value> <string>python: None</string> </value>
+            <value> <string>variable_portal_type</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -46,7 +34,7 @@
         </item>
         <item>
             <key> <string>ref</string> </key>
-            <value> <string>action</string> </value>
+            <value> <string>portal_type</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
@@ -56,7 +44,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Action</string> </value>
+            <value> <string>Portal Type</string> </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
