@@ -40,7 +40,7 @@ from zLOG import LOG, INFO, ERROR, WARNING
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class Interaction(IdAsReferenceMixin('_interaction'), XMLObject):
+class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
   """
   An ERP5 Interaction.
   """
