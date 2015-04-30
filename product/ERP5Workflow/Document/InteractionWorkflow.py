@@ -49,7 +49,7 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 _MARKER = []
 
-class InteractionWorkflow(IdAsReferenceMixin('_interactionworkflow'), XMLObject):
+class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), XMLObject):
   """
   An ERP5 Interaction Workflow.
   """
