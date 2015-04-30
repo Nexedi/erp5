@@ -79,6 +79,7 @@ url_template_dict = {\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "{&query,select_list*,limit*}",\n
+  "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   # XXX View is set by default to empty\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                   "&relative_url=%(relative_url)s",\n
@@ -97,6 +98,10 @@ def getFormRelativeUrl(form):\n
     select_dict={\'relative_url\': None}\n
   )[0].relative_url\n
 \n
+def getFieldDefault(field, key):\n
+  # REQUEST.get(field.id, field.get_value("default"))\n
+  return traversed_document.Field_getDefaultValue(field, key, REQUEST)\n
+\n
 def renderField(field, meta_type=None):\n
   if meta_type is None:\n
     meta_type = field.meta_type\n
@@ -107,7 +112,6 @@ def renderField(field, meta_type=None):\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -117,11 +121,11 @@ def renderField(field, meta_type=None):\n
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
   elif meta_type in ("ParallelListField", "MultiListField"):\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -131,6 +135,7 @@ def renderField(field, meta_type=None):\n
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
     result["sub_select_key"] = traversed_document.Field_getSubFieldKeyDict(field, \'default:list\', key=result["key"])\n
     result["sub_input_key"] = "default_" + traversed_document.Field_getSubFieldKeyDict(field, \'default:list:int\', key=result["key"])\n
   elif meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",\n
@@ -139,7 +144,6 @@ def renderField(field, meta_type=None):\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -147,6 +151,7 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
     if meta_type == "FloatField":\n
       result["precision"] = field.get_value("precision")\n
   elif meta_type == "DateTimeField":\n
@@ -166,7 +171,7 @@ def renderField(field, meta_type=None):\n
       "hide_day": field.get_value(\'hide_day\'),\n
       "hidden_day_is_last_day": field.get_value(\'hidden_day_is_last_day\'),\n
     }\n
-    date_value = field.get_value("default")\n
+    date_value = getFieldDefault(field, result["key"])\n
     if same_type(date_value, DateTime()):\n
       # Serialize DateTime\n
       date_value = date_value.rfc822()\n
@@ -207,7 +212,6 @@ def renderField(field, meta_type=None):\n
       "allow_creation": 0,\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -215,6 +219,7 @@ def renderField(field, meta_type=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required")\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
     result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(\n
       field,\n
       "relation",\n
@@ -232,18 +237,17 @@ def renderField(field, meta_type=None):\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
       "description": field.get_value("description"),\n
       "title": field.get_value("title")\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
   elif meta_type == "GadgetField":\n
     result = {\n
       "type": meta_type,\n
       "key": field.generate_field_key(),\n
-      "default": field.get_value("default"),\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -252,6 +256,7 @@ def renderField(field, meta_type=None):\n
       "url": field.get_value("gadget_url"),\n
       "sandbox": field.get_value("js_sandbox"),\n
     }\n
+    result["default"] = getFieldDefault(field, result["key"])\n
   elif meta_type == "ListBox":\n
     # XXX Not implemented\n
     columns = field.get_value("columns")\n
@@ -336,6 +341,7 @@ def renderField(field, meta_type=None):\n
 \n
 def renderForm(form, response_dict):\n
   REQUEST.set(\'here\', traversed_document)\n
+  field_errors = REQUEST.get(\'field_errors\', {})\n
 \n
   # Form action\n
   response_dict[\'_actions\'] = {\n
@@ -379,6 +385,8 @@ def renderForm(form, response_dict):\n
         if field.get_value("enabled"):\n
           try:\n
             response_dict[field.id] = renderField(field)\n
+            if field_errors.has_key(field.id):\n
+              response_dict[field.id]["error_text"] = field_errors[field.id].error_text\n
           except AttributeError:\n
             # Do not crash if field configuration is wrong.\n
             pass\n
@@ -490,7 +498,10 @@ else:\n
 \n
 # Check if traversed_document is the site_root\n
 if relative_url:\n
-  traversed_document = site_root.restrictedTraverse(relative_url)\n
+  traversed_document = site_root.restrictedTraverse(relative_url, None)\n
+  if (traversed_document is None):\n
+    response.setStatus(404)\n
+    return ""\n
 else:\n
   traversed_document = context\n
 is_site_root = (traversed_document.getPath() == site_root.getPath())\n
@@ -688,6 +699,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
     response.setHeader("Cache-Control", "public, max-age=1800")\n
     response.setHeader("Vary", "Cookie")\n
     response.setHeader("Last-Modified", DateTime().rfc822())\n
+    REQUEST.set("X-HATEOAS-CACHE", 1)\n
 \n
     # Global action users for the jIO plugin\n
     # XXX Would be better to not hardcode them but put them as portal type\n
@@ -713,6 +725,14 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
       \'name\': \'Traverse\',\n
       \'templated\': True\n
     }\n
+    action_dict[\'add\'] = {\n
+      "href": url_template_dict["new_content_action"] % {\n
+        "root_url": site_root.absolute_url(),\n
+        "script_id": script.id\n
+      },\n
+      \'method\': \'POST\',\n
+      \'name\': \'New Content\',\n
+    }\n
 \n
     # Handle also other kind of users: instance, computer, master\n
     person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
@@ -730,6 +750,7 @@ elif (mode == \'root\') or (mode == \'traverse\'):\n
     traversed_document_portal_type = traversed_document.getPortalType()\n
     if traversed_document_portal_type == "ERP5 Form":\n
       renderFormDefinition(traversed_document, result_dict)\n
+      REQUEST.set("X-HATEOAS-CACHE", 1)\n
 \n
   # Define document action\n
   if action_dict:\n
@@ -840,6 +861,41 @@ elif mode == \'search\':\n
   result_dict[\'_query\'] = query\n
   result_dict[\'_limit\'] = limit\n
   result_dict[\'_select_list\'] = select_list\n
+\n
+elif mode == \'form\':\n
+  #################################################\n
+  # Calculate form value\n
+  #################################################\n
+  if REQUEST.other[\'method\'] != "POST":\n
+    response.setStatus(405)\n
+    return ""\n
+\n
+  renderForm(form, result_dict)\n
+\n
+elif mode == \'newContent\':\n
+  #################################################\n
+  # Create new document\n
+  #################################################\n
+  if REQUEST.other[\'method\'] != "POST":\n
+    response.setStatus(405)\n
+    return ""\n
+  portal_type = REQUEST.form["portal_type"]\n
+  parent_relative_url = REQUEST.form["parent_relative_url"]\n
+  # First, try to validate the data on a temp document\n
+  parent = portal.restrictedTraverse(parent_relative_url)\n
+  # module = portal.getDefaultModule(portal_type=portal_type)\n
+  document = parent.newContent(\n
+    portal_type=portal_type\n
+  )\n
+  # http://en.wikipedia.org/wiki/Post/Redirect/Get\n
+  response.setStatus(201)\n
+  response.setHeader("X-Location",\n
+    default_document_uri_template % {\n
+      "root_url": site_root.absolute_url(),\n
+      "relative_url": document.getRelativeUrl(),\n
+      "script_id": script.id\n
+    })\n
+  return \'\'\n
 \n
 else:\n
   raise NotImplementedError("Unsupported mode %s" % mode)\n

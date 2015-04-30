@@ -103,8 +103,9 @@ except FormValidationError, validation_errors:\n
       value = request.get(field_id)\n
       if callable(value):\n
         value(request)\n
-  if silent_mode: return form(request), \'form\'\n
-  return form(request)\n
+  if silent_mode: return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode=\'form\'), \'form\'\n
+  request.RESPONSE.setStatus(400)\n
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode=\'form\')\n
 \n
 def editListBox(listbox_field, listbox):\n
   """ Function called to edit a listbox\n
