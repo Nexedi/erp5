@@ -166,11 +166,11 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         return True
     return False
 
-  def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    wfs = self.getWorkflowsFor(ob)
-    workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
+  def doActionFor(self, ob, action, wf_id=None, *args, **kw):
+    wfs = self.getWorkflowsFor(ob)# dc workflow
+    workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList() # workflow
     case = 1
-
+    LOG(" 173 do action '%s' for object '%s'"%(action, ob.getId()),WARNING," in ERP5 Workflow Tool.py")
     if wfs is None or wf_id in workflow_list:
       wfs = ()
       case = 2
@@ -185,7 +185,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
           case = 1
           break
       for workflow_id in workflow_list:
-        wf = self.getPortalObject().portal_workflow._getOb(workflow_id) ### _getObjectByRef
+        wf = self.getPortalObject().portal_workflow._getOb(workflow_id)
         if wf.isActionSupported(ob, action, **kw):
           found = 1
           case = 2
@@ -198,7 +198,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       if case == 1:
         wf = self.getWorkflowById(wf_id)
       else:
-        wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)### _getObjectByRef
+        wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
       if wf is None:
         raise WorkflowException(_(u'Requested workflow definition not found.'))
 
@@ -227,7 +227,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
                   case = 1
                   break
           for workflow_id in workflow_list:
-              workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)### _getObjectByRef
+              workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
               if workflow.isInfoSuported(ob, name):
                 found = 1
                 case = 2
@@ -243,7 +243,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
           if case == 1:
               wf = self.getWorkflowById(wf_id)
           else:
-              wf = self.getPortalObject().portal_workflow._getOb(wf_id)### _getObjectByRef
+              wf = self.getPortalObject().portal_workflow._getOb(wf_id)
           if wf is None:
               if default is _marker:
                   raise WorkflowException(
@@ -612,16 +612,18 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         if (workflow_list is not None) and (workflow_list is not []):
           for wf_id in workflow_list:
             did[wf_id] = None
-            wf = self.getPortalObject().portal_workflow._getOb(wf_id, None) ### getObjectByRef
+            wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
             if wf is None:
               raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
             a = wf.listObjectActions(info)
-            if a is not None:
+            if a is not None and a != []:
+              LOG("620 Generating workflow actions '%s' for workflow '%s'"%(a,wf_id), WARNING, " in ERP5WorkflowTool.py")
               actions.extend(a)
             a = wf.getWorklistVariableMatchDict(info)
             if a is not None:
               worklist_dict[wf_id] = a
 
+    # DC workflow compatibility
     for wf_id in chain:
       did[wf_id] = None
       wf = self.getWorkflowById(wf_id)
