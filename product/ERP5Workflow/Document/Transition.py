@@ -278,7 +278,7 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
       kwargs = form_kw
       # Script can be either script or workflow method
       if script_id in old_sdef.getDestinationIdList():
-        getattr(workflow, convertToMixedCase(script_id)).execute(document)
+        getattr(workflow, script_id).execute(document)
       else:
         script = self.getParent()._getOb(script_id)
         # Pass lots of info to the script in a single parameter.
