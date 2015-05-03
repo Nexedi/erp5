@@ -67,10 +67,6 @@
             <value> <string>Transition</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>delete</string> </value>
-        </item>
-        <item>
             <key> <string>role</string> </key>
             <value>
               <tuple/>

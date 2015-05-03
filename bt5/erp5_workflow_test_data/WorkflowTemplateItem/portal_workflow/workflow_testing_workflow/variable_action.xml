@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>automatic_update</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>default_expr</string> </key>
             <value> <string>transition/getId|nothing</string> </value>
         </item>
@@ -33,24 +29,12 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>for_status</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>variable_action</string> </value>
         </item>
         <item>
-            <key> <string>initial_value</string> </key>
-            <value> <string>python: None</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Variable</string> </value>
-        </item>
-        <item>
-            <key> <string>ref</string> </key>
-            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>

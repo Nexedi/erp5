@@ -58,10 +58,6 @@
             <value> <string>State</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>draft</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Draft</string> </value>
         </item>

@@ -73,10 +73,6 @@ document.setDescription("After script was executed.")\n
             <value> <string>Workflow Script</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>after_script</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>After Script</string> </value>
         </item>

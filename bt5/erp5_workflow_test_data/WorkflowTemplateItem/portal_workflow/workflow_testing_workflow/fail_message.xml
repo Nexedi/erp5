@@ -75,10 +75,6 @@ raise ValidationFailed ("foo error")\n
             <value> <string>Workflow Script</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>fail_message</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Fail Message</string> </value>
         </item>

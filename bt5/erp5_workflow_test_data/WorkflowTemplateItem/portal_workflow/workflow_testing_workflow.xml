@@ -13,23 +13,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>workflow_managed_permission</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -77,28 +60,12 @@
             <value> <string>Workflow</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>testing_workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>state_base_category</string> </key>
-            <value> <string>validation_state</string> </value>
-        </item>
-        <item>
             <key> <string>state_variable</string> </key>
             <value> <string>validation_state</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Testing Workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>workflow_managed_permission</string> </key>
-            <value>
-              <tuple>
-                <string>Access contents information</string>
-              </tuple>
-            </value>
         </item>
       </dictionary>
     </pickle>

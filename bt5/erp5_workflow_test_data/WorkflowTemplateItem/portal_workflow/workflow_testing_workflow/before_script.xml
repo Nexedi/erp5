@@ -73,10 +73,6 @@ document.setDescription("Before script was executed.")\n
             <value> <string>Workflow Script</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>before_script</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Before Script</string> </value>
         </item>

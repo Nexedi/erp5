@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=validate_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=transition_validate_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_id</string> </key>
@@ -35,12 +35,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>validate_action</string> </value>
         </item>
@@ -49,10 +43,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>groups</string> </key>
-            <value> <string>()</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -69,43 +59,22 @@
             <value> <string>transition_validate_action</string> </value>
         </item>
         <item>
-            <key> <string>permissions</string> </key>
-            <value> <string>()</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Transition</string> </value>
-        </item>
-        <item>
-            <key> <string>ref</string> </key>
-            <value> <string>validate_action</string> </value>
         </item>
         <item>
             <key> <string>role</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>role_list</string> </key>
-            <value>
-              <tuple>
-                <string>Associate</string>
-                <string>Author</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>Validate Action</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -115,18 +84,7 @@
       <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <list>
-                <string>Assignor</string>
-                <string>Assignee</string>
-                <string>Manager</string>
-              </list>
-            </value>
-        </item>
-      </dictionary>
+      <dictionary/>
     </pickle>
   </record>
 </ZopeData>

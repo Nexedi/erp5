@@ -37,10 +37,6 @@
             <value> <string>Variable</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>time</string> </value>
-        </item>
-        <item>
             <key> <string>role</string> </key>
             <value>
               <tuple/>

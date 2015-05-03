@@ -42,12 +42,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Fail action does nothing but put an error message into workflow history</string> </value>
-        </item>
-        <item>
-            <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -63,10 +59,6 @@
             <value> <string>Transition</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>fail_action</string> </value>
-        </item>
-        <item>
             <key> <string>role</string> </key>
             <value>
               <tuple>
@@ -79,29 +71,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Fail Action</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <list>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </list>
-            </value>
         </item>
       </dictionary>
     </pickle>

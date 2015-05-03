@@ -58,10 +58,6 @@
             <value> <string>State</string> </value>
         </item>
         <item>
-            <key> <string>ref</string> </key>
-            <value> <string>validated</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Validated</string> </value>
         </item>
