@@ -514,6 +514,17 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       else:
           return state
 
+  def getVariableList(self):
+    return self.objectValues(portal_type="Variable")
+
+  def getStateList(self):
+    return self.objectValues(portal_type="State")
+
+  def getWorkflowList(self):
+    return self.objectValues(portal_type="Worklist")
+
+  def getTransitionList(self):
+    return self.objectValues(portal_type="Transition")
   ###########
   ## Graph ##
   ###########
