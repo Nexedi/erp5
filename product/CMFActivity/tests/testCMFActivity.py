@@ -1417,8 +1417,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     foobar_list = []
     def setFoobar(self, object_list):
       foobar_list.append(len(object_list))
-      for obj, args, kw, _ in object_list:
+      for m in object_list:
+        obj, args, kw = m
         obj.foobar = getattr(obj.aq_base, 'foobar', 0) + kw.get('number', 1)
+        m.append(None)
     from Products.ERP5Type.Core.Folder import Folder
     Folder.setFoobar = setFoobar
 
@@ -3039,8 +3041,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     group_method_call_list = []
     def doSomething(self, message_list):
-      group_method_call_list.append(sorted((ob.getPath(), args, kw)
-                                           for ob, args, kw, _ in message_list))
+      r = []
+      for m in message_list:
+        r.append((m[0].getPath(), m[1], m[2]))
+        m.append(None)
+      r.sort()
+      group_method_call_list.append(r)
     activity_tool.__class__.doSomething = doSomething
     try:
       for activity in 'SQLDict', 'SQLQueue':
@@ -3258,7 +3264,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                     merge_parent=c[(i-1)//2 or i].getPath(),
                     priority=priority, **kw).doSomething()
     def invokeGroup(self, message_list):
-      invoked.append(sorted(c.index(m[0]) for m in message_list))
+      r = []
+      for m in message_list:
+        r.append(c.index(m[0]))
+        m.append(None)
+      r.sort()
+      invoked.append(r)
     category_tool.__class__.invokeGroup = invokeGroup
     try:
       activate(5, 0); activate(1, 1); check([1, 5])
@@ -3379,6 +3390,40 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation_module.manage_delObjects(ids=[organisation.getId()])
     organisation.reindexObject()
     self.tic()
+
+  def test_failingGroupMethod(self):
+    activity_tool = self.portal.portal_activities
+    obj = activity_tool.newActiveProcess()
+    self.tic()
+    obj.x = 1
+    def doSomething(self):
+      self.x %= self.x
+    obj.__class__.doSomething = doSomething
+    try:
+      activity_kw = dict(activity="SQLQueue", group_method_id=None)
+      obj.activate(**activity_kw).doSomething()
+      obj.activate(**activity_kw).doSomething()
+      obj.activate(**activity_kw).doSomething()
+      self.commit()
+      self.assertEqual(3, len(activity_tool.getMessageList()))
+      activity_tool.tic()
+      self.assertEqual(obj.x, 0)
+      skipped, failed = activity_tool.getMessageList()
+      self.assertEqual(0, skipped.retry)
+      self.assertEqual(1, failed.retry)
+      obj.x = 1
+      self.commit()
+      activity_tool.timeShift(VALIDATION_ERROR_DELAY)
+      activity_tool.tic()
+      m, = activity_tool.getMessageList()
+      self.assertEqual(1, failed.retry)
+      obj.x = 1
+      self.commit()
+      activity_tool.timeShift(VALIDATION_ERROR_DELAY)
+      activity_tool.tic()
+      self.assertFalse(activity_tool.getMessageList())
+    finally:
+      del obj.__class__.doSomething
 
 def test_suite():
   suite = unittest.TestSuite()

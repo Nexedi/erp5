@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import sys
+from collections import defaultdict
 from zLOG import LOG, INFO
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
@@ -140,12 +142,21 @@ class RuleTool(BaseTool):
   security.declarePrivate('updateSimulation')
   @UnrestrictedMethod
   def updateSimulation(self, message_list):
-    expandable_dict = {}
+    expandable_dict = defaultdict(list)
     for m in message_list:
-      expandable_dict.setdefault(m[0], {}).update(m[2])
-    for expandable, kw in expandable_dict.iteritems():
-      LOG("RuleTool", INFO, "Updating simulation for %s: %r"
-                            % (expandable.getPath(), kw))
-      expandable._updateSimulation(**kw)
+      expandable_dict[m[0]].append(m)
+    for expandable, message_list in expandable_dict.iteritems():
+      try:
+        kw = {}
+        for m in message_list:
+          kw.update(m[2])
+          m.append(None)
+        LOG("RuleTool", INFO, "Updating simulation for %s: %r"
+                              % (expandable.getPath(), kw))
+        expandable._updateSimulation(**kw)
+      except Exception:
+        exc_info = sys.exc_info()
+        for m in message_list:
+          m[3:] = exc_info
 
 InitializeClass(RuleTool)

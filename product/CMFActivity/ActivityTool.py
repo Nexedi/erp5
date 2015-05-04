@@ -137,6 +137,10 @@ MESSAGE_EXECUTED = 1
 MESSAGE_NOT_EXECUTABLE = 2
 
 
+class SkippedMessage(Exception):
+  pass
+
+
 class Message(BaseMessage):
   """Activity Message Class.
 
@@ -417,6 +421,8 @@ Named Parameters: %r
           raise Exception, 'Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.'
         except Exception:
           exc_info = sys.exc_info()
+      elif exc_info[0] is SkippedMessage:
+        return
       if log:
         LOG('ActivityTool', WARNING, 'Could not call method %s on object %s. Activity created at:\n%s' % (self.method_id, self.object_path, self.call_traceback), error=exc_info)
         # push the error in ZODB error_log
@@ -1285,7 +1291,7 @@ class ActivityTool (Folder, UniqueObject):
               active_obj = subobj.activate(activity=activity, **activity_kw)
               getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
             else:
-              expanded_object_list.append([subobj, m.args, m.kw, None])
+              expanded_object_list.append([subobj, m.args, m.kw])
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
@@ -1294,9 +1300,12 @@ class ActivityTool (Folder, UniqueObject):
         if len(expanded_object_list) > 0:
           traverse = self.getPortalObject().unrestrictedTraverse
           # FIXME: how to apply security here?
-          # NOTE: expanded_object_list[*][3] must be updated by the callee:
-          #       it must be deleted in case of failure, or updated with the
-          #       result to post on the active process otherwise.
+          # NOTE: The callee must update each processed item of
+          #       expanded_object_list, by appending:
+          #       - exc_info in case of error (so its length becomes 6)
+          #       - None or the result to post on the active process otherwise
+          #         (length=4)
+          #       Skipped item must not be touched (length=3).
           traverse(method_id)(expanded_object_list)
       except:
         # In this case, the group method completely failed.
@@ -1329,7 +1338,10 @@ class ActivityTool (Folder, UniqueObject):
             else:
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
               continue
-          m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
+          exc_info = result[3:]
+          m.setExecutionState(MESSAGE_NOT_EXECUTED,
+            tuple(exc_info) if exc_info else (SkippedMessage,),
+            context=self)
       if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
 
@@ -1337,8 +1349,11 @@ class ActivityTool (Folder, UniqueObject):
     class dummyGroupMethod(object):
       def __bobo_traverse__(self, REQUEST, method_id):
         def group_method(message_list):
-          for m in message_list:
-            m[3] = getattr(m[0], method_id)(*m[1], **m[2])
+          try:
+            for m in message_list:
+              m.append(getattr(m[0], method_id)(*m[1], **m[2]))
+          except Exception:
+            m += sys.exc_info()
         return group_method
     dummyGroupMethod = dummyGroupMethod()
 

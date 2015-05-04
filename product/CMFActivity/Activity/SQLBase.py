@@ -33,7 +33,7 @@ from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
-  Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
+  Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment, getTransactionalVariable)
@@ -569,7 +569,8 @@ class SQLBase(Queue):
         if uid_to_duplicate_uid_list_dict is not None:
           make_available_uid_list += uid_to_duplicate_uid_list_dict.get(uid, ())
         if (m.exc_type and # m.exc_type may be None
-            m.conflict_retry and issubclass(m.exc_type, ConflictError)):
+            (m.conflict_retry if issubclass(m.exc_type, ConflictError) else
+             m.exc_type is SkippedMessage)):
           delay_uid_list.append(uid)
         else:
           max_retry = m.max_retry

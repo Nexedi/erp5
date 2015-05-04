@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import sys
 from copy import deepcopy
 from collections import defaultdict
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
@@ -792,9 +793,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           tmp_object_list = [x[0] for x in object_list]
           super(CatalogTool, self).catalogObjectList(tmp_object_list, **m[2])
           if tmp_object_list:
-            for x in object_list:
-              if x[0] in tmp_object_list:
-                del x[3] # no result means failed
+            exc_info = sys.exc_info()
+          for x in object_list:
+            if x[0] in tmp_object_list:
+              x += exc_info # failed
+            else:
+              x.append(None) # success, no result
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
@@ -803,8 +807,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """Uncatalog a list of objects"""
       # XXX: this is currently only a placeholder for further optimization
       #      (for the moment, it's not faster than the dummy group method)
-      for m in message_list:
-        self.unindexObject(*m[1], **m[2])
+      try:
+        for m in message_list:
+          m.append(self.unindexObject(*m[1], **m[2]))
+      except Exception:
+        m += sys.exc_info()
 
     security.declarePrivate('unindexObject')
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
