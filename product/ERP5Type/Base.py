@@ -680,7 +680,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
         transition_id_list = [] #ERP5Workflow.objectIds(portal_type='Transition')
         transition_list = ERP5Workflow.objectValues(portal_type='Transition')
         for tr in transition_list:
-          transition_id_list.append('_'.join(tr.getId().split('_')[1:]))### getRef, this id list is actually a reference list
+          transition_id_list.append(tr.getReference())### getRef, this id list is actually a reference list
         LOG(" 686 transition_id_list = '%s'"%transition_id_list, WARNING, " in Base.py")
       elif workflow_type == 'DCWorkflowDefinition':
         LOG(" 688 Generating methods of DCWorkflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
@@ -697,7 +697,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
         transition_id_list = []
         transition_list = ERP5Workflow.objectValues(portal_type='Interaction')
         for tr in transition_list:
-          transition_id_list.append('_'.join(tr.getId().split('_')[1:])) # remove suffinx
+          transition_id_list.append(tr.getReference()) # remove suffinx
         LOG(" 703 transition_id_list = '%s'"%transition_id_list, WARNING, ' in Base.py')
       elif workflow_type == 'InteractionWorkflowDefinition':
         LOG(" 705 Generating methods of DC Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
@@ -716,7 +716,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
     trigger_dict = {}
 
     for transition in transition_list:
-      transition_id = transition.getId()
+      transition_id = transition.getReference()
       LOG("722 Found transition '%s'"%transition_id,WARNING, " in Base.py")
       if transition.trigger_type == TRIGGER_WORKFLOW_METHOD:
         LOG("723 Register Trigger by workflow method transition %s"%transition_id,WARNING, " in Base.py")
@@ -728,7 +728,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       LOG("733 processing transition '%s' of '%s'"%(tr_id,ERP5Workflow_id), WARNING, "in Base.py")
-      method_id = convertToMixedCase('_'.join(tr_id.split('_')[1:]))
+      method_id = convertToMixedCase(tr_id)
       LOG(" 731 register transition '%s' as method '%s'"%(tr_id, method_id), WARNING, " in Base.py")
       try:
         method = getattr(ptype_klass, method_id)
@@ -3091,7 +3091,7 @@ class Base( CopyContainer,
     for workflow_id in self.getTypeInfo().getTypeERP5WorkflowList():
       workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
       if workflow.getPortalType() == 'Workflow':
-        result += [('_'.join(workflow_id.split('_')[1:]), workflow._getWorkflowStateOf(self, id_only=1))]
+        result += [(workflow.getReference(), workflow._getWorkflowStateOf(self, id_only=1))]
     LOG(" 3093 Workflow History result is '%s'"%result, WARNING, " in Base.py")
     return result
 
