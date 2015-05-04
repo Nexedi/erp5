@@ -650,11 +650,6 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
   portal_type_module = portal_workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   portal_type_value = portal_type_module._getOb(portal_type, None)
 
-  """
-  for ERP5Workflow_id in portal_type.erp5workflow_list:
-    ERP5Workflow = portal_workflow._getOb(ERP5Workflow_id)
-  """
-  #raise NotImplementedError(portal_workflow.getPortalType()) # ERP5Site
   for ERP5Workflow in portal_workflow.getWorkflowValueListFor(portal_type_value):
     ERP5Workflow_id = ERP5Workflow.getId()
     workflow_type = ERP5Workflow.__class__.__name__
@@ -702,6 +697,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
       elif workflow_type == 'InteractionWorkflowDefinition':
         LOG(" 705 Generating methods of DC Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
         transition_id_list = ERP5Workflow.interactions
+        transition_list = []
         for interaction_id in transition_id_list:
           interaction = ERP5Workflow.interactions.get(interaction_id)
           transition_list.append(interaction)
@@ -712,7 +708,6 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
 
     ### zwj: compatibility for Interaction Workflow and Workflow ===============
     transition_id_set = set(transition_id_list)
-    transition_set = set(transition_list) ### useless
     trigger_dict = {}
 
     for transition in transition_list:
