@@ -256,6 +256,9 @@ class InteractionDefinition (SimpleItem):
 
             return self.manage_variables(REQUEST, 'Variables changed.')
 
+    def getReference(self):
+        return self.id
+
 Globals.InitializeClass(InteractionDefinition)
 
 

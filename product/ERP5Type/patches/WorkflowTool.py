@@ -23,8 +23,14 @@ from AccessControl import Unauthorized
 from Products.CMFCore.WorkflowTool import WorkflowTool
 from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Transitions import TransitionDefinition
+from Products.DCWorkflow.States import StateDefinition
+from Products.DCWorkflow.Variables import VariableDefinition
+from Products.DCWorkflow.Worklists import WorklistDefinition
+
 from Products.CMFCore.utils import Message as _
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
@@ -89,6 +95,14 @@ def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=N
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
 DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
+
+def method_getReference(self):
+  return self.id
+DCWorkflowDefinition.getReference = method_getReference
+TransitionDefinition.getReference = method_getReference
+StateDefinition.getReference = method_getReference
+VariableDefinition.getReference = method_getReference
+WorklistDefinition.getReference = method_getReference
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'

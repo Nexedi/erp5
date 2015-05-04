@@ -347,6 +347,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
     return DCWorkflowDefinition._checkTransitionGuard(self, t, ob, **kw)
 
+  def getReference(self):
+    return self.id
+
 Globals.InitializeClass(InteractionWorkflowDefinition)
 
 addWorkflowFactory(InteractionWorkflowDefinition, id='interaction_workflow',
