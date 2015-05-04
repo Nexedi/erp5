@@ -227,3 +227,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
 
   def _getWorkflowStateOf(self, ob, id_only=0):
     return None
+
+  def getTransitionList(self):
+    return self.objectValues(portal_type="Interaction")
