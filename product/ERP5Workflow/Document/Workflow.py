@@ -104,7 +104,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
-    state_id = '_'.join(self.getSourceId().split('_')[1:])
+    state_id = self.getSourceValue().getReference()
     status_dict = {state_var: state_id}
     variable_list = self.objectValues(portal_type='Variable')
     former_status = self._getOb(status_dict[state_var], None)
@@ -358,6 +358,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                 'category': tdef.actbox_category,
                 'transition': tdef}))
             fmt_data._pop()
+            LOG("362 listing user action '%s'"%tid,WARNING," in Workflow.py")
       res.sort()
 
       return [ result[1] for result in res ]
@@ -502,15 +503,16 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       status = tool.getStatusOf(id_no_suffix, ob)
       LOG("502 tool is '%s' type, status is '%s'"%(tool.getPortalType(), status),WARNING, " in Workflow.py")
       if status is None:
-          state = self.getSourceId()
+          state = self.getSourceValue()
       else:
-          state = 'state_' + status.get(self.getStateVariable(), None)
+          state_id = 'state_' + status.get(self.getStateVariable(), None)
+          state = self._getOb(state_id)
           if state is None:
-              state = self.getSourceId()
+              state = self.getSourceValue()
       if id_only:
-          return '_'.join(state.split('_')[1:])
+          return state.getReference()
       else:
-          return self._getOb(state, None)
+          return state
 
   ###########
   ## Graph ##
