@@ -54,8 +54,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>workflows</string>
-                        <string>interaction_workflows</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
