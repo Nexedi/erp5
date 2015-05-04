@@ -144,10 +144,13 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
     if state_object == None:
       state_object = workflow.getSourceValue()
 
-    old_state = state_object.getId()
+    old_state = state_object.getReference()
     old_sdef = state_object
-
-    new_state = self.getDestinationId()
+    new_sdef = self.getDestinationValue()
+    if new_sdef == None:
+      new_state = None
+    else:
+      new_state = new_sdef.getReference()
 
     if new_state is None:
         #new_state = workflow.getSourceId()
@@ -159,11 +162,6 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
         former_status = {}
     else:
         former_status = state_object.getId()
-
-    try:
-        new_sdef = self.getDestinationValue()
-    except KeyError:
-        raise WorkflowException('Destination state undefined: ' + new_state)
 
     LOG(" 168 object '%s' will change from state '%s' to '%s'"%(document.getId(), old_state, new_state), WARNING, " in Transition.py")
 
@@ -210,7 +208,7 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
     status_dict['undo'] = 0
 
     # Modify workflow history
-    status_dict[state_var] = '_'.join(new_state.split('_')[1:])
+    status_dict[state_var] = new_state
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
     # update variables =========================================================
@@ -227,7 +225,7 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
 
     for vdef in workflow.objectValues(portal_type='Variable'):
       id = vdef.getId()
-      id_no_suffix = '_'.join(id.split('_')[1:])
+      id_no_suffix = vdef.getReference()
       if vdef.for_status == 0:
         continue
       expr = None
