@@ -188,7 +188,7 @@ class ERP5WorkflowMethod(Method):
       valid_list = []
       workflow = wf_module._getOb(wf_id)
       for transition_id in transition_list:
-        LOG("191 Type '%s' is ckecking transition '%s' of workflow '%s'" %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py")
+        LOG("191 Type '%s' is checking transition '%s' of workflow '%s'" %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py")
         if workflow.isERP5WorkflowMethodSupported(instance, workflow._getOb(transition_id)):
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
@@ -643,13 +643,13 @@ def getClassPropertyList(klass):
   return ps_list
 
 def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
-  LOG("648 Start Initializing portal type'%s'"%ptype_klass.__name__, WARNING, " in Base.py")
   portal_type = ptype_klass.__name__
   workflow_dict = {}
   interaction_workflow_dict = {}
   portal_workflow = aq_inner(portal_workflow)
   portal_type_module = portal_workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
   portal_type_value = portal_type_module._getOb(portal_type, None)
+
   """
   for ERP5Workflow_id in portal_type.erp5workflow_list:
     ERP5Workflow = portal_workflow._getOb(ERP5Workflow_id)
@@ -658,6 +658,7 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
   for ERP5Workflow in portal_workflow.getWorkflowValueListFor(portal_type_value):
     ERP5Workflow_id = ERP5Workflow.getId()
     workflow_type = ERP5Workflow.__class__.__name__
+    LOG(" 661 initializing portal type '%s' "%ptype_klass.__name__, WARNING, " in Base.py")
     LOG(" 664 Found Workflow type = %s"%workflow_type, WARNING, " in Base.py.")
     if workflow_type == 'Workflow' or workflow_type == 'DCWorkflowDefinition':
       state_var = ERP5Workflow.getStateVariable()
@@ -675,14 +676,14 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
         ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
       if workflow_type == 'Workflow':
-        LOG("681 Generating methods of Workflow type workflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
+        LOG(" 681 Generating methods of Workflow type workflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
         transition_id_list = [] #ERP5Workflow.objectIds(portal_type='Transition')
         transition_list = ERP5Workflow.objectValues(portal_type='Transition')
         for tr in transition_list:
           transition_id_list.append('_'.join(tr.getId().split('_')[1:]))### getRef, this id list is actually a reference list
-        LOG("686 transition_id_list = '%s'"%transition_id_list, WARNING, " in Base.py")
+        LOG(" 686 transition_id_list = '%s'"%transition_id_list, WARNING, " in Base.py")
       elif workflow_type == 'DCWorkflowDefinition':
-        LOG("688 Generating methods of DCWorkflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
+        LOG(" 688 Generating methods of DCWorkflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
         transition_id_list = ERP5Workflow.transitions
         transition_list = []
         for transition_id in transition_id_list:
@@ -692,14 +693,14 @@ def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
       storage = workflow_dict
     elif workflow_type == 'Interaction Workflow' or workflow_type == 'InteractionWorkflowDefinition':
       if workflow_type == 'Interaction Workflow':
-        LOG("698 Generating methods of Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
+        LOG(" 698 Generating methods of Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
         transition_id_list = []
         transition_list = ERP5Workflow.objectValues(portal_type='Interaction')
         for tr in transition_list:
           transition_id_list.append('_'.join(tr.getId().split('_')[1:])) # remove suffinx
-        LOG("703 transition_id_list = '%s'"%transition_id_list, WARNING, ' in Base.py')
+        LOG(" 703 transition_id_list = '%s'"%transition_id_list, WARNING, ' in Base.py')
       elif workflow_type == 'InteractionWorkflowDefinition':
-        LOG("705 Generating methods of DC Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
+        LOG(" 705 Generating methods of DC Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
         transition_id_list = ERP5Workflow.interactions
         for interaction_id in transition_id_list:
           interaction = ERP5Workflow.interactions.get(interaction_id)
