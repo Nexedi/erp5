@@ -98,11 +98,41 @@ DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 
 def method_getReference(self):
   return self.id
+
+def DCWorkflowDefinition_getVariableList(self):
+  if self.variables is not None:
+    return self.variables.objectValues()
+  else:
+    return None
+
+def DCWorkflowDefinition_getStateList(self):
+  if self.states is not None:
+    return self.states.objectValues()
+  else:
+    return None
+
+def DCWorkflowDefinition_getTransitionList(self):
+  if self.transitions is not None:
+    return self.transitions.objectValues()
+  else:
+    return None
+
+def DCWorkflowDefinition_getWorklistList(self):
+  if self.worklists is not None:
+    return self.worklists.objectValues()
+  else:
+    return None
+
 DCWorkflowDefinition.getReference = method_getReference
 TransitionDefinition.getReference = method_getReference
 StateDefinition.getReference = method_getReference
 VariableDefinition.getReference = method_getReference
 WorklistDefinition.getReference = method_getReference
+
+DCWorkflowDefinition.getVariableList = DCWorkflowDefinition_getVariableList
+DCWorkflowDefinition.getStateList = DCWorkflowDefinition_getStateList
+DCWorkflowDefinition.getTransitionList = DCWorkflowDefinition_getTransitionList
+DCWorkflowDefinition.getWorklistList = DCWorkflowDefinition_getWorklistList
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
