@@ -49,22 +49,6 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
     def getIdAsReferenceSuffix():
       return extra_string
 
-    def __migrate(self):
-      if self.id[extra_string_index:] != extra_string:
-        new_id = self.__dict__.get('default_reference') + extra_string
-        parent = self.getParentValue()
-        if parent.has_key(new_id):
-          LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
-              " property sheet, due to ID conflict" % (new_id, parent.getId()))
-        else:
-          try:
-            self.setId(new_id)
-            del self.default_reference
-          except ActivityPendingError:
-            LOG("IdAsReferenceMixin", WARNING, "Skipping migration of %r in %r"
-              " property sheet, due to pending activities" %
-               (new_id, parent.getId()))
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
     def getReference(self, *args):
@@ -89,20 +73,14 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
       self.__dict__.pop('default_reference', None)
       if string_type == "prefix":
         new_id = extra_string + value
-        if parent.has_key(new_id):
-          LOG("IdAsReferenceMixin", WARNING, "Skipping adding of %r in %r"
-              " property sheet, due to ID conflict" % (new_id, parent.getId()))
-        else:
-          self.setId(new_id)
-          self.default_reference = value # to save reference in workflow tool.
       elif string_type == "suffix":
         new_id = value + extra_string
-        if parent.has_key(new_id):
-          LOG("IdAsReferenceMixin", WARNING, "Skipping adding of %r in %r"
-              " property sheet, due to ID conflict" % (new_id, parent.getId()))
-        else:
-          self.setId(new_id)
-          self.default_reference = value
+      if parent.has_key(new_id):
+        LOG("IdAsReferenceMixin", WARNING, "Skipping adding of %r in %r"
+            " property sheet, due to ID conflict" % (new_id, parent.getId()))
+      else:
+        self.setId(new_id)
+        self.default_reference = value
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference
