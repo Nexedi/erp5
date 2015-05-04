@@ -86,7 +86,7 @@ class TitleGetter(BaseGetter):
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
-      return wf._getWorkflowStateOf(instance).getTitle()
+      return wf._getWorkflowStateOf(instance).title
 
     psyco.bind(__call__)
 
