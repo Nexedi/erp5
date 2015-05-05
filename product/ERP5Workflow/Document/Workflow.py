@@ -25,6 +25,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import sys
+from types import StringTypes
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
@@ -37,6 +39,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Accessor import WorkflowState
 from Products.ERP5Type import Permissions
 from tempfile import mktemp
+
 import os
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC
@@ -49,7 +52,7 @@ from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Products.CMFCore.WorkflowCore import ObjectMoved
 from Products.DCWorkflow.utils import Message as _
 from DocumentTemplate.DT_Util import TemplateDict
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime import DateTime
 from zLOG import LOG, ERROR, DEBUG, WARNING
@@ -100,7 +103,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     Set initial state on the Document
     """
     state_var = self.getStateVariable()
-    #document.setCategoryMembership(state_var, self.getSource())
     object = self.getStateChangeInformation(document, self.getSourceValue())
 
     # Initialize workflow history
@@ -118,7 +120,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         value = expr(ec)
       else:
         value = variable.getInitialValue(object=object)
-      status_dict['_'.join(variable.getId().split('_')[1:])] = value # remove suffix
+      status_dict[variable.getReference()] = value
 
     self._updateWorkflowHistory(document, status_dict)
     self.updateRoleMappingsFor(document)
@@ -185,7 +187,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                           transition_url=transition_url,
                           state=state)
 
-  def isERP5WorkflowMethodSupported(self, document, transition):
+  def isERP5WorkflowMethodSupported(self, document, transition_id):
+    transition = self._getOb('transition_' + transition_id)
     sdef = self._getWorkflowStateOf(document, id_only=0)
     LOG(" 190 is transition '%s' supported by workflow '%s'"%(transition.getReference(), self.getReference()), WARNING, " in Workflow.py")
     if sdef is None:
@@ -196,6 +199,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         ):
       return 1
     return 0
+
+  isWorkflowMethodSupported = isERP5WorkflowMethodSupported
 
   security.declarePrivate('isActionSupported')
   def isActionSupported(self, document, action, **kw):
@@ -244,8 +249,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           tdef = t
           break
     return tdef
-
-  ### zwj: following parts related to the security features
 
   security.declarePrivate('updateRoleMappingsFor')
   def updateRoleMappingsFor(self, document):
@@ -298,15 +301,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       raise WorkflowException(msg)
     if not self._checkTransitionGuard(tdef, document, **kw):
       raise Unauthorized(action)
-    ### execute action
     self._changeStateOf(document, tdef)
-
-    workflow_list = document.getTypeInfo().getTypeERP5WorkflowList()
-    for interaction_workflow in self.getParent().objectValues(portal_type='Interaction Workflow'):
-      if interaction_workflow.getId() in workflow_list:
-        for interaction in interaction_workflow.objectValues(portal_type='Interaction'):
-          if action in interaction.getMethodId():
-            interaction.execute(document)
 
   def _changeStateOf(self, document, tdef=None, kwargs=None):
     '''
@@ -317,7 +312,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     moved_exc = None
     while 1:
       try:
-        sdef = tdef.execute(document, kwargs)
+        sdef = self._executeTransition(document, tdef, kwargs)
       except ObjectMoved, moved_exc:
         document = moved_exc.getNewObject()
         sdef = self._getWorkflowStateOf(document, id_only=0)
@@ -362,7 +357,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       res.sort()
 
       return [ result[1] for result in res ]
-
 
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     """
@@ -514,17 +508,246 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       else:
           return state
 
-  def getVariableList(self):
-    return self.objectValues(portal_type="Variable")
+  def getVariableValueList(self):
+    variable_dict = {}
+    for vdef in self.objectValues(portal_type="Variable"):
+      variable_dict[vdef.getReference()] = vdef
+    return variable_dict
 
-  def getStateList(self):
-    return self.objectValues(portal_type="State")
+  def getVariableIdList(self):
+    id_list = []
+    for ob in self.objectValues(portal_type="Variable"):
+      id_list.append(ob.getReference())
+    return id_list
 
-  def getWorkflowList(self):
-    return self.objectValues(portal_type="Worklist")
+  def getStateValueList(self):
+    state_dict = {}
+    for sdef in self.objectValues(portal_type="State"):
+      state_dict[sdef.getReference()] = sdef
+    return state_dict
 
-  def getTransitionList(self):
-    return self.objectValues(portal_type="Transition")
+  def getStateIdList(self):
+    id_list = []
+    for ob in self.objectValues(portal_type="State"):
+      id_list.append(ob.getReference())
+    return id_list
+
+  def getWorklistValueList(self):
+    worklist_dict = {}
+    for qdef in self.objectValues(portal_type="Worklist"):
+      worklist_dict[qdef.getReference()] = qdef
+    return worklist_dict
+
+  def getWorklistIdList():
+    id_list = []
+    for ob in self.objectValues(portal_type="Worklist"):
+      id_list.append(ob.getReference())
+    return id_list
+
+  def getTransitionValueList(self):
+    transition_dict = {}
+    for tdef in self.objectValues(portal_type="Transition"):
+      transition_dict[tdef.getReference()] = tdef
+    return transition_dict
+
+  def getTransitionIdList(self):
+    id_list = []
+    for ob in self.objectValues(portal_type="Transition"):
+      id_list.append(ob.getReference())
+    return id_list
+
+  def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
+    """ Execute workflow methods.
+    """
+    LOG("transition_list is '%s'"%transition_list, WARNING, " in Workflow.py 528.")
+    if type(transition_list) in StringTypes:
+      method_id = transition_list
+    elif len(transition_list) == 1:
+      method_id = transition_list[0]
+    else:
+      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+      raise WorkflowException, 'Object is in an undefined state'
+    prefix_method_id = 'transition_' + method_id
+    if prefix_method_id not in sdef.getDestinationIdList():
+      raise Unauthorized(method_id)
+    tdef = self._getOb(prefix_method_id)
+    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
+      raise WorkflowException, (
+         'Transition %s is not triggered by a workflow method'
+             % method_id)
+    if not self._checkTransitionGuard(tdef, ob):
+      raise Unauthorized(method_id)
+    self._changeStateOf(ob, tdef, kw)
+    if getattr(ob, 'reindexObject', None) is not None:
+      if kw is not None:
+        activate_kw = kw.get('activate_kw', {})
+      else:
+        activate_kw = {}
+      ob.reindexObject(activate_kw=activate_kw)
+
+  def notifyBefore(self, ob, transition_list, args=None, kw=None):
+    pass
+
+  def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
+    pass
+
+  def _executeTransition(self, document, tdef=None, form_kw=None):
+    """
+    Execute transition.
+    """
+    sci = None
+    econtext = None
+    moved_exc = None
+    validation_exc = None
+    tool = getToolByName(self, 'portal_workflow')
+
+    # Figure out the old and new states.
+    state_var = self.getStateVariable()
+    status_dict = self.getCurrentStatusDict(document)
+    current_state_value = self._getWorkflowStateOf(document, id_only=0)
+    status_dict['undo'] = 0
+
+    if current_state_value == None:
+      current_state_value = self.getSourceValue()
+    old_state = current_state_value.getReference()
+    old_sdef = current_state_value
+
+    if tdef is None:
+      new_sdef = self.getSourceValue()
+      if not new_state:
+        return
+      former_status = {}
+    else:
+      new_sdef = tdef.getDestinationValue()
+      if new_sdef == None:
+        new_state = old_state
+      else:
+        new_state = new_sdef.getReference()
+      former_status = current_state_value.getReference()
+
+    LOG(" Object '%s' will change from state '%s' to '%s'"%(document.getId(), old_state, new_state), WARNING, " in Workflow.py 593")
+
+    # Execute the "before" script.
+    before_script_success = 1
+    if tdef is not None and tdef.getBeforeScriptId():
+      script_id = tdef.getBeforeScriptId()
+      if script_id:
+        script = self._getOb(script_id)
+        # Pass lots of info to the script in a single parameter.
+        kwargs = form_kw
+        sci = StateChangeInfo(
+              document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
+        try:
+          #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
+          script.execute(sci)  # May throw an exception.
+        except ValidationFailed, validation_exc:
+          before_script_success = 0
+          before_script_error_message = deepcopy(validation_exc.msg)
+          validation_exc_traceback = sys.exc_traceback
+        except ObjectMoved, moved_exc:
+          ob = moved_exc.getNewObject()
+          # Re-raise after transition
+
+    # update variables
+    state_values = None
+    if new_sdef is not None:
+      state_values = getattr(new_sdef,'var_values', None)
+    if state_values is None:
+      state_values = {}
+
+    if state_values is None: state_values = {}
+    tdef_exprs = None
+    if tdef is not None:
+      tdef_exprs = tdef.objectValues(portal_type='Variable')
+    if tdef_exprs is None: tdef_exprs = {}
+
+    for vdef in self.objectValues(portal_type='Variable'):
+      id = vdef.getId()
+      id_no_suffix = vdef.getReference()
+      if vdef.for_status == 0:
+        continue
+      expr = None
+      if id_no_suffix in state_values:
+        value = state_values[id_no_suffix]
+      elif id in tdef_exprs:
+        expr = tdef_exprs[id]
+      elif not vdef.update_always and id in former_status:
+        # Preserve former value
+        value = former_status[id]
+      else:
+        if vdef.default_expr is not None:
+          expr = vdef.default_expr
+        else:
+          value = vdef.default_value
+      if expr is not None:
+        # Evaluate an expression.
+        if econtext is None:
+          # Lazily create the expression context.
+          if sci is None:
+            kwargs = form_kw
+            sci = StateChangeInfo(
+                document, self, former_status, tdef,
+                old_sdef, new_sdef, kwargs)
+          econtext = Expression_createExprContext(sci)
+        expr = Expression(expr)
+        value = expr(econtext)
+      if id_no_suffix == "action":
+        status_dict[id_no_suffix] = '_'.join(value.split('_')[1:])
+      else:
+        status_dict[id_no_suffix] = value
+
+    # Do not proceed in case of failure of before script
+    if not before_script_success:
+      status_dict[state_var] = old_state # Remain in state
+      tool.setStatusOf(self.getReference(), document, status_dict)
+      sci = StateChangeInfo(
+        document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
+        # put the error message in the workflow history
+      sci.setWorkflowVariable(error_message=before_script_error_message)
+      if validation_exc :
+        # reraise validation failed exception
+        raise validation_exc, None, validation_exc_traceback
+      return new_sdef
+
+    # update state
+    status_dict[state_var] = new_state
+    object = self.getStateChangeInformation(document, current_state_value, transition=self)
+    # Update all transition variables
+    if form_kw is not None:
+      object.REQUEST.other.update(form_kw)
+
+    for variable in self.objectValues(portal_type='Transition Variable'):
+      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
+
+    tool.setStatusOf(self.getReference(), document, status_dict)
+    self.updateRoleMappingsFor(document)
+
+    # Execute the "after" script.
+    script_id = getattr(tdef, 'getAfterScriptId')()
+    if script_id is not None:
+      kwargs = form_kw
+      # Script can be either script or workflow method
+      if script_id in old_sdef.getDestinationIdList() and \
+          self._getOb(script_id).trigger_type == TRIGGER_WORKFLOW_METHOD:
+        getattr(document, convertToMixedCase(self._getOb(script_id).getReference()))()
+      else:
+        script = self._getOb(script_id)
+        # Pass lots of info to the script in a single parameter.
+        if script.getTypeInfo().getId() == 'Workflow Script':
+          sci = StateChangeInfo(
+              document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
+          script.execute(sci)  # May throw an exception.
+        else:
+          raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+    # Return the new state object.
+    if moved_exc is not None:
+        # Propagate the notification that the object has moved.
+        raise moved_exc
+    else:
+        return new_sdef
+
   ###########
   ## Graph ##
   ###########
