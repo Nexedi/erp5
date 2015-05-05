@@ -123,119 +123,6 @@ def resetRegisteredERP5WorkflowMethod(portal_type=None):
   for method in erp5workflow_method_registry:
     method.reset(portal_type=portal_type)
 
-class ERP5WorkflowMethod(Method):
-  ### to get the name of the class
-  def __init__(self, method, id=None, reindex=1):
-    self._m = method
-    if id is None:
-      self._transition_id = method.__name__
-    else:
-      self._transition_id = id
-    LOG("134 initializing method '%s'"%self._transition_id, WARNING, " in Base.py")
-    if not method.__name__.startswith('_'):
-      self.__name__ = method.__name__
-      for func_id in ['func_code', 'func_defaults', 'func_dict', 'func_doc', 'func_globals', 'func_name']:
-        setattr(self, func_id, getattr(method, func_id, None))
-    self._invoke_once = {}
-    self._invoke_always = {} # Store in a dict all workflow IDs which require to
-                                # invoke wrapWorkflowMethod at every call
-                                # during the same transaction
-
-  def getTransitionId(self):
-    return self._transition_id
-
-  def __call__(self, instance, *args, **kw):
-    LOG("148 Calling method '%s' by '%s'"%(self._transition_id, instance.getId()), WARNING, " in Base.py")
-    if getattr(self, '__name__', None) in ('getPhysicalPath', 'getId',):
-      return self._m(instance, *args, **kw)
-
-    # Build a list of transitions which may need to be invoked
-    instance_path = instance.getPhysicalPath()
-    portal_type = instance.portal_type
-    transactional_variable = getTransactionalVariable()
-    invoke_once_dict = self._invoke_once.get(portal_type, {})
-    valid_invoke_once_item_list = []
-    # Only keep those transitions which were never invoked
-    once_transition_dict = {}
-    # New implementation does not use any longer wrapWorkflowMethod
-    # but directly calls the workflow methods
-
-    for wf_id, transition_list in invoke_once_dict.iteritems():
-      valid_transition_list = []
-      for transition_id in transition_list:
-        once_transition_key = ('Products.ERP5Type.Base.ERP5WorkflowMethod.__call__',
-                                wf_id, transition_id, instance_path)
-        once_transition_dict[(wf_id, transition_id)] = once_transition_key
-        if once_transition_key not in transactional_variable:
-          valid_transition_list.append(transition_id)
-      if valid_transition_list:
-        valid_invoke_once_item_list.append((wf_id, valid_transition_list))
-    LOG("173 _invoke_always list contains: '%s'"%self._invoke_always,WARNING," in Base.py")
-    candidate_transition_item_list = valid_invoke_once_item_list + \
-                         self._invoke_always.get(portal_type, {}).items()
-
-    # Try to return immediately if there are no transition to invoke
-    if not candidate_transition_item_list:
-      return apply(self.__dict__['_m'], (instance,) + args, kw)
-
-    try:
-      wf_module = instance.getPortalObject().portal_workflow
-    except AttributeError:
-      return self._m(instance, *arge, **kw)
-
-    valid_transition_item_list = []
-    for wf_id, transition_list in candidate_transition_item_list:
-      valid_list = []
-      workflow = wf_module._getOb(wf_id)
-      for transition_id in transition_list:
-        LOG("191 Type '%s' is checking transition '%s' of workflow '%s'" %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py")
-        if workflow.isERP5WorkflowMethodSupported(instance, workflow._getOb(transition_id)):
-          valid_list.append(transition_id)
-          once_transition_key = once_transition_dict.get((wf_id, transition_id))
-          transactional_variable[once_transition_key] = 1
-        else:
-          raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
-      if valid_list:
-        valid_transition_item_list.append((wf_id, valid_list))
-
-    result = apply(self.__dict__['_m'], (instance,) + args, kw)
-
-    ### zwj: Execute method
-    for wf_id, transition_list in valid_transition_item_list:
-      try:
-        for tr_id in transition_list:
-          method = wf_module._getOb(wf_id)._getOb(tr_id)
-          LOG(" 208 executing method '%s' of workflow '%s'"%(tr_id, wf_id), WARNING, " in Base.py")
-          method.execute(instance)
-      except ObjectDeleted:
-        raise ObjectDeleted(result)
-      except ObjectMoved, ex:
-        raise ObjectMoved(ex.getNewObject(), result)
-
-  def registerERP5TransitionAlways(self, portal_type, workflow_id, transition_id):
-    LOG(" 216 register transition-always '%s' of workflow '%s'"%(transition_id, workflow_id), WARNING, " in Base.py")
-    transition_list = self._invoke_always.setdefault(portal_type, {}).setdefault(workflow_id, [])
-    if transition_id not in transition_list: transition_list.append(transition_id)
-    self.registerERP5()
-
-  def registerERP5TransitionOncePerTransaction(self, portal_type, workflow_id, transition_id):
-    LOG(" 222 register transition-once '%s' of workflow '%s'"%(transition_id, worfklow_id), WARNING, " in Base.py")
-    transition_list = self._invoke_once.setdefault(portal_type, {}).setdefault(workflow_id, [])
-    if transition_id not in transition_list: transition_list.append(transition_id)
-    self.registerERP5()
-
-  def registerERP5(self):
-    erp5workflow_method_registry.append(self)
-  
-  def reset(self, portal_type=None):
-    if portal_type:
-      self._invoke_once[portal_type] = {}
-      self._invoke_always[portal_type] = {}
-    else:
-      self._invoke_once = {}
-      self._invoke_always = {}
-  ### ==========================================================================
-
 class WorkflowMethod(Method):
 
   def __init__(self, method, id=None, reindex=1):
@@ -342,7 +229,8 @@ class WorkflowMethod(Method):
               # a run-once transition, prevent it from running again in
               # the same transaction
             transactional_variable[once_transition_key] = 1
-        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
+        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition' or \
+            candidate_workflow.__class__.__name__ == 'Workflow':
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
         # XXX Keep the log for projects that needs to comment out
         #     the previous line.
@@ -642,195 +530,7 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
-def initializePortalTypeERP5WorkflowMethod(ptype_klass, portal_workflow):
-  portal_type = ptype_klass.__name__
-  workflow_dict = {}
-  interaction_workflow_dict = {}
-  portal_workflow = aq_inner(portal_workflow)
-  portal_type_module = portal_workflow.getPortalObject().getDefaultModule(portal_type="portal_types")
-  portal_type_value = portal_type_module._getOb(portal_type, None)
-
-  for ERP5Workflow in portal_workflow.getWorkflowValueListFor(portal_type_value):
-    ERP5Workflow_id = ERP5Workflow.getId()
-    workflow_type = ERP5Workflow.__class__.__name__
-    LOG(" 661 initializing portal type '%s' "%ptype_klass.__name__, WARNING, " in Base.py")
-    LOG(" 664 Found Workflow type = %s"%workflow_type, WARNING, " in Base.py.")
-    if workflow_type == 'Workflow' or workflow_type == 'DCWorkflowDefinition':
-      state_var = ERP5Workflow.getStateVariable()
-      LOG(" 666 Found Workflow '%s' with state_var '%s'"%(ERP5Workflow_id, state_var), WARNING, " in Base.py.")
-      for method_id, getter in (
-          ('get%s' % UpperCase(state_var), WorkflowState.Getter),
-          ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
-          ('getTranslated%s' % UpperCase(state_var),
-                                     WorkflowState.TranslatedGetter),
-          ('getTranslated%sTitle' % UpperCase(state_var),
-                                     WorkflowState.TranslatedTitleGetter),
-          ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
-          ):
-        method = getter(method_id, ERP5Workflow_id)
-        ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
-      if workflow_type == 'Workflow':
-        LOG(" 681 Generating methods of Workflow type workflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
-        transition_id_list = [] #ERP5Workflow.objectIds(portal_type='Transition')
-        transition_list = ERP5Workflow.objectValues(portal_type='Transition')
-        for tr in transition_list:
-          transition_id_list.append(tr.getReference())### getRef, this id list is actually a reference list
-        LOG(" 686 transition_id_list = '%s'"%transition_id_list, WARNING, " in Base.py")
-      elif workflow_type == 'DCWorkflowDefinition':
-        LOG(" 688 Generating methods of DCWorkflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
-        transition_id_list = ERP5Workflow.transitions
-        transition_list = []
-        for transition_id in transition_id_list:
-          LOG(" 692 register transition '%s' to transition_list"%transition_id, WARNING, " in Base.py")
-          transition = ERP5Workflow.transitions.get(transition_id)
-          transition_list.append(transition)
-      storage = workflow_dict
-    elif workflow_type == 'Interaction Workflow' or workflow_type == 'InteractionWorkflowDefinition':
-      if workflow_type == 'Interaction Workflow':
-        LOG(" 698 Generating methods of Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
-        transition_id_list = []
-        transition_list = ERP5Workflow.objectValues(portal_type='Interaction')
-        for tr in transition_list:
-          transition_id_list.append(tr.getReference()) # remove suffinx
-        LOG(" 703 transition_id_list = '%s'"%transition_id_list, WARNING, ' in Base.py')
-      elif workflow_type == 'InteractionWorkflowDefinition':
-        LOG(" 705 Generating methods of DC Interaction Workflow '%s'"%ERP5Workflow_id, WARNING, ' in Base.py')
-        transition_id_list = ERP5Workflow.interactions
-        transition_list = []
-        for interaction_id in transition_id_list:
-          interaction = ERP5Workflow.interactions.get(interaction_id)
-          transition_list.append(interaction)
-      storage = interaction_workflow_dict
-    else:
-      LOG("Please check workflow list definded. '%s' '%s' is ignored "%(workflow_type, ERP5Workflow_id),WARNING,"in Base.py/initializePortalTypeWorkflowMethod.")
-      continue
-
-    ### zwj: compatibility for Interaction Workflow and Workflow ===============
-    transition_id_set = set(transition_id_list)
-    trigger_dict = {}
-
-    for transition in transition_list:
-      transition_id = transition.getReference()
-      LOG("722 Found transition '%s'"%transition_id,WARNING, " in Base.py")
-      if transition.trigger_type == TRIGGER_WORKFLOW_METHOD:
-        LOG("723 Register Trigger by workflow method transition %s"%transition_id,WARNING, " in Base.py")
-        trigger_dict[transition_id] = transition
-    storage[ERP5Workflow_id] = (transition_id_set, trigger_dict)
-  ### zwj: generate Workflow methods
-  for ERP5Workflow_id, v in workflow_dict.iteritems():
-    LOG("730 Generating methods of Workflow '%s'"%ERP5Workflow_id, WARNING, " in Base.py")
-    transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
-      LOG("733 processing transition '%s' of '%s'"%(tr_id,ERP5Workflow_id), WARNING, "in Base.py")
-      method_id = convertToMixedCase(tr_id)
-      LOG(" 731 register transition '%s' as method '%s'"%(tr_id, method_id), WARNING, " in Base.py")
-      try:
-        method = getattr(ptype_klass, method_id)
-      except AttributeError:
-        LOG("738 processing new method '%s'"%method_id, WARNING, " in Base.py.")
-        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-                                                method_id)
-        ptype_klass.registerERP5WorkflowMethod(method_id, ERP5Workflow_id, tr_id, 0)
-        continue
-      LOG("743 check if method '%s' is callable"%method_id, WARNING, " in Base.py")
-      # Wrap method
-      if not callable(method):
-        LOG('initializePortalTypeDynamicWorkflowMethods', 100,
-            'WARNING! Can not initialize %s on %s' % \
-              (method_id, portal_type))
-        continue
-      LOG("751 check if workflow method '%s' is an ERP5 WorkflowMethod"%method_id, WARNING, " in Base.py")
-      if not isinstance(method, ERP5WorkflowMethod):
-        method = ERP5WorkflowMethod(method, method_id)
-        setattr(ptype_klass, method_id, method)
-      else:
-        transition_id = method.getTransitionId()
-        if transition_id in transition_id_set:
-          method.registerERP5TransitionAlways(portal_type, ERP5Workflow_id, transition_id)
-      method.registerERP5TransitionAlways(portal_type, ERP5Workflow_id, tr_id)
-
-  ### zwj: generate interaction workflow methods
-  if not interaction_workflow_dict:
-    return
-  class_method_id_list = ptype_klass.getClassMethodIdList(ptype_klass)
-  interaction_queue = []
-  LOG(" 767 Initializing Interaction Workflow methods",WARNING," in Base.py")
-  for wf_id, v in interaction_workflow_dict.iteritems():
-    transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
-      # check portal type filter
-      LOG(" 772 processing transition '%s' of workflow '%s'"%(tdef.getId(), wf_id), WARNING, " in Base.py.")
-      type_filter = list(tdef.portal_type_filter)
-      if (type_filter != [] and portal_type not in type_filter):
-        continue
-      # check portal type group filter
-      group_filter = list(tdef.portal_type_group_filter) ### not use property sheet accessor
-      if group_filter != []:
-        getPortalGroupedTypeSet = portal_workflow.getPortalObject()._getPortalGroupedTypeSet
-        if not any(portal_type in getPortalGroupedTypeSet(portal_type_group) for
-                  portal_type_group in group_filter):
-          continue
-      # gather trigger method id
-      if list(tdef.method_id) == []:
-        raise NotImplementedError ("Please give a trigger method for interaction: %s in interaction workflow: %s."%(tr_id, wf_id))
-
-      for imethod_id in list(tdef.method_id):
-        if wildcard_interaction_method_id_match(imethod_id):
-          method_id_matcher = re.compile(imethod_id).match
-          # queue transitions using regexps for later examination
-          interaction_queue.append((wf_id,
-                                    tr_id,
-                                    transition_id_set,
-                                    tdef.once_per_transaction,
-                                    method_id_matcher))
-          method_id_list = filter(method_id_matcher, class_method_id_list)
-        else:
-          method_id_list = [imethod_id]
-        for method_id in method_id_list:
-          method = getattr(ptype_klass, method_id, _MARKER)
-
-          if method is _MARKER:
-            if method_id not in ptype_klass.security.names:
-              ptype_klass.security.declareProtected(
-                    Permissions.AccessContentsInformation, method_id)
-            ptype_klass.registerERP5WorkflowMethod(method_id, wf_id, tr_id, tdef.once_per_transaction)
-            continue
-          # wrap method
-          if not callable(method):
-            LOG('initializePortalTypeDynamicWorkflowMethods', 100,
-                     'WARNING! Can not initialize %s on %s' % \
-                       (method_id, portal_type))
-            continue
-          if not isinstance(method, ERP5WorkflowMethod):
-            method = ERP5WorkflowMethod(method, method_id)
-            setattr(ptype_klass, method_id, method)
-          else:
-            transition_id = method.getTransitionId()
-            if transition_id in transition_id_set:
-              method.registerERP5TransitionAlways(portal_type, wf_id, transition_id)
-          if tdef.once_per_transaction:
-            method.registerERP5TransitionOncePerTransaction(portal_type, wf_id, tr_id)
-          else:
-            method.registerERP5TransitionAlways(portal_type, wf_id, tr_id)
-  if not interaction_queue:
-    return
-
-  new_method_set = set(ptype_klass.getWorkflowMethodIdList())
-  added_method_set = new_method_set.difference(class_method_id_list)
-  for wf_id, tr_id, transition_id_set, once, method_id_matcher in interaction_queue:
-    for method_id in filter(method_id_matcher, added_method_set):
-      # method must already exist and be a workflow method
-      method = getattr(ptype_klass, method_id)
-      transition_id = method.getTransitionId()
-      if transition_id in transition_id_set:
-        method.registerERP5TransitionAlways(portal_type, wf_id, transition_id)
-      if once:
-        method.registerERP5TransitionOncePerTransaction(portal_type, wf_id, tr_id)
-      else:
-        method.registerERP5TransitionAlways(portal_type, wf_id, tr_id)
-
-def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
+def initializePortalTypeWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
   # aq_inner is required to prevent extra name lookups from happening
@@ -841,15 +541,15 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
-  dc_workflow_dict = {}
+  workflow_dict = {}
   interaction_workflow_dict = {}
-  for wf in portal_workflow.getWorkflowsFor(portal_type):
-    wf_id = wf.id
+  for wf in portal_workflow.getWorkflowValueListFor(portal_type):
+    wf_id = wf.getId()
     wf_type = wf.__class__.__name__
-    if wf_type == "DCWorkflowDefinition":
+    if wf_type == "DCWorkflowDefinition" or wf_type == "Workflow":
       # Create state var accessor
       # and generate methods that support the translation of workflow states
-      state_var = wf.variables.getStateVar()
+      state_var = wf.getStateVariable()
       for method_id, getter in (
           ('get%s' % UpperCase(state_var), WorkflowState.Getter),
           ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
@@ -865,16 +565,17 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
         ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
-      storage = dc_workflow_dict
-      transitions = wf.transitions
-    elif wf_type == "InteractionWorkflowDefinition":
+      storage = workflow_dict
+      transitions = wf.getTransitionValueList()
+    elif wf_type == "InteractionWorkflowDefinition" or wf_type == "InteractionWorkflow":
       storage = interaction_workflow_dict
-      transitions = wf.interactions
+      transitions = wf.getTransitionValueList()
     else:
       continue
 
     # extract Trigger transitions from workflow definitions for later
-    transition_id_set = set(transitions.objectIds())
+    transition_id_set = set(wf.getTransitionIdList())
+
     trigger_dict = {}
     for tr_id in transition_id_set:
       tdef = transitions[tr_id]
@@ -883,8 +584,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
     storage[wf_id] = (transition_id_set, trigger_dict)
 
-# Generate Workflow method:
-  for wf_id, v in dc_workflow_dict.iteritems():
+  # Generate Workflow method
+  for wf_id, v in workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       method_id = convertToMixedCase(tr_id)
