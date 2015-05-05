@@ -760,7 +760,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList(group):
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        for state in wf.getStateList():
+        state_list = wf.getStateValueList()
+        for state_id in wf.getStateValueList():
+          state = state_list[state_id]
           if group in getattr(state, 'type_list', ()):
             state_dict[state.getReference()] = None
       return tuple(state_dict.keys())
@@ -1282,8 +1284,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList():
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        if wf.getVariableList() and wf.getStateVariable() == 'simulation_state':
-          for state in wf.getStateList():
+        if wf.getVariableValueList() and wf.getStateVariable() == 'simulation_state':
+          state_list = wf.getStateValueList()
+          for state_id in state_list:
+            state = state_list[state_id]
             if getattr(state, 'type_list', None):
               state_dict[state.getReference()] = None
       return tuple(sorted(state_dict.keys()))
