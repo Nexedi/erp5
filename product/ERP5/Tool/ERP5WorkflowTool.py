@@ -108,11 +108,10 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
   security = ClassSecurityInfo()
 
   manage_options = OriginalWorkflowTool.manage_options
-
   manage_overview = OriginalWorkflowTool.manage_overview
-
   _manage_selectWorkflows = OriginalWorkflowTool._manage_selectWorkflows
-
+  manage_selectWorkflows = OriginalWorkflowTool.manage_selectWorkflows
+  manage_changeWorkflows = OriginalWorkflowTool.manage_changeWorkflows
     # Declarative properties
   property_sheets = (
     PropertySheet.Base,
@@ -273,45 +272,27 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       temp_workflow_id_list.append(temp_workflow.getTitle())
     return temp_workflow_list
 
-  def getWorkflowValueListFor(self, portal_type):
+  def getWorkflowValueListFor(self, portal_type_id):
     """ Return a list of workflows bound to selected portal_type.
-        Caution: this method will convert DC workflow.
     """
+    portal_type = self.getPortalObject().getDefaultModule(portal_type="portal_types")._getOb(portal_type_id, None)
     workflow_list = []
     if portal_type is None:
       return workflow_list
-    workflow_module = self.getPortalObject().portal_workflow
     for workflow_id in portal_type.getTypeERP5WorkflowList():
-      workflow_list.append(workflow_module._getOb(workflow_id))
+      workflow_list.append(self._getOb(workflow_id))
 
-    ### zwj: get DCWorkflow
-    dc_workflow_list = self._chains_by_type.get(portal_type.getId())
-    if dc_workflow_list is None:
-      return workflow_list
+    for wf in self.getWorkflowsFor(portal_type_id):
+      if wf is not None:
+        workflow_list.append(wf)
 
-    for dc_workflow_id in dc_workflow_list:
-      duplicated_wf = 0
-      for wf in workflow_module.objectValues():
-        if dc_workflow_id == wf.getId():
-          duplicated_wf = 1
-      if getattr(workflow_module, dc_workflow_id, None) is not None:
-        duplicated_wf = 1
-
-      if duplicated_wf == 1:
-        continue
-
-      dc_workflow = self.getWorkflowById(dc_workflow_id)
-      temporary_conversion = 1
-      workflow = self.dc_workflow_asERP5Object(workflow_module, dc_workflow, temporary_conversion)
-      workflow_list.extend(workflow)
-      workflow_list.extend(dc_workflow)
     return workflow_list
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
     ### create a temporary ERP5 Workflow
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
-      LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.getId(),WARNING,' in ERP5WorkflowTool.py')
+      LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.id,WARNING,' in ERP5WorkflowTool.py')
       workflow = container.newContent(portal_type='Workflow', temp_object=temp)
       workflow.setStateVariable(dc_workflow.state_var)
       workflow.setWorkflowManagedPermission(dc_workflow.permissions)
