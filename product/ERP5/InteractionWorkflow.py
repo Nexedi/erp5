@@ -350,9 +350,14 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   def getReference(self):
     return self.id
 
-  def getTransitionList(self):
+  def getTransitionValueList(self):
     if self.interactions is not None:
-      return self.interactions.objectValues()
+      return self.interactions
+    return None
+
+  def getTransitionIdList(self):
+    if self.interactions is not None:
+      return self.interactions.objectIds()
     return None
 
 Globals.InitializeClass(InteractionWorkflowDefinition)
