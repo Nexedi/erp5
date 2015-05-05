@@ -102,43 +102,43 @@ def method_getReference(self):
 def DCWorkflowDefinition_getVariableValueList(self):
   if self.variables is not None:
     return self.variables
-  return None
+  return {}
 
 def DCWorkflowDefinition_getVariableIdList(self):
   if self.variables is not None:
     return self.variables.objectIds()
-  return None
+  return []
 
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
     return self.states
-  return None
+  return {}
 
 def DCWorkflowDefinition_getStateIdList(self):
   if self.states is not None:
     return self.states.objectIds()
-  return None
+  return []
 
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
     return self.transitions
   else:
-    return None
+    return {}
 
 def DCWorkflowDefinition_getTransitionIdList(self):
   if self.transitions is not None:
     return self.transitions.objectIds()
-  return None
+  return []
 
 def DCWorkflowDefinition_getWorklistValueList(self):
   if self.worklists is not None:
     return self.worklists
-  return None
+  return {}
 
 def DCWorkflowDefinition_getWorklistIdList(self):
   if self.worklists is not None:
     return self.worklists.objectIds()
-  return None
+  return []
 
 DCWorkflowDefinition.getReference = method_getReference
 TransitionDefinition.getReference = method_getReference
