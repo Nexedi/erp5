@@ -147,17 +147,27 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
 
     return value
 
-  def isERP5WorkflowMethodSupported(self, ob, tdef):
+  security.declarePrivate('isWorkflowMethodSupported')
+  def isERP5WorkflowMethodSupported(self, ob, tid):
     '''
     Returns a true value if the given workflow method
     is supported in the current state.
     '''
+    tdef = self._getOb('interaction_' + tid)
     LOG(' Trigger %s passing guard'%(tdef.getId()), WARNING,'in InteractionWorkflow.py') ### getRef
     if tdef is not None and self._checkTransitionGuard(tdef, ob):
       return 1
     return 0
 
+  isWorkflowMethodSupported = isERP5WorkflowMethodSupported
+
   def _checkTransitionGuard(self, tdef, document, **kw):
+    if tdef.temporary_document_disallowed:
+      isTempDocument = getattr(document, 'isTempDocument', None)
+      if isTempDocument is not None:
+        if isTempDocument():
+          return 0
+
     guard = tdef.getGuard()
     if guard is None:
       return 1
@@ -165,15 +175,11 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       return 1
     return 0
 
-  def _getObjectByRef(self, ref):
-    for ob in self:
-      if wf.getRef() == ref:
-        return ob
-    return None
-
+  security.declarePrivate('getValidRoleList')
   def getValidRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
 
+  security.declarePrivate('_updateWorkflowHistory')
   def _updateWorkflowHistory(self, document, status_dict):
     """
     Change the state of the object.
@@ -192,6 +198,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     # Update history
     document.workflow_history[workflow_key] += (status_dict,)
 
+  security.declarePrivate('getStateChangeInformation')
   def getStateChangeInformation(self, document, state, transition=None):
     """
     Return an object used for variable tales expression.
@@ -205,6 +212,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
                           transition_url=transition_url,
                           state=state)
 
+  security.declarePrivate('getCurrentStatusDict')
   def getCurrentStatusDict(self, document):
     """
     Get the current status dict.
@@ -215,6 +223,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     result = document.workflow_history[workflow_key][-1].copy()
     return result
 
+  security.declarePrivate('_generateHistoryKey')
   def _generateHistoryKey(self):
     """
     Generate a key used in the workflow history.
@@ -222,11 +231,168 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId() ### getRef
     return history_key
 
+  security.declarePrivate('getWorklistVariableMatchDict')
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     return None
 
   def _getWorkflowStateOf(self, ob, id_only=0):
     return None
 
-  def getTransitionList(self):
-    return self.objectValues(portal_type="Interaction")
+  security.declarePrivate('getTransitionValueList')
+  def getTransitionValueList(self):
+    interaction_dict = {}
+    for tdef in self.objectValues(portal_type="Interaction"):
+      interaction_dict[tdef.getReference()] = tdef
+    return interaction_dict
+
+  security.declarePrivate('getTransitionIdList')
+  def getTransitionIdList(self):
+    id_list = []
+    for ob in self.objectValues(portal_type="Interaction"):
+      id_list.append(ob.getReference())
+    return id_list
+
+  security.declarePrivate('notifyWorkflowMethod')
+  def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
+    """ InteractionWorkflow is stateless. Thus, this function should do nothing.
+    """
+    pass
+
+  security.declarePrivate('notifyBefore')
+  def notifyBefore(self, ob, transition_list, args=None, kw=None):
+    if type(transition_list) in StringTypes:
+      return
+
+    if kw is None:
+      kw = {'workflow_method_args' : args}
+    else:
+      kw = kw.copy()
+      kw['workflow_method_args'] = args
+    filtered_transition_list = []
+
+    for t_id in transition_list:
+      LOG(" t_id is '%s'"%t_id, WARNING, " in InteractionWorkflow.py 247.")
+      tdef = self._getOb(t_id) # t_id is id or reference?
+      assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
+      filtered_transition_list.append(tdef.getId())
+      former_status = self._getOb(status_dict[self.getStateVariable()], None)
+
+      sci = StateChangeInfo(
+      ob, self, former_status, tdef, None, None, kwargs=kw)
+
+      before_script_list = []
+      before_script_list.append(self.getBeforeScriptName())
+      if before_script_list != [] and tdef.getBeforeScriptName() is not None:
+        for script_name in before_script_list:
+          script = self._getOb(script_name)
+          script.execute(sci)
+    return filtered_transition_list
+
+  security.declarePrivate('notifySuccess')
+  def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
+    """
+    Notifies this workflow that an action has taken place.
+    """
+    if type(transition_list) in StringTypes:
+      return
+
+    if kw is None:
+      kw = {'workflow_method_args' : args}
+    else:
+      kw = kw.copy()
+      kw['workflow_method_args'] = args
+
+    for t_id in transition_list:
+      LOG(" t_id is '%s'"%t_id, WARNING, " in InteractionWorkflow.py 279.")
+      tdef = self._getOb(t_id) # t_id is id or reference?
+      assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
+      former_status = self._getOb(status_dict[self.getStateVariable()], None)
+      econtext = None
+      sci = None
+
+      # Update variables.
+      tdef_exprs = tdef.var_exprs
+      if tdef_exprs is None: tdef_exprs = {}
+      status = {}
+
+      for vdef in self.objectValues(portal_type='Variable'):
+        id = vdef.getId()
+        if not vdef.for_status:
+          continue
+        expr = None
+        if id in tdef_exprs:
+          expr = tdef_exprs[id]
+        elif not vdef.update_always and id in former_status:
+          # Preserve former value
+          value = former_status[id]
+        else:
+          if vdef.default_expr is not None:
+            expr = vdef.default_expr
+          else:
+            value = vdef.default_value
+        if expr is not None:
+          # Evaluate an expression.
+          if econtext is None:
+            # Lazily create the expression context.
+            if sci is None:
+              sci = StateChangeInfo(
+                  ob, self, former_status, tdef,
+                  None, None, None)
+            econtext = Expression_createExprContext(sci)
+          value = expr(econtext)
+        status[id] = value
+
+      sci = StateChangeInfo(
+            ob, self, former_status, tdef, None, None, kwargs=kw)
+
+      # Execute the "after" script.
+      after_script_list = []
+      after_script_list.append(self.getAfterScriptName())
+      if after_script_list != [] and self.getAfterScriptName() is not None:
+        for script_name in after_script_list:
+          script = workflow._getOb(script_name)
+          # Pass lots of info to the script in a single parameter.
+          script.execute(sci)  # May throw an exception
+
+      # Queue the "Before Commit" scripts
+      sm = getSecurityManager()
+      before_commit_script_list = []
+      before_commit_script_list.append(self.getBeforeCommitScriptName())
+      if before_commit_script_list != [] and tdef.getBeforeCommitScriptName() is not None:
+        for script_name in before_commit_script_list:
+          transaction.get().addBeforeCommitHook(tdef._before_commit,
+                                                (sci, script_name, sm))
+
+      # Execute "activity" scripts
+      activity_script_list = []
+      activity_script_list.append(tdef.getActivateScriptName())
+      if activity_script_list != [] and tdef.getActivateScriptName() is not None:
+        for script_name in activity_script_list:
+          workflow.activate(activity='SQLQueue')\
+              .activeScript(script_name, ob.getRelativeUrl(),
+                            status, tdef.getId())
+
+  def _before_commit(self, sci, script_name, security_manager):
+    # check the object still exists before calling the script
+    ob = sci.object
+    while ob.isTempObject():
+      ob = ob.getParentValue()
+    if aq_base(self.unrestrictedTraverse(ob.getPhysicalPath(), None)) is \
+       aq_base(ob):
+      current_security_manager = getSecurityManager()
+      try:
+        # Who knows what happened to the authentication context
+        # between here and when the interaction was executed... So we
+        # need to switch to the security manager as it was back then
+        setSecurityManager(security_manager)
+        self._getOb(script_name)(sci)
+      finally:
+        setSecurityManager(current_security_manager)
+
+  def activeScript(self, script_name, ob_url, former_status, tdef_id):
+    script = self._getOb(script_name)
+    ob = self.unrestrictedTraverse(ob_url)
+    tdef = self._getOb(tdef_id)
+    sci = StateChangeInfo(
+          ob, self, former_status, tdef, None, None, kwargs=kw)
+    script.execute(sci)
