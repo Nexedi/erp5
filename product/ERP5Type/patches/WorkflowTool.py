@@ -99,29 +99,46 @@ DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 def method_getReference(self):
   return self.id
 
-def DCWorkflowDefinition_getVariableList(self):
+def DCWorkflowDefinition_getVariableValueList(self):
   if self.variables is not None:
-    return self.variables.objectValues()
-  else:
-    return None
+    return self.variables
+  return None
 
-def DCWorkflowDefinition_getStateList(self):
+def DCWorkflowDefinition_getVariableIdList(self):
+  if self.variables is not None:
+    return self.variables.objectIds()
+  return None
+
+def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
-    return self.states.objectValues()
-  else:
-    return None
+    return self.states
+  return None
 
-def DCWorkflowDefinition_getTransitionList(self):
+def DCWorkflowDefinition_getStateIdList(self):
+  if self.states is not None:
+    return self.states.objectIds()
+  return None
+
+def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
-    return self.transitions.objectValues()
+    return self.transitions
   else:
     return None
 
-def DCWorkflowDefinition_getWorklistList(self):
+def DCWorkflowDefinition_getTransitionIdList(self):
+  if self.transitions is not None:
+    return self.transitions.objectIds()
+  return None
+
+def DCWorkflowDefinition_getWorklistValueList(self):
   if self.worklists is not None:
-    return self.worklists.objectValues()
-  else:
-    return None
+    return self.worklists
+  return None
+
+def DCWorkflowDefinition_getWorklistIdList(self):
+  if self.worklists is not None:
+    return self.worklists.objectIds()
+  return None
 
 DCWorkflowDefinition.getReference = method_getReference
 TransitionDefinition.getReference = method_getReference
@@ -129,10 +146,14 @@ StateDefinition.getReference = method_getReference
 VariableDefinition.getReference = method_getReference
 WorklistDefinition.getReference = method_getReference
 
-DCWorkflowDefinition.getVariableList = DCWorkflowDefinition_getVariableList
-DCWorkflowDefinition.getStateList = DCWorkflowDefinition_getStateList
-DCWorkflowDefinition.getTransitionList = DCWorkflowDefinition_getTransitionList
-DCWorkflowDefinition.getWorklistList = DCWorkflowDefinition_getWorklistList
+DCWorkflowDefinition.getVariableValueList = DCWorkflowDefinition_getVariableValueList
+DCWorkflowDefinition.getStateValueList = DCWorkflowDefinition_getStateValueList
+DCWorkflowDefinition.getTransitionValueList = DCWorkflowDefinition_getTransitionValueList
+DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
+DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
+DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
+DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
+DCWorkflowDefinition.getWorklistIdList = DCWorkflowDefinition_getWorklistIdList
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
