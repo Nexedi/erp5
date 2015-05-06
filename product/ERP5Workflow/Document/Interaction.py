@@ -52,7 +52,6 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
   isPortalContent = 1
   isRADContent = 1
 
-  ### zwj: for security issue
   managed_permission_list = ()
   managed_role = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
