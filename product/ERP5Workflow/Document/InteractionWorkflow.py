@@ -53,7 +53,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
   """
   An ERP5 Interaction Workflow.
   """
-
   meta_type = 'ERP5 Workflow'
   portal_type = 'Interaction Workflow'
   _isAWorkflow = True # DCWorkflow Tool compatibility
@@ -67,8 +66,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
 
   intaractions = None
   manager_bypass = 0
-
-  
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -85,7 +82,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
   )
 
 
-  def initializeDocument(self, document):
+  def notifyCreated(self, document):
     pass
 
   security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
@@ -129,7 +126,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     Allows the user to request information provided by the
     workflow.  This method must perform its own security checks.
     '''
-    vdef = self._getOb(name, _MARKER) ### getObjectByRef
+    vdef = self._getOb(name, _MARKER)
     if vdef is _MARKER:
       return default
     if vdef.info_guard is not None and not vdef.info_guard.check(
@@ -148,7 +145,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     return value
 
   security.declarePrivate('isWorkflowMethodSupported')
-  def isERP5WorkflowMethodSupported(self, ob, tid):
+  def isWorkflowMethodSupported(self, ob, tid):
     '''
     Returns a true value if the given workflow method
     is supported in the current state.
@@ -158,8 +155,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     if tdef is not None and self._checkTransitionGuard(tdef, ob):
       return 1
     return 0
-
-  isWorkflowMethodSupported = isERP5WorkflowMethodSupported
 
   def _checkTransitionGuard(self, tdef, document, **kw):
     if tdef.temporary_document_disallowed:
@@ -271,8 +266,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     filtered_transition_list = []
 
     for t_id in transition_list:
-      LOG(" t_id is '%s'"%t_id, WARNING, " in InteractionWorkflow.py 247.")
-      tdef = self._getOb(t_id) # t_id is id or reference?
+      tdef = self._getOb(t_id)
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
       filtered_transition_list.append(tdef.getId())
       former_status = self._getOb(status_dict[self.getStateVariable()], None)
