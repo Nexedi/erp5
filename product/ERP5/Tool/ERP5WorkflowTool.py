@@ -246,15 +246,13 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     portal_type = self.getPortalObject().getDefaultModule(portal_type="portal_types")._getOb(portal_type_id, None)
     workflow_list = []
-    if portal_type is None:
-      return workflow_list
-    for workflow_id in portal_type.getTypeERP5WorkflowList():
-      workflow_list.append(self._getOb(workflow_id))
+    if portal_type is not None:
+      for workflow_id in portal_type.getTypeERP5WorkflowList():
+        workflow_list.append(self._getOb(workflow_id))
 
     for wf in self.getWorkflowsFor(portal_type_id):
       if wf is not None:
         workflow_list.append(wf)
-
     return workflow_list
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
