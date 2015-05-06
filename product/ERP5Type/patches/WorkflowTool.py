@@ -1057,6 +1057,51 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
   return self._invokeWithNotification(
     workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
+def tool_changeWorkflows(self, default_chain, props=None, REQUEST=None):
+    """ Changes which workflows apply to objects of which type.
+    """
+    if props is None:
+        props = REQUEST
+    cbt = self._chains_by_type
+    if cbt is None:
+        self._chains_by_type = cbt = PersistentMapping()
+    ti = self._listTypeInfo()
+    # Set up the chains by type.
+    if not (props is None):
+        for t in ti:
+            id = t.getId()
+            field_name = 'chain_%s' % id
+            chain = props.get(field_name, '(Default)').strip()
+            if chain == '(Default)' or chain =='default_workflow':
+                # Remove from cbt.
+                if cbt.has_key(id):
+                    del cbt[id]
+            else:
+                chain = chain.replace(',', ' ')
+                ids = []
+                for wf_id in chain.split(' '):
+                    if wf_id:
+                        if not self.getWorkflowById(wf_id):
+                            raise ValueError, (
+                                '"%s" is not a workflow ID.' % wf_id)
+                        ids.append(wf_id)
+                cbt[id] = tuple(ids)
+    # Set up the default chain.
+    default_chain = default_chain.replace(',', ' ')
+    ids = []
+    for wf_id in default_chain.split(' '):
+        if wf_id:
+            if not self.getWorkflowById(wf_id):
+                raise ValueError, (
+                    '"%s" is not a workflow ID.' % wf_id)
+            ids.append(wf_id)
+    self._default_chain = tuple(ids)
+    if REQUEST is not None:
+        return self.manage_selectWorkflows(REQUEST,
+                        manage_tabs_message='Changed.')
+
+WorkflowTool.manage_changeWorkflows = tool_changeWorkflows
+
 def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
