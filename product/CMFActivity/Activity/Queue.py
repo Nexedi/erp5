@@ -43,7 +43,7 @@ INVALID_ORDER  = 2
 
 # Time global parameters
 MAX_PROCESSING_TIME = 900 # in seconds
-VALIDATION_ERROR_DELAY = 30 # in seconds
+VALIDATION_ERROR_DELAY = 15 # in seconds
 
 class Queue(object):
   """

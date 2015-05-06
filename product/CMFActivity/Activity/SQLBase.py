@@ -586,7 +586,7 @@ class SQLBase(Queue):
           delay = m.delay
           if delay is None:
             # By default, make delay quadratic to the number of retries.
-            delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) / 2
+            delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) * 2
           try:
             # Immediately update, because values different for every message
             activity_tool.SQLBase_reactivate(table=self.sql_table,
