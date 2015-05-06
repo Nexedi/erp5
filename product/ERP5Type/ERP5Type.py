@@ -416,16 +416,10 @@ class ERP5TypeInformation(XMLObject,
       if notify_workflow:
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        workflow_tool = getToolByName(portal, 'portal_workflow', None)
+        workflow_tool = portal.portal_workflow
         if workflow_tool is not None:
-          for workflow in workflow_tool.getWorkflowsFor(ob):
-            workflow.notifyCreated(ob)
-
-        for ERP5Workflow_id in self.getTypeERP5WorkflowList():
-          workflow_module = portal.portal_workflow
-          if workflow_module is not None:
-            ERP5Workflow = workflow_module._getOb(ERP5Workflow_id)
-            ERP5Workflow.initializeDocument(ob)
+          for ERP5Workflow in workflow_tool.getWorkflowValueListFor(ob.portal_type):
+            ERP5Workflow.notifyCreated(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
