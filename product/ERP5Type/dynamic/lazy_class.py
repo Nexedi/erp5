@@ -164,7 +164,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
     cls.workflow_method_registry = {}
-    cls.erp5workflow_method_registry = {}
 
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
