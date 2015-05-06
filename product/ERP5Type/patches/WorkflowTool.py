@@ -140,9 +140,13 @@ def DCWorkflowDefinition_getWorklistIdList(self):
     return self.worklists.objectIds()
   return []
 
+def StateDefinition_getDestinationIdList(self):
+  return self.transitions
+
 DCWorkflowDefinition.getReference = method_getReference
 TransitionDefinition.getReference = method_getReference
 StateDefinition.getReference = method_getReference
+StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
 VariableDefinition.getReference = method_getReference
 WorklistDefinition.getReference = method_getReference
 
@@ -922,12 +926,7 @@ WorkflowTool.getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
 def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
-      state = workflow._getWorkflowStateOf(ob)
-      if state and transition_id in state.transitions:
-          return 1
-    for workflow_id in ob.getTypeInfo().getTypeERP5WorkflowList():
-      workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationIdList():
         return 1
@@ -1045,7 +1044,6 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
     for wf in workflow_list:
       if wf.isActionSupported(ob, action, **kw):
         found = 1
-        case = 2
         break
     if not found:
       msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
@@ -1114,7 +1112,6 @@ def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
         for workflow in workflow_list:
             if workflow.isInfoSuported(ob, name):
               found = 1
-              case = 2
               break
         if not found:
             if default is _marker:
