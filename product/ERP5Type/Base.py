@@ -222,7 +222,6 @@ class WorkflowMethod(Method):
       candidate_workflow = wf[wf_id]
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
-          #LOG('zwj: Type: %s Executing %s in %s' %(instance.getPortalType(), transition_id, wf_id), WARNING, " in Base.py DCWorkflow.")
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
@@ -392,22 +391,6 @@ class PropertyHolder(object):
                                                wf_id,
                                                tr_id)
 
-  def registerERP5WorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
-    portal_type = self.portal_type
-    ERP5workflow_method = getattr(self, id, None)
-    if ERP5workflow_method is None:
-      ERP5workflow_method = ERP5WorkflowMethod(Base._doNothing)
-      setattr(self, id, ERP5workflow_method)
-    if ERP5workflow_method.__class__.__name__ == "ERP5WorkflowMethod":
-      if once_per_transaction:
-        ERP5workflow_method.registerERP5TransitionOncePerTransaction(portal_type,
-                                                           wf_id,
-                                                           tr_id)
-      else:
-        ERP5workflow_method.registerERP5TransitionAlways(portal_type,
-                                               wf_id,
-                                               tr_id)
-
   def declareProtected(self, permission, accessor_name):
     """
       It is possible to gain 30% of accessor RAM footprint
@@ -455,25 +438,11 @@ class PropertyHolder(object):
         or (isinstance(x[1], types.TupleType)
             and x[1] is PropertyHolder.WORKFLOW_METHOD_MARKER)]
 
-  def getERP5WorkflowMethodItemList(self):
-    """
-    Return a list of tuple (id, method) for every workflow method
-    """
-    return [x for x in self._getPropertyHolderItemList() if isinstance(x[1], ERP5WorkflowMethod)
-        or (isinstance(x[1], types.TupleType)
-            and x[1] is PropertyHolder.ERP5WORKFLOW_METHOD_MARKER)]
-
   def getWorkflowMethodIdList(self):
     """
     Return the list of workflow method IDs
     """
     return [x[0] for x in self.getWorkflowMethodItemList()]
-
-  def getERP5WorkflowMethodIdList(self):
-    """
-    Return the list of workflow method IDs
-    """
-    return [x[0] for x in self.getERP5WorkflowMethodItemList()]
 
   def _getClassDict(self, klass, inherited=1, local=1):
     """
@@ -2730,18 +2699,9 @@ class Base( CopyContainer,
                             'isDeleted')
   def isDeleted(self):
     """Test if the context is in 'deleted' state"""
-    for wf in self.getPortalObject().portal_workflow.getWorkflowsFor(self):
+    for wf in self.getPortalObject().portal_workflow.getWorkflowValueListFor(self):
       state = wf._getWorkflowStateOf(self)
-      if state is not None and state.getId() == 'deleted':
-        return True
-    return False
-
-  def isERP5WorkflowDeleted(self):
-    ### zwj: deal with the deleted object
-    for wf_id in self.getTypeInfo().getTypeERP5WorkflowList():
-      wf = self.getPortalObject().portal_workflow._getOb(wf_id)
-      state = self._getDefaultAcquiredValue(wf.getStateVariable())
-      if state is not None and state.getId() == 'deleted_state':
+      if state is not None and state.getReference() == 'deleted':
         return True
     return False
 
@@ -2767,13 +2727,12 @@ class Base( CopyContainer,
           if related_path[:len(ignored)] == ignored:
             break
         else:
-          if related.isDeleted() or related.isERP5WorkflowDeleted():
+          if related.isDeleted():
             ignored = related_path
           else:
             ignored = None
             related_count += 1
     return related_count
-
 
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
@@ -2782,13 +2741,8 @@ class Base( CopyContainer,
       Returns a list of tuples {id:workflow_id, state:workflow_state}
     """
     result = []
-    for wf in self.portal_workflow.getWorkflowsFor(self):
-      result += [(wf.id, wf._getWorkflowStateOf(self, id_only=1))]
-    for workflow_id in self.getTypeInfo().getTypeERP5WorkflowList():
-      workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
-      if workflow.getPortalType() == 'Workflow':
-        result += [(workflow.getReference(), workflow._getWorkflowStateOf(self, id_only=1))]
-    LOG(" 3093 Workflow History result is '%s'"%result, WARNING, " in Base.py")
+    for wf in self.portal_workflow.getWorkflowValueListFor(self.getPortalType()):
+      result += [(wf.getReference(), wf._getWorkflowStateOf(self, id_only=1))]
     return result
 
   security.declarePublic('getWorkflowInfo')
@@ -3155,7 +3109,7 @@ class Base( CopyContainer,
     # Check if edit_workflow defined
     portal_workflow = self.getPortalObject().portal_workflow
     wf = portal_workflow.getWorkflowById('edit_workflow')
-    wf_list = portal_workflow.getWorkflowsFor(self)
+    wf_list = portal_workflow.getWorkflowValueListFor(self)
     if wf is not None:
       wf_list = [wf] + wf_list
     for wf in wf_list:
@@ -3269,16 +3223,8 @@ class Base( CopyContainer,
   def updateRoleMappingsFor(self, wf_id, **kw):
 
     workflow = self.portal_workflow.getWorkflowById(wf_id)
-    erp5workflow = self.portal_workflow._getOb(wf_id, None)### _getObjectByRef
-    #LOG('zwj: Loading %s'%erp5workflow.getId(), WARNING,'updating roles')
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
-      if changed:
-        self.reindexObjectSecurity(activate_kw={'priority':4})
-
-    ### zwj: update role changed through erp5workflow
-    if erp5workflow is not None:
-      changed = erp5workflow.updateRoleMappingsFor(self)
       if changed:
         self.reindexObjectSecurity(activate_kw={'priority':4})
 
@@ -3429,11 +3375,13 @@ class Base( CopyContainer,
     # Use meta transition to jump from one state to another
     # without existing transitions.
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []
-    for workflow in workflow_tool.getWorkflowsFor(self):
-      if not isinstance(workflow, InteractionWorkflowDefinition):
+    for workflow in workflow_tool.getWorkflowValueListFor(self):
+      if not isinstance(workflow, InteractionWorkflowDefinition) or \
+          not isinstance(workflow, InteractionWorkflow):
         worflow_variable_list.append(self.getProperty(workflow.state_var))
 
     # then restart ingestion with new portal_type
