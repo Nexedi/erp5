@@ -134,16 +134,18 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     any state to another in same workflow)
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
-    workflow_list = self.getWorkflowsFor(ob)
+    from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
+    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
       if not workflow_list:
         raise WorkflowException('No workflows found.')
       found = False
       for workflow in workflow_list:
-        if not isinstance(workflow, InteractionWorkflowDefinition) and\
-          state_id in workflow.states._mapping:
-          found = True
-          break
+        if not isinstance(workflow, InteractionWorkflowDefinition) or \
+            not isinstance(workflow, InteractionWorkflow):
+          if state_id in workflow.states._mapping:
+            found = True
+            break
       if not found:
         raise WorkflowException('No workflow provides the destination state %r'\
                                                                       % state_id)
@@ -159,32 +161,21 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     in at least one associated workflow
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
-      if not isinstance(workflow, InteractionWorkflowDefinition) and\
-      state_id in workflow.states._mapping:
-        return True
+    from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+      if not isinstance(workflow, InteractionWorkflowDefinition) or \
+          not isinstance(workflow, InteractionWorkflow):
+        if state_id in workflow.states._mapping:
+          return True
     return False
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    wfs = self.getWorkflowsFor(ob)# dc workflow
-    workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList() # workflow
-    case = 1
-    LOG(" 173 do action '%s' for object '%s'"%(action, ob.getId()),WARNING," in ERP5 Workflow Tool.py")
-    if wfs is None or wf_id in workflow_list:
-      wfs = ()
-      case = 2
-
+    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
-      if wfs == () and workflow_list == []:
+      if workflow_list == []:
         raise WorkflowException(_(u'No workflows found.'))
       found = 0
-      for wf in wfs:
-        if wf.isActionSupported(ob, action, **kw):
-          found = 1
-          case = 1
-          break
-      for workflow_id in workflow_list:
-        wf = self.getPortalObject().portal_workflow._getOb(workflow_id)
+      for wf in workflow_list:
         if wf.isActionSupported(ob, action, **kw):
           found = 1
           case = 2
@@ -192,41 +183,23 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       if not found:
         msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
         raise WorkflowException(msg)
-
     else:
-      if case == 1:
-        wf = self.getWorkflowById(wf_id)
-      else:
-        wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
+      wf = self.getWorkflowById(wf_id)
       if wf is None:
         raise WorkflowException(_(u'Requested workflow definition not found.'))
-
-    if case == 1:
-      return self._invokeWithNotification(wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
-    else:
-      return wf.doActionFor(ob, action)
+    return self._invokeWithNotification(
+      workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
   def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
-      wfs = self.getWorkflowsFor(ob)
-      workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
-      case = 1
-      if wfs is None or wf_id in workflow_list:
-          case = 2
-
+      workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
       if wf_id is None:
-          if wfs is None and workflow_list == []:
+          if workflow_list == []:
               if default is _marker:
                   raise WorkflowException(_(u'No workflows found.'))
               else:
                   return default
           found = 0
-          for wf in wfs:
-              if wf.isInfoSupported(ob, name):
-                  found = 1
-                  case = 1
-                  break
-          for workflow_id in workflow_list:
-              workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
+          for workflow in workflow_list:
               if workflow.isInfoSuported(ob, name):
                 found = 1
                 case = 2
@@ -239,10 +212,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
               else:
                   return default
       else:
-          if case == 1:
-              wf = self.getWorkflowById(wf_id)
-          else:
-              wf = self.getPortalObject().portal_workflow._getOb(wf_id)
+          wf = self.getWorkflowById(wf_id)
           if wf is None:
               if default is _marker:
                   raise WorkflowException(
@@ -423,12 +393,12 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
   def isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.transitions:
           return 1
     for workflow_id in ob.getTypeInfo().getTypeERP5WorkflowList():
-      workflow = self.getPortalObject().portal_workflow._getOb(workflow_id) ### _getObjectByRef
+      workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationIdList():
         return 1
