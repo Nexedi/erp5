@@ -178,7 +178,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       for wf in workflow_list:
         if wf.isActionSupported(ob, action, **kw):
           found = 1
-          case = 2
           break
       if not found:
         msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
@@ -192,6 +191,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
 
   def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
       workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+
       if wf_id is None:
           if workflow_list == []:
               if default is _marker:
@@ -202,7 +202,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
           for workflow in workflow_list:
               if workflow.isInfoSuported(ob, name):
                 found = 1
-                case = 2
                 break
           if not found:
               if default is _marker:
@@ -395,11 +394,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
-      if state and transition_id in state.transitions:
-          return 1
-    for workflow_id in ob.getTypeInfo().getTypeERP5WorkflowList():
-      workflow = self.getPortalObject().portal_workflow._getOb(workflow_id)
-      state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationIdList():
         return 1
     return 0
@@ -568,12 +562,10 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
               raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
             a = wf.listObjectActions(info)
             if a is not None and a != []:
-              LOG("620 Generating workflow actions '%s' for workflow '%s'"%(a,wf_id), WARNING, " in ERP5WorkflowTool.py")
               actions.extend(a)
             a = wf.getWorklistVariableMatchDict(info)
             if a is not None:
               worklist_dict[wf_id] = a
-
     # DC workflow compatibility
     for wf_id in chain:
       did[wf_id] = None
