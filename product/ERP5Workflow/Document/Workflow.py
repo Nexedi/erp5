@@ -98,7 +98,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     PropertySheet.Workflow,
   )
 
-  def initializeDocument(self, document):
+  def notifyCreated(self, document):
     """
     Set initial state on the Document
     """
@@ -187,10 +187,9 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                           transition_url=transition_url,
                           state=state)
 
-  def isERP5WorkflowMethodSupported(self, document, transition_id):
+  def isWorkflowMethodSupported(self, document, transition_id):
     transition = self._getOb('transition_' + transition_id)
     sdef = self._getWorkflowStateOf(document, id_only=0)
-    LOG(" 190 is transition '%s' supported by workflow '%s'"%(transition.getReference(), self.getReference()), WARNING, " in Workflow.py")
     if sdef is None:
       return 0
     if (transition in sdef.getDestinationValueList() and
@@ -199,8 +198,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         ):
       return 1
     return 0
-
-  isWorkflowMethodSupported = isERP5WorkflowMethodSupported
 
   security.declarePrivate('isActionSupported')
   def isActionSupported(self, document, action, **kw):
@@ -458,14 +455,11 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       Allows the user to request information provided by the
       workflow.  This method must perform its own security checks.
       '''
-      LOG('464 zwj: ob is %s, name is %s'%(ob.getId(),name), WARNING, ' in Workflow.py.')
       state_var = self.getStateVariable()
       if name == state_var:
-          LOG ('468 State = : %s'%ob._getDefaultAcquiredValue(state_var).getId(), WARNING, ' in Workflow.py')
           return ob._getDefaultAcquiredValue(state_var).getId()
 
       vdef = self._getOb(name)
-      LOG('474: vdef is %s'%vdef.getId(), WARNING, ' in Workflow.py.')
 
       status_dict = self.getCurrentStatusDict(ob)
       former_status = self._getOb(status_dict[state_var], None)
@@ -476,19 +470,16 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       if vdef.info_guard is not None and not vdef.info_guard.check(
           getSecurityManager(), self, ob):
           return default
-      LOG('484: Pass Info guard', WARNING, ' in Workflow.py.')
 
       if status_dict is not None and name in status_dict:
           value = status_dict[name]
       # Not set yet.  Use a default.
       if vdef.default_expr is not None:
-          LOG('490: executing default_expr ', WARNING, ' in Workflow.py.')
           ec = Expression_createExprContext(StateChangeInfo(ob, self, former_status))
           expr = Expression(vdef.default_expr)
           value = expr(ec)
       else:
           value = vdef.default_value
-      LOG('496: generated value successfully ', WARNING, ' in Workflow.py.')
       return value
 
   def _getWorkflowStateOf(self, ob, id_only=0):
