@@ -158,7 +158,6 @@
       form_gadget.props.editable = options.editable;\n
       form_gadget.props.action = erp5_document._embedded._view._actions.put;\n
       form_gadget.props.form_id = erp5_document._embedded._view.form_id;\n
-      form_gadget.props.form_action = options.form_definition.action;\n
 \n
       return form_gadget.getDeclaredGadget("erp5_form")\n
 \n
@@ -231,12 +230,7 @@
 \n
 \n
     .declareService(function () {\n
-      var form_gadget = this,\n
-        is_custom_dialog = false,\n
-        tmp,\n
-        generic_dialog_id_list = ["Base_configureUI", "Base_configureSortOn", "Workflow_statusModify",\n
-                                  "Base_editRelation", "Base_createRelation", "Folder_delete",\n
-                                  "Base_newContentFromJS"];\n
+      var form_gadget = this;\n
 \n
       function formSubmit() {\n
         return form_gadget.notifySubmitting()\n
@@ -255,16 +249,11 @@
             // XXX Hardcoded\n
             data.dialog_id =\n
                                     form_gadget.props.form_id[\'default\'];\n
-            if (generic_dialog_id_list.indexOf(form_gadget.props.form_action) === -1) {\n
-              is_custom_dialog = true;\n
-            }\n
+            data.dialog_method = \n
+                                    form_gadget.props.action.action;\n
             for (key in content_dict) {\n
               if (content_dict.hasOwnProperty(key)) {\n
-                tmp = key;\n
-                if (is_custom_dialog && (key.indexOf("field_your") === 0 || key.indexOf("field_my") === 0)) {\n
-                  tmp = key.split("_")[2];\n
-                }\n
-                data[tmp] = content_dict[key];\n
+                data[key] = content_dict[key];\n
               }\n
             }\n
 \n
@@ -277,7 +266,7 @@
           })\n
           .push(function (evt) {\n
             var location = evt.target.getResponseHeader("X-Location");\n
-            if (location === undefined) {\n
+            if (location === undefined || location === null) {\n
               // No redirection, stay on the same document\n
               return form_gadget.whoWantToDisplayThisPage({name: "view"});\n
             }\n
@@ -437,7 +426,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.35946.42655.6161</string> </value>
+                <value> <string>942.54421.21287.62378</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -455,7 +444,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430120185.39</float>
+                        <float>1430897308.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

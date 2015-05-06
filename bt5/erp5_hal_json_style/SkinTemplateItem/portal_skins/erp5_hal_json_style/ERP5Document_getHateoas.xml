@@ -369,13 +369,20 @@ def renderForm(form, response_dict):\n
   REQUEST.set(\'here\', traversed_document)\n
   field_errors = REQUEST.get(\'field_errors\', {})\n
 \n
+  #hardcoded\n
+  if form.pt == \'form_dialog\':\n
+    action_to_call = "Base_callDialogMethod"\n
+  else:\n
+    action_to_call = form.action\n
+\n
   # Form action\n
   response_dict[\'_actions\'] = {\n
     \'put\': {\n
       "href": url_template_dict["form_action"] % {\n
         "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),\n
-        "action_id": form.action\n
+        "action_id": action_to_call\n
       },\n
+      "action": form.action,\n
       "method": form.method,\n
     }\n
   }\n
