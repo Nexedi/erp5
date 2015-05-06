@@ -1037,25 +1037,12 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
   return False
 
 def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
-  wfs = self.getWorkflowsFor(ob)
-  workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
-  case = 1
-
-  if wfs is None or wf_id in workflow_list:
-    wfs = ()
-    case = 2
-
+  workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
   if wf_id is None:
-    if wfs == () and workflow_list == []:
+    if workflow_list == []:
       raise WorkflowException(_(u'No workflows found.'))
     found = 0
-    for wf in wfs:
-      if wf.isActionSupported(ob, action, **kw):
-        found = 1
-        case = 1
-        break
-    for workflow_id in workflow_list:
-      wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+    for wf in workflow_list:
       if wf.isActionSupported(ob, action, **kw):
         found = 1
         case = 2
@@ -1063,41 +1050,23 @@ def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
     if not found:
       msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
       raise WorkflowException(msg)
-
   else:
-    if case == 1:
-      wf = self.getWorkflowById(wf_id)
-    else:
-      wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
+    wf = self.getWorkflowById(wf_id)
     if wf is None:
       raise WorkflowException(_(u'Requested workflow definition not found.'))
-
-  if case == 1:
-    return self._invokeWithNotification(wfs, ob, action, wf.doActionFor, (ob, action) + args, kw)
-  else:
-    return wf.doActionFor(ob, action)
+  return self._invokeWithNotification(
+    workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
 def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
-    wfs = self.getWorkflowsFor(ob)
-    workflow_list = ob.getTypeInfo().getTypeERP5WorkflowList()
-    case = 1
-    if wfs is None or wf_id in workflow_list:
-        case = 2
-
+    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
-        if wfs is None and workflow_list == []:
+        if workflow_list == []:
             if default is _marker:
                 raise WorkflowException(_(u'No workflows found.'))
             else:
                 return default
         found = 0
-        for wf in wfs:
-            if wf.isInfoSupported(ob, name):
-                found = 1
-                case = 1
-                break
-        for workflow_id in workflow_list:
-            workflow = self.getPortalObject().getDefaultModule('Workflow')._getOb(workflow_id)
+        for workflow in workflow_list:
             if workflow.isInfoSuported(ob, name):
               found = 1
               case = 2
@@ -1110,10 +1079,7 @@ def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
             else:
                 return default
     else:
-        if case == 1:
-            wf = self.getWorkflowById(wf_id)
-        else:
-            wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id)
+        wf = self.getWorkflowById(wf_id)
         if wf is None:
             if default is _marker:
                 raise WorkflowException(
@@ -1126,7 +1092,6 @@ def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
         msg = _(u'Could not get info: ${name}', mapping={'name': name})
         raise WorkflowException(msg)
     return res
-
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
 WorkflowTool.doActionFor = _doActionFor
