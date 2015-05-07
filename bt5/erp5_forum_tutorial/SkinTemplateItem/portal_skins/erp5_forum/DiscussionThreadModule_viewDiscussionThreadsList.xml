@@ -2,31 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
@@ -35,11 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>DiscussionThreadModule_addThread</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use this dialog to create a reply and associate it with a post.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -74,7 +53,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -86,16 +67,15 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_count</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_title</string>
-                        <string>your_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -109,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionModuleThread_viewAddThreadDialog</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadsList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,11 +97,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionThreadModule_viewAddThreadDialog</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadsList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -133,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Post</string> </value>
+            <value> <string>Discussion Threads</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

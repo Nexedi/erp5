@@ -11,20 +11,24 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
-            <key> <string>actbox_name</string> </key>
-            <value> <string>Unsticky</string> </value>
-        </item>
-        <item>
-            <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=unsticky_action</string> </value>
-        </item>
-        <item>
-            <key> <string>after_script_name</string> </key>
+            <key> <string>actbox_icon</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Unstick</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=unstick_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>unstick</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>Unsticky the thread.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,7 +38,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>unsticky_action</string> </value>
+            <value> <string>unstick_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -46,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Unsticky Action</string> </value>
+            <value> <string>Unstick Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -57,10 +61,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>

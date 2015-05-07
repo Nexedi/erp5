@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>portal type (use as filter for worklists)</string> </value>
+            <value> <string>Portal type (used as filter for worklists)</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

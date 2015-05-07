@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Publish</string> </value>
         </item>
@@ -24,7 +28,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Publish a thread.</string> </value>
+            <value> <string>Publish a thread in the forum</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -57,10 +61,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,7 +69,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

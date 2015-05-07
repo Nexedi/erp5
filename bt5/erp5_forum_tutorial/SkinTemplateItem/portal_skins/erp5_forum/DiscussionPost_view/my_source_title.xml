@@ -82,6 +82,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -241,6 +245,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -385,7 +393,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>Source</string> </value>
+                    <value> <string>source</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -399,6 +407,10 @@
                 </item>
                 <item>
                     <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>context_getter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -486,7 +498,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>person</string>
+                          <string>Person</string>
                           <string>Person</string>
                         </tuple>
                       </list>

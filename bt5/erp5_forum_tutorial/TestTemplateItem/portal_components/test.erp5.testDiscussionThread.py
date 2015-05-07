@@ -1,5 +1,33 @@
+##############################################################################
+#
+# Copyright (c) 2002-2015 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
+
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from httplib import OK as HTTP_OK
+import transaction
 
 class TestDiscussionThread(SecurityTestCase):
   """
@@ -7,198 +35,183 @@ class TestDiscussionThread(SecurityTestCase):
   """
 
   def getTitle(self):
-    return "TestDiscussionThread"
+    return "Test Discussion thread"
+
+  def getBusinessTemplateList(self):
+    """
+    Tuple of Business Templates we need to install
+    """
+    return ('erp5_base',
+        'erp5_web',
+       'erp5_ingestion_mysql_innodb_catalog',
+       'erp5_ingestion',
+       'erp5_dms',
+       'erp5_forum_tutorial')
 
   def afterSetUp(self):
     """
-    This is ran before each and every test, used to set up the environment
+    This is ran before anything, used to set the environment
     """
-    user_list = [
-      # This is Dictator, a user of our portal and a forum admin
-      dict(title='Dictator', reference='admin', function='forum/administrator'),
-      # This is "Forum User", a user of our portal. He's funny, but has no administrative power
-      dict(title='Forum User', reference='forum_user', function='forum/user'),
-      # This is yet another user. He has no administrative power
-      dict(title='Another Forum User', reference='another_forum_user', function='forum/user'),
-      # This is a Lurker. He is lurking in the forum, but is not an User
-      dict(title='Forum visitor', reference='visitor', function='forum/visitor'),
-      # This is a Spy. He has an ERP5 account, but no specific forum access.
-      dict(title='Spy', reference='spy', function=None),
-    ]
-    # now we create the users
+
+    user_list=[
+        dict(title='Dictator', reference='admin', function='forum/administrator'),
+        dict(title='Forum User', reference='forum_user', function='forum/user'),
+        dict(title='Another_Forum_user', reference='another_forum_user', function='forum/user'),
+        dict(title='Forum Visitor', reference='visitor', function='forum/visitor'),
+        dict(title='Spy', reference='spy', function=None),
+       ]
+
     for user in user_list:
-      self.createSimpleUser(**user)
-
-    self.commit()
-    self.tic()
-
+      if len(self.portal.portal_catalog(portal_type='Person', reference=user['reference']))==0:
+        self.createSimpleUser(**user)
+#    self.tic()
     self.forum_module = self.portal.getDefaultModule(portal_type='Discussion Thread')
     self.assertTrue(self.forum_module is not None)
 
   def _newThread(self, content=''):
-    """Helper function to create a new Thread"""
+    """Helper function to create new Thread"""
     return self.forum_module.DiscussionThreadModule_addThread(
-        title='Some title',
-        text_content=content,
-        form_id='DiscussionThreadModule_viewAddThreadDialog',
-        batch_mode=True,
-        )
-
+      title='Some title',
+      text_content=content,
+      form_id='DiscussionThreadModule_viewAddThreadDialog',
+      batch_mode=True
+      )
+      
   def testUserCanCreateContent(self):
     """
     Use case:
-        - user creates a thread
-        - that user can see it
-        - that user can reply to his thread
+    - user creates a thread
+    - that user can see it
+    - that user can reply to this thread
     """
-    # forum_user should be able to access/view the forum module
-    self.assertUserCanAccessDocument('forum_user', self.forum_module)
+    # forum user should be able to access/view the forum module
     self.assertUserCanViewDocument('forum_user', self.forum_module)
+    self.assertUserCanAccessDocument('forum_user', self.forum_module)
     self.assertUserCanAddDocument('forum_user', self.forum_module)
 
     self.login('forum_user')
-
-    thread_content='Hey, lets create a new thread!'
+  
+    thread_content="Hey, let's create a new thread!"
     thread = self._newThread(content=thread_content)
-
-    # user should be able to access/view the created thread
+  
     self.assertUserCanViewDocument('forum_user', thread)
     self.assertUserCanAccessDocument('forum_user', thread)
     self.assertUserCanAddDocument('forum_user', thread)
-
-    # get thread posts
+  
     thread_posts = thread.objectValues()
-
-    # thread should have only one post
-    self.assertEqual(len(thread_posts), 1)
-
-    # that unique post should have the right content
-    self.assertEqual(thread_posts[0].getTextContent(), thread_content)
-
-    # Check that the thread is inserted in the forum module
-    self.assertEqual(thread.getParentValue().getRelativeUrl(), self.forum_module.getRelativeUrl())
-
-    # the thread should have been published
-    self.assertEqual(thread.getValidationState(), 'public')
-
-    reply_content='Can we add a reply?'
+    self.assertEquals(len(thread_posts), 1)
+    self.assertEquals(thread_posts[0].getTextContent(), thread_content)
+    self.assertEquals(thread.getParentValue().getRelativeUrl(), self.forum_module.getRelativeUrl())
+    self.assertEquals(thread.getValidationState(), 'public')
+  
+    reply_content = 'Can we add a reply?'
     post = thread.DiscussionThreadModule_addReply(
-        title='A new reply',
-        text_content=reply_content,
-        form_id='DiscussionThreadModule_viewAddReplyDialog',
-        batch_mode=True,
-        )
-
+      title='A new reply',
+      text_content = reply_content,
+      form_id = 'DiscussionThreadModule_viewAddReplyDialog',
+      batch_mode=True,
+    )
+    
     self.assertUserCanViewDocument('forum_user', post)
     self.assertUserCanAccessDocument('forum_user', post)
-
+  
+    transaction.commit()
     self.tic()
-
+  
     thread_posts = thread.objectValues()
+  
+    self.assertEquals(len(thread_posts), 2)
 
-    # original thread and reply:
-    # thread should have two posts
-    self.assertEqual(len(thread_posts), 2)
-
-    # Check that post was inserted in thread
-    self.assertEqual(post.getParentValue().getRelativeUrl(), thread.getRelativeUrl())
-
+    self.assertEquals(len(thread.searchFolder(SearchableText=reply_content)), 1)
+    self.assertEquals(post.getParentValue().getRelativeUrl(), thread.getRelativeUrl())
+  
   def testSpyCannotAccessButVisitorCan(self):
     """
-    Unassigneds can't display threads, and visitor can:
-        - user creates a thread
-        - outsiders can't read the thread
-        - visitor can read the thread
+    Unassigned can't display threads, and visitor can:
+      - user creates a thread
+      - outsiders can't read hthe thread
+      - visitors can read the thread
     """
     self.login('forum_user')
-    thread = self._newThread()
-
+    thread =self._newThread()
+  
     self.failIfUserCanViewDocument('spy', thread)
     self.failIfUserCanAccessDocument('spy', thread)
-
+  
     self.assertUserCanViewDocument('visitor', thread)
     self.assertUserCanAccessDocument('visitor', thread)
-
-    # Check that visitor has permissions on related objects
-    # for example, if visitor has no permissions on the Person
-    # module, the above checks will pass, but the view
-    # will not work, because Person.getTitle() will fail
-
-    self.assertUserCanViewDocument('visitor', self.portal.person_module)
-    self.assertUserCanAccessDocument('visitor', self.portal.person_module)
-
-    response = self.publish('/%s/%s' % \
-                    (self.portal.getId(), thread.getRelativeUrl()),
-                     'visitor:visitor'
-                     )
-    self.assertEqual(response.getStatus(), HTTP_OK)
-
-  def testVisitorCannotPost(self):
+  
+    self.assertUserCanAccessDocument('visitor', self.portal.person_module.searchFolder(reference='forum_user')[0].getObject())
+  
+  def testVisistorsCannotPost(self):
     """
     Use case:
-        - user creates a thread
-        - visitor cannot reply
-        - visitor cannot post a new thread
+      - user creates a thread
+      - visitor cannot reply
+      - visitor cannot post a thread 
     """
     self.login('forum_user')
     thread = self._newThread()
-
-    # visitor cannot reply to a thread
+    
     self.failIfUserCanAddDocument('visitor', thread)
-    # visitor cannot create a new thread
     self.failIfUserCanAddDocument('visitor', self.forum_module)
-
+    
   def testAdminCanModerate(self):
     """
     Use case:
-        - admin creates a thread
-        - admin can display it
-        - admin closes it
-        - admin can display it
-        - admin reopens it
+      - admin creates a thread
+      - admin closes it
+      - admin can display it
+      - admin reopens it
     """
     self.login('admin')
     thread = self._newThread()
-
+    
     self.assertUserCanPassWorkflowTransition('admin', 'close_action', thread)
     thread.close()
-    self.commit()
-
+    transaction.commit()
+    
     self.assertUserCanViewDocument('admin', thread)
     self.assertUserCanAccessDocument('admin', thread)
     self.assertUserCanPassWorkflowTransition('admin', 'unclose_action', thread)
-
+  
   def testUserCannotModerate(self):
     """
     Use case:
-        - user creates thread
-        - user cannot close it
+      - user creates a thread
+      - user cannot close it
     """
     self.login('forum_user')
-    thread = self._newThread()
-
+    thread  = self._newThread()
+    
     self.assertUserCanPassWorkflowTransition('forum_user', 'close_action', thread)
     self.failIfUserCanPassWorkflowTransition('another_forum_user', 'close_action', thread)
+    
+  def testHiddenState(self):
+    """
+    Use case:
+      - forum creates a thread
+      - admin hides it
+      - forum_user still see his thread
+      - and can reply
+      - but another forum_user cannot display it
+      - user cannot unhide it
+    """
+    self.login('forum_user')
+    thread  = self._newThread()
 
-
+    self.failIfUserCanPassWorkflowTransition('another_forum_user', 'unhide_action', thread)
+      
   def testCanPostIfNotOwner(self):
     """
     Use case:
-        - forum_user creates a thread
-        - another_forum_user displays it
-        - another_forum_user replies
+      - forum_user creates a thread
+      - another_forum_user displays it
+      - another_forum_user replies 
     """
     self.login('forum_user')
     thread = self._newThread()
-
-    # other user (not thread owner) can access and view the thread
+      
     self.assertUserCanViewDocument('another_forum_user', thread)
     self.assertUserCanAccessDocument('another_forum_user', thread)
-    # ... and can reply to thread even if he did not start it
     self.assertUserCanAddDocument('another_forum_user', thread)
-
-    response = self.publish('/%s/%s' % \
-                    (self.portal.getId(), thread.getRelativeUrl()),
-                     'another_forum_user:another_forum_user'
-                     )
-    self.assertEqual(response.getStatus(), HTTP_OK)

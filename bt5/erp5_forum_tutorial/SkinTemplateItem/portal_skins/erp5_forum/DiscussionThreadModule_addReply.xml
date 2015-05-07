@@ -50,27 +50,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>person = context.ERP5Site_getAuthenticatedMemberPersonValue\n
+            <value> <string># Example code:\n
+\n
+# Import a standard function, and get the HTML request and response objects.\n
+from Products.PythonScripts.standard import html_quote\n
+request = container.REQUEST\n
+response =  request.response\n
+\n
+person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+translateString = context.Base_translateString\n
 \n
 discussion_post = context.newContent(\n
     title=title,\n
     text_content=text_content,\n
     source_value=person,\n
-    portal_type=\'Discussion Post\'\n
+    portal_type="Discussion Post"\n
 )\n
+\n
 if batch_mode:\n
   return discussion_post\n
 \n
-translateString = context.Base_translateString\n
+portal_status_message = translateString("New reply created.")\n
 \n
-portal_status_message = translateString(\'New reply created.\')\n
 context.Base_redirect(\'view\',\n
     keep_items = dict(portal_status_message=portal_status_message))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, batch_mode=False, **kw</string> </value>
+            <value> <string>title, text_content, form_id, batch_mode=False,**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

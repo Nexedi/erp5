@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>closed</string> </value>
+            <value> <string>hidden</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,14 +22,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed</string> </value>
+            <value> <string>Hidden</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>unclose</string>
-                <string>unclose_action</string>
+                <string>publish</string>
+                <string>publish_action</string>
               </tuple>
             </value>
         </item>

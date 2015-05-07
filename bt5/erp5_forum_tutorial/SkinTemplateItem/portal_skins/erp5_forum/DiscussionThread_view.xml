@@ -2,31 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
@@ -80,9 +59,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -97,7 +74,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_rating</string>
-                        <string>my_text_content</string>
+                        <string>my_listbox</string>
+                        <string>my_subject_list</string>
                       </list>
                     </value>
                 </item>
@@ -105,7 +83,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_translated_validation_state</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

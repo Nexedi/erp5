@@ -47,10 +47,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>

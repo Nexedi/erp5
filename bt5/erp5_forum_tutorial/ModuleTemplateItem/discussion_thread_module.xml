@@ -79,7 +79,6 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>

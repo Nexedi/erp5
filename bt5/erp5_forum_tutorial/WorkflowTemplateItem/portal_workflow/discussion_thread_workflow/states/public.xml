@@ -30,8 +30,10 @@
               <tuple>
                 <string>close</string>
                 <string>close_action</string>
-                <string>sticky</string>
-                <string>sticky_action</string>
+                <string>hide</string>
+                <string>hide_action</string>
+                <string>stick</string>
+                <string>stick_action</string>
               </tuple>
             </value>
         </item>
@@ -46,10 +48,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>

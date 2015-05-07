@@ -11,8 +11,12 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Cancelled</string> </value>
+            <value> <string>Cancel</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -24,7 +28,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cancel action.</string> </value>
+            <value> <string>Cancels a thread</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -57,10 +61,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
