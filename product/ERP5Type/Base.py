@@ -110,17 +110,12 @@ _MARKER = []
 global registered_workflow_method_set
 wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
 workflow_method_registry = [] # XXX A set() would be better but would require a hash in WorkflowMethod class
-erp5workflow_method_registry = []
 
 def resetRegisteredWorkflowMethod(portal_type=None):
   """
     TODO: unwrap workflow methos which were standard methods initially
   """
   for method in workflow_method_registry:
-    method.reset(portal_type=portal_type)
-
-def resetRegisteredERP5WorkflowMethod(portal_type=None):
-  for method in erp5workflow_method_registry:
     method.reset(portal_type=portal_type)
 
 class WorkflowMethod(Method):
@@ -363,7 +358,6 @@ class PropertyHolder(object):
     self.__name__ = name
     self.security = ClassSecurityInfo() # We create a new security info object
     self.workflow_method_registry = {}
-    self.erp5workflow_method_registry ={}
 
     self._categories = []
     self._properties = []
