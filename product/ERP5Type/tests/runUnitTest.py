@@ -384,26 +384,13 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           from Products.ERP5.ERP5Site import getBootstrapDirectory
           bt5_path_list = [os.environ.get('erp5_tests_bootstrap_path') or
                            getBootstrapDirectory()]
+          for path in os.environ['erp5_tests_bt5_path'].split(','):
+            if os.path.exists(os.path.join(path, "bt5list")):
+              bt5_path_list.append(path)
+            for path in glob(os.path.join(path, "*", "bt5list")):
+              bt5_path_list.append(os.path.dirname(path))
 
-          bt5_path = os.environ.get('erp5_tests_bt5_path')
-          if bt5_path:
-            bt5_path_list += {re.sub("(\/\*|\*)", '', bt5_path)
-                              for bt5_path in bt5_path.split(',')}
-          else:
-            from App.config import getConfiguration
-            instancehome = getConfiguration().instancehome
-            bt5_path_list.append(os.path.join(instancehome, 'bt5'))
-
-          valid_bt5_path_list = []
-          for bt5_path in bt5_path_list:
-            if bt5_path:
-              bt5_path = os.path.expanduser(bt5_path)
-              if not os.path.exists(bt5_path):
-                _print("Ignoring non existant bt5 path %s\n" % bt5_path)
-              else:
-                valid_bt5_path_list.append(bt5_path)
-
-          template_tool.updateRepositoryBusinessTemplateList(valid_bt5_path_list)
+          template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
 
           url_bt_tuple_list = [
             ('%s/%s' % (repository, bt_title), bt_title) for repository, bt_title in
@@ -534,33 +521,20 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   root_logger.handlers = []
   logger.EventLogFactory(section)()
 
-  # allow unit tests of our Products or business templates to be reached.
-  product_test_list = glob(os.path.join(products_home, '*', 'tests'))
-  sys.path.extend(product_test_list)
-  erp5_tests_bt5_path = os.environ.get('erp5_tests_bt5_path',
-                              os.path.join(instance_home, 'bt5'))
-  bt5_path_list = erp5_tests_bt5_path.split(",")
-  bt5_test_list = []
-  project_bt5_test_list = []
-  for bt5_path in bt5_path_list:
-    bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem')))
-    bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem',
-                                           'portal_components')))
-
-    # also suport instance_home/bt5/project_bt5/*
-    project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
-                                                   'TestTemplateItem')))
-    project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
-                                                   'TestTemplateItem',
-                                                   'portal_components')))
-
-  sys.path.extend(bt5_test_list)
-  sys.path.extend(project_bt5_test_list)
-
-  sys.path.extend((os.path.join(real_instance_home, 'tests'), tests_home))
-  sys.path.append(instance_home)
   # Make sure that locally overridden python modules are used
   sys.path.insert(0, os.path.join(real_instance_home, 'lib', 'python'))
+
+  # allow unit tests of our Products or business templates to be reached.
+  sys.path += glob(os.path.join(products_home, '*', 'tests'))
+  bt5_path_list = os.environ['erp5_tests_bt5_path'].split(',')
+  bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
+  for path in bt5_path_list:
+    path = os.path.join(path,'*','TestTemplateItem')
+    sys.path += glob(path)
+    sys.path += glob(os.path.join(path, 'portal_components'))
+
+  sys.path += (os.path.join(real_instance_home, 'tests'),
+               tests_home, instance_home)
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
@@ -746,14 +720,13 @@ def main(argument_list=None):
     usage(sys.stderr, msg)
     sys.exit(2)
 
-  if WIN:
-    os.environ["erp5_tests_bt5_path"] = os.path.join(real_instance_home, 'bt5')
-
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
   debug = 0
   run_only = None
   instance_home = os.path.join(real_instance_home, 'unit_test')
+
+  bt5_path_list = []
 
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
@@ -784,8 +757,7 @@ def main(argument_list=None):
       os.environ["erp5_tests_data_fs_path"] = arg
       os.environ["erp5_tests_recreate_catalog"] = "1"
     elif opt ==  '--bt5_path':
-      os.environ["erp5_tests_bt5_path"] = ','.join([arg] +
-        os.environ.get('erp5_tests_bt5_path', '').split(','))
+      bt5_path_list.append(arg)
     elif opt == '--firefox_bin':
       os.environ["firefox_bin"] = arg
     elif opt == '--xvfb_bin':
@@ -855,6 +827,17 @@ def main(argument_list=None):
       sys.path.extend(arg.split(','))
     elif opt == "--instance_home":
       instance_home = os.path.abspath(arg)
+
+  bt5_path_list += filter(None,
+    os.environ.get("erp5_tests_bt5_path", "").split(','))
+  valid_path_list = []
+  for path in map(os.path.expanduser, bt5_path_list) if bt5_path_list else (
+      os.path.join(real_instance_home if WIN else instance_home, 'bt5'),):
+    if os.path.exists(path):
+      valid_path_list.append(path)
+    else:
+      _print("Ignoring non existing bt5 path %s\n" % path)
+  os.environ["erp5_tests_bt5_path"] = ','.join(valid_path_list)
 
   global tests_home
   os.environ['INSTANCE_HOME'] = instance_home

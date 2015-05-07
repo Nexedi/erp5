@@ -444,13 +444,8 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def _getBTPathAndIdList(template_list):
       bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
         ERP5Site.getBootstrapDirectory()
-      bt5_path = os.environ.get('erp5_tests_bt5_path')
-      if bt5_path:
-        bt5_path_list = bt5_path.split(',')
-        bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
-      else:
-        bt5_path = os.path.join(instancehome, 'bt5')
-        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
+      bt5_path_list = os.environ['erp5_tests_bt5_path'].split(',')
+      bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
         urltype, url = urllib.splittype(path + '/' + template)
@@ -469,7 +464,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           if errcode == 200:
             return urltype + ':' + url
         else:
-          path_list = glob(os.path.join(os.path.expanduser(path), template))
+          path_list = glob(os.path.join(path, template))
           if path_list:
             return path_list[0]
 
