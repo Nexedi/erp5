@@ -77,7 +77,7 @@ previous_method_id = launchUpgraderAlarm(\'upgrader_check_pre_upgrade\')\n
 \n
 previous_method_id.extend([\'recursiveImmediateReindexObject\',\n
                            \'immediateReindexObject\',\n
-                           \'callMethodOnObjectList\'])\n
+                           \'Base_postCheckConsistencyResult\'])\n
 \n
 previous_method_id = launchUpgraderAlarm(\'upgrader_check_upgrader\',\n
                                    after_method_id=previous_method_id)\n

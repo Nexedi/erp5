@@ -58,7 +58,7 @@
 portal = context.getPortalObject()\n
 portal_alarms = portal.portal_alarms\n
 \n
-after_method_id = \'callMethodOnObjectList\'\n
+after_method_id = \'Base_postCheckConsistencyResult\'\n
 def launchSenseAlarm(alarm_id, after_tag=[]):\n
   """ Get the alarm and use sense"""\n
   upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n

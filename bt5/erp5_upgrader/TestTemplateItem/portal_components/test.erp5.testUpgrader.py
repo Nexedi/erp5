@@ -27,7 +27,6 @@
 ##############################################################################
 
 import re
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Tool.TemplateTool import BusinessTemplateUnknownError
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -312,21 +311,16 @@ class TestUpgrader(ERP5TypeTestCase):
       self.portal.portal_templates.getInstalledBusinessTemplateTitleList())
 
   def stepCheckNoActivitiesCreated(self, sequence=None):
-    transaction.commit()
     portal_activities = self.getActivityTool()
-    message = portal_activities.getMessageList()[0]
+    message, = portal_activities.getMessageList()
     self.assertEqual(message.method_id, "Alarm_runUpgrader")
-    portal_templates = self.getTemplateTool()
-    title_list = portal_templates.getInstalledBusinessTemplateTitleList()
-    self.assertTrue('erp5_web' not in title_list,
-      "%s found in %s" % ('erp5_web', title_list))
+    getTitleList = self.getTemplateTool().getInstalledBusinessTemplateTitleList
+    self.assertNotIn('erp5_web', getTitleList())
     portal_activities.manageInvoke(message.object_path, message.method_id)
-    title_list = portal_templates.getInstalledBusinessTemplateTitleList()
-    self.assertTrue('erp5_web' in title_list,
-      "%s not found in %s" % ('erp5_web', title_list))
-    transaction.commit()
-    message_list = set([i.method_id for i in portal_activities.getMessageList()])
-    self.assertTrue('callMethodOnObjectList' not in message_list)
+    self.assertIn('erp5_web', getTitleList())
+    self.commit()
+    self.assertEqual({'immediateReindexObject', 'unindexObject'},
+      {x.method_id for x in portal_activities.getMessageList()})
 
   def stepCreateBigIncosistentData(self, sequence=None):
     for _ in range(101):
@@ -341,18 +335,13 @@ class TestUpgrader(ERP5TypeTestCase):
         title="org_%s" % self.portal.organisation_module.getLastId())
 
   def stepCheckActivitiesCreated(self, sequence=None):
-    transaction.commit()
     portal_activities = self.getActivityTool()
-    message = portal_activities.getMessageList()[0]
+    message, = portal_activities.getMessageList()
     self.assertEqual(message.method_id, "Alarm_runUpgrader")
     portal_activities.manageInvoke(message.object_path, message.method_id)
-    transaction.commit()
-    message_list = portal_activities.getMessageList()
-    method_id_list = set([i.method_id for i in message_list])
-    self.assertTrue('callMethodOnObjectList' in method_id_list)
-    for message in message_list:
-      if message.method_id == 'callMethodOnObjectList':
-        self.assertEqual(message.args[-1], 'Base_postCheckConsistencyResult')
+    self.commit()
+    self.assertIn('Base_postCheckConsistencyResult',
+      {x.method_id for x in portal_activities.getMessageList()})
 
   def stepUninstallERP5UpgraderTestBT(self, sequence=None):
     bt5 = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_web')
