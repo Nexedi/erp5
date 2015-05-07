@@ -20,17 +20,24 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+
+import Products
 import zope.interface
-from Products.ERP5Type.Globals import InitializeClass
+
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
-import Products
-from Products.CMFCore.TypesTool import FactoryTypeInformation
+from Products.CMFCore.exceptions import zExceptions_Unauthorized,\
+                                        AccessControl_Unauthorized
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.Base import getClassPropertyList
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList,\
+                                                      getAccessorHolderList
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
@@ -45,9 +52,11 @@ from TranslationProviderBase import TranslationProviderBase
 from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
 
 from sys import exc_info
-from zLOG import LOG, ERROR
-from Products.CMFCore.exceptions import zExceptions_Unauthorized
+from TranslationProviderBase import TranslationProviderBase
 from types import NoneType
+from zLOG import LOG, ERROR
+
+ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
 def getCurrentUserIdOrAnonymousToken():
   """Return connected user_id or simple token for
@@ -133,7 +142,7 @@ class LocalRoleAssignorMixIn(object):
       ## Make sure that the object is reindexed if modified
       # XXX: Document modification detection assumes local roles are always
       # part of ob and not separate persistent objects.
-      if reindex:# and ob._p_changed:
+      if reindex and ob._p_changed:
         ob.reindexObjectSecurity(activate_kw=dict(activate_kw))
 
     security.declarePrivate('getFilteredRoleListFor')

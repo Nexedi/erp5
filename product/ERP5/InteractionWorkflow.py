@@ -17,21 +17,20 @@
 #
 ##############################################################################
 
-import transaction
-from Products.ERP5Type import Globals
 import App
-from types import StringTypes
+import transaction
+
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.SecurityManagement import setSecurityManager
 from Acquisition import aq_base
-from Products.CMFCore.utils import getToolByName
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
-from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
-from Products.ERP5Type import Permissions
-
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions, Globals
+from Products.ERP5Type.Workflow import addWorkflowFactory
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+from types import StringTypes
 from zLOG import LOG, WARNING
 
 _MARKER = []

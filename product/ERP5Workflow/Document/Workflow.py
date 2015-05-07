@@ -25,46 +25,40 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import sys
-from types import StringTypes
-
-from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.unauthorized import Unauthorized
-from Products.DCWorkflow.utils import modifyRolesForPermission
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition as DCWorkflow
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Globals import PersistentMapping
-from Products.ERP5Type.Accessor import WorkflowState
-from Products.ERP5Type import Permissions
-from tempfile import mktemp
 
 import os
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC
-from Products.ERP5Workflow.Document.Transition import TRIGGER_USER_ACTION
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
-from Products.DCWorkflowGraph.config import DOT_EXE
-from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
-from Products.DCWorkflow.States import StateDefinition as DCWorkflowState
-from Products.CMFCore.WorkflowCore import ObjectDeleted
-from Products.CMFCore.WorkflowCore import ObjectMoved
-from Products.DCWorkflow.utils import Message as _
-from DocumentTemplate.DT_Util import TemplateDict
-from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
+import sys
+
+from AccessControl import ClassSecurityInfo
+from AccessControl.unauthorized import Unauthorized
+from AccessControl.SecurityManagement import getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime import DateTime
-from zLOG import LOG, ERROR, DEBUG, WARNING
+from DocumentTemplate.DT_Util import TemplateDict
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
-from Products.ERP5Type.patches.DCWorkflow import Guard_checkWithoutRoles
-from Products.DCWorkflow.Expression import StateChangeInfo
-from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowException, ObjectDeleted,\
+                                          ObjectMoved
+from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.DCWorkflowGraph.config import DOT_EXE
+from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
+from Products.DCWorkflow.utils import Message as _
+from Products.DCWorkflow.utils import modifyRolesForPermission
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition as DCWorkflow
 from Products.ERP5.Tool import ERP5WorkflowTool
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID,\
+                                                          WORKLIST_METADATA_KEY
+from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
+                                    TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
+from tempfile import mktemp
+from types import StringTypes
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
@@ -78,7 +72,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   isPortalContent = 1
   isRADContent = 1
   default_reference = ''
-  ### zwj: for security issue
   managed_permission_list = ()
   managed_role = ()
   erp5_permission_roles = {} # { permission: [role] or (role,) }
@@ -151,7 +144,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     document.workflow_history[workflow_key] += (status_dict,)
     # XXX this _p_changed marks the document modified, but the
     # only the PersistentMapping is modified
-    #document._p_changed = 1
+    # document._p_changed = 1
     # XXX this _p_changed is apparently not necessary
     #document.workflow_history._p_changed = 1
 
@@ -256,22 +249,22 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     managed_permission = self.getManagedPermissionList()
     if sdef is None:
         return 0
-    ### zwj: get all matrix cell objects
+    # zwj: get all matrix cell objects
     permission_role_matrix_cells = sdef.objectValues(portal_type = "PermissionRoles")
-    ### zwj: build a permission roles dict
+    # zwj: build a permission roles dict
     for perm_role in permission_role_matrix_cells:
       permission, role = perm_role.getPermissionRole()
-      ### zwj: double check the right role and permission are obtained
+      # zwj: double check the right role and permission are obtained
       if permission != 'None':
         if self.erp5_permission_roles.has_key(permission):
           self.erp5_permission_roles[permission] += (role,)
         else:
           self.erp5_permission_roles.update({permission : (role,)})
-    ### zwj: update role list to permission
+    # zwj: update role list to permission
     for permission_roles in self.erp5_permission_roles.keys():
       if modifyRolesForPermission(document, permission_roles, self.erp5_permission_roles[permission_roles]):
         changed = 1
-        ### zwj: clean Permission Role list for next role mapping
+        # zwj: clean Permission Role list for the next role mapping
       del self.erp5_permission_roles[permission_roles]
     return changed
 
@@ -368,8 +361,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     if not self.objectValues(portal_type='Worklist'):
       return None
 
-    LOG("380 '%s' Worklists found!"%len(self.objectValues(portal_type='Worklist')), WARNING, "in Workflow.py")
-    ### zwj: for DC workflow
     portal = self.getPortalObject()
     def getPortalTypeListForWorkflow(workflow_id):
         workflow_tool = portal.portal_workflow
@@ -377,7 +368,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         append = result.append
         for workflow_id in info.object.getTypeInfo().getTypeERP5WorkflowList():
             append(info.object.getTypeInfo().getId())
-        #LOG ('Supported portal types are: %s'%result, WARNING, ' in Workflow.py')
         return result
 
     portal_type_list = getPortalTypeListForWorkflow(self.id)
@@ -405,7 +395,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           variable_match[key] = evaluated_value
 
         if 'portal_type' in variable_match and len(variable_match['portal_type']):
-          #raise NotImplementedError (variable_match['portal_type'])
           portal_type_intersection = set(variable_match['portal_type']).intersection(portal_type_list)
           # in case the current workflow is not associated with portal_types
           # defined on the worklist, don't display the worklist for this
@@ -484,9 +473,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
 
   def _getWorkflowStateOf(self, ob, id_only=0):
       tool = getToolByName(self, 'portal_workflow')
-      id_no_suffix = '_'.join(self.id.split('_')[1:])
+      id_no_suffix = self.getReference()
       status = tool.getStatusOf(id_no_suffix, ob)
-      LOG("502 tool is '%s' type, status is '%s'"%(tool.getPortalType(), status),WARNING, " in Workflow.py")
       if status is None:
           state = self.getSourceValue()
       else:
@@ -550,7 +538,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     """ Execute workflow methods.
     """
-    LOG("transition_list is '%s'"%transition_list, WARNING, " in Workflow.py 528.")
     if type(transition_list) in StringTypes:
       method_id = transition_list
     elif len(transition_list) == 1:
@@ -617,8 +604,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       else:
         new_state = new_sdef.getReference()
       former_status = current_state_value.getReference()
-
-    LOG(" Object '%s' will change from state '%s' to '%s'"%(document.getId(), old_state, new_state), WARNING, " in Workflow.py 593")
 
     # Execute the "before" script.
     before_script_success = 1

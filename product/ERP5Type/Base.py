@@ -28,82 +28,69 @@
 #
 ##############################################################################
 
-from struct import unpack
-from copy import copy
-import warnings
-import types
+import inspect
+import OFS.History
+import random
+import sys, re
 import thread, threading
+import types
+import warnings
+import zope.interface
 
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Accessor import WorkflowState
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
+from copy import copy
+from CopySupport import CopyContainer, CopyError,\
+                        tryMethodCallWithTemporaryPermission
+from cStringIO import StringIO
 from DateTime import DateTime
-import OFS.History
+from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 from persistent.TimeStamp import TimeStamp
-from zExceptions import NotFound, Unauthorized
-
-from ZopePatch import ERP5PropertyManager
-
-from Products.CMFCore.PortalContent import PortalContent
-from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
-from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
+from pprint import pformat
+from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
-
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.PortalContent import PortalContent
+from Products.CMFCore.utils import getToolByName, _checkConditionalGET,\
+                                   _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
-
-from Products.ERP5Type import _dtmldir
-from Products.ERP5Type import PropertySheet
-from Products.ERP5Type import interfaces
-from Products.ERP5Type import Permissions
-from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
-from Products.ERP5Type.Utils import UpperCase
-from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
-from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
+from Products.ERP5Type import PropertySheet, interfaces, Permissions, _dtmldir
+from Products.ERP5Type.Accessor import Base as BaseAccessor
+from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Accessor.TypeDefinition import list_types
-from Products.ERP5Type.Accessor import Base as BaseAccessor
-from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
-from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
-from Accessor import WorkflowState, Value
-from Products.ERP5Type.Log import log as unrestrictedLog
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Accessor.TypeDefinition import type_definition
-
-from CopySupport import CopyContainer, CopyError,\
-    tryMethodCallWithTemporaryPermission
-from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
-from Products.CMFActivity.ActiveObject import ActiveObject
-from Products.ERP5Type.Accessor.Accessor import Accessor as Method
-from Products.ERP5Type.Accessor.TypeDefinition import asDate
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Accessor.TypeDefinition import type_definition,\
+                                                      list_types, asDate
+from Products.ERP5Type.Cache import CachingMethod, clearCache,\
+                                    getReadOnlyTransactionCache
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Log import log as unrestrictedLog
+from Products.ERP5Type.Message import Message
+from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-
-from zope.interface import classImplementsOnly, implementedBy
-
-from string import join
-import sys, re
-
-from cStringIO import StringIO
+from Products.ERP5Type.Utils import UpperCase,\
+                                    convertToUpperCase, convertToMixedCase,\
+                                    createExpressionContext, simple_decorator
+from Products.ERP5Type.XMLExportImport import Base_asXML
 from socket import gethostname, gethostbyaddr
-import random
-
-import inspect
-from pprint import pformat
-
-import zope.interface
-
-from ZODB.POSException import ConflictError
+from string import join
+from struct import unpack
+from zExceptions import NotFound, Unauthorized
 from zLOG import LOG, INFO, ERROR, WARNING
+from ZODB.POSException import ConflictError
+from zope.interface import classImplementsOnly, implementedBy
+from ZopePatch import ERP5PropertyManager
 
 _MARKER = []
 
@@ -205,10 +192,10 @@ class WorkflowMethod(Method):
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
     try:
-      wf = getattr(instance.getPortalObject(), 'portal_workflow') # portal_workflow is a list!
+      wf = getattr(instance.getPortalObject(), 'portal_workflow')
     except AttributeError:
-        # XXX instance is unwrapped(no acquisition)
-        # XXX I must think that what is a correct behavior.(Yusei)
+      # XXX instance is unwrapped(no acquisition)
+      # XXX I must think that what is a correct behavior.(Yusei)
       return self._m(instance, *args, **kw)
 
     valid_transition_item_list = []
@@ -220,14 +207,14 @@ class WorkflowMethod(Method):
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
-              # a run-once transition, prevent it from running again in
-              # the same transaction
+            # a run-once transition, prevent it from running again in
+            # the same transaction
             transactional_variable[once_transition_key] = 1
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition' or \
             candidate_workflow.__class__.__name__ == 'Workflow':
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
-        # XXX Keep the log for projects that needs to comment out
-        #     the previous line.
+          # XXX Keep the log for projects that needs to comment out
+          #     the previous line.
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
               % (wf_id, transition_id, instance,
@@ -237,30 +224,29 @@ class WorkflowMethod(Method):
 
     #LOG('valid_transition_item_list %s' % self.__name__, 0, str(valid_transition_item_list))
 
-      # Call whatever must be called before changing states
+    # Call whatever must be called before changing states
     for wf_id, transition_list in valid_transition_item_list:
        wf[wf_id].notifyBefore(instance, transition_list, args=args, kw=kw)
 
     # Compute expected result
     result = apply(self.__dict__['_m'], (instance,) + args, kw)
 
-      # Change the state of statefull workflows
+    # Change the state of statefull workflows
     for wf_id, transition_list in valid_transition_item_list:
       try:
         wf[wf_id].notifyWorkflowMethod(instance, transition_list, args=args, kw=kw)
       except ObjectDeleted:
-      # Re-raise with a different result.
+        # Re-raise with a different result.
         raise ObjectDeleted(result)
       except ObjectMoved, ex:
-      # Re-raise with a different result.
+        # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), result)
 
     # Call whatever must be called after changing states
     for wf_id, transition_list in valid_transition_item_list:
-    # /product/ERP5/InteractionWorkflow.py, update value, provide info
       wf[wf_id].notifySuccess(instance, transition_list, result, args=args, kw=kw)
 
-      # Return result finally
+    # Return result finally
     return result
   # Interactions should not be disabled during normal operation. Only in very
   # rare and specific cases like data migration. That's why it is implemented
@@ -522,10 +508,10 @@ def initializePortalTypeWorkflowMethods(ptype_klass, portal_workflow):
                                      WorkflowState.TranslatedTitleGetter),
           ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
           ):
-        #if not hasattr(ptype_klass, method_id):
-        method = getter(method_id, wf_id)
+        if not hasattr(ptype_klass, method_id):
+          method = getter(method_id, wf_id)
           # Attach to portal_type
-        ptype_klass.registerAccessor(method,
+          ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
       storage = workflow_dict
@@ -1652,9 +1638,6 @@ class Base( CopyContainer,
     """
     return self.aq_inner.aq_parent.getRelativeUrl()
 
-  def getParentTef(self):
-    raise NotImplementedError('to be definded 2023 Base.py')
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentId' )
   def getParentId(self):
@@ -2221,9 +2204,6 @@ class Base( CopyContainer,
     """
     return self._getCategoryTool().isAcquiredMemberOf(self, category)
 
-  def getTitleOrRef(self):
-    raise NotImplementedError('to be definded 2588 in Base.py')
-
   # Aliases
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitleOrId')
@@ -2241,7 +2221,7 @@ class Base( CopyContainer,
     return self.getId()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'Title' )
-  Title = getTitleOrId # Why ???
+  Title = getTitleOrId
 
   # CMF Compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'title_or_id' )
@@ -2329,9 +2309,6 @@ class Base( CopyContainer,
         else:
           property_dict[k] = user_dict[k]
     return property_dict
-
-  def getTranslatedRef(self):
-    raise NotImplementedError('to be definded in 2694 Base.py')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedId')

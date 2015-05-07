@@ -26,21 +26,22 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 import re
-from zLOG import LOG, WARNING
+
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_inner
-from Acquisition import aq_parent
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
-from Products.DCWorkflow.Expression import Expression
-from Products.DCWorkflow.Expression import StateChangeInfo
-from Products.DCWorkflow.Guard import Guard
-from Products.DCWorkflow.permissions import ManagePortal
+from Acquisition import aq_inner, aq_parent
 from Persistence import PersistentMapping
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.DCWorkflow.Expression import Expression, StateChangeInfo
+from Products.DCWorkflow.Guard import Guard
+from Products.DCWorkflow.permissions import ManagePortal
+
+from zLOG import LOG, WARNING
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
@@ -54,14 +55,11 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
-
     description = ''
     var_matches = None  # Compared with catalog when set.
-    ### zwj: following 3 variables take place var_matches for this moment
     matched_portal_type = ''
     matched_validation_state = None
     matched_simulation_state = None
-
     actbox_name = ''
     actbox_url = ''
     actbox_icon = ''
@@ -110,7 +108,6 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
           if self.guard.expr != self.getExpression():
             self.guard.expr = self.getExpression()
 
-
     def getAvailableCatalogVars(self):
         res = []
         res.append(self.getParentValue().getStateVariable())
@@ -145,10 +142,8 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
             v = [ var.strip() for var in self.getMatchedPortalTypeList() ]
             matches = tuple(v)
         elif id == 'validation_state':
-          LOG('3.2 Matched validation state = %s'%self.getMatchedValidationStateList(), WARNING, 'in Worklist.py')
           matches = tuple([self.getMatchedValidationStateList()])
         elif id == 'simulation_stae':
-          LOG('3.3 Matched simulation state = %s'%self.getMatchedSimulationStateList(), WARNING, 'in Worklist.py')
           matches = tuple([self.getMatchedSimulationStateList()])
         else:
           raise NotImplementedError ("Cataloged variable matching error in Worklist.py")

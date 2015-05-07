@@ -14,150 +14,34 @@
 ##############################################################################
 
 import sys
-from zLOG import LOG, WARNING
-from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
 from AccessControl import Unauthorized
-from Products.CMFCore.WorkflowTool import WorkflowTool
-from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TransitionDefinition
-from Products.DCWorkflow.States import StateDefinition
-from Products.DCWorkflow.Variables import VariableDefinition
-from Products.DCWorkflow.Worklists import WorklistDefinition
-
-from Products.CMFCore.utils import Message as _
-from Products.CMFCore.utils import getToolByName
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
-from Products.CMFCore.utils import _getAuthenticatedUser
-from Products.ERP5Type.Cache import CachingMethod
-from sets import ImmutableSet
 from Acquisition import aq_base
-from Persistence import Persistent
-from Products.ERP5Type.Globals import PersistentMapping
+from DateTime import DateTime
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
-from DateTime import DateTime
+from Products.ERP5Type.Cache import CachingMethod
+from Persistence import Persistent
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
+from Products.CMFCore.utils import Message as _
+from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted,\
+                                          WorkflowException
+from Products.CMFCore.WorkflowTool import WorkflowTool
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD,\
+                                            TransitionDefinition
+from Products.DCWorkflow.Variables import VariableDefinition
+from Products.DCWorkflow.Worklists import WorklistDefinition
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery,\
+                                            ComplexQuery, NegatedQuery
+from sets import ImmutableSet
+from types import StringTypes
+from zLOG import LOG, WARNING
 
 _marker = []  # Create a new marker object.
-
-def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
-    '''
-    Allows the system to request a workflow action.  This method
-    must perform its own security checks.
-    '''
-    if type(transition_list) in StringTypes:
-      method_id = transition_list
-    elif len(transition_list) == 1:
-      method_id = transition_list[0]
-    else:
-      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
-    sdef = self._getWorkflowStateOf(ob)
-    if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
-    if method_id not in sdef.transitions:
-        raise Unauthorized(method_id)
-    tdef = self.transitions.get(method_id, None)
-    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
-            'Transition %s is not triggered by a workflow method'
-            % method_id)
-    if not self._checkTransitionGuard(tdef, ob):
-        raise Unauthorized(method_id)
-    self._changeStateOf(ob, tdef, kw)
-    if getattr(ob, 'reindexObject', None) is not None:
-        if kw is not None:
-            activate_kw = kw.get('activate_kw', {})
-        else:
-            activate_kw = {}
-        ob.reindexObject(activate_kw=activate_kw)
-
-def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=None):
-    '''
-    Notifies this workflow of an action before it happens,
-    allowing veto by exception.  Unless an exception is thrown, either
-    a notifySuccess() or notifyException() can be expected later on.
-    The action usually corresponds to a method name.
-    '''
-    pass
-
-def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
-    '''
-    Notifies this workflow that an action has taken place.
-    '''
-    pass
-
-DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
-DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
-DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
-
-def method_getReference(self):
-  return self.id
-
-def DCWorkflowDefinition_getVariableValueList(self):
-  if self.variables is not None:
-    return self.variables
-  return {}
-
-def DCWorkflowDefinition_getVariableIdList(self):
-  if self.variables is not None:
-    return self.variables.objectIds()
-  return []
-
-def DCWorkflowDefinition_getStateValueList(self):
-  if self.states is not None:
-    return self.states
-  return {}
-
-def DCWorkflowDefinition_getStateIdList(self):
-  if self.states is not None:
-    return self.states.objectIds()
-  return []
-
-def DCWorkflowDefinition_getTransitionValueList(self):
-  if self.transitions is not None:
-    return self.transitions
-  else:
-    return {}
-
-def DCWorkflowDefinition_getTransitionIdList(self):
-  if self.transitions is not None:
-    return self.transitions.objectIds()
-  return []
-
-def DCWorkflowDefinition_getWorklistValueList(self):
-  if self.worklists is not None:
-    return self.worklists
-  return {}
-
-def DCWorkflowDefinition_getWorklistIdList(self):
-  if self.worklists is not None:
-    return self.worklists.objectIds()
-  return []
-
-def StateDefinition_getDestinationIdList(self):
-  return self.transitions
-
-DCWorkflowDefinition.getReference = method_getReference
-TransitionDefinition.getReference = method_getReference
-StateDefinition.getReference = method_getReference
-StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
-VariableDefinition.getReference = method_getReference
-WorklistDefinition.getReference = method_getReference
-
-DCWorkflowDefinition.getVariableValueList = DCWorkflowDefinition_getVariableValueList
-DCWorkflowDefinition.getStateValueList = DCWorkflowDefinition_getStateValueList
-DCWorkflowDefinition.getTransitionValueList = DCWorkflowDefinition_getTransitionValueList
-DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
-DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
-DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
-DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
-DCWorkflowDefinition.getWorklistIdList = DCWorkflowDefinition_getWorklistIdList
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'

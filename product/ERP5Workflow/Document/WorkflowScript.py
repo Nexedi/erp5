@@ -25,14 +25,15 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from AccessControl.class_init import InitializeClass
+
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from AccessControl.class_init import InitializeClass
 from App.special_dtml import HTMLFile
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Ticket import Ticket
 from Products.ERP5.Document.PythonScript import PythonScript
+from Products.ERP5.Document.Ticket import Ticket
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class WorkflowScript(PythonScript):

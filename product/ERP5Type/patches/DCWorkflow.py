@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-# Copyright (c) 2002,2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2005,2015 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
@@ -13,31 +13,31 @@
 #
 ##############################################################################
 
-# Optimized rendering of global actions (cache)
-
-from Products.ERP5Type.Globals import DTMLFile
-from Products.ERP5Type import _dtmldir
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
-from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
-from Products.DCWorkflow import DCWorkflow
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
-from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.CMFCore.utils import  _getAuthenticatedUser
-from DocumentTemplate.DT_Util import TemplateDict
-from DateTime import DateTime
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Utils import convertToMixedCase
 import sys
 from Acquisition import aq_base
+from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
 from copy import deepcopy
-
-# Patch WorkflowUIMixin to add description on workflows
-from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
+from DateTime import DateTime
+from DocumentTemplate.DT_Util import TemplateDict
+from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.DCWorkflow import DCWorkflow
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition,\
+                              StateChangeInfo, createExprContext,\
+                              ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow.Guard import Guard, _checkPermission
-
+from Products.DCWorkflow.States import StateDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD,\
+                                      TransitionDefinition, TRIGGER_USER_ACTION
+from Products.DCWorkflow.Variables import VariableDefinition
+from Products.DCWorkflow.Worklists import WorklistDefinition
+from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
+from Products.ERP5Type import _dtmldir
+# Optimized rendering of global actions (cache)
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Globals import DTMLFile
+# Patch WorkflowUIMixin to add description on workflows
+from Products.ERP5Type.Utils import convertToMixedCase
 from zLOG import LOG, WARNING
 
 ACTIVITY_GROUPING_COUNT = 100
@@ -61,7 +61,6 @@ def WorkflowUIMixin_setProperties( self, title
 
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
-
 
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
@@ -108,7 +107,6 @@ def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
         if not res:
             return 0
     return 1
-
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -207,7 +205,6 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_factory = 'erp5_ui_short')
     user = str(_getAuthenticatedUser(self))
     return _listGlobalActions(user=user, id=self.id, portal_path=self._getPortalRoot().getPhysicalPath())
-
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
@@ -350,7 +347,6 @@ class ValidationFailed(Exception):
 DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
-
 
 # Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
 # error messages in workflow history.
@@ -581,7 +577,6 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
 
 DCWorkflowDefinition.wrapWorkflowMethod = DCWorkflowDefinition_wrapWorkflowMethod
 
-
 # Patch updateRoleMappingsFor so that if 2 workflows define security, then we
 # should do an AND operation between each permission
 def updateRoleMappingsFor(self, ob):
@@ -721,9 +716,119 @@ def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
 DCWorkflowDefinition.getFutureStateSet = DCWorkflowDefinition_getFutureStateSet
 
 def DCWorkflowDefinition_getStateVariable(self):
-  ### return state variable name, for ERP5 compatibility
   return self.state_var
 DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
+
+def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
+    '''
+    Allows the system to request a workflow action.  This method
+    must perform its own security checks.
+    '''
+    if type(transition_list) in StringTypes:
+      method_id = transition_list
+    elif len(transition_list) == 1:
+      method_id = transition_list[0]
+    else:
+      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+        raise WorkflowException, 'Object is in an undefined state'
+    if method_id not in sdef.transitions:
+        raise Unauthorized(method_id)
+    tdef = self.transitions.get(method_id, None)
+    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
+        raise WorkflowException, (
+            'Transition %s is not triggered by a workflow method'
+            % method_id)
+    if not self._checkTransitionGuard(tdef, ob):
+        raise Unauthorized(method_id)
+    self._changeStateOf(ob, tdef, kw)
+    if getattr(ob, 'reindexObject', None) is not None:
+        if kw is not None:
+            activate_kw = kw.get('activate_kw', {})
+        else:
+            activate_kw = {}
+        ob.reindexObject(activate_kw=activate_kw)
+
+def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=None):
+    '''
+    Notifies this workflow of an action before it happens,
+    allowing veto by exception.  Unless an exception is thrown, either
+    a notifySuccess() or notifyException() can be expected later on.
+    The action usually corresponds to a method name.
+    '''
+    pass
+
+def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
+    '''
+    Notifies this workflow that an action has taken place.
+    '''
+    pass
+
+def method_getReference(self):
+  return self.id
+
+def DCWorkflowDefinition_getVariableValueList(self):
+  if self.variables is not None:
+    return self.variables
+  return {}
+
+def DCWorkflowDefinition_getVariableIdList(self):
+  if self.variables is not None:
+    return self.variables.objectIds()
+  return []
+
+def DCWorkflowDefinition_getStateValueList(self):
+  if self.states is not None:
+    return self.states
+  return {}
+
+def DCWorkflowDefinition_getStateIdList(self):
+  if self.states is not None:
+    return self.states.objectIds()
+  return []
+
+def DCWorkflowDefinition_getTransitionValueList(self):
+  if self.transitions is not None:
+    return self.transitions
+  else:
+    return {}
+
+def DCWorkflowDefinition_getTransitionIdList(self):
+  if self.transitions is not None:
+    return self.transitions.objectIds()
+  return []
+
+def DCWorkflowDefinition_getWorklistValueList(self):
+  if self.worklists is not None:
+    return self.worklists
+  return {}
+
+def DCWorkflowDefinition_getWorklistIdList(self):
+  if self.worklists is not None:
+    return self.worklists.objectIds()
+  return []
+
+def StateDefinition_getDestinationIdList(self):
+  return self.transitions
+
+DCWorkflowDefinition.getReference = method_getReference
+TransitionDefinition.getReference = method_getReference
+StateDefinition.getReference = method_getReference
+StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
+VariableDefinition.getReference = method_getReference
+WorklistDefinition.getReference = method_getReference
+DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
+DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
+DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
+DCWorkflowDefinition.getVariableValueList = DCWorkflowDefinition_getVariableValueList
+DCWorkflowDefinition.getStateValueList = DCWorkflowDefinition_getStateValueList
+DCWorkflowDefinition.getTransitionValueList = DCWorkflowDefinition_getTransitionValueList
+DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
+DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
+DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
+DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
+DCWorkflowDefinition.getWorklistIdList = DCWorkflowDefinition_getWorklistIdList
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
@@ -742,4 +847,3 @@ def getAvailableScriptIds(self):
    self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
 
 TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
-

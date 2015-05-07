@@ -278,7 +278,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                                                        category_tool)
 
     portal_workflow = getattr(site, 'portal_workflow', None)
-
     if portal_workflow is None:
       if not getattr(site, '_v_bootstrapping', False):
         LOG("ERP5Type.Dynamic", WARNING,

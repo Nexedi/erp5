@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
+# Copyright (c) 2015 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Wenjie Zheng <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,26 +26,26 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Workflow.Document.Workflow import Workflow
-import transaction
-from Products.ERP5Type import Globals
 import App
-from types import StringTypes
+import transaction
+
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.SecurityManagement import setSecurityManager
 from Acquisition import aq_base
+from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
 from Products.DCWorkflow.Expression import StateChangeInfo
-from Products.ERP5Type.Workflow import addWorkflowFactory
-from Products.CMFActivity.ActiveObject import ActiveObject
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
-from Products.ERP5Type.Globals import PersistentMapping
-from zLOG import LOG, ERROR, WARNING
+from Products.ERP5Type import Permissions, PropertySheet, Globals
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Workflow import addWorkflowFactory
+from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+from Products.ERP5Workflow.Document.Workflow import Workflow
+from types import StringTypes
+from zLOG import LOG, ERROR, WARNING
 
 _MARKER = []
 
@@ -60,7 +60,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
   isPortalContent = 1
   isRADContent = 1
   default_reference = ''
-  ### zwj: for security issue
   managed_permission_list = ()
   managed_role = ()
 
@@ -93,7 +92,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     wf_tool = getToolByName(self, 'portal_workflow')
     types_tool = getToolByName(self, 'portal_types')
     for ptype in types_tool.objectValues():
-      if self.getId() in ptype.getTypeERP5WorkflowList(): ### getRef
+      if self.getId() in ptype.getTypeERP5WorkflowList():
         chained_ptype_list.append(ptype.getId())
     return chained_ptype_list
 
@@ -113,7 +112,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     '''
     Returns a true value if the given info name is supported.
     '''
-    vdef = self._getOb(name, None) ### getObjectByRef
+    vdef = self._getOb(name, None)
     if vdef is not None:
       if vdef.getTypeInfo().getId() == 'Variable':
         return 1
@@ -151,7 +150,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     is supported in the current state.
     '''
     tdef = self._getOb('interaction_' + tid)
-    LOG(' Trigger %s passing guard'%(tdef.getId()), WARNING,'in InteractionWorkflow.py') ### getRef
     if tdef is not None and self._checkTransitionGuard(tdef, ob):
       return 1
     return 0
@@ -223,7 +221,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     """
     Generate a key used in the workflow history.
     """
-    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId() ### getRef
+    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
     return history_key
 
   security.declarePrivate('getWorklistVariableMatchDict')
@@ -297,8 +295,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       kw['workflow_method_args'] = args
 
     for t_id in transition_list:
-      LOG(" t_id is '%s'"%t_id, WARNING, " in InteractionWorkflow.py 279.")
-      tdef = self._getOb(t_id) # t_id is id or reference?
+      tdef = self._getOb(t_id)
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
       former_status = self._getOb(status_dict[self.getStateVariable()], None)
       econtext = None

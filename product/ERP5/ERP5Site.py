@@ -1631,7 +1631,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         tool_id = tool.id
         if tool_id not in ('portal_property_sheets', 'portal_components'):
           if tool_id in ('portal_categories', ):
-            tool = tool.activate() ### return self
+            tool = tool.activate()
           tool.migrateToPortalTypeClass(tool_id not in (
             'portal_activities', 'portal_simulation', 'portal_templates',
             'portal_trash'))
@@ -1653,20 +1653,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     new_tool._chains_by_type = tool._chains_by_type
     self.manage_delObjects(['portal_workflow'])
     self.manage_renameObject(new_tool.id, 'portal_workflow')
-
-  security.declareProtected(Permissions.ManagePortal,
-                            'migrateWorkflowModuleToPortalWorkflow')
-  def migrateWorkflowModuleToPortalWorkflow(self):
-    """ manually called function to migrate dcworkflow to erp5workflow.
-        only for the specific case of workflow migration.
-    """
-    tool = self.workflow_module
-    object_id_list = tool.objectIds()
-    new_tool = self.portal_workflow
-    object_clipboard = tool.manage_copyObjects(object_id_list)
-    new_tool = self.portal_workflow
-    new_tool.manage_pasteObjects(object_clipboard)
-
 
 Globals.InitializeClass(ERP5Site)
 

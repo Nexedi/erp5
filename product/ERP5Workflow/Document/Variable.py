@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,11 +27,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.DCWorkflow.Guard import Guard
 from Products.CMFCore.Expression import Expression
+from Products.DCWorkflow.Guard import Guard
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.XMLObject import XMLObject
 
 class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
     """
@@ -100,14 +100,12 @@ class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
             res = self.info_guard.getSummary()
         return res
 
-    ### zwj: originated from DC workflow; seems useless here?
+    # zwj: originated from DC workflow; seems useless here?
     def setProperties(self, description,
                       default_value='', default_expr='',
                       for_catalog=0, for_status=0,
                       update_always=0,
                       props=None, REQUEST=None):
-        '''
-        '''
         self.description = str(description)
         self.default_value = str(default_value)
         if default_expr:

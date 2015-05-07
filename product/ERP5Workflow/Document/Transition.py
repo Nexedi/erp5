@@ -26,25 +26,26 @@
 #
 ##############################################################################
 
+import sys
+
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
+from copy import deepcopy
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.utils import getToolByName
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
+from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.DCWorkflow.Guard import Guard
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.DCWorkflow.Expression import StateChangeInfo
-from zLOG import LOG, ERROR, DEBUG, WARNING
-from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
-from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
-from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
-from copy import deepcopy
-import sys
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
-from Products.DCWorkflow.Guard import Guard
-from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
+from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.XMLObject import XMLObject
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
 TRIGGER_AUTOMATIC = 0
 TRIGGER_USER_ACTION = 1
@@ -91,8 +92,7 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
   def getGuard(self):
     if self.guard is None:
       self.generateGuard()
-    return self.guard ### only generate gurad when self is a User Action
-      #return Guard().__of__(self)  # Create a temporary guard.
+    return self.guard
 
   def getVarExprText(self, id):
     if not self.var_exprs:

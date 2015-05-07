@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
-#          Julien Muchembled <jm@nexedi.com>
+#                    Julien Muchembled <jm@nexedi.com>
+#               2015 wenjie Zheng <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -27,11 +28,12 @@
 ##############################################################################
 
 import transaction
+
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.CMFActivity.Errors import ActivityPendingError
-from zLOG import LOG, WARNING
 from Acquisition import aq_base
+from Products.CMFActivity.Errors import ActivityPendingError
+from Products.ERP5Type import Permissions, PropertySheet
+from zLOG import LOG, WARNING
 
 def IdAsReferenceMixin(extra_string, string_type="suffix"):
 

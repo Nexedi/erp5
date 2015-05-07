@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2015 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Wenjie ZHENG <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,17 +26,13 @@
 #
 ##############################################################################
 
-from Acquisition import aq_inner
-from Acquisition import aq_parent
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_inner, aq_parent
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
-
-
 class PermissionRoles(XMLObject):
-
   """
   Permission role matrix cell unit,
   Used to assign a role to a permission.
@@ -46,7 +42,7 @@ class PermissionRoles(XMLObject):
   portal_type = 'PermissionRoles'
   add_permission = Permissions.AddPortalContent
 
-  is_selected = 0 ### for checkerbox (True 1 /False 0)
+  is_selected = 0 # for checkerbox (True 1 /False 0)
 
   isPortalContent = 1
   isRADContent = 1
@@ -69,15 +65,13 @@ class PermissionRoles(XMLObject):
     if self.is_selected == 1:
       permission_id = int(self.id.split('_')[1])
       role_id = int(self.id.split('_')[2])
-      ### zwj: make sure here gets the right coordinates
-      #LOG('zwj: Assign %s to %s' %(role_id, permission_id), WARNING, "in PermissionRole.")
+      # zwj: make sure here gets the right coordinates
       workflow = self.getParent().getParent()
       permission_list = sorted(workflow.getManagedPermissionList())
       role_list = workflow.getRoleList()
       permission = permission_list[permission_id]
       role = role_list[role_id]
-      ### zwj: check the name of the role and permission is the one we want
-      #LOG('zwj: Assign %s to %s' %(role, permission), WARNING, "in PermissionRole.")
+      # zwj: check the name of the role and permission is the one we want
     if role == 'None':
       role = ['Manager']
     return permission, role

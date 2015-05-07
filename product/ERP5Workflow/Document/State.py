@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#                    Wenjie ZHENG <wenjie.zheng@tiolive.com>
+#               2015 Wenjie ZHENG <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,14 +27,13 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_inner, aq_parent
 from Persistence import PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
-from Acquisition import aq_inner
-from Acquisition import aq_parent
-from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 class StateError(Exception):
   """
@@ -51,7 +50,6 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  ###zwj: security features
   erp5_permission_roles = {} # { permission: [role] or (role,) }
   default_reference = ''
   # Declarative security
@@ -81,7 +79,6 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
       raise StateError
     else:
       transition.execute(document, form_kw=form_kw)
-      ### zwj: update Role mapping, also in Workflow, initialiseDocument()
       self.getParent().updateRoleMappingsFor(document)
 
   def undoTransition(self, document):
@@ -121,9 +118,6 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
     status_dict = self.getParentValue().getCurrentStatusDict(document)
     return status_dict[variable_name]
 
-##### zwj: following parts related to the security features ####################
-
-  ### zwj: Martix method
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent
   security.declareProtected(Permissions.AccessContentsInformation,

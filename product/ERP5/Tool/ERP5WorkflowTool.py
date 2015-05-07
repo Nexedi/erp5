@@ -26,8 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from webdav.client import Resource
-from App.config import getConfiguration
+
 import os
 import shutil
 import sys
@@ -38,49 +37,46 @@ import cPickle
 import urllib2
 import re
 
-from Acquisition import Implicit, Explicit
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
+from Acquisition import aq_base, Implicit, Explicit
+from App.config import getConfiguration
+from base64 import b64encode, b64decode, decodestring
+from cStringIO import StringIO
+from DateTime import DateTime
+from itertools import izip
+from MethodObject import Method
+from MySQLdb import ProgrammingError, OperationalError
+from Persistence import Persistent
 from Products.CMFActivity.ActiveResult import ActiveResult
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.DiffUtils import DiffFile
-from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Cache import transactional_cached
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.CMFCore.utils import Message as _
+from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
+from Products.CMFCore.WorkflowTool import WorkflowTool as OriginalWorkflowTool
+from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted,\
+                                          WorkflowException
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Products.ERP5.genbt5list import generateInformation
-from Products.CMFCore.WorkflowTool import WorkflowTool as OriginalWorkflowTool
-from Acquisition import aq_base
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Cache import transactional_cached, CachingMethod
+from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.DiffUtils import DiffFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
+from sets import ImmutableSet
 from tempfile import mkstemp, mkdtemp
-from Products.ERP5 import _dtmldir
-from cStringIO import StringIO
+from types import StringTypes
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
-from base64 import b64encode, b64decode
-from Products.ERP5Type.Message import translateString
+from webdav.client import Resource
 from zLOG import LOG, INFO, WARNING
-from base64 import decodestring
-from zLOG import LOG, WARNING
-from types import StringTypes
-from AccessControl import Unauthorized
-from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-from Products.CMFCore.utils import Message as _
-from Products.CMFCore.utils import getToolByName
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
-from Products.CMFCore.utils import _getAuthenticatedUser
-from Products.ERP5Type.Cache import CachingMethod
-from sets import ImmutableSet
-from Persistence import Persistent
-from itertools import izip
-from MySQLdb import ProgrammingError, OperationalError
-from DateTime import DateTime
-from MethodObject import Method
-from Products.ERP5Type.Core.Folder import Folder
+
 """
 Most of the codes in this file are copy-pasted from patches/WorkflowTool.py.
 """
@@ -248,7 +244,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     return workflow_list
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
-    ### create a temporary ERP5 Workflow
+    # create a temporary ERP5 Workflow
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
       LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.id,WARNING,' in ERP5WorkflowTool.py')
@@ -265,7 +261,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow.edit(title=dc_workflow.title)
     workflow.edit(description=dc_workflow.description)
 
-    ### create transitions
+    # create transitions
     if workflow_type_id == 'DCWorkflowDefinition':
       for tid in dc_workflow.transitions:
         tdef = dc_workflow.transitions.get(tid)
@@ -282,7 +278,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         transition.setBeforeScriptId(tdef.script_name)
         transition.setDestination(tdef.new_state_id)
         transition.guard = tdef.guard
-      ### create states (portal_type = State)
+      # create states (portal_type = State)
       for sid in dc_workflow.states:
         sdef = dc_workflow.states.get(sid)
         LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
@@ -291,7 +287,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         state.setReference(sdef.id)
         state.setStatePermissionRoles(sdef.permission_roles)
         state.setDestinationList(sdef.transitions)
-      ### create worklists (portal_type = Worklist)
+      # create worklists (portal_type = Worklist)
       for qid in dc_workflow.worklists:
         qdef = dc_workflow.worklists.get(qid)
         LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in ERP5WorkflowTool.py')
@@ -325,12 +321,12 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         interaction.setPortalTypeFilter(tdef.portal_type_filter)
         interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
         interaction.setTemporaryDocumentDisallowed(tdef.temporary_document_disallowed)
-        #interaction.setTransition_form_id ### this is not defined in DC interaction
+        #interaction.setTransitionFormId() # this is not defined in DC interaction?
         interaction.setTriggerMethodId(tdef.method_id)
         interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
         interaction.setTriggerType(tdef.trigger_type)
 
-    ### create scripts (portal_type = Workflow Script)
+    # create scripts (portal_type = Workflow Script)
     for script_id in dc_workflow.scripts:
       script = dc_workflow.scripts.get(script_id)
       workflow_script = workflow.newContent(portal_type='Workflow Script', temp_object=temp)
@@ -338,10 +334,10 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       workflow_script.edit(title=script.title)
       workflow_script.setId(script.id)
       workflow_script.setParameterSignature(script._params)
-      #workflow_script.setCallableType(script.callable_type)### not defined in DC script
+      #workflow_script.setCallableType(script.callable_type)# not defined in DC script?
       workflow_script.setBody(script._body)
       workflow_script.setProxyRole(script._proxy_roles)
-    ### create variables (portal_type = Variable)
+    # create variables (portal_type = Variable)
     for vid in dc_workflow.variables:
       vdef = dc_workflow.variables.get(vid)
       variable = workflow.newContent(portal_type='Variable', temp_object=temp)

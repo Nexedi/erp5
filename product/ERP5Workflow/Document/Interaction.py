@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
+# Copyright (c) 2015 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Wenjie Zheng <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,20 +25,21 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 import transaction
+
 from AccessControl import getSecurityManager, ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Globals import PersistentMapping
 from Acquisition import aq_inner, aq_parent
-from Products.ERP5Type import Globals
-from Products.ERP5Type.Permissions import ManagePortal
 from Products.DCWorkflow.Guard import Guard
-from Products.DCWorkflow.Expression import Expression
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
-from zLOG import LOG, INFO, ERROR, WARNING
-from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.DCWorkflow.Expression import Expression, StateChangeInfo
+from Products.ERP5Type import Globals, Permissions, PropertySheet
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.Permissions import ManagePortal
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD,\
+                                                      TRIGGER_USER_ACTION
+from zLOG import LOG, INFO, ERROR, WARNING
 
 class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
 
