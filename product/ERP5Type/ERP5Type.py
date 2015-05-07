@@ -418,8 +418,8 @@ class ERP5TypeInformation(XMLObject,
         # Unauthorized error on transition's condition
         workflow_tool = portal.portal_workflow
         if workflow_tool is not None:
-          for ERP5Workflow in workflow_tool.getWorkflowValueListFor(ob.portal_type):
-            ERP5Workflow.notifyCreated(ob)
+          for workflow in workflow_tool.getWorkflowValueListFor(ob.portal_type):
+            workflow.notifyCreated(ob)
 
       if not temp_object:
         init_script = self.getTypeInitScriptId()
