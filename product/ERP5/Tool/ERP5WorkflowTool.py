@@ -120,14 +120,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     PropertySheet.DublinCore,
   )
 
-
-  ### a getter for Workflow Tool. For other objects, this is not recommended.
-  def _getObjectByRef(self, ref):
-    for ob in self:
-      if wf.getRef() == ref:
-        return ob
-    return None
-
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
     """Inspired from doActionFor.
     This is public method to allow passing meta transition (Jump form
@@ -143,7 +135,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       for workflow in workflow_list:
         if not isinstance(workflow, InteractionWorkflowDefinition) or \
             not isinstance(workflow, InteractionWorkflow):
-          if state_id in workflow.states._mapping:
+          if state_id in workflow.getStateIdList():
             found = True
             break
       if not found:
@@ -165,7 +157,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       if not isinstance(workflow, InteractionWorkflowDefinition) or \
           not isinstance(workflow, InteractionWorkflow):
-        if state_id in workflow.states._mapping:
+        if state_id in workflow.getStateIdList():
           return True
     return False
 
