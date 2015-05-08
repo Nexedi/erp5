@@ -33,7 +33,6 @@ Business Template | guess_portal_types
 Business Template | jump_trash_bin
 Business Template | migrate_component_from_filesystem
 Business Template | save
-Business Template | unittest_run
 Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
