@@ -234,7 +234,7 @@
  }\n
 \n
   // Save source code only through an AJAX request\n
- function saveDocument(cm, event) {\n
+ function saveComponentDocument(cm, event) {\n
    event.stopPropagation();\n
    event.preventDefault();\n
 \n
@@ -332,9 +332,19 @@
             data: edit_data,\n
             success: successHandler,\n
             error: errorHandler});\n
-   \n
+\n
    return false;\n
  }\n
+\n
+ function saveZMIDocument(cm, event) {\n
+   $(\'input[value="Save Changes"]\').click();\n
+   return false;\n
+ }\n
+\n
+ if($(\'input[value="Save Changes"]\').length)\n
+   saveDocument = saveZMIDocument;\n
+ else\n
+   saveDocument = saveComponentDocument;\n
 \n
  function switchToFullScreen(cm) {\n
    element = $(\'#merge\')[0];\n

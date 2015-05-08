@@ -1,3 +1,6 @@
+2015-05-08 arnaud.fontaine
+* Allow saving with C-s in the ZMI.
+
 2015-04-23 arnaud.fontaine
 * Add support for the ZMI.
 
