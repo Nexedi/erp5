@@ -151,6 +151,13 @@
 \n
 <div id="merge" style="height: 100%; width: 100%">\n
   <div id="view" style="display: none;"></div>\n
+\n
+<dtml-if field_id>\n
+<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;">\n
+<dtml-var content>\n
+</textarea>\n
+</dtml-if>\n
+\n
 </div>\n
 </dtml-unless>\n
 \n
@@ -167,14 +174,6 @@
    // When the textarea does not exist yet (eg ERP5Form EditorField)\n
 <dtml-if field_id>\n
    textarea = $(\'#&dtml-field_id;\');\n
-   if(!textarea.length) {\n
-     $(\'#merge\').append(\n
-       \'<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;">\' + \n
-       `&dtml-content;` +\n
-       \'</textarea>\');\n
-\n
-     textarea = $(\'#&dtml-field_id;\');\n
-   }\n
 <dtml-elif textarea_selector>\n
    textarea = $(\'<dtml-var name="textarea_selector">\');\n
 <dtml-else>\n

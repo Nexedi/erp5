@@ -1,4 +1,7 @@
 2015-05-08 arnaud.fontaine
+* Use HTML <textarea> rather than dirty JS hacks.
+
+2015-05-08 arnaud.fontaine
 * 'viewportMargin: Infinity' is too slow with files with > 1000 lines.
 
 2015-05-08 arnaud.fontaine
