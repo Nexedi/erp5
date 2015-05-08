@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test RenderJS UI</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<!-- Clean Up -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Initialize -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Foos\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>link=Foos</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Add\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>link=Add</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//select[@name=\'field_your_portal_type\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name=\'field_your_portal_type\']</td>\n
+  <td>label=Foo</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Save</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Quantity</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Tabs\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Tabs\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Relation Fields\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Relation Fields\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>A new foo</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>fireEvent</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>input</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@name=\'subfield_field_my_successor_title_relation\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>fireEvent</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>input</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//li[@data-relative-url=\'foo_category/a/a1\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//li[@data-relative-url=\'foo_category/a/a1\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_successor_title\']/a[@class=\'ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td>A new foo</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_successor_title\']/a</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Jump\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_title\']</td>\n
+  <td>A new foo</td>\n
+</tr>\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testRelationFieldCreate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
