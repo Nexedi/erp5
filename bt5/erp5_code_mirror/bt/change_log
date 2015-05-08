@@ -1,4 +1,7 @@
 2015-05-08 arnaud.fontaine
+* Rename 'edit' addon to 'cm_edit' to prevent conflict with ERP5 'edit()' method preventing update of the bt5.
+
+2015-05-08 arnaud.fontaine
 * Allow saving with C-s in the ZMI.
 
 2015-04-23 arnaud.fontaine

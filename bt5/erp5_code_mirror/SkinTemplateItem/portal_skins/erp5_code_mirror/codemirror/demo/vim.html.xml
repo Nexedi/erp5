@@ -48,7 +48,7 @@
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/search/searchcursor.js"></script>\n
 <script src="../mode/clike/clike.js"></script>\n
-<script src="../addon/edit/matchbrackets.js"></script>\n
+<script src="../addon/cm_edit/matchbrackets.js"></script>\n
 <script src="../keymap/vim.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}\n

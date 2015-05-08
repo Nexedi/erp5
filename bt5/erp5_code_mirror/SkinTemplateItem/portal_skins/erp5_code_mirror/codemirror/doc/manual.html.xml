@@ -2227,7 +2227,7 @@ editor.setOption("extraKeys", {\n
       the <a href="#addon_search"><code>search</code></a> addon will\n
       automatically use it.</dd>\n
 \n
-      <dt id="addon_matchbrackets"><a href="../addon/edit/matchbrackets.js"><code>edit/matchbrackets.js</code></a></dt>\n
+      <dt id="addon_matchbrackets"><a href="../addon/cm_edit/matchbrackets.js"><code>edit/matchbrackets.js</code></a></dt>\n
       <dd>Defines an option <code>matchBrackets</code> which, when set\n
       to true, causes matching brackets to be highlighted whenever the\n
       cursor is next to them. It also adds a\n
@@ -2236,7 +2236,7 @@ editor.setOption("extraKeys", {\n
       used to run the bracket-finding algorithm that this uses\n
       internally.</dd>\n
 \n
-      <dt id="addon_closebrackets"><a href="../addon/edit/closebrackets.js"><code>edit/closebrackets.js</code></a></dt>\n
+      <dt id="addon_closebrackets"><a href="../addon/cm_edit/closebrackets.js"><code>edit/closebrackets.js</code></a></dt>\n
       <dd>Defines an option <code>autoCloseBrackets</code> that will\n
       auto-close brackets and quotes when typed. By default, it\'ll\n
       auto-close <code>()[]{}\'\'""</code>, but you can pass it a string\n
@@ -2248,7 +2248,7 @@ editor.setOption("extraKeys", {\n
       them, should have the second character also moved to its own\n
       line. <a href="../demo/closebrackets.html">Demo here</a>.</dd>\n
 \n
-      <dt id="addon_matchtags"><a href="../addon/edit/matchtags.js"><code>edit/matchtags.js</code></a></dt>\n
+      <dt id="addon_matchtags"><a href="../addon/cm_edit/matchtags.js"><code>edit/matchtags.js</code></a></dt>\n
       <dd>Defines an option <code>matchTags</code> that, when enabled,\n
       will cause the tags around the cursor to be highlighted (using\n
       the <code>CodeMirror-matchingtag</code> class). Also\n
@@ -2259,19 +2259,19 @@ editor.setOption("extraKeys", {\n
       the <code>addon/fold/xml-fold.js</code>\n
       addon. <a href="../demo/matchtags.html">Demo here.</a></dd>\n
 \n
-      <dt id="addon_trailingspace"><a href="../addon/edit/trailingspace.js"><code>edit/trailingspace.js</code></a></dt>\n
+      <dt id="addon_trailingspace"><a href="../addon/cm_edit/trailingspace.js"><code>edit/trailingspace.js</code></a></dt>\n
       <dd>Adds an option <code>showTrailingSpace</code> which, when\n
       enabled, adds the CSS class <code>cm-trailingspace</code> to\n
       stretches of whitespace at the end of lines.\n
       The <a href="../demo/trailingspace.html">demo</a> has a nice\n
       squiggly underline style for this class.</dd>\n
 \n
-      <dt id="addon_closetag"><a href="../addon/edit/closetag.js"><code>edit/closetag.js</code></a></dt>\n
+      <dt id="addon_closetag"><a href="../addon/cm_edit/closetag.js"><code>edit/closetag.js</code></a></dt>\n
       <dd>Provides utility functions for adding automatic tag closing\n
       to XML modes. See\n
       the <a href="../demo/closetag.html">demo</a>.</dd>\n
 \n
-      <dt id="addon_continuelist"><a href="../addon/edit/continuelist.js"><code>edit/continuelist.js</code></a></dt>\n
+      <dt id="addon_continuelist"><a href="../addon/cm_edit/continuelist.js"><code>edit/continuelist.js</code></a></dt>\n
       <dd>Markdown specific. Defines\n
       a <code>"newlineAndIndentContinueMarkdownList"</code> <a href="#commands">command</a>\n
       command that can be bound to <code>enter</code> to automatically\n

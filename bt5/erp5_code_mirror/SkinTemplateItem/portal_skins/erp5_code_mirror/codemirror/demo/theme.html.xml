@@ -77,7 +77,7 @@
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
 <script src="../addon/selection/active-line.js"></script>\n
-<script src="../addon/edit/matchbrackets.js"></script>\n
+<script src="../addon/cm_edit/matchbrackets.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border: 1px solid black; font-size:13px}\n
     </style>\n

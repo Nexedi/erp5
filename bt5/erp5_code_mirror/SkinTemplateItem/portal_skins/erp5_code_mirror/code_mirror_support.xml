@@ -29,10 +29,10 @@
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/lib/codemirror.js"></script>\n
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/lib/codemirror.css">\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/&dtml-mode;/&dtml-mode;.js"></script>\n
-<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/edit/matchbrackets.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/cm_edit/matchbrackets.js"></script>\n
 \n
 <!-- Trailing spaces -->\n
-<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/edit/trailingspace.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/cm_edit/trailingspace.js"></script>\n
 <style type="text/css">\n
   .cm-trailingspace {\n
     background-color: gray;\n

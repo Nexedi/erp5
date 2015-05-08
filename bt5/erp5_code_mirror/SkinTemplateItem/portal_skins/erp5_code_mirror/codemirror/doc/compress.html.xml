@@ -232,13 +232,13 @@
           <option value="http://codemirror.net/addon/selection/active-line.js">active-line.js</option>\n
           <option value="http://codemirror.net/addon/hint/anyword-hint.js">anyword-hint.js</option>\n
           <option value="http://codemirror.net/addon/fold/brace-fold.js">brace-fold.js</option>\n
-          <option value="http://codemirror.net/addon/edit/closebrackets.js">closebrackets.js</option>\n
-          <option value="http://codemirror.net/addon/edit/closetag.js">closetag.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/closebrackets.js">closebrackets.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/closetag.js">closetag.js</option>\n
           <option value="http://codemirror.net/addon/runmode/colorize.js">colorize.js</option>\n
           <option value="http://codemirror.net/addon/comment/comment.js">comment.js</option>\n
           <option value="http://codemirror.net/addon/fold/comment-fold.js">comment-fold.js</option>\n
           <option value="http://codemirror.net/addon/comment/continuecomment.js">continuecomment.js</option>\n
-          <option value="http://codemirror.net/addon/edit/continuelist.js">continuelist.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/continuelist.js">continuelist.js</option>\n
           <option value="http://codemirror.net/addon/hint/css-hint.js">css-hint.js</option>\n
           <option value="http://codemirror.net/addon/dialog/dialog.js">dialog.js</option>\n
           <option value="http://codemirror.net/addon/fold/foldcode.js">foldcode.js</option>\n
@@ -255,8 +255,8 @@
           <option value="http://codemirror.net/addon/fold/markdown-fold.js">markdown-fold.js</option>\n
           <option value="http://codemirror.net/addon/selection/mark-selection.js">mark-selection.js</option>\n
           <option value="http://codemirror.net/addon/search/match-highlighter.js">match-highlighter.js</option>\n
-          <option value="http://codemirror.net/addon/edit/matchbrackets.js">matchbrackets.js</option>\n
-          <option value="http://codemirror.net/addon/edit/matchtags.js">matchtags.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/matchbrackets.js">matchbrackets.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/matchtags.js">matchtags.js</option>\n
           <option value="http://codemirror.net/addon/merge/merge.js">merge.js</option>\n
           <option value="http://codemirror.net/addon/mode/multiplex.js">multiplex.js</option>\n
           <option value="http://codemirror.net/addon/mode/overlay.js">overlay.js</option>\n
@@ -271,7 +271,7 @@
           <option value="http://codemirror.net/addon/mode/simple.js">simple.js</option>\n
           <option value="http://codemirror.net/addon/scroll/simplescrollbars.js">simplescrollbars.js</option>\n
           <option value="http://codemirror.net/addon/hint/sql-hint.js">sql-hint.js</option>\n
-          <option value="http://codemirror.net/addon/edit/trailingspace.js">trailingspace.js</option>\n
+          <option value="http://codemirror.net/addon/cm_edit/trailingspace.js">trailingspace.js</option>\n
           <option value="http://codemirror.net/addon/tern/tern.js">tern.js</option>\n
           <option value="http://codemirror.net/addon/fold/xml-fold.js">xml-fold.js</option>\n
           <option value="http://codemirror.net/addon/hint/xml-hint.js">xml-hint.js</option>\n

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897131.32</string> </value>
+            <value> <string>ts31074350.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,9 +30,9 @@
 \n
 (function(mod) {\n
   if (typeof exports == "object" && typeof module == "object") // CommonJS\n
-    mod(require("../lib/codemirror"), require("../addon/search/searchcursor"), require("../addon/edit/matchbrackets"));\n
+    mod(require("../lib/codemirror"), require("../addon/search/searchcursor"), require("../addon/cm_edit/matchbrackets"));\n
   else if (typeof define == "function" && define.amd) // AMD\n
-    define(["../lib/codemirror", "../addon/search/searchcursor", "../addon/edit/matchbrackets"], mod);\n
+    define(["../lib/codemirror", "../addon/search/searchcursor", "../addon/cm_edit/matchbrackets"], mod);\n
   else // Plain browser env\n
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
@@ -572,7 +572,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>20403</int> </value>
+            <value> <int>20409</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

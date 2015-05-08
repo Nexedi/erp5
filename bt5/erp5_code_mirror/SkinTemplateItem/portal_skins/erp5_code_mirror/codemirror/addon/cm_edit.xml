@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>edit</string> </value>
+            <value> <string>cm_edit</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

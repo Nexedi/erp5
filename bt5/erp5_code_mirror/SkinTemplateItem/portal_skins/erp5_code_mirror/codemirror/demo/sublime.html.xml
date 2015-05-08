@@ -50,8 +50,8 @@
 <script src="../addon/search/searchcursor.js"></script>\n
 <script src="../addon/search/search.js"></script>\n
 <script src="../addon/dialog/dialog.js"></script>\n
-<script src="../addon/edit/matchbrackets.js"></script>\n
-<script src="../addon/edit/closebrackets.js"></script>\n
+<script src="../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="../addon/cm_edit/closebrackets.js"></script>\n
 <script src="../addon/comment/comment.js"></script>\n
 <script src="../addon/wrap/hardwrap.js"></script>\n
 <script src="../addon/fold/foldcode.js"></script>\n

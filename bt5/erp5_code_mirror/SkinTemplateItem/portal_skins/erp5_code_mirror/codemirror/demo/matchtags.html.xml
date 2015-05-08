@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../addon/fold/xml-fold.js"></script>\n
-<script src="../addon/edit/matchtags.js"></script>\n
+<script src="../addon/cm_edit/matchtags.js"></script>\n
 <script src="../mode/xml/xml.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n

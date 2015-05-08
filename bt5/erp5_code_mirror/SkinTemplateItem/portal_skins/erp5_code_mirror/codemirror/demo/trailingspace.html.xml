@@ -44,7 +44,7 @@
 \n
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <script src="../lib/codemirror.js"></script>\n
-<script src="../addon/edit/trailingspace.js"></script>\n
+<script src="../addon/cm_edit/trailingspace.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
       .cm-trailingspace {\n

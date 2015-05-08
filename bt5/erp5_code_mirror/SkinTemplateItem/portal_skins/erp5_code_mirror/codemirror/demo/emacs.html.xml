@@ -47,7 +47,7 @@
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/clike/clike.js"></script>\n
 <script src="../keymap/emacs.js"></script>\n
-<script src="../addon/edit/matchbrackets.js"></script>\n
+<script src="../addon/cm_edit/matchbrackets.js"></script>\n
 <script src="../addon/comment/comment.js"></script>\n
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/search/searchcursor.js"></script>\n
