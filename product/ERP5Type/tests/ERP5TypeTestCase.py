@@ -469,7 +469,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           if errcode == 200:
             return urltype + ':' + url
         else:
-          path_list = glob(os.path.join(path, template))
+          path_list = glob(os.path.join(os.path.expanduser(path), template))
           if path_list:
             return path_list[0]
 

@@ -123,7 +123,7 @@ class WorkingCopy(Implicit):
     except ValueError:
       pass
     # Allow symlinks inside instance home.
-    path = os.path.normpath(path)
+    path = os.path.normpath(os.path.expanduser(path))
     real_path = os.path.realpath(path)
     if restricted and not any(
         issubdir(allowed, path) or issubdir(allowed, real_path)

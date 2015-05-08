@@ -5410,6 +5410,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       from App.config import getConfiguration
       instance_home = getConfiguration().instancehome
       for path in (preferences.getPreferredWorkingCopyList() or ['bt5']):
+        path = os.path.expanduser(path)
         if not os.path.isabs(path):
           path = os.path.join(instance_home, path)
         bt_path = os.path.join(path, bt_name)
