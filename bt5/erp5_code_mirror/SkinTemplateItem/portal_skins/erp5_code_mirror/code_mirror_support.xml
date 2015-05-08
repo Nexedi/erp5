@@ -360,7 +360,7 @@
      else if(element.webkitRequestFullScreen) {\n
        element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);\n
      }\n
-     \n
+\n
      cm.refresh();\n
     }\n
   }\n
@@ -485,6 +485,14 @@
     matchBrackets: true,\n
     extraKeys: {"Ctrl-Space": "autocomplete",\n
                 "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},\n
+                "Tab": function(cm) {\n
+                  // We want to insert spaces, not tab, and we also want to keep the behaviour of indenting selection.\n
+                  if (cm.getSelection()) {\n
+                    return cm.execCommand("defaultTab");\n
+                  }\n
+                  var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");\n
+                  cm.replaceSelection(spaces);\n
+                },\n
                 "Ctrl-S": function(cm){saveDocument(cm, $.Event(\'click\'))}},\n
     foldGutter: true,\n
     lineWrapping: true,\n
