@@ -484,7 +484,6 @@
     tabSize: 2,\n
     indentWithTabs: false,\n
     matchBrackets: true,\n
-    viewportMargin: Infinity,\n
     extraKeys: {"Ctrl-Space": "autocomplete",\n
                 "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},\n
                 "Ctrl-S": function(cm){saveDocument(cm, $.Event(\'click\'))}},\n
@@ -532,7 +531,6 @@
       lineNumbers: true,\n
       showTrailingSpace: true,\n
       matchBrackets: true,\n
-      /* viewportMargin: Infinity, */\n
       extraKeys: {"Ctrl-Space": "autocomplete",\n
                   "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},\n
                   "Ctrl-S": function(cm){saveDocument(merge_mode_elem.edit, $.Event(\'click\'))}},\n
