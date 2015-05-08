@@ -128,7 +128,29 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
-\n
+    .allowPublicAcquisition("pleaseRefreshFields", function () {\n
+      var gadget = this,\n
+        options = this.props.options,\n
+        erp5_document,\n
+        form_gadget = this.props.form_gadget;\n
+      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view})\n
+        .push(function (result) {\n
+          var uri = new URI(result.data._embedded._view._links.form_definition.href);\n
+          erp5_document = result.data;\n
+          return gadget.jio_getAttachment({"_id": uri.segment(2), "_attachment": "view"});\n
+        })\n
+        .push(function (result) {\n
+          var new_options;\n
+          new_options = options.fg || {};\n
+          new_options.erp5_document = erp5_document;\n
+          new_options.form_definition = result.data;\n
+          new_options.view = options.view;\n
+          new_options.action_view = options.action_view;\n
+          new_options.jio_key = options.jio_key;\n
+          new_options.editable = options.editable;\n
+          return form_gadget.refresh(new_options);\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -144,7 +166,7 @@
         erp5_document,\n
         erp5_form,\n
         form_gadget;\n
-\n
+      gadget.props.options = options;\n
       return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view})\n
         .push(function (result) {\n
           var uri = new URI(result.data._embedded._view._links.form_definition.href);\n
@@ -173,7 +195,7 @@
           sub_options.action_view = options.action_view;\n
           sub_options.jio_key = options.jio_key;\n
           sub_options.editable = options.editable;\n
-\n
+          gadget.props.form_gadget = result;\n
           form_gadget = result;\n
           return form_gadget.render(sub_options);\n
         })\n
@@ -312,7 +334,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +348,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49122.12001.41540</string> </value>
+                <value> <string>942.55908.31920.60569</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,8 +366,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423065965.58</float>
-                        <string>GMT</string>
+                        <float>1431045870.59</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

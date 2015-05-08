@@ -322,6 +322,7 @@ promiseEventListener */\n
         // show "new" tag, clicking it will remove it and reset the field!\n
         // XXX Not active - reset should be handled by a generic reset method!\n
         if (no_results && field_json.allow_creation) {\n
+          props.need_to_refresh = true;\n
           return new RSVP.Queue()\n
             .push(function () {\n
               props.wrapper.appendChild(createNewTag(my_gadget));\n
@@ -347,9 +348,9 @@ promiseEventListener */\n
               tag_list = wrapper.querySelector(".ui-tag-list");\n
               tag_list.parentNode.removeChild(tag_list);\n
               return setRelationJump(my_gadget, undefined);\n
-            })\n
+            });\n
         }\n
-\n
+        props.need_to_refresh = false;\n
         // default autocomplete\n
         return new RSVP.Queue()\n
           .push(function () {\n
@@ -398,6 +399,7 @@ promiseEventListener */\n
     // Init local properties\n
     .ready(function (my_gadget) {\n
       my_gadget.property_dict = {};\n
+      my_gadget.property_dict.need_to_refresh = false;\n
     })\n
 \n
     .ready(function (my_gadget) {\n
@@ -472,10 +474,22 @@ promiseEventListener */\n
         result[this.property_dict.field_json.relation_field_id] =\n
           this.property_dict.selected_uid;\n
       }\n
-\n
       return result;\n
     })\n
-\n
+    .declareMethod(\'refresh\', function (options) {\n
+      var wrapper = this.property_dict.wrapper,\n
+        tag_list;\n
+      tag_list = wrapper.querySelector(".ui-tag-list");\n
+      if (tag_list !== null) {\n
+        tag_list.parentNode.removeChild(tag_list);\n
+      }\n
+      return this.render(options);\n
+    })\n
+    .declareMethod(\'checkRefresh\', function () {\n
+      var tmp = this.property_dict.need_to_refresh;\n
+      this.property_dict.need_to_refresh = false;\n
+      return tmp;\n
+    })\n
     .declareMethod(\'checkValidity\', function () {\n
       var result;\n
       result = (this.element.querySelector(\'input\').checkValidity()) &&\n
@@ -606,11 +620,11 @@ promiseEventListener */\n
   - OK reimplement setting link without calling allDocs\n
   - on small displays JQM will toggle headers, find way to prevent!\n
   - fix broken promise chain\n
-  - test\n
+  - ok test\n
   - keyboard speed test\n
   - add generic text and translations\n
   - do multiRelationfield\n
-  - find way to digest response of erp5? submit should clean input\n
+  - ok find way to digest response of erp5? submit should clean input\n
   - add column_list parameter to pass more than title = "John Smith", render?\n
  \n
  \n
@@ -739,7 +753,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -753,7 +767,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.1041.20854.22596</string> </value>
+                <value> <string>942.57468.41646.29286</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -771,8 +785,8 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1424104195.48</float>
-                        <string>GMT</string>
+                        <float>1431075656.16</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

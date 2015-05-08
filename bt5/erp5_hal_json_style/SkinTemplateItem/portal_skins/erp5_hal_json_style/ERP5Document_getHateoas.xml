@@ -218,8 +218,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "query": query,\n
       "catalog_index": field.get_value(\'catalog_index\'),\n
       "allow_jump": field.get_value(\'allow_jump\'),\n
-      # "allow_creation": field.get_value(\'allow_creation\'),\n
-      "allow_creation": 0,\n
+      "allow_creation": field.get_value(\'allow_creation\'),\n
       "type": meta_type,\n
       "key": key,\n
       "editable": field.get_value("editable"),\n

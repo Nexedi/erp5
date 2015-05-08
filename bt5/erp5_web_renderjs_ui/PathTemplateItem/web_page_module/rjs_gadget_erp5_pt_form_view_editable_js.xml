@@ -135,6 +135,7 @@
     .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
+    .declareAcquiredMethod("pleaseRefreshFields", "pleaseRefreshFields")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -193,6 +194,18 @@
           });\n
         });\n
     })\n
+    .declareMethod(\'refresh\', function (options) {\n
+      return this.getDeclaredGadget("erp5_form")\n
+        .push(function (erp5_form) {\n
+          var form_options = options.erp5_form || {};\n
+\n
+          form_options.erp5_document = options.erp5_document;\n
+          form_options.form_definition = options.form_definition;\n
+          form_options.view = options.view;\n
+\n
+          return erp5_form.refresh(form_options);\n
+        });\n
+    })\n
 \n
 \n
     .declareService(function () {\n
@@ -202,13 +215,20 @@
       var form_gadget = this;\n
 \n
       function formSubmit() {\n
-        var erp5_form;\n
+        var erp5_form,\n
+          validity,\n
+          need_to_refresh;\n
         return form_gadget.getDeclaredGadget("erp5_form")\n
           .push(function (gadget) {\n
             erp5_form = gadget;\n
-            return erp5_form.checkValidity();\n
+            return RSVP.all([\n
+              erp5_form.checkValidity(),\n
+              erp5_form.checkRefresh()\n
+            ]);\n
           })\n
-          .push(function (validity) {\n
+          .push(function (result) {\n
+            validity = result[0];\n
+            need_to_refresh = result[1];\n
             if (validity) {\n
               return erp5_form.getContent()\n
                 .push(function (data) {\n
@@ -224,6 +244,11 @@
                       "_data": data\n
                     })\n
                   ]);\n
+                })\n
+                .push(function () {\n
+                  if (need_to_refresh) {\n
+                    return form_gadget.pleaseRefreshFields();\n
+                  }\n
                 })\n
                 .push(form_gadget.notifySubmitted.bind(form_gadget));\n
             }\n
@@ -360,7 +385,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -374,7 +399,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49289.61084.65194</string> </value>
+                <value> <string>942.56412.30506.44083</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -392,8 +417,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423215734.45</float>
-                        <string>GMT</string>
+                        <float>1431046040.15</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
