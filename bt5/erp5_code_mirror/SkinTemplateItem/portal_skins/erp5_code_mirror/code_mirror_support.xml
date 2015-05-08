@@ -538,8 +538,7 @@
       gutters: ["CodeMirror-lint-markers",\n
                 "CodeMirror-linenumbers",\n
                 "CodeMirror-foldgutter"],\n
-      lint: {"getAnnotations": checkPythonSourceCode,\n
-             "async": true}});\n
+      lint: lint_option});\n
 \n
    $("#merge").keyup(\n
      function(event) {\n

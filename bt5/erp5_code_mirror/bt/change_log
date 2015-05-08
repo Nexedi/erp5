@@ -1,4 +1,7 @@
 2015-05-08 arnaud.fontaine
+* Cosmetic.
+
+2015-05-08 arnaud.fontaine
 * Use HTML <textarea> rather than dirty JS hacks.
 
 2015-05-08 arnaud.fontaine
