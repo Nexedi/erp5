@@ -465,6 +465,11 @@
    });\n
  }\n
 \n
+ var mode = "&dtml-mode;";\n
+ if ( mode === "sql" ) {\n
+   mode = "text/x-mariadb";\n
+ }\n
+\n
 <dtml-if expr="mode == \'python\'">\n
  lint_option = {"getAnnotations": checkPythonSourceCode,\n
                 "async": true};\n
@@ -477,7 +482,7 @@
  // CodeMirror expects a DOM element, not a JQuery Object\n
  var cm = CodeMirror.fromTextArea(\n
    getTextareaField()[0],\n
-   {mode: "&dtml-mode;",\n
+   {mode: mode,\n
     lineNumbers: true,\n
     showTrailingSpace: true,\n
     tabSize: 2,\n
@@ -534,7 +539,7 @@
      {value: cm.getValue(),\n
       orig: data,\n
       highlightDifferences: true,\n
-      mode: "&dtml-mode;",\n
+      mode: mode,\n
       lineNumbers: true,\n
       showTrailingSpace: true,\n
       matchBrackets: true,\n
