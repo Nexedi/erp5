@@ -144,19 +144,19 @@ class RuleTool(BaseTool):
   def updateSimulation(self, message_list):
     expandable_dict = defaultdict(list)
     for m in message_list:
-      expandable_dict[m[0]].append(m)
-    for expandable, message_list in expandable_dict.iteritems():
-      try:
+      expandable_dict[m.object].append(m)
+    try:
+      for expandable, message_list in expandable_dict.iteritems():
         kw = {}
         for m in message_list:
-          kw.update(m[2])
-          m.append(None)
+          kw.update(m.kw)
+          m.result = None
         LOG("RuleTool", INFO, "Updating simulation for %s: %r"
                               % (expandable.getPath(), kw))
         expandable._updateSimulation(**kw)
-      except Exception:
-        exc_info = sys.exc_info()
-        for m in message_list:
-          m[3:] = exc_info
+    except Exception:
+      exc_info = sys.exc_info()
+      for m in message_list:
+        m.raised(exc_info)
 
 InitializeClass(RuleTool)

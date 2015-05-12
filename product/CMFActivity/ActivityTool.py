@@ -434,6 +434,26 @@ Named Parameters: %r
   def getExecutionState(self):
     return self.is_executed
 
+class GroupedMessage(object):
+  __slots__ = 'object', '_message', 'result', 'exc_info'
+
+  def __init__(self, object, message):
+    self.object = object
+    self._message = message
+
+  args = property(lambda self: self._message.args)
+  kw = property(lambda self: self._message.kw)
+
+  def raised(self, exc_info=None):
+    self.exc_info = exc_info or sys.exc_info()
+    try:
+      del self.result
+    except AttributeError:
+      pass
+
+# XXX: Allowing restricted code to implement a grouping method is questionable
+#      but there already exist some.
+allow_class(GroupedMessage)
 
 # Activity Registration
 def activity_dict():
@@ -1291,21 +1311,21 @@ class ActivityTool (Folder, UniqueObject):
               active_obj = subobj.activate(activity=activity, **activity_kw)
               getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
             else:
-              expanded_object_list.append([subobj, m.args, m.kw])
+              expanded_object_list.append(GroupedMessage(subobj, m))
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
       expanded_object_list = sum(message_dict.itervalues(), [])
       try:
-        if len(expanded_object_list) > 0:
+        if expanded_object_list:
           traverse = self.getPortalObject().unrestrictedTraverse
           # FIXME: how to apply security here?
           # NOTE: The callee must update each processed item of
-          #       expanded_object_list, by appending:
-          #       - exc_info in case of error (so its length becomes 6)
-          #       - None or the result to post on the active process otherwise
-          #         (length=4)
-          #       Skipped item must not be touched (length=3).
+          #       expanded_object_list, by setting:
+          #       - 'exc_info' in case of error
+          #       - 'result' otherwise, with None or the result to post
+          #          on the active process
+          #       Skipped item must not be touched.
           traverse(method_id)(expanded_object_list)
       except:
         # In this case, the group method completely failed.
@@ -1314,7 +1334,7 @@ class ActivityTool (Folder, UniqueObject):
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, [x[0] for x in expanded_object_list]), error=exc_info)
+            (method_id, [x.obj for x in expanded_object_list]), error=exc_info)
         error_log = getattr(self, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
@@ -1323,25 +1343,24 @@ class ActivityTool (Folder, UniqueObject):
         for m, expanded_object_list in message_dict.iteritems():
           result_list = []
           for result in expanded_object_list:
-            if len(result) != 4:
-              break # message marked as failed by the group_method_id
-            elif result[3] is not None:
-              result_list.append(result)
+            try:
+              if result.result is not None:
+                result_list.append(result)
+            except AttributeError:
+              exc_info = getattr(result, "exc_info", (SkippedMessage,))
+              break # failed or skipped message
           else:
             try:
               if result_list and m.active_process:
                 active_process = traverse(m.active_process)
                 for result in result_list:
-                  m.activateResult(active_process, result[3], result[0])
+                  m.activateResult(active_process, result.result, result.obj)
             except:
-              pass
+              exc_info = None
             else:
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
               continue
-          exc_info = result[3:]
-          m.setExecutionState(MESSAGE_NOT_EXECUTED,
-            tuple(exc_info) if exc_info else (SkippedMessage,),
-            context=self)
+          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, context=self)
       if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
 
@@ -1351,9 +1370,9 @@ class ActivityTool (Folder, UniqueObject):
         def group_method(message_list):
           try:
             for m in message_list:
-              m.append(getattr(m[0], method_id)(*m[1], **m[2]))
+              m.result = getattr(m.object, method_id)(*m.args, **m.kw)
           except Exception:
-            m += sys.exc_info()
+            m.raised()
         return group_method
     dummyGroupMethod = dummyGroupMethod()
 

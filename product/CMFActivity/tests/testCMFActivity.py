@@ -43,7 +43,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from ZODB.POSException import ConflictError
 from DateTime import DateTime
-import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
 import gc
 import random
@@ -1418,9 +1417,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def setFoobar(self, object_list):
       foobar_list.append(len(object_list))
       for m in object_list:
-        obj, args, kw = m
-        obj.foobar = getattr(obj.aq_base, 'foobar', 0) + kw.get('number', 1)
-        m.append(None)
+        obj = m.object
+        obj.foobar = getattr(obj.aq_base, 'foobar', 0) + m.kw.get('number', 1)
+        m.result = None
     from Products.ERP5Type.Core.Folder import Folder
     Folder.setFoobar = setFoobar
 
@@ -2723,8 +2722,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def doSomething(self, message_list):
       r = []
       for m in message_list:
-        r.append((m[0].getPath(), m[1], m[2]))
-        m.append(None)
+        m.result = r.append((m.object.getPath(), m.args, m.kw))
       r.sort()
       group_method_call_list.append(r)
     activity_tool.__class__.doSomething = doSomething
@@ -2946,8 +2944,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def invokeGroup(self, message_list):
       r = []
       for m in message_list:
-        r.append(c.index(m[0]))
-        m.append(None)
+        m.result = r.append(c.index(m.object))
       r.sort()
       invoked.append(r)
     category_tool.__class__.invokeGroup = invokeGroup

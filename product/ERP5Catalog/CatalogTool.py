@@ -39,6 +39,7 @@ from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolB
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
+from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -789,29 +790,28 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def catalogObjectList(self, object_list, *args, **kw):
         """Catalog a list of objects"""
         m = object_list[0]
-        if type(m) is list:
-          tmp_object_list = [x[0] for x in object_list]
-          super(CatalogTool, self).catalogObjectList(tmp_object_list, **m[2])
+        if isinstance(m, GroupedMessage):
+          tmp_object_list = [x.object for x in object_list]
+          super(CatalogTool, self).catalogObjectList(tmp_object_list, **m.kw)
           if tmp_object_list:
             exc_info = sys.exc_info()
           for x in object_list:
-            if x[0] in tmp_object_list:
-              x += exc_info # failed
+            if x.object in tmp_object_list:
+              x.raised(exc_info)
             else:
-              x.append(None) # success, no result
+              x.result = None
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
     security.declarePrivate('uncatalogObjectList')
     def uncatalogObjectList(self, message_list):
       """Uncatalog a list of objects"""
-      # XXX: this is currently only a placeholder for further optimization
-      #      (for the moment, it's not faster than the dummy group method)
+      # TODO: this is currently only a placeholder for further optimization
       try:
         for m in message_list:
-          m.append(self.unindexObject(*m[1], **m[2]))
+          m.result = self.unindexObject(*m.args, **m.kw)
       except Exception:
-        m += sys.exc_info()
+        m.raised()
 
     security.declarePrivate('unindexObject')
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
