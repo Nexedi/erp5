@@ -28,69 +28,83 @@
 #
 ##############################################################################
 
-import inspect
-import OFS.History
-import random
-import sys, re
-import thread, threading
-import types
+from struct import unpack
+from copy import copy
 import warnings
-import zope.interface
+import types
+import thread, threading
 
-from Accessor import WorkflowState
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
-from copy import copy
-from CopySupport import CopyContainer, CopyError,\
-                        tryMethodCallWithTemporaryPermission
-from cStringIO import StringIO
 from DateTime import DateTime
-from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
+import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 from persistent.TimeStamp import TimeStamp
-from pprint import pformat
-from Products.CMFActivity.ActiveObject import ActiveObject
-from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
-from Products.CMFCore.Expression import Expression
+from zExceptions import NotFound, Unauthorized
+
+from ZopePatch import ERP5PropertyManager
+
 from Products.CMFCore.PortalContent import PortalContent
-from Products.CMFCore.utils import getToolByName, _checkConditionalGET,\
-                                   _setCacheHeaders, _ViewEmulator
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
+from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
+
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
-from Products.ERP5Type import PropertySheet, interfaces, Permissions, _dtmldir
-from Products.ERP5Type.Accessor import Base as BaseAccessor
-from Products.ERP5Type.Accessor.Accessor import Accessor as Method
+
+from Products.ERP5Type import _dtmldir
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
+from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Accessor.TypeDefinition import type_definition,\
-                                                      list_types, asDate
-from Products.ERP5Type.Cache import CachingMethod, clearCache,\
-                                    getReadOnlyTransactionCache
-from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Log import log as unrestrictedLog
-from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Accessor.TypeDefinition import list_types
+from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
-from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.Utils import UpperCase,\
-                                    convertToUpperCase, convertToMixedCase,\
-                                    createExpressionContext, simple_decorator
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from socket import gethostname, gethostbyaddr
-from string import join
-from struct import unpack
-from zExceptions import NotFound, Unauthorized
-from zLOG import LOG, INFO, ERROR, WARNING
-from ZODB.POSException import ConflictError
+from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
+from Accessor import WorkflowState
+from Products.ERP5Type.Log import log as unrestrictedLog
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Accessor.TypeDefinition import type_definition
+
+from CopySupport import CopyContainer, CopyError,\
+    tryMethodCallWithTemporaryPermission
+from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
+from Products.CMFActivity.ActiveObject import ActiveObject
+from Products.ERP5Type.Accessor.Accessor import Accessor as Method
+from Products.ERP5Type.Accessor.TypeDefinition import asDate
+from Products.ERP5Type.Message import Message
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+
 from zope.interface import classImplementsOnly, implementedBy
-from ZopePatch import ERP5PropertyManager
+
+from string import join
+import sys, re
+
+from cStringIO import StringIO
+from socket import gethostname, gethostbyaddr
+import random
+
+import inspect
+from pprint import pformat
+
+import zope.interface
+
+from ZODB.POSException import ConflictError
+from zLOG import LOG, INFO, ERROR, WARNING
+
 
 _MARKER = []
 
