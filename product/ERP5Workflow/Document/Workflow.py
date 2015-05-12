@@ -39,6 +39,7 @@ from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException, ObjectDeleted,\
                                           ObjectMoved
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.DCWorkflowGraph.config import DOT_EXE
 from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
