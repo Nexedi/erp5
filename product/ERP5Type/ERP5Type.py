@@ -21,23 +21,17 @@
 #
 ##############################################################################
 
-import Products
 import zope.interface
-
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
-from Products.CMFCore.exceptions import zExceptions_Unauthorized,\
-                                        AccessControl_Unauthorized
-from Products.CMFCore.Expression import Expression
+import Products
 from Products.CMFCore.TypesTool import FactoryTypeInformation
+from Products.CMFCore.Expression import Expression
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.Base import getClassPropertyList
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList,\
-                                                      getAccessorHolderList
-from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
@@ -57,6 +51,12 @@ from types import NoneType
 from zLOG import LOG, ERROR
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
+
+from TranslationProviderBase import TranslationProviderBase
+
+from sys import exc_info
+from zLOG import LOG, ERROR
+from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
 def getCurrentUserIdOrAnonymousToken():
   """Return connected user_id or simple token for
