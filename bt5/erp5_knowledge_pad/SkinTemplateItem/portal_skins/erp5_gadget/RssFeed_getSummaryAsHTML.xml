@@ -111,7 +111,7 @@
       <a target="_blank" \n
          class="document-link"\n
          title="Original Document"\n
-         i18n:domain="ui" i18n:attributes="title"\n
+         i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
          tal:attributes="href link">Show original item</a>\n
     </div>\n
   </div>\n
