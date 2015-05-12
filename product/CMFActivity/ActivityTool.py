@@ -1368,11 +1368,19 @@ class ActivityTool (Folder, UniqueObject):
     class dummyGroupMethod(object):
       def __bobo_traverse__(self, REQUEST, method_id):
         def group_method(message_list):
+          user_name = None
+          sm = getSecurityManager()
           try:
             for m in message_list:
+              message = m._message
+              if user_name != message.user_name:
+                user_name = message.user_name
+                message.changeUser(user_name, m.object)
               m.result = getattr(m.object, method_id)(*m.args, **m.kw)
           except Exception:
             m.raised()
+          finally:
+            setSecurityManager(sm)
         return group_method
     dummyGroupMethod = dummyGroupMethod()
 
