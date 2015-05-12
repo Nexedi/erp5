@@ -669,6 +669,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_base': second_group,
       'erp5_jquery': third_group,
       'erp5_ingestion': third_group,
+      'erp5_workflow_test_data': third_group,
       'erp5_web': fourth_group,
       'erp5_crm': fourth_group,
       'erp5_credential': fifth_group}
