@@ -28,26 +28,33 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
-import inspect
 import os
-import persistent
 import re
 import string
-import sys
 import time
 import warnings
-
-from AccessControl import ModuleSecurityInfo, getSecurityManager
-from AccessControl.SecurityInfo import allow_class
-from AccessControl.SecurityManagement import newSecurityManager
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+import sys
+import inspect
+import persistent
 from hashlib import md5 as md5_new, sha1 as sha_new
+from Products.ERP5Type.Globals import package_home
+from Products.ERP5Type.Globals import DevelopmentMode
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Acquisition import aq_self
+
+from AccessControl import ModuleSecurityInfo
+from AccessControl.SecurityInfo import allow_class
+from AccessControl import getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
+
 from Products.CMFCore import utils
-from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.Expression import Expression
+from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Globals import package_home, DevelopmentMode
-from Products.PageTemplates.Expressions import getEngine, SecureModuleImporter
+from Products.PageTemplates.Expressions import getEngine
+from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
 try:
@@ -423,7 +430,6 @@ def checkPythonSourceCode(source_code_str):
               allow passing a string) and this should probably return a proper
               ERP5 object rather than a dict...
   """
-
   if not source_code_str:
     return []
 
