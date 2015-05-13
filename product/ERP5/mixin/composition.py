@@ -70,11 +70,14 @@ def _getEffectiveModel(self, start_date, stop_date):
 
   # XXX What to do the catalog returns nothing (either because 'self' was just
   #     created and not yet indexed, or because it was invalidated) ?
-  #     For the moment, we raise.
+  #     For the moment, we return self if self is invalidated and we raise otherwise.
+  #     This way, if this happens in activity it may succeed when activity is retried.
   model_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
       query=ComplexQuery(logical_operator='AND', *query_list),
       sort_on=(('version', 'descending'),))
   if not model_list:
+    if self.getValidationState() == 'invalidated':
+       return self
     raise KeyError('No %s found with the reference %s between %s and %s' % \
             (self.getPortalType(), reference, start_date, stop_date))
   return model_list[0].getObject()
