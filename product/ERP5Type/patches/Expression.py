@@ -34,14 +34,7 @@ def Expression_createExprContext(sci):
     '''
     ob = sci.object
     wf = sci.workflow
-    if wf.getTypeInfo().getId() == 'Workflow' or\
-        wf.getTypeInfo().getId() == 'InteractionWorkflow':
-      script_list = wf.objectValues(portal_type='Workflow Script')
-      scripts = {}
-      for script in script_list:
-        scripts[script.getId()] = script
-    else:
-      scripts = wf.scripts
+    scripts = wf.getScriptValueList()
     container = aq_parent(aq_inner(ob))
     data = {
         'here':         ob,
@@ -64,7 +57,7 @@ def Expression_createExprContext(sci):
 
 Expression.createExprContext = Expression_createExprContext
 
-def StateChanceInfo_getHistory(self):
+def StateChangeInfo_getHistory(self):
     wf = self.workflow
     if getattr(wf, 'getTypeInfo'):
       tool = wf.getPortalObject().portal_workflow
@@ -78,5 +71,5 @@ def StateChanceInfo_getHistory(self):
     else:
         return ()
 
-StateChangeInfo.getHistory = StateChanceInfo_getHistory
+StateChangeInfo.getHistory = StateChangeInfo_getHistory
 
