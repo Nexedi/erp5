@@ -24,6 +24,7 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 
 def Expression_hash(self):
   return hash(self.text)
+
 Expression.__hash__ = Expression_hash
 
 
@@ -33,8 +34,12 @@ def Expression_createExprContext(sci):
     '''
     ob = sci.object
     wf = sci.workflow
-    if wf.getTypeInfo().getId() == 'Workflow':
-      scripts = wf.objectValues(portal_type='Workflow Script')
+    if wf.getTypeInfo().getId() == 'Workflow' or\
+        wf.getTypeInfo().getId() == 'InteractionWorkflow':
+      script_list = wf.objectValues(portal_type='Workflow Script')
+      scripts = {}
+      for script in script_list:
+        scripts[script.getId()] = script
     else:
       scripts = wf.scripts
     container = aq_parent(aq_inner(ob))
@@ -61,11 +66,9 @@ Expression.createExprContext = Expression_createExprContext
 
 def StateChanceInfo_getHistory(self):
     wf = self.workflow
-    #raise NotImplementedError (wf)
-    #raise NotImplementedError(wf.getTypeInfo())
     if getattr(wf, 'getTypeInfo'):
       tool = wf.getPortalObject().portal_workflow
-      wf_id = wf.getId()
+      wf_id = wf.getReference()
     else:
       tool = aq_parent(aq_inner(wf))
       wf_id = wf.id
