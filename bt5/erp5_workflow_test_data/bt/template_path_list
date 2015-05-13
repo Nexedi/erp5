@@ -1,6 +1,3 @@
 person_module/18
 portal_categories/group/develop_group
-workflow_module/testing_interaction_workflow
-workflow_module/testing_interaction_workflow/**
-workflow_module/testing_workflow
-workflow_module/testing_workflow/**
+portal_categories/group/test_group

@@ -221,7 +221,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     self.workflow_module = self.portal.portal_workflow
     self.wf = self.workflow_module._getOb('testing_workflow_workflow') # workflow id comes with suffix
     type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
-    type_test_object.edit(type_erp5workflow_list=('testing_workflow_workflow', 'testing_interaction_workflow_interactionworkflow', ))
+    type_test_object.edit(type_erp5workflow_list=('workflow_testing_workflow', 'interactionworkflow_testing_interaction_workflow', ))
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
     self.login()
