@@ -493,7 +493,7 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
-def initializePortalTypeWorkflowMethods(ptype_klass, portal_workflow):
+def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
   # aq_inner is required to prevent extra name lookups from happening
