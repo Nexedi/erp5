@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                    Wenjie ZHENG <wenjie.zheng@tiolive.com>
+#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -30,8 +30,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
-from zLOG import LOG, INFO, ERROR, WARNING
-import pdb
+
 # Creation of default constructor
 class func_code: pass
 
@@ -112,7 +111,6 @@ class TranslatedTitleGetter(TitleGetter):
       wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
-
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
                                          lang=selected_language,
