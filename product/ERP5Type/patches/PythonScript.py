@@ -11,6 +11,8 @@
 #
 ##############################################################################
 from Products.PythonScripts.PythonScript import PythonScript
+from App.special_dtml import DTMLFile
+from Products.ERP5Type import _dtmldir
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 
@@ -36,3 +38,15 @@ pyscript_proxyrole = ImageFile('pyscript_proxyrole.gif', globals())
 PythonScript.haveProxyRole = haveProxyRole
 PythonScript.om_icons = om_icons
 p_.PythonScript_ProxyRole_icon = pyscript_proxyrole
+
+
+# Patch for displaying textearea in full window instead of
+# remembering a quantity of lines to display in a cookie
+manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
+manage_editForm._setName('manage_editForm')
+PythonScript.ZPythonScriptHTML_editForm = manage_editForm
+PythonScript.manage_editForm = manage_editForm
+PythonScript.manage = manage_editForm
+PythonScript.manage_main = manage_editForm
+PythonScript.manage_editDocument = manage_editForm
+PythonScript.manage_editForm = manage_editForm
