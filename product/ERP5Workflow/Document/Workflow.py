@@ -536,6 +536,12 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       id_list.append(ob.getReference())
     return id_list
 
+  def getScriptValueList(self):
+    scripts = {}
+    for script in self.objectValues(portal_type='Workflow Script'):
+      scripts[script.getId()] = script
+    return scripts
+
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     """ Execute workflow methods.
     """
