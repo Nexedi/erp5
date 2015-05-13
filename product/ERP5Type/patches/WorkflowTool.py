@@ -12,34 +12,34 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-
+ 
 import sys
+from zLOG import LOG, WARNING
+from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
 from AccessControl import Unauthorized
-from Acquisition import aq_base
-from DateTime import DateTime
-from itertools import izip
-from MySQLdb import ProgrammingError, OperationalError
+from Products.CMFCore.WorkflowTool import WorkflowTool
+from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
+
+from Products.CMFCore.utils import getToolByName
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
+from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
+from sets import ImmutableSet
+from Acquisition import aq_base
 from Persistence import Persistent
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
+from itertools import izip
+from MySQLdb import ProgrammingError, OperationalError
+from DateTime import DateTime
 from Products.CMFCore.utils import Message as _
-from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted,\
-                                          WorkflowException
-from Products.CMFCore.WorkflowTool import WorkflowTool
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD,\
-                                            TransitionDefinition
 from Products.DCWorkflow.Variables import VariableDefinition
 from Products.DCWorkflow.Worklists import WorklistDefinition
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery,\
-                                            ComplexQuery, NegatedQuery
-from sets import ImmutableSet
-from types import StringTypes
-from zLOG import LOG, WARNING
 
 _marker = []  # Create a new marker object.
 
@@ -140,7 +140,6 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   worklist_set_dict = {}
   metadata_dict = {}
   for workflow_id, worklist in worklist_dict.iteritems():
-    LOG('190 workflow =%s '%workflow_id, WARNING,' in WorkflowTool.py')
     for worklist_id, worklist_match_dict in worklist.iteritems():
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
       if getSecurityUidDictAndRoleColumnDict is None:
@@ -159,13 +158,11 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         security_kw = {}
         if len(security_parameter):
           security_kw[SECURITY_PARAMETER_ID] = security_parameter
-          LOG('209 security_kw %s = %s '%(SECURITY_PARAMETER_ID,security_kw[SECURITY_PARAMETER_ID]), WARNING,' in WorkflowTool.py')
         uid_dict, role_column_dict, local_role_column_dict = \
             getSecurityUidDictAndRoleColumnDict(**security_kw)
 
         for key, value in local_role_column_dict.items():
           worklist_match_dict[key] = [value]
-          LOG('215 local role key %s = %s '%(key,value), WARNING,' in WorkflowTool.py')
 
         for local_roles_group_id, uid_list in uid_dict.iteritems():
           role_column_dict[
@@ -173,7 +170,6 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
 
         # Make sure every item is a list - or a tuple
         for security_column_id in role_column_dict.iterkeys():
-          LOG('223 Security colum id is %s'%security_column_id,WARNING,'in WorkflowTool.py')
           value = role_column_dict[security_column_id]
           if not isinstance(value, (tuple, list)):
             role_column_dict[security_column_id] = [value]
@@ -182,13 +178,11 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         # worklists if possible at all.
         for security_column_id, security_column_value in \
             role_column_dict.iteritems():
-          LOG('232 security_column_id is %s'%security_column_id, WARNING,' in WorkflowTool.py')
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
             sql_catalog=sql_catalog,
             workflow_worklist_key=workflow_worklist_key)
           if metadata is not None:
-            LOG('238 workflow_worklist_key is %s'%workflow_worklist_key, WARNING,' in WorkflowTool.py')
             metadata_dict[workflow_worklist_key] = metadata
           valid_criterion_dict.update(applied_security_criterion_dict)
           # Current security criterion must be applied to all further queries
@@ -201,7 +195,6 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
             worklist_set_dict=worklist_set_dict,
             workflow_worklist_key=workflow_worklist_key,
             valid_criterion_dict=valid_criterion_dict)
-          LOG('251 security_column_id is %s'%security_column_id, WARNING,' in WorkflowTool.py')
   return worklist_set_dict.values(), metadata_dict
 
 def generateNestedQuery(getQuery, priority_list, criterion_dict,
@@ -503,7 +496,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       worklist_result_dict = {}
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
-
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
@@ -572,7 +564,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
         )
       return action_list
-
     user = str(_getAuthenticatedUser(self))
     if src__:
       actions = _getWorklistActionList()
@@ -581,7 +572,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         id=('_getWorklistActionList', user, portal_url),
         cache_factory = 'erp5_ui_short')
       actions.extend(_getWorklistActionList())
-    LOG('631 user = %s'%user, WARNING,' in WorkflowTool.py')
   return actions
 
 WorkflowTool.listActions = WorkflowTool_listActions
@@ -678,7 +668,6 @@ def WorkflowTool_refreshWorklistCache(self):
         value_column_dict = {x: [] for x in table_column_id_set}
         for catalog_brain_line in catalog_brain_result.dictionaries():
           for column_id, value in catalog_brain_line.iteritems():
-            LOG('724 column_id is %s'%column_id, WARNING,' in WorkflowTool.py')
             if column_id in value_column_dict:
               value_column_dict[column_id].append(value)
         if len(value_column_dict[COUNT_COLUMN_TITLE]):
