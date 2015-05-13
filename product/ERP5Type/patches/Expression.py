@@ -72,4 +72,3 @@ def StateChangeInfo_getHistory(self):
         return ()
 
 StateChangeInfo.getHistory = StateChangeInfo_getHistory
-
