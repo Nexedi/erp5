@@ -45,7 +45,6 @@ from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
 from Products.ERP5Workflow.Document.Workflow import Workflow
 from types import StringTypes
-from zLOG import LOG, ERROR, WARNING
 
 _MARKER = []
 
