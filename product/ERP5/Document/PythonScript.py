@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
-#                    Wenjie Zheng <wenjie.zheng@tiolive.com>
+#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -71,6 +71,7 @@ class PythonScript(XMLObject, ZopePythonScript):
     meta_type = 'ERP5 Python Script'
     portal_type = 'Python Script'
     add_permission = Permissions.AddPortalContent
+
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -122,6 +123,7 @@ class PythonScript(XMLObject, ZopePythonScript):
 
     def edit(self, **kw):
       XMLObject.edit(self, **kw)
+
     # We need to take __setstate__ from ZopePythonScript in order to
     # generate _v_ft attributes which is necessary to run the script
     __setstate__ = ZopePythonScript.__setstate__
