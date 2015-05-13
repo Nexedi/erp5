@@ -395,8 +395,8 @@ def synchronizeDynamicModules(context, force=False):
     # stored in WorkflowMethod objects: our generation of workflow
     # methods adds/registers/wraps existing methods, but does not
     # remove old chains. Do it now.
-
     resetRegisteredWorkflowMethod()
+
     # Some method generations are based on portal methods, and portal
     # methods cache results. So it is safer to invalidate the cache.
     cache_tool = getattr(portal, 'portal_caches', None)
