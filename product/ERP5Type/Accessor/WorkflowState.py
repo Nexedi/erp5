@@ -57,11 +57,7 @@ class Getter(BaseGetter):
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
-      if wf.getPortalType() in ['Workflow', 'Interaction Workflow']:
-        # remove id suffix for workflow and interaction workflow
-        return '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[1:])
-      else:
-        return wf._getWorkflowStateOf(instance, id_only=1)
+      return wf._getWorkflowStateOf(instance, id_only=1)
 
     psyco.bind(__call__)
 
@@ -97,10 +93,7 @@ class TranslatedGetter(Getter):
     def __call__(self, instance):
       portal = instance.getPortalObject()
       wf = portal.portal_workflow.getWorkflowById(self._key)
-      if wf.getPortalType() in ['Workflow','Interaction Workflow']:
-        state_id = '_'.join(wf._getWorkflowStateOf(instance, id_only=1).split('_')[1:])
-      else:
-        state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
       return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
