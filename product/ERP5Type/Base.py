@@ -169,6 +169,14 @@ class WorkflowMethod(Method):
       # thread variable which tells in which semantic context the code
       # should be executed. - XXX
       return self._m(instance, *args, **kw)
+    # New implementation does not use any longer wrapWorkflowMethod
+    # but directly calls the workflow methods
+    try:
+      wf = getattr(instance.getPortalObject(), 'portal_workflow')
+    except AttributeError:
+      # XXX instance is unwrapped(no acquisition)
+      # XXX I must think that what is a correct behavior.(Yusei)
+      return self._m(instance, *args, **kw)
 
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
@@ -178,8 +186,6 @@ class WorkflowMethod(Method):
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
     once_transition_dict = {}
-    # New implementation does not use any longer wrapWorkflowMethod
-    # but directly calls the workflow methods
 
     for wf_id, transition_list in invoke_once_dict.iteritems():
       valid_transition_list = []
@@ -192,7 +198,7 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                         self._invoke_always.get(portal_type, {}).items()
+                            self._invoke_always.get(portal_type, {}).items()
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
@@ -205,12 +211,6 @@ class WorkflowMethod(Method):
     # An interaction is ignored if the guard prevents execution.
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
-    try:
-      wf = getattr(instance.getPortalObject(), 'portal_workflow')
-    except AttributeError:
-      # XXX instance is unwrapped(no acquisition)
-      # XXX I must think that what is a correct behavior.(Yusei)
-      return self._m(instance, *args, **kw)
 
     valid_transition_item_list = []
     for wf_id, transition_list in candidate_transition_item_list:
