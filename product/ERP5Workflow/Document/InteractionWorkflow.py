@@ -231,6 +231,13 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
   def _getWorkflowStateOf(self, ob, id_only=0):
     return None
 
+  security.declarePrivate('getScriptValueList')
+  def getScriptValueList(self):
+    scripts = {}
+    for script in self.objectValues(portal_type='Workflow Script'):
+      scripts[script.getId()] = script
+    return scripts
+
   security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
     interaction_dict = {}
