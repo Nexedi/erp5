@@ -42,6 +42,7 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+
     def cb_isMoveable(self):
       return self.cb_userHasCopyOrMovePermission()
     security.declareProtected(Permissions.AccessContentsInformation,
