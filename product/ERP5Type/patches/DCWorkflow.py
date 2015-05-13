@@ -809,6 +809,11 @@ def DCWorkflowDefinition_getWorklistIdList(self):
     return self.worklists.objectIds()
   return []
 
+def DCWorkflowDefinition_getScriptValueList(self):
+  if self.scripts is not None:
+    return self.scripts
+  return {}
+
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
 
@@ -825,6 +830,7 @@ DCWorkflowDefinition.getVariableValueList = DCWorkflowDefinition_getVariableValu
 DCWorkflowDefinition.getStateValueList = DCWorkflowDefinition_getStateValueList
 DCWorkflowDefinition.getTransitionValueList = DCWorkflowDefinition_getTransitionValueList
 DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
+DCWorkflowDefinition.getScriptValueList = DCWorkflowDefinition_getScriptValueList
 DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
 DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
 DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
