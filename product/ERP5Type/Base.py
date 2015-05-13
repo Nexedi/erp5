@@ -105,7 +105,6 @@ import zope.interface
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
-
 _MARKER = []
 
 global registered_workflow_method_set
@@ -169,6 +168,7 @@ class WorkflowMethod(Method):
       # thread variable which tells in which semantic context the code
       # should be executed. - XXX
       return self._m(instance, *args, **kw)
+
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
     try:
@@ -198,7 +198,7 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                            self._invoke_always.get(portal_type, {}).items()
+                           self._invoke_always.get(portal_type, {}).items()
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
@@ -211,11 +211,10 @@ class WorkflowMethod(Method):
     # An interaction is ignored if the guard prevents execution.
     # Otherwise, an exception is raised if the workflow transition does not
     # exist from the current state, or if the guard rejects it.
-
     valid_transition_item_list = []
     for wf_id, transition_list in candidate_transition_item_list:
-      valid_list = []
       candidate_workflow = wf[wf_id]
+      valid_list = []
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
@@ -262,10 +261,12 @@ class WorkflowMethod(Method):
 
     # Return result finally
     return result
+
   # Interactions should not be disabled during normal operation. Only in very
   # rare and specific cases like data migration. That's why it is implemented
   # with temporary monkey-patching, instead of slowing down __call__ with yet
   # another condition.
+
   _do_interaction = __call__
   _no_interaction_lock = threading.Lock()
   _no_interaction_log = None
@@ -2235,7 +2236,7 @@ class Base( CopyContainer,
     return self.getId()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'Title' )
-  Title = getTitleOrId
+  Title = getTitleOrId # Why ???
 
   # CMF Compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'title_or_id' )
@@ -2323,6 +2324,7 @@ class Base( CopyContainer,
         else:
           property_dict[k] = user_dict[k]
     return property_dict
+
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedId')
@@ -3206,7 +3208,12 @@ class Base( CopyContainer,
   security.declareProtected(Permissions.ManagePortal,
                             'updateRoleMappingsFor')
   def updateRoleMappingsFor(self, wf_id, **kw):
+    """
+    Update security policy according to workflow settings given by wf_id
 
+    There's no check that the document is actually chained to the workflow,
+    it's caller responsability to perform this check.
+    """
     workflow = self.portal_workflow.getWorkflowById(wf_id)
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
