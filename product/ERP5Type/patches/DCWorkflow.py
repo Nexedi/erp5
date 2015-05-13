@@ -13,32 +13,33 @@
 #
 ##############################################################################
 
+# Optimized rendering of global actions (cache)
+
+from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type import _dtmldir
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
+from Products.DCWorkflow import DCWorkflow
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
+from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
+from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.CMFCore.utils import  _getAuthenticatedUser
+from DocumentTemplate.DT_Util import TemplateDict
+from DateTime import DateTime
+from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Utils import convertToMixedCase
 import sys
 from Acquisition import aq_base
-from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
 from copy import deepcopy
-from DateTime import DateTime
-from DocumentTemplate.DT_Util import TemplateDict
-from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.DCWorkflow import DCWorkflow
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition,\
-                              StateChangeInfo, createExprContext,\
-                              ObjectDeleted, ObjectMoved, aq_parent, aq_inner
+
+# Patch WorkflowUIMixin to add description on workflows
+from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
 from Products.DCWorkflow.Guard import Guard, _checkPermission
 from Products.DCWorkflow.States import StateDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD,\
-                                      TransitionDefinition, TRIGGER_USER_ACTION
 from Products.DCWorkflow.Variables import VariableDefinition
 from Products.DCWorkflow.Worklists import WorklistDefinition
-from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
-from Products.ERP5Type import _dtmldir
-# Optimized rendering of global actions (cache)
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Globals import DTMLFile
-# Patch WorkflowUIMixin to add description on workflows
-from Products.ERP5Type.Utils import convertToMixedCase
-from zLOG import LOG, WARNING
 
 ACTIVITY_GROUPING_COUNT = 100
 
