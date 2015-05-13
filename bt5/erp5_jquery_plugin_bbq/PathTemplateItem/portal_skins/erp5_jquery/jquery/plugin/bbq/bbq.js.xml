@@ -7,8 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts54098924.89</string> </value>
+            <value> <string>ts31508727.41</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -999,9 +1003,8 @@
     \n
     // IE6/7 specifically need some special love when it comes to back-button\n
     // support, so let\'s do a little browser sniffing..\n
-    browser = $.browser,\n
     mode = document.documentMode,\n
-    is_old_ie = browser.msie && ( mode === undefined || mode < 8 ),\n
+    is_old_ie = (navigator.userAgent.match(/MSIE/i) !== null) && ( mode === undefined || mode < 8 ),\n
     \n
     // Does the browser support window.onhashchange? Test for IE version, since\n
     // IE8 incorrectly reports this when in "IE7" or "IE8 Compatibility View"!\n
@@ -1170,7 +1173,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>43249</int> </value>
+            <value> <int>43257</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
