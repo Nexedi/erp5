@@ -61,6 +61,7 @@ class TranslatedPropertyGetter(BaseGetter):
     if self._warning:
       LOG("ERP5Type Deprecated Getter Id:",0, self._id)
     domain = instance.getProperty('%s_translation_domain' % self._property_id)
+
     if domain==TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
       if len(args) > 0:
         default = args[0]
