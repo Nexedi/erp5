@@ -27,7 +27,7 @@ from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from . import aq_method_lock
-from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeWorkflowMethods
+from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
@@ -284,7 +284,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
             "Could not generate workflow methods for %s"
             % cls.__name__)
     else:
-      initializePortalTypeWorkflowMethods(cls, portal_workflow)
+      initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
 
     # portal type group methods, isNodeType, isResourceType...
     from Products.ERP5Type.ERP5Type import ERP5TypeInformation
