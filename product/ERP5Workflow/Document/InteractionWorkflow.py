@@ -387,3 +387,21 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     sci = StateChangeInfo(
           ob, self, former_status, tdef, None, None, kwargs=kw)
     script.execute(sci)
+
+  security.declarePrivate('isActionSupported')
+  def isActionSupported(self, document, action, **kw):
+    '''
+    Returns a true value if the given action name
+    is possible in the current state.
+    '''
+    sdef = self._getWorkflowStateOf(document, id_only=0)
+    if sdef is None:
+      return 0
+
+    if action in sdef.getDestinationIdList():
+      tdef = self._getOb(action, None)
+      if (tdef is not None and
+        tdef.trigger_type == TRIGGER_USER_ACTION and
+        self._checkTransitionGuard(tdef, document, **kw)):
+        return 1
+    return 0
