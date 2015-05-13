@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from zLOG import LOG, WARNING
+from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 
@@ -82,9 +82,7 @@ class TranslatedPropertyGetter(BaseGetter):
       if domain == '' or (value in ('', None)):
         return value
       localizer = instance.getPortalObject().Localizer
-      if domain is not None:
-        message_catalog = getattr(localizer, domain, None)
-      else: message_catalog = None
+      message_catalog = getattr(localizer, domain, None)
       if message_catalog is not None:
         return message_catalog.gettext(unicode(value, 'utf8'), lang=self._language).encode('utf8')
       else:
