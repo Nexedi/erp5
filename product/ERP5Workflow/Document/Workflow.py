@@ -59,7 +59,6 @@ from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
                                     TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
 from tempfile import mktemp
 from types import StringTypes
-from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
@@ -344,7 +343,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                 'category': tdef.actbox_category,
                 'transition': tdef}))
             fmt_data._pop()
-            LOG("362 listing user action '%s'"%tid,WARNING," in Workflow.py")
       res.sort()
 
       return [ result[1] for result in res ]
@@ -400,9 +398,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           # in case the current workflow is not associated with portal_types
           # defined on the worklist, don't display the worklist for this
           # portal_type.
-          LOG ('420 portal type list are: %s'%portal_type_list, WARNING, ' in Workflow.py')
-          LOG ('421 matched portal type are: %s'%variable_match['portal_type'], WARNING, ' in Workflow.py')
-          LOG ('422 len of intersection portal type are: %s'%len(portal_type_intersection), WARNING, ' in Workflow.py')
           variable_match['portal_type'] = list(portal_type_intersection)
         variable_match.setdefault('portal_type', portal_type_list)
 
@@ -623,7 +618,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         sci = StateChangeInfo(
               document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
         try:
-          #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
           script.execute(sci)  # May throw an exception.
         except ValidationFailed, validation_exc:
           before_script_success = 0
