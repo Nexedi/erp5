@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -74,7 +74,6 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
-                        <string>my_preferred_unit_test_sql_connection_string</string>
                       </list>
                     </value>
                 </item>
