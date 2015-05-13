@@ -63,6 +63,7 @@ def WorkflowUIMixin_setProperties( self, title
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
 
+
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
        This function is the same as Guard.check, but roles are not taken
@@ -108,6 +109,7 @@ def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
         if not res:
             return 0
     return 1
+
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -206,6 +208,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_factory = 'erp5_ui_short')
     user = str(_getAuthenticatedUser(self))
     return _listGlobalActions(user=user, id=self.id, portal_path=self._getPortalRoot().getPhysicalPath())
+
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
@@ -348,6 +351,7 @@ class ValidationFailed(Exception):
 DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
+
 
 # Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
 # error messages in workflow history.
@@ -577,6 +581,7 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
     return res
 
 DCWorkflowDefinition.wrapWorkflowMethod = DCWorkflowDefinition_wrapWorkflowMethod
+
 
 # Patch updateRoleMappingsFor so that if 2 workflows define security, then we
 # should do an AND operation between each permission
