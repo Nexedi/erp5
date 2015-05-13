@@ -28,12 +28,11 @@
 ##############################################################################
 
 import transaction
-
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
-from Products.CMFActivity.Errors import ActivityPendingError
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
+from Acquisition import aq_base
 
 def IdAsReferenceMixin(extra_string, string_type="suffix"):
 
