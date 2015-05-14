@@ -157,7 +157,8 @@ class LocalRoleAssignorMixIn(object):
                               'getRoleInformationList')
     def getRoleInformationList(self):
       """Return all Role Information objects stored on this portal type"""
-      return self.objectValues(meta_type='ERP5 Role Information')
+      # tuple need because CMFBTreeFolder.objectValues use LazyMap and object id is changed while objectValues run
+      return tuple(self.objectValues(meta_type='ERP5 Role Information'))
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateRoleMapping')

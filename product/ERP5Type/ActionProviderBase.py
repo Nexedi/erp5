@@ -60,7 +60,8 @@ class ActionProviderBase(object):
                             'getActionInformationList')
   def getActionInformationList(self):
     """Return all Action Information objects stored on this portal type"""
-    return self.objectValues(meta_type='ERP5 Action Information')
+    # tuple need because CMFBTreeFolder.objectValues use LazyMap and object id is changed while objectValues run
+    return tuple(self.objectValues(meta_type='ERP5 Action Information'))
 
   #
   # XXX CMF compatibility
