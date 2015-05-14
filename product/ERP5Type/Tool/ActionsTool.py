@@ -67,8 +67,10 @@ class ActionsTool(BaseTool, ActionProviderBase, CMFCore_ActionsTool):
               getattr(provider, 'listActionInfos', None) is None ):
         logger.info('migrating actions from %r to %r',
                     portal_actions_path, '/'.join(provider.getPhysicalPath()))
-        for old_action in provider._actions:
-          self._importOldAction(old_action)
+        if provider._actions:
+          for old_action in provider._actions:
+            self._importOldAction(old_action)
+          self.clearGetActionListCache()
         del provider._actions
       if (getattr(provider, 'listActionInfos', None) is None and
               getattr(provider, 'getActionListFor', None) is None and
@@ -76,9 +78,10 @@ class ActionsTool(BaseTool, ActionProviderBase, CMFCore_ActionsTool):
         action_providers.remove(provider_name)
     self.action_providers = tuple(action_providers)
 
-  security.declarePrivate('getActionListFor')
-  def getActionListFor(self, ob=None):
-    """Return all actions applicable to the object"""
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActionInformationList')
+  def getActionInformationList(self):
+    """Return all Action Information objects stored on this portal type"""
     old_actions = self._actions or ()
     if old_actions:
       LOG('OldActionsTool', WARNING, "Converting portal_actions...")
@@ -87,8 +90,15 @@ class ActionsTool(BaseTool, ActionProviderBase, CMFCore_ActionsTool):
         self._importOldAction(action_info)
       LOG('OldActionsTool', WARNING, "... portal_actions converted.")
       self._actions = ()
+      self.clearGetActionListCache()
+
+    return ActionProviderBase.getActionInformationList(self)
+
+  security.declarePrivate('getActionListFor')
+  def getActionListFor(self, ob=None):
+    """Return all actions applicable to the object"""
     if ob is not None:
-      return (action.getCacheableAction() for action in self.objectValues())
+      return self.getActionList()
     return ()
 
   def listFilteredActionsFor(self, object=None):
