@@ -219,7 +219,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     self.portal = self.getPortal()
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
     self.workflow_module = self.portal.portal_workflow
-    self.wf = self.workflow_module._getOb('testing_workflow_workflow') # workflow id comes with suffix
+    self.wf = self.workflow_module._getOb('workflow_testing_workflow') # workflow id comes with suffix
     type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
     type_test_object.edit(type_erp5workflow_list=('workflow_testing_workflow', 'interactionworkflow_testing_interaction_workflow', ))
     self.resetComponentTool()
@@ -231,7 +231,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
 
   def doActionFor(self, document, action):
     user_action = '_'.join(action.split('_')[0:-1]) + '_action' # remove suffix
-    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow_workflow')
+    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'workflow_testing_workflow')
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
   """
@@ -245,7 +245,6 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     self.wf = self.workflow_module._getOb('testing_workflow')
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     type_test_object.edit(type_erp5workflow_list=())
-    type_test_object.edit(type_interaction_workflow_list=())
     self.resetComponentTool()
     self.assertEqual(type_test_object.getTypeErp5workflowList(), [])
     self.login()
