@@ -100,7 +100,10 @@ def GenerateIdFromReferenceMixin(prefix):
         except ActivityPendingError:
           parent = self.getParentValue()
           LOG("GenerateIdFromReferenceMixin", WARNING, "Skipping migration of %r in %r"
-              " %s, due to pending activities" % (old_id, parent.getId(), parent.getPortalType()))
+              " %s, due to pending activities" % (ob_id, parent.getId(), parent.getPortalType()))
+          self._v_idmigration = False
+          return ob_id
+        self._v_idmigration = False
         return new_id
       return ob_id
 
