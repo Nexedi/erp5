@@ -230,7 +230,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     return getattr(document, 'getValidationState')()
 
   def doActionFor(self, document, action):
-    user_action = '_'.join(action.split('_')[0:-1]) + '_action' # remove suffix
+    user_action = action + '_action'
     self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'workflow_testing_workflow')
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
