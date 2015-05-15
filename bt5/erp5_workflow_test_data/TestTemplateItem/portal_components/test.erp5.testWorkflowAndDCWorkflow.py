@@ -59,7 +59,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def test_01_testAfterScript(self):
     new_object = self.getTestObject()
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     # self.assertEqual(new_object.getDescription(), "After script was executed.")
     ### zwj: mechanism: validate => validate interaction =>
     ### setTitle => setTitle interaction => setDescription
@@ -67,15 +67,15 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def test_02_testBeforeScript(self):
     new_object = self.getTestObject()
-    self.doActionFor(new_object, "validate")
-    self.doActionFor(new_object, "invalidate")
+    self.doActionFor(new_object, "validate_action")
+    self.doActionFor(new_object, "invalidate_action")
     self.assertEqual(new_object.getDescription(), "Before script was executed.")
 
   def test_03_testChangeOfState(self):
     new_object = self.getTestObject()
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     self.assertEqual(self.getStateFor(new_object), 'validated')
-    self.doActionFor(new_object, "invalidate")
+    self.doActionFor(new_object, "invalidate_action")
     self.assertEqual(self.getStateFor(new_object), 'invalidated')
 
   def test_04_testDoWorkflowMethodTransition(self):
@@ -93,7 +93,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     are available
     """
     new_object = self.getTestObject()
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     history_list = new_object.workflow_history["testing_workflow"]
     # 3 history lines are expected : draft->validation_action->validate
     self.assertEqual(3, len(history_list))
@@ -105,7 +105,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
       'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
       'Associate', 'Auditor', 'Manager'))
 
@@ -116,7 +116,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     exception_raised = False
     try:
-      self.doActionFor(new_object, "fail")
+      self.doActionFor(new_object, "fail_action")
     except ValidationFailed:
       exception_raised = True
     self.assertEqual(True, exception_raised)
@@ -135,7 +135,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
         self.assertEqual(expected_dict[key], action.get(key))
     checkExpectedDict({"category": "workflow", "name": "Validate"},
                       action)
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     action_list = self.getWorkflowTool().listActions(object=new_object)
     self.assertEqual(1, len(action_list))
     action = action_list[0]
@@ -148,7 +148,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     working fine
     """
     new_object = self.getTestObject()
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     item_list = new_object.Base_getWorkflowHistoryItemList("testing_workflow", display=0)
     self.assertEqual(3, len(item_list))
     def checkLine(expected_data, index):
@@ -180,7 +180,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     """
     new_object = self.getTestObject()
     new_object.setTitle('nana')
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     self.assertEqual(new_object.getTitle(), "toto")
     self.assertEqual(self.getStateFor(new_object), 'validated')
     new_object.setTitle("tictic")
@@ -191,7 +191,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.portal = self.getPortal()
     workflow_tool = self.portal.portal_workflow
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 0)
-    self.doActionFor(new_object, "validate")
+    self.doActionFor(new_object, "validate_action")
     self.assertEqual(self.getStateFor(new_object), 'validated')
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
 
@@ -230,7 +230,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     return getattr(document, 'getValidationState')()
 
   def doActionFor(self, document, action):
-    user_action = action + '_action'
+    user_action = 'transition_' + action
     self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'workflow_testing_workflow')
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
@@ -253,7 +253,7 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     return self.wf._getWorkflowStateOf(document, id_only=True)
 
   def doActionFor(self, document, action):
-    user_action = action + '_action'
+    user_action = action
     self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
 
 def test_suite():
