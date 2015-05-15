@@ -1334,7 +1334,8 @@ class ActivityTool (Folder, UniqueObject):
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, [x.obj for x in expanded_object_list]), error=exc_info)
+            (method_id, [x.object for x in expanded_object_list]),
+            error=exc_info)
         error_log = getattr(self, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
@@ -1354,7 +1355,7 @@ class ActivityTool (Folder, UniqueObject):
               if result_list and m.active_process:
                 active_process = traverse(m.active_process)
                 for result in result_list:
-                  m.activateResult(active_process, result.result, result.obj)
+                  m.activateResult(active_process, result.result, result.object)
             except:
               exc_info = None
             else:
