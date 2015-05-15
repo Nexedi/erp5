@@ -51,6 +51,11 @@ def manage_page_footer(self):
       mode = 'javascript'
     elif 'css' in document.getContentType():
       mode = 'css'
+    elif 'html' in document.getContentType():
+      if editor == 'codemirror':
+        mode = 'htmlmixed'
+      else:
+        mode = 'html'
     textarea_selector = 'textarea[name="filedata:text"]'
   elif document.meta_type in ('Script (Python)', ):
     mode = 'python'
