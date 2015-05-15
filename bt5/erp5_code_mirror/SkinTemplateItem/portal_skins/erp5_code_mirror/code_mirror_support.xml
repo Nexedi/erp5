@@ -74,6 +74,10 @@
 <dtml-elif expr="mode == \'css\'">\n
 <script type="text/javascript" src="&dtml-portal_url;/csslint.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/css-lint.js"></script>\n
+<dtml-elif expr="mode == \'htmlmixed\'">\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/xml/xml.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/javascript/javascript.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/css/css.js"></script>\n
 </dtml-if>\n
 \n
 <style type="text/css">\n
