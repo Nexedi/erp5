@@ -102,7 +102,9 @@ def patch_linecache():
     ipdb does not pass module_globals to getlines()...
     """
     m = frame.f_globals['__name__']
-    if m == 'linecache':
+    # 'linecache' or 'IPython.utils.ulinecache' (may be renamed/moved in
+    # IPython so just check the presence of 'linecache'...)
+    if isinstance(m, str) and 'linecache' in m:
       frame = frame.f_back
       m = frame.f_globals['__name__']
     if m == 'IPython.core.debugger':
