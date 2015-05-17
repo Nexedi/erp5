@@ -34,6 +34,7 @@ from AccessControl.unauthorized import Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime import DateTime
+from copy import deepcopy
 from DocumentTemplate.DT_Util import TemplateDict
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName
@@ -117,6 +118,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
 
     self._updateWorkflowHistory(document, status_dict)
     self.updateRoleMappingsFor(document)
+
+  initializeDocument = notifyCreated
 
   def _generateHistoryKey(self):
     """
