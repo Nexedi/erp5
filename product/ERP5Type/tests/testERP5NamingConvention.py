@@ -68,11 +68,9 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_tiosafe_pdm', 'erp5_utils', 'erp5_workflow', 'erp5_workflow_test_data', 'erp5_wizard', 'tiolive_base',
       'tiolive_decouple_instance', 'erp5_public_accounting_budget', 'erp5_publication',
       'erp5_social_contracts', 'test_core', 'test_accounting', 'test_web', 'test_html_style',
-      'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', )
-      # skip old type erp5 workflow templates since the new structure has been deployed.
-      #'erp5_configurator',
-      #'erp5_configurator_maxma_demo', 'erp5_configurator_run_my_doc', 'erp5_configurator_standard',
-      #'erp5_configurator_standard_solver', 'erp5_configurator_ung',
+      'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
+      'erp5_configurator_maxma_demo', 'erp5_configurator_run_my_doc', 'erp5_configurator_standard',
+      'erp5_configurator_standard_solver', 'erp5_configurator_ung',
       # skip l10n templates to save time.
       # 'erp5_l10n_fr', 'erp5_l10n_ja',
       # 'erp5_l10n_pl_PL', 'erp5_l10n_pt-BR',
