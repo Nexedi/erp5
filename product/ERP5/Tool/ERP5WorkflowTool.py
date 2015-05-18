@@ -108,7 +108,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
   _manage_selectWorkflows = OriginalWorkflowTool._manage_selectWorkflows
   manage_selectWorkflows = OriginalWorkflowTool.manage_selectWorkflows
   manage_changeWorkflows = OriginalWorkflowTool.manage_changeWorkflows
-    # Declarative properties
+  # Declarative properties
   property_sheets = (
     PropertySheet.Base,
     PropertySheet.XMLObject,
@@ -129,7 +129,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException('No workflows found.')
       found = False
       for workflow in workflow_list:
-        if not isinstance(workflow, InteractionWorkflowDefinition) or \
+        if not isinstance(workflow, InteractionWorkflowDefinition) and \
             not isinstance(workflow, InteractionWorkflow):
           if state_id in workflow.getStateIdList():
             found = True
@@ -151,7 +151,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
-      if not isinstance(workflow, InteractionWorkflowDefinition) or \
+      if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
         if state_id in workflow.getStateIdList():
           return True
@@ -242,6 +242,24 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       if wf is not None:
         workflow_list.append(wf)
     return workflow_list
+
+  security.declarePrivate('getHistoryOf')
+  def getHistoryOf(self, wf_id, ob):
+      """ Get the history of an object for a given workflow.
+      """
+      if hasattr(aq_base(ob), 'workflow_history'):
+          wfh = ob.workflow_history
+          return wfh.get(wf_id, None)
+      return ()
+
+  security.declarePrivate('getStatusOf')
+  def getStatusOf(self, wf_id, ob):
+      """ Get the last element of a workflow history for a given workflow.
+      """
+      wfh = self.getHistoryOf(wf_id, ob)
+      if wfh:
+          return wfh[-1]
+      return None
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
     # create a temporary ERP5 Workflow
