@@ -193,7 +193,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 0)
     self.doActionFor(new_object, "validate_action")
     self.assertEqual(self.getStateFor(new_object), 'validated')
-    self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
+    self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'transition_invalidate'), 1)
 
   def test_13_testDCWorkflowMigrationScript(self):
     new_object = self.getTestObject()
