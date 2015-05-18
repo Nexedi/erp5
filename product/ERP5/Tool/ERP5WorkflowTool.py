@@ -398,7 +398,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
-      if state and transition_id in state.getDestinationIdList():
+      if state and transition_id in state.getDestinationReferenceList():
         return 1
     return 0
 
