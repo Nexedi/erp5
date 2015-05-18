@@ -178,6 +178,12 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   def getWorkflow(self):
     return aq_parent(aq_inner(aq_parent(aq_inner(self))))
 
+  def getDestinationReferenceList(self):
+    ref_list = []
+    for tr in self.getDestinationValueList():
+      ref_list.append(tr.getReference())
+    return ref_list
+
   def setGroups(self, REQUEST, RESPONSE=None):
     """Set the group to role mappings in REQUEST for this State.
     """
