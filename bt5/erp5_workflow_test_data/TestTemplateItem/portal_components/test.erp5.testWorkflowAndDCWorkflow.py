@@ -63,7 +63,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     # self.assertEqual(new_object.getDescription(), "After script was executed.")
     ### zwj: mechanism: validate => validate interaction =>
     ### setTitle => setTitle interaction => setDescription
-    self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed.")
+    self.assertEqual(new_object.getDescription(), "'Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_02_testBeforeScript(self):
     new_object = self.getTestObject()
@@ -181,10 +181,10 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     new_object.setTitle('nana')
     self.doActionFor(new_object, "validate_action")
-    self.assertEqual(new_object.getTitle(), "toto")
+    self.assertEqual(new_object.getTitle(), "After validate interaction.")
     self.assertEqual(self.getStateFor(new_object), 'validated')
     new_object.setTitle("tictic")
-    self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed.")
+    self.assertEqual(new_object.getDescription(), "'Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_12_testIsTransitionPossible(self):
     new_object = self.getTestObject()

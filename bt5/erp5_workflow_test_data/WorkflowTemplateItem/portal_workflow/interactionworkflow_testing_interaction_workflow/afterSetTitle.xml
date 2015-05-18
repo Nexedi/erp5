@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>document = state_change.object\n
-document.setDescription(\'Interaction of setTitle executed.\')\n
+document.setDescription(\'Interaction of setTitle executed. setTitle is appeared in after validate script.\')\n
 </string> </value>
         </item>
         <item>

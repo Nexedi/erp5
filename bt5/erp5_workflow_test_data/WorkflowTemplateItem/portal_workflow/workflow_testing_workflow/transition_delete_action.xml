@@ -47,6 +47,12 @@
             </value>
         </item>
         <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>guard_expression</string> </key>
             <value> <string>python: True</string> </value>
         </item>
@@ -73,6 +79,14 @@
             <value> <string>Delete Action</string> </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary/>
     </pickle>
   </record>
 </ZopeData>
