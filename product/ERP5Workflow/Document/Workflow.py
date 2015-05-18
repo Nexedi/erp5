@@ -125,8 +125,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     """
     Generate a key used in the workflow history.
     """
-    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
-    return '_'.join(history_key.split('_')[1:])
+    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getReference()
+    return history_key
 
   def _updateWorkflowHistory(self, document, status_dict):
     """
