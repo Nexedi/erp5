@@ -229,7 +229,8 @@ for wf in context.portal_workflow.objectValues():\n
   wf_states = wf.getStateValueList()\n
   message = \'\'\n
   if wf_states not in (None, (), [], \'\'):\n
-    for state in wf_states.objectValues() :\n
+    for state_id in wf_states.keys():\n
+      state = wf_state[state_id]\n
       message += checkTitle(\'/\'.join([\'portal_workflow\', wf.id, \'states\', state.id]), \'title\', state.title)\n
     if message:\n
       message_list.append(message)\n
