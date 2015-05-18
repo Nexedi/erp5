@@ -531,7 +531,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
       storage = workflow_dict
       transitions = wf.getTransitionValueList()
-    elif wf_type == "InteractionWorkflowDefinition" or wf_type == "InteractionWorkflow":
+    elif wf_type == "InteractionWorkflowDefinition" or wf_type == "Interaction Workflow":
       storage = interaction_workflow_dict
       transitions = wf.getTransitionValueList()
     else:
@@ -3372,7 +3372,7 @@ class Base( CopyContainer,
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []
     for workflow in workflow_tool.getWorkflowValueListFor(self):
-      if not isinstance(workflow, InteractionWorkflowDefinition) or \
+      if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
         worflow_variable_list.append(self.getProperty(workflow.state_var))
 
