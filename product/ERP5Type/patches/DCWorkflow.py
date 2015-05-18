@@ -827,6 +827,7 @@ DCWorkflowDefinition.getReference = method_getReference
 TransitionDefinition.getReference = method_getReference
 StateDefinition.getReference = method_getReference
 StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
+StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
 VariableDefinition.getReference = method_getReference
 WorklistDefinition.getReference = method_getReference
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
