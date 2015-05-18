@@ -210,9 +210,10 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     Get the current status dict.
     """
     workflow_key = self._generateHistoryKey()
-
+    hist = document.workflow_history
     # Copy is requested
-    result = document.workflow_history[workflow_key][-1].copy()
+    result = hist.get(hist.keys()[-1])
+    #result = document.workflow_history[workflow_key][-1].copy()
     return result
 
   security.declarePrivate('_generateHistoryKey')
@@ -220,7 +221,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     """
     Generate a key used in the workflow history.
     """
-    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getId()
+    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getReference()
     return history_key
 
   security.declarePrivate('getWorklistVariableMatchDict')
@@ -259,6 +260,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
 
   security.declarePrivate('notifyBefore')
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
+    status_dict = self.getCurrentStatusDict(ob)
     if type(transition_list) in StringTypes:
       return
 
@@ -270,16 +272,16 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     filtered_transition_list = []
 
     for t_id in transition_list:
-      tdef = self._getOb(t_id)
+      tdef = self._getOb('interaction_' + t_id )
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
       filtered_transition_list.append(tdef.getId())
-      former_status = self._getOb(status_dict[self.getStateVariable()], None)
+      former_status = {}
 
       sci = StateChangeInfo(
       ob, self, former_status, tdef, None, None, kwargs=kw)
 
       before_script_list = []
-      before_script_list.append(self.getBeforeScriptName())
+      before_script_list.append(tdef.getBeforeScriptName())
       if before_script_list != [] and tdef.getBeforeScriptName() is not None:
         for script_name in before_script_list:
           script = self._getOb(script_name)
@@ -301,9 +303,9 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       kw['workflow_method_args'] = args
 
     for t_id in transition_list:
-      tdef = self._getOb(t_id)
+      tdef = self._getOb('interaction_' + t_id )
       assert tdef.trigger_type == TRIGGER_WORKFLOW_METHOD
-      former_status = self._getOb(status_dict[self.getStateVariable()], None)
+      former_status = {}
       econtext = None
       sci = None
 
@@ -344,17 +346,17 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
 
       # Execute the "after" script.
       after_script_list = []
-      after_script_list.append(self.getAfterScriptName())
-      if after_script_list != [] and self.getAfterScriptName() is not None:
+      after_script_list.append(tdef.getAfterScriptName())
+      if after_script_list != [] and tdef.getAfterScriptName() is not None:
         for script_name in after_script_list:
-          script = workflow._getOb(script_name)
+          script = self ._getOb(script_name)
           # Pass lots of info to the script in a single parameter.
           script.execute(sci)  # May throw an exception
 
       # Queue the "Before Commit" scripts
       sm = getSecurityManager()
       before_commit_script_list = []
-      before_commit_script_list.append(self.getBeforeCommitScriptName())
+      before_commit_script_list.append(tdef.getBeforeCommitScriptName())
       if before_commit_script_list != [] and tdef.getBeforeCommitScriptName() is not None:
         for script_name in before_commit_script_list:
           transaction.get().addBeforeCommitHook(tdef._before_commit,
@@ -365,7 +367,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       activity_script_list.append(tdef.getActivateScriptName())
       if activity_script_list != [] and tdef.getActivateScriptName() is not None:
         for script_name in activity_script_list:
-          workflow.activate(activity='SQLQueue')\
+          self .activate(activity='SQLQueue')\
               .activeScript(script_name, ob.getRelativeUrl(),
                             status, tdef.getId())
 
