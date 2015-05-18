@@ -63,8 +63,8 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
   after_script_name = ()  # Executed after transition
   before_commit_script_name = () #Executed Before Commit Transaction
   activate_script_name = ()  # Executed as activity
-  portal_type_filter = ()
-  portal_type_group_filter = ()
+  portal_type_filter = None
+  portal_type_group_filter = None
   once_per_transaction = False
   temporary_document_disallowed = False
   var_exprs = None  # A mapping.
