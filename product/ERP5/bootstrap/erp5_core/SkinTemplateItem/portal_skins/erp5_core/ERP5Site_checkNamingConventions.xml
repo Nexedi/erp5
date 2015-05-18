@@ -226,7 +226,7 @@ for folder in context.portal_skins.objectValues(spec=(\'Folder\',)):\n
 for wf in context.portal_workflow.objectValues():\n
 \n
   # Test workflow states\n
-  wf_states = wf.states\n
+  wf_states = wf.getStateValueList()\n
   message = \'\'\n
   if wf_states not in (None, (), [], \'\'):\n
     for state in wf_states.objectValues() :\n
