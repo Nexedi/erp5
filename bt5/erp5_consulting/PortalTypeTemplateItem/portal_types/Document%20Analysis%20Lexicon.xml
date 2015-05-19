@@ -42,6 +42,10 @@
             <key> <string>title</string> </key>
             <value> <string>Document Analysis Lexicon</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Document</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
