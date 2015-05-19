@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Workflow Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+configuration_save_url = kw.get(\'configuration_save_url\', None)\n
+preferred_event_sender_email = kw.get(\'preferred_event_sender_email\', \'\')\n
+preferred_date_order = kw.get(\'preferred_date_order\', None)\n
+preferred_language_list = kw.get(\'lang\', [])\n
+\n
+configuration_save = context.restrictedTraverse(configuration_save_url)\n
+\n
+# if preferred email is not specified used previously saved company email.\n
+company_email = context.getGlobalConfigurationAttr(\'company_email\')\n
+if preferred_event_sender_email in (\'\', None,):\n
+  preferred_event_sender_email = company_email\n
+\n
+# price currency contains all currency info like iso code& precision \';\'\n
+# separated\n
+currency_info = kw[\'price_currency\']\n
+currency_reference, currency_base_unit_quantity, currency_title  = \\\n
+    currency_info.split(\';\')\n
+configuration_save.addConfigurationItem(\n
+    "Currency Configurator Item",\n
+    reference = currency_reference,\n
+    base_unit_quantity = currency_base_unit_quantity,\n
+    title = currency_title,)\n
+context.setGlobalConfigurationAttr(default_currency=currency_reference)\n
+\n
+# adjust price_currency for organisation configuration item\n
+organisation_configurator_item = context.getGlobalConfigurationAttr(\n
+    \'organisation_configurator_item\')\n
+organisation_configurator_item_obj = context.restrictedTraverse(\n
+    organisation_configurator_item, None)\n
+organisation_configurator_item_obj.setPriceCurrency(currency_reference)\n
+\n
+# CRM\n
+# Create services used in crm preference.\n
+# XXX I think here is not a good place.(yusei)\n
+service_list = (\n
+  # sale opportunity\n
+  (\'product\', dict(title=\'Product\', use=\'crm/sale_opportunity\', )),\n
+  (\'service\', dict(title=\'Service\', use=\'crm/sale_opportunity\', )),\n
+  # campaign\n
+  (\'marketing_campaign\', dict(title=\'Marketing Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_survey\', dict(title=\'Market Survey\', use=\'crm/campaign\', )),\n
+  (\'marketing_purchases\', dict(title=\'Purchases Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_sales\', dict(title=\'Sales Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_other\', dict(title=\'Other Marketing Service\', use=\'crm/campaign\', )),\n
+  # support request\n
+  (\'support_administrative\', dict(title=\'Administrative Support\', use=\'crm/support_request\', )),\n
+  (\'support_financial\', dict(title=\'Financial Support\', use=\'crm/support_request\', )),\n
+  (\'support_it\', dict(title=\'IT Support\', use=\'crm/support_request\', )),\n
+  (\'support_other\', dict(title=\'Other Support Service\', use=\'crm/support_request\', )),\n
+  # meeting\n
+  (\'organisation_conference\', dict(title=\'Conference\', use=\'crm/meeting\', )),\n
+  (\'organisation_partnership\', dict(title=\'Partnership Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_purchases\', dict(title=\'Purchases Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_project\', dict(title=\'Project Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_sales\', dict(title=\'Sales Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_other\', dict(title=\'Other Meeting\', use=\'crm/meeting\', )),\n
+  # event\n
+  (\'event_complaint\', dict(title=\'Complaint\', use=\'crm/event\', )),\n
+  (\'event_announcement\', dict(title=\'Announcement\', use=\'crm/event\', )),\n
+  (\'event_inquiry\', dict(title=\'Inquiry\', use=\'crm/event\', )),\n
+  (\'event_advertisement\', dict(title=\'Advertisement\', use=\'crm/event\', )),\n
+  (\'event_spam\', dict(title=\'Spam\', use=\'crm/event\', )),\n
+  (\'event_information\', dict(title=\'Information\', use=\'crm/event\', )),\n
+  (\'event_other\', dict(title=\'Other event\', use=\'crm/event\', )),\n
+  )\n
+configuration_save.addConfigurationItem("Service Configurator Item",\n
+                                        configuration_list=service_list)\n
+\n
+# configure preferences\n
+prefs = dict(\n
+  # UI\n
+  preferred_category_child_item_list_method_id =\n
+                   \'getCategoryChildTranslatedLogicalPathItemList\',\n
+  preferred_text_format = \'text/html\',\n
+  preferred_text_editor = \'fck_editor\',\n
+  preferred_date_order = preferred_date_order,\n
+  preferred_listbox_view_mode_line_count = 20,\n
+  preferred_listbox_list_mode_line_count = 20,\n
+  preferred_string_field_width = 30,\n
+  preferred_textarea_width = 80,\n
+  preferred_textarea_height = 5,\n
+  preferred_report_style = \'ODT\',\n
+  preferred_report_format = \'pdf\',\n
+  preferred_money_quantity_field_width = 10, # TODO: adapt this\n
+                                             # based on the selected\n
+                                             # currency, XOF needs\n
+                                             # more than 10 for\n
+                                             # example\n
+  preferred_html_style_access_tab = 1,\n
+  preferred_quantity_field_width = 8,\n
+  # accounting\n
+  preferred_accounting_transaction_currency = \'currency_module/%s\' % \\\n
+      currency_reference,\n
+)\n
+\n
+configuration_save.addConfigurationItem(\n
+    \'Preference Configurator Item\',\n
+    object_id = \'default_configurator_preference\',\n
+    description = "The default parameters for the site are set on this "\n
+    "preference",\n
+    title = "Default Configurator Site Preference",\n
+    **prefs)\n
+\n
+# configure system preferences\n
+# some preparation\n
+system_prefs = dict(\n
+  # CRM\n
+  preferred_campaign_use_list = [\'use/crm/campaign\'],\n
+  preferred_event_use_list = [\'use/crm/event\'],\n
+  preferred_meeting_use_list = [\'use/crm/meeting\'],\n
+  preferred_sale_opportunity_use_list = [\'use/crm/sale_opportunity\'],\n
+  preferred_support_request_use_list = [\'use/crm/support_request\'],\n
+  preferred_event_sender_email = preferred_event_sender_email,\n
+  preferred_event_assessment_form_id_list = [],\n
+  # DMS\n
+  # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
+  #           representation\n
+  preferred_document_file_name_regular_expression = \\\n
+      \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)\'\n
+      \'-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
+  preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9\'\n
+      \'-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a\'\n
+      \'-z]{2})[^-]*)?\',\n
+  preferred_document_classification = \'collaborative/team\',\n
+  preferred_synchronous_metadata_discovery = True,\n
+  preferred_redirect_to_document = True,\n
+  # PDM\n
+  preferred_product_individual_variation_base_category_list = [\'variation\'],\n
+  preferred_component_individual_variation_base_category_list = [\'variation\'],\n
+  preferred_service_individual_variation_base_category_list = [\'variation\'],\n
+  # trade\n
+  preferred_supplier_role_list = [\'role/supplier\'],\n
+  preferred_client_role_list = [\'role/client\'],\n
+  preferred_sale_use_list = [\'use/trade/sale\'],\n
+  preferred_purchase_use_list = [\'use/trade/purchase\'],\n
+  preferred_packing_use_list = [\'use/trade/container\'],\n
+  preferred_tax_use_list=[\'use/trade/tax\'],\n
+  preferred_price_ratio_use_list=[\'use/trade/tax\'])\n
+\n
+configuration_save.addConfigurationItem(\n
+    \'System Preference Configurator Item\',\n
+    object_id = \'default_configurator_system_preference\',\n
+    description="The default system parameters for the site are set on this "\\\n
+    "preference",\n
+    title="Default Configurator System Site Preference",\n
+    **system_prefs)\n
+\n
+# preferred_languages\n
+for bt5_id in preferred_language_list:\n
+  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
+                                          bt5_id=bt5_id)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_setupPreferences</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Workflow Script</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Configure global ERP5 preferences</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

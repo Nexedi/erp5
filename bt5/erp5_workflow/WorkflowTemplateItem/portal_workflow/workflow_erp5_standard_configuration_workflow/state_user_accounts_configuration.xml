@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="State" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/workflow_erp5_standard_configuration_workflow/transition_configure_accounting</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user_accounts_configuration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Fill in detailled information for each ERP5 user. At end of configuration process each TioLive user will receive an email containing his username and password.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>state_user_accounts_configuration</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>State</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>User accounts configuration</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
