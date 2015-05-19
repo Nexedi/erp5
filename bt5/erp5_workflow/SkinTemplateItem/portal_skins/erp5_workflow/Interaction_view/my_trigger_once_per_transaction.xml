@@ -157,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Trigger Once Per Transaction</string> </value>
+                    <value> <string>Trigger once per Transaction</string> </value>
                 </item>
               </dictionary>
             </value>

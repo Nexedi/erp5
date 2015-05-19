@@ -105,11 +105,11 @@
                         </tuple>
                         <tuple>
                           <string>before_commit_script_name</string>
-                          <string>Script (end of transction</string>
+                          <string>Script (End of Transaction)</string>
                         </tuple>
                         <tuple>
                           <string>activate_script_name</string>
-                          <string>Activities (later)</string>
+                          <string>Activities (Later)</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
