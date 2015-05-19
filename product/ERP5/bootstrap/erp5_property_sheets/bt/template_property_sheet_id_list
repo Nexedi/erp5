@@ -154,7 +154,6 @@ SortIndex
 SQLIdGenerator
 StandardBT5ConfiguratorItem
 StandardProperty
-State
 StockCapacity
 SupplyLine
 SupplyLink
@@ -176,7 +175,6 @@ TradeOrderLine
 TradePreference
 Transformation
 TransformedResource
-Transition
 TranslatableProperty
 Url
 Variable
@@ -186,9 +184,6 @@ Version
 VcsPreference
 WebSection
 WebSite
-Workflow
-WorkflowScript
-Worklist
 XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference
