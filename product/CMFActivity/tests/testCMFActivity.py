@@ -32,6 +32,7 @@ import unittest
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Base import Base
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -3101,6 +3102,26 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertFalse(activity_tool.getMessageList())
     finally:
       del obj.__class__.doSomething
+
+  def test_restrictedGroupMethod(self):
+    skin = self.portal.portal_skins.custom
+    script_id = self.id()
+    createZODBPythonScript(skin, script_id, "message_list", """if 1:
+      for m in message_list:
+        m.result = m.object.getProperty(*m.args, **m.kw)
+    """)
+    obj = self.portal.portal_activities.newActiveProcess(causality_value_list=(
+      self.portal.person_module, self.portal.organisation_module))
+    foo = obj.activate(activity='SQLQueue',
+                       group_method_id=script_id,
+                       active_process=obj.getPath()).foo
+    foo('causality', portal_type='Organisation Module')
+    foo('stop_date', 'bar')
+    self.tic()
+    self.assertEqual(sorted(x.getResult() for x in obj.getResultList()),
+                     ['bar', 'organisation_module'])
+    skin.manage_delObjects([script_id])
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

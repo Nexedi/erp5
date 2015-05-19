@@ -453,6 +453,7 @@ class GroupedMessage(object):
 
 # XXX: Allowing restricted code to implement a grouping method is questionable
 #      but there already exist some.
+  _guarded_writes = 1 # for result
 allow_class(GroupedMessage)
 
 # Activity Registration
