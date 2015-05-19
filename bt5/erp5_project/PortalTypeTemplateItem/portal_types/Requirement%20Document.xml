@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Requirement documents allow to describe a client project from a requirement list point of view. They contain Requirement which can contain individual requirements.</string> </value>
+            <value> <string>Requirement documents allow to describe a client project from a requirement list point of view. They contain Requirement which can contain individual requirements. They are Path in UBM sense since they describe potential tasks (Movements). Documents or Images can be aggregated to them.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -61,15 +61,35 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Path</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
