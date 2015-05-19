@@ -72,7 +72,7 @@ ABBREVIATION_WORD_SET = ((\n
 ))\n
 \n
 # List of words that do not need to be titlecased\n
-LOWERCASE_WORD_SET = set((\'g\', \'cm\', \'kg\', \'%\', \'/\', \'...\', \'m\', \'-\', \'g/m2\', \'iCalendar\', \'m&#179;\', \'kB\'))\n
+LOWERCASE_WORD_SET = set((\'g\', \'cm\', \'kg\', \'%\', \'/\', \'...\', \'m\', \'-\', \'g/m2\', \'iCalendar\', \'m&#179;\', \'kB\', \'s\', ))\n
 \n
 # List of words that should not be modified\n
 SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",\n
