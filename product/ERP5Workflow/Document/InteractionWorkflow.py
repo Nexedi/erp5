@@ -413,3 +413,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
         self._checkTransitionGuard(tdef, document, **kw)):
         return 1
     return 0
+
+  def getStateValueList(self):
+    return None
