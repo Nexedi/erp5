@@ -95,11 +95,11 @@
                         </tuple>
                         <tuple>
                           <string>automatic_update</string>
-                          <string>Update on every Transition</string>
+                          <string>Update On Every Transition</string>
                         </tuple>
                         <tuple>
                           <string>for_catalog</string>
-                          <string>Available for Catalog</string>
+                          <string>Available For Catalog</string>
                         </tuple>
                         <tuple>
                           <string>default_expr</string>
