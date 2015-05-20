@@ -42,7 +42,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_erp5_standard_workflow/state_number_of_user_accounts</string>
+                <string>destination/portal_workflow/workflow_run_my_doc_configuration_workflow/state_number_of_user_accounts</string>
               </tuple>
             </value>
         </item>
@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure user accounts number</string> </value>
+            <value> <string>Configure User Accounts Number</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
