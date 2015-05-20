@@ -115,7 +115,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/erp5_consulting_workflow</string>
+                <string>resource/portal_workflow/workflow_erp5_consulting_workflow</string>
               </tuple>
             </value>
         </item>
@@ -161,10 +161,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>modification_date</string> </key>
