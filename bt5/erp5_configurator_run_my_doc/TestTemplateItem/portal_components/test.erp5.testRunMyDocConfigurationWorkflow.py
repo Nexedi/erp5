@@ -98,7 +98,7 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Set RunMyDocs Workflow into Business Configuration """
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
-                                   "workflow_module/run_my_doc_configuration_workflow")
+                                   "portal_workflow/workflow_run_my_doc_configuration_workflow")
 
   def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Create one Organisation with Basic information """
