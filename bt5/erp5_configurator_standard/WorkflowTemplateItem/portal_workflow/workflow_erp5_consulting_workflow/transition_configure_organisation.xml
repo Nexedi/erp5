@@ -42,7 +42,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_erp5_standard_workflow/state_your_organisation</string>
+                <string>destination/portal_workflow/workflow_erp5_consulting_workflow/state_your_organisation</string>
               </tuple>
             </value>
         </item>

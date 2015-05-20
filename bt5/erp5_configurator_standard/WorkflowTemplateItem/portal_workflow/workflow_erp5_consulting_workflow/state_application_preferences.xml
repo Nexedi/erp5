@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_erp5_standard_workflow/transition_install</string>
+                <string>destination/portal_workflow/workflow_erp5_consulting_workflow/transition_install</string>
               </tuple>
             </value>
         </item>
@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Application preferences</string> </value>
+            <value> <string>Application Preferences</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_erp5_standard_workflow/transition_configure_user_accounts_numbers</string>
+                <string>destination/portal_workflow/workflow_erp5_consulting_workflow/transition_configure_user_accounts_number</string>
               </tuple>
             </value>
         </item>
@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Your organisation</string> </value>
+            <value> <string>Your Organisation</string> </value>
         </item>
       </dictionary>
     </pickle>
