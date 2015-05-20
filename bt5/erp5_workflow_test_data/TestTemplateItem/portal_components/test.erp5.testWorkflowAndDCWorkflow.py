@@ -63,7 +63,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     # self.assertEqual(new_object.getDescription(), "After script was executed.")
     ### zwj: mechanism: validate => validate interaction =>
     ### setTitle => setTitle interaction => setDescription
-    self.assertEqual(new_object.getDescription(), "'Interaction of setTitle executed. setTitle is appeared in after validate script.")
+    self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_02_testBeforeScript(self):
     new_object = self.getTestObject()
