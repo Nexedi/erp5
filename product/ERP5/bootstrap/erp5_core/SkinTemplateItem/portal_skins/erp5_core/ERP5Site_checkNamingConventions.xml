@@ -69,6 +69,7 @@ ABBREVIATION_WORD_SET = ((\n
   "PDM", "PO", "RAM", "RSS", "SMS", "SQL", "SVN", "TALES", "TSV", "UBM",\n
   "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "ZODB",\n
   "DNS", "IP", "CSS", "IMAP", "XML", "GPG", "GID", "TCP", "SOAP", "MRP",\n
+  "UNG", "BT", "BT5",\n
 ))\n
 \n
 # List of words that do not need to be titlecased\n
