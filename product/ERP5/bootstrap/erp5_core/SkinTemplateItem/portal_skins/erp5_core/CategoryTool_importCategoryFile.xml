@@ -99,7 +99,7 @@ def hasRelation(obj):\n
 def invalid_category_spreadsheet_handler(message):\n
   report(\n
     field_type=\'Error\',\n
-    message=message,\n
+    message=str(message),\n
   )\n
   return True\n
 category_list_spreadsheet_dict = context.Base_getCategoriesSpreadSheetMapping(\n
@@ -107,7 +107,9 @@ category_list_spreadsheet_dict = context.Base_getCategoriesSpreadSheetMapping(\n
   invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler,\n
 )\n
 if detailed_report_result:\n
-  REQUEST.RESPONSE.write(portal_categories.CategoryTool_viewImportReport())\n
+  REQUEST.other[\'portal_status_message\'] = translateString(\'Spreasheet contains errors\')\n
+  REQUEST.other[\'category_import_report\'] = detailed_report_result\n
+  REQUEST.RESPONSE.write(portal_categories.CategoryTool_viewImportReport().encode(\'utf-8\'))\n
   raise Exception(\'Spreadsheet contains errors\')\n
 \n
 for base_category, category_list in category_list_spreadsheet_dict.iteritems():\n
