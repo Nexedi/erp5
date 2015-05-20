@@ -54,6 +54,10 @@
             <value> <string>The default UNG configuration workflow.</string> </value>
         </item>
         <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterUNGConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>ung_configuration_workflow</string> </value>
         </item>
