@@ -39,6 +39,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/workflow_maxma_demo_configuration_workflow/state_standard_bt5</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>setup_standard_bt5</string> </value>
         </item>
@@ -68,7 +76,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Setup standard BT5</string> </value>
+            <value> <string>Setup Standard BT5</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
