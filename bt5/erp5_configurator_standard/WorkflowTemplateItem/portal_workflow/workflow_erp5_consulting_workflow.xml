@@ -54,6 +54,10 @@
             <value> <string>The default Configuration with configurable categories and security.</string> </value>
         </item>
         <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>erp5_consulting_workflow</string> </value>
         </item>
