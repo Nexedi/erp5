@@ -83,6 +83,7 @@ from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
+from Products.CMFCore.interfaces import IActionProvider
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
@@ -3186,7 +3187,6 @@ class ActionTemplateItem(ObjectTemplateItem):
         return obj._exportOldAction(action)
 
   def _getPortalToolActionCopy(self, obj, context, value):
-    from Products.CMFCore.interfaces import IActionProvider
     if not IActionProvider.providedBy(obj):
       # look for the action in portal_actions, instead of the original object
       LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
@@ -3253,7 +3253,19 @@ class ActionTemplateItem(ObjectTemplateItem):
         container = p.unrestrictedTraverse(path)
 
         if interfaces.ITypeProvider.providedBy(aq_parent(aq_inner(container)))\
-           or IActionsTool.providedBy(container):
+                                     or IActionsTool.providedBy(container)\
+                                     or not IActionProvider.providedBy(container):
+
+          if not IActionProvider.providedBy(container):
+            # some tools stopped being ActionProviders in CMF 2.x. Drop the
+            # action into portal_actions.
+            LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+                'Redirected action import',
+                'Attempted to store action %r in %r which is no longer an '
+                'IActionProvider. Storing action on portal_actions instead' %
+                (id, path))
+            path = 'portal_actions'
+
           # XXX future BT should use 'reference' instead of 'id'
           reference = getattr(obj, 'reference', None) or obj.id
           portal_type_dict.setdefault(path, {})[reference] = obj
@@ -3261,16 +3273,6 @@ class ActionTemplateItem(ObjectTemplateItem):
 
         # Following code is for actions outside Types Tool.
         # It will be removed when they are also converted to ERP5 actions.
-        from Products.CMFCore.interfaces import IActionProvider
-        if not IActionProvider.providedBy(container):
-          # some tools stopped being ActionProviders in CMF 2.x. Drop the
-          # action into portal_actions.
-          LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-              'Redirected action import',
-              'Attempted to store action %r in %r which is no longer an '
-              'IActionProvider. Storing action on portal_actions instead' %
-              (id, path))
-          container = p.portal_actions
         obj, action = container, obj
         action_list = obj.listActions()
         for index in range(len(action_list)):
