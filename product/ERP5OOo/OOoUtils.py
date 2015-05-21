@@ -110,6 +110,8 @@ class OOoBuilder(Implicit):
     except KeyError:
       # This is a new file
       pass
+    if isinstance(stream, unicode):
+      stream = stream.encode('utf-8')
     zf.writestr(filename, stream)
     zf.close()
 
